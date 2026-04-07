@@ -13758,7 +13758,6 @@ fn build_frame_features_for_market(
     market: Option<&str>,
 ) -> Result<FrameFeatures> {
     let mut frame = build_frame_features(candles)?;
-    frame.market = market.map(|value| value.to_ascii_uppercase());
 
     if let Some(market) = frame.market.as_deref() {
         let base_regime = frame.regime_label.clone();
