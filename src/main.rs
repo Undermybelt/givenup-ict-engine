@@ -96,6 +96,7 @@ struct FrameFeatures {
     observations: Vec<Vec<f64>>,
     regime_label: String,
     liquidity_label: String,
+    market: Option<String>,
     sweep_count: usize,
     fvg_count: usize,
 }
@@ -4777,7 +4778,8 @@ fn build_expansion_factor_pipeline_report(
         .first()
         .cloned()
         .ok_or_else(|| anyhow!("factor '{}' did not produce a latest signal", factor_name))?;
-    let frame = build_frame_features(candles)?;
+    let market = infer_market_from_symbol(factor_name);
+    let frame = build_frame_features_for_market(candles, Some(&market))?;
     let market_regime_trace = raw_market_regime_trace(&frame.regime_label, &frame);
     let liquidity_context_trace = raw_liquidity_context_trace(&frame.liquidity_label, &frame);
     let network = build_trading_network()?;
@@ -11969,7 +11971,8 @@ fn build_expansion_factor_pipeline_report_from_registry(
         .first()
         .cloned()
         .ok_or_else(|| anyhow!("factor '{}' did not produce a latest signal", factor_name))?;
-    let frame = build_frame_features(candles)?;
+    let market = infer_market_from_symbol(factor_name);
+    let frame = build_frame_features_for_market(candles, Some(&market))?;
     let market_regime_trace = raw_market_regime_trace(&frame.regime_label, &frame);
     let liquidity_context_trace = raw_liquidity_context_trace(&frame.liquidity_label, &frame);
     let network = build_trading_network()?;
@@ -13736,9 +13739,54 @@ fn build_frame_features(candles: &[Candle]) -> Result<FrameFeatures> {
         observations,
         regime_label: regime_label.to_string(),
         liquidity_label: liquidity_label.to_string(),
+        market: None,
         sweep_count: sweeps.len(),
         fvg_count: fvgs.len(),
     })
+}
+
+fn infer_market_from_symbol(symbol: &str) -> String {
+    symbol
+        .split(['.', '_', '-'])
+        .next()
+        .unwrap_or(symbol)
+        .to_ascii_uppercase()
+}
+
+fn build_frame_features_for_market(
+    candles: &[Candle],
+    market: Option<&str>,
+) -> Result<FrameFeatures> {
+    let mut frame = build_frame_features(candles)?;
+    frame.market = market.map(|value| value.to_ascii_uppercase());
+
+    if let Some(market) = frame.market.as_deref() {
+        let base_regime = frame.regime_label.clone();
+        let base_liquidity = frame.liquidity_label.clone();
+        match market {
+            "NQ" => {
+                if frame.sweep_count > frame.fvg_count.saturating_mul(2) {
+                    frame.regime_label = "range".to_string();
+                }
+                if base_liquidity == "hostile" && frame.sweep_count > 0 && frame.fvg_count > 0 {
+                    frame.liquidity_label = "neutral".to_string();
+                }
+            }
+            "ES" => {
+                if base_regime == "range" && frame.fvg_count > frame.sweep_count {
+                    frame.regime_label = "bull".to_string();
+                }
+            }
+            "CL" => {
+                if base_liquidity == "favorable" && frame.sweep_count >= 1 {
+                    frame.liquidity_label = "neutral".to_string();
+                }
+            }
+            _ => {}
+        }
+    }
+
+    Ok(frame)
 }
 
 fn pre_bayes_evidence_policy() -> ict_engine::state::PreBayesEvidencePolicy {
@@ -18243,6 +18291,21 @@ mod tests {
         assert!(snapshot.contains_key("medium"));
         assert!(snapshot.contains_key("low"));
         assert_eq!(snapshot["high"].len(), 3);
+    }
+
+    #[test]
+    fn test_build_frame_features_for_market_neutralizes_nq_hostile_sweep_bias() {
+        let candles = sample_candles(140);
+        let baseline = build_frame_features(&candles).unwrap();
+        let nq = build_frame_features_for_market(&candles, Some("NQ")).unwrap();
+
+        assert_eq!(nq.market.as_deref(), Some("NQ"));
+        if baseline.sweep_count > baseline.fvg_count.saturating_mul(2) {
+            assert_eq!(nq.regime_label, "range");
+        }
+        if baseline.liquidity_label == "hostile" && baseline.fvg_count > 0 {
+            assert_eq!(nq.liquidity_label, "neutral");
+        }
     }
 
     #[test]
