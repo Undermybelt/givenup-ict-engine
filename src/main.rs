@@ -623,7 +623,7 @@ enum Commands {
         symbol: String,
         #[arg(long)]
         data: String,
-        #[arg(long, default_value = "generic")]
+        #[arg(long, default_value = "expansion_manipulation")]
         objective: String,
         #[arg(long)]
         data_1m: Option<String>,
@@ -733,7 +733,7 @@ enum Commands {
         data: String,
         #[arg(long)]
         factor: String,
-        #[arg(long, default_value = "generic")]
+        #[arg(long, default_value = "expansion_manipulation")]
         objective: String,
         #[arg(long)]
         data_1m: Option<String>,
@@ -2668,6 +2668,7 @@ fn factor_pipeline_debug_command(
     let candles = load_candles(data)?;
     let registry = FactorRegistry::default();
     let pipeline = build_expansion_factor_pipeline_report_with_registry(
+        symbol,
         factor,
         &candles,
         &registry,
@@ -2687,7 +2688,7 @@ fn factor_pipeline_debug_command(
 fn build_factor_pipeline_debug_report(
     symbol: &str,
     data: &str,
-    _objective_mode: ResearchObjectiveMode,
+    objective_mode: ResearchObjectiveMode,
     pipeline: &ExpansionFactorPipelineReport,
     multi_timeframe_summary: &[String],
 ) -> FactorPipelineDebugReport {
@@ -2723,7 +2724,7 @@ fn build_factor_pipeline_debug_report(
         symbol: symbol.to_string(),
         data: data.to_string(),
         factor_name: pipeline.factor_name.clone(),
-        objective: research_objective_label(_objective_mode).to_string(),
+        objective: research_objective_label(objective_mode).to_string(),
         latest_signal: pipeline.latest_signal.clone(),
         factor_diagnostics: pipeline.probability_support.clone(),
         raw_label_trace: FactorPipelineRawLabelTrace {
@@ -3031,6 +3032,7 @@ fn run_futures_sop(root: &str, output_dir: &str, interval: &str) -> Result<Futur
             .as_deref()
             .map(|factor| {
                 build_expansion_factor_pipeline_report(
+                    &dataset.market,
                     factor,
                     &candles,
                     &report.multi_timeframe_summary,
@@ -3343,6 +3345,7 @@ fn run_expansion_sop(
             .as_deref()
             .map(|factor| {
                 build_expansion_factor_pipeline_report_with_registry(
+                    &dataset.market,
                     factor,
                     &candles,
                     &registry,
@@ -3610,6 +3613,7 @@ fn build_expansion_sop_mutation_metrics(
             .as_deref()
             .map(|factor| {
                 build_expansion_factor_pipeline_report_with_registry(
+                    &dataset.market,
                     factor,
                     &candles,
                     registry,
@@ -3848,6 +3852,7 @@ fn expansion_regression_reasons_by_market(
         let baseline_pipeline = baseline_factor
             .map(|factor| {
                 build_expansion_factor_pipeline_report_with_registry(
+                    &dataset.market,
                     factor,
                     &candles,
                     baseline_registry,
@@ -3858,6 +3863,7 @@ fn expansion_regression_reasons_by_market(
         let mutated_pipeline = mutated_factor
             .map(|factor| {
                 build_expansion_factor_pipeline_report_with_registry(
+                    &dataset.market,
                     factor,
                     &candles,
                     mutated_registry,
@@ -3966,6 +3972,24 @@ fn recommended_mutation_directions_from_failure_tags(
                 .to_string(),
         );
     }
+    if failure_tags
+        .iter()
+        .any(|tag| tag == "market_specific_regressions_detected")
+    {
+        directions.push(
+            "Stop global blind tuning and pivot to market-specific label refinement or per-market factor forks for the regressed families"
+                .to_string(),
+        );
+    }
+    if failure_tags
+        .iter()
+        .any(|tag| tag == "no_superior_mutation_found")
+    {
+        directions.push(
+            "Treat the current default as near-local-optimum until new evidence appears; shift the next cycle to label refinement or market-specific fork validation"
+                .to_string(),
+        );
+    }
     if !regressed_markets.is_empty() {
         directions.push(format!(
             "Inspect regressed markets first: {}",
@@ -4019,6 +4043,18 @@ fn recommended_mutation_directions_from_failure_tags(
     }
     directions.dedup();
     directions
+}
+
+fn no_superior_mutation_found(
+    score_delta: f64,
+    failure_tags: &[String],
+    objective: ResearchObjectiveMode,
+) -> bool {
+    objective == ResearchObjectiveMode::ExpansionManipulation
+        && score_delta <= 0.0
+        && !failure_tags
+            .iter()
+            .any(|tag| tag == "pre_bayes_gate_regressed")
 }
 
 fn factor_mutation_priority_markets(evaluation: &FactorMutationEvaluation) -> Vec<String> {
@@ -4634,6 +4670,7 @@ fn score_grade(score: f64) -> String {
 fn apply_expansion_manipulation_objective(
     report: &mut ict_engine::factor_lab::ResearchReport,
     registry: &FactorRegistry,
+    symbol: &str,
     candles: &[Candle],
     multi_timeframe_summary: &[String],
 ) -> Result<()> {
@@ -4648,6 +4685,7 @@ fn apply_expansion_manipulation_objective(
             continue;
         };
         let pipeline = build_expansion_factor_pipeline_report_with_registry(
+            symbol,
             &scorecard.factor_name,
             candles,
             registry,
@@ -4747,6 +4785,7 @@ fn apply_expansion_manipulation_objective(
 }
 
 fn build_expansion_factor_pipeline_report(
+    symbol: &str,
     factor_name: &str,
     candles: &[Candle],
     multi_timeframe_summary: &[String],
@@ -4778,7 +4817,7 @@ fn build_expansion_factor_pipeline_report(
         .first()
         .cloned()
         .ok_or_else(|| anyhow!("factor '{}' did not produce a latest signal", factor_name))?;
-    let market = infer_market_from_symbol(factor_name);
+    let market = infer_market_from_symbol(symbol);
     let frame = build_frame_features_for_market(candles, Some(&market))?;
     let market_regime_trace = raw_market_regime_trace(&frame.regime_label, &frame);
     let liquidity_context_trace = raw_liquidity_context_trace(&frame.liquidity_label, &frame);
@@ -9413,7 +9452,7 @@ fn backtest_command(
     let _ = run_factor_research(
         symbol,
         data,
-        ResearchObjectiveMode::Generic,
+        ResearchObjectiveMode::ExpansionManipulation,
         None,
         None,
         None,
@@ -11119,6 +11158,7 @@ fn run_factor_research(
         apply_expansion_manipulation_objective(
             &mut report,
             &objective_registry,
+            symbol,
             &candles,
             &multi_timeframe_summary
                 .iter()
@@ -11621,12 +11661,14 @@ fn baseline_factor_mutation_metrics(
         apply_expansion_manipulation_objective(
             &mut report,
             registry,
+            symbol,
             candles,
             multi_timeframe_summary,
         )?;
     }
     build_factor_mutation_metric_set(
         &report,
+        symbol,
         candles,
         registry,
         target_factor,
@@ -11636,6 +11678,7 @@ fn baseline_factor_mutation_metrics(
 
 fn build_factor_mutation_metric_set(
     report: &ict_engine::factor_lab::ResearchReport,
+    symbol: &str,
     candles: &[Candle],
     registry: &FactorRegistry,
     target_factor: Option<&str>,
@@ -11687,6 +11730,7 @@ fn build_factor_mutation_metric_set(
     if evaluate_expansion_preview {
         if let Some(best_factor) = evaluated_factor {
             let pipeline = build_expansion_factor_pipeline_report_with_registry(
+                symbol,
                 best_factor,
                 candles,
                 registry,
@@ -11730,6 +11774,7 @@ fn evaluate_factor_mutation(
     let _ = apply_factor_mutation_spec(&mut registry, spec);
     let metrics_after = build_factor_mutation_metric_set(
         report,
+        &report.workflow_snapshot.symbol,
         candles,
         &registry,
         if spec.base_factor.is_empty() {
@@ -11781,6 +11826,9 @@ fn evaluate_factor_mutation(
         }
     } else if gate_after == "observe_only" {
         failure_tags.push("pre_bayes_gate_observe_only".to_string());
+    }
+    if no_superior_mutation_found(score_delta, &failure_tags, objective) {
+        failure_tags.push("no_superior_mutation_found".to_string());
     }
     let recommended_mutation_directions = if failure_tags.is_empty() {
         vec![
@@ -11851,6 +11899,12 @@ fn augment_action_plan_with_factor_mutation_evaluation(
                     target: "factor_mutation_evaluation".to_string(),
                     direction: if evaluation.accepted {
                         "accepted".to_string()
+                    } else if evaluation
+                        .failure_tags
+                        .iter()
+                        .any(|tag| tag == "no_superior_mutation_found")
+                    {
+                        "near_local_optimum".to_string()
                     } else {
                         "rejected".to_string()
                     },
@@ -11864,6 +11918,12 @@ fn augment_action_plan_with_factor_mutation_evaluation(
                     target: "factor_mutation_focus".to_string(),
                     direction: if recommended_focus.is_empty() {
                         "review_required".to_string()
+                    } else if evaluation
+                        .failure_tags
+                        .iter()
+                        .any(|tag| tag == "no_superior_mutation_found")
+                    {
+                        "pivot_to_label_refinement_or_market_specific_fork".to_string()
                     } else {
                         "prioritized".to_string()
                     },
@@ -11925,6 +11985,7 @@ fn mechanical_mutation_score(
 }
 
 fn build_expansion_factor_pipeline_report_with_registry(
+    symbol: &str,
     factor_name: &str,
     candles: &[Candle],
     base_registry: &FactorRegistry,
@@ -11940,6 +12001,7 @@ fn build_expansion_factor_pipeline_report_with_registry(
         registry.set_enabled(&name, name == factor_name);
     }
     build_expansion_factor_pipeline_report_from_registry(
+        symbol,
         factor_name,
         candles,
         registry,
@@ -11948,6 +12010,7 @@ fn build_expansion_factor_pipeline_report_with_registry(
 }
 
 fn build_expansion_factor_pipeline_report_from_registry(
+    symbol: &str,
     factor_name: &str,
     candles: &[Candle],
     registry: FactorRegistry,
@@ -11971,7 +12034,7 @@ fn build_expansion_factor_pipeline_report_from_registry(
         .first()
         .cloned()
         .ok_or_else(|| anyhow!("factor '{}' did not produce a latest signal", factor_name))?;
-    let market = infer_market_from_symbol(factor_name);
+    let market = infer_market_from_symbol(symbol);
     let frame = build_frame_features_for_market(candles, Some(&market))?;
     let market_regime_trace = raw_market_regime_trace(&frame.regime_label, &frame);
     let liquidity_context_trace = raw_liquidity_context_trace(&frame.liquidity_label, &frame);
