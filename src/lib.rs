@@ -1,3 +1,4 @@
+pub mod agent;
 pub mod backtest;
 pub mod bayesian;
 pub mod bbn;

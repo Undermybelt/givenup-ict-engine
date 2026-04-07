@@ -80,14 +80,75 @@ impl Node {
     }
 
     pub fn probabilities_for_evidence(&self, evidence: &Evidence) -> Result<Vec<f64>> {
-        let config = Self::parent_config_from_evidence(&self.parents, evidence)?;
-        self.cpt.get(&config).cloned().ok_or_else(|| {
-            anyhow!(
-                "missing CPT entry for node '{}' and config {:?}",
-                self.id,
-                config
-            )
-        })
+        if self.parents.is_empty() {
+            return self
+                .cpt
+                .get(&Vec::new())
+                .cloned()
+                .ok_or_else(|| anyhow!("missing prior distribution for root node '{}'", self.id));
+        }
+
+        let mut distribution = vec![0.0; self.states.len()];
+        let mut total_weight = 0.0;
+
+        for (config, probabilities) in &self.cpt.entries {
+            if config.len() != self.parents.len() {
+                bail!(
+                    "node '{}' CPT config length {} does not match parent count {}",
+                    self.id,
+                    config.len(),
+                    self.parents.len()
+                );
+            }
+
+            let mut weight = 1.0;
+            for (parent_index, parent) in self.parents.iter().enumerate() {
+                let state_index = config[parent_index];
+                match evidence.get(parent) {
+                    Some(EvidenceType::Hard(index)) => {
+                        if *index != state_index {
+                            weight = 0.0;
+                            break;
+                        }
+                    }
+                    Some(EvidenceType::Soft(distribution)) => {
+                        let probability =
+                            distribution.get(state_index).copied().ok_or_else(|| {
+                                anyhow!(
+                                    "soft evidence for '{}' missing state index {}",
+                                    parent,
+                                    state_index
+                                )
+                            })?;
+                        weight *= probability;
+                    }
+                    None => return Err(anyhow!("missing evidence for parent '{}'", parent)),
+                }
+            }
+
+            if weight <= f64::EPSILON {
+                continue;
+            }
+
+            total_weight += weight;
+            for (value, conditional_probability) in
+                distribution.iter_mut().zip(probabilities.iter())
+            {
+                *value += weight * conditional_probability;
+            }
+        }
+
+        if total_weight <= f64::EPSILON {
+            return Err(anyhow!(
+                "no compatible CPT entries for node '{}' under supplied evidence",
+                self.id
+            ));
+        }
+
+        for value in &mut distribution {
+            *value /= total_weight;
+        }
+        Ok(distribution)
     }
 
     pub fn parent_config_from_evidence(
@@ -145,5 +206,34 @@ mod cpt_entries_serde {
     {
         let entries = Vec::<(ParentConfig, Vec<f64>)>::deserialize(deserializer)?;
         Ok(entries.into_iter().collect())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_probabilities_for_evidence_marginalizes_soft_parent_evidence() {
+        let mut cpt = ConditionalProbabilityTable::new();
+        cpt.insert(vec![0], vec![0.9, 0.1]);
+        cpt.insert(vec![1], vec![0.2, 0.8]);
+        let node = Node {
+            id: "child".to_string(),
+            name: "child".to_string(),
+            node_type: NodeType::Hidden,
+            states: vec!["a".to_string(), "b".to_string()],
+            parents: vec!["parent".to_string()],
+            cpt,
+        };
+        let evidence = std::collections::HashMap::from([(
+            "parent".to_string(),
+            EvidenceType::Soft(vec![0.25, 0.75]),
+        )]);
+
+        let distribution = node.probabilities_for_evidence(&evidence).unwrap();
+
+        assert!((distribution[0] - 0.375).abs() < 1e-9);
+        assert!((distribution[1] - 0.625).abs() < 1e-9);
     }
 }

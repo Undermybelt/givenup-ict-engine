@@ -16,7 +16,10 @@ pub fn yahoo_finance_quote(symbol: &str) -> Result<Quote> {
         return Ok(quote);
     }
     let client = daemon_client()?;
-    let tab_id = navigate(&client, &format!("https://finance.yahoo.com/quote/{}/", symbol))?;
+    let tab_id = navigate(
+        &client,
+        &format!("https://finance.yahoo.com/quote/{}/", symbol),
+    )?;
     let value = exec(
         &client,
         tab_id,
@@ -69,8 +72,8 @@ pub fn yahoo_finance_quote(symbol: &str) -> Result<Quote> {
 }
 
 fn yahoo_finance_quote_via_bb_browser(symbol: &str) -> Result<Quote> {
-    let bb_browser = find_executable("bb-browser")
-        .ok_or_else(|| anyhow!("bb-browser executable not found"))?;
+    let bb_browser =
+        find_executable("bb-browser").ok_or_else(|| anyhow!("bb-browser executable not found"))?;
 
     let output = Command::new(bb_browser)
         .args(["site", "yahoo-finance/quote", symbol, "--json"])
@@ -88,7 +91,8 @@ fn yahoo_finance_quote_via_bb_browser(symbol: &str) -> Result<Quote> {
         );
     }
 
-    let stdout = String::from_utf8(output.stdout).context("bb-browser output is not valid UTF-8")?;
+    let stdout =
+        String::from_utf8(output.stdout).context("bb-browser output is not valid UTF-8")?;
     let value: Value = serde_json::from_str(&stdout).context("failed to parse bb-browser json")?;
     extract_bb_browser_quote(symbol, &value)
 }
@@ -99,7 +103,10 @@ fn extract_bb_browser_quote(symbol: &str, value: &Value) -> Result<Quote> {
             bail!(
                 "bb-browser returned error for '{}': {}",
                 symbol,
-                value.get("error").and_then(Value::as_str).unwrap_or("unknown error")
+                value
+                    .get("error")
+                    .and_then(Value::as_str)
+                    .unwrap_or("unknown error")
             );
         }
         if let Some(data) = value.get("data") {
@@ -136,7 +143,10 @@ pub fn yahoo_finance_options_summary(symbol: &str) -> Result<OptionsChainSummary
     let client = daemon_client()?;
     let tab_id = navigate(
         &client,
-        &format!("https://finance.yahoo.com/quote/{}/options?p={}", symbol, symbol),
+        &format!(
+            "https://finance.yahoo.com/quote/{}/options?p={}",
+            symbol, symbol
+        ),
     )?;
     let value = exec(
         &client,

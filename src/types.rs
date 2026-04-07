@@ -231,6 +231,13 @@ pub struct FactorIC {
     pub std_ic: f64,
     pub ir: f64,
     pub weight: f64,
+    pub backtest_return: f64,
+    pub sharpe: f64,
+    pub stability: f64,
+    pub win_rate: f64,
+    pub profit_factor: f64,
+    pub trade_count: usize,
+    pub regime_scores: HashMap<String, f64>,
 }
 
 // ========== HMM ==========

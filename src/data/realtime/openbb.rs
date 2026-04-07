@@ -130,8 +130,7 @@ impl OpenBBProvider {
                         .iter()
                         .filter(|contract| {
                             contract.dte <= 45.0
-                                && (contract.strike - price).abs() / price.max(f64::EPSILON)
-                                    <= 0.10
+                                && (contract.strike - price).abs() / price.max(f64::EPSILON) <= 0.10
                         })
                         .filter_map(|contract| contract.implied_volatility)
                         .collect::<Vec<_>>();
@@ -171,19 +170,22 @@ impl OpenBBProvider {
         };
 
         if let Ok(greeks) = self.fetch_barchart_greeks(&symbol) {
-            summary.near_atm_implied_volatility =
-                greeks.near_atm_implied_volatility.or(summary.near_atm_implied_volatility);
+            summary.near_atm_implied_volatility = greeks
+                .near_atm_implied_volatility
+                .or(summary.near_atm_implied_volatility);
             summary.put_call_oi_ratio = greeks.put_call_oi_ratio.or(summary.put_call_oi_ratio);
-            summary.put_call_volume_ratio =
-                greeks.put_call_volume_ratio.or(summary.put_call_volume_ratio);
+            summary.put_call_volume_ratio = greeks
+                .put_call_volume_ratio
+                .or(summary.put_call_volume_ratio);
             summary.near_atm_delta = greeks.near_atm_delta;
             summary.near_atm_gamma = greeks.near_atm_gamma;
             summary.near_atm_vega = greeks.near_atm_vega;
             summary.call_gamma_oi = greeks.call_gamma_oi;
             summary.put_gamma_oi = greeks.put_gamma_oi;
             summary.gamma_skew = greeks.gamma_skew;
-            summary.nearest_expiration_dte =
-                greeks.nearest_expiration_dte.or(summary.nearest_expiration_dte);
+            summary.nearest_expiration_dte = greeks
+                .nearest_expiration_dte
+                .or(summary.nearest_expiration_dte);
         }
 
         Ok(summary)
@@ -307,7 +309,10 @@ impl OpenBBProvider {
             .with_context(|| format!("failed to request yahoo quote for '{}'", symbol));
 
         let response: QuoteResponse = match response
-            .and_then(|resp| resp.error_for_status().context("yahoo quote returned error"))
+            .and_then(|resp| {
+                resp.error_for_status()
+                    .context("yahoo quote returned error")
+            })
             .and_then(|resp| resp.json().context("failed to parse yahoo quote response"))
         {
             Ok(response) => response,
@@ -357,7 +362,11 @@ impl OpenBBProvider {
                 "https://query1.finance.yahoo.com/v8/finance/chart/{}",
                 urlencoding::encode(&resolved)
             ))
-            .query(&[("interval", "1d"), ("range", "1d"), ("includePrePost", "true")])
+            .query(&[
+                ("interval", "1d"),
+                ("range", "1d"),
+                ("includePrePost", "true"),
+            ])
             .send()
             .with_context(|| format!("failed to request yahoo chart quote for '{}'", resolved))?
             .error_for_status()
@@ -374,9 +383,7 @@ impl OpenBBProvider {
         let quote = chart.indicators.quote.first();
         let last = meta
             .regular_market_price
-            .or_else(|| {
-                quote.and_then(|q| q.close.iter().rev().flatten().copied().next())
-            })
+            .or_else(|| quote.and_then(|q| q.close.iter().rev().flatten().copied().next()))
             .ok_or_else(|| anyhow!("yahoo chart quote missing price"))?;
         let timestamp = meta
             .regular_market_time
@@ -393,52 +400,61 @@ impl OpenBBProvider {
     }
 
     fn fetch_quote_from_barchart(&self, symbol: &str) -> Result<Quote> {
-        let page_url = format!(
-            "https://www.barchart.com/stocks/quotes/{}/overview",
-            urlencoding::encode(symbol)
-        );
-        let response = self
-            .client
-            .get(&page_url)
-            .send()
-            .with_context(|| format!("failed to request Barchart quote page for '{}'", symbol))?
-            .error_for_status()
-            .with_context(|| format!("Barchart quote page returned error for '{}'", symbol))?;
-        let html = response.text().context("failed to read Barchart quote page html")?;
+        let candidates = [
+            format!(
+                "https://www.barchart.com/stocks/quotes/{}/overview",
+                urlencoding::encode(symbol)
+            ),
+            format!(
+                "https://www.barchart.com/stocks/quotes/{}/options",
+                urlencoding::encode(symbol)
+            ),
+        ];
+        let mut last_error: Option<anyhow::Error> = None;
 
-        let marker = "\"currentSymbol\":";
-        let start = html
-            .find(marker)
-            .ok_or_else(|| anyhow!("Barchart currentSymbol block not found"))?
-            + marker.len();
-        let tail = &html[start..];
-        let end = tail
-            .find(",\"dynamicAssets\"")
-            .ok_or_else(|| anyhow!("Barchart currentSymbol block terminator not found"))?;
-        let current_symbol_json = &tail[..end];
-        let value: serde_json::Value =
-            serde_json::from_str(current_symbol_json).context("failed to parse Barchart currentSymbol json")?;
+        for page_url in candidates {
+            match self
+                .client
+                .get(&page_url)
+                .send()
+                .with_context(|| format!("failed to request Barchart page '{}'", page_url))
+                .and_then(|resp| {
+                    resp.error_for_status()
+                        .with_context(|| format!("Barchart page returned error '{}'", page_url))
+                })
+                .and_then(|resp| resp.text().context("failed to read Barchart page html"))
+                .and_then(|html| parse_barchart_current_symbol(&html))
+            {
+                Ok(value) => {
+                    let last = value
+                        .get("raw")
+                        .and_then(|raw| raw.get("lastPrice"))
+                        .and_then(serde_json::Value::as_f64)
+                        .or_else(|| {
+                            value
+                                .get("lastPrice")
+                                .and_then(serde_json::Value::as_str)
+                                .and_then(|s| s.replace(',', "").parse::<f64>().ok())
+                        })
+                        .ok_or_else(|| anyhow!("Barchart quote missing lastPrice"))?;
 
-        let last = value
-            .get("raw")
-            .and_then(|raw| raw.get("lastPrice"))
-            .and_then(serde_json::Value::as_f64)
-            .or_else(|| {
-                value.get("lastPrice").and_then(serde_json::Value::as_str).and_then(|s| s.replace(',', "").parse::<f64>().ok())
-            })
-            .ok_or_else(|| anyhow!("Barchart quote missing lastPrice"))?;
+                    return Ok(Quote {
+                        symbol: value
+                            .get("symbol")
+                            .and_then(serde_json::Value::as_str)
+                            .unwrap_or(symbol)
+                            .to_string(),
+                        bid: last,
+                        ask: last,
+                        last,
+                        timestamp: Utc::now(),
+                    });
+                }
+                Err(err) => last_error = Some(err),
+            }
+        }
 
-        Ok(Quote {
-            symbol: value
-                .get("symbol")
-                .and_then(serde_json::Value::as_str)
-                .unwrap_or(symbol)
-                .to_string(),
-            bid: last,
-            ask: last,
-            last,
-            timestamp: Utc::now(),
-        })
+        Err(last_error.unwrap_or_else(|| anyhow!("Barchart quote extraction failed")))
     }
 
     fn fetch_options_chain_page(
@@ -551,7 +567,9 @@ impl OpenBBProvider {
             .error_for_status()
             .with_context(|| format!("Barchart options page returned error for '{}'", symbol))?;
         let cookie_header = cookie_header_from_response(&page)?;
-        let html = page.text().context("failed to read Barchart options page html")?;
+        let html = page
+            .text()
+            .context("failed to read Barchart options page html")?;
         let csrf = parse_barchart_csrf(&html)?;
 
         let response: BarchartChainResponse = self
@@ -607,12 +625,31 @@ impl OpenBBProvider {
             }
         };
 
-        let near_atm_implied_volatility =
-            mean(sample.iter().filter_map(|row| row.raw.volatility).collect::<Vec<_>>())
-                .map(|value| value / 100.0);
-        let near_atm_delta = mean(sample.iter().filter_map(|row| row.raw.delta).collect::<Vec<_>>());
-        let near_atm_gamma = mean(sample.iter().filter_map(|row| row.raw.gamma).collect::<Vec<_>>());
-        let near_atm_vega = mean(sample.iter().filter_map(|row| row.raw.vega).collect::<Vec<_>>());
+        let near_atm_implied_volatility = mean(
+            sample
+                .iter()
+                .filter_map(|row| row.raw.volatility)
+                .collect::<Vec<_>>(),
+        )
+        .map(|value| value / 100.0);
+        let near_atm_delta = mean(
+            sample
+                .iter()
+                .filter_map(|row| row.raw.delta)
+                .collect::<Vec<_>>(),
+        );
+        let near_atm_gamma = mean(
+            sample
+                .iter()
+                .filter_map(|row| row.raw.gamma)
+                .collect::<Vec<_>>(),
+        );
+        let near_atm_vega = mean(
+            sample
+                .iter()
+                .filter_map(|row| row.raw.vega)
+                .collect::<Vec<_>>(),
+        );
 
         let call_gamma_oi: f64 = sample
             .iter()
@@ -1065,6 +1102,20 @@ fn parse_barchart_csrf(html: &str) -> Result<String> {
         .find('"')
         .ok_or_else(|| anyhow!("Barchart csrf token malformed"))?;
     Ok(html[start..start + end].to_string())
+}
+
+fn parse_barchart_current_symbol(html: &str) -> Result<serde_json::Value> {
+    let marker = "\"currentSymbol\":";
+    let start = html
+        .find(marker)
+        .ok_or_else(|| anyhow!("Barchart currentSymbol block not found"))?
+        + marker.len();
+    let tail = &html[start..];
+    let end = tail
+        .find(",\"dynamicAssets\"")
+        .ok_or_else(|| anyhow!("Barchart currentSymbol block terminator not found"))?;
+    let current_symbol_json = &tail[..end];
+    serde_json::from_str(current_symbol_json).context("failed to parse Barchart currentSymbol json")
 }
 
 fn parse_barchart_expiry_dte(expiration: &str) -> Option<f64> {

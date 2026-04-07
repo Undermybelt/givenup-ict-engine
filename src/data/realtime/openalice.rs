@@ -340,7 +340,9 @@ impl OpenAliceProvider {
                 "neutral".to_string()
             }
         });
-        let hedge_pressure_score = options_summary.gamma_skew.map(|gamma_skew| gamma_skew.tanh());
+        let hedge_pressure_score = options_summary
+            .gamma_skew
+            .map(|gamma_skew| gamma_skew.tanh());
 
         if let Some(gamma_skew) = options_summary.gamma_skew {
             if gamma_skew > 0.15 {
@@ -351,9 +353,10 @@ impl OpenAliceProvider {
                 notes.push("put_gamma_skew_supports_downside_hedging".to_string());
             }
         }
-        if let (Some(pcr), Some(gamma_skew)) =
-            (options_summary.put_call_oi_ratio, options_summary.gamma_skew)
-        {
+        if let (Some(pcr), Some(gamma_skew)) = (
+            options_summary.put_call_oi_ratio,
+            options_summary.gamma_skew,
+        ) {
             if pcr > 1.20 && gamma_skew < 0.0 {
                 short_bias += 0.03;
                 notes.push("put_skew_and_negative_gamma_align_bearishly".to_string());

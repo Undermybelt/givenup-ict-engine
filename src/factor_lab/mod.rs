@@ -4,8 +4,15 @@ pub mod factor_definition;
 pub mod metrics;
 pub mod research;
 
-pub use backtest::{BacktestConfig, BacktestResult, FactorBacktestEngine};
-pub use engine::{FactorContext, FactorEngine, FactorResearchEngine, FactorSignal};
-pub use factor_definition::FactorDefinition;
+pub use backtest::{
+    BacktestConfig, BacktestResult, FactorBacktestEngine, FactorBacktestResult, FactorTrade,
+    WalkForwardWindow,
+};
+pub use engine::{
+    FactorContribution, FactorDiagnostics, FactorEngine, FactorEngineOutput, FactorResearchEngine,
+};
+pub use factor_definition::{
+    FactorCategory, FactorContext, FactorDefinition, FactorSeries, FactorSignal,
+};
 pub use metrics::BacktestMetrics;
 pub use research::{FactorLab, ResearchReport};
