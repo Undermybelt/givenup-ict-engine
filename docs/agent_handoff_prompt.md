@@ -222,6 +222,122 @@
 - 不是继续“盲调参数一定会出更优”
 - 下一步更需要 debug 能力和更细标签，而不是乱改 sweep 参数
 
+## 5.3 `factor-pipeline-debug` 最新边界结论
+
+已补出正式 `factor-pipeline-debug` 命令，并验证 NQ `structure_ict` latest sample 可直接打穿：
+
+- `latest signal`
+- `factor diagnostics`
+- `raw pre-bayes labels`
+- `filtered pre-bayes labels`
+- `evidence_quality_score`
+- `gating_status`
+- `soft evidence divergence`
+- `bridge gap`
+- `selected entry quality`
+- `six-timeframe resonance`
+- `bbn_support`
+
+已验证命令：
+
+```bash
+cargo run -- factor-pipeline-debug \
+  --symbol NQ \
+  --data /Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-15m/nq.continuous-15m.json \
+  --factor structure_ict \
+  --objective expansion_manipulation
+```
+
+该样本当前边界结论：
+
+- `latest_signal.direction = Bull`
+- `raw_market_regime = bear`
+- `raw_liquidity_context = hostile`
+- `raw_multi_timeframe_resonance = dislocated`
+- `filtered_market_regime = range`
+- `filtered_liquidity_context = neutral`
+- `filtered_factor_uncertainty = high`
+- `filtered_multi_timeframe_resonance = mixed`
+- `evidence_quality_score ≈ 0.3885`
+- `gating_status = observe_only`
+- `selected_entry_quality = high`
+- `bridge_gap ≈ 0.1211`
+
+这说明当前真正卡住 `structure_ict` 的，不是“没有信号”，而是：
+
+- latest signal 与六周期方向偏置冲突
+- raw regime / liquidity 过于 hostile
+- PreBayesEvidenceFilter 将其正式中和为 `range/neutral/high-uncertainty/mixed`
+- 最终只允许 soft evidence observe-only，而非硬放行
+
+因此当前边界已较清楚：
+
+- `factor-pipeline-debug` 已能作为正式 debug 入口
+- 下一步不该先盲调全局 `structure_ict`
+- 应先做跨市场对比，再决定是否转 `market-specific fork`
+
+## 5.4 NQ / ES 正式 research 对比结论
+
+已继续用正式 research 链重跑：
+
+```bash
+cargo run -- factor-research \
+  --symbol NQ \
+  --data /Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-15m/nq.continuous-15m.json \
+  --objective expansion_manipulation \
+  --state-dir /tmp/ict-stage2-nq
+
+cargo run -- factor-research \
+  --symbol ES \
+  --data /Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-15m/es.continuous-15m.json \
+  --objective expansion_manipulation \
+  --state-dir /tmp/ict-stage2-es
+```
+
+正式结果：
+
+- NQ:
+  - `best_factor = structure_ict`
+  - `aggregate_return ≈ -0.4003`
+  - `structure_ict new_score ≈ 0.9991`
+  - `structure_ict action = keep`
+  - six-timeframe summary 指向：
+    - `mtf_direction = bullish`
+    - `mtf_alignment ≈ 0.9966`
+    - `mtf_entry_alignment ≈ 0.6545`
+
+- ES:
+  - `best_factor = structure_ict`
+  - `aggregate_return ≈ -0.2954`
+  - `structure_ict new_score ≈ 0.9035`
+  - `structure_ict action = tune`
+  - six-timeframe summary 指向：
+    - `mtf_direction = bullish`
+    - `mtf_alignment = 1.0000`
+    - `mtf_entry_alignment = 0.0000`
+
+这说明：
+
+- 在 `expansion_manipulation` objective 下，`structure_ict` 在 NQ / ES 都仍是第一名
+- 但 market behavior 已显著分化：
+  - NQ 更接近可直接保留的全链路通过态
+  - ES 虽仍以 `structure_ict` 为第一名，但更像需要 market-specific 调整，而不是继续拿全局参数硬吃
+- 因此下一步最合理方向，不是盲调全局默认，而是：
+  - 保住当前 global `structure_ict` 默认
+  - 优先补 `NQ` / `ES` 的 market-specific fork 证据链
+  - 再决定 ES family 的 fork 粒度与 sweep/displacement 参数差异
+
+### 5.5 CL 当前阻塞事实
+
+本机当前未在 `/Users/thrill3r/Downloads/Tomac` 下找到 `cl.continuous-*.json` cleaned 数据。
+
+因此当前无法完成：
+
+- CL `factor-pipeline-debug`
+- CL `factor-research --objective expansion_manipulation`
+
+不要伪造 CL 结论。若要纳入 CL，先补齐 cleaned multi-timeframe 数据。
+
 ## 6. 你接手后第一优先级
 
 ### P0

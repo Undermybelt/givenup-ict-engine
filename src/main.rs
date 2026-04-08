@@ -27,8 +27,8 @@ use ict_engine::data::{
     CleanedContinuousFuturesSummary,
 };
 use ict_engine::factor_lab::{
-    BacktestConfig as FactorBacktestConfig, FactorContext, FactorDiagnostics, FactorEngine,
-    FactorLab,
+    BacktestConfig as FactorBacktestConfig, FactorContext, FactorContribution, FactorDiagnostics,
+    FactorEngine, FactorLab,
 };
 use ict_engine::factors::{FactorRegistry, WeightUpdater};
 use ict_engine::hmm::{
@@ -72,8 +72,8 @@ use ict_engine::state::{
     PreBayesEvidenceFilter, PreBayesPolicyRecord, ProbabilityDiff, PromotionDecision,
     RankingDiffItem, RecommendedCommand, ResearchRunRecord, RollbackRecommendation, RunProvenance,
     StageAgentContext, StageAgentContextMinimal, TrainRunRecord, UpdateRunRecord,
-    WorkflowConflictSource, WorkflowDisagreement, WorkflowFieldDiff, WorkflowPhaseSnapshot,
-    WorkflowSnapshot, WorkflowState, ANALYZE_RUNS_FILE, BACKTEST_RUNS_FILE,
+    WorkflowBlockingTruth, WorkflowConflictSource, WorkflowDisagreement, WorkflowFieldDiff,
+    WorkflowPhaseSnapshot, WorkflowSnapshot, WorkflowState, ANALYZE_RUNS_FILE, BACKTEST_RUNS_FILE,
     EXECUTION_CANDIDATE_FILE, FACTOR_MUTATION_RUNS_FILE, PENDING_UPDATE_ARTIFACT_FILE,
     RESEARCH_RUNS_FILE, TRAIN_RUNS_FILE, UPDATE_RUNS_FILE,
 };
@@ -480,6 +480,7 @@ struct UpdateReport {
 
 #[derive(Clone, Copy)]
 struct AnalyzeBuildContext<'a> {
+    symbol: &'a str,
     paired_candles: Option<&'a [Candle]>,
     auxiliary: Option<&'a AuxiliaryMarketEvidence>,
     learning_state: &'a LearningState,
@@ -1195,6 +1196,7 @@ fn analyze_command(
         &params,
         &network,
         AnalyzeBuildContext {
+            symbol,
             paired_candles: None,
             auxiliary: None,
             learning_state: &learning_state,
@@ -1499,6 +1501,12 @@ fn build_agent_bootstrap_view(
     let tomac_history_root = detected_tomac_root();
     let multi_timeframe_clean_root =
         detected_multi_timeframe_clean_root(tomac_history_root.as_deref());
+    let agent_brief = vec![
+        "mission: formalize factor-pipeline debug from latest signal through pre-bayes / bridge / resonance".to_string(),
+        "priority: promote expansion_manipulation to SOP-tier objective, not research-only".to_string(),
+        "guardrail: do not blind-tune structure_ict before evidence pinpoints the blocking surface".to_string(),
+        "success: either find a real structure_ict mutation win or prove near-local-optimum then shift to label refinement / market fork".to_string(),
+    ];
     let analyze_command = if let Some(clean_root) = &multi_timeframe_clean_root {
         format!(
             "ict-engine analyze --symbol {} --data-root {} --market {} --state-dir {}",
@@ -1571,6 +1579,7 @@ fn build_agent_bootstrap_view(
             "analyze -> pending/execution artifacts".to_string(),
             "artifacts -> update -> learning feedback".to_string(),
         ],
+        agent_brief,
         guardrails: vec![
             "do_not_bypass_pre_bayes_evidence_filter".to_string(),
             "do_not_feed_raw_factor_labels_directly_into_bbn".to_string(),
@@ -1644,6 +1653,7 @@ fn build_agent_bootstrap_view(
         latest_snapshot: AgentBootstrapSnapshot {
             current_focus_phase: snapshot.current_focus_phase.clone(),
             current_focus_reason: snapshot.current_focus_reason.clone(),
+            blocking_truth: snapshot.blocking_truth.clone(),
             latest_train_phase: snapshot.latest_train.as_ref().map(|phase| phase.phase.clone()),
             latest_analyze_phase: snapshot
                 .latest_analyze
@@ -1834,6 +1844,7 @@ struct AgentBootstrapView {
     symbol: String,
     project_role: String,
     closed_loop_chain: Vec<String>,
+    agent_brief: Vec<String>,
     guardrails: Vec<String>,
     detected_paths: AgentBootstrapPaths,
     input_acquisition: AgentBootstrapInputs,
@@ -1863,6 +1874,7 @@ struct AgentBootstrapCommands {
 struct AgentBootstrapSnapshot {
     current_focus_phase: String,
     current_focus_reason: String,
+    blocking_truth: WorkflowBlockingTruth,
     latest_train_phase: Option<String>,
     latest_analyze_phase: Option<String>,
     latest_pre_bayes_gate_status: Option<String>,
@@ -2442,6 +2454,8 @@ struct FuturesSopReport {
         Option<ict_engine::state::PreBayesPolicyLineageSummary>,
     recommended_global_pre_bayes_soft_evidence_diff:
         Vec<ict_engine::state::PreBayesSoftEvidenceNodeDiff>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    recommended_global_pipeline_debug: Option<FactorPipelineDebugReport>,
     recommended_market_factors: BTreeMap<String, String>,
     warnings: Vec<String>,
     recommended_commands: Vec<String>,
@@ -2504,6 +2518,8 @@ struct ExpansionSopReport {
         Option<ict_engine::state::PreBayesPolicyLineageSummary>,
     recommended_global_pre_bayes_soft_evidence_diff:
         Vec<ict_engine::state::PreBayesSoftEvidenceNodeDiff>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    recommended_global_pipeline_debug: Option<FactorPipelineDebugReport>,
     recommended_market_factors: BTreeMap<String, String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     mutation_spec: Option<FactorMutationSpec>,
@@ -2523,6 +2539,7 @@ struct ExpansionMarketReport {
     bear_expansion_samples: usize,
     best_factor: Option<String>,
     top_factors: Vec<ExpansionFactorScore>,
+    multi_timeframe_summary: Vec<String>,
     pipeline: Option<ExpansionFactorPipelineReport>,
 }
 
@@ -2570,6 +2587,7 @@ struct FactorPipelineDebugReport {
     bridge_gap: f64,
     selected_entry_quality: String,
     six_timeframe_resonance: Vec<String>,
+    pipeline_verdict: String,
     pipeline_summary: String,
     recommended_actions: Vec<String>,
     entry_quality_bridge: ict_engine::state::PreBayesEntryQualityBridge,
@@ -2615,11 +2633,16 @@ struct ExpansionLatestSignal {
 struct ExpansionProbabilitySupport {
     long_support: f64,
     short_support: f64,
+    support_gap: f64,
+    alignment_threshold: f64,
     uncertainty: f64,
     alignment_label: String,
     uncertainty_label: String,
     long_entry_bias: Vec<f64>,
     short_entry_bias: Vec<f64>,
+    bullish_factors: Vec<FactorContribution>,
+    bearish_factors: Vec<FactorContribution>,
+    uncertainty_factors: Vec<FactorContribution>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -2720,6 +2743,18 @@ fn build_factor_pipeline_debug_report(
     ]);
     let filtered_pre_bayes_labels = pipeline.bbn_support.evidence_assignments.clone();
     let bridge_diff = pre_bayes_entry_quality_bridge_diff(&pipeline.entry_quality_bridge);
+    let gating_status = pipeline.bbn_support.pre_bayes_filter.gating_status.clone();
+    let pipeline_verdict = if pre_bayes_gate_is_hard_pass(&gating_status)
+        && bridge_diff.long_short_signal_probability_gap >= 0.20
+    {
+        "clear_through_pre_bayes_and_bridge".to_string()
+    } else if gating_status == "pass_neutralized" {
+        "pre_bayes_pass_but_bridge_needs_confirmation".to_string()
+    } else if gating_status == "observe_only" {
+        "blocked_at_pre_bayes_gate".to_string()
+    } else {
+        "pipeline_unclear".to_string()
+    };
     FactorPipelineDebugReport {
         symbol: symbol.to_string(),
         data: data.to_string(),
@@ -2738,7 +2773,7 @@ fn build_factor_pipeline_debug_report(
         raw_pre_bayes_labels,
         filtered_pre_bayes_labels,
         evidence_quality_score: pipeline.bbn_support.pre_bayes_filter.evidence_quality_score,
-        gating_status: pipeline.bbn_support.pre_bayes_filter.gating_status.clone(),
+        gating_status,
         soft_evidence_divergence: pre_bayes_soft_evidence_diff(
             &pipeline.bbn_support.pre_bayes_filter,
         ),
@@ -2747,6 +2782,7 @@ fn build_factor_pipeline_debug_report(
             .selected_entry_quality
             .unwrap_or_else(|| "unknown".to_string()),
         six_timeframe_resonance: multi_timeframe_summary.to_vec(),
+        pipeline_verdict,
         pipeline_summary: pipeline.pipeline_summary.clone(),
         recommended_actions: pipeline.recommended_actions.clone(),
         entry_quality_bridge: pipeline.entry_quality_bridge.clone(),
@@ -3137,6 +3173,23 @@ fn run_futures_sop(root: &str, output_dir: &str, interval: &str) -> Result<Futur
         .and_then(|market| market.pipeline.as_ref())
         .map(|pipeline| pre_bayes_soft_evidence_diff(&pipeline.bbn_support.pre_bayes_filter))
         .unwrap_or_default();
+    let recommended_global_pipeline_debug = market_reports
+        .iter()
+        .find(|market| {
+            market.best_factor.as_deref() == recommended_global_factor.as_deref()
+                && market.pipeline.is_some()
+        })
+        .and_then(|market| {
+            market.pipeline.as_ref().map(|pipeline| {
+                build_factor_pipeline_debug_report(
+                    &market.market,
+                    &market.cleaned_path,
+                    objective_mode,
+                    pipeline,
+                    &market.multi_timeframe_summary,
+                )
+            })
+        });
 
     Ok(FuturesSopReport {
         sop_version: "futures-sop-v1".to_string(),
@@ -3158,6 +3211,7 @@ fn run_futures_sop(root: &str, output_dir: &str, interval: &str) -> Result<Futur
         recommended_global_pre_bayes_summary,
         recommended_global_pre_bayes_policy_lineage,
         recommended_global_pre_bayes_soft_evidence_diff,
+        recommended_global_pipeline_debug,
         recommended_market_factors,
         warnings,
         recommended_commands: vec![
@@ -3362,6 +3416,7 @@ fn run_expansion_sop(
             bear_expansion_samples,
             best_factor,
             top_factors: scores.into_iter().take(5).collect(),
+            multi_timeframe_summary,
             pipeline,
         });
     }
@@ -3506,6 +3561,23 @@ fn run_expansion_sop(
         .find(|market| market.best_factor.as_deref() == recommended_global_factor.as_deref())
         .map(|market| market.market.clone())
         .unwrap_or_else(|| "NQ".to_string());
+    let recommended_global_pipeline_debug = market_reports
+        .iter()
+        .find(|market| {
+            market.best_factor.as_deref() == recommended_global_factor.as_deref()
+                && market.pipeline.is_some()
+        })
+        .and_then(|market| {
+            market.pipeline.as_ref().map(|pipeline| {
+                build_factor_pipeline_debug_report(
+                    &market.market,
+                    &market.cleaned_path,
+                    objective_mode,
+                    pipeline,
+                    &market.multi_timeframe_summary,
+                )
+            })
+        });
 
     Ok(ExpansionSopReport {
         sop_version: "expansion-sop-v1".to_string(),
@@ -3525,6 +3597,7 @@ fn run_expansion_sop(
         recommended_global_pre_bayes_summary,
         recommended_global_pre_bayes_policy_lineage,
         recommended_global_pre_bayes_soft_evidence_diff,
+        recommended_global_pipeline_debug,
         recommended_market_factors,
         mutation_spec: mutation_spec.cloned(),
         factor_mutation_evaluation,
@@ -3639,6 +3712,7 @@ fn build_expansion_sop_mutation_metrics(
                 .unwrap_or(0),
             best_factor,
             top_factors: scores.into_iter().take(5).collect(),
+            multi_timeframe_summary,
             pipeline,
         });
     }
@@ -4830,6 +4904,7 @@ fn build_expansion_factor_pipeline_report(
         &frame.liquidity_label,
         &output.diagnostics,
         &multi_timeframe_evidence,
+        Some(&market),
     );
     let resonance_trace = raw_multi_timeframe_resonance_trace(
         &pre_bayes_policy,
@@ -4929,11 +5004,16 @@ fn build_expansion_factor_pipeline_report(
         probability_support: ExpansionProbabilitySupport {
             long_support: output.diagnostics.long_support,
             short_support: output.diagnostics.short_support,
+            support_gap: (output.diagnostics.long_support - output.diagnostics.short_support).abs(),
+            alignment_threshold: 0.10,
             uncertainty: output.diagnostics.uncertainty,
             alignment_label: output.diagnostics.alignment_label.clone(),
             uncertainty_label: output.diagnostics.uncertainty_label.clone(),
             long_entry_bias: output.diagnostics.entry_bias_for_direction(Direction::Bull),
             short_entry_bias: output.diagnostics.entry_bias_for_direction(Direction::Bear),
+            bullish_factors: output.diagnostics.bullish_factors.clone(),
+            bearish_factors: output.diagnostics.bearish_factors.clone(),
+            uncertainty_factors: output.diagnostics.uncertainty_factors.clone(),
         },
         entry_quality_bridge,
         bbn_support: ExpansionBbnSupport {
@@ -5437,6 +5517,7 @@ fn analyze_live_command(
         &params,
         &network,
         AnalyzeBuildContext {
+            symbol,
             paired_candles: Some(&spot_candles),
             auxiliary: Some(&auxiliary),
             learning_state: &learning_state,
@@ -6837,6 +6918,13 @@ fn build_workflow_snapshot(
     .collect::<Vec<_>>();
     phases.sort_by(|a, b| a.timestamp.cmp(&b.timestamp));
     let current = phases.last().cloned();
+    let blocking_truth = workflow_blocking_truth(
+        symbol,
+        state_dir,
+        current.as_ref(),
+        latest_analyze,
+        &artifact_decision_summary,
+    );
 
     let mut risk_flags = std::collections::BTreeSet::new();
     for phase in [
@@ -6865,6 +6953,7 @@ fn build_workflow_snapshot(
             .as_ref()
             .map(|phase| phase.workflow_reason.clone())
             .unwrap_or_default(),
+        blocking_truth,
         recommended_next_command: current
             .as_ref()
             .map(|phase| phase.recommended_next_command.clone())
@@ -8353,6 +8442,107 @@ fn workflow_top_actions(plan: &AgentActionPlan) -> Vec<String> {
         .take(3)
         .map(|item| format!("{}:{}", item.stage, item.title))
         .collect()
+}
+
+fn workflow_blocking_truth(
+    symbol: &str,
+    state_dir: &str,
+    current_phase: Option<&WorkflowPhaseSnapshot>,
+    pre_bayes_filter: Option<&AnalyzeRunRecord>,
+    artifact_decision_summary: &ict_engine::state::ArtifactDecisionSummary,
+) -> WorkflowBlockingTruth {
+    let current_recommended_command = current_phase
+        .map(|phase| phase.recommended_next_command.clone())
+        .unwrap_or_default();
+    if let Some(analyze) = pre_bayes_filter {
+        let gate_status = analyze.pre_bayes_evidence_filter.gating_status.clone();
+        let bridge_diff =
+            pre_bayes_entry_quality_bridge_diff(&analyze.pre_bayes_entry_quality_bridge);
+        let bridge_gap = bridge_diff.long_short_signal_probability_gap;
+        let hard_pass = pre_bayes_gate_is_hard_pass(&gate_status);
+        if !hard_pass || bridge_gap < 0.20 {
+            let mut evidence = vec![
+                format!("pre_bayes_gate_status={gate_status}"),
+                format!("bridge_probability_gap={bridge_gap:.3}"),
+                format!(
+                    "selected_entry_quality={}",
+                    bridge_diff
+                        .selected_entry_quality
+                        .unwrap_or_else(|| "unknown".to_string())
+                ),
+            ];
+            evidence.extend(
+                analyze
+                    .pre_bayes_evidence_filter
+                    .rationale
+                    .iter()
+                    .take(3)
+                    .cloned(),
+            );
+            return WorkflowBlockingTruth {
+                stage: "analyze".to_string(),
+                status: if hard_pass {
+                    "bridge_needs_confirmation".to_string()
+                } else {
+                    gate_status.clone()
+                },
+                reason: if hard_pass {
+                    format!(
+                        "pre_bayes passed but bridge gap {:.3} is below confirmation threshold",
+                        bridge_gap
+                    )
+                } else {
+                    analyze
+                        .pre_bayes_evidence_filter
+                        .rationale
+                        .first()
+                        .cloned()
+                        .unwrap_or_else(|| {
+                            "pre-bayes gate still blocks downstream chain".to_string()
+                        })
+                },
+                evidence,
+                next_command: if current_recommended_command.is_empty() {
+                    format!(
+                        "ict-engine pre-bayes-status --symbol {} --state-dir {}",
+                        shell_quote(symbol),
+                        shell_quote(state_dir)
+                    )
+                } else {
+                    current_recommended_command
+                },
+            };
+        }
+    }
+    if artifact_decision_summary.consumed_trend_status == "validated_regressing" {
+        return WorkflowBlockingTruth {
+            stage: "artifact_consumption".to_string(),
+            status: artifact_decision_summary.consumed_trend_status.clone(),
+            reason: artifact_decision_summary.consumed_trend_reason.clone(),
+            evidence: artifact_decision_summary.consumed_target_kinds.clone(),
+            next_command: format!(
+                "ict-engine workflow-status --symbol {} --state-dir {} --phase artifact-consumed-gate",
+                shell_quote(symbol),
+                shell_quote(state_dir)
+            ),
+        };
+    }
+    if let Some(phase) = current_phase {
+        return WorkflowBlockingTruth {
+            stage: phase.phase.clone(),
+            status: "follow_current_focus".to_string(),
+            reason: phase.workflow_reason.clone(),
+            evidence: phase.top_actions.clone(),
+            next_command: phase.recommended_next_command.clone(),
+        };
+    }
+    WorkflowBlockingTruth {
+        stage: "unknown".to_string(),
+        status: "insufficient_state".to_string(),
+        reason: "no workflow phase snapshots available".to_string(),
+        evidence: Vec::new(),
+        next_command: String::new(),
+    }
 }
 
 fn workflow_phase_risk_flags(
@@ -12047,6 +12237,7 @@ fn build_expansion_factor_pipeline_report_from_registry(
         &frame.liquidity_label,
         &output.diagnostics,
         &multi_timeframe_evidence,
+        Some(&market),
     );
     let resonance_trace = raw_multi_timeframe_resonance_trace(
         &pre_bayes_policy,
@@ -12145,11 +12336,16 @@ fn build_expansion_factor_pipeline_report_from_registry(
         probability_support: ExpansionProbabilitySupport {
             long_support: output.diagnostics.long_support,
             short_support: output.diagnostics.short_support,
+            support_gap: (output.diagnostics.long_support - output.diagnostics.short_support).abs(),
+            alignment_threshold: 0.10,
             uncertainty: output.diagnostics.uncertainty,
             alignment_label: output.diagnostics.alignment_label.clone(),
             uncertainty_label: output.diagnostics.uncertainty_label.clone(),
             long_entry_bias: output.diagnostics.entry_bias_for_direction(Direction::Bull),
             short_entry_bias: output.diagnostics.entry_bias_for_direction(Direction::Bear),
+            bullish_factors: output.diagnostics.bullish_factors.clone(),
+            bearish_factors: output.diagnostics.bearish_factors.clone(),
+            uncertainty_factors: output.diagnostics.uncertainty_factors.clone(),
         },
         entry_quality_bridge,
         bbn_support: ExpansionBbnSupport {
@@ -12662,6 +12858,7 @@ fn build_analyze_report(
     let pre_bayes_policy = pre_bayes_evidence_policy();
     let multi_timeframe_evidence =
         parse_multi_timeframe_evidence(build_context.multi_timeframe_summary);
+    let market = infer_market_from_symbol(build_context.symbol);
     let mut factor_registry = FactorRegistry::default();
     factor_registry.apply_learning_state(build_context.learning_state);
     let factor_engine = FactorEngine::new(factor_registry);
@@ -12680,6 +12877,7 @@ fn build_analyze_report(
         &liquidity_label,
         &factor_output.diagnostics,
         &multi_timeframe_evidence,
+        Some(&market),
     );
 
     let evidence = trade_evidence_from_pre_bayes_filter(network, &pre_bayes_evidence_filter)?;
@@ -13135,6 +13333,7 @@ fn run_probabilistic_backtest(
             params,
             &working_network,
             AnalyzeBuildContext {
+                symbol,
                 paired_candles: paired_candles.and_then(|series| {
                     if series.is_empty() {
                         None
@@ -13816,6 +14015,19 @@ fn infer_market_from_symbol(symbol: &str) -> String {
         .to_ascii_uppercase()
 }
 
+fn pre_bayes_market_policy_override(
+    market: Option<&str>,
+    override_config: &std::collections::BTreeMap<
+        String,
+        ict_engine::state::PreBayesMarketPolicyOverride,
+    >,
+) -> ict_engine::state::PreBayesMarketPolicyOverride {
+    market
+        .map(|value| value.to_ascii_uppercase())
+        .and_then(|market| override_config.get(&market).cloned())
+        .unwrap_or_default()
+}
+
 fn build_frame_features_for_market(
     candles: &[Candle],
     market: Option<&str>,
@@ -13839,8 +14051,17 @@ fn build_frame_features_for_market(
                 if base_regime == "range" && frame.fvg_count > frame.sweep_count {
                     frame.regime_label = "bull".to_string();
                 }
+                if base_liquidity == "hostile"
+                    && frame.fvg_count >= frame.sweep_count
+                    && frame.fvg_count > 0
+                {
+                    frame.liquidity_label = "neutral".to_string();
+                }
             }
             "CL" => {
+                if base_regime == "bear" && frame.sweep_count > frame.fvg_count {
+                    frame.regime_label = "range".to_string();
+                }
                 if base_liquidity == "favorable" && frame.sweep_count >= 1 {
                     frame.liquidity_label = "neutral".to_string();
                 }
@@ -13879,6 +14100,24 @@ fn pre_bayes_evidence_policy() -> ict_engine::state::PreBayesEvidencePolicy {
         "ICT_ENGINE_PREBAYES_HOSTILE_LIQUIDITY_FORCES_HIGH_UNCERTAINTY",
         true,
     );
+    let market_overrides = std::collections::BTreeMap::from([
+        (
+            "ES".to_string(),
+            ict_engine::state::PreBayesMarketPolicyOverride {
+                hostile_liquidity_penalty: Some(0.06),
+                favorable_liquidity_bonus: Some(0.06),
+                hostile_liquidity_forces_high_uncertainty: Some(false),
+            },
+        ),
+        (
+            "CL".to_string(),
+            ict_engine::state::PreBayesMarketPolicyOverride {
+                hostile_liquidity_penalty: Some(0.14),
+                favorable_liquidity_bonus: Some(0.03),
+                hostile_liquidity_forces_high_uncertainty: Some(true),
+            },
+        ),
+    ]);
     let source = if [
         "ICT_ENGINE_PREBAYES_MIN_SUPPORT_GAP",
         "ICT_ENGINE_PREBAYES_HIGH_UNCERTAINTY_THRESHOLD",
@@ -13903,7 +14142,7 @@ fn pre_bayes_evidence_policy() -> ict_engine::state::PreBayesEvidencePolicy {
     } else {
         "default".to_string()
     };
-    let version = compute_hash(&[
+    let mut version_inputs = vec![
         format!("{:.6}", min_directional_support_gap),
         format!("{:.6}", high_uncertainty_threshold),
         format!("{:.6}", min_multi_timeframe_alignment_score),
@@ -13919,7 +14158,32 @@ fn pre_bayes_evidence_policy() -> ict_engine::state::PreBayesEvidencePolicy {
         format!("{:.6}", hostile_liquidity_penalty),
         format!("{:.6}", favorable_liquidity_bonus),
         hostile_liquidity_forces_high_uncertainty.to_string(),
-    ]);
+    ];
+    for (market, override_policy) in &market_overrides {
+        version_inputs.push(format!("market={market}"));
+        version_inputs.push(format!(
+            "hostile_liquidity_penalty={}",
+            override_policy
+                .hostile_liquidity_penalty
+                .map(|value| format!("{value:.6}"))
+                .unwrap_or_else(|| "none".to_string())
+        ));
+        version_inputs.push(format!(
+            "favorable_liquidity_bonus={}",
+            override_policy
+                .favorable_liquidity_bonus
+                .map(|value| format!("{value:.6}"))
+                .unwrap_or_else(|| "none".to_string())
+        ));
+        version_inputs.push(format!(
+            "hostile_liquidity_forces_high_uncertainty={}",
+            override_policy
+                .hostile_liquidity_forces_high_uncertainty
+                .map(|value| value.to_string())
+                .unwrap_or_else(|| "none".to_string())
+        ));
+    }
+    let version = compute_hash(&version_inputs);
     ict_engine::state::PreBayesEvidencePolicy {
         version,
         source,
@@ -13938,6 +14202,7 @@ fn pre_bayes_evidence_policy() -> ict_engine::state::PreBayesEvidencePolicy {
         hostile_liquidity_penalty,
         favorable_liquidity_bonus,
         hostile_liquidity_forces_high_uncertainty,
+        market_overrides,
     }
 }
 
@@ -13947,7 +14212,18 @@ fn build_pre_bayes_evidence_filter(
     liquidity_label: &str,
     factor_diagnostics: &FactorDiagnostics,
     multi_timeframe_evidence: &ParsedMultiTimeframeEvidence,
+    market: Option<&str>,
 ) -> PreBayesEvidenceFilter {
+    let market_policy = pre_bayes_market_policy_override(market, &policy.market_overrides);
+    let hostile_liquidity_penalty = market_policy
+        .hostile_liquidity_penalty
+        .unwrap_or(policy.hostile_liquidity_penalty);
+    let favorable_liquidity_bonus = market_policy
+        .favorable_liquidity_bonus
+        .unwrap_or(policy.favorable_liquidity_bonus);
+    let hostile_liquidity_forces_high_uncertainty = market_policy
+        .hostile_liquidity_forces_high_uncertainty
+        .unwrap_or(policy.hostile_liquidity_forces_high_uncertainty);
     let raw_factor_alignment = factor_diagnostics.alignment_label.clone();
     let raw_factor_uncertainty = factor_diagnostics.uncertainty_label.clone();
     let raw_multi_timeframe_direction_bias = multi_timeframe_evidence.direction_bias.clone();
@@ -13962,6 +14238,16 @@ fn build_pre_bayes_evidence_filter(
     let filtered_multi_timeframe_entry_alignment_score = raw_multi_timeframe_entry_alignment_score;
     let mut conflict_flags = Vec::new();
     let mut rationale = Vec::new();
+
+    if let Some(market) = market {
+        rationale.push(format!(
+            "market_policy={} hostile_liquidity_penalty={:.3} favorable_liquidity_bonus={:.3} hostile_liquidity_forces_high_uncertainty={}",
+            market.to_ascii_uppercase(),
+            hostile_liquidity_penalty,
+            favorable_liquidity_bonus,
+            hostile_liquidity_forces_high_uncertainty
+        ));
+    }
 
     let support_gap = (factor_diagnostics.long_support - factor_diagnostics.short_support).abs();
     rationale.push(format!(
@@ -14051,7 +14337,7 @@ fn build_pre_bayes_evidence_filter(
     if raw_multi_timeframe_direction_bias == "neutral" {
         filtered_multi_timeframe_direction_bias = "neutral".to_string();
     }
-    if policy.hostile_liquidity_forces_high_uncertainty
+    if hostile_liquidity_forces_high_uncertainty
         && liquidity_label == "hostile"
         && filtered_factor_uncertainty == "low"
     {
@@ -14097,9 +14383,9 @@ fn build_pre_bayes_evidence_filter(
         evidence_quality_score -= policy.multi_timeframe_entry_penalty;
     }
     if filtered_liquidity_context_label == "hostile" {
-        evidence_quality_score -= policy.hostile_liquidity_penalty;
+        evidence_quality_score -= hostile_liquidity_penalty;
     } else if filtered_liquidity_context_label == "favorable" {
-        evidence_quality_score += policy.favorable_liquidity_bonus;
+        evidence_quality_score += favorable_liquidity_bonus;
     }
     evidence_quality_score = evidence_quality_score.clamp(0.0, 1.0);
 
@@ -18372,6 +18658,76 @@ mod tests {
     }
 
     #[test]
+    fn test_build_frame_features_for_market_applies_es_and_cl_overrides_conditionally() {
+        let candles = sample_candles(140);
+        let baseline = build_frame_features(&candles).unwrap();
+        let es = build_frame_features_for_market(&candles, Some("ES")).unwrap();
+        let cl = build_frame_features_for_market(&candles, Some("CL")).unwrap();
+
+        assert_eq!(es.market.as_deref(), Some("ES"));
+        assert_eq!(cl.market.as_deref(), Some("CL"));
+        if baseline.regime_label == "range" && baseline.fvg_count > baseline.sweep_count {
+            assert_eq!(es.regime_label, "bull");
+        }
+        if baseline.liquidity_label == "hostile"
+            && baseline.fvg_count >= baseline.sweep_count
+            && baseline.fvg_count > 0
+        {
+            assert_eq!(es.liquidity_label, "neutral");
+        }
+        if baseline.regime_label == "bear" && baseline.sweep_count > baseline.fvg_count {
+            assert_eq!(cl.regime_label, "range");
+        }
+        if baseline.liquidity_label == "favorable" && baseline.sweep_count >= 1 {
+            assert_eq!(cl.liquidity_label, "neutral");
+        }
+    }
+
+    #[test]
+    fn test_pre_bayes_market_policy_override_applies_es_liquidity_profile() {
+        let policy = pre_bayes_evidence_policy();
+        let diagnostics = FactorDiagnostics {
+            alignment_label: "bullish".to_string(),
+            uncertainty_label: "low".to_string(),
+            long_support: 0.82,
+            short_support: 0.18,
+            uncertainty: 0.20,
+            ..FactorDiagnostics::default()
+        };
+        let multi_timeframe_evidence = ParsedMultiTimeframeEvidence {
+            direction_bias: "bullish".to_string(),
+            alignment_score: Some(0.80),
+            entry_alignment_score: Some(0.78),
+            ..ParsedMultiTimeframeEvidence::default()
+        };
+
+        let generic = build_pre_bayes_evidence_filter(
+            &policy,
+            "bull",
+            "hostile",
+            &diagnostics,
+            &multi_timeframe_evidence,
+            None,
+        );
+        let es = build_pre_bayes_evidence_filter(
+            &policy,
+            "bull",
+            "hostile",
+            &diagnostics,
+            &multi_timeframe_evidence,
+            Some("ES"),
+        );
+
+        assert_eq!(generic.filtered_factor_uncertainty, "high");
+        assert_eq!(es.filtered_factor_uncertainty, "low");
+        assert!(es.evidence_quality_score > generic.evidence_quality_score);
+        assert!(es
+            .rationale
+            .iter()
+            .any(|line| line.contains("market_policy=ES")));
+    }
+
+    #[test]
     fn test_run_factor_research_persists_rankings_and_run_record() {
         let temp = tempfile::tempdir().unwrap();
         let data = temp.path().join("candles.json");
@@ -19595,6 +19951,7 @@ mod tests {
                 ict_engine::state::PreBayesPolicyLineageSummary::default(),
             ),
             recommended_global_pre_bayes_soft_evidence_diff: Vec::new(),
+            recommended_global_pipeline_debug: None,
             recommended_market_factors: BTreeMap::new(),
             warnings: Vec::new(),
             recommended_commands: Vec::new(),
@@ -19645,11 +20002,43 @@ mod tests {
             probability_support: ExpansionProbabilitySupport {
                 long_support: 0.72,
                 short_support: 0.28,
+                support_gap: 0.44,
+                alignment_threshold: 0.10,
                 uncertainty: 0.18,
                 alignment_label: "aligned".to_string(),
                 uncertainty_label: "stable".to_string(),
                 long_entry_bias: vec![0.2, 0.3, 0.5],
                 short_entry_bias: vec![0.5, 0.3, 0.2],
+                bullish_factors: vec![FactorContribution {
+                    factor_name: "structure_ict".to_string(),
+                    category: "structure".to_string(),
+                    direction: Direction::Bull,
+                    value: 0.81,
+                    confidence: 0.74,
+                    weighted_score: 0.72,
+                    uncertainty_contribution: 0.05,
+                    explanation: "recent_sweep_then_displacement".to_string(),
+                }],
+                bearish_factors: vec![FactorContribution {
+                    factor_name: "structure_ict_counterflow".to_string(),
+                    category: "structure".to_string(),
+                    direction: Direction::Bear,
+                    value: -0.22,
+                    confidence: 0.40,
+                    weighted_score: -0.28,
+                    uncertainty_contribution: 0.08,
+                    explanation: "late bear expansion overlap".to_string(),
+                }],
+                uncertainty_factors: vec![FactorContribution {
+                    factor_name: "multi_timeframe_noise".to_string(),
+                    category: "context".to_string(),
+                    direction: Direction::Neutral,
+                    value: 0.0,
+                    confidence: 0.52,
+                    weighted_score: 0.0,
+                    uncertainty_contribution: 0.18,
+                    explanation: "entry window still carries opposing noise".to_string(),
+                }],
             },
             entry_quality_bridge: bridge.clone(),
             bbn_support: ExpansionBbnSupport {
@@ -19717,6 +20106,11 @@ mod tests {
         assert_eq!(report.objective, "expansion_manipulation");
         assert_eq!(report.gating_status, "pass_hard");
         assert_eq!(report.selected_entry_quality, "high");
+        assert_eq!(report.factor_diagnostics.support_gap, 0.44);
+        assert_eq!(report.factor_diagnostics.alignment_threshold, 0.10);
+        assert_eq!(report.factor_diagnostics.bullish_factors.len(), 1);
+        assert_eq!(report.factor_diagnostics.bearish_factors.len(), 1);
+        assert_eq!(report.factor_diagnostics.uncertainty_factors.len(), 1);
         assert_eq!(report.raw_label_trace.market_regime.label, "bull");
         assert_eq!(
             report.raw_label_trace.market_regime.derivation,
@@ -19773,6 +20167,7 @@ mod tests {
             recommended_global_pre_bayes_summary: Vec::new(),
             recommended_global_pre_bayes_policy_lineage: None,
             recommended_global_pre_bayes_soft_evidence_diff: Vec::new(),
+            recommended_global_pipeline_debug: None,
             recommended_market_factors: BTreeMap::new(),
             mutation_spec: None,
             factor_mutation_evaluation: None,
@@ -21061,6 +21456,7 @@ mod tests {
                 ..FactorDiagnostics::default()
             },
             &ParsedMultiTimeframeEvidence::default(),
+            None,
         );
 
         assert_eq!(filter.filtered_factor_alignment, "mixed");
@@ -21091,6 +21487,7 @@ mod tests {
                 alignment_score: Some(0.42),
                 entry_alignment_score: Some(0.35),
             },
+            None,
         );
 
         assert!(filter
