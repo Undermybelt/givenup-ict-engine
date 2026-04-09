@@ -21407,6 +21407,7 @@ mod tests {
                 direction_bias: "bearish".to_string(),
                 alignment_score: Some(0.42),
                 entry_alignment_score: Some(0.35),
+                covered_count: 6,
             },
             None,
         );
