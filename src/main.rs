@@ -21500,6 +21500,7 @@ mod tests {
                 direction_bias: "bullish".to_string(),
                 alignment_score: Some(0.80),
                 entry_alignment_score: Some(0.75),
+                covered_count: 6,
             },
             Direction::Bull,
         );
@@ -21508,6 +21509,7 @@ mod tests {
                 direction_bias: "bullish".to_string(),
                 alignment_score: Some(0.80),
                 entry_alignment_score: Some(0.75),
+                covered_count: 6,
             },
             Direction::Bear,
         );
