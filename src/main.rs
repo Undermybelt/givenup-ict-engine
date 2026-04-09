@@ -2742,14 +2742,18 @@ fn build_factor_pipeline_debug_report(
     let filtered_pre_bayes_labels = pipeline.bbn_support.evidence_assignments.clone();
     let bridge_diff = pre_bayes_entry_quality_bridge_diff(&pipeline.entry_quality_bridge);
     let gating_status = pipeline.bbn_support.pre_bayes_filter.gating_status.clone();
+    let bridge_gap_clear_threshold =
+        env_f64("ICT_ENGINE_BRIDGE_GAP_CLEAR_THRESHOLD", 0.12);
     let pipeline_verdict = if pre_bayes_gate_is_hard_pass(&gating_status)
-        && bridge_diff.long_short_signal_probability_gap >= 0.20
+        && bridge_diff.long_short_signal_probability_gap >= bridge_gap_clear_threshold
     {
         "clear_through_pre_bayes_and_bridge".to_string()
     } else if gating_status == "pass_neutralized" {
         "pre_bayes_pass_but_bridge_needs_confirmation".to_string()
     } else if gating_status == "observe_only" {
         "blocked_at_pre_bayes_gate".to_string()
+    } else if pre_bayes_gate_is_hard_pass(&gating_status) {
+        "pre_bayes_pass_hard_but_bridge_gap_insufficient".to_string()
     } else {
         "pipeline_unclear".to_string()
     };
@@ -8458,7 +8462,9 @@ fn workflow_blocking_truth(
             pre_bayes_entry_quality_bridge_diff(&analyze.pre_bayes_entry_quality_bridge);
         let bridge_gap = bridge_diff.long_short_signal_probability_gap;
         let hard_pass = pre_bayes_gate_is_hard_pass(&gate_status);
-        if !hard_pass || bridge_gap < 0.20 {
+        let bridge_gap_clear_threshold =
+            env_f64("ICT_ENGINE_BRIDGE_GAP_CLEAR_THRESHOLD", 0.12);
+        if !hard_pass || bridge_gap < bridge_gap_clear_threshold {
             let mut evidence = vec![
                 format!("pre_bayes_gate_status={gate_status}"),
                 format!("bridge_probability_gap={bridge_gap:.3}"),
