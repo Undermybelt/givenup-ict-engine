@@ -13,9 +13,9 @@ use ict_engine::analyze::multi_timeframe_parse::{
 use ict_engine::analyze::multi_timeframe_section::{
     build_analyze_multi_timeframe_section, AnalyzeMultiTimeframeSection,
 };
-use ict_engine::analyze::options_hedging::{build_options_hedging_section, OptionsHedgingSection};
+use ict_engine::analyze::options_hedging_section::{build_options_hedging_section, OptionsHedgingSection};
 use ict_engine::analyze::series::{aligned_close_series, close_to_returns};
-use ict_engine::analyze::smt_correlation::{
+use ict_engine::analyze::smt_correlation_section::{
     build_smt_correlation_section, empty_smt_correlation_section, SmtCorrelationSection,
 };
 use ict_engine::analyze::technical_price::{
