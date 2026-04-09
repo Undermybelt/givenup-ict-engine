@@ -48,6 +48,8 @@ pub struct FactorDiagnostics {
     pub uncertainty_factors: Vec<FactorContribution>,
 }
 
+pub const ALIGNMENT_SUPPORT_GAP_THRESHOLD: f64 = 0.10;
+
 impl FactorDiagnostics {
     pub fn directional_bias(&self, direction: Direction) -> f64 {
         match direction {
@@ -223,9 +225,13 @@ fn build_diagnostics(latest_signals: &[FactorSignal]) -> FactorDiagnostics {
         diagnostics.long_support,
         diagnostics.uncertainty,
     );
-    diagnostics.alignment_label = if diagnostics.long_support > diagnostics.short_support + 0.10 {
+    diagnostics.alignment_label = if diagnostics.long_support
+        >= diagnostics.short_support + ALIGNMENT_SUPPORT_GAP_THRESHOLD
+    {
         "bullish".to_string()
-    } else if diagnostics.short_support > diagnostics.long_support + 0.10 {
+    } else if diagnostics.short_support
+        >= diagnostics.long_support + ALIGNMENT_SUPPORT_GAP_THRESHOLD
+    {
         "bearish".to_string()
     } else {
         "mixed".to_string()
@@ -263,3 +269,38 @@ fn normalize_bias(mut values: Vec<f64>) -> Vec<f64> {
 }
 
 pub type FactorResearchEngine = FactorEngine;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::factor_lab::factor_definition::{FactorCategory, FactorSignal};
+    use chrono::Utc;
+
+    fn sample_signal(direction: Direction, weighted_score: f64) -> FactorSignal {
+        FactorSignal {
+            factor_name: "boundary_case".to_string(),
+            category: FactorCategory::StructureIct,
+            direction,
+            value: weighted_score.max(0.0),
+            confidence: 1.0,
+            explanation: format!("weighted_score={weighted_score}"),
+            weight: 1.0,
+            posterior_reliability: 1.0,
+            regime_multiplier: 1.0,
+            regime_adjusted_score: weighted_score,
+            timestamp: Utc::now(),
+        }
+    }
+
+    #[test]
+    fn test_build_diagnostics_treats_equal_threshold_gap_as_bullish() {
+        let diagnostics = build_diagnostics(&[
+            sample_signal(Direction::Bull, ALIGNMENT_SUPPORT_GAP_THRESHOLD),
+            sample_signal(Direction::Neutral, 0.0),
+        ]);
+
+        assert_eq!(diagnostics.long_support, ALIGNMENT_SUPPORT_GAP_THRESHOLD);
+        assert_eq!(diagnostics.short_support, 0.0);
+        assert_eq!(diagnostics.alignment_label, "bullish");
+    }
+}

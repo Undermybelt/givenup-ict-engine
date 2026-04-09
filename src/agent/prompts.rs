@@ -85,7 +85,7 @@ pub fn factor_iteration_prompt_pack(
     AgentPromptPack {
         version: PROMPT_PACK_VERSION.to_string(),
         workflow: format!(
-            "Use stored research state to decide factor tuning and replacement for {} without auto-generating code inside the engine. The engine provides metrics, scorecards, failure modes, and gating thresholds; the agent decides and submits edits.",
+            "Use stored research state to decide factor tuning and replacement for {} without auto-generating code inside the engine. Keep internal evidence compact, but when answering a human user, translate the result into exactly five readable blocks: (1) 基本价格结构分析, (2) 技术面价格分析, (3) SMT相关性分析, (4) Regime分类结合贝叶斯分析并给推测概率, (5) 交易计划. Do not expose internal terms like pre-Bayes gate, structure_ict verdict, or market-specific fork directly unless the user explicitly asks for internals.",
             symbol
         ),
         prompts: vec![

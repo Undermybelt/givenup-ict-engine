@@ -13,6 +13,7 @@ pub const FACTOR_MUTATION_RUNS_FILE: &str = "factor_mutation_runs.json";
 pub const BACKTEST_RUNS_FILE: &str = "backtest_runs.json";
 pub const UPDATE_RUNS_FILE: &str = "update_runs.json";
 pub const WORKFLOW_SNAPSHOT_FILE: &str = "workflow_snapshot.json";
+pub const COMPACT_SNAPSHOT_FILE: &str = "compact_snapshot.json";
 pub const PRE_BAYES_POLICY_HISTORY_FILE: &str = "pre_bayes_policy_history.json";
 pub const PENDING_UPDATE_ARTIFACT_FILE: &str = "pending_update_feedback.json";
 pub const PENDING_UPDATE_HISTORY_FILE: &str = "pending_update_history.json";
@@ -853,6 +854,18 @@ pub struct PreBayesEvidencePolicy {
     pub hostile_liquidity_penalty: f64,
     pub favorable_liquidity_bonus: f64,
     pub hostile_liquidity_forces_high_uncertainty: bool,
+    #[serde(default)]
+    pub market_overrides: BTreeMap<String, PreBayesMarketPolicyOverride>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct PreBayesMarketPolicyOverride {
+    #[serde(default)]
+    pub hostile_liquidity_penalty: Option<f64>,
+    #[serde(default)]
+    pub favorable_liquidity_bonus: Option<f64>,
+    #[serde(default)]
+    pub hostile_liquidity_forces_high_uncertainty: Option<bool>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -1773,6 +1786,8 @@ pub struct WorkflowSnapshot {
     pub generated_at: DateTime<Utc>,
     pub current_focus_phase: String,
     pub current_focus_reason: String,
+    #[serde(default)]
+    pub blocking_truth: WorkflowBlockingTruth,
     pub recommended_next_command: String,
     pub pending_actions: Vec<String>,
     pub risk_flags: Vec<String>,
@@ -1845,6 +1860,7 @@ impl Default for WorkflowSnapshot {
             generated_at: Utc::now(),
             current_focus_phase: String::new(),
             current_focus_reason: String::new(),
+            blocking_truth: WorkflowBlockingTruth::default(),
             recommended_next_command: String::new(),
             pending_actions: Vec::new(),
             risk_flags: Vec::new(),
@@ -1882,6 +1898,15 @@ impl Default for WorkflowSnapshot {
             disagreements: Vec::new(),
         }
     }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct WorkflowBlockingTruth {
+    pub stage: String,
+    pub status: String,
+    pub reason: String,
+    pub evidence: Vec<String>,
+    pub next_command: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]

@@ -1,6 +1,11 @@
 use anyhow::{anyhow, bail, Context, Result};
 use chrono::{Duration, Utc};
 use clap::{Parser, Subcommand};
+use ict_engine::analyze::multi_timeframe_parse::{
+    classify_multi_timeframe_resonance, multi_timeframe_direction_conflicts_with,
+    parse_multi_timeframe_evidence, ParsedMultiTimeframeEvidence,
+};
+use ict_engine::analyze::series::{aligned_close_series, close_to_returns};
 use ict_engine::agent::{
     dataset_audit_prompt, factor_iteration_prompt_pack, promotion_gate_prompt,
     research_diff_prompt, rollback_review_prompt, update_diff_prompt, AgentPrompt, AgentPromptPack,
@@ -1965,13 +1970,6 @@ impl ResolvedMultiTimeframeInputs {
     fn get(&self, interval: &str) -> Option<&str> {
         self.paths.get(interval).map(String::as_str)
     }
-}
-
-#[derive(Debug, Clone, Default)]
-struct ParsedMultiTimeframeEvidence {
-    direction_bias: String,
-    alignment_score: Option<f64>,
-    entry_alignment_score: Option<f64>,
 }
 
 fn build_hint_effectiveness_summary(
@@ -10903,58 +10901,6 @@ fn build_live_multi_timeframe_signal(frames: &[(&str, &[Candle])]) -> MultiTimef
     multi_timeframe_signal_from_trends(&long_term, &short_term)
 }
 
-fn parse_multi_timeframe_evidence(
-    multi_timeframe_summary: &[String],
-) -> ParsedMultiTimeframeEvidence {
-    let direction_bias = multi_timeframe_summary
-        .iter()
-        .find_map(|item| item.strip_prefix("higher_timeframe_direction_bias="))
-        .unwrap_or("neutral")
-        .to_string();
-    let alignment_score = multi_timeframe_summary
-        .iter()
-        .find_map(|item| item.strip_prefix("higher_timeframe_alignment_score="))
-        .and_then(|value| value.parse::<f64>().ok());
-    let entry_alignment_score = multi_timeframe_summary
-        .iter()
-        .find_map(|item| item.strip_prefix("lower_timeframe_entry_alignment_score="))
-        .and_then(|value| value.parse::<f64>().ok());
-    ParsedMultiTimeframeEvidence {
-        direction_bias,
-        alignment_score,
-        entry_alignment_score,
-    }
-}
-
-fn multi_timeframe_direction_conflicts_with(label: &str, direction_bias: &str) -> bool {
-    matches!(
-        (label, direction_bias),
-        ("bull", "bearish") | ("bear", "bullish") | ("bullish", "bearish") | ("bearish", "bullish")
-    )
-}
-
-fn classify_multi_timeframe_resonance(
-    policy: &ict_engine::state::PreBayesEvidencePolicy,
-    direction_conflict: bool,
-    evidence: &ParsedMultiTimeframeEvidence,
-) -> String {
-    let alignment = evidence.alignment_score.unwrap_or(0.5);
-    let entry_alignment = evidence.entry_alignment_score.unwrap_or(0.5);
-    if direction_conflict
-        || alignment < policy.min_multi_timeframe_alignment_score * 0.8
-        || entry_alignment < policy.min_multi_timeframe_entry_alignment_score * 0.8
-    {
-        "dislocated".to_string()
-    } else if evidence.direction_bias == "neutral"
-        || alignment < policy.min_multi_timeframe_alignment_score
-        || entry_alignment < policy.min_multi_timeframe_entry_alignment_score
-    {
-        "mixed".to_string()
-    } else {
-        "aligned".to_string()
-    }
-}
-
 fn raw_market_regime_trace(regime_label: &str, frame: &FrameFeatures) -> FactorPipelineLabelSource {
     FactorPipelineLabelSource {
         label: regime_label.to_string(),
@@ -13896,37 +13842,6 @@ fn build_trade_plan_section(
         uncertainties: trade_plan.uncertainties.clone(),
         narrative,
     }
-}
-
-fn aligned_close_series(
-    futures_candles: &[Candle],
-    spot_candles: &[Candle],
-) -> (Vec<f64>, Vec<f64>) {
-    let len = futures_candles.len().min(spot_candles.len());
-    let futures = futures_candles[futures_candles.len().saturating_sub(len)..]
-        .iter()
-        .map(|candle| candle.close)
-        .collect();
-    let spot = spot_candles[spot_candles.len().saturating_sub(len)..]
-        .iter()
-        .map(|candle| candle.close)
-        .collect();
-    (futures, spot)
-}
-
-fn close_to_returns(closes: &[f64]) -> Vec<f64> {
-    closes
-        .windows(2)
-        .filter_map(|window| {
-            let prev = window[0];
-            let next = window[1];
-            if prev.abs() <= f64::EPSILON {
-                None
-            } else {
-                Some((next - prev) / prev)
-            }
-        })
-        .collect()
 }
 
 fn build_frame_features(candles: &[Candle]) -> Result<FrameFeatures> {

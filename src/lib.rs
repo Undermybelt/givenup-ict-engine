@@ -1,4 +1,5 @@
 pub mod agent;
+pub mod analyze;
 pub mod backtest;
 pub mod bayesian;
 pub mod bbn;
