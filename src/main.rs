@@ -1,16 +1,17 @@
 use anyhow::{anyhow, bail, Context, Result};
 use chrono::{Duration, Utc};
 use clap::{Parser, Subcommand};
-use ict_engine::analyze::multi_timeframe_parse::{
-    classify_multi_timeframe_resonance, multi_timeframe_direction_conflicts_with,
-    parse_multi_timeframe_evidence, ParsedMultiTimeframeEvidence,
-};
-use ict_engine::analyze::series::{aligned_close_series, close_to_returns};
 use ict_engine::agent::{
     dataset_audit_prompt, factor_iteration_prompt_pack, promotion_gate_prompt,
     research_diff_prompt, rollback_review_prompt, update_diff_prompt, AgentPrompt, AgentPromptPack,
     PROMPT_PACK_VERSION,
 };
+use ict_engine::analyze::multi_timeframe_parse::{
+    classify_multi_timeframe_resonance, multi_timeframe_direction_conflicts_with,
+    parse_multi_timeframe_evidence, ParsedMultiTimeframeEvidence,
+};
+use ict_engine::analyze::series::{aligned_close_series, close_to_returns};
+use ict_engine::analyze::types::AnalyzeMultiTimeframeInterval;
 use ict_engine::backtest::{BacktestEngine, Metrics, RegimeSplit};
 use ict_engine::bayesian::{cascade_bear, cascade_bull, CascadeConfig};
 use ict_engine::bbn::learning::cpt_updater::{CPTUpdater, TradeOutcome};
@@ -195,13 +196,6 @@ struct AnalyzeMultiTimeframeSection {
     intervals: Vec<AnalyzeMultiTimeframeInterval>,
     summary: Vec<String>,
     narrative: String,
-}
-
-#[derive(Debug, Serialize)]
-struct AnalyzeMultiTimeframeInterval {
-    interval: String,
-    bars: usize,
-    source_detail: String,
 }
 
 #[derive(Debug, Serialize)]
@@ -2742,8 +2736,7 @@ fn build_factor_pipeline_debug_report(
     let filtered_pre_bayes_labels = pipeline.bbn_support.evidence_assignments.clone();
     let bridge_diff = pre_bayes_entry_quality_bridge_diff(&pipeline.entry_quality_bridge);
     let gating_status = pipeline.bbn_support.pre_bayes_filter.gating_status.clone();
-    let bridge_gap_clear_threshold =
-        env_f64("ICT_ENGINE_BRIDGE_GAP_CLEAR_THRESHOLD", 0.12);
+    let bridge_gap_clear_threshold = env_f64("ICT_ENGINE_BRIDGE_GAP_CLEAR_THRESHOLD", 0.12);
     let pipeline_verdict = if pre_bayes_gate_is_hard_pass(&gating_status)
         && bridge_diff.long_short_signal_probability_gap >= bridge_gap_clear_threshold
     {
@@ -8462,8 +8455,7 @@ fn workflow_blocking_truth(
             pre_bayes_entry_quality_bridge_diff(&analyze.pre_bayes_entry_quality_bridge);
         let bridge_gap = bridge_diff.long_short_signal_probability_gap;
         let hard_pass = pre_bayes_gate_is_hard_pass(&gate_status);
-        let bridge_gap_clear_threshold =
-            env_f64("ICT_ENGINE_BRIDGE_GAP_CLEAR_THRESHOLD", 0.12);
+        let bridge_gap_clear_threshold = env_f64("ICT_ENGINE_BRIDGE_GAP_CLEAR_THRESHOLD", 0.12);
         if !hard_pass || bridge_gap < bridge_gap_clear_threshold {
             let mut evidence = vec![
                 format!("pre_bayes_gate_status={gate_status}"),
