@@ -943,6 +943,25 @@ pub struct PreBayesEntryQualityBridgeDiff {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct FactorPipelineLabelSource {
+    pub label: String,
+    pub derivation: String,
+    pub evidence: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct PreBayesEvidencePacket {
+    pub filter: PreBayesEvidenceFilter,
+    #[serde(default)]
+    pub evidence_assignments: BTreeMap<String, String>,
+    #[serde(default)]
+    pub timed_pda_summary: crate::bbn::ICTStructureSummary,
+    pub raw_market_regime_trace: FactorPipelineLabelSource,
+    pub raw_liquidity_context_trace: FactorPipelineLabelSource,
+    pub raw_multi_timeframe_resonance_trace: FactorPipelineLabelSource,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct PreBayesEvidenceFilter {
     #[serde(default)]
     pub policy: PreBayesEvidencePolicy,
@@ -958,6 +977,16 @@ pub struct PreBayesEvidenceFilter {
     pub raw_multi_timeframe_entry_alignment_score: Option<f64>,
     #[serde(default)]
     pub raw_multi_timeframe_resonance_label: String,
+    #[serde(default)]
+    pub active_pda_count: usize,
+    #[serde(default)]
+    pub inversed_pda_count: usize,
+    #[serde(default)]
+    pub stale_pda_count: usize,
+    #[serde(default)]
+    pub nearest_active_pda: Option<String>,
+    #[serde(default)]
+    pub nearest_inversed_pda: Option<String>,
     pub filtered_market_regime_label: String,
     pub filtered_liquidity_context_label: String,
     pub filtered_factor_alignment: String,

@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -35,6 +35,72 @@ impl FactorCategory {
             Self::OptionsHedging => "options_hedging",
         }
     }
+
+    pub fn is_footprint_context_only(self) -> bool {
+        matches!(
+            self,
+            Self::StructureIct | Self::CrossMarketSmt | Self::OptionsHedging
+        )
+    }
+
+    pub fn allowed_roles(self) -> &'static [FactorRole] {
+        match self {
+            Self::TrendMomentum => &[FactorRole::Evidence, FactorRole::OutcomeValidator],
+            Self::VolatilityMeanReversion => &[FactorRole::Evidence, FactorRole::SetupClassifier],
+            Self::StructureIct | Self::CrossMarketSmt | Self::OptionsHedging => &[
+                FactorRole::PriorAdjuster,
+                FactorRole::StateTransition,
+                FactorRole::SetupClassifier,
+                FactorRole::OutcomeValidator,
+            ],
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+pub enum FactorRole {
+    PriorAdjuster,
+    StateTransition,
+    SetupClassifier,
+    Evidence,
+    OutcomeValidator,
+}
+
+impl FactorRole {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::PriorAdjuster => "prior_adjuster",
+            Self::StateTransition => "state_transition",
+            Self::SetupClassifier => "setup_classifier",
+            Self::Evidence => "evidence",
+            Self::OutcomeValidator => "outcome_validator",
+        }
+    }
+
+    pub fn allowed_for_category(self, category: FactorCategory) -> bool {
+        category.allowed_roles().contains(&self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+pub enum FactorUsagePhase {
+    PriorAdjustment,
+    HiddenStateTransition,
+    SetupClassification,
+    Evidence,
+    OutcomeValidation,
+}
+
+impl FactorUsagePhase {
+    pub fn required_role(self) -> FactorRole {
+        match self {
+            Self::PriorAdjustment => FactorRole::PriorAdjuster,
+            Self::HiddenStateTransition => FactorRole::StateTransition,
+            Self::SetupClassification => FactorRole::SetupClassifier,
+            Self::Evidence => FactorRole::Evidence,
+            Self::OutcomeValidation => FactorRole::OutcomeValidator,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Default)]
@@ -48,6 +114,7 @@ pub struct FactorContext<'a> {
 pub struct FactorSignal {
     pub factor_name: String,
     pub category: FactorCategory,
+    pub roles: Vec<FactorRole>,
     pub timestamp: DateTime<Utc>,
     pub value: f64,
     pub direction: Direction,
@@ -64,6 +131,7 @@ impl Default for FactorSignal {
         Self {
             factor_name: String::new(),
             category: FactorCategory::TrendMomentum,
+            roles: vec![FactorRole::Evidence],
             timestamp: Utc::now(),
             value: 0.0,
             direction: Direction::Neutral,
@@ -74,6 +142,37 @@ impl Default for FactorSignal {
             regime_multiplier: 1.0,
             regime_adjusted_score: 0.0,
         }
+    }
+}
+
+impl FactorSignal {
+    pub fn sanitized_roles(&self) -> Vec<FactorRole> {
+        self.roles
+            .iter()
+            .copied()
+            .filter(|role| role.allowed_for_category(self.category))
+            .collect()
+    }
+
+    pub fn supports_role(&self, role: FactorRole) -> bool {
+        self.sanitized_roles().contains(&role)
+    }
+
+    pub fn ensure_role(&self, role: FactorRole) -> Result<()> {
+        if self.supports_role(role) {
+            Ok(())
+        } else {
+            Err(anyhow!(
+                "factor '{}' category '{}' cannot be used as {}",
+                self.factor_name,
+                self.category.as_str(),
+                role.as_str()
+            ))
+        }
+    }
+
+    pub fn ensure_phase(&self, phase: FactorUsagePhase) -> Result<()> {
+        self.ensure_role(phase.required_role())
     }
 }
 

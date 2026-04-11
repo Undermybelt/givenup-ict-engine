@@ -148,6 +148,77 @@ pub struct OrderBlock {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PriceLevelBand {
+    pub top: f64,
+    pub bottom: f64,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum PdaLifecycleState {
+    Active,
+    Touched,
+    Mitigated,
+    Invalidated,
+    Inversed,
+    Expired,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum PdaInvalidationRule {
+    WickThrough,
+    CloseThrough,
+    BodyAcceptance,
+    FullFill,
+    StructureBreak,
+    TimeExpiry,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum PdaInverseMode {
+    None,
+    FlipSameBand,
+    FlipNeedsConfirmation,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum PdaConceptKind {
+    FairValueGap,
+    InversionFairValueGap,
+    BalancedPriceRange,
+    LiquidityPool,
+    EqualHighsLows,
+    OptimalTradeEntry,
+    Ndog,
+    Nwog,
+    OpenRangeGap,
+    SwingFailurePattern,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PdaStateTransition {
+    pub state: PdaLifecycleState,
+    pub at_bar: usize,
+    pub note: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TimedPdaState {
+    pub concept: PdaConceptKind,
+    pub direction: Direction,
+    pub band: PriceLevelBand,
+    pub anchor_bar: usize,
+    pub last_updated_bar: usize,
+    pub state: PdaLifecycleState,
+    pub invalidation_rule: PdaInvalidationRule,
+    pub inverse_mode: PdaInverseMode,
+    pub validity_bars: usize,
+    pub touch_count: usize,
+    pub mitigation_progress: f64,
+    pub inverse_confirmed: bool,
+    pub transitions: Vec<PdaStateTransition>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FairValueGap {
     pub top: f64,
     pub bottom: f64,
@@ -381,4 +452,5 @@ pub struct ICTStructureSummary {
     pub cisd_ltf_confirmed: bool,
     pub cisd_htf_confirmed: bool,
     pub rb_pinbar_detected: bool,
+    pub timed_pda_states: Vec<TimedPdaState>,
 }

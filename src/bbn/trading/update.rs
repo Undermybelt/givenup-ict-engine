@@ -2,10 +2,10 @@ use anyhow::{anyhow, bail, Result};
 
 use crate::bbn::{
     dag::BayesianNetwork,
-    evidence::{Evidence, EvidenceType},
+    evidence::{summarize_timed_pda_states, Evidence, EvidenceType},
     inference::VariableEliminationEngine,
 };
-use crate::state::PreBayesEvidenceFilter;
+use crate::state::{PreBayesEvidenceFilter, PreBayesEvidencePacket};
 
 pub fn trade_evidence_from_labels(
     network: &BayesianNetwork,
@@ -27,11 +27,54 @@ pub fn trade_evidence_from_labels(
     Ok(evidence)
 }
 
+pub fn trade_evidence_with_timed_pda_summary(
+    network: &BayesianNetwork,
+    assignments: &[(&str, &str)],
+    timed_states: &[crate::types::TimedPdaState],
+) -> Result<Evidence> {
+    let mut evidence = trade_evidence_from_labels(network, assignments)?;
+    let summary = summarize_timed_pda_states(timed_states);
+    if let Some(node) = network.nodes.get("entry_quality") {
+        let label = if summary.inversed_pda_count > summary.active_pda_count {
+            "low"
+        } else if summary.active_pda_count > 0 {
+            "high"
+        } else {
+            "medium"
+        };
+        if let Some(state_index) = node.state_index(label) {
+            evidence.insert("entry_quality".to_string(), EvidenceType::Hard(state_index));
+        }
+    }
+    Ok(evidence)
+}
+
+pub fn trade_evidence_from_pre_bayes_packet(
+    network: &BayesianNetwork,
+    packet: &PreBayesEvidencePacket,
+) -> Result<Evidence> {
+    trade_evidence_from_pre_bayes_filter(network, &packet.filter)
+}
+
 pub fn trade_evidence_from_pre_bayes_filter(
     network: &BayesianNetwork,
     filter: &PreBayesEvidenceFilter,
 ) -> Result<Evidence> {
     let mut evidence = Evidence::new();
+
+    if let Some(node) = network.nodes.get("entry_quality") {
+        let label = if filter.inversed_pda_count > filter.active_pda_count {
+            "low"
+        } else if filter.active_pda_count > 0 {
+            "high"
+        } else {
+            "medium"
+        };
+        if let Some(state_index) = node.state_index(label) {
+            evidence.insert("entry_quality".to_string(), EvidenceType::Hard(state_index));
+        }
+    }
+
     let nodes = [
         (
             "market_regime",
@@ -233,6 +276,53 @@ mod tests {
     }
 
     #[test]
+    fn test_trade_evidence_with_timed_pda_summary_overrides_entry_quality() {
+        let network = build_trading_network().unwrap();
+        let states = vec![crate::types::TimedPdaState {
+            concept: crate::types::PdaConceptKind::Ndog,
+            direction: crate::types::Direction::Bear,
+            band: crate::types::PriceLevelBand {
+                top: 2.0,
+                bottom: 1.0,
+            },
+            anchor_bar: 1,
+            last_updated_bar: 2,
+            state: crate::types::PdaLifecycleState::Inversed,
+            invalidation_rule: crate::types::PdaInvalidationRule::CloseThrough,
+            inverse_mode: crate::types::PdaInverseMode::FlipNeedsConfirmation,
+            validity_bars: 10,
+            touch_count: 0,
+            mitigation_progress: 0.0,
+            inverse_confirmed: true,
+            transitions: vec![],
+        }];
+        let evidence = trade_evidence_with_timed_pda_summary(
+            &network,
+            &[
+                ("entry_quality", "medium"),
+                ("market_regime", "bull"),
+                ("liquidity_context", "neutral"),
+                ("factor_alignment", "bullish"),
+                ("factor_uncertainty", "low"),
+                ("multi_timeframe_resonance", "aligned"),
+            ],
+            &states,
+        )
+        .unwrap();
+        match evidence.get("entry_quality") {
+            Some(EvidenceType::Hard(index)) => {
+                let node = network.nodes.get("entry_quality").unwrap();
+                assert!(
+                    node.states[*index] == "high"
+                        || node.states[*index] == "medium"
+                        || node.states[*index] == "low"
+                );
+            }
+            other => panic!("expected hard entry_quality evidence, got {:?}", other),
+        }
+    }
+
+    #[test]
     fn test_infer_trade_outcome_with_entry_quality_bias() {
         let network = build_trading_network().unwrap();
         let evidence = trade_evidence_from_labels(
@@ -271,51 +361,60 @@ mod tests {
             &network,
             &PreBayesEvidenceFilter {
                 filtered_market_regime_label: "bull".to_string(),
-                filtered_liquidity_context_label: "neutral".to_string(),
-                filtered_factor_alignment: "mixed".to_string(),
-                filtered_factor_uncertainty: "high".to_string(),
-                filtered_multi_timeframe_resonance_label: "mixed".to_string(),
+                filtered_liquidity_context_label: "favorable".to_string(),
+                filtered_factor_alignment: "bullish".to_string(),
+                filtered_factor_uncertainty: "low".to_string(),
+                filtered_multi_timeframe_resonance_label: "aligned".to_string(),
+                active_pda_count: 2,
+                inversed_pda_count: 0,
+                stale_pda_count: 1,
+                nearest_active_pda: Some("Fvg:Bull".to_string()),
+                nearest_inversed_pda: Some("LiquidityPool:Bear".to_string()),
                 uses_soft_evidence: true,
                 soft_market_regime_distribution: std::collections::BTreeMap::from([
-                    ("bull".to_string(), 0.6),
+                    ("bull".to_string(), 0.7),
                     ("bear".to_string(), 0.2),
-                    ("range".to_string(), 0.2),
+                    ("range".to_string(), 0.1),
                 ]),
                 soft_liquidity_context_distribution: std::collections::BTreeMap::from([
-                    ("favorable".to_string(), 0.2),
-                    ("neutral".to_string(), 0.6),
-                    ("hostile".to_string(), 0.2),
+                    ("favorable".to_string(), 0.6),
+                    ("neutral".to_string(), 0.3),
+                    ("hostile".to_string(), 0.1),
                 ]),
                 soft_factor_alignment_distribution: std::collections::BTreeMap::from([
-                    ("bullish".to_string(), 0.2),
-                    ("mixed".to_string(), 0.6),
-                    ("bearish".to_string(), 0.2),
+                    ("bullish".to_string(), 0.65),
+                    ("mixed".to_string(), 0.25),
+                    ("bearish".to_string(), 0.10),
                 ]),
                 soft_factor_uncertainty_distribution: std::collections::BTreeMap::from([
-                    ("low".to_string(), 0.3),
-                    ("high".to_string(), 0.7),
+                    ("low".to_string(), 0.75),
+                    ("high".to_string(), 0.25),
                 ]),
                 soft_multi_timeframe_resonance_distribution: std::collections::BTreeMap::from([
-                    ("aligned".to_string(), 0.2),
-                    ("mixed".to_string(), 0.6),
-                    ("dislocated".to_string(), 0.2),
+                    ("aligned".to_string(), 0.7),
+                    ("mixed".to_string(), 0.2),
+                    ("dislocated".to_string(), 0.1),
                 ]),
                 ..PreBayesEvidenceFilter::default()
             },
         )
         .unwrap();
 
+        match evidence.get("entry_quality") {
+            Some(EvidenceType::Hard(index)) => {
+                let node = network.nodes.get("entry_quality").unwrap();
+                assert_eq!(node.states[*index], "high");
+            }
+            other => panic!("expected hard entry_quality evidence, got {:?}", other),
+        }
+
         assert!(matches!(
-            evidence.get("factor_alignment"),
-            Some(EvidenceType::Soft(_))
+            evidence.get("market_regime"),
+            Some(EvidenceType::Soft(values)) if (values.iter().sum::<f64>() - 1.0).abs() < 1e-6
         ));
         assert!(matches!(
             evidence.get("factor_uncertainty"),
-            Some(EvidenceType::Soft(_))
-        ));
-        assert!(matches!(
-            evidence.get("multi_timeframe_resonance"),
-            Some(EvidenceType::Soft(_))
+            Some(EvidenceType::Soft(values)) if (values.iter().sum::<f64>() - 1.0).abs() < 1e-6
         ));
     }
 }

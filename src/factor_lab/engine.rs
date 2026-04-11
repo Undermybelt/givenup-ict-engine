@@ -280,6 +280,7 @@ mod tests {
         FactorSignal {
             factor_name: "boundary_case".to_string(),
             category: FactorCategory::StructureIct,
+            roles: vec![crate::factor_lab::factor_definition::FactorRole::StateTransition],
             direction,
             value: weighted_score.max(0.0),
             confidence: 1.0,

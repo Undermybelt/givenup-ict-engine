@@ -3,6 +3,9 @@ use std::collections::HashMap;
 use anyhow::{bail, Result};
 use serde::{Deserialize, Serialize};
 
+use crate::factor_lab::factor_definition::{FactorSignal, FactorUsagePhase};
+use crate::types::PdaLifecycleState;
+
 use super::node::NodeId;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -14,12 +17,78 @@ pub enum EvidenceType {
 pub type Evidence = HashMap<NodeId, EvidenceType>;
 pub type IndicatorValues = HashMap<String, f64>;
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct EvidenceBinding {
+    pub node_id: NodeId,
+    pub signal: FactorSignal,
+    pub value: EvidenceType,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ICTStructureSummary {
     pub bias: Option<String>,
     pub dealing_range: Option<String>,
     pub session: Option<String>,
+    pub active_pda_count: usize,
+    pub inversed_pda_count: usize,
+    pub stale_pda_count: usize,
+    pub nearest_active_pda: Option<String>,
+    pub nearest_inversed_pda: Option<String>,
     pub notes: Vec<String>,
+}
+
+pub fn summarize_timed_pda_states(states: &[crate::types::TimedPdaState]) -> ICTStructureSummary {
+    let active = states
+        .iter()
+        .filter(|state| {
+            matches!(
+                state.state,
+                PdaLifecycleState::Active
+                    | PdaLifecycleState::Touched
+                    | PdaLifecycleState::Mitigated
+            )
+        })
+        .count();
+    let inversed = states
+        .iter()
+        .filter(|state| matches!(state.state, PdaLifecycleState::Inversed))
+        .count();
+    let stale = states
+        .iter()
+        .filter(|state| {
+            matches!(
+                state.state,
+                PdaLifecycleState::Invalidated | PdaLifecycleState::Expired
+            )
+        })
+        .count();
+    let nearest_active = states
+        .iter()
+        .find(|state| {
+            matches!(
+                state.state,
+                PdaLifecycleState::Active
+                    | PdaLifecycleState::Touched
+                    | PdaLifecycleState::Mitigated
+            )
+        })
+        .map(|state| format!("{:?}:{:?}", state.concept, state.direction));
+    let nearest_inversed = states
+        .iter()
+        .find(|state| matches!(state.state, PdaLifecycleState::Inversed))
+        .map(|state| format!("{:?}:{:?}", state.concept, state.direction));
+
+    ICTStructureSummary {
+        bias: None,
+        dealing_range: None,
+        session: None,
+        active_pda_count: active,
+        inversed_pda_count: inversed,
+        stale_pda_count: stale,
+        nearest_active_pda: nearest_active,
+        nearest_inversed_pda: nearest_inversed,
+        notes: Vec::new(),
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -53,6 +122,12 @@ impl EvidenceManager {
     pub fn insert_soft(&mut self, node_id: impl Into<NodeId>, distribution: Vec<f64>) {
         self.evidence
             .insert(node_id.into(), EvidenceType::Soft(distribution));
+    }
+
+    pub fn insert_factor_binding(&mut self, binding: EvidenceBinding) -> Result<()> {
+        binding.signal.ensure_phase(FactorUsagePhase::Evidence)?;
+        self.evidence.insert(binding.node_id, binding.value);
+        Ok(())
     }
 
     pub fn get(&self, node_id: &str) -> Option<&EvidenceType> {
@@ -108,5 +183,151 @@ impl EvidenceExt for Evidence {
 
     fn insert_soft(&mut self, node_id: impl Into<NodeId>, distribution: Vec<f64>) {
         self.insert(node_id.into(), EvidenceType::Soft(distribution));
+    }
+}
+
+pub fn validate_factor_evidence_binding(signal: &FactorSignal) -> Result<()> {
+    signal.ensure_phase(FactorUsagePhase::Evidence)
+}
+
+#[cfg(test)]
+mod summary_tests {
+    use super::*;
+    use crate::types::{
+        Direction, PdaConceptKind, PdaInvalidationRule, PdaInverseMode, PdaLifecycleState,
+        PdaStateTransition, PriceLevelBand, TimedPdaState,
+    };
+
+    #[test]
+    fn summarizes_timed_pda_states_counts() {
+        let states = vec![
+            TimedPdaState {
+                concept: PdaConceptKind::FairValueGap,
+                direction: Direction::Bull,
+                band: PriceLevelBand {
+                    top: 2.0,
+                    bottom: 1.0,
+                },
+                anchor_bar: 1,
+                last_updated_bar: 2,
+                state: PdaLifecycleState::Active,
+                invalidation_rule: PdaInvalidationRule::FullFill,
+                inverse_mode: PdaInverseMode::FlipNeedsConfirmation,
+                validity_bars: 10,
+                touch_count: 0,
+                mitigation_progress: 0.0,
+                inverse_confirmed: false,
+                transitions: vec![PdaStateTransition {
+                    state: PdaLifecycleState::Active,
+                    at_bar: 1,
+                    note: "x".into(),
+                }],
+            },
+            TimedPdaState {
+                concept: PdaConceptKind::Ndog,
+                direction: Direction::Bear,
+                band: PriceLevelBand {
+                    top: 3.0,
+                    bottom: 2.0,
+                },
+                anchor_bar: 1,
+                last_updated_bar: 2,
+                state: PdaLifecycleState::Inversed,
+                invalidation_rule: PdaInvalidationRule::CloseThrough,
+                inverse_mode: PdaInverseMode::FlipNeedsConfirmation,
+                validity_bars: 10,
+                touch_count: 0,
+                mitigation_progress: 0.0,
+                inverse_confirmed: true,
+                transitions: vec![PdaStateTransition {
+                    state: PdaLifecycleState::Inversed,
+                    at_bar: 2,
+                    note: "x".into(),
+                }],
+            },
+            TimedPdaState {
+                concept: PdaConceptKind::Nwog,
+                direction: Direction::Bear,
+                band: PriceLevelBand {
+                    top: 4.0,
+                    bottom: 3.0,
+                },
+                anchor_bar: 1,
+                last_updated_bar: 2,
+                state: PdaLifecycleState::Expired,
+                invalidation_rule: PdaInvalidationRule::TimeExpiry,
+                inverse_mode: PdaInverseMode::None,
+                validity_bars: 10,
+                touch_count: 0,
+                mitigation_progress: 0.0,
+                inverse_confirmed: false,
+                transitions: vec![PdaStateTransition {
+                    state: PdaLifecycleState::Expired,
+                    at_bar: 2,
+                    note: "x".into(),
+                }],
+            },
+        ];
+        let summary = summarize_timed_pda_states(&states);
+        assert_eq!(summary.active_pda_count, 1);
+        assert_eq!(summary.inversed_pda_count, 1);
+        assert_eq!(summary.stale_pda_count, 1);
+        assert!(summary.nearest_active_pda.is_some());
+        assert!(summary.nearest_inversed_pda.is_some());
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::factor_lab::factor_definition::{FactorCategory, FactorRole};
+    use crate::types::Direction;
+    use chrono::Utc;
+
+    fn signal(category: FactorCategory, roles: Vec<FactorRole>) -> FactorSignal {
+        FactorSignal {
+            factor_name: "test".to_string(),
+            category,
+            roles,
+            timestamp: Utc::now(),
+            value: 0.6,
+            direction: Direction::Bull,
+            confidence: 0.8,
+            explanation: "x".to_string(),
+            weight: 1.0,
+            posterior_reliability: 1.0,
+            regime_multiplier: 1.0,
+            regime_adjusted_score: 0.6,
+        }
+    }
+
+    #[test]
+    fn rejects_footprint_signal_as_evidence_binding() {
+        let mut manager = EvidenceManager::new();
+        let err = manager
+            .insert_factor_binding(EvidenceBinding {
+                node_id: "node".to_string(),
+                signal: signal(
+                    FactorCategory::StructureIct,
+                    vec![FactorRole::PriorAdjuster, FactorRole::Evidence],
+                ),
+                value: EvidenceType::Hard(0),
+            })
+            .unwrap_err()
+            .to_string();
+        assert!(err.contains("cannot be used as evidence"));
+    }
+
+    #[test]
+    fn accepts_true_evidence_binding() {
+        let mut manager = EvidenceManager::new();
+        manager
+            .insert_factor_binding(EvidenceBinding {
+                node_id: "node".to_string(),
+                signal: signal(FactorCategory::TrendMomentum, vec![FactorRole::Evidence]),
+                value: EvidenceType::Soft(vec![0.2, 0.8]),
+            })
+            .unwrap();
+        assert!(manager.get("node").is_some());
     }
 }

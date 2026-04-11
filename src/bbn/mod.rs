@@ -7,7 +7,8 @@ pub mod trading;
 
 pub use dag::BayesianNetwork;
 pub use evidence::{
-    Evidence, EvidenceManager, EvidenceSource, EvidenceType, ICTStructureSummary, IndicatorValues,
+    summarize_timed_pda_states, Evidence, EvidenceManager, EvidenceSource, EvidenceType,
+    ICTStructureSummary, IndicatorValues,
 };
 pub use inference::{InferenceEngine, InferenceMethod, SamplingMethod, VariableEliminationEngine};
 pub use node::{ConditionalProbabilityTable, Node, NodeId, NodeType, ParentConfig};

@@ -13,12 +13,11 @@ use ict_engine::analyze::multi_timeframe_parse::{
 use ict_engine::analyze::multi_timeframe_section::{
     build_analyze_multi_timeframe_section, AnalyzeMultiTimeframeSection,
 };
-use ict_engine::analyze::options_hedging_section::{build_options_hedging_section, OptionsHedgingSection};
-use ict_engine::analyze::series::{aligned_close_series, close_to_returns};
+use ict_engine::analyze::options_hedging_section::OptionsHedgingSection;
 use ict_engine::analyze::smt_correlation_section::{
     build_smt_correlation_section, empty_smt_correlation_section, SmtCorrelationSection,
 };
-use ict_engine::analyze::technical_price::{
+use ict_engine::analyze::technical_price_section::{
     build_technical_price_section, TechnicalPriceSection,
 };
 use ict_engine::backtest::{BacktestEngine, Metrics, RegimeSplit};
@@ -55,16 +54,13 @@ use ict_engine::ict::{
     detect_order_blocks, detect_structure_breaks, expansion_strength, find_swing_highs,
     find_swing_lows, find_unfilled_fvgs, find_untested_obs, has_recent_pinbar,
 };
-use ict_engine::indicators::{
-    atr_percent, compute_adx, compute_atr, compute_rsi, latest_adx, latest_atr, latest_bollinger,
-    latest_ema, latest_macd, latest_rsi,
-};
+use ict_engine::indicators::{atr_percent, compute_adx, compute_atr, compute_rsi};
 use ict_engine::kalman::KalmanFilter;
 use ict_engine::planner::{
     generate_probabilistic_trade_plan, probabilistic_decision_snapshot,
     ProbabilisticDecisionSnapshot, ProbabilisticPlanConfig,
 };
-use ict_engine::smt::{Cointegration, Correlation, Divergence};
+
 use ict_engine::state::{
     append_analyze_run, append_artifact_ledger_entry, append_backtest_run,
     append_execution_candidate_history, append_factor_mutation_run,
@@ -14083,6 +14079,11 @@ fn build_pre_bayes_evidence_filter(
         raw_multi_timeframe_alignment_score,
         raw_multi_timeframe_entry_alignment_score,
         raw_multi_timeframe_resonance_label,
+        active_pda_count: 0,
+        inversed_pda_count: 0,
+        stale_pda_count: 0,
+        nearest_active_pda: None,
+        nearest_inversed_pda: None,
         filtered_market_regime_label,
         filtered_liquidity_context_label,
         filtered_factor_alignment,
