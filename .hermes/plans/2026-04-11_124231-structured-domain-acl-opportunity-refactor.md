@@ -6,7 +6,7 @@
 
 **Architecture:** 建立四层主干：规范领域模型 -> 防腐/装配层 -> 纯计算引擎 -> 策略/路由层。任何跨模块传递的核心对象，都用强类型结构承载；任何“是否通过/是否进入下一阶段”的判定，只在显式策略层完成；任何“算不全”的对象都保留壳体与缺失原因，而非中途消失。
 
-**Tech Stack:** 维持 Rust 现栈；使用现有 `state/*`、`bbn/*`、`factor_lab/*`、`ict/*` 子树；通过结构体、枚举、模块导出面收敛、针对性测试、graphify 验证推进。
+**Tech Stack:** 维持 Rust 现栈；使用现有 `state/*`、`bbn/*`、`factor_lab/*`、`ict/*` 子树；通过结构体、枚举、模块导出面收敛、针对性测试推进。
 
 ---
 
@@ -443,7 +443,7 @@ Python 示例中的：
    - `cargo check`
    - targeted tests
    - `cargo test`
-   - graphify rebuild
+
 
 ---
 

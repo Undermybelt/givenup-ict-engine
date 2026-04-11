@@ -20,6 +20,17 @@ use ict_engine::analyze::smt_correlation_section::{
 use ict_engine::analyze::technical_price_section::{
     build_technical_price_section, TechnicalPriceSection,
 };
+use ict_engine::application::belief::{
+    build_canonical_belief_snapshot,
+    build_factor_pipeline_debug_report as build_factor_pipeline_debug_report_v2,
+    debug_report::{
+        ExpansionBbnSupport as DebugExpansionBbnSupport,
+        ExpansionLatestSignal as DebugExpansionLatestSignal,
+        ExpansionProbabilitySupport as DebugExpansionProbabilitySupport,
+    },
+    pipeline_types::ExpansionFactorPipelineReport,
+    FactorPipelineDebugReport,
+};
 use ict_engine::backtest::{BacktestEngine, Metrics, RegimeSplit};
 use ict_engine::bayesian::{cascade_bear, cascade_bull, CascadeConfig};
 use ict_engine::bbn::learning::cpt_updater::{CPTUpdater, TradeOutcome};
@@ -41,8 +52,8 @@ use ict_engine::data::{
     CleanedContinuousFuturesSummary,
 };
 use ict_engine::factor_lab::{
-    BacktestConfig as FactorBacktestConfig, FactorContext, FactorContribution, FactorDiagnostics,
-    FactorEngine, FactorLab,
+    BacktestConfig as FactorBacktestConfig, FactorContext, FactorDiagnostics, FactorEngine,
+    FactorLab,
 };
 use ict_engine::factors::{FactorRegistry, WeightUpdater};
 use ict_engine::hmm::{
@@ -76,17 +87,18 @@ use ict_engine::state::{
     ExecutionCandidateArtifactDecision, ExecutionCandidateArtifactDiff,
     ExecutionCandidateArtifactSummary, ExpectedStateChange, FactorFamilyDecision, FactorFamilyDiff,
     FactorFamilyHistory, FactorFamilyOutcome, FactorIterationPrompt, FactorMutationEvaluation,
-    FactorMutationMetricSet, FactorMutationRunRecord, FactorMutationSpec, FeedbackFactorUsage,
-    FeedbackHistorySummary, FeedbackRecord, LearningState, LiveDataSourceProvenance,
-    ModelProbabilitySnapshot, PendingUpdateArtifact, PendingUpdateArtifactDecision,
-    PendingUpdateArtifactDiff, PendingUpdateArtifactSummary, PersistedFactorRanking,
-    PreBayesEvidenceFilter, PreBayesPolicyRecord, ProbabilityDiff, PromotionDecision,
-    RankingDiffItem, RecommendedCommand, ResearchRunRecord, RollbackRecommendation, RunProvenance,
-    StageAgentContext, StageAgentContextMinimal, TrainRunRecord, UpdateRunRecord,
-    WorkflowBlockingTruth, WorkflowConflictSource, WorkflowDisagreement, WorkflowFieldDiff,
-    WorkflowPhaseSnapshot, WorkflowSnapshot, WorkflowState, ANALYZE_RUNS_FILE, BACKTEST_RUNS_FILE,
-    EXECUTION_CANDIDATE_FILE, FACTOR_MUTATION_RUNS_FILE, PENDING_UPDATE_ARTIFACT_FILE,
-    RESEARCH_RUNS_FILE, TRAIN_RUNS_FILE, UPDATE_RUNS_FILE,
+    FactorMutationMetricSet, FactorMutationRunRecord, FactorMutationSpec,
+    FactorPipelineLabelSource, FeedbackFactorUsage, FeedbackHistorySummary, FeedbackRecord,
+    LearningState, LiveDataSourceProvenance, ModelProbabilitySnapshot, PendingUpdateArtifact,
+    PendingUpdateArtifactDecision, PendingUpdateArtifactDiff, PendingUpdateArtifactSummary,
+    PersistedFactorRanking, PreBayesEvidenceFilter, PreBayesPolicyRecord, ProbabilityDiff,
+    PromotionDecision, RankingDiffItem, RecommendedCommand, ResearchRunRecord,
+    RollbackRecommendation, RunProvenance, StageAgentContext, StageAgentContextMinimal,
+    TrainRunRecord, UpdateRunRecord, WorkflowBlockingTruth, WorkflowConflictSource,
+    WorkflowDisagreement, WorkflowFieldDiff, WorkflowPhaseSnapshot, WorkflowSnapshot,
+    WorkflowState, ANALYZE_RUNS_FILE, BACKTEST_RUNS_FILE, EXECUTION_CANDIDATE_FILE,
+    FACTOR_MUTATION_RUNS_FILE, PENDING_UPDATE_ARTIFACT_FILE, RESEARCH_RUNS_FILE, TRAIN_RUNS_FILE,
+    UPDATE_RUNS_FILE,
 };
 use ict_engine::types::{
     Candle, CascadeLayer, Direction, HMMParams, Regime, RegimeProbs, Symbol, TradePlan,
@@ -146,6 +158,7 @@ struct AnalyzeSupporting {
     factor_diagnostics: FactorDiagnostics,
     pre_bayes_evidence_filter: PreBayesEvidenceFilter,
     pre_bayes_entry_quality_bridge: ict_engine::state::PreBayesEntryQualityBridge,
+    canonical_belief_report: ict_engine::reporting::belief::BeliefReportPacket,
     decision_thresholds: DecisionThresholds,
     factor_ranking: Vec<PersistedFactorRanking>,
     factor_iteration_queue: Vec<FactorIterationPrompt>,
@@ -249,6 +262,8 @@ struct AnalyzeModelState {
     viterbi_log_likelihood: f64,
     regime_probs: RegimeProbs,
     evidence_policy: String,
+    canonical_belief_engine: String,
+    canonical_shadow_status: String,
 }
 
 #[derive(Debug, Serialize)]
@@ -2443,100 +2458,6 @@ struct ExpansionFactorLeaderboardEntry {
     average_directional_accuracy: f64,
 }
 
-#[derive(Debug, Serialize)]
-struct FactorPipelineDebugReport {
-    symbol: String,
-    data: String,
-    factor_name: String,
-    objective: String,
-    latest_signal: ExpansionLatestSignal,
-    factor_diagnostics: ExpansionProbabilitySupport,
-    raw_label_trace: FactorPipelineRawLabelTrace,
-    raw_pre_bayes_labels: BTreeMap<String, String>,
-    filtered_pre_bayes_labels: BTreeMap<String, String>,
-    evidence_quality_score: f64,
-    gating_status: String,
-    soft_evidence_divergence: Vec<ict_engine::state::PreBayesSoftEvidenceNodeDiff>,
-    bridge_gap: f64,
-    selected_entry_quality: String,
-    six_timeframe_resonance: Vec<String>,
-    pipeline_verdict: String,
-    pipeline_summary: String,
-    recommended_actions: Vec<String>,
-    entry_quality_bridge: ict_engine::state::PreBayesEntryQualityBridge,
-    bbn_support: ExpansionBbnSupport,
-}
-
-#[derive(Debug, Serialize)]
-struct FactorPipelineRawLabelTrace {
-    market_regime: FactorPipelineLabelSource,
-    liquidity_context: FactorPipelineLabelSource,
-    multi_timeframe_resonance: FactorPipelineLabelSource,
-}
-
-#[derive(Debug, Clone, Serialize)]
-struct FactorPipelineLabelSource {
-    label: String,
-    derivation: String,
-    evidence: Vec<String>,
-}
-
-#[derive(Debug, Serialize)]
-struct ExpansionFactorPipelineReport {
-    factor_name: String,
-    parameters: BTreeMap<String, f64>,
-    latest_signal: ExpansionLatestSignal,
-    probability_support: ExpansionProbabilitySupport,
-    entry_quality_bridge: ict_engine::state::PreBayesEntryQualityBridge,
-    bbn_support: ExpansionBbnSupport,
-    pipeline_summary: String,
-    recommended_actions: Vec<String>,
-}
-
-#[derive(Debug, Clone, Serialize)]
-struct ExpansionLatestSignal {
-    timestamp: chrono::DateTime<Utc>,
-    direction: String,
-    value: f64,
-    confidence: f64,
-    explanation: String,
-}
-
-#[derive(Debug, Clone, Serialize)]
-struct ExpansionProbabilitySupport {
-    long_support: f64,
-    short_support: f64,
-    support_gap: f64,
-    alignment_threshold: f64,
-    uncertainty: f64,
-    alignment_label: String,
-    uncertainty_label: String,
-    long_entry_bias: Vec<f64>,
-    short_entry_bias: Vec<f64>,
-    bullish_factors: Vec<FactorContribution>,
-    bearish_factors: Vec<FactorContribution>,
-    uncertainty_factors: Vec<FactorContribution>,
-}
-
-#[derive(Debug, Clone, Serialize)]
-struct ExpansionBbnSupport {
-    market_regime_label: String,
-    liquidity_context_label: String,
-    evidence_policy: String,
-    pre_bayes_filter: PreBayesEvidenceFilter,
-    evidence_assignments: BTreeMap<String, String>,
-    raw_market_regime_trace: FactorPipelineLabelSource,
-    raw_liquidity_context_trace: FactorPipelineLabelSource,
-    raw_multi_timeframe_resonance_trace: FactorPipelineLabelSource,
-    entry_quality_base: BTreeMap<String, f64>,
-    entry_quality_long: BTreeMap<String, f64>,
-    entry_quality_short: BTreeMap<String, f64>,
-    trade_outcome_long: BTreeMap<String, f64>,
-    trade_outcome_short: BTreeMap<String, f64>,
-    selected_direction: String,
-    selected_win_probability: f64,
-}
-
 fn factor_pipeline_debug_command(
     symbol: &str,
     data: &str,
@@ -2570,100 +2491,127 @@ fn factor_pipeline_debug_command(
         &registry,
         &multi_timeframe_summary,
     )?;
-    let report = build_factor_pipeline_debug_report(
+    let report = build_factor_pipeline_debug_report_v2(
         symbol,
         data,
-        objective_mode,
-        &pipeline,
+        research_objective_label(objective_mode),
+        &pipeline.factor_name,
+        DebugExpansionLatestSignal {
+            timestamp: pipeline.latest_signal.timestamp,
+            direction: pipeline.latest_signal.direction.clone(),
+            value: pipeline.latest_signal.value,
+            confidence: pipeline.latest_signal.confidence,
+            explanation: pipeline.latest_signal.explanation.clone(),
+        },
+        DebugExpansionProbabilitySupport {
+            long_support: pipeline.probability_support.long_support,
+            short_support: pipeline.probability_support.short_support,
+            support_gap: pipeline.probability_support.support_gap,
+            alignment_threshold: pipeline.probability_support.alignment_threshold,
+            uncertainty: pipeline.probability_support.uncertainty,
+            alignment_label: pipeline.probability_support.alignment_label.clone(),
+            uncertainty_label: pipeline.probability_support.uncertainty_label.clone(),
+            long_entry_bias: pipeline.probability_support.long_entry_bias.clone(),
+            short_entry_bias: pipeline.probability_support.short_entry_bias.clone(),
+            bullish_factors: pipeline.probability_support.bullish_factors.clone(),
+            bearish_factors: pipeline.probability_support.bearish_factors.clone(),
+            uncertainty_factors: pipeline.probability_support.uncertainty_factors.clone(),
+        },
+        DebugExpansionBbnSupport {
+            market_regime_label: pipeline.bbn_support.market_regime_label.clone(),
+            liquidity_context_label: pipeline.bbn_support.liquidity_context_label.clone(),
+            evidence_policy: pipeline.bbn_support.evidence_policy.clone(),
+            pre_bayes_filter: pipeline.bbn_support.pre_bayes_filter.clone(),
+            evidence_assignments: pipeline.bbn_support.evidence_assignments.clone(),
+            raw_market_regime_trace: ict_engine::state::FactorPipelineLabelSource {
+                label: pipeline.bbn_support.raw_market_regime_trace.label.clone(),
+                derivation: pipeline
+                    .bbn_support
+                    .raw_market_regime_trace
+                    .derivation
+                    .clone(),
+                evidence: pipeline
+                    .bbn_support
+                    .raw_market_regime_trace
+                    .evidence
+                    .clone(),
+            },
+            raw_liquidity_context_trace: ict_engine::state::FactorPipelineLabelSource {
+                label: pipeline
+                    .bbn_support
+                    .raw_liquidity_context_trace
+                    .label
+                    .clone(),
+                derivation: pipeline
+                    .bbn_support
+                    .raw_liquidity_context_trace
+                    .derivation
+                    .clone(),
+                evidence: pipeline
+                    .bbn_support
+                    .raw_liquidity_context_trace
+                    .evidence
+                    .clone(),
+            },
+            raw_multi_timeframe_resonance_trace: ict_engine::state::FactorPipelineLabelSource {
+                label: pipeline
+                    .bbn_support
+                    .raw_multi_timeframe_resonance_trace
+                    .label
+                    .clone(),
+                derivation: pipeline
+                    .bbn_support
+                    .raw_multi_timeframe_resonance_trace
+                    .derivation
+                    .clone(),
+                evidence: pipeline
+                    .bbn_support
+                    .raw_multi_timeframe_resonance_trace
+                    .evidence
+                    .clone(),
+            },
+            entry_quality_base: pipeline.bbn_support.entry_quality_base.clone(),
+            entry_quality_long: pipeline.bbn_support.entry_quality_long.clone(),
+            entry_quality_short: pipeline.bbn_support.entry_quality_short.clone(),
+            trade_outcome_long: pipeline.bbn_support.trade_outcome_long.clone(),
+            trade_outcome_short: pipeline.bbn_support.trade_outcome_short.clone(),
+            selected_direction: pipeline.bbn_support.selected_direction.clone(),
+            selected_win_probability: pipeline.bbn_support.selected_win_probability,
+        },
+        pipeline.entry_quality_bridge.clone(),
+        pre_bayes_entry_quality_bridge_diff(&pipeline.entry_quality_bridge),
         &multi_timeframe_summary,
-    );
+        BTreeMap::from([
+            (
+                "market_regime".to_string(),
+                pipeline.bbn_support.market_regime_label.clone(),
+            ),
+            (
+                "liquidity_context".to_string(),
+                pipeline.bbn_support.liquidity_context_label.clone(),
+            ),
+            (
+                "factor_alignment".to_string(),
+                pipeline.probability_support.alignment_label.clone(),
+            ),
+            (
+                "factor_uncertainty".to_string(),
+                pipeline.probability_support.uncertainty_label.clone(),
+            ),
+            (
+                "multi_timeframe_resonance".to_string(),
+                pipeline
+                    .bbn_support
+                    .pre_bayes_filter
+                    .raw_multi_timeframe_resonance_label
+                    .clone(),
+            ),
+        ]),
+        pre_bayes_soft_evidence_diff(&pipeline.bbn_support.pre_bayes_filter),
+        env_f64("ICT_ENGINE_BRIDGE_GAP_CLEAR_THRESHOLD", 0.12),
+    )?;
     println!("{}", serde_json::to_string_pretty(&report)?);
     Ok(())
-}
-
-fn build_factor_pipeline_debug_report(
-    symbol: &str,
-    data: &str,
-    objective_mode: ResearchObjectiveMode,
-    pipeline: &ExpansionFactorPipelineReport,
-    multi_timeframe_summary: &[String],
-) -> FactorPipelineDebugReport {
-    let raw_pre_bayes_labels = BTreeMap::from([
-        (
-            "market_regime".to_string(),
-            pipeline.bbn_support.market_regime_label.clone(),
-        ),
-        (
-            "liquidity_context".to_string(),
-            pipeline.bbn_support.liquidity_context_label.clone(),
-        ),
-        (
-            "factor_alignment".to_string(),
-            pipeline.probability_support.alignment_label.clone(),
-        ),
-        (
-            "factor_uncertainty".to_string(),
-            pipeline.probability_support.uncertainty_label.clone(),
-        ),
-        (
-            "multi_timeframe_resonance".to_string(),
-            pipeline
-                .bbn_support
-                .pre_bayes_filter
-                .raw_multi_timeframe_resonance_label
-                .clone(),
-        ),
-    ]);
-    let filtered_pre_bayes_labels = pipeline.bbn_support.evidence_assignments.clone();
-    let bridge_diff = pre_bayes_entry_quality_bridge_diff(&pipeline.entry_quality_bridge);
-    let gating_status = pipeline.bbn_support.pre_bayes_filter.gating_status.clone();
-    let bridge_gap_clear_threshold = env_f64("ICT_ENGINE_BRIDGE_GAP_CLEAR_THRESHOLD", 0.12);
-    let pipeline_verdict = if pre_bayes_gate_is_hard_pass(&gating_status)
-        && bridge_diff.long_short_signal_probability_gap >= bridge_gap_clear_threshold
-    {
-        "clear_through_pre_bayes_and_bridge".to_string()
-    } else if gating_status == "pass_neutralized" {
-        "pre_bayes_pass_but_bridge_needs_confirmation".to_string()
-    } else if gating_status == "observe_only" {
-        "blocked_at_pre_bayes_gate".to_string()
-    } else if pre_bayes_gate_is_hard_pass(&gating_status) {
-        "pre_bayes_pass_hard_but_bridge_gap_insufficient".to_string()
-    } else {
-        "pipeline_unclear".to_string()
-    };
-    FactorPipelineDebugReport {
-        symbol: symbol.to_string(),
-        data: data.to_string(),
-        factor_name: pipeline.factor_name.clone(),
-        objective: research_objective_label(objective_mode).to_string(),
-        latest_signal: pipeline.latest_signal.clone(),
-        factor_diagnostics: pipeline.probability_support.clone(),
-        raw_label_trace: FactorPipelineRawLabelTrace {
-            market_regime: pipeline.bbn_support.raw_market_regime_trace.clone(),
-            liquidity_context: pipeline.bbn_support.raw_liquidity_context_trace.clone(),
-            multi_timeframe_resonance: pipeline
-                .bbn_support
-                .raw_multi_timeframe_resonance_trace
-                .clone(),
-        },
-        raw_pre_bayes_labels,
-        filtered_pre_bayes_labels,
-        evidence_quality_score: pipeline.bbn_support.pre_bayes_filter.evidence_quality_score,
-        gating_status,
-        soft_evidence_divergence: pre_bayes_soft_evidence_diff(
-            &pipeline.bbn_support.pre_bayes_filter,
-        ),
-        bridge_gap: bridge_diff.long_short_signal_probability_gap,
-        selected_entry_quality: bridge_diff
-            .selected_entry_quality
-            .unwrap_or_else(|| "unknown".to_string()),
-        six_timeframe_resonance: multi_timeframe_summary.to_vec(),
-        pipeline_verdict,
-        pipeline_summary: pipeline.pipeline_summary.clone(),
-        recommended_actions: pipeline.recommended_actions.clone(),
-        entry_quality_bridge: pipeline.entry_quality_bridge.clone(),
-        bbn_support: pipeline.bbn_support.clone(),
-    }
 }
 
 fn persist_candle_snapshot(
@@ -3056,14 +3004,134 @@ fn run_futures_sop(root: &str, output_dir: &str, interval: &str) -> Result<Futur
                 && market.pipeline.is_some()
         })
         .and_then(|market| {
-            market.pipeline.as_ref().map(|pipeline| {
-                build_factor_pipeline_debug_report(
+            market.pipeline.as_ref().and_then(|pipeline| {
+                build_factor_pipeline_debug_report_v2(
                     &market.market,
                     &market.cleaned_path,
-                    objective_mode,
-                    pipeline,
+                    research_objective_label(objective_mode),
+                    &pipeline.factor_name,
+                    DebugExpansionLatestSignal {
+                        timestamp: pipeline.latest_signal.timestamp,
+                        direction: pipeline.latest_signal.direction.clone(),
+                        value: pipeline.latest_signal.value,
+                        confidence: pipeline.latest_signal.confidence,
+                        explanation: pipeline.latest_signal.explanation.clone(),
+                    },
+                    DebugExpansionProbabilitySupport {
+                        long_support: pipeline.probability_support.long_support,
+                        short_support: pipeline.probability_support.short_support,
+                        support_gap: pipeline.probability_support.support_gap,
+                        alignment_threshold: pipeline.probability_support.alignment_threshold,
+                        uncertainty: pipeline.probability_support.uncertainty,
+                        alignment_label: pipeline.probability_support.alignment_label.clone(),
+                        uncertainty_label: pipeline.probability_support.uncertainty_label.clone(),
+                        long_entry_bias: pipeline.probability_support.long_entry_bias.clone(),
+                        short_entry_bias: pipeline.probability_support.short_entry_bias.clone(),
+                        bullish_factors: pipeline.probability_support.bullish_factors.clone(),
+                        bearish_factors: pipeline.probability_support.bearish_factors.clone(),
+                        uncertainty_factors: pipeline
+                            .probability_support
+                            .uncertainty_factors
+                            .clone(),
+                    },
+                    DebugExpansionBbnSupport {
+                        market_regime_label: pipeline.bbn_support.market_regime_label.clone(),
+                        liquidity_context_label: pipeline
+                            .bbn_support
+                            .liquidity_context_label
+                            .clone(),
+                        evidence_policy: pipeline.bbn_support.evidence_policy.clone(),
+                        pre_bayes_filter: pipeline.bbn_support.pre_bayes_filter.clone(),
+                        evidence_assignments: pipeline.bbn_support.evidence_assignments.clone(),
+                        raw_market_regime_trace: ict_engine::state::FactorPipelineLabelSource {
+                            label: pipeline.bbn_support.raw_market_regime_trace.label.clone(),
+                            derivation: pipeline
+                                .bbn_support
+                                .raw_market_regime_trace
+                                .derivation
+                                .clone(),
+                            evidence: pipeline
+                                .bbn_support
+                                .raw_market_regime_trace
+                                .evidence
+                                .clone(),
+                        },
+                        raw_liquidity_context_trace: ict_engine::state::FactorPipelineLabelSource {
+                            label: pipeline
+                                .bbn_support
+                                .raw_liquidity_context_trace
+                                .label
+                                .clone(),
+                            derivation: pipeline
+                                .bbn_support
+                                .raw_liquidity_context_trace
+                                .derivation
+                                .clone(),
+                            evidence: pipeline
+                                .bbn_support
+                                .raw_liquidity_context_trace
+                                .evidence
+                                .clone(),
+                        },
+                        raw_multi_timeframe_resonance_trace:
+                            ict_engine::state::FactorPipelineLabelSource {
+                                label: pipeline
+                                    .bbn_support
+                                    .raw_multi_timeframe_resonance_trace
+                                    .label
+                                    .clone(),
+                                derivation: pipeline
+                                    .bbn_support
+                                    .raw_multi_timeframe_resonance_trace
+                                    .derivation
+                                    .clone(),
+                                evidence: pipeline
+                                    .bbn_support
+                                    .raw_multi_timeframe_resonance_trace
+                                    .evidence
+                                    .clone(),
+                            },
+                        entry_quality_base: pipeline.bbn_support.entry_quality_base.clone(),
+                        entry_quality_long: pipeline.bbn_support.entry_quality_long.clone(),
+                        entry_quality_short: pipeline.bbn_support.entry_quality_short.clone(),
+                        trade_outcome_long: pipeline.bbn_support.trade_outcome_long.clone(),
+                        trade_outcome_short: pipeline.bbn_support.trade_outcome_short.clone(),
+                        selected_direction: pipeline.bbn_support.selected_direction.clone(),
+                        selected_win_probability: pipeline.bbn_support.selected_win_probability,
+                    },
+                    pipeline.entry_quality_bridge.clone(),
+                    pre_bayes_entry_quality_bridge_diff(&pipeline.entry_quality_bridge),
                     &market.multi_timeframe_summary,
+                    BTreeMap::from([
+                        (
+                            "market_regime".to_string(),
+                            pipeline.bbn_support.market_regime_label.clone(),
+                        ),
+                        (
+                            "liquidity_context".to_string(),
+                            pipeline.bbn_support.liquidity_context_label.clone(),
+                        ),
+                        (
+                            "factor_alignment".to_string(),
+                            pipeline.probability_support.alignment_label.clone(),
+                        ),
+                        (
+                            "factor_uncertainty".to_string(),
+                            pipeline.probability_support.uncertainty_label.clone(),
+                        ),
+                        (
+                            "multi_timeframe_resonance".to_string(),
+                            pipeline
+                                .bbn_support
+                                .pre_bayes_filter
+                                .raw_multi_timeframe_resonance_label
+                                .clone(),
+                        ),
+                    ]),
+                    pre_bayes_soft_evidence_diff(&pipeline.bbn_support.pre_bayes_filter),
+                    env_f64("ICT_ENGINE_BRIDGE_GAP_CLEAR_THRESHOLD", 0.12),
                 )
+                .ok()
             })
         });
 
@@ -3444,14 +3512,134 @@ fn run_expansion_sop(
                 && market.pipeline.is_some()
         })
         .and_then(|market| {
-            market.pipeline.as_ref().map(|pipeline| {
-                build_factor_pipeline_debug_report(
+            market.pipeline.as_ref().and_then(|pipeline| {
+                build_factor_pipeline_debug_report_v2(
                     &market.market,
                     &market.cleaned_path,
-                    objective_mode,
-                    pipeline,
+                    research_objective_label(objective_mode),
+                    &pipeline.factor_name,
+                    DebugExpansionLatestSignal {
+                        timestamp: pipeline.latest_signal.timestamp,
+                        direction: pipeline.latest_signal.direction.clone(),
+                        value: pipeline.latest_signal.value,
+                        confidence: pipeline.latest_signal.confidence,
+                        explanation: pipeline.latest_signal.explanation.clone(),
+                    },
+                    DebugExpansionProbabilitySupport {
+                        long_support: pipeline.probability_support.long_support,
+                        short_support: pipeline.probability_support.short_support,
+                        support_gap: pipeline.probability_support.support_gap,
+                        alignment_threshold: pipeline.probability_support.alignment_threshold,
+                        uncertainty: pipeline.probability_support.uncertainty,
+                        alignment_label: pipeline.probability_support.alignment_label.clone(),
+                        uncertainty_label: pipeline.probability_support.uncertainty_label.clone(),
+                        long_entry_bias: pipeline.probability_support.long_entry_bias.clone(),
+                        short_entry_bias: pipeline.probability_support.short_entry_bias.clone(),
+                        bullish_factors: pipeline.probability_support.bullish_factors.clone(),
+                        bearish_factors: pipeline.probability_support.bearish_factors.clone(),
+                        uncertainty_factors: pipeline
+                            .probability_support
+                            .uncertainty_factors
+                            .clone(),
+                    },
+                    DebugExpansionBbnSupport {
+                        market_regime_label: pipeline.bbn_support.market_regime_label.clone(),
+                        liquidity_context_label: pipeline
+                            .bbn_support
+                            .liquidity_context_label
+                            .clone(),
+                        evidence_policy: pipeline.bbn_support.evidence_policy.clone(),
+                        pre_bayes_filter: pipeline.bbn_support.pre_bayes_filter.clone(),
+                        evidence_assignments: pipeline.bbn_support.evidence_assignments.clone(),
+                        raw_market_regime_trace: ict_engine::state::FactorPipelineLabelSource {
+                            label: pipeline.bbn_support.raw_market_regime_trace.label.clone(),
+                            derivation: pipeline
+                                .bbn_support
+                                .raw_market_regime_trace
+                                .derivation
+                                .clone(),
+                            evidence: pipeline
+                                .bbn_support
+                                .raw_market_regime_trace
+                                .evidence
+                                .clone(),
+                        },
+                        raw_liquidity_context_trace: ict_engine::state::FactorPipelineLabelSource {
+                            label: pipeline
+                                .bbn_support
+                                .raw_liquidity_context_trace
+                                .label
+                                .clone(),
+                            derivation: pipeline
+                                .bbn_support
+                                .raw_liquidity_context_trace
+                                .derivation
+                                .clone(),
+                            evidence: pipeline
+                                .bbn_support
+                                .raw_liquidity_context_trace
+                                .evidence
+                                .clone(),
+                        },
+                        raw_multi_timeframe_resonance_trace:
+                            ict_engine::state::FactorPipelineLabelSource {
+                                label: pipeline
+                                    .bbn_support
+                                    .raw_multi_timeframe_resonance_trace
+                                    .label
+                                    .clone(),
+                                derivation: pipeline
+                                    .bbn_support
+                                    .raw_multi_timeframe_resonance_trace
+                                    .derivation
+                                    .clone(),
+                                evidence: pipeline
+                                    .bbn_support
+                                    .raw_multi_timeframe_resonance_trace
+                                    .evidence
+                                    .clone(),
+                            },
+                        entry_quality_base: pipeline.bbn_support.entry_quality_base.clone(),
+                        entry_quality_long: pipeline.bbn_support.entry_quality_long.clone(),
+                        entry_quality_short: pipeline.bbn_support.entry_quality_short.clone(),
+                        trade_outcome_long: pipeline.bbn_support.trade_outcome_long.clone(),
+                        trade_outcome_short: pipeline.bbn_support.trade_outcome_short.clone(),
+                        selected_direction: pipeline.bbn_support.selected_direction.clone(),
+                        selected_win_probability: pipeline.bbn_support.selected_win_probability,
+                    },
+                    pipeline.entry_quality_bridge.clone(),
+                    pre_bayes_entry_quality_bridge_diff(&pipeline.entry_quality_bridge),
                     &market.multi_timeframe_summary,
+                    BTreeMap::from([
+                        (
+                            "market_regime".to_string(),
+                            pipeline.bbn_support.market_regime_label.clone(),
+                        ),
+                        (
+                            "liquidity_context".to_string(),
+                            pipeline.bbn_support.liquidity_context_label.clone(),
+                        ),
+                        (
+                            "factor_alignment".to_string(),
+                            pipeline.probability_support.alignment_label.clone(),
+                        ),
+                        (
+                            "factor_uncertainty".to_string(),
+                            pipeline.probability_support.uncertainty_label.clone(),
+                        ),
+                        (
+                            "multi_timeframe_resonance".to_string(),
+                            pipeline
+                                .bbn_support
+                                .pre_bayes_filter
+                                .raw_multi_timeframe_resonance_label
+                                .clone(),
+                        ),
+                    ]),
+                    pre_bayes_soft_evidence_diff(&pipeline.bbn_support.pre_bayes_filter),
+                    env_f64("ICT_ENGINE_BRIDGE_GAP_CLEAR_THRESHOLD", 0.12),
                 )
+                .ok()
             })
         });
 
@@ -4870,29 +5058,30 @@ fn build_expansion_factor_pipeline_report(
     Ok(ExpansionFactorPipelineReport {
         factor_name: factor_name.to_string(),
         parameters: definition.parameters,
-        latest_signal: ExpansionLatestSignal {
+        latest_signal: ict_engine::application::belief::pipeline_types::ExpansionLatestSignal {
             timestamp: signal.timestamp,
             direction: format!("{:?}", signal.direction),
             value: signal.value,
             confidence: signal.confidence,
             explanation: signal.explanation,
         },
-        probability_support: ExpansionProbabilitySupport {
-            long_support: output.diagnostics.long_support,
-            short_support: output.diagnostics.short_support,
-            support_gap: (output.diagnostics.long_support - output.diagnostics.short_support).abs(),
-            alignment_threshold: 0.10,
-            uncertainty: output.diagnostics.uncertainty,
-            alignment_label: output.diagnostics.alignment_label.clone(),
-            uncertainty_label: output.diagnostics.uncertainty_label.clone(),
-            long_entry_bias: output.diagnostics.entry_bias_for_direction(Direction::Bull),
-            short_entry_bias: output.diagnostics.entry_bias_for_direction(Direction::Bear),
-            bullish_factors: output.diagnostics.bullish_factors.clone(),
-            bearish_factors: output.diagnostics.bearish_factors.clone(),
-            uncertainty_factors: output.diagnostics.uncertainty_factors.clone(),
-        },
+        probability_support:
+            ict_engine::application::belief::pipeline_types::ExpansionProbabilitySupport {
+                long_support: output.diagnostics.long_support,
+                short_support: output.diagnostics.short_support,
+                support_gap: (output.diagnostics.long_support - output.diagnostics.short_support).abs(),
+                alignment_threshold: 0.10,
+                uncertainty: output.diagnostics.uncertainty,
+                alignment_label: output.diagnostics.alignment_label.clone(),
+                uncertainty_label: output.diagnostics.uncertainty_label.clone(),
+                long_entry_bias: output.diagnostics.entry_bias_for_direction(Direction::Bull),
+                short_entry_bias: output.diagnostics.entry_bias_for_direction(Direction::Bear),
+                bullish_factors: output.diagnostics.bullish_factors.clone(),
+                bearish_factors: output.diagnostics.bearish_factors.clone(),
+                uncertainty_factors: output.diagnostics.uncertainty_factors.clone(),
+            },
         entry_quality_bridge,
-        bbn_support: ExpansionBbnSupport {
+        bbn_support: ict_engine::application::belief::pipeline_types::ExpansionBbnSupport {
             market_regime_label: frame.regime_label,
             liquidity_context_label: frame.liquidity_label,
             evidence_policy: "expansion_sop_factor_signal_to_pre_bayes_soft_evidence_to_bbn"
@@ -12151,29 +12340,30 @@ fn build_expansion_factor_pipeline_report_from_registry(
     Ok(ExpansionFactorPipelineReport {
         factor_name: factor_name.to_string(),
         parameters: definition.parameters,
-        latest_signal: ExpansionLatestSignal {
+        latest_signal: ict_engine::application::belief::pipeline_types::ExpansionLatestSignal {
             timestamp: signal.timestamp,
             direction: format!("{:?}", signal.direction),
             value: signal.value,
             confidence: signal.confidence,
             explanation: signal.explanation,
         },
-        probability_support: ExpansionProbabilitySupport {
-            long_support: output.diagnostics.long_support,
-            short_support: output.diagnostics.short_support,
-            support_gap: (output.diagnostics.long_support - output.diagnostics.short_support).abs(),
-            alignment_threshold: 0.10,
-            uncertainty: output.diagnostics.uncertainty,
-            alignment_label: output.diagnostics.alignment_label.clone(),
-            uncertainty_label: output.diagnostics.uncertainty_label.clone(),
-            long_entry_bias: output.diagnostics.entry_bias_for_direction(Direction::Bull),
-            short_entry_bias: output.diagnostics.entry_bias_for_direction(Direction::Bear),
-            bullish_factors: output.diagnostics.bullish_factors.clone(),
-            bearish_factors: output.diagnostics.bearish_factors.clone(),
-            uncertainty_factors: output.diagnostics.uncertainty_factors.clone(),
-        },
+        probability_support:
+            ict_engine::application::belief::pipeline_types::ExpansionProbabilitySupport {
+                long_support: output.diagnostics.long_support,
+                short_support: output.diagnostics.short_support,
+                support_gap: (output.diagnostics.long_support - output.diagnostics.short_support).abs(),
+                alignment_threshold: 0.10,
+                uncertainty: output.diagnostics.uncertainty,
+                alignment_label: output.diagnostics.alignment_label.clone(),
+                uncertainty_label: output.diagnostics.uncertainty_label.clone(),
+                long_entry_bias: output.diagnostics.entry_bias_for_direction(Direction::Bull),
+                short_entry_bias: output.diagnostics.entry_bias_for_direction(Direction::Bear),
+                bullish_factors: output.diagnostics.bullish_factors.clone(),
+                bearish_factors: output.diagnostics.bearish_factors.clone(),
+                uncertainty_factors: output.diagnostics.uncertainty_factors.clone(),
+            },
         entry_quality_bridge,
-        bbn_support: ExpansionBbnSupport {
+        bbn_support: ict_engine::application::belief::pipeline_types::ExpansionBbnSupport {
             market_regime_label: frame.regime_label,
             liquidity_context_label: frame.liquidity_label,
             evidence_policy: "expansion_sop_factor_signal_to_pre_bayes_soft_evidence_to_bbn"
@@ -13000,6 +13190,12 @@ fn build_analyze_report(
         build_context.multi_timeframe_summary,
     );
 
+    let canonical_belief_report = build_canonical_belief_snapshot(
+        symbol,
+        Some(infer_market_from_symbol(symbol).as_str()),
+        &pre_bayes_evidence_filter,
+    )?;
+
     Ok(AnalyzeReport {
         symbol: symbol.to_string(),
         timestamp: Utc::now(),
@@ -13030,6 +13226,12 @@ fn build_analyze_report(
                 evidence_policy:
                     "multi_timeframe_hmm_prior_times_pre_bayes_evidence_filter_times_bbn_trade_probability"
                         .to_string(),
+                canonical_belief_engine: canonical_belief_report.engine_trace.primary_engine.clone(),
+                canonical_shadow_status: canonical_belief_report
+                    .shadow_comparison
+                    .as_ref()
+                    .map(|summary| summary.status.clone())
+                    .unwrap_or_else(|| "green".to_string()),
             },
             provenance: analyze_provenance,
             promotion_decision: observe_promotion,
@@ -13073,8 +13275,9 @@ fn build_analyze_report(
                 short: probability_map(&trade_outcome.states, &bear_trade_outcome),
             },
             factor_diagnostics: factor_output.diagnostics,
-            pre_bayes_evidence_filter,
-            pre_bayes_entry_quality_bridge,
+            pre_bayes_evidence_filter: pre_bayes_evidence_filter.clone(),
+            pre_bayes_entry_quality_bridge: pre_bayes_entry_quality_bridge.clone(),
+            canonical_belief_report: canonical_belief_report.clone(),
             decision_thresholds: thresholds,
             factor_ranking,
             factor_iteration_queue,
@@ -19589,56 +19792,57 @@ mod tests {
         let pipeline = ExpansionFactorPipelineReport {
             factor_name: "structure_ict".to_string(),
             parameters: BTreeMap::from([("lookback".to_string(), 20.0)]),
-            latest_signal: ExpansionLatestSignal {
+            latest_signal: ict_engine::application::belief::pipeline_types::ExpansionLatestSignal {
                 timestamp: Utc::now(),
                 direction: "bull".to_string(),
                 value: 0.81,
                 confidence: 0.74,
                 explanation: "recent_sweep_then_displacement".to_string(),
             },
-            probability_support: ExpansionProbabilitySupport {
-                long_support: 0.72,
-                short_support: 0.28,
-                support_gap: 0.44,
-                alignment_threshold: 0.10,
-                uncertainty: 0.18,
-                alignment_label: "aligned".to_string(),
-                uncertainty_label: "stable".to_string(),
-                long_entry_bias: vec![0.2, 0.3, 0.5],
-                short_entry_bias: vec![0.5, 0.3, 0.2],
-                bullish_factors: vec![FactorContribution {
-                    factor_name: "structure_ict".to_string(),
-                    category: "structure".to_string(),
-                    direction: Direction::Bull,
-                    value: 0.81,
-                    confidence: 0.74,
-                    weighted_score: 0.72,
-                    uncertainty_contribution: 0.05,
-                    explanation: "recent_sweep_then_displacement".to_string(),
-                }],
-                bearish_factors: vec![FactorContribution {
-                    factor_name: "structure_ict_counterflow".to_string(),
-                    category: "structure".to_string(),
-                    direction: Direction::Bear,
-                    value: -0.22,
-                    confidence: 0.40,
-                    weighted_score: -0.28,
-                    uncertainty_contribution: 0.08,
-                    explanation: "late bear expansion overlap".to_string(),
-                }],
-                uncertainty_factors: vec![FactorContribution {
-                    factor_name: "multi_timeframe_noise".to_string(),
-                    category: "context".to_string(),
-                    direction: Direction::Neutral,
-                    value: 0.0,
-                    confidence: 0.52,
-                    weighted_score: 0.0,
-                    uncertainty_contribution: 0.18,
-                    explanation: "entry window still carries opposing noise".to_string(),
-                }],
-            },
+            probability_support:
+                ict_engine::application::belief::pipeline_types::ExpansionProbabilitySupport {
+                    long_support: 0.72,
+                    short_support: 0.28,
+                    support_gap: 0.44,
+                    alignment_threshold: 0.10,
+                    uncertainty: 0.18,
+                    alignment_label: "aligned".to_string(),
+                    uncertainty_label: "stable".to_string(),
+                    long_entry_bias: vec![0.2, 0.3, 0.5],
+                    short_entry_bias: vec![0.5, 0.3, 0.2],
+                    bullish_factors: vec![ict_engine::factor_lab::FactorContribution {
+                        factor_name: "structure_ict".to_string(),
+                        category: "structure".to_string(),
+                        direction: Direction::Bull,
+                        value: 0.81,
+                        confidence: 0.74,
+                        weighted_score: 0.72,
+                        uncertainty_contribution: 0.05,
+                        explanation: "recent_sweep_then_displacement".to_string(),
+                    }],
+                    bearish_factors: vec![ict_engine::factor_lab::FactorContribution {
+                        factor_name: "structure_ict_counterflow".to_string(),
+                        category: "structure".to_string(),
+                        direction: Direction::Bear,
+                        value: -0.22,
+                        confidence: 0.40,
+                        weighted_score: -0.28,
+                        uncertainty_contribution: 0.08,
+                        explanation: "late bear expansion overlap".to_string(),
+                    }],
+                    uncertainty_factors: vec![ict_engine::factor_lab::FactorContribution {
+                        factor_name: "multi_timeframe_noise".to_string(),
+                        category: "context".to_string(),
+                        direction: Direction::Neutral,
+                        value: 0.0,
+                        confidence: 0.52,
+                        weighted_score: 0.0,
+                        uncertainty_contribution: 0.18,
+                        explanation: "entry window still carries opposing noise".to_string(),
+                    }],
+                },
             entry_quality_bridge: bridge.clone(),
-            bbn_support: ExpansionBbnSupport {
+            bbn_support: ict_engine::application::belief::pipeline_types::ExpansionBbnSupport {
                 market_regime_label: "bull".to_string(),
                 liquidity_context_label: "sweep_supportive".to_string(),
                 evidence_policy: "policy-v2".to_string(),
@@ -19683,11 +19887,95 @@ mod tests {
             recommended_actions: vec!["inspect_latest_sample".to_string()],
         };
 
-        let report = build_factor_pipeline_debug_report(
+        let report = build_factor_pipeline_debug_report_v2(
             "NQ",
             "/tmp/nq.json",
-            ResearchObjectiveMode::ExpansionManipulation,
-            &pipeline,
+            "expansion_manipulation",
+            &pipeline.factor_name,
+            DebugExpansionLatestSignal {
+                timestamp: pipeline.latest_signal.timestamp,
+                direction: pipeline.latest_signal.direction.clone(),
+                value: pipeline.latest_signal.value,
+                confidence: pipeline.latest_signal.confidence,
+                explanation: pipeline.latest_signal.explanation.clone(),
+            },
+            DebugExpansionProbabilitySupport {
+                long_support: pipeline.probability_support.long_support,
+                short_support: pipeline.probability_support.short_support,
+                support_gap: pipeline.probability_support.support_gap,
+                alignment_threshold: pipeline.probability_support.alignment_threshold,
+                uncertainty: pipeline.probability_support.uncertainty,
+                alignment_label: pipeline.probability_support.alignment_label.clone(),
+                uncertainty_label: pipeline.probability_support.uncertainty_label.clone(),
+                long_entry_bias: pipeline.probability_support.long_entry_bias.clone(),
+                short_entry_bias: pipeline.probability_support.short_entry_bias.clone(),
+                bullish_factors: pipeline.probability_support.bullish_factors.clone(),
+                bearish_factors: pipeline.probability_support.bearish_factors.clone(),
+                uncertainty_factors: pipeline.probability_support.uncertainty_factors.clone(),
+            },
+            DebugExpansionBbnSupport {
+                market_regime_label: pipeline.bbn_support.market_regime_label.clone(),
+                liquidity_context_label: pipeline.bbn_support.liquidity_context_label.clone(),
+                evidence_policy: pipeline.bbn_support.evidence_policy.clone(),
+                pre_bayes_filter: pipeline.bbn_support.pre_bayes_filter.clone(),
+                evidence_assignments: pipeline.bbn_support.evidence_assignments.clone(),
+                raw_market_regime_trace: ict_engine::state::FactorPipelineLabelSource {
+                    label: pipeline.bbn_support.raw_market_regime_trace.label.clone(),
+                    derivation: pipeline
+                        .bbn_support
+                        .raw_market_regime_trace
+                        .derivation
+                        .clone(),
+                    evidence: pipeline
+                        .bbn_support
+                        .raw_market_regime_trace
+                        .evidence
+                        .clone(),
+                },
+                raw_liquidity_context_trace: ict_engine::state::FactorPipelineLabelSource {
+                    label: pipeline
+                        .bbn_support
+                        .raw_liquidity_context_trace
+                        .label
+                        .clone(),
+                    derivation: pipeline
+                        .bbn_support
+                        .raw_liquidity_context_trace
+                        .derivation
+                        .clone(),
+                    evidence: pipeline
+                        .bbn_support
+                        .raw_liquidity_context_trace
+                        .evidence
+                        .clone(),
+                },
+                raw_multi_timeframe_resonance_trace: ict_engine::state::FactorPipelineLabelSource {
+                    label: pipeline
+                        .bbn_support
+                        .raw_multi_timeframe_resonance_trace
+                        .label
+                        .clone(),
+                    derivation: pipeline
+                        .bbn_support
+                        .raw_multi_timeframe_resonance_trace
+                        .derivation
+                        .clone(),
+                    evidence: pipeline
+                        .bbn_support
+                        .raw_multi_timeframe_resonance_trace
+                        .evidence
+                        .clone(),
+                },
+                entry_quality_base: pipeline.bbn_support.entry_quality_base.clone(),
+                entry_quality_long: pipeline.bbn_support.entry_quality_long.clone(),
+                entry_quality_short: pipeline.bbn_support.entry_quality_short.clone(),
+                trade_outcome_long: pipeline.bbn_support.trade_outcome_long.clone(),
+                trade_outcome_short: pipeline.bbn_support.trade_outcome_short.clone(),
+                selected_direction: pipeline.bbn_support.selected_direction.clone(),
+                selected_win_probability: pipeline.bbn_support.selected_win_probability,
+            },
+            pipeline.entry_quality_bridge.clone(),
+            pre_bayes_entry_quality_bridge_diff(&pipeline.entry_quality_bridge),
             &[
                 "1m bull continuation".to_string(),
                 "5m aligned".to_string(),
@@ -19696,7 +19984,36 @@ mod tests {
                 "4h premium reprice".to_string(),
                 "1d higher-timeframe support".to_string(),
             ],
-        );
+            BTreeMap::from([
+                (
+                    "market_regime".to_string(),
+                    pipeline.bbn_support.market_regime_label.clone(),
+                ),
+                (
+                    "liquidity_context".to_string(),
+                    pipeline.bbn_support.liquidity_context_label.clone(),
+                ),
+                (
+                    "factor_alignment".to_string(),
+                    pipeline.probability_support.alignment_label.clone(),
+                ),
+                (
+                    "factor_uncertainty".to_string(),
+                    pipeline.probability_support.uncertainty_label.clone(),
+                ),
+                (
+                    "multi_timeframe_resonance".to_string(),
+                    pipeline
+                        .bbn_support
+                        .pre_bayes_filter
+                        .raw_multi_timeframe_resonance_label
+                        .clone(),
+                ),
+            ]),
+            pre_bayes_soft_evidence_diff(&pipeline.bbn_support.pre_bayes_filter),
+            0.12,
+        )
+        .unwrap();
 
         assert_eq!(report.symbol, "NQ");
         assert_eq!(report.factor_name, "structure_ict");

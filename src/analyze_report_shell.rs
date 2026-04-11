@@ -46,6 +46,7 @@ pub struct AnalyzeSupporting {
     pub factor_diagnostics: crate::factor_lab::FactorDiagnostics,
     pub pre_bayes_evidence_filter: crate::state::PreBayesEvidenceFilter,
     pub pre_bayes_entry_quality_bridge: crate::state::PreBayesEntryQualityBridge,
+    pub canonical_belief_report: crate::reporting::belief::BeliefReportPacket,
     pub decision_thresholds: DecisionThresholds,
     pub factor_ranking: Vec<PersistedFactorRanking>,
     pub factor_iteration_queue: Vec<FactorIterationPrompt>,
@@ -87,6 +88,8 @@ pub struct AnalyzeModelState {
     pub viterbi_log_likelihood: f64,
     pub regime_probs: crate::types::RegimeProbs,
     pub evidence_policy: String,
+    pub canonical_belief_engine: String,
+    pub canonical_shadow_status: String,
 }
 
 #[derive(Debug, Serialize)]

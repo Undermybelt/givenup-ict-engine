@@ -24,6 +24,7 @@ reqwest = { version = "0.12", default-features = false, features = ["blocking", 
 async-trait = "0.1"
 futures = "0.3"
 urlencoding = "2.1"
+loopybayesnet = { path = "/Users/thrill3r/loopybayesnet" }
 
 [dev-dependencies]
 tempfile = "3"
