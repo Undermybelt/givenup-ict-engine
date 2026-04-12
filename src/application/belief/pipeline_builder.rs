@@ -35,6 +35,30 @@ pub fn infer_market_from_symbol(symbol: &str) -> String {
         .to_ascii_uppercase()
 }
 
+pub fn build_expansion_factor_pipeline_report(
+    symbol: &str,
+    factor_name: &str,
+    candles: &[Candle],
+    multi_timeframe_summary: &[String],
+) -> Result<ExpansionFactorPipelineReport> {
+    let mut registry = FactorRegistry::default();
+    let factor_names = registry
+        .list()
+        .into_iter()
+        .map(|definition| definition.name.clone())
+        .collect::<Vec<_>>();
+    for name in factor_names {
+        registry.set_enabled(&name, name == factor_name);
+    }
+    build_expansion_factor_pipeline_report_with_registry(
+        symbol,
+        factor_name,
+        candles,
+        multi_timeframe_summary,
+        &registry,
+    )
+}
+
 pub fn build_expansion_factor_pipeline_report_with_registry(
     symbol: &str,
     factor_name: &str,
