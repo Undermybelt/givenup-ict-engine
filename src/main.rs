@@ -2474,12 +2474,12 @@ fn factor_pipeline_debug_command(
             .collect::<Vec<_>>();
     let candles = load_candles(data)?;
     let registry = FactorRegistry::default();
-    let pipeline = build_expansion_factor_pipeline_report_with_registry(
+    let pipeline = build_expansion_factor_pipeline_report_with_registry_v2(
         symbol,
         factor,
         &candles,
-        &registry,
         &multi_timeframe_summary,
+        &registry,
     )?;
     let report = build_factor_pipeline_debug_report_v2(
         symbol,
@@ -2881,7 +2881,7 @@ fn run_futures_sop(root: &str, output_dir: &str, interval: &str) -> Result<Futur
             .best_factor
             .as_deref()
             .map(|factor| {
-                build_expansion_factor_pipeline_report(
+                build_expansion_factor_pipeline_report_v2(
                     &dataset.market,
                     factor,
                     &candles,
@@ -3332,12 +3332,12 @@ fn run_expansion_sop(
         let pipeline = best_factor
             .as_deref()
             .map(|factor| {
-                build_expansion_factor_pipeline_report_with_registry(
+                build_expansion_factor_pipeline_report_with_registry_v2(
                     &dataset.market,
                     factor,
                     &candles,
-                    &registry,
                     &multi_timeframe_summary,
+                    &registry,
                 )
             })
             .transpose()?;
@@ -3739,12 +3739,12 @@ fn build_expansion_sop_mutation_metrics(
         let pipeline = best_factor
             .as_deref()
             .map(|factor| {
-                build_expansion_factor_pipeline_report_with_registry(
+                build_expansion_factor_pipeline_report_with_registry_v2(
                     &dataset.market,
                     factor,
                     &candles,
-                    registry,
                     &multi_timeframe_summary,
+                    registry,
                 )
             })
             .transpose()?;
@@ -3979,23 +3979,23 @@ fn expansion_regression_reasons_by_market(
             .map(|score| score.factor_name.as_str());
         let baseline_pipeline = baseline_factor
             .map(|factor| {
-                build_expansion_factor_pipeline_report_with_registry(
+                build_expansion_factor_pipeline_report_with_registry_v2(
                     &dataset.market,
                     factor,
                     &candles,
-                    baseline_registry,
                     &multi_timeframe_summary,
+                    baseline_registry,
                 )
             })
             .transpose()?;
         let mutated_pipeline = mutated_factor
             .map(|factor| {
-                build_expansion_factor_pipeline_report_with_registry(
+                build_expansion_factor_pipeline_report_with_registry_v2(
                     &dataset.market,
                     factor,
                     &candles,
-                    mutated_registry,
                     &multi_timeframe_summary,
+                    mutated_registry,
                 )
             })
             .transpose()?;
@@ -4791,12 +4791,12 @@ fn apply_expansion_manipulation_objective(
         let Some(expansion_score) = expansion_scores.get(&scorecard.factor_name) else {
             continue;
         };
-        let pipeline = build_expansion_factor_pipeline_report_with_registry(
+        let pipeline = build_expansion_factor_pipeline_report_with_registry_v2(
             symbol,
             &scorecard.factor_name,
             candles,
-            registry,
             multi_timeframe_summary,
+            registry,
         )?;
         let gate_status = pipeline.bbn_support.pre_bayes_filter.gating_status.as_str();
         let bridge_gap = pre_bayes_entry_quality_bridge_diff(&pipeline.entry_quality_bridge)
@@ -4889,15 +4889,6 @@ fn apply_expansion_manipulation_objective(
     report.backtest.best_factor = report.best_factor.clone();
     report.factor_count = objective_scorecards.len();
     Ok(())
-}
-
-fn build_expansion_factor_pipeline_report(
-    symbol: &str,
-    factor_name: &str,
-    candles: &[Candle],
-    multi_timeframe_summary: &[String],
-) -> Result<ExpansionFactorPipelineReport> {
-    build_expansion_factor_pipeline_report_v2(symbol, factor_name, candles, multi_timeframe_summary)
 }
 
 fn evaluate_expansion_sop_mutation(
@@ -11350,12 +11341,12 @@ fn build_factor_mutation_metric_set(
     }
     if evaluate_expansion_preview {
         if let Some(best_factor) = evaluated_factor {
-            let pipeline = build_expansion_factor_pipeline_report_with_registry(
+            let pipeline = build_expansion_factor_pipeline_report_with_registry_v2(
                 symbol,
                 best_factor,
                 candles,
-                registry,
                 &report.multi_timeframe_summary,
+                registry,
             )?;
             let bridge_diff = pre_bayes_entry_quality_bridge_diff(&pipeline.entry_quality_bridge);
             let soft_diff = pre_bayes_soft_evidence_diff(&pipeline.bbn_support.pre_bayes_filter);
@@ -11603,47 +11594,6 @@ fn mechanical_mutation_score(
                 }
         }
     }
-}
-
-fn build_expansion_factor_pipeline_report_with_registry(
-    symbol: &str,
-    factor_name: &str,
-    candles: &[Candle],
-    base_registry: &FactorRegistry,
-    multi_timeframe_summary: &[String],
-) -> Result<ExpansionFactorPipelineReport> {
-    let mut registry = base_registry.clone();
-    let factor_names = registry
-        .list()
-        .into_iter()
-        .map(|definition| definition.name.clone())
-        .collect::<Vec<_>>();
-    for name in factor_names {
-        registry.set_enabled(&name, name == factor_name);
-    }
-    build_expansion_factor_pipeline_report_from_registry(
-        symbol,
-        factor_name,
-        candles,
-        multi_timeframe_summary,
-        &registry,
-    )
-}
-
-fn build_expansion_factor_pipeline_report_from_registry(
-    symbol: &str,
-    factor_name: &str,
-    candles: &[Candle],
-    multi_timeframe_summary: &[String],
-    registry: &FactorRegistry,
-) -> Result<ExpansionFactorPipelineReport> {
-    build_expansion_factor_pipeline_report_with_registry_v2(
-        symbol,
-        factor_name,
-        candles,
-        multi_timeframe_summary,
-        registry,
-    )
 }
 
 fn run_factor_backtest(
