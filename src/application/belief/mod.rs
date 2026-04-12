@@ -10,8 +10,8 @@ pub use pipeline_builder::{
     pre_bayes_evidence_policy, FactorPipelineDebugReport,
 };
 pub use pipeline_shared::{
-    apply_factor_outcome_overlay, combine_bias_vectors, multi_timeframe_entry_quality_bias,
-    probability_map, raw_liquidity_context_trace, raw_market_regime_trace,
-    raw_multi_timeframe_resonance_trace,
+    apply_factor_outcome_overlay, build_pre_bayes_entry_quality_bridge, combine_bias_vectors,
+    effective_trade_outcome_win_probability, multi_timeframe_entry_quality_bias, probability_map,
+    raw_liquidity_context_trace, raw_market_regime_trace, raw_multi_timeframe_resonance_trace,
 };
 pub use pipeline_types::ExpansionFactorPipelineReport;

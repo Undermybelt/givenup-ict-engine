@@ -6,9 +6,7 @@ use ict_engine::agent::{
     research_diff_prompt, rollback_review_prompt, update_diff_prompt, AgentPrompt, AgentPromptPack,
     PROMPT_PACK_VERSION,
 };
-use ict_engine::analyze::multi_timeframe_parse::{
-    parse_multi_timeframe_evidence, ParsedMultiTimeframeEvidence,
-};
+use ict_engine::analyze::multi_timeframe_parse::parse_multi_timeframe_evidence;
 use ict_engine::analyze::multi_timeframe_section::{
     build_analyze_multi_timeframe_section, AnalyzeMultiTimeframeSection,
 };
@@ -23,13 +21,14 @@ use ict_engine::application::{
     belief::{
         apply_factor_outcome_overlay, build_canonical_belief_snapshot,
         build_factor_pipeline_debug_report as build_factor_pipeline_debug_report_v2,
-        combine_bias_vectors,
+        build_pre_bayes_entry_quality_bridge, combine_bias_vectors,
         debug_report::{
             ExpansionBbnSupport as DebugExpansionBbnSupport,
             ExpansionLatestSignal as DebugExpansionLatestSignal,
             ExpansionProbabilitySupport as DebugExpansionProbabilitySupport,
         },
-        infer_market_from_symbol, multi_timeframe_entry_quality_bias,
+        effective_trade_outcome_win_probability, infer_market_from_symbol,
+        multi_timeframe_entry_quality_bias,
         pipeline_types::ExpansionFactorPipelineReport,
         pre_bayes_evidence_policy, probability_map, raw_liquidity_context_trace,
         raw_market_regime_trace, raw_multi_timeframe_resonance_trace, FactorPipelineDebugReport,
@@ -5096,14 +5095,6 @@ fn build_expansion_factor_pipeline_report(
     })
 }
 
-fn effective_trade_outcome_win_probability(trade_outcome: &[f64]) -> f64 {
-    match trade_outcome {
-        [win, breakeven, ..] => (win + 0.5 * breakeven).clamp(0.0, 0.999),
-        [win] => (*win).clamp(0.0, 0.999),
-        _ => 0.0,
-    }
-}
-
 fn evaluate_expansion_sop_mutation(
     spec: &FactorMutationSpec,
     root: &str,
@@ -5217,51 +5208,6 @@ fn evaluate_expansion_sop_mutation(
         recommended_mutation_directions,
         metrics_before,
         metrics_after,
-    }
-}
-
-fn build_pre_bayes_entry_quality_bridge(
-    factor_diagnostics: &FactorDiagnostics,
-    decision: &ProbabilisticDecisionSnapshot,
-    long_entry_bias: &[f64],
-    short_entry_bias: &[f64],
-    long_entry_quality: &[f64],
-    short_entry_quality: &[f64],
-    selected_entry_quality: &[f64],
-    entry_quality_node: &ict_engine::bbn::Node,
-    multi_timeframe_evidence: &ParsedMultiTimeframeEvidence,
-) -> ict_engine::state::PreBayesEntryQualityBridge {
-    ict_engine::state::PreBayesEntryQualityBridge {
-        long_signal_probability: decision.win_prob_long,
-        short_signal_probability: decision.win_prob_short,
-        long_entry_bias: long_entry_bias.to_vec(),
-        short_entry_bias: short_entry_bias.to_vec(),
-        long_entry_quality: probability_map(&entry_quality_node.states, long_entry_quality),
-        short_entry_quality: probability_map(&entry_quality_node.states, short_entry_quality),
-        selected_entry_quality: probability_map(&entry_quality_node.states, selected_entry_quality),
-        multi_timeframe_direction_bias: multi_timeframe_evidence.direction_bias.clone(),
-        multi_timeframe_alignment_score: multi_timeframe_evidence.alignment_score,
-        multi_timeframe_entry_alignment_score: multi_timeframe_evidence.entry_alignment_score,
-        rationale: vec![
-            format!(
-                "factor_alignment={} factor_uncertainty={}",
-                factor_diagnostics.alignment_label, factor_diagnostics.uncertainty_label
-            ),
-            format!(
-                "long_support={:.3} short_support={:.3} uncertainty={:.3}",
-                factor_diagnostics.long_support,
-                factor_diagnostics.short_support,
-                factor_diagnostics.uncertainty
-            ),
-            format!(
-                "multi_timeframe_direction_bias={} multi_timeframe_alignment_score={:.3} multi_timeframe_entry_alignment_score={:.3}",
-                multi_timeframe_evidence.direction_bias,
-                multi_timeframe_evidence.alignment_score.unwrap_or_default(),
-                multi_timeframe_evidence.entry_alignment_score.unwrap_or_default()
-            ),
-            "entry_quality_bias combines directional factor support with cascade probability bias"
-                .to_string(),
-        ],
     }
 }
 
@@ -17118,6 +17064,7 @@ fn neutral_options_summary(
 mod tests {
     use super::*;
     use chrono::{Duration, TimeZone};
+    use ict_engine::analyze::multi_timeframe_parse::ParsedMultiTimeframeEvidence;
     use ict_engine::bbn::trading::topology::build_trading_network;
     use ict_engine::state::FactorPipelineLabelSource;
 

@@ -8,6 +8,9 @@ use crate::analyze::multi_timeframe_parse::{
 };
 use crate::bbn::adapters::belief_evidence_packet_from_pre_bayes_filter;
 use crate::bbn::engine::InferenceEngineRegistry;
+use crate::bbn::Node;
+use crate::factor_lab::FactorDiagnostics;
+use crate::planner::ProbabilisticDecisionSnapshot;
 use crate::reporting::belief::BeliefReportPacket;
 use crate::state::{
     FactorPipelineLabelSource, PreBayesEntryQualityBridge, PreBayesEntryQualityBridgeDiff,
@@ -423,6 +426,59 @@ pub fn multi_timeframe_entry_quality_bias(
     }
     normalize_distribution(&mut bias);
     bias
+}
+
+pub fn effective_trade_outcome_win_probability(trade_outcome: &[f64]) -> f64 {
+    match trade_outcome {
+        [win, breakeven, ..] => (win + 0.5 * breakeven).clamp(0.0, 0.999),
+        [win] => (*win).clamp(0.0, 0.999),
+        _ => 0.0,
+    }
+}
+
+pub fn build_pre_bayes_entry_quality_bridge(
+    factor_diagnostics: &FactorDiagnostics,
+    decision: &ProbabilisticDecisionSnapshot,
+    long_entry_bias: &[f64],
+    short_entry_bias: &[f64],
+    long_entry_quality: &[f64],
+    short_entry_quality: &[f64],
+    selected_entry_quality: &[f64],
+    entry_quality_node: &Node,
+    multi_timeframe_evidence: &ParsedMultiTimeframeEvidence,
+) -> PreBayesEntryQualityBridge {
+    PreBayesEntryQualityBridge {
+        long_signal_probability: decision.win_prob_long,
+        short_signal_probability: decision.win_prob_short,
+        long_entry_bias: long_entry_bias.to_vec(),
+        short_entry_bias: short_entry_bias.to_vec(),
+        long_entry_quality: probability_map(&entry_quality_node.states, long_entry_quality),
+        short_entry_quality: probability_map(&entry_quality_node.states, short_entry_quality),
+        selected_entry_quality: probability_map(&entry_quality_node.states, selected_entry_quality),
+        multi_timeframe_direction_bias: multi_timeframe_evidence.direction_bias.clone(),
+        multi_timeframe_alignment_score: multi_timeframe_evidence.alignment_score,
+        multi_timeframe_entry_alignment_score: multi_timeframe_evidence.entry_alignment_score,
+        rationale: vec![
+            format!(
+                "factor_alignment={} factor_uncertainty={}",
+                factor_diagnostics.alignment_label, factor_diagnostics.uncertainty_label
+            ),
+            format!(
+                "long_support={:.3} short_support={:.3} uncertainty={:.3}",
+                factor_diagnostics.long_support,
+                factor_diagnostics.short_support,
+                factor_diagnostics.uncertainty
+            ),
+            format!(
+                "multi_timeframe_direction_bias={} multi_timeframe_alignment_score={:.3} multi_timeframe_entry_alignment_score={:.3}",
+                multi_timeframe_evidence.direction_bias,
+                multi_timeframe_evidence.alignment_score.unwrap_or_default(),
+                multi_timeframe_evidence.entry_alignment_score.unwrap_or_default()
+            ),
+            "entry_quality_bias combines directional factor support with cascade probability bias"
+                .to_string(),
+        ],
+    }
 }
 
 pub fn probability_map(states: &[String], probabilities: &[f64]) -> BTreeMap<String, f64> {
