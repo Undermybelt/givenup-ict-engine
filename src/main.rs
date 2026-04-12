@@ -3227,7 +3227,29 @@ fn expansion_sop_command(
             }))?
         );
     } else {
-        println!("{}", serde_json::to_string_pretty(&report)?);
+        let compact_report = build_backtest_result_artifact(
+            format!("expansion_sop:{}", interval),
+            &report
+                .recommended_market_factors
+                .iter()
+                .map(|(market, factor)| format!("{}:{}", market, factor))
+                .collect::<Vec<_>>(),
+            &[format!(
+                "recommended_global_factor={:?}",
+                report.recommended_global_factor
+            )],
+            &[],
+            &[],
+            true,
+            &report.recommended_commands,
+        );
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&serde_json::json!({
+                "report": report,
+                "compact_backtest_report": compact_report,
+            }))?
+        );
     }
     Ok(())
 }
