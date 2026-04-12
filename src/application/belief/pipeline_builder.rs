@@ -1,6 +1,30 @@
+use anyhow::{anyhow, Result};
+
+use crate::analyze::multi_timeframe_parse::parse_multi_timeframe_evidence;
+use crate::bbn::trading::{
+    topology::build_trading_network,
+    update::{
+        entry_quality_bias_from_signal, infer_entry_quality, infer_entry_quality_with_bias,
+        infer_trade_outcome_with_entry_quality_bias, trade_evidence_from_pre_bayes_filter,
+    },
+};
+use crate::config::{build_frame_features_for_market, build_pre_bayes_evidence_filter};
+use crate::factor_lab::{FactorContext, FactorEngine};
+use crate::factors::FactorRegistry;
+use crate::state::PreBayesEvidencePolicy;
+use crate::types::{Candle, Direction, Regime};
+
 pub use super::pipeline_shared::{
-    adapt_factor_pipeline_debug_report, build_canonical_belief_report,
-    build_canonical_belief_snapshot, build_factor_pipeline_debug_report, FactorPipelineDebugReport,
+    adapt_factor_pipeline_debug_report, apply_factor_outcome_overlay,
+    build_canonical_belief_report, build_canonical_belief_snapshot,
+    build_factor_pipeline_debug_report, build_pre_bayes_entry_quality_bridge, combine_bias_vectors,
+    effective_trade_outcome_win_probability, multi_timeframe_entry_quality_bias, probability_map,
+    raw_liquidity_context_trace, raw_market_regime_trace, raw_multi_timeframe_resonance_trace,
+    FactorPipelineDebugReport,
+};
+use super::pipeline_types::{
+    ExpansionBbnSupport, ExpansionFactorPipelineReport, ExpansionLatestSignal,
+    ExpansionProbabilitySupport,
 };
 
 pub fn infer_market_from_symbol(symbol: &str) -> String {
@@ -11,7 +35,202 @@ pub fn infer_market_from_symbol(symbol: &str) -> String {
         .to_ascii_uppercase()
 }
 
-pub fn pre_bayes_evidence_policy() -> crate::state::PreBayesEvidencePolicy {
+pub fn build_expansion_factor_pipeline_report_with_registry(
+    symbol: &str,
+    factor_name: &str,
+    candles: &[Candle],
+    multi_timeframe_summary: &[String],
+    registry: &FactorRegistry,
+) -> Result<ExpansionFactorPipelineReport> {
+    let definition = registry
+        .get(factor_name)
+        .cloned()
+        .ok_or_else(|| anyhow!("unknown factor '{}'", factor_name))?;
+    let factor_engine = FactorEngine::new(registry.clone());
+    let output = factor_engine.run(
+        candles,
+        &FactorContext {
+            regime: Some(Regime::ManipulationExpansion),
+            ..FactorContext::default()
+        },
+        None,
+    )?;
+    let signal = output
+        .latest_signals
+        .first()
+        .cloned()
+        .ok_or_else(|| anyhow!("factor '{}' did not produce a latest signal", factor_name))?;
+    let market = infer_market_from_symbol(symbol);
+    let frame = build_frame_features_for_market(candles, Some(&market))?;
+    let market_regime_trace = raw_market_regime_trace(
+        &frame.regime_label,
+        &frame.regime_label,
+        frame.sweep_count,
+        frame.fvg_count,
+    );
+    let liquidity_context_trace = raw_liquidity_context_trace(
+        &frame.liquidity_label,
+        &frame.liquidity_label,
+        frame.sweep_count,
+        frame.fvg_count,
+    );
+    let network = build_trading_network()?;
+    let pre_bayes_policy = pre_bayes_evidence_policy();
+    let multi_timeframe_evidence = parse_multi_timeframe_evidence(multi_timeframe_summary);
+    let pre_bayes_filter = build_pre_bayes_evidence_filter(
+        &pre_bayes_policy,
+        &frame.regime_label,
+        &frame.liquidity_label,
+        &output.diagnostics,
+        &multi_timeframe_evidence,
+        Some(&market),
+    );
+    let resonance_trace = raw_multi_timeframe_resonance_trace(
+        &pre_bayes_policy,
+        &pre_bayes_filter,
+        &multi_timeframe_evidence,
+        &frame.regime_label,
+        &output.diagnostics.alignment_label,
+    );
+    let evidence_assignments = pre_bayes_filter.evidence_assignments.clone();
+    let evidence = trade_evidence_from_pre_bayes_filter(&network, &pre_bayes_filter)?;
+    let base_entry_quality = infer_entry_quality(&network, &evidence)?;
+    let long_bias = combine_bias_vectors(
+        &combine_bias_vectors(
+            &entry_quality_bias_from_signal(output.diagnostics.long_support.max(signal.confidence)),
+            &output.diagnostics.entry_bias_for_direction(Direction::Bull),
+        ),
+        &multi_timeframe_entry_quality_bias(&multi_timeframe_evidence, Direction::Bull),
+    );
+    let short_bias = combine_bias_vectors(
+        &combine_bias_vectors(
+            &entry_quality_bias_from_signal(
+                output.diagnostics.short_support.max(signal.confidence),
+            ),
+            &output.diagnostics.entry_bias_for_direction(Direction::Bear),
+        ),
+        &multi_timeframe_entry_quality_bias(&multi_timeframe_evidence, Direction::Bear),
+    );
+    let long_entry_quality = infer_entry_quality_with_bias(&network, &evidence, &long_bias)?;
+    let short_entry_quality = infer_entry_quality_with_bias(&network, &evidence, &short_bias)?;
+    let long_trade_outcome = apply_factor_outcome_overlay(
+        &infer_trade_outcome_with_entry_quality_bias(&network, &evidence, &long_bias)?,
+        output.diagnostics.directional_bias(Direction::Bull),
+        output.diagnostics.uncertainty,
+    );
+    let short_trade_outcome = apply_factor_outcome_overlay(
+        &infer_trade_outcome_with_entry_quality_bias(&network, &evidence, &short_bias)?,
+        output.diagnostics.directional_bias(Direction::Bear),
+        output.diagnostics.uncertainty,
+    );
+    let trade_outcome_node = network
+        .nodes
+        .get("trade_outcome")
+        .ok_or_else(|| anyhow!("missing node 'trade_outcome'"))?;
+    let entry_quality_node = network
+        .nodes
+        .get("entry_quality")
+        .ok_or_else(|| anyhow!("missing node 'entry_quality'"))?;
+    let long_win_probability = effective_trade_outcome_win_probability(&long_trade_outcome);
+    let short_win_probability = effective_trade_outcome_win_probability(&short_trade_outcome);
+    let (selected_direction, selected_win_probability) =
+        if long_win_probability >= short_win_probability {
+            ("bull".to_string(), long_win_probability)
+        } else {
+            ("bear".to_string(), short_win_probability)
+        };
+    let entry_quality_bridge = build_pre_bayes_entry_quality_bridge(
+        &output.diagnostics,
+        &crate::planner::ProbabilisticDecisionSnapshot {
+            long_score: output.diagnostics.long_support,
+            short_score: output.diagnostics.short_support,
+            win_prob_long: long_win_probability,
+            win_prob_short: short_win_probability,
+            ict_support_long: 0.0,
+            ict_support_short: 0.0,
+            selected_direction: if selected_direction == "bull" {
+                Direction::Bull
+            } else {
+                Direction::Bear
+            },
+            selected_score: long_win_probability.max(short_win_probability),
+            selected_win_probability,
+            ict_role: "expansion_sop_factor_only".to_string(),
+        },
+        &long_bias,
+        &short_bias,
+        &long_entry_quality,
+        &short_entry_quality,
+        if selected_direction == "bull" {
+            &long_entry_quality
+        } else {
+            &short_entry_quality
+        },
+        entry_quality_node,
+        &multi_timeframe_evidence,
+    );
+
+    Ok(ExpansionFactorPipelineReport {
+        factor_name: factor_name.to_string(),
+        parameters: definition.parameters,
+        latest_signal: ExpansionLatestSignal {
+            timestamp: signal.timestamp,
+            direction: format!("{:?}", signal.direction),
+            value: signal.value,
+            confidence: signal.confidence,
+            explanation: signal.explanation,
+        },
+        probability_support: ExpansionProbabilitySupport {
+            long_support: output.diagnostics.long_support,
+            short_support: output.diagnostics.short_support,
+            support_gap: (output.diagnostics.long_support - output.diagnostics.short_support).abs(),
+            alignment_threshold: 0.10,
+            uncertainty: output.diagnostics.uncertainty,
+            alignment_label: output.diagnostics.alignment_label.clone(),
+            uncertainty_label: output.diagnostics.uncertainty_label.clone(),
+            long_entry_bias: output.diagnostics.entry_bias_for_direction(Direction::Bull),
+            short_entry_bias: output.diagnostics.entry_bias_for_direction(Direction::Bear),
+            bullish_factors: output.diagnostics.bullish_factors.clone(),
+            bearish_factors: output.diagnostics.bearish_factors.clone(),
+            uncertainty_factors: output.diagnostics.uncertainty_factors.clone(),
+        },
+        entry_quality_bridge,
+        bbn_support: ExpansionBbnSupport {
+            market_regime_label: frame.regime_label,
+            liquidity_context_label: frame.liquidity_label,
+            evidence_policy: "expansion_sop_factor_signal_to_pre_bayes_soft_evidence_to_bbn"
+                .to_string(),
+            pre_bayes_filter: pre_bayes_filter.clone(),
+            evidence_assignments,
+            raw_market_regime_trace: market_regime_trace,
+            raw_liquidity_context_trace: liquidity_context_trace,
+            raw_multi_timeframe_resonance_trace: resonance_trace,
+            entry_quality_base: probability_map(&entry_quality_node.states, &base_entry_quality),
+            entry_quality_long: probability_map(&entry_quality_node.states, &long_entry_quality),
+            entry_quality_short: probability_map(&entry_quality_node.states, &short_entry_quality),
+            trade_outcome_long: probability_map(&trade_outcome_node.states, &long_trade_outcome),
+            trade_outcome_short: probability_map(&trade_outcome_node.states, &short_trade_outcome),
+            selected_direction,
+            selected_win_probability,
+        },
+        pipeline_summary: format!(
+            "factor_signal -> diagnostics(alignment={}, uncertainty={}) -> evidence(market_regime/liquidity_context/factor_alignment/factor_uncertainty) -> entry_quality -> trade_outcome",
+            output.diagnostics.alignment_label,
+            output.diagnostics.uncertainty_label
+        ),
+        recommended_actions: vec![
+            format!(
+                "Use {} as the primary expansion discrimination factor in the MVP probability stack",
+                factor_name
+            ),
+            "Treat factor_alignment and factor_uncertainty as the BBN bridge, not as hard triggers"
+                .to_string(),
+            "Review whether market_regime/liquidity_context labels should be made more independent from the expansion heuristic".to_string(),
+        ],
+    })
+}
+
+pub fn pre_bayes_evidence_policy() -> PreBayesEvidencePolicy {
     let min_directional_support_gap =
         crate::config::env_f64("ICT_ENGINE_PREBAYES_MIN_SUPPORT_GAP", 0.08);
     let high_uncertainty_threshold =
