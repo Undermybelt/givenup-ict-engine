@@ -18,6 +18,7 @@ use ict_engine::analyze::technical_price_section::{
     build_technical_price_section, TechnicalPriceSection,
 };
 use ict_engine::application::{
+    backtest::build_backtest_result_artifact,
     belief::{
         apply_factor_outcome_overlay, build_canonical_belief_snapshot,
         build_expansion_factor_pipeline_report as build_expansion_factor_pipeline_report_v2,
@@ -9475,7 +9476,22 @@ fn backtest_command(
         hold_bars,
         online_learn,
     )?;
-    println!("{}", serde_json::to_string_pretty(&report)?);
+    let compact_report = build_backtest_result_artifact(
+        format!("backtest:{}", symbol),
+        &[],
+        &[format!("symbol={}", symbol)],
+        &[],
+        &[],
+        true,
+        &[],
+    );
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&serde_json::json!({
+            "report": report,
+            "compact_backtest_report": compact_report,
+        }))?
+    );
     Ok(())
 }
 
