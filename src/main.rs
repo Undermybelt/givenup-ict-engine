@@ -29,9 +29,10 @@ use ict_engine::application::{
             ExpansionLatestSignal as DebugExpansionLatestSignal,
             ExpansionProbabilitySupport as DebugExpansionProbabilitySupport,
         },
-        infer_market_from_symbol,
+        infer_market_from_symbol, multi_timeframe_entry_quality_bias,
         pipeline_types::ExpansionFactorPipelineReport,
-        pre_bayes_evidence_policy, probability_map, FactorPipelineDebugReport,
+        pre_bayes_evidence_policy, probability_map, raw_liquidity_context_trace,
+        raw_market_regime_trace, raw_multi_timeframe_resonance_trace, FactorPipelineDebugReport,
     },
     decision_utils::{
         derive_family_outcomes, derive_promotion_decision, derive_rollback_recommendation,
@@ -58,8 +59,7 @@ use ict_engine::bbn::trading::{
 };
 use ict_engine::config::{
     build_frame_features, build_frame_features_for_market, build_pre_bayes_evidence_filter,
-    left_pad, multi_timeframe_entry_quality_bias, raw_liquidity_context_trace,
-    raw_market_regime_trace, raw_multi_timeframe_resonance_trace, FrameFeatures, INDICATOR_PERIOD,
+    left_pad, FrameFeatures, INDICATOR_PERIOD,
 };
 use ict_engine::data::{
     aggregate_candles_by_minutes, load_candles, load_tomac_continuous_candles,
@@ -4927,8 +4927,18 @@ fn build_expansion_factor_pipeline_report(
         .ok_or_else(|| anyhow!("factor '{}' did not produce a latest signal", factor_name))?;
     let market = infer_market_from_symbol(symbol);
     let frame = build_frame_features_for_market(candles, Some(&market))?;
-    let market_regime_trace = raw_market_regime_trace(&frame.regime_label, &frame);
-    let liquidity_context_trace = raw_liquidity_context_trace(&frame.liquidity_label, &frame);
+    let market_regime_trace = raw_market_regime_trace(
+        &frame.regime_label,
+        &frame.regime_label,
+        frame.sweep_count,
+        frame.fvg_count,
+    );
+    let liquidity_context_trace = raw_liquidity_context_trace(
+        &frame.liquidity_label,
+        &frame.liquidity_label,
+        frame.sweep_count,
+        frame.fvg_count,
+    );
     let network = build_trading_network()?;
     let pre_bayes_policy = pre_bayes_evidence_policy();
     let multi_timeframe_evidence = parse_multi_timeframe_evidence(multi_timeframe_summary);
@@ -11896,8 +11906,18 @@ fn build_expansion_factor_pipeline_report_from_registry(
         .ok_or_else(|| anyhow!("factor '{}' did not produce a latest signal", factor_name))?;
     let market = infer_market_from_symbol(symbol);
     let frame = build_frame_features_for_market(candles, Some(&market))?;
-    let market_regime_trace = raw_market_regime_trace(&frame.regime_label, &frame);
-    let liquidity_context_trace = raw_liquidity_context_trace(&frame.liquidity_label, &frame);
+    let market_regime_trace = raw_market_regime_trace(
+        &frame.regime_label,
+        &frame.regime_label,
+        frame.sweep_count,
+        frame.fvg_count,
+    );
+    let liquidity_context_trace = raw_liquidity_context_trace(
+        &frame.liquidity_label,
+        &frame.liquidity_label,
+        frame.sweep_count,
+        frame.fvg_count,
+    );
     let network = build_trading_network()?;
     let pre_bayes_policy = pre_bayes_evidence_policy();
     let multi_timeframe_evidence = parse_multi_timeframe_evidence(multi_timeframe_summary);
