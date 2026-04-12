@@ -1,5 +1,4 @@
-use super::helpers::wilder_smooth;
-use crate::types::Candle;
+use crate::{math::wilder_smooth, types::Candle};
 
 /// Compute Average True Range (ATR) using Wilder's smoothing
 pub fn compute_atr(candles: &[Candle], period: usize) -> Vec<f64> {

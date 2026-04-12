@@ -1,7 +1,12 @@
-pub mod builder;
 pub mod debug_report;
+pub mod pipeline_builder;
+pub mod pipeline_shared;
 pub mod pipeline_types;
+pub mod shared;
 
-pub use builder::{build_canonical_belief_report, build_canonical_belief_snapshot};
-pub use debug_report::{build_factor_pipeline_debug_report, FactorPipelineDebugReport};
+pub use pipeline_builder::{
+    adapt_factor_pipeline_debug_report, build_canonical_belief_report,
+    build_canonical_belief_snapshot, build_factor_pipeline_debug_report, infer_market_from_symbol,
+    pre_bayes_evidence_policy, FactorPipelineDebugReport,
+};
 pub use pipeline_types::ExpansionFactorPipelineReport;

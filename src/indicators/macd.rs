@@ -1,5 +1,4 @@
-use super::helpers::ema;
-use crate::types::Candle;
+use crate::{math::ema, types::Candle};
 
 #[derive(Debug, Clone)]
 pub struct MACD {

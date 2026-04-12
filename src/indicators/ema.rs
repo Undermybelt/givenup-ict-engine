@@ -1,10 +1,9 @@
-use super::helpers;
-use crate::types::Candle;
+use crate::{math, types::Candle};
 
 /// Compute Exponential Moving Average on close prices
 pub fn compute_ema(candles: &[Candle], period: usize) -> Vec<f64> {
     let prices: Vec<f64> = candles.iter().map(|c| c.close).collect();
-    helpers::ema(&prices, period)
+    math::ema(&prices, period)
 }
 
 /// Get the latest EMA value

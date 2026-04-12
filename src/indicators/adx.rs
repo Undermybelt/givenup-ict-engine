@@ -1,5 +1,4 @@
-use super::helpers::wilder_smooth;
-use crate::types::Candle;
+use crate::{math::wilder_smooth, types::Candle};
 
 /// Compute Average Directional Index (ADX)
 pub fn compute_adx(candles: &[Candle], period: usize) -> Vec<f64> {

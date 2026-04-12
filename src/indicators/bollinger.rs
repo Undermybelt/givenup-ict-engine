@@ -1,5 +1,7 @@
-use super::helpers::{sma, std_dev};
-use crate::types::Candle;
+use crate::{
+    math::{sma, std_dev},
+    types::Candle,
+};
 
 #[derive(Debug, Clone)]
 pub struct BollingerBands {
