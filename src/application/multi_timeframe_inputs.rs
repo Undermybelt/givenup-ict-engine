@@ -1,6 +1,14 @@
+use anyhow::{anyhow, bail, Result};
 use std::collections::BTreeMap;
 
 pub const MULTI_TIMEFRAME_INTERVALS: [&str; 6] = ["1m", "5m", "15m", "1h", "4h", "1d"];
+
+pub trait MultiTimeframeCleanReportView {
+    fn interval_dataset_output_pairs<'a>(
+        &'a self,
+        market: &'a str,
+    ) -> Box<dyn Iterator<Item = (&'a str, &'a str)> + 'a>;
+}
 
 #[derive(Debug, Clone, Default)]
 pub struct ResolvedMultiTimeframeInputs {
@@ -128,4 +136,86 @@ pub fn resolve_analyze_multi_timeframe_inputs(
         other => other.to_string(),
     };
     resolved
+}
+
+pub fn resolved_multi_timeframe_inputs_for_market<T>(
+    clean_report: &T,
+    market: &str,
+) -> ResolvedMultiTimeframeInputs
+where
+    T: MultiTimeframeCleanReportView,
+{
+    let mut resolved = ResolvedMultiTimeframeInputs {
+        source: "clean_futures_multi_timeframe".to_string(),
+        ..ResolvedMultiTimeframeInputs::default()
+    };
+    for (interval, output_path) in clean_report.interval_dataset_output_pairs(market) {
+        resolved
+            .paths
+            .insert(interval.to_string(), output_path.to_string());
+    }
+    if resolved.paths.is_empty() {
+        resolved.source = "primary_only".to_string();
+    }
+    resolved
+}
+
+pub fn resolve_analyze_cli_inputs(
+    symbol: &str,
+    data_htf: Option<&str>,
+    data_mtf: Option<&str>,
+    data_ltf: Option<&str>,
+    data_root: Option<&str>,
+    market: Option<&str>,
+) -> Result<(String, String, String)> {
+    match (data_htf, data_mtf, data_ltf) {
+        (Some(htf), Some(mtf), Some(ltf)) => {
+            return Ok((htf.to_string(), mtf.to_string(), ltf.to_string()))
+        }
+        _ => {}
+    }
+    let data_root = data_root.ok_or_else(|| {
+        anyhow!("analyze requires either --data-htf/--data-mtf/--data-ltf or --data-root")
+    })?;
+    let market = market
+        .map(|value| value.to_ascii_lowercase())
+        .unwrap_or_else(|| symbol.to_ascii_lowercase());
+    let resolve = |interval: &str| -> Result<String> {
+        let path = std::path::Path::new(data_root)
+            .join(format!("cleaned-{}", interval))
+            .join(format!("{}.continuous-{}.json", market, interval));
+        if path.exists() {
+            Ok(path.to_string_lossy().to_string())
+        } else {
+            bail!(
+                "missing analyze input for interval '{}' under root '{}'",
+                interval,
+                data_root
+            )
+        }
+    };
+    Ok((resolve("1d")?, resolve("1h")?, resolve("15m")?))
+}
+
+pub fn is_multi_timeframe_clean_root(path: &std::path::Path) -> bool {
+    path.join("cleaned-1d").is_dir()
+        && path.join("cleaned-4h").is_dir()
+        && path.join("cleaned-1h").is_dir()
+        && path.join("cleaned-15m").is_dir()
+        && path.join("cleaned-5m").is_dir()
+        && path.join("cleaned-1m").is_dir()
+}
+
+pub fn detected_multi_timeframe_clean_root(tomac_root: Option<&str>) -> Option<String> {
+    let tomac_root = tomac_root?;
+    let root = std::path::Path::new(tomac_root);
+    if is_multi_timeframe_clean_root(root) {
+        return Some(root.to_string_lossy().to_string());
+    }
+    std::fs::read_dir(root)
+        .ok()?
+        .filter_map(|entry| entry.ok())
+        .map(|entry| entry.path())
+        .find(|path| path.is_dir() && is_multi_timeframe_clean_root(path))
+        .map(|path| path.to_string_lossy().to_string())
 }
