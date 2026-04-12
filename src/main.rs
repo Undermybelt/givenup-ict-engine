@@ -19,17 +19,31 @@ use ict_engine::analyze::smt_correlation_section::{
 use ict_engine::analyze::technical_price_section::{
     build_technical_price_section, TechnicalPriceSection,
 };
-use ict_engine::application::belief::{
-    build_canonical_belief_snapshot,
-    build_factor_pipeline_debug_report as build_factor_pipeline_debug_report_v2,
-    debug_report::{
-        ExpansionBbnSupport as DebugExpansionBbnSupport,
-        ExpansionLatestSignal as DebugExpansionLatestSignal,
-        ExpansionProbabilitySupport as DebugExpansionProbabilitySupport,
+use ict_engine::application::{
+    belief::{
+        build_canonical_belief_snapshot,
+        build_factor_pipeline_debug_report as build_factor_pipeline_debug_report_v2,
+        debug_report::{
+            ExpansionBbnSupport as DebugExpansionBbnSupport,
+            ExpansionLatestSignal as DebugExpansionLatestSignal,
+            ExpansionProbabilitySupport as DebugExpansionProbabilitySupport,
+        },
+        infer_market_from_symbol,
+        pipeline_types::ExpansionFactorPipelineReport,
+        pre_bayes_evidence_policy, FactorPipelineDebugReport,
     },
-    infer_market_from_symbol,
-    pipeline_types::ExpansionFactorPipelineReport,
-    pre_bayes_evidence_policy, FactorPipelineDebugReport,
+    decision_utils::{
+        derive_family_outcomes, derive_promotion_decision, derive_rollback_recommendation,
+        normalize_distribution, normalize_entry_quality_label, normalize_trade_outcome_label,
+        parse_research_objective, research_objective_label, score_grade,
+        ArtifactConsumedDecisionGate, ResearchObjectiveMode,
+    },
+    multi_timeframe_inputs::{
+        detected_multi_timeframe_clean_root, infer_interval_for_analyze_frame,
+        resolve_analyze_cli_inputs, resolve_analyze_multi_timeframe_inputs,
+        resolve_multi_timeframe_inputs, resolved_multi_timeframe_inputs_for_market,
+        MultiTimeframeCleanReportView, ResolvedMultiTimeframeInputs, MULTI_TIMEFRAME_INTERVALS,
+    },
 };
 use ict_engine::backtest::{BacktestEngine, Metrics, RegimeSplit};
 use ict_engine::bayesian::{cascade_bear, cascade_bull, CascadeConfig};
@@ -427,12 +441,6 @@ struct ConsumedAnalyzeContext {
     pre_bayes_evidence_filter: Option<PreBayesEvidenceFilter>,
     pre_bayes_entry_quality_bridge: Option<ict_engine::state::PreBayesEntryQualityBridge>,
     multi_timeframe_summary: Vec<String>,
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-enum ResearchObjectiveMode {
-    Generic,
-    ExpansionManipulation,
 }
 
 #[derive(Clone, Copy, Default)]
@@ -1837,20 +1845,6 @@ struct MultiTimeframeResearchSignal {
     summary: Vec<String>,
 }
 
-const MULTI_TIMEFRAME_INTERVALS: [&str; 6] = ["1m", "5m", "15m", "1h", "4h", "1d"];
-
-#[derive(Debug, Clone, Default)]
-struct ResolvedMultiTimeframeInputs {
-    source: String,
-    paths: BTreeMap<String, String>,
-}
-
-impl ResolvedMultiTimeframeInputs {
-    fn get(&self, interval: &str) -> Option<&str> {
-        self.paths.get(interval).map(String::as_str)
-    }
-}
-
 fn build_hint_effectiveness_summary(
     hint: &str,
     deltas: &[f64],
@@ -1915,13 +1909,6 @@ struct ArtifactLineageView {
     focus_artifact_id: Option<String>,
     nodes: Vec<ArtifactLedgerEntry>,
     edges: Vec<ArtifactLineageEdge>,
-}
-
-#[derive(Debug, Clone, Default)]
-struct ArtifactConsumedDecisionGate {
-    status: String,
-    reason: String,
-    target_kinds: Vec<String>,
 }
 
 fn artifact_status_command(
@@ -2307,6 +2294,21 @@ struct CleanFuturesDatasetReport {
     symbology_path: String,
     output_path: String,
     summary: CleanedContinuousFuturesSummary,
+}
+
+impl MultiTimeframeCleanReportView for MultiTimeframeCleanFuturesReport {
+    fn interval_dataset_output_pairs<'a>(
+        &'a self,
+        market: &'a str,
+    ) -> Box<dyn Iterator<Item = (&'a str, &'a str)> + 'a> {
+        Box::new(self.reports.iter().filter_map(move |report| {
+            report
+                .datasets
+                .iter()
+                .find(|dataset| dataset.market == market)
+                .map(|dataset| (report.interval.as_str(), dataset.output_path.as_str()))
+        }))
+    }
 }
 
 #[derive(Debug, Serialize)]
@@ -4771,27 +4773,6 @@ fn expansion_factor_scores_for_market(
             })
     });
     Ok(scores)
-}
-
-fn research_objective_label(objective: ResearchObjectiveMode) -> &'static str {
-    match objective {
-        ResearchObjectiveMode::Generic => "generic",
-        ResearchObjectiveMode::ExpansionManipulation => "expansion_manipulation",
-    }
-}
-
-fn score_grade(score: f64) -> String {
-    if score >= 0.85 {
-        "A".to_string()
-    } else if score >= 0.70 {
-        "B".to_string()
-    } else if score >= 0.55 {
-        "C".to_string()
-    } else if score >= 0.40 {
-        "D".to_string()
-    } else {
-        "F".to_string()
-    }
 }
 
 fn apply_expansion_manipulation_objective(
@@ -10771,100 +10752,6 @@ fn detected_tomac_root_or_placeholder() -> String {
     detected_tomac_root().unwrap_or_else(|| "<root>".to_string())
 }
 
-fn is_multi_timeframe_clean_root(path: &std::path::Path) -> bool {
-    path.join("cleaned-1d").is_dir()
-        && path.join("cleaned-4h").is_dir()
-        && path.join("cleaned-1h").is_dir()
-        && path.join("cleaned-15m").is_dir()
-        && path.join("cleaned-5m").is_dir()
-        && path.join("cleaned-1m").is_dir()
-}
-
-fn detected_multi_timeframe_clean_root(tomac_root: Option<&str>) -> Option<String> {
-    let tomac_root = tomac_root?;
-    let root = std::path::Path::new(tomac_root);
-    if is_multi_timeframe_clean_root(root) {
-        return Some(root.to_string_lossy().to_string());
-    }
-    std::fs::read_dir(root)
-        .ok()?
-        .filter_map(|entry| entry.ok())
-        .map(|entry| entry.path())
-        .find(|path| path.is_dir() && is_multi_timeframe_clean_root(path))
-        .map(|path| path.to_string_lossy().to_string())
-}
-
-fn infer_interval_for_analyze_frame(path: &str, fallback: &str) -> String {
-    parse_cleaned_continuous_identity(path)
-        .map(|(_, interval)| interval)
-        .unwrap_or_else(|| fallback.to_string())
-}
-
-fn resolve_analyze_multi_timeframe_inputs(
-    data_htf: &str,
-    data_mtf: &str,
-    data_ltf: &str,
-) -> ResolvedMultiTimeframeInputs {
-    let mut resolved = resolve_multi_timeframe_inputs(data_ltf, None, None, None, None, None, None);
-    for (path, fallback) in [(data_htf, "1d"), (data_mtf, "1h"), (data_ltf, "15m")] {
-        let interval = infer_interval_for_analyze_frame(path, fallback);
-        resolved.paths.insert(interval, path.to_string());
-    }
-    resolved.source = match resolved.source.as_str() {
-        "auto_from_cleaned_siblings" => "analyze_explicit_with_auto_fill".to_string(),
-        "primary_only" => "analyze_explicit_frames".to_string(),
-        other => other.to_string(),
-    };
-    resolved
-}
-
-fn resolve_analyze_cli_inputs(
-    symbol: &str,
-    data_htf: Option<&str>,
-    data_mtf: Option<&str>,
-    data_ltf: Option<&str>,
-    data_root: Option<&str>,
-    market: Option<&str>,
-) -> Result<(String, String, String)> {
-    match (data_htf, data_mtf, data_ltf) {
-        (Some(htf), Some(mtf), Some(ltf)) => {
-            return Ok((htf.to_string(), mtf.to_string(), ltf.to_string()))
-        }
-        _ => {}
-    }
-    let data_root = data_root.ok_or_else(|| {
-        anyhow!("analyze requires either --data-htf/--data-mtf/--data-ltf or --data-root")
-    })?;
-    let market = market
-        .map(|value| value.to_ascii_lowercase())
-        .unwrap_or_else(|| symbol.to_ascii_lowercase());
-    let resolve = |interval: &str| -> Result<String> {
-        let path = std::path::Path::new(data_root)
-            .join(format!("cleaned-{}", interval))
-            .join(format!("{}.continuous-{}.json", market, interval));
-        if path.exists() {
-            Ok(path.to_string_lossy().to_string())
-        } else {
-            bail!(
-                "missing analyze input for interval '{}' under root '{}'",
-                interval,
-                data_root
-            )
-        }
-    };
-    Ok((resolve("1d")?, resolve("1h")?, resolve("15m")?))
-}
-
-fn parse_research_objective(value: &str) -> Result<ResearchObjectiveMode> {
-    match value.trim().to_ascii_lowercase().as_str() {
-        "generic" => Ok(ResearchObjectiveMode::Generic),
-        "expansion_manipulation" | "expansion-manipulation" | "expansion" => {
-            Ok(ResearchObjectiveMode::ExpansionManipulation)
-        }
-        other => bail!("unsupported research objective '{}'", other),
-    }
-}
-
 fn candle_trend(candles: &[Candle]) -> Option<f64> {
     if candles.len() < 2 {
         return None;
@@ -10956,123 +10843,6 @@ fn build_live_multi_timeframe_signal(frames: &[(&str, &[Candle])]) -> MultiTimef
         })
         .collect::<Vec<_>>();
     multi_timeframe_signal_from_trends(&long_term, &short_term)
-}
-
-fn parse_cleaned_continuous_identity(path: &str) -> Option<(String, String)> {
-    let file_name = std::path::Path::new(path).file_name()?.to_str()?;
-    let stem = file_name.strip_suffix(".json")?;
-    let (market, interval) = stem.rsplit_once(".continuous-")?;
-    Some((market.to_string(), interval.to_string()))
-}
-
-fn auto_resolve_multi_timeframe_inputs(primary_data: &str) -> ResolvedMultiTimeframeInputs {
-    let mut resolved = ResolvedMultiTimeframeInputs::default();
-    let primary_path = std::path::Path::new(primary_data);
-    let Some((market, primary_interval)) = parse_cleaned_continuous_identity(primary_data) else {
-        resolved.source = "primary_only".to_string();
-        return resolved;
-    };
-
-    resolved
-        .paths
-        .insert(primary_interval.clone(), primary_data.to_string());
-
-    let mut root_candidates = Vec::new();
-    if let Some(parent) = primary_path.parent() {
-        root_candidates.push(parent.to_path_buf());
-        if let Some(root) = parent.parent() {
-            root_candidates.push(root.to_path_buf());
-        }
-    }
-
-    for interval in MULTI_TIMEFRAME_INTERVALS {
-        if interval == primary_interval {
-            continue;
-        }
-        for root in &root_candidates {
-            let candidate = root
-                .join(format!("cleaned-{}", interval))
-                .join(format!("{}.continuous-{}.json", market, interval));
-            if candidate.exists() {
-                resolved.paths.insert(
-                    interval.to_string(),
-                    candidate.to_string_lossy().to_string(),
-                );
-                break;
-            }
-        }
-    }
-
-    resolved.source = if resolved.paths.len() > 1 {
-        "auto_from_cleaned_siblings".to_string()
-    } else {
-        "primary_only".to_string()
-    };
-    resolved
-}
-
-fn resolve_multi_timeframe_inputs(
-    primary_data: &str,
-    data_1m: Option<&str>,
-    data_5m: Option<&str>,
-    data_15m: Option<&str>,
-    data_1h: Option<&str>,
-    data_4h: Option<&str>,
-    data_1d: Option<&str>,
-) -> ResolvedMultiTimeframeInputs {
-    let mut resolved = auto_resolve_multi_timeframe_inputs(primary_data);
-    let explicit = [
-        ("1m", data_1m),
-        ("5m", data_5m),
-        ("15m", data_15m),
-        ("1h", data_1h),
-        ("4h", data_4h),
-        ("1d", data_1d),
-    ];
-    let explicit_count = explicit.iter().filter(|(_, path)| path.is_some()).count();
-    for (interval, path) in explicit {
-        if let Some(path) = path {
-            resolved
-                .paths
-                .insert(interval.to_string(), path.to_string());
-        }
-    }
-    if explicit_count > 0 {
-        resolved.source = if resolved.paths.len() > explicit_count {
-            "explicit_with_auto_fill".to_string()
-        } else {
-            "explicit".to_string()
-        };
-    }
-    if resolved.source.is_empty() {
-        resolved.source = "primary_only".to_string();
-    }
-    resolved
-}
-
-fn resolved_multi_timeframe_inputs_for_market(
-    clean_report: &MultiTimeframeCleanFuturesReport,
-    market: &str,
-) -> ResolvedMultiTimeframeInputs {
-    let mut resolved = ResolvedMultiTimeframeInputs {
-        source: "clean_futures_multi_timeframe".to_string(),
-        ..ResolvedMultiTimeframeInputs::default()
-    };
-    for report in &clean_report.reports {
-        if let Some(dataset) = report
-            .datasets
-            .iter()
-            .find(|dataset| dataset.market == market)
-        {
-            resolved
-                .paths
-                .insert(report.interval.clone(), dataset.output_path.clone());
-        }
-    }
-    if resolved.paths.is_empty() {
-        resolved.source = "primary_only".to_string();
-    }
-    resolved
 }
 
 fn build_multi_timeframe_summary(
@@ -14092,27 +13862,6 @@ fn hmm_params_compatible(params: &HMMParams) -> bool {
         && params.emission_stds.iter().all(|row| row.len() == OBS_DIM)
 }
 
-fn normalize_entry_quality_label(entry_signal: &str) -> String {
-    let normalized = entry_signal.trim().to_ascii_lowercase();
-    match normalized.as_str() {
-        "high" | "strong_buy" | "strong_sell" | "a+" => "high".to_string(),
-        "low" | "weak" | "invalid" | "no_trade" => "low".to_string(),
-        "medium" | "buy" | "sell" | "valid" => "medium".to_string(),
-        _ if normalized.contains("strong") || normalized.contains("high") => "high".to_string(),
-        _ if normalized.contains("weak") || normalized.contains("low") => "low".to_string(),
-        _ => "medium".to_string(),
-    }
-}
-
-fn normalize_trade_outcome_label(outcome: &str) -> String {
-    let normalized = outcome.trim().to_ascii_lowercase();
-    match normalized.as_str() {
-        "win" | "profit" | "tp" | "take_profit" => "win".to_string(),
-        "loss" | "lose" | "sl" | "stop" | "stop_loss" => "loss".to_string(),
-        _ => "breakeven".to_string(),
-    }
-}
-
 fn entry_quality_label_from_probability(probability: f64) -> &'static str {
     if probability >= 0.66 {
         "high"
@@ -14275,18 +14024,6 @@ fn apply_factor_outcome_overlay(
     adjusted[2] *= (1.0 - directional_bias * 0.35 + uncertainty * 0.30).max(0.05);
     normalize_distribution(&mut adjusted);
     adjusted
-}
-
-fn normalize_distribution(values: &mut [f64]) {
-    let sum: f64 = values.iter().sum();
-    if sum <= f64::EPSILON {
-        let uniform = 1.0 / values.len() as f64;
-        values.fill(uniform);
-        return;
-    }
-    for value in values {
-        *value /= sum;
-    }
 }
 
 fn build_feedback_record(
@@ -14694,100 +14431,6 @@ fn build_analyze_decision_hint(
         );
     }
     "market_view_comparable_and_factor_stack_stable".to_string()
-}
-
-fn derive_family_outcomes(
-    family_decisions: &[FactorFamilyDecision],
-    thresholds: &DecisionThresholds,
-    comparability: &DatasetComparability,
-    artifact_family_trends: Option<&[ict_engine::state::ArtifactFamilyTrendSummary]>,
-) -> Vec<FactorFamilyOutcome> {
-    family_decisions
-        .iter()
-        .map(|family| {
-            let replacement_candidates = family.replacement_candidates.clone();
-            let artifact_family_trend = artifact_family_trends
-                .and_then(|trends| trends.iter().find(|trend| trend.family == family.family));
-            let artifact_regressing = artifact_family_trend
-                .map(|trend| trend.consumed_validation_status == "validated_regressing")
-                .unwrap_or(false);
-            let artifact_improving = artifact_family_trend
-                .map(|trend| trend.consumed_validation_status == "validated_improving")
-                .unwrap_or(false);
-            let artifact_reason = artifact_family_trend
-                .map(|trend| trend.consumed_validation_reason.clone())
-                .unwrap_or_default();
-            let should_promote = comparability.comparable
-                && family.avg_score >= thresholds.promotion_min_score
-                && !artifact_regressing;
-            let should_rollback = comparability.comparable
-                && (artifact_regressing
-                    || !replacement_candidates.is_empty()
-                    || family.avg_score
-                        <= thresholds.promotion_min_score + thresholds.rollback_score_delta.abs());
-            FactorFamilyOutcome {
-                family: family.family.clone(),
-                promotion_decision: PromotionDecision {
-                    approved: should_promote,
-                    status: if should_promote {
-                        "promote".to_string()
-                    } else {
-                        "hold".to_string()
-                    },
-                    reason: if artifact_regressing {
-                        format!(
-                            "family_artifact_consumption_validated_regression:{}",
-                            artifact_reason
-                        )
-                    } else if should_promote && artifact_improving {
-                        format!(
-                            "family_score_above_promotion_threshold_with_artifact_validation:{}",
-                            artifact_reason
-                        )
-                    } else if should_promote {
-                        "family_score_above_promotion_threshold".to_string()
-                    } else {
-                        comparability.reason.clone()
-                    },
-                    target_factors: family
-                        .actions
-                        .iter()
-                        .filter(|item| item.ends_with(":keep") || item.ends_with(":tune"))
-                        .cloned()
-                        .collect(),
-                    target_families: vec![family.family.clone()],
-                },
-                rollback_recommendation: RollbackRecommendation {
-                    should_rollback,
-                    scope: if should_rollback {
-                        if artifact_regressing && replacement_candidates.is_empty() {
-                            "family_artifact".to_string()
-                        } else {
-                            "family".to_string()
-                        }
-                    } else {
-                        "none".to_string()
-                    },
-                    reason: if should_rollback {
-                        if artifact_regressing {
-                            format!(
-                                "family_artifact_consumption_validated_regression:{}",
-                                artifact_reason
-                            )
-                        } else if !replacement_candidates.is_empty() {
-                            "family_contains_replacement_candidates".to_string()
-                        } else {
-                            "family_score_below_safe_band".to_string()
-                        }
-                    } else {
-                        "family_stable".to_string()
-                    },
-                    target_factors: replacement_candidates,
-                    target_families: vec![family.family.clone()],
-                },
-            }
-        })
-        .collect()
 }
 
 fn family_diffs(
@@ -17329,164 +16972,6 @@ fn decision_thresholds() -> DecisionThresholds {
     DecisionThresholds::default()
 }
 
-fn derive_promotion_decision(
-    rankings: &[PersistedFactorRanking],
-    score_deltas: &[RankingDiffItem],
-    comparability: &DatasetComparability,
-    thresholds: &DecisionThresholds,
-    artifact_consumed_gate: Option<&ArtifactConsumedDecisionGate>,
-) -> PromotionDecision {
-    let improving = score_deltas
-        .iter()
-        .filter(|item| item.score_delta >= thresholds.promotion_min_score_delta)
-        .map(|item| item.factor_name.clone())
-        .collect::<Vec<_>>();
-    let top_score = rankings
-        .first()
-        .map(|item| item.composite_score)
-        .unwrap_or(0.0);
-    let severe_regression = score_deltas
-        .iter()
-        .any(|item| item.score_delta <= thresholds.rollback_score_delta);
-    let artifact_regressing = artifact_consumed_gate
-        .map(|gate| gate.status == "validated_regressing")
-        .unwrap_or(false);
-    let artifact_improving = artifact_consumed_gate
-        .map(|gate| gate.status == "validated_improving")
-        .unwrap_or(false);
-
-    if !comparability.comparable {
-        PromotionDecision {
-            approved: false,
-            status: "hold".to_string(),
-            reason: comparability.reason.clone(),
-            target_factors: improving,
-            target_families: Vec::new(),
-        }
-    } else if artifact_regressing {
-        PromotionDecision {
-            approved: false,
-            status: "hold".to_string(),
-            reason: artifact_consumed_gate
-                .map(|gate| {
-                    format!(
-                        "artifact_consumption_validated_regression:{} target_kinds={:?}",
-                        gate.reason, gate.target_kinds
-                    )
-                })
-                .unwrap_or_else(|| "artifact_consumption_validated_regression".to_string()),
-            target_factors: improving,
-            target_families: Vec::new(),
-        }
-    } else if !improving.is_empty()
-        && !severe_regression
-        && top_score >= thresholds.promotion_min_score
-    {
-        PromotionDecision {
-            approved: true,
-            status: "promote".to_string(),
-            reason: if artifact_improving {
-                artifact_consumed_gate
-                    .map(|gate| {
-                        format!(
-                            "material_score_improvement_with_artifact_consumption_validation:{}",
-                            gate.reason
-                        )
-                    })
-                    .unwrap_or_else(|| {
-                        "material_score_improvement_with_artifact_consumption_validation"
-                            .to_string()
-                    })
-            } else {
-                "material_score_improvement_without_major_regression".to_string()
-            },
-            target_factors: improving,
-            target_families: Vec::new(),
-        }
-    } else {
-        PromotionDecision {
-            approved: false,
-            status: "hold".to_string(),
-            reason: if severe_regression {
-                "score_regression_detected".to_string()
-            } else {
-                "insufficient_improvement".to_string()
-            },
-            target_factors: improving,
-            target_families: Vec::new(),
-        }
-    }
-}
-
-fn derive_rollback_recommendation(
-    score_deltas: &[RankingDiffItem],
-    probability_deltas: &[ProbabilityDiff],
-    comparability: &DatasetComparability,
-    thresholds: &DecisionThresholds,
-    artifact_consumed_gate: Option<&ArtifactConsumedDecisionGate>,
-) -> RollbackRecommendation {
-    if !comparability.comparable {
-        return RollbackRecommendation {
-            should_rollback: false,
-            scope: "none".to_string(),
-            reason: comparability.reason.clone(),
-            target_factors: Vec::new(),
-            target_families: Vec::new(),
-        };
-    }
-
-    let target_factors = score_deltas
-        .iter()
-        .filter(|item| item.score_delta <= thresholds.rollback_score_delta)
-        .map(|item| item.factor_name.clone())
-        .collect::<Vec<_>>();
-    let harmful_prob_shift = probability_deltas.iter().any(|item| {
-        (item.state.ends_with(":win") && item.delta <= -thresholds.rollback_probability_delta)
-            || (item.state.ends_with(":loss")
-                && item.delta >= thresholds.rollback_probability_delta)
-    });
-    let artifact_regressing = artifact_consumed_gate
-        .map(|gate| gate.status == "validated_regressing")
-        .unwrap_or(false);
-
-    if harmful_prob_shift || !target_factors.is_empty() || artifact_regressing {
-        RollbackRecommendation {
-            should_rollback: true,
-            scope: if artifact_regressing && target_factors.is_empty() {
-                "artifact".to_string()
-            } else if target_factors.len() <= 1 {
-                "targeted".to_string()
-            } else {
-                "broad".to_string()
-            },
-            reason: if artifact_regressing {
-                artifact_consumed_gate
-                    .map(|gate| {
-                        format!(
-                            "artifact_consumption_validated_regression:{} target_kinds={:?}",
-                            gate.reason, gate.target_kinds
-                        )
-                    })
-                    .unwrap_or_else(|| "artifact_consumption_validated_regression".to_string())
-            } else if harmful_prob_shift {
-                "outcome_calibration_regressed".to_string()
-            } else {
-                "factor_score_regression".to_string()
-            },
-            target_factors,
-            target_families: Vec::new(),
-        }
-    } else {
-        RollbackRecommendation {
-            should_rollback: false,
-            scope: "none".to_string(),
-            reason: "no_material_regression".to_string(),
-            target_factors,
-            target_families: Vec::new(),
-        }
-    }
-}
-
 fn compute_hash(parts: &[impl AsRef<str>]) -> String {
     let mut hasher = DefaultHasher::new();
     for part in parts {
@@ -17651,6 +17136,7 @@ mod tests {
     use super::*;
     use chrono::{Duration, TimeZone};
     use ict_engine::bbn::trading::topology::build_trading_network;
+    use ict_engine::state::FactorPipelineLabelSource;
 
     fn sample_candles(count: usize) -> Vec<Candle> {
         let start = Utc.with_ymd_and_hms(2024, 1, 1, 0, 0, 0).unwrap();
