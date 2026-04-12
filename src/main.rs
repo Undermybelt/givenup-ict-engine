@@ -21,8 +21,9 @@ use ict_engine::analyze::technical_price_section::{
 };
 use ict_engine::application::{
     belief::{
-        build_canonical_belief_snapshot,
+        apply_factor_outcome_overlay, build_canonical_belief_snapshot,
         build_factor_pipeline_debug_report as build_factor_pipeline_debug_report_v2,
+        combine_bias_vectors,
         debug_report::{
             ExpansionBbnSupport as DebugExpansionBbnSupport,
             ExpansionLatestSignal as DebugExpansionLatestSignal,
@@ -30,13 +31,12 @@ use ict_engine::application::{
         },
         infer_market_from_symbol,
         pipeline_types::ExpansionFactorPipelineReport,
-        pre_bayes_evidence_policy, FactorPipelineDebugReport,
+        pre_bayes_evidence_policy, probability_map, FactorPipelineDebugReport,
     },
     decision_utils::{
         derive_family_outcomes, derive_promotion_decision, derive_rollback_recommendation,
-        normalize_distribution, normalize_entry_quality_label, normalize_trade_outcome_label,
-        parse_research_objective, research_objective_label, score_grade,
-        ArtifactConsumedDecisionGate, ResearchObjectiveMode,
+        normalize_entry_quality_label, normalize_trade_outcome_label, parse_research_objective,
+        research_objective_label, score_grade, ArtifactConsumedDecisionGate, ResearchObjectiveMode,
     },
     multi_timeframe_inputs::{
         detected_multi_timeframe_clean_root, infer_interval_for_analyze_frame,
@@ -13982,48 +13982,11 @@ fn regime_probs_from_log_gamma(log_gamma: Option<&Vec<f64>>) -> Result<RegimePro
     })
 }
 
-fn probability_map(states: &[String], probabilities: &[f64]) -> BTreeMap<String, f64> {
-    states
-        .iter()
-        .cloned()
-        .zip(probabilities.iter().copied())
-        .collect()
-}
-
 fn distribution_from_map(states: &[String], probabilities: &BTreeMap<String, f64>) -> Vec<f64> {
     states
         .iter()
         .map(|state| probabilities.get(state).copied().unwrap_or(0.0))
         .collect()
-}
-
-fn combine_bias_vectors(left: &[f64], right: &[f64]) -> Vec<f64> {
-    let len = left.len().max(right.len());
-    let mut combined = vec![1.0; len];
-    for index in 0..len {
-        let left_value = left.get(index).copied().unwrap_or(1.0 / len as f64);
-        let right_value = right.get(index).copied().unwrap_or(1.0 / len as f64);
-        combined[index] = (left_value * right_value).max(1e-6);
-    }
-    normalize_distribution(&mut combined);
-    combined
-}
-
-fn apply_factor_outcome_overlay(
-    distribution: &[f64],
-    directional_bias: f64,
-    uncertainty: f64,
-) -> Vec<f64> {
-    let mut adjusted = distribution.to_vec();
-    if adjusted.len() < 3 {
-        return adjusted;
-    }
-
-    adjusted[0] *= (1.0 + directional_bias * 0.35 - uncertainty * 0.10).max(0.05);
-    adjusted[1] *= (1.0 + uncertainty * 0.20).max(0.05);
-    adjusted[2] *= (1.0 - directional_bias * 0.35 + uncertainty * 0.30).max(0.05);
-    normalize_distribution(&mut adjusted);
-    adjusted
 }
 
 fn build_feedback_record(
