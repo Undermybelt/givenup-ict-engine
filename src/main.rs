@@ -10692,7 +10692,26 @@ fn factor_backtest_command(
     state_dir: &str,
 ) -> Result<()> {
     let report = run_factor_backtest(symbol, data, paired_data, state_dir)?;
-    println!("{}", serde_json::to_string_pretty(&report)?);
+    let compact_report = build_backtest_result_artifact(
+        format!("factor_backtest:{}", symbol),
+        &report
+            .scorecards
+            .iter()
+            .map(|item| format!("{}:{:.3}", item.factor_name, item.composite_score))
+            .collect::<Vec<_>>(),
+        &[format!("best_factor={:?}", report.best_factor)],
+        &[],
+        &[],
+        true,
+        &[],
+    );
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&serde_json::json!({
+            "report": report,
+            "compact_backtest_report": compact_report,
+        }))?
+    );
     Ok(())
 }
 
