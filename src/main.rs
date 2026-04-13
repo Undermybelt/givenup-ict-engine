@@ -3314,11 +3314,34 @@ fn expansion_sop_command(
             true,
             &report.recommended_commands,
         );
+        let factor_lifecycle = build_factor_lifecycle_view(
+            report.mutation_spec.as_ref(),
+            report.factor_mutation_evaluation.as_ref(),
+            &PromotionDecision {
+                approved: report.recommended_global_factor.is_some(),
+                status: if report.recommended_global_factor.is_some() {
+                    "promote".to_string()
+                } else {
+                    "hold".to_string()
+                },
+                reason: "expansion_sop_global_selection".to_string(),
+                target_factors: report.recommended_global_factor.iter().cloned().collect(),
+                target_families: vec![],
+            },
+            &RollbackRecommendation {
+                should_rollback: false,
+                scope: "none".to_string(),
+                reason: "no_global_rollback".to_string(),
+                target_factors: vec![],
+                target_families: vec![],
+            },
+        );
         println!(
             "{}",
             serde_json::to_string_pretty(&serde_json::json!({
                 "report": report,
                 "compact_backtest_report": compact_report,
+                "factor_lifecycle": factor_lifecycle,
             }))?
         );
     }
