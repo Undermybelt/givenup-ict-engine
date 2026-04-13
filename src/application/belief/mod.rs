@@ -2,6 +2,7 @@ pub mod debug_report;
 pub mod pipeline_builder;
 pub mod pipeline_shared;
 pub mod pipeline_types;
+pub mod policy_lineage_surface;
 pub mod shadow_policy_surface;
 pub mod shared;
 
@@ -17,4 +18,5 @@ pub use pipeline_shared::{
     raw_liquidity_context_trace, raw_market_regime_trace, raw_multi_timeframe_resonance_trace,
 };
 pub use pipeline_types::ExpansionFactorPipelineReport;
+pub use policy_lineage_surface::{build_belief_policy_lineage_surface, BeliefPolicyLineageSurface};
 pub use shadow_policy_surface::{build_belief_shadow_policy_surface, BeliefShadowPolicySurface};
