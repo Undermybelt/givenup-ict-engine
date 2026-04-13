@@ -5595,12 +5595,40 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
                 .num_seconds(),
         )
     });
+    let compact_report = build_compact_analyze_report(
+        report.supporting.decision_hint.clone(),
+        &report.supporting.multi_timeframe_summary,
+        &report.supporting.artifact_action_summary,
+        &[report.supporting.recommended_next_command.clone()],
+    );
+    let agent_report = build_agent_guidance_report(
+        report.supporting.workflow_state.reason.clone(),
+        &report.supporting.multi_timeframe_summary,
+        &report.supporting.artifact_action_summary,
+        &[report.supporting.recommended_next_command.clone()],
+        &[],
+    );
+    let human_report = build_human_analyze_report(
+        report.analysis.price_action.narrative.clone(),
+        report.analysis.technical_price.narrative.clone(),
+        report.analysis.smt_correlation.narrative.clone(),
+        format!(
+            "regime={} liquidity={} direction={:?}",
+            report.analysis.regime_bayesian.regime_label,
+            report.analysis.regime_bayesian.liquidity_label,
+            report.analysis.regime_bayesian.selected_direction
+        ),
+        report.analysis.trade_plan.narrative.clone(),
+    );
     println!(
         "{}",
         serde_json::to_string_pretty(&serde_json::json!({
             "report": report,
             "source_snapshot": source_snapshot,
             "freshness_gate": freshness_gate,
+            "compact_report": compact_report,
+            "agent_report": agent_report,
+            "human_report": human_report.render(),
         }))?
     );
     Ok(())
