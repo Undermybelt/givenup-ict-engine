@@ -7,6 +7,14 @@ pub struct SimulatedTrade {
     pub entry_price: f64,
     pub exit_price: f64,
     pub pnl: f64,
+    pub exit_reason: SimulatedExitReason,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SimulatedExitReason {
+    StopLoss,
+    TakeProfit,
+    TimeExpiry,
 }
 
 /// Backtest engine
@@ -59,6 +67,7 @@ impl BacktestEngine {
                             exit_index,
                             plan.entry,
                             plan.stop_loss,
+                            SimulatedExitReason::StopLoss,
                         ));
                     }
                     if candle.high >= plan.tp1 {
@@ -68,6 +77,7 @@ impl BacktestEngine {
                             exit_index,
                             plan.entry,
                             plan.tp1,
+                            SimulatedExitReason::TakeProfit,
                         ));
                     }
                 }
@@ -79,6 +89,7 @@ impl BacktestEngine {
                             exit_index,
                             plan.entry,
                             plan.stop_loss,
+                            SimulatedExitReason::StopLoss,
                         ));
                     }
                     if candle.low <= plan.tp1 {
@@ -88,6 +99,7 @@ impl BacktestEngine {
                             exit_index,
                             plan.entry,
                             plan.tp1,
+                            SimulatedExitReason::TakeProfit,
                         ));
                     }
                 }
@@ -101,6 +113,7 @@ impl BacktestEngine {
             exit_end,
             plan.entry,
             candles[exit_end].close,
+            SimulatedExitReason::TimeExpiry,
         ))
     }
 
@@ -110,6 +123,7 @@ impl BacktestEngine {
         exit_index: usize,
         entry_price: f64,
         exit_price: f64,
+        exit_reason: SimulatedExitReason,
     ) -> SimulatedTrade {
         let signed_return = match plan.direction {
             Direction::Bull => (exit_price - entry_price) / entry_price.max(f64::EPSILON),
@@ -123,6 +137,7 @@ impl BacktestEngine {
             entry_price,
             exit_price,
             pnl: signed_return * plan.kelly_fraction,
+            exit_reason,
         }
     }
 }
@@ -191,6 +206,7 @@ mod tests {
             BacktestEngine::simulate_trade(&candles, 0, &plan(Direction::Bull), 2).unwrap();
         assert_eq!(simulated.entry_index, 1);
         assert_eq!(simulated.exit_index, 2);
+        assert_eq!(simulated.exit_reason, SimulatedExitReason::TakeProfit);
         assert!(simulated.pnl > 0.0);
     }
 
@@ -204,5 +220,35 @@ mod tests {
 
         let simulated = BacktestEngine::simulate_trade(&candles, 0, &plan(Direction::Bull), 2);
         assert!(simulated.is_none());
+    }
+
+    #[test]
+    fn test_simulate_trade_marks_stop_loss_exit_reason() {
+        let candles = vec![
+            candle(99.0, 99.5, 98.5, 99.2),
+            candle(99.5, 100.5, 99.0, 100.0),
+            candle(100.0, 100.2, 97.5, 98.0),
+        ];
+
+        let simulated =
+            BacktestEngine::simulate_trade(&candles, 0, &plan(Direction::Bull), 2).unwrap();
+        assert_eq!(simulated.exit_reason, SimulatedExitReason::StopLoss);
+        assert!(simulated.pnl < 0.0);
+    }
+
+    #[test]
+    fn test_simulate_trade_marks_time_expiry_exit_reason() {
+        let candles = vec![
+            candle(99.0, 99.5, 98.5, 99.2),
+            candle(99.5, 100.5, 99.0, 100.0),
+            candle(100.0, 102.0, 99.5, 101.0),
+            candle(101.0, 102.5, 100.0, 101.5),
+        ];
+
+        let simulated =
+            BacktestEngine::simulate_trade(&candles, 0, &plan(Direction::Bull), 2).unwrap();
+        assert_eq!(simulated.exit_index, 3);
+        assert_eq!(simulated.exit_reason, SimulatedExitReason::TimeExpiry);
+        assert!(simulated.pnl > 0.0);
     }
 }

@@ -4,6 +4,25 @@ English first. 中文在后。
 
 A probability-driven Rust CLI for ICT-style market analysis, research, feedback learning, and workflow tracking.
 
+## Quick start
+
+Default direction today is absorb/learn the command surface first, then install optional extras only if needed.
+
+```bash
+cargo run -- --help
+cargo run -- analyze --help
+cargo run -- factor-research --help
+```
+
+If you only want the core CLI, Rust is enough:
+
+```bash
+cargo check
+cargo run -- --help
+```
+
+TimesFM is optional and only needed for the Python bridge / forecasting path.
+
 ## Overview
 
 This repository is a Rust implementation of an ICT-oriented trading analysis engine. It combines:
