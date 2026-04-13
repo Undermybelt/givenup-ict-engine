@@ -1,6 +1,8 @@
 use serde::Serialize;
 
-use crate::state::{FactorMutationEvaluation, FactorMutationSpec, PromotionDecision, RollbackRecommendation};
+use crate::state::{
+    FactorMutationEvaluation, FactorMutationSpec, PromotionDecision, RollbackRecommendation,
+};
 
 #[derive(Debug, Clone, Serialize, Default)]
 pub struct FactorLifecycleView {
@@ -22,7 +24,9 @@ pub fn build_factor_lifecycle_view(
         .map(|spec| spec.mutation_id.clone())
         .or_else(|| mutation_evaluation.map(|item| item.mutation_id.clone()))
         .unwrap_or_else(|| "unscoped".to_string());
-    let accepted = mutation_evaluation.map(|item| item.accepted).unwrap_or(false);
+    let accepted = mutation_evaluation
+        .map(|item| item.accepted)
+        .unwrap_or(false);
     let next_action = if rollback_recommendation.should_rollback {
         "rollback".to_string()
     } else if promotion_decision.approved {

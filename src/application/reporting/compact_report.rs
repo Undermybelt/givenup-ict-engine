@@ -76,7 +76,14 @@ mod tests {
 
     #[test]
     fn compact_analyze_report_limits_lists() {
-        let items = vec!["a".to_string(), "b".to_string(), "c".to_string(), "d".to_string(), "e".to_string(), "f".to_string()];
+        let items = vec![
+            "a".to_string(),
+            "b".to_string(),
+            "c".to_string(),
+            "d".to_string(),
+            "e".to_string(),
+            "f".to_string(),
+        ];
         let report = build_compact_analyze_report("ok", &items, &items, &items);
         assert_eq!(report.evidence.len(), 5);
         assert_eq!(report.risks.len(), 5);

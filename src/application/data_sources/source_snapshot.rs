@@ -25,7 +25,11 @@ pub fn build_source_snapshot(
         aux_base_url: provenance.aux_base_url.clone(),
         freshness: classify_freshness(provenance.fetched_at, now),
         health: vec![
-            build_source_health(provenance.futures_backend.clone(), true, "source_registered"),
+            build_source_health(
+                provenance.futures_backend.clone(),
+                true,
+                "source_registered",
+            ),
             build_source_health(provenance.aux_backend.clone(), true, "source_registered"),
         ],
     }

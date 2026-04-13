@@ -4,7 +4,10 @@ use super::{build_reflection_bundle, ReflectionBundle};
 
 pub fn build_research_reflection_bundle(symbol: &str, report: &ResearchReport) -> ReflectionBundle {
     let next_candidates = if report.recommended_next_command.is_empty() {
-        vec![format!("research={}", report.recommended_commands.research.command)]
+        vec![format!(
+            "research={}",
+            report.recommended_commands.research.command
+        )]
     } else {
         vec![report.recommended_next_command.clone()]
     };
@@ -13,7 +16,10 @@ pub fn build_research_reflection_bundle(symbol: &str, report: &ResearchReport) -
         symbol,
         report.provenance.data_fingerprint.clone(),
         report.research_objective.clone(),
-        report.artifact_decision_summary.consumed_trend_status.clone(),
+        report
+            .artifact_decision_summary
+            .consumed_trend_status
+            .clone(),
         report
             .best_factor
             .clone()

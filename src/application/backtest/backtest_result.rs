@@ -37,9 +37,7 @@ mod tests {
 
     #[test]
     fn backtest_result_builder_keeps_comparable_flag() {
-        let result = build_backtest_result_artifact(
-            "summary", &[], &[], &[], &[], true, &[]
-        );
+        let result = build_backtest_result_artifact("summary", &[], &[], &[], &[], true, &[]);
         assert!(result.comparable);
     }
 }

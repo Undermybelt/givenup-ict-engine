@@ -44,7 +44,15 @@ mod tests {
     #[test]
     fn backtest_request_builder_keeps_market() {
         let req = build_backtest_request(
-            "NQ", "futures", "15m", "2024Q1", "generic", &[], &[], true, "history"
+            "NQ",
+            "futures",
+            "15m",
+            "2024Q1",
+            "generic",
+            &[],
+            &[],
+            true,
+            "history",
         );
         assert_eq!(req.market, "futures");
         assert!(req.use_multi_timeframe);

@@ -15,7 +15,10 @@ impl HumanAnalyzeReport {
             format!("基本价格结构分析\n{}", self.basic_price_structure_analysis),
             format!("技术面价格分析\n{}", self.technical_price_analysis),
             format!("SMT相关性分析\n{}", self.smt_correlation_analysis),
-            format!("Regime分类结合贝叶斯分析并给推测概率\n{}", self.regime_bayes_analysis),
+            format!(
+                "Regime分类结合贝叶斯分析并给推测概率\n{}",
+                self.regime_bayes_analysis
+            ),
             format!("交易计划\n{}", self.trade_plan),
         ]
         .join("\n\n")

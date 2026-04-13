@@ -24,13 +24,14 @@ pub fn build_belief_policy_lineage_surface(
         .collect::<std::collections::BTreeSet<_>>()
         .into_iter()
         .collect::<Vec<_>>();
-    let rollback_candidate_version = if matches!(latest_gate_status, "observe_only" | "pass_neutralized") {
-        previous
-            .map(|record| record.policy.version.clone())
-            .unwrap_or_default()
-    } else {
-        String::new()
-    };
+    let rollback_candidate_version =
+        if matches!(latest_gate_status, "observe_only" | "pass_neutralized") {
+            previous
+                .map(|record| record.policy.version.clone())
+                .unwrap_or_default()
+        } else {
+            String::new()
+        };
     let rollback_reason = if rollback_candidate_version.is_empty() {
         "current_policy_stable".to_string()
     } else {
@@ -54,7 +55,8 @@ impl From<BeliefPolicyLineageSurface> for PreBayesPolicyLineageSummary {
     fn from(value: BeliefPolicyLineageSurface) -> Self {
         Self {
             latest_version: (!value.latest_version.is_empty()).then_some(value.latest_version),
-            previous_version: (!value.previous_version.is_empty()).then_some(value.previous_version),
+            previous_version: (!value.previous_version.is_empty())
+                .then_some(value.previous_version),
             total_versions: value.total_versions,
             changed_fields_union: value.changed_fields_union,
             rollback_candidate_version: (!value.rollback_candidate_version.is_empty())
