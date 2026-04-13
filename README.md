@@ -1,14 +1,32 @@
-# ICT Engine - ICT Expansion Trading Engine
+# ICT Engine - ICT Expansion Trading Engine (•̀ᴗ•́)و
 
-基于ICT (Inner Circle Trader) 市场制造者模型的概率交易分析引擎。
+English first. 中文在后。
+
+A probability-driven Rust CLI for ICT-style market analysis, research, feedback learning, and workflow tracking.
+
+## Overview
+
+This repository is a Rust implementation of an ICT-oriented trading analysis engine. It combines:
+
+- **ICT structure analysis** - market structure, liquidity, imbalance, expansion context
+- **Probabilistic decision layers** - HMM, Bayesian fusion, gated trade reasoning
+- **Research / feedback workflow** - factor research, update feedback, artifact tracking
+- **Workflow visibility** - workflow snapshots, agent prompts, next-command guidance
+
+---
+
+# 中文简介 (✿◠‿◠)
+
+基于 ICT (Inner Circle Trader) 思路的概率交易分析引擎，核心是：分析、研究、反馈回灌、工作流追踪。
 
 ## 项目概述
 
-本项目是一个完整的Rust实现的ICT交易分析引擎，结合了：
+本项目是一个 Rust CLI 交易研究引擎，结合了：
 
-- **ICTMS核心** - 基于ICT理论的市场结构分析
-- **TimesFM集成** - Google时间序列基础模型用于预测
-- **Market Analysis数据源** - 从market-analysis技能获取数据
+- **ICT 结构分析** - 市场结构、流动性、失衡、扩张上下文
+- **概率决策层** - HMM、贝叶斯融合、带门控的交易推断
+- **研究 / 反馈工作流** - 因子研究、结果回灌、artifact 追踪
+- **工作流可见性** - workflow snapshot、agent prompts、下一步命令建议
 
 ## 目录结构
 
@@ -106,13 +124,20 @@ src/
     └── timesfm.rs         # TimesFM调用桥接
 ```
 
-## 构建
+## Build
 
 ```bash
 cargo build --release
 ```
 
-## 使用
+## Usage
+
+### 查看命令面
+
+```bash
+cargo run -- --help
+cargo run -- analyze --help
+```
 
 ### 分析市场
 
@@ -124,6 +149,13 @@ ict-engine analyze \
   --data-ltf data/NQ_15m.json
 ```
 
+当前 analyze 输出除 `report` 外，还会包含：
+- `compact_report`
+- `agent_report`
+- `human_report`
+- `belief_shadow_policy`
+- `belief_policy_lineage`
+
 ### 训练HMM
 
 ```bash
@@ -133,13 +165,52 @@ ict-engine train \
   --epochs 200
 ```
 
-### 回测
+### 因子研究
 
 ```bash
-ict-engine backtest \
+ict-engine factor-research \
   --symbol NQ \
-  --data data/NQ_1h_historical.json
+  --data data/NQ_1h_historical.json \
+  --objective generic
 ```
+
+当前 factor-research 输出会包含：
+- `report`
+- `reflection_bundle`
+- `factor_lifecycle`
+
+### 结果回灌
+
+```bash
+ict-engine update \
+  --symbol NQ \
+  --outcome win \
+  --entry-signal medium
+```
+
+当前 update 输出会包含：
+- `report`
+- `reflection_bundle`
+
+### 工作流状态
+
+```bash
+ict-engine workflow-status \
+  --symbol NQ
+```
+
+### 历史数据复用规则
+
+当前工作流已改为：
+- 若 agent 要复用历史数据去跑 `factor-research` 或 `factor-backtest`
+- 即使系统已记录路径，也必须先问用户“这次用哪份数据”
+- 因此推荐命令会进入硬门禁：
+  - `ready = false`
+  - `missing_inputs` 包含 `user_selected_historical_data`
+  - `recorded_data_paths` 会列出已知候选路径
+
+详细 smoke / acceptance 流见：
+- `docs/smoke-acceptance.md`
 
 ## 核心功能
 
