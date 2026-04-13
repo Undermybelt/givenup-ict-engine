@@ -48,6 +48,9 @@ use ict_engine::application::{
         MultiTimeframeCleanReportView, ResolvedMultiTimeframeInputs, MULTI_TIMEFRAME_INTERVALS,
     },
     reflection::build_research_reflection_bundle,
+    reporting::{
+        build_agent_guidance_report, build_compact_analyze_report, build_human_analyze_report,
+    },
 };
 use ict_engine::backtest::{BacktestEngine, Metrics, RegimeSplit};
 use ict_engine::bayesian::{cascade_bear, cascade_bull, CascadeConfig};
@@ -1278,7 +1281,44 @@ fn analyze_command(
         &mut report.supporting.rollback_recommendation,
     );
 
-    println!("{}", serde_json::to_string_pretty(&report)?);
+    emit_analyze_output(&report)
+}
+
+fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
+    let compact_report = build_compact_analyze_report(
+        report.supporting.decision_hint.clone(),
+        &report.supporting.multi_timeframe_summary,
+        &report.supporting.artifact_action_summary,
+        &[report.supporting.recommended_next_command.clone()],
+    );
+    let agent_report = build_agent_guidance_report(
+        report.supporting.workflow_state.reason.clone(),
+        &report.supporting.multi_timeframe_summary,
+        &report.supporting.artifact_action_summary,
+        &[report.supporting.recommended_next_command.clone()],
+        &[],
+    );
+    let human_report = build_human_analyze_report(
+        report.analysis.price_action.narrative.clone(),
+        report.analysis.technical_price.narrative.clone(),
+        report.analysis.smt_correlation.narrative.clone(),
+        format!(
+            "regime={} liquidity={} direction={:?}",
+            report.analysis.regime_bayesian.regime_label,
+            report.analysis.regime_bayesian.liquidity_label,
+            report.analysis.regime_bayesian.selected_direction
+        ),
+        report.analysis.trade_plan.narrative.clone(),
+    );
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&serde_json::json!({
+            "report": report,
+            "compact_report": compact_report,
+            "agent_report": agent_report,
+            "human_report": human_report.render(),
+        }))?
+    );
     Ok(())
 }
 
