@@ -20,7 +20,8 @@ use ict_engine::analyze::technical_price_section::{
 use ict_engine::application::{
     backtest::build_backtest_result_artifact,
     belief::{
-        apply_factor_outcome_overlay, build_canonical_belief_snapshot,
+        apply_factor_outcome_overlay, build_belief_shadow_policy_surface,
+        build_canonical_belief_snapshot,
         build_expansion_factor_pipeline_report as build_expansion_factor_pipeline_report_v2,
         build_expansion_factor_pipeline_report_with_registry as build_expansion_factor_pipeline_report_with_registry_v2,
         build_factor_pipeline_debug_report as build_factor_pipeline_debug_report_v2,
@@ -1311,6 +1312,13 @@ fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
         ),
         report.analysis.trade_plan.narrative.clone(),
     );
+    let policy_record = load_pre_bayes_policy_history(&report.meta.state_dir, &report.symbol)?
+        .into_iter()
+        .last();
+    let belief_shadow_policy = build_belief_shadow_policy_surface(
+        &report.supporting.canonical_belief_report,
+        policy_record.as_ref(),
+    );
     println!(
         "{}",
         serde_json::to_string_pretty(&serde_json::json!({
@@ -1318,6 +1326,7 @@ fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
             "compact_report": compact_report,
             "agent_report": agent_report,
             "human_report": human_report.render(),
+            "belief_shadow_policy": belief_shadow_policy,
         }))?
     );
     Ok(())
