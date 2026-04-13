@@ -1255,6 +1255,7 @@ fn analyze_command(
             update_outcome: None,
             update_entry_signal: None,
             update_feedback_file: Some(pending_update_file),
+            user_data_selection_required: true,
         },
     );
     report.supporting.workflow_snapshot = persist_analyze_run(
@@ -5600,6 +5601,7 @@ fn analyze_live_command(
             update_outcome: None,
             update_entry_signal: None,
             update_feedback_file: Some(pending_update_file),
+            user_data_selection_required: true,
         },
     );
     report.supporting.workflow_snapshot = persist_analyze_run(
@@ -9482,6 +9484,7 @@ fn train_command(symbol: &str, data: &str, epochs: usize, state_dir: &str) -> Re
         update_outcome: None,
         update_entry_signal: None,
         update_feedback_file: pending_update_artifact_path(state_dir, symbol),
+        user_data_selection_required: true,
     });
     concretize_action_plan_commands(&mut agent_action_plan, &recommended_commands);
     let recommended_next_command =
@@ -10127,6 +10130,7 @@ fn update_command(
         update_outcome: Some(report.realized_outcome.clone()),
         update_entry_signal: Some(entry_signal.to_string()),
         update_feedback_file: feedback_file.map(str::to_string),
+        user_data_selection_required: true,
     });
     concretize_action_plan_commands(&mut report.agent_action_plan, &report.recommended_commands);
     report.recommended_next_command =
@@ -11060,7 +11064,7 @@ fn run_factor_research(
             data,
             paired_data.unwrap_or(""),
         ],
-        data_fingerprint(&candles, paired_candles.as_deref(), "factor-research"),
+        data_fingerprint(&candles, paired_candles.as_deref(), "analyze"),
     );
     report.dataset_comparability = dataset_comparability(
         previous_runs.last().map(|run| run.run_id.clone()),
@@ -11273,6 +11277,7 @@ fn run_factor_research(
         update_outcome: None,
         update_entry_signal: None,
         update_feedback_file: pending_update_artifact_path(state_dir, symbol),
+        user_data_selection_required: true,
     });
     if objective != ResearchObjectiveMode::Generic && report.recommended_commands.research.ready {
         report.recommended_commands.research.command = format!(
@@ -12065,6 +12070,7 @@ fn run_factor_backtest(
         update_outcome: None,
         update_entry_signal: None,
         update_feedback_file: pending_update_artifact_path(state_dir, symbol),
+        user_data_selection_required: true,
     });
     concretize_action_plan_commands(&mut report.agent_action_plan, &report.recommended_commands);
     report.recommended_next_command =
@@ -12619,6 +12625,7 @@ fn build_analyze_report(
         update_outcome: None,
         update_entry_signal: None,
         update_feedback_file: pending_update_artifact_path(state_dir, symbol),
+        user_data_selection_required: true,
     });
     concretize_action_plan_commands(&mut agent_action_plan, &recommended_commands);
     let recommended_next_command =
@@ -14334,6 +14341,7 @@ struct CommandContext {
     update_outcome: Option<String>,
     update_entry_signal: Option<String>,
     update_feedback_file: Option<String>,
+    user_data_selection_required: bool,
 }
 
 fn shell_quote(value: &str) -> String {
@@ -14360,10 +14368,41 @@ fn recommended_command(
         ready,
         missing_inputs,
         rationale: rationale.into(),
+        user_data_selection_required: false,
+        user_data_selection_prompt: String::new(),
+        recorded_data_paths: Vec::new(),
     }
 }
 
+fn user_data_selection_prompt(symbol: &str, data_paths: &[String]) -> String {
+    let recorded = if data_paths.is_empty() {
+        "recorded_paths=[]".to_string()
+    } else {
+        format!("recorded_paths={}", data_paths.join(", "))
+    };
+    format!(
+        "Before using historical data for {} again, ask the user which dataset to use. {}",
+        symbol, recorded
+    )
+}
+
 fn render_recommended_command(command: &RecommendedCommand) -> String {
+    if command.user_data_selection_required {
+        let rendered_command = if command.command.is_empty() {
+            "choose historical dataset with user before running command".to_string()
+        } else {
+            command.command.clone()
+        };
+        let prompt = if command.user_data_selection_prompt.is_empty() {
+            "ask user which historical dataset to use".to_string()
+        } else {
+            command.user_data_selection_prompt.clone()
+        };
+        return format!(
+            "ask-user: {} | blocked until user_selected_historical_data | then {}",
+            prompt, rendered_command
+        );
+    }
     if command.ready {
         command.command.clone()
     } else if !command.command.is_empty() {
@@ -14424,6 +14463,48 @@ fn recommended_next_command(
 }
 
 fn command_recommendations(context: &CommandContext) -> CommandRecommendations {
+    let mut recorded_data_paths = Vec::new();
+    if let Some(analyze) = &context.analyze {
+        match analyze {
+            AnalyzeCommandSource::Files {
+                data_htf,
+                data_mtf,
+                data_ltf,
+            } => {
+                for path in [data_htf, data_mtf, data_ltf] {
+                    if !recorded_data_paths.contains(path) {
+                        recorded_data_paths.push(path.clone());
+                    }
+                }
+            }
+            AnalyzeCommandSource::Live { source } => {
+                for path in [
+                    source.persisted_htf_path.clone(),
+                    source.persisted_mtf_path.clone(),
+                    source.persisted_ltf_path.clone(),
+                    source.persisted_spot_path.clone(),
+                ]
+                .into_iter()
+                .flatten()
+                {
+                    if !recorded_data_paths.contains(&path) {
+                        recorded_data_paths.push(path);
+                    }
+                }
+            }
+        }
+    }
+    if let Some(data) = &context.research_data {
+        if !recorded_data_paths.contains(data) {
+            recorded_data_paths.push(data.clone());
+        }
+    }
+    if let Some(data) = &context.paired_data {
+        if !recorded_data_paths.contains(data) {
+            recorded_data_paths.push(data.clone());
+        }
+    }
+    let user_prompt = user_data_selection_prompt(&context.symbol, &recorded_data_paths);
     let analyze = match &context.analyze {
         Some(AnalyzeCommandSource::Files {
             data_htf,
@@ -14468,7 +14549,7 @@ fn command_recommendations(context: &CommandContext) -> CommandRecommendations {
         ),
     };
 
-    let research = if let Some(data) = &context.research_data {
+    let mut research = if let Some(data) = &context.research_data {
         recommended_command(
             format!(
                 "ict-engine factor-research --symbol {} --data {}{} --state-dir {}",
@@ -14494,7 +14575,7 @@ fn command_recommendations(context: &CommandContext) -> CommandRecommendations {
         )
     };
 
-    let backtest = if let Some(data) = &context.research_data {
+    let mut backtest = if let Some(data) = &context.research_data {
         recommended_command(
             format!(
                 "ict-engine factor-backtest --symbol {} --data {}{} --state-dir {}",
@@ -14520,7 +14601,29 @@ fn command_recommendations(context: &CommandContext) -> CommandRecommendations {
         )
     };
 
-    let update = if let Some(feedback_file) = &context.update_feedback_file {
+    if context.user_data_selection_required {
+        for command in [&mut research, &mut backtest] {
+            command.user_data_selection_required = true;
+            command.user_data_selection_prompt = user_prompt.clone();
+            command.recorded_data_paths = recorded_data_paths.clone();
+            if command.ready {
+                command.ready = false;
+                command
+                    .missing_inputs
+                    .push("user_selected_historical_data".to_string());
+                command.rationale = format!(
+                    "{} User must explicitly choose one of the recorded historical datasets before rerun.",
+                    command.rationale
+                );
+            }
+        }
+    } else {
+        for command in [&mut research, &mut backtest] {
+            command.recorded_data_paths = recorded_data_paths.clone();
+        }
+    }
+
+    let mut update = if let Some(feedback_file) = &context.update_feedback_file {
         let command = format!(
             "ict-engine update --symbol {} --outcome {} --state-dir {}",
             shell_quote(&context.symbol),
@@ -14576,6 +14679,8 @@ fn command_recommendations(context: &CommandContext) -> CommandRecommendations {
             "update requires a realized outcome or feedback file",
         )
     };
+
+    update.recorded_data_paths = recorded_data_paths.clone();
 
     CommandRecommendations {
         analyze,
@@ -16316,6 +16421,7 @@ fn finalize_backtest_report(
         update_outcome: None,
         update_entry_signal: None,
         update_feedback_file: None,
+        user_data_selection_required: true,
     });
     concretize_action_plan_commands(&mut report.agent_action_plan, &report.recommended_commands);
     report.recommended_next_command =
@@ -19508,13 +19614,28 @@ mod tests {
             update_outcome: None,
             update_entry_signal: None,
             update_feedback_file: None,
+            user_data_selection_required: true,
         });
 
-        assert!(commands.research.ready);
-        assert!(commands.backtest.ready);
+        assert!(!commands.research.ready);
+        assert!(!commands.backtest.ready);
         assert!(commands.research.command.contains("/tmp/ltf.json"));
         assert!(commands.backtest.command.contains("/tmp/spot.json"));
         assert!(commands.analyze.command.contains("analyze-live"));
+        assert!(commands.research.user_data_selection_required);
+        assert!(commands.backtest.user_data_selection_required);
+        assert!(commands
+            .research
+            .missing_inputs
+            .contains(&"user_selected_historical_data".to_string()));
+        assert!(commands
+            .research
+            .user_data_selection_prompt
+            .contains("ask the user"));
+        assert!(commands
+            .research
+            .recorded_data_paths
+            .contains(&"/tmp/ltf.json".to_string()));
     }
 
     #[test]
@@ -20093,11 +20214,12 @@ mod tests {
             symbol: "NQ".to_string(),
             state_dir: "state".to_string(),
             analyze: None,
-            research_data: Some("a.json".to_string()),
+            research_data: None,
             paired_data: None,
-            update_outcome: Some("loss".to_string()),
-            update_entry_signal: None,
-            update_feedback_file: Some("f.json".to_string()),
+            update_outcome: Some("win".to_string()),
+            update_entry_signal: Some("medium".to_string()),
+            update_feedback_file: Some("feedback.json".to_string()),
+            user_data_selection_required: true,
         });
 
         let mut plan = plan;
@@ -20174,6 +20296,7 @@ mod tests {
             update_outcome: Some("win".to_string()),
             update_entry_signal: None,
             update_feedback_file: Some("f.json".to_string()),
+            user_data_selection_required: true,
         });
         assert_eq!(
             commands.research.command,
@@ -20182,6 +20305,17 @@ mod tests {
         assert_eq!(
             commands.update.command,
             "ict-engine update --symbol NQ --outcome win --state-dir state"
+        );
+        assert!(commands.research.user_data_selection_required);
+        assert!(commands.backtest.user_data_selection_required);
+        assert!(!commands.research.ready);
+        assert!(commands
+            .research
+            .missing_inputs
+            .contains(&"user_selected_historical_data".to_string()));
+        assert_eq!(
+            render_recommended_command(&commands.research),
+            "ask-user: Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=htf.json, mtf.json, ltf.json, a.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ --data a.json --state-dir state"
         );
     }
 

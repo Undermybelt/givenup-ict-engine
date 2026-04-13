@@ -1609,6 +1609,12 @@ pub struct RecommendedCommand {
     pub missing_inputs: Vec<String>,
     #[serde(default)]
     pub rationale: String,
+    #[serde(default)]
+    pub user_data_selection_required: bool,
+    #[serde(default)]
+    pub user_data_selection_prompt: String,
+    #[serde(default)]
+    pub recorded_data_paths: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
