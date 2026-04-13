@@ -35,6 +35,7 @@ use ict_engine::application::{
         pre_bayes_evidence_policy, probability_map, FactorPipelineDebugReport,
     },
     data_sources::build_source_snapshot,
+    decision_freshness::build_decision_freshness_gate,
     decision_utils::{
         derive_family_outcomes, derive_promotion_decision, derive_rollback_recommendation,
         normalize_entry_quality_label, normalize_trade_outcome_label, parse_research_objective,
@@ -5545,11 +5546,21 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
         .data_source
         .as_ref()
         .map(|source| build_source_snapshot(source, report.timestamp));
+    let freshness_gate = report.meta.data_source.as_ref().map(|source| {
+        build_decision_freshness_gate(
+            300,
+            report
+                .timestamp
+                .signed_duration_since(source.fetched_at)
+                .num_seconds(),
+        )
+    });
     println!(
         "{}",
         serde_json::to_string_pretty(&serde_json::json!({
             "report": report,
             "source_snapshot": source_snapshot,
+            "freshness_gate": freshness_gate,
         }))?
     );
     Ok(())
