@@ -3,6 +3,7 @@ pub mod belief;
 pub mod data_sources;
 pub mod decision_freshness;
 pub mod decision_utils;
+pub mod factor_lifecycle;
 pub mod multi_timeframe_inputs;
 pub mod reflection;
 pub mod reporting;
