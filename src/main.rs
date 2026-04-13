@@ -95,6 +95,7 @@ use ict_engine::planner::{
     generate_probabilistic_trade_plan, probabilistic_decision_snapshot,
     ProbabilisticDecisionSnapshot, ProbabilisticPlanConfig,
 };
+use serde_json::Value;
 
 use ict_engine::state::{
     append_analyze_run, append_artifact_ledger_entry, append_backtest_run,
@@ -1351,6 +1352,141 @@ fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
     Ok(())
 }
 
+fn humanize_workflow_command(command: &str) -> String {
+    let trimmed = command.trim();
+    if trimmed.is_empty() {
+        return "No actionable command available.".to_string();
+    }
+    if let Some(rest) = trimmed.strip_prefix("ask-user: ") {
+        let mut parts = rest.split(" | blocked until user_selected_historical_data | then ");
+        let ask = parts.next().unwrap_or("").trim();
+        let then = parts.next().unwrap_or("").trim();
+        if then.is_empty() || then == "choose historical dataset with user before running command" {
+            return format!("Ask the user to choose the historical dataset. {}", ask);
+        }
+        return format!(
+            "Ask the user to choose the historical dataset. {} Then run: {}",
+            ask, then
+        );
+    }
+    if trimmed.starts_with("blocked:") {
+        return format!("Blocked: {}", trimmed.trim_start_matches("blocked:").trim());
+    }
+    format!("Next step: {}", trimmed)
+}
+
+fn workflow_status_human_view(snapshot: &ict_engine::state::WorkflowSnapshot) -> Value {
+    let latest_phase = snapshot
+        .latest_update
+        .as_ref()
+        .or(snapshot.latest_research.as_ref())
+        .or(snapshot.latest_analyze.as_ref())
+        .or(snapshot.latest_backtest.as_ref())
+        .or(snapshot.latest_train.as_ref());
+    let latest_phase_label = latest_phase
+        .map(|phase| phase.phase.clone())
+        .unwrap_or_else(|| "unknown".to_string());
+    let latest_phase_summary = latest_phase
+        .map(|phase| phase.phase_summary.clone())
+        .unwrap_or_else(|| "尚无可用阶段摘要。".to_string());
+    let selected_data_candidates = if let Some(update) = &snapshot.latest_update {
+        let mut candidates = update
+            .multi_timeframe_summary
+            .iter()
+            .filter_map(|line| line.split("path=").nth(1))
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+            .map(str::to_string)
+            .collect::<Vec<_>>();
+        candidates.sort();
+        candidates.dedup();
+        candidates
+    } else {
+        Vec::new()
+    };
+    let human_next_action = humanize_workflow_command(&snapshot.recommended_next_command);
+    serde_json::json!({
+        "symbol": snapshot.symbol,
+        "current_status": {
+            "focus_phase": snapshot.current_focus_phase,
+            "focus_reason": snapshot.current_focus_reason,
+            "blocking_stage": snapshot.blocking_truth.stage,
+            "blocking_status": snapshot.blocking_truth.status,
+            "blocking_reason": snapshot.blocking_truth.reason,
+        },
+        "what_you_should_do_now": human_next_action,
+        "latest_stage": {
+            "phase": latest_phase_label,
+            "summary": latest_phase_summary,
+        },
+        "pending_actions": snapshot.pending_actions,
+        "risk_flags": snapshot.risk_flags,
+        "historical_data_candidates": selected_data_candidates,
+    })
+}
+
+#[cfg(test)]
+fn sample_human_workflow_snapshot() -> ict_engine::state::WorkflowSnapshot {
+    let mut snapshot = ict_engine::state::WorkflowSnapshot::default();
+    snapshot.symbol = "NQ".to_string();
+    snapshot.current_focus_phase = "update".to_string();
+    snapshot.current_focus_reason = "waiting_for_user_data_choice".to_string();
+    snapshot.blocking_truth = ict_engine::state::WorkflowBlockingTruth {
+        stage: "research".to_string(),
+        status: "blocked".to_string(),
+        reason: "user_selected_historical_data_missing".to_string(),
+        evidence: vec!["need user choice".to_string()],
+        next_command: "ask-user".to_string(),
+    };
+    snapshot.recommended_next_command = "ask-user: Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=/tmp/a.json, /tmp/b.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ --data /tmp/a.json --state-dir state".to_string();
+    snapshot.pending_actions = vec!["research:choose data".to_string()];
+    snapshot.risk_flags = vec!["human_gate_active".to_string()];
+    snapshot.latest_update = Some(ict_engine::state::WorkflowPhaseSnapshot {
+        phase: "update".to_string(),
+        source_command: "update".to_string(),
+        run_id: "update:NQ:test".to_string(),
+        timestamp: Utc::now(),
+        workflow_phase: "research_iteration".to_string(),
+        workflow_reason: "waiting_for_data_choice".to_string(),
+        promotion_status: "hold".to_string(),
+        rollback_scope: "none".to_string(),
+        comparable_to_previous: true,
+        comparison_class: "same_data_different_config".to_string(),
+        recommended_next_command: snapshot.recommended_next_command.clone(),
+        phase_summary: "latest update complete".to_string(),
+        top_actions: vec!["update:review".to_string()],
+        risk_flags: vec!["human_gate_active".to_string()],
+        selected_direction: None,
+        selected_entry_quality: Some("medium".to_string()),
+        pre_bayes_gate_status: "pass_neutralized".to_string(),
+        pre_bayes_uses_soft_evidence: true,
+        pre_bayes_policy_version: "v1".to_string(),
+        pre_bayes_evidence_quality_score: 0.5,
+        pre_bayes_conflict_flags: vec![],
+        pre_bayes_filtered_assignments: std::collections::BTreeMap::new(),
+        pre_bayes_soft_evidence: std::collections::BTreeMap::new(),
+        pre_bayes_long_signal_probability: None,
+        pre_bayes_short_signal_probability: None,
+        pre_bayes_selected_entry_quality_probability: None,
+        pre_bayes_bridge_selected_entry_quality: Some("medium".to_string()),
+        pre_bayes_bridge_probability_gap: Some(0.01),
+        pre_bayes_bridge_rationale_summary: vec![],
+        pre_bayes_multi_timeframe_direction_bias: "bullish".to_string(),
+        pre_bayes_multi_timeframe_alignment_score: Some(0.8),
+        pre_bayes_multi_timeframe_entry_alignment_score: Some(0.8),
+        realized_outcome: Some("win".to_string()),
+        family_states: vec![],
+        factor_actions: vec![],
+        multi_timeframe_summary: vec![
+            "15m:80 bars path=/tmp/a.json".to_string(),
+            "1h:80 bars path=/tmp/b.json".to_string(),
+        ],
+        family_score_map: std::collections::BTreeMap::new(),
+        factor_score_map: std::collections::BTreeMap::new(),
+    });
+    snapshot
+}
+
 fn workflow_status_command(
     symbol: &str,
     state_dir: &str,
@@ -1395,6 +1531,7 @@ fn workflow_status_command(
             "agent-bootstrap" | "bootstrap" => {
                 serde_json::to_value(build_agent_bootstrap_view(symbol, state_dir, &snapshot))?
             }
+            "human" | "human-next" | "human-next-action" => workflow_status_human_view(&snapshot),
             "train" => serde_json::to_value(&snapshot.latest_train)?,
             "analyze" => serde_json::to_value(&snapshot.latest_analyze)?,
             "research" => serde_json::to_value(&snapshot.latest_research)?,
@@ -20279,6 +20416,30 @@ mod tests {
             recommended_next_command(&plan, &commands),
             "ict-engine workflow-status --symbol NQ --state-dir state --phase artifact-consumed-gate"
         );
+    }
+
+    #[test]
+    fn test_humanize_workflow_command_for_user_data_gate() {
+        let rendered = humanize_workflow_command(
+            "ask-user: Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=/tmp/a.json, /tmp/b.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ --data /tmp/a.json --state-dir state"
+        );
+        assert_eq!(
+            rendered,
+            "Ask the user to choose the historical dataset. Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=/tmp/a.json, /tmp/b.json Then run: ict-engine factor-research --symbol NQ --data /tmp/a.json --state-dir state"
+        );
+    }
+
+    #[test]
+    fn test_workflow_status_human_view_exposes_candidates() {
+        let snapshot = sample_human_workflow_snapshot();
+        let value = workflow_status_human_view(&snapshot);
+        assert_eq!(value["symbol"], "NQ");
+        assert_eq!(value["current_status"]["focus_phase"], "update");
+        assert!(value["what_you_should_do_now"]
+            .as_str()
+            .unwrap()
+            .contains("Ask the user to choose the historical dataset"));
+        assert_eq!(value["historical_data_candidates"][0], "/tmp/a.json");
     }
 
     #[test]
