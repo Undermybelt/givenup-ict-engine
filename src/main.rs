@@ -41,6 +41,7 @@ use ict_engine::application::{
         normalize_entry_quality_label, normalize_trade_outcome_label, parse_research_objective,
         research_objective_label, score_grade, ArtifactConsumedDecisionGate, ResearchObjectiveMode,
     },
+    factor_lifecycle::build_factor_lifecycle_view,
     multi_timeframe_inputs::{
         detected_multi_timeframe_clean_root, infer_interval_for_analyze_frame,
         resolve_analyze_cli_inputs, resolve_analyze_multi_timeframe_inputs,
@@ -10243,11 +10244,18 @@ fn factor_research_command(
         );
     } else {
         let reflection_bundle = build_research_reflection_bundle(symbol, &report);
+        let lifecycle_view = build_factor_lifecycle_view(
+            mutation_spec.as_ref(),
+            report.factor_mutation_evaluation.as_ref(),
+            &report.promotion_decision,
+            &report.rollback_recommendation,
+        );
         println!(
             "{}",
             serde_json::to_string_pretty(&serde_json::json!({
                 "report": report,
                 "reflection_bundle": reflection_bundle,
+                "factor_lifecycle": lifecycle_view,
             }))?
         );
     }
