@@ -54,6 +54,7 @@ use ict_engine::application::{
         build_agent_guidance_report, build_compact_analyze_report, build_human_analyze_report,
     },
 };
+use ict_engine::backtest::engine::{AmbiguousBarPolicy, ExecutionRealismConfig};
 use ict_engine::backtest::{BacktestEngine, Metrics, RegimeSplit};
 use ict_engine::bayesian::{cascade_bear, cascade_bull, CascadeConfig};
 use ict_engine::bbn::learning::cpt_updater::{CPTUpdater, TradeOutcome};
@@ -320,6 +321,10 @@ struct BacktestReport {
     bars: usize,
     warmup_bars: usize,
     hold_bars: usize,
+    spread_bps: f64,
+    slippage_bps: f64,
+    fee_bps: f64,
+    ambiguous_bar_policy: String,
     window_mode: String,
     evidence_policy: String,
     ict_role: String,
@@ -546,6 +551,14 @@ enum Commands {
         warmup_bars: usize,
         #[arg(long, default_value = "10")]
         hold_bars: usize,
+        #[arg(long, default_value = "0")]
+        spread_bps: f64,
+        #[arg(long, default_value = "0")]
+        slippage_bps: f64,
+        #[arg(long, default_value = "0")]
+        fee_bps: f64,
+        #[arg(long, default_value = "favor_stop_loss")]
+        ambiguous_bar_policy: String,
         #[arg(long, default_value_t = false)]
         online_learn: bool,
     },
@@ -859,6 +872,10 @@ fn main() -> Result<()> {
             state_dir,
             warmup_bars,
             hold_bars,
+            spread_bps,
+            slippage_bps,
+            fee_bps,
+            ambiguous_bar_policy,
             online_learn,
         } => backtest_command(
             &symbol,
@@ -867,6 +884,10 @@ fn main() -> Result<()> {
             &state_dir,
             warmup_bars,
             hold_bars,
+            spread_bps,
+            slippage_bps,
+            fee_bps,
+            &ambiguous_bar_policy,
             online_learn,
         )?,
         Commands::Update {
@@ -9739,6 +9760,10 @@ fn backtest_command(
     state_dir: &str,
     warmup_bars: usize,
     hold_bars: usize,
+    spread_bps: f64,
+    slippage_bps: f64,
+    fee_bps: f64,
+    ambiguous_bar_policy: &str,
     online_learn: bool,
 ) -> Result<()> {
     let candles = load_candles(data)?;
@@ -9762,6 +9787,8 @@ fn backtest_command(
     let mut learning_state = load_learning_state(state_dir, symbol)?;
     let previous_rankings = learning_state.factor_rankings.clone();
     let previous_trade_outcome_cpt = trade_outcome_cpt_snapshot(&network)?;
+    let realism =
+        parse_execution_realism_config(spread_bps, slippage_bps, fee_bps, ambiguous_bar_policy)?;
     let (report, updated_network, trades) = run_probabilistic_backtest(
         symbol,
         state_dir,
@@ -9769,6 +9796,7 @@ fn backtest_command(
         paired_candles.as_deref(),
         warmup_bars,
         hold_bars,
+        &realism,
         online_learn,
         &params,
         &network,
@@ -9791,6 +9819,7 @@ fn backtest_command(
         state_dir,
         warmup_bars,
         hold_bars,
+        &realism,
         online_learn,
     )?;
     let compact_report = build_backtest_result_artifact(
@@ -12920,6 +12949,7 @@ fn run_probabilistic_backtest(
     paired_candles: Option<&[Candle]>,
     warmup_bars: usize,
     hold_bars: usize,
+    realism: &ExecutionRealismConfig,
     online_learn: bool,
     params: &HMMParams,
     network: &ict_engine::bbn::BayesianNetwork,
@@ -12992,11 +13022,12 @@ fn run_probabilistic_backtest(
 
         signals += 1;
 
-        if let Some(simulated) = BacktestEngine::simulate_trade(
+        if let Some(simulated) = BacktestEngine::simulate_trade_with_realism(
             candles,
             signal_index,
             &analysis.supporting.raw_trade_plan,
             hold_bars,
+            realism,
         ) {
             trades.push(TradeRecord {
                 timestamp: candles[simulated.entry_index].timestamp,
@@ -13148,6 +13179,10 @@ fn run_probabilistic_backtest(
         bars: candles.len(),
         warmup_bars: minimum_history,
         hold_bars,
+        spread_bps: realism.spread_bps,
+        slippage_bps: realism.slippage_bps,
+        fee_bps: realism.fee_bps,
+        ambiguous_bar_policy: ambiguous_bar_policy_label(realism.ambiguous_bar_policy),
         window_mode: "expanding".to_string(),
         evidence_policy: "same_as_analyze_json_snapshot".to_string(),
         ict_role: "evidence_only_non_deterministic".to_string(),
@@ -16431,6 +16466,7 @@ fn finalize_backtest_report(
     state_dir: &str,
     warmup_bars: usize,
     hold_bars: usize,
+    realism: &ExecutionRealismConfig,
     online_learning: bool,
 ) -> Result<BacktestReport> {
     let previous_runs: Vec<BacktestRunRecord> =
@@ -16447,6 +16483,10 @@ fn finalize_backtest_report(
             paired_data.unwrap_or(""),
             &warmup_bars.to_string(),
             &hold_bars.to_string(),
+            &format!("spread_bps={:.4}", realism.spread_bps),
+            &format!("slippage_bps={:.4}", realism.slippage_bps),
+            &format!("fee_bps={:.4}", realism.fee_bps),
+            &ambiguous_bar_policy_label(realism.ambiguous_bar_policy),
             &online_learning.to_string(),
         ],
         data_fingerprint(candles, paired_candles_slice, "backtest"),
@@ -17036,6 +17076,35 @@ fn data_fingerprint(
     }
 
     compute_hash(&parts)
+}
+
+fn ambiguous_bar_policy_label(policy: AmbiguousBarPolicy) -> String {
+    match policy {
+        AmbiguousBarPolicy::FavorStopLoss => "favor_stop_loss".to_string(),
+        AmbiguousBarPolicy::FavorTakeProfit => "favor_take_profit".to_string(),
+    }
+}
+
+fn parse_execution_realism_config(
+    spread_bps: f64,
+    slippage_bps: f64,
+    fee_bps: f64,
+    ambiguous_bar_policy: &str,
+) -> Result<ExecutionRealismConfig> {
+    if spread_bps < 0.0 || slippage_bps < 0.0 || fee_bps < 0.0 {
+        bail!("spread/slippage/fee bps must be non-negative");
+    }
+    let ambiguous_bar_policy = match ambiguous_bar_policy.trim().to_ascii_lowercase().as_str() {
+        "favor_stop_loss" | "stop" | "stop_loss" => AmbiguousBarPolicy::FavorStopLoss,
+        "favor_take_profit" | "tp" | "take_profit" => AmbiguousBarPolicy::FavorTakeProfit,
+        other => bail!("unsupported ambiguous_bar_policy '{}'", other),
+    };
+    Ok(ExecutionRealismConfig {
+        spread_bps,
+        slippage_bps,
+        fee_bps,
+        ambiguous_bar_policy,
+    })
 }
 
 fn factor_version(learning_state: &LearningState) -> String {

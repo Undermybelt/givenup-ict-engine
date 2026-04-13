@@ -30,8 +30,23 @@ pub fn compute_macd(candles: &[Candle], fast: usize, slow: usize, signal: usize)
         .map(|(fast, slow)| fast - slow)
         .collect();
 
+    if macd_line.len() < signal {
+        return MACD {
+            macd_line,
+            signal_line: Vec::new(),
+            histogram: Vec::new(),
+        };
+    }
+
     // Signal line is EMA of MACD line
     let signal_line = ema(&macd_line, signal);
+    if signal_line.is_empty() {
+        return MACD {
+            macd_line,
+            signal_line,
+            histogram: Vec::new(),
+        };
+    }
 
     // Histogram is MACD - Signal
     let signal_offset = signal - 1;
@@ -56,39 +71,59 @@ pub fn latest_macd(
     signal: usize,
 ) -> Option<(f64, f64, f64)> {
     let macd = compute_macd(candles, fast, slow, signal);
-    if macd.macd_line.is_empty() {
-        None
-    } else {
-        Some((
-            *macd.macd_line.last().unwrap(),
-            *macd.signal_line.last().unwrap(),
-            *macd.histogram.last().unwrap(),
-        ))
-    }
+    let macd_line = *macd.macd_line.last()?;
+    let signal_line = *macd.signal_line.last()?;
+    let histogram = *macd.histogram.last()?;
+    Some((macd_line, signal_line, histogram))
 }
 
 /// Check if MACD histogram is bullish (positive and increasing)
 pub fn is_macd_bullish(candles: &[Candle], fast: usize, slow: usize, signal: usize) -> bool {
     let macd = compute_macd(candles, fast, slow, signal);
-    if macd.histogram.len() < 2 {
+    let Some(last) = macd.histogram.last().copied() else {
         return false;
-    }
+    };
+    let Some(prev) = macd.histogram.iter().rev().nth(1).copied() else {
+        return false;
+    };
 
-    let last = macd.histogram.last().unwrap();
-    let prev = macd.histogram[macd.histogram.len() - 2];
-
-    *last > 0.0 && *last > prev
+    last > 0.0 && last > prev
 }
 
 /// Check if MACD histogram is bearish (negative and decreasing)
 pub fn is_macd_bearish(candles: &[Candle], fast: usize, slow: usize, signal: usize) -> bool {
     let macd = compute_macd(candles, fast, slow, signal);
-    if macd.histogram.len() < 2 {
+    let Some(last) = macd.histogram.last().copied() else {
         return false;
+    };
+    let Some(prev) = macd.histogram.iter().rev().nth(1).copied() else {
+        return false;
+    };
+
+    last < 0.0 && last < prev
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use chrono::Utc;
+
+    fn candle(close: f64) -> Candle {
+        Candle {
+            timestamp: Utc::now(),
+            open: close,
+            high: close,
+            low: close,
+            close,
+            volume: 1.0,
+        }
     }
 
-    let last = macd.histogram.last().unwrap();
-    let prev = macd.histogram[macd.histogram.len() - 2];
-
-    *last < 0.0 && *last < prev
+    #[test]
+    fn latest_macd_returns_none_for_short_windows() {
+        let candles = vec![candle(1.0), candle(1.1), candle(1.2), candle(1.3)];
+        assert!(latest_macd(&candles, 12, 26, 9).is_none());
+        assert!(!is_macd_bullish(&candles, 12, 26, 9));
+        assert!(!is_macd_bearish(&candles, 12, 26, 9));
+    }
 }
