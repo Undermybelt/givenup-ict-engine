@@ -45,6 +45,7 @@ use ict_engine::application::{
         resolve_multi_timeframe_inputs, resolved_multi_timeframe_inputs_for_market,
         MultiTimeframeCleanReportView, ResolvedMultiTimeframeInputs, MULTI_TIMEFRAME_INTERVALS,
     },
+    reflection::build_research_reflection_bundle,
 };
 use ict_engine::backtest::{BacktestEngine, Metrics, RegimeSplit};
 use ict_engine::bayesian::{cascade_bear, cascade_bull, CascadeConfig};
@@ -10146,7 +10147,14 @@ fn factor_research_command(
             }))?
         );
     } else {
-        println!("{}", serde_json::to_string_pretty(&report)?);
+        let reflection_bundle = build_research_reflection_bundle(symbol, &report);
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&serde_json::json!({
+                "report": report,
+                "reflection_bundle": reflection_bundle,
+            }))?
+        );
     }
     Ok(())
 }
