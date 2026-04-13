@@ -5630,6 +5630,13 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
         ),
         report.analysis.trade_plan.narrative.clone(),
     );
+    let policy_record = load_pre_bayes_policy_history(&report.meta.state_dir, &report.symbol)?
+        .into_iter()
+        .last();
+    let belief_shadow_policy = build_belief_shadow_policy_surface(
+        &report.supporting.canonical_belief_report,
+        policy_record.as_ref(),
+    );
     println!(
         "{}",
         serde_json::to_string_pretty(&serde_json::json!({
@@ -5639,6 +5646,7 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
             "compact_report": compact_report,
             "agent_report": agent_report,
             "human_report": human_report.render(),
+            "belief_shadow_policy": belief_shadow_policy,
         }))?
     );
     Ok(())
