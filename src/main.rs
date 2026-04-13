@@ -9822,20 +9822,49 @@ fn backtest_command(
         &realism,
         online_learn,
     )?;
+    let realism_summary = format!(
+        "execution_realism=spread:{:.2}bps slippage:{:.2}bps fee:{:.2}bps policy={} trades={} comparable={}",
+        report.spread_bps,
+        report.slippage_bps,
+        report.fee_bps,
+        report.ambiguous_bar_policy,
+        report.trades,
+        report.dataset_comparability.comparable
+    );
+    let zero_trade_risk = if report.trades == 0 {
+        vec!["no_trades_generated_under_current_constraints".to_string()]
+    } else {
+        Vec::new()
+    };
     let compact_report = build_backtest_result_artifact(
         format!("backtest:{}", symbol),
+        &[realism_summary.clone()],
+        &[
+            format!("symbol={}", symbol),
+            format!("trades={}", report.trades),
+        ],
+        &zero_trade_risk,
         &[],
-        &[format!("symbol={}", symbol)],
-        &[],
-        &[],
-        true,
+        report.dataset_comparability.comparable,
         &[],
     );
+    let human_backtest_summary = if report.trades == 0 {
+        format!(
+            "Backtest ran with {} and produced no trades under the current constraints.",
+            realism_summary
+        )
+    } else {
+        format!(
+            "Backtest ran with {} and produced {} trades.",
+            realism_summary, report.trades
+        )
+    };
     println!(
         "{}",
         serde_json::to_string_pretty(&serde_json::json!({
             "report": report,
             "compact_backtest_report": compact_report,
+            "human_backtest_summary": human_backtest_summary,
         }))?
     );
     Ok(())

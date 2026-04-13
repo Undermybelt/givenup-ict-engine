@@ -89,4 +89,20 @@ mod tests {
         assert_eq!(report.risks.len(), 5);
         assert_eq!(report.next_actions.len(), 5);
     }
+
+    #[test]
+    fn compact_backtest_report_limits_lists() {
+        let items = vec![
+            "a".to_string(),
+            "b".to_string(),
+            "c".to_string(),
+            "d".to_string(),
+            "e".to_string(),
+            "f".to_string(),
+        ];
+        let report = build_compact_backtest_report("ok", &items, &items, &items);
+        assert_eq!(report.highlights.len(), 5);
+        assert_eq!(report.risks.len(), 5);
+        assert_eq!(report.next_actions.len(), 5);
+    }
 }
