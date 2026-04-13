@@ -20,8 +20,8 @@ use ict_engine::analyze::technical_price_section::{
 use ict_engine::application::{
     backtest::build_backtest_result_artifact,
     belief::{
-        apply_factor_outcome_overlay, build_belief_shadow_policy_surface,
-        build_canonical_belief_snapshot,
+        apply_factor_outcome_overlay, build_belief_policy_lineage_surface,
+        build_belief_shadow_policy_surface, build_canonical_belief_snapshot,
         build_expansion_factor_pipeline_report as build_expansion_factor_pipeline_report_v2,
         build_expansion_factor_pipeline_report_with_registry as build_expansion_factor_pipeline_report_with_registry_v2,
         build_factor_pipeline_debug_report as build_factor_pipeline_debug_report_v2,
@@ -1286,6 +1286,29 @@ fn analyze_command(
     emit_analyze_output(&report)
 }
 
+fn build_analyze_policy_outputs(
+    report: &AnalyzeReport,
+) -> Result<(
+    ict_engine::application::belief::BeliefShadowPolicySurface,
+    ict_engine::application::belief::BeliefPolicyLineageSurface,
+)> {
+    let policy_history = load_pre_bayes_policy_history(&report.meta.state_dir, &report.symbol)?;
+    let policy_record = policy_history.last().cloned();
+    let shadow = build_belief_shadow_policy_surface(
+        &report.supporting.canonical_belief_report,
+        policy_record.as_ref(),
+    );
+    let lineage = build_belief_policy_lineage_surface(
+        &policy_history,
+        report
+            .supporting
+            .pre_bayes_evidence_filter
+            .gating_status
+            .as_str(),
+    );
+    Ok((shadow, lineage))
+}
+
 fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
     let compact_report = build_compact_analyze_report(
         report.supporting.decision_hint.clone(),
@@ -1312,13 +1335,7 @@ fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
         ),
         report.analysis.trade_plan.narrative.clone(),
     );
-    let policy_record = load_pre_bayes_policy_history(&report.meta.state_dir, &report.symbol)?
-        .into_iter()
-        .last();
-    let belief_shadow_policy = build_belief_shadow_policy_surface(
-        &report.supporting.canonical_belief_report,
-        policy_record.as_ref(),
-    );
+    let (belief_shadow_policy, belief_policy_lineage) = build_analyze_policy_outputs(report)?;
     println!(
         "{}",
         serde_json::to_string_pretty(&serde_json::json!({
@@ -1327,6 +1344,7 @@ fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
             "agent_report": agent_report,
             "human_report": human_report.render(),
             "belief_shadow_policy": belief_shadow_policy,
+            "belief_policy_lineage": belief_policy_lineage,
         }))?
     );
     Ok(())
