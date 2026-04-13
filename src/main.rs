@@ -49,7 +49,7 @@ use ict_engine::application::{
         resolve_multi_timeframe_inputs, resolved_multi_timeframe_inputs_for_market,
         MultiTimeframeCleanReportView, ResolvedMultiTimeframeInputs, MULTI_TIMEFRAME_INTERVALS,
     },
-    reflection::build_research_reflection_bundle,
+    reflection::{build_reflection_bundle, build_research_reflection_bundle},
     reporting::{
         build_agent_guidance_report, build_compact_analyze_report, build_human_analyze_report,
     },
@@ -9672,6 +9672,46 @@ fn backtest_command(
     Ok(())
 }
 
+fn emit_update_output(report: &UpdateReport) -> Result<()> {
+    let reflection_evidence = report
+        .agent_prompts
+        .prompts
+        .iter()
+        .map(|prompt| format!("{}:{}:{}", prompt.stage, prompt.id, prompt.objective))
+        .collect::<Vec<_>>();
+    let reflection_next_candidates = report
+        .recommended_next_command
+        .split(';')
+        .map(str::trim)
+        .filter(|candidate| !candidate.is_empty())
+        .map(str::to_string)
+        .collect::<Vec<_>>();
+    let reflection_bundle = build_reflection_bundle(
+        &report.symbol,
+        report.provenance.data_fingerprint.clone(),
+        report.agent_prompts.workflow.clone(),
+        report.workflow_state.phase.clone(),
+        report
+            .agent_action_plan
+            .items
+            .first()
+            .map(|item| item.title.clone())
+            .filter(|title| !title.is_empty())
+            .unwrap_or_else(|| report.realized_outcome.clone()),
+        report.realized_outcome.clone(),
+        &reflection_evidence,
+        &reflection_next_candidates,
+    );
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&serde_json::json!({
+            "report": report,
+            "reflection_bundle": reflection_bundle,
+        }))?
+    );
+    Ok(())
+}
+
 fn update_command(
     symbol: &str,
     outcome: &str,
@@ -10219,8 +10259,7 @@ fn update_command(
         &mut report.rollback_recommendation,
     );
 
-    println!("{}", serde_json::to_string_pretty(&report)?);
-    Ok(())
+    emit_update_output(&report)
 }
 
 fn factor_research_command(
