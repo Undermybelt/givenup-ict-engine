@@ -20214,12 +20214,12 @@ mod tests {
             symbol: "NQ".to_string(),
             state_dir: "state".to_string(),
             analyze: None,
-            research_data: None,
+            research_data: Some("a.json".to_string()),
             paired_data: None,
-            update_outcome: Some("win".to_string()),
-            update_entry_signal: Some("medium".to_string()),
-            update_feedback_file: Some("feedback.json".to_string()),
-            user_data_selection_required: true,
+            update_outcome: Some("loss".to_string()),
+            update_entry_signal: None,
+            update_feedback_file: Some("f.json".to_string()),
+            user_data_selection_required: false,
         });
 
         let mut plan = plan;
