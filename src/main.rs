@@ -34,6 +34,7 @@ use ict_engine::application::{
         pipeline_types::ExpansionFactorPipelineReport,
         pre_bayes_evidence_policy, probability_map, FactorPipelineDebugReport,
     },
+    data_sources::build_source_snapshot,
     decision_utils::{
         derive_family_outcomes, derive_promotion_decision, derive_rollback_recommendation,
         normalize_entry_quality_label, normalize_trade_outcome_label, parse_research_objective,
@@ -5535,7 +5536,22 @@ fn analyze_live_command(
         &mut report.supporting.rollback_recommendation,
     );
 
-    println!("{}", serde_json::to_string_pretty(&report)?);
+    emit_analyze_live_output(&report)
+}
+
+fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
+    let source_snapshot = report
+        .meta
+        .data_source
+        .as_ref()
+        .map(|source| build_source_snapshot(source, report.timestamp));
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&serde_json::json!({
+            "report": report,
+            "source_snapshot": source_snapshot,
+        }))?
+    );
     Ok(())
 }
 
