@@ -5,5 +5,6 @@ pub mod decision_freshness;
 pub mod decision_utils;
 pub mod factor_lifecycle;
 pub mod multi_timeframe_inputs;
+pub mod orchestration;
 pub mod reflection;
 pub mod reporting;

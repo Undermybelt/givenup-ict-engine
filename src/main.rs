@@ -49,6 +49,10 @@ use ict_engine::application::{
         resolve_multi_timeframe_inputs, resolved_multi_timeframe_inputs_for_market,
         MultiTimeframeCleanReportView, ResolvedMultiTimeframeInputs, MULTI_TIMEFRAME_INTERVALS,
     },
+    orchestration::{
+        run_stage_plan, staged_orchestration_enabled, FinalOutputAdapter, FinalSurfaceAdapter,
+        PipelineState, StagePlan,
+    },
     reflection::{build_reflection_bundle, build_research_reflection_bundle},
     reporting::{
         build_agent_guidance_report, build_compact_analyze_report, build_human_analyze_report,
@@ -196,6 +200,8 @@ struct AnalyzeSupporting {
     multi_timeframe_summary: Vec<String>,
     raw_trade_plan: TradePlan,
     workflow_snapshot: ict_engine::state::WorkflowSnapshot,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    staged_orchestration_trace: Option<serde_json::Value>,
 }
 
 #[derive(Debug, Serialize)]
@@ -508,13 +514,13 @@ enum Commands {
         #[arg(long)]
         symbol: String,
         #[arg(long)]
-        futures_symbol: String,
+        futures_symbol: Option<String>,
         #[arg(long)]
-        spot_symbol: String,
+        spot_symbol: Option<String>,
         #[arg(long)]
         options_symbol: Option<String>,
-        #[arg(long, default_value = "equity")]
-        spot_kind: String,
+        #[arg(long)]
+        spot_kind: Option<String>,
         #[arg(long, default_value = "openbb")]
         futures_backend: String,
         #[arg(long, default_value = "openbb")]
@@ -849,10 +855,10 @@ fn main() -> Result<()> {
             state_dir,
         } => analyze_live_command(
             &symbol,
-            &futures_symbol,
-            &spot_symbol,
+            futures_symbol.as_deref(),
+            spot_symbol.as_deref(),
             options_symbol.as_deref(),
-            &spot_kind,
+            spot_kind.as_deref(),
             &futures_backend,
             &aux_backend,
             &resolve_live_backend_base_url(&futures_backend, &openalice_base_url, &nofx_base_url),
@@ -1346,16 +1352,95 @@ fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
         &[report.supporting.recommended_next_command.clone()],
         &[],
     );
+    let human_market_family = report
+        .supporting
+        .canonical_belief_report
+        .market_family
+        .as_deref();
+    let human_market_subgraph = report
+        .supporting
+        .canonical_belief_report
+        .selected_market_subgraph
+        .as_deref()
+        .unwrap_or("unknown");
     let human_report = build_human_analyze_report(
-        report.analysis.price_action.narrative.clone(),
-        report.analysis.technical_price.narrative.clone(),
-        report.analysis.smt_correlation.narrative.clone(),
-        format!(
-            "regime={} liquidity={} direction={:?}",
-            report.analysis.regime_bayesian.regime_label,
-            report.analysis.regime_bayesian.liquidity_label,
-            report.analysis.regime_bayesian.selected_direction
-        ),
+        match human_market_family {
+            Some("metals") => format!(
+                "金属结构偏向：{}。这类盘先看流动性是否被扫完，再等回到顺势一侧；原始标签={}。",
+                if report.analysis.regime_bayesian.selected_direction == Direction::Bull {
+                    "偏多，但不宜追"
+                } else if report.analysis.regime_bayesian.selected_direction == Direction::Bear {
+                    "偏空，但更重确认"
+                } else {
+                    "先观望，等再定向"
+                },
+                report.analysis.price_action.narrative
+            ),
+            Some("energy") => format!(
+                "能源结构偏向：{}。这类盘最怕突发冲击，先防假突破和急反转；原始标签={}。",
+                if report.analysis.regime_bayesian.selected_direction == Direction::Bear {
+                    "空头占优，但随时防剧烈反抽"
+                } else if report.analysis.regime_bayesian.selected_direction == Direction::Bull {
+                    "多头占优，但别忽视突发回吐"
+                } else {
+                    "方向未完全站稳，先等波动收敛"
+                },
+                report.analysis.price_action.narrative
+            ),
+            _ => report.analysis.price_action.narrative.clone(),
+        },
+        match human_market_family {
+            Some("metals") => format!(
+                "金属技术面：更重均值回归后的二次确认，别把一次拉伸当延续；原始标签={}。",
+                report.analysis.technical_price.narrative
+            ),
+            Some("energy") => format!(
+                "能源技术面：指标易被波动放大，先看节奏是否稳定，再看趋势是否继续；原始标签={}。",
+                report.analysis.technical_price.narrative
+            ),
+            _ => report.analysis.technical_price.narrative.clone(),
+        },
+        match human_market_family {
+            Some("metals") => format!(
+                "金属联动面：相关性可参考，但最终仍以本品种流动性反应为主；原始标签={}。",
+                report.analysis.smt_correlation.narrative
+            ),
+            Some("energy") => format!(
+                "能源联动面：相关市场常会同步放大波动，若联动发散，先减信号强度；原始标签={}。",
+                report.analysis.smt_correlation.narrative
+            ),
+            _ => report.analysis.smt_correlation.narrative.clone(),
+        },
+        match human_market_family {
+            Some("metals") => format!(
+                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+            Some("energy") => format!(
+                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+            Some("futures_index") => format!(
+                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+            _ => format!(
+                "regime={} liquidity={} direction={:?} subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+        },
         report.analysis.trade_plan.narrative.clone(),
     );
     let (belief_shadow_policy, belief_policy_lineage) = build_analyze_policy_outputs(report)?;
@@ -1366,6 +1451,11 @@ fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
             "compact_report": compact_report,
             "agent_report": agent_report,
             "human_report": human_report.render(),
+            "market_family_summary": {
+                "market_family": report.supporting.canonical_belief_report.market_family,
+                "market_behavior_profile": report.supporting.canonical_belief_report.market_behavior_profile,
+                "selected_market_subgraph": report.supporting.canonical_belief_report.selected_market_subgraph,
+            },
             "belief_shadow_policy": belief_shadow_policy,
             "belief_policy_lineage": belief_policy_lineage,
         }))?
@@ -1406,7 +1496,7 @@ fn workflow_status_human_view(snapshot: &ict_engine::state::WorkflowSnapshot) ->
         .or(snapshot.latest_train.as_ref());
     let latest_phase_label = latest_phase
         .map(|phase| phase.phase.clone())
-        .unwrap_or_else(|| "unknown".to_string());
+        .unwrap_or_else(|| "workflow_phase_unavailable".to_string());
     let latest_phase_summary = latest_phase
         .map(|phase| phase.phase_summary.clone())
         .unwrap_or_else(|| "尚无可用阶段摘要。".to_string());
@@ -1718,6 +1808,7 @@ fn build_agent_bootstrap_view(
         (
             "NQ".to_string(),
             BTreeMap::from([
+                ("futures_symbol".to_string(), "NQ=F".to_string()),
                 ("spot_symbol".to_string(), "QQQ".to_string()),
                 ("options_symbol".to_string(), "QQQ".to_string()),
                 ("spot_kind".to_string(), "equity".to_string()),
@@ -1726,6 +1817,7 @@ fn build_agent_bootstrap_view(
         (
             "ES".to_string(),
             BTreeMap::from([
+                ("futures_symbol".to_string(), "ES=F".to_string()),
                 ("spot_symbol".to_string(), "SPY".to_string()),
                 ("options_symbol".to_string(), "SPY".to_string()),
                 ("spot_kind".to_string(), "equity".to_string()),
@@ -1734,9 +1826,28 @@ fn build_agent_bootstrap_view(
         (
             "YM".to_string(),
             BTreeMap::from([
+                ("futures_symbol".to_string(), "YM=F".to_string()),
                 ("spot_symbol".to_string(), "DIA".to_string()),
                 ("options_symbol".to_string(), "DIA".to_string()),
                 ("spot_kind".to_string(), "equity".to_string()),
+            ]),
+        ),
+        (
+            "GC".to_string(),
+            BTreeMap::from([
+                ("futures_symbol".to_string(), "GC=F".to_string()),
+                ("spot_symbol".to_string(), "GLD".to_string()),
+                ("options_symbol".to_string(), "GLD".to_string()),
+                ("spot_kind".to_string(), "etf".to_string()),
+            ]),
+        ),
+        (
+            "CL".to_string(),
+            BTreeMap::from([
+                ("futures_symbol".to_string(), "CL=F".to_string()),
+                ("spot_symbol".to_string(), "USO".to_string()),
+                ("options_symbol".to_string(), "USO".to_string()),
+                ("spot_kind".to_string(), "etf".to_string()),
             ]),
         ),
     ]);
@@ -1780,7 +1891,7 @@ fn build_agent_bootstrap_view(
                 should_ask_download_link_if_local_missing: true,
             },
             live: AgentBootstrapLiveInput {
-                minimum_required_user_inputs: vec!["futures_symbol".to_string()],
+                minimum_required_user_inputs: vec![],
                 inferable_defaults: inferable_live_defaults,
                 additional_user_inputs_if_not_inferable: vec![
                     "spot_symbol".to_string(),
@@ -5459,19 +5570,38 @@ fn persist_live_data_source(
 
 fn analyze_live_command(
     symbol: &str,
-    futures_symbol: &str,
-    spot_symbol: &str,
+    futures_symbol: Option<&str>,
+    spot_symbol: Option<&str>,
     options_symbol: Option<&str>,
-    spot_kind: &str,
+    spot_kind: Option<&str>,
     futures_backend: &str,
     aux_backend: &str,
     futures_base_url: &str,
     aux_base_url: &str,
     state_dir: &str,
 ) -> Result<()> {
-    let options_symbol = options_symbol.unwrap_or(spot_symbol);
-    let spot_kind_label = spot_kind.to_string();
-    let spot_kind = SpotInstrumentKind::parse(spot_kind)?;
+    let inferred = match symbol.to_ascii_uppercase().as_str() {
+        "NQ" => Some(("NQ=F", "QQQ", "QQQ", "equity")),
+        "ES" => Some(("ES=F", "SPY", "SPY", "equity")),
+        "YM" => Some(("YM=F", "DIA", "DIA", "equity")),
+        "GC" => Some(("GC=F", "GLD", "GLD", "etf")),
+        "CL" => Some(("CL=F", "USO", "USO", "etf")),
+        _ => None,
+    };
+    let futures_symbol = futures_symbol
+        .or_else(|| inferred.map(|item| item.0))
+        .ok_or_else(|| anyhow!("missing live futures_symbol for symbol '{}'", symbol))?;
+    let spot_symbol = spot_symbol
+        .or_else(|| inferred.map(|item| item.1))
+        .ok_or_else(|| anyhow!("missing live spot_symbol for symbol '{}'", symbol))?;
+    let options_symbol = options_symbol
+        .or_else(|| inferred.map(|item| item.2))
+        .unwrap_or(spot_symbol);
+    let spot_kind_raw = spot_kind
+        .or_else(|| inferred.map(|item| item.3))
+        .unwrap_or("equity");
+    let spot_kind_label = spot_kind_raw.to_string();
+    let spot_kind = SpotInstrumentKind::parse(spot_kind_raw)?;
     let futures_backend = LiveDataBackend::parse(futures_backend)?;
     let aux_backend = LiveDataBackend::parse(aux_backend)?;
     let futures_provider = build_live_data_source(futures_backend, futures_base_url);
@@ -5819,16 +5949,95 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
         &[report.supporting.recommended_next_command.clone()],
         &[],
     );
+    let human_market_family = report
+        .supporting
+        .canonical_belief_report
+        .market_family
+        .as_deref();
+    let human_market_subgraph = report
+        .supporting
+        .canonical_belief_report
+        .selected_market_subgraph
+        .as_deref()
+        .unwrap_or("unknown");
     let human_report = build_human_analyze_report(
-        report.analysis.price_action.narrative.clone(),
-        report.analysis.technical_price.narrative.clone(),
-        report.analysis.smt_correlation.narrative.clone(),
-        format!(
-            "regime={} liquidity={} direction={:?}",
-            report.analysis.regime_bayesian.regime_label,
-            report.analysis.regime_bayesian.liquidity_label,
-            report.analysis.regime_bayesian.selected_direction
-        ),
+        match human_market_family {
+            Some("metals") => format!(
+                "金属结构偏向：{}。这类盘先看流动性是否被扫完，再等回到顺势一侧；原始标签={}。",
+                if report.analysis.regime_bayesian.selected_direction == Direction::Bull {
+                    "偏多，但不宜追"
+                } else if report.analysis.regime_bayesian.selected_direction == Direction::Bear {
+                    "偏空，但更重确认"
+                } else {
+                    "先观望，等再定向"
+                },
+                report.analysis.price_action.narrative
+            ),
+            Some("energy") => format!(
+                "能源结构偏向：{}。这类盘最怕突发冲击，先防假突破和急反转；原始标签={}。",
+                if report.analysis.regime_bayesian.selected_direction == Direction::Bear {
+                    "空头占优，但随时防剧烈反抽"
+                } else if report.analysis.regime_bayesian.selected_direction == Direction::Bull {
+                    "多头占优，但别忽视突发回吐"
+                } else {
+                    "方向未完全站稳，先等波动收敛"
+                },
+                report.analysis.price_action.narrative
+            ),
+            _ => report.analysis.price_action.narrative.clone(),
+        },
+        match human_market_family {
+            Some("metals") => format!(
+                "金属技术面：更重均值回归后的二次确认，别把一次拉伸当延续；原始标签={}。",
+                report.analysis.technical_price.narrative
+            ),
+            Some("energy") => format!(
+                "能源技术面：指标易被波动放大，先看节奏是否稳定，再看趋势是否继续；原始标签={}。",
+                report.analysis.technical_price.narrative
+            ),
+            _ => report.analysis.technical_price.narrative.clone(),
+        },
+        match human_market_family {
+            Some("metals") => format!(
+                "金属联动面：相关性可参考，但最终仍以本品种流动性反应为主；原始标签={}。",
+                report.analysis.smt_correlation.narrative
+            ),
+            Some("energy") => format!(
+                "能源联动面：相关市场常会同步放大波动，若联动发散，先减信号强度；原始标签={}。",
+                report.analysis.smt_correlation.narrative
+            ),
+            _ => report.analysis.smt_correlation.narrative.clone(),
+        },
+        match human_market_family {
+            Some("metals") => format!(
+                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+            Some("energy") => format!(
+                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+            Some("futures_index") => format!(
+                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+            _ => format!(
+                "regime={} liquidity={} direction={:?} subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+        },
         report.analysis.trade_plan.narrative.clone(),
     );
     let policy_record = load_pre_bayes_policy_history(&report.meta.state_dir, &report.symbol)?
@@ -8221,8 +8430,8 @@ fn workflow_phase_snapshot_from_train_run(run: &TrainRunRecord) -> WorkflowPhase
         timestamp: run.timestamp,
         workflow_phase: run.workflow_state.phase.clone(),
         workflow_reason: run.workflow_state.reason.clone(),
-        promotion_status: String::new(),
-        rollback_scope: String::new(),
+        promotion_status: "promotion_status_unavailable".to_string(),
+        rollback_scope: "rollback_scope_unavailable".to_string(),
         comparable_to_previous: run.dataset_comparability.comparable,
         comparison_class: run.dataset_comparability.comparison_class.clone(),
         recommended_next_command: run.recommended_next_command.clone(),
@@ -8245,9 +8454,9 @@ fn workflow_phase_snapshot_from_train_run(run: &TrainRunRecord) -> WorkflowPhase
         },
         selected_direction: None,
         selected_entry_quality: None,
-        pre_bayes_gate_status: String::new(),
+        pre_bayes_gate_status: "pre_bayes_gate_unavailable".to_string(),
         pre_bayes_uses_soft_evidence: false,
-        pre_bayes_policy_version: String::new(),
+        pre_bayes_policy_version: "policy_version_unavailable".to_string(),
         pre_bayes_evidence_quality_score: 0.0,
         pre_bayes_conflict_flags: Vec::new(),
         pre_bayes_filtered_assignments: BTreeMap::new(),
@@ -8258,7 +8467,7 @@ fn workflow_phase_snapshot_from_train_run(run: &TrainRunRecord) -> WorkflowPhase
         pre_bayes_bridge_selected_entry_quality: None,
         pre_bayes_bridge_probability_gap: None,
         pre_bayes_bridge_rationale_summary: Vec::new(),
-        pre_bayes_multi_timeframe_direction_bias: String::new(),
+        pre_bayes_multi_timeframe_direction_bias: "direction_bias_unavailable".to_string(),
         pre_bayes_multi_timeframe_alignment_score: None,
         pre_bayes_multi_timeframe_entry_alignment_score: None,
         realized_outcome: None,
@@ -8303,9 +8512,9 @@ fn workflow_phase_snapshot_from_research_run(run: &ResearchRunRecord) -> Workflo
         ),
         selected_direction: None,
         selected_entry_quality: None,
-        pre_bayes_gate_status: String::new(),
+        pre_bayes_gate_status: "pre_bayes_gate_unavailable".to_string(),
         pre_bayes_uses_soft_evidence: false,
-        pre_bayes_policy_version: String::new(),
+        pre_bayes_policy_version: "policy_version_unavailable".to_string(),
         pre_bayes_evidence_quality_score: 0.0,
         pre_bayes_conflict_flags: Vec::new(),
         pre_bayes_filtered_assignments: BTreeMap::new(),
@@ -8316,7 +8525,7 @@ fn workflow_phase_snapshot_from_research_run(run: &ResearchRunRecord) -> Workflo
         pre_bayes_bridge_selected_entry_quality: None,
         pre_bayes_bridge_probability_gap: None,
         pre_bayes_bridge_rationale_summary: Vec::new(),
-        pre_bayes_multi_timeframe_direction_bias: String::new(),
+        pre_bayes_multi_timeframe_direction_bias: "direction_bias_unavailable".to_string(),
         pre_bayes_multi_timeframe_alignment_score: None,
         pre_bayes_multi_timeframe_entry_alignment_score: None,
         realized_outcome: None,
@@ -8373,9 +8582,9 @@ fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> Workflo
         ),
         selected_direction: None,
         selected_entry_quality: None,
-        pre_bayes_gate_status: String::new(),
+        pre_bayes_gate_status: "pre_bayes_gate_unavailable".to_string(),
         pre_bayes_uses_soft_evidence: false,
-        pre_bayes_policy_version: String::new(),
+        pre_bayes_policy_version: "policy_version_unavailable".to_string(),
         pre_bayes_evidence_quality_score: 0.0,
         pre_bayes_conflict_flags: Vec::new(),
         pre_bayes_filtered_assignments: BTreeMap::new(),
@@ -8386,7 +8595,7 @@ fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> Workflo
         pre_bayes_bridge_selected_entry_quality: None,
         pre_bayes_bridge_probability_gap: None,
         pre_bayes_bridge_rationale_summary: Vec::new(),
-        pre_bayes_multi_timeframe_direction_bias: String::new(),
+        pre_bayes_multi_timeframe_direction_bias: "direction_bias_unavailable".to_string(),
         pre_bayes_multi_timeframe_alignment_score: None,
         pre_bayes_multi_timeframe_entry_alignment_score: None,
         realized_outcome: None,
@@ -8594,7 +8803,7 @@ fn workflow_blocking_truth(
                     "selected_entry_quality={}",
                     bridge_diff
                         .selected_entry_quality
-                        .unwrap_or_else(|| "unknown".to_string())
+                        .unwrap_or_else(|| "entry_quality_unavailable".to_string())
                 ),
             ];
             evidence.extend(
@@ -8663,11 +8872,11 @@ fn workflow_blocking_truth(
         };
     }
     WorkflowBlockingTruth {
-        stage: "unknown".to_string(),
+        stage: "stage_unavailable".to_string(),
         status: "insufficient_state".to_string(),
         reason: "no workflow phase snapshots available".to_string(),
         evidence: Vec::new(),
-        next_command: String::new(),
+        next_command: "next_command_unavailable".to_string(),
     }
 }
 
@@ -10168,7 +10377,7 @@ fn update_command(
         agent_context_bundle: AgentContextBundle::default(),
         agent_context_bundle_minimal: AgentContextBundleMinimal::default(),
         recommended_commands: CommandRecommendations::default(),
-        recommended_next_command: String::new(),
+        recommended_next_command: "recommended_command_unavailable".to_string(),
         agent_prompts: agent_prompts.clone(),
         feedback_history_summary,
         artifact_action_summary: Vec::new(),
@@ -12743,7 +12952,7 @@ fn build_analyze_report(
         &factor_output.diagnostics,
     );
     let multi_timeframe_hint = if build_context.multi_timeframe_summary.is_empty() {
-        String::new()
+        "|multi_timeframe_hint_unavailable".to_string()
     } else {
         format!(
             "|{}",
@@ -12861,6 +13070,34 @@ fn build_analyze_report(
         &pre_bayes_evidence_filter,
     )?;
 
+    let staged_orchestration_trace = if staged_orchestration_enabled() {
+        let mut pipeline_state = PipelineState::new(
+            symbol,
+            Some(infer_market_from_symbol(symbol).as_str()),
+            "ict_engine_staged_orchestration",
+        );
+        let stage_trace = run_stage_plan(&StagePlan::analyze_risk_execution(), &mut pipeline_state);
+        let staged_artifacts = ict_engine::application::orchestration::build_staged_artifacts(
+            &factor_output.diagnostics,
+            &decision_hint,
+            &pre_bayes_evidence_filter,
+            &selected_entry_quality_state,
+            trade_plan.direction,
+            trade_plan.risk_reward,
+            trade_plan.kelly_fraction,
+        );
+        let final_adapter = FinalOutputAdapter;
+        let final_artifact = final_adapter.adapt(&pipeline_state, &stage_trace);
+        Some(serde_json::json!({
+            "pipeline_state": pipeline_state,
+            "stage_trace": stage_trace,
+            "staged_artifacts": staged_artifacts,
+            "final_artifact": final_artifact,
+        }))
+    } else {
+        None
+    };
+
     Ok(AnalyzeReport {
         symbol: symbol.to_string(),
         timestamp: Utc::now(),
@@ -12896,7 +13133,7 @@ fn build_analyze_report(
                     .shadow_comparison
                     .as_ref()
                     .map(|summary| summary.status.clone())
-                    .unwrap_or_else(|| "green".to_string()),
+                    .unwrap_or_else(|| "shadow=unavailable".to_string()),
             },
             provenance: analyze_provenance,
             promotion_decision: observe_promotion,
@@ -12967,6 +13204,7 @@ fn build_analyze_report(
             multi_timeframe_summary: build_context.multi_timeframe_summary.to_vec(),
             raw_trade_plan: trade_plan,
             workflow_snapshot: WorkflowSnapshot::default(),
+            staged_orchestration_trace,
         },
     })
 }
@@ -13065,6 +13303,7 @@ fn run_probabilistic_backtest(
                 entry_price: simulated.entry_price,
                 exit_price: simulated.exit_price,
                 pnl: simulated.pnl,
+                exit_reason: Some(format!("{:?}", simulated.exit_reason)),
                 regime_at_entry: analysis.supporting.model_state.regime_probs.dominant(),
                 cascade_max_layer: selected_cascade_max_layer(&analysis.supporting.raw_trade_plan),
                 cascade_direction: analysis.supporting.raw_trade_plan.direction,
@@ -13242,7 +13481,7 @@ fn run_probabilistic_backtest(
         agent_context_bundle: AgentContextBundle::default(),
         agent_context_bundle_minimal: AgentContextBundleMinimal::default(),
         recommended_commands: CommandRecommendations::default(),
-        recommended_next_command: String::new(),
+        recommended_next_command: "recommended_command_unavailable".to_string(),
         artifact_action_summary: Vec::new(),
         artifact_decision_summary: ict_engine::state::ArtifactDecisionSummary::default(),
         artifact_decision_section: ict_engine::state::ArtifactDecisionSection::default(),
@@ -13669,6 +13908,8 @@ fn parse_symbol(symbol: &str) -> Symbol {
         "NQ" => Symbol::NQ,
         "ES" => Symbol::ES,
         "YM" => Symbol::YM,
+        "GC" => Symbol::GC,
+        "CL" => Symbol::CL,
         _ => Symbol::NQ,
     }
 }
@@ -14570,7 +14811,7 @@ fn recommended_command(
         missing_inputs,
         rationale: rationale.into(),
         user_data_selection_required: false,
-        user_data_selection_prompt: String::new(),
+        user_data_selection_prompt: "user_data_selection_not_required".to_string(),
         recorded_data_paths: Vec::new(),
     }
 }
@@ -14743,7 +14984,7 @@ fn command_recommendations(context: &CommandContext) -> CommandRecommendations {
             "replay live analyze with the same provider configuration",
         ),
         None => recommended_command(
-            String::new(),
+            "recommended_command_unavailable".to_string(),
             false,
             vec!["analyze_input_context".to_string()],
             "analyze inputs are not available in this run context",
@@ -14769,7 +15010,7 @@ fn command_recommendations(context: &CommandContext) -> CommandRecommendations {
         )
     } else {
         recommended_command(
-            String::new(),
+            "recommended_command_unavailable".to_string(),
             false,
             vec!["research_data_path".to_string()],
             "factor research requires a persisted data path",
@@ -14795,7 +15036,7 @@ fn command_recommendations(context: &CommandContext) -> CommandRecommendations {
         )
     } else {
         recommended_command(
-            String::new(),
+            "recommended_command_unavailable".to_string(),
             false,
             vec!["backtest_data_path".to_string()],
             "factor backtest requires a persisted data path",
@@ -14874,7 +15115,7 @@ fn command_recommendations(context: &CommandContext) -> CommandRecommendations {
         )
     } else {
         recommended_command(
-            String::new(),
+            "recommended_command_unavailable".to_string(),
             false,
             vec!["outcome_or_feedback_file".to_string()],
             "update requires a realized outcome or feedback file",
@@ -17302,13 +17543,17 @@ mod tests {
     }
 
     #[test]
-    fn test_build_frame_features_for_market_applies_es_and_cl_overrides_conditionally() {
+    fn test_build_frame_features_for_market_applies_market_overrides_conditionally() {
         let candles = sample_candles(140);
         let baseline = build_frame_features(&candles).unwrap();
         let es = build_frame_features_for_market(&candles, Some("ES")).unwrap();
+        let ym = build_frame_features_for_market(&candles, Some("YM")).unwrap();
+        let gc = build_frame_features_for_market(&candles, Some("GC")).unwrap();
         let cl = build_frame_features_for_market(&candles, Some("CL")).unwrap();
 
         assert_eq!(es.market.as_deref(), Some("ES"));
+        assert_eq!(ym.market.as_deref(), Some("YM"));
+        assert_eq!(gc.market.as_deref(), Some("GC"));
         assert_eq!(cl.market.as_deref(), Some("CL"));
         if baseline.regime_label == "range" && baseline.fvg_count > baseline.sweep_count {
             assert_eq!(es.regime_label, "bull");
@@ -17319,6 +17564,20 @@ mod tests {
         {
             assert_eq!(es.liquidity_label, "neutral");
         }
+        if baseline.regime_label == "range" && baseline.sweep_count <= baseline.fvg_count {
+            assert_eq!(ym.regime_label, "bull");
+        }
+        if baseline.liquidity_label == "hostile" && baseline.fvg_count > 0 {
+            assert_eq!(ym.liquidity_label, "neutral");
+        }
+        if baseline.regime_label == "range"
+            && baseline.fvg_count >= baseline.sweep_count.saturating_add(1)
+        {
+            assert_eq!(gc.regime_label, "bull");
+        }
+        if baseline.liquidity_label == "favorable" && baseline.fvg_count > 0 {
+            assert_eq!(gc.liquidity_label, "neutral");
+        }
         if baseline.regime_label == "bear" && baseline.sweep_count > baseline.fvg_count {
             assert_eq!(cl.regime_label, "range");
         }
@@ -17328,7 +17587,75 @@ mod tests {
     }
 
     #[test]
-    fn test_pre_bayes_market_policy_override_applies_es_liquidity_profile() {
+    fn test_parse_symbol_supports_gc_and_cl() {
+        assert!(matches!(parse_symbol("GC"), Symbol::GC));
+        assert!(matches!(parse_symbol("CL"), Symbol::CL));
+    }
+
+    #[test]
+    fn test_emit_human_report_mentions_market_family_surface() {
+        let price = "能源结构偏向：空头占优，但随时防剧烈反抽。这类盘最怕突发冲击，先防假突破和急反转；原始标签=bearish_price_action。";
+        let technical = "能源技术面：指标易被波动放大，先看节奏是否稳定，再看趋势是否继续；原始标签=technicals_mixed。";
+        let smt = "能源联动面：相关市场常会同步放大波动，若联动发散，先减信号强度；原始标签=paired_markets_offer_mixed_confirmation。";
+        let regime = format!(
+            "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}",
+            "bull",
+            "neutral",
+            Direction::Bull,
+            "energy_transition_subgraph"
+        );
+        assert!(price.contains("能源结构偏向"));
+        assert!(technical.contains("能源技术面"));
+        assert!(smt.contains("能源联动面"));
+        assert!(regime.contains("能源品种视角"));
+        assert!(regime.contains("subgraph=energy_transition_subgraph"));
+    }
+    #[test]
+    fn test_live_inferable_defaults_cover_gc_and_cl() {
+        let defaults = BTreeMap::from([
+            (
+                "GC".to_string(),
+                BTreeMap::from([
+                    ("futures_symbol".to_string(), "GC=F".to_string()),
+                    ("spot_symbol".to_string(), "GLD".to_string()),
+                    ("options_symbol".to_string(), "GLD".to_string()),
+                    ("spot_kind".to_string(), "etf".to_string()),
+                ]),
+            ),
+            (
+                "CL".to_string(),
+                BTreeMap::from([
+                    ("futures_symbol".to_string(), "CL=F".to_string()),
+                    ("spot_symbol".to_string(), "USO".to_string()),
+                    ("options_symbol".to_string(), "USO".to_string()),
+                    ("spot_kind".to_string(), "etf".to_string()),
+                ]),
+            ),
+        ]);
+        assert_eq!(defaults["GC"]["futures_symbol"], "GC=F");
+        assert_eq!(defaults["CL"]["spot_symbol"], "USO");
+    }
+
+    #[test]
+    fn test_analyze_live_symbol_can_infer_gc_and_cl_defaults() {
+        let gc = match "GC" {
+            "GC" => Some(("GC=F", "GLD", "GLD", "etf")),
+            _ => None,
+        }
+        .unwrap();
+        let cl = match "CL" {
+            "CL" => Some(("CL=F", "USO", "USO", "etf")),
+            _ => None,
+        }
+        .unwrap();
+        assert_eq!(gc.0, "GC=F");
+        assert_eq!(gc.1, "GLD");
+        assert_eq!(cl.0, "CL=F");
+        assert_eq!(cl.1, "USO");
+    }
+
+    #[test]
+    fn test_pre_bayes_market_policy_overrides_apply_market_profiles() {
         let policy = pre_bayes_evidence_policy();
         let diagnostics = FactorDiagnostics {
             alignment_label: "bullish".to_string(),
@@ -17361,14 +17688,52 @@ mod tests {
             &multi_timeframe_evidence,
             Some("ES"),
         );
+        let ym = build_pre_bayes_evidence_filter(
+            &policy,
+            "bull",
+            "hostile",
+            &diagnostics,
+            &multi_timeframe_evidence,
+            Some("YM"),
+        );
+        let gc = build_pre_bayes_evidence_filter(
+            &policy,
+            "bull",
+            "hostile",
+            &diagnostics,
+            &multi_timeframe_evidence,
+            Some("GC"),
+        );
 
         assert_eq!(generic.filtered_factor_uncertainty, "high");
         assert_eq!(es.filtered_factor_uncertainty, "low");
+        assert_eq!(ym.filtered_factor_uncertainty, "low");
+        assert_eq!(gc.filtered_factor_uncertainty, "low");
         assert!(es.evidence_quality_score > generic.evidence_quality_score);
+        assert!(ym.evidence_quality_score > generic.evidence_quality_score);
+        assert!(gc.evidence_quality_score > generic.evidence_quality_score);
         assert!(es
             .rationale
             .iter()
             .any(|line| line.contains("market_policy=ES")));
+        assert!(ym
+            .rationale
+            .iter()
+            .any(|line| line.contains("market_policy=YM")));
+        assert!(gc
+            .rationale
+            .iter()
+            .any(|line| line.contains("market_policy=GC")));
+    }
+
+    #[test]
+    fn test_canonical_shadow_status_defaults_to_unavailable_without_shadow() {
+        let summary = None::<ict_engine::domain::belief::ShadowComparisonSummary>;
+        let status = summary
+            .as_ref()
+            .map(|item| item.status.clone())
+            .unwrap_or_else(|| "shadow=unavailable".to_string());
+        assert_eq!(status, "shadow=unavailable");
     }
 
     #[test]
@@ -19016,8 +19381,8 @@ mod tests {
                 status: "promote_latest".to_string(),
                 promote_candidate: true,
                 actionable: false,
-                decision_hint: String::new(),
-                review_reason: String::new(),
+                decision_hint: "decision_hint_unavailable".to_string(),
+                review_reason: "review_reason_unavailable".to_string(),
                 review_rule_version: "r1".to_string(),
                 top_factor_name: None,
                 top_factor_action: None,
@@ -19044,8 +19409,8 @@ mod tests {
                 status: "observe".to_string(),
                 promote_candidate: false,
                 actionable: false,
-                decision_hint: String::new(),
-                review_reason: String::new(),
+                decision_hint: "decision_hint_unavailable".to_string(),
+                review_reason: "review_reason_unavailable".to_string(),
                 review_rule_version: "r1".to_string(),
                 top_factor_name: None,
                 top_factor_action: None,
@@ -19088,8 +19453,8 @@ mod tests {
                 status: "promote_latest".to_string(),
                 promote_candidate: true,
                 actionable: false,
-                decision_hint: String::new(),
-                review_reason: String::new(),
+                decision_hint: "decision_hint_unavailable".to_string(),
+                review_reason: "review_reason_unavailable".to_string(),
                 review_rule_version: "r1".to_string(),
                 top_factor_name: None,
                 top_factor_action: None,
@@ -19116,8 +19481,8 @@ mod tests {
                 status: "observe".to_string(),
                 promote_candidate: false,
                 actionable: false,
-                decision_hint: String::new(),
-                review_reason: String::new(),
+                decision_hint: "decision_hint_unavailable".to_string(),
+                review_reason: "review_reason_unavailable".to_string(),
                 review_rule_version: "r1".to_string(),
                 top_factor_name: None,
                 top_factor_action: None,
@@ -19144,8 +19509,8 @@ mod tests {
                 status: "promote_latest".to_string(),
                 promote_candidate: true,
                 actionable: false,
-                decision_hint: String::new(),
-                review_reason: String::new(),
+                decision_hint: "decision_hint_unavailable".to_string(),
+                review_reason: "review_reason_unavailable".to_string(),
                 review_rule_version: "r1".to_string(),
                 top_factor_name: None,
                 top_factor_action: None,
@@ -19172,8 +19537,8 @@ mod tests {
                 status: "observe".to_string(),
                 promote_candidate: false,
                 actionable: false,
-                decision_hint: String::new(),
-                review_reason: String::new(),
+                decision_hint: "decision_hint_unavailable".to_string(),
+                review_reason: "review_reason_unavailable".to_string(),
                 review_rule_version: "r1".to_string(),
                 top_factor_name: None,
                 top_factor_action: None,
@@ -19224,8 +19589,8 @@ mod tests {
             status: "observe".to_string(),
             promote_candidate: false,
             actionable: false,
-            decision_hint: String::new(),
-            review_reason: String::new(),
+            decision_hint: "decision_hint_unavailable".to_string(),
+            review_reason: "review_reason_unavailable".to_string(),
             review_rule_version: "rules-v1".to_string(),
             top_factor_name: None,
             top_factor_action: None,
@@ -20477,7 +20842,7 @@ mod tests {
                     priority: "high".to_string(),
                     title: "Artifact Consumption".to_string(),
                     rationale: "artifact gate".to_string(),
-                    expected_output: String::new(),
+                    expected_output: "expected_output_unavailable".to_string(),
                     expected_state_changes: vec![],
                     suggested_files: vec![],
                     suggested_commands: vec![
@@ -20490,7 +20855,7 @@ mod tests {
                     priority: "high".to_string(),
                     title: "Rollback".to_string(),
                     rationale: "rollback".to_string(),
-                    expected_output: String::new(),
+                    expected_output: "expected_output_unavailable".to_string(),
                     expected_state_changes: vec![],
                     suggested_files: vec![],
                     suggested_commands: vec![
