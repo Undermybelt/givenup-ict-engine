@@ -4,8 +4,8 @@ use std::path::Path;
 use serde::{Deserialize, Serialize};
 
 use super::{
-    CatBoostCompatiblePolicyEngine, EnsembleVoteArtifact, PolicyEngine, PolicyFeatureVector,
-    PosteriorAuditArtifact,
+    CatBoostCompatiblePolicyEngine, EnsembleDecision, EnsembleVoteArtifact, PolicyEngine,
+    PolicyFeatureVector, PosteriorAuditArtifact,
 };
 use crate::domain::belief::BeliefReportPacket;
 use crate::factor_lab::research::ResearchReport;
@@ -35,6 +35,19 @@ pub struct EnsembleExecutorDecision {
     pub recommended_command: Option<String>,
     pub split_explanations: Vec<String>,
 }
+
+pub trait VotingAggregator {
+    fn aggregate(
+        &self,
+        input: &AnalyzeEnsembleVoteInput,
+        posterior: &PosteriorAuditArtifact,
+        executors: &[EnsembleExecutorDecision],
+        weights: &[f64],
+    ) -> EnsembleDecision;
+}
+
+#[derive(Debug, Clone, Copy, Default)]
+pub struct WeightedVotingAggregator;
 
 fn normalization_status(probabilities: &BTreeMap<String, f64>) -> String {
     if probabilities.is_empty() {
@@ -85,6 +98,99 @@ fn summarize_executor(decision: &EnsembleExecutorDecision) -> String {
         "executor={} action={} confidence={:.3}",
         decision.executor, decision.action, decision.confidence
     )
+}
+
+impl VotingAggregator for WeightedVotingAggregator {
+    fn aggregate(
+        &self,
+        input: &AnalyzeEnsembleVoteInput,
+        posterior: &PosteriorAuditArtifact,
+        executors: &[EnsembleExecutorDecision],
+        weights: &[f64],
+    ) -> EnsembleDecision {
+        let weighted = executors
+            .iter()
+            .zip(weights.iter().copied())
+            .map(|(decision, weight)| {
+                (
+                    decision,
+                    weight,
+                    decision.confidence * weight,
+                    format!("{} weight={:.2}", summarize_executor(decision), weight),
+                )
+            })
+            .collect::<Vec<_>>();
+        let final_action = if weighted
+            .windows(2)
+            .all(|pair| pair[0].0.action == pair[1].0.action)
+        {
+            weighted
+                .first()
+                .map(|item| item.0.action.clone())
+                .unwrap_or_else(|| "observe".to_string())
+        } else {
+            weighted
+                .iter()
+                .max_by(|a, b| a.2.partial_cmp(&b.2).unwrap_or(std::cmp::Ordering::Equal))
+                .map(|item| item.0.action.clone())
+                .unwrap_or_else(|| "observe".to_string())
+        };
+        let consensus_strength = if weighted
+            .windows(2)
+            .all(|pair| pair[0].0.action == pair[1].0.action)
+        {
+            weighted.iter().map(|item| item.2).sum::<f64>().clamp(0.0, 1.0)
+        } else if weighted.len() >= 2 {
+            let mut scores = weighted.iter().map(|item| item.2).collect::<Vec<_>>();
+            scores.sort_by(|a, b| b.partial_cmp(a).unwrap_or(std::cmp::Ordering::Equal));
+            (scores[0] - scores[1]).abs().clamp(0.0, 1.0)
+        } else {
+            0.0
+        };
+        let recommended_command = weighted
+            .iter()
+            .find_map(|item| item.0.recommended_command.clone())
+            .filter(|value| !value.trim().is_empty())
+            .unwrap_or_else(|| {
+                if input.recommended_next_command.trim().is_empty() {
+                    fallback_command(&input.symbol, &final_action)
+                } else {
+                    input.recommended_next_command.clone()
+                }
+            });
+        let disagreement_flags = if weighted
+            .windows(2)
+            .all(|pair| pair[0].0.action == pair[1].0.action)
+        {
+            Vec::new()
+        } else {
+            weighted
+                .windows(2)
+                .map(|pair| {
+                    format!(
+                        "executor_disagreement:{}_vs_{}",
+                        pair[0].0.action, pair[1].0.action
+                    )
+                })
+                .collect()
+        };
+        EnsembleDecision {
+            final_action: final_action.clone(),
+            recommended_command: recommended_command.clone(),
+            human_next_triage: format!(
+                "ensemble_action={} consensus={:.3} regime={} command={}",
+                final_action, consensus_strength, posterior.active_regime, recommended_command
+            ),
+            confidence: weighted.iter().map(|item| item.2).sum::<f64>().clamp(0.0, 1.0),
+            consensus_strength,
+            disagreement_flags,
+            executor_summaries: weighted.iter().map(|item| item.3.clone()).collect(),
+            split_explanations: executors
+                .iter()
+                .flat_map(|item| item.split_explanations.clone())
+                .collect(),
+        }
+    }
 }
 
 fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeatureVector {
@@ -320,76 +426,25 @@ pub fn build_stub_ensemble_vote_from_input(
     }
 
     let (catboost_weight, xgboost_weight) = historical_executor_weights(input);
-    let catboost_score = catboost_like.confidence * catboost_weight;
-    let xgboost_score = xgboost_like.confidence * xgboost_weight;
-
-    let final_action = if catboost_like.action == xgboost_like.action {
-        catboost_like.action.clone()
-    } else if catboost_score >= xgboost_score {
-        catboost_like.action.clone()
-    } else {
-        xgboost_like.action.clone()
-    };
-
-    let consensus_strength = if catboost_like.action == xgboost_like.action {
-        (catboost_score + xgboost_score).clamp(0.0, 1.0)
-    } else {
-        (catboost_score - xgboost_score).abs().clamp(0.0, 1.0)
-    };
-
-    let recommended_command = catboost_like
-        .recommended_command
-        .clone()
-        .filter(|value| !value.trim().is_empty())
-        .or_else(|| xgboost_like.recommended_command.clone())
-        .filter(|value| !value.trim().is_empty())
-        .unwrap_or_else(|| {
-            if input.recommended_next_command.trim().is_empty() {
-                fallback_command(&input.symbol, &final_action)
-            } else {
-                input.recommended_next_command.clone()
-            }
-        });
-
-    let disagreement_flags = if catboost_like.action == xgboost_like.action {
-        Vec::new()
-    } else {
-        vec![format!(
-            "executor_disagreement:{}_vs_{}",
-            catboost_like.action, xgboost_like.action
-        )]
-    };
+    let aggregator = WeightedVotingAggregator;
+    let decision = aggregator.aggregate(
+        input,
+        &posterior,
+        &[catboost_like.clone(), xgboost_like.clone()],
+        &[catboost_weight, xgboost_weight],
+    );
 
     EnsembleVoteArtifact {
         ensemble_version: "ensemble-audit-v2-weighted".to_string(),
         posterior,
-        final_action: final_action.clone(),
-        recommended_command: recommended_command.clone(),
-        human_next_triage: format!(
-            "ensemble_action={} consensus={:.3} regime={} command={}",
-            final_action, consensus_strength, active_regime, recommended_command
-        ),
-        confidence: (catboost_score + xgboost_score).clamp(0.0, 1.0),
-        consensus_strength,
-        disagreement_flags,
-        executor_summaries: vec![
-            format!(
-                "{} weight={:.2}",
-                summarize_executor(&catboost_like),
-                catboost_weight
-            ),
-            format!(
-                "{} weight={:.2}",
-                summarize_executor(&xgboost_like),
-                xgboost_weight
-            ),
-        ],
-        split_explanations: catboost_like
-            .split_explanations
-            .iter()
-            .chain(xgboost_like.split_explanations.iter())
-            .cloned()
-            .collect(),
+        final_action: decision.final_action,
+        recommended_command: decision.recommended_command,
+        human_next_triage: decision.human_next_triage,
+        confidence: decision.confidence,
+        consensus_strength: decision.consensus_strength,
+        disagreement_flags: decision.disagreement_flags,
+        executor_summaries: decision.executor_summaries,
+        split_explanations: decision.split_explanations,
     }
 }
 

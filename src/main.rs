@@ -591,6 +591,8 @@ enum Commands {
         direction: Option<String>,
         #[arg(long)]
         feedback_file: Option<String>,
+        #[arg(long, default_value_t = false)]
+        ensemble: bool,
     },
     /// Run factor research sandbox
     FactorResearch {
@@ -618,6 +620,8 @@ enum Commands {
         mutation_spec: Option<String>,
         #[arg(long, default_value_t = false)]
         emit_mutation_evaluation: bool,
+        #[arg(long, default_value_t = false)]
+        ensemble: bool,
         #[arg(long, default_value = "state")]
         state_dir: String,
     },
@@ -658,6 +662,8 @@ enum Commands {
         data_1d: Option<String>,
         #[arg(long)]
         paired_data: Option<String>,
+        #[arg(long, default_value_t = false)]
+        ensemble: bool,
         #[arg(long, default_value = "state")]
         state_dir: String,
     },
@@ -910,6 +916,7 @@ fn main() -> Result<()> {
             regime,
             direction,
             feedback_file,
+            ensemble,
         } => update_command(
             &symbol,
             &outcome,
@@ -919,6 +926,7 @@ fn main() -> Result<()> {
             pnl,
             regime.as_deref(),
             direction.as_deref(),
+            ensemble,
         )?,
         Commands::FactorResearch {
             symbol,
@@ -933,6 +941,7 @@ fn main() -> Result<()> {
             paired_data,
             mutation_spec,
             emit_mutation_evaluation,
+            ensemble,
             state_dir,
         } => factor_research_command(
             &symbol,
@@ -947,6 +956,7 @@ fn main() -> Result<()> {
             paired_data.as_deref(),
             mutation_spec.as_deref(),
             emit_mutation_evaluation,
+            ensemble,
             &state_dir,
         )?,
         Commands::FactorMutationStatus {
@@ -970,9 +980,10 @@ fn main() -> Result<()> {
             symbol,
             data,
             paired_data,
+            ensemble,
             state_dir,
             ..
-        } => factor_backtest_command(&symbol, &data, paired_data.as_deref(), &state_dir)?,
+        } => factor_backtest_command(&symbol, &data, paired_data.as_deref(), ensemble, &state_dir)?,
         Commands::CleanFutures {
             root,
             output_dir,
@@ -10458,7 +10469,7 @@ fn backtest_command(
     Ok(())
 }
 
-fn emit_update_output(report: &UpdateReport) -> Result<()> {
+fn emit_update_output(report: &UpdateReport, ensemble: bool) -> Result<()> {
     let reflection_evidence = report
         .agent_prompts
         .prompts
@@ -10488,11 +10499,32 @@ fn emit_update_output(report: &UpdateReport) -> Result<()> {
         &reflection_evidence,
         &reflection_next_candidates,
     );
+    let ensemble_surface = if ensemble {
+        report
+            .workflow_snapshot
+            .latest_ensemble_vote
+            .as_ref()
+            .map(|vote| {
+                let persisted_scorecards =
+                    load_ensemble_executor_scorecards(&report.state_dir, &report.symbol)
+                        .unwrap_or_default();
+                let (scorecards, scorecard_source) =
+                    resolved_vote_scorecards(&persisted_scorecards, vote);
+                serde_json::json!({
+                    "ensemble_vote": vote,
+                    "executor_scorecards": scorecards,
+                    "executor_scorecard_source": scorecard_source,
+                })
+            })
+    } else {
+        None
+    };
     println!(
         "{}",
         serde_json::to_string_pretty(&serde_json::json!({
             "report": report,
             "reflection_bundle": reflection_bundle,
+            "ensemble": ensemble_surface,
         }))?
     );
     Ok(())
@@ -10507,6 +10539,7 @@ fn update_command(
     pnl: Option<f64>,
     regime: Option<&str>,
     direction: Option<&str>,
+    ensemble: bool,
 ) -> Result<()> {
     let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
 
@@ -11068,7 +11101,7 @@ fn update_command(
         &mut report.rollback_recommendation,
     );
 
-    emit_update_output(&report)
+    emit_update_output(&report, ensemble)
 }
 
 fn factor_research_command(
@@ -11084,6 +11117,7 @@ fn factor_research_command(
     paired_data: Option<&str>,
     mutation_spec_path: Option<&str>,
     emit_mutation_evaluation: bool,
+    ensemble: bool,
     state_dir: &str,
 ) -> Result<()> {
     let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
@@ -11151,25 +11185,37 @@ fn factor_research_command(
         );
     } else {
         let reflection_bundle = build_research_reflection_bundle(symbol, &report);
-        let ensemble_vote = build_stub_ensemble_vote_from_research(&report);
-        let scorecard_summary = format_executor_summary_lines(&ensemble_vote.executor_summaries);
-        let persisted_scorecards =
-            load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
-        let (_, scorecard_source) = executor_scorecard_surface(&persisted_scorecards, &[]);
         let lifecycle_view = build_factor_lifecycle_view(
             mutation_spec.as_ref(),
             report.factor_mutation_evaluation.as_ref(),
             &report.promotion_decision,
             &report.rollback_recommendation,
         );
+        let ensemble_surface = if ensemble {
+            report
+                .workflow_snapshot
+                .latest_ensemble_vote
+                .as_ref()
+                .map(|vote| {
+                    let persisted_scorecards =
+                        load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
+                    let (scorecards, scorecard_source) =
+                        resolved_vote_scorecards(&persisted_scorecards, vote);
+                    serde_json::json!({
+                        "ensemble_vote": vote,
+                        "executor_scorecards": scorecards,
+                        "executor_scorecard_source": scorecard_source,
+                    })
+                })
+        } else {
+            None
+        };
         println!(
             "{}",
             serde_json::to_string_pretty(&serde_json::json!({
                 "report": report,
                 "reflection_bundle": reflection_bundle,
-                "ensemble_vote": ensemble_vote,
-                "executor_scorecard_summary": scorecard_summary,
-                "executor_scorecard_source": scorecard_source,
+                "ensemble": ensemble_surface,
                 "factor_lifecycle": lifecycle_view,
             }))?
         );
@@ -11737,6 +11783,7 @@ fn factor_backtest_command(
     symbol: &str,
     data: &str,
     paired_data: Option<&str>,
+    ensemble: bool,
     state_dir: &str,
 ) -> Result<()> {
     let report = run_factor_backtest(symbol, data, paired_data, state_dir)?;
@@ -11753,11 +11800,31 @@ fn factor_backtest_command(
         true,
         &[],
     );
+    let ensemble_surface = if ensemble {
+        report
+            .workflow_snapshot
+            .latest_ensemble_vote
+            .as_ref()
+            .map(|vote| {
+                let persisted_scorecards =
+                    load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
+                let (scorecards, scorecard_source) =
+                    resolved_vote_scorecards(&persisted_scorecards, vote);
+                serde_json::json!({
+                    "ensemble_vote": vote,
+                    "executor_scorecards": scorecards,
+                    "executor_scorecard_source": scorecard_source,
+                })
+            })
+    } else {
+        None
+    };
     println!(
         "{}",
         serde_json::to_string_pretty(&serde_json::json!({
             "report": report,
             "compact_backtest_report": compact_report,
+            "ensemble": ensemble_surface,
         }))?
     );
     Ok(())
@@ -19917,6 +19984,7 @@ mod tests {
             None,
             None,
             None,
+            false,
         )
         .unwrap();
 
