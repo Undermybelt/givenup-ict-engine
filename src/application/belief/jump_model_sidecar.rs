@@ -25,28 +25,51 @@ pub fn build_jump_model_regime_sidecar(
     multi_timeframe_evidence: &BTreeMap<String, String>,
     factor_evidence: &[String],
 ) -> JumpModelRegimeSummary {
+    let market_family = factor_evidence.iter().find_map(|line| {
+        line.strip_prefix("market_category=")
+            .map(|value| value.to_string())
+    });
+    let trend_weight = match market_family.as_deref() {
+        Some("futures_index") => 1.10,
+        Some("metals") => 0.92,
+        Some("energy") => 0.84,
+        _ => 1.0,
+    };
+    let balance_weight = match market_family.as_deref() {
+        Some("metals") => 1.08,
+        Some("energy") => 0.88,
+        Some("futures_index") => 0.95,
+        _ => 1.0,
+    };
+    let transition_weight = match market_family.as_deref() {
+        Some("energy") => 1.18,
+        Some("futures_index") => 1.02,
+        Some("metals") => 0.96,
+        _ => 1.0,
+    };
     let trend_score = match features.market_regime_label.as_deref() {
-        Some("bull") | Some("bear") | Some("trend") => 0.62,
-        Some("range") => 0.18,
-        _ => 0.34,
+        Some("bull") | Some("bear") | Some("trend") => 0.62 * trend_weight,
+        Some("range") => 0.18 * trend_weight,
+        _ => 0.34 * trend_weight,
     };
     let balance_score = match features.market_regime_label.as_deref() {
-        Some("range") => 0.58,
-        Some("bull") | Some("bear") | Some("trend") => 0.20,
-        _ => 0.30,
+        Some("range") => 0.58 * balance_weight,
+        Some("bull") | Some("bear") | Some("trend") => 0.20 * balance_weight,
+        _ => 0.30 * balance_weight,
     };
     let transition_hint = multi_timeframe_evidence
         .get("filtered_resonance_label")
         .map(|value| value.as_str())
         .unwrap_or("mixed");
     let volatility = features.stress_score.unwrap_or(0.5).clamp(0.0, 1.0);
-    let transition_score = match transition_hint {
+    let transition_score = (match transition_hint {
         "dislocated" => 0.66,
         "mixed" => 0.42,
         "aligned" => 0.18,
         _ => 0.34,
     } + volatility * 0.18
-        + features.transition_score.unwrap_or(0.0).clamp(0.0, 1.0) * 0.24;
+        + features.transition_score.unwrap_or(0.0).clamp(0.0, 1.0) * 0.24)
+        * transition_weight;
 
     let state_probabilities = normalized_distribution([
         ("trend_persistent".to_string(), trend_score),
@@ -68,6 +91,13 @@ pub fn build_jump_model_regime_sidecar(
         format!("jump_model.active_state={active_state}"),
         format!("jump_model.transition_hint={transition_hint}"),
         format!("jump_model.volatility={volatility:.3}"),
+        format!(
+            "jump_model.market_family_weighting={}:trend={:.2}:balance={:.2}:transition={:.2}",
+            market_family.clone().unwrap_or_else(|| "unknown".to_string()),
+            trend_weight,
+            balance_weight,
+            transition_weight
+        ),
     ];
     if let Some(liquidity) = features.liquidity_regime_label.as_deref() {
         evidence.push(format!("jump_model.liquidity={liquidity}"));
@@ -163,7 +193,10 @@ mod tests {
                 "filtered_resonance_label".to_string(),
                 "dislocated".to_string(),
             )]),
-            &["mtf_divergence".to_string()],
+            &[
+                "market_category=energy".to_string(),
+                "mtf_divergence".to_string(),
+            ],
         );
 
         assert_eq!(summary.active_state, "jump_transition");
