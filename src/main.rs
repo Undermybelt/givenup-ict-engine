@@ -388,6 +388,15 @@ struct BacktestMetricsSummary {
     structural_break_score: f64,
     structural_break_index: Option<usize>,
     structural_break_detected: bool,
+    signal_structural_break_score: f64,
+    signal_structural_break_index: Option<usize>,
+    signal_structural_break_detected: bool,
+    residual_structural_break_score: f64,
+    residual_structural_break_index: Option<usize>,
+    residual_structural_break_detected: bool,
+    rolling_ic_structural_break_score: f64,
+    rolling_ic_structural_break_index: Option<usize>,
+    rolling_ic_structural_break_detected: bool,
 }
 
 #[derive(Debug, Serialize)]
@@ -13286,6 +13295,48 @@ fn run_factor_backtest(
                 .first()
                 .map(|result| result.metrics.structural_break_detected)
                 .unwrap_or(false),
+            signal_structural_break_score: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.signal_structural_break_score)
+                .unwrap_or_default(),
+            signal_structural_break_index: report
+                .factor_results
+                .first()
+                .and_then(|result| result.metrics.signal_structural_break_index),
+            signal_structural_break_detected: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.signal_structural_break_detected)
+                .unwrap_or(false),
+            residual_structural_break_score: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.residual_structural_break_score)
+                .unwrap_or_default(),
+            residual_structural_break_index: report
+                .factor_results
+                .first()
+                .and_then(|result| result.metrics.residual_structural_break_index),
+            residual_structural_break_detected: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.residual_structural_break_detected)
+                .unwrap_or(false),
+            rolling_ic_structural_break_score: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.rolling_ic_structural_break_score)
+                .unwrap_or_default(),
+            rolling_ic_structural_break_index: report
+                .factor_results
+                .first()
+                .and_then(|result| result.metrics.rolling_ic_structural_break_index),
+            rolling_ic_structural_break_detected: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.rolling_ic_structural_break_detected)
+                .unwrap_or(false),
             factor_score_deltas: score_deltas,
             trade_outcome_deltas: report.trade_outcome_deltas.clone(),
             factor_family_decisions,
@@ -14191,6 +14242,15 @@ fn run_probabilistic_backtest(
             structural_break_score: 0.0,
             structural_break_index: None,
             structural_break_detected: false,
+            signal_structural_break_score: 0.0,
+            signal_structural_break_index: None,
+            signal_structural_break_detected: false,
+            residual_structural_break_score: 0.0,
+            residual_structural_break_index: None,
+            residual_structural_break_detected: false,
+            rolling_ic_structural_break_score: 0.0,
+            rolling_ic_structural_break_index: None,
+            rolling_ic_structural_break_detected: false,
         },
         equity_curve,
         regime_metrics,
@@ -17684,6 +17744,15 @@ fn finalize_backtest_report(
             structural_break_score: report.metrics.structural_break_score,
             structural_break_index: report.metrics.structural_break_index,
             structural_break_detected: report.metrics.structural_break_detected,
+            signal_structural_break_score: report.metrics.signal_structural_break_score,
+            signal_structural_break_index: report.metrics.signal_structural_break_index,
+            signal_structural_break_detected: report.metrics.signal_structural_break_detected,
+            residual_structural_break_score: report.metrics.residual_structural_break_score,
+            residual_structural_break_index: report.metrics.residual_structural_break_index,
+            residual_structural_break_detected: report.metrics.residual_structural_break_detected,
+            rolling_ic_structural_break_score: report.metrics.rolling_ic_structural_break_score,
+            rolling_ic_structural_break_index: report.metrics.rolling_ic_structural_break_index,
+            rolling_ic_structural_break_detected: report.metrics.rolling_ic_structural_break_detected,
             factor_score_deltas: score_deltas,
             trade_outcome_deltas: probability_deltas,
             factor_family_decisions: report.factor_family_decisions.clone(),

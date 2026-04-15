@@ -1539,6 +1539,24 @@ pub struct BacktestRunRecord {
     pub structural_break_index: Option<usize>,
     #[serde(default)]
     pub structural_break_detected: bool,
+    #[serde(default)]
+    pub signal_structural_break_score: f64,
+    #[serde(default)]
+    pub signal_structural_break_index: Option<usize>,
+    #[serde(default)]
+    pub signal_structural_break_detected: bool,
+    #[serde(default)]
+    pub residual_structural_break_score: f64,
+    #[serde(default)]
+    pub residual_structural_break_index: Option<usize>,
+    #[serde(default)]
+    pub residual_structural_break_detected: bool,
+    #[serde(default)]
+    pub rolling_ic_structural_break_score: f64,
+    #[serde(default)]
+    pub rolling_ic_structural_break_index: Option<usize>,
+    #[serde(default)]
+    pub rolling_ic_structural_break_detected: bool,
     pub factor_score_deltas: Vec<RankingDiffItem>,
     pub trade_outcome_deltas: Vec<ProbabilityDiff>,
     pub factor_family_decisions: Vec<FactorFamilyDecision>,

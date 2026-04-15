@@ -100,6 +100,14 @@ pub struct StructuralBreakDiagnostics {
     pub segment_mean_shift: f64,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+struct ParallelStructuralBreakDiagnostics {
+    signal: StructuralBreakDiagnostics,
+    residual: StructuralBreakDiagnostics,
+    rolling_ic: StructuralBreakDiagnostics,
+    verdict: StructuralBreakDiagnostics,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FactorBacktestResult {
     pub factor_name: String,
@@ -395,6 +403,57 @@ fn structural_break_diagnostics(realized_returns: &[f64]) -> StructuralBreakDiag
     best
 }
 
+fn aggregate_structural_breaks(
+    signal: StructuralBreakDiagnostics,
+    residual: StructuralBreakDiagnostics,
+    rolling_ic: StructuralBreakDiagnostics,
+) -> StructuralBreakDiagnostics {
+    let mut candidates = [signal.clone(), residual.clone(), rolling_ic.clone()];
+    candidates.sort_by(|left, right| {
+        right
+            .break_score
+            .partial_cmp(&left.break_score)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    let mut verdict = candidates.first().cloned().unwrap_or_default();
+    let detected_votes = [signal.detected, residual.detected, rolling_ic.detected]
+        .into_iter()
+        .filter(|detected| *detected)
+        .count();
+    verdict.detected = detected_votes >= 2 || verdict.detected;
+    verdict.segment_mean_shift = [
+        signal.segment_mean_shift,
+        residual.segment_mean_shift,
+        rolling_ic.segment_mean_shift,
+    ]
+    .into_iter()
+    .fold(0.0, f64::max);
+    verdict
+}
+
+fn parallel_structural_break_diagnostics(
+    signal_values: &[f64],
+    realized_returns: &[f64],
+    rolling_ic: &[f64],
+) -> ParallelStructuralBreakDiagnostics {
+    let signal = structural_break_diagnostics(signal_values);
+    let residual_series = signal_values
+        .iter()
+        .zip(realized_returns.iter())
+        .map(|(signal_value, realized_return)| realized_return - signal_value)
+        .collect::<Vec<_>>();
+    let residual = structural_break_diagnostics(&residual_series);
+    let rolling_ic = structural_break_diagnostics(rolling_ic);
+    let verdict = aggregate_structural_breaks(signal.clone(), residual.clone(), rolling_ic.clone());
+
+    ParallelStructuralBreakDiagnostics {
+        signal,
+        residual,
+        rolling_ic,
+        verdict,
+    }
+}
+
 fn conformal_diagnostics(
     predicted_return: f64,
     calibration_trade_returns: &[f64],
@@ -482,8 +541,26 @@ fn walk_forward_backtest(
         let realized_return = realized_window_return(&window.trades);
         let conformal =
             conformal_diagnostics(predicted_return, &calibration_trade_returns, realized_return);
-        let realized_break_series = [predicted_return, predicted_return, realized_return, realized_return];
-        let structural_break = structural_break_diagnostics(&realized_break_series);
+        let test_signal_values = series
+            .signals
+            .iter()
+            .skip(test_start.saturating_sub(1))
+            .take(test_end.saturating_sub(test_start).max(1))
+            .map(|signal| signal.value)
+            .collect::<Vec<_>>();
+        let test_returns = forward_returns(&candles[test_start.saturating_sub(1)..=test_end], 1);
+        let pair_len = test_signal_values.len().min(test_returns.len());
+        let rolling_ic_window = ICCalculator::rolling_ic(
+            &test_signal_values[..pair_len],
+            &test_returns[..pair_len],
+            pair_len.clamp(2, 8),
+        );
+        let structural_break = parallel_structural_break_diagnostics(
+            &test_signal_values[..pair_len],
+            &test_returns[..pair_len],
+            &rolling_ic_window,
+        )
+        .verdict;
         equity = *window.equity_curve.last().unwrap_or(&equity);
         if window.equity_curve.len() > 1 {
             equity_curve.extend(window.equity_curve.iter().copied().skip(1));
@@ -528,12 +605,22 @@ fn walk_forward_backtest(
             ic: 0.0,
             ir: 0.0,
             conformal: conformal_diagnostics(0.0, &[], realized_window_return(&all_trades)),
-            structural_break: structural_break_diagnostics(&[
-                0.0,
-                realized_window_return(&all_trades),
-                realized_window_return(&all_trades),
-                0.0,
-            ]),
+            structural_break: parallel_structural_break_diagnostics(
+                &[
+                    0.0,
+                    realized_window_return(&all_trades),
+                    realized_window_return(&all_trades),
+                    0.0,
+                ],
+                &[
+                    realized_window_return(&all_trades),
+                    0.0,
+                    realized_window_return(&all_trades),
+                    0.0,
+                ],
+                &[0.0, 0.0, 0.0, 0.0],
+            )
+            .verdict,
         });
     }
 
@@ -720,9 +807,30 @@ fn forward_returns(candles: &[Candle], horizon: usize) -> Vec<f64> {
 
 fn summarize_conformal_metrics(
     windows: &[WalkForwardWindow],
-) -> (f64, f64, f64, f64, f64, f64, Option<usize>, bool) {
+) -> (
+    f64,
+    f64,
+    f64,
+    f64,
+    f64,
+    f64,
+    Option<usize>,
+    bool,
+    f64,
+    Option<usize>,
+    bool,
+    f64,
+    Option<usize>,
+    bool,
+    f64,
+    Option<usize>,
+    bool,
+) {
     if windows.is_empty() {
-        return (0.0, 0.0, 0.0, 0.0, 0.0, 0.0, None, false);
+        return (
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, None, false, 0.0, None, false, 0.0, None, false, 0.0,
+            None, false,
+        );
     }
 
     let coverage = windows
@@ -739,10 +847,17 @@ fn summarize_conformal_metrics(
         .iter()
         .map(|window| window.conformal.miscoverage)
         .fold(0.0, f64::max);
+    let signal_series = windows
+        .iter()
+        .map(|window| window.conformal.predicted_return)
+        .collect::<Vec<_>>();
     let realized_returns = windows
         .iter()
         .map(|window| window.conformal.realized_return)
         .collect::<Vec<_>>();
+    let rolling_ic_series = windows.iter().map(|window| window.ic).collect::<Vec<_>>();
+    let parallel_breaks =
+        parallel_structural_break_diagnostics(&signal_series, &realized_returns, &rolling_ic_series);
     let structural_break = windows
         .iter()
         .map(|window| window.structural_break.clone())
@@ -751,7 +866,18 @@ fn summarize_conformal_metrics(
                 .partial_cmp(&right.break_score)
                 .unwrap_or(std::cmp::Ordering::Equal)
         })
-        .unwrap_or_else(|| structural_break_diagnostics(&realized_returns));
+        .map(|window_break| {
+            aggregate_structural_breaks(
+                parallel_breaks.signal.clone(),
+                parallel_breaks.residual.clone(),
+                aggregate_structural_breaks(
+                    window_break,
+                    parallel_breaks.rolling_ic.clone(),
+                    parallel_breaks.verdict.clone(),
+                ),
+            )
+        })
+        .unwrap_or_else(|| parallel_breaks.verdict.clone());
     let regime_break_penalty = structural_break.segment_mean_shift;
 
     (
@@ -763,6 +889,15 @@ fn summarize_conformal_metrics(
         structural_break.break_score,
         structural_break.break_index,
         structural_break.detected,
+        parallel_breaks.signal.break_score,
+        parallel_breaks.signal.break_index,
+        parallel_breaks.signal.detected,
+        parallel_breaks.residual.break_score,
+        parallel_breaks.residual.break_index,
+        parallel_breaks.residual.detected,
+        parallel_breaks.rolling_ic.break_score,
+        parallel_breaks.rolling_ic.break_index,
+        parallel_breaks.rolling_ic.detected,
     )
 }
 
@@ -817,6 +952,15 @@ fn metrics_from_trades(
         structural_break_score,
         structural_break_index,
         structural_break_detected,
+        signal_structural_break_score,
+        signal_structural_break_index,
+        signal_structural_break_detected,
+        residual_structural_break_score,
+        residual_structural_break_index,
+        residual_structural_break_detected,
+        rolling_ic_structural_break_score,
+        rolling_ic_structural_break_index,
+        rolling_ic_structural_break_detected,
     ) = summarize_conformal_metrics(windows);
 
     BacktestMetrics {
@@ -834,6 +978,15 @@ fn metrics_from_trades(
         structural_break_score,
         structural_break_index,
         structural_break_detected,
+        signal_structural_break_score,
+        signal_structural_break_index,
+        signal_structural_break_detected,
+        residual_structural_break_score,
+        residual_structural_break_index,
+        residual_structural_break_detected,
+        rolling_ic_structural_break_score,
+        rolling_ic_structural_break_index,
+        rolling_ic_structural_break_detected,
     }
 }
 
@@ -1037,5 +1190,8 @@ mod tests {
         assert!(metrics.structural_break_detected);
         assert!(metrics.structural_break_score > 0.0);
         assert!(metrics.structural_break_index.is_some());
+        assert!(metrics.signal_structural_break_score >= 0.0);
+        assert!(metrics.residual_structural_break_score >= 0.0);
+        assert!(metrics.rolling_ic_structural_break_score >= 0.0);
     }
 }
