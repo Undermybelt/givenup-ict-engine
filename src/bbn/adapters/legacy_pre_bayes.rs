@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
 use crate::application::belief::{
-    backtest_calibrated_market_jump_weight, build_jump_model_regime_sidecar,
+    build_jump_model_regime_sidecar_with_history, historical_market_jump_weight,
 };
 use crate::domain::belief::{BeliefEvidencePacket, BeliefNodePosteriorSnapshot};
 use crate::domain::regime::{
@@ -231,10 +231,14 @@ pub fn regime_posterior_from_pre_bayes_filter(filter: &PreBayesEvidenceFilter) -
     }
 }
 
-pub fn jump_model_summary_from_belief_packet(packet: &BeliefEvidencePacket) -> JumpModelRegimeSummary {
+pub fn jump_model_summary_from_belief_packet(
+    packet: &BeliefEvidencePacket,
+) -> JumpModelRegimeSummary {
     let mut factor_evidence = packet.factor_evidence.clone();
     factor_evidence.extend(packet.market_evidence.iter().cloned());
-    build_jump_model_regime_sidecar(
+    build_jump_model_regime_sidecar_with_history(
+        std::env::temp_dir(),
+        packet.symbol.as_str(),
         &packet.regime_features,
         &packet.multi_timeframe_evidence,
         &factor_evidence,
@@ -318,7 +322,9 @@ pub fn gate_decision_from_regime_posterior(posterior: &RegimePosterior) -> Regim
         selected_subgraph: market_subgraph,
         selected_regime: selected,
         market_family: posterior.market_family.clone(),
-        jump_weight: Some(backtest_calibrated_market_jump_weight(
+        jump_weight: Some(historical_market_jump_weight(
+            std::env::temp_dir(),
+            "regime_gate",
             posterior.market_family.as_deref(),
             posterior.market_behavior_profile.as_deref(),
         )),

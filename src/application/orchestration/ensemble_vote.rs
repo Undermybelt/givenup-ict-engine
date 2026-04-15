@@ -115,17 +115,31 @@ impl VotingAggregator for WeightedVotingAggregator {
             .as_ref()
             .map(|item| item.gate_bias.as_str())
             .unwrap_or("hmm_only");
+        let jump_weight = input
+            .belief
+            .gate_decision
+            .jump_weight
+            .or_else(|| {
+                input
+                    .belief
+                    .regime_companion
+                    .jump_model
+                    .as_ref()
+                    .map(|item| item.market_jump_weight)
+            })
+            .unwrap_or(1.0);
         let weighted = executors
             .iter()
             .zip(weights.iter().copied())
             .map(|(decision, weight)| {
-                let adjusted_confidence = match jump_gate_bias {
+                let gate_adjusted_confidence = match jump_gate_bias {
                     "shrink_and_observe" if decision.action != "observe" => {
                         (decision.confidence * 0.55).clamp(0.0, 1.0)
                     }
                     "relax_if_other_gates_clear" => (decision.confidence * 1.10).clamp(0.0, 1.0),
                     _ => decision.confidence,
                 };
+                let adjusted_confidence = (gate_adjusted_confidence * jump_weight).clamp(0.0, 1.0);
                 (
                     decision,
                     weight,
@@ -159,7 +173,11 @@ impl VotingAggregator for WeightedVotingAggregator {
             .windows(2)
             .all(|pair| pair[0].0.action == pair[1].0.action)
         {
-            weighted.iter().map(|item| item.2).sum::<f64>().clamp(0.0, 1.0)
+            weighted
+                .iter()
+                .map(|item| item.2)
+                .sum::<f64>()
+                .clamp(0.0, 1.0)
         } else if weighted.len() >= 2 {
             let mut scores = weighted.iter().map(|item| item.2).collect::<Vec<_>>();
             scores.sort_by(|a, b| b.partial_cmp(a).unwrap_or(std::cmp::Ordering::Equal));
@@ -211,7 +229,11 @@ impl VotingAggregator for WeightedVotingAggregator {
                 jump_gate_bias,
                 recommended_command
             ),
-            confidence: weighted.iter().map(|item| item.2).sum::<f64>().clamp(0.0, 1.0),
+            confidence: weighted
+                .iter()
+                .map(|item| item.2)
+                .sum::<f64>()
+                .clamp(0.0, 1.0),
             consensus_strength,
             disagreement_flags,
             executor_summaries: weighted.iter().map(|item| item.3.clone()).collect(),
@@ -535,21 +557,23 @@ pub fn build_stub_ensemble_vote_from_research(report: &ResearchReport) -> Ensemb
                     ]),
                     evidence: report.multi_timeframe_summary.clone(),
                 }),
-                disagreement: Some(crate::application::belief::build_regime_disagreement_summary(
-                    Some("transition"),
-                    Some(&crate::domain::regime::JumpModelRegimeSummary {
-                        active_state: "jump_transition".to_string(),
-                        confidence: 0.5,
-                        transition_risk: 0.5,
-                        market_jump_weight: 1.0,
-                        state_probabilities: BTreeMap::from([
-                            ("trend_persistent".to_string(), 0.25),
-                            ("balance_mean_revert".to_string(), 0.25),
-                            ("jump_transition".to_string(), 0.5),
-                        ]),
-                        evidence: report.multi_timeframe_summary.clone(),
-                    }),
-                )),
+                disagreement: Some(
+                    crate::application::belief::build_regime_disagreement_summary(
+                        Some("transition"),
+                        Some(&crate::domain::regime::JumpModelRegimeSummary {
+                            active_state: "jump_transition".to_string(),
+                            confidence: 0.5,
+                            transition_risk: 0.5,
+                            market_jump_weight: 1.0,
+                            state_probabilities: BTreeMap::from([
+                                ("trend_persistent".to_string(), 0.25),
+                                ("balance_mean_revert".to_string(), 0.25),
+                                ("jump_transition".to_string(), 0.5),
+                            ]),
+                            evidence: report.multi_timeframe_summary.clone(),
+                        }),
+                    ),
+                ),
             },
             ..BeliefReportPacket::default()
         },

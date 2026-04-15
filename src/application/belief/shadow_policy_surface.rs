@@ -12,6 +12,7 @@ pub struct BeliefShadowPolicySurface {
     pub evidence_quality_score: f64,
     pub jump_model_active_state: String,
     pub jump_model_transition_risk: f64,
+    pub jump_model_market_weight: f64,
     pub jump_model_disagreement_score: f64,
     pub jump_model_gate_bias: String,
 }
@@ -48,6 +49,12 @@ pub fn build_belief_shadow_policy_surface(
             .as_ref()
             .map(|item| item.transition_risk)
             .unwrap_or_default(),
+        jump_model_market_weight: packet
+            .regime_companion
+            .jump_model
+            .as_ref()
+            .map(|item| item.market_jump_weight)
+            .unwrap_or(1.0),
         jump_model_disagreement_score: packet
             .regime_companion
             .disagreement
@@ -99,6 +106,7 @@ mod tests {
         let surface = build_belief_shadow_policy_surface(&packet, None);
         assert_eq!(surface.jump_model_active_state, "jump_transition");
         assert!(surface.jump_model_transition_risk > 0.6);
+        assert!(surface.jump_model_market_weight > 1.1);
         assert!(surface.jump_model_disagreement_score > 0.6);
         assert_eq!(surface.jump_model_gate_bias, "shrink_and_observe");
     }

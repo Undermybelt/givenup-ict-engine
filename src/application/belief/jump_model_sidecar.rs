@@ -1,12 +1,21 @@
 use std::collections::BTreeMap;
+use std::path::Path;
 
-use crate::domain::regime::{
-    JumpModelRegimeSummary, RegimeDisagreementSummary, RegimeFeatures,
-};
-use crate::state::WorkflowSnapshot;
+use crate::domain::regime::{JumpModelRegimeSummary, RegimeDisagreementSummary, RegimeFeatures};
+use crate::state::{load_state_or_default, WorkflowSnapshot};
+
+const MARKET_JUMP_CALIBRATION_FILE: &str = "market_jump_calibration.json";
 
 #[derive(Debug, Clone, Copy)]
 struct MarketJumpCalibration {
+    trend_weight: f64,
+    balance_weight: f64,
+    transition_weight: f64,
+    backtest_edge: f64,
+}
+
+#[derive(Debug, Clone, Copy, serde::Serialize, serde::Deserialize)]
+struct PersistedMarketJumpCalibration {
     trend_weight: f64,
     balance_weight: f64,
     transition_weight: f64,
@@ -66,11 +75,54 @@ fn market_jump_calibration(
     }
 }
 
+fn calibration_key(market_family: Option<&str>, market_behavior_profile: Option<&str>) -> String {
+    format!(
+        "{}::{}",
+        market_family.unwrap_or("generic"),
+        market_behavior_profile.unwrap_or("generic")
+    )
+}
+
+fn dynamic_market_jump_calibration<P: AsRef<Path>>(
+    state_dir: P,
+    symbol: &str,
+    market_family: Option<&str>,
+    market_behavior_profile: Option<&str>,
+) -> MarketJumpCalibration {
+    let baseline = market_jump_calibration(market_family, market_behavior_profile);
+    let persisted: BTreeMap<String, PersistedMarketJumpCalibration> =
+        load_state_or_default(state_dir, symbol, MARKET_JUMP_CALIBRATION_FILE).unwrap_or_default();
+    let Some(overlay) = persisted.get(&calibration_key(market_family, market_behavior_profile))
+    else {
+        return baseline;
+    };
+
+    MarketJumpCalibration {
+        trend_weight: ((baseline.trend_weight + overlay.trend_weight) / 2.0).clamp(0.75, 1.35),
+        balance_weight: ((baseline.balance_weight + overlay.balance_weight) / 2.0)
+            .clamp(0.75, 1.35),
+        transition_weight: ((baseline.transition_weight + overlay.transition_weight) / 2.0)
+            .clamp(0.75, 1.45),
+        backtest_edge: ((baseline.backtest_edge + overlay.backtest_edge) / 2.0).clamp(-0.25, 0.35),
+    }
+}
+
 pub fn backtest_calibrated_market_jump_weight(
     market_family: Option<&str>,
     market_behavior_profile: Option<&str>,
 ) -> f64 {
     let calibration = market_jump_calibration(market_family, market_behavior_profile);
+    (1.0 + calibration.backtest_edge).clamp(0.75, 1.35)
+}
+
+pub fn historical_market_jump_weight<P: AsRef<Path>>(
+    state_dir: P,
+    symbol: &str,
+    market_family: Option<&str>,
+    market_behavior_profile: Option<&str>,
+) -> f64 {
+    let calibration =
+        dynamic_market_jump_calibration(state_dir, symbol, market_family, market_behavior_profile);
     (1.0 + calibration.backtest_edge).clamp(0.75, 1.35)
 }
 
@@ -102,17 +154,61 @@ pub fn build_jump_model_regime_sidecar(
         line.strip_prefix("market_behavior_profile=")
             .map(|value| value.to_string())
     });
-    let calibration = market_jump_calibration(
+    let calibration =
+        market_jump_calibration(market_family.as_deref(), market_behavior_profile.as_deref());
+    build_jump_model_regime_sidecar_inner(
+        features,
+        multi_timeframe_evidence,
+        factor_evidence,
+        market_family,
+        market_behavior_profile,
+        calibration,
+    )
+}
+
+pub fn build_jump_model_regime_sidecar_with_history<P: AsRef<Path>>(
+    state_dir: P,
+    symbol: &str,
+    features: &RegimeFeatures,
+    multi_timeframe_evidence: &BTreeMap<String, String>,
+    factor_evidence: &[String],
+) -> JumpModelRegimeSummary {
+    let market_family = factor_evidence.iter().find_map(|line| {
+        line.strip_prefix("market_category=")
+            .map(|value| value.to_string())
+    });
+    let market_behavior_profile = factor_evidence.iter().find_map(|line| {
+        line.strip_prefix("market_behavior_profile=")
+            .map(|value| value.to_string())
+    });
+    let calibration = dynamic_market_jump_calibration(
+        state_dir,
+        symbol,
         market_family.as_deref(),
         market_behavior_profile.as_deref(),
     );
+    build_jump_model_regime_sidecar_inner(
+        features,
+        multi_timeframe_evidence,
+        factor_evidence,
+        market_family,
+        market_behavior_profile,
+        calibration,
+    )
+}
+
+fn build_jump_model_regime_sidecar_inner(
+    features: &RegimeFeatures,
+    multi_timeframe_evidence: &BTreeMap<String, String>,
+    factor_evidence: &[String],
+    market_family: Option<String>,
+    market_behavior_profile: Option<String>,
+    calibration: MarketJumpCalibration,
+) -> JumpModelRegimeSummary {
     let trend_weight = calibration.trend_weight;
     let balance_weight = calibration.balance_weight;
     let transition_weight = calibration.transition_weight;
-    let market_jump_weight = backtest_calibrated_market_jump_weight(
-        market_family.as_deref(),
-        market_behavior_profile.as_deref(),
-    );
+    let market_jump_weight = (1.0 + calibration.backtest_edge).clamp(0.75, 1.35);
     let trend_score = match features.market_regime_label.as_deref() {
         Some("bull") | Some("bear") | Some("trend") => 0.62 * trend_weight,
         Some("range") => 0.18 * trend_weight,
@@ -161,12 +257,17 @@ pub fn build_jump_model_regime_sidecar(
         format!("jump_model.market_jump_weight={market_jump_weight:.3}"),
         format!(
             "jump_model.market_family_weighting={}:trend={:.2}:balance={:.2}:transition={:.2}",
-            market_family.clone().unwrap_or_else(|| "unknown".to_string()),
+            market_family
+                .clone()
+                .unwrap_or_else(|| "unknown".to_string()),
             trend_weight,
             balance_weight,
             transition_weight
         ),
     ];
+    if let Some(profile) = market_behavior_profile.as_deref() {
+        evidence.push(format!("jump_model.market_behavior_profile={profile}"));
+    }
     if let Some(liquidity) = features.liquidity_regime_label.as_deref() {
         evidence.push(format!("jump_model.liquidity={liquidity}"));
     }
@@ -289,5 +390,41 @@ mod tests {
         assert!(energy > 1.0);
         assert!(metals < 1.0);
         assert!(energy > metals);
+    }
+
+    #[test]
+    fn historical_market_jump_weight_uses_persisted_overlay() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "NQ";
+        let path = temp.path().join(symbol);
+        std::fs::create_dir_all(&path).unwrap();
+        let payload = serde_json::json!({
+            "energy::energy_volatility_shock_sensitive": {
+                "trend_weight": 0.90,
+                "balance_weight": 0.92,
+                "transition_weight": 1.40,
+                "backtest_edge": 0.30
+            }
+        });
+        std::fs::write(
+            path.join(MARKET_JUMP_CALIBRATION_FILE),
+            serde_json::to_string_pretty(&payload).unwrap(),
+        )
+        .unwrap();
+
+        let weight = historical_market_jump_weight(
+            temp.path(),
+            symbol,
+            Some("energy"),
+            Some("energy_volatility_shock_sensitive"),
+        );
+
+        assert!(
+            weight
+                > backtest_calibrated_market_jump_weight(
+                    Some("energy"),
+                    Some("energy_volatility_shock_sensitive")
+                )
+        );
     }
 }
