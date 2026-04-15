@@ -1,6 +1,8 @@
 use std::collections::BTreeMap;
 
-use crate::domain::regime::{JumpModelRegimeSummary, RegimeFeatures};
+use crate::domain::regime::{
+    JumpModelRegimeSummary, RegimeDisagreementSummary, RegimeFeatures,
+};
 use crate::state::WorkflowSnapshot;
 
 fn normalized_distribution(entries: [(String, f64); 3]) -> BTreeMap<String, f64> {
@@ -92,6 +94,55 @@ pub fn jump_model_workflow_summary(snapshot: &WorkflowSnapshot) -> Option<String
         .iter()
         .find(|line| line.contains("jump_model"))
         .cloned()
+}
+
+pub fn build_regime_disagreement_summary(
+    hmm_active_regime: Option<&str>,
+    jump_model: Option<&JumpModelRegimeSummary>,
+) -> RegimeDisagreementSummary {
+    let jump_active_state = jump_model.map(|item| item.active_state.clone());
+    let aligned = match (hmm_active_regime, jump_active_state.as_deref()) {
+        (Some("trend"), Some("trend_persistent")) => true,
+        (Some("range"), Some("balance_mean_revert")) => true,
+        (Some("transition"), Some("jump_transition")) => true,
+        (Some(_), Some(_)) => false,
+        _ => true,
+    };
+    let disagreement_score = if let Some(jump_model) = jump_model {
+        if aligned {
+            (1.0 - jump_model.confidence).clamp(0.0, 1.0) * 0.35
+        } else {
+            jump_model.confidence.clamp(0.0, 1.0)
+        }
+    } else {
+        0.0
+    };
+    let gate_bias = if jump_model.is_none() {
+        "hmm_only".to_string()
+    } else if aligned {
+        "relax_if_other_gates_clear".to_string()
+    } else {
+        "shrink_and_observe".to_string()
+    };
+    let mut evidence = Vec::new();
+    if let Some(hmm) = hmm_active_regime {
+        evidence.push(format!("hmm_active_regime={hmm}"));
+    }
+    if let Some(jump) = &jump_active_state {
+        evidence.push(format!("jump_active_state={jump}"));
+    }
+    evidence.push(format!("aligned={aligned}"));
+    evidence.push(format!("disagreement_score={disagreement_score:.3}"));
+    evidence.push(format!("gate_bias={gate_bias}"));
+
+    RegimeDisagreementSummary {
+        hmm_active_regime: hmm_active_regime.map(|value| value.to_string()),
+        jump_active_state,
+        aligned,
+        disagreement_score,
+        gate_bias,
+        evidence,
+    }
 }
 
 #[cfg(test)]

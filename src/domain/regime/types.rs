@@ -52,6 +52,16 @@ pub struct JumpModelRegimeSummary {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct RegimeDisagreementSummary {
+    pub hmm_active_regime: Option<String>,
+    pub jump_active_state: Option<String>,
+    pub aligned: bool,
+    pub disagreement_score: f64,
+    pub gate_bias: String,
+    pub evidence: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct RegimeGateDecision {
     pub selected_regime: String,
     pub selected_subgraph: String,

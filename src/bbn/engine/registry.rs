@@ -11,6 +11,7 @@ use crate::bbn::adapters::{
     strategy_recommendation_from_pre_bayes_filter,
 };
 use crate::state::PreBayesEvidenceFilter;
+use crate::application::belief::build_regime_disagreement_summary;
 
 pub struct InferenceEngineRegistry {
     primary: Box<dyn BeliefInferenceEngine + Send + Sync>,
@@ -44,6 +45,10 @@ impl InferenceEngineRegistry {
             .clone()
             .unwrap_or_else(|| jump_model_summary_from_belief_packet(&request.packet));
         let gate_decision = gate_decision_from_regime_posterior(&regime_posterior);
+        let jump_disagreement = build_regime_disagreement_summary(
+            regime_posterior.active_regime.as_deref(),
+            Some(&jump_model),
+        );
         let belief_posteriors = self.primary.infer_beliefs(&request)?;
         let credible_intervals = self.primary.credible_intervals(&request)?;
 
@@ -191,6 +196,7 @@ impl InferenceEngineRegistry {
             strategy_recommendation,
             regime_companion: crate::domain::belief::RegimeCompanionPacket {
                 jump_model: Some(jump_model.clone()),
+                disagreement: Some(jump_disagreement.clone()),
             },
             market_family,
             market_behavior_profile,

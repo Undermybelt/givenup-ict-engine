@@ -1655,6 +1655,15 @@ fn workflow_status_human_view(
                     .find(|line| line.contains("jump_model"))
                     .cloned()
             }),
+        "jump_disagreement": snapshot
+            .latest_ensemble_vote
+            .as_ref()
+            .and_then(|vote| {
+                vote.executor_summaries
+                    .iter()
+                    .find(|line| line.contains("jump_disagreement"))
+                    .cloned()
+            }),
     })
 }
 

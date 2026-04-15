@@ -3,6 +3,7 @@ pub use crate::domain::belief::{
     EngineTrace, RegimeCompanionPacket, ShadowComparisonSummary,
 };
 pub use crate::domain::regime::{
-    JumpModelRegimeSummary, RegimeFeatures, RegimeGateDecision, RegimePosterior,
+    JumpModelRegimeSummary, RegimeDisagreementSummary, RegimeFeatures, RegimeGateDecision,
+    RegimePosterior,
 };
 pub use crate::domain::strategy::StrategyRecommendation;

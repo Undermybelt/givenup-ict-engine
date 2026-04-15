@@ -503,6 +503,20 @@ pub fn build_stub_ensemble_vote_from_research(report: &ResearchReport) -> Ensemb
                     ]),
                     evidence: report.multi_timeframe_summary.clone(),
                 }),
+                disagreement: Some(crate::application::belief::build_regime_disagreement_summary(
+                    Some("transition"),
+                    Some(&crate::domain::regime::JumpModelRegimeSummary {
+                        active_state: "jump_transition".to_string(),
+                        confidence: 0.5,
+                        transition_risk: 0.5,
+                        state_probabilities: BTreeMap::from([
+                            ("trend_persistent".to_string(), 0.25),
+                            ("balance_mean_revert".to_string(), 0.25),
+                            ("jump_transition".to_string(), 0.5),
+                        ]),
+                        evidence: report.multi_timeframe_summary.clone(),
+                    }),
+                )),
             },
             ..BeliefReportPacket::default()
         },
@@ -577,6 +591,12 @@ mod tests {
             state_probabilities: BTreeMap::new(),
             evidence: vec![],
         });
+        belief.regime_companion.disagreement = Some(
+            crate::application::belief::build_regime_disagreement_summary(
+                belief.regime_posterior.active_regime.as_deref(),
+                belief.regime_companion.jump_model.as_ref(),
+            ),
+        );
         let artifact = build_stub_ensemble_vote_from_input(&AnalyzeEnsembleVoteInput {
             symbol: "NQ".to_string(),
             state_dir: None,

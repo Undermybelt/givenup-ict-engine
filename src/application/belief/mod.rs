@@ -19,7 +19,10 @@ pub use pipeline_shared::{
     effective_trade_outcome_win_probability, multi_timeframe_entry_quality_bias, probability_map,
     raw_liquidity_context_trace, raw_market_regime_trace, raw_multi_timeframe_resonance_trace,
 };
-pub use jump_model_sidecar::{build_jump_model_regime_sidecar, jump_model_workflow_summary};
+pub use jump_model_sidecar::{
+    build_jump_model_regime_sidecar, build_regime_disagreement_summary,
+    jump_model_workflow_summary,
+};
 pub use pipeline_types::ExpansionFactorPipelineReport;
 pub use policy_lineage_surface::{build_belief_policy_lineage_surface, BeliefPolicyLineageSurface};
 pub use shadow_policy_surface::{build_belief_shadow_policy_surface, BeliefShadowPolicySurface};

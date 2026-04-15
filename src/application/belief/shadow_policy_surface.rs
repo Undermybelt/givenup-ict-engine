@@ -12,6 +12,8 @@ pub struct BeliefShadowPolicySurface {
     pub evidence_quality_score: f64,
     pub jump_model_active_state: String,
     pub jump_model_transition_risk: f64,
+    pub jump_model_disagreement_score: f64,
+    pub jump_model_gate_bias: String,
 }
 
 pub fn build_belief_shadow_policy_surface(
@@ -46,6 +48,18 @@ pub fn build_belief_shadow_policy_surface(
             .as_ref()
             .map(|item| item.transition_risk)
             .unwrap_or_default(),
+        jump_model_disagreement_score: packet
+            .regime_companion
+            .disagreement
+            .as_ref()
+            .map(|item| item.disagreement_score)
+            .unwrap_or_default(),
+        jump_model_gate_bias: packet
+            .regime_companion
+            .disagreement
+            .as_ref()
+            .map(|item| item.gate_bias.clone())
+            .unwrap_or_else(|| "jump_gate_unavailable".to_string()),
     }
 }
 
@@ -74,8 +88,17 @@ mod tests {
             evidence: vec![],
         });
 
+        packet.regime_companion.disagreement = Some(
+            crate::application::belief::build_regime_disagreement_summary(
+                Some("trend"),
+                packet.regime_companion.jump_model.as_ref(),
+            ),
+        );
+
         let surface = build_belief_shadow_policy_surface(&packet, None);
         assert_eq!(surface.jump_model_active_state, "jump_transition");
         assert!(surface.jump_model_transition_risk > 0.6);
+        assert!(surface.jump_model_disagreement_score > 0.6);
+        assert_eq!(surface.jump_model_gate_bias, "shrink_and_observe");
     }
 }
