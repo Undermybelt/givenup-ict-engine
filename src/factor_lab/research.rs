@@ -21,6 +21,8 @@ pub struct ResearchReport {
     pub factor_count: usize,
     #[serde(default)]
     pub research_objective: String,
+    #[serde(default)]
+    pub objective_surfaces: Vec<HashMap<String, String>>,
     pub best_factor: Option<String>,
     pub aggregate_return: f64,
     pub feedback_records_generated: usize,
@@ -124,6 +126,7 @@ impl FactorLab {
         Ok(ResearchReport {
             factor_count: result.factor_results.len(),
             research_objective: String::new(),
+            objective_surfaces: Vec::new(),
             best_factor: result.best_factor.clone(),
             aggregate_return: result.aggregate_return,
             feedback_records_generated: feedback_records.len(),
@@ -146,7 +149,7 @@ impl FactorLab {
             agent_context_bundle: AgentContextBundle::default(),
             agent_context_bundle_minimal: AgentContextBundleMinimal::default(),
             recommended_commands: CommandRecommendations::default(),
-            recommended_next_command: String::new(),
+            recommended_next_command: "recommended_command_unavailable".to_string(),
             artifact_action_summary: Vec::new(),
             artifact_decision_summary: crate::state::ArtifactDecisionSummary::default(),
             artifact_decision_section: crate::state::ArtifactDecisionSection::default(),

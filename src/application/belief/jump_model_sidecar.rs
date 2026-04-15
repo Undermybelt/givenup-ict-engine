@@ -9,6 +9,7 @@ use crate::state::{
 };
 
 const MARKET_JUMP_CALIBRATION_FILE: &str = "market_jump_calibration.json";
+const MARKET_JUMP_OBJECTIVE_CALIBRATION_FILE: &str = "market_jump_objective_calibration.json";
 
 #[derive(Debug, Clone, Copy)]
 struct MarketJumpCalibration {
@@ -94,6 +95,14 @@ fn calibration_key(market_family: Option<&str>, market_behavior_profile: Option<
     )
 }
 
+fn objective_calibration_key(market_family: Option<&str>, objective: Option<&str>) -> String {
+    format!(
+        "{}::{}",
+        market_family.unwrap_or("generic"),
+        objective.unwrap_or("generic")
+    )
+}
+
 fn dynamic_market_jump_calibration<P: AsRef<Path>>(
     state_dir: P,
     symbol: &str,
@@ -102,20 +111,57 @@ fn dynamic_market_jump_calibration<P: AsRef<Path>>(
 ) -> MarketJumpCalibration {
     let baseline = market_jump_calibration(market_family, market_behavior_profile);
     let persisted: BTreeMap<String, PersistedMarketJumpCalibration> =
-        load_state_or_default(state_dir, symbol, MARKET_JUMP_CALIBRATION_FILE).unwrap_or_default();
-    let Some(overlay) = persisted.get(&calibration_key(market_family, market_behavior_profile))
-    else {
+        load_state_or_default(&state_dir, symbol, MARKET_JUMP_CALIBRATION_FILE).unwrap_or_default();
+    let objective_persisted: BTreeMap<String, PersistedMarketJumpCalibration> =
+        load_state_or_default(state_dir, symbol, MARKET_JUMP_OBJECTIVE_CALIBRATION_FILE)
+            .unwrap_or_default();
+    let overlay = persisted.get(&calibration_key(market_family, market_behavior_profile));
+    let objective_overlay = objective_persisted.get(&objective_calibration_key(
+        market_family,
+        market_behavior_profile,
+    ));
+    let Some(blended_overlay) = overlay.or(objective_overlay) else {
         return baseline;
     };
 
+    let trend_overlay = overlay
+        .map(|item| item.trend_weight)
+        .or_else(|| objective_overlay.map(|item| item.trend_weight))
+        .unwrap_or(blended_overlay.trend_weight);
+    let balance_overlay = overlay
+        .map(|item| item.balance_weight)
+        .or_else(|| objective_overlay.map(|item| item.balance_weight))
+        .unwrap_or(blended_overlay.balance_weight);
+    let transition_overlay = overlay
+        .map(|item| item.transition_weight)
+        .or_else(|| objective_overlay.map(|item| item.transition_weight))
+        .unwrap_or(blended_overlay.transition_weight);
+    let edge_overlay = overlay
+        .map(|item| item.backtest_edge)
+        .or_else(|| objective_overlay.map(|item| item.backtest_edge))
+        .unwrap_or(blended_overlay.backtest_edge);
+
     MarketJumpCalibration {
-        trend_weight: ((baseline.trend_weight + overlay.trend_weight) / 2.0).clamp(0.75, 1.35),
-        balance_weight: ((baseline.balance_weight + overlay.balance_weight) / 2.0)
-            .clamp(0.75, 1.35),
-        transition_weight: ((baseline.transition_weight + overlay.transition_weight) / 2.0)
+        trend_weight: ((baseline.trend_weight + trend_overlay) / 2.0).clamp(0.75, 1.35),
+        balance_weight: ((baseline.balance_weight + balance_overlay) / 2.0).clamp(0.75, 1.35),
+        transition_weight: ((baseline.transition_weight + transition_overlay) / 2.0)
             .clamp(0.75, 1.45),
-        backtest_edge: ((baseline.backtest_edge + overlay.backtest_edge) / 2.0).clamp(-0.25, 0.35),
+        backtest_edge: ((baseline.backtest_edge + edge_overlay) / 2.0).clamp(-0.25, 0.35),
     }
+}
+
+fn dynamic_market_jump_objective_calibration<P: AsRef<Path>>(
+    state_dir: P,
+    symbol: &str,
+    market_family: Option<&str>,
+    objective: Option<&str>,
+) -> Option<PersistedMarketJumpCalibration> {
+    let persisted: BTreeMap<String, PersistedMarketJumpCalibration> =
+        load_state_or_default(state_dir, symbol, MARKET_JUMP_OBJECTIVE_CALIBRATION_FILE)
+            .unwrap_or_default();
+    persisted
+        .get(&objective_calibration_key(market_family, objective))
+        .copied()
 }
 
 fn calibration_sample_weight(score: f64) -> f64 {
@@ -219,6 +265,73 @@ fn merge_market_jump_calibrations(
     merged
 }
 
+fn market_jump_objective_calibration_from_records<'a, I>(
+    records: I,
+    updated_at: DateTime<Utc>,
+) -> BTreeMap<String, PersistedMarketJumpCalibration>
+where
+    I: IntoIterator<Item = (Option<&'a str>, Option<&'a str>, f64)>,
+{
+    let mut grouped: BTreeMap<String, (f64, f64, f64, f64, f64, usize)> = BTreeMap::new();
+    for (market_family, objective, score) in records {
+        let sample_weight = calibration_sample_weight(score);
+        if sample_weight <= 0.0 {
+            continue;
+        }
+        let key = objective_calibration_key(market_family, objective);
+        let baseline = market_jump_calibration(market_family, None);
+        let aggregate = grouped.entry(key).or_insert((0.0, 0.0, 0.0, 0.0, 0.0, 0));
+        blend_calibration_sample(baseline, aggregate, sample_weight);
+        aggregate.5 += 1;
+    }
+
+    grouped
+        .into_iter()
+        .filter_map(
+            |(key, (trend, balance, transition, edge, total_weight, sample_count))| {
+                if total_weight <= 0.0 {
+                    return None;
+                }
+                Some((
+                    key,
+                    PersistedMarketJumpCalibration {
+                        trend_weight: (trend / total_weight).clamp(0.75, 1.35),
+                        balance_weight: (balance / total_weight).clamp(0.75, 1.35),
+                        transition_weight: (transition / total_weight).clamp(0.75, 1.45),
+                        backtest_edge: (edge / total_weight).clamp(-0.25, 0.35),
+                        sample_count,
+                        updated_at: Some(updated_at),
+                    },
+                ))
+            },
+        )
+        .collect()
+}
+
+fn persist_market_jump_objective_calibration_from_scores<
+    'a,
+    P: AsRef<Path>,
+    I: IntoIterator<Item = (Option<&'a str>, Option<&'a str>, f64)>,
+>(
+    state_dir: P,
+    symbol: &str,
+    records: I,
+    updated_at: DateTime<Utc>,
+) -> anyhow::Result<BTreeMap<String, PersistedMarketJumpCalibration>> {
+    let existing: BTreeMap<String, PersistedMarketJumpCalibration> =
+        load_state_or_default(&state_dir, symbol, MARKET_JUMP_OBJECTIVE_CALIBRATION_FILE)
+            .unwrap_or_default();
+    let candidate = market_jump_objective_calibration_from_records(records, updated_at);
+    let calibrations = merge_market_jump_calibrations(existing, candidate);
+    save_state(
+        &state_dir,
+        symbol,
+        MARKET_JUMP_OBJECTIVE_CALIBRATION_FILE,
+        &calibrations,
+    )?;
+    Ok(calibrations)
+}
+
 pub fn persist_market_jump_calibration_from_research_runs<P: AsRef<Path>>(
     state_dir: P,
     symbol: &str,
@@ -271,6 +384,35 @@ pub fn persist_market_jump_calibration_from_backtest_runs<P: AsRef<Path>>(
         &calibrations,
     )?;
     Ok(calibrations)
+}
+
+pub fn persist_market_jump_objective_calibration_from_research_runs<P: AsRef<Path>>(
+    state_dir: P,
+    symbol: &str,
+    runs: &[ResearchRunRecord],
+    market_family: Option<&str>,
+    objective: Option<&str>,
+) -> anyhow::Result<BTreeMap<String, PersistedMarketJumpCalibration>> {
+    persist_market_jump_objective_calibration_from_scores(
+        state_dir,
+        symbol,
+        runs.iter()
+            .map(|run| (market_family, objective, run.aggregate_return)),
+        runs.iter()
+            .map(|run| run.timestamp)
+            .max()
+            .unwrap_or_else(Utc::now),
+    )
+}
+
+pub fn historical_market_jump_objective_weight<P: AsRef<Path>>(
+    state_dir: P,
+    symbol: &str,
+    market_family: Option<&str>,
+    objective: Option<&str>,
+) -> Option<f64> {
+    dynamic_market_jump_objective_calibration(state_dir, symbol, market_family, objective)
+        .map(|calibration| (1.0 + calibration.backtest_edge).clamp(0.75, 1.35))
 }
 
 pub fn backtest_calibrated_market_jump_weight(
@@ -651,6 +793,57 @@ mod tests {
         assert!(overlay.backtest_edge > 0.0);
         assert_eq!(overlay.sample_count, 3);
         assert_eq!(overlay.updated_at, Some(timestamp));
+    }
+
+    #[test]
+    fn persist_market_jump_objective_calibration_from_research_runs_writes_expected_profile() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "NQ";
+        let timestamp = Utc::now();
+        let runs = vec![
+            ResearchRunRecord {
+                timestamp,
+                aggregate_return: 0.14,
+                ..ResearchRunRecord::default()
+            },
+            ResearchRunRecord {
+                timestamp,
+                aggregate_return: 0.18,
+                ..ResearchRunRecord::default()
+            },
+            ResearchRunRecord {
+                timestamp,
+                aggregate_return: 0.22,
+                ..ResearchRunRecord::default()
+            },
+        ];
+
+        let persisted = persist_market_jump_objective_calibration_from_research_runs(
+            temp.path(),
+            symbol,
+            &runs,
+            Some("futures_index"),
+            Some("expansion_manipulation"),
+        )
+        .unwrap();
+
+        let overlay = persisted
+            .get("futures_index::expansion_manipulation")
+            .unwrap();
+        assert!(overlay.trend_weight > 1.0);
+        assert!(overlay.backtest_edge > 0.0);
+        assert_eq!(overlay.sample_count, 3);
+        assert_eq!(overlay.updated_at, Some(timestamp));
+        assert!(
+            historical_market_jump_objective_weight(
+                temp.path(),
+                symbol,
+                Some("futures_index"),
+                Some("expansion_manipulation")
+            )
+            .unwrap()
+                > 1.0
+        );
     }
 
     #[test]

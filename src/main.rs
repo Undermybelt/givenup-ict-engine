@@ -31,9 +31,10 @@ use ict_engine::application::{
             ExpansionLatestSignal as DebugExpansionLatestSignal,
             ExpansionProbabilitySupport as DebugExpansionProbabilitySupport,
         },
-        infer_market_from_symbol, multi_timeframe_entry_quality_bias,
-        persist_market_jump_calibration_from_backtest_runs,
+        historical_market_jump_objective_weight, infer_market_from_symbol,
+        multi_timeframe_entry_quality_bias, persist_market_jump_calibration_from_backtest_runs,
         persist_market_jump_calibration_from_research_runs,
+        persist_market_jump_objective_calibration_from_research_runs,
         pipeline_types::ExpansionFactorPipelineReport,
         pre_bayes_evidence_policy, probability_map, FactorPipelineDebugReport,
     },
@@ -5399,12 +5400,31 @@ fn expansion_factor_scores_for_market(
     Ok(scores)
 }
 
+fn market_category_for_symbol(symbol: &str) -> Option<&'static str> {
+    match infer_market_from_symbol(symbol).as_str() {
+        "ES" | "NQ" | "RTY" | "YM" => Some("futures_index"),
+        "GC" | "SI" | "HG" => Some("metals"),
+        "CL" | "NG" | "RB" => Some("energy"),
+        _ => None,
+    }
+}
+
+fn market_behavior_profile_for_family(category: &str) -> &'static str {
+    match category {
+        "futures_index" => "index_beta_regime_sensitive",
+        "metals" => "metals_defensive_liquidity_sensitive",
+        "energy" => "energy_volatility_shock_sensitive",
+        _ => "generic",
+    }
+}
+
 fn apply_expansion_manipulation_objective(
     report: &mut ict_engine::factor_lab::ResearchReport,
     registry: &FactorRegistry,
     symbol: &str,
     candles: &[Candle],
     multi_timeframe_summary: &[String],
+    objective_jump_weight: Option<f64>,
 ) -> Result<()> {
     let expansion_scores = expansion_factor_scores_for_market(registry, candles, 20, 1.5)?
         .into_iter()
@@ -5433,13 +5453,15 @@ fn apply_expansion_manipulation_objective(
             "observe_only" => -0.12,
             _ => 0.0,
         };
+        let objective_jump_weight = objective_jump_weight.unwrap_or(1.0).clamp(0.75, 1.35);
         let objective_score = (expansion_score.balanced_accuracy * 0.45
             + expansion_score.directional_accuracy * 0.20
             + expansion_score.fit_score * 0.15
             + bridge_gap_score * 0.10
             + pipeline.bbn_support.selected_win_probability * 0.10
             + gate_adjustment)
-            .clamp(0.0, 1.0);
+            * objective_jump_weight.clamp(0.75, 1.35);
+        let objective_score = objective_score.clamp(0.0, 1.0);
 
         scorecard.composite_score = objective_score;
         scorecard.score_breakdown = BTreeMap::from([
@@ -5457,6 +5479,7 @@ fn apply_expansion_manipulation_objective(
                 "selected_win_probability".to_string(),
                 pipeline.bbn_support.selected_win_probability,
             ),
+            ("objective_jump_weight".to_string(), objective_jump_weight),
         ]);
         let mut weaknesses = Vec::new();
         if expansion_score.balanced_accuracy < 0.60 {
@@ -5497,6 +5520,33 @@ fn apply_expansion_manipulation_objective(
             bridge_gap
         );
     }
+    report.objective_surfaces = objective_scorecards
+        .iter()
+        .map(|scorecard| {
+            HashMap::from([
+                ("factor_name".to_string(), scorecard.factor_name.clone()),
+                (
+                    "research_objective".to_string(),
+                    "expansion_manipulation".to_string(),
+                ),
+                (
+                    "objective_score".to_string(),
+                    format!("{:.6}", scorecard.composite_score),
+                ),
+                (
+                    "objective_jump_weight".to_string(),
+                    format!(
+                        "{:.6}",
+                        scorecard
+                            .score_breakdown
+                            .get("objective_jump_weight")
+                            .copied()
+                            .unwrap_or(1.0)
+                    ),
+                ),
+            ])
+        })
+        .collect();
     objective_scorecards.sort_by(|a, b| {
         b.composite_score
             .partial_cmp(&a.composite_score)
@@ -12064,6 +12114,13 @@ fn run_factor_research(
     );
     let mut report = report;
     report.research_objective = research_objective_label(objective).to_string();
+    let market_family = market_category_for_symbol(symbol).map(str::to_string);
+    let objective_jump_weight = historical_market_jump_objective_weight(
+        state_dir,
+        symbol,
+        market_family.as_deref(),
+        Some(report.research_objective.as_str()),
+    );
     if objective == ResearchObjectiveMode::ExpansionManipulation {
         apply_expansion_manipulation_objective(
             &mut report,
@@ -12075,6 +12132,7 @@ fn run_factor_research(
                 .cloned()
                 .chain(multi_timeframe_signal.summary.iter().cloned())
                 .collect::<Vec<_>>(),
+            objective_jump_weight,
         )?;
         learning_state.factor_rankings = report.backtest.scorecards.clone();
     }
@@ -12518,13 +12576,23 @@ fn run_factor_research(
         multi_timeframe_summary: report.multi_timeframe_summary.clone(),
     };
     let research_runs = append_research_run(state_dir, symbol, research_run_record.clone())?;
+    let market_family = market_category_for_symbol(symbol);
+    let market_behavior_profile = market_family.map(market_behavior_profile_for_family);
     persist_market_jump_calibration_from_research_runs(
         state_dir,
         symbol,
         &research_runs,
-        None,
-        None,
+        market_family.as_deref(),
+        market_behavior_profile,
     )?;
+    persist_market_jump_objective_calibration_from_research_runs(
+        state_dir,
+        symbol,
+        &research_runs,
+        market_family.as_deref(),
+        Some(research_objective_label(objective)),
+    )?;
+
     let research_ensemble_vote = build_stub_ensemble_vote_from_research(&report);
     let canonical_scorecards =
         load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
@@ -12654,6 +12722,13 @@ fn baseline_factor_mutation_metrics(
     )?;
     report.research_objective = research_objective_label(objective).to_string();
     report.multi_timeframe_summary = multi_timeframe_summary.to_vec();
+    let market_family = market_category_for_symbol(symbol).map(str::to_string);
+    let objective_jump_weight = historical_market_jump_objective_weight(
+        std::env::temp_dir(),
+        symbol,
+        market_family.as_deref(),
+        Some(report.research_objective.as_str()),
+    );
     if objective == ResearchObjectiveMode::ExpansionManipulation {
         apply_expansion_manipulation_objective(
             &mut report,
@@ -12661,6 +12736,7 @@ fn baseline_factor_mutation_metrics(
             symbol,
             candles,
             multi_timeframe_summary,
+            objective_jump_weight,
         )?;
     }
     build_factor_mutation_metric_set(
@@ -18366,6 +18442,10 @@ mod tests {
             .collect()
     }
 
+    fn write_test_candles(path: &std::path::Path, count: usize) {
+        std::fs::write(path, serde_json::to_string(&sample_candles(count)).unwrap()).unwrap();
+    }
+
     fn test_market_category(symbol: &str) -> Option<&'static str> {
         match symbol {
             "ES" | "NQ" | "RTY" | "YM" => Some("futures_index"),
@@ -18466,6 +18546,71 @@ mod tests {
         );
 
         assert!(weight < 0.98);
+    }
+
+    #[test]
+    fn test_objective_calibration_writeback_updates_market_jump_weights_and_surfaces() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "NQ";
+        let timestamp = Utc::now();
+        let runs = vec![
+            ResearchRunRecord {
+                timestamp,
+                aggregate_return: 0.20,
+                ..ResearchRunRecord::default()
+            },
+            ResearchRunRecord {
+                timestamp,
+                aggregate_return: 0.24,
+                ..ResearchRunRecord::default()
+            },
+            ResearchRunRecord {
+                timestamp,
+                aggregate_return: 0.28,
+                ..ResearchRunRecord::default()
+            },
+        ];
+
+        persist_market_jump_objective_calibration_from_research_runs(
+            temp.path(),
+            symbol,
+            &runs,
+            Some("futures_index"),
+            Some("expansion_manipulation"),
+        )
+        .unwrap();
+        let objective_weight = historical_market_jump_objective_weight(
+            temp.path(),
+            symbol,
+            Some("futures_index"),
+            Some("expansion_manipulation"),
+        )
+        .unwrap();
+
+        let data = temp.path().join("candles.json");
+        write_test_candles(&data, 160);
+        let report = run_factor_research(
+            symbol,
+            data.to_str().unwrap(),
+            ResearchObjectiveMode::ExpansionManipulation,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            temp.path().to_str().unwrap(),
+        )
+        .unwrap();
+
+        assert!(objective_weight > 1.0);
+        assert!(!report.objective_surfaces.is_empty());
+        assert!(report.objective_surfaces.iter().all(|surface| {
+            surface.get("research_objective") == Some(&"expansion_manipulation".to_string())
+                && surface.contains_key("objective_jump_weight")
+        }));
     }
 
     #[test]
