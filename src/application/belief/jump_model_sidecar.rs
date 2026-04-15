@@ -422,13 +422,15 @@ pub fn objective_market_credibility_shrink(
     credibility_score: f64,
 ) -> ObjectiveMarketCredibilityShrink {
     let normalized_credibility = credibility_score.clamp(0.0, 1.0);
-    let objective_bias = match objective.unwrap_or("generic") {
+    let objective_name = objective.unwrap_or("generic");
+    let market_name = market_family.unwrap_or("generic");
+    let objective_bias = match objective_name {
         "expansion_manipulation" => 0.18,
         "trend_following" => 0.10,
         "mean_reversion" => 0.08,
         _ => 0.12,
     };
-    let market_bias = match market_family.unwrap_or("generic") {
+    let market_bias = match market_name {
         "energy" => 0.20,
         "metals" => 0.14,
         "futures_index" => 0.10,
@@ -437,9 +439,12 @@ pub fn objective_market_credibility_shrink(
     let raw_shrink = (1.0 - normalized_credibility) * (1.0 + objective_bias + market_bias);
     let shrink_weight = (1.0 - raw_shrink).clamp(0.55, 1.0);
     let shrink_triggered = shrink_weight < 0.95;
+    let hard_blocked = objective_name == "expansion_manipulation"
+        && market_name == "energy"
+        && normalized_credibility <= 0.35;
     let mut rationale = vec![
-        format!("objective={}", objective.unwrap_or("generic")),
-        format!("market_family={}", market_family.unwrap_or("generic")),
+        format!("objective={objective_name}"),
+        format!("market_family={market_name}"),
         format!("credibility_score={normalized_credibility:.3}"),
         format!("objective_bias={objective_bias:.3}"),
         format!("market_bias={market_bias:.3}"),
@@ -448,6 +453,10 @@ pub fn objective_market_credibility_shrink(
     if shrink_triggered {
         rationale.push("objective_market_credibility_shrink=active".to_string());
     }
+    if hard_blocked {
+        rationale
+            .push("objective_market_credibility_hard_block=return_up_oos_down_shrink".to_string());
+    }
 
     ObjectiveMarketCredibilityShrink {
         objective: objective.map(str::to_string),
@@ -455,6 +464,7 @@ pub fn objective_market_credibility_shrink(
         credibility_score: normalized_credibility,
         shrink_weight,
         shrink_triggered,
+        hard_blocked,
         rationale,
     }
 }
@@ -779,8 +789,25 @@ mod tests {
         );
 
         assert!(shrink.shrink_triggered);
+        assert!(shrink.hard_blocked);
         assert!(shrink.shrink_weight < 0.95);
         assert!(shrink.shrink_weight >= 0.55);
+        assert!(shrink
+            .rationale
+            .iter()
+            .any(|line| line.contains("return_up_oos_down_shrink")));
+    }
+
+    #[test]
+    fn objective_market_credibility_shrink_does_not_hard_block_higher_credibility_case() {
+        let shrink = objective_market_credibility_shrink(
+            Some("expansion_manipulation"),
+            Some("energy"),
+            0.44,
+        );
+
+        assert!(shrink.shrink_triggered);
+        assert!(!shrink.hard_blocked);
     }
 
     #[test]

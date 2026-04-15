@@ -65,6 +65,7 @@ pub struct ObjectiveMarketCredibilityShrink {
     pub credibility_score: f64,
     pub shrink_weight: f64,
     pub shrink_triggered: bool,
+    pub hard_blocked: bool,
     pub rationale: Vec<String>,
 }
 
