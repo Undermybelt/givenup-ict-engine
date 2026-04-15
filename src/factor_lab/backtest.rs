@@ -77,6 +77,8 @@ pub struct WalkForwardWindow {
     pub ir: f64,
     #[serde(default)]
     pub conformal: WindowConformalDiagnostics,
+    #[serde(default)]
+    pub structural_break: StructuralBreakDiagnostics,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -88,6 +90,14 @@ pub struct WindowConformalDiagnostics {
     pub interval_half_width: f64,
     pub covered: bool,
     pub miscoverage: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralBreakDiagnostics {
+    pub detected: bool,
+    pub break_index: Option<usize>,
+    pub break_score: f64,
+    pub segment_mean_shift: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -347,6 +357,44 @@ fn realized_window_return(trades: &[FactorTrade]) -> f64 {
     trades.iter().fold(1.0, |equity, trade| equity * (1.0 + trade.pnl)) - 1.0
 }
 
+fn structural_break_diagnostics(realized_returns: &[f64]) -> StructuralBreakDiagnostics {
+    if realized_returns.len() < 4 {
+        return StructuralBreakDiagnostics::default();
+    }
+
+    let mut best = StructuralBreakDiagnostics::default();
+    for split in 2..=realized_returns.len().saturating_sub(2) {
+        let left = &realized_returns[..split];
+        let right = &realized_returns[split..];
+        let left_mean = mean(left);
+        let right_mean = mean(right);
+        let shift = (left_mean - right_mean).abs();
+        let left_var = mean(
+            &left
+                .iter()
+                .map(|value| (value - left_mean).powi(2))
+                .collect::<Vec<_>>(),
+        );
+        let right_var = mean(
+            &right
+                .iter()
+                .map(|value| (value - right_mean).powi(2))
+                .collect::<Vec<_>>(),
+        );
+        let pooled_scale = (left_var + right_var).sqrt().max(1e-6);
+        let score = shift / pooled_scale;
+        if score > best.break_score {
+            best = StructuralBreakDiagnostics {
+                detected: score >= 1.5,
+                break_index: Some(split),
+                break_score: score,
+                segment_mean_shift: shift,
+            };
+        }
+    }
+    best
+}
+
 fn conformal_diagnostics(
     predicted_return: f64,
     calibration_trade_returns: &[f64],
@@ -434,6 +482,8 @@ fn walk_forward_backtest(
         let realized_return = realized_window_return(&window.trades);
         let conformal =
             conformal_diagnostics(predicted_return, &calibration_trade_returns, realized_return);
+        let realized_break_series = [predicted_return, predicted_return, realized_return, realized_return];
+        let structural_break = structural_break_diagnostics(&realized_break_series);
         equity = *window.equity_curve.last().unwrap_or(&equity);
         if window.equity_curve.len() > 1 {
             equity_curve.extend(window.equity_curve.iter().copied().skip(1));
@@ -451,6 +501,7 @@ fn walk_forward_backtest(
             ic,
             ir,
             conformal,
+            structural_break,
         });
 
         let step = config.step_bars.max(1);
@@ -477,6 +528,12 @@ fn walk_forward_backtest(
             ic: 0.0,
             ir: 0.0,
             conformal: conformal_diagnostics(0.0, &[], realized_window_return(&all_trades)),
+            structural_break: structural_break_diagnostics(&[
+                0.0,
+                realized_window_return(&all_trades),
+                realized_window_return(&all_trades),
+                0.0,
+            ]),
         });
     }
 
@@ -661,9 +718,11 @@ fn forward_returns(candles: &[Candle], horizon: usize) -> Vec<f64> {
         .collect()
 }
 
-fn summarize_conformal_metrics(windows: &[WalkForwardWindow]) -> (f64, f64, f64, f64, f64) {
+fn summarize_conformal_metrics(
+    windows: &[WalkForwardWindow],
+) -> (f64, f64, f64, f64, f64, f64, Option<usize>, bool) {
     if windows.is_empty() {
-        return (0.0, 0.0, 0.0, 0.0, 0.0);
+        return (0.0, 0.0, 0.0, 0.0, 0.0, 0.0, None, false);
     }
 
     let coverage = windows
@@ -684,13 +743,16 @@ fn summarize_conformal_metrics(windows: &[WalkForwardWindow]) -> (f64, f64, f64,
         .iter()
         .map(|window| window.conformal.realized_return)
         .collect::<Vec<_>>();
-    let first_half = &realized_returns[..realized_returns.len() / 2];
-    let second_half = &realized_returns[realized_returns.len() / 2..];
-    let regime_break_penalty = if first_half.is_empty() || second_half.is_empty() {
-        0.0
-    } else {
-        (mean(first_half) - mean(second_half)).abs()
-    };
+    let structural_break = windows
+        .iter()
+        .map(|window| window.structural_break.clone())
+        .max_by(|left, right| {
+            left.break_score
+                .partial_cmp(&right.break_score)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        })
+        .unwrap_or_else(|| structural_break_diagnostics(&realized_returns));
+    let regime_break_penalty = structural_break.segment_mean_shift;
 
     (
         coverage,
@@ -698,6 +760,9 @@ fn summarize_conformal_metrics(windows: &[WalkForwardWindow]) -> (f64, f64, f64,
         mean_half_width,
         worst_miscoverage,
         regime_break_penalty,
+        structural_break.break_score,
+        structural_break.break_index,
+        structural_break.detected,
     )
 }
 
@@ -749,6 +814,9 @@ fn metrics_from_trades(
         mean_prediction_interval_half_width,
         worst_window_miscoverage,
         regime_break_penalty,
+        structural_break_score,
+        structural_break_index,
+        structural_break_detected,
     ) = summarize_conformal_metrics(windows);
 
     BacktestMetrics {
@@ -763,6 +831,9 @@ fn metrics_from_trades(
         mean_prediction_interval_half_width,
         worst_window_miscoverage,
         regime_break_penalty,
+        structural_break_score,
+        structural_break_index,
+        structural_break_detected,
     }
 }
 
@@ -926,6 +997,12 @@ mod tests {
                     covered: true,
                     miscoverage: 0.0,
                 },
+                structural_break: StructuralBreakDiagnostics {
+                    detected: true,
+                    break_index: Some(2),
+                    break_score: 1.8,
+                    segment_mean_shift: 0.03,
+                },
             },
             WalkForwardWindow {
                 start_index: 21,
@@ -942,6 +1019,12 @@ mod tests {
                     covered: false,
                     miscoverage: 1.0,
                 },
+                structural_break: StructuralBreakDiagnostics {
+                    detected: true,
+                    break_index: Some(2),
+                    break_score: 2.1,
+                    segment_mean_shift: 0.05,
+                },
             },
         ];
 
@@ -951,5 +1034,8 @@ mod tests {
         assert!((metrics.mean_prediction_interval_half_width - 0.02).abs() < 1e-9);
         assert_eq!(metrics.worst_window_miscoverage, 1.0);
         assert!(metrics.regime_break_penalty > 0.0);
+        assert!(metrics.structural_break_detected);
+        assert!(metrics.structural_break_score > 0.0);
+        assert!(metrics.structural_break_index.is_some());
     }
 }
