@@ -4,13 +4,15 @@ use serde::{de::DeserializeOwned, Serialize};
 use std::path::Path;
 
 use crate::state::types::{
-    AnalyzeRunRecord, ArtifactLedgerEntry, BacktestRunRecord, ExecutionCandidateArtifact,
-    FactorMutationRunRecord, LearningState, PendingUpdateArtifact, PreBayesPolicyRecord,
-    ResearchRunRecord, TrainRunRecord, UpdateRunRecord, ANALYZE_RUNS_FILE, ARTIFACT_LEDGER_FILE,
-    BACKTEST_RUNS_FILE, EXECUTION_CANDIDATE_FILE, EXECUTION_CANDIDATE_HISTORY_FILE,
-    FACTOR_MUTATION_RUNS_FILE, LEARNING_STATE_FILE, PENDING_UPDATE_ARTIFACT_FILE,
-    PENDING_UPDATE_HISTORY_FILE, PRE_BAYES_POLICY_HISTORY_FILE, RESEARCH_RUNS_FILE,
-    TRADE_HISTORY_FILE, TRAIN_RUNS_FILE, UPDATE_RUNS_FILE, WORKFLOW_SNAPSHOT_FILE,
+    AnalyzeRunRecord, ArtifactLedgerEntry, BacktestRunRecord, EnsembleExecutorScorecard,
+    EnsembleVoteRecord, ExecutionCandidateArtifact, FactorMutationRunRecord, LearningState,
+    PendingUpdateArtifact, PreBayesPolicyRecord, ResearchRunRecord, TrainRunRecord,
+    UpdateRunRecord, ANALYZE_RUNS_FILE, ARTIFACT_LEDGER_FILE, BACKTEST_RUNS_FILE,
+    ENSEMBLE_EXECUTOR_SCORECARDS_FILE, ENSEMBLE_VOTE_FILE, ENSEMBLE_VOTE_HISTORY_FILE,
+    EXECUTION_CANDIDATE_FILE, EXECUTION_CANDIDATE_HISTORY_FILE, FACTOR_MUTATION_RUNS_FILE,
+    LEARNING_STATE_FILE, PENDING_UPDATE_ARTIFACT_FILE, PENDING_UPDATE_HISTORY_FILE,
+    PRE_BAYES_POLICY_HISTORY_FILE, RESEARCH_RUNS_FILE, TRADE_HISTORY_FILE, TRAIN_RUNS_FILE,
+    UPDATE_RUNS_FILE, WORKFLOW_SNAPSHOT_FILE,
 };
 
 /// Load state from JSON file
@@ -277,6 +279,102 @@ pub fn load_execution_candidate_history<P: AsRef<Path>>(
     load_state_or_default(dir, symbol, EXECUTION_CANDIDATE_HISTORY_FILE)
 }
 
+pub fn load_ensemble_vote_artifact<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+) -> Result<EnsembleVoteRecord> {
+    load_state_or_default(dir, symbol, ENSEMBLE_VOTE_FILE)
+}
+
+pub fn save_ensemble_vote_artifact<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+    artifact: &EnsembleVoteRecord,
+) -> Result<()> {
+    save_state(dir, symbol, ENSEMBLE_VOTE_FILE, artifact)
+}
+
+pub fn append_ensemble_vote_history<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+    artifact: EnsembleVoteRecord,
+) -> Result<Vec<EnsembleVoteRecord>> {
+    let mut history: Vec<EnsembleVoteRecord> =
+        load_state_or_default(&dir, symbol, ENSEMBLE_VOTE_HISTORY_FILE)?;
+    history.push(artifact);
+    save_state(&dir, symbol, ENSEMBLE_VOTE_HISTORY_FILE, &history)?;
+    Ok(history)
+}
+
+pub fn load_ensemble_vote_history<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+) -> Result<Vec<EnsembleVoteRecord>> {
+    load_state_or_default(dir, symbol, ENSEMBLE_VOTE_HISTORY_FILE)
+}
+
+pub fn load_ensemble_executor_scorecards<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+) -> Result<Vec<EnsembleExecutorScorecard>> {
+    load_state_or_default(dir, symbol, ENSEMBLE_EXECUTOR_SCORECARDS_FILE)
+}
+
+pub fn save_ensemble_executor_scorecards<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+    scorecards: &[EnsembleExecutorScorecard],
+) -> Result<()> {
+    save_state(dir, symbol, ENSEMBLE_EXECUTOR_SCORECARDS_FILE, &scorecards)
+}
+
+pub fn migrate_ensemble_executor_scorecards<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+) -> Result<Vec<EnsembleExecutorScorecard>> {
+    let persisted: Vec<EnsembleExecutorScorecard> =
+        load_state_or_default(&dir, symbol, ENSEMBLE_EXECUTOR_SCORECARDS_FILE)?;
+    if !persisted.is_empty() {
+        return Ok(persisted);
+    }
+    let history: Vec<EnsembleVoteRecord> =
+        load_state_or_default(&dir, symbol, ENSEMBLE_VOTE_HISTORY_FILE)?;
+    let derived = history
+        .into_iter()
+        .rev()
+        .find_map(|record| {
+            if !record.executor_scorecards.is_empty() {
+                Some(record.executor_scorecards)
+            } else if !record.executor_summaries.is_empty() {
+                Some(
+                    record
+                        .executor_summaries
+                        .iter()
+                        .map(|summary| EnsembleExecutorScorecard {
+                            executor: summary
+                                .split_whitespace()
+                                .find_map(|part| part.strip_prefix("executor="))
+                                .unwrap_or("executor_unavailable")
+                                .to_string(),
+                            latest_weight_hint: summary
+                                .split_whitespace()
+                                .find_map(|part| part.strip_prefix("weight="))
+                                .and_then(|value| value.parse::<f64>().ok()),
+                            ..EnsembleExecutorScorecard::default()
+                        })
+                        .collect(),
+                )
+            } else {
+                None
+            }
+        })
+        .unwrap_or_default();
+    if !derived.is_empty() {
+        save_ensemble_executor_scorecards(&dir, symbol, &derived)?;
+    }
+    Ok(derived)
+}
+
 pub fn append_artifact_ledger_entry<P: AsRef<Path>>(
     dir: P,
     symbol: &str,
@@ -347,6 +445,45 @@ mod tests {
     use crate::types::{Direction, Regime, TradeRecord};
     use chrono::Utc;
     use std::collections::HashMap;
+
+    #[test]
+    fn test_migrate_ensemble_executor_scorecards_from_vote_history() {
+        let temp = tempfile::tempdir().unwrap();
+        let record = EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:test".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-1".to_string()),
+            provenance: crate::state::types::RunProvenance::default(),
+            dataset_comparability: crate::state::types::DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2-weighted".to_string(),
+            final_action: "observe".to_string(),
+            recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next"
+                .to_string(),
+            human_next_triage: "ensemble_action=observe".to_string(),
+            confidence: 0.5,
+            consensus_strength: 0.5,
+            disagreement_flags: Vec::new(),
+            executor_summaries: vec![
+                "executor=catboost_stub action=observe confidence=0.500 weight=0.55".to_string(),
+            ],
+            split_explanations: vec!["active_regime=research".to_string()],
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: Some("fallback".to_string()),
+            posterior_fingerprint: "fp-test".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "research".to_string(),
+            posterior_confidence: Some(0.5),
+            posterior_probabilities: std::collections::BTreeMap::new(),
+            posterior_evidence: vec!["mtf=test".to_string()],
+        };
+        append_ensemble_vote_history(temp.path(), "NQ", record).unwrap();
+
+        let migrated = migrate_ensemble_executor_scorecards(temp.path(), "NQ").unwrap();
+        assert_eq!(migrated[0].executor, "catboost_stub");
+        assert_eq!(migrated[0].latest_weight_hint, Some(0.55));
+    }
 
     #[test]
     fn test_save_and_load_bayesian_network_state() {
@@ -422,6 +559,7 @@ mod tests {
             entry_price: 100.0,
             exit_price: 101.0,
             pnl: 0.01,
+            exit_reason: None,
             regime_at_entry: Regime::ManipulationExpansion,
             cascade_max_layer: crate::types::CascadeLayer::L1,
             cascade_direction: Direction::Bull,
@@ -443,6 +581,7 @@ mod tests {
             entry_price: 100.0,
             exit_price: 101.0,
             pnl: 0.01,
+            exit_reason: None,
             regime_at_entry: Regime::ManipulationExpansion,
             cascade_max_layer: crate::types::CascadeLayer::L1,
             cascade_direction: Direction::Bull,
@@ -455,6 +594,7 @@ mod tests {
             entry_price: 102.0,
             exit_price: 100.0,
             pnl: 0.02,
+            exit_reason: None,
             regime_at_entry: Regime::Distribution,
             cascade_max_layer: crate::types::CascadeLayer::L1,
             cascade_direction: Direction::Bear,

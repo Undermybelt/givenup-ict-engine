@@ -50,8 +50,10 @@ use ict_engine::application::{
         MultiTimeframeCleanReportView, ResolvedMultiTimeframeInputs, MULTI_TIMEFRAME_INTERVALS,
     },
     orchestration::{
-        run_stage_plan, staged_orchestration_enabled, FinalOutputAdapter, FinalSurfaceAdapter,
-        PipelineState, StagePlan,
+        build_stub_ensemble_vote_from_input, build_stub_ensemble_vote_from_research,
+        run_stage_plan, staged_orchestration_enabled, AnalyzeEnsembleVoteInput,
+        CatBoostCompatiblePolicyEngine, FinalOutputAdapter, FinalSurfaceAdapter, PipelineState,
+        StagePlan,
     },
     reflection::{build_reflection_bundle, build_research_reflection_bundle},
     reporting::{
@@ -104,16 +106,19 @@ use serde_json::Value;
 
 use ict_engine::state::{
     append_analyze_run, append_artifact_ledger_entry, append_backtest_run,
-    append_execution_candidate_history, append_factor_mutation_run,
+    append_ensemble_vote_history, append_execution_candidate_history, append_factor_mutation_run,
     append_pending_update_artifact_history, append_pre_bayes_policy_history, append_research_run,
     append_trade_history, append_train_run, append_update_run, load_artifact_ledger,
+    load_ensemble_executor_scorecards, load_ensemble_vote_history,
     load_execution_candidate_history, load_learning_state, load_pending_update_artifact,
     load_pending_update_history, load_pre_bayes_policy_history, load_state, load_state_or_default,
-    load_workflow_snapshot, mark_artifact_consumed, save_execution_candidate_artifact,
-    save_learning_state, save_pending_update_artifact, save_state, save_workflow_snapshot,
-    state_exists, AgentActionItem, AgentActionPlan, AgentContextBundle, AgentContextBundleMinimal,
-    AnalyzeRunRecord, ArtifactLedgerEntry, BacktestRunRecord, CommandRecommendations,
-    DatasetComparability, DecisionHistorySummary, DecisionThresholds, ExecutionCandidateArtifact,
+    load_workflow_snapshot, mark_artifact_consumed, migrate_ensemble_executor_scorecards,
+    save_ensemble_executor_scorecards, save_ensemble_vote_artifact,
+    save_execution_candidate_artifact, save_learning_state, save_pending_update_artifact,
+    save_state, save_workflow_snapshot, state_exists, AgentActionItem, AgentActionPlan,
+    AgentContextBundle, AgentContextBundleMinimal, AnalyzeRunRecord, ArtifactLedgerEntry,
+    BacktestRunRecord, CommandRecommendations, DatasetComparability, DecisionHistorySummary,
+    DecisionThresholds, EnsembleExecutorScorecard, EnsembleVoteRecord, ExecutionCandidateArtifact,
     ExecutionCandidateArtifactDecision, ExecutionCandidateArtifactDiff,
     ExecutionCandidateArtifactSummary, ExpectedStateChange, FactorFamilyDecision, FactorFamilyDiff,
     FactorFamilyHistory, FactorFamilyOutcome, FactorIterationPrompt, FactorMutationEvaluation,
@@ -126,8 +131,8 @@ use ict_engine::state::{
     StageAgentContext, StageAgentContextMinimal, TrainRunRecord, UpdateRunRecord,
     WorkflowBlockingTruth, WorkflowConflictSource, WorkflowDisagreement, WorkflowFieldDiff,
     WorkflowPhaseSnapshot, WorkflowSnapshot, WorkflowState, ANALYZE_RUNS_FILE, BACKTEST_RUNS_FILE,
-    EXECUTION_CANDIDATE_FILE, FACTOR_MUTATION_RUNS_FILE, PENDING_UPDATE_ARTIFACT_FILE,
-    RESEARCH_RUNS_FILE, TRAIN_RUNS_FILE, UPDATE_RUNS_FILE,
+    ENSEMBLE_VOTE_FILE, EXECUTION_CANDIDATE_FILE, FACTOR_MUTATION_RUNS_FILE,
+    PENDING_UPDATE_ARTIFACT_FILE, RESEARCH_RUNS_FILE, TRAIN_RUNS_FILE, UPDATE_RUNS_FILE,
 };
 use ict_engine::types::{
     Candle, CascadeLayer, Direction, HMMParams, Regime, RegimeProbs, Symbol, TradePlan,
@@ -908,12 +913,12 @@ fn main() -> Result<()> {
         } => update_command(
             &symbol,
             &outcome,
-            &entry_signal,
+            Some(&entry_signal),
+            feedback_file.as_deref(),
             &state_dir,
             pnl,
             regime.as_deref(),
             direction.as_deref(),
-            feedback_file.as_deref(),
         )?,
         Commands::FactorResearch {
             symbol,
@@ -1117,6 +1122,7 @@ fn analyze_command(
     data_ltf: &str,
     state_dir: &str,
 ) -> Result<()> {
+    let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
     let htf = load_candles(data_htf)?;
     let mtf = load_candles(data_mtf)?;
     let ltf = load_candles(data_ltf)?;
@@ -1338,6 +1344,40 @@ fn build_analyze_policy_outputs(
     Ok((shadow, lineage))
 }
 
+fn format_executor_summary_lines(executor_summaries: &[String]) -> Vec<String> {
+    executor_summaries
+        .iter()
+        .map(|summary| summary.to_string())
+        .collect()
+}
+
+fn resolved_vote_scorecards<'a>(
+    persisted_scorecards: &'a [EnsembleExecutorScorecard],
+    vote: &'a EnsembleVoteRecord,
+) -> (&'a [EnsembleExecutorScorecard], &'a str) {
+    if persisted_scorecards.is_empty() {
+        (
+            &vote.executor_scorecards,
+            vote.executor_scorecards_source
+                .as_deref()
+                .unwrap_or("fallback"),
+        )
+    } else {
+        (persisted_scorecards, "persisted")
+    }
+}
+
+fn executor_scorecard_surface<'a>(
+    persisted_scorecards: &'a [EnsembleExecutorScorecard],
+    fallback_scorecards: &'a [EnsembleExecutorScorecard],
+) -> (&'a [EnsembleExecutorScorecard], &'static str) {
+    if persisted_scorecards.is_empty() {
+        (fallback_scorecards, "fallback")
+    } else {
+        (persisted_scorecards, "persisted")
+    }
+}
+
 fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
     let compact_report = build_compact_analyze_report(
         report.supporting.decision_hint.clone(),
@@ -1444,6 +1484,19 @@ fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
         report.analysis.trade_plan.narrative.clone(),
     );
     let (belief_shadow_policy, belief_policy_lineage) = build_analyze_policy_outputs(report)?;
+    let ensemble_vote = build_stub_ensemble_vote_from_input(&AnalyzeEnsembleVoteInput {
+        symbol: report.symbol.clone(),
+        state_dir: None,
+        recommended_next_command: report.supporting.recommended_next_command.clone(),
+        provenance: report.supporting.provenance.clone(),
+        dataset_comparability: report.supporting.dataset_comparability.clone(),
+        belief: report.supporting.canonical_belief_report.clone(),
+    });
+    let scorecard_summary = format_executor_summary_lines(&ensemble_vote.executor_summaries);
+    let persisted_scorecards =
+        load_ensemble_executor_scorecards(&report.meta.state_dir, &report.symbol)
+            .unwrap_or_default();
+    let (_, scorecard_source) = executor_scorecard_surface(&persisted_scorecards, &[]);
     println!(
         "{}",
         serde_json::to_string_pretty(&serde_json::json!({
@@ -1458,6 +1511,9 @@ fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
             },
             "belief_shadow_policy": belief_shadow_policy,
             "belief_policy_lineage": belief_policy_lineage,
+            "ensemble_vote": ensemble_vote,
+            "executor_scorecard_summary": scorecard_summary,
+            "executor_scorecard_source": scorecard_source,
         }))?
     );
     Ok(())
@@ -1486,7 +1542,10 @@ fn humanize_workflow_command(command: &str) -> String {
     format!("Next step: {}", trimmed)
 }
 
-fn workflow_status_human_view(snapshot: &ict_engine::state::WorkflowSnapshot) -> Value {
+fn workflow_status_human_view(
+    snapshot: &ict_engine::state::WorkflowSnapshot,
+    persisted_scorecards: &[EnsembleExecutorScorecard],
+) -> Value {
     let latest_phase = snapshot
         .latest_update
         .as_ref()
@@ -1516,6 +1575,19 @@ fn workflow_status_human_view(snapshot: &ict_engine::state::WorkflowSnapshot) ->
         Vec::new()
     };
     let human_next_action = humanize_workflow_command(&snapshot.recommended_next_command);
+    let ensemble_summary = snapshot.latest_ensemble_vote.as_ref().map(|vote| {
+        let (scorecards, scorecard_source) = resolved_vote_scorecards(persisted_scorecards, vote);
+        serde_json::json!({
+            "final_action": vote.final_action,
+            "confidence": vote.confidence,
+            "consensus_strength": vote.consensus_strength,
+            "human_next_triage": vote.human_next_triage,
+            "recommended_command": vote.recommended_command,
+            "disagreement_flags": vote.disagreement_flags,
+            "executor_scorecards": scorecards,
+            "executor_scorecard_source": scorecard_source,
+        })
+    });
     serde_json::json!({
         "symbol": snapshot.symbol,
         "current_status": {
@@ -1530,6 +1602,7 @@ fn workflow_status_human_view(snapshot: &ict_engine::state::WorkflowSnapshot) ->
             "phase": latest_phase_label,
             "summary": latest_phase_summary,
         },
+        "ensemble_consensus": ensemble_summary,
         "pending_actions": snapshot.pending_actions,
         "risk_flags": snapshot.risk_flags,
         "historical_data_candidates": selected_data_candidates,
@@ -1552,6 +1625,36 @@ fn sample_human_workflow_snapshot() -> ict_engine::state::WorkflowSnapshot {
     snapshot.recommended_next_command = "ask-user: Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=/tmp/a.json, /tmp/b.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ --data /tmp/a.json --state-dir state".to_string();
     snapshot.pending_actions = vec!["research:choose data".to_string()];
     snapshot.risk_flags = vec!["human_gate_active".to_string()];
+    snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+        artifact_id: "ensemble-vote:update:test".to_string(),
+        generated_at: Utc::now(),
+        symbol: "NQ".to_string(),
+        source_phase: "update".to_string(),
+        source_run_id: Some("update:NQ:test".to_string()),
+        provenance: RunProvenance::default(),
+        dataset_comparability: DatasetComparability::default(),
+        ensemble_version: "ensemble-audit-v1".to_string(),
+        final_action: "observe".to_string(),
+        recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next".to_string(),
+        human_next_triage: "ensemble_action=observe consensus=0.500 regime=research command=ict-engine workflow-status --symbol NQ --phase human-next".to_string(),
+        confidence: 0.5,
+        consensus_strength: 0.5,
+        disagreement_flags: Vec::new(),
+        executor_summaries: vec!["executor=catboost_stub action=observe confidence=0.500".to_string()],
+        split_explanations: vec!["active_regime=research".to_string()],
+        executor_scorecards: vec![EnsembleExecutorScorecard {
+            executor: "catboost_stub".to_string(),
+            latest_weight_hint: Some(0.55),
+            ..EnsembleExecutorScorecard::default()
+        }],
+        executor_scorecards_source: Some("fallback".to_string()),
+        posterior_fingerprint: "fp-test".to_string(),
+        posterior_normalization_status: "normalized".to_string(),
+        posterior_active_regime: "research".to_string(),
+        posterior_confidence: Some(0.5),
+        posterior_probabilities: BTreeMap::new(),
+        posterior_evidence: vec!["mtf=test".to_string()],
+    });
     snapshot.latest_update = Some(ict_engine::state::WorkflowPhaseSnapshot {
         phase: "update".to_string(),
         source_command: "update".to_string(),
@@ -1607,6 +1710,7 @@ fn workflow_status_command(
     conflicts_only: bool,
     latest_promotable: bool,
 ) -> Result<()> {
+    let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
     let filter_count = actionable_only as u8 + conflicts_only as u8 + latest_promotable as u8;
     if phase.is_some() && filter_count > 0 {
         bail!("workflow-status phase and filter flags are mutually exclusive");
@@ -1619,6 +1723,8 @@ fn workflow_status_command(
     } else {
         load_workflow_snapshot(state_dir, symbol)?
     };
+    let persisted_scorecards =
+        load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
     if actionable_only {
         println!(
             "{}",
@@ -1642,7 +1748,9 @@ fn workflow_status_command(
             "agent-bootstrap" | "bootstrap" => {
                 serde_json::to_value(build_agent_bootstrap_view(symbol, state_dir, &snapshot))?
             }
-            "human" | "human-next" | "human-next-action" => workflow_status_human_view(&snapshot),
+            "human" | "human-next" | "human-next-action" => {
+                workflow_status_human_view(&snapshot, &persisted_scorecards)
+            }
             "train" => serde_json::to_value(&snapshot.latest_train)?,
             "analyze" => serde_json::to_value(&snapshot.latest_analyze)?,
             "research" => serde_json::to_value(&snapshot.latest_research)?,
@@ -1678,6 +1786,77 @@ fn workflow_status_command(
             "execution-candidate" => serde_json::to_value(&snapshot.latest_execution_candidate)?,
             "execution-candidate-history" => {
                 serde_json::to_value(&snapshot.recent_execution_candidates)?
+            }
+            "ensemble-vote" => {
+                serde_json::to_value(&snapshot.latest_ensemble_vote.as_ref().map(|vote| {
+                    let (scorecards, scorecard_source) =
+                        resolved_vote_scorecards(&persisted_scorecards, vote);
+                    serde_json::json!({
+                        "artifact_id": vote.artifact_id,
+                        "generated_at": vote.generated_at,
+                        "symbol": vote.symbol,
+                        "source_phase": vote.source_phase,
+                        "source_run_id": vote.source_run_id,
+                        "provenance": vote.provenance,
+                        "dataset_comparability": vote.dataset_comparability,
+                        "ensemble_version": vote.ensemble_version,
+                        "final_action": vote.final_action,
+                        "recommended_command": vote.recommended_command,
+                        "human_next_triage": vote.human_next_triage,
+                        "confidence": vote.confidence,
+                        "consensus_strength": vote.consensus_strength,
+                        "disagreement_flags": vote.disagreement_flags,
+                        "executor_summaries": vote.executor_summaries,
+                        "split_explanations": vote.split_explanations,
+                        "executor_scorecards": scorecards,
+                        "executor_scorecard_source": scorecard_source,
+                        "posterior_fingerprint": vote.posterior_fingerprint,
+                        "posterior_normalization_status": vote.posterior_normalization_status,
+                        "posterior_active_regime": vote.posterior_active_regime,
+                        "posterior_confidence": vote.posterior_confidence,
+                        "posterior_probabilities": vote.posterior_probabilities,
+                        "posterior_evidence": vote.posterior_evidence,
+                    })
+                }))?
+            }
+            "ensemble-vote-history" => serde_json::to_value(
+                &snapshot
+                    .recent_ensemble_votes
+                    .iter()
+                    .map(|vote| {
+                        let (scorecards, scorecard_source) =
+                            resolved_vote_scorecards(&persisted_scorecards, vote);
+                        serde_json::json!({
+                            "artifact_id": vote.artifact_id,
+                            "generated_at": vote.generated_at,
+                            "symbol": vote.symbol,
+                            "source_phase": vote.source_phase,
+                            "source_run_id": vote.source_run_id,
+                            "provenance": vote.provenance,
+                            "dataset_comparability": vote.dataset_comparability,
+                            "ensemble_version": vote.ensemble_version,
+                            "final_action": vote.final_action,
+                            "recommended_command": vote.recommended_command,
+                            "human_next_triage": vote.human_next_triage,
+                            "confidence": vote.confidence,
+                            "consensus_strength": vote.consensus_strength,
+                            "disagreement_flags": vote.disagreement_flags,
+                            "executor_summaries": vote.executor_summaries,
+                            "split_explanations": vote.split_explanations,
+                            "executor_scorecards": scorecards,
+                            "executor_scorecard_source": scorecard_source,
+                            "posterior_fingerprint": vote.posterior_fingerprint,
+                            "posterior_normalization_status": vote.posterior_normalization_status,
+                            "posterior_active_regime": vote.posterior_active_regime,
+                            "posterior_confidence": vote.posterior_confidence,
+                            "posterior_probabilities": vote.posterior_probabilities,
+                            "posterior_evidence": vote.posterior_evidence,
+                        })
+                    })
+                    .collect::<Vec<_>>(),
+            )?,
+            "ensemble-scorecards" | "ensemble-executor-scorecards" => {
+                serde_json::to_value(&persisted_scorecards)?
             }
             "artifact-history-summary" => serde_json::to_value(&snapshot.artifact_history_summary)?,
             "artifact-factor-trends" => serde_json::to_value(&snapshot.artifact_factor_trends)?,
@@ -6074,60 +6253,74 @@ fn persist_analyze_run(
     let previous_policy = load_pre_bayes_policy_history(state_dir, &report.symbol)?
         .last()
         .map(|record| record.policy.clone());
-    append_analyze_run(
-        state_dir,
+    let analyze_run_record = AnalyzeRunRecord {
+        run_id: format!(
+            "{}:{}:{}",
+            source_command,
+            report.symbol,
+            report.timestamp.format("%Y%m%dT%H%M%S%.3fZ")
+        ),
+        timestamp: report.timestamp,
+        symbol: report.symbol.clone(),
+        provenance: report.supporting.provenance.clone(),
+        decision_thresholds: report.supporting.decision_thresholds.clone(),
+        dataset_comparability: report.supporting.dataset_comparability.clone(),
+        promotion_decision: report.supporting.promotion_decision.clone(),
+        rollback_recommendation: report.supporting.rollback_recommendation.clone(),
+        family_history_window: family_history_window(),
+        source_command: source_command.to_string(),
+        data_htf_path: data_htf_path.map(str::to_string),
+        data_mtf_path: data_mtf_path.map(str::to_string),
+        data_ltf_path: data_ltf_path.map(str::to_string),
+        live_data_source,
+        htf_bars: report.meta.bars.htf,
+        mtf_bars: report.meta.bars.mtf,
+        ltf_bars: report.meta.bars.ltf,
+        selected_direction: report.supporting.decision.selected_direction,
+        selected_entry_quality: report.supporting.entry_quality.selected_state.clone(),
+        decision_hint: report.supporting.decision_hint.clone(),
+        pre_bayes_evidence_filter: report.supporting.pre_bayes_evidence_filter.clone(),
+        pre_bayes_entry_quality_bridge: report.supporting.pre_bayes_entry_quality_bridge.clone(),
+        factor_family_decisions: report.supporting.factor_family_decisions.clone(),
+        factor_family_outcomes: report.supporting.factor_family_outcomes.clone(),
+        factor_family_diffs: report.supporting.factor_family_diffs.clone(),
+        factor_family_history: report.supporting.factor_family_history.clone(),
+        decision_history_summary: report.supporting.decision_history_summary.clone(),
+        workflow_state: report.supporting.workflow_state.clone(),
+        agent_action_plan: report.supporting.agent_action_plan.clone(),
+        recommended_commands: report.supporting.recommended_commands.clone(),
+        recommended_next_command: report.supporting.recommended_next_command.clone(),
+        agent_context_bundle: report.supporting.agent_context_bundle.clone(),
+        agent_context_bundle_minimal: report.supporting.agent_context_bundle_minimal.clone(),
+        feedback_history_summary: report.supporting.feedback_history_summary.clone(),
+        multi_timeframe_summary: report.supporting.multi_timeframe_summary.clone(),
+        artifact_action_summary: report.supporting.artifact_action_summary.clone(),
+        artifact_decision_summary: report.supporting.artifact_decision_summary.clone(),
+        artifact_decision_section: report.supporting.artifact_decision_section.clone(),
+        agent_prompts: report.supporting.agent_prompts.clone(),
+        prompt_workflow: report.supporting.agent_prompts.workflow.clone(),
+    };
+    append_analyze_run(state_dir, &report.symbol, analyze_run_record.clone())?;
+    let analyze_ensemble_vote = build_stub_ensemble_vote_from_input(&AnalyzeEnsembleVoteInput {
+        symbol: report.symbol.clone(),
+        state_dir: Some(state_dir.to_string()),
+        recommended_next_command: report.supporting.recommended_next_command.clone(),
+        provenance: report.supporting.provenance.clone(),
+        dataset_comparability: report.supporting.dataset_comparability.clone(),
+        belief: report.supporting.canonical_belief_report.clone(),
+    });
+    let canonical_scorecards =
+        load_ensemble_executor_scorecards(state_dir, &report.symbol).unwrap_or_default();
+    let analyze_ensemble_record = build_ensemble_vote_record(
         &report.symbol,
-        AnalyzeRunRecord {
-            run_id: format!(
-                "{}:{}:{}",
-                source_command,
-                report.symbol,
-                report.timestamp.format("%Y%m%dT%H%M%S%.3fZ")
-            ),
-            timestamp: report.timestamp,
-            symbol: report.symbol.clone(),
-            provenance: report.supporting.provenance.clone(),
-            decision_thresholds: report.supporting.decision_thresholds.clone(),
-            dataset_comparability: report.supporting.dataset_comparability.clone(),
-            promotion_decision: report.supporting.promotion_decision.clone(),
-            rollback_recommendation: report.supporting.rollback_recommendation.clone(),
-            family_history_window: family_history_window(),
-            source_command: source_command.to_string(),
-            data_htf_path: data_htf_path.map(str::to_string),
-            data_mtf_path: data_mtf_path.map(str::to_string),
-            data_ltf_path: data_ltf_path.map(str::to_string),
-            live_data_source,
-            htf_bars: report.meta.bars.htf,
-            mtf_bars: report.meta.bars.mtf,
-            ltf_bars: report.meta.bars.ltf,
-            selected_direction: report.supporting.decision.selected_direction,
-            selected_entry_quality: report.supporting.entry_quality.selected_state.clone(),
-            decision_hint: report.supporting.decision_hint.clone(),
-            pre_bayes_evidence_filter: report.supporting.pre_bayes_evidence_filter.clone(),
-            pre_bayes_entry_quality_bridge: report
-                .supporting
-                .pre_bayes_entry_quality_bridge
-                .clone(),
-            factor_family_decisions: report.supporting.factor_family_decisions.clone(),
-            factor_family_outcomes: report.supporting.factor_family_outcomes.clone(),
-            factor_family_diffs: report.supporting.factor_family_diffs.clone(),
-            factor_family_history: report.supporting.factor_family_history.clone(),
-            decision_history_summary: report.supporting.decision_history_summary.clone(),
-            workflow_state: report.supporting.workflow_state.clone(),
-            agent_action_plan: report.supporting.agent_action_plan.clone(),
-            recommended_commands: report.supporting.recommended_commands.clone(),
-            recommended_next_command: report.supporting.recommended_next_command.clone(),
-            agent_context_bundle: report.supporting.agent_context_bundle.clone(),
-            agent_context_bundle_minimal: report.supporting.agent_context_bundle_minimal.clone(),
-            feedback_history_summary: report.supporting.feedback_history_summary.clone(),
-            multi_timeframe_summary: report.supporting.multi_timeframe_summary.clone(),
-            artifact_action_summary: report.supporting.artifact_action_summary.clone(),
-            artifact_decision_summary: report.supporting.artifact_decision_summary.clone(),
-            artifact_decision_section: report.supporting.artifact_decision_section.clone(),
-            agent_prompts: report.supporting.agent_prompts.clone(),
-            prompt_workflow: report.supporting.agent_prompts.workflow.clone(),
-        },
-    )?;
+        source_command,
+        Some(analyze_run_record.run_id.clone()),
+        &report.supporting.provenance,
+        &report.supporting.dataset_comparability,
+        &analyze_ensemble_vote,
+        &canonical_scorecards,
+    );
+    persist_ensemble_vote_record(state_dir, &analyze_ensemble_record, &canonical_scorecards)?;
     append_pre_bayes_policy_history(
         state_dir,
         &report.symbol,
@@ -6633,6 +6826,7 @@ fn persist_execution_candidate_from_analyze(
             report.supporting.pre_bayes_entry_quality_bridge.clone(),
         ),
         multi_timeframe_summary: report.supporting.multi_timeframe_summary.clone(),
+        executor_scorecards: Vec::new(),
         diff_from_previous: ExecutionCandidateArtifactDiff::default(),
         review_decision: ExecutionCandidateArtifactDecision::default(),
     };
@@ -6695,6 +6889,97 @@ fn persist_execution_candidate_from_analyze(
         .to_string_lossy()
         .to_string())
 }
+fn build_ensemble_vote_record(
+    symbol: &str,
+    source_phase: &str,
+    source_run_id: Option<String>,
+    provenance: &RunProvenance,
+    dataset_comparability: &DatasetComparability,
+    ensemble_vote: &ict_engine::application::orchestration::EnsembleVoteArtifact,
+    compatibility_scorecards: &[EnsembleExecutorScorecard],
+) -> EnsembleVoteRecord {
+    EnsembleVoteRecord {
+        artifact_id: format!(
+            "ensemble-vote:{}:{}",
+            source_phase,
+            Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true)
+        ),
+        generated_at: Utc::now(),
+        symbol: symbol.to_string(),
+        source_phase: source_phase.to_string(),
+        source_run_id,
+        provenance: provenance.clone(),
+        dataset_comparability: dataset_comparability.clone(),
+        ensemble_version: ensemble_vote.ensemble_version.clone(),
+        final_action: ensemble_vote.final_action.clone(),
+        recommended_command: ensemble_vote.recommended_command.clone(),
+        human_next_triage: ensemble_vote.human_next_triage.clone(),
+        confidence: ensemble_vote.confidence,
+        consensus_strength: ensemble_vote.consensus_strength,
+        disagreement_flags: ensemble_vote.disagreement_flags.clone(),
+        executor_summaries: ensemble_vote.executor_summaries.clone(),
+        split_explanations: ensemble_vote.split_explanations.clone(),
+        executor_scorecards: compatibility_scorecards.to_vec(),
+        executor_scorecards_source: Some("persisted".to_string()),
+        posterior_fingerprint: ensemble_vote.posterior.fingerprint.clone(),
+        posterior_normalization_status: ensemble_vote.posterior.normalization_status.clone(),
+        posterior_active_regime: ensemble_vote.posterior.active_regime.clone(),
+        posterior_confidence: ensemble_vote.posterior.confidence,
+        posterior_probabilities: ensemble_vote.posterior.probabilities.clone(),
+        posterior_evidence: ensemble_vote.posterior.evidence.clone(),
+    }
+}
+
+fn persist_ensemble_vote_record(
+    state_dir: &str,
+    record: &EnsembleVoteRecord,
+    canonical_scorecards: &[EnsembleExecutorScorecard],
+) -> Result<()> {
+    append_artifact_ledger_entry(
+        state_dir,
+        &record.symbol,
+        ArtifactLedgerEntry {
+            entry_id: format!("ledger:{}", record.artifact_id),
+            artifact_kind: "ensemble_vote".to_string(),
+            artifact_id: record.artifact_id.clone(),
+            version: 1,
+            generated_at: record.generated_at,
+            symbol: record.symbol.clone(),
+            source_phase: record.source_phase.clone(),
+            source_run_id: record.source_run_id.clone(),
+            path: std::path::Path::new(state_dir)
+                .join(&record.symbol)
+                .join(ENSEMBLE_VOTE_FILE)
+                .to_string_lossy()
+                .to_string(),
+            status: if record.disagreement_flags.is_empty() {
+                "consensus".to_string()
+            } else {
+                "mixed".to_string()
+            },
+            promote_candidate: record.confidence >= 0.60 && record.disagreement_flags.is_empty(),
+            actionable: true,
+            decision_hint: record.final_action.clone(),
+            review_reason: record.human_next_triage.clone(),
+            review_rule_version: record.ensemble_version.clone(),
+            top_factor_name: None,
+            top_factor_action: Some(record.final_action.clone()),
+            family_scores: BTreeMap::new(),
+            supersedes_artifact_id: None,
+            quality_score: ((record.confidence + record.consensus_strength) * 50.0) as i32,
+            consumed_by_update_run_id: None,
+            consumed_at: None,
+            consumed_outcome: None,
+            regraded_at: None,
+            consumption_regrade_status: None,
+            consumption_regrade_reason: None,
+        },
+    )?;
+    save_ensemble_vote_artifact(state_dir, &record.symbol, record)?;
+    save_ensemble_executor_scorecards(state_dir, &record.symbol, canonical_scorecards)?;
+    append_ensemble_vote_history(state_dir, &record.symbol, record.clone())?;
+    Ok(())
+}
 
 fn latest_execution_candidate_for_source_run(
     state_dir: &str,
@@ -6708,6 +6993,84 @@ fn latest_execution_candidate_for_source_run(
         .into_iter()
         .rev()
         .find(|artifact| artifact.source_run_id.as_deref() == Some(source_run_id)))
+}
+
+fn latest_ensemble_vote_for_source_run(
+    state_dir: &str,
+    symbol: &str,
+    source_run_id: Option<&str>,
+) -> Result<Option<EnsembleVoteRecord>> {
+    let Some(source_run_id) = source_run_id else {
+        return Ok(None);
+    };
+    Ok(load_ensemble_vote_history(state_dir, symbol)?
+        .into_iter()
+        .rev()
+        .find(|artifact| artifact.source_run_id.as_deref() == Some(source_run_id)))
+}
+
+fn derive_executor_scorecards_from_summaries(
+    executor_summaries: &[String],
+) -> Vec<EnsembleExecutorScorecard> {
+    executor_summaries
+        .iter()
+        .map(|summary| EnsembleExecutorScorecard {
+            executor: summary
+                .split_whitespace()
+                .find_map(|part| part.strip_prefix("executor="))
+                .unwrap_or("executor_unavailable")
+                .to_string(),
+            latest_weight_hint: summary
+                .split_whitespace()
+                .find_map(|part| part.strip_prefix("weight="))
+                .and_then(|value| value.parse::<f64>().ok()),
+            ..EnsembleExecutorScorecard::default()
+        })
+        .collect()
+}
+
+fn load_canonical_executor_scorecards(
+    state_dir: &str,
+    symbol: &str,
+    source_run_id: Option<&str>,
+) -> Result<Vec<EnsembleExecutorScorecard>> {
+    let persisted = load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
+    if !persisted.is_empty() {
+        return Ok(persisted);
+    }
+    Ok(
+        latest_ensemble_vote_for_source_run(state_dir, symbol, source_run_id)?
+            .map(|artifact| {
+                if artifact.executor_scorecards.is_empty() {
+                    derive_executor_scorecards_from_summaries(&artifact.executor_summaries)
+                } else {
+                    artifact.executor_scorecards
+                }
+            })
+            .unwrap_or_default(),
+    )
+}
+
+fn apply_update_outcome_to_executor_scorecards(
+    scorecards: &mut [EnsembleExecutorScorecard],
+    realized_outcome: &str,
+    quality_adjustment: i64,
+) {
+    for scorecard in scorecards {
+        match realized_outcome {
+            "win" => scorecard.wins += 1,
+            "loss" => scorecard.losses += 1,
+            _ => scorecard.breakevens += 1,
+        }
+        match realized_outcome {
+            "win" => scorecard.validated_positive += 1,
+            "loss" => scorecard.validated_negative += 1,
+            _ => {}
+        }
+        scorecard.cumulative_quality_score += quality_adjustment;
+        scorecard.last_outcome = Some(realized_outcome.to_string());
+        scorecard.last_updated_at = Some(Utc::now());
+    }
 }
 
 fn pending_update_artifact_by_id(
@@ -7168,6 +7531,15 @@ fn build_workflow_snapshot(
         .into_iter()
         .rev()
         .collect::<Vec<_>>();
+    let recent_ensemble_votes = load_ensemble_vote_history(state_dir, symbol)
+        .unwrap_or_default()
+        .into_iter()
+        .rev()
+        .take(5)
+        .collect::<Vec<_>>()
+        .into_iter()
+        .rev()
+        .collect::<Vec<_>>();
     let recent_artifacts = artifact_ledger
         .iter()
         .rev()
@@ -7317,6 +7689,8 @@ fn build_workflow_snapshot(
         recent_pending_updates,
         latest_execution_candidate: recent_execution_candidates.last().cloned(),
         recent_execution_candidates,
+        latest_ensemble_vote: recent_ensemble_votes.last().cloned(),
+        recent_ensemble_votes,
         recent_artifacts,
         actionable_artifacts,
         latest_promotable_artifact,
@@ -7429,6 +7803,10 @@ fn build_artifact_history_summary(
         .iter()
         .filter(|entry| entry.artifact_kind == "execution_candidate")
         .count();
+    let ensemble_vote_entries = artifact_ledger
+        .iter()
+        .filter(|entry| entry.artifact_kind == "ensemble_vote")
+        .count();
     let promotable_entries = artifact_ledger
         .iter()
         .filter(|entry| entry.promote_candidate)
@@ -7467,6 +7845,7 @@ fn build_artifact_history_summary(
         total_entries,
         pending_update_entries,
         execution_candidate_entries,
+        ensemble_vote_entries,
         promotable_entries,
         actionable_entries,
         consumed_entries,
@@ -10122,13 +10501,15 @@ fn emit_update_output(report: &UpdateReport) -> Result<()> {
 fn update_command(
     symbol: &str,
     outcome: &str,
-    entry_signal: &str,
+    entry_signal: Option<&str>,
+    feedback_file: Option<&str>,
     state_dir: &str,
     pnl: Option<f64>,
     regime: Option<&str>,
     direction: Option<&str>,
-    feedback_file: Option<&str>,
 ) -> Result<()> {
+    let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
+
     let update_run_id = format!(
         "update:{}:{}",
         symbol,
@@ -10140,6 +10521,7 @@ fn update_command(
     let mut learning_state = load_learning_state(state_dir, symbol)?;
     let previous_rankings = learning_state.factor_rankings.clone();
     let outcome_label = normalize_trade_outcome_label(outcome);
+    let entry_signal = entry_signal.unwrap_or("medium");
     let mut consumed_pending_update_artifact: Option<PendingUpdateArtifact> = None;
     let feedback = if let Some(path) = feedback_file {
         let content = std::fs::read_to_string(path)?;
@@ -10311,6 +10693,24 @@ fn update_command(
         &factor_score_deltas,
         feedback_records_applied == 0,
     ));
+    let mut ensemble_executor_scorecards = load_canonical_executor_scorecards(
+        state_dir,
+        symbol,
+        consumed_execution_candidate_artifact
+            .as_ref()
+            .and_then(|artifact| artifact.source_run_id.as_deref()),
+    )?;
+    let ensemble_quality_adjustment = match outcome {
+        "win" => 20,
+        "loss" => -20,
+        _ => 0,
+    };
+    apply_update_outcome_to_executor_scorecards(
+        &mut ensemble_executor_scorecards,
+        outcome,
+        ensemble_quality_adjustment,
+    );
+
     let report = UpdateReport {
         symbol: symbol.to_string(),
         timestamp: Utc::now(),
@@ -10584,6 +10984,7 @@ fn update_command(
             run_id: format!("{}", update_run_id),
             timestamp: Utc::now(),
             symbol: symbol.to_string(),
+            ensemble_executor_scorecards: ensemble_executor_scorecards,
             provenance: report.provenance.clone(),
             decision_thresholds: report.decision_thresholds.clone(),
             dataset_comparability: report.dataset_comparability.clone(),
@@ -10685,6 +11086,7 @@ fn factor_research_command(
     emit_mutation_evaluation: bool,
     state_dir: &str,
 ) -> Result<()> {
+    let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
     let objective = parse_research_objective(objective)?;
     let mutation_spec = mutation_spec_path
         .map(load_factor_mutation_spec)
@@ -10749,6 +11151,11 @@ fn factor_research_command(
         );
     } else {
         let reflection_bundle = build_research_reflection_bundle(symbol, &report);
+        let ensemble_vote = build_stub_ensemble_vote_from_research(&report);
+        let scorecard_summary = format_executor_summary_lines(&ensemble_vote.executor_summaries);
+        let persisted_scorecards =
+            load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
+        let (_, scorecard_source) = executor_scorecard_surface(&persisted_scorecards, &[]);
         let lifecycle_view = build_factor_lifecycle_view(
             mutation_spec.as_ref(),
             report.factor_mutation_evaluation.as_ref(),
@@ -10760,6 +11167,9 @@ fn factor_research_command(
             serde_json::to_string_pretty(&serde_json::json!({
                 "report": report,
                 "reflection_bundle": reflection_bundle,
+                "ensemble_vote": ensemble_vote,
+                "executor_scorecard_summary": scorecard_summary,
+                "executor_scorecard_source": scorecard_source,
                 "factor_lifecycle": lifecycle_view,
             }))?
         );
@@ -11780,53 +12190,63 @@ fn run_factor_research(
         save_state(state_dir, symbol, BBN_STATE_FILE, &network)?;
     }
     save_learning_state(state_dir, symbol, &learning_state)?;
-    append_research_run(
-        state_dir,
+    let research_run_record = ResearchRunRecord {
+        run_id,
+        timestamp: run_timestamp,
+        symbol: symbol.to_string(),
+        research_objective: report.research_objective.clone(),
+        provenance: report.provenance.clone(),
+        decision_thresholds: report.decision_thresholds.clone(),
+        dataset_comparability: report.dataset_comparability.clone(),
+        promotion_decision: report.promotion_decision.clone(),
+        rollback_recommendation: report.rollback_recommendation.clone(),
+        family_history_window: family_history_window(),
+        data_path: data.to_string(),
+        paired_data_path: paired_data.map(str::to_string),
+        candles: candles.len(),
+        paired_candles: paired_candles.as_ref().map(Vec::len),
+        config_name: "FactorBacktestConfig::default".to_string(),
+        source_command: "factor-research".to_string(),
+        factor_count: report.factor_count,
+        best_factor: report.best_factor.clone(),
+        aggregate_return: report.aggregate_return,
+        feedback_records_generated: report.feedback_records_generated,
+        feedback_records_applied: report.feedback_records_applied,
+        factor_score_deltas: score_deltas,
+        factor_family_decisions,
+        factor_family_outcomes: report.factor_family_outcomes.clone(),
+        factor_family_diffs: report.factor_family_diffs.clone(),
+        factor_family_history: report.factor_family_history.clone(),
+        decision_history_summary: report.decision_history_summary.clone(),
+        workflow_state: report.workflow_state.clone(),
+        agent_action_plan: report.agent_action_plan.clone(),
+        recommended_commands: report.recommended_commands.clone(),
+        recommended_next_command: report.recommended_next_command.clone(),
+        agent_context_bundle: report.agent_context_bundle.clone(),
+        agent_context_bundle_minimal: report.agent_context_bundle_minimal.clone(),
+        feedback_history_summary: report.feedback_history_summary.clone(),
+        artifact_action_summary: report.artifact_action_summary.clone(),
+        artifact_decision_summary: report.artifact_decision_summary.clone(),
+        artifact_decision_section: report.artifact_decision_section.clone(),
+        agent_prompts: report.agent_prompts.clone(),
+        prompt_workflow: report.agent_prompts.workflow.clone(),
+        factor_mutation_evaluation: mutation_evaluation.clone(),
+        multi_timeframe_summary: report.multi_timeframe_summary.clone(),
+    };
+    append_research_run(state_dir, symbol, research_run_record.clone())?;
+    let research_ensemble_vote = build_stub_ensemble_vote_from_research(&report);
+    let canonical_scorecards =
+        load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
+    let research_ensemble_record = build_ensemble_vote_record(
         symbol,
-        ResearchRunRecord {
-            run_id,
-            timestamp: run_timestamp,
-            symbol: symbol.to_string(),
-            research_objective: report.research_objective.clone(),
-            provenance: report.provenance.clone(),
-            decision_thresholds: report.decision_thresholds.clone(),
-            dataset_comparability: report.dataset_comparability.clone(),
-            promotion_decision: report.promotion_decision.clone(),
-            rollback_recommendation: report.rollback_recommendation.clone(),
-            family_history_window: family_history_window(),
-            data_path: data.to_string(),
-            paired_data_path: paired_data.map(str::to_string),
-            candles: candles.len(),
-            paired_candles: paired_candles.as_ref().map(Vec::len),
-            config_name: "FactorBacktestConfig::default".to_string(),
-            source_command: "factor-research".to_string(),
-            factor_count: report.factor_count,
-            best_factor: report.best_factor.clone(),
-            aggregate_return: report.aggregate_return,
-            feedback_records_generated: report.feedback_records_generated,
-            feedback_records_applied: report.feedback_records_applied,
-            factor_score_deltas: score_deltas,
-            factor_family_decisions,
-            factor_family_outcomes: report.factor_family_outcomes.clone(),
-            factor_family_diffs: report.factor_family_diffs.clone(),
-            factor_family_history: report.factor_family_history.clone(),
-            decision_history_summary: report.decision_history_summary.clone(),
-            workflow_state: report.workflow_state.clone(),
-            agent_action_plan: report.agent_action_plan.clone(),
-            recommended_commands: report.recommended_commands.clone(),
-            recommended_next_command: report.recommended_next_command.clone(),
-            agent_context_bundle: report.agent_context_bundle.clone(),
-            agent_context_bundle_minimal: report.agent_context_bundle_minimal.clone(),
-            feedback_history_summary: report.feedback_history_summary.clone(),
-            artifact_action_summary: report.artifact_action_summary.clone(),
-            artifact_decision_summary: report.artifact_decision_summary.clone(),
-            artifact_decision_section: report.artifact_decision_section.clone(),
-            agent_prompts: report.agent_prompts.clone(),
-            prompt_workflow: report.agent_prompts.workflow.clone(),
-            factor_mutation_evaluation: mutation_evaluation.clone(),
-            multi_timeframe_summary: report.multi_timeframe_summary.clone(),
-        },
-    )?;
+        "factor-research",
+        Some(research_run_record.run_id.clone()),
+        &report.provenance,
+        &report.dataset_comparability,
+        &research_ensemble_vote,
+        &canonical_scorecards,
+    );
+    persist_ensemble_vote_record(state_dir, &research_ensemble_record, &canonical_scorecards)?;
     if let (Some(spec), Some(evaluation)) = (mutation_spec, mutation_evaluation.clone()) {
         let mutation_run_id = format!(
             "factor-mutation:{}:{}",
@@ -13077,6 +13497,7 @@ fn build_analyze_report(
             "ict_engine_staged_orchestration",
         );
         let stage_trace = run_stage_plan(&StagePlan::analyze_risk_execution(), &mut pipeline_state);
+        let policy_engine = CatBoostCompatiblePolicyEngine::load_default_or_placeholder();
         let staged_artifacts = ict_engine::application::orchestration::build_staged_artifacts(
             &factor_output.diagnostics,
             &decision_hint,
@@ -13085,6 +13506,8 @@ fn build_analyze_report(
             trade_plan.direction,
             trade_plan.risk_reward,
             trade_plan.kelly_fraction,
+            &recommended_next_command,
+            &policy_engine,
         );
         let final_adapter = FinalOutputAdapter;
         let final_artifact = final_adapter.adapt(&pipeline_state, &stage_trace);
@@ -17775,7 +18198,12 @@ mod tests {
         assert_eq!(report.research_objective, "generic");
         assert_eq!(runs.len(), 1);
         assert_eq!(runs[0].research_objective, "generic");
+        let ensemble: EnsembleVoteRecord =
+            load_state(temp.path(), "NQ", ict_engine::state::ENSEMBLE_VOTE_FILE).unwrap();
+        assert_eq!(ensemble.symbol, "NQ");
+        assert_eq!(ensemble.source_phase, "factor-research");
         assert!(snapshot.latest_research.is_some());
+        assert!(snapshot.latest_ensemble_vote.is_some());
         assert_eq!(snapshot.current_focus_phase, "research");
         assert!(snapshot
             .latest_research
@@ -17906,8 +18334,104 @@ mod tests {
         assert!(!runs[0].factor_family_decisions.is_empty());
         assert!(!runs[0].agent_prompts.prompts.is_empty());
         assert!(!runs[0].agent_context_bundle.stage_views.is_empty());
+        let ensemble: EnsembleVoteRecord =
+            load_state(temp.path(), "NQ", ict_engine::state::ENSEMBLE_VOTE_FILE).unwrap();
+        assert_eq!(ensemble.symbol, "NQ");
+        assert_eq!(ensemble.source_phase, "analyze");
         assert!(snapshot.latest_analyze.is_some());
+        assert!(snapshot.latest_ensemble_vote.is_some());
         assert_eq!(snapshot.current_focus_phase, "analyze");
+    }
+
+    #[test]
+    fn test_format_executor_summary_lines_clones_executor_summaries() {
+        let lines = format_executor_summary_lines(&[
+            "executor=catboost_file action=observe confidence=0.55 weight=0.55".to_string(),
+            "executor=xgboost_file action=hold confidence=0.45 weight=0.45".to_string(),
+        ]);
+
+        assert_eq!(lines.len(), 2);
+        assert!(lines[0].contains("executor=catboost_file"));
+        assert!(lines[1].contains("executor=xgboost_file"));
+    }
+
+    #[test]
+    fn test_emit_analyze_output_includes_executor_scorecard_summary() {
+        let temp = tempfile::tempdir().unwrap();
+        let htf = sample_candles(220);
+        let mtf = sample_candles(180);
+        let ltf = sample_candles(140);
+        let params = load_or_init_hmm_params("NQ", temp.path().to_str().unwrap());
+        let network = load_or_init_trading_network("NQ", temp.path().to_str().unwrap()).unwrap();
+        let learning_state = load_learning_state(temp.path(), "NQ").unwrap();
+        let report = build_analyze_report(
+            "NQ",
+            temp.path().to_str().unwrap(),
+            &htf,
+            &mtf,
+            &ltf,
+            &params,
+            &network,
+            AnalyzeBuildContext {
+                symbol: "NQ",
+                paired_candles: None,
+                auxiliary: None,
+                learning_state: &learning_state,
+                multi_timeframe_summary: &[],
+                native_frames: AnalyzeNativeFrames::default(),
+            },
+        )
+        .unwrap();
+
+        let ensemble_vote = build_stub_ensemble_vote_from_input(&AnalyzeEnsembleVoteInput {
+            symbol: report.symbol.clone(),
+            state_dir: None,
+            recommended_next_command: report.supporting.recommended_next_command.clone(),
+            provenance: report.supporting.provenance.clone(),
+            dataset_comparability: report.supporting.dataset_comparability.clone(),
+            belief: report.supporting.canonical_belief_report.clone(),
+        });
+        let summary = format_executor_summary_lines(&ensemble_vote.executor_summaries);
+
+        assert!(!summary.is_empty());
+        assert!(summary[0].contains("executor=catboost_file"));
+    }
+
+    #[test]
+    fn test_factor_research_output_summary_uses_executor_summaries() {
+        let temp = tempfile::tempdir().unwrap();
+        let data = temp.path().join("candles.json");
+        std::fs::write(
+            &data,
+            serde_json::to_string(&serde_json::json!({
+                "candles": sample_candles(140)
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        let report = run_factor_research(
+            "NQ",
+            data.to_str().unwrap(),
+            ResearchObjectiveMode::Generic,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            temp.path().to_str().unwrap(),
+        )
+        .unwrap();
+        let ensemble_vote = build_stub_ensemble_vote_from_research(&report);
+        let summary = format_executor_summary_lines(&ensemble_vote.executor_summaries);
+
+        assert!(!summary.is_empty());
+        assert!(summary
+            .iter()
+            .any(|line| line.contains("executor=catboost") || line.contains("executor=xgboost")));
     }
 
     #[test]
@@ -18082,6 +18606,36 @@ mod tests {
             temp.path().to_str().unwrap(),
             false,
             Some("execution-candidate-history"),
+            false,
+            false,
+            false,
+        )
+        .unwrap();
+        workflow_status_command(
+            "NQ",
+            temp.path().to_str().unwrap(),
+            false,
+            Some("ensemble-vote"),
+            false,
+            false,
+            false,
+        )
+        .unwrap();
+        workflow_status_command(
+            "NQ",
+            temp.path().to_str().unwrap(),
+            false,
+            Some("ensemble-vote-history"),
+            false,
+            false,
+            false,
+        )
+        .unwrap();
+        workflow_status_command(
+            "NQ",
+            temp.path().to_str().unwrap(),
+            false,
+            Some("ensemble-scorecards"),
             false,
             false,
             false,
@@ -18762,6 +19316,11 @@ mod tests {
             run_id: "update:1".to_string(),
             timestamp: Utc.with_ymd_and_hms(2024, 1, 2, 0, 0, 0).unwrap(),
             symbol: "NQ".to_string(),
+            ensemble_executor_scorecards: vec![EnsembleExecutorScorecard {
+                executor: "catboost_file".to_string(),
+                wins: 1,
+                ..EnsembleExecutorScorecard::default()
+            }],
             rollback_recommendation: RollbackRecommendation {
                 should_rollback: true,
                 scope: "targeted".to_string(),
@@ -19312,6 +19871,18 @@ mod tests {
     }
 
     #[test]
+    fn test_apply_update_outcome_to_executor_scorecards_updates_counts() {
+        let mut scorecards = vec![EnsembleExecutorScorecard {
+            executor: "catboost_file".to_string(),
+            ..EnsembleExecutorScorecard::default()
+        }];
+        apply_update_outcome_to_executor_scorecards(&mut scorecards, "win", 20);
+        assert_eq!(scorecards[0].wins, 1);
+        assert_eq!(scorecards[0].validated_positive, 1);
+        assert_eq!(scorecards[0].cumulative_quality_score, 20);
+    }
+
+    #[test]
     fn test_update_command_records_consumed_artifacts_and_marks_ledger() {
         let temp = tempfile::tempdir().unwrap();
         let htf = temp.path().join("htf.json");
@@ -19340,9 +19911,9 @@ mod tests {
         update_command(
             "NQ",
             "win",
-            "strong_buy",
-            temp.path().to_str().unwrap(),
+            Some("strong_buy"),
             None,
+            temp.path().to_str().unwrap(),
             None,
             None,
             None,
@@ -19360,6 +19931,11 @@ mod tests {
         assert!(runs[0].consumed_analyze_run_id.is_some());
         assert!(runs[0].consumed_pre_bayes_evidence_filter.is_some());
         assert!(!runs[0].consumed_multi_timeframe_summary.is_empty());
+        assert!(!runs[0].ensemble_executor_scorecards.is_empty());
+        assert!(runs[0]
+            .ensemble_executor_scorecards
+            .iter()
+            .any(|scorecard| !scorecard.executor.is_empty()));
         assert!(ledger.iter().any(|entry| {
             entry.consumed_by_update_run_id.as_deref() == Some(runs[0].run_id.as_str())
         }));
@@ -20895,7 +21471,7 @@ mod tests {
     #[test]
     fn test_workflow_status_human_view_exposes_candidates() {
         let snapshot = sample_human_workflow_snapshot();
-        let value = workflow_status_human_view(&snapshot);
+        let value = workflow_status_human_view(&snapshot, &[]);
         assert_eq!(value["symbol"], "NQ");
         assert_eq!(value["current_status"]["focus_phase"], "update");
         assert!(value["what_you_should_do_now"]
@@ -20903,6 +21479,194 @@ mod tests {
             .unwrap()
             .contains("Ask the user to choose the historical dataset"));
         assert_eq!(value["historical_data_candidates"][0], "/tmp/a.json");
+        assert_eq!(value["ensemble_consensus"]["final_action"], "observe");
+        assert!(value["ensemble_consensus"]["human_next_triage"]
+            .as_str()
+            .unwrap()
+            .contains("ensemble_action=observe"));
+        assert_eq!(
+            value["ensemble_consensus"]["executor_scorecards"][0]["executor"],
+            "catboost_stub"
+        );
+        assert_eq!(
+            value["ensemble_consensus"]["executor_scorecards"][0]["latest_weight_hint"],
+            0.55
+        );
+    }
+
+    #[test]
+    fn test_workflow_status_human_view_prefers_persisted_scorecards() {
+        let snapshot = sample_human_workflow_snapshot();
+        let persisted = vec![EnsembleExecutorScorecard {
+            executor: "xgboost_file".to_string(),
+            latest_weight_hint: Some(0.72),
+            wins: 3,
+            ..EnsembleExecutorScorecard::default()
+        }];
+        let value = workflow_status_human_view(&snapshot, &persisted);
+        assert_eq!(
+            value["ensemble_consensus"]["executor_scorecards"][0]["executor"],
+            "xgboost_file"
+        );
+        assert_eq!(
+            value["ensemble_consensus"]["executor_scorecard_source"],
+            "persisted"
+        );
+        assert_eq!(
+            value["ensemble_consensus"]["executor_scorecards"][0]["latest_weight_hint"],
+            0.72
+        );
+    }
+
+    #[test]
+    fn test_executor_scorecard_surface_marks_fallback_and_persisted() {
+        let fallback = vec![EnsembleExecutorScorecard {
+            executor: "catboost_stub".to_string(),
+            ..EnsembleExecutorScorecard::default()
+        }];
+        let persisted = vec![EnsembleExecutorScorecard {
+            executor: "xgboost_file".to_string(),
+            ..EnsembleExecutorScorecard::default()
+        }];
+
+        let (fallback_surface, fallback_source) = executor_scorecard_surface(&[], &fallback);
+        assert_eq!(fallback_source, "fallback");
+        assert_eq!(fallback_surface[0].executor, "catboost_stub");
+
+        let (persisted_surface, persisted_source) =
+            executor_scorecard_surface(&persisted, &fallback);
+        assert_eq!(persisted_source, "persisted");
+        assert_eq!(persisted_surface[0].executor, "xgboost_file");
+    }
+
+    #[test]
+    fn test_ensemble_vote_history_view_uses_resolved_scorecard_source() {
+        let vote = sample_human_workflow_snapshot()
+            .latest_ensemble_vote
+            .expect("sample ensemble vote");
+        let persisted = vec![EnsembleExecutorScorecard {
+            executor: "xgboost_file".to_string(),
+            latest_weight_hint: Some(0.80),
+            ..EnsembleExecutorScorecard::default()
+        }];
+        let value = serde_json::json!([vote]
+            .iter()
+            .map(|vote| {
+                let (scorecards, scorecard_source) = resolved_vote_scorecards(&persisted, vote);
+                serde_json::json!({
+                    "artifact_id": vote.artifact_id,
+                    "executor_scorecards": scorecards,
+                    "executor_scorecard_source": scorecard_source,
+                })
+            })
+            .collect::<Vec<_>>());
+        assert_eq!(value[0]["executor_scorecard_source"], "persisted");
+        assert_eq!(
+            value[0]["executor_scorecards"][0]["executor"],
+            "xgboost_file"
+        );
+    }
+
+    #[test]
+    fn test_load_canonical_executor_scorecards_falls_back_to_vote_record() {
+        let temp = tempfile::tempdir().unwrap();
+        let record = EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:test".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-1".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2-weighted".to_string(),
+            final_action: "observe".to_string(),
+            recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next"
+                .to_string(),
+            human_next_triage: "ensemble_action=observe".to_string(),
+            confidence: 0.5,
+            consensus_strength: 0.5,
+            disagreement_flags: Vec::new(),
+            executor_summaries: vec![
+                "executor=catboost_stub action=observe confidence=0.500".to_string()
+            ],
+            split_explanations: vec!["active_regime=research".to_string()],
+            executor_scorecards: vec![EnsembleExecutorScorecard {
+                executor: "catboost_stub".to_string(),
+                latest_weight_hint: Some(0.55),
+                ..EnsembleExecutorScorecard::default()
+            }],
+            executor_scorecards_source: Some("fallback".to_string()),
+            posterior_fingerprint: "fp-test".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "research".to_string(),
+            posterior_confidence: Some(0.5),
+            posterior_probabilities: BTreeMap::new(),
+            posterior_evidence: vec!["mtf=test".to_string()],
+        };
+        save_ensemble_vote_artifact(temp.path(), "NQ", &record).unwrap();
+        append_ensemble_vote_history(temp.path(), "NQ", record).unwrap();
+
+        let scorecards =
+            load_canonical_executor_scorecards(temp.path().to_str().unwrap(), "NQ", Some("run-1"))
+                .unwrap();
+        assert_eq!(scorecards[0].executor, "catboost_stub");
+        assert_eq!(scorecards[0].latest_weight_hint, Some(0.55));
+    }
+
+    fn save_then_load_vote_record_for_test(
+        dir: &std::path::Path,
+        record: &EnsembleVoteRecord,
+    ) -> EnsembleVoteRecord {
+        save_ensemble_vote_artifact(dir, "NQ", record).unwrap();
+        load_state(dir, "NQ", ict_engine::state::ENSEMBLE_VOTE_FILE).unwrap()
+    }
+
+    #[test]
+    fn test_persist_ensemble_vote_record_writes_canonical_scorecards_not_mirror() {
+        let temp = tempfile::tempdir().unwrap();
+        let record = EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:test".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-1".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2-weighted".to_string(),
+            final_action: "observe".to_string(),
+            recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next"
+                .to_string(),
+            human_next_triage: "ensemble_action=observe".to_string(),
+            confidence: 0.5,
+            consensus_strength: 0.5,
+            disagreement_flags: Vec::new(),
+            executor_summaries: vec![
+                "executor=catboost_stub action=observe confidence=0.500".to_string()
+            ],
+            split_explanations: vec!["active_regime=research".to_string()],
+            executor_scorecards: vec![EnsembleExecutorScorecard {
+                executor: "mirror_only".to_string(),
+                ..EnsembleExecutorScorecard::default()
+            }],
+            executor_scorecards_source: Some("fallback".to_string()),
+            posterior_fingerprint: "fp-test".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "research".to_string(),
+            posterior_confidence: Some(0.5),
+            posterior_probabilities: BTreeMap::new(),
+            posterior_evidence: vec!["mtf=test".to_string()],
+        };
+        let canonical = vec![EnsembleExecutorScorecard {
+            executor: "canonical_only".to_string(),
+            latest_weight_hint: Some(0.77),
+            ..EnsembleExecutorScorecard::default()
+        }];
+        persist_ensemble_vote_record(temp.path().to_str().unwrap(), &record, &canonical).unwrap();
+
+        let saved = load_ensemble_executor_scorecards(temp.path(), "NQ").unwrap();
+        let saved_vote = save_then_load_vote_record_for_test(temp.path(), &record);
+        assert_eq!(saved[0].executor, "canonical_only");
+        assert_eq!(saved_vote.executor_scorecards[0].executor, "mirror_only");
     }
 
     #[test]

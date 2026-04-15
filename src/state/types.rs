@@ -19,6 +19,9 @@ pub const PENDING_UPDATE_ARTIFACT_FILE: &str = "pending_update_feedback.json";
 pub const PENDING_UPDATE_HISTORY_FILE: &str = "pending_update_history.json";
 pub const EXECUTION_CANDIDATE_FILE: &str = "execution_candidate.json";
 pub const EXECUTION_CANDIDATE_HISTORY_FILE: &str = "execution_candidate_history.json";
+pub const ENSEMBLE_VOTE_FILE: &str = "ensemble_vote.json";
+pub const ENSEMBLE_VOTE_HISTORY_FILE: &str = "ensemble_vote_history.json";
+pub const ENSEMBLE_EXECUTOR_SCORECARDS_FILE: &str = "ensemble_executor_scorecards.json";
 pub const ARTIFACT_LEDGER_FILE: &str = "artifact_ledger.json";
 
 /// State persistence types
@@ -345,6 +348,8 @@ pub struct ExecutionCandidateArtifact {
     #[serde(default)]
     pub multi_timeframe_summary: Vec<String>,
     #[serde(default)]
+    pub executor_scorecards: Vec<EnsembleExecutorScorecard>,
+    #[serde(default)]
     pub diff_from_previous: ExecutionCandidateArtifactDiff,
     #[serde(default)]
     pub review_decision: ExecutionCandidateArtifactDecision,
@@ -380,6 +385,7 @@ impl Default for ExecutionCandidateArtifact {
             pre_bayes_evidence_filter: None,
             pre_bayes_entry_quality_bridge: None,
             multi_timeframe_summary: Vec::new(),
+            executor_scorecards: Vec::new(),
             diff_from_previous: ExecutionCandidateArtifactDiff::default(),
             review_decision: ExecutionCandidateArtifactDecision::default(),
         }
@@ -515,10 +521,59 @@ pub struct ArtifactReviewRules {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct EnsembleExecutorScorecard {
+    pub executor: String,
+    pub wins: usize,
+    pub losses: usize,
+    pub breakevens: usize,
+    pub validated_positive: usize,
+    pub validated_negative: usize,
+    pub cumulative_quality_score: i64,
+    pub latest_weight_hint: Option<f64>,
+    pub last_outcome: Option<String>,
+    pub last_updated_at: Option<DateTime<Utc>>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct EnsembleVoteRecord {
+    pub artifact_id: String,
+    pub generated_at: DateTime<Utc>,
+    pub symbol: String,
+    pub source_phase: String,
+    pub source_run_id: Option<String>,
+    pub provenance: RunProvenance,
+    pub dataset_comparability: DatasetComparability,
+    pub ensemble_version: String,
+    pub final_action: String,
+    pub recommended_command: String,
+    pub human_next_triage: String,
+    pub confidence: f64,
+    pub consensus_strength: f64,
+    pub disagreement_flags: Vec<String>,
+    pub executor_summaries: Vec<String>,
+    pub split_explanations: Vec<String>,
+    #[serde(default)]
+    // DEPRECATED compatibility mirror. Canonical executor scorecards live in
+    // ensemble_executor_scorecards.json and should be read through canonical loaders.
+    pub executor_scorecards: Vec<EnsembleExecutorScorecard>,
+    #[serde(default)]
+    // Source of the scorecard surface used for this record: persisted or fallback.
+    pub executor_scorecards_source: Option<String>,
+    pub posterior_fingerprint: String,
+    pub posterior_normalization_status: String,
+    pub posterior_active_regime: String,
+    pub posterior_confidence: Option<f64>,
+    pub posterior_probabilities: BTreeMap<String, f64>,
+    pub posterior_evidence: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ArtifactHistorySummary {
     pub total_entries: usize,
     pub pending_update_entries: usize,
     pub execution_candidate_entries: usize,
+    #[serde(default)]
+    pub ensemble_vote_entries: usize,
     pub promotable_entries: usize,
     pub actionable_entries: usize,
     pub consumed_entries: usize,
@@ -965,6 +1020,10 @@ pub struct PreBayesEvidencePacket {
 pub struct PreBayesEvidenceFilter {
     #[serde(default)]
     pub policy: PreBayesEvidencePolicy,
+    #[serde(default)]
+    pub entry_logic_id: Option<String>,
+    #[serde(default)]
+    pub logic_family: Option<String>,
     pub raw_market_regime_label: String,
     pub raw_liquidity_context_label: String,
     pub raw_factor_alignment: String,
@@ -1379,6 +1438,8 @@ pub struct UpdateRunRecord {
     pub run_id: String,
     pub timestamp: DateTime<Utc>,
     pub symbol: String,
+    #[serde(default)]
+    pub ensemble_executor_scorecards: Vec<EnsembleExecutorScorecard>,
     pub provenance: RunProvenance,
     pub decision_thresholds: DecisionThresholds,
     pub dataset_comparability: DatasetComparability,
@@ -1855,6 +1916,10 @@ pub struct WorkflowSnapshot {
     #[serde(default)]
     pub recent_execution_candidates: Vec<ExecutionCandidateArtifactSummary>,
     #[serde(default)]
+    pub latest_ensemble_vote: Option<EnsembleVoteRecord>,
+    #[serde(default)]
+    pub recent_ensemble_votes: Vec<EnsembleVoteRecord>,
+    #[serde(default)]
     pub recent_artifacts: Vec<ArtifactLedgerEntry>,
     #[serde(default)]
     pub actionable_artifacts: Vec<ArtifactLedgerEntry>,
@@ -1915,6 +1980,8 @@ impl Default for WorkflowSnapshot {
             recent_pending_updates: Vec::new(),
             latest_execution_candidate: None,
             recent_execution_candidates: Vec::new(),
+            latest_ensemble_vote: None,
+            recent_ensemble_votes: Vec::new(),
             recent_artifacts: Vec::new(),
             actionable_artifacts: Vec::new(),
             latest_promotable_artifact: None,
