@@ -19,7 +19,7 @@ pub fn build_belief_shadow_policy_surface(
     BeliefShadowPolicySurface {
         policy_version: policy_record
             .map(|record| record.policy.version.clone())
-            .unwrap_or_default(),
+            .unwrap_or_else(|| "policy_version_unavailable".to_string()),
         shadow_summary_line: packet
             .shadow_comparison
             .as_ref()
@@ -43,6 +43,7 @@ mod tests {
     fn shadow_surface_defaults_without_policy_record() {
         let packet = BeliefReportPacket::default();
         let surface = build_belief_shadow_policy_surface(&packet, None);
+        assert_eq!(surface.policy_version, "policy_version_unavailable");
         assert_eq!(surface.shadow_summary_line, "shadow=unavailable");
         assert!(!surface.shadow_available);
     }

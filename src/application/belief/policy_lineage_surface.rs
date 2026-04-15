@@ -33,17 +33,21 @@ pub fn build_belief_policy_lineage_surface(
             String::new()
         };
     let rollback_reason = if rollback_candidate_version.is_empty() {
-        "current_policy_stable".to_string()
+        if history.is_empty() {
+            "policy_history_unavailable".to_string()
+        } else {
+            "current_policy_stable".to_string()
+        }
     } else {
         format!("consider_rollback_to={}", rollback_candidate_version)
     };
     BeliefPolicyLineageSurface {
         latest_version: latest
             .map(|record| record.policy.version.clone())
-            .unwrap_or_default(),
+            .unwrap_or_else(|| "policy_version_unavailable".to_string()),
         previous_version: previous
             .map(|record| record.policy.version.clone())
-            .unwrap_or_default(),
+            .unwrap_or_else(|| "policy_version_unavailable".to_string()),
         total_versions: history.len(),
         changed_fields_union,
         rollback_candidate_version,
@@ -74,6 +78,16 @@ mod tests {
     fn lineage_surface_defaults_when_empty() {
         let surface = build_belief_policy_lineage_surface(&[], "pass_hard");
         assert_eq!(surface.total_versions, 0);
+        assert_eq!(surface.latest_version, "policy_version_unavailable");
+        assert_eq!(surface.previous_version, "policy_version_unavailable");
+        assert_eq!(surface.rollback_reason, "policy_history_unavailable");
+    }
+
+    #[test]
+    fn lineage_surface_marks_stable_only_when_history_exists() {
+        let mut record = PreBayesPolicyRecord::default();
+        record.policy.version = "v1".to_string();
+        let surface = build_belief_policy_lineage_surface(&[record], "pass_hard");
         assert_eq!(surface.rollback_reason, "current_policy_stable");
     }
 }

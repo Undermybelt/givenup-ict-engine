@@ -289,10 +289,34 @@ pub fn pre_bayes_evidence_policy() -> PreBayesEvidencePolicy {
     );
     let market_overrides = std::collections::BTreeMap::from([
         (
+            "NQ".to_string(),
+            crate::state::PreBayesMarketPolicyOverride {
+                hostile_liquidity_penalty: Some(0.10),
+                favorable_liquidity_bonus: Some(0.04),
+                hostile_liquidity_forces_high_uncertainty: Some(true),
+            },
+        ),
+        (
             "ES".to_string(),
             crate::state::PreBayesMarketPolicyOverride {
                 hostile_liquidity_penalty: Some(0.06),
                 favorable_liquidity_bonus: Some(0.06),
+                hostile_liquidity_forces_high_uncertainty: Some(false),
+            },
+        ),
+        (
+            "YM".to_string(),
+            crate::state::PreBayesMarketPolicyOverride {
+                hostile_liquidity_penalty: Some(0.07),
+                favorable_liquidity_bonus: Some(0.05),
+                hostile_liquidity_forces_high_uncertainty: Some(false),
+            },
+        ),
+        (
+            "GC".to_string(),
+            crate::state::PreBayesMarketPolicyOverride {
+                hostile_liquidity_penalty: Some(0.09),
+                favorable_liquidity_bonus: Some(0.07),
                 hostile_liquidity_forces_high_uncertainty: Some(false),
             },
         ),

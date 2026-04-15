@@ -1,4 +1,5 @@
 pub mod debug_report;
+pub mod logic_family;
 pub mod pipeline_builder;
 pub mod pipeline_shared;
 pub mod pipeline_types;

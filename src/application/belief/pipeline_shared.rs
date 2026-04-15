@@ -20,6 +20,10 @@ use crate::types::Direction;
 
 use super::pipeline_types::ExpansionFactorPipelineReport;
 
+#[cfg(test)]
+#[path = "pipeline_shared_tests.rs"]
+mod tests;
+
 #[derive(Debug, Clone, Serialize)]
 pub struct ExpansionLatestSignal {
     pub timestamp: chrono::DateTime<chrono::Utc>,
@@ -155,6 +159,21 @@ pub fn build_canonical_belief_snapshot(
     build_canonical_belief_report(symbol, market, filter, None, None, None)
 }
 
+pub fn market_category_from_symbol(symbol: &str) -> &'static str {
+    match symbol
+        .split(['.', '_', '-'])
+        .next()
+        .unwrap_or(symbol)
+        .to_ascii_uppercase()
+        .as_str()
+    {
+        "NQ" | "ES" | "YM" => "futures_index",
+        "GC" => "metals",
+        "CL" => "energy",
+        _ => "generic",
+    }
+}
+
 #[derive(Debug, Serialize, Clone)]
 pub struct FactorPipelineDebugReport {
     pub symbol: String,
@@ -208,7 +227,7 @@ pub fn build_factor_pipeline_debug_report(
     let selected_entry_quality = bridge_diff
         .selected_entry_quality
         .clone()
-        .unwrap_or_else(|| "unknown".to_string());
+        .unwrap_or_else(|| "entry_quality_unavailable".to_string());
     let bridge_gap = bridge_diff.long_short_signal_probability_gap;
     let pipeline_verdict =
         if is_hard_pass(&gating_status) && bridge_gap >= bridge_gap_clear_threshold {
