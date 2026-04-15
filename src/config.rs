@@ -139,6 +139,23 @@ pub fn build_frame_features_for_market(
                     frame.liquidity_label = "neutral".to_string();
                 }
             }
+            "YM" => {
+                if base_regime == "range" && frame.sweep_count <= frame.fvg_count {
+                    frame.regime_label = "bull".to_string();
+                }
+                if base_liquidity == "hostile" && frame.fvg_count > 0 {
+                    frame.liquidity_label = "neutral".to_string();
+                }
+            }
+            "GC" => {
+                if base_regime == "range" && frame.fvg_count >= frame.sweep_count.saturating_add(1)
+                {
+                    frame.regime_label = "bull".to_string();
+                }
+                if base_liquidity == "favorable" && frame.fvg_count > 0 {
+                    frame.liquidity_label = "neutral".to_string();
+                }
+            }
             "CL" => {
                 if base_regime == "bear" && frame.sweep_count > frame.fvg_count {
                     frame.regime_label = "range".to_string();
@@ -598,6 +615,8 @@ pub fn build_pre_bayes_evidence_filter(
 
     PreBayesEvidenceFilter {
         policy: policy.clone(),
+        entry_logic_id: None,
+        logic_family: None,
         raw_market_regime_label: regime_label.to_string(),
         raw_liquidity_context_label: liquidity_label.to_string(),
         raw_factor_alignment,

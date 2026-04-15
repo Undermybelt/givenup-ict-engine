@@ -33,6 +33,8 @@ pub struct RegimeFeatures {
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct RegimePosterior {
     pub active_regime: Option<String>,
+    pub market_family: Option<String>,
+    pub market_behavior_profile: Option<String>,
     pub probabilities: BTreeMap<String, f64>,
     pub confidence: Option<f64>,
     pub credible_intervals: BTreeMap<String, super::super::belief::CredibleInterval>,
@@ -43,5 +45,6 @@ pub struct RegimePosterior {
 pub struct RegimeGateDecision {
     pub selected_regime: String,
     pub selected_subgraph: String,
+    pub market_family: Option<String>,
     pub rationale: Vec<String>,
 }
