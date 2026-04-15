@@ -1591,6 +1591,16 @@ fn workflow_status_human_view(
         Vec::new()
     };
     let human_next_action = humanize_workflow_command(&snapshot.recommended_next_command);
+    let credibility_risks = snapshot
+        .risk_flags
+        .iter()
+        .filter(|flag| {
+            flag.contains("conformal_coverage_low")
+                || flag.contains("regime_break_penalty_high")
+                || flag.contains("conformal_credibility")
+        })
+        .cloned()
+        .collect::<Vec<_>>();
     let ensemble_summary = snapshot.latest_ensemble_vote.as_ref().map(|vote| {
         let (scorecards, scorecard_source) = resolved_vote_scorecards(persisted_scorecards, vote);
         serde_json::json!({
@@ -1619,6 +1629,7 @@ fn workflow_status_human_view(
             "summary": latest_phase_summary,
         },
         "ensemble_consensus": ensemble_summary,
+        "credibility_risks": credibility_risks,
         "pending_actions": snapshot.pending_actions,
         "risk_flags": snapshot.risk_flags,
         "historical_data_candidates": selected_data_candidates,
@@ -8888,7 +8899,7 @@ fn workflow_phase_snapshot_from_research_run(run: &ResearchRunRecord) -> Workflo
         comparison_class: run.dataset_comparability.comparison_class.clone(),
         recommended_next_command: run.recommended_next_command.clone(),
         phase_summary: format!(
-            "objective={} best_factor={:?} aggregate_return={:.4} feedback_applied={} {}",
+            "objective={} best_factor={:?} aggregate_return={:.4} feedback_applied={} credibility={} {}",
             if run.research_objective.is_empty() {
                 "generic"
             } else {
@@ -8897,6 +8908,11 @@ fn workflow_phase_snapshot_from_research_run(run: &ResearchRunRecord) -> Workflo
             run.best_factor,
             run.aggregate_return,
             run.feedback_records_applied,
+            run.artifact_action_summary
+                .iter()
+                .find(|item| item.starts_with("conformal_credibility:"))
+                .cloned()
+                .unwrap_or_else(|| "conformal_credibility:unavailable".to_string()),
             multi_timeframe_phase_hint(&run.multi_timeframe_summary)
         ),
         top_actions: workflow_top_actions(&run.agent_action_plan),
@@ -8963,10 +8979,12 @@ fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> Workflo
         comparison_class: run.dataset_comparability.comparison_class.clone(),
         recommended_next_command: run.recommended_next_command.clone(),
         phase_summary: format!(
-            "total_return={:.4} trade_count={} source={} {}",
+            "total_return={:.4} trade_count={} source={} coverage_1sigma={:.3} break_penalty={:.3} {}",
             run.total_return,
             run.trade_count,
             run.source_command,
+            run.conformal_coverage_1sigma,
+            run.regime_break_penalty,
             multi_timeframe_phase_hint(&run.multi_timeframe_summary)
         ),
         top_actions: workflow_top_actions(&run.agent_action_plan),
