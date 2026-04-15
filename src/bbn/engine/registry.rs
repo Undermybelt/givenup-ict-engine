@@ -212,6 +212,11 @@ impl InferenceEngineRegistry {
                         jump_model.active_state, jump_model.confidence, jump_model.transition_risk
                     ),
                     format!(
+                        "jump_disagreement_score={:.3} gate_bias={}",
+                        jump_disagreement.disagreement_score,
+                        jump_disagreement.gate_bias
+                    ),
+                    format!(
                         "particle_count={} ess={:.2} dominant_regime={}",
                         temporal_summary.particle_count,
                         temporal_summary.effective_sample_size,
