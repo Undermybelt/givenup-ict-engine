@@ -1,7 +1,8 @@
 use serde::{Deserialize, Serialize};
 
 use super::{
-    AnalysisArtifact, ExecutionPlanArtifact, PipelineState, QualificationArtifact, StageRunTrace,
+    AnalysisArtifact, ExecutionPlanArtifact, PipelineState, PolicyDecisionArtifact,
+    QualificationArtifact, StageRunTrace,
 };
 
 pub trait FinalSurfaceAdapter<T> {
@@ -16,6 +17,7 @@ pub struct StagedArtifacts {
     pub analysis: AnalysisArtifact,
     pub qualification: QualificationArtifact,
     pub execution_plan: ExecutionPlanArtifact,
+    pub policy_decision: PolicyDecisionArtifact,
 }
 
 impl FinalSurfaceAdapter<ExecutionPlanArtifact> for FinalOutputAdapter {

@@ -6,6 +6,12 @@ use super::{build_postmortem_artifact, build_prior_artifact, PostmortemArtifact,
 pub struct ReflectionBundle {
     pub prior: PriorArtifact,
     pub postmortem: PostmortemArtifact,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ensemble_vote_summary: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ensemble_vote_artifact_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub ensemble_disagreement_summary: Option<String>,
 }
 
 pub fn build_reflection_bundle(
@@ -48,6 +54,9 @@ pub fn build_reflection_bundle(
             next_candidates,
             next_candidates,
         ),
+        ensemble_vote_summary: None,
+        ensemble_vote_artifact_id: None,
+        ensemble_disagreement_summary: None,
     }
 }
 

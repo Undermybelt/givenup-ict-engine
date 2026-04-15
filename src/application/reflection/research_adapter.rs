@@ -1,3 +1,4 @@
+use crate::application::orchestration::build_stub_ensemble_vote_from_research;
 use crate::factor_lab::research::ResearchReport;
 
 use super::{build_reflection_bundle, ReflectionBundle};
@@ -12,7 +13,7 @@ pub fn build_research_reflection_bundle(symbol: &str, report: &ResearchReport) -
         vec![report.recommended_next_command.clone()]
     };
 
-    build_reflection_bundle(
+    let mut bundle = build_reflection_bundle(
         symbol,
         report.provenance.data_fingerprint.clone(),
         report.research_objective.clone(),
@@ -27,7 +28,17 @@ pub fn build_research_reflection_bundle(symbol: &str, report: &ResearchReport) -
         "research_completed",
         &report.multi_timeframe_summary,
         &next_candidates,
-    )
+    );
+    let ensemble_vote = build_stub_ensemble_vote_from_research(report);
+    bundle.ensemble_vote_summary = Some(ensemble_vote.human_next_triage.clone());
+    bundle.ensemble_vote_artifact_id = Some(format!(
+        "ensemble-vote:{}",
+        report.provenance.data_fingerprint
+    ));
+    if !ensemble_vote.disagreement_flags.is_empty() {
+        bundle.ensemble_disagreement_summary = Some(ensemble_vote.disagreement_flags.join(","));
+    }
+    bundle
 }
 
 #[cfg(test)]
@@ -45,5 +56,6 @@ mod tests {
         let bundle = build_research_reflection_bundle("NQ", &report);
         assert_eq!(bundle.prior.symbol, "NQ");
         assert_eq!(bundle.postmortem.realized_outcome, "research_completed");
+        assert!(bundle.ensemble_vote_summary.is_some());
     }
 }

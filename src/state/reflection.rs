@@ -132,8 +132,8 @@ pub fn empty_reflection_record(
         expected_chain: Vec::new(),
         realized_chain: Vec::new(),
         mismatch_tags: Vec::new(),
-        belief_update: build_belief_update(&[], ""),
-        suggested_belief_update: String::new(),
+        belief_update: build_belief_update(&[], "belief_update_unavailable"),
+        suggested_belief_update: "belief_update_unavailable".to_string(),
     }
 }
 
@@ -170,6 +170,13 @@ mod tests {
         assert!(update
             .mismatch_tags
             .contains(&"confirmation_missing".to_string()));
+    }
+
+    #[test]
+    fn empty_reflection_record_marks_belief_update_unavailable() {
+        let record = empty_reflection_record(crate::factor_lab::ReversalHypothesis::BearTrap);
+        assert_eq!(record.belief_update.summary, "belief_update_unavailable");
+        assert_eq!(record.suggested_belief_update, "belief_update_unavailable");
     }
 
     #[test]
