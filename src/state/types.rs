@@ -1592,6 +1592,9 @@ pub struct BacktestRunRecord {
     pub prompt_workflow: String,
     #[serde(default)]
     pub multi_timeframe_summary: Vec<String>,
+    #[serde(default)]
+    pub objective_market_credibility_shrink:
+        Option<crate::domain::belief::ObjectiveMarketCredibilityShrink>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -1839,6 +1842,8 @@ pub struct WorkflowPhaseSnapshot {
     pub family_score_map: BTreeMap<String, f64>,
     #[serde(default)]
     pub factor_score_map: BTreeMap<String, f64>,
+    #[serde(default)]
+    pub objective_market_credibility_shrink: Option<crate::domain::belief::ObjectiveMarketCredibilityShrink>,
 }
 
 impl Default for WorkflowPhaseSnapshot {
@@ -1882,6 +1887,7 @@ impl Default for WorkflowPhaseSnapshot {
             multi_timeframe_summary: Vec::new(),
             family_score_map: BTreeMap::new(),
             factor_score_map: BTreeMap::new(),
+            objective_market_credibility_shrink: None,
         }
     }
 }

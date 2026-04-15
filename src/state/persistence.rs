@@ -744,6 +744,7 @@ mod tests {
             agent_context_bundle_minimal: crate::state::AgentContextBundleMinimal::default(),
             feedback_history_summary: crate::state::FeedbackHistorySummary::default(),
             multi_timeframe_summary: Vec::new(),
+            objective_market_credibility_shrink: None,
             artifact_action_summary: Vec::new(),
             artifact_decision_summary: crate::state::ArtifactDecisionSummary::default(),
             artifact_decision_section: crate::state::ArtifactDecisionSection::default(),

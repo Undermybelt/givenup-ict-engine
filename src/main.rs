@@ -375,6 +375,8 @@ struct BacktestReport {
     final_trade_outcome_cpt: BTreeMap<String, BTreeMap<String, f64>>,
     recent_trades: Vec<BacktestTradeSample>,
     workflow_snapshot: ict_engine::state::WorkflowSnapshot,
+    objective_market_credibility_shrink:
+        Option<ict_engine::domain::belief::ObjectiveMarketCredibilityShrink>,
 }
 
 #[derive(Debug, Serialize)]
@@ -1804,6 +1806,7 @@ fn sample_human_workflow_snapshot() -> ict_engine::state::WorkflowSnapshot {
         ],
         family_score_map: std::collections::BTreeMap::new(),
         factor_score_map: std::collections::BTreeMap::new(),
+        objective_market_credibility_shrink: None,
     });
     snapshot
 }
@@ -9036,6 +9039,7 @@ fn workflow_phase_snapshot_from_analyze_run(run: &AnalyzeRunRecord) -> WorkflowP
             .map(|family| (family.family.clone(), family.avg_score))
             .collect(),
         factor_score_map: BTreeMap::new(),
+        objective_market_credibility_shrink: None,
     }
 }
 
@@ -9093,6 +9097,7 @@ fn workflow_phase_snapshot_from_train_run(run: &TrainRunRecord) -> WorkflowPhase
         multi_timeframe_summary: run.multi_timeframe_summary.clone(),
         family_score_map: BTreeMap::new(),
         factor_score_map: BTreeMap::new(),
+        objective_market_credibility_shrink: None,
     }
 }
 
@@ -9173,10 +9178,21 @@ fn workflow_phase_snapshot_from_research_run(run: &ResearchRunRecord) -> Workflo
             .iter()
             .map(|item| (item.factor_name.clone(), item.new_score))
             .collect(),
+        objective_market_credibility_shrink: None,
     }
 }
 
 fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> WorkflowPhaseSnapshot {
+    let objective_market_shrink_summary = run
+        .objective_market_credibility_shrink
+        .as_ref()
+        .map(|item| {
+            format!(
+                " objective_market_shrink={:.3} objective_market_credibility={:.3} objective_market_shrink_triggered={}",
+                item.shrink_weight, item.credibility_score, item.shrink_triggered
+            )
+        })
+        .unwrap_or_default();
     WorkflowPhaseSnapshot {
         phase: "backtest".to_string(),
         source_command: run.source_command.clone(),
@@ -9190,7 +9206,7 @@ fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> Workflo
         comparison_class: run.dataset_comparability.comparison_class.clone(),
         recommended_next_command: run.recommended_next_command.clone(),
         phase_summary: format!(
-            "total_return={:.4} trade_count={} source={} coverage_1sigma={:.3} break_penalty={:.3} structural_break_detected={} structural_break_score={:.3} structural_break_index={:?} {}",
+            "total_return={:.4} trade_count={} source={} coverage_1sigma={:.3} break_penalty={:.3} structural_break_detected={} structural_break_score={:.3} structural_break_index={:?}{} {}",
             run.total_return,
             run.trade_count,
             run.source_command,
@@ -9199,6 +9215,7 @@ fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> Workflo
             run.structural_break_detected,
             run.structural_break_score,
             run.structural_break_index,
+            objective_market_shrink_summary,
             multi_timeframe_phase_hint(&run.multi_timeframe_summary)
         ),
         top_actions: workflow_top_actions(&run.agent_action_plan),
@@ -9248,6 +9265,7 @@ fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> Workflo
             .iter()
             .map(|item| (item.factor_name.clone(), item.new_score))
             .collect(),
+        objective_market_credibility_shrink: run.objective_market_credibility_shrink.clone(),
     }
 }
 
@@ -9394,6 +9412,7 @@ fn workflow_phase_snapshot_from_update_run(run: &UpdateRunRecord) -> WorkflowPha
             .iter()
             .map(|item| (item.factor_name.clone(), item.new_score))
             .collect(),
+        objective_market_credibility_shrink: None,
     }
 }
 
@@ -13460,6 +13479,11 @@ fn run_factor_backtest(
         save_state(state_dir, symbol, BBN_STATE_FILE, &network)?;
     }
     save_learning_state(state_dir, symbol, &learning_state)?;
+    let factor_backtest_objective_market_credibility_shrink = report
+        .workflow_snapshot
+        .latest_analyze
+        .as_ref()
+        .and_then(|snapshot| snapshot.objective_market_credibility_shrink.clone());
     let backtest_runs = append_backtest_run(
         state_dir,
         symbol,
@@ -13588,6 +13612,7 @@ fn run_factor_backtest(
             agent_prompts: report.agent_prompts.clone(),
             prompt_workflow: report.agent_prompts.workflow.clone(),
             multi_timeframe_summary: report.multi_timeframe_summary.clone(),
+            objective_market_credibility_shrink: factor_backtest_objective_market_credibility_shrink.clone(),
         },
     )?;
     persist_market_jump_calibration_from_backtest_runs(
@@ -14518,6 +14543,7 @@ fn run_probabilistic_backtest(
         final_trade_outcome_cpt,
         recent_trades,
         workflow_snapshot: WorkflowSnapshot::default(),
+        objective_market_credibility_shrink: None,
     };
 
     Ok((report, working_network, trades))
@@ -17887,6 +17913,16 @@ fn finalize_backtest_report(
         &report.promotion_decision,
         &report.rollback_recommendation,
     );
+    report.objective_market_credibility_shrink = report
+        .objective_market_credibility_shrink
+        .clone()
+        .or_else(|| {
+            report
+                .workflow_snapshot
+                .latest_analyze
+                .as_ref()
+                .and_then(|snapshot| snapshot.objective_market_credibility_shrink.clone())
+        });
     report.recommended_commands = command_recommendations(&CommandContext {
         symbol: symbol.to_string(),
         state_dir: state_dir.to_string(),
@@ -18013,7 +18049,8 @@ fn finalize_backtest_report(
             artifact_decision_section: report.artifact_decision_section.clone(),
             agent_prompts: report.agent_prompts.clone(),
             prompt_workflow: report.agent_prompts.workflow.clone(),
-            multi_timeframe_summary: Vec::new(),
+            multi_timeframe_summary: report.multi_timeframe_summary.clone(),
+            objective_market_credibility_shrink: report.objective_market_credibility_shrink.clone(),
         },
     )?;
     persist_market_jump_calibration_from_backtest_runs(
@@ -18785,6 +18822,41 @@ mod tests {
             rendered["supporting"]["objective_jump_weight"],
             serde_json::to_value(expected_weight).unwrap()
         );
+    }
+
+    #[test]
+    fn test_workflow_phase_snapshot_from_backtest_run_surfaces_objective_market_shrink() {
+        let shrink = ict_engine::application::belief::objective_market_credibility_shrink(
+            Some("expansion_manipulation"),
+            Some("energy"),
+            0.34,
+        );
+        let run = BacktestRunRecord {
+            source_command: "backtest".to_string(),
+            total_return: 0.07,
+            trade_count: 12,
+            conformal_coverage_1sigma: 0.68,
+            regime_break_penalty: 0.11,
+            structural_break_score: 0.18,
+            structural_break_index: Some(21),
+            recommended_next_command: "ict-engine update".to_string(),
+            objective_market_credibility_shrink: Some(shrink.clone()),
+            ..BacktestRunRecord::default()
+        };
+
+        let snapshot = workflow_phase_snapshot_from_backtest_run(&run);
+
+        assert_eq!(
+            snapshot
+                .objective_market_credibility_shrink
+                .as_ref()
+                .map(|item| item.shrink_weight),
+            Some(shrink.shrink_weight)
+        );
+        assert!(snapshot.phase_summary.contains("objective_market_shrink="));
+        assert!(snapshot
+            .phase_summary
+            .contains("objective_market_credibility="));
     }
 
     #[test]

@@ -18,6 +18,7 @@ pub struct BeliefShadowPolicySurface {
     pub objective_market_credibility_score: f64,
     pub objective_market_shrink_weight: f64,
     pub objective_market_shrink_triggered: bool,
+    pub objective_market_rationale: Vec<String>,
 }
 
 pub fn build_belief_shadow_policy_surface(
@@ -88,6 +89,12 @@ pub fn build_belief_shadow_policy_surface(
             .as_ref()
             .map(|item| item.shrink_triggered)
             .unwrap_or(false),
+        objective_market_rationale: packet
+            .regime_companion
+            .objective_market_credibility_shrink
+            .as_ref()
+            .map(|item| item.rationale.clone())
+            .unwrap_or_default(),
     }
 }
 
@@ -147,5 +154,6 @@ mod tests {
         assert!(surface.objective_market_credibility_score < 0.5);
         assert!(surface.objective_market_shrink_weight < 0.95);
         assert!(surface.objective_market_shrink_triggered);
+        assert!(!surface.objective_market_rationale.is_empty());
     }
 }
