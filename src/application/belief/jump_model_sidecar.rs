@@ -2,7 +2,9 @@ use std::collections::BTreeMap;
 use std::path::Path;
 
 use crate::domain::regime::{JumpModelRegimeSummary, RegimeDisagreementSummary, RegimeFeatures};
-use crate::state::{load_state_or_default, WorkflowSnapshot};
+use crate::state::{
+    load_state_or_default, save_state, BacktestRunRecord, ResearchRunRecord, WorkflowSnapshot,
+};
 
 const MARKET_JUMP_CALIBRATION_FILE: &str = "market_jump_calibration.json";
 
@@ -15,7 +17,7 @@ struct MarketJumpCalibration {
 }
 
 #[derive(Debug, Clone, Copy, serde::Serialize, serde::Deserialize)]
-struct PersistedMarketJumpCalibration {
+pub struct PersistedMarketJumpCalibration {
     trend_weight: f64,
     balance_weight: f64,
     transition_weight: f64,
@@ -105,6 +107,105 @@ fn dynamic_market_jump_calibration<P: AsRef<Path>>(
             .clamp(0.75, 1.45),
         backtest_edge: ((baseline.backtest_edge + overlay.backtest_edge) / 2.0).clamp(-0.25, 0.35),
     }
+}
+
+fn calibration_sample_weight(score: f64) -> f64 {
+    if !score.is_finite() {
+        return 0.0;
+    }
+    score.abs().clamp(0.0, 1.0)
+}
+
+fn blend_calibration_sample(
+    baseline: MarketJumpCalibration,
+    aggregate: &mut (f64, f64, f64, f64, f64),
+    sample_weight: f64,
+) {
+    if sample_weight <= 0.0 {
+        return;
+    }
+    aggregate.0 += baseline.trend_weight * sample_weight;
+    aggregate.1 += baseline.balance_weight * sample_weight;
+    aggregate.2 += baseline.transition_weight * sample_weight;
+    aggregate.3 += baseline.backtest_edge * sample_weight;
+    aggregate.4 += sample_weight;
+}
+
+fn market_jump_calibration_from_records<'a, I>(
+    records: I,
+) -> BTreeMap<String, PersistedMarketJumpCalibration>
+where
+    I: IntoIterator<Item = (Option<&'a str>, Option<&'a str>, f64)>,
+{
+    let mut grouped: BTreeMap<String, (f64, f64, f64, f64, f64)> = BTreeMap::new();
+    for (market_family, market_behavior_profile, score) in records {
+        let sample_weight = calibration_sample_weight(score);
+        if sample_weight <= 0.0 {
+            continue;
+        }
+        let key = calibration_key(market_family, market_behavior_profile);
+        let baseline = market_jump_calibration(market_family, market_behavior_profile);
+        let aggregate = grouped.entry(key).or_insert((0.0, 0.0, 0.0, 0.0, 0.0));
+        blend_calibration_sample(baseline, aggregate, sample_weight);
+    }
+
+    grouped
+        .into_iter()
+        .filter_map(|(key, (trend, balance, transition, edge, total_weight))| {
+            if total_weight <= 0.0 {
+                return None;
+            }
+            Some((
+                key,
+                PersistedMarketJumpCalibration {
+                    trend_weight: (trend / total_weight).clamp(0.75, 1.35),
+                    balance_weight: (balance / total_weight).clamp(0.75, 1.35),
+                    transition_weight: (transition / total_weight).clamp(0.75, 1.45),
+                    backtest_edge: (edge / total_weight).clamp(-0.25, 0.35),
+                },
+            ))
+        })
+        .collect()
+}
+
+pub fn persist_market_jump_calibration_from_research_runs<P: AsRef<Path>>(
+    state_dir: P,
+    symbol: &str,
+    runs: &[ResearchRunRecord],
+    market_family: Option<&str>,
+    market_behavior_profile: Option<&str>,
+) -> anyhow::Result<BTreeMap<String, PersistedMarketJumpCalibration>> {
+    let calibrations = market_jump_calibration_from_records(
+        runs.iter()
+            .map(|run| (market_family, market_behavior_profile, run.aggregate_return)),
+    );
+    save_state(
+        &state_dir,
+        symbol,
+        MARKET_JUMP_CALIBRATION_FILE,
+        &calibrations,
+    )?;
+    Ok(calibrations)
+}
+
+pub fn persist_market_jump_calibration_from_backtest_runs<P: AsRef<Path>>(
+    state_dir: P,
+    symbol: &str,
+    runs: &[BacktestRunRecord],
+    market_family: Option<&str>,
+    market_behavior_profile: Option<&str>,
+) -> anyhow::Result<BTreeMap<String, PersistedMarketJumpCalibration>> {
+    let calibrations = market_jump_calibration_from_records(
+        runs.iter()
+            .map(|run| (market_family, market_behavior_profile, run.total_return)),
+    );
+    save_state(
+        &state_dir,
+        symbol,
+        MARKET_JUMP_CALIBRATION_FILE,
+        &calibrations,
+    )?;
+    Ok(calibrations)
 }
 
 pub fn backtest_calibrated_market_jump_weight(
@@ -426,5 +527,55 @@ mod tests {
                     Some("energy_volatility_shock_sensitive")
                 )
         );
+    }
+
+    #[test]
+    fn persist_market_jump_calibration_from_research_runs_writes_expected_profile() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "NQ";
+        let runs = vec![ResearchRunRecord {
+            aggregate_return: 0.14,
+            ..ResearchRunRecord::default()
+        }];
+
+        let persisted = persist_market_jump_calibration_from_research_runs(
+            temp.path(),
+            symbol,
+            &runs,
+            Some("energy"),
+            Some("energy_volatility_shock_sensitive"),
+        )
+        .unwrap();
+
+        let overlay = persisted
+            .get("energy::energy_volatility_shock_sensitive")
+            .unwrap();
+        assert!(overlay.transition_weight > 1.0);
+        assert!(overlay.backtest_edge > 0.0);
+    }
+
+    #[test]
+    fn persist_market_jump_calibration_from_backtest_runs_writes_expected_profile() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "GC";
+        let runs = vec![BacktestRunRecord {
+            total_return: -0.08,
+            ..BacktestRunRecord::default()
+        }];
+
+        let persisted = persist_market_jump_calibration_from_backtest_runs(
+            temp.path(),
+            symbol,
+            &runs,
+            Some("metals"),
+            Some("metals_defensive_liquidity_sensitive"),
+        )
+        .unwrap();
+
+        let overlay = persisted
+            .get("metals::metals_defensive_liquidity_sensitive")
+            .unwrap();
+        assert!(overlay.balance_weight > 1.0);
+        assert!(overlay.backtest_edge < 0.0);
     }
 }

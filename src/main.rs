@@ -32,6 +32,8 @@ use ict_engine::application::{
             ExpansionProbabilitySupport as DebugExpansionProbabilitySupport,
         },
         infer_market_from_symbol, multi_timeframe_entry_quality_bias,
+        persist_market_jump_calibration_from_backtest_runs,
+        persist_market_jump_calibration_from_research_runs,
         pipeline_types::ExpansionFactorPipelineReport,
         pre_bayes_evidence_policy, probability_map, FactorPipelineDebugReport,
     },
@@ -12520,7 +12522,14 @@ fn run_factor_research(
         factor_mutation_evaluation: mutation_evaluation.clone(),
         multi_timeframe_summary: report.multi_timeframe_summary.clone(),
     };
-    append_research_run(state_dir, symbol, research_run_record.clone())?;
+    let research_runs = append_research_run(state_dir, symbol, research_run_record.clone())?;
+    persist_market_jump_calibration_from_research_runs(
+        state_dir,
+        symbol,
+        &research_runs,
+        None,
+        None,
+    )?;
     let research_ensemble_vote = build_stub_ensemble_vote_from_research(&report);
     let canonical_scorecards =
         load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
@@ -13251,7 +13260,7 @@ fn run_factor_backtest(
         save_state(state_dir, symbol, BBN_STATE_FILE, &network)?;
     }
     save_learning_state(state_dir, symbol, &learning_state)?;
-    append_backtest_run(
+    let backtest_runs = append_backtest_run(
         state_dir,
         symbol,
         BacktestRunRecord {
@@ -13380,6 +13389,13 @@ fn run_factor_backtest(
             prompt_workflow: report.agent_prompts.workflow.clone(),
             multi_timeframe_summary: report.multi_timeframe_summary.clone(),
         },
+    )?;
+    persist_market_jump_calibration_from_backtest_runs(
+        state_dir,
+        symbol,
+        &backtest_runs,
+        None,
+        None,
     )?;
     report.workflow_snapshot = refresh_workflow_snapshot(state_dir, symbol)?;
     report.artifact_decision_summary = artifact_decision_summary_from_snapshot(
@@ -17731,7 +17747,7 @@ fn finalize_backtest_report(
         &report.decision_thresholds,
     ));
 
-    append_backtest_run(
+    let backtest_runs = append_backtest_run(
         state_dir,
         symbol,
         BacktestRunRecord {
@@ -17774,7 +17790,9 @@ fn finalize_backtest_report(
             residual_structural_break_detected: report.metrics.residual_structural_break_detected,
             rolling_ic_structural_break_score: report.metrics.rolling_ic_structural_break_score,
             rolling_ic_structural_break_index: report.metrics.rolling_ic_structural_break_index,
-            rolling_ic_structural_break_detected: report.metrics.rolling_ic_structural_break_detected,
+            rolling_ic_structural_break_detected: report
+                .metrics
+                .rolling_ic_structural_break_detected,
             factor_score_deltas: score_deltas,
             trade_outcome_deltas: probability_deltas,
             factor_family_decisions: report.factor_family_decisions.clone(),
@@ -17796,6 +17814,13 @@ fn finalize_backtest_report(
             prompt_workflow: report.agent_prompts.workflow.clone(),
             multi_timeframe_summary: Vec::new(),
         },
+    )?;
+    persist_market_jump_calibration_from_backtest_runs(
+        state_dir,
+        symbol,
+        &backtest_runs,
+        None,
+        None,
     )?;
     report.workflow_snapshot = refresh_workflow_snapshot(state_dir, symbol)?;
 
@@ -18320,9 +18345,13 @@ mod tests {
     use super::*;
     use chrono::{Duration, TimeZone};
     use ict_engine::analyze::multi_timeframe_parse::ParsedMultiTimeframeEvidence;
+    use ict_engine::application::belief::{
+        historical_market_jump_weight, persist_market_jump_calibration_from_backtest_runs,
+        persist_market_jump_calibration_from_research_runs,
+    };
     use ict_engine::bbn::trading::topology::build_trading_network;
     use ict_engine::config::build_frame_features_for_market;
-    use ict_engine::state::FactorPipelineLabelSource;
+    use ict_engine::state::{BacktestRunRecord, FactorPipelineLabelSource, ResearchRunRecord};
 
     fn sample_candles(count: usize) -> Vec<Candle> {
         let start = Utc.with_ymd_and_hms(2024, 1, 1, 0, 0, 0).unwrap();
@@ -18339,6 +18368,80 @@ mod tests {
                 }
             })
             .collect()
+    }
+
+    fn test_market_category(symbol: &str) -> Option<&'static str> {
+        match symbol {
+            "ES" | "NQ" | "RTY" | "YM" => Some("futures_index"),
+            "GC" | "SI" | "HG" => Some("metals"),
+            "CL" | "NG" | "RB" => Some("energy"),
+            _ => None,
+        }
+    }
+
+    fn test_market_behavior_profile(category: &str) -> &'static str {
+        match category {
+            "futures_index" => "index_beta_regime_sensitive",
+            "metals" => "metals_defensive_liquidity_sensitive",
+            "energy" => "energy_volatility_shock_sensitive",
+            _ => "generic",
+        }
+    }
+
+    #[test]
+    fn test_research_calibration_writeback_updates_market_jump_weights() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "CL";
+        let runs = vec![ResearchRunRecord {
+            aggregate_return: 0.20,
+            ..ResearchRunRecord::default()
+        }];
+
+        let family = test_market_category(symbol).unwrap();
+        persist_market_jump_calibration_from_research_runs(
+            temp.path(),
+            symbol,
+            &runs,
+            Some(family),
+            Some(test_market_behavior_profile(family)),
+        )
+        .unwrap();
+        let weight = historical_market_jump_weight(
+            temp.path(),
+            symbol,
+            Some("energy"),
+            Some("energy_volatility_shock_sensitive"),
+        );
+
+        assert!(weight > 1.20);
+    }
+
+    #[test]
+    fn test_backtest_calibration_writeback_updates_market_jump_weights() {
+        let temp = tempfile::tempdir().unwrap();
+        let symbol = "GC";
+        let runs = vec![BacktestRunRecord {
+            total_return: -0.12,
+            ..BacktestRunRecord::default()
+        }];
+
+        let family = test_market_category(symbol).unwrap();
+        persist_market_jump_calibration_from_backtest_runs(
+            temp.path(),
+            symbol,
+            &runs,
+            Some(family),
+            Some(test_market_behavior_profile(family)),
+        )
+        .unwrap();
+        let weight = historical_market_jump_weight(
+            temp.path(),
+            symbol,
+            Some("metals"),
+            Some("metals_defensive_liquidity_sensitive"),
+        );
+
+        assert!(weight < 0.98);
     }
 
     #[test]
