@@ -1,4 +1,5 @@
 use anyhow::{anyhow, bail, Result};
+use std::path::PathBuf;
 
 use crate::bbn::{
     dag::BayesianNetwork,
@@ -6,6 +7,28 @@ use crate::bbn::{
     inference::VariableEliminationEngine,
 };
 use crate::state::{PreBayesEvidenceFilter, PreBayesEvidencePacket};
+
+use super::family_overlay::{apply_trading_cpt_family_overlay, load_logic_family_overlays};
+
+fn logic_family_overlay_search_paths() -> Vec<PathBuf> {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    vec![root.join("state/policy_training/repo_bbn_logic_family_overlays.json")]
+}
+
+pub fn apply_family_overlay_from_filter(
+    network: &mut BayesianNetwork,
+    filter: &PreBayesEvidenceFilter,
+) -> Result<bool> {
+    let Some(family) = filter.logic_family.as_deref() else {
+        return Ok(false);
+    };
+    for path in logic_family_overlay_search_paths() {
+        if let Ok(overlays) = load_logic_family_overlays(&path) {
+            return apply_trading_cpt_family_overlay(network, &overlays, family);
+        }
+    }
+    Ok(false)
+}
 
 pub fn trade_evidence_from_labels(
     network: &BayesianNetwork,
@@ -265,7 +288,59 @@ mod tests {
     use crate::state::PreBayesEvidenceFilter;
 
     #[test]
-    fn test_entry_quality_bias_monotonicity() {
+    fn inference_smoke_test_with_loaded_tomac_cpt() {
+        let network = build_trading_network().unwrap();
+        let evidence = trade_evidence_from_labels(
+            &network,
+            &[
+                ("market_regime", "bull"),
+                ("liquidity_context", "favorable"),
+                ("factor_alignment", "bullish"),
+                ("factor_uncertainty", "low"),
+                ("multi_timeframe_resonance", "aligned"),
+            ],
+        )
+        .unwrap();
+
+        let entry_quality = infer_entry_quality(&network, &evidence).unwrap();
+        assert_eq!(entry_quality.len(), 3);
+        assert!((entry_quality.iter().sum::<f64>() - 1.0).abs() < 1e-6);
+
+        let trade_outcome = infer_trade_outcome(&network, &evidence).unwrap();
+        assert_eq!(trade_outcome.len(), 3);
+        assert!((trade_outcome.iter().sum::<f64>() - 1.0).abs() < 1e-6);
+        assert!(trade_outcome[0] >= trade_outcome[2]);
+    }
+
+    #[test]
+    fn family_overlay_changes_trade_outcome_distribution() {
+        let mut network = build_trading_network().unwrap();
+        let evidence = trade_evidence_from_labels(
+            &network,
+            &[
+                ("market_regime", "range"),
+                ("liquidity_context", "favorable"),
+                ("factor_alignment", "bullish"),
+                ("factor_uncertainty", "low"),
+                ("multi_timeframe_resonance", "aligned"),
+            ],
+        )
+        .unwrap();
+        let base = infer_trade_outcome(&network, &evidence).unwrap();
+
+        let filter = PreBayesEvidenceFilter {
+            logic_family: Some("purified_sweep".to_string()),
+            ..PreBayesEvidenceFilter::default()
+        };
+        let applied = apply_family_overlay_from_filter(&mut network, &filter).unwrap();
+        assert!(applied);
+
+        let after = infer_trade_outcome(&network, &evidence).unwrap();
+        assert_ne!(base, after);
+    }
+
+    #[test]
+    fn trade_evidence_from_pre_bayes_filter_prefers_soft_distributions_when_enabled() {
         let low = entry_quality_bias_from_signal(0.2);
         let high = entry_quality_bias_from_signal(0.8);
 

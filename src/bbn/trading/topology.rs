@@ -1,9 +1,20 @@
 use anyhow::Result;
+use std::path::PathBuf;
 
 use crate::bbn::{
     dag::BayesianNetwork,
     node::{ConditionalProbabilityTable, Node, NodeType},
 };
+
+use super::cpt_init::{apply_trading_cpt_init, load_trading_cpt_init};
+
+fn trading_cpt_init_search_paths() -> Vec<PathBuf> {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    vec![
+        root.join("state/policy_training/repo_bbn_trading_cpt_init_smoothed.json"),
+        root.join("state/policy_training/repo_bbn_trading_cpt_init.json"),
+    ]
+}
 
 pub fn build_trading_network() -> Result<BayesianNetwork> {
     let mut network = BayesianNetwork::new();
@@ -74,6 +85,13 @@ pub fn build_trading_network() -> Result<BayesianNetwork> {
 
     populate_entry_quality_cpt(&mut network, None)?;
     populate_trade_outcome_cpt(&mut network, None)?;
+
+    for path in trading_cpt_init_search_paths() {
+        if let Ok(init) = load_trading_cpt_init(&path) {
+            apply_trading_cpt_init(&mut network, &init)?;
+            break;
+        }
+    }
 
     Ok(network)
 }
@@ -385,6 +403,16 @@ mod tests {
                 "factor_uncertainty".to_string()
             ]
         );
+    }
+
+    #[test]
+    fn test_trading_network_prefers_smoothed_tomac_cpt_when_available() {
+        let network = build_trading_network().unwrap();
+        let trade_outcome = network.nodes.get("trade_outcome").unwrap();
+        let high = trade_outcome.cpt.get(&vec![0, 0, 0]).unwrap();
+        assert!(high[0] < 1.0);
+        assert!(high[1] > 0.0);
+        assert!(high[2] > 0.0);
     }
 
     #[test]
