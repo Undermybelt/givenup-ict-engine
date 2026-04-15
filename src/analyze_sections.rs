@@ -96,23 +96,7 @@ pub struct OptionsHedgingSection {
     pub narrative: String,
 }
 
-#[derive(Debug, Serialize)]
-pub struct SmtCorrelationSection {
-    pub probability_role: String,
-    pub paired_market_available: bool,
-    pub futures_symbol: Option<String>,
-    pub spot_symbol: Option<String>,
-    pub rolling_correlation_20: Option<f64>,
-    pub rolling_correlation_50: Option<f64>,
-    pub divergence_detected: Option<bool>,
-    pub cointegration_stat: Option<f64>,
-    pub cointegrated: Option<bool>,
-    pub raw_basis_bps: Option<f64>,
-    pub normalized_basis_bps: Option<f64>,
-    pub rolling_price_ratio_mean: Option<f64>,
-    pub notes: Vec<String>,
-    pub narrative: String,
-}
+pub use crate::analyze::smt_correlation_section::SmtCorrelationSection;
 
 #[derive(Debug, Serialize)]
 pub struct RegimeBayesianSection {
