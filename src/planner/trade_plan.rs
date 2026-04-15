@@ -226,6 +226,8 @@ fn build_trade_plan(
         "NQ" => Symbol::NQ,
         "ES" => Symbol::ES,
         "YM" => Symbol::YM,
+        "GC" => Symbol::GC,
+        "CL" => Symbol::CL,
         _ => Symbol::NQ,
     };
 
@@ -276,6 +278,8 @@ fn no_trade_with_uncertainties(
         "NQ" => Symbol::NQ,
         "ES" => Symbol::ES,
         "YM" => Symbol::YM,
+        "GC" => Symbol::GC,
+        "CL" => Symbol::CL,
         _ => Symbol::NQ,
     };
     let mut uncertainties = uncertainties;
