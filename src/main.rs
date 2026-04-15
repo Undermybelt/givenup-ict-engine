@@ -385,6 +385,9 @@ struct BacktestMetricsSummary {
     mean_prediction_interval_half_width: f64,
     worst_window_miscoverage: f64,
     regime_break_penalty: f64,
+    structural_break_score: f64,
+    structural_break_index: Option<usize>,
+    structural_break_detected: bool,
 }
 
 #[derive(Debug, Serialize)]
@@ -1597,6 +1600,7 @@ fn workflow_status_human_view(
         .filter(|flag| {
             flag.contains("conformal_coverage_low")
                 || flag.contains("regime_break_penalty_high")
+                || flag.contains("structural_break_detected")
                 || flag.contains("conformal_credibility")
         })
         .cloned()
@@ -8979,12 +8983,15 @@ fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> Workflo
         comparison_class: run.dataset_comparability.comparison_class.clone(),
         recommended_next_command: run.recommended_next_command.clone(),
         phase_summary: format!(
-            "total_return={:.4} trade_count={} source={} coverage_1sigma={:.3} break_penalty={:.3} {}",
+            "total_return={:.4} trade_count={} source={} coverage_1sigma={:.3} break_penalty={:.3} structural_break_detected={} structural_break_score={:.3} structural_break_index={:?} {}",
             run.total_return,
             run.trade_count,
             run.source_command,
             run.conformal_coverage_1sigma,
             run.regime_break_penalty,
+            run.structural_break_detected,
+            run.structural_break_score,
+            run.structural_break_index,
             multi_timeframe_phase_hint(&run.multi_timeframe_summary)
         ),
         top_actions: workflow_top_actions(&run.agent_action_plan),
@@ -9277,7 +9284,9 @@ fn workflow_blocking_truth(
     }
     if let Some(phase) = current_phase {
         if let Some(credibility_block) = phase.risk_flags.iter().find(|flag| {
-            flag.contains("conformal_coverage_low") || flag.contains("regime_break_penalty_high")
+            flag.contains("conformal_coverage_low")
+                || flag.contains("regime_break_penalty_high")
+                || flag.contains("structural_break_detected")
         }) {
             return WorkflowBlockingTruth {
                 stage: phase.phase.clone(),
@@ -11847,6 +11856,21 @@ fn factor_backtest_command(
             .iter()
             .map(|result| (result.factor_name.clone(), result.metrics.regime_break_penalty))
             .collect::<Vec<_>>(),
+        "structural_break_score": report
+            .factor_results
+            .iter()
+            .map(|result| (result.factor_name.clone(), result.metrics.structural_break_score))
+            .collect::<Vec<_>>(),
+        "structural_break_detected": report
+            .factor_results
+            .iter()
+            .map(|result| (result.factor_name.clone(), result.metrics.structural_break_detected))
+            .collect::<Vec<_>>(),
+        "structural_break_index": report
+            .factor_results
+            .iter()
+            .map(|result| (result.factor_name.clone(), result.metrics.structural_break_index))
+            .collect::<Vec<_>>(),
     });
     let compact_report = build_backtest_result_artifact(
         format!("factor_backtest:{}", symbol),
@@ -11871,6 +11895,22 @@ fn factor_backtest_command(
                     .factor_results
                     .first()
                     .map(|result| result.metrics.regime_break_penalty)
+                    .unwrap_or_default()
+            ),
+            format!(
+                "structural_break_detected={}",
+                report
+                    .factor_results
+                    .first()
+                    .map(|result| result.metrics.structural_break_detected)
+                    .unwrap_or(false)
+            ),
+            format!(
+                "structural_break_score={:.3}",
+                report
+                    .factor_results
+                    .first()
+                    .map(|result| result.metrics.structural_break_score)
                     .unwrap_or_default()
             ),
         ],
@@ -12207,6 +12247,20 @@ fn run_factor_research(
             )
         })
         .collect::<Vec<_>>();
+    let structural_break_caution = report
+        .backtest
+        .factor_results
+        .iter()
+        .filter(|result| result.metrics.structural_break_detected)
+        .map(|result| {
+            format!(
+                "structural_break_detected:{}:score={:.3}:index={:?}",
+                result.factor_name,
+                result.metrics.structural_break_score,
+                result.metrics.structural_break_index
+            )
+        })
+        .collect::<Vec<_>>();
     report
         .artifact_action_summary
         .extend(coverage_caution.iter().cloned());
@@ -12234,6 +12288,9 @@ fn run_factor_research(
     report
         .artifact_action_summary
         .extend(break_caution.iter().cloned());
+    report
+        .artifact_action_summary
+        .extend(structural_break_caution.iter().cloned());
     report.agent_action_plan = build_agent_action_plan(
         "research_review_ready",
         &report.promotion_decision,
@@ -13215,6 +13272,20 @@ fn run_factor_backtest(
                 .first()
                 .map(|result| result.metrics.regime_break_penalty)
                 .unwrap_or_default(),
+            structural_break_score: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.structural_break_score)
+                .unwrap_or_default(),
+            structural_break_index: report
+                .factor_results
+                .first()
+                .and_then(|result| result.metrics.structural_break_index),
+            structural_break_detected: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.structural_break_detected)
+                .unwrap_or(false),
             factor_score_deltas: score_deltas,
             trade_outcome_deltas: report.trade_outcome_deltas.clone(),
             factor_family_decisions,
@@ -14117,6 +14188,9 @@ fn run_probabilistic_backtest(
             mean_prediction_interval_half_width: 0.0,
             worst_window_miscoverage: 0.0,
             regime_break_penalty: 0.0,
+            structural_break_score: 0.0,
+            structural_break_index: None,
+            structural_break_detected: false,
         },
         equity_curve,
         regime_metrics,
@@ -17607,6 +17681,9 @@ fn finalize_backtest_report(
             mean_prediction_interval_half_width: report.metrics.mean_prediction_interval_half_width,
             worst_window_miscoverage: report.metrics.worst_window_miscoverage,
             regime_break_penalty: report.metrics.regime_break_penalty,
+            structural_break_score: report.metrics.structural_break_score,
+            structural_break_index: report.metrics.structural_break_index,
+            structural_break_detected: report.metrics.structural_break_detected,
             factor_score_deltas: score_deltas,
             trade_outcome_deltas: probability_deltas,
             factor_family_decisions: report.factor_family_decisions.clone(),

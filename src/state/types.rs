@@ -1533,6 +1533,12 @@ pub struct BacktestRunRecord {
     pub worst_window_miscoverage: f64,
     #[serde(default)]
     pub regime_break_penalty: f64,
+    #[serde(default)]
+    pub structural_break_score: f64,
+    #[serde(default)]
+    pub structural_break_index: Option<usize>,
+    #[serde(default)]
+    pub structural_break_detected: bool,
     pub factor_score_deltas: Vec<RankingDiffItem>,
     pub trade_outcome_deltas: Vec<ProbabilityDiff>,
     pub factor_family_decisions: Vec<FactorFamilyDecision>,
