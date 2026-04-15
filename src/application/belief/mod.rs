@@ -11,8 +11,8 @@ pub mod shared;
 pub use jump_model_sidecar::{
     backtest_calibrated_market_jump_weight, build_jump_model_regime_sidecar,
     build_jump_model_regime_sidecar_with_history, build_regime_disagreement_summary,
-    historical_market_jump_weight, jump_model_workflow_summary,
-    persist_market_jump_calibration_from_backtest_runs,
+    historical_market_jump_weight, jump_calibration_gate_workflow_summary,
+    jump_model_workflow_summary, persist_market_jump_calibration_from_backtest_runs,
     persist_market_jump_calibration_from_research_runs,
 };
 pub use pipeline_builder::{

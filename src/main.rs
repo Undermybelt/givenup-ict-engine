@@ -1648,15 +1648,8 @@ fn workflow_status_human_view(
         "pending_actions": snapshot.pending_actions,
         "risk_flags": snapshot.risk_flags,
         "historical_data_candidates": selected_data_candidates,
-        "jump_model": snapshot
-            .latest_ensemble_vote
-            .as_ref()
-            .and_then(|vote| {
-                vote.executor_summaries
-                    .iter()
-                    .find(|line| line.contains("jump_model"))
-                    .cloned()
-            }),
+        "jump_model": ict_engine::application::belief::jump_model_workflow_summary(snapshot),
+        "jump_calibration_gate": ict_engine::application::belief::jump_calibration_gate_workflow_summary(snapshot),
         "jump_disagreement": snapshot
             .latest_ensemble_vote
             .as_ref()
@@ -1703,6 +1696,8 @@ fn sample_human_workflow_snapshot() -> ict_engine::state::WorkflowSnapshot {
         executor_summaries: vec![
             "executor=catboost_stub action=observe confidence=0.500".to_string(),
             "jump_model active_state=jump_transition confidence=0.500 transition_risk=0.500"
+                .to_string(),
+            "jump_calibration_gate outcome=accepted sample_count=4 cooldown_status=ready"
                 .to_string(),
         ],
         split_explanations: vec!["active_regime=research".to_string()],
@@ -18346,7 +18341,8 @@ mod tests {
     use chrono::{Duration, TimeZone};
     use ict_engine::analyze::multi_timeframe_parse::ParsedMultiTimeframeEvidence;
     use ict_engine::application::belief::{
-        historical_market_jump_weight, persist_market_jump_calibration_from_backtest_runs,
+        historical_market_jump_weight, jump_calibration_gate_workflow_summary,
+        jump_model_workflow_summary, persist_market_jump_calibration_from_backtest_runs,
         persist_market_jump_calibration_from_research_runs,
     };
     use ict_engine::bbn::trading::topology::build_trading_network;
@@ -22089,8 +22085,29 @@ mod tests {
         assert_eq!(
             value["jump_model"],
             serde_json::json!(
-                "jump_model active_state=jump_transition confidence=0.500 transition_risk=0.500"
+                "jump_model active_state=jump_transition confidence=0.500 transition_risk=0.500; jump_calibration_gate outcome=accepted sample_count=4 cooldown_status=ready"
             )
+        );
+        assert_eq!(
+            value["jump_calibration_gate"],
+            serde_json::json!(
+                "jump_calibration_gate outcome=accepted sample_count=4 cooldown_status=ready"
+            )
+        );
+    }
+
+    #[test]
+    fn test_jump_workflow_summaries_surface_calibration_gate() {
+        let snapshot = sample_human_workflow_snapshot();
+        assert_eq!(
+            jump_model_workflow_summary(&snapshot).as_deref(),
+            Some(
+                "jump_model active_state=jump_transition confidence=0.500 transition_risk=0.500; jump_calibration_gate outcome=accepted sample_count=4 cooldown_status=ready"
+            )
+        );
+        assert_eq!(
+            jump_calibration_gate_workflow_summary(&snapshot).as_deref(),
+            Some("jump_calibration_gate outcome=accepted sample_count=4 cooldown_status=ready")
         );
     }
 

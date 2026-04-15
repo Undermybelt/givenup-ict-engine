@@ -456,9 +456,27 @@ fn build_jump_model_regime_sidecar_inner(
 
 pub fn jump_model_workflow_summary(snapshot: &WorkflowSnapshot) -> Option<String> {
     let vote = snapshot.latest_ensemble_vote.as_ref()?;
+    let jump_model = vote
+        .executor_summaries
+        .iter()
+        .find(|line| line.contains("jump_model"))?;
+    let gating_outcome = vote
+        .executor_summaries
+        .iter()
+        .find(|line| line.contains("jump_calibration_gate"))
+        .cloned();
+
+    Some(match gating_outcome {
+        Some(gating_outcome) => format!("{jump_model}; {gating_outcome}"),
+        None => jump_model.clone(),
+    })
+}
+
+pub fn jump_calibration_gate_workflow_summary(snapshot: &WorkflowSnapshot) -> Option<String> {
+    let vote = snapshot.latest_ensemble_vote.as_ref()?;
     vote.executor_summaries
         .iter()
-        .find(|line| line.contains("jump_model"))
+        .find(|line| line.contains("jump_calibration_gate"))
         .cloned()
 }
 
