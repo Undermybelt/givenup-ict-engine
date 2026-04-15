@@ -1,9 +1,47 @@
 use std::collections::BTreeMap;
 
 use crate::domain::belief::{BeliefEvidencePacket, BeliefNodePosteriorSnapshot};
-use crate::domain::regime::{RegimeFeatures, RegimeGateDecision, RegimePosterior};
+use crate::domain::regime::{
+    JumpModelRegimeSummary, RegimeFeatures, RegimeGateDecision, RegimePosterior,
+};
 use crate::domain::strategy::StrategyRecommendation;
 use crate::state::{FactorPipelineLabelSource, PreBayesEvidenceFilter, PreBayesEvidencePacket};
+
+fn market_category(market: Option<&str>) -> Option<String> {
+    let market = market?.to_ascii_uppercase();
+    let category = match market.as_str() {
+        "NQ" | "ES" | "YM" => "futures_index",
+        "GC" => "metals",
+        "CL" => "energy",
+        _ => return None,
+    };
+    Some(category.to_string())
+}
+
+fn market_behavior_profile(category: &str) -> &'static str {
+    match category {
+        "futures_index" => "index_beta_regime_sensitive",
+        "metals" => "metals_defensive_liquidity_sensitive",
+        "energy" => "energy_volatility_shock_sensitive",
+        _ => "generic",
+    }
+}
+
+fn packet_market_family(packet: &BeliefEvidencePacket) -> Option<String> {
+    packet
+        .market_evidence
+        .iter()
+        .find_map(|line| line.strip_prefix("market_category="))
+        .map(str::to_string)
+}
+
+fn packet_market_behavior_profile(packet: &BeliefEvidencePacket) -> Option<String> {
+    packet
+        .market_evidence
+        .iter()
+        .find_map(|line| line.strip_prefix("market_behavior_profile="))
+        .map(str::to_string)
+}
 
 pub fn belief_evidence_packet_from_pre_bayes_filter(
     symbol: &str,
@@ -14,6 +52,13 @@ pub fn belief_evidence_packet_from_pre_bayes_filter(
     raw_multi_timeframe_resonance_trace: Option<&FactorPipelineLabelSource>,
 ) -> BeliefEvidencePacket {
     let mut market_evidence = Vec::new();
+    if let Some(category) = market_category(market.or(Some(symbol))) {
+        market_evidence.push(format!("market_category={category}"));
+        market_evidence.push(format!(
+            "market_behavior_profile={}",
+            market_behavior_profile(&category)
+        ));
+    }
     if let Some(trace) = raw_market_regime_trace {
         market_evidence.extend(trace.evidence.clone());
     }
@@ -73,10 +118,21 @@ pub fn belief_evidence_packet_from_pre_bayes_filter(
         );
     }
 
+    let entry_logic_id = filter.entry_logic_id.clone();
+    let logic_family = filter.logic_family.clone();
+    if let Some(value) = &entry_logic_id {
+        factor_evidence.push(format!("entry_logic_id={value}"));
+    }
+    if let Some(value) = &logic_family {
+        factor_evidence.push(format!("logic_family={value}"));
+    }
+
     BeliefEvidencePacket {
         symbol: symbol.to_string(),
         market: market.map(str::to_string),
         timestamp: None,
+        entry_logic_id,
+        logic_family,
         regime_features: RegimeFeatures {
             market_regime_label: Some(filter.filtered_market_regime_label.clone()),
             volatility_regime_label: Some(filter.filtered_factor_uncertainty.clone()),
@@ -162,6 +218,9 @@ pub fn regime_posterior_from_pre_bayes_filter(filter: &PreBayesEvidenceFilter) -
 
     RegimePosterior {
         active_regime,
+        market_family: None,
+        market_behavior_profile: None,
+        jump_model: None,
         probabilities,
         confidence: Some(filter.evidence_quality_score),
         credible_intervals: BTreeMap::new(),
@@ -169,14 +228,159 @@ pub fn regime_posterior_from_pre_bayes_filter(filter: &PreBayesEvidenceFilter) -
     }
 }
 
+pub fn jump_model_summary_from_belief_packet(packet: &BeliefEvidencePacket) -> JumpModelRegimeSummary {
+    let market_label = packet
+        .regime_features
+        .market_regime_label
+        .as_deref()
+        .unwrap_or("range");
+    let resonance_label = packet
+        .multi_timeframe_evidence
+        .get("filtered_resonance_label")
+        .map(|value| value.as_str())
+        .unwrap_or("mixed");
+    let stress = packet.regime_features.stress_score.unwrap_or(0.5).clamp(0.0, 1.0);
+    let transition = packet
+        .regime_features
+        .transition_score
+        .unwrap_or(0.0)
+        .clamp(0.0, 1.0);
+    let trend_score = match market_label {
+        "bull" | "bear" | "trend" => 0.62,
+        "range" => 0.18,
+        _ => 0.34,
+    };
+    let balance_score = match market_label {
+        "range" => 0.58,
+        "bull" | "bear" | "trend" => 0.20,
+        _ => 0.30,
+    };
+    let jump_score = match resonance_label {
+        "dislocated" => 0.66,
+        "mixed" => 0.42,
+        "aligned" => 0.18,
+        _ => 0.34,
+    } + stress * 0.18
+        + transition * 0.24;
+
+    let raw = [
+        ("trend_persistent".to_string(), trend_score),
+        ("balance_mean_revert".to_string(), balance_score),
+        ("jump_transition".to_string(), jump_score),
+    ];
+    let total = raw.iter().map(|(_, value)| value.max(0.0)).sum::<f64>();
+    let state_probabilities = raw
+        .into_iter()
+        .map(|(label, value)| {
+            let normalized = if total > 0.0 {
+                value.max(0.0) / total
+            } else {
+                1.0 / 3.0
+            };
+            (label, normalized)
+        })
+        .collect::<BTreeMap<_, _>>();
+    let (active_state, confidence) = state_probabilities
+        .iter()
+        .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
+        .map(|(label, probability)| (label.clone(), *probability))
+        .unwrap_or_else(|| ("balance_mean_revert".to_string(), 1.0 / 3.0));
+    let transition_risk = state_probabilities
+        .get("jump_transition")
+        .copied()
+        .unwrap_or_default();
+
+    JumpModelRegimeSummary {
+        active_state: active_state.clone(),
+        confidence,
+        transition_risk,
+        state_probabilities,
+        evidence: vec![
+            format!("jump_model.active_state={active_state}"),
+            format!("jump_model.market_regime={market_label}"),
+            format!("jump_model.resonance={resonance_label}"),
+            format!("jump_model.stress={stress:.3}"),
+        ],
+    }
+}
+
+pub fn regime_posterior_from_belief_packet(packet: &BeliefEvidencePacket) -> RegimePosterior {
+    let mut posterior = regime_posterior_from_pre_bayes_filter(&PreBayesEvidenceFilter {
+        filtered_market_regime_label: packet
+            .regime_features
+            .market_regime_label
+            .clone()
+            .unwrap_or_else(|| "range".to_string()),
+        filtered_liquidity_context_label: packet
+            .regime_features
+            .liquidity_regime_label
+            .clone()
+            .unwrap_or_else(|| "neutral".to_string()),
+        filtered_multi_timeframe_resonance_label: packet
+            .multi_timeframe_evidence
+            .get("filtered_resonance_label")
+            .cloned()
+            .unwrap_or_else(|| "mixed".to_string()),
+        evidence_quality_score: 1.0
+            - packet
+                .regime_features
+                .stress_score
+                .unwrap_or(0.5)
+                .clamp(0.0, 1.0),
+        uses_soft_evidence: false,
+        rationale: packet.factor_evidence.clone(),
+        ..PreBayesEvidenceFilter::default()
+    });
+    posterior.market_family = packet_market_family(packet);
+    posterior.market_behavior_profile = packet_market_behavior_profile(packet);
+    posterior.jump_model = Some(jump_model_summary_from_belief_packet(packet));
+    if let Some(family) = posterior.market_family.as_deref() {
+        match family {
+            "metals" => {
+                if let Some(stress) = posterior.probabilities.get_mut("stress") {
+                    *stress = (*stress + 0.08).clamp(0.0, 1.0);
+                }
+            }
+            "energy" => {
+                if let Some(transition) = posterior.probabilities.get_mut("transition") {
+                    *transition = (*transition + 0.10).clamp(0.0, 1.0);
+                }
+                if let Some(stress) = posterior.probabilities.get_mut("stress") {
+                    *stress = (*stress + 0.04).clamp(0.0, 1.0);
+                }
+            }
+            _ => {}
+        }
+        posterior.active_regime = posterior
+            .probabilities
+            .iter()
+            .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
+            .map(|(k, _)| k.clone());
+        posterior.evidence.push(format!("market_family={family}"));
+    }
+    if let Some(profile) = posterior.market_behavior_profile.clone() {
+        posterior
+            .evidence
+            .push(format!("market_behavior_profile={profile}"));
+    }
+    posterior
+}
+
 pub fn gate_decision_from_regime_posterior(posterior: &RegimePosterior) -> RegimeGateDecision {
     let selected = posterior
         .active_regime
         .clone()
         .unwrap_or_else(|| "range".to_string());
+    let market_subgraph = posterior
+        .market_family
+        .as_deref()
+        .filter(|family| *family != "generic")
+        .map(|family| format!("{}_{}_subgraph", family, selected))
+        .unwrap_or_else(|| format!("{}_subgraph", selected));
     RegimeGateDecision {
-        selected_subgraph: format!("{}_subgraph", selected),
+        selected_subgraph: market_subgraph,
         selected_regime: selected,
+        market_family: posterior.market_family.clone(),
         rationale: posterior.evidence.clone(),
     }
 }
@@ -185,6 +389,9 @@ pub fn strategy_recommendation_from_pre_bayes_filter(
     filter: &PreBayesEvidenceFilter,
     selected_direction: &str,
     selected_win_probability: f64,
+    market_family: Option<&str>,
+    market_behavior_profile: Option<&str>,
+    selected_market_subgraph: Option<&str>,
 ) -> StrategyRecommendation {
     let aggression_level =
         if filter.gating_status == "pass_hard" && selected_win_probability >= 0.60 {
@@ -195,22 +402,46 @@ pub fn strategy_recommendation_from_pre_bayes_filter(
             "balanced"
         };
 
+    let mut sizing_multiplier = match aggression_level {
+        "aggressive" => 1.0,
+        "balanced" => 0.65,
+        _ => 0.35,
+    };
+    match market_family {
+        Some("energy") => sizing_multiplier *= 0.85,
+        Some("metals") => sizing_multiplier *= 0.92,
+        Some("futures_index") => {}
+        _ => {}
+    }
+
+    let mut invalidate_if = vec![
+        format!("gating_status={}", filter.gating_status),
+        format!(
+            "liquidity_context={}",
+            filter.filtered_liquidity_context_label
+        ),
+    ];
+    if let Some(family) = market_family {
+        invalidate_if.push(format!("market_family={family}"));
+    }
+    if let Some(profile) = market_behavior_profile {
+        invalidate_if.push(format!("market_behavior_profile={profile}"));
+    }
+
+    let mut rationale = filter.rationale.clone();
+    if let Some(subgraph) = selected_market_subgraph {
+        rationale.push(format!("selected_market_subgraph={subgraph}"));
+    }
+
     StrategyRecommendation {
         direction: selected_direction.to_string(),
         aggression_level: aggression_level.to_string(),
-        sizing_multiplier: match aggression_level {
-            "aggressive" => 1.0,
-            "balanced" => 0.65,
-            _ => 0.35,
-        },
-        invalidate_if: vec![
-            format!("gating_status={}", filter.gating_status),
-            format!(
-                "liquidity_context={}",
-                filter.filtered_liquidity_context_label
-            ),
-        ],
-        rationale: filter.rationale.clone(),
+        sizing_multiplier,
+        market_family: market_family.map(str::to_string),
+        market_behavior_profile: market_behavior_profile.map(str::to_string),
+        selected_market_subgraph: selected_market_subgraph.map(str::to_string),
+        invalidate_if,
+        rationale,
     }
 }
 
@@ -222,7 +453,7 @@ pub fn belief_snapshot_from_distribution(
         .iter()
         .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
         .map(|(state, prob)| (state.clone(), *prob))
-        .unwrap_or_else(|| ("unknown".to_string(), 0.0));
+        .unwrap_or_else(|| ("state_unavailable".to_string(), 0.0));
 
     let entropy = probabilities
         .values()
@@ -297,9 +528,49 @@ mod tests {
         };
         let posterior = regime_posterior_from_pre_bayes_filter(&filter);
         let gate = gate_decision_from_regime_posterior(&posterior);
-        let strategy = strategy_recommendation_from_pre_bayes_filter(&filter, "bear", 0.54);
+        let strategy =
+            strategy_recommendation_from_pre_bayes_filter(&filter, "bear", 0.54, None, None, None);
         assert!(posterior.probabilities.contains_key("stress"));
         assert!(gate.selected_subgraph.ends_with("_subgraph"));
         assert_eq!(strategy.aggression_level, "conservative");
+    }
+
+    #[test]
+    fn belief_packet_market_family_changes_regime_and_subgraph() {
+        let packet = BeliefEvidencePacket {
+            symbol: "CL".to_string(),
+            market: Some("CL".to_string()),
+            market_evidence: vec![
+                "market_category=energy".to_string(),
+                "market_behavior_profile=energy_volatility_shock_sensitive".to_string(),
+            ],
+            factor_evidence: vec!["shock".to_string()],
+            regime_features: RegimeFeatures {
+                market_regime_label: Some("bull".to_string()),
+                liquidity_regime_label: Some("hostile".to_string()),
+                stress_score: Some(0.45),
+                ..RegimeFeatures::default()
+            },
+            multi_timeframe_evidence: BTreeMap::from([(
+                "filtered_resonance_label".to_string(),
+                "dislocated".to_string(),
+            )]),
+            ..BeliefEvidencePacket::default()
+        };
+
+        let posterior = regime_posterior_from_belief_packet(&packet);
+        let gate = gate_decision_from_regime_posterior(&posterior);
+
+        assert_eq!(posterior.market_family.as_deref(), Some("energy"));
+        assert_eq!(
+            posterior.market_behavior_profile.as_deref(),
+            Some("energy_volatility_shock_sensitive")
+        );
+        assert!(posterior
+            .evidence
+            .iter()
+            .any(|line| line == "market_family=energy"));
+        assert_eq!(gate.market_family.as_deref(), Some("energy"));
+        assert!(gate.selected_subgraph.starts_with("energy_"));
     }
 }

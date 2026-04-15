@@ -1646,6 +1646,15 @@ fn workflow_status_human_view(
         "pending_actions": snapshot.pending_actions,
         "risk_flags": snapshot.risk_flags,
         "historical_data_candidates": selected_data_candidates,
+        "jump_model": snapshot
+            .latest_ensemble_vote
+            .as_ref()
+            .and_then(|vote| {
+                vote.executor_summaries
+                    .iter()
+                    .find(|line| line.contains("jump_model"))
+                    .cloned()
+            }),
     })
 }
 
@@ -1680,7 +1689,11 @@ fn sample_human_workflow_snapshot() -> ict_engine::state::WorkflowSnapshot {
         confidence: 0.5,
         consensus_strength: 0.5,
         disagreement_flags: Vec::new(),
-        executor_summaries: vec!["executor=catboost_stub action=observe confidence=0.500".to_string()],
+        executor_summaries: vec![
+            "executor=catboost_stub action=observe confidence=0.500".to_string(),
+            "jump_model active_state=jump_transition confidence=0.500 transition_risk=0.500"
+                .to_string(),
+        ],
         split_explanations: vec!["active_regime=research".to_string()],
         executor_scorecards: vec![EnsembleExecutorScorecard {
             executor: "catboost_stub".to_string(),
@@ -21932,6 +21945,12 @@ mod tests {
         assert_eq!(
             value["ensemble_consensus"]["executor_scorecards"][0]["latest_weight_hint"],
             0.55
+        );
+        assert_eq!(
+            value["jump_model"],
+            serde_json::json!(
+                "jump_model active_state=jump_transition confidence=0.500 transition_risk=0.500"
+            )
         );
     }
 

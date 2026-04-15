@@ -7,7 +7,8 @@ use crate::domain::belief::{
 
 use super::{BeliefInferenceEngine, ExactEngine, InferenceRequest, LoopyEngine, SamplingEngine};
 use crate::bbn::adapters::{
-    gate_decision_from_regime_posterior, strategy_recommendation_from_pre_bayes_filter,
+    gate_decision_from_regime_posterior, jump_model_summary_from_belief_packet,
+    strategy_recommendation_from_pre_bayes_filter,
 };
 use crate::state::PreBayesEvidenceFilter;
 
@@ -36,7 +37,12 @@ impl Default for InferenceEngineRegistry {
 impl InferenceEngineRegistry {
     pub fn build_report(&self, packet: BeliefEvidencePacket) -> Result<BeliefReportPacket> {
         let request = InferenceRequest { packet };
-        let regime_posterior = self.primary.infer_regime(&request)?;
+        let regime_posterior =
+            crate::bbn::adapters::regime_posterior_from_belief_packet(&request.packet);
+        let jump_model = regime_posterior
+            .jump_model
+            .clone()
+            .unwrap_or_else(|| jump_model_summary_from_belief_packet(&request.packet));
         let gate_decision = gate_decision_from_regime_posterior(&regime_posterior);
         let belief_posteriors = self.primary.infer_beliefs(&request)?;
         let credible_intervals = self.primary.credible_intervals(&request)?;
@@ -80,8 +86,14 @@ impl InferenceEngineRegistry {
             },
             ..PreBayesEvidenceFilter::default()
         };
-        let strategy_recommendation =
-            strategy_recommendation_from_pre_bayes_filter(&pseudo_filter, selected_direction, 0.55);
+        let strategy_recommendation = strategy_recommendation_from_pre_bayes_filter(
+            &pseudo_filter,
+            selected_direction,
+            0.55,
+            regime_posterior.market_family.as_deref(),
+            regime_posterior.market_behavior_profile.as_deref(),
+            Some(gate_decision.selected_subgraph.as_str()),
+        );
 
         let mut match_rate = std::collections::BTreeMap::new();
         let mut kl_divergence = std::collections::BTreeMap::new();
@@ -92,6 +104,11 @@ impl InferenceEngineRegistry {
             shadow_names.push(engine.name().to_string());
             let shadow_beliefs = engine.infer_beliefs(&request)?;
             let shadow_intervals = engine.credible_intervals(&request)?;
+            let shadow_direction = shadow_beliefs
+                .iter()
+                .find(|item| item.node_id == "trade_outcome")
+                .map(|item| item.top_state.clone())
+                .unwrap_or_else(|| strategy_recommendation.direction.clone());
             for primary in &belief_posteriors {
                 if let Some(shadow) = shadow_beliefs
                     .iter()
@@ -127,11 +144,7 @@ impl InferenceEngineRegistry {
                         .insert(format!("{}:{}", engine.name(), primary.node_id), overlap);
                 }
             }
-            recommendation_drift.push(format!(
-                "{}:direction={}",
-                engine.name(),
-                strategy_recommendation.direction
-            ));
+            recommendation_drift.push(format!("{}:direction={}", engine.name(), shadow_direction));
         }
 
         let node_count = belief_posteriors.len();
@@ -145,7 +158,30 @@ impl InferenceEngineRegistry {
         };
         let temporal_summary = bootstrap_particle_summary(
             regime_posterior.active_regime.as_deref().unwrap_or("range"),
+            regime_posterior.market_family.as_deref(),
+            regime_posterior.market_behavior_profile.as_deref(),
         );
+
+        let market_family = regime_posterior.market_family.clone();
+        let market_behavior_profile = regime_posterior.market_behavior_profile.clone();
+        let selected_market_subgraph = Some(gate_decision.selected_subgraph.clone());
+        let belief_posteriors = belief_posteriors
+            .into_iter()
+            .map(|mut item| {
+                if let Some(family) = market_family.as_deref() {
+                    item.probabilities.insert(
+                        "market_family_weight".to_string(),
+                        match family {
+                            "energy" => 0.96,
+                            "metals" => 0.88,
+                            "futures_index" => 0.75,
+                            _ => 0.50,
+                        },
+                    );
+                }
+                item
+            })
+            .collect();
 
         Ok(BeliefReportPacket {
             regime_posterior,
@@ -153,12 +189,22 @@ impl InferenceEngineRegistry {
             belief_posteriors,
             credible_intervals,
             strategy_recommendation,
+            regime_companion: crate::domain::belief::RegimeCompanionPacket {
+                jump_model: Some(jump_model.clone()),
+            },
+            market_family,
+            market_behavior_profile,
+            selected_market_subgraph,
             engine_trace: EngineTrace {
                 primary_engine: self.primary.name().to_string(),
                 shadow_engine: Some(shadow_engine_names.clone()),
                 sample_count: Some(self.shadow.len()),
                 notes: vec![
                     "registry_build_report_v3".to_string(),
+                    format!(
+                        "jump_model_state={} confidence={:.3} transition_risk={:.3}",
+                        jump_model.active_state, jump_model.confidence, jump_model.transition_risk
+                    ),
                     format!(
                         "particle_count={} ess={:.2} dominant_regime={}",
                         temporal_summary.particle_count,
@@ -171,11 +217,13 @@ impl InferenceEngineRegistry {
             shadow_comparison: Some(ShadowComparisonSummary {
                 status: shadow_status.clone(),
                 summary_line: format!(
-                    "primary={} shadow={} nodes={} status={} particle_count={} ess={:.2}",
+                    "primary={} shadow={} nodes={} status={} jump_model={} transition_risk={:.3} particle_count={} ess={:.2}",
                     self.primary.name(),
                     shadow_engine_names,
                     node_count,
                     shadow_status,
+                    jump_model.active_state,
+                    jump_model.transition_risk,
                     temporal_summary.particle_count,
                     temporal_summary.effective_sample_size
                 ),
@@ -199,8 +247,10 @@ mod tests {
         let report = registry
             .build_report(BeliefEvidencePacket {
                 symbol: "NQ".to_string(),
-                market: Some("futures".to_string()),
+                market: Some("NQ".to_string()),
                 timestamp: None,
+                entry_logic_id: None,
+                logic_family: None,
                 regime_features: crate::domain::regime::RegimeFeatures {
                     market_regime_label: Some("bull".to_string()),
                     volatility_regime_label: Some("low".to_string()),
@@ -209,7 +259,10 @@ mod tests {
                     transition_score: Some(0.1),
                     evidence: vec![],
                 },
-                market_evidence: vec![],
+                market_evidence: vec![
+                    "market_category=futures_index".to_string(),
+                    "market_behavior_profile=index_beta_regime_sensitive".to_string(),
+                ],
                 factor_evidence: vec!["aligned".to_string()],
                 timed_pda_summary: BTreeMap::new(),
                 multi_timeframe_evidence: BTreeMap::from([(
@@ -225,13 +278,55 @@ mod tests {
             .unwrap();
         assert!(!report.engine_trace.primary_engine.is_empty());
         assert!(!report.belief_posteriors.is_empty());
-        assert_eq!(report.gate_decision.selected_subgraph, "trend_subgraph");
-        assert!(report.shadow_comparison.is_some());
+        assert_eq!(
+            report.gate_decision.market_family.as_deref(),
+            Some("futures_index")
+        );
+        assert_eq!(
+            report.gate_decision.selected_subgraph,
+            "futures_index_trend_subgraph"
+        );
+        assert_eq!(report.market_family.as_deref(), Some("futures_index"));
+        assert_eq!(
+            report.selected_market_subgraph.as_deref(),
+            Some("futures_index_trend_subgraph")
+        );
+        assert_eq!(
+            report.strategy_recommendation.market_family.as_deref(),
+            Some("futures_index")
+        );
+        assert!(
+            report
+                .temporal_summary
+                .as_ref()
+                .unwrap()
+                .market_family
+                .as_deref()
+                == Some("futures_index")
+        );
+        let shadow = report.shadow_comparison.as_ref().unwrap();
+        assert!(shadow.summary_line.contains("particle_count="));
+        assert!(shadow
+            .recommendation_drift
+            .iter()
+            .any(|line| line.starts_with("sampling-stub:direction=")));
+        assert!(shadow
+            .recommendation_drift
+            .iter()
+            .all(|line| !line.ends_with(":direction=bull")));
+        assert_eq!(
+            report
+                .regime_companion
+                .jump_model
+                .as_ref()
+                .map(|item| item.active_state.as_str()),
+            Some("trend_persistent")
+        );
+        assert!(shadow.summary_line.contains("jump_model="));
         assert!(report
-            .shadow_comparison
-            .as_ref()
-            .unwrap()
-            .summary_line
-            .contains("particle_count="));
+            .engine_trace
+            .notes
+            .iter()
+            .any(|note| note.contains("jump_model_state=")));
     }
 }

@@ -1,5 +1,7 @@
 use crate::bbn::temporal::ParticleBeliefSummary;
-use crate::domain::regime::{RegimeFeatures, RegimeGateDecision, RegimePosterior};
+use crate::domain::regime::{
+    JumpModelRegimeSummary, RegimeFeatures, RegimeGateDecision, RegimePosterior,
+};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -56,8 +58,14 @@ pub struct ShadowComparisonSummary {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct RegimeCompanionPacket {
+    pub jump_model: Option<JumpModelRegimeSummary>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct BeliefReportPacket {
     pub regime_posterior: RegimePosterior,
+    pub regime_companion: RegimeCompanionPacket,
     pub gate_decision: RegimeGateDecision,
     pub belief_posteriors: Vec<BeliefNodePosteriorSnapshot>,
     pub credible_intervals: Vec<CredibleInterval>,

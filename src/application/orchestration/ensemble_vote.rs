@@ -475,10 +475,34 @@ pub fn build_stub_ensemble_vote_from_research(report: &ResearchReport) -> Ensemb
                 active_regime: Some(active_phase),
                 market_family: None,
                 market_behavior_profile: None,
+                jump_model: Some(crate::domain::regime::JumpModelRegimeSummary {
+                    active_state: "jump_transition".to_string(),
+                    confidence: 0.5,
+                    transition_risk: 0.5,
+                    state_probabilities: BTreeMap::from([
+                        ("trend_persistent".to_string(), 0.25),
+                        ("balance_mean_revert".to_string(), 0.25),
+                        ("jump_transition".to_string(), 0.5),
+                    ]),
+                    evidence: report.multi_timeframe_summary.clone(),
+                }),
                 probabilities,
                 confidence: Some(0.5),
                 credible_intervals: BTreeMap::new(),
                 evidence: report.multi_timeframe_summary.clone(),
+            },
+            regime_companion: crate::domain::belief::RegimeCompanionPacket {
+                jump_model: Some(crate::domain::regime::JumpModelRegimeSummary {
+                    active_state: "jump_transition".to_string(),
+                    confidence: 0.5,
+                    transition_risk: 0.5,
+                    state_probabilities: BTreeMap::from([
+                        ("trend_persistent".to_string(), 0.25),
+                        ("balance_mean_revert".to_string(), 0.25),
+                        ("jump_transition".to_string(), 0.5),
+                    ]),
+                    evidence: report.multi_timeframe_summary.clone(),
+                }),
             },
             ..BeliefReportPacket::default()
         },
@@ -546,6 +570,13 @@ mod tests {
             .probabilities
             .insert("range".to_string(), 0.2);
         belief.regime_posterior.confidence = Some(0.8);
+        belief.regime_companion.jump_model = Some(crate::domain::regime::JumpModelRegimeSummary {
+            active_state: "jump_transition".to_string(),
+            confidence: 0.8,
+            transition_risk: 0.8,
+            state_probabilities: BTreeMap::new(),
+            evidence: vec![],
+        });
         let artifact = build_stub_ensemble_vote_from_input(&AnalyzeEnsembleVoteInput {
             symbol: "NQ".to_string(),
             state_dir: None,

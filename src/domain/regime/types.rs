@@ -35,9 +35,19 @@ pub struct RegimePosterior {
     pub active_regime: Option<String>,
     pub market_family: Option<String>,
     pub market_behavior_profile: Option<String>,
+    pub jump_model: Option<JumpModelRegimeSummary>,
     pub probabilities: BTreeMap<String, f64>,
     pub confidence: Option<f64>,
     pub credible_intervals: BTreeMap<String, super::super::belief::CredibleInterval>,
+    pub evidence: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct JumpModelRegimeSummary {
+    pub active_state: String,
+    pub confidence: f64,
+    pub transition_risk: f64,
+    pub state_probabilities: BTreeMap<String, f64>,
     pub evidence: Vec<String>,
 }
 

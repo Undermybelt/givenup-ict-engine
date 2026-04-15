@@ -10,6 +10,8 @@ pub struct BeliefShadowPolicySurface {
     pub shadow_available: bool,
     pub pre_bayes_uses_soft_evidence: bool,
     pub evidence_quality_score: f64,
+    pub jump_model_active_state: String,
+    pub jump_model_transition_risk: f64,
 }
 
 pub fn build_belief_shadow_policy_surface(
@@ -32,6 +34,18 @@ pub fn build_belief_shadow_policy_surface(
         evidence_quality_score: policy_record
             .map(|record| record.diff_from_previous.changed_fields.len() as f64)
             .unwrap_or_default(),
+        jump_model_active_state: packet
+            .regime_companion
+            .jump_model
+            .as_ref()
+            .map(|item| item.active_state.clone())
+            .unwrap_or_else(|| "jump_model_unavailable".to_string()),
+        jump_model_transition_risk: packet
+            .regime_companion
+            .jump_model
+            .as_ref()
+            .map(|item| item.transition_risk)
+            .unwrap_or_default(),
     }
 }
 
@@ -46,5 +60,22 @@ mod tests {
         assert_eq!(surface.policy_version, "policy_version_unavailable");
         assert_eq!(surface.shadow_summary_line, "shadow=unavailable");
         assert!(!surface.shadow_available);
+        assert_eq!(surface.jump_model_active_state, "jump_model_unavailable");
+    }
+
+    #[test]
+    fn shadow_surface_exposes_jump_model_sidecar() {
+        let mut packet = BeliefReportPacket::default();
+        packet.regime_companion.jump_model = Some(crate::domain::regime::JumpModelRegimeSummary {
+            active_state: "jump_transition".to_string(),
+            confidence: 0.61,
+            transition_risk: 0.61,
+            state_probabilities: std::collections::BTreeMap::new(),
+            evidence: vec![],
+        });
+
+        let surface = build_belief_shadow_policy_surface(&packet, None);
+        assert_eq!(surface.jump_model_active_state, "jump_transition");
+        assert!(surface.jump_model_transition_risk > 0.6);
     }
 }
