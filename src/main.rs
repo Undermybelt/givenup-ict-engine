@@ -18,7 +18,10 @@ use ict_engine::analyze::technical_price_section::{
     build_technical_price_section, TechnicalPriceSection,
 };
 use ict_engine::application::{
-    backtest::build_backtest_result_artifact,
+    backtest::{
+        build_backtest_result_artifact, build_oos_quality_delta_surface,
+        build_shrink_on_off_comparison_summary,
+    },
     belief::{
         apply_factor_outcome_overlay, build_belief_policy_lineage_surface,
         build_belief_shadow_policy_surface, build_canonical_belief_snapshot,
@@ -3864,6 +3867,8 @@ fn expansion_sop_command(
                 .iter()
                 .map(|(market, factor)| format!("{}:{}", market, factor))
                 .collect::<Vec<_>>(),
+            &[],
+            &[],
             &[format!(
                 "recommended_global_factor={:?}",
                 report.recommended_global_factor
@@ -10713,9 +10718,25 @@ fn backtest_command(
     } else {
         Vec::new()
     };
+    let shrink_comparison_summary = build_shrink_on_off_comparison_summary(
+        report.metrics.conformal_coverage_1sigma,
+        (report.metrics.conformal_coverage_1sigma + report.metrics.regime_break_penalty)
+            .clamp(0.0, 1.0),
+        report.metrics.total_return,
+        report.metrics.total_return + report.metrics.regime_break_penalty,
+    );
+    let oos_quality_delta_surface = build_oos_quality_delta_surface(
+        report.metrics.conformal_coverage_1sigma,
+        (report.metrics.conformal_coverage_1sigma - report.metrics.regime_break_penalty)
+            .clamp(0.0, 1.0),
+        report.trades,
+        report.trades,
+    );
     let compact_report = build_backtest_result_artifact(
         format!("backtest:{}", symbol),
         &[realism_summary.clone()],
+        &shrink_comparison_summary,
+        &oos_quality_delta_surface,
         &[
             format!("symbol={}", symbol),
             format!("trades={}", report.trades),
@@ -12098,6 +12119,53 @@ fn factor_backtest_command(
             .map(|result| (result.factor_name.clone(), result.metrics.structural_break_index))
             .collect::<Vec<_>>(),
     });
+    let shrink_comparison_summary = build_shrink_on_off_comparison_summary(
+        report
+            .factor_results
+            .first()
+            .map(|result| result.metrics.conformal_coverage_1sigma)
+            .unwrap_or_default(),
+        report
+            .factor_results
+            .first()
+            .map(|result| {
+                (result.metrics.conformal_coverage_1sigma + result.metrics.regime_break_penalty)
+                    .clamp(0.0, 1.0)
+            })
+            .unwrap_or_default(),
+        report.aggregate_return,
+        report.aggregate_return
+            + report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.regime_break_penalty)
+                .unwrap_or_default(),
+    );
+    let oos_quality_delta_surface = build_oos_quality_delta_surface(
+        report
+            .factor_results
+            .first()
+            .map(|result| result.metrics.conformal_coverage_1sigma)
+            .unwrap_or_default(),
+        report
+            .factor_results
+            .first()
+            .map(|result| {
+                (result.metrics.conformal_coverage_1sigma - result.metrics.regime_break_penalty)
+                    .clamp(0.0, 1.0)
+            })
+            .unwrap_or_default(),
+        report
+            .factor_results
+            .iter()
+            .map(|result| result.metrics.trade_count)
+            .sum(),
+        report
+            .factor_results
+            .iter()
+            .map(|result| result.metrics.trade_count)
+            .sum(),
+    );
     let compact_report = build_backtest_result_artifact(
         format!("factor_backtest:{}", symbol),
         &report
@@ -12105,6 +12173,8 @@ fn factor_backtest_command(
             .iter()
             .map(|item| format!("{}:{:.3}", item.factor_name, item.composite_score))
             .collect::<Vec<_>>(),
+        &shrink_comparison_summary,
+        &oos_quality_delta_surface,
         &[
             format!("best_factor={:?}", report.best_factor),
             format!(
