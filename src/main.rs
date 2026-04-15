@@ -5501,13 +5501,19 @@ fn apply_expansion_manipulation_objective(
             _ => 0.0,
         };
         let objective_jump_weight = objective_jump_weight.unwrap_or(1.0).clamp(0.75, 1.35);
+        let shrink = ict_engine::application::belief::objective_market_credibility_shrink(
+            Some("expansion_manipulation"),
+            market_category_for_symbol(symbol),
+            pipeline.bbn_support.pre_bayes_filter.evidence_quality_score,
+        );
         let objective_score = (expansion_score.balanced_accuracy * 0.45
             + expansion_score.directional_accuracy * 0.20
             + expansion_score.fit_score * 0.15
             + bridge_gap_score * 0.10
             + pipeline.bbn_support.selected_win_probability * 0.10
             + gate_adjustment)
-            * objective_jump_weight.clamp(0.75, 1.35);
+            * objective_jump_weight.clamp(0.75, 1.35)
+            * shrink.shrink_weight;
         let objective_score = objective_score.clamp(0.0, 1.0);
 
         scorecard.composite_score = objective_score;
@@ -5527,6 +5533,14 @@ fn apply_expansion_manipulation_objective(
                 pipeline.bbn_support.selected_win_probability,
             ),
             ("objective_jump_weight".to_string(), objective_jump_weight),
+            (
+                "objective_market_shrink_weight".to_string(),
+                shrink.shrink_weight,
+            ),
+            (
+                "objective_market_credibility_score".to_string(),
+                shrink.credibility_score,
+            ),
         ]);
         let mut weaknesses = Vec::new();
         if expansion_score.balanced_accuracy < 0.60 {
@@ -5587,6 +5601,28 @@ fn apply_expansion_manipulation_objective(
                         scorecard
                             .score_breakdown
                             .get("objective_jump_weight")
+                            .copied()
+                            .unwrap_or(1.0)
+                    ),
+                ),
+                (
+                    "objective_market_shrink_weight".to_string(),
+                    format!(
+                        "{:.6}",
+                        scorecard
+                            .score_breakdown
+                            .get("objective_market_shrink_weight")
+                            .copied()
+                            .unwrap_or(1.0)
+                    ),
+                ),
+                (
+                    "objective_market_credibility_score".to_string(),
+                    format!(
+                        "{:.6}",
+                        scorecard
+                            .score_breakdown
+                            .get("objective_market_credibility_score")
                             .copied()
                             .unwrap_or(1.0)
                     ),
@@ -18704,6 +18740,8 @@ mod tests {
         assert!(report.objective_surfaces.iter().all(|surface| {
             surface.get("research_objective") == Some(&"expansion_manipulation".to_string())
                 && surface.contains_key("objective_jump_weight")
+                && surface.contains_key("objective_market_shrink_weight")
+                && surface.contains_key("objective_market_credibility_score")
         }));
     }
 

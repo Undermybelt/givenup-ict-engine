@@ -15,6 +15,9 @@ pub struct BeliefShadowPolicySurface {
     pub jump_model_market_weight: f64,
     pub jump_model_disagreement_score: f64,
     pub jump_model_gate_bias: String,
+    pub objective_market_credibility_score: f64,
+    pub objective_market_shrink_weight: f64,
+    pub objective_market_shrink_triggered: bool,
 }
 
 pub fn build_belief_shadow_policy_surface(
@@ -67,6 +70,24 @@ pub fn build_belief_shadow_policy_surface(
             .as_ref()
             .map(|item| item.gate_bias.clone())
             .unwrap_or_else(|| "jump_gate_unavailable".to_string()),
+        objective_market_credibility_score: packet
+            .regime_companion
+            .objective_market_credibility_shrink
+            .as_ref()
+            .map(|item| item.credibility_score)
+            .unwrap_or(1.0),
+        objective_market_shrink_weight: packet
+            .regime_companion
+            .objective_market_credibility_shrink
+            .as_ref()
+            .map(|item| item.shrink_weight)
+            .unwrap_or(1.0),
+        objective_market_shrink_triggered: packet
+            .regime_companion
+            .objective_market_credibility_shrink
+            .as_ref()
+            .map(|item| item.shrink_triggered)
+            .unwrap_or(false),
     }
 }
 
@@ -96,10 +117,21 @@ mod tests {
             evidence: vec![],
         });
 
+        packet.regime_companion.objective_market_credibility_shrink = Some(
+            crate::application::belief::objective_market_credibility_shrink(
+                Some("expansion_manipulation"),
+                Some("energy"),
+                0.35,
+            ),
+        );
         packet.regime_companion.disagreement = Some(
             crate::application::belief::build_regime_disagreement_summary(
                 Some("trend"),
                 packet.regime_companion.jump_model.as_ref(),
+                packet
+                    .regime_companion
+                    .objective_market_credibility_shrink
+                    .as_ref(),
             ),
         );
 
@@ -108,6 +140,12 @@ mod tests {
         assert!(surface.jump_model_transition_risk > 0.6);
         assert!(surface.jump_model_market_weight > 1.1);
         assert!(surface.jump_model_disagreement_score > 0.6);
-        assert_eq!(surface.jump_model_gate_bias, "shrink_and_observe");
+        assert_eq!(
+            surface.jump_model_gate_bias,
+            "objective_market_credibility_shrink"
+        );
+        assert!(surface.objective_market_credibility_score < 0.5);
+        assert!(surface.objective_market_shrink_weight < 0.95);
+        assert!(surface.objective_market_shrink_triggered);
     }
 }

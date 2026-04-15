@@ -3,6 +3,7 @@ use std::path::Path;
 
 use chrono::{DateTime, Duration, Utc};
 
+use crate::domain::belief::ObjectiveMarketCredibilityShrink;
 use crate::domain::regime::{JumpModelRegimeSummary, RegimeDisagreementSummary, RegimeFeatures};
 use crate::state::{
     load_state_or_default, save_state, BacktestRunRecord, ResearchRunRecord, WorkflowSnapshot,
@@ -415,6 +416,49 @@ pub fn historical_market_jump_objective_weight<P: AsRef<Path>>(
         .map(|calibration| (1.0 + calibration.backtest_edge).clamp(0.75, 1.35))
 }
 
+pub fn objective_market_credibility_shrink(
+    objective: Option<&str>,
+    market_family: Option<&str>,
+    credibility_score: f64,
+) -> ObjectiveMarketCredibilityShrink {
+    let normalized_credibility = credibility_score.clamp(0.0, 1.0);
+    let objective_bias = match objective.unwrap_or("generic") {
+        "expansion_manipulation" => 0.18,
+        "trend_following" => 0.10,
+        "mean_reversion" => 0.08,
+        _ => 0.12,
+    };
+    let market_bias = match market_family.unwrap_or("generic") {
+        "energy" => 0.20,
+        "metals" => 0.14,
+        "futures_index" => 0.10,
+        _ => 0.08,
+    };
+    let raw_shrink = (1.0 - normalized_credibility) * (1.0 + objective_bias + market_bias);
+    let shrink_weight = (1.0 - raw_shrink).clamp(0.55, 1.0);
+    let shrink_triggered = shrink_weight < 0.95;
+    let mut rationale = vec![
+        format!("objective={}", objective.unwrap_or("generic")),
+        format!("market_family={}", market_family.unwrap_or("generic")),
+        format!("credibility_score={normalized_credibility:.3}"),
+        format!("objective_bias={objective_bias:.3}"),
+        format!("market_bias={market_bias:.3}"),
+        format!("shrink_weight={shrink_weight:.3}"),
+    ];
+    if shrink_triggered {
+        rationale.push("objective_market_credibility_shrink=active".to_string());
+    }
+
+    ObjectiveMarketCredibilityShrink {
+        objective: objective.map(str::to_string),
+        market_family: market_family.map(str::to_string),
+        credibility_score: normalized_credibility,
+        shrink_weight,
+        shrink_triggered,
+        rationale,
+    }
+}
+
 pub fn backtest_calibrated_market_jump_weight(
     market_family: Option<&str>,
     market_behavior_profile: Option<&str>,
@@ -625,6 +669,7 @@ pub fn jump_calibration_gate_workflow_summary(snapshot: &WorkflowSnapshot) -> Op
 pub fn build_regime_disagreement_summary(
     hmm_active_regime: Option<&str>,
     jump_model: Option<&JumpModelRegimeSummary>,
+    shrink: Option<&ObjectiveMarketCredibilityShrink>,
 ) -> RegimeDisagreementSummary {
     let jump_active_state = jump_model.map(|item| item.active_state.clone());
     let aligned = match (hmm_active_regime, jump_active_state.as_deref()) {
@@ -645,6 +690,8 @@ pub fn build_regime_disagreement_summary(
     };
     let gate_bias = if jump_model.is_none() {
         "hmm_only".to_string()
+    } else if shrink.is_some_and(|item| item.shrink_triggered) {
+        "objective_market_credibility_shrink".to_string()
     } else if aligned {
         "relax_if_other_gates_clear".to_string()
     } else {
@@ -660,6 +707,10 @@ pub fn build_regime_disagreement_summary(
     evidence.push(format!("aligned={aligned}"));
     evidence.push(format!("disagreement_score={disagreement_score:.3}"));
     evidence.push(format!("gate_bias={gate_bias}"));
+    if let Some(shrink) = shrink {
+        evidence.push(format!("credibility_score={:.3}", shrink.credibility_score));
+        evidence.push(format!("shrink_weight={:.3}", shrink.shrink_weight));
+    }
 
     RegimeDisagreementSummary {
         hmm_active_regime: hmm_active_regime.map(|value| value.to_string()),
@@ -716,6 +767,46 @@ mod tests {
         assert!(energy > 1.0);
         assert!(metals < 1.0);
         assert!(energy > metals);
+    }
+
+    #[test]
+    fn objective_market_credibility_shrink_rules_reduce_weight_for_low_credibility_energy_expansion(
+    ) {
+        let shrink = objective_market_credibility_shrink(
+            Some("expansion_manipulation"),
+            Some("energy"),
+            0.32,
+        );
+
+        assert!(shrink.shrink_triggered);
+        assert!(shrink.shrink_weight < 0.95);
+        assert!(shrink.shrink_weight >= 0.55);
+    }
+
+    #[test]
+    fn regime_disagreement_prefers_objective_market_credibility_shrink_gate_when_active() {
+        let jump_model = JumpModelRegimeSummary {
+            active_state: "trend_persistent".to_string(),
+            confidence: 0.84,
+            transition_risk: 0.20,
+            market_jump_weight: 1.05,
+            state_probabilities: BTreeMap::new(),
+            evidence: vec![],
+        };
+        let shrink = objective_market_credibility_shrink(
+            Some("expansion_manipulation"),
+            Some("energy"),
+            0.35,
+        );
+
+        let summary =
+            build_regime_disagreement_summary(Some("trend"), Some(&jump_model), Some(&shrink));
+
+        assert_eq!(summary.gate_bias, "objective_market_credibility_shrink");
+        assert!(summary
+            .evidence
+            .iter()
+            .any(|line| line.contains("shrink_weight=")));
     }
 
     #[test]

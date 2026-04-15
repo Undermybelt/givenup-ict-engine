@@ -59,9 +59,20 @@ pub struct ShadowComparisonSummary {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct ObjectiveMarketCredibilityShrink {
+    pub objective: Option<String>,
+    pub market_family: Option<String>,
+    pub credibility_score: f64,
+    pub shrink_weight: f64,
+    pub shrink_triggered: bool,
+    pub rationale: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct RegimeCompanionPacket {
     pub jump_model: Option<JumpModelRegimeSummary>,
     pub disagreement: Option<RegimeDisagreementSummary>,
+    pub objective_market_credibility_shrink: Option<ObjectiveMarketCredibilityShrink>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]

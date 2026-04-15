@@ -13,6 +13,7 @@ pub use jump_model_sidecar::{
     build_jump_model_regime_sidecar_with_history, build_regime_disagreement_summary,
     historical_market_jump_objective_weight, historical_market_jump_weight,
     jump_calibration_gate_workflow_summary, jump_model_workflow_summary,
+    objective_market_credibility_shrink,
     persist_market_jump_calibration_from_backtest_runs,
     persist_market_jump_calibration_from_research_runs,
     persist_market_jump_objective_calibration_from_research_runs,

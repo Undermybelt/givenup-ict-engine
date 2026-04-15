@@ -572,8 +572,10 @@ pub fn build_stub_ensemble_vote_from_research(report: &ResearchReport) -> Ensemb
                             ]),
                             evidence: report.multi_timeframe_summary.clone(),
                         }),
+                        None,
                     ),
                 ),
+                objective_market_credibility_shrink: None,
             },
             ..BeliefReportPacket::default()
         },
@@ -653,6 +655,10 @@ mod tests {
             crate::application::belief::build_regime_disagreement_summary(
                 belief.regime_posterior.active_regime.as_deref(),
                 belief.regime_companion.jump_model.as_ref(),
+                belief
+                    .regime_companion
+                    .objective_market_credibility_shrink
+                    .as_ref(),
             ),
         );
         let artifact = build_stub_ensemble_vote_from_input(&AnalyzeEnsembleVoteInput {
