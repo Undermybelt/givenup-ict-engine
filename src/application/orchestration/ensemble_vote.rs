@@ -509,6 +509,7 @@ pub fn build_stub_ensemble_vote_from_research(report: &ResearchReport) -> Ensemb
                     active_state: "jump_transition".to_string(),
                     confidence: 0.5,
                     transition_risk: 0.5,
+                    market_jump_weight: 1.0,
                     state_probabilities: BTreeMap::from([
                         ("trend_persistent".to_string(), 0.25),
                         ("balance_mean_revert".to_string(), 0.25),
@@ -526,6 +527,7 @@ pub fn build_stub_ensemble_vote_from_research(report: &ResearchReport) -> Ensemb
                     active_state: "jump_transition".to_string(),
                     confidence: 0.5,
                     transition_risk: 0.5,
+                    market_jump_weight: 1.0,
                     state_probabilities: BTreeMap::from([
                         ("trend_persistent".to_string(), 0.25),
                         ("balance_mean_revert".to_string(), 0.25),
@@ -539,6 +541,7 @@ pub fn build_stub_ensemble_vote_from_research(report: &ResearchReport) -> Ensemb
                         active_state: "jump_transition".to_string(),
                         confidence: 0.5,
                         transition_risk: 0.5,
+                        market_jump_weight: 1.0,
                         state_probabilities: BTreeMap::from([
                             ("trend_persistent".to_string(), 0.25),
                             ("balance_mean_revert".to_string(), 0.25),
@@ -618,6 +621,7 @@ mod tests {
             active_state: "jump_transition".to_string(),
             confidence: 0.8,
             transition_risk: 0.8,
+            market_jump_weight: 1.0,
             state_probabilities: BTreeMap::new(),
             evidence: vec![],
         });

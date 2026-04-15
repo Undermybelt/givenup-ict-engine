@@ -5,6 +5,75 @@ use crate::domain::regime::{
 };
 use crate::state::WorkflowSnapshot;
 
+#[derive(Debug, Clone, Copy)]
+struct MarketJumpCalibration {
+    trend_weight: f64,
+    balance_weight: f64,
+    transition_weight: f64,
+    backtest_edge: f64,
+}
+
+fn market_jump_calibration(
+    market_family: Option<&str>,
+    market_behavior_profile: Option<&str>,
+) -> MarketJumpCalibration {
+    let family = match market_family {
+        Some("futures_index") => MarketJumpCalibration {
+            trend_weight: 1.08,
+            balance_weight: 0.95,
+            transition_weight: 1.01,
+            backtest_edge: 0.06,
+        },
+        Some("metals") => MarketJumpCalibration {
+            trend_weight: 0.93,
+            balance_weight: 1.09,
+            transition_weight: 0.94,
+            backtest_edge: -0.02,
+        },
+        Some("energy") => MarketJumpCalibration {
+            trend_weight: 0.82,
+            balance_weight: 0.88,
+            transition_weight: 1.24,
+            backtest_edge: 0.18,
+        },
+        _ => MarketJumpCalibration {
+            trend_weight: 1.0,
+            balance_weight: 1.0,
+            transition_weight: 1.0,
+            backtest_edge: 0.0,
+        },
+    };
+
+    match market_behavior_profile {
+        Some("energy_volatility_shock_sensitive") => MarketJumpCalibration {
+            transition_weight: family.transition_weight + 0.08,
+            backtest_edge: family.backtest_edge + 0.06,
+            ..family
+        },
+        Some("metals_defensive_liquidity_sensitive") => MarketJumpCalibration {
+            balance_weight: family.balance_weight + 0.04,
+            transition_weight: (family.transition_weight - 0.04).max(0.75),
+            backtest_edge: family.backtest_edge - 0.02,
+            ..family
+        },
+        Some("index_beta_regime_sensitive") => MarketJumpCalibration {
+            trend_weight: family.trend_weight + 0.02,
+            transition_weight: family.transition_weight + 0.01,
+            backtest_edge: family.backtest_edge + 0.01,
+            ..family
+        },
+        _ => family,
+    }
+}
+
+pub fn backtest_calibrated_market_jump_weight(
+    market_family: Option<&str>,
+    market_behavior_profile: Option<&str>,
+) -> f64 {
+    let calibration = market_jump_calibration(market_family, market_behavior_profile);
+    (1.0 + calibration.backtest_edge).clamp(0.75, 1.35)
+}
+
 fn normalized_distribution(entries: [(String, f64); 3]) -> BTreeMap<String, f64> {
     let total = entries.iter().map(|(_, value)| value.max(0.0)).sum::<f64>();
     entries
@@ -29,24 +98,21 @@ pub fn build_jump_model_regime_sidecar(
         line.strip_prefix("market_category=")
             .map(|value| value.to_string())
     });
-    let trend_weight = match market_family.as_deref() {
-        Some("futures_index") => 1.10,
-        Some("metals") => 0.92,
-        Some("energy") => 0.84,
-        _ => 1.0,
-    };
-    let balance_weight = match market_family.as_deref() {
-        Some("metals") => 1.08,
-        Some("energy") => 0.88,
-        Some("futures_index") => 0.95,
-        _ => 1.0,
-    };
-    let transition_weight = match market_family.as_deref() {
-        Some("energy") => 1.18,
-        Some("futures_index") => 1.02,
-        Some("metals") => 0.96,
-        _ => 1.0,
-    };
+    let market_behavior_profile = factor_evidence.iter().find_map(|line| {
+        line.strip_prefix("market_behavior_profile=")
+            .map(|value| value.to_string())
+    });
+    let calibration = market_jump_calibration(
+        market_family.as_deref(),
+        market_behavior_profile.as_deref(),
+    );
+    let trend_weight = calibration.trend_weight;
+    let balance_weight = calibration.balance_weight;
+    let transition_weight = calibration.transition_weight;
+    let market_jump_weight = backtest_calibrated_market_jump_weight(
+        market_family.as_deref(),
+        market_behavior_profile.as_deref(),
+    );
     let trend_score = match features.market_regime_label.as_deref() {
         Some("bull") | Some("bear") | Some("trend") => 0.62 * trend_weight,
         Some("range") => 0.18 * trend_weight,
@@ -69,7 +135,8 @@ pub fn build_jump_model_regime_sidecar(
         _ => 0.34,
     } + volatility * 0.18
         + features.transition_score.unwrap_or(0.0).clamp(0.0, 1.0) * 0.24)
-        * transition_weight;
+        * transition_weight
+        * market_jump_weight;
 
     let state_probabilities = normalized_distribution([
         ("trend_persistent".to_string(), trend_score),
@@ -91,6 +158,7 @@ pub fn build_jump_model_regime_sidecar(
         format!("jump_model.active_state={active_state}"),
         format!("jump_model.transition_hint={transition_hint}"),
         format!("jump_model.volatility={volatility:.3}"),
+        format!("jump_model.market_jump_weight={market_jump_weight:.3}"),
         format!(
             "jump_model.market_family_weighting={}:trend={:.2}:balance={:.2}:transition={:.2}",
             market_family.clone().unwrap_or_else(|| "unknown".to_string()),
@@ -113,6 +181,7 @@ pub fn build_jump_model_regime_sidecar(
         active_state,
         confidence,
         transition_risk,
+        market_jump_weight,
         state_probabilities,
         evidence,
     }
@@ -195,12 +264,30 @@ mod tests {
             )]),
             &[
                 "market_category=energy".to_string(),
+                "market_behavior_profile=energy_volatility_shock_sensitive".to_string(),
                 "mtf_divergence".to_string(),
             ],
         );
 
         assert_eq!(summary.active_state, "jump_transition");
         assert!(summary.transition_risk > 0.4);
+        assert!(summary.market_jump_weight > 1.0);
         assert_eq!(summary.state_probabilities.len(), 3);
+    }
+
+    #[test]
+    fn backtest_calibrated_market_jump_weight_varies_by_market() {
+        let energy = backtest_calibrated_market_jump_weight(
+            Some("energy"),
+            Some("energy_volatility_shock_sensitive"),
+        );
+        let metals = backtest_calibrated_market_jump_weight(
+            Some("metals"),
+            Some("metals_defensive_liquidity_sensitive"),
+        );
+
+        assert!(energy > 1.0);
+        assert!(metals < 1.0);
+        assert!(energy > metals);
     }
 }

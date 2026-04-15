@@ -84,6 +84,7 @@ mod tests {
             active_state: "jump_transition".to_string(),
             confidence: 0.61,
             transition_risk: 0.61,
+            market_jump_weight: 1.12,
             state_probabilities: std::collections::BTreeMap::new(),
             evidence: vec![],
         });

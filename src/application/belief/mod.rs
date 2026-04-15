@@ -20,7 +20,7 @@ pub use pipeline_shared::{
     raw_liquidity_context_trace, raw_market_regime_trace, raw_multi_timeframe_resonance_trace,
 };
 pub use jump_model_sidecar::{
-    build_jump_model_regime_sidecar, build_regime_disagreement_summary,
+    backtest_calibrated_market_jump_weight, build_jump_model_regime_sidecar, build_regime_disagreement_summary,
     jump_model_workflow_summary,
 };
 pub use pipeline_types::ExpansionFactorPipelineReport;

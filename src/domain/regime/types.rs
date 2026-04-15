@@ -47,6 +47,7 @@ pub struct JumpModelRegimeSummary {
     pub active_state: String,
     pub confidence: f64,
     pub transition_risk: f64,
+    pub market_jump_weight: f64,
     pub state_probabilities: BTreeMap<String, f64>,
     pub evidence: Vec<String>,
 }
@@ -66,5 +67,6 @@ pub struct RegimeGateDecision {
     pub selected_regime: String,
     pub selected_subgraph: String,
     pub market_family: Option<String>,
+    pub jump_weight: Option<f64>,
     pub rationale: Vec<String>,
 }

@@ -1,5 +1,8 @@
 use std::collections::BTreeMap;
 
+use crate::application::belief::{
+    backtest_calibrated_market_jump_weight, build_jump_model_regime_sidecar,
+};
 use crate::domain::belief::{BeliefEvidencePacket, BeliefNodePosteriorSnapshot};
 use crate::domain::regime::{
     JumpModelRegimeSummary, RegimeFeatures, RegimeGateDecision, RegimePosterior,
@@ -229,79 +232,13 @@ pub fn regime_posterior_from_pre_bayes_filter(filter: &PreBayesEvidenceFilter) -
 }
 
 pub fn jump_model_summary_from_belief_packet(packet: &BeliefEvidencePacket) -> JumpModelRegimeSummary {
-    let market_label = packet
-        .regime_features
-        .market_regime_label
-        .as_deref()
-        .unwrap_or("range");
-    let resonance_label = packet
-        .multi_timeframe_evidence
-        .get("filtered_resonance_label")
-        .map(|value| value.as_str())
-        .unwrap_or("mixed");
-    let stress = packet.regime_features.stress_score.unwrap_or(0.5).clamp(0.0, 1.0);
-    let transition = packet
-        .regime_features
-        .transition_score
-        .unwrap_or(0.0)
-        .clamp(0.0, 1.0);
-    let trend_score = match market_label {
-        "bull" | "bear" | "trend" => 0.62,
-        "range" => 0.18,
-        _ => 0.34,
-    };
-    let balance_score = match market_label {
-        "range" => 0.58,
-        "bull" | "bear" | "trend" => 0.20,
-        _ => 0.30,
-    };
-    let jump_score = match resonance_label {
-        "dislocated" => 0.66,
-        "mixed" => 0.42,
-        "aligned" => 0.18,
-        _ => 0.34,
-    } + stress * 0.18
-        + transition * 0.24;
-
-    let raw = [
-        ("trend_persistent".to_string(), trend_score),
-        ("balance_mean_revert".to_string(), balance_score),
-        ("jump_transition".to_string(), jump_score),
-    ];
-    let total = raw.iter().map(|(_, value)| value.max(0.0)).sum::<f64>();
-    let state_probabilities = raw
-        .into_iter()
-        .map(|(label, value)| {
-            let normalized = if total > 0.0 {
-                value.max(0.0) / total
-            } else {
-                1.0 / 3.0
-            };
-            (label, normalized)
-        })
-        .collect::<BTreeMap<_, _>>();
-    let (active_state, confidence) = state_probabilities
-        .iter()
-        .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
-        .map(|(label, probability)| (label.clone(), *probability))
-        .unwrap_or_else(|| ("balance_mean_revert".to_string(), 1.0 / 3.0));
-    let transition_risk = state_probabilities
-        .get("jump_transition")
-        .copied()
-        .unwrap_or_default();
-
-    JumpModelRegimeSummary {
-        active_state: active_state.clone(),
-        confidence,
-        transition_risk,
-        state_probabilities,
-        evidence: vec![
-            format!("jump_model.active_state={active_state}"),
-            format!("jump_model.market_regime={market_label}"),
-            format!("jump_model.resonance={resonance_label}"),
-            format!("jump_model.stress={stress:.3}"),
-        ],
-    }
+    let mut factor_evidence = packet.factor_evidence.clone();
+    factor_evidence.extend(packet.market_evidence.iter().cloned());
+    build_jump_model_regime_sidecar(
+        &packet.regime_features,
+        &packet.multi_timeframe_evidence,
+        &factor_evidence,
+    )
 }
 
 pub fn regime_posterior_from_belief_packet(packet: &BeliefEvidencePacket) -> RegimePosterior {
@@ -381,6 +318,10 @@ pub fn gate_decision_from_regime_posterior(posterior: &RegimePosterior) -> Regim
         selected_subgraph: market_subgraph,
         selected_regime: selected,
         market_family: posterior.market_family.clone(),
+        jump_weight: Some(backtest_calibrated_market_jump_weight(
+            posterior.market_family.as_deref(),
+            posterior.market_behavior_profile.as_deref(),
+        )),
         rationale: posterior.evidence.clone(),
     }
 }

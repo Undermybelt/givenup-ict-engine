@@ -184,6 +184,10 @@ impl InferenceEngineRegistry {
                         },
                     );
                 }
+                item.probabilities.insert(
+                    "market_jump_weight".to_string(),
+                    jump_model.market_jump_weight,
+                );
                 item
             })
             .collect();
