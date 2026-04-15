@@ -183,6 +183,7 @@ struct AnalyzeSupporting {
     factor_diagnostics: FactorDiagnostics,
     pre_bayes_evidence_filter: PreBayesEvidenceFilter,
     pre_bayes_entry_quality_bridge: ict_engine::state::PreBayesEntryQualityBridge,
+    objective_jump_weight: Option<f64>,
     canonical_belief_report: ict_engine::reporting::belief::BeliefReportPacket,
     decision_thresholds: DecisionThresholds,
     factor_ranking: Vec<PersistedFactorRanking>,
@@ -1410,9 +1411,18 @@ fn executor_scorecard_surface<'a>(
 }
 
 fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
+    let objective_jump_weight = report
+        .supporting
+        .objective_jump_weight
+        .map(|weight| format!("objective_jump_weight={weight:.3}"));
+    let compact_evidence = objective_jump_weight
+        .iter()
+        .cloned()
+        .chain(report.supporting.multi_timeframe_summary.iter().cloned())
+        .collect::<Vec<_>>();
     let compact_report = build_compact_analyze_report(
         report.supporting.decision_hint.clone(),
-        &report.supporting.multi_timeframe_summary,
+        &compact_evidence,
         &report.supporting.artifact_action_summary,
         &[report.supporting.recommended_next_command.clone()],
     );
@@ -1434,6 +1444,72 @@ fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
         .selected_market_subgraph
         .as_deref()
         .unwrap_or("unknown");
+    let human_regime_bayes_analysis = match human_market_family {
+        Some("metals") => match report.supporting.objective_jump_weight {
+            Some(weight) => format!(
+                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}；objective_jump_weight={weight:.3}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+            None => format!(
+                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+        },
+        Some("energy") => match report.supporting.objective_jump_weight {
+            Some(weight) => format!(
+                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}；objective_jump_weight={weight:.3}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+            None => format!(
+                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+        },
+        Some("futures_index") => match report.supporting.objective_jump_weight {
+            Some(weight) => format!(
+                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}；objective_jump_weight={weight:.3}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+            None => format!(
+                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+        },
+        _ => match report.supporting.objective_jump_weight {
+            Some(weight) => format!(
+                "regime={} liquidity={} direction={:?} subgraph={} objective_jump_weight={weight:.3}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+            None => format!(
+                "regime={} liquidity={} direction={:?} subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+        },
+    };
     let human_report = build_human_analyze_report(
         match human_market_family {
             Some("metals") => format!(
@@ -1482,36 +1558,7 @@ fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
             ),
             _ => report.analysis.smt_correlation.narrative.clone(),
         },
-        match human_market_family {
-            Some("metals") => format!(
-                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph
-            ),
-            Some("energy") => format!(
-                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph
-            ),
-            Some("futures_index") => format!(
-                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph
-            ),
-            _ => format!(
-                "regime={} liquidity={} direction={:?} subgraph={}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph
-            ),
-        },
+        human_regime_bayes_analysis,
         report.analysis.trade_plan.narrative.clone(),
     );
     let (belief_shadow_policy, belief_policy_lineage) = build_analyze_policy_outputs(report)?;
@@ -6224,9 +6271,18 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
                 .num_seconds(),
         )
     });
+    let objective_jump_weight = report
+        .supporting
+        .objective_jump_weight
+        .map(|weight| format!("objective_jump_weight={weight:.3}"));
+    let compact_evidence = objective_jump_weight
+        .iter()
+        .cloned()
+        .chain(report.supporting.multi_timeframe_summary.iter().cloned())
+        .collect::<Vec<_>>();
     let compact_report = build_compact_analyze_report(
         report.supporting.decision_hint.clone(),
-        &report.supporting.multi_timeframe_summary,
+        &compact_evidence,
         &report.supporting.artifact_action_summary,
         &[report.supporting.recommended_next_command.clone()],
     );
@@ -6248,6 +6304,72 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
         .selected_market_subgraph
         .as_deref()
         .unwrap_or("unknown");
+    let human_regime_bayes_analysis = match human_market_family {
+        Some("metals") => match report.supporting.objective_jump_weight {
+            Some(weight) => format!(
+                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}；objective_jump_weight={weight:.3}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+            None => format!(
+                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+        },
+        Some("energy") => match report.supporting.objective_jump_weight {
+            Some(weight) => format!(
+                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}；objective_jump_weight={weight:.3}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+            None => format!(
+                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+        },
+        Some("futures_index") => match report.supporting.objective_jump_weight {
+            Some(weight) => format!(
+                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}；objective_jump_weight={weight:.3}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+            None => format!(
+                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+        },
+        _ => match report.supporting.objective_jump_weight {
+            Some(weight) => format!(
+                "regime={} liquidity={} direction={:?} subgraph={} objective_jump_weight={weight:.3}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+            None => format!(
+                "regime={} liquidity={} direction={:?} subgraph={}",
+                report.analysis.regime_bayesian.regime_label,
+                report.analysis.regime_bayesian.liquidity_label,
+                report.analysis.regime_bayesian.selected_direction,
+                human_market_subgraph
+            ),
+        },
+    };
     let human_report = build_human_analyze_report(
         match human_market_family {
             Some("metals") => format!(
@@ -6296,36 +6418,7 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
             ),
             _ => report.analysis.smt_correlation.narrative.clone(),
         },
-        match human_market_family {
-            Some("metals") => format!(
-                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph
-            ),
-            Some("energy") => format!(
-                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph
-            ),
-            Some("futures_index") => format!(
-                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph
-            ),
-            _ => format!(
-                "regime={} liquidity={} direction={:?} subgraph={}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph
-            ),
-        },
+        human_regime_bayes_analysis,
         report.analysis.trade_plan.narrative.clone(),
     );
     let policy_record = load_pre_bayes_policy_history(&report.meta.state_dir, &report.symbol)?
@@ -14058,6 +14151,7 @@ fn build_analyze_report(
             factor_diagnostics: factor_output.diagnostics,
             pre_bayes_evidence_filter: pre_bayes_evidence_filter.clone(),
             pre_bayes_entry_quality_bridge: pre_bayes_entry_quality_bridge.clone(),
+            objective_jump_weight: canonical_belief_report.gate_decision.jump_weight,
             canonical_belief_report: canonical_belief_report.clone(),
             decision_thresholds: thresholds,
             factor_ranking,
@@ -18611,6 +18705,48 @@ mod tests {
             surface.get("research_objective") == Some(&"expansion_manipulation".to_string())
                 && surface.contains_key("objective_jump_weight")
         }));
+    }
+
+    #[test]
+    fn test_analyze_report_surfaces_objective_jump_weight() {
+        let temp = tempfile::tempdir().unwrap();
+        let htf = sample_candles(220);
+        let mtf = sample_candles(180);
+        let ltf = sample_candles(140);
+        let params = load_or_init_hmm_params("NQ", temp.path().to_str().unwrap());
+        let network = load_or_init_trading_network("NQ", temp.path().to_str().unwrap()).unwrap();
+        let learning_state = load_learning_state(temp.path(), "NQ").unwrap();
+        let report = build_analyze_report(
+            "NQ",
+            temp.path().to_str().unwrap(),
+            &htf,
+            &mtf,
+            &ltf,
+            &params,
+            &network,
+            AnalyzeBuildContext {
+                symbol: "NQ",
+                paired_candles: None,
+                auxiliary: None,
+                learning_state: &learning_state,
+                multi_timeframe_summary: &[],
+                native_frames: AnalyzeNativeFrames::default(),
+            },
+        )
+        .unwrap();
+
+        let expected_weight = report
+            .supporting
+            .canonical_belief_report
+            .gate_decision
+            .jump_weight;
+        assert_eq!(report.supporting.objective_jump_weight, expected_weight);
+
+        let rendered = serde_json::to_value(&report).unwrap();
+        assert_eq!(
+            rendered["supporting"]["objective_jump_weight"],
+            serde_json::to_value(expected_weight).unwrap()
+        );
     }
 
     #[test]
