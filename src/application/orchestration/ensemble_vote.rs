@@ -108,15 +108,35 @@ impl VotingAggregator for WeightedVotingAggregator {
         executors: &[EnsembleExecutorDecision],
         weights: &[f64],
     ) -> EnsembleDecision {
+        let jump_gate_bias = input
+            .belief
+            .regime_companion
+            .disagreement
+            .as_ref()
+            .map(|item| item.gate_bias.as_str())
+            .unwrap_or("hmm_only");
         let weighted = executors
             .iter()
             .zip(weights.iter().copied())
             .map(|(decision, weight)| {
+                let adjusted_confidence = match jump_gate_bias {
+                    "shrink_and_observe" if decision.action != "observe" => {
+                        (decision.confidence * 0.55).clamp(0.0, 1.0)
+                    }
+                    "relax_if_other_gates_clear" => (decision.confidence * 1.10).clamp(0.0, 1.0),
+                    _ => decision.confidence,
+                };
                 (
                     decision,
                     weight,
-                    decision.confidence * weight,
-                    format!("{} weight={:.2}", summarize_executor(decision), weight),
+                    adjusted_confidence * weight,
+                    format!(
+                        "{} weight={:.2} jump_gate_bias={} adjusted_confidence={:.3}",
+                        summarize_executor(decision),
+                        weight,
+                        jump_gate_bias,
+                        adjusted_confidence
+                    ),
                 )
             })
             .collect::<Vec<_>>();
@@ -147,7 +167,7 @@ impl VotingAggregator for WeightedVotingAggregator {
         } else {
             0.0
         };
-        let recommended_command = weighted
+        let mut recommended_command = weighted
             .iter()
             .find_map(|item| item.0.recommended_command.clone())
             .filter(|value| !value.trim().is_empty())
@@ -158,6 +178,12 @@ impl VotingAggregator for WeightedVotingAggregator {
                     input.recommended_next_command.clone()
                 }
             });
+        if jump_gate_bias == "shrink_and_observe" {
+            recommended_command = format!(
+                "ict-engine workflow-status --symbol {} --phase human-next",
+                input.symbol
+            );
+        }
         let disagreement_flags = if weighted
             .windows(2)
             .all(|pair| pair[0].0.action == pair[1].0.action)
@@ -178,8 +204,12 @@ impl VotingAggregator for WeightedVotingAggregator {
             final_action: final_action.clone(),
             recommended_command: recommended_command.clone(),
             human_next_triage: format!(
-                "ensemble_action={} consensus={:.3} regime={} command={}",
-                final_action, consensus_strength, posterior.active_regime, recommended_command
+                "ensemble_action={} consensus={:.3} regime={} jump_gate_bias={} command={}",
+                final_action,
+                consensus_strength,
+                posterior.active_regime,
+                jump_gate_bias,
+                recommended_command
             ),
             confidence: weighted.iter().map(|item| item.2).sum::<f64>().clamp(0.0, 1.0),
             consensus_strength,
