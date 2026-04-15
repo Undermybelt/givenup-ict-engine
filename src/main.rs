@@ -18392,10 +18392,24 @@ mod tests {
     fn test_research_calibration_writeback_updates_market_jump_weights() {
         let temp = tempfile::tempdir().unwrap();
         let symbol = "CL";
-        let runs = vec![ResearchRunRecord {
-            aggregate_return: 0.20,
-            ..ResearchRunRecord::default()
-        }];
+        let timestamp = Utc::now();
+        let runs = vec![
+            ResearchRunRecord {
+                timestamp,
+                aggregate_return: 0.20,
+                ..ResearchRunRecord::default()
+            },
+            ResearchRunRecord {
+                timestamp,
+                aggregate_return: 0.24,
+                ..ResearchRunRecord::default()
+            },
+            ResearchRunRecord {
+                timestamp,
+                aggregate_return: 0.28,
+                ..ResearchRunRecord::default()
+            },
+        ];
 
         let family = test_market_category(symbol).unwrap();
         persist_market_jump_calibration_from_research_runs(
@@ -18420,10 +18434,24 @@ mod tests {
     fn test_backtest_calibration_writeback_updates_market_jump_weights() {
         let temp = tempfile::tempdir().unwrap();
         let symbol = "GC";
-        let runs = vec![BacktestRunRecord {
-            total_return: -0.12,
-            ..BacktestRunRecord::default()
-        }];
+        let timestamp = Utc::now();
+        let runs = vec![
+            BacktestRunRecord {
+                timestamp,
+                total_return: -0.12,
+                ..BacktestRunRecord::default()
+            },
+            BacktestRunRecord {
+                timestamp,
+                total_return: -0.10,
+                ..BacktestRunRecord::default()
+            },
+            BacktestRunRecord {
+                timestamp,
+                total_return: -0.14,
+                ..BacktestRunRecord::default()
+            },
+        ];
 
         let family = test_market_category(symbol).unwrap();
         persist_market_jump_calibration_from_backtest_runs(
