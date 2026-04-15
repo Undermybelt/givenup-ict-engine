@@ -75,6 +75,19 @@ pub struct WalkForwardWindow {
     pub metrics: BacktestMetrics,
     pub ic: f64,
     pub ir: f64,
+    #[serde(default)]
+    pub conformal: WindowConformalDiagnostics,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct WindowConformalDiagnostics {
+    pub predicted_return: f64,
+    pub realized_return: f64,
+    pub interval_lower: f64,
+    pub interval_upper: f64,
+    pub interval_half_width: f64,
+    pub covered: bool,
+    pub miscoverage: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -165,7 +178,7 @@ impl FactorBacktestEngine {
             let (mean_ic, std_ic, ir) = ICCalculator::ir(&rolling_ic);
 
             let (trades, equity_curve, windows) = walk_forward_backtest(&series, candles, config);
-            let metrics = metrics_from_trades(config.initial_capital, &equity_curve, &trades);
+            let metrics = metrics_from_trades(config.initial_capital, &equity_curve, &trades, &windows);
             let regime_scores = regime_scores(&trades);
             let stability = if windows.is_empty() {
                 if metrics.total_return > 0.0 {
@@ -182,7 +195,7 @@ impl FactorBacktestEngine {
             };
             let regime = best_regime(&regime_scores);
 
-            let ranking = FactorIC {
+            let mut ranking = FactorIC {
                 factor_name: series.name.clone(),
                 regime,
                 ic_values: rolling_ic,
@@ -198,6 +211,15 @@ impl FactorBacktestEngine {
                 trade_count: metrics.trade_count,
                 regime_scores,
             };
+            let mut persisted_preview = PersistedFactorRanking::from(&ranking);
+            persisted_preview.conformal_coverage_1sigma = metrics.conformal_coverage_1sigma;
+            persisted_preview.conformal_miscoverage_1sigma = metrics.conformal_miscoverage_1sigma;
+            persisted_preview.mean_prediction_interval_half_width =
+                metrics.mean_prediction_interval_half_width;
+            persisted_preview.worst_window_miscoverage = metrics.worst_window_miscoverage;
+            persisted_preview.regime_break_penalty = metrics.regime_break_penalty;
+            persisted_preview.refresh_scorecard();
+            ranking.weight = persisted_preview.composite_score.max(0.0);
             rankings.push(ranking.clone());
             factor_results.push(FactorBacktestResult {
                 factor_name: series.name.clone(),
@@ -281,7 +303,7 @@ impl FactorBacktestEngine {
             agent_context_bundle: AgentContextBundle::default(),
             agent_context_bundle_minimal: AgentContextBundleMinimal::default(),
             recommended_commands: CommandRecommendations::default(),
-            recommended_next_command: String::new(),
+            recommended_next_command: "recommended_command_unavailable".to_string(),
             artifact_action_summary: Vec::new(),
             artifact_decision_summary: crate::state::ArtifactDecisionSummary::default(),
             artifact_decision_section: crate::state::ArtifactDecisionSection::default(),
@@ -300,6 +322,53 @@ fn sanitize_non_finite_metric(value: f64) -> f64 {
         value
     } else {
         0.0
+    }
+}
+
+fn empirical_quantile(mut values: Vec<f64>, quantile: f64) -> f64 {
+    if values.is_empty() {
+        return 0.0;
+    }
+
+    values.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+    let index = ((values.len().saturating_sub(1)) as f64 * quantile.clamp(0.0, 1.0)).round() as usize;
+    values[index.min(values.len().saturating_sub(1))]
+}
+
+fn mean(values: &[f64]) -> f64 {
+    if values.is_empty() {
+        0.0
+    } else {
+        values.iter().sum::<f64>() / values.len() as f64
+    }
+}
+
+fn realized_window_return(trades: &[FactorTrade]) -> f64 {
+    trades.iter().fold(1.0, |equity, trade| equity * (1.0 + trade.pnl)) - 1.0
+}
+
+fn conformal_diagnostics(
+    predicted_return: f64,
+    calibration_trade_returns: &[f64],
+    realized_return: f64,
+) -> WindowConformalDiagnostics {
+    let nonconformity = calibration_trade_returns
+        .iter()
+        .map(|ret| (ret - predicted_return).abs())
+        .collect::<Vec<_>>();
+    let interval_half_width = empirical_quantile(nonconformity, 0.9);
+    let interval_lower = predicted_return - interval_half_width;
+    let interval_upper = predicted_return + interval_half_width;
+    let covered = realized_return >= interval_lower && realized_return <= interval_upper;
+
+    WindowConformalDiagnostics {
+        predicted_return,
+        realized_return,
+        interval_lower,
+        interval_upper,
+        interval_half_width,
+        covered,
+        miscoverage: if covered { 0.0 } else { 1.0 },
     }
 }
 
@@ -347,8 +416,24 @@ fn walk_forward_backtest(
             factor_values.len().min(train_returns.len()).max(2),
         );
         let (_, _, ir) = ICCalculator::ir(&rolling_train_ic);
+        let predicted_return = mean(&train_returns);
+        let calibration_trade_returns = backtest_range(
+            series,
+            candles,
+            start.max(1),
+            test_start,
+            config,
+            config.initial_capital,
+        )
+        .trades
+        .into_iter()
+        .map(|trade| trade.pnl)
+        .collect::<Vec<_>>();
 
         let window = backtest_range(series, candles, test_start, test_end, config, equity);
+        let realized_return = realized_window_return(&window.trades);
+        let conformal =
+            conformal_diagnostics(predicted_return, &calibration_trade_returns, realized_return);
         equity = *window.equity_curve.last().unwrap_or(&equity);
         if window.equity_curve.len() > 1 {
             equity_curve.extend(window.equity_curve.iter().copied().skip(1));
@@ -361,9 +446,11 @@ fn walk_forward_backtest(
                 config.initial_capital,
                 &window.equity_curve,
                 &window.trades,
+                &[],
             ),
             ic,
             ir,
+            conformal,
         });
 
         let step = config.step_bars.max(1);
@@ -386,9 +473,10 @@ fn walk_forward_backtest(
         windows.push(WalkForwardWindow {
             start_index: 1,
             end_index: candles.len().saturating_sub(1),
-            metrics: metrics_from_trades(config.initial_capital, &equity_curve, &all_trades),
+            metrics: metrics_from_trades(config.initial_capital, &equity_curve, &all_trades, &[]),
             ic: 0.0,
             ir: 0.0,
+            conformal: conformal_diagnostics(0.0, &[], realized_window_return(&all_trades)),
         });
     }
 
@@ -573,10 +661,51 @@ fn forward_returns(candles: &[Candle], horizon: usize) -> Vec<f64> {
         .collect()
 }
 
+fn summarize_conformal_metrics(windows: &[WalkForwardWindow]) -> (f64, f64, f64, f64, f64) {
+    if windows.is_empty() {
+        return (0.0, 0.0, 0.0, 0.0, 0.0);
+    }
+
+    let coverage = windows
+        .iter()
+        .filter(|window| window.conformal.covered)
+        .count() as f64
+        / windows.len() as f64;
+    let mean_half_width = windows
+        .iter()
+        .map(|window| window.conformal.interval_half_width)
+        .sum::<f64>()
+        / windows.len() as f64;
+    let worst_miscoverage = windows
+        .iter()
+        .map(|window| window.conformal.miscoverage)
+        .fold(0.0, f64::max);
+    let realized_returns = windows
+        .iter()
+        .map(|window| window.conformal.realized_return)
+        .collect::<Vec<_>>();
+    let first_half = &realized_returns[..realized_returns.len() / 2];
+    let second_half = &realized_returns[realized_returns.len() / 2..];
+    let regime_break_penalty = if first_half.is_empty() || second_half.is_empty() {
+        0.0
+    } else {
+        (mean(first_half) - mean(second_half)).abs()
+    };
+
+    (
+        coverage,
+        1.0 - coverage,
+        mean_half_width,
+        worst_miscoverage,
+        regime_break_penalty,
+    )
+}
+
 fn metrics_from_trades(
     starting_equity: f64,
     equity_curve: &[f64],
     trades: &[FactorTrade],
+    windows: &[WalkForwardWindow],
 ) -> BacktestMetrics {
     let total_return = equity_curve
         .last()
@@ -614,6 +743,13 @@ fn metrics_from_trades(
     } else {
         0.0
     };
+    let (
+        conformal_coverage_1sigma,
+        conformal_miscoverage_1sigma,
+        mean_prediction_interval_half_width,
+        worst_window_miscoverage,
+        regime_break_penalty,
+    ) = summarize_conformal_metrics(windows);
 
     BacktestMetrics {
         total_return,
@@ -622,6 +758,11 @@ fn metrics_from_trades(
         win_rate,
         profit_factor,
         trade_count: trades.len(),
+        conformal_coverage_1sigma,
+        conformal_miscoverage_1sigma,
+        mean_prediction_interval_half_width,
+        worst_window_miscoverage,
+        regime_break_penalty,
     }
 }
 
@@ -762,5 +903,53 @@ mod tests {
         assert!(!result.factor_results.is_empty());
         assert!(result.factor_results[0].metrics.trade_count > 0);
         assert!(!result.factor_results[0].equity_curve.is_empty());
+        assert!(result.factor_results[0].windows.iter().all(|window| {
+            window.conformal.interval_upper >= window.conformal.interval_lower
+        }));
+    }
+
+    #[test]
+    fn test_conformal_metrics_capture_window_diagnostics() {
+        let windows = vec![
+            WalkForwardWindow {
+                start_index: 10,
+                end_index: 20,
+                metrics: BacktestMetrics::default(),
+                ic: 0.1,
+                ir: 0.2,
+                conformal: WindowConformalDiagnostics {
+                    predicted_return: 0.01,
+                    realized_return: 0.015,
+                    interval_lower: -0.01,
+                    interval_upper: 0.03,
+                    interval_half_width: 0.02,
+                    covered: true,
+                    miscoverage: 0.0,
+                },
+            },
+            WalkForwardWindow {
+                start_index: 21,
+                end_index: 30,
+                metrics: BacktestMetrics::default(),
+                ic: 0.0,
+                ir: 0.0,
+                conformal: WindowConformalDiagnostics {
+                    predicted_return: 0.02,
+                    realized_return: -0.03,
+                    interval_lower: 0.0,
+                    interval_upper: 0.04,
+                    interval_half_width: 0.02,
+                    covered: false,
+                    miscoverage: 1.0,
+                },
+            },
+        ];
+
+        let metrics = metrics_from_trades(100_000.0, &[100_000.0, 101_000.0], &[], &windows);
+        assert!((metrics.conformal_coverage_1sigma - 0.5).abs() < 1e-9);
+        assert!((metrics.conformal_miscoverage_1sigma - 0.5).abs() < 1e-9);
+        assert!((metrics.mean_prediction_interval_half_width - 0.02).abs() < 1e-9);
+        assert_eq!(metrics.worst_window_miscoverage, 1.0);
+        assert!(metrics.regime_break_penalty > 0.0);
     }
 }

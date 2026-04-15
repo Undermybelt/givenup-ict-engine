@@ -22,7 +22,12 @@ impl WeightUpdater {
     pub fn update_weights(factors: &mut [FactorIC]) {
         let scorecards = factors
             .iter()
-            .map(PersistedFactorRanking::from)
+            .map(|factor| {
+                let mut scorecard = PersistedFactorRanking::from(factor);
+                scorecard.conformal_coverage_1sigma = factor.weight;
+                scorecard.refresh_scorecard();
+                scorecard
+            })
             .collect::<Vec<_>>();
         let raw_scores = scorecards
             .iter()

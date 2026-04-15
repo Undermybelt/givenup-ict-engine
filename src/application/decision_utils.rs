@@ -145,6 +145,24 @@ pub fn derive_family_outcomes(
         .collect()
 }
 
+fn credibility_regressing(rankings: &[PersistedFactorRanking]) -> Option<String> {
+    rankings.iter().find_map(|ranking| {
+        if ranking.conformal_coverage_1sigma < 0.55 {
+            Some(format!(
+                "conformal_coverage_low:{}:{:.3}",
+                ranking.factor_name, ranking.conformal_coverage_1sigma
+            ))
+        } else if ranking.regime_break_penalty > 0.20 {
+            Some(format!(
+                "regime_break_penalty_high:{}:{:.3}",
+                ranking.factor_name, ranking.regime_break_penalty
+            ))
+        } else {
+            None
+        }
+    })
+}
+
 pub fn derive_promotion_decision(
     rankings: &[PersistedFactorRanking],
     score_deltas: &[RankingDiffItem],
@@ -170,6 +188,7 @@ pub fn derive_promotion_decision(
     let artifact_improving = artifact_consumed_gate
         .map(|gate| gate.status == "validated_improving")
         .unwrap_or(false);
+    let credibility_regression_reason = credibility_regressing(rankings);
 
     if !comparability.comparable {
         PromotionDecision {
@@ -191,6 +210,14 @@ pub fn derive_promotion_decision(
                     )
                 })
                 .unwrap_or_else(|| "artifact_consumption_validated_regression".to_string()),
+            target_factors: improving,
+            target_families: Vec::new(),
+        }
+    } else if let Some(reason) = credibility_regression_reason {
+        PromotionDecision {
+            approved: false,
+            status: "hold".to_string(),
+            reason,
             target_factors: improving,
             target_families: Vec::new(),
         }
@@ -235,6 +262,7 @@ pub fn derive_promotion_decision(
 }
 
 pub fn derive_rollback_recommendation(
+    rankings: &[PersistedFactorRanking],
     score_deltas: &[RankingDiffItem],
     probability_deltas: &[ProbabilityDiff],
     comparability: &DatasetComparability,
@@ -264,8 +292,13 @@ pub fn derive_rollback_recommendation(
     let artifact_regressing = artifact_consumed_gate
         .map(|gate| gate.status == "validated_regressing")
         .unwrap_or(false);
+    let credibility_regression_reason = credibility_regressing(rankings);
 
-    if harmful_prob_shift || !target_factors.is_empty() || artifact_regressing {
+    if harmful_prob_shift
+        || !target_factors.is_empty()
+        || artifact_regressing
+        || credibility_regression_reason.is_some()
+    {
         RollbackRecommendation {
             should_rollback: true,
             scope: if artifact_regressing && target_factors.is_empty() {
@@ -284,6 +317,8 @@ pub fn derive_rollback_recommendation(
                         )
                     })
                     .unwrap_or_else(|| "artifact_consumption_validated_regression".to_string())
+            } else if let Some(reason) = credibility_regression_reason {
+                reason
             } else if harmful_prob_shift {
                 "outcome_calibration_regressed".to_string()
             } else {

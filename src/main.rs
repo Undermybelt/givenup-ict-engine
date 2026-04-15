@@ -380,6 +380,11 @@ struct BacktestMetricsSummary {
     max_drawdown: f64,
     win_rate: f64,
     profit_factor: f64,
+    conformal_coverage_1sigma: f64,
+    conformal_miscoverage_1sigma: f64,
+    mean_prediction_interval_half_width: f64,
+    worst_window_miscoverage: f64,
+    regime_break_penalty: f64,
 }
 
 #[derive(Debug, Serialize)]
@@ -10860,6 +10865,7 @@ fn update_command(
         Some(&artifact_consumed_gate),
     );
     report.rollback_recommendation = derive_rollback_recommendation(
+        &report.factor_ranking,
         &report.factor_score_deltas,
         &report.trade_outcome_deltas,
         &report.dataset_comparability,
@@ -11787,6 +11793,23 @@ fn factor_backtest_command(
     state_dir: &str,
 ) -> Result<()> {
     let report = run_factor_backtest(symbol, data, paired_data, state_dir)?;
+    let credibility_summary = serde_json::json!({
+        "conformal_coverage_1sigma": report
+            .factor_results
+            .iter()
+            .map(|result| (result.factor_name.clone(), result.metrics.conformal_coverage_1sigma))
+            .collect::<Vec<_>>(),
+        "conformal_miscoverage_1sigma": report
+            .factor_results
+            .iter()
+            .map(|result| (result.factor_name.clone(), result.metrics.conformal_miscoverage_1sigma))
+            .collect::<Vec<_>>(),
+        "regime_break_penalty": report
+            .factor_results
+            .iter()
+            .map(|result| (result.factor_name.clone(), result.metrics.regime_break_penalty))
+            .collect::<Vec<_>>(),
+    });
     let compact_report = build_backtest_result_artifact(
         format!("factor_backtest:{}", symbol),
         &report
@@ -11794,7 +11817,25 @@ fn factor_backtest_command(
             .iter()
             .map(|item| format!("{}:{:.3}", item.factor_name, item.composite_score))
             .collect::<Vec<_>>(),
-        &[format!("best_factor={:?}", report.best_factor)],
+        &[
+            format!("best_factor={:?}", report.best_factor),
+            format!(
+                "coverage_1sigma={:.3}",
+                report
+                    .factor_results
+                    .first()
+                    .map(|result| result.metrics.conformal_coverage_1sigma)
+                    .unwrap_or_default()
+            ),
+            format!(
+                "regime_break_penalty={:.3}",
+                report
+                    .factor_results
+                    .first()
+                    .map(|result| result.metrics.regime_break_penalty)
+                    .unwrap_or_default()
+            ),
+        ],
         &[],
         &[],
         true,
@@ -11824,6 +11865,7 @@ fn factor_backtest_command(
         serde_json::to_string_pretty(&serde_json::json!({
             "report": report,
             "compact_backtest_report": compact_report,
+            "credibility_summary": credibility_summary,
             "ensemble": ensemble_surface,
         }))?
     );
@@ -12026,6 +12068,7 @@ fn run_factor_research(
         cpt_probability_diffs(&previous_trade_outcome_cpt, &final_trade_outcome_cpt);
     report.backtest.final_trade_outcome_cpt = final_trade_outcome_cpt.clone();
     report.rollback_recommendation = derive_rollback_recommendation(
+        &learning_state.factor_rankings,
         &score_deltas,
         &report.backtest.trade_outcome_deltas,
         &report.dataset_comparability,
@@ -12102,6 +12145,57 @@ fn run_factor_research(
         &report.promotion_decision,
         &report.rollback_recommendation,
     );
+    let coverage_caution = report
+        .backtest
+        .factor_results
+        .iter()
+        .filter(|result| result.metrics.conformal_coverage_1sigma < 0.55)
+        .map(|result| {
+            format!(
+                "conformal_coverage_low:{}:{:.3}",
+                result.factor_name, result.metrics.conformal_coverage_1sigma
+            )
+        })
+        .collect::<Vec<_>>();
+    let break_caution = report
+        .backtest
+        .factor_results
+        .iter()
+        .filter(|result| result.metrics.regime_break_penalty > 0.20)
+        .map(|result| {
+            format!(
+                "regime_break_penalty_high:{}:{:.3}",
+                result.factor_name, result.metrics.regime_break_penalty
+            )
+        })
+        .collect::<Vec<_>>();
+    report
+        .artifact_action_summary
+        .extend(coverage_caution.iter().cloned());
+    report.artifact_action_summary.push(format!(
+        "conformal_credibility:coverage_1sigma={:.3} miscoverage_1sigma={:.3} break_penalty={:.3}",
+        report
+            .backtest
+            .factor_results
+            .first()
+            .map(|result| result.metrics.conformal_coverage_1sigma)
+            .unwrap_or_default(),
+        report
+            .backtest
+            .factor_results
+            .first()
+            .map(|result| result.metrics.conformal_miscoverage_1sigma)
+            .unwrap_or_default(),
+        report
+            .backtest
+            .factor_results
+            .first()
+            .map(|result| result.metrics.regime_break_penalty)
+            .unwrap_or_default()
+    ));
+    report
+        .artifact_action_summary
+        .extend(break_caution.iter().cloned());
     report.agent_action_plan = build_agent_action_plan(
         "research_review_ready",
         &report.promotion_decision,
@@ -12894,6 +12988,7 @@ fn run_factor_backtest(
         cpt_probability_diffs(&previous_trade_outcome_cpt, &final_trade_outcome_cpt);
     report.final_trade_outcome_cpt = final_trade_outcome_cpt.clone();
     report.rollback_recommendation = derive_rollback_recommendation(
+        &learning_state.factor_rankings,
         &score_deltas,
         &report.trade_outcome_deltas,
         &report.dataset_comparability,
@@ -13057,6 +13152,31 @@ fn run_factor_backtest(
                 .iter()
                 .map(|result| result.trades.len())
                 .sum(),
+            conformal_coverage_1sigma: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.conformal_coverage_1sigma)
+                .unwrap_or_default(),
+            conformal_miscoverage_1sigma: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.conformal_miscoverage_1sigma)
+                .unwrap_or_default(),
+            mean_prediction_interval_half_width: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.mean_prediction_interval_half_width)
+                .unwrap_or_default(),
+            worst_window_miscoverage: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.worst_window_miscoverage)
+                .unwrap_or_default(),
+            regime_break_penalty: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.regime_break_penalty)
+                .unwrap_or_default(),
             factor_score_deltas: score_deltas,
             trade_outcome_deltas: report.trade_outcome_deltas.clone(),
             factor_family_decisions,
@@ -13954,6 +14074,11 @@ fn run_probabilistic_backtest(
             max_drawdown: Metrics::max_drawdown(&equity_curve),
             win_rate: Metrics::win_rate(&trades),
             profit_factor: Metrics::profit_factor(&trades),
+            conformal_coverage_1sigma: 0.0,
+            conformal_miscoverage_1sigma: 0.0,
+            mean_prediction_interval_half_width: 0.0,
+            worst_window_miscoverage: 0.0,
+            regime_break_penalty: 0.0,
         },
         equity_curve,
         regime_metrics,
@@ -15076,6 +15201,11 @@ fn analyze_signal_rankings(
                 win_rate: 0.0,
                 profit_factor: 1.0,
                 trade_count: 0,
+                conformal_coverage_1sigma: 0.0,
+                conformal_miscoverage_1sigma: 0.0,
+                mean_prediction_interval_half_width: 0.0,
+                worst_window_miscoverage: 0.0,
+                regime_break_penalty: 0.0,
                 weight: signal.weight,
                 regime_scores: BTreeMap::from([(
                     ict_engine::state::regime_key(regime).to_string(),
@@ -17270,6 +17400,7 @@ fn finalize_backtest_report(
         Some(&artifact_consumed_gate),
     );
     report.rollback_recommendation = derive_rollback_recommendation(
+        &report.factor_ranking,
         &score_deltas,
         &probability_deltas,
         &report.dataset_comparability,
@@ -17433,6 +17564,11 @@ fn finalize_backtest_report(
             source_command: "backtest".to_string(),
             total_return: report.metrics.total_return,
             trade_count: report.trades,
+            conformal_coverage_1sigma: report.metrics.conformal_coverage_1sigma,
+            conformal_miscoverage_1sigma: report.metrics.conformal_miscoverage_1sigma,
+            mean_prediction_interval_half_width: report.metrics.mean_prediction_interval_half_width,
+            worst_window_miscoverage: report.metrics.worst_window_miscoverage,
+            regime_break_penalty: report.metrics.regime_break_penalty,
             factor_score_deltas: score_deltas,
             trade_outcome_deltas: probability_deltas,
             factor_family_decisions: report.factor_family_decisions.clone(),
@@ -20377,6 +20513,8 @@ mod tests {
             &[PersistedFactorRanking {
                 factor_name: "trend_momentum".to_string(),
                 composite_score: 0.82,
+                conformal_coverage_1sigma: 0.80,
+                regime_break_penalty: 0.05,
                 ..PersistedFactorRanking::default()
             }],
             &[RankingDiffItem {
@@ -20392,6 +20530,13 @@ mod tests {
             Some(&gate),
         );
         let rollback = derive_rollback_recommendation(
+            &[PersistedFactorRanking {
+                factor_name: "trend_momentum".to_string(),
+                composite_score: 0.82,
+                conformal_coverage_1sigma: 0.80,
+                regime_break_penalty: 0.05,
+                ..PersistedFactorRanking::default()
+            }],
             &[],
             &[],
             &DatasetComparability {
@@ -20412,6 +20557,50 @@ mod tests {
         assert!(rollback
             .reason
             .contains("artifact_consumption_validated_regression"));
+    }
+
+    #[test]
+    fn test_derive_decisions_hold_on_credibility_regression() {
+        let rankings = [PersistedFactorRanking {
+            factor_name: "fragile_alpha".to_string(),
+            composite_score: 0.91,
+            conformal_coverage_1sigma: 0.42,
+            regime_break_penalty: 0.31,
+            ..PersistedFactorRanking::default()
+        }];
+        let promotion = derive_promotion_decision(
+            &rankings,
+            &[RankingDiffItem {
+                factor_name: "fragile_alpha".to_string(),
+                score_delta: 0.20,
+                ..RankingDiffItem::default()
+            }],
+            &DatasetComparability {
+                comparable: true,
+                ..DatasetComparability::default()
+            },
+            &decision_thresholds(),
+            None,
+        );
+        let rollback = derive_rollback_recommendation(
+            &rankings,
+            &[],
+            &[],
+            &DatasetComparability {
+                comparable: true,
+                ..DatasetComparability::default()
+            },
+            &decision_thresholds(),
+            None,
+        );
+        assert!(!promotion.approved);
+        assert_eq!(promotion.status, "hold");
+        assert!(promotion.reason.contains("conformal_coverage_low"));
+        assert!(rollback.should_rollback);
+        assert!(
+            rollback.reason.contains("conformal_coverage_low")
+                || rollback.reason.contains("regime_break_penalty_high")
+        );
     }
 
     #[test]

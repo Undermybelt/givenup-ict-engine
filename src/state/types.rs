@@ -1523,6 +1523,16 @@ pub struct BacktestRunRecord {
     pub source_command: String,
     pub total_return: f64,
     pub trade_count: usize,
+    #[serde(default)]
+    pub conformal_coverage_1sigma: f64,
+    #[serde(default)]
+    pub conformal_miscoverage_1sigma: f64,
+    #[serde(default)]
+    pub mean_prediction_interval_half_width: f64,
+    #[serde(default)]
+    pub worst_window_miscoverage: f64,
+    #[serde(default)]
+    pub regime_break_penalty: f64,
     pub factor_score_deltas: Vec<RankingDiffItem>,
     pub trade_outcome_deltas: Vec<ProbabilityDiff>,
     pub factor_family_decisions: Vec<FactorFamilyDecision>,
@@ -1572,6 +1582,16 @@ pub struct PersistedFactorRanking {
     pub win_rate: f64,
     pub profit_factor: f64,
     pub trade_count: usize,
+    #[serde(default)]
+    pub conformal_coverage_1sigma: f64,
+    #[serde(default)]
+    pub conformal_miscoverage_1sigma: f64,
+    #[serde(default)]
+    pub mean_prediction_interval_half_width: f64,
+    #[serde(default)]
+    pub worst_window_miscoverage: f64,
+    #[serde(default)]
+    pub regime_break_penalty: f64,
     pub weight: f64,
     pub regime_scores: BTreeMap<String, f64>,
     pub composite_score: f64,
@@ -2374,6 +2394,11 @@ impl From<&FactorIC> for PersistedFactorRanking {
             win_rate: value.win_rate,
             profit_factor: value.profit_factor,
             trade_count: value.trade_count,
+            conformal_coverage_1sigma: 0.0,
+            conformal_miscoverage_1sigma: 0.0,
+            mean_prediction_interval_half_width: 0.0,
+            worst_window_miscoverage: 0.0,
+            regime_break_penalty: 0.0,
             weight: value.weight,
             regime_scores: value
                 .regime_scores
@@ -2426,6 +2451,8 @@ impl PersistedFactorRanking {
         let win_rate_score = ((self.win_rate - 0.45) / 0.20).clamp(0.0, 1.0);
         let profit_factor_score = ((self.profit_factor - 0.95) / 0.55).clamp(0.0, 1.0);
         let regime_score = regime_breadth.clamp(0.0, 1.0);
+        let conformal_score = ((self.conformal_coverage_1sigma - 0.45) / 0.35).clamp(0.0, 1.0);
+        let break_penalty_score = (1.0 - (self.regime_break_penalty / 0.35)).clamp(0.0, 1.0);
 
         self.score_breakdown = BTreeMap::from([
             ("ic".to_string(), ic_score),
@@ -2436,17 +2463,21 @@ impl PersistedFactorRanking {
             ("win_rate".to_string(), win_rate_score),
             ("profit_factor".to_string(), profit_factor_score),
             ("regime_coverage".to_string(), regime_score),
+            ("conformal_coverage".to_string(), conformal_score),
+            ("regime_break_resilience".to_string(), break_penalty_score),
             ("sample".to_string(), sample_score),
         ]);
 
         self.composite_score = 0.16 * ic_score
             + 0.13 * ir_score
             + 0.16 * return_score
-            + 0.12 * sharpe_score
-            + 0.12 * stability_score
+            + 0.10 * sharpe_score
+            + 0.10 * stability_score
             + 0.10 * win_rate_score
-            + 0.10 * profit_factor_score
+            + 0.08 * profit_factor_score
             + 0.06 * regime_score
+            + 0.07 * conformal_score
+            + 0.05 * break_penalty_score
             + 0.05 * sample_score;
         self.composite_score = self.composite_score.clamp(0.0, 1.0);
 
@@ -2489,6 +2520,12 @@ fn factor_weaknesses(
     }
     if ranking.profit_factor < 1.05 {
         weaknesses.push("weak_profit_factor".to_string());
+    }
+    if ranking.conformal_coverage_1sigma < 0.55 {
+        weaknesses.push("low_conformal_coverage".to_string());
+    }
+    if ranking.regime_break_penalty > 0.20 {
+        weaknesses.push("high_regime_break_penalty".to_string());
     }
     if regime_score < 0.34 {
         weaknesses.push("narrow_regime_coverage".to_string());
