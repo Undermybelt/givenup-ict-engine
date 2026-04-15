@@ -2,19 +2,33 @@
   "artifact_version": "catboost-policy-v1-sample",
   "model_family": "catboost",
   "target_kind": "post_bbn_policy_action",
-  "feature_schema_version": "policy_features_v1",
+  "feature_schema_version": "policy_features_v2_execution_setup",
   "categorical_features": [
     "factor_alignment",
     "factor_uncertainty",
     "gating_status",
     "selected_entry_quality",
     "recommended_command",
-    "selected_direction"
+    "selected_direction",
+    "setup_family",
+    "entry_style",
+    "risk_template",
+    "setup_quality",
+    "signal_bar_pattern",
+    "session_model"
   ],
   "numerical_features": [
     "evidence_quality_score",
     "risk_reward",
-    "kelly_fraction"
+    "kelly_fraction",
+    "pda_distance_bps",
+    "pda_width_bps",
+    "overlap_ratio",
+    "displacement_strength",
+    "sweep_depth_bps",
+    "entry_price_offset_bps",
+    "sl_distance_bps",
+    "tp_rr_ratio"
   ],
   "target_label_space": ["Observe", "Bull", "Bear"],
   "trees": [],

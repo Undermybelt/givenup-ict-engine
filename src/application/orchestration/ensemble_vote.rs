@@ -11,7 +11,7 @@ use crate::domain::belief::BeliefReportPacket;
 use crate::factor_lab::research::ResearchReport;
 use crate::state::{
     load_ensemble_executor_scorecards, load_ensemble_vote_history, DatasetComparability,
-    EnsembleExecutorScorecard, RunProvenance,
+    EnsembleExecutorScorecard, PreBayesEvidenceFilter, RunProvenance,
 };
 
 const DEFAULT_CATBOOST_WEIGHT: f64 = 0.55;
@@ -22,8 +22,13 @@ pub struct AnalyzeEnsembleVoteInput {
     pub symbol: String,
     pub state_dir: Option<String>,
     pub recommended_next_command: String,
+    pub hard_blocked: bool,
+    pub hard_block_reason: Option<String>,
+    pub hard_block_command: Option<String>,
     pub provenance: RunProvenance,
     pub dataset_comparability: DatasetComparability,
+    #[serde(default)]
+    pub pre_bayes_filter: Option<PreBayesEvidenceFilter>,
     pub belief: BeliefReportPacket,
 }
 
@@ -98,6 +103,29 @@ fn summarize_executor(decision: &EnsembleExecutorDecision) -> String {
         "executor={} action={} confidence={:.3}",
         decision.executor, decision.action, decision.confidence
     )
+}
+
+fn humanize_workflow_command_local(command: &str) -> String {
+    let trimmed = command.trim();
+    if trimmed.is_empty() {
+        return "No actionable command available.".to_string();
+    }
+    if let Some(rest) = trimmed.strip_prefix("ask-user: ") {
+        let mut parts = rest.split(" | blocked until user_selected_historical_data | then ");
+        let ask = parts.next().unwrap_or("").trim();
+        let then = parts.next().unwrap_or("").trim();
+        if then.is_empty() || then == "choose historical dataset with user before running command" {
+            return format!("Ask the user to choose the historical dataset. {}", ask);
+        }
+        return format!(
+            "Ask the user to choose the historical dataset. {} Then run: {}",
+            ask, then
+        );
+    }
+    if trimmed.starts_with("blocked:") {
+        return format!("Blocked: {}", trimmed.trim_start_matches("blocked:").trim());
+    }
+    format!("Next step: {}", trimmed)
 }
 
 impl VotingAggregator for WeightedVotingAggregator {
@@ -202,6 +230,13 @@ impl VotingAggregator for WeightedVotingAggregator {
                 input.symbol
             );
         }
+        if input.hard_blocked {
+            recommended_command = input
+                .hard_block_command
+                .clone()
+                .filter(|value| !value.trim().is_empty())
+                .unwrap_or_else(|| recommended_command.clone());
+        }
         let disagreement_flags = if weighted
             .windows(2)
             .all(|pair| pair[0].0.action == pair[1].0.action)
@@ -218,17 +253,46 @@ impl VotingAggregator for WeightedVotingAggregator {
                 })
                 .collect()
         };
+        let hard_block = if input.hard_blocked {
+            super::EnsembleHardBlockArtifact {
+                active: true,
+                stage: Some("analyze".to_string()),
+                status: Some("hard_blocked".to_string()),
+                reason: input.hard_block_reason.clone(),
+                evidence: Vec::new(),
+                command: Some(recommended_command.clone()),
+                human_action: Some(humanize_workflow_command_local(&recommended_command)),
+            }
+        } else {
+            super::EnsembleHardBlockArtifact::default()
+        };
         EnsembleDecision {
             final_action: final_action.clone(),
             recommended_command: recommended_command.clone(),
-            human_next_triage: format!(
-                "ensemble_action={} consensus={:.3} regime={} jump_gate_bias={} command={}",
-                final_action,
-                consensus_strength,
-                posterior.active_regime,
-                jump_gate_bias,
-                recommended_command
-            ),
+            human_next_triage: if input.hard_blocked {
+                format!(
+                    "hard_blocked=true ensemble_action={} consensus={:.3} regime={} jump_gate_bias={} hard_block_reason={} command={}",
+                    final_action,
+                    consensus_strength,
+                    posterior.active_regime,
+                    jump_gate_bias,
+                    input
+                        .hard_block_reason
+                        .clone()
+                        .unwrap_or_else(|| "hard_block_reason_unavailable".to_string()),
+                    recommended_command
+                )
+            } else {
+                format!(
+                    "hard_blocked=false ensemble_action={} consensus={:.3} regime={} jump_gate_bias={} command={}",
+                    final_action,
+                    consensus_strength,
+                    posterior.active_regime,
+                    jump_gate_bias,
+                    recommended_command
+                )
+            },
+            hard_block,
             confidence: weighted
                 .iter()
                 .map(|item| item.2)
@@ -245,6 +309,42 @@ impl VotingAggregator for WeightedVotingAggregator {
     }
 }
 
+fn parse_summary_value<'a>(summary: &'a [String], key: &str) -> Option<&'a str> {
+    summary
+        .iter()
+        .find_map(|item| item.strip_prefix(&format!("{key}=")))
+}
+
+fn derive_session_model(summary: &[String]) -> String {
+    let source_mode = parse_summary_value(summary, "multi_timeframe_source").unwrap_or_default();
+    let source_mode_lower = source_mode.to_ascii_lowercase();
+    if source_mode_lower.contains("silver") {
+        "silver_bullet".to_string()
+    } else if source_mode_lower.contains("judas") {
+        "judas".to_string()
+    } else if source_mode_lower.contains("turtle") {
+        "turtle_soup".to_string()
+    } else {
+        "standard".to_string()
+    }
+}
+
+fn map_timed_pda_label_to_setup_family(label: &str) -> String {
+    let concept = label.split(':').next().unwrap_or_default();
+    match concept {
+        "FairValueGap" => "fair_value_gap",
+        "InversionFairValueGap" => "inverse_fvg",
+        "BalancedPriceRange" => "breaker_block",
+        "LiquidityPool" => "liquidity_void",
+        "EqualHighsLows" => "turtle_soup",
+        "OptimalTradeEntry" => "ote_confluence",
+        "Ndog" | "Nwog" | "OpenRangeGap" => "silver_bullet",
+        "SwingFailurePattern" => "judas_swing",
+        _ => "none",
+    }
+    .to_string()
+}
+
 fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeatureVector {
     let gate = input
         .belief
@@ -259,6 +359,7 @@ fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeature
     } else {
         "Observe".to_string()
     };
+    let pre_bayes = input.pre_bayes_filter.as_ref();
     PolicyFeatureVector {
         factor_alignment: input
             .belief
@@ -278,6 +379,71 @@ fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeature
         selected_direction: direction,
         risk_reward: 2.0,
         kelly_fraction: 0.1,
+        setup_family: pre_bayes
+            .and_then(|filter| filter.nearest_active_pda.as_deref())
+            .map(map_timed_pda_label_to_setup_family)
+            .unwrap_or_else(|| "none".to_string()),
+        entry_style: if pre_bayes.map(|filter| filter.active_pda_count).unwrap_or(0) > 0 {
+            "limit_pullback".to_string()
+        } else {
+            "observe".to_string()
+        },
+        risk_template: if pre_bayes
+            .map(|filter| filter.inversed_pda_count)
+            .unwrap_or(0)
+            > 0
+        {
+            "tight_external".to_string()
+        } else {
+            "observe_only".to_string()
+        },
+        setup_quality: if pre_bayes.map(|filter| filter.active_pda_count).unwrap_or(0) > 0 {
+            "medium".to_string()
+        } else {
+            "low".to_string()
+        },
+        signal_bar_pattern: if pre_bayes.map(|filter| filter.active_pda_count).unwrap_or(0) > 0 {
+            if derive_session_model(&input.belief.regime_posterior.evidence) == "standard" {
+                "displacement".to_string()
+            } else {
+                "sweep_reject".to_string()
+            }
+        } else {
+            "none".to_string()
+        },
+        session_model: derive_session_model(&input.belief.regime_posterior.evidence),
+        higher_tf_bias_match: pre_bayes
+            .map(|filter| filter.filtered_multi_timeframe_direction_bias != "neutral")
+            .unwrap_or(false),
+        discount_premium_correct: pre_bayes.map(|filter| filter.active_pda_count).unwrap_or(0) > 0,
+        liquidity_swept: pre_bayes
+            .map(|filter| {
+                filter.raw_liquidity_context_label.contains("sweep")
+                    || filter.filtered_liquidity_context_label.contains("sweep")
+            })
+            .unwrap_or(false),
+        signal_bar_present: pre_bayes.map(|filter| filter.active_pda_count).unwrap_or(0) > 0,
+        pda_signal_overlap: pre_bayes
+            .and_then(|filter| filter.filtered_multi_timeframe_entry_alignment_score)
+            .unwrap_or(0.0)
+            >= 0.5,
+        timed_pda_active_nearby: pre_bayes.map(|filter| filter.active_pda_count).unwrap_or(0) > 0,
+        timed_pda_inversed_nearby: pre_bayes
+            .map(|filter| filter.inversed_pda_count)
+            .unwrap_or(0)
+            > 0,
+        timed_pda_stale_nearby: pre_bayes.map(|filter| filter.stale_pda_count).unwrap_or(0) > 0,
+        pda_distance_bps: 0.0,
+        pda_width_bps: 0.0,
+        overlap_ratio: pre_bayes
+            .and_then(|filter| filter.filtered_multi_timeframe_entry_alignment_score)
+            .unwrap_or(0.0)
+            .clamp(0.0, 1.0),
+        displacement_strength: input.belief.regime_posterior.confidence.unwrap_or(0.5),
+        sweep_depth_bps: 0.0,
+        entry_price_offset_bps: 0.0,
+        sl_distance_bps: 0.0,
+        tp_rr_ratio: 2.0,
     }
 }
 
@@ -492,6 +658,7 @@ pub fn build_stub_ensemble_vote_from_input(
         final_action: decision.final_action,
         recommended_command: decision.recommended_command,
         human_next_triage: decision.human_next_triage,
+        hard_block: decision.hard_block,
         confidence: decision.confidence,
         consensus_strength: decision.consensus_strength,
         disagreement_flags: decision.disagreement_flags,
@@ -520,8 +687,12 @@ pub fn build_stub_ensemble_vote_from_research(report: &ResearchReport) -> Ensemb
         symbol: report.symbol_or_default(),
         state_dir: None,
         recommended_next_command: report.recommended_next_command.clone(),
+        hard_blocked: false,
+        hard_block_reason: None,
+        hard_block_command: None,
         provenance: report.provenance.clone(),
         dataset_comparability: report.dataset_comparability.clone(),
+        pre_bayes_filter: Some(report.pre_bayes_evidence_filter.clone()),
         belief: BeliefReportPacket {
             regime_posterior: crate::domain::regime::RegimePosterior {
                 active_regime: Some(active_phase),
@@ -613,6 +784,9 @@ mod tests {
             state_dir: None,
             recommended_next_command: "ict-engine workflow-status --symbol NQ --phase human-next"
                 .to_string(),
+            hard_blocked: false,
+            hard_block_reason: None,
+            hard_block_command: None,
             provenance: RunProvenance {
                 data_fingerprint: "fp1".to_string(),
                 ..RunProvenance::default()
@@ -622,12 +796,14 @@ mod tests {
                 comparison_class: "same_data_different_config".to_string(),
                 ..DatasetComparability::default()
             },
+            pre_bayes_filter: None,
             belief,
         });
         assert_eq!(artifact.posterior.normalization_status, "normalized");
         assert!(!artifact.final_action.is_empty());
         assert_eq!(artifact.ensemble_version, "ensemble-audit-v2-weighted");
         assert_eq!(artifact.executor_summaries.len(), 2);
+        assert!(!artifact.hard_block.active);
     }
 
     #[test]
@@ -667,14 +843,54 @@ mod tests {
             recommended_next_command:
                 "ict-engine update --symbol NQ --outcome <win|loss|breakeven> --entry-signal medium"
                     .to_string(),
+            hard_blocked: false,
+            hard_block_reason: None,
+            hard_block_command: None,
             provenance: RunProvenance {
                 data_fingerprint: "fp2".to_string(),
                 ..RunProvenance::default()
             },
             dataset_comparability: DatasetComparability::default(),
+            pre_bayes_filter: None,
             belief,
         });
         assert_eq!(artifact.executor_summaries.len(), 2);
+    }
+
+    #[test]
+    fn hard_block_artifact_is_embedded_in_ensemble_vote() {
+        let artifact = build_stub_ensemble_vote_from_input(&AnalyzeEnsembleVoteInput {
+            symbol: "NQ".to_string(),
+            state_dir: None,
+            recommended_next_command:
+                "ict-engine update --symbol NQ --outcome win --state-dir state".to_string(),
+            hard_blocked: true,
+            hard_block_reason: Some("pre-bayes gate still blocks downstream chain".to_string()),
+            hard_block_command: Some(
+                "ict-engine pre-bayes-status --symbol NQ --state-dir state".to_string(),
+            ),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            pre_bayes_filter: None,
+            belief: BeliefReportPacket::default(),
+        });
+        assert!(artifact.hard_block.active);
+        assert_eq!(artifact.hard_block.stage.as_deref(), Some("analyze"));
+        assert_eq!(artifact.hard_block.status.as_deref(), Some("hard_blocked"));
+        assert_eq!(
+            artifact.hard_block.reason.as_deref(),
+            Some("pre-bayes gate still blocks downstream chain")
+        );
+        assert_eq!(
+            artifact.hard_block.command.as_deref(),
+            Some("ict-engine pre-bayes-status --symbol NQ --state-dir state")
+        );
+        assert!(artifact
+            .hard_block
+            .human_action
+            .as_deref()
+            .unwrap()
+            .contains("Next step: ict-engine pre-bayes-status --symbol NQ --state-dir state"));
     }
 
     #[test]
@@ -699,7 +915,8 @@ mod tests {
             final_action: "observe".to_string(),
             recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next"
                 .to_string(),
-            human_next_triage: "ensemble_action=observe".to_string(),
+            human_next_triage: "hard_blocked=false ensemble_action=observe".to_string(),
+            hard_block: crate::application::orchestration::EnsembleHardBlockArtifact::default(),
             confidence: 0.5,
             consensus_strength: 0.5,
             disagreement_flags: Vec::new(),

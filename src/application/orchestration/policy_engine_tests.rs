@@ -9,7 +9,7 @@ fn catboost_policy_engine_loads_sample_artifact() {
     assert_eq!(engine.model_artifact.model_family, "catboost");
     assert_eq!(
         engine.model_artifact.feature_schema_version,
-        "policy_features_v1"
+        "policy_features_v2_execution_setup"
     );
 }
 
@@ -28,6 +28,28 @@ fn catboost_policy_engine_infer_uses_loaded_artifact_version() {
         selected_direction: "Bull".to_string(),
         risk_reward: 2.4,
         kelly_fraction: 0.12,
+        setup_family: "order_block".to_string(),
+        entry_style: "market_confirmation".to_string(),
+        risk_template: "structure_external".to_string(),
+        setup_quality: "high".to_string(),
+        signal_bar_pattern: "displacement".to_string(),
+        session_model: "silver_bullet".to_string(),
+        higher_tf_bias_match: true,
+        discount_premium_correct: true,
+        liquidity_swept: true,
+        signal_bar_present: true,
+        pda_signal_overlap: true,
+        timed_pda_active_nearby: true,
+        timed_pda_inversed_nearby: false,
+        timed_pda_stale_nearby: false,
+        pda_distance_bps: 12.0,
+        pda_width_bps: 18.0,
+        overlap_ratio: 0.75,
+        displacement_strength: 0.82,
+        sweep_depth_bps: 24.0,
+        entry_price_offset_bps: 4.0,
+        sl_distance_bps: 14.0,
+        tp_rr_ratio: 2.4,
     });
     assert_eq!(decision.policy_version, "catboost-policy-v1-sample");
     assert_eq!(decision.qualification, "qualified");
@@ -51,6 +73,28 @@ fn catboost_policy_engine_falls_back_when_feature_conditions_do_not_match() {
         selected_direction: "Bull".to_string(),
         risk_reward: 2.4,
         kelly_fraction: 0.12,
+        setup_family: "none".to_string(),
+        entry_style: "observe".to_string(),
+        risk_template: "observe_only".to_string(),
+        setup_quality: "low".to_string(),
+        signal_bar_pattern: "none".to_string(),
+        session_model: "standard".to_string(),
+        higher_tf_bias_match: false,
+        discount_premium_correct: false,
+        liquidity_swept: false,
+        signal_bar_present: false,
+        pda_signal_overlap: false,
+        timed_pda_active_nearby: false,
+        timed_pda_inversed_nearby: false,
+        timed_pda_stale_nearby: true,
+        pda_distance_bps: 0.0,
+        pda_width_bps: 0.0,
+        overlap_ratio: 0.0,
+        displacement_strength: 0.0,
+        sweep_depth_bps: 0.0,
+        entry_price_offset_bps: 0.0,
+        sl_distance_bps: 0.0,
+        tp_rr_ratio: 2.4,
     });
     assert_ne!(decision.leaf_id, "qualified-bull");
 }

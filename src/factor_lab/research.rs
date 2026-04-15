@@ -12,7 +12,8 @@ use crate::state::{
     DatasetComparability, DecisionHistorySummary, DecisionThresholds, FactorFamilyDiff,
     FactorFamilyHistory, FactorFamilyOutcome, FactorMutationEvaluation, FeedbackFactorUsage,
     FeedbackHistorySummary, FeedbackRecord, LearningState, ModelProbabilitySnapshot,
-    PromotionDecision, RankingDiffItem, RollbackRecommendation, RunProvenance, WorkflowState,
+    PreBayesEvidenceFilter, PromotionDecision, RankingDiffItem, RollbackRecommendation,
+    RunProvenance, WorkflowState,
 };
 use crate::types::Candle;
 
@@ -51,6 +52,8 @@ pub struct ResearchReport {
     pub artifact_decision_section: crate::state::ArtifactDecisionSection,
     pub workflow_snapshot: crate::state::WorkflowSnapshot,
     pub backtest: BacktestResult,
+    #[serde(default)]
+    pub pre_bayes_evidence_filter: PreBayesEvidenceFilter,
     pub factor_mutation_evaluation: Option<FactorMutationEvaluation>,
     #[serde(default)]
     pub multi_timeframe_summary: Vec<String>,
@@ -155,6 +158,7 @@ impl FactorLab {
             artifact_decision_section: crate::state::ArtifactDecisionSection::default(),
             workflow_snapshot: crate::state::WorkflowSnapshot::default(),
             backtest: result,
+            pre_bayes_evidence_filter: PreBayesEvidenceFilter::default(),
             factor_mutation_evaluation: None,
             multi_timeframe_summary: Vec::new(),
         })

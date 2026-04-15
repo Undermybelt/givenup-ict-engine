@@ -12,6 +12,10 @@ pub struct ReflectionBundle {
     pub ensemble_vote_artifact_id: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ensemble_disagreement_summary: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub execution_setup_summary: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub execution_setup_guardrail: Option<String>,
 }
 
 pub fn build_reflection_bundle(
@@ -57,6 +61,8 @@ pub fn build_reflection_bundle(
         ensemble_vote_summary: None,
         ensemble_vote_artifact_id: None,
         ensemble_disagreement_summary: None,
+        execution_setup_summary: None,
+        execution_setup_guardrail: None,
     }
 }
 

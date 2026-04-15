@@ -196,7 +196,8 @@ impl FactorBacktestEngine {
             let (mean_ic, std_ic, ir) = ICCalculator::ir(&rolling_ic);
 
             let (trades, equity_curve, windows) = walk_forward_backtest(&series, candles, config);
-            let metrics = metrics_from_trades(config.initial_capital, &equity_curve, &trades, &windows);
+            let metrics =
+                metrics_from_trades(config.initial_capital, &equity_curve, &trades, &windows);
             let regime_scores = regime_scores(&trades);
             let stability = if windows.is_empty() {
                 if metrics.total_return > 0.0 {
@@ -349,7 +350,8 @@ fn empirical_quantile(mut values: Vec<f64>, quantile: f64) -> f64 {
     }
 
     values.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
-    let index = ((values.len().saturating_sub(1)) as f64 * quantile.clamp(0.0, 1.0)).round() as usize;
+    let index =
+        ((values.len().saturating_sub(1)) as f64 * quantile.clamp(0.0, 1.0)).round() as usize;
     values[index.min(values.len().saturating_sub(1))]
 }
 
@@ -362,7 +364,10 @@ fn mean(values: &[f64]) -> f64 {
 }
 
 fn realized_window_return(trades: &[FactorTrade]) -> f64 {
-    trades.iter().fold(1.0, |equity, trade| equity * (1.0 + trade.pnl)) - 1.0
+    trades
+        .iter()
+        .fold(1.0, |equity, trade| equity * (1.0 + trade.pnl))
+        - 1.0
 }
 
 fn structural_break_diagnostics(realized_returns: &[f64]) -> StructuralBreakDiagnostics {
@@ -539,8 +544,11 @@ fn walk_forward_backtest(
 
         let window = backtest_range(series, candles, test_start, test_end, config, equity);
         let realized_return = realized_window_return(&window.trades);
-        let conformal =
-            conformal_diagnostics(predicted_return, &calibration_trade_returns, realized_return);
+        let conformal = conformal_diagnostics(
+            predicted_return,
+            &calibration_trade_returns,
+            realized_return,
+        );
         let test_signal_values = series
             .signals
             .iter()
@@ -692,7 +700,7 @@ fn backtest_range(
             exit_price,
             pnl: net_return,
             holding_bars: exit_index.saturating_sub(index),
-            regime_at_entry: infer_regime(candles, index),
+            regime_at_entry: infer_regime(candles, index, config),
             signal_value: signal.value,
             signal_confidence: signal.confidence,
             signal_weight: signal.weight,
@@ -856,8 +864,11 @@ fn summarize_conformal_metrics(
         .map(|window| window.conformal.realized_return)
         .collect::<Vec<_>>();
     let rolling_ic_series = windows.iter().map(|window| window.ic).collect::<Vec<_>>();
-    let parallel_breaks =
-        parallel_structural_break_diagnostics(&signal_series, &realized_returns, &rolling_ic_series);
+    let parallel_breaks = parallel_structural_break_diagnostics(
+        &signal_series,
+        &realized_returns,
+        &rolling_ic_series,
+    );
     let structural_break = windows
         .iter()
         .map(|window| window.structural_break.clone())
@@ -1056,7 +1067,7 @@ fn best_regime(regime_scores: &HashMap<String, f64>) -> Regime {
         .unwrap_or(Regime::ManipulationExpansion)
 }
 
-fn infer_regime(candles: &[Candle], index: usize) -> Regime {
+fn infer_regime(candles: &[Candle], index: usize, _config: &BacktestConfig) -> Regime {
     let start = index.saturating_sub(20);
     let window = &candles[start..=index];
     let total_move = if window.first().unwrap().close.abs() <= f64::EPSILON {
@@ -1127,9 +1138,10 @@ mod tests {
         assert!(!result.factor_results.is_empty());
         assert!(result.factor_results[0].metrics.trade_count > 0);
         assert!(!result.factor_results[0].equity_curve.is_empty());
-        assert!(result.factor_results[0].windows.iter().all(|window| {
-            window.conformal.interval_upper >= window.conformal.interval_lower
-        }));
+        assert!(result.factor_results[0]
+            .windows
+            .iter()
+            .all(|window| { window.conformal.interval_upper >= window.conformal.interval_lower }));
     }
 
     #[test]

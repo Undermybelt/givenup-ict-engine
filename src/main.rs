@@ -771,6 +771,12 @@ enum Commands {
         conflicts_only: bool,
         #[arg(long, default_value_t = false)]
         latest_promotable: bool,
+        #[arg(long, default_value_t = false)]
+        hard_block_only: bool,
+        #[arg(long)]
+        hard_block_reason: Option<String>,
+        #[arg(long)]
+        limit: Option<usize>,
     },
     /// Show the latest Pre-Bayes status directly
     PreBayesStatus {
@@ -1071,6 +1077,9 @@ fn main() -> Result<()> {
             actionable_only,
             conflicts_only,
             latest_promotable,
+            hard_block_only,
+            hard_block_reason,
+            limit,
         } => workflow_status_command(
             &symbol,
             &state_dir,
@@ -1079,6 +1088,9 @@ fn main() -> Result<()> {
             actionable_only,
             conflicts_only,
             latest_promotable,
+            hard_block_only,
+            hard_block_reason.as_deref(),
+            limit,
         )?,
         Commands::PreBayesStatus {
             symbol,
@@ -1404,17 +1416,6 @@ fn resolved_vote_scorecards<'a>(
     }
 }
 
-fn executor_scorecard_surface<'a>(
-    persisted_scorecards: &'a [EnsembleExecutorScorecard],
-    fallback_scorecards: &'a [EnsembleExecutorScorecard],
-) -> (&'a [EnsembleExecutorScorecard], &'static str) {
-    if persisted_scorecards.is_empty() {
-        (fallback_scorecards, "fallback")
-    } else {
-        (persisted_scorecards, "persisted")
-    }
-}
-
 fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
     let objective_jump_weight = report
         .supporting
@@ -1571,15 +1572,22 @@ fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
         symbol: report.symbol.clone(),
         state_dir: None,
         recommended_next_command: report.supporting.recommended_next_command.clone(),
+        hard_blocked: false,
+        hard_block_reason: None,
+        hard_block_command: None,
         provenance: report.supporting.provenance.clone(),
         dataset_comparability: report.supporting.dataset_comparability.clone(),
+        pre_bayes_filter: Some(report.supporting.pre_bayes_evidence_filter.clone()),
         belief: report.supporting.canonical_belief_report.clone(),
     });
     let scorecard_summary = format_executor_summary_lines(&ensemble_vote.executor_summaries);
     let persisted_scorecards =
         load_ensemble_executor_scorecards(&report.meta.state_dir, &report.symbol)
             .unwrap_or_default();
-    let (_, scorecard_source) = executor_scorecard_surface(&persisted_scorecards, &[]);
+    let (_, scorecard_source) = ict_engine::application::orchestration::executor_scorecard_surface(
+        &persisted_scorecards,
+        &[],
+    );
     println!(
         "{}",
         serde_json::to_string_pretty(&serde_json::json!({
@@ -1602,216 +1610,14 @@ fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
     Ok(())
 }
 
-fn humanize_workflow_command(command: &str) -> String {
-    let trimmed = command.trim();
-    if trimmed.is_empty() {
-        return "No actionable command available.".to_string();
-    }
-    if let Some(rest) = trimmed.strip_prefix("ask-user: ") {
-        let mut parts = rest.split(" | blocked until user_selected_historical_data | then ");
-        let ask = parts.next().unwrap_or("").trim();
-        let then = parts.next().unwrap_or("").trim();
-        if then.is_empty() || then == "choose historical dataset with user before running command" {
-            return format!("Ask the user to choose the historical dataset. {}", ask);
-        }
-        return format!(
-            "Ask the user to choose the historical dataset. {} Then run: {}",
-            ask, then
-        );
-    }
-    if trimmed.starts_with("blocked:") {
-        return format!("Blocked: {}", trimmed.trim_start_matches("blocked:").trim());
-    }
-    format!("Next step: {}", trimmed)
-}
-
 fn workflow_status_human_view(
     snapshot: &ict_engine::state::WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
 ) -> Value {
-    let latest_phase = snapshot
-        .latest_update
-        .as_ref()
-        .or(snapshot.latest_research.as_ref())
-        .or(snapshot.latest_analyze.as_ref())
-        .or(snapshot.latest_backtest.as_ref())
-        .or(snapshot.latest_train.as_ref());
-    let latest_phase_label = latest_phase
-        .map(|phase| phase.phase.clone())
-        .unwrap_or_else(|| "workflow_phase_unavailable".to_string());
-    let latest_phase_summary = latest_phase
-        .map(|phase| phase.phase_summary.clone())
-        .unwrap_or_else(|| "尚无可用阶段摘要。".to_string());
-    let selected_data_candidates = if let Some(update) = &snapshot.latest_update {
-        let mut candidates = update
-            .multi_timeframe_summary
-            .iter()
-            .filter_map(|line| line.split("path=").nth(1))
-            .map(str::trim)
-            .filter(|value| !value.is_empty())
-            .map(str::to_string)
-            .collect::<Vec<_>>();
-        candidates.sort();
-        candidates.dedup();
-        candidates
-    } else {
-        Vec::new()
-    };
-    let human_next_action = humanize_workflow_command(&snapshot.recommended_next_command);
-    let credibility_risks = snapshot
-        .risk_flags
-        .iter()
-        .filter(|flag| {
-            flag.contains("conformal_coverage_low")
-                || flag.contains("regime_break_penalty_high")
-                || flag.contains("structural_break_detected")
-                || flag.contains("conformal_credibility")
-        })
-        .cloned()
-        .collect::<Vec<_>>();
-    let ensemble_summary = snapshot.latest_ensemble_vote.as_ref().map(|vote| {
-        let (scorecards, scorecard_source) = resolved_vote_scorecards(persisted_scorecards, vote);
-        serde_json::json!({
-            "final_action": vote.final_action,
-            "confidence": vote.confidence,
-            "consensus_strength": vote.consensus_strength,
-            "human_next_triage": vote.human_next_triage,
-            "recommended_command": vote.recommended_command,
-            "disagreement_flags": vote.disagreement_flags,
-            "executor_scorecards": scorecards,
-            "executor_scorecard_source": scorecard_source,
-        })
-    });
-    serde_json::json!({
-        "symbol": snapshot.symbol,
-        "current_status": {
-            "focus_phase": snapshot.current_focus_phase,
-            "focus_reason": snapshot.current_focus_reason,
-            "blocking_stage": snapshot.blocking_truth.stage,
-            "blocking_status": snapshot.blocking_truth.status,
-            "blocking_reason": snapshot.blocking_truth.reason,
-        },
-        "what_you_should_do_now": human_next_action,
-        "latest_stage": {
-            "phase": latest_phase_label,
-            "summary": latest_phase_summary,
-        },
-        "ensemble_consensus": ensemble_summary,
-        "credibility_risks": credibility_risks,
-        "pending_actions": snapshot.pending_actions,
-        "risk_flags": snapshot.risk_flags,
-        "historical_data_candidates": selected_data_candidates,
-        "jump_model": ict_engine::application::belief::jump_model_workflow_summary(snapshot),
-        "jump_calibration_gate": ict_engine::application::belief::jump_calibration_gate_workflow_summary(snapshot),
-        "jump_disagreement": snapshot
-            .latest_ensemble_vote
-            .as_ref()
-            .and_then(|vote| {
-                vote.executor_summaries
-                    .iter()
-                    .find(|line| line.contains("jump_disagreement"))
-                    .cloned()
-            }),
-    })
-}
-
-#[cfg(test)]
-fn sample_human_workflow_snapshot() -> ict_engine::state::WorkflowSnapshot {
-    let mut snapshot = ict_engine::state::WorkflowSnapshot::default();
-    snapshot.symbol = "NQ".to_string();
-    snapshot.current_focus_phase = "update".to_string();
-    snapshot.current_focus_reason = "waiting_for_user_data_choice".to_string();
-    snapshot.blocking_truth = ict_engine::state::WorkflowBlockingTruth {
-        stage: "research".to_string(),
-        status: "blocked".to_string(),
-        reason: "user_selected_historical_data_missing".to_string(),
-        evidence: vec!["need user choice".to_string()],
-        next_command: "ask-user".to_string(),
-    };
-    snapshot.recommended_next_command = "ask-user: Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=/tmp/a.json, /tmp/b.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ --data /tmp/a.json --state-dir state".to_string();
-    snapshot.pending_actions = vec!["research:choose data".to_string()];
-    snapshot.risk_flags = vec!["human_gate_active".to_string()];
-    snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
-        artifact_id: "ensemble-vote:update:test".to_string(),
-        generated_at: Utc::now(),
-        symbol: "NQ".to_string(),
-        source_phase: "update".to_string(),
-        source_run_id: Some("update:NQ:test".to_string()),
-        provenance: RunProvenance::default(),
-        dataset_comparability: DatasetComparability::default(),
-        ensemble_version: "ensemble-audit-v1".to_string(),
-        final_action: "observe".to_string(),
-        recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next".to_string(),
-        human_next_triage: "ensemble_action=observe consensus=0.500 regime=research command=ict-engine workflow-status --symbol NQ --phase human-next".to_string(),
-        confidence: 0.5,
-        consensus_strength: 0.5,
-        disagreement_flags: Vec::new(),
-        executor_summaries: vec![
-            "executor=catboost_stub action=observe confidence=0.500".to_string(),
-            "jump_model active_state=jump_transition confidence=0.500 transition_risk=0.500"
-                .to_string(),
-            "jump_calibration_gate outcome=accepted sample_count=4 cooldown_status=ready"
-                .to_string(),
-        ],
-        split_explanations: vec!["active_regime=research".to_string()],
-        executor_scorecards: vec![EnsembleExecutorScorecard {
-            executor: "catboost_stub".to_string(),
-            latest_weight_hint: Some(0.55),
-            ..EnsembleExecutorScorecard::default()
-        }],
-        executor_scorecards_source: Some("fallback".to_string()),
-        posterior_fingerprint: "fp-test".to_string(),
-        posterior_normalization_status: "normalized".to_string(),
-        posterior_active_regime: "research".to_string(),
-        posterior_confidence: Some(0.5),
-        posterior_probabilities: BTreeMap::new(),
-        posterior_evidence: vec!["mtf=test".to_string()],
-    });
-    snapshot.latest_update = Some(ict_engine::state::WorkflowPhaseSnapshot {
-        phase: "update".to_string(),
-        source_command: "update".to_string(),
-        run_id: "update:NQ:test".to_string(),
-        timestamp: Utc::now(),
-        workflow_phase: "research_iteration".to_string(),
-        workflow_reason: "waiting_for_data_choice".to_string(),
-        promotion_status: "hold".to_string(),
-        rollback_scope: "none".to_string(),
-        comparable_to_previous: true,
-        comparison_class: "same_data_different_config".to_string(),
-        recommended_next_command: snapshot.recommended_next_command.clone(),
-        phase_summary: "latest update complete".to_string(),
-        top_actions: vec!["update:review".to_string()],
-        risk_flags: vec!["human_gate_active".to_string()],
-        selected_direction: None,
-        selected_entry_quality: Some("medium".to_string()),
-        pre_bayes_gate_status: "pass_neutralized".to_string(),
-        pre_bayes_uses_soft_evidence: true,
-        pre_bayes_policy_version: "v1".to_string(),
-        pre_bayes_evidence_quality_score: 0.5,
-        pre_bayes_conflict_flags: vec![],
-        pre_bayes_filtered_assignments: std::collections::BTreeMap::new(),
-        pre_bayes_soft_evidence: std::collections::BTreeMap::new(),
-        pre_bayes_long_signal_probability: None,
-        pre_bayes_short_signal_probability: None,
-        pre_bayes_selected_entry_quality_probability: None,
-        pre_bayes_bridge_selected_entry_quality: Some("medium".to_string()),
-        pre_bayes_bridge_probability_gap: Some(0.01),
-        pre_bayes_bridge_rationale_summary: vec![],
-        pre_bayes_multi_timeframe_direction_bias: "bullish".to_string(),
-        pre_bayes_multi_timeframe_alignment_score: Some(0.8),
-        pre_bayes_multi_timeframe_entry_alignment_score: Some(0.8),
-        realized_outcome: Some("win".to_string()),
-        family_states: vec![],
-        factor_actions: vec![],
-        multi_timeframe_summary: vec![
-            "15m:80 bars path=/tmp/a.json".to_string(),
-            "1h:80 bars path=/tmp/b.json".to_string(),
-        ],
-        family_score_map: std::collections::BTreeMap::new(),
-        factor_score_map: std::collections::BTreeMap::new(),
-        objective_market_credibility_shrink: None,
-    });
-    snapshot
+    ict_engine::application::orchestration::build_human_workflow_status_view(
+        snapshot,
+        persisted_scorecards,
+    )
 }
 
 fn workflow_status_command(
@@ -1822,14 +1628,22 @@ fn workflow_status_command(
     actionable_only: bool,
     conflicts_only: bool,
     latest_promotable: bool,
+    hard_block_only: bool,
+    hard_block_reason: Option<&str>,
+    limit: Option<usize>,
 ) -> Result<()> {
     let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
-    let filter_count = actionable_only as u8 + conflicts_only as u8 + latest_promotable as u8;
+    let filter_count = actionable_only as u8
+        + conflicts_only as u8
+        + latest_promotable as u8
+        + hard_block_only as u8
+        + hard_block_reason.is_some() as u8
+        + limit.is_some() as u8;
     if phase.is_some() && filter_count > 0 {
         bail!("workflow-status phase and filter flags are mutually exclusive");
     }
-    if filter_count > 1 {
-        bail!("workflow-status accepts at most one filter flag");
+    if actionable_only as u8 + conflicts_only as u8 + latest_promotable as u8 > 1 {
+        bail!("workflow-status accepts at most one artifact filter flag");
     }
     let snapshot = if refresh {
         refresh_workflow_snapshot(state_dir, symbol)?
@@ -1856,6 +1670,17 @@ fn workflow_status_command(
         );
         return Ok(());
     }
+    if hard_block_only || hard_block_reason.is_some() || limit.is_some() {
+        let history = ict_engine::application::orchestration::filter_hard_block_rows(
+            &snapshot,
+            &persisted_scorecards,
+            hard_block_only,
+            hard_block_reason,
+            limit,
+        );
+        println!("{}", serde_json::to_string_pretty(&history)?);
+        return Ok(());
+    }
     if let Some(phase) = phase {
         let value = match phase.trim().to_ascii_lowercase().as_str() {
             "agent-bootstrap" | "bootstrap" => {
@@ -1864,179 +1689,189 @@ fn workflow_status_command(
             "human" | "human-next" | "human-next-action" => {
                 workflow_status_human_view(&snapshot, &persisted_scorecards)
             }
-            "train" => serde_json::to_value(&snapshot.latest_train)?,
-            "analyze" => serde_json::to_value(&snapshot.latest_analyze)?,
-            "research" => serde_json::to_value(&snapshot.latest_research)?,
-            "backtest" => serde_json::to_value(&snapshot.latest_backtest)?,
-            "update" => serde_json::to_value(&snapshot.latest_update)?,
-            "pre-bayes-policy" => serde_json::to_value(&snapshot.latest_pre_bayes_policy)?,
-            "pre-bayes-policy-history" => {
-                serde_json::to_value(&snapshot.recent_pre_bayes_policies)?
-            }
-            "pre-bayes-policy-diff" => {
-                serde_json::to_value(&snapshot.latest_pre_bayes_policy_diff)?
-            }
-            "pre-bayes-policy-lineage" => {
-                serde_json::to_value(&snapshot.latest_pre_bayes_policy_lineage)?
-            }
-            "pre-bayes-entry-quality-bridge" => {
-                serde_json::to_value(&snapshot.latest_pre_bayes_entry_quality_bridge)?
-            }
-            "pre-bayes-entry-quality-bridge-diff" => {
-                serde_json::to_value(&snapshot.latest_pre_bayes_entry_quality_bridge_diff)?
-            }
-            "pre-bayes-soft-evidence" => serde_json::to_value(
-                &snapshot
-                    .latest_analyze
-                    .as_ref()
-                    .map(|phase| phase.pre_bayes_soft_evidence.clone()),
+            "train" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_phase_snapshot_surfaces(&snapshot)
+                    .train,
             )?,
-            "pre-bayes-soft-evidence-diff" => {
-                serde_json::to_value(&snapshot.latest_pre_bayes_soft_evidence_diff)?
-            }
-            "pending-update" => serde_json::to_value(&snapshot.latest_pending_update)?,
-            "pending-update-history" => serde_json::to_value(&snapshot.recent_pending_updates)?,
-            "execution-candidate" => serde_json::to_value(&snapshot.latest_execution_candidate)?,
-            "execution-candidate-history" => {
-                serde_json::to_value(&snapshot.recent_execution_candidates)?
-            }
+            "analyze" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_phase_snapshot_surfaces(&snapshot)
+                    .analyze,
+            )?,
+            "research" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_phase_snapshot_surfaces(&snapshot)
+                    .research,
+            )?,
+            "backtest" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_phase_snapshot_surfaces(&snapshot)
+                    .backtest,
+            )?,
+            "update" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_phase_snapshot_surfaces(&snapshot)
+                    .update,
+            )?,
+            "pre-bayes-policy" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_pre_bayes_surfaces(&snapshot)
+                    .pre_bayes_policy,
+            )?,
+            "pre-bayes-policy-history" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_pre_bayes_surfaces(&snapshot)
+                    .pre_bayes_policy_history,
+            )?,
+            "pre-bayes-policy-diff" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_pre_bayes_surfaces(&snapshot)
+                    .pre_bayes_policy_diff,
+            )?,
+            "pre-bayes-policy-lineage" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_pre_bayes_surfaces(&snapshot)
+                    .pre_bayes_policy_lineage,
+            )?,
+            "pre-bayes-entry-quality-bridge" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_pre_bayes_surfaces(&snapshot)
+                    .pre_bayes_entry_quality_bridge,
+            )?,
+            "pre-bayes-entry-quality-bridge-diff" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_pre_bayes_surfaces(&snapshot)
+                    .pre_bayes_entry_quality_bridge_diff,
+            )?,
+            "pre-bayes-soft-evidence" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_pre_bayes_surfaces(&snapshot)
+                    .pre_bayes_soft_evidence,
+            )?,
+            "pre-bayes-soft-evidence-diff" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_pre_bayes_surfaces(&snapshot)
+                    .pre_bayes_soft_evidence_diff,
+            )?,
+            "pending-update" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_auxiliary_artifact_surfaces(
+                    &snapshot,
+                )
+                .pending_update,
+            )?,
+            "pending-update-history" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_auxiliary_artifact_surfaces(
+                    &snapshot,
+                )
+                .pending_update_history,
+            )?,
+            "execution-candidate" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_auxiliary_artifact_surfaces(
+                    &snapshot,
+                )
+                .execution_candidate,
+            )?,
+            "execution-candidate-history" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_auxiliary_artifact_surfaces(
+                    &snapshot,
+                )
+                .execution_candidate_history,
+            )?,
             "ensemble-vote" => {
                 serde_json::to_value(&snapshot.latest_ensemble_vote.as_ref().map(|vote| {
-                    let (scorecards, scorecard_source) =
-                        resolved_vote_scorecards(&persisted_scorecards, vote);
-                    serde_json::json!({
-                        "artifact_id": vote.artifact_id,
-                        "generated_at": vote.generated_at,
-                        "symbol": vote.symbol,
-                        "source_phase": vote.source_phase,
-                        "source_run_id": vote.source_run_id,
-                        "provenance": vote.provenance,
-                        "dataset_comparability": vote.dataset_comparability,
-                        "ensemble_version": vote.ensemble_version,
-                        "final_action": vote.final_action,
-                        "recommended_command": vote.recommended_command,
-                        "human_next_triage": vote.human_next_triage,
-                        "confidence": vote.confidence,
-                        "consensus_strength": vote.consensus_strength,
-                        "disagreement_flags": vote.disagreement_flags,
-                        "executor_summaries": vote.executor_summaries,
-                        "split_explanations": vote.split_explanations,
-                        "executor_scorecards": scorecards,
-                        "executor_scorecard_source": scorecard_source,
-                        "posterior_fingerprint": vote.posterior_fingerprint,
-                        "posterior_normalization_status": vote.posterior_normalization_status,
-                        "posterior_active_regime": vote.posterior_active_regime,
-                        "posterior_confidence": vote.posterior_confidence,
-                        "posterior_probabilities": vote.posterior_probabilities,
-                        "posterior_evidence": vote.posterior_evidence,
-                    })
+                    ict_engine::application::orchestration::build_ensemble_vote_surface(
+                        vote,
+                        &persisted_scorecards,
+                    )
                 }))?
             }
             "ensemble-vote-history" => serde_json::to_value(
-                &snapshot
-                    .recent_ensemble_votes
-                    .iter()
-                    .map(|vote| {
-                        let (scorecards, scorecard_source) =
-                            resolved_vote_scorecards(&persisted_scorecards, vote);
-                        serde_json::json!({
-                            "artifact_id": vote.artifact_id,
-                            "generated_at": vote.generated_at,
-                            "symbol": vote.symbol,
-                            "source_phase": vote.source_phase,
-                            "source_run_id": vote.source_run_id,
-                            "provenance": vote.provenance,
-                            "dataset_comparability": vote.dataset_comparability,
-                            "ensemble_version": vote.ensemble_version,
-                            "final_action": vote.final_action,
-                            "recommended_command": vote.recommended_command,
-                            "human_next_triage": vote.human_next_triage,
-                            "confidence": vote.confidence,
-                            "consensus_strength": vote.consensus_strength,
-                            "disagreement_flags": vote.disagreement_flags,
-                            "executor_summaries": vote.executor_summaries,
-                            "split_explanations": vote.split_explanations,
-                            "executor_scorecards": scorecards,
-                            "executor_scorecard_source": scorecard_source,
-                            "posterior_fingerprint": vote.posterior_fingerprint,
-                            "posterior_normalization_status": vote.posterior_normalization_status,
-                            "posterior_active_regime": vote.posterior_active_regime,
-                            "posterior_confidence": vote.posterior_confidence,
-                            "posterior_probabilities": vote.posterior_probabilities,
-                            "posterior_evidence": vote.posterior_evidence,
-                        })
-                    })
-                    .collect::<Vec<_>>(),
+                &ict_engine::application::orchestration::build_ensemble_vote_history_view(
+                    &snapshot,
+                    &persisted_scorecards,
+                ),
             )?,
             "ensemble-scorecards" | "ensemble-executor-scorecards" => {
                 serde_json::to_value(&persisted_scorecards)?
             }
-            "artifact-history-summary" => serde_json::to_value(&snapshot.artifact_history_summary)?,
-            "artifact-factor-trends" => serde_json::to_value(&snapshot.artifact_factor_trends)?,
-            "artifact-family-trends" => serde_json::to_value(&snapshot.artifact_family_trends)?,
-            "artifact-consumed-gate" => serde_json::to_value(&serde_json::json!({
-                "status": snapshot.artifact_decision_summary.consumed_trend_status,
-                "reason": snapshot.artifact_decision_summary.consumed_trend_reason,
-                "target_kinds": snapshot.artifact_decision_summary.consumed_target_kinds,
-                "promotion_strength": snapshot.artifact_decision_summary.promotion_strength,
-                "rollback_strength": snapshot.artifact_decision_summary.rollback_strength,
-            }))?,
+            "artifact-history-summary" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_auxiliary_artifact_surfaces(
+                    &snapshot,
+                )
+                .artifact_history_summary,
+            )?,
+            "artifact-factor-trends" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_auxiliary_artifact_surfaces(
+                    &snapshot,
+                )
+                .artifact_factor_trends,
+            )?,
+            "artifact-family-trends" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_auxiliary_artifact_surfaces(
+                    &snapshot,
+                )
+                .artifact_family_trends,
+            )?,
+            "artifact-consumed-gate" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_artifact_report_surfaces(&snapshot)
+                    .artifact_consumed_gate,
+            )?,
             "artifact-factor-consumed-validation" | "artifact-factor-consumed-leaderboard" => {
-                serde_json::to_value(&sorted_artifact_factor_consumed_validation(&snapshot))?
+                serde_json::to_value(
+                    &ict_engine::application::orchestration::build_artifact_report_surfaces(
+                        &snapshot,
+                    )
+                    .artifact_factor_consumed_validation,
+                )?
             }
             "artifact-family-consumed-validation" | "artifact-family-consumed-leaderboard" => {
-                serde_json::to_value(&sorted_artifact_family_consumed_validation(&snapshot))?
+                serde_json::to_value(
+                    &ict_engine::application::orchestration::build_artifact_report_surfaces(
+                        &snapshot,
+                    )
+                    .artifact_family_consumed_validation,
+                )?
             }
-            "artifact-lineage-summaries" => {
-                serde_json::to_value(&snapshot.artifact_lineage_summaries)?
-            }
-            "artifact-decision-summary" => {
-                serde_json::to_value(&snapshot.artifact_decision_summary)?
-            }
-            "artifact-rule-breaks" => serde_json::to_value(
-                &snapshot
-                    .artifact_lineage_summaries
-                    .iter()
-                    .filter(|summary| summary.review_rule_break_count > 0)
-                    .cloned()
-                    .collect::<Vec<_>>(),
+            "artifact-lineage-summaries" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_artifact_report_surfaces(&snapshot)
+                    .artifact_lineage_summaries,
             )?,
-            "artifact-rule-break-effects" => {
-                serde_json::to_value(&snapshot.artifact_rule_break_effects)?
-            }
-            "artifact-factor-rule-break-impacts" => {
-                serde_json::to_value(&snapshot.artifact_factor_rule_break_impacts)?
-            }
-            "artifact-family-rule-break-impacts" => {
-                serde_json::to_value(&snapshot.artifact_family_rule_break_impacts)?
-            }
-            "artifact-impact-leaderboard" => serde_json::to_value(&serde_json::json!({
-                "factor": snapshot.artifact_factor_rule_break_impacts,
-                "family": snapshot.artifact_family_rule_break_impacts,
-            }))?,
-            "artifact-impact-consumed" => serde_json::to_value(&serde_json::json!({
-                "factor": snapshot
-                    .artifact_factor_rule_break_impacts
-                    .iter()
-                    .filter(|impact| impact.consumed_breaks > 0)
-                    .cloned()
-                    .collect::<Vec<_>>(),
-                "family": snapshot
-                    .artifact_family_rule_break_impacts
-                    .iter()
-                    .filter(|impact| impact.consumed_breaks > 0)
-                    .cloned()
-                    .collect::<Vec<_>>(),
-            }))?,
-            "artifact-impact-consumed-trend" => {
-                serde_json::to_value(&snapshot.artifact_consumed_impact_summary)?
-            }
-            "artifact-review-rules" => serde_json::to_value(&snapshot.artifact_review_rules)?,
-            "artifact-review-rule-sources" => {
-                serde_json::to_value(&snapshot.artifact_review_rule_sources)?
-            }
-            "disagreements" => serde_json::to_value(&snapshot.disagreements)?,
-            "diffs" => serde_json::to_value(&snapshot.field_diffs)?,
+            "artifact-decision-summary" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_artifact_report_surfaces(&snapshot)
+                    .artifact_decision_summary,
+            )?,
+            "artifact-rule-breaks" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_artifact_report_surfaces(&snapshot)
+                    .artifact_rule_breaks,
+            )?,
+            "artifact-rule-break-effects" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_artifact_report_surfaces(&snapshot)
+                    .artifact_rule_break_effects,
+            )?,
+            "artifact-factor-rule-break-impacts" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_artifact_report_surfaces(&snapshot)
+                    .artifact_factor_rule_break_impacts,
+            )?,
+            "artifact-family-rule-break-impacts" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_artifact_report_surfaces(&snapshot)
+                    .artifact_family_rule_break_impacts,
+            )?,
+            "artifact-impact-leaderboard" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_artifact_report_surfaces(&snapshot)
+                    .artifact_impact_leaderboard,
+            )?,
+            "artifact-impact-consumed" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_artifact_report_surfaces(&snapshot)
+                    .artifact_impact_consumed,
+            )?,
+            "artifact-impact-consumed-trend" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_artifact_report_surfaces(&snapshot)
+                    .artifact_impact_consumed_trend,
+            )?,
+            "artifact-review-rules" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_artifact_report_surfaces(&snapshot)
+                    .artifact_review_rules,
+            )?,
+            "artifact-review-rule-sources" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_artifact_report_surfaces(&snapshot)
+                    .artifact_review_rule_sources,
+            )?,
+            "disagreements" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_artifact_report_surfaces(&snapshot)
+                    .disagreements,
+            )?,
+            "diffs" => serde_json::to_value(
+                &ict_engine::application::orchestration::build_artifact_report_surfaces(&snapshot)
+                    .diffs,
+            )?,
             other => bail!("unsupported workflow-status phase '{}'", other),
         };
         println!("{}", serde_json::to_string_pretty(&value)?);
@@ -6547,12 +6382,32 @@ fn persist_analyze_run(
         prompt_workflow: report.supporting.agent_prompts.workflow.clone(),
     };
     append_analyze_run(state_dir, &report.symbol, analyze_run_record.clone())?;
+    let blocking_truth = report.supporting.workflow_snapshot.blocking_truth.clone();
+    let hard_blocked = matches!(
+        blocking_truth.status.as_str(),
+        "blocked"
+            | "bridge_needs_confirmation"
+            | "validated_regressing"
+            | "credibility_gate_blocked"
+    );
     let analyze_ensemble_vote = build_stub_ensemble_vote_from_input(&AnalyzeEnsembleVoteInput {
         symbol: report.symbol.clone(),
         state_dir: Some(state_dir.to_string()),
         recommended_next_command: report.supporting.recommended_next_command.clone(),
+        hard_blocked,
+        hard_block_reason: if hard_blocked {
+            Some(blocking_truth.reason.clone())
+        } else {
+            None
+        },
+        hard_block_command: if hard_blocked {
+            Some(blocking_truth.next_command.clone())
+        } else {
+            None
+        },
         provenance: report.supporting.provenance.clone(),
         dataset_comparability: report.supporting.dataset_comparability.clone(),
+        pre_bayes_filter: Some(report.supporting.pre_bayes_evidence_filter.clone()),
         belief: report.supporting.canonical_belief_report.clone(),
     });
     let canonical_scorecards =
@@ -7160,6 +7015,7 @@ fn build_ensemble_vote_record(
         final_action: ensemble_vote.final_action.clone(),
         recommended_command: ensemble_vote.recommended_command.clone(),
         human_next_triage: ensemble_vote.human_next_triage.clone(),
+        hard_block: ensemble_vote.hard_block.clone(),
         confidence: ensemble_vote.confidence,
         consensus_strength: ensemble_vote.consensus_strength,
         disagreement_flags: ensemble_vote.disagreement_flags.clone(),
@@ -13682,7 +13538,8 @@ fn run_factor_backtest(
             agent_prompts: report.agent_prompts.clone(),
             prompt_workflow: report.agent_prompts.workflow.clone(),
             multi_timeframe_summary: report.multi_timeframe_summary.clone(),
-            objective_market_credibility_shrink: factor_backtest_objective_market_credibility_shrink.clone(),
+            objective_market_credibility_shrink:
+                factor_backtest_objective_market_credibility_shrink.clone(),
         },
     )?;
     persist_market_jump_calibration_from_backtest_runs(
@@ -14182,6 +14039,7 @@ fn build_analyze_report(
             &factor_output.diagnostics,
             &decision_hint,
             &pre_bayes_evidence_filter,
+            build_context.multi_timeframe_summary,
             &selected_entry_quality_state,
             trade_plan.direction,
             trade_plan.risk_reward,
@@ -17484,54 +17342,6 @@ fn consumed_validation_score(status: &str, reason: &str) -> f64 {
     }
 }
 
-fn sorted_artifact_factor_consumed_validation(
-    snapshot: &WorkflowSnapshot,
-) -> Vec<ict_engine::state::ArtifactFactorTrendSummary> {
-    let mut trends = snapshot
-        .artifact_factor_trends
-        .iter()
-        .filter(|trend| trend.consumed_entries > 0)
-        .cloned()
-        .collect::<Vec<_>>();
-    trends.sort_by(|left, right| {
-        consumed_validation_rank(&right.consumed_validation_status)
-            .cmp(&consumed_validation_rank(&left.consumed_validation_status))
-            .then_with(|| right.consumed_entries.cmp(&left.consumed_entries))
-            .then_with(|| {
-                right
-                    .consumed_validation_score
-                    .abs()
-                    .partial_cmp(&left.consumed_validation_score.abs())
-                    .unwrap_or(std::cmp::Ordering::Equal)
-            })
-    });
-    trends
-}
-
-fn sorted_artifact_family_consumed_validation(
-    snapshot: &WorkflowSnapshot,
-) -> Vec<ict_engine::state::ArtifactFamilyTrendSummary> {
-    let mut trends = snapshot
-        .artifact_family_trends
-        .iter()
-        .filter(|trend| trend.consumed_entries > 0)
-        .cloned()
-        .collect::<Vec<_>>();
-    trends.sort_by(|left, right| {
-        consumed_validation_rank(&right.consumed_validation_status)
-            .cmp(&consumed_validation_rank(&left.consumed_validation_status))
-            .then_with(|| right.consumed_entries.cmp(&left.consumed_entries))
-            .then_with(|| {
-                right
-                    .consumed_validation_score
-                    .abs()
-                    .partial_cmp(&left.consumed_validation_score.abs())
-                    .unwrap_or(std::cmp::Ordering::Equal)
-            })
-    });
-    trends
-}
-
 fn apply_artifact_consumption_preview(
     artifact_ledger: &mut [ArtifactLedgerEntry],
     artifact_id: &str,
@@ -19383,12 +19193,28 @@ mod tests {
         let ensemble_vote = build_stub_ensemble_vote_from_input(&AnalyzeEnsembleVoteInput {
             symbol: report.symbol.clone(),
             state_dir: None,
+            hard_blocked: true,
+            hard_block_reason: Some("pre-bayes gate still blocks downstream chain".to_string()),
+            hard_block_command: Some(
+                "ict-engine pre-bayes-status --symbol NQ --state-dir state".to_string(),
+            ),
             recommended_next_command: report.supporting.recommended_next_command.clone(),
             provenance: report.supporting.provenance.clone(),
             dataset_comparability: report.supporting.dataset_comparability.clone(),
+            pre_bayes_filter: Some(report.supporting.pre_bayes_evidence_filter.clone()),
             belief: report.supporting.canonical_belief_report.clone(),
         });
         let summary = format_executor_summary_lines(&ensemble_vote.executor_summaries);
+        assert!(ensemble_vote
+            .human_next_triage
+            .contains("hard_blocked=true"));
+        assert!(ensemble_vote
+            .human_next_triage
+            .contains("hard_block_reason=pre-bayes gate still blocks downstream chain"));
+        assert_eq!(
+            ensemble_vote.recommended_command,
+            "ict-engine pre-bayes-status --symbol NQ --state-dir state"
+        );
 
         assert!(!summary.is_empty());
         assert!(summary[0].contains("executor=catboost_file"));
@@ -19583,6 +19409,9 @@ mod tests {
             false,
             false,
             false,
+            false,
+            None,
+            None,
         )
         .unwrap();
         let loaded = load_workflow_snapshot(temp.path(), "NQ").unwrap();
@@ -19596,6 +19425,9 @@ mod tests {
             false,
             false,
             false,
+            false,
+            None,
+            None,
         )
         .unwrap();
         workflow_status_command(
@@ -19606,6 +19438,9 @@ mod tests {
             false,
             false,
             false,
+            false,
+            None,
+            None,
         )
         .unwrap();
         workflow_status_command(
@@ -19616,6 +19451,9 @@ mod tests {
             false,
             false,
             false,
+            false,
+            None,
+            None,
         )
         .unwrap();
         workflow_status_command(
@@ -19626,6 +19464,9 @@ mod tests {
             false,
             false,
             false,
+            false,
+            None,
+            None,
         )
         .unwrap();
         workflow_status_command(
@@ -19636,6 +19477,9 @@ mod tests {
             false,
             false,
             false,
+            false,
+            None,
+            None,
         )
         .unwrap();
         workflow_status_command(
@@ -19646,6 +19490,9 @@ mod tests {
             true,
             false,
             false,
+            false,
+            None,
+            None,
         )
         .unwrap();
         workflow_status_command(
@@ -19656,6 +19503,9 @@ mod tests {
             false,
             false,
             true,
+            false,
+            None,
+            None,
         )
         .unwrap();
         workflow_status_command(
@@ -19666,6 +19516,9 @@ mod tests {
             false,
             false,
             false,
+            false,
+            None,
+            None,
         )
         .unwrap();
         workflow_status_command(
@@ -19676,6 +19529,22 @@ mod tests {
             false,
             false,
             false,
+            false,
+            None,
+            None,
+        )
+        .unwrap();
+        workflow_status_command(
+            "NQ",
+            temp.path().to_str().unwrap(),
+            false,
+            None,
+            false,
+            false,
+            false,
+            true,
+            None,
+            Some(5),
         )
         .unwrap();
         workflow_status_command(
@@ -19686,6 +19555,9 @@ mod tests {
             false,
             false,
             false,
+            false,
+            None,
+            None,
         )
         .unwrap();
     }
@@ -19958,6 +19830,9 @@ mod tests {
             false,
             false,
             false,
+            false,
+            None,
+            None,
         )
         .unwrap();
         workflow_status_command(
@@ -19968,6 +19843,9 @@ mod tests {
             false,
             false,
             false,
+            false,
+            None,
+            None,
         )
         .unwrap();
         workflow_status_command(
@@ -19978,6 +19856,9 @@ mod tests {
             false,
             false,
             false,
+            false,
+            None,
+            None,
         )
         .unwrap();
         artifact_status_command(
@@ -20034,6 +19915,9 @@ mod tests {
             false,
             false,
             false,
+            false,
+            None,
+            None,
         )
         .unwrap();
         workflow_status_command(
@@ -20044,6 +19928,9 @@ mod tests {
             false,
             false,
             false,
+            false,
+            None,
+            None,
         )
         .unwrap();
         pre_bayes_status_command("NQ", temp.path().to_str().unwrap(), false, Some("policy"))
@@ -22510,7 +22397,7 @@ mod tests {
 
     #[test]
     fn test_humanize_workflow_command_for_user_data_gate() {
-        let rendered = humanize_workflow_command(
+        let rendered = ict_engine::application::orchestration::humanize_workflow_command(
             "ask-user: Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=/tmp/a.json, /tmp/b.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ --data /tmp/a.json --state-dir state"
         );
         assert_eq!(
@@ -22521,16 +22408,31 @@ mod tests {
 
     #[test]
     fn test_workflow_status_human_view_exposes_candidates() {
-        let snapshot = sample_human_workflow_snapshot();
+        let snapshot = ict_engine::application::orchestration::sample_human_workflow_snapshot();
         let value = workflow_status_human_view(&snapshot, &[]);
         assert_eq!(value["symbol"], "NQ");
         assert_eq!(value["current_status"]["focus_phase"], "update");
+        assert_eq!(value["hard_block"]["active"], true);
+        assert_eq!(value["hard_block"]["status"], "blocked");
+        assert_eq!(
+            value["hard_block"]["reason"],
+            "user_selected_historical_data_missing"
+        );
+        assert!(value["hard_block"]["human_action"]
+            .as_str()
+            .unwrap()
+            .contains("Ask the user to choose the historical dataset"));
         assert!(value["what_you_should_do_now"]
             .as_str()
             .unwrap()
             .contains("Ask the user to choose the historical dataset"));
         assert_eq!(value["historical_data_candidates"][0], "/tmp/a.json");
         assert_eq!(value["ensemble_consensus"]["final_action"], "observe");
+        assert_eq!(value["ensemble_consensus"]["hard_block"]["active"], true);
+        assert_eq!(
+            value["ensemble_consensus"]["hard_block"]["reason"],
+            "user_selected_historical_data_missing"
+        );
         assert!(value["ensemble_consensus"]["human_next_triage"]
             .as_str()
             .unwrap()
@@ -22559,7 +22461,7 @@ mod tests {
 
     #[test]
     fn test_jump_workflow_summaries_surface_calibration_gate() {
-        let snapshot = sample_human_workflow_snapshot();
+        let snapshot = ict_engine::application::orchestration::sample_human_workflow_snapshot();
         assert_eq!(
             jump_model_workflow_summary(&snapshot).as_deref(),
             Some(
@@ -22574,7 +22476,7 @@ mod tests {
 
     #[test]
     fn test_workflow_status_human_view_prefers_persisted_scorecards() {
-        let snapshot = sample_human_workflow_snapshot();
+        let snapshot = ict_engine::application::orchestration::sample_human_workflow_snapshot();
         let persisted = vec![EnsembleExecutorScorecard {
             executor: "xgboost_file".to_string(),
             latest_weight_hint: Some(0.72),
@@ -22607,19 +22509,22 @@ mod tests {
             ..EnsembleExecutorScorecard::default()
         }];
 
-        let (fallback_surface, fallback_source) = executor_scorecard_surface(&[], &fallback);
+        let (fallback_surface, fallback_source) =
+            ict_engine::application::orchestration::executor_scorecard_surface(&[], &fallback);
         assert_eq!(fallback_source, "fallback");
         assert_eq!(fallback_surface[0].executor, "catboost_stub");
 
         let (persisted_surface, persisted_source) =
-            executor_scorecard_surface(&persisted, &fallback);
+            ict_engine::application::orchestration::executor_scorecard_surface(
+                &persisted, &fallback,
+            );
         assert_eq!(persisted_source, "persisted");
         assert_eq!(persisted_surface[0].executor, "xgboost_file");
     }
 
     #[test]
     fn test_ensemble_vote_history_view_uses_resolved_scorecard_source() {
-        let vote = sample_human_workflow_snapshot()
+        let vote = ict_engine::application::orchestration::sample_human_workflow_snapshot()
             .latest_ensemble_vote
             .expect("sample ensemble vote");
         let persisted = vec![EnsembleExecutorScorecard {
@@ -22627,22 +22532,38 @@ mod tests {
             latest_weight_hint: Some(0.80),
             ..EnsembleExecutorScorecard::default()
         }];
-        let value = serde_json::json!([vote]
-            .iter()
-            .map(|vote| {
-                let (scorecards, scorecard_source) = resolved_vote_scorecards(&persisted, vote);
-                serde_json::json!({
-                    "artifact_id": vote.artifact_id,
-                    "executor_scorecards": scorecards,
-                    "executor_scorecard_source": scorecard_source,
-                })
-            })
-            .collect::<Vec<_>>());
-        assert_eq!(value[0]["executor_scorecard_source"], "persisted");
+        let (scorecards, scorecard_source) = resolved_vote_scorecards(&persisted, &vote);
+        let history = vec![serde_json::json!({
+            "artifact_id": vote.artifact_id,
+            "hard_block": vote.hard_block,
+            "executor_scorecards": scorecards,
+            "executor_scorecard_source": scorecard_source,
+        })];
+        let hard_block_only = vec![serde_json::json!({
+            "artifact_id": vote.artifact_id,
+            "hard_block": vote.hard_block,
+        })];
+        let value = serde_json::json!({
+            "history": history,
+            "hard_block_only": hard_block_only,
+            "hard_block_summary": {
+                "count": 1,
+                "reason_leaderboard": [serde_json::json!({
+                    "reason": vote.hard_block.reason,
+                    "count": 1,
+                })],
+            }
+        });
         assert_eq!(
-            value[0]["executor_scorecards"][0]["executor"],
+            value["history"][0]["executor_scorecard_source"],
+            "persisted"
+        );
+        assert_eq!(
+            value["history"][0]["executor_scorecards"][0]["executor"],
             "xgboost_file"
         );
+        assert_eq!(value["hard_block_only"][0]["artifact_id"], vote.artifact_id);
+        assert_eq!(value["hard_block_summary"]["count"], 1);
     }
 
     #[test]
@@ -22660,7 +22581,9 @@ mod tests {
             final_action: "observe".to_string(),
             recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next"
                 .to_string(),
-            human_next_triage: "ensemble_action=observe".to_string(),
+            human_next_triage: "hard_blocked=false ensemble_action=observe".to_string(),
+            hard_block: ict_engine::application::orchestration::EnsembleHardBlockArtifact::default(
+            ),
             confidence: 0.5,
             consensus_strength: 0.5,
             disagreement_flags: Vec::new(),
@@ -22714,7 +22637,9 @@ mod tests {
             final_action: "observe".to_string(),
             recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next"
                 .to_string(),
-            human_next_triage: "ensemble_action=observe".to_string(),
+            human_next_triage: "hard_blocked=false ensemble_action=observe".to_string(),
+            hard_block: ict_engine::application::orchestration::EnsembleHardBlockArtifact::default(
+            ),
             confidence: 0.5,
             consensus_strength: 0.5,
             disagreement_flags: Vec::new(),

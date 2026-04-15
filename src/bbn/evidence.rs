@@ -8,6 +8,30 @@ use crate::types::PdaLifecycleState;
 
 use super::node::NodeId;
 
+fn band_width_bps(top: f64, bottom: f64) -> f64 {
+    let mid = ((top + bottom) / 2.0).abs();
+    if mid <= f64::EPSILON {
+        0.0
+    } else {
+        ((top - bottom).abs() / mid) * 10_000.0
+    }
+}
+
+fn inferred_sweep_depth_bps(state: &crate::types::TimedPdaState) -> f64 {
+    let width = band_width_bps(state.band.top, state.band.bottom);
+    if matches!(state.concept, crate::types::PdaConceptKind::LiquidityPool)
+        || matches!(state.concept, crate::types::PdaConceptKind::EqualHighsLows)
+        || matches!(
+            state.concept,
+            crate::types::PdaConceptKind::SwingFailurePattern
+        )
+    {
+        width.max(10.0)
+    } else {
+        0.0
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum EvidenceType {
     Hard(usize),
@@ -72,11 +96,31 @@ pub fn summarize_timed_pda_states(states: &[crate::types::TimedPdaState]) -> ICT
                     | PdaLifecycleState::Mitigated
             )
         })
-        .map(|state| format!("{:?}:{:?}", state.concept, state.direction));
+        .map(|state| {
+            format!(
+                "{:?}:{:?}|top={:.6}|bottom={:.6}|width_bps={:.3}|sweep_depth_bps={:.3}",
+                state.concept,
+                state.direction,
+                state.band.top,
+                state.band.bottom,
+                band_width_bps(state.band.top, state.band.bottom),
+                inferred_sweep_depth_bps(state)
+            )
+        });
     let nearest_inversed = states
         .iter()
         .find(|state| matches!(state.state, PdaLifecycleState::Inversed))
-        .map(|state| format!("{:?}:{:?}", state.concept, state.direction));
+        .map(|state| {
+            format!(
+                "{:?}:{:?}|top={:.6}|bottom={:.6}|width_bps={:.3}|sweep_depth_bps={:.3}",
+                state.concept,
+                state.direction,
+                state.band.top,
+                state.band.bottom,
+                band_width_bps(state.band.top, state.band.bottom),
+                inferred_sweep_depth_bps(state)
+            )
+        });
 
     ICTStructureSummary {
         bias: None,
