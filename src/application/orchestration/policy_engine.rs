@@ -1,0 +1,232 @@
+use serde::{Deserialize, Serialize};
+use std::path::{Path, PathBuf};
+
+use super::PolicyDecisionArtifact;
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct PolicyFeatureVector {
+    pub factor_alignment: String,
+    pub factor_uncertainty: String,
+    pub gating_status: String,
+    pub selected_entry_quality: String,
+    pub recommended_command: String,
+    pub evidence_quality_score: f64,
+    pub selected_direction: String,
+    pub risk_reward: f64,
+    pub kelly_fraction: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct CatBoostTreeSplit {
+    pub feature: String,
+    pub split_type: String,
+    pub threshold: Option<f64>,
+    pub category_match: Option<String>,
+    pub yes: usize,
+    pub no: usize,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct CatBoostLeafOutput {
+    pub leaf_id: String,
+    pub action: String,
+    pub qualification: String,
+    #[serde(default)]
+    pub gating_status: Option<String>,
+    #[serde(default)]
+    pub selected_direction: Option<String>,
+    #[serde(default)]
+    pub factor_alignment: Option<String>,
+    #[serde(default)]
+    pub selected_entry_quality: Option<String>,
+    pub confidence_band: String,
+    pub recommended_command: Option<String>,
+    pub invalidation_triggers: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct CatBoostPolicyModelArtifact {
+    pub artifact_version: String,
+    pub model_family: String,
+    pub target_kind: String,
+    pub feature_schema_version: String,
+    pub categorical_features: Vec<String>,
+    pub numerical_features: Vec<String>,
+    pub target_label_space: Vec<String>,
+    pub trees: Vec<CatBoostTreeSplit>,
+    pub leaf_outputs: Vec<CatBoostLeafOutput>,
+    pub notes: Vec<String>,
+}
+
+pub trait PolicyEngine {
+    fn engine_name(&self) -> &'static str;
+    fn artifact_version(&self) -> &str;
+    fn infer(&self, features: &PolicyFeatureVector) -> PolicyDecisionArtifact;
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct CatBoostCompatiblePolicyEngine {
+    pub model_artifact: CatBoostPolicyModelArtifact,
+}
+
+impl CatBoostCompatiblePolicyEngine {
+    pub fn default_policy_path() -> PathBuf {
+        Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("src/application/orchestration/catboost_policy.sample.json")
+    }
+
+    pub fn load_default_or_placeholder() -> Self {
+        Self::load_from_file(&Self::default_policy_path()).unwrap_or_else(|_| Self::placeholder())
+    }
+
+    pub fn placeholder() -> Self {
+        Self {
+            model_artifact: CatBoostPolicyModelArtifact {
+                artifact_version: "catboost-policy-placeholder-v0".to_string(),
+                model_family: "catboost".to_string(),
+                target_kind: "post_bbn_policy_action".to_string(),
+                feature_schema_version: "policy_features_v1".to_string(),
+                categorical_features: vec![
+                    "factor_alignment".to_string(),
+                    "factor_uncertainty".to_string(),
+                    "gating_status".to_string(),
+                    "selected_entry_quality".to_string(),
+                    "recommended_command".to_string(),
+                    "selected_direction".to_string(),
+                ],
+                numerical_features: vec![
+                    "evidence_quality_score".to_string(),
+                    "risk_reward".to_string(),
+                    "kelly_fraction".to_string(),
+                ],
+                target_label_space: vec![
+                    "Observe".to_string(),
+                    "Bull".to_string(),
+                    "Bear".to_string(),
+                ],
+                trees: Vec::new(),
+                leaf_outputs: Vec::new(),
+                notes: vec![
+                    "catboost_schema_only_no_runtime".to_string(),
+                    "post_bbn_policy_layer".to_string(),
+                ],
+            },
+        }
+    }
+
+    pub fn from_artifact(model_artifact: CatBoostPolicyModelArtifact) -> Self {
+        Self { model_artifact }
+    }
+
+    pub fn load_from_file(path: &std::path::Path) -> anyhow::Result<Self> {
+        let content = std::fs::read_to_string(path)?;
+        let artifact: CatBoostPolicyModelArtifact = serde_json::from_str(&content)?;
+        Ok(Self::from_artifact(artifact))
+    }
+}
+
+impl PolicyEngine for CatBoostCompatiblePolicyEngine {
+    fn engine_name(&self) -> &'static str {
+        "catboost-compatible-placeholder"
+    }
+
+    fn artifact_version(&self) -> &str {
+        &self.model_artifact.artifact_version
+    }
+
+    fn infer(&self, features: &PolicyFeatureVector) -> PolicyDecisionArtifact {
+        let qualification = if features.gating_status == "observe_only" {
+            "disqualified"
+        } else {
+            "qualified"
+        };
+        let confidence_band = if features.evidence_quality_score >= 0.75 {
+            "high"
+        } else if features.evidence_quality_score >= 0.45 {
+            "medium"
+        } else {
+            "low"
+        };
+        let leaf_output = self.model_artifact.leaf_outputs.iter().find(|leaf| {
+            leaf.qualification == qualification
+                && leaf
+                    .gating_status
+                    .as_ref()
+                    .map(|value| value == &features.gating_status)
+                    .unwrap_or(true)
+                && leaf
+                    .selected_direction
+                    .as_ref()
+                    .map(|value| value == &features.selected_direction)
+                    .unwrap_or(
+                        leaf.action == features.selected_direction
+                            || leaf.action.eq_ignore_ascii_case("observe"),
+                    )
+                && leaf
+                    .factor_alignment
+                    .as_ref()
+                    .map(|value| value == &features.factor_alignment)
+                    .unwrap_or(true)
+                && leaf
+                    .selected_entry_quality
+                    .as_ref()
+                    .map(|value| value == &features.selected_entry_quality)
+                    .unwrap_or(true)
+        });
+        let action = leaf_output
+            .map(|leaf| leaf.action.clone())
+            .unwrap_or_else(|| {
+                if qualification == "qualified" && features.selected_direction != "Neutral" {
+                    features.selected_direction.clone()
+                } else {
+                    "Observe".to_string()
+                }
+            });
+        PolicyDecisionArtifact {
+            policy_version: self.artifact_version().to_string(),
+            action,
+            qualification: qualification.to_string(),
+            recommended_command: leaf_output
+                .and_then(|leaf| leaf.recommended_command.clone())
+                .unwrap_or_else(|| features.recommended_command.clone()),
+            confidence_band: leaf_output
+                .map(|leaf| leaf.confidence_band.clone())
+                .unwrap_or_else(|| confidence_band.to_string()),
+            leaf_id: leaf_output
+                .map(|leaf| leaf.leaf_id.clone())
+                .unwrap_or_else(|| {
+                    format!(
+                        "gate:{}|entry:{}|direction:{}",
+                        features.gating_status,
+                        features.selected_entry_quality,
+                        features.selected_direction
+                    )
+                }),
+            split_trace: vec![
+                format!("gating_status={}", features.gating_status),
+                format!("selected_entry_quality={}", features.selected_entry_quality),
+                format!("factor_alignment={}", features.factor_alignment),
+                format!("factor_uncertainty={}", features.factor_uncertainty),
+            ],
+            invalidation_triggers: vec![
+                format!("gate_changes_from={}", features.gating_status),
+                format!(
+                    "entry_quality_changes_from={}",
+                    features.selected_entry_quality
+                ),
+            ],
+            summary: format!(
+                "engine={} action={} qualification={} command={} confidence={}",
+                self.engine_name(),
+                if qualification == "qualified" && features.selected_direction != "Neutral" {
+                    features.selected_direction.clone()
+                } else {
+                    "Observe".to_string()
+                },
+                qualification,
+                features.recommended_command,
+                confidence_band
+            ),
+        }
+    }
+}
