@@ -9276,6 +9276,26 @@ fn workflow_blocking_truth(
         };
     }
     if let Some(phase) = current_phase {
+        if let Some(credibility_block) = phase.risk_flags.iter().find(|flag| {
+            flag.contains("conformal_coverage_low") || flag.contains("regime_break_penalty_high")
+        }) {
+            return WorkflowBlockingTruth {
+                stage: phase.phase.clone(),
+                status: "credibility_gate_blocked".to_string(),
+                reason: format!(
+                    "workflow credibility gate blocked next step because {}",
+                    credibility_block
+                ),
+                evidence: phase.risk_flags.clone(),
+                next_command: format!(
+                    "ict-engine workflow-status --symbol {} --state-dir {} --phase human-next",
+                    shell_quote(symbol),
+                    shell_quote(state_dir)
+                ),
+            };
+        }
+    }
+    if let Some(phase) = current_phase {
         return WorkflowBlockingTruth {
             stage: phase.phase.clone(),
             status: "follow_current_focus".to_string(),
