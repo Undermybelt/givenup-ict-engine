@@ -715,3 +715,48 @@ pub fn family_history_window() -> usize {
         .map(|value| value.clamp(1, 20))
         .unwrap_or(5)
 }
+
+pub fn trend_label_f64(values: &[f64]) -> String {
+    match (values.first(), values.last()) {
+        (Some(first), Some(last)) if last - first > 0.05 => "improving".to_string(),
+        (Some(first), Some(last)) if first - last > 0.05 => "deteriorating".to_string(),
+        (Some(_), Some(_)) => "stable".to_string(),
+        _ => "insufficient_history".to_string(),
+    }
+}
+
+pub fn trend_label_usize(values: &[usize]) -> String {
+    match (values.first(), values.last()) {
+        (Some(first), Some(last)) if last > first => "worsening".to_string(),
+        (Some(first), Some(last)) if last < first => "improving".to_string(),
+        (Some(_), Some(_)) => "stable".to_string(),
+        _ => "insufficient_history".to_string(),
+    }
+}
+
+pub fn parse_interval_minutes(interval: &str) -> anyhow::Result<i64> {
+    let normalized = interval.trim().to_ascii_lowercase();
+    match normalized.as_str() {
+        "1m" => Ok(1),
+        "5m" => Ok(5),
+        "15m" => Ok(15),
+        "30m" => Ok(30),
+        "1h" => Ok(60),
+        "4h" => Ok(240),
+        "1d" => Ok(1440),
+        _ => anyhow::bail!("unsupported interval '{}'", interval),
+    }
+}
+
+pub fn shell_quote(value: &str) -> String {
+    if value.is_empty() {
+        "''".to_string()
+    } else if value
+        .chars()
+        .all(|ch| ch.is_ascii_alphanumeric() || matches!(ch, '/' | ':' | '.' | '_' | '-'))
+    {
+        value.to_string()
+    } else {
+        format!("'{}'", value.replace('\'', "'\"'\"'"))
+    }
+}

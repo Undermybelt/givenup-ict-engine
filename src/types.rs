@@ -485,3 +485,14 @@ pub fn normalize_regime_label(input: &str) -> Regime {
         _ => Regime::ManipulationExpansion,
     }
 }
+
+pub fn parse_symbol(symbol: &str) -> Symbol {
+    match symbol.to_uppercase().as_str() {
+        "NQ" => Symbol::NQ,
+        "ES" => Symbol::ES,
+        "YM" => Symbol::YM,
+        "GC" => Symbol::GC,
+        "CL" => Symbol::CL,
+        _ => Symbol::NQ,
+    }
+}

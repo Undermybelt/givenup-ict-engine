@@ -79,7 +79,8 @@ use ict_engine::bbn::trading::{
 use ict_engine::config::{
     build_frame_features, build_pre_bayes_evidence_filter, compute_hash, env_bool,
     env_bool_with_source, env_f64, env_f64_with_source, family_history_window, left_pad,
-    FrameFeatures, INDICATOR_PERIOD,
+    parse_interval_minutes, shell_quote, trend_label_f64, trend_label_usize, FrameFeatures,
+    INDICATOR_PERIOD,
 };
 use ict_engine::data::{
     aggregate_candles_by_minutes, load_candles, load_tomac_continuous_candles,
@@ -139,9 +140,11 @@ use ict_engine::state::{
     ENSEMBLE_VOTE_FILE, EXECUTION_CANDIDATE_FILE, FACTOR_MUTATION_RUNS_FILE,
     PENDING_UPDATE_ARTIFACT_FILE, RESEARCH_RUNS_FILE, TRAIN_RUNS_FILE, UPDATE_RUNS_FILE,
 };
+#[cfg(test)]
+use ict_engine::types::Symbol;
 use ict_engine::types::{
-    normalize_direction_label, normalize_regime_label, Candle, CascadeLayer, Direction, HMMParams,
-    Regime, RegimeProbs, Symbol, TradePlan, TradeRecord, OBS_DIM,
+    normalize_direction_label, normalize_regime_label, parse_symbol, Candle, CascadeLayer,
+    Direction, HMMParams, Regime, RegimeProbs, TradePlan, TradeRecord, OBS_DIM,
 };
 use serde::Serialize;
 
@@ -3300,20 +3303,6 @@ fn infer_market_code_from_path(path: &str) -> String {
         .next()
         .unwrap_or(parent)
         .to_ascii_uppercase()
-}
-
-fn parse_interval_minutes(interval: &str) -> Result<i64> {
-    let normalized = interval.trim().to_ascii_lowercase();
-    match normalized.as_str() {
-        "1m" => Ok(1),
-        "5m" => Ok(5),
-        "15m" => Ok(15),
-        "30m" => Ok(30),
-        "1h" => Ok(60),
-        "4h" => Ok(240),
-        "1d" => Ok(1440),
-        _ => bail!("unsupported interval '{}'", interval),
-    }
 }
 
 fn futures_sop_command(root: Option<&str>, output_dir: &str, interval: &str) -> Result<()> {
@@ -14879,17 +14868,6 @@ fn resolve_live_backend_base_url(
     }
 }
 
-fn parse_symbol(symbol: &str) -> Symbol {
-    match symbol.to_uppercase().as_str() {
-        "NQ" => Symbol::NQ,
-        "ES" => Symbol::ES,
-        "YM" => Symbol::YM,
-        "GC" => Symbol::GC,
-        "CL" => Symbol::CL,
-        _ => Symbol::NQ,
-    }
-}
-
 fn selected_cascade_max_layer(plan: &TradePlan) -> CascadeLayer {
     let cascade = match plan.direction {
         Direction::Bull => &plan.cascade_bull,
@@ -15781,19 +15759,6 @@ struct CommandContext {
     update_entry_signal: Option<String>,
     update_feedback_file: Option<String>,
     user_data_selection_required: bool,
-}
-
-fn shell_quote(value: &str) -> String {
-    if value.is_empty() {
-        "''".to_string()
-    } else if value
-        .chars()
-        .all(|ch| ch.is_ascii_alphanumeric() || matches!(ch, '/' | ':' | '.' | '_' | '-'))
-    {
-        value.to_string()
-    } else {
-        format!("'{}'", value.replace('\'', "'\"'\"'"))
-    }
 }
 
 fn recommended_command(
@@ -17600,24 +17565,6 @@ fn execution_candidate_review_rule_version(
         rules.require_same_data.to_string(),
         rules.require_same_factor_version.to_string(),
     ])
-}
-
-fn trend_label_f64(values: &[f64]) -> String {
-    match (values.first(), values.last()) {
-        (Some(first), Some(last)) if last - first > 0.05 => "improving".to_string(),
-        (Some(first), Some(last)) if first - last > 0.05 => "deteriorating".to_string(),
-        (Some(_), Some(_)) => "stable".to_string(),
-        _ => "insufficient_history".to_string(),
-    }
-}
-
-fn trend_label_usize(values: &[usize]) -> String {
-    match (values.first(), values.last()) {
-        (Some(first), Some(last)) if last > first => "worsening".to_string(),
-        (Some(first), Some(last)) if last < first => "improving".to_string(),
-        (Some(_), Some(_)) => "stable".to_string(),
-        _ => "insufficient_history".to_string(),
-    }
 }
 
 fn action_priority(item: &AgentActionItem) -> u8 {
