@@ -140,8 +140,8 @@ use ict_engine::state::{
     PENDING_UPDATE_ARTIFACT_FILE, RESEARCH_RUNS_FILE, TRAIN_RUNS_FILE, UPDATE_RUNS_FILE,
 };
 use ict_engine::types::{
-    Candle, CascadeLayer, Direction, HMMParams, Regime, RegimeProbs, Symbol, TradePlan,
-    TradeRecord, OBS_DIM,
+    normalize_direction_label, normalize_regime_label, Candle, CascadeLayer, Direction, HMMParams,
+    Regime, RegimeProbs, Symbol, TradePlan, TradeRecord, OBS_DIM,
 };
 use serde::Serialize;
 
@@ -18398,22 +18398,6 @@ fn run_provenance(
         factor_version: factor_version(learning_state),
         config_hash: compute_hash(&config_parts),
         data_fingerprint,
-    }
-}
-
-fn normalize_direction_label(input: &str) -> Direction {
-    match input.trim().to_ascii_lowercase().as_str() {
-        "bull" | "long" | "buy" => Direction::Bull,
-        "bear" | "short" | "sell" => Direction::Bear,
-        _ => Direction::Neutral,
-    }
-}
-
-fn normalize_regime_label(input: &str) -> Regime {
-    match input.trim().to_ascii_lowercase().as_str() {
-        "accumulation" | "accum" => Regime::Accumulation,
-        "distribution" | "dist" => Regime::Distribution,
-        _ => Regime::ManipulationExpansion,
     }
 }
 

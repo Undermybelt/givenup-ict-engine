@@ -469,3 +469,19 @@ pub struct ICTStructureSummary {
     pub rb_pinbar_detected: bool,
     pub timed_pda_states: Vec<TimedPdaState>,
 }
+
+pub fn normalize_direction_label(input: &str) -> Direction {
+    match input.trim().to_ascii_lowercase().as_str() {
+        "bull" | "long" | "buy" => Direction::Bull,
+        "bear" | "short" | "sell" => Direction::Bear,
+        _ => Direction::Neutral,
+    }
+}
+
+pub fn normalize_regime_label(input: &str) -> Regime {
+    match input.trim().to_ascii_lowercase().as_str() {
+        "accumulation" | "accum" => Regime::Accumulation,
+        "distribution" | "dist" => Regime::Distribution,
+        _ => Regime::ManipulationExpansion,
+    }
+}
