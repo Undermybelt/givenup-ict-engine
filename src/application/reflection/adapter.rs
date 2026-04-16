@@ -1,6 +1,9 @@
 use serde::Serialize;
 
-use super::{build_postmortem_artifact, build_prior_artifact, PostmortemArtifact, PriorArtifact};
+use super::{
+    build_postmortem_artifact, build_prior_artifact, PostmortemArtifact, PostmortemArtifactInput,
+    PriorArtifact, PriorArtifactInput,
+};
 
 #[derive(Debug, Clone, Serialize, Default)]
 pub struct ReflectionBundle {
@@ -18,46 +21,51 @@ pub struct ReflectionBundle {
     pub execution_setup_guardrail: Option<String>,
 }
 
-pub fn build_reflection_bundle(
-    symbol: impl Into<String>,
-    timestamp: impl Into<String>,
-    objective: impl Into<String>,
-    expected_regime: impl Into<String>,
-    expected_direction: impl Into<String>,
-    realized_outcome: impl Into<String>,
-    evidence: &[String],
-    next_candidates: &[String],
-) -> ReflectionBundle {
-    let symbol = symbol.into();
-    let timestamp = timestamp.into();
-    let objective = objective.into();
-    let expected_regime = expected_regime.into();
-    let expected_direction = expected_direction.into();
-    let realized_outcome = realized_outcome.into();
+#[derive(Debug, Clone, Default)]
+pub struct ReflectionBundleInput {
+    pub symbol: String,
+    pub timestamp: String,
+    pub objective: String,
+    pub expected_regime: String,
+    pub expected_direction: String,
+    pub realized_outcome: String,
+    pub evidence: Vec<String>,
+    pub next_candidates: Vec<String>,
+}
+
+pub fn build_reflection_bundle(input: ReflectionBundleInput) -> ReflectionBundle {
+    let symbol = input.symbol;
+    let timestamp = input.timestamp;
+    let objective = input.objective;
+    let expected_regime = input.expected_regime;
+    let expected_direction = input.expected_direction;
+    let realized_outcome = input.realized_outcome;
+    let evidence = input.evidence;
+    let next_candidates = input.next_candidates;
 
     ReflectionBundle {
-        prior: build_prior_artifact(
-            symbol.clone(),
-            timestamp.clone(),
+        prior: build_prior_artifact(PriorArtifactInput {
+            symbol: symbol.clone(),
+            timestamp: timestamp.clone(),
             objective,
             expected_regime,
             expected_direction,
-            evidence,
-            next_candidates,
-            "fresh_required",
-            next_candidates,
-        ),
-        postmortem: build_postmortem_artifact(
+            expected_key_evidence: evidence.clone(),
+            invalidation_conditions: next_candidates.clone(),
+            freshness_expectation: "fresh_required".to_string(),
+            notes: next_candidates.clone(),
+        }),
+        postmortem: build_postmortem_artifact(PostmortemArtifactInput {
             symbol,
             timestamp,
-            "unknown_expected_outcome",
+            expected_outcome: "unknown_expected_outcome".to_string(),
             realized_outcome,
+            deviations: next_candidates.clone(),
+            evidence_drift: evidence.clone(),
+            what_worked: evidence,
+            what_failed: next_candidates.clone(),
             next_candidates,
-            evidence,
-            evidence,
-            next_candidates,
-            next_candidates,
-        ),
+        }),
         ensemble_vote_summary: None,
         ensemble_vote_artifact_id: None,
         ensemble_disagreement_summary: None,
@@ -72,16 +80,16 @@ mod tests {
 
     #[test]
     fn reflection_bundle_contains_prior_and_postmortem() {
-        let bundle = build_reflection_bundle(
-            "NQ",
-            "2026-01-01T00:00:00Z",
-            "generic",
-            "bull",
-            "long",
-            "win",
-            &["e1".to_string()],
-            &["n1".to_string()],
-        );
+        let bundle = build_reflection_bundle(ReflectionBundleInput {
+            symbol: "NQ".to_string(),
+            timestamp: "2026-01-01T00:00:00Z".to_string(),
+            objective: "generic".to_string(),
+            expected_regime: "bull".to_string(),
+            expected_direction: "long".to_string(),
+            realized_outcome: "win".to_string(),
+            evidence: vec!["e1".to_string()],
+            next_candidates: vec!["n1".to_string()],
+        });
         assert_eq!(bundle.prior.symbol, "NQ");
         assert_eq!(bundle.postmortem.realized_outcome, "win");
     }

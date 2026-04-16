@@ -235,22 +235,48 @@ impl OpenBBProvider {
             "https://query1.finance.yahoo.com/v8/finance/chart/{}",
             urlencoding::encode(symbol)
         );
-        let response: ChartResponse = self
-            .client
-            .get(url)
-            .query(&[
-                ("interval", yahoo_interval.to_string()),
-                ("period1", start.timestamp().to_string()),
-                ("period2", end.timestamp().to_string()),
-                ("includePrePost", "true".to_string()),
-                ("events", "div,splits".to_string()),
-            ])
-            .send()
-            .with_context(|| format!("failed to request yahoo chart for '{}'", symbol))?
-            .error_for_status()
-            .with_context(|| format!("yahoo chart returned error for '{}'", symbol))?
-            .json()
-            .context("failed to parse yahoo chart response")?;
+        let response: ChartResponse = {
+            const MAX_ATTEMPTS: usize = 3;
+            let mut last_error = None;
+            let mut parsed = None;
+            for attempt in 0..MAX_ATTEMPTS {
+                let result = self
+                    .client
+                    .get(&url)
+                    .query(&[
+                        ("interval", yahoo_interval.to_string()),
+                        ("period1", start.timestamp().to_string()),
+                        ("period2", end.timestamp().to_string()),
+                        ("includePrePost", "true".to_string()),
+                        ("events", "div,splits".to_string()),
+                    ])
+                    .send()
+                    .with_context(|| format!("failed to request yahoo chart for '{}'", symbol))
+                    .and_then(|resp| {
+                        resp.error_for_status()
+                            .with_context(|| format!("yahoo chart returned error for '{}'", symbol))
+                    })
+                    .and_then(|resp| resp.json().context("failed to parse yahoo chart response"));
+                match result {
+                    Ok(value) => {
+                        parsed = Some(value);
+                        break;
+                    }
+                    Err(err) => {
+                        let retryable = is_retryable_yahoo_chart_error(&err);
+                        last_error = Some(err);
+                        if !retryable || !should_sleep_before_retry(attempt, MAX_ATTEMPTS) {
+                            break;
+                        }
+                        std::thread::sleep(std::time::Duration::from_millis(700));
+                    }
+                }
+            }
+            parsed.ok_or_else(|| {
+                last_error
+                    .unwrap_or_else(|| anyhow!("failed to fetch yahoo chart for '{}'", symbol))
+            })?
+        };
 
         let result = response
             .chart
@@ -1123,4 +1149,54 @@ fn parse_barchart_expiry_dte(expiration: &str) -> Option<f64> {
     let dt = date.and_hms_opt(0, 0, 0)?;
     let expiry = DateTime::<Utc>::from_naive_utc_and_offset(dt, Utc);
     Some(((expiry - Utc::now()).num_seconds().max(0) as f64) / 86_400.0)
+}
+
+fn should_retry_yahoo_chart_status(status: reqwest::StatusCode) -> bool {
+    status == reqwest::StatusCode::TOO_MANY_REQUESTS || status.is_server_error()
+}
+
+fn is_retryable_yahoo_chart_error(err: &anyhow::Error) -> bool {
+    err.chain().any(|cause| {
+        cause
+            .downcast_ref::<reqwest::Error>()
+            .is_some_and(|reqwest_err| {
+                reqwest_err.is_timeout()
+                    || reqwest_err.is_connect()
+                    || reqwest_err
+                        .status()
+                        .is_some_and(should_retry_yahoo_chart_status)
+            })
+    })
+}
+
+fn should_sleep_before_retry(attempt: usize, max_attempts: usize) -> bool {
+    attempt + 1 < max_attempts
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn yahoo_chart_retry_policy_only_retries_retryable_statuses() {
+        assert!(should_retry_yahoo_chart_status(
+            reqwest::StatusCode::TOO_MANY_REQUESTS
+        ));
+        assert!(should_retry_yahoo_chart_status(
+            reqwest::StatusCode::INTERNAL_SERVER_ERROR
+        ));
+        assert!(!should_retry_yahoo_chart_status(
+            reqwest::StatusCode::BAD_REQUEST
+        ));
+        assert!(!should_retry_yahoo_chart_status(
+            reqwest::StatusCode::NOT_FOUND
+        ));
+    }
+
+    #[test]
+    fn yahoo_chart_retry_only_sleeps_when_another_attempt_remains() {
+        assert!(should_sleep_before_retry(0, 3));
+        assert!(should_sleep_before_retry(1, 3));
+        assert!(!should_sleep_before_retry(2, 3));
+    }
 }

@@ -43,9 +43,7 @@ pub fn detect_fvg(candles: &[Candle]) -> Vec<FairValueGap> {
 
 /// Check if an FVG has been filled
 pub fn check_fvg_filled(candles: &[Candle], fvg: &FairValueGap) -> bool {
-    for i in fvg.start_bar + 2..candles.len() {
-        let candle = &candles[i];
-
+    for candle in candles.iter().skip(fvg.start_bar + 2) {
         if fvg.direction == Direction::Bull {
             // Bullish FVG is filled when price drops below the gap
             if candle.low <= fvg.bottom {

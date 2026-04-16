@@ -307,10 +307,10 @@ fn send_command(client: &Client, body: Value) -> Result<Value> {
         );
     }
 
-    Ok(response
+    response
         .get("data")
         .cloned()
-        .ok_or_else(|| anyhow!("opencli daemon response missing data"))?)
+        .ok_or_else(|| anyhow!("opencli daemon response missing data"))
 }
 
 fn find_executable(name: &str) -> Option<PathBuf> {

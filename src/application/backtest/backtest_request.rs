@@ -13,27 +13,30 @@ pub struct BacktestRequest {
     pub source: String,
 }
 
-pub fn build_backtest_request(
-    symbol: impl Into<String>,
-    market: impl Into<String>,
-    interval: impl Into<String>,
-    window: impl Into<String>,
-    objective: impl Into<String>,
-    factor_filter: &[String],
-    regime_filter: &[String],
-    use_multi_timeframe: bool,
-    source: impl Into<String>,
-) -> BacktestRequest {
+#[derive(Debug, Clone, Default)]
+pub struct BacktestRequestInput {
+    pub symbol: String,
+    pub market: String,
+    pub interval: String,
+    pub window: String,
+    pub objective: String,
+    pub factor_filter: Vec<String>,
+    pub regime_filter: Vec<String>,
+    pub use_multi_timeframe: bool,
+    pub source: String,
+}
+
+pub fn build_backtest_request(input: BacktestRequestInput) -> BacktestRequest {
     BacktestRequest {
-        symbol: symbol.into(),
-        market: market.into(),
-        interval: interval.into(),
-        window: window.into(),
-        objective: objective.into(),
-        factor_filter: factor_filter.to_vec(),
-        regime_filter: regime_filter.to_vec(),
-        use_multi_timeframe,
-        source: source.into(),
+        symbol: input.symbol,
+        market: input.market,
+        interval: input.interval,
+        window: input.window,
+        objective: input.objective,
+        factor_filter: input.factor_filter,
+        regime_filter: input.regime_filter,
+        use_multi_timeframe: input.use_multi_timeframe,
+        source: input.source,
     }
 }
 
@@ -43,17 +46,17 @@ mod tests {
 
     #[test]
     fn backtest_request_builder_keeps_market() {
-        let req = build_backtest_request(
-            "NQ",
-            "futures",
-            "15m",
-            "2024Q1",
-            "generic",
-            &[],
-            &[],
-            true,
-            "history",
-        );
+        let req = build_backtest_request(BacktestRequestInput {
+            symbol: "NQ".to_string(),
+            market: "futures".to_string(),
+            interval: "15m".to_string(),
+            window: "2024Q1".to_string(),
+            objective: "generic".to_string(),
+            factor_filter: vec![],
+            regime_filter: vec![],
+            use_multi_timeframe: true,
+            source: "history".to_string(),
+        });
         assert_eq!(req.market, "futures");
         assert!(req.use_multi_timeframe);
     }

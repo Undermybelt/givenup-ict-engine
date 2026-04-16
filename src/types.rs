@@ -18,6 +18,8 @@ pub enum Symbol {
     NQ,
     ES,
     YM,
+    GC,
+    CL,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -98,6 +100,17 @@ pub struct CascadeResult {
     pub stopped_at: Option<CascadeLayer>,
     pub steps: Vec<CascadeStep>,
     pub final_posterior: f64,
+}
+
+impl Default for CascadeResult {
+    fn default() -> Self {
+        Self {
+            direction: Direction::Neutral,
+            stopped_at: None,
+            steps: Vec::new(),
+            final_posterior: 0.0,
+        }
+    }
 }
 
 // ========== Beta 分布参数 ==========
@@ -405,6 +418,8 @@ pub struct TradeRecord {
     pub entry_price: f64,
     pub exit_price: f64,
     pub pnl: f64,
+    #[serde(default)]
+    pub exit_reason: Option<String>,
     pub regime_at_entry: Regime,
     pub cascade_max_layer: CascadeLayer,
     pub cascade_direction: Direction,

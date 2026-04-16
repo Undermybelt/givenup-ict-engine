@@ -13,27 +13,30 @@ pub struct PriorArtifact {
     pub notes: Vec<String>,
 }
 
-pub fn build_prior_artifact(
-    symbol: impl Into<String>,
-    timestamp: impl Into<String>,
-    objective: impl Into<String>,
-    expected_regime: impl Into<String>,
-    expected_direction: impl Into<String>,
-    expected_key_evidence: &[String],
-    invalidation_conditions: &[String],
-    freshness_expectation: impl Into<String>,
-    notes: &[String],
-) -> PriorArtifact {
+#[derive(Debug, Clone, Default)]
+pub struct PriorArtifactInput {
+    pub symbol: String,
+    pub timestamp: String,
+    pub objective: String,
+    pub expected_regime: String,
+    pub expected_direction: String,
+    pub expected_key_evidence: Vec<String>,
+    pub invalidation_conditions: Vec<String>,
+    pub freshness_expectation: String,
+    pub notes: Vec<String>,
+}
+
+pub fn build_prior_artifact(input: PriorArtifactInput) -> PriorArtifact {
     PriorArtifact {
-        symbol: symbol.into(),
-        timestamp: timestamp.into(),
-        objective: objective.into(),
-        expected_regime: expected_regime.into(),
-        expected_direction: expected_direction.into(),
-        expected_key_evidence: expected_key_evidence.to_vec(),
-        invalidation_conditions: invalidation_conditions.to_vec(),
-        freshness_expectation: freshness_expectation.into(),
-        notes: notes.to_vec(),
+        symbol: input.symbol,
+        timestamp: input.timestamp,
+        objective: input.objective,
+        expected_regime: input.expected_regime,
+        expected_direction: input.expected_direction,
+        expected_key_evidence: input.expected_key_evidence,
+        invalidation_conditions: input.invalidation_conditions,
+        freshness_expectation: input.freshness_expectation,
+        notes: input.notes,
     }
 }
 
@@ -43,17 +46,17 @@ mod tests {
 
     #[test]
     fn prior_builder_keeps_symbol_and_objective() {
-        let artifact = build_prior_artifact(
-            "NQ",
-            "2026-01-01T00:00:00Z",
-            "expansion_manipulation",
-            "bull",
-            "long",
-            &["e1".to_string()],
-            &["i1".to_string()],
-            "fresh",
-            &["n1".to_string()],
-        );
+        let artifact = build_prior_artifact(PriorArtifactInput {
+            symbol: "NQ".to_string(),
+            timestamp: "2026-01-01T00:00:00Z".to_string(),
+            objective: "expansion_manipulation".to_string(),
+            expected_regime: "bull".to_string(),
+            expected_direction: "long".to_string(),
+            expected_key_evidence: vec!["e1".to_string()],
+            invalidation_conditions: vec!["i1".to_string()],
+            freshness_expectation: "fresh".to_string(),
+            notes: vec!["n1".to_string()],
+        });
         assert_eq!(artifact.symbol, "NQ");
         assert_eq!(artifact.objective, "expansion_manipulation");
     }

@@ -168,11 +168,8 @@ pub fn resolve_analyze_cli_inputs(
     data_root: Option<&str>,
     market: Option<&str>,
 ) -> Result<(String, String, String)> {
-    match (data_htf, data_mtf, data_ltf) {
-        (Some(htf), Some(mtf), Some(ltf)) => {
-            return Ok((htf.to_string(), mtf.to_string(), ltf.to_string()))
-        }
-        _ => {}
+    if let (Some(htf), Some(mtf), Some(ltf)) = (data_htf, data_mtf, data_ltf) {
+        return Ok((htf.to_string(), mtf.to_string(), ltf.to_string()));
     }
     let data_root = data_root.ok_or_else(|| {
         anyhow!("analyze requires either --data-htf/--data-mtf/--data-ltf or --data-root")

@@ -47,7 +47,7 @@ impl InferenceEngine {
             .ok_or_else(|| anyhow!("node '{}' not found", node_id))?;
 
         if let Some(observed) = evidence.get(node_id) {
-            return Ok(Self::distribution_from_observation(node, observed)?);
+            return Self::distribution_from_observation(node, observed);
         }
 
         if node.parents.is_empty() {

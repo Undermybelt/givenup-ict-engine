@@ -26,26 +26,29 @@ pub struct AgentPromptPack {
     pub prompts: Vec<AgentPrompt>,
 }
 
+#[derive(Debug, Clone, Default)]
+pub struct AgentPromptInput {
+    pub id: String,
+    pub stage: String,
+    pub priority: String,
+    pub objective: String,
+    pub system_prompt: String,
+    pub user_prompt: String,
+    pub success_criteria: Vec<String>,
+    pub suggested_files: Vec<String>,
+}
+
 impl AgentPrompt {
-    pub fn new(
-        id: impl Into<String>,
-        stage: impl Into<String>,
-        priority: impl Into<String>,
-        objective: impl Into<String>,
-        system_prompt: impl Into<String>,
-        user_prompt: impl Into<String>,
-        success_criteria: Vec<String>,
-        suggested_files: Vec<String>,
-    ) -> Self {
+    pub fn new(input: AgentPromptInput) -> Self {
         Self {
-            id: id.into(),
-            stage: stage.into(),
-            priority: priority.into(),
-            objective: objective.into(),
-            system_prompt: system_prompt.into(),
-            user_prompt: user_prompt.into(),
-            success_criteria,
-            suggested_files,
+            id: input.id,
+            stage: input.stage,
+            priority: input.priority,
+            objective: input.objective,
+            system_prompt: input.system_prompt,
+            user_prompt: input.user_prompt,
+            success_criteria: input.success_criteria,
+            suggested_files: input.suggested_files,
         }
     }
 }
@@ -89,13 +92,13 @@ pub fn factor_iteration_prompt_pack(
             symbol
         ),
         prompts: vec![
-            AgentPrompt::new(
-                "factor_triage",
-                "factor_research",
-                "high",
-                "Select which factors to keep, tune, observe, or replace.",
-                "You are the factor-iteration agent. Use only the supplied scorecards and feedback summary to decide which factor edits are justified. Do not invent success criteria; follow the thresholds embedded in each factor prompt.",
-                format!(
+            AgentPrompt::new(AgentPromptInput {
+                id: "factor_triage".to_string(),
+                stage: "factor_research".to_string(),
+                priority: "high".to_string(),
+                objective: "Select which factors to keep, tune, observe, or replace.".to_string(),
+                system_prompt: "You are the factor-iteration agent. Use only the supplied scorecards and feedback summary to decide which factor edits are justified. Do not invent success criteria; follow the thresholds embedded in each factor prompt.".to_string(),
+                user_prompt: format!(
                     "Symbol={} top_scorecards=[{}] iteration_queue=[{}] feedback_summary=records:{} wins:{} losses:{} avg_pnl:{:.6} factor_success_rates:{:?}",
                     symbol,
                     top,
@@ -106,24 +109,24 @@ pub fn factor_iteration_prompt_pack(
                     feedback_summary.avg_pnl,
                     feedback_summary.factor_success_rates
                 ),
-                vec![
+                success_criteria: vec![
                     "Prioritize replace > tune > observe > keep".to_string(),
                     "Only recommend replacing a factor when its action is replace or replacement_candidate=true".to_string(),
                     "Use the factor-specific agent prompt as the acceptance rule for the next iteration".to_string(),
                 ],
-                vec![
+                suggested_files: vec![
                     "src/factor_lab/factor_definition.rs".to_string(),
                     "src/factors/registry.rs".to_string(),
                     "src/factors/weight_updater.rs".to_string(),
                 ],
-            ),
-            AgentPrompt::new(
-                "feedback_review",
-                "feedback_learning",
-                "medium",
-                "Review which factors are failing by regime and whether weight updates should be trusted.",
-                "You are the feedback-diagnostics agent. Compare factor success rates, grading, and weaknesses. Focus on regime-conditional failure and persistent underperformance.",
-                format!(
+            }),
+            AgentPrompt::new(AgentPromptInput {
+                id: "feedback_review".to_string(),
+                stage: "feedback_learning".to_string(),
+                priority: "medium".to_string(),
+                objective: "Review which factors are failing by regime and whether weight updates should be trusted.".to_string(),
+                system_prompt: "You are the feedback-diagnostics agent. Compare factor success rates, grading, and weaknesses. Focus on regime-conditional failure and persistent underperformance.".to_string(),
+                user_prompt: format!(
                     "Symbol={} feedback_total={} avg_pnl={:.6} weak_factors=[{}]",
                     symbol,
                     feedback_summary.total_records,
@@ -138,16 +141,16 @@ pub fn factor_iteration_prompt_pack(
                         .collect::<Vec<_>>()
                         .join("; ")
                 ),
-                vec![
+                success_criteria: vec![
                     "Flag factors with narrow regime coverage or unstable walk-forward".to_string(),
                     "Do not promote a weaker factor just because it has higher recent win rate on small sample".to_string(),
                 ],
-                vec![
+                suggested_files: vec![
                     "src/state/types.rs".to_string(),
                     "src/factors/regime_conditional.rs".to_string(),
                     "src/factors/weight_updater.rs".to_string(),
                 ],
-            ),
+            }),
         ],
     }
 }
@@ -160,26 +163,26 @@ pub fn dataset_audit_prompt(
     paired_candles: Option<usize>,
     source_command: &str,
 ) -> AgentPrompt {
-    AgentPrompt::new(
-        "dataset_audit",
-        "dataset_audit",
-        "high",
-        "Audit whether the dataset and command context are sufficient for trustworthy iteration.",
-        "You are the dataset-audit agent. Check whether the current dataset scope, paired market coverage, and command context are sufficient before making factor or model changes.",
-        format!(
+    AgentPrompt::new(AgentPromptInput {
+        id: "dataset_audit".to_string(),
+        stage: "dataset_audit".to_string(),
+        priority: "high".to_string(),
+        objective: "Audit whether the dataset and command context are sufficient for trustworthy iteration.".to_string(),
+        system_prompt: "You are the dataset-audit agent. Check whether the current dataset scope, paired market coverage, and command context are sufficient before making factor or model changes.".to_string(),
+        user_prompt: format!(
             "Symbol={} data_path={} paired_data_path={:?} candles={} paired_candles={:?} source_command={}",
             symbol, data_path, paired_data_path, candles, paired_candles, source_command
         ),
-        vec![
+        success_criteria: vec![
             "Flag low sample size or missing paired-market evidence before approving major factor changes".to_string(),
             "If this run is not comparable to prior runs, tell the next agent not to over-interpret score deltas".to_string(),
         ],
-        vec![
+        suggested_files: vec![
             "src/data/loader.rs".to_string(),
             "src/main.rs".to_string(),
             "src/factor_lab/research.rs".to_string(),
         ],
-    )
+    })
 }
 
 pub fn research_diff_prompt(
@@ -188,26 +191,26 @@ pub fn research_diff_prompt(
     generated: usize,
     applied: usize,
 ) -> AgentPrompt {
-    AgentPrompt::new(
-        "research_diff_review",
-        "research_diff",
-        "high",
-        "Review what changed in this research run compared with the previous run.",
-        "You are the research-diff agent. Compare factor score, weight, and action changes. Focus on whether the latest run actually improved candidate quality or just changed rankings without robust gains.",
-        format!(
+    AgentPrompt::new(AgentPromptInput {
+        id: "research_diff_review".to_string(),
+        stage: "research_diff".to_string(),
+        priority: "high".to_string(),
+        objective: "Review what changed in this research run compared with the previous run.".to_string(),
+        system_prompt: "You are the research-diff agent. Compare factor score, weight, and action changes. Focus on whether the latest run actually improved candidate quality or just changed rankings without robust gains.".to_string(),
+        user_prompt: format!(
             "Symbol={} feedback_generated={} feedback_applied={} score_deltas={:?}",
             symbol, generated, applied, score_deltas
         ),
-        vec![
+        success_criteria: vec![
             "Flag factors whose score improved but action stayed replace or tune".to_string(),
             "Highlight score drops on previously strong factors before promoting new edits".to_string(),
         ],
-        vec![
+        suggested_files: vec![
             "src/factor_lab/research.rs".to_string(),
             "src/state/types.rs".to_string(),
             "src/factors/weight_updater.rs".to_string(),
         ],
-    )
+    })
 }
 
 pub fn update_diff_prompt(
@@ -216,26 +219,26 @@ pub fn update_diff_prompt(
     score_deltas: &[RankingDiffItem],
     duplicate_feedback_skipped: bool,
 ) -> AgentPrompt {
-    AgentPrompt::new(
-        "update_diff_review",
-        "update_diff",
-        "high",
-        "Review whether the realized update materially changed model state.",
-        "You are the update-diff agent. Use the trade_outcome probability deltas and factor score deltas to judge whether this realized result should change factor code, evidence mapping, or neither.",
-        format!(
+    AgentPrompt::new(AgentPromptInput {
+        id: "update_diff_review".to_string(),
+        stage: "update_diff".to_string(),
+        priority: "high".to_string(),
+        objective: "Review whether the realized update materially changed model state.".to_string(),
+        system_prompt: "You are the update-diff agent. Use the trade_outcome probability deltas and factor score deltas to judge whether this realized result should change factor code, evidence mapping, or neither.".to_string(),
+        user_prompt: format!(
             "Symbol={} duplicate_feedback_skipped={} trade_outcome_deltas={:?} factor_score_deltas={:?}",
             symbol, duplicate_feedback_skipped, probability_deltas, score_deltas
         ),
-        vec![
+        success_criteria: vec![
             "If duplicate_feedback_skipped is true, recommend no model change".to_string(),
             "If outcome probabilities changed materially but factor scores did not, investigate BBN evidence mapping".to_string(),
         ],
-        vec![
+        suggested_files: vec![
             "src/main.rs".to_string(),
             "src/bbn/trading/topology.rs".to_string(),
             "src/factors/weight_updater.rs".to_string(),
         ],
-    )
+    })
 }
 
 pub fn promotion_gate_prompt(
@@ -244,13 +247,13 @@ pub fn promotion_gate_prompt(
     score_deltas: &[RankingDiffItem],
     thresholds: &DecisionThresholds,
 ) -> AgentPrompt {
-    AgentPrompt::new(
-        "promotion_gate",
-        "promotion_gate",
-        "high",
-        "Decide whether a factor iteration is strong enough to promote.",
-        "You are the promotion-gate agent. Only approve factor promotion when score deltas, grading, and supporting metrics clear the configured improvement thresholds. Reject cosmetic ranking changes.",
-        format!(
+    AgentPrompt::new(AgentPromptInput {
+        id: "promotion_gate".to_string(),
+        stage: "promotion_gate".to_string(),
+        priority: "high".to_string(),
+        objective: "Decide whether a factor iteration is strong enough to promote.".to_string(),
+        system_prompt: "You are the promotion-gate agent. Only approve factor promotion when score deltas, grading, and supporting metrics clear the configured improvement thresholds. Reject cosmetic ranking changes.".to_string(),
+        user_prompt: format!(
             "Symbol={} thresholds={{promotion_min_score_delta:{:.3}, promotion_min_score:{:.3}}} top_rankings={:?} score_deltas={:?}",
             symbol,
             thresholds.promotion_min_score_delta,
@@ -265,16 +268,16 @@ pub fn promotion_gate_prompt(
                 .collect::<Vec<_>>(),
             score_deltas
         ),
-        vec![
+        success_criteria: vec![
             "Only promote replace/tune outcomes when score delta is material and stability is not worse".to_string(),
             "If trade_count is low or dataset coverage changed, recommend holdout validation before promotion".to_string(),
         ],
-        vec![
+        suggested_files: vec![
             "src/state/types.rs".to_string(),
             "src/factors/weight_updater.rs".to_string(),
             "src/factor_lab/research.rs".to_string(),
         ],
-    )
+    })
 }
 
 pub fn rollback_review_prompt(
@@ -283,13 +286,13 @@ pub fn rollback_review_prompt(
     probability_deltas: &[ProbabilityDiff],
     thresholds: &DecisionThresholds,
 ) -> AgentPrompt {
-    AgentPrompt::new(
-        "rollback_review",
-        "rollback_review",
-        "high",
-        "Decide whether recent changes should be rolled back or isolated.",
-        "You are the rollback-review agent. Look for score degradation, action downgrades, and harmful probability shifts. Recommend rollback when the latest iteration weakened factor quality or destabilized outcome calibration.",
-        format!(
+    AgentPrompt::new(AgentPromptInput {
+        id: "rollback_review".to_string(),
+        stage: "rollback_review".to_string(),
+        priority: "high".to_string(),
+        objective: "Decide whether recent changes should be rolled back or isolated.".to_string(),
+        system_prompt: "You are the rollback-review agent. Look for score degradation, action downgrades, and harmful probability shifts. Recommend rollback when the latest iteration weakened factor quality or destabilized outcome calibration.".to_string(),
+        user_prompt: format!(
             "Symbol={} thresholds={{rollback_score_delta:{:.3}, rollback_probability_delta:{:.3}}} score_deltas={:?} trade_outcome_deltas={:?}",
             symbol,
             thresholds.rollback_score_delta,
@@ -297,14 +300,14 @@ pub fn rollback_review_prompt(
             score_deltas,
             probability_deltas
         ),
-        vec![
+        success_criteria: vec![
             "Recommend rollback when strong factors degrade materially or outcome calibration shifts against realized performance".to_string(),
             "If only one factor family regressed, prefer targeted rollback over full revert".to_string(),
         ],
-        vec![
+        suggested_files: vec![
             "src/main.rs".to_string(),
             "src/bbn/trading/topology.rs".to_string(),
             "src/factors/weight_updater.rs".to_string(),
         ],
-    )
+    })
 }

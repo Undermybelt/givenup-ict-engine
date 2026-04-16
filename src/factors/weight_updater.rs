@@ -234,12 +234,14 @@ mod tests {
     #[test]
     fn test_apply_feedback_updates_reliability_and_regime_stats() {
         let updater = WeightUpdater::default();
-        let mut learning_state = LearningState::default();
-        learning_state.factor_rankings = vec![PersistedFactorRanking {
-            factor_name: "trend_momentum".to_string(),
-            weight: 0.2,
-            ..PersistedFactorRanking::default()
-        }];
+        let mut learning_state = LearningState {
+            factor_rankings: vec![PersistedFactorRanking {
+                factor_name: "trend_momentum".to_string(),
+                weight: 0.2,
+                ..PersistedFactorRanking::default()
+            }],
+            ..LearningState::default()
+        };
         let feedback = FeedbackRecord {
             timestamp: Utc::now(),
             symbol: "NQ".to_string(),

@@ -547,6 +547,8 @@ pub struct EnsembleVoteRecord {
     pub final_action: String,
     pub recommended_command: String,
     pub human_next_triage: String,
+    #[serde(default)]
+    pub hard_block: crate::application::orchestration::EnsembleHardBlockArtifact,
     pub confidence: f64,
     pub consensus_strength: f64,
     pub disagreement_flags: Vec<String>,
@@ -1843,7 +1845,8 @@ pub struct WorkflowPhaseSnapshot {
     #[serde(default)]
     pub factor_score_map: BTreeMap<String, f64>,
     #[serde(default)]
-    pub objective_market_credibility_shrink: Option<crate::domain::belief::ObjectiveMarketCredibilityShrink>,
+    pub objective_market_credibility_shrink:
+        Option<crate::domain::belief::ObjectiveMarketCredibilityShrink>,
 }
 
 impl Default for WorkflowPhaseSnapshot {
@@ -2174,18 +2177,6 @@ pub struct StageAgentContextMinimal {
     pub recommended_command: String,
     #[serde(default)]
     pub gate_status: String,
-}
-
-impl Default for PersistedState {
-    fn default() -> Self {
-        Self {
-            hmm_params: None,
-            cascade_config: None,
-            beta_learner: None,
-            sv_params: None,
-            learning_state: None,
-        }
-    }
 }
 
 impl LearningState {
@@ -2737,8 +2728,8 @@ mod tests {
     use super::*;
     use std::collections::HashMap;
 
-    fn ranking(
-        name: &str,
+    struct RankingInput<'a> {
+        name: &'a str,
         mean_ic: f64,
         ir: f64,
         backtest_return: f64,
@@ -2747,21 +2738,23 @@ mod tests {
         win_rate: f64,
         profit_factor: f64,
         trade_count: usize,
-    ) -> PersistedFactorRanking {
+    }
+
+    fn ranking(input: RankingInput<'_>) -> PersistedFactorRanking {
         PersistedFactorRanking::from(&FactorIC {
-            factor_name: name.to_string(),
+            factor_name: input.name.to_string(),
             regime: Regime::ManipulationExpansion,
             ic_values: vec![0.1, 0.2],
-            mean_ic,
+            mean_ic: input.mean_ic,
             std_ic: 0.02,
-            ir,
+            ir: input.ir,
             weight: 0.2,
-            backtest_return,
-            sharpe,
-            stability,
-            win_rate,
-            profit_factor,
-            trade_count,
+            backtest_return: input.backtest_return,
+            sharpe: input.sharpe,
+            stability: input.stability,
+            win_rate: input.win_rate,
+            profit_factor: input.profit_factor,
+            trade_count: input.trade_count,
             regime_scores: HashMap::from([("manipulation_expansion".to_string(), 0.02)]),
         })
     }
@@ -2807,7 +2800,7 @@ mod tests {
         let feedback = sample_feedback();
         let mut state = LearningState::default();
 
-        let first = state.merge_feedback_records(&[feedback.clone()]);
+        let first = state.merge_feedback_records(std::slice::from_ref(&feedback));
         let second = state.merge_feedback_records(&[feedback]);
 
         assert_eq!(first.len(), 1);
@@ -2817,8 +2810,28 @@ mod tests {
 
     #[test]
     fn test_scorecard_assigns_keep_vs_replace_actions() {
-        let keep = ranking("trend_momentum", 0.08, 1.2, 0.14, 1.4, 0.72, 0.58, 1.35, 18);
-        let replace = ranking("weak_factor", 0.01, 0.1, -0.03, -0.2, 0.20, 0.42, 0.82, 14);
+        let keep = ranking(RankingInput {
+            name: "trend_momentum",
+            mean_ic: 0.08,
+            ir: 1.2,
+            backtest_return: 0.14,
+            sharpe: 1.4,
+            stability: 0.72,
+            win_rate: 0.58,
+            profit_factor: 1.35,
+            trade_count: 18,
+        });
+        let replace = ranking(RankingInput {
+            name: "weak_factor",
+            mean_ic: 0.01,
+            ir: 0.1,
+            backtest_return: -0.03,
+            sharpe: -0.2,
+            stability: 0.20,
+            win_rate: 0.42,
+            profit_factor: 0.82,
+            trade_count: 14,
+        });
 
         assert_eq!(keep.iteration_action, "keep");
         assert!(keep.composite_score > replace.composite_score);
@@ -2828,11 +2841,33 @@ mod tests {
 
     #[test]
     fn test_iteration_queue_prioritizes_low_scoring_replace_items() {
-        let mut state = LearningState::default();
-        state.factor_rankings = vec![
-            ranking("good_factor", 0.07, 1.0, 0.12, 1.1, 0.70, 0.55, 1.28, 16),
-            ranking("bad_factor", 0.01, 0.0, -0.04, -0.1, 0.25, 0.43, 0.80, 14),
-        ];
+        let state = LearningState {
+            factor_rankings: vec![
+                ranking(RankingInput {
+                    name: "good_factor",
+                    mean_ic: 0.07,
+                    ir: 1.0,
+                    backtest_return: 0.12,
+                    sharpe: 1.1,
+                    stability: 0.70,
+                    win_rate: 0.55,
+                    profit_factor: 1.28,
+                    trade_count: 16,
+                }),
+                ranking(RankingInput {
+                    name: "bad_factor",
+                    mean_ic: 0.01,
+                    ir: 0.0,
+                    backtest_return: -0.04,
+                    sharpe: -0.1,
+                    stability: 0.25,
+                    win_rate: 0.43,
+                    profit_factor: 0.80,
+                    trade_count: 14,
+                }),
+            ],
+            ..LearningState::default()
+        };
 
         let queue = state.iteration_queue();
         assert_eq!(queue[0].factor_name, "bad_factor");
@@ -2842,8 +2877,28 @@ mod tests {
     #[test]
     fn test_family_decisions_group_by_factor_family() {
         let mut state = LearningState::default();
-        let mut a = ranking("trend_momentum", 0.08, 1.2, 0.10, 1.2, 0.70, 0.56, 1.3, 15);
-        let mut b = ranking("structure_ict", 0.02, 0.3, -0.02, 0.1, 0.30, 0.45, 0.95, 12);
+        let mut a = ranking(RankingInput {
+            name: "trend_momentum",
+            mean_ic: 0.08,
+            ir: 1.2,
+            backtest_return: 0.10,
+            sharpe: 1.2,
+            stability: 0.70,
+            win_rate: 0.56,
+            profit_factor: 1.3,
+            trade_count: 15,
+        });
+        let mut b = ranking(RankingInput {
+            name: "structure_ict",
+            mean_ic: 0.02,
+            ir: 0.3,
+            backtest_return: -0.02,
+            sharpe: 0.1,
+            stability: 0.30,
+            win_rate: 0.45,
+            profit_factor: 0.95,
+            trade_count: 12,
+        });
         a.iteration_action = "keep".to_string();
         b.iteration_action = "replace".to_string();
         b.replacement_candidate = true;

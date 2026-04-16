@@ -19,10 +19,10 @@ impl ForwardBackward {
         stds: &[Vec<f64>],
     ) -> f64 {
         let mut log_p = 0.0;
-        for d in 0..obs.len() {
-            let diff = obs[d] - means[state][d];
-            log_p += -0.5 * (diff / stds[state][d]).powi(2)
-                - stds[state][d].ln()
+        for ((&x, &mean), &std) in obs.iter().zip(means[state].iter()).zip(stds[state].iter()) {
+            let diff = x - mean;
+            log_p += -0.5 * (diff / std).powi(2)
+                - std.ln()
                 - 0.5 * (2.0 * std::f64::consts::PI).ln();
         }
         log_p
@@ -37,14 +37,14 @@ impl ForwardBackward {
         let mut log_alpha: Vec<Vec<f64>> = vec![vec![f64::NEG_INFINITY; k]; t];
 
         // Initialization
-        for state in 0..k {
+        for (state, alpha) in log_alpha[0].iter_mut().enumerate() {
             let log_emit = Self::log_emission_prob(
                 &observations[0],
                 state,
                 &params.emission_means,
                 &params.emission_stds,
             );
-            log_alpha[0][state] = params.initial_probs[state].ln() + log_emit;
+            *alpha = params.initial_probs[state].ln() + log_emit;
         }
 
         // Forward pass
@@ -58,9 +58,9 @@ impl ForwardBackward {
                 );
 
                 let mut log_sum = f64::NEG_INFINITY;
-                for prev_state in 0..k {
+                for (prev_state, prev_alpha) in log_alpha[tt - 1].iter().enumerate() {
                     let log_val =
-                        log_alpha[tt - 1][prev_state] + params.transition[prev_state][state].ln();
+                        *prev_alpha + params.transition[prev_state][state].ln();
                     log_sum = Self::log_sum_exp(&[log_sum, log_val]);
                 }
 
@@ -83,8 +83,8 @@ impl ForwardBackward {
         let mut log_beta: Vec<Vec<f64>> = vec![vec![f64::NEG_INFINITY; k]; t];
 
         // Initialization (last time step)
-        for state in 0..k {
-            log_beta[t - 1][state] = 0.0; // log(1) = 0
+        for beta in &mut log_beta[t - 1] {
+            *beta = 0.0; // log(1) = 0
         }
 
         // Backward pass
@@ -92,7 +92,7 @@ impl ForwardBackward {
             for state in 0..k {
                 let mut log_sum = f64::NEG_INFINITY;
 
-                for next_state in 0..k {
+                for (next_state, next_beta) in log_beta[tt + 1].iter().enumerate() {
                     let log_emit = Self::log_emission_prob(
                         &observations[tt + 1],
                         next_state,
@@ -102,7 +102,7 @@ impl ForwardBackward {
 
                     let log_val = params.transition[state][next_state].ln()
                         + log_emit
-                        + log_beta[tt + 1][next_state];
+                        + *next_beta;
                     log_sum = Self::log_sum_exp(&[log_sum, log_val]);
                 }
 

@@ -65,19 +65,21 @@ mod tests {
         let promotion = PromotionDecision {
             approved: true,
             status: "promote".to_string(),
-            reason: String::new(),
+            reason: "promotion_reason_unavailable".to_string(),
             target_factors: vec!["a".to_string()],
             target_families: vec![],
         };
         let rollback = RollbackRecommendation {
             should_rollback: true,
             scope: "targeted".to_string(),
-            reason: String::new(),
+            reason: "rollback_reason_unavailable".to_string(),
             target_factors: vec!["b".to_string()],
             target_families: vec![],
         };
         let view = build_factor_lifecycle_view(None, None, &promotion, &rollback);
         assert_eq!(view.next_action, "rollback");
+        assert_eq!(promotion.reason, "promotion_reason_unavailable");
+        assert_eq!(rollback.reason, "rollback_reason_unavailable");
         assert!(view.target_factors.contains(&"a".to_string()));
         assert!(view.target_factors.contains(&"b".to_string()));
     }

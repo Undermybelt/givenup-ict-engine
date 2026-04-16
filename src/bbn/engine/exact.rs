@@ -15,10 +15,15 @@ use super::{BeliefInferenceEngine, InferenceRequest};
 pub struct ExactEngine;
 
 impl ExactEngine {
-    fn filter_from_request<'a>(
-        &self,
-        request: &'a InferenceRequest,
-    ) -> Result<PreBayesEvidenceFilter> {
+    fn market_behavior_profile(request: &InferenceRequest) -> Option<&str> {
+        request
+            .packet
+            .market_evidence
+            .iter()
+            .find_map(|line| line.strip_prefix("market_behavior_profile="))
+    }
+
+    fn filter_from_request(&self, request: &InferenceRequest) -> Result<PreBayesEvidenceFilter> {
         let packet = &request.packet;
         let filtered_market_regime_label = packet
             .regime_features
@@ -36,6 +41,8 @@ impl ExactEngine {
             .clone()
             .unwrap_or_else(|| "high".to_string());
         Ok(PreBayesEvidenceFilter {
+            entry_logic_id: packet.entry_logic_id.clone(),
+            logic_family: packet.logic_family.clone(),
             filtered_market_regime_label,
             filtered_liquidity_context_label,
             filtered_factor_alignment: packet
@@ -77,6 +84,7 @@ impl BeliefInferenceEngine for ExactEngine {
         request: &InferenceRequest,
     ) -> Result<Vec<BeliefNodePosteriorSnapshot>> {
         let assignments = &request.packet.evidence_assignments;
+        let market_behavior_profile = Self::market_behavior_profile(request);
         let mut out = Vec::new();
 
         let market_regime = BTreeMap::from([(
@@ -139,6 +147,14 @@ impl BeliefInferenceEngine for ExactEngine {
             &risk_posture,
         ));
 
+        if let Some(profile) = market_behavior_profile {
+            let market_profile = BTreeMap::from([(profile.to_string(), 1.0)]);
+            out.push(belief_snapshot_from_distribution(
+                "market_behavior_profile",
+                &market_profile,
+            ));
+        }
+
         Ok(out)
     }
 
@@ -155,5 +171,53 @@ impl BeliefInferenceEngine for ExactEngine {
                 method: "exact-surrogate-band".to_string(),
             })
             .collect())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::domain::belief::BeliefEvidencePacket;
+
+    #[test]
+    fn exact_engine_beliefs_do_not_change_with_market_category_string() {
+        let packet = BeliefEvidencePacket {
+            evidence_assignments: BTreeMap::from([
+                ("market_regime".to_string(), "range".to_string()),
+                ("liquidity_context".to_string(), "neutral".to_string()),
+                ("entry_quality".to_string(), "high".to_string()),
+            ]),
+            ..BeliefEvidencePacket::default()
+        };
+
+        let mut energy_packet = packet.clone();
+        energy_packet
+            .market_evidence
+            .push("market_category=energy".to_string());
+        let mut metals_packet = packet.clone();
+        metals_packet
+            .market_evidence
+            .push("market_category=metals".to_string());
+
+        let energy_beliefs = ExactEngine
+            .infer_beliefs(&InferenceRequest {
+                packet: energy_packet,
+            })
+            .unwrap();
+        let metals_beliefs = ExactEngine
+            .infer_beliefs(&InferenceRequest {
+                packet: metals_packet,
+            })
+            .unwrap();
+
+        let energy_entry = energy_beliefs
+            .iter()
+            .find(|belief| belief.node_id == "entry_quality")
+            .unwrap();
+        let metals_entry = metals_beliefs
+            .iter()
+            .find(|belief| belief.node_id == "entry_quality")
+            .unwrap();
+        assert_eq!(energy_entry.probabilities, metals_entry.probabilities);
     }
 }

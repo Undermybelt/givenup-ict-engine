@@ -259,7 +259,7 @@ pub fn cascade_bear(
 
 fn update_posterior(prior: f64, lr: f64) -> f64 {
     let posterior = prior * lr / (prior * lr + (1.0 - prior));
-    posterior.min(0.999).max(0.001)
+    posterior.clamp(0.001, 0.999)
 }
 
 // Layer check functions (simplified implementations)

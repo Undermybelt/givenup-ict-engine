@@ -92,18 +92,35 @@ fn bps_distance(anchor: f64, target: f64) -> f64 {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct StagedArtifactsInput<'a> {
+    pub diagnostics: &'a FactorDiagnostics,
+    pub decision_hint: &'a str,
+    pub filter: &'a PreBayesEvidenceFilter,
+    pub multi_timeframe_summary: &'a [String],
+    pub selected_entry_quality: &'a str,
+    pub direction: Direction,
+    pub risk_reward: f64,
+    pub kelly_fraction: f64,
+    pub recommended_command: &'a str,
+}
+
 pub fn build_staged_artifacts(
-    diagnostics: &FactorDiagnostics,
-    decision_hint: &str,
-    filter: &PreBayesEvidenceFilter,
-    multi_timeframe_summary: &[String],
-    selected_entry_quality: &str,
-    direction: Direction,
-    risk_reward: f64,
-    kelly_fraction: f64,
-    recommended_command: &str,
+    input: StagedArtifactsInput<'_>,
     policy_engine: &dyn PolicyEngine,
 ) -> StagedArtifacts {
+    let StagedArtifactsInput {
+        diagnostics,
+        decision_hint,
+        filter,
+        multi_timeframe_summary,
+        selected_entry_quality,
+        direction,
+        risk_reward,
+        kelly_fraction,
+        recommended_command,
+    } = input;
+
     let plan_status = if matches!(direction, Direction::Neutral) {
         "plan_blocked"
     } else {

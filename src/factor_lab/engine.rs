@@ -128,9 +128,7 @@ impl FactorEngine {
             signal.posterior_reliability = profile
                 .map(|profile| profile.posterior_reliability)
                 .unwrap_or(0.5);
-            signal.regime_multiplier = profile
-                .map(|profile| RegimeConditional::multiplier(profile, regime))
-                .unwrap_or(1.0);
+            signal.regime_multiplier = RegimeConditional::multiplier_opt(profile, regime);
             signal.regime_adjusted_score = signal.value
                 * signal.confidence
                 * signal.weight
@@ -274,6 +272,7 @@ pub type FactorResearchEngine = FactorEngine;
 mod tests {
     use super::*;
     use crate::factor_lab::factor_definition::{FactorCategory, FactorSignal};
+    use crate::factors::FactorRegistry;
     use chrono::Utc;
 
     fn sample_signal(direction: Direction, weighted_score: f64) -> FactorSignal {
@@ -303,5 +302,35 @@ mod tests {
         assert_eq!(diagnostics.long_support, ALIGNMENT_SUPPORT_GAP_THRESHOLD);
         assert_eq!(diagnostics.short_support, 0.0);
         assert_eq!(diagnostics.alignment_label, "bullish");
+    }
+
+    #[test]
+    fn test_run_keeps_neutral_regime_multiplier_without_learning_profile() {
+        let registry = FactorRegistry::default();
+        let engine = FactorEngine::new(registry);
+        let candles = (0..80)
+            .map(|i| Candle {
+                timestamp: Utc::now() + chrono::Duration::minutes(i as i64),
+                open: 100.0 + i as f64 * 0.1,
+                high: 100.5 + i as f64 * 0.1,
+                low: 99.5 + i as f64 * 0.1,
+                close: 100.2 + i as f64 * 0.1,
+                volume: 1.0,
+            })
+            .collect::<Vec<_>>();
+        let context = FactorContext {
+            regime: Some(crate::types::Regime::Distribution),
+            ..FactorContext::default()
+        };
+
+        let output = engine
+            .run(&candles, &context, None)
+            .expect("factor engine output");
+
+        assert!(!output.latest_signals.is_empty());
+        assert!(output
+            .latest_signals
+            .iter()
+            .all(|signal| (signal.regime_multiplier - 1.0).abs() <= f64::EPSILON));
     }
 }

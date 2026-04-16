@@ -1,7 +1,7 @@
 use crate::application::orchestration::build_stub_ensemble_vote_from_research;
 use crate::factor_lab::research::ResearchReport;
 
-use super::{build_reflection_bundle, ReflectionBundle};
+use super::{build_reflection_bundle, ReflectionBundle, ReflectionBundleInput};
 
 pub fn build_research_reflection_bundle(symbol: &str, report: &ResearchReport) -> ReflectionBundle {
     let next_candidates = if report.recommended_next_command.is_empty() {
@@ -13,22 +13,22 @@ pub fn build_research_reflection_bundle(symbol: &str, report: &ResearchReport) -
         vec![report.recommended_next_command.clone()]
     };
 
-    let mut bundle = build_reflection_bundle(
-        symbol,
-        report.provenance.data_fingerprint.clone(),
-        report.research_objective.clone(),
-        report
+    let mut bundle = build_reflection_bundle(ReflectionBundleInput {
+        symbol: symbol.to_string(),
+        timestamp: report.provenance.data_fingerprint.clone(),
+        objective: report.research_objective.clone(),
+        expected_regime: report
             .artifact_decision_summary
             .consumed_trend_status
             .clone(),
-        report
+        expected_direction: report
             .best_factor
             .clone()
             .unwrap_or_else(|| "unknown".to_string()),
-        "research_completed",
-        &report.multi_timeframe_summary,
-        &next_candidates,
-    );
+        realized_outcome: "research_completed".to_string(),
+        evidence: report.multi_timeframe_summary.clone(),
+        next_candidates: next_candidates.clone(),
+    });
     let ensemble_vote = build_stub_ensemble_vote_from_research(report);
     bundle.ensemble_vote_summary = Some(ensemble_vote.human_next_triage.clone());
     bundle.ensemble_vote_artifact_id = Some(format!(

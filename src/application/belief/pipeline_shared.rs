@@ -8,7 +8,6 @@ use crate::analyze::multi_timeframe_parse::{
 };
 use crate::bbn::adapters::belief_evidence_packet_from_pre_bayes_filter;
 use crate::bbn::engine::InferenceEngineRegistry;
-use crate::bbn::Node;
 use crate::factor_lab::FactorDiagnostics;
 use crate::planner::ProbabilisticDecisionSnapshot;
 use crate::reporting::belief::BeliefReportPacket;
@@ -68,69 +67,113 @@ pub struct ExpansionBbnSupport {
     pub selected_win_probability: f64,
 }
 
+#[derive(Debug, Clone)]
+pub struct AdaptFactorPipelineDebugReportInput<'a> {
+    pub symbol: &'a str,
+    pub data: &'a str,
+    pub objective: &'a str,
+    pub pipeline: &'a ExpansionFactorPipelineReport,
+    pub raw_pre_bayes_labels: BTreeMap<String, String>,
+    pub soft_evidence_divergence: Vec<PreBayesSoftEvidenceNodeDiff>,
+    pub bridge_gap_clear_threshold: f64,
+    pub multi_timeframe_summary: &'a [String],
+}
+
+#[derive(Debug, Clone)]
+pub struct FactorPipelineDebugReportInput {
+    pub symbol: String,
+    pub data: String,
+    pub objective: String,
+    pub factor_name: String,
+    pub latest_signal: ExpansionLatestSignal,
+    pub factor_diagnostics: ExpansionProbabilitySupport,
+    pub bbn_support: ExpansionBbnSupport,
+    pub entry_quality_bridge: PreBayesEntryQualityBridge,
+    pub bridge_diff: PreBayesEntryQualityBridgeDiff,
+    pub multi_timeframe_summary: Vec<String>,
+    pub raw_pre_bayes_labels: BTreeMap<String, String>,
+    pub soft_evidence_divergence: Vec<PreBayesSoftEvidenceNodeDiff>,
+    pub bridge_gap_clear_threshold: f64,
+}
+
+#[derive(Debug, Clone)]
+pub struct PreBayesEntryQualityBridgeInput {
+    pub factor_diagnostics: FactorDiagnostics,
+    pub decision: ProbabilisticDecisionSnapshot,
+    pub long_entry_bias: Vec<f64>,
+    pub short_entry_bias: Vec<f64>,
+    pub long_entry_quality: Vec<f64>,
+    pub short_entry_quality: Vec<f64>,
+    pub selected_entry_quality: Vec<f64>,
+    pub entry_quality_states: Vec<String>,
+    pub multi_timeframe_evidence: ParsedMultiTimeframeEvidence,
+}
+
 pub fn adapt_factor_pipeline_debug_report(
-    symbol: &str,
-    data: &str,
-    objective: &str,
-    pipeline: &ExpansionFactorPipelineReport,
-    raw_pre_bayes_labels: BTreeMap<String, String>,
-    soft_evidence_divergence: Vec<PreBayesSoftEvidenceNodeDiff>,
-    bridge_gap_clear_threshold: f64,
-    multi_timeframe_summary: &[String],
+    input: AdaptFactorPipelineDebugReportInput<'_>,
 ) -> Result<FactorPipelineDebugReport> {
-    build_factor_pipeline_debug_report(
-        symbol,
-        data,
-        objective,
-        &pipeline.factor_name,
-        ExpansionLatestSignal {
-            timestamp: pipeline.latest_signal.timestamp,
-            direction: pipeline.latest_signal.direction.clone(),
-            value: pipeline.latest_signal.value,
-            confidence: pipeline.latest_signal.confidence,
-            explanation: pipeline.latest_signal.explanation.clone(),
+    build_factor_pipeline_debug_report(FactorPipelineDebugReportInput {
+        symbol: input.symbol.to_string(),
+        data: input.data.to_string(),
+        objective: input.objective.to_string(),
+        factor_name: input.pipeline.factor_name.clone(),
+        latest_signal: ExpansionLatestSignal {
+            timestamp: input.pipeline.latest_signal.timestamp,
+            direction: input.pipeline.latest_signal.direction.clone(),
+            value: input.pipeline.latest_signal.value,
+            confidence: input.pipeline.latest_signal.confidence,
+            explanation: input.pipeline.latest_signal.explanation.clone(),
         },
-        ExpansionProbabilitySupport {
-            long_support: pipeline.probability_support.long_support,
-            short_support: pipeline.probability_support.short_support,
-            support_gap: pipeline.probability_support.support_gap,
-            alignment_threshold: pipeline.probability_support.alignment_threshold,
-            uncertainty: pipeline.probability_support.uncertainty,
-            alignment_label: pipeline.probability_support.alignment_label.clone(),
-            uncertainty_label: pipeline.probability_support.uncertainty_label.clone(),
-            long_entry_bias: pipeline.probability_support.long_entry_bias.clone(),
-            short_entry_bias: pipeline.probability_support.short_entry_bias.clone(),
-            bullish_factors: pipeline.probability_support.bullish_factors.clone(),
-            bearish_factors: pipeline.probability_support.bearish_factors.clone(),
-            uncertainty_factors: pipeline.probability_support.uncertainty_factors.clone(),
+        factor_diagnostics: ExpansionProbabilitySupport {
+            long_support: input.pipeline.probability_support.long_support,
+            short_support: input.pipeline.probability_support.short_support,
+            support_gap: input.pipeline.probability_support.support_gap,
+            alignment_threshold: input.pipeline.probability_support.alignment_threshold,
+            uncertainty: input.pipeline.probability_support.uncertainty,
+            alignment_label: input.pipeline.probability_support.alignment_label.clone(),
+            uncertainty_label: input.pipeline.probability_support.uncertainty_label.clone(),
+            long_entry_bias: input.pipeline.probability_support.long_entry_bias.clone(),
+            short_entry_bias: input.pipeline.probability_support.short_entry_bias.clone(),
+            bullish_factors: input.pipeline.probability_support.bullish_factors.clone(),
+            bearish_factors: input.pipeline.probability_support.bearish_factors.clone(),
+            uncertainty_factors: input
+                .pipeline
+                .probability_support
+                .uncertainty_factors
+                .clone(),
         },
-        ExpansionBbnSupport {
-            market_regime_label: pipeline.bbn_support.market_regime_label.clone(),
-            liquidity_context_label: pipeline.bbn_support.liquidity_context_label.clone(),
-            evidence_policy: pipeline.bbn_support.evidence_policy.clone(),
-            pre_bayes_filter: pipeline.bbn_support.pre_bayes_filter.clone(),
-            evidence_assignments: pipeline.bbn_support.evidence_assignments.clone(),
-            raw_market_regime_trace: pipeline.bbn_support.raw_market_regime_trace.clone(),
-            raw_liquidity_context_trace: pipeline.bbn_support.raw_liquidity_context_trace.clone(),
-            raw_multi_timeframe_resonance_trace: pipeline
+        bbn_support: ExpansionBbnSupport {
+            market_regime_label: input.pipeline.bbn_support.market_regime_label.clone(),
+            liquidity_context_label: input.pipeline.bbn_support.liquidity_context_label.clone(),
+            evidence_policy: input.pipeline.bbn_support.evidence_policy.clone(),
+            pre_bayes_filter: input.pipeline.bbn_support.pre_bayes_filter.clone(),
+            evidence_assignments: input.pipeline.bbn_support.evidence_assignments.clone(),
+            raw_market_regime_trace: input.pipeline.bbn_support.raw_market_regime_trace.clone(),
+            raw_liquidity_context_trace: input
+                .pipeline
+                .bbn_support
+                .raw_liquidity_context_trace
+                .clone(),
+            raw_multi_timeframe_resonance_trace: input
+                .pipeline
                 .bbn_support
                 .raw_multi_timeframe_resonance_trace
                 .clone(),
-            entry_quality_base: pipeline.bbn_support.entry_quality_base.clone(),
-            entry_quality_long: pipeline.bbn_support.entry_quality_long.clone(),
-            entry_quality_short: pipeline.bbn_support.entry_quality_short.clone(),
-            trade_outcome_long: pipeline.bbn_support.trade_outcome_long.clone(),
-            trade_outcome_short: pipeline.bbn_support.trade_outcome_short.clone(),
-            selected_direction: pipeline.bbn_support.selected_direction.clone(),
-            selected_win_probability: pipeline.bbn_support.selected_win_probability,
+            entry_quality_base: input.pipeline.bbn_support.entry_quality_base.clone(),
+            entry_quality_long: input.pipeline.bbn_support.entry_quality_long.clone(),
+            entry_quality_short: input.pipeline.bbn_support.entry_quality_short.clone(),
+            trade_outcome_long: input.pipeline.bbn_support.trade_outcome_long.clone(),
+            trade_outcome_short: input.pipeline.bbn_support.trade_outcome_short.clone(),
+            selected_direction: input.pipeline.bbn_support.selected_direction.clone(),
+            selected_win_probability: input.pipeline.bbn_support.selected_win_probability,
         },
-        pipeline.entry_quality_bridge.clone(),
-        pre_bayes_entry_quality_bridge_diff(&pipeline.entry_quality_bridge),
-        multi_timeframe_summary,
-        raw_pre_bayes_labels,
-        soft_evidence_divergence,
-        bridge_gap_clear_threshold,
-    )
+        entry_quality_bridge: input.pipeline.entry_quality_bridge.clone(),
+        bridge_diff: pre_bayes_entry_quality_bridge_diff(&input.pipeline.entry_quality_bridge),
+        multi_timeframe_summary: input.multi_timeframe_summary.to_vec(),
+        raw_pre_bayes_labels: input.raw_pre_bayes_labels,
+        soft_evidence_divergence: input.soft_evidence_divergence,
+        bridge_gap_clear_threshold: input.bridge_gap_clear_threshold,
+    })
 }
 
 pub fn build_canonical_belief_report(
@@ -208,20 +251,24 @@ pub struct FactorPipelineRawLabelTrace {
 }
 
 pub fn build_factor_pipeline_debug_report(
-    symbol: &str,
-    data: &str,
-    objective: &str,
-    factor_name: &str,
-    latest_signal: ExpansionLatestSignal,
-    factor_diagnostics: ExpansionProbabilitySupport,
-    bbn_support: ExpansionBbnSupport,
-    entry_quality_bridge: PreBayesEntryQualityBridge,
-    bridge_diff: PreBayesEntryQualityBridgeDiff,
-    multi_timeframe_summary: &[String],
-    raw_pre_bayes_labels: BTreeMap<String, String>,
-    soft_evidence_divergence: Vec<PreBayesSoftEvidenceNodeDiff>,
-    bridge_gap_clear_threshold: f64,
+    input: FactorPipelineDebugReportInput,
 ) -> Result<FactorPipelineDebugReport> {
+    let FactorPipelineDebugReportInput {
+        symbol,
+        data,
+        objective,
+        factor_name,
+        latest_signal,
+        factor_diagnostics,
+        bbn_support,
+        entry_quality_bridge,
+        bridge_diff,
+        multi_timeframe_summary,
+        raw_pre_bayes_labels,
+        soft_evidence_divergence,
+        bridge_gap_clear_threshold,
+    } = input;
+
     let filtered_pre_bayes_labels = bbn_support.evidence_assignments.clone();
     let gating_status = bbn_support.pre_bayes_filter.gating_status.clone();
     let selected_entry_quality = bridge_diff
@@ -243,8 +290,8 @@ pub fn build_factor_pipeline_debug_report(
         };
 
     let shadow_belief_report = build_canonical_belief_report(
-        symbol,
-        Some(data),
+        &symbol,
+        Some(&data),
         &bbn_support.pre_bayes_filter,
         Some(&bbn_support.raw_market_regime_trace),
         Some(&bbn_support.raw_liquidity_context_trace),
@@ -257,10 +304,10 @@ pub fn build_factor_pipeline_debug_report(
         .unwrap_or_else(|| "shadow=unavailable".to_string());
 
     Ok(FactorPipelineDebugReport {
-        symbol: symbol.to_string(),
-        data: data.to_string(),
-        factor_name: factor_name.to_string(),
-        objective: objective.to_string(),
+        symbol,
+        data,
+        factor_name: factor_name.clone(),
+        objective,
         latest_signal,
         factor_diagnostics,
         raw_label_trace: FactorPipelineRawLabelTrace {
@@ -275,7 +322,7 @@ pub fn build_factor_pipeline_debug_report(
         soft_evidence_divergence,
         bridge_gap,
         selected_entry_quality,
-        six_timeframe_resonance: multi_timeframe_summary.to_vec(),
+        six_timeframe_resonance: multi_timeframe_summary,
         pipeline_verdict,
         pipeline_summary: bbn_support.evidence_policy.clone(),
         recommended_actions: vec![format!("inspect_factor={factor_name}")],
@@ -456,24 +503,28 @@ pub fn effective_trade_outcome_win_probability(trade_outcome: &[f64]) -> f64 {
 }
 
 pub fn build_pre_bayes_entry_quality_bridge(
-    factor_diagnostics: &FactorDiagnostics,
-    decision: &ProbabilisticDecisionSnapshot,
-    long_entry_bias: &[f64],
-    short_entry_bias: &[f64],
-    long_entry_quality: &[f64],
-    short_entry_quality: &[f64],
-    selected_entry_quality: &[f64],
-    entry_quality_node: &Node,
-    multi_timeframe_evidence: &ParsedMultiTimeframeEvidence,
+    input: PreBayesEntryQualityBridgeInput,
 ) -> PreBayesEntryQualityBridge {
+    let PreBayesEntryQualityBridgeInput {
+        factor_diagnostics,
+        decision,
+        long_entry_bias,
+        short_entry_bias,
+        long_entry_quality,
+        short_entry_quality,
+        selected_entry_quality,
+        entry_quality_states,
+        multi_timeframe_evidence,
+    } = input;
+
     PreBayesEntryQualityBridge {
         long_signal_probability: decision.win_prob_long,
         short_signal_probability: decision.win_prob_short,
-        long_entry_bias: long_entry_bias.to_vec(),
-        short_entry_bias: short_entry_bias.to_vec(),
-        long_entry_quality: probability_map(&entry_quality_node.states, long_entry_quality),
-        short_entry_quality: probability_map(&entry_quality_node.states, short_entry_quality),
-        selected_entry_quality: probability_map(&entry_quality_node.states, selected_entry_quality),
+        long_entry_bias,
+        short_entry_bias,
+        long_entry_quality: probability_map(&entry_quality_states, &long_entry_quality),
+        short_entry_quality: probability_map(&entry_quality_states, &short_entry_quality),
+        selected_entry_quality: probability_map(&entry_quality_states, &selected_entry_quality),
         multi_timeframe_direction_bias: multi_timeframe_evidence.direction_bias.clone(),
         multi_timeframe_alignment_score: multi_timeframe_evidence.alignment_score,
         multi_timeframe_entry_alignment_score: multi_timeframe_evidence.entry_alignment_score,
@@ -511,10 +562,10 @@ pub fn probability_map(states: &[String], probabilities: &[f64]) -> BTreeMap<Str
 pub fn combine_bias_vectors(left: &[f64], right: &[f64]) -> Vec<f64> {
     let len = left.len().max(right.len());
     let mut combined = vec![1.0; len];
-    for index in 0..len {
+    for (index, value) in combined.iter_mut().enumerate().take(len) {
         let left_value = left.get(index).copied().unwrap_or(1.0 / len as f64);
         let right_value = right.get(index).copied().unwrap_or(1.0 / len as f64);
-        combined[index] = (left_value * right_value).max(1e-6);
+        *value = (left_value * right_value).max(1e-6);
     }
     normalize_distribution(&mut combined);
     combined

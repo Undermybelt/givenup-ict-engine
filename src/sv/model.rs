@@ -23,7 +23,7 @@ impl SVModel {
         // Initialize latent log variances
         let mut log_variances: Vec<f64> = log_returns
             .iter()
-            .map(|_| self.mu + rng.sample(&normal) * self.sigma_eta)
+            .map(|_| self.mu + rng.sample(normal) * self.sigma_eta)
             .collect();
 
         for _ in 0..n_iter {
@@ -58,7 +58,7 @@ impl SVModel {
             let likelihood_mean = likelihood_var * (prior_mean / prior_var);
 
             // Sample
-            log_variances[t] = likelihood_mean + rng.sample(&normal) * likelihood_var.sqrt();
+            log_variances[t] = likelihood_mean + rng.sample(normal) * likelihood_var.sqrt();
         }
     }
 
@@ -85,7 +85,7 @@ impl SVModel {
         }
 
         if xx.abs() > 1e-10 {
-            self.phi = (xy / xx).max(-0.99).min(0.99);
+            self.phi = (xy / xx).clamp(-0.99, 0.99);
         }
 
         // Update sigma_eta from residuals

@@ -461,7 +461,8 @@ mod tests {
             final_action: "observe".to_string(),
             recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next"
                 .to_string(),
-            human_next_triage: "ensemble_action=observe".to_string(),
+            human_next_triage: "hard_blocked=false ensemble_action=observe".to_string(),
+            hard_block: crate::application::orchestration::EnsembleHardBlockArtifact::default(),
             confidence: 0.5,
             consensus_strength: 0.5,
             disagreement_flags: Vec::new(),

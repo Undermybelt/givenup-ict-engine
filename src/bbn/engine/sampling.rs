@@ -81,3 +81,26 @@ impl BeliefInferenceEngine for SamplingEngine {
         true
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::domain::belief::BeliefNodePosteriorSnapshot;
+
+    #[test]
+    fn sampling_engine_does_not_inject_non_state_probability_keys() {
+        let belief = BeliefNodePosteriorSnapshot {
+            node_id: "entry_quality".to_string(),
+            probabilities: BTreeMap::from([
+                ("high".to_string(), 0.7),
+                ("medium".to_string(), 0.2),
+                ("low".to_string(), 0.1),
+            ]),
+            ..BeliefNodePosteriorSnapshot::default()
+        };
+
+        let resampled = SamplingEngine::resample_distribution(&belief.probabilities);
+        assert!(!resampled.contains_key("shadow_market_family_weight"));
+        assert_eq!(resampled.len(), 3);
+    }
+}

@@ -20,7 +20,7 @@ pub use super::pipeline_shared::{
     build_factor_pipeline_debug_report, build_pre_bayes_entry_quality_bridge, combine_bias_vectors,
     effective_trade_outcome_win_probability, multi_timeframe_entry_quality_bias, probability_map,
     raw_liquidity_context_trace, raw_market_regime_trace, raw_multi_timeframe_resonance_trace,
-    FactorPipelineDebugReport,
+    FactorPipelineDebugReport, PreBayesEntryQualityBridgeInput,
 };
 use super::pipeline_types::{
     ExpansionBbnSupport, ExpansionFactorPipelineReport, ExpansionLatestSignal,
@@ -163,36 +163,37 @@ pub fn build_expansion_factor_pipeline_report_with_registry(
         } else {
             ("bear".to_string(), short_win_probability)
         };
-    let entry_quality_bridge = build_pre_bayes_entry_quality_bridge(
-        &output.diagnostics,
-        &crate::planner::ProbabilisticDecisionSnapshot {
-            long_score: output.diagnostics.long_support,
-            short_score: output.diagnostics.short_support,
-            win_prob_long: long_win_probability,
-            win_prob_short: short_win_probability,
-            ict_support_long: 0.0,
-            ict_support_short: 0.0,
-            selected_direction: if selected_direction == "bull" {
-                Direction::Bull
-            } else {
-                Direction::Bear
+    let entry_quality_bridge =
+        build_pre_bayes_entry_quality_bridge(PreBayesEntryQualityBridgeInput {
+            factor_diagnostics: output.diagnostics.clone(),
+            decision: crate::planner::ProbabilisticDecisionSnapshot {
+                long_score: output.diagnostics.long_support,
+                short_score: output.diagnostics.short_support,
+                win_prob_long: long_win_probability,
+                win_prob_short: short_win_probability,
+                ict_support_long: 0.0,
+                ict_support_short: 0.0,
+                selected_direction: if selected_direction == "bull" {
+                    Direction::Bull
+                } else {
+                    Direction::Bear
+                },
+                selected_score: long_win_probability.max(short_win_probability),
+                selected_win_probability,
+                ict_role: "expansion_sop_factor_only".to_string(),
             },
-            selected_score: long_win_probability.max(short_win_probability),
-            selected_win_probability,
-            ict_role: "expansion_sop_factor_only".to_string(),
-        },
-        &long_bias,
-        &short_bias,
-        &long_entry_quality,
-        &short_entry_quality,
-        if selected_direction == "bull" {
-            &long_entry_quality
-        } else {
-            &short_entry_quality
-        },
-        entry_quality_node,
-        &multi_timeframe_evidence,
-    );
+            long_entry_bias: long_bias.clone(),
+            short_entry_bias: short_bias.clone(),
+            long_entry_quality: long_entry_quality.clone(),
+            short_entry_quality: short_entry_quality.clone(),
+            selected_entry_quality: if selected_direction == "bull" {
+                long_entry_quality.clone()
+            } else {
+                short_entry_quality.clone()
+            },
+            entry_quality_states: entry_quality_node.states.clone(),
+            multi_timeframe_evidence: multi_timeframe_evidence.clone(),
+        });
 
     Ok(ExpansionFactorPipelineReport {
         factor_name: factor_name.to_string(),

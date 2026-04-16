@@ -24,7 +24,7 @@ impl SVParticleFilter {
 
         self.particles.clear();
         for _ in 0..self.n_particles {
-            let log_var = rng.sample(&normal);
+            let log_var = rng.sample(normal);
             self.particles.push(Particle {
                 state: vec![log_var],
                 weight: 1.0 / self.n_particles as f64,
@@ -39,7 +39,7 @@ impl SVParticleFilter {
 
         for particle in &mut self.particles {
             let log_var_old = particle.state[0];
-            let log_var_new = model.mu + model.phi * (log_var_old - model.mu) + rng.sample(&normal);
+            let log_var_new = model.mu + model.phi * (log_var_old - model.mu) + rng.sample(normal);
             particle.state[0] = log_var_new;
         }
     }

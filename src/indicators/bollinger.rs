@@ -40,33 +40,6 @@ pub fn compute_bollinger(candles: &[Candle], period: usize, num_std: f64) -> Bol
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use chrono::Utc;
-
-    fn candles(count: usize) -> Vec<Candle> {
-        (0..count)
-            .map(|index| Candle {
-                timestamp: Utc::now(),
-                open: 100.0 + index as f64,
-                high: 101.0 + index as f64,
-                low: 99.0 + index as f64,
-                close: 100.5 + index as f64,
-                volume: 1_000.0,
-            })
-            .collect()
-    }
-
-    #[test]
-    fn test_compute_bollinger_no_out_of_bounds() {
-        let bands = compute_bollinger(&candles(50), 20, 2.0);
-        assert_eq!(bands.middle.len(), 31);
-        assert_eq!(bands.upper.len(), 31);
-        assert_eq!(bands.lower.len(), 31);
-    }
-}
-
 /// Get the latest Bollinger Bands values
 pub fn latest_bollinger(
     candles: &[Candle],
@@ -97,4 +70,31 @@ pub fn is_squeeze(candles: &[Candle], period: usize, num_std: f64, threshold: f6
     let band_width = (last_upper - last_lower) / bands.middle.last().unwrap();
 
     band_width < threshold
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use chrono::Utc;
+
+    fn candles(count: usize) -> Vec<Candle> {
+        (0..count)
+            .map(|index| Candle {
+                timestamp: Utc::now(),
+                open: 100.0 + index as f64,
+                high: 101.0 + index as f64,
+                low: 99.0 + index as f64,
+                close: 100.5 + index as f64,
+                volume: 1_000.0,
+            })
+            .collect()
+    }
+
+    #[test]
+    fn test_compute_bollinger_no_out_of_bounds() {
+        let bands = compute_bollinger(&candles(50), 20, 2.0);
+        assert_eq!(bands.middle.len(), 31);
+        assert_eq!(bands.upper.len(), 31);
+        assert_eq!(bands.lower.len(), 31);
+    }
 }

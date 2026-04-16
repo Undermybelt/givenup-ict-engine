@@ -73,10 +73,12 @@ fn run_config(
     candles: &[Candle],
     ctx: &FactorContext,
 ) -> PocResult {
-    let mut config = BacktestConfig::default();
-    config.train_bars = 120;
-    config.test_bars = 60;
-    config.step_bars = 30;
+    let config = BacktestConfig {
+        train_bars: 120,
+        test_bars: 60,
+        step_bars: 30,
+        ..BacktestConfig::default()
+    };
 
     let result = backtest
         .run(candles, ctx, None, &config)

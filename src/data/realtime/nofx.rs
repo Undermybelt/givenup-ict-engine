@@ -354,8 +354,8 @@ fn normalize_hyperliquid_interval(interval: &str) -> &'static str {
 
 fn normalize_hyperliquid_symbol(symbol: &str) -> String {
     let upper = symbol.trim().to_uppercase();
-    if upper.starts_with("XYZ:") {
-        return format!("xyz:{}", &upper[4..]);
+    if let Some(stripped) = upper.strip_prefix("XYZ:") {
+        return format!("xyz:{}", stripped);
     }
     if upper.ends_with("USDT") {
         return upper.trim_end_matches("USDT").to_string();

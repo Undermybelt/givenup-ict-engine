@@ -13,8 +13,7 @@ pub use jump_model_sidecar::{
     build_jump_model_regime_sidecar_with_history, build_regime_disagreement_summary,
     historical_market_jump_objective_weight, historical_market_jump_weight,
     jump_calibration_gate_workflow_summary, jump_model_workflow_summary,
-    objective_market_credibility_shrink,
-    persist_market_jump_calibration_from_backtest_runs,
+    objective_market_credibility_shrink, persist_market_jump_calibration_from_backtest_runs,
     persist_market_jump_calibration_from_research_runs,
     persist_market_jump_objective_calibration_from_research_runs,
 };
@@ -28,6 +27,8 @@ pub use pipeline_shared::{
     apply_factor_outcome_overlay, build_pre_bayes_entry_quality_bridge, combine_bias_vectors,
     effective_trade_outcome_win_probability, multi_timeframe_entry_quality_bias, probability_map,
     raw_liquidity_context_trace, raw_market_regime_trace, raw_multi_timeframe_resonance_trace,
+    AdaptFactorPipelineDebugReportInput, FactorPipelineDebugReportInput,
+    PreBayesEntryQualityBridgeInput,
 };
 pub use pipeline_types::ExpansionFactorPipelineReport;
 pub use policy_lineage_surface::{build_belief_policy_lineage_surface, BeliefPolicyLineageSurface};
