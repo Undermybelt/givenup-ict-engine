@@ -58,10 +58,14 @@ pub fn detect_cisd(candles: &[Candle], obs: &[OrderBlock], min_strength: usize) 
 fn calculate_cisd_strength(candles: &[Candle], start: usize, direction: Direction) -> usize {
     let mut strength = 1;
 
-    for i in start + 1..candles.len() {
-        if direction == Direction::Bull && candles[i].is_bullish() {
-            strength += 1;
-        } else if direction == Direction::Bear && candles[i].is_bearish() {
+    for candle in candles.iter().skip(start + 1) {
+        let continues = match direction {
+            Direction::Bull => candle.is_bullish(),
+            Direction::Bear => candle.is_bearish(),
+            Direction::Neutral => false,
+        };
+
+        if continues {
             strength += 1;
         } else {
             break;

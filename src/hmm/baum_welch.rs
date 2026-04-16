@@ -25,40 +25,39 @@ impl BaumWelch {
 
             // M-step: update parameters
             let k = params.n_states;
-            let d = observations[0].len();
             let t = observations.len();
 
             // Update initial probabilities
-            for state in 0..k {
-                params.initial_probs[state] = gamma[0][state].exp();
+            for (initial_prob, gamma_state) in params.initial_probs.iter_mut().zip(gamma[0].iter()) {
+                *initial_prob = gamma_state.exp();
             }
 
             // Update transition matrix
             for i in 0..k {
                 let gamma_sum_i: f64 = (0..t - 1).map(|tt| gamma[tt][i].exp()).sum();
 
-                for j in 0..k {
+                for (j, transition) in params.transition[i].iter_mut().enumerate() {
                     let xi_sum: f64 = (0..t - 1).map(|tt| log_xi[tt][i][j].exp()).sum();
-                    params.transition[i][j] = xi_sum / gamma_sum_i.max(1e-30);
+                    *transition = xi_sum / gamma_sum_i.max(1e-30);
                 }
             }
 
             // Update emission parameters
-            for state in 0..k {
+            for (state, emission_means) in params.emission_means.iter_mut().enumerate() {
                 let gamma_sum: f64 = (0..t).map(|tt| gamma[tt][state].exp()).sum();
                 let gamma_sum_safe = gamma_sum.max(1e-30);
 
-                for dim in 0..d {
+                for (dim, mean) in emission_means.iter_mut().enumerate() {
                     // Mean
                     let weighted_sum: f64 = (0..t)
                         .map(|tt| gamma[tt][state].exp() * observations[tt][dim])
                         .sum();
-                    params.emission_means[state][dim] = weighted_sum / gamma_sum_safe;
+                    *mean = weighted_sum / gamma_sum_safe;
 
                     // Standard deviation
                     let var_sum: f64 = (0..t)
                         .map(|tt| {
-                            let diff = observations[tt][dim] - params.emission_means[state][dim];
+                            let diff = observations[tt][dim] - *mean;
                             gamma[tt][state].exp() * diff * diff
                         })
                         .sum();

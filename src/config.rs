@@ -9,7 +9,7 @@ use crate::analyze::multi_timeframe_parse::{
 };
 use crate::data::candles_to_prices;
 use crate::factor_lab::FactorDiagnostics;
-use crate::hmm::build_observations;
+use crate::hmm::{build_observations, ObservationInput};
 use crate::ict::{detect_fvg, detect_liquidity_pools, detect_liquidity_sweep};
 use crate::indicators::{atr_percent, compute_adx, compute_atr, compute_rsi};
 use crate::kalman::KalmanFilter;
@@ -62,17 +62,17 @@ pub fn build_frame_features(candles: &[Candle]) -> anyhow::Result<FrameFeatures>
         .filter(|sweep| sweep.sweep_bar >= candles.len().saturating_sub(10))
         .count();
 
-    let observations = build_observations(
+    let observations = build_observations(ObservationInput {
         candles,
-        candles,
-        &implied_vol,
-        &smoothed_prices,
-        &atr,
-        &rsi,
-        &adx,
-        &fvgs,
-        &sweeps,
-    );
+        ltf_candles: candles,
+        implied_vol: &implied_vol,
+        smoothed_prices: &smoothed_prices,
+        atr: &atr,
+        rsi: &rsi,
+        adx: &adx,
+        fvgs: &fvgs,
+        sweeps: &sweeps,
+    });
     if observations.is_empty() {
         anyhow::bail!(
             "failed to build HMM observations from {} candles",
@@ -280,9 +280,7 @@ pub fn multi_timeframe_entry_quality_bias(
         }
     } else {
         let uniform = 1.0 / bias.len() as f64;
-        for value in &mut bias {
-            *value = uniform;
-        }
+        bias.fill(uniform);
     }
     bias
 }

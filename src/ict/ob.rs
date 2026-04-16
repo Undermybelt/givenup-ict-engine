@@ -43,9 +43,7 @@ pub fn detect_order_blocks(candles: &[Candle]) -> Vec<OrderBlock> {
 
 /// Check if an Order Block has been tested
 pub fn check_ob_tested(candles: &[Candle], ob: &OrderBlock) -> bool {
-    for i in ob.bar_index + 1..candles.len() {
-        let candle = &candles[i];
-
+    for candle in candles.iter().skip(ob.bar_index + 1) {
         if ob.ob_type == Direction::Bull {
             // Bullish OB is tested when price returns to it
             if candle.low <= ob.high && candle.high >= ob.low {

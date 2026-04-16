@@ -1,17 +1,31 @@
 use crate::types::{Candle, FairValueGap, LiquiditySweep, OBS_DIM};
 
+#[derive(Debug, Clone)]
+pub struct ObservationInput<'a> {
+    pub candles: &'a [Candle],
+    pub ltf_candles: &'a [Candle],
+    pub implied_vol: &'a [f64],
+    pub smoothed_prices: &'a [(f64, f64, f64)],
+    pub atr: &'a [f64],
+    pub rsi: &'a [f64],
+    pub adx: &'a [f64],
+    pub fvgs: &'a [FairValueGap],
+    pub sweeps: &'a [LiquiditySweep],
+}
+
 /// Build observation vectors for HMM
-pub fn build_observations(
-    candles: &[Candle],
-    _ltf_candles: &[Candle],
-    implied_vol: &[f64],
-    smoothed_prices: &[(f64, f64, f64)],
-    atr: &[f64],
-    rsi: &[f64],
-    adx: &[f64],
-    fvgs: &[FairValueGap],
-    sweeps: &[LiquiditySweep],
-) -> Vec<Vec<f64>> {
+pub fn build_observations(input: ObservationInput<'_>) -> Vec<Vec<f64>> {
+    let ObservationInput {
+        candles,
+        ltf_candles: _ltf_candles,
+        implied_vol,
+        smoothed_prices,
+        atr,
+        rsi,
+        adx,
+        fvgs,
+        sweeps,
+    } = input;
     let mut observations = Vec::new();
     let min_len = candles.len().min(atr.len()).min(rsi.len()).min(adx.len());
 

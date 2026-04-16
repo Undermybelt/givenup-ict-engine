@@ -65,6 +65,10 @@ pub fn detect_liquidity_sweep(
     pools: &[LiquidityPool],
     return_bars: usize,
 ) -> Vec<LiquiditySweep> {
+    if candles.len() <= return_bars {
+        return Vec::new();
+    }
+
     let mut sweeps = Vec::new();
 
     for pool in pools {
@@ -77,8 +81,13 @@ pub fn detect_liquidity_sweep(
                 let mut returned = false;
                 let mut return_bar = i;
 
-                for j in i + 1..=i + return_bars.min(candles.len() - i - 1) {
-                    if candles[j].close < pool.price_level {
+                for (j, candle) in candles
+                    .iter()
+                    .enumerate()
+                    .skip(i + 1)
+                    .take(return_bars.min(candles.len() - i - 1))
+                {
+                    if candle.close < pool.price_level {
                         returned = true;
                         return_bar = j;
                         break;
@@ -101,8 +110,13 @@ pub fn detect_liquidity_sweep(
                 let mut returned = false;
                 let mut return_bar = i;
 
-                for j in i + 1..=i + return_bars.min(candles.len() - i - 1) {
-                    if candles[j].close > pool.price_level {
+                for (j, candle) in candles
+                    .iter()
+                    .enumerate()
+                    .skip(i + 1)
+                    .take(return_bars.min(candles.len() - i - 1))
+                {
+                    if candle.close > pool.price_level {
                         returned = true;
                         return_bar = j;
                         break;
@@ -132,4 +146,38 @@ pub fn count_recent_sweeps(
 ) -> usize {
     let threshold = candles.len().saturating_sub(lookback);
     sweeps.iter().filter(|s| s.sweep_bar >= threshold).count()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use chrono::{TimeZone, Utc};
+
+    fn candle(ts: i64, open: f64, high: f64, low: f64, close: f64) -> Candle {
+        Candle {
+            timestamp: Utc.timestamp_opt(ts, 0).single().expect("valid ts"),
+            open,
+            high,
+            low,
+            close,
+            volume: 1.0,
+        }
+    }
+
+    #[test]
+    fn detect_liquidity_sweep_returns_empty_for_short_windows() {
+        let candles = vec![
+            candle(1, 100.0, 101.0, 99.0, 100.5),
+            candle(2, 100.5, 101.5, 100.0, 101.0),
+            candle(3, 101.0, 102.0, 100.5, 101.5),
+        ];
+        let pools = vec![LiquidityPool {
+            price_level: 101.0,
+            sp_count: 2,
+            pool_type: Direction::Bear,
+        }];
+
+        let sweeps = detect_liquidity_sweep(&candles, &pools, 5);
+        assert!(sweeps.is_empty());
+    }
 }

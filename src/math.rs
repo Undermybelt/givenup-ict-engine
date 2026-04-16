@@ -8,9 +8,9 @@ pub fn wilder_smooth(values: &[f64], period: usize) -> Vec<f64> {
     let first: f64 = values[..period].iter().sum();
     result.push(first / period as f64);
 
-    for i in period..values.len() {
+    for value in values.iter().skip(period) {
         let prev = result.last().unwrap();
-        let smoothed = (prev * (period - 1) as f64 + values[i]) / period as f64;
+        let smoothed = (prev * (period - 1) as f64 + *value) / period as f64;
         result.push(smoothed);
     }
 

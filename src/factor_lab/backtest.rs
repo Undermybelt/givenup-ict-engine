@@ -755,8 +755,12 @@ fn find_exit(
     take_profit: f64,
     slippage_rate: f64,
 ) -> (usize, f64) {
-    for index in entry_index..=exit_limit {
-        let candle = &candles[index];
+    for (index, candle) in candles
+        .iter()
+        .enumerate()
+        .skip(entry_index)
+        .take(exit_limit - entry_index + 1)
+    {
         match direction {
             Direction::Bull => {
                 if candle.low <= stop_loss {
@@ -813,9 +817,7 @@ fn forward_returns(candles: &[Candle], horizon: usize) -> Vec<f64> {
         .collect()
 }
 
-fn summarize_conformal_metrics(
-    windows: &[WalkForwardWindow],
-) -> (
+type ConformalMetricsSummary = (
     f64,
     f64,
     f64,
@@ -833,7 +835,9 @@ fn summarize_conformal_metrics(
     f64,
     Option<usize>,
     bool,
-) {
+);
+
+fn summarize_conformal_metrics(windows: &[WalkForwardWindow]) -> ConformalMetricsSummary {
     if windows.is_empty() {
         return (
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, None, false, 0.0, None, false, 0.0, None, false, 0.0,
