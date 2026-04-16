@@ -21,9 +21,8 @@ impl ForwardBackward {
         let mut log_p = 0.0;
         for ((&x, &mean), &std) in obs.iter().zip(means[state].iter()).zip(stds[state].iter()) {
             let diff = x - mean;
-            log_p += -0.5 * (diff / std).powi(2)
-                - std.ln()
-                - 0.5 * (2.0 * std::f64::consts::PI).ln();
+            log_p +=
+                -0.5 * (diff / std).powi(2) - std.ln() - 0.5 * (2.0 * std::f64::consts::PI).ln();
         }
         log_p
     }
@@ -59,8 +58,7 @@ impl ForwardBackward {
 
                 let mut log_sum = f64::NEG_INFINITY;
                 for (prev_state, prev_alpha) in log_alpha[tt - 1].iter().enumerate() {
-                    let log_val =
-                        *prev_alpha + params.transition[prev_state][state].ln();
+                    let log_val = *prev_alpha + params.transition[prev_state][state].ln();
                     log_sum = Self::log_sum_exp(&[log_sum, log_val]);
                 }
 
@@ -100,9 +98,7 @@ impl ForwardBackward {
                         &params.emission_stds,
                     );
 
-                    let log_val = params.transition[state][next_state].ln()
-                        + log_emit
-                        + *next_beta;
+                    let log_val = params.transition[state][next_state].ln() + log_emit + *next_beta;
                     log_sum = Self::log_sum_exp(&[log_sum, log_val]);
                 }
 

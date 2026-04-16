@@ -77,8 +77,9 @@ use ict_engine::bbn::trading::{
     },
 };
 use ict_engine::config::{
-    build_frame_features, build_pre_bayes_evidence_filter, left_pad, FrameFeatures,
-    INDICATOR_PERIOD,
+    build_frame_features, build_pre_bayes_evidence_filter, compute_hash, env_bool,
+    env_bool_with_source, env_f64, env_f64_with_source, family_history_window, left_pad,
+    FrameFeatures, INDICATOR_PERIOD,
 };
 use ict_engine::data::{
     aggregate_candles_by_minutes, load_candles, load_tomac_continuous_candles,
@@ -143,10 +144,9 @@ use ict_engine::types::{
     TradeRecord, OBS_DIM,
 };
 use serde::Serialize;
-use std::collections::hash_map::DefaultHasher;
+
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::env;
-use std::hash::{Hash, Hasher};
 
 const HMM_STATE_FILE: &str = "hmm_params.json";
 const BBN_STATE_FILE: &str = "bbn_network.json";
@@ -986,8 +986,11 @@ fn main() -> Result<()> {
             nofx_base_url,
             state_dir,
         } => {
-            let futures_base_url =
-                resolve_live_backend_base_url(&futures_backend, &openalice_base_url, &nofx_base_url);
+            let futures_base_url = resolve_live_backend_base_url(
+                &futures_backend,
+                &openalice_base_url,
+                &nofx_base_url,
+            );
             let aux_base_url =
                 resolve_live_backend_base_url(&aux_backend, &openalice_base_url, &nofx_base_url);
             analyze_live_command(AnalyzeLiveCommandInput {
@@ -3077,10 +3080,7 @@ fn factor_pipeline_debug_command(input: FactorPipelineDebugCommandInput<'_>) -> 
     let multi_timeframe_summary =
         build_multi_timeframe_summary(data, &resolved_multi_timeframe_inputs)?
             .into_iter()
-            .chain(
-                build_multi_timeframe_research_signal(&resolved_multi_timeframe_inputs)?
-                    .summary,
-            )
+            .chain(build_multi_timeframe_research_signal(&resolved_multi_timeframe_inputs)?.summary)
             .collect::<Vec<_>>();
     let candles = load_candles(data)?;
     let registry = FactorRegistry::default();
@@ -7476,21 +7476,22 @@ fn apply_command_context_to_analyze_report(
         &report.supporting.agent_action_plan,
         &report.supporting.recommended_commands,
     );
-    report.supporting.agent_context_bundle = build_agent_context_bundle(BuildAgentContextBundleInput {
-        symbol: &command_context.symbol,
-        state_dir: &command_context.state_dir,
-        workflow_state: &report.supporting.workflow_state,
-        decision_hint: &report.supporting.decision_hint,
-        recommended_next_command: &report.supporting.recommended_next_command,
-        recommended_commands: &report.supporting.recommended_commands,
-        dataset_comparability: &report.supporting.dataset_comparability,
-        factor_iteration_queue: &report.supporting.factor_iteration_queue,
-        family_outcomes: &report.supporting.factor_family_outcomes,
-        pre_bayes_evidence_filter: Some(&report.supporting.pre_bayes_evidence_filter),
-        pre_bayes_entry_quality_bridge: Some(&report.supporting.pre_bayes_entry_quality_bridge),
-        factor_mutation_evaluation: None,
-        artifact_decision_summary: Some(&report.supporting.artifact_decision_summary),
-    });
+    report.supporting.agent_context_bundle =
+        build_agent_context_bundle(BuildAgentContextBundleInput {
+            symbol: &command_context.symbol,
+            state_dir: &command_context.state_dir,
+            workflow_state: &report.supporting.workflow_state,
+            decision_hint: &report.supporting.decision_hint,
+            recommended_next_command: &report.supporting.recommended_next_command,
+            recommended_commands: &report.supporting.recommended_commands,
+            dataset_comparability: &report.supporting.dataset_comparability,
+            factor_iteration_queue: &report.supporting.factor_iteration_queue,
+            family_outcomes: &report.supporting.factor_family_outcomes,
+            pre_bayes_evidence_filter: Some(&report.supporting.pre_bayes_evidence_filter),
+            pre_bayes_entry_quality_bridge: Some(&report.supporting.pre_bayes_entry_quality_bridge),
+            factor_mutation_evaluation: None,
+            artifact_decision_summary: Some(&report.supporting.artifact_decision_summary),
+        });
     report
         .supporting
         .agent_context_bundle
@@ -10467,8 +10468,8 @@ fn backtest_command(input: BacktestCommandInput<'_>) -> Result<()> {
     let previous_trade_outcome_cpt = trade_outcome_cpt_snapshot(&network)?;
     let realism =
         parse_execution_realism_config(spread_bps, slippage_bps, fee_bps, ambiguous_bar_policy)?;
-    let (report, updated_network, trades) = run_probabilistic_backtest(
-        RunProbabilisticBacktestInput {
+    let (report, updated_network, trades) =
+        run_probabilistic_backtest(RunProbabilisticBacktestInput {
             symbol,
             state_dir,
             candles: &candles,
@@ -10480,8 +10481,7 @@ fn backtest_command(input: BacktestCommandInput<'_>) -> Result<()> {
             params: &params,
             network: &network,
             learning_state: &mut learning_state,
-        },
-    )?;
+        })?;
     save_learning_state(state_dir, symbol, &learning_state)?;
     save_state(state_dir, symbol, BBN_STATE_FILE, &updated_network)?;
     append_trade_history(state_dir, symbol, &trades)?;
@@ -10801,7 +10801,9 @@ fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         factor_uncertainty: &factor_uncertainty,
         realized_outcome: &outcome_label,
         feedback_records_applied,
-        consumed_pre_bayes_evidence_filter: consumed_analyze_context.pre_bayes_evidence_filter.as_ref(),
+        consumed_pre_bayes_evidence_filter: consumed_analyze_context
+            .pre_bayes_evidence_filter
+            .as_ref(),
         consumed_pre_bayes_entry_quality_bridge: consumed_analyze_context
             .pre_bayes_entry_quality_bridge
             .as_ref(),
@@ -17498,53 +17500,6 @@ fn top_consumed_trend_comparisons(
     comparisons
 }
 
-fn family_history_window() -> usize {
-    env::var("ICT_ENGINE_FAMILY_HISTORY_WINDOW")
-        .ok()
-        .and_then(|value| value.parse::<usize>().ok())
-        .map(|value| value.clamp(1, 20))
-        .unwrap_or(5)
-}
-
-fn env_f64(name: &str, default: f64) -> f64 {
-    env::var(name)
-        .ok()
-        .and_then(|value| value.parse::<f64>().ok())
-        .unwrap_or(default)
-}
-
-fn env_bool(name: &str, default: bool) -> bool {
-    env::var(name)
-        .ok()
-        .and_then(|value| match value.trim().to_ascii_lowercase().as_str() {
-            "1" | "true" | "yes" | "on" => Some(true),
-            "0" | "false" | "no" | "off" => Some(false),
-            _ => None,
-        })
-        .unwrap_or(default)
-}
-
-fn env_f64_with_source(name: &str, default: f64) -> (f64, String) {
-    match env::var(name)
-        .ok()
-        .and_then(|value| value.parse::<f64>().ok().map(|parsed| (parsed, value)))
-    {
-        Some((parsed, raw)) => (parsed, format!("env:{}={}", name, raw)),
-        None => (default, "default".to_string()),
-    }
-}
-
-fn env_bool_with_source(name: &str, default: bool) -> (bool, String) {
-    match env::var(name).ok() {
-        Some(raw) => match raw.trim().to_ascii_lowercase().as_str() {
-            "1" | "true" | "yes" | "on" => (true, format!("env:{}={}", name, raw)),
-            "0" | "false" | "no" | "off" => (false, format!("env:{}={}", name, raw)),
-            _ => (default, "default".to_string()),
-        },
-        None => (default, "default".to_string()),
-    }
-}
-
 fn artifact_review_rules() -> ict_engine::state::ArtifactReviewRules {
     ict_engine::state::ArtifactReviewRules {
         pending_update: ict_engine::state::PendingUpdateReviewRules {
@@ -18004,7 +17959,8 @@ struct BuildUpdateAgentPromptsInput<'a> {
     realized_outcome: &'a str,
     feedback_records_applied: usize,
     consumed_pre_bayes_evidence_filter: Option<&'a PreBayesEvidenceFilter>,
-    consumed_pre_bayes_entry_quality_bridge: Option<&'a ict_engine::state::PreBayesEntryQualityBridge>,
+    consumed_pre_bayes_entry_quality_bridge:
+        Option<&'a ict_engine::state::PreBayesEntryQualityBridge>,
     consumed_multi_timeframe_summary: &'a [String],
 }
 
@@ -18332,14 +18288,6 @@ fn dataset_comparability(
 
 fn decision_thresholds() -> DecisionThresholds {
     DecisionThresholds::default()
-}
-
-fn compute_hash(parts: &[impl AsRef<str>]) -> String {
-    let mut hasher = DefaultHasher::new();
-    for part in parts {
-        part.as_ref().hash(&mut hasher);
-    }
-    format!("{:016x}", hasher.finish())
 }
 
 fn data_fingerprint(
@@ -20634,7 +20582,9 @@ mod tests {
                         .clone(),
                 ),
             ]),
-            soft_evidence_divergence: pre_bayes_soft_evidence_diff(&pipeline.bbn_support.pre_bayes_filter),
+            soft_evidence_divergence: pre_bayes_soft_evidence_diff(
+                &pipeline.bbn_support.pre_bayes_filter,
+            ),
             bridge_gap_clear_threshold: 0.12,
             multi_timeframe_summary: &[
                 "1m bull continuation".to_string(),
@@ -22810,7 +22760,9 @@ mod tests {
                 ]),
                 ..PreBayesEvidenceFilter::default()
             }),
-            pre_bayes_entry_quality_bridge: Some(&ict_engine::state::PreBayesEntryQualityBridge::default()),
+            pre_bayes_entry_quality_bridge: Some(
+                &ict_engine::state::PreBayesEntryQualityBridge::default(),
+            ),
             factor_mutation_evaluation: None,
             artifact_decision_summary: None,
         });

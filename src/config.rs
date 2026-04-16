@@ -686,3 +686,32 @@ pub fn left_pad(values: Vec<f64>, target_len: usize, fill: f64) -> Vec<f64> {
     padded.extend(values);
     padded
 }
+
+pub fn env_f64_with_source(name: &str, default: f64) -> (f64, String) {
+    match env::var(name)
+        .ok()
+        .and_then(|value| value.parse::<f64>().ok().map(|parsed| (parsed, value)))
+    {
+        Some((parsed, raw)) => (parsed, format!("env:{}={}", name, raw)),
+        None => (default, "default".to_string()),
+    }
+}
+
+pub fn env_bool_with_source(name: &str, default: bool) -> (bool, String) {
+    match env::var(name).ok() {
+        Some(raw) => match raw.trim().to_ascii_lowercase().as_str() {
+            "1" | "true" | "yes" | "on" => (true, format!("env:{}={}", name, raw)),
+            "0" | "false" | "no" | "off" => (false, format!("env:{}={}", name, raw)),
+            _ => (default, "default".to_string()),
+        },
+        None => (default, "default".to_string()),
+    }
+}
+
+pub fn family_history_window() -> usize {
+    env::var("ICT_ENGINE_FAMILY_HISTORY_WINDOW")
+        .ok()
+        .and_then(|value| value.parse::<usize>().ok())
+        .map(|value| value.clamp(1, 20))
+        .unwrap_or(5)
+}

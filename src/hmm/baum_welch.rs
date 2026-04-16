@@ -28,7 +28,8 @@ impl BaumWelch {
             let t = observations.len();
 
             // Update initial probabilities
-            for (initial_prob, gamma_state) in params.initial_probs.iter_mut().zip(gamma[0].iter()) {
+            for (initial_prob, gamma_state) in params.initial_probs.iter_mut().zip(gamma[0].iter())
+            {
                 *initial_prob = gamma_state.exp();
             }
 
