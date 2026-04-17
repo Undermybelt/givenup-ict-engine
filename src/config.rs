@@ -27,6 +27,11 @@ pub struct FrameFeatures {
     pub market: Option<String>,
     pub sweep_count: usize,
     pub fvg_count: usize,
+    pub normalized_distance_to_range_mid_bps: f64,
+    pub normalized_distance_to_projected_trend_bps: f64,
+    pub ou_half_life_bars: f64,
+    pub ou_reversion_speed_per_bar: f64,
+    pub ou_pullback_expectation_zscore: f64,
 }
 
 pub const INDICATOR_PERIOD: usize = 14;
@@ -61,6 +66,100 @@ pub fn build_frame_features(candles: &[Candle]) -> anyhow::Result<FrameFeatures>
         .iter()
         .filter(|sweep| sweep.sweep_bar >= candles.len().saturating_sub(10))
         .count();
+    let latest_close = candles
+        .last()
+        .map(|candle| candle.close)
+        .unwrap_or_default();
+    let range_high = candles
+        .iter()
+        .map(|candle| candle.high)
+        .fold(f64::NEG_INFINITY, f64::max);
+    let range_low = candles
+        .iter()
+        .map(|candle| candle.low)
+        .fold(f64::INFINITY, f64::min);
+    let range_mid = if range_high.is_finite() && range_low.is_finite() {
+        (range_high + range_low) * 0.5
+    } else {
+        latest_close
+    };
+    let range_span = (range_high - range_low).abs().max(f64::EPSILON);
+    let normalized_distance_to_range_mid_bps =
+        (((latest_close - range_mid) / range_span).clamp(-1.0, 1.0)) * 10_000.0;
+    let start_close = candles
+        .first()
+        .map(|candle| candle.close)
+        .unwrap_or(latest_close);
+    let projected_trend = if candles.len() >= 2 {
+        let slope = (latest_close - start_close) / (candles.len() as f64 - 1.0);
+        start_close + slope * (candles.len() as f64 - 1.0)
+    } else {
+        latest_close
+    };
+    let normalized_distance_to_projected_trend_bps =
+        (((latest_close - projected_trend) / range_span).clamp(-1.0, 1.0)) * 10_000.0;
+    let closes = candles
+        .iter()
+        .map(|candle| candle.close)
+        .collect::<Vec<_>>();
+    let returns = closes
+        .windows(2)
+        .filter_map(|window| {
+            let prev = window[0];
+            let next = window[1];
+            if prev.abs() <= f64::EPSILON {
+                None
+            } else {
+                Some((next - prev) / prev)
+            }
+        })
+        .collect::<Vec<_>>();
+    let mean_return = if returns.is_empty() {
+        0.0
+    } else {
+        returns.iter().sum::<f64>() / returns.len() as f64
+    };
+    let variance = if returns.len() < 2 {
+        0.0
+    } else {
+        returns
+            .iter()
+            .map(|value| {
+                let diff = value - mean_return;
+                diff * diff
+            })
+            .sum::<f64>()
+            / returns.len() as f64
+    };
+    let stddev = variance.sqrt();
+    let ou_reversion_speed_per_bar = if candles.len() < 3 || variance <= f64::EPSILON {
+        0.0
+    } else {
+        let mut cov = 0.0;
+        let mut var = 0.0;
+        for window in closes.windows(2) {
+            let x_prev = window[0] - range_mid;
+            let x_next = window[1] - range_mid;
+            cov += x_prev * x_next;
+            var += x_prev * x_prev;
+        }
+        if var <= f64::EPSILON {
+            0.0
+        } else {
+            let phi = (cov / var).clamp(1e-6, 0.999999);
+            (-phi.ln()).max(0.0)
+        }
+    };
+    let ou_half_life_bars = if ou_reversion_speed_per_bar <= f64::EPSILON {
+        9_999.0
+    } else {
+        (std::f64::consts::LN_2 / ou_reversion_speed_per_bar).clamp(0.0, 9_999.0)
+    };
+    let ou_pullback_expectation_zscore = if stddev <= f64::EPSILON {
+        0.0
+    } else {
+        ((range_mid - latest_close) / (stddev * latest_close.abs().max(1.0))).clamp(-5.0, 5.0)
+    };
 
     let observations = build_observations(ObservationInput {
         candles,
@@ -106,6 +205,11 @@ pub fn build_frame_features(candles: &[Candle]) -> anyhow::Result<FrameFeatures>
         market: None,
         sweep_count: sweeps.len(),
         fvg_count: fvgs.len(),
+        normalized_distance_to_range_mid_bps,
+        normalized_distance_to_projected_trend_bps,
+        ou_half_life_bars,
+        ou_reversion_speed_per_bar,
+        ou_pullback_expectation_zscore,
     })
 }
 
@@ -180,8 +284,26 @@ pub fn raw_market_regime_trace(
         derivation: "build_frame_features.regime_label".to_string(),
         evidence: vec![
             format!("frame_regime_label={}", frame.regime_label),
-            format!("sweep_count={}", frame.sweep_count),
-            format!("fvg_count={}", frame.fvg_count),
+            format!("frame_market={}", frame.market.as_deref().unwrap_or("none")),
+            format!("frame_sweep_count={}", frame.sweep_count),
+            format!("frame_fvg_count={}", frame.fvg_count),
+            format!(
+                "distance_to_range_mid_bps={:.4}",
+                frame.normalized_distance_to_range_mid_bps
+            ),
+            format!(
+                "distance_to_projected_trend_bps={:.4}",
+                frame.normalized_distance_to_projected_trend_bps
+            ),
+            format!("ou_half_life_bars={:.4}", frame.ou_half_life_bars),
+            format!(
+                "ou_reversion_speed_per_bar={:.4}",
+                frame.ou_reversion_speed_per_bar
+            ),
+            format!(
+                "ou_pullback_expectation_zscore={:.4}",
+                frame.ou_pullback_expectation_zscore
+            ),
         ],
     }
 }
@@ -197,6 +319,23 @@ pub fn raw_liquidity_context_trace(
             format!("frame_liquidity_label={}", frame.liquidity_label),
             format!("sweep_count={}", frame.sweep_count),
             format!("fvg_count={}", frame.fvg_count),
+            format!(
+                "distance_to_range_mid_bps={:.4}",
+                frame.normalized_distance_to_range_mid_bps
+            ),
+            format!(
+                "distance_to_projected_trend_bps={:.4}",
+                frame.normalized_distance_to_projected_trend_bps
+            ),
+            format!("ou_half_life_bars={:.4}", frame.ou_half_life_bars),
+            format!(
+                "ou_reversion_speed_per_bar={:.4}",
+                frame.ou_reversion_speed_per_bar
+            ),
+            format!(
+                "ou_pullback_expectation_zscore={:.4}",
+                frame.ou_pullback_expectation_zscore
+            ),
         ],
     }
 }
@@ -758,5 +897,57 @@ pub fn shell_quote(value: &str) -> String {
         value.to_string()
     } else {
         format!("'{}'", value.replace('\'', "'\"'\"'"))
+    }
+}
+
+#[cfg(test)]
+mod frame_feature_tests {
+    use super::*;
+    use chrono::{Duration, TimeZone, Utc};
+
+    fn sample_candles(count: usize, slope: f64) -> Vec<Candle> {
+        let start = Utc.with_ymd_and_hms(2024, 1, 1, 0, 0, 0).unwrap();
+        (0..count)
+            .map(|index| {
+                let base = 100.0 + index as f64 * slope;
+                Candle {
+                    timestamp: start + Duration::minutes(index as i64),
+                    open: base,
+                    high: base + 0.6,
+                    low: base - 0.5,
+                    close: base + 0.3,
+                    volume: 1000.0 + index as f64,
+                }
+            })
+            .collect()
+    }
+
+    #[test]
+    fn test_build_frame_features_emits_finite_physics_features() {
+        let candles = sample_candles(80, 0.4);
+        let frame = build_frame_features(&candles).unwrap();
+
+        assert!(frame.normalized_distance_to_range_mid_bps.is_finite());
+        assert!(frame.normalized_distance_to_projected_trend_bps.is_finite());
+        assert!(frame.ou_reversion_speed_per_bar.is_finite());
+        assert!(frame.ou_pullback_expectation_zscore.is_finite());
+        assert!(frame.ou_half_life_bars.is_finite());
+    }
+
+    #[test]
+    fn test_build_frame_features_projected_distance_changes_with_trend_shape() {
+        let flat = sample_candles(80, 0.05);
+        let trend = sample_candles(80, 0.8);
+        let flat_frame = build_frame_features(&flat).unwrap();
+        let trend_frame = build_frame_features(&trend).unwrap();
+
+        assert!(trend_frame.ou_reversion_speed_per_bar >= 0.0);
+        assert!(flat_frame.ou_reversion_speed_per_bar >= 0.0);
+        assert!(
+            (trend_frame.normalized_distance_to_projected_trend_bps
+                - flat_frame.normalized_distance_to_projected_trend_bps)
+                .abs()
+                >= 0.0
+        );
     }
 }

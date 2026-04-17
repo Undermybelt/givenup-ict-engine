@@ -1,7 +1,7 @@
 use serde::Serialize;
 use std::collections::BTreeMap;
 
-use crate::state::PreBayesEntryQualityBridge;
+use crate::state::{FactorPipelineLabelSource, PreBayesEntryQualityBridge};
 
 pub use super::pipeline_shared::{
     ExpansionBbnSupport, ExpansionLatestSignal, ExpansionProbabilitySupport,
@@ -17,4 +17,5 @@ pub struct ExpansionFactorPipelineReport {
     pub bbn_support: ExpansionBbnSupport,
     pub pipeline_summary: String,
     pub recommended_actions: Vec<String>,
+    pub frame_physics_trace: Vec<FactorPipelineLabelSource>,
 }

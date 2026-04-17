@@ -8,7 +8,7 @@ use crate::bbn::trading::{
         infer_trade_outcome_with_entry_quality_bias, trade_evidence_from_pre_bayes_filter,
     },
 };
-use crate::config::{build_frame_features_for_market, build_pre_bayes_evidence_filter};
+use crate::config::{build_frame_features_for_market, build_pre_bayes_evidence_filter, env_bool};
 use crate::factor_lab::{FactorContext, FactorEngine};
 use crate::factors::FactorRegistry;
 use crate::state::PreBayesEvidencePolicy;
@@ -91,12 +91,22 @@ pub fn build_expansion_factor_pipeline_report_with_registry(
         &frame.regime_label,
         frame.sweep_count,
         frame.fvg_count,
+        frame.normalized_distance_to_range_mid_bps,
+        frame.normalized_distance_to_projected_trend_bps,
+        frame.ou_half_life_bars,
+        frame.ou_reversion_speed_per_bar,
+        frame.ou_pullback_expectation_zscore,
     );
     let liquidity_context_trace = raw_liquidity_context_trace(
         &frame.liquidity_label,
         &frame.liquidity_label,
         frame.sweep_count,
         frame.fvg_count,
+        frame.normalized_distance_to_range_mid_bps,
+        frame.normalized_distance_to_projected_trend_bps,
+        frame.ou_half_life_bars,
+        frame.ou_reversion_speed_per_bar,
+        frame.ou_pullback_expectation_zscore,
     );
     let network = build_trading_network()?;
     let pre_bayes_policy = pre_bayes_evidence_policy();
@@ -109,6 +119,35 @@ pub fn build_expansion_factor_pipeline_report_with_registry(
         &multi_timeframe_evidence,
         Some(&market),
     );
+    let mut recommended_physics_actions = Vec::new();
+    let distance_enabled = env_bool("ICT_ENGINE_FEATURE_DISTANCE_ONLY", false)
+        || env_bool("ICT_ENGINE_FEATURE_DISTANCE_AND_OU", false);
+    let ou_enabled = env_bool("ICT_ENGINE_FEATURE_OU_ONLY", false)
+        || env_bool("ICT_ENGINE_FEATURE_DISTANCE_AND_OU", false);
+    if distance_enabled {
+        if frame.normalized_distance_to_range_mid_bps.abs() >= 800.0 {
+            recommended_physics_actions.push(format!(
+                "distance_feature: price is stretched {:.1}bps from range mid",
+                frame.normalized_distance_to_range_mid_bps
+            ));
+        }
+        if frame.normalized_distance_to_projected_trend_bps.abs() <= 150.0 {
+            recommended_physics_actions
+                .push("distance_feature: price remains close to projected trend path".to_string());
+        }
+    }
+    if ou_enabled {
+        if frame.ou_pullback_expectation_zscore.abs() >= 2.0 {
+            recommended_physics_actions.push(format!(
+                "ou_feature: pullback pressure zscore={:.2}",
+                frame.ou_pullback_expectation_zscore
+            ));
+        }
+        if frame.ou_half_life_bars >= 1000.0 {
+            recommended_physics_actions
+                .push("ou_feature: mean reversion is slow on the current path".to_string());
+        }
+    }
     let resonance_trace = raw_multi_timeframe_resonance_trace(
         &pre_bayes_policy,
         &pre_bayes_filter,
@@ -227,8 +266,8 @@ pub fn build_expansion_factor_pipeline_report_with_registry(
                 .to_string(),
             pre_bayes_filter: pre_bayes_filter.clone(),
             evidence_assignments,
-            raw_market_regime_trace: market_regime_trace,
-            raw_liquidity_context_trace: liquidity_context_trace,
+            raw_market_regime_trace: market_regime_trace.clone(),
+            raw_liquidity_context_trace: liquidity_context_trace.clone(),
             raw_multi_timeframe_resonance_trace: resonance_trace,
             entry_quality_base: probability_map(&entry_quality_node.states, &base_entry_quality),
             entry_quality_long: probability_map(&entry_quality_node.states, &long_entry_quality),
@@ -243,15 +282,20 @@ pub fn build_expansion_factor_pipeline_report_with_registry(
             output.diagnostics.alignment_label,
             output.diagnostics.uncertainty_label
         ),
-        recommended_actions: vec![
-            format!(
-                "Use {} as the primary expansion discrimination factor in the MVP probability stack",
-                factor_name
-            ),
-            "Treat factor_alignment and factor_uncertainty as the BBN bridge, not as hard triggers"
-                .to_string(),
-            "Review whether market_regime/liquidity_context labels should be made more independent from the expansion heuristic".to_string(),
-        ],
+        recommended_actions: {
+            let mut actions = vec![
+                format!(
+                    "Use {} as the primary expansion discrimination factor in the MVP probability stack",
+                    factor_name
+                ),
+                "Treat factor_alignment and factor_uncertainty as the BBN bridge, not as hard triggers"
+                    .to_string(),
+                "Review whether market_regime/liquidity_context labels should be made more independent from the expansion heuristic".to_string(),
+            ];
+            actions.extend(recommended_physics_actions);
+            actions
+        },
+        frame_physics_trace: vec![market_regime_trace.clone(), liquidity_context_trace.clone()],
     })
 }
 

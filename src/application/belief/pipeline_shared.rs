@@ -237,6 +237,7 @@ pub struct FactorPipelineDebugReport {
     pub pipeline_verdict: String,
     pub pipeline_summary: String,
     pub recommended_actions: Vec<String>,
+    pub frame_physics_trace: BTreeMap<String, f64>,
     pub entry_quality_bridge: PreBayesEntryQualityBridge,
     pub bbn_support: ExpansionBbnSupport,
     pub shadow_belief_report: BeliefReportPacket,
@@ -248,6 +249,85 @@ pub struct FactorPipelineRawLabelTrace {
     pub market_regime: FactorPipelineLabelSource,
     pub liquidity_context: FactorPipelineLabelSource,
     pub multi_timeframe_resonance: FactorPipelineLabelSource,
+}
+
+fn summarize_frame_physics_trace(frame_physics_trace: &BTreeMap<String, f64>) -> Option<String> {
+    let range_mid = frame_physics_trace
+        .get("distance_to_range_mid_bps")
+        .copied();
+    let projected = frame_physics_trace
+        .get("distance_to_projected_trend_bps")
+        .copied();
+    let half_life = frame_physics_trace.get("ou_half_life_bars").copied();
+    let reversion = frame_physics_trace
+        .get("ou_reversion_speed_per_bar")
+        .copied();
+    let pullback = frame_physics_trace
+        .get("ou_pullback_expectation_zscore")
+        .copied();
+
+    let mut notes = Vec::new();
+    if let (Some(range_mid), Some(pullback)) = (range_mid, pullback) {
+        if range_mid.abs() >= 800.0 && pullback <= -2.0 {
+            notes.push(
+                "price is stretched above range mid and OU pullback pressure is elevated"
+                    .to_string(),
+            );
+        } else if range_mid.abs() >= 800.0 && pullback >= 2.0 {
+            notes.push(
+                "price is stretched below range mid and OU rebound pressure is elevated"
+                    .to_string(),
+            );
+        } else if range_mid.abs() <= 250.0 {
+            notes.push(
+                "price is still close to range mid, so extension pressure is limited".to_string(),
+            );
+        }
+    }
+    if let Some(projected) = projected {
+        if projected.abs() <= 150.0 {
+            notes.push("price remains close to the projected trend path, so continuation structure is intact".to_string());
+        } else if projected.abs() >= 800.0 {
+            notes.push(
+                "price is far from the projected trend path, so continuation risk is degraded"
+                    .to_string(),
+            );
+        }
+    }
+    if let (Some(half_life), Some(reversion)) = (half_life, reversion) {
+        if half_life >= 1000.0 || reversion <= 0.001 {
+            notes.push(
+                "OU reversion is slow, so mean-reversion may take many bars to resolve".to_string(),
+            );
+        } else if half_life <= 50.0 {
+            notes.push(
+                "OU reversion is fast, so pullback pressure should resolve quickly if it triggers"
+                    .to_string(),
+            );
+        }
+    }
+
+    if notes.is_empty() {
+        None
+    } else {
+        Some(notes.join(" "))
+    }
+}
+
+fn extract_frame_physics_metrics(
+    trace: &[crate::state::FactorPipelineLabelSource],
+) -> BTreeMap<String, f64> {
+    let mut metrics = BTreeMap::new();
+    for source in trace {
+        for evidence in &source.evidence {
+            if let Some((key, value)) = evidence.split_once('=') {
+                if let Ok(parsed) = value.parse::<f64>() {
+                    metrics.insert(key.to_string(), parsed);
+                }
+            }
+        }
+    }
+    metrics
 }
 
 pub fn build_factor_pipeline_debug_report(
@@ -302,6 +382,14 @@ pub fn build_factor_pipeline_debug_report(
         .as_ref()
         .map(|summary| summary.summary_line.clone())
         .unwrap_or_else(|| "shadow=unavailable".to_string());
+    let frame_physics_trace = extract_frame_physics_metrics(&[
+        bbn_support.raw_market_regime_trace.clone(),
+        bbn_support.raw_liquidity_context_trace.clone(),
+    ]);
+    let mut recommended_actions = vec![format!("inspect_factor={factor_name}")];
+    if let Some(summary) = summarize_frame_physics_trace(&frame_physics_trace) {
+        recommended_actions.push(format!("frame_physics_summary={summary}"));
+    }
 
     Ok(FactorPipelineDebugReport {
         symbol,
@@ -325,7 +413,8 @@ pub fn build_factor_pipeline_debug_report(
         six_timeframe_resonance: multi_timeframe_summary,
         pipeline_verdict,
         pipeline_summary: bbn_support.evidence_policy.clone(),
-        recommended_actions: vec![format!("inspect_factor={factor_name}")],
+        recommended_actions,
+        frame_physics_trace,
         entry_quality_bridge,
         bbn_support,
         shadow_belief_report,
@@ -389,6 +478,11 @@ pub fn raw_market_regime_trace(
     regime_evidence_label: &str,
     sweep_count: usize,
     fvg_count: usize,
+    normalized_distance_to_range_mid_bps: f64,
+    normalized_distance_to_projected_trend_bps: f64,
+    ou_half_life_bars: f64,
+    ou_reversion_speed_per_bar: f64,
+    ou_pullback_expectation_zscore: f64,
 ) -> FactorPipelineLabelSource {
     FactorPipelineLabelSource {
         label: regime_label.to_string(),
@@ -397,6 +491,23 @@ pub fn raw_market_regime_trace(
             format!("frame_regime_label={}", regime_evidence_label),
             format!("sweep_count={}", sweep_count),
             format!("fvg_count={}", fvg_count),
+            format!(
+                "distance_to_range_mid_bps={:.4}",
+                normalized_distance_to_range_mid_bps
+            ),
+            format!(
+                "distance_to_projected_trend_bps={:.4}",
+                normalized_distance_to_projected_trend_bps
+            ),
+            format!("ou_half_life_bars={:.4}", ou_half_life_bars),
+            format!(
+                "ou_reversion_speed_per_bar={:.4}",
+                ou_reversion_speed_per_bar
+            ),
+            format!(
+                "ou_pullback_expectation_zscore={:.4}",
+                ou_pullback_expectation_zscore
+            ),
         ],
     }
 }
@@ -406,6 +517,11 @@ pub fn raw_liquidity_context_trace(
     liquidity_evidence_label: &str,
     sweep_count: usize,
     fvg_count: usize,
+    normalized_distance_to_range_mid_bps: f64,
+    normalized_distance_to_projected_trend_bps: f64,
+    ou_half_life_bars: f64,
+    ou_reversion_speed_per_bar: f64,
+    ou_pullback_expectation_zscore: f64,
 ) -> FactorPipelineLabelSource {
     FactorPipelineLabelSource {
         label: liquidity_label.to_string(),
@@ -414,6 +530,23 @@ pub fn raw_liquidity_context_trace(
             format!("frame_liquidity_label={}", liquidity_evidence_label),
             format!("sweep_count={}", sweep_count),
             format!("fvg_count={}", fvg_count),
+            format!(
+                "distance_to_range_mid_bps={:.4}",
+                normalized_distance_to_range_mid_bps
+            ),
+            format!(
+                "distance_to_projected_trend_bps={:.4}",
+                normalized_distance_to_projected_trend_bps
+            ),
+            format!("ou_half_life_bars={:.4}", ou_half_life_bars),
+            format!(
+                "ou_reversion_speed_per_bar={:.4}",
+                ou_reversion_speed_per_bar
+            ),
+            format!(
+                "ou_pullback_expectation_zscore={:.4}",
+                ou_pullback_expectation_zscore
+            ),
         ],
     }
 }
