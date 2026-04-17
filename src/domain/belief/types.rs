@@ -7,6 +7,40 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct ConformalUncertaintyPacket {
+    pub method: String,
+    pub target: String,
+    pub nominal_coverage: f64,
+    pub empirical_coverage: Option<f64>,
+    pub interval_width: Option<f64>,
+    pub nonconformity_score: Option<f64>,
+    pub abstain_threshold: Option<f64>,
+    pub abstain: bool,
+    pub notes: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct MicrostructureContextPacket {
+    pub source: String,
+    pub granularity: String,
+    pub usable_as_evidence: bool,
+    pub prior_adjuster_bias: Option<f64>,
+    pub transition_bias: Option<f64>,
+    pub setup_quality_score: Option<f64>,
+    pub context_notes: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct MarketPolicyPacket {
+    pub market_family: Option<String>,
+    pub market_behavior_profile: Option<String>,
+    pub policy_mode: String,
+    pub evidence_reliability: BTreeMap<String, f64>,
+    pub abstention_bias: Option<f64>,
+    pub notes: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct BeliefEvidencePacket {
     pub symbol: String,
     pub market: Option<String>,
@@ -19,6 +53,8 @@ pub struct BeliefEvidencePacket {
     pub timed_pda_summary: BTreeMap<String, String>,
     pub multi_timeframe_evidence: BTreeMap<String, String>,
     pub evidence_assignments: BTreeMap<String, String>,
+    pub microstructure_context: Option<MicrostructureContextPacket>,
+    pub market_policy: Option<MarketPolicyPacket>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -90,4 +126,6 @@ pub struct BeliefReportPacket {
     pub engine_trace: EngineTrace,
     pub temporal_summary: Option<ParticleBeliefSummary>,
     pub shadow_comparison: Option<ShadowComparisonSummary>,
+    pub conformal_uncertainty: Vec<ConformalUncertaintyPacket>,
+    pub market_policy: Option<MarketPolicyPacket>,
 }

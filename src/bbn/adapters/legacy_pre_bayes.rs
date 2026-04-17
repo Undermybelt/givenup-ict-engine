@@ -151,12 +151,16 @@ pub fn belief_evidence_packet_from_pre_bayes_filter(
                 },
             ),
             evidence: filter.conflict_flags.clone(),
+            segmentation_context: None,
+            structural_break_context: None,
         },
         market_evidence,
         factor_evidence,
         timed_pda_summary,
         multi_timeframe_evidence,
         evidence_assignments: filter.evidence_assignments.clone(),
+        microstructure_context: None,
+        market_policy: None,
     }
 }
 
@@ -228,6 +232,7 @@ pub fn regime_posterior_from_pre_bayes_filter(filter: &PreBayesEvidenceFilter) -
         confidence: Some(filter.evidence_quality_score),
         credible_intervals: BTreeMap::new(),
         evidence: filter.rationale.clone(),
+        regime_validation: None,
     }
 }
 

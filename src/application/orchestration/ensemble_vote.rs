@@ -714,6 +714,7 @@ pub fn build_stub_ensemble_vote_from_research(report: &ResearchReport) -> Ensemb
                 confidence: Some(0.5),
                 credible_intervals: BTreeMap::new(),
                 evidence: report.multi_timeframe_summary.clone(),
+                regime_validation: None,
             },
             regime_companion: crate::domain::belief::RegimeCompanionPacket {
                 jump_model: Some(crate::domain::regime::JumpModelRegimeSummary {

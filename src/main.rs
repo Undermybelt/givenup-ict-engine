@@ -11889,22 +11889,32 @@ fn factor_autoresearch_status_command(
         .join(symbol)
         .join(ict_engine::state::FACTOR_AUTORESEARCH_FINAL_FILE);
     let final_summary_exists = final_summary_path.is_file();
-    let interrupted = live_snapshot
+
+    // Staleness threshold: if snapshot says "running" but hasn't been
+    // updated in >10 minutes and no final summary exists, it was interrupted.
+    let staleness_threshold = chrono::Duration::minutes(10);
+    let snapshot_is_stale = live_snapshot
         .as_ref()
-        .map(|snapshot| snapshot.status == "running" && !final_summary_exists)
+        .map(|s| Utc::now().signed_duration_since(s.updated_at) > staleness_threshold)
         .unwrap_or(false);
-    let effective_status = if interrupted {
-        "interrupted"
-    } else if live_snapshot
+    let snapshot_says_running = live_snapshot
         .as_ref()
-        .map(|snapshot| snapshot.status.as_str() == "running")
-        .unwrap_or(false)
-    {
-        "running"
-    } else if final_summary_exists {
-        "completed"
+        .map(|s| s.status == "running")
+        .unwrap_or(false);
+    let snapshot_says_completed = live_snapshot
+        .as_ref()
+        .map(|s| s.status == "completed")
+        .unwrap_or(false);
+
+    // Priority: final_summary > snapshot.status=="completed" > stale running > fresh running > unknown
+    let (effective_status, interrupted) = if final_summary_exists || snapshot_says_completed {
+        ("completed", false)
+    } else if snapshot_says_running && snapshot_is_stale {
+        ("interrupted", true)
+    } else if snapshot_says_running {
+        ("running", false)
     } else {
-        "unknown"
+        ("unknown", false)
     };
 
     let mut decision_counts = BTreeMap::<String, usize>::new();
@@ -19512,36 +19522,73 @@ mod tests {
 
     #[test]
     fn test_factor_autoresearch_effective_status_logic() {
-        let running_snapshot = FactorAutoresearchLiveSnapshot {
+        use chrono::Duration;
+
+        // Helper: mirrors the new status logic in factor_autoresearch_status_command
+        fn effective_status(
+            snapshot: Option<&FactorAutoresearchLiveSnapshot>,
+            final_summary_exists: bool,
+        ) -> (&'static str, bool) {
+            let staleness_threshold = Duration::minutes(10);
+            let snapshot_is_stale = snapshot
+                .map(|s| Utc::now().signed_duration_since(s.updated_at) > staleness_threshold)
+                .unwrap_or(false);
+            let snapshot_says_running = snapshot.map(|s| s.status == "running").unwrap_or(false);
+            let snapshot_says_completed =
+                snapshot.map(|s| s.status == "completed").unwrap_or(false);
+
+            if final_summary_exists || snapshot_says_completed {
+                ("completed", false)
+            } else if snapshot_says_running && snapshot_is_stale {
+                ("interrupted", true)
+            } else if snapshot_says_running {
+                ("running", false)
+            } else {
+                ("unknown", false)
+            }
+        }
+
+        // Case 1: final_summary_exists → completed regardless of snapshot
+        let running_snap = FactorAutoresearchLiveSnapshot {
             status: "running".to_string(),
+            updated_at: Utc::now() - Duration::hours(1),
             ..FactorAutoresearchLiveSnapshot::default()
         };
-        let completed_snapshot = FactorAutoresearchLiveSnapshot {
+        let (status, interrupted) = effective_status(Some(&running_snap), true);
+        assert_eq!(status, "completed");
+        assert!(!interrupted);
+
+        // Case 2: snapshot says completed, no final summary → still completed
+        let completed_snap = FactorAutoresearchLiveSnapshot {
             status: "completed".to_string(),
             ..FactorAutoresearchLiveSnapshot::default()
         };
+        let (status, _) = effective_status(Some(&completed_snap), false);
+        assert_eq!(status, "completed");
 
-        let interrupted = if running_snapshot.status == "running" && !false {
-            "interrupted"
-        } else if running_snapshot.status == "running" {
-            "running"
-        } else if false {
-            "completed"
-        } else {
-            "unknown"
+        // Case 3: snapshot says running, stale, no final → interrupted
+        let stale_running = FactorAutoresearchLiveSnapshot {
+            status: "running".to_string(),
+            updated_at: Utc::now() - Duration::minutes(30),
+            ..FactorAutoresearchLiveSnapshot::default()
         };
-        let completed = if completed_snapshot.status == "running" && !true {
-            "interrupted"
-        } else if completed_snapshot.status == "running" {
-            "running"
-        } else if true {
-            "completed"
-        } else {
-            "unknown"
-        };
+        let (status, interrupted) = effective_status(Some(&stale_running), false);
+        assert_eq!(status, "interrupted");
+        assert!(interrupted);
 
-        assert_eq!(interrupted, "interrupted");
-        assert_eq!(completed, "completed");
+        // Case 4: snapshot says running, fresh, no final → running
+        let fresh_running = FactorAutoresearchLiveSnapshot {
+            status: "running".to_string(),
+            updated_at: Utc::now(),
+            ..FactorAutoresearchLiveSnapshot::default()
+        };
+        let (status, interrupted) = effective_status(Some(&fresh_running), false);
+        assert_eq!(status, "running");
+        assert!(!interrupted);
+
+        // Case 5: no snapshot, no final → unknown
+        let (status, _) = effective_status(None, false);
+        assert_eq!(status, "unknown");
     }
 
     #[test]

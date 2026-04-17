@@ -263,6 +263,8 @@ impl InferenceEngineRegistry {
                 interval_overlap,
                 recommendation_drift,
             }),
+            conformal_uncertainty: Vec::new(),
+            market_policy: None,
         })
     }
 }
@@ -289,6 +291,8 @@ mod tests {
                     stress_score: Some(0.2),
                     transition_score: Some(0.1),
                     evidence: vec![],
+                    segmentation_context: None,
+                    structural_break_context: None,
                 },
                 market_evidence: vec![
                     "market_category=futures_index".to_string(),
@@ -305,6 +309,8 @@ mod tests {
                     ("liquidity_context".to_string(), "favorable".to_string()),
                     ("entry_quality".to_string(), "high".to_string()),
                 ]),
+                microstructure_context: None,
+                market_policy: None,
             })
             .unwrap();
         assert!(!report.engine_trace.primary_engine.is_empty());
