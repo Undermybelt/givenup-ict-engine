@@ -265,6 +265,19 @@ fn summarize_frame_physics_trace(frame_physics_trace: &BTreeMap<String, f64>) ->
     let pullback = frame_physics_trace
         .get("ou_pullback_expectation_zscore")
         .copied();
+    let pythagorean_speed = frame_physics_trace
+        .get("pythagorean_speed_bps_per_bar")
+        .copied();
+    let pythagorean_sweep = frame_physics_trace
+        .get("pythagorean_distance_to_last_sweep")
+        .copied();
+    let pythagorean_fvg = frame_physics_trace
+        .get("pythagorean_distance_to_last_fvg")
+        .copied();
+    let ou_target = frame_physics_trace
+        .get("ou_mean_reversion_target_bps")
+        .copied();
+    let ou_pullback_bps = frame_physics_trace.get("ou_expected_pullback_bps").copied();
 
     let mut notes = Vec::new();
     if let (Some(range_mid), Some(pullback)) = (range_mid, pullback) {
@@ -304,6 +317,42 @@ fn summarize_frame_physics_trace(frame_physics_trace: &BTreeMap<String, f64>) ->
                 "OU reversion is fast, so pullback pressure should resolve quickly if it triggers"
                     .to_string(),
             );
+        }
+    }
+    if let Some(speed) = pythagorean_speed {
+        if speed >= 50.0 {
+            notes.push(format!(
+                "Pythagorean speed is elevated ({:.1} bps/bar), indicating fast combined price+time displacement",
+                speed
+            ));
+        } else if speed <= 5.0 {
+            notes.push(format!(
+                "Pythagorean speed is low ({:.1} bps/bar), indicating slow combined price+time displacement",
+                speed
+            ));
+        }
+    }
+    if let (Some(sweep_dist), Some(fvg_dist)) = (pythagorean_sweep, pythagorean_fvg) {
+        if sweep_dist.is_finite() && fvg_dist.is_finite() {
+            if sweep_dist < fvg_dist {
+                notes.push(format!(
+                    "closer to last liquidity sweep ({:.0}) than last FVG ({:.0}) in Pythagorean distance",
+                    sweep_dist, fvg_dist
+                ));
+            } else {
+                notes.push(format!(
+                    "closer to last FVG ({:.0}) than last liquidity sweep ({:.0}) in Pythagorean distance",
+                    fvg_dist, sweep_dist
+                ));
+            }
+        }
+    }
+    if let (Some(target), Some(pullback_bps)) = (ou_target, ou_pullback_bps) {
+        if target.abs() >= 500.0 && pullback_bps >= 100.0 {
+            notes.push(format!(
+                "OU mean reversion target is {:.0} bps away with expected pullback {:.0} bps",
+                target, pullback_bps
+            ));
         }
     }
 

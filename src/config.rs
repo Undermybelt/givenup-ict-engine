@@ -32,6 +32,16 @@ pub struct FrameFeatures {
     pub ou_half_life_bars: f64,
     pub ou_reversion_speed_per_bar: f64,
     pub ou_pullback_expectation_zscore: f64,
+    /// Pythagorean speed: sqrt(distance_bps² + time_bars²) normalized
+    pub pythagorean_speed_bps_per_bar: f64,
+    /// Pythagorean distance to last liquidity sweep (combined price+time)
+    pub pythagorean_distance_to_last_sweep: f64,
+    /// Pythagorean distance to last FVG (combined price+time)
+    pub pythagorean_distance_to_last_fvg: f64,
+    /// OU mean reversion target in bps from current price
+    pub ou_mean_reversion_target_bps: f64,
+    /// OU expected pullback magnitude in bps
+    pub ou_expected_pullback_bps: f64,
 }
 
 pub const INDICATOR_PERIOD: usize = 14;
@@ -161,6 +171,62 @@ pub fn build_frame_features(candles: &[Candle]) -> anyhow::Result<FrameFeatures>
         ((range_mid - latest_close) / (stddev * latest_close.abs().max(1.0))).clamp(-5.0, 5.0)
     };
 
+    // Pythagorean distance features: combine price displacement (dx) and time displacement (dy)
+    // dx = normalized distance in bps, dy = bar count normalized to [0,1] per 100 bars
+    let dx_range_mid = normalized_distance_to_range_mid_bps.abs();
+    let dy_time = (candles.len() as f64 / 100.0).clamp(0.0, 1.0) * 10_000.0; // normalize time to bps scale
+    let pythagorean_speed_bps_per_bar = if candles.len() < 2 {
+        0.0
+    } else {
+        (dx_range_mid.powi(2) + dy_time.powi(2)).sqrt() / candles.len() as f64
+    };
+
+    // Distance to last liquidity sweep (Pythagorean: price delta + time delta)
+    let pythagorean_distance_to_last_sweep = if let Some(last_sweep) = sweeps.last() {
+        let sweep_bar_idx = last_sweep.sweep_bar;
+        let bars_since = candles.len().saturating_sub(sweep_bar_idx) as f64;
+        let sweep_price = last_sweep.pool_price;
+        let price_delta_bps = if latest_close.abs() > f64::EPSILON {
+            ((latest_close - sweep_price) / latest_close * 10_000.0).abs()
+        } else {
+            0.0
+        };
+        (price_delta_bps.powi(2) + bars_since.powi(2)).sqrt()
+    } else {
+        f64::NAN
+    };
+
+    // Distance to last FVG (Pythagorean: price delta + time delta)
+    let pythagorean_distance_to_last_fvg = if let Some(last_fvg) = fvgs.last() {
+        let fvg_bar_idx = last_fvg.start_bar;
+        let bars_since = candles.len().saturating_sub(fvg_bar_idx) as f64;
+        let fvg_mid = (last_fvg.top + last_fvg.bottom) * 0.5;
+        let price_delta_bps = if latest_close.abs() > f64::EPSILON {
+            ((latest_close - fvg_mid) / latest_close * 10_000.0).abs()
+        } else {
+            0.0
+        };
+        (price_delta_bps.powi(2) + bars_since.powi(2)).sqrt()
+    } else {
+        f64::NAN
+    };
+
+    // OU mean reversion target in bps from current price
+    let ou_mean_reversion_target_bps = if range_span > f64::EPSILON {
+        ((range_mid - latest_close) / range_span * 10_000.0).clamp(-10_000.0, 10_000.0)
+    } else {
+        0.0
+    };
+
+    // OU expected pullback magnitude in bps
+    let ou_expected_pullback_bps = if latest_close.abs() > f64::EPSILON && stddev > f64::EPSILON {
+        (ou_pullback_expectation_zscore * stddev * latest_close / latest_close * 10_000.0)
+            .abs()
+            .clamp(0.0, 10_000.0)
+    } else {
+        0.0
+    };
+
     let observations = build_observations(ObservationInput {
         candles,
         ltf_candles: candles,
@@ -210,6 +276,11 @@ pub fn build_frame_features(candles: &[Candle]) -> anyhow::Result<FrameFeatures>
         ou_half_life_bars,
         ou_reversion_speed_per_bar,
         ou_pullback_expectation_zscore,
+        pythagorean_speed_bps_per_bar,
+        pythagorean_distance_to_last_sweep,
+        pythagorean_distance_to_last_fvg,
+        ou_mean_reversion_target_bps,
+        ou_expected_pullback_bps,
     })
 }
 
@@ -304,6 +375,26 @@ pub fn raw_market_regime_trace(
                 "ou_pullback_expectation_zscore={:.4}",
                 frame.ou_pullback_expectation_zscore
             ),
+            format!(
+                "pythagorean_speed_bps_per_bar={:.4}",
+                frame.pythagorean_speed_bps_per_bar
+            ),
+            format!(
+                "pythagorean_distance_to_last_sweep={:.4}",
+                frame.pythagorean_distance_to_last_sweep
+            ),
+            format!(
+                "pythagorean_distance_to_last_fvg={:.4}",
+                frame.pythagorean_distance_to_last_fvg
+            ),
+            format!(
+                "ou_mean_reversion_target_bps={:.4}",
+                frame.ou_mean_reversion_target_bps
+            ),
+            format!(
+                "ou_expected_pullback_bps={:.4}",
+                frame.ou_expected_pullback_bps
+            ),
         ],
     }
 }
@@ -335,6 +426,26 @@ pub fn raw_liquidity_context_trace(
             format!(
                 "ou_pullback_expectation_zscore={:.4}",
                 frame.ou_pullback_expectation_zscore
+            ),
+            format!(
+                "pythagorean_speed_bps_per_bar={:.4}",
+                frame.pythagorean_speed_bps_per_bar
+            ),
+            format!(
+                "pythagorean_distance_to_last_sweep={:.4}",
+                frame.pythagorean_distance_to_last_sweep
+            ),
+            format!(
+                "pythagorean_distance_to_last_fvg={:.4}",
+                frame.pythagorean_distance_to_last_fvg
+            ),
+            format!(
+                "ou_mean_reversion_target_bps={:.4}",
+                frame.ou_mean_reversion_target_bps
+            ),
+            format!(
+                "ou_expected_pullback_bps={:.4}",
+                frame.ou_expected_pullback_bps
             ),
         ],
     }
@@ -932,6 +1043,17 @@ mod frame_feature_tests {
         assert!(frame.ou_reversion_speed_per_bar.is_finite());
         assert!(frame.ou_pullback_expectation_zscore.is_finite());
         assert!(frame.ou_half_life_bars.is_finite());
+        assert!(frame.pythagorean_speed_bps_per_bar.is_finite());
+        assert!(
+            frame.pythagorean_distance_to_last_sweep.is_nan()
+                || frame.pythagorean_distance_to_last_sweep.is_finite()
+        );
+        assert!(
+            frame.pythagorean_distance_to_last_fvg.is_nan()
+                || frame.pythagorean_distance_to_last_fvg.is_finite()
+        );
+        assert!(frame.ou_mean_reversion_target_bps.is_finite());
+        assert!(frame.ou_expected_pullback_bps.is_finite());
     }
 
     #[test]
@@ -949,5 +1071,29 @@ mod frame_feature_tests {
                 .abs()
                 >= 0.0
         );
+    }
+
+    #[test]
+    fn test_pythagorean_and_ou_features_computed() {
+        let candles = sample_candles(100, 0.5);
+        let frame = build_frame_features(&candles).unwrap();
+
+        // Pythagorean speed should be non-negative
+        assert!(frame.pythagorean_speed_bps_per_bar >= 0.0);
+
+        // OU mean reversion target should be finite and within bounds
+        assert!(frame.ou_mean_reversion_target_bps.is_finite());
+        assert!(frame.ou_mean_reversion_target_bps >= -10_000.0);
+        assert!(frame.ou_mean_reversion_target_bps <= 10_000.0);
+
+        // OU expected pullback should be non-negative and bounded
+        assert!(frame.ou_expected_pullback_bps >= 0.0);
+        assert!(frame.ou_expected_pullback_bps <= 10_000.0);
+
+        // Pythagorean speed should equal sqrt(dx^2 + dy^2) / n_bars
+        let dx = frame.normalized_distance_to_range_mid_bps.abs();
+        let dy = (candles.len() as f64 / 100.0).clamp(0.0, 1.0) * 10_000.0;
+        let expected_speed = (dx.powi(2) + dy.powi(2)).sqrt() / candles.len() as f64;
+        assert!((frame.pythagorean_speed_bps_per_bar - expected_speed).abs() < 1e-6);
     }
 }
