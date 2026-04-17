@@ -976,17 +976,44 @@ impl FactorDefinition {
                     .iter()
                     .map(|item| item.close)
                     .collect::<Vec<_>>();
-                let primary_returns = close_returns(&primary_closes);
-                let pair_returns = close_returns(&pair_closes);
-                let correlation = Correlation::pearson(&primary_returns, &pair_returns);
-                let divergence = Divergence::detect(
-                    &primary_closes,
-                    &pair_closes,
-                    lookback.min(primary_closes.len().saturating_sub(1)),
-                )
-                .last()
-                .copied()
-                .unwrap_or(false);
+                let aligned_len = primary_closes.len().min(pair_closes.len());
+                if aligned_len < 3 {
+                    return build_signal(
+                        &self.name,
+                        self.category,
+                        candle.timestamp,
+                        0.0,
+                        0.05,
+                        "insufficient_aligned_cross_market_samples".to_string(),
+                    );
+                }
+                let primary_closes = &primary_closes[..aligned_len];
+                let pair_closes = &pair_closes[..aligned_len];
+                let primary_returns = close_returns(primary_closes);
+                let pair_returns = close_returns(pair_closes);
+                let return_len = primary_returns.len().min(pair_returns.len());
+                if return_len < 2 {
+                    return build_signal(
+                        &self.name,
+                        self.category,
+                        candle.timestamp,
+                        0.0,
+                        0.05,
+                        "insufficient_aligned_cross_market_returns".to_string(),
+                    );
+                }
+                let primary_returns = &primary_returns[..return_len];
+                let pair_returns = &pair_returns[..return_len];
+                let correlation = Correlation::pearson(primary_returns, pair_returns);
+                let safe_lookback = lookback.min(aligned_len.saturating_sub(1));
+                let divergence = if safe_lookback < 2 {
+                    false
+                } else {
+                    Divergence::detect(primary_closes, pair_closes, safe_lookback)
+                        .last()
+                        .copied()
+                        .unwrap_or(false)
+                };
                 let primary_ret = total_return(primary_window);
                 let pair_ret = total_return(pair_window);
                 let relative_strength = primary_ret - pair_ret;
@@ -1190,5 +1217,35 @@ mod tests {
             last.direction,
             Direction::Bull | Direction::Bear | Direction::Neutral
         ));
+    }
+
+    #[test]
+    fn test_cross_market_smt_handles_short_aligned_series_without_panic() {
+        let definition = FactorDefinition::cross_market_smt();
+        let candles = candles(25);
+        let paired = (0..19)
+            .map(|index| {
+                let base = 200.0 + index as f64 * 0.25;
+                Candle {
+                    timestamp: Utc.with_ymd_and_hms(2024, 1, 1, 0, 0, 0).unwrap()
+                        + Duration::minutes(index as i64),
+                    open: base,
+                    high: base + 0.4,
+                    low: base - 0.3,
+                    close: base + 0.2,
+                    volume: 1000.0,
+                }
+            })
+            .collect::<Vec<_>>();
+        let context = FactorContext {
+            paired_candles: Some(&paired),
+            auxiliary: None,
+            regime: None,
+        };
+
+        let series = definition.evaluate(&candles, &context).unwrap();
+
+        assert_eq!(series.signals.len(), candles.len());
+        assert!(series.signals.iter().all(|signal| signal.confidence >= 0.0));
     }
 }

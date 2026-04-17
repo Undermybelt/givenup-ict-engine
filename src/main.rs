@@ -1785,6 +1785,7 @@ fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
         dataset_comparability: report.supporting.dataset_comparability.clone(),
         pre_bayes_filter: Some(report.supporting.pre_bayes_evidence_filter.clone()),
         belief: report.supporting.canonical_belief_report.clone(),
+        ict_structure: None,
     });
     let scorecard_summary = format_executor_summary_lines(&ensemble_vote.executor_summaries);
     let persisted_scorecards =
@@ -6570,6 +6571,7 @@ fn persist_analyze_run(
         dataset_comparability: report.supporting.dataset_comparability.clone(),
         pre_bayes_filter: Some(report.supporting.pre_bayes_evidence_filter.clone()),
         belief: report.supporting.canonical_belief_report.clone(),
+        ict_structure: None,
     });
     let canonical_scorecards =
         load_ensemble_executor_scorecards(state_dir, &report.symbol).unwrap_or_default();
@@ -13550,7 +13552,15 @@ fn build_factor_mutation_metric_set(
             )?;
             let bridge_diff = pre_bayes_entry_quality_bridge_diff(&pipeline.entry_quality_bridge);
             let soft_diff = pre_bayes_soft_evidence_diff(&pipeline.bbn_support.pre_bayes_filter);
-            let score = expansion_factor_scores_for_market(registry, candles, 20, 1.5)?
+            let expansion_lookback = registry
+                .get(best_factor)
+                .map(|f| f.parameter("lookback", 20.0) as usize)
+                .unwrap_or(20);
+            let expansion_atr_mult = registry
+                .get(best_factor)
+                .map(|f| f.parameter("expansion_threshold", 1.5))
+                .unwrap_or(1.5);
+            let score = expansion_factor_scores_for_market(registry, candles, expansion_lookback, expansion_atr_mult)?
                 .into_iter()
                 .find(|item| item.factor_name == best_factor);
             metrics.expansion_selected_direction =
@@ -20437,6 +20447,7 @@ mod tests {
             dataset_comparability: report.supporting.dataset_comparability.clone(),
             pre_bayes_filter: Some(report.supporting.pre_bayes_evidence_filter.clone()),
             belief: report.supporting.canonical_belief_report.clone(),
+            ict_structure: None,
         });
         let summary = format_executor_summary_lines(&ensemble_vote.executor_summaries);
         assert!(ensemble_vote
