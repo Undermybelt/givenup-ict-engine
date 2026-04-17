@@ -10,6 +10,10 @@ pub const TRAIN_RUNS_FILE: &str = "train_runs.json";
 pub const ANALYZE_RUNS_FILE: &str = "analyze_runs.json";
 pub const RESEARCH_RUNS_FILE: &str = "research_runs.json";
 pub const FACTOR_MUTATION_RUNS_FILE: &str = "factor_mutation_runs.json";
+pub const FACTOR_AUTORESEARCH_SESSIONS_FILE: &str = "factor_autoresearch_sessions.json";
+pub const FACTOR_AUTORESEARCH_ATTEMPTS_FILE: &str = "factor_autoresearch_attempts.json";
+pub const FACTOR_AUTORESEARCH_LIVE_FILE: &str = "factor_autoresearch_live.json";
+pub const FACTOR_AUTORESEARCH_FINAL_FILE: &str = "factor_autoresearch_final.json";
 pub const BACKTEST_RUNS_FILE: &str = "backtest_runs.json";
 pub const UPDATE_RUNS_FILE: &str = "update_runs.json";
 pub const WORKFLOW_SNAPSHOT_FILE: &str = "workflow_snapshot.json";
@@ -1336,6 +1340,82 @@ pub struct FactorMutationRunRecord {
     pub paired_data_path: Option<String>,
     pub mutation_spec: FactorMutationSpec,
     pub evaluation: FactorMutationEvaluation,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct FactorAutoresearchDecision {
+    pub status: String,
+    pub reason: String,
+    pub promoted_to_baseline: bool,
+    pub baseline_score_before: f64,
+    pub candidate_score: f64,
+    pub score_delta: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct FactorAutoresearchAttempt {
+    pub session_id: String,
+    pub attempt_id: String,
+    pub timestamp: DateTime<Utc>,
+    pub symbol: String,
+    pub source_command: String,
+    pub base_factor: String,
+    #[serde(default)]
+    pub baseline_mutation_id_before: Option<String>,
+    pub candidate_mutation_spec: FactorMutationSpec,
+    pub evaluation: FactorMutationEvaluation,
+    pub decision: FactorAutoresearchDecision,
+    #[serde(default)]
+    pub branch_summary: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct FactorAutoresearchSession {
+    pub session_id: String,
+    pub started_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+    pub symbol: String,
+    pub objective: String,
+    pub source_command: String,
+    pub base_factor: String,
+    #[serde(default)]
+    pub baseline_mutation_id: Option<String>,
+    pub baseline_score: f64,
+    pub attempts_total: usize,
+    pub kept_attempts: usize,
+    pub discarded_attempts: usize,
+    #[serde(default)]
+    pub last_attempt_id: Option<String>,
+    pub status: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct FactorAutoresearchLiveSnapshot {
+    pub session_id: String,
+    pub started_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+    pub symbol: String,
+    pub objective: String,
+    pub current_iteration: usize,
+    pub attempts_total: usize,
+    pub kept_attempts: usize,
+    pub discarded_attempts: usize,
+    #[serde(default)]
+    pub current_candidate_spec: Option<FactorMutationSpec>,
+    #[serde(default)]
+    pub latest_attempt_id: Option<String>,
+    pub status: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct FactorAutoresearchSummary {
+    pub session: FactorAutoresearchSession,
+    #[serde(default)]
+    pub latest_attempt: Option<FactorAutoresearchAttempt>,
+    #[serde(default)]
+    pub next_mutation_spec_template: Option<FactorMutationSpec>,
+    #[serde(default)]
+    pub live_snapshot: Option<FactorAutoresearchLiveSnapshot>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

@@ -5,14 +5,17 @@ use std::path::Path;
 
 use crate::state::types::{
     AnalyzeRunRecord, ArtifactLedgerEntry, BacktestRunRecord, EnsembleExecutorScorecard,
-    EnsembleVoteRecord, ExecutionCandidateArtifact, FactorMutationRunRecord, LearningState,
-    PendingUpdateArtifact, PreBayesPolicyRecord, ResearchRunRecord, TrainRunRecord,
+    EnsembleVoteRecord, ExecutionCandidateArtifact, FactorAutoresearchAttempt,
+    FactorAutoresearchLiveSnapshot, FactorAutoresearchSession, FactorMutationRunRecord,
+    LearningState, PendingUpdateArtifact, PreBayesPolicyRecord, ResearchRunRecord, TrainRunRecord,
     UpdateRunRecord, ANALYZE_RUNS_FILE, ARTIFACT_LEDGER_FILE, BACKTEST_RUNS_FILE,
     ENSEMBLE_EXECUTOR_SCORECARDS_FILE, ENSEMBLE_VOTE_FILE, ENSEMBLE_VOTE_HISTORY_FILE,
-    EXECUTION_CANDIDATE_FILE, EXECUTION_CANDIDATE_HISTORY_FILE, FACTOR_MUTATION_RUNS_FILE,
-    LEARNING_STATE_FILE, PENDING_UPDATE_ARTIFACT_FILE, PENDING_UPDATE_HISTORY_FILE,
-    PRE_BAYES_POLICY_HISTORY_FILE, RESEARCH_RUNS_FILE, TRADE_HISTORY_FILE, TRAIN_RUNS_FILE,
-    UPDATE_RUNS_FILE, WORKFLOW_SNAPSHOT_FILE,
+    EXECUTION_CANDIDATE_FILE, EXECUTION_CANDIDATE_HISTORY_FILE, FACTOR_AUTORESEARCH_ATTEMPTS_FILE,
+    FACTOR_AUTORESEARCH_FINAL_FILE, FACTOR_AUTORESEARCH_LIVE_FILE,
+    FACTOR_AUTORESEARCH_SESSIONS_FILE, FACTOR_MUTATION_RUNS_FILE, LEARNING_STATE_FILE,
+    PENDING_UPDATE_ARTIFACT_FILE, PENDING_UPDATE_HISTORY_FILE, PRE_BAYES_POLICY_HISTORY_FILE,
+    RESEARCH_RUNS_FILE, TRADE_HISTORY_FILE, TRAIN_RUNS_FILE, UPDATE_RUNS_FILE,
+    WORKFLOW_SNAPSHOT_FILE,
 };
 
 /// Load state from JSON file
@@ -41,7 +44,7 @@ where
 }
 
 /// Save state to JSON file
-pub fn save_state<T: Serialize, P: AsRef<Path>>(
+pub fn save_state<T: Serialize + ?Sized, P: AsRef<Path>>(
     dir: P,
     symbol: &str,
     filename: &str,
@@ -140,6 +143,63 @@ pub fn append_factor_mutation_run<P: AsRef<Path>>(
     history.push(record);
     save_state(&dir, symbol, FACTOR_MUTATION_RUNS_FILE, &history)?;
     Ok(history)
+}
+
+pub fn load_factor_autoresearch_sessions<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+) -> Result<Vec<FactorAutoresearchSession>> {
+    load_state_or_default(dir, symbol, FACTOR_AUTORESEARCH_SESSIONS_FILE)
+}
+
+pub fn save_factor_autoresearch_sessions<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+    sessions: &[FactorAutoresearchSession],
+) -> Result<()> {
+    save_state(dir, symbol, FACTOR_AUTORESEARCH_SESSIONS_FILE, sessions)
+}
+
+pub fn append_factor_autoresearch_attempt<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+    attempt: FactorAutoresearchAttempt,
+) -> Result<Vec<FactorAutoresearchAttempt>> {
+    let mut history: Vec<FactorAutoresearchAttempt> =
+        load_state_or_default(&dir, symbol, FACTOR_AUTORESEARCH_ATTEMPTS_FILE)?;
+    history.push(attempt);
+    save_state(&dir, symbol, FACTOR_AUTORESEARCH_ATTEMPTS_FILE, &history)?;
+    Ok(history)
+}
+
+pub fn load_factor_autoresearch_attempts<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+) -> Result<Vec<FactorAutoresearchAttempt>> {
+    load_state_or_default(dir, symbol, FACTOR_AUTORESEARCH_ATTEMPTS_FILE)
+}
+
+pub fn load_factor_autoresearch_live_snapshot<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+) -> Result<FactorAutoresearchLiveSnapshot> {
+    load_state_or_default(dir, symbol, FACTOR_AUTORESEARCH_LIVE_FILE)
+}
+
+pub fn save_factor_autoresearch_live_snapshot<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+    snapshot: &FactorAutoresearchLiveSnapshot,
+) -> Result<()> {
+    save_state(dir, symbol, FACTOR_AUTORESEARCH_LIVE_FILE, snapshot)
+}
+
+pub fn save_factor_autoresearch_final_summary<P: AsRef<Path>, T: Serialize + ?Sized>(
+    dir: P,
+    symbol: &str,
+    summary: &T,
+) -> Result<()> {
+    save_state(dir, symbol, FACTOR_AUTORESEARCH_FINAL_FILE, summary)
 }
 
 pub fn append_analyze_run<P: AsRef<Path>>(
