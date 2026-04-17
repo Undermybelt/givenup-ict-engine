@@ -183,6 +183,54 @@ pub fn resolved_vote_scorecards(
     executor_scorecard_surface(persisted_scorecards, &vote.executor_scorecards)
 }
 
+fn push_paths_from_command_text(candidates: &mut Vec<String>, command: &str) {
+    let tokens = command
+        .split(|ch: char| ch.is_whitespace() || ch == ',' || ch == '|' || ch == ';')
+        .map(|token| token.trim_matches(|ch| ch == '\'' || ch == '"'));
+    for token in tokens {
+        if (token.starts_with('/') || token.starts_with("./") || token.starts_with("../"))
+            && (token.ends_with(".json") || token.ends_with(".csv"))
+            && !candidates.iter().any(|existing| existing == token)
+        {
+            candidates.push(token.to_string());
+        }
+    }
+}
+
+fn historical_data_candidates(snapshot: &WorkflowSnapshot) -> Vec<String> {
+    let mut candidates = Vec::new();
+    if let Some(update) = &snapshot.latest_update {
+        for line in &update.multi_timeframe_summary {
+            if let Some(path) = line.split("path=").nth(1) {
+                push_paths_from_command_text(&mut candidates, path);
+                let trimmed = path.trim();
+                if !trimmed.is_empty() && !candidates.iter().any(|existing| existing == trimmed) {
+                    candidates.push(trimmed.to_string());
+                }
+            }
+        }
+    }
+
+    push_paths_from_command_text(&mut candidates, &snapshot.blocking_truth.next_command);
+    push_paths_from_command_text(&mut candidates, &snapshot.recommended_next_command);
+    for phase in [
+        snapshot.latest_update.as_ref(),
+        snapshot.latest_research.as_ref(),
+        snapshot.latest_analyze.as_ref(),
+        snapshot.latest_backtest.as_ref(),
+        snapshot.latest_train.as_ref(),
+    ]
+    .into_iter()
+    .flatten()
+    {
+        push_paths_from_command_text(&mut candidates, &phase.recommended_next_command);
+    }
+
+    candidates.sort();
+    candidates.dedup();
+    candidates
+}
+
 pub fn build_human_workflow_status_view(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
@@ -200,21 +248,7 @@ pub fn build_human_workflow_status_view(
     let latest_phase_summary = latest_phase
         .map(|phase| phase.phase_summary.clone())
         .unwrap_or_else(|| "尚无可用阶段摘要。".to_string());
-    let selected_data_candidates = if let Some(update) = &snapshot.latest_update {
-        let mut candidates = update
-            .multi_timeframe_summary
-            .iter()
-            .filter_map(|line| line.split("path=").nth(1))
-            .map(str::trim)
-            .filter(|value| !value.is_empty())
-            .map(str::to_string)
-            .collect::<Vec<_>>();
-        candidates.sort();
-        candidates.dedup();
-        candidates
-    } else {
-        Vec::new()
-    };
+    let selected_data_candidates = historical_data_candidates(snapshot);
     let hard_block_statuses = [
         "blocked",
         "bridge_needs_confirmation",
@@ -229,7 +263,50 @@ pub fn build_human_workflow_status_view(
     } else {
         snapshot.recommended_next_command.clone()
     };
-    let human_next_action = humanize_workflow_command(&top_level_command);
+    let historical_data_gate_active = !selected_data_candidates.is_empty()
+        && (top_level_command.contains("factor-research")
+            || top_level_command.contains("factor-backtest")
+            || snapshot
+                .recommended_next_command
+                .contains("factor-research")
+            || snapshot
+                .recommended_next_command
+                .contains("factor-backtest"));
+    let historical_data_request_template = if !selected_data_candidates.is_empty() {
+        format!(
+            "Please choose one historical data path for the next research/backtest run: {}",
+            selected_data_candidates.join(", ")
+        )
+    } else {
+        String::new()
+    };
+    let user_path_input_prompt = if !selected_data_candidates.is_empty() {
+        format!(
+            "Reply with one path from the list, or paste another valid file path. Candidates: {}",
+            selected_data_candidates.join(", ")
+        )
+    } else {
+        "Reply with a historical data file path to continue research/backtest.".to_string()
+    };
+    let user_selection_pending = historical_data_gate_active
+        || top_level_command.contains("user_selected_historical_data")
+        || snapshot
+            .blocking_truth
+            .reason
+            .contains("user_selected_historical_data_missing");
+    let human_next_action = if user_selection_pending {
+        if !historical_data_request_template.is_empty() {
+            format!(
+                "Ask the user to choose the historical dataset. {} {}",
+                historical_data_request_template, user_path_input_prompt
+            )
+        } else {
+            "Ask the user to provide the historical data path before running research/backtest."
+                .to_string()
+        }
+    } else {
+        humanize_workflow_command(&top_level_command)
+    };
     let credibility_risks = snapshot
         .risk_flags
         .iter()
@@ -245,16 +322,43 @@ pub fn build_human_workflow_status_view(
         let surface = build_ensemble_vote_surface(vote, persisted_scorecards);
         serde_json::to_value(surface).expect("serialize ensemble vote surface")
     });
+    let agent_fill_path_instructions = if selected_data_candidates.is_empty() {
+        Vec::new()
+    } else {
+        selected_data_candidates
+            .iter()
+            .map(|path| {
+                format!(
+                    "Ask user to confirm --data {} before running factor-research/factor-backtest.",
+                    path
+                )
+            })
+            .collect::<Vec<_>>()
+    };
     serde_json::json!({
         "symbol": snapshot.symbol,
         "current_status": {
             "focus_phase": snapshot.current_focus_phase,
             "focus_reason": snapshot.current_focus_reason,
-            "blocking_stage": snapshot.blocking_truth.stage,
-            "blocking_status": snapshot.blocking_truth.status,
-            "blocking_reason": snapshot.blocking_truth.reason,
-            "hard_block_active": hard_block_active,
-            "top_level_command_source": if hard_block_active {
+            "blocking_stage": if historical_data_gate_active {
+                snapshot.current_focus_phase.clone()
+            } else {
+                snapshot.blocking_truth.stage.clone()
+            },
+            "blocking_status": if historical_data_gate_active {
+                "blocked".to_string()
+            } else {
+                snapshot.blocking_truth.status.clone()
+            },
+            "blocking_reason": if historical_data_gate_active {
+                "user_selected_historical_data_missing".to_string()
+            } else {
+                snapshot.blocking_truth.reason.clone()
+            },
+            "hard_block_active": hard_block_active || historical_data_gate_active,
+            "top_level_command_source": if historical_data_gate_active {
+                "historical_data_selection_gate"
+            } else if hard_block_active {
                 "blocking_truth"
             } else {
                 "recommended_next_command"
@@ -282,6 +386,13 @@ pub fn build_human_workflow_status_view(
             })
         },
         "what_you_should_do_now": human_next_action,
+        "what_you_should_do_now_source": if historical_data_gate_active {
+            "historical_data_selection_gate"
+        } else if hard_block_active {
+            "blocking_truth"
+        } else {
+            "recommended_next_command"
+        },
         "latest_stage": {
             "phase": latest_phase_label,
             "summary": latest_phase_summary,
@@ -291,6 +402,9 @@ pub fn build_human_workflow_status_view(
         "pending_actions": snapshot.pending_actions,
         "risk_flags": snapshot.risk_flags,
         "historical_data_candidates": selected_data_candidates,
+        "historical_data_request_template": historical_data_request_template,
+        "user_path_input_prompt": user_path_input_prompt,
+        "agent_fill_path_instructions": agent_fill_path_instructions,
         "jump_model": jump_model_workflow_summary(snapshot),
         "jump_calibration_gate": jump_calibration_gate_workflow_summary(snapshot),
         "jump_disagreement": snapshot

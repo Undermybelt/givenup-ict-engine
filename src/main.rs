@@ -8698,6 +8698,15 @@ fn execution_candidate_summary(
     }
 }
 
+fn gate_aware_recommended_next_command(stored: &str, commands: &CommandRecommendations) -> String {
+    for command in [&commands.research, &commands.backtest] {
+        if command.user_data_selection_required {
+            return render_recommended_command(command);
+        }
+    }
+    stored.to_string()
+}
+
 fn workflow_phase_snapshot_from_analyze_run(run: &AnalyzeRunRecord) -> WorkflowPhaseSnapshot {
     let bridge_diff = pre_bayes_entry_quality_bridge_diff(&run.pre_bayes_entry_quality_bridge);
     WorkflowPhaseSnapshot {
@@ -8711,7 +8720,10 @@ fn workflow_phase_snapshot_from_analyze_run(run: &AnalyzeRunRecord) -> WorkflowP
         rollback_scope: run.rollback_recommendation.scope.clone(),
         comparable_to_previous: run.dataset_comparability.comparable,
         comparison_class: run.dataset_comparability.comparison_class.clone(),
-        recommended_next_command: run.recommended_next_command.clone(),
+        recommended_next_command: gate_aware_recommended_next_command(
+            &run.recommended_next_command,
+            &run.recommended_commands,
+        ),
         phase_summary: format!(
             "selected_direction={:?} selected_entry_quality={} pre_bayes_status={} pre_bayes_quality={:.3} decision_hint={} {}",
             run.selected_direction,
@@ -8844,7 +8856,10 @@ fn workflow_phase_snapshot_from_train_run(run: &TrainRunRecord) -> WorkflowPhase
         rollback_scope: "rollback_scope_unavailable".to_string(),
         comparable_to_previous: run.dataset_comparability.comparable,
         comparison_class: run.dataset_comparability.comparison_class.clone(),
-        recommended_next_command: run.recommended_next_command.clone(),
+        recommended_next_command: gate_aware_recommended_next_command(
+            &run.recommended_next_command,
+            &run.recommended_commands,
+        ),
         phase_summary: format!(
             "final_state={} observations={} epochs={} log_likelihood={:.4} {}",
             run.final_state,
@@ -8902,7 +8917,10 @@ fn workflow_phase_snapshot_from_research_run(run: &ResearchRunRecord) -> Workflo
         rollback_scope: run.rollback_recommendation.scope.clone(),
         comparable_to_previous: run.dataset_comparability.comparable,
         comparison_class: run.dataset_comparability.comparison_class.clone(),
-        recommended_next_command: run.recommended_next_command.clone(),
+        recommended_next_command: gate_aware_recommended_next_command(
+            &run.recommended_next_command,
+            &run.recommended_commands,
+        ),
         phase_summary: format!(
             "objective={} best_factor={:?} aggregate_return={:.4} feedback_applied={} credibility={} {}",
             if run.research_objective.is_empty() {
@@ -8993,7 +9011,10 @@ fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> Workflo
         rollback_scope: run.rollback_recommendation.scope.clone(),
         comparable_to_previous: run.dataset_comparability.comparable,
         comparison_class: run.dataset_comparability.comparison_class.clone(),
-        recommended_next_command: run.recommended_next_command.clone(),
+        recommended_next_command: gate_aware_recommended_next_command(
+            &run.recommended_next_command,
+            &run.recommended_commands,
+        ),
         phase_summary: format!(
             "total_return={:.4} trade_count={} source={} coverage_1sigma={:.3} break_penalty={:.3} structural_break_detected={} structural_break_score={:.3} structural_break_index={:?}{} {}",
             run.total_return,
@@ -9074,7 +9095,10 @@ fn workflow_phase_snapshot_from_update_run(run: &UpdateRunRecord) -> WorkflowPha
         rollback_scope: run.rollback_recommendation.scope.clone(),
         comparable_to_previous: run.dataset_comparability.comparable,
         comparison_class: run.dataset_comparability.comparison_class.clone(),
-        recommended_next_command: run.recommended_next_command.clone(),
+        recommended_next_command: gate_aware_recommended_next_command(
+            &run.recommended_next_command,
+            &run.recommended_commands,
+        ),
         phase_summary: format!(
             "realized_outcome={} feedback_applied={} duplicate_feedback_skipped={} consumed_pre_bayes_gate_status={} {}",
             run.realized_outcome,
@@ -9223,6 +9247,20 @@ fn workflow_blocking_truth(
     let current_recommended_command = current_phase
         .map(|phase| phase.recommended_next_command.clone())
         .unwrap_or_default();
+    if current_recommended_command.contains("user_selected_historical_data") {
+        return WorkflowBlockingTruth {
+            stage: current_phase
+                .map(|phase| phase.phase.clone())
+                .unwrap_or_else(|| "data_selection".to_string()),
+            status: "blocked".to_string(),
+            reason: "user_selected_historical_data_missing".to_string(),
+            evidence: vec![
+                "historical data reuse requires explicit user path selection".to_string(),
+                current_recommended_command.clone(),
+            ],
+            next_command: current_recommended_command,
+        };
+    }
     if let Some(analyze) = pre_bayes_filter {
         let gate_status = analyze.pre_bayes_evidence_filter.gating_status.clone();
         let bridge_diff =
@@ -15849,7 +15887,11 @@ fn recommended_next_command(
                 .cloned()
                 .or_else(|| {
                     let command = command_for_stage(&item.stage, commands);
-                    command.ready.then(|| command.command.clone())
+                    if command.user_data_selection_required {
+                        Some(render_recommended_command(command))
+                    } else {
+                        command.ready.then(|| command.command.clone())
+                    }
                 })
         })
         .or_else(|| {
@@ -15860,8 +15902,15 @@ fn recommended_next_command(
                 &commands.update,
             ]
             .into_iter()
-            .find(|command| command.ready)
-            .map(|command| command.command.clone())
+            .find_map(|command| {
+                if command.user_data_selection_required {
+                    Some(render_recommended_command(command))
+                } else if command.ready {
+                    Some(command.command.clone())
+                } else {
+                    None
+                }
+            })
         })
         .unwrap_or_default()
 }
@@ -22287,7 +22336,41 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("Ask the user to choose the historical dataset"));
+        assert!(!value["what_you_should_do_now"]
+            .as_str()
+            .unwrap()
+            .contains("Next step: ict-engine factor-research"));
+        assert_eq!(value["current_status"]["blocking_status"], "blocked");
+        assert_eq!(
+            value["current_status"]["blocking_reason"],
+            "user_selected_historical_data_missing"
+        );
+        assert_eq!(
+            value["current_status"]["top_level_command_source"],
+            "historical_data_selection_gate"
+        );
+        assert_eq!(
+            value["what_you_should_do_now_source"],
+            "historical_data_selection_gate"
+        );
         assert_eq!(value["historical_data_candidates"][0], "/tmp/a.json");
+        assert!(value["historical_data_request_template"]
+            .as_str()
+            .unwrap()
+            .contains("Please choose one historical data path"));
+        assert!(value["historical_data_request_template"]
+            .as_str()
+            .unwrap()
+            .contains("/tmp/a.json"));
+        assert!(value["agent_fill_path_instructions"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item.as_str().unwrap().contains("--data /tmp/a.json")));
+        assert!(value["user_path_input_prompt"]
+            .as_str()
+            .unwrap()
+            .contains("Reply with one path"));
         assert_eq!(value["ensemble_consensus"]["final_action"], "observe");
         assert_eq!(value["ensemble_consensus"]["hard_block"]["active"], true);
         assert_eq!(
