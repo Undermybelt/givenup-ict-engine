@@ -1,7 +1,7 @@
 {
   "summary": {
     "root_help_has_version_flag": true,
-    "command_count": 20,
+    "command_count": 22,
     "commands_with_missing_help": 0,
     "status": "pass"
   },
@@ -57,6 +57,18 @@
     {
       "command": "factor-autoresearch-status",
       "option_count": 6,
+      "missing_description_count": 0,
+      "missing_descriptions": []
+    },
+    {
+      "command": "research-verdict",
+      "option_count": 3,
+      "missing_description_count": 0,
+      "missing_descriptions": []
+    },
+    {
+      "command": "evidence-quality-breakdown",
+      "option_count": 4,
       "missing_description_count": 0,
       "missing_descriptions": []
     },
