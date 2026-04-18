@@ -117,7 +117,12 @@ Use:
 - `agent` for next-step automation surface
 - `human` for release-style readable summary
 
-`analyze --agent` keeps: direction, entry state, pre-Bayes gate, next command, machine `decision_hint`, human `decision_summary`, top evidence, top risks, and top next actions.
+Agent consumers should prefer:
+- `decision_summary` over `decision_hint_raw`
+- `next_step` for routing and gating
+- `next_command` only as a display/backward-compatibility string
+
+`analyze --agent` keeps: direction, entry state, pre-Bayes gate, next command, machine `decision_hint_raw`, human `decision_summary`, structured `next_step`, top evidence, top risks, and top next actions.
 
 `workflow-status --agent` is thinner than `--compact`. It keeps: focus, block state, next command, top disagreement, top actionable artifact, and ensemble headline.
 
