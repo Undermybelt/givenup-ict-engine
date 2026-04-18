@@ -3,16 +3,24 @@
 lookback [15, 16, 18, 20] × expansion [1.40, 1.45, 1.50, 1.60] = 16 runs.
 Each run isolated state_dir."""
 
-import json, subprocess, time, pathlib, itertools
+import itertools
+import json
+import pathlib
+import subprocess
+import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
-REPO = pathlib.Path('/Users/thrill3r/projects-ict-engine/ict-engine')
+REPO = pathlib.Path(__file__).resolve().parents[2]
 PHASE_DIR = REPO / 'state_isolated_v2d'
 PHASE_DIR.mkdir(parents=True, exist_ok=True)
 RESULTS_FILE = PHASE_DIR / 'results.json'
 
-DATA_BASE = '/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf'
-BIN = str(REPO / 'target' / 'release' / 'ict-engine')
+DEFAULT_DATA_ROOT = REPO.parent.parent / 'Downloads' / 'Tomac' / 'ict-cleaned-mtf'
+DATA_BASE = pathlib.Path(
+    subprocess.os.environ.get('ICT_ENGINE_DATA_ROOT', DEFAULT_DATA_ROOT)
+).expanduser().resolve()
+DEFAULT_BIN = REPO / 'target' / 'release' / 'ict-engine'
+BIN = pathlib.Path(subprocess.os.environ.get('ICT_ENGINE_BIN', DEFAULT_BIN)).expanduser().resolve()
 
 FIXED = {
     'sweep_atr_multiplier': 1.05,
@@ -40,6 +48,9 @@ for i, combo in enumerate(itertools.product(*GRID.values()), 1):
 
 TOTAL = len(specs)
 print(f'Total specs: {TOTAL} (each with isolated state_dir)')
+print(f'Repo: {REPO}')
+print(f'Data root: {DATA_BASE}')
+print(f'Binary: {BIN}')
 
 
 def extract_json(text):
@@ -48,8 +59,10 @@ def extract_json(text):
         return None
     depth = 0
     for ci, ch in enumerate(text[first_brace:]):
-        if ch == '{': depth += 1
-        elif ch == '}': depth -= 1
+        if ch == '{':
+            depth += 1
+        elif ch == '}':
+            depth -= 1
         if depth == 0:
             try:
                 return json.loads(text[first_brace:first_brace + ci + 1])
@@ -77,14 +90,14 @@ def run_one(args):
     spec_path.write_text(json.dumps(spec, indent=2))
 
     cmd = [
-        BIN, 'factor-research', '--symbol', 'NQ',
-        '--data', f'{DATA_BASE}/cleaned-15m/nq.continuous-15m.json',
-        '--data-1m', f'{DATA_BASE}/cleaned-1m/nq.continuous-1m.json',
-        '--data-5m', f'{DATA_BASE}/cleaned-5m/nq.continuous-5m.json',
-        '--data-15m', f'{DATA_BASE}/cleaned-15m/nq.continuous-15m.json',
-        '--data-1h', f'{DATA_BASE}/cleaned-1h/nq.continuous-1h.json',
-        '--data-4h', f'{DATA_BASE}/cleaned-4h/nq.continuous-4h.json',
-        '--data-1d', f'{DATA_BASE}/cleaned-1d/nq.continuous-1d.json',
+        str(BIN), 'factor-research', '--symbol', 'NQ',
+        '--data', str(DATA_BASE / 'cleaned-15m' / 'nq.continuous-15m.json'),
+        '--data-1m', str(DATA_BASE / 'cleaned-1m' / 'nq.continuous-1m.json'),
+        '--data-5m', str(DATA_BASE / 'cleaned-5m' / 'nq.continuous-5m.json'),
+        '--data-15m', str(DATA_BASE / 'cleaned-15m' / 'nq.continuous-15m.json'),
+        '--data-1h', str(DATA_BASE / 'cleaned-1h' / 'nq.continuous-1h.json'),
+        '--data-4h', str(DATA_BASE / 'cleaned-4h' / 'nq.continuous-4h.json'),
+        '--data-1d', str(DATA_BASE / 'cleaned-1d' / 'nq.continuous-1d.json'),
         '--objective', 'expansion_manipulation',
         '--ensemble', '--emit-mutation-evaluation',
         '--state-dir', str(run_state),
@@ -143,9 +156,8 @@ if __name__ == '__main__':
     results = sorted(results, key=lambda r: r['i'])
     RESULTS_FILE.write_text(json.dumps(results, indent=2))
 
-    # Combined table with v2c results
     print(f'\n{"=" * 80}')
-    print(f'Combined results: v2c (9 runs) + v2d (16 runs)')
+    print('Combined results: v2c (9 runs) + v2d (16 runs)')
     print(f'{"=" * 80}')
 
     all_results = list(results)

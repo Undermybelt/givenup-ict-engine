@@ -3,16 +3,23 @@
 Each run uses baseline structure_ict defaults with expansion_preview=true,
 modifying only environment variables that control evidence_quality_score."""
 
-import json, subprocess, time, pathlib, os, itertools
+import itertools
+import json
+import os
+import pathlib
+import subprocess
+import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
-REPO = pathlib.Path('/Users/thrill3r/projects-ict-engine/ict-engine')
+REPO = pathlib.Path(__file__).resolve().parents[2]
 PHASE_DIR = REPO / 'state_policy_tuning'
 PHASE_DIR.mkdir(parents=True, exist_ok=True)
 RESULTS_FILE = PHASE_DIR / 'results.json'
 
-DATA_BASE = '/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf'
-BIN = str(REPO / 'target' / 'release' / 'ict-engine')
+DEFAULT_DATA_ROOT = REPO.parent.parent / 'Downloads' / 'Tomac' / 'ict-cleaned-mtf'
+DATA_BASE = pathlib.Path(os.environ.get('ICT_ENGINE_DATA_ROOT', DEFAULT_DATA_ROOT)).expanduser().resolve()
+DEFAULT_BIN = REPO / 'target' / 'release' / 'ict-engine'
+BIN = pathlib.Path(os.environ.get('ICT_ENGINE_BIN', DEFAULT_BIN)).expanduser().resolve()
 
 DEFAULTS = {
     'lookback': 20.0,
@@ -26,15 +33,11 @@ DEFAULTS = {
     'post_sweep_displacement_weight': 0.12,
 }
 
-# Policy tuning configs
 CONFIGS = [
-    # baseline env (just for comparison)
     {'name': 'baseline', 'env': {}},
-    # lower hard_pass threshold
     {'name': 'hardpass_070', 'env': {'ICT_ENGINE_PREBAYES_HARD_PASS_QUALITY_THRESHOLD': '0.70'}},
     {'name': 'hardpass_065', 'env': {'ICT_ENGINE_PREBAYES_HARD_PASS_QUALITY_THRESHOLD': '0.65'}},
     {'name': 'hardpass_060', 'env': {'ICT_ENGINE_PREBAYES_HARD_PASS_QUALITY_THRESHOLD': '0.60'}},
-    # lower conflict penalties
     {'name': 'conflict_soft', 'env': {
         'ICT_ENGINE_PREBAYES_DIRECTIONAL_CONFLICT_PENALTY': '0.10',
         'ICT_ENGINE_PREBAYES_MIXED_ALIGNMENT_PENALTY': '0.05',
@@ -47,7 +50,6 @@ CONFIGS = [
     {'name': 'liquidity_soft', 'env': {
         'ICT_ENGINE_PREBAYES_HOSTILE_LIQUIDITY_PENALTY': '0.05',
     }},
-    # combined configs
     {'name': 'combined_070', 'env': {
         'ICT_ENGINE_PREBAYES_HARD_PASS_QUALITY_THRESHOLD': '0.70',
         'ICT_ENGINE_PREBAYES_DIRECTIONAL_CONFLICT_PENALTY': '0.10',
@@ -84,8 +86,10 @@ def extract_json(text):
         return None
     depth = 0
     for ci, ch in enumerate(text[first_brace:]):
-        if ch == '{': depth += 1
-        elif ch == '}': depth -= 1
+        if ch == '{':
+            depth += 1
+        elif ch == '}':
+            depth -= 1
         if depth == 0:
             try:
                 return json.loads(text[first_brace:first_brace + ci + 1])
@@ -116,14 +120,14 @@ def run_one(args):
     env.update(cfg['env'])
 
     cmd = [
-        BIN, 'factor-research', '--symbol', 'NQ',
-        '--data', f'{DATA_BASE}/cleaned-15m/nq.continuous-15m.json',
-        '--data-1m', f'{DATA_BASE}/cleaned-1m/nq.continuous-1m.json',
-        '--data-5m', f'{DATA_BASE}/cleaned-5m/nq.continuous-5m.json',
-        '--data-15m', f'{DATA_BASE}/cleaned-15m/nq.continuous-15m.json',
-        '--data-1h', f'{DATA_BASE}/cleaned-1h/nq.continuous-1h.json',
-        '--data-4h', f'{DATA_BASE}/cleaned-4h/nq.continuous-4h.json',
-        '--data-1d', f'{DATA_BASE}/cleaned-1d/nq.continuous-1d.json',
+        str(BIN), 'factor-research', '--symbol', 'NQ',
+        '--data', str(DATA_BASE / 'cleaned-15m' / 'nq.continuous-15m.json'),
+        '--data-1m', str(DATA_BASE / 'cleaned-1m' / 'nq.continuous-1m.json'),
+        '--data-5m', str(DATA_BASE / 'cleaned-5m' / 'nq.continuous-5m.json'),
+        '--data-15m', str(DATA_BASE / 'cleaned-15m' / 'nq.continuous-15m.json'),
+        '--data-1h', str(DATA_BASE / 'cleaned-1h' / 'nq.continuous-1h.json'),
+        '--data-4h', str(DATA_BASE / 'cleaned-4h' / 'nq.continuous-4h.json'),
+        '--data-1d', str(DATA_BASE / 'cleaned-1d' / 'nq.continuous-1d.json'),
         '--objective', 'expansion_manipulation',
         '--ensemble', '--emit-mutation-evaluation',
         '--state-dir', str(run_state),
@@ -164,6 +168,9 @@ if __name__ == '__main__':
     done_ids = {r['i'] for r in existing}
     todo = [(i, cfg) for i, cfg in enumerate(CONFIGS, 1) if i not in done_ids]
     print(f'Total configs: {len(CONFIGS)}, done: {len(done_ids)}, remaining: {len(todo)}')
+    print(f'Repo: {REPO}')
+    print(f'Data root: {DATA_BASE}')
+    print(f'Binary: {BIN}')
 
     results = list(existing)
     with ProcessPoolExecutor(max_workers=4) as pool:
@@ -177,8 +184,10 @@ if __name__ == '__main__':
                 RESULTS_FILE.write_text(json.dumps(results_sorted, indent=2))
                 d = row['score_delta']
                 d_str = f'{d:+.4f}' if d is not None else 'N/A'
+                score_after = row['score_after']
+                score_after_str = f'{score_after:.4f}' if score_after is not None else 'N/A'
                 print(f'[{len(results) - len(existing)}/{len(todo)}] {row["config"]}: '
-                      f'score_after={row["score_after"]:.4f} delta={d_str} gate={row["gate_after"]} bridge={row["bridge_gap_after"]}')
+                      f'score_after={score_after_str} delta={d_str} gate={row["gate_after"]} bridge={row["bridge_gap_after"]}')
             except Exception as e:
                 print(f'config {i}: EXCEPTION {e}')
 
@@ -186,7 +195,7 @@ if __name__ == '__main__':
     RESULTS_FILE.write_text(json.dumps(results, indent=2))
 
     print(f'\n{"=" * 80}')
-    print(f'Policy Tuning Results')
+    print('Policy Tuning Results')
     print(f'{"=" * 80}')
     print(f'\n{"config":<15} {"score":>8} {"delta":>8} {"gate":>15} {"bridge":>8}')
     print('-' * 60)

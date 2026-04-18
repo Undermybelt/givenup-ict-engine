@@ -2,14 +2,20 @@
 """Phase 2: Run 4 cluster autoresearch sessions in parallel.
 Each cluster gets its own state_dir to avoid cross-contamination."""
 
-import json, subprocess, pathlib, time
+import json
+import pathlib
+import subprocess
+import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 
-REPO = pathlib.Path('/Users/thrill3r/projects-ict-engine/ict-engine')
-DATA_BASE = '/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf'
-BIN = str(REPO / 'target' / 'release' / 'ict-engine')
+REPO = pathlib.Path(__file__).resolve().parents[2]
+DEFAULT_DATA_ROOT = REPO.parent.parent / 'Downloads' / 'Tomac' / 'ict-cleaned-mtf'
+DATA_BASE = pathlib.Path(
+    subprocess.os.environ.get('ICT_ENGINE_DATA_ROOT', DEFAULT_DATA_ROOT)
+).expanduser().resolve()
+DEFAULT_BIN = REPO / 'target' / 'release' / 'ict-engine'
+BIN = pathlib.Path(subprocess.os.environ.get('ICT_ENGINE_BIN', DEFAULT_BIN)).expanduser().resolve()
 
-# Run5 best params as base
 RUN5_BASE = {
     'lookback': 10.0,
     'expansion_threshold': 1.25,
@@ -82,7 +88,6 @@ def run_cluster(cluster):
     state_dir = str(REPO / cluster['state_dir'])
     pathlib.Path(state_dir).mkdir(parents=True, exist_ok=True)
 
-    # Build seed spec: run5 base + cluster-specific overrides
     params = {**RUN5_BASE, **cluster['overrides']}
     spec = {
         'mutation_id': f'cluster-{cluster["name"]}-001',
@@ -103,14 +108,14 @@ def run_cluster(cluster):
     spec_path.write_text(json.dumps(spec, indent=2))
 
     cmd = [
-        BIN, 'factor-autoresearch', '--symbol', 'NQ',
-        '--data', f'{DATA_BASE}/cleaned-15m/nq.continuous-15m.json',
-        '--data-1m', f'{DATA_BASE}/cleaned-1m/nq.continuous-1m.json',
-        '--data-5m', f'{DATA_BASE}/cleaned-5m/nq.continuous-5m.json',
-        '--data-15m', f'{DATA_BASE}/cleaned-15m/nq.continuous-15m.json',
-        '--data-1h', f'{DATA_BASE}/cleaned-1h/nq.continuous-1h.json',
-        '--data-4h', f'{DATA_BASE}/cleaned-4h/nq.continuous-4h.json',
-        '--data-1d', f'{DATA_BASE}/cleaned-1d/nq.continuous-1d.json',
+        str(BIN), 'factor-autoresearch', '--symbol', 'NQ',
+        '--data', str(DATA_BASE / 'cleaned-15m' / 'nq.continuous-15m.json'),
+        '--data-1m', str(DATA_BASE / 'cleaned-1m' / 'nq.continuous-1m.json'),
+        '--data-5m', str(DATA_BASE / 'cleaned-5m' / 'nq.continuous-5m.json'),
+        '--data-15m', str(DATA_BASE / 'cleaned-15m' / 'nq.continuous-15m.json'),
+        '--data-1h', str(DATA_BASE / 'cleaned-1h' / 'nq.continuous-1h.json'),
+        '--data-4h', str(DATA_BASE / 'cleaned-4h' / 'nq.continuous-4h.json'),
+        '--data-1d', str(DATA_BASE / 'cleaned-1d' / 'nq.continuous-1d.json'),
         '--objective', 'expansion_manipulation',
         '--mutation-spec', str(spec_path),
         '--iterations', '3',
@@ -136,6 +141,9 @@ def run_cluster(cluster):
 
 if __name__ == '__main__':
     print(f'Running {len(CLUSTERS)} cluster autoresearch sessions in parallel...')
+    print(f'Repo: {REPO}')
+    print(f'Data root: {DATA_BASE}')
+    print(f'Binary: {BIN}')
     results = []
     with ProcessPoolExecutor(max_workers=4) as pool:
         futures = {pool.submit(run_cluster, c): c['name'] for c in CLUSTERS}
