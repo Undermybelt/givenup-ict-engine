@@ -13,6 +13,7 @@ pub struct ExpansionFactorPipelineReport {
     pub parameters: BTreeMap<String, f64>,
     pub latest_signal: ExpansionLatestSignal,
     pub probability_support: ExpansionProbabilitySupport,
+    pub paired_market_quality_report: Option<crate::factor_lab::PairedMarketQualityReport>,
     pub entry_quality_bridge: PreBayesEntryQualityBridge,
     pub bbn_support: ExpansionBbnSupport,
     pub pipeline_summary: String,

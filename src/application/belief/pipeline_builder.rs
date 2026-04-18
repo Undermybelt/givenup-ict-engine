@@ -245,7 +245,7 @@ pub fn build_expansion_factor_pipeline_report_with_registry(
             direction: format!("{:?}", signal.direction),
             value: signal.value,
             confidence: signal.confidence,
-            explanation: signal.explanation,
+            explanation: signal.explanation.clone(),
         },
         probability_support: ExpansionProbabilitySupport {
             long_support: output.diagnostics.long_support,
@@ -261,6 +261,7 @@ pub fn build_expansion_factor_pipeline_report_with_registry(
             bearish_factors: output.diagnostics.bearish_factors.clone(),
             uncertainty_factors: output.diagnostics.uncertainty_factors.clone(),
         },
+        paired_market_quality_report: signal.paired_market_quality_report.clone(),
         entry_quality_bridge,
         bbn_support: ExpansionBbnSupport {
             market_regime_label: frame.regime_label,

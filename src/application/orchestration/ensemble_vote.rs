@@ -347,6 +347,12 @@ fn map_timed_pda_label_to_setup_family(label: &str) -> String {
     .to_string()
 }
 
+fn label_contains(label: &str, needle: &str) -> bool {
+    label
+        .to_ascii_lowercase()
+        .contains(&needle.to_ascii_lowercase())
+}
+
 fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeatureVector {
     let gate = input
         .belief
@@ -420,8 +426,8 @@ fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeature
         discount_premium_correct: pre_bayes.map(|filter| filter.active_pda_count).unwrap_or(0) > 0,
         liquidity_swept: pre_bayes
             .map(|filter| {
-                filter.raw_liquidity_context_label.contains("sweep")
-                    || filter.filtered_liquidity_context_label.contains("sweep")
+                label_contains(&filter.raw_liquidity_context_label, "sweep")
+                    || label_contains(&filter.filtered_liquidity_context_label, "sweep")
             })
             .unwrap_or(false),
         signal_bar_present: pre_bayes.map(|filter| filter.active_pda_count).unwrap_or(0) > 0,
@@ -452,8 +458,8 @@ fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeature
         htf_dol_distance_ratio: 1.0,
         htf_eqx_swept: pre_bayes
             .map(|f| {
-                f.raw_liquidity_context_label.contains("sweep")
-                    || f.filtered_liquidity_context_label.contains("sweep")
+                label_contains(&f.raw_liquidity_context_label, "sweep")
+                    || label_contains(&f.filtered_liquidity_context_label, "sweep")
             })
             .unwrap_or(false),
         htf_rb_type: if pre_bayes.map(|f| f.active_pda_count).unwrap_or(0) > 0 {
@@ -471,7 +477,7 @@ fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeature
             let has_cisd = ict.map(|s| s.cisd_ltf_confirmed).unwrap_or(false);
             let has_fvg = ict.map(|s| s.fvgs_open > 0).unwrap_or(false);
             let has_mss = pre_bayes
-                .map(|f| f.filtered_liquidity_context_label.contains("mss"))
+                .map(|f| label_contains(&f.filtered_liquidity_context_label, "mss"))
                 .unwrap_or(false);
             if has_cisd && has_fvg && has_mss {
                 3
@@ -520,7 +526,7 @@ fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeature
                 count += 1;
             }
             if pre_bayes
-                .map(|f| f.filtered_liquidity_context_label.contains("mss"))
+                .map(|f| label_contains(&f.filtered_liquidity_context_label, "mss"))
                 .unwrap_or(false)
             {
                 count += 1;
@@ -573,7 +579,8 @@ fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeature
             let regime = pre_bayes
                 .map(|f| f.filtered_market_regime_label.as_str())
                 .unwrap_or("unknown");
-            match regime {
+            let regime_lower = regime.to_ascii_lowercase();
+            match regime_lower.as_str() {
                 r if r.contains("bear") || r.contains("distribution") => "bear".to_string(),
                 r if r.contains("chop") || r.contains("range") => "chop".to_string(),
                 r if r.contains("bull")
@@ -674,10 +681,10 @@ fn historical_executor_weights_from_scorecards(
         let quality_bias = (scorecard.cumulative_quality_score.max(0) as f64 / 1000.0).max(0.0);
         let score =
             (activity_bias + quality_bias + scorecard.latest_weight_hint.unwrap_or(0.0)).max(0.05);
-        if scorecard.executor.contains("catboost") {
+        if label_contains(&scorecard.executor, "catboost") {
             catboost_score += score;
         }
-        if scorecard.executor.contains("xgboost") {
+        if label_contains(&scorecard.executor, "xgboost") {
             xgboost_score += score;
         }
     }

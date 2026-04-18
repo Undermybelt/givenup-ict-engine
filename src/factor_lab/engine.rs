@@ -284,6 +284,7 @@ mod tests {
             value: weighted_score.max(0.0),
             confidence: 1.0,
             explanation: format!("weighted_score={weighted_score}"),
+            paired_market_quality_report: None,
             weight: 1.0,
             posterior_reliability: 1.0,
             regime_multiplier: 1.0,

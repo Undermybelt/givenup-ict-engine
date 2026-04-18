@@ -77,6 +77,7 @@ pub struct AdaptFactorPipelineDebugReportInput<'a> {
     pub soft_evidence_divergence: Vec<PreBayesSoftEvidenceNodeDiff>,
     pub bridge_gap_clear_threshold: f64,
     pub multi_timeframe_summary: &'a [String],
+    pub paired_market_quality_report: Option<PairedMarketQualityReport>,
 }
 
 #[derive(Debug, Clone)]
@@ -174,14 +175,22 @@ pub fn adapt_factor_pipeline_debug_report(
         raw_pre_bayes_labels: input.raw_pre_bayes_labels,
         soft_evidence_divergence: input.soft_evidence_divergence,
         bridge_gap_clear_threshold: input.bridge_gap_clear_threshold,
-        paired_market_quality_report: paired_market_quality_report_from_explanation(
-            &input.pipeline.factor_name,
-            &input.pipeline.latest_signal.explanation,
-        ),
+        paired_market_quality_report: input.paired_market_quality_report.clone().or_else(|| {
+            input
+                .pipeline
+                .paired_market_quality_report
+                .clone()
+                .or_else(|| {
+                    paired_market_quality_report_from_explanation(
+                        &input.pipeline.factor_name,
+                        &input.pipeline.latest_signal.explanation,
+                    )
+                })
+        }),
     })
 }
 
-fn paired_market_quality_report_from_explanation(
+pub(crate) fn paired_market_quality_report_from_explanation(
     factor_name: &str,
     explanation: &str,
 ) -> Option<PairedMarketQualityReport> {
