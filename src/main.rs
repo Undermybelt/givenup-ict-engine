@@ -2216,7 +2216,8 @@ fn redact_local_paths(text: &str) -> String {
                 || rest.starts_with("/home/")
                 || rest.starts_with("/tmp/")
                 || rest.starts_with("/var/")
-                || rest.starts_with("/private/");
+                || rest.starts_with("/private/")
+                || rest.starts_with("/Volumes/");
             if is_local {
                 let mut j = i;
                 while j < bytes.len() {
@@ -24384,6 +24385,37 @@ mod tests {
         assert!(agent.get("disagreements").is_none());
         assert!(agent.get("top_disagreement").is_some());
         assert!(compact.get("disagreements").is_some());
+    }
+
+    #[test]
+    fn test_redact_local_paths_covers_local_path_prefixes_and_delimiters() {
+        let input = concat!(
+            "/Users/alice/file.json ",
+            "/home/bob/file.json,",
+            "/tmp/run.json;",
+            "/var/log/app.json|",
+            "/private/tmp/a.json)",
+            "/Volumes/Data/demo.json]"
+        );
+        let redacted = redact_local_paths(input);
+        assert_eq!(redacted.matches("<local-path>").count(), 6);
+        assert!(redacted.contains("<local-path> <local-path>,<local-path>;"));
+        assert!(redacted.contains("<local-path>|<local-path>)<local-path>]"));
+    }
+
+    #[test]
+    fn test_redact_local_paths_in_value_walks_nested_strings() {
+        let mut value = serde_json::json!({
+            "top": "/Users/alice/top.json",
+            "nested": [
+                "/tmp/a.json",
+                {"inner": "/Volumes/Data/demo.json"}
+            ]
+        });
+        redact_local_paths_in_value(&mut value);
+        assert_eq!(value["top"], "<local-path>");
+        assert_eq!(value["nested"][0], "<local-path>");
+        assert_eq!(value["nested"][1]["inner"], "<local-path>");
     }
 
     #[test]
