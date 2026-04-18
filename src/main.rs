@@ -12722,16 +12722,31 @@ fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
     let attempts = load_factor_autoresearch_attempts(state_dir, symbol)?;
     let research_runs: Vec<ResearchRunRecord> = load_state_or_default(state_dir, symbol, RESEARCH_RUNS_FILE)?;
     let backtest_runs: Vec<BacktestRunRecord> = load_state_or_default(state_dir, symbol, BACKTEST_RUNS_FILE)?;
+    let mutation_runs: Vec<FactorMutationRunRecord> =
+        load_state_or_default(state_dir, symbol, FACTOR_MUTATION_RUNS_FILE)?;
     let artifact_ledger = load_artifact_ledger(state_dir, symbol)?;
 
     let mut contamination_reasons = Vec::new();
     if sessions.len() > 1 {
-        let unique_data = sessions
+        let unique_objectives = sessions
             .iter()
-            .map(|session| session.source_command.clone())
+            .map(|session| session.objective.clone())
             .collect::<BTreeSet<_>>();
-        if unique_data.len() > 1 {
-            contamination_reasons.push("multiple_autoresearch_sessions_share_one_state_dir_with_different_data_paths".to_string());
+        if unique_objectives.len() > 1 {
+            contamination_reasons.push(
+                "multiple_autoresearch_sessions_share_one_state_dir_with_different_objectives"
+                    .to_string(),
+            );
+        }
+        let unique_base_factors = sessions
+            .iter()
+            .map(|session| session.base_factor.clone())
+            .collect::<BTreeSet<_>>();
+        if unique_base_factors.len() > 1 {
+            contamination_reasons.push(
+                "multiple_autoresearch_sessions_share_one_state_dir_with_different_base_factors"
+                    .to_string(),
+            );
         }
     }
     if attempts.len() > 1 {
@@ -12742,19 +12757,70 @@ fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
         let monotonic_up = deltas.windows(2).all(|w| w[1] >= w[0]);
         let monotonic_down = deltas.windows(2).all(|w| w[1] <= w[0]);
         if monotonic_up || monotonic_down {
-            contamination_reasons.push("attempt_score_deltas_are_monotonic_within_shared_state".to_string());
+            contamination_reasons
+                .push("attempt_score_deltas_are_monotonic_within_shared_state".to_string());
+        }
+    }
+    if !research_runs.is_empty() && !backtest_runs.is_empty() {
+        let research_objectives = research_runs
+            .iter()
+            .map(|run| run.research_objective.clone())
+            .collect::<BTreeSet<_>>();
+        if research_objectives.len() > 1 {
+            contamination_reasons
+                .push("research_runs_mix_multiple_objectives_in_one_state_dir".to_string());
+        }
+    }
+    if mutation_runs.len() > 3 {
+        let unique_sources = mutation_runs
+            .iter()
+            .map(|run| run.source_command.clone())
+            .collect::<BTreeSet<_>>();
+        if unique_sources.len() > 1 {
+            contamination_reasons
+                .push("factor_mutation_runs_mix_multiple_sources_in_one_state_dir".to_string());
         }
     }
     let comparison_contaminated = !contamination_reasons.is_empty();
 
-    let best_research = research_runs
+    let best_research = research_runs.iter().max_by(|a, b| {
+        a.aggregate_return
+            .partial_cmp(&b.aggregate_return)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    let best_backtest = backtest_runs.iter().max_by(|a, b| {
+        a.total_return
+            .partial_cmp(&b.total_return)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    let cluster_scoreboard = mutation_runs.iter().fold(
+        BTreeMap::<String, (usize, f64, f64)>::new(),
+        |mut acc, run| {
+            let cluster = run
+                .mutation_spec
+                .direction_hints
+                .get("cluster_jump")
+                .cloned()
+                .unwrap_or_else(|| "none".to_string());
+            let entry = acc.entry(cluster).or_insert((0, 0.0, f64::MIN));
+            entry.0 += 1;
+            entry.1 += run.evaluation.score_delta;
+            entry.2 = entry.2.max(run.evaluation.score_delta);
+            acc
+        },
+    );
+    let best_cluster = cluster_scoreboard
         .iter()
-        .max_by(|a, b| a.aggregate_return.partial_cmp(&b.aggregate_return).unwrap_or(std::cmp::Ordering::Equal));
-    let best_backtest = backtest_runs
-        .iter()
-        .max_by(|a, b| a.total_return.partial_cmp(&b.total_return).unwrap_or(std::cmp::Ordering::Equal));
+        .max_by(|a, b| a.1 .2.partial_cmp(&b.1 .2).unwrap_or(std::cmp::Ordering::Equal));
+
     let best_known_baseline = if let Some(run) = best_research {
-        format!("research best_factor={} aggregate_return={:.3}", run.best_factor.clone().unwrap_or_else(|| "unknown".to_string()), run.aggregate_return)
+        format!(
+            "research best_factor={} aggregate_return={:.3}",
+            run.best_factor
+                .clone()
+                .unwrap_or_else(|| "unknown".to_string()),
+            run.aggregate_return
+        )
     } else if let Some(run) = best_backtest {
         format!("backtest return={:.3} trades={}", run.total_return, run.trade_count)
     } else {
@@ -12764,54 +12830,76 @@ fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
     let mut proven_bad_regions = attempts
         .iter()
         .flat_map(|attempt| attempt.evaluation.failure_tags.clone())
+        .chain(mutation_runs.iter().flat_map(|run| run.evaluation.failure_tags.clone()))
         .collect::<BTreeSet<_>>()
         .into_iter()
         .collect::<Vec<_>>();
     proven_bad_regions.sort();
 
-    let current_bottleneck = if attempts.iter().any(|attempt| {
-        attempt
-            .evaluation
-            .failure_tags
-            .iter()
-            .any(|tag| tag.contains("bridge_gap"))
-    }) {
+    let current_bottleneck = if proven_bad_regions
+        .iter()
+        .any(|tag| tag.contains("bridge_gap"))
+    {
         "bridge_gap".to_string()
-    } else if attempts.iter().any(|attempt| {
-        attempt
-            .evaluation
-            .failure_tags
-            .iter()
-            .any(|tag| tag.contains("pre_bayes"))
-    }) {
+    } else if proven_bad_regions
+        .iter()
+        .any(|tag| tag.contains("pre_bayes"))
+    {
         "pre_bayes_gate".to_string()
-    } else if attempts.iter().any(|attempt| {
-        attempt
-            .evaluation
-            .failure_tags
-            .iter()
-            .any(|tag| tag.contains("pair_quality") || tag.contains("cross_market"))
-    }) {
+    } else if proven_bad_regions
+        .iter()
+        .any(|tag| tag.contains("pair_quality") || tag.contains("cross_market"))
+    {
         "paired_data_quality".to_string()
     } else if comparison_contaminated {
         "comparison_contamination".to_string()
+    } else if best_cluster.is_some() {
+        "cluster_search_follow_up".to_string()
     } else {
         "needs_more_evidence".to_string()
     };
 
     let recommended_next_experiment = match current_bottleneck.as_str() {
-        "bridge_gap" => format!("ict-engine evidence-quality-breakdown --symbol {} --state-dir {}", shell_quote(symbol), shell_quote(state_dir)),
-        "pre_bayes_gate" => format!("ict-engine workflow-status --symbol {} --state-dir {} --phase pre-bayes-policy", shell_quote(symbol), shell_quote(state_dir)),
-        "paired_data_quality" => format!("ict-engine factor-pipeline-debug --symbol {} --data <cleaned-15m.json> --factor cross_market_smt --objective expansion_manipulation", shell_quote(symbol)),
-        "comparison_contamination" => "rerun experiments in an isolated fresh state_dir before comparing results".to_string(),
-        _ => format!("ict-engine factor-autoresearch-status --symbol {} --state-dir {} --latest-only", shell_quote(symbol), shell_quote(state_dir)),
+        "bridge_gap" => format!(
+            "ict-engine evidence-quality-breakdown --symbol {} --state-dir {}",
+            shell_quote(symbol),
+            shell_quote(state_dir)
+        ),
+        "pre_bayes_gate" => format!(
+            "ict-engine workflow-status --symbol {} --state-dir {} --phase pre-bayes-policy",
+            shell_quote(symbol),
+            shell_quote(state_dir)
+        ),
+        "paired_data_quality" => format!(
+            "ict-engine factor-pipeline-debug --symbol {} --data <cleaned-15m.json> --factor cross_market_smt --objective expansion_manipulation",
+            shell_quote(symbol)
+        ),
+        "comparison_contamination" => {
+            "rerun experiments in an isolated fresh state_dir before comparing results".to_string()
+        }
+        "cluster_search_follow_up" => {
+            let cluster = best_cluster.map(|item| item.0.as_str()).unwrap_or("none");
+            format!(
+                "continue cluster search around cluster_jump={} with isolated state_dir",
+                cluster
+            )
+        }
+        _ => format!(
+            "ict-engine factor-autoresearch-status --symbol {} --state-dir {} --latest-only",
+            shell_quote(symbol),
+            shell_quote(state_dir)
+        ),
     };
 
     let stop_or_continue = if comparison_contaminated {
         "pivot".to_string()
-    } else if best_research.map(|run| run.aggregate_return >= 0.0).unwrap_or(false) {
+    } else if best_research
+        .map(|run| run.aggregate_return >= 0.0)
+        .unwrap_or(false)
+        && !proven_bad_regions.is_empty()
+    {
         "stop_as_local_optimum".to_string()
-    } else if artifact_ledger.iter().any(|item| item.actionable) {
+    } else if artifact_ledger.iter().any(|item| item.actionable) || best_cluster.is_some() {
         "continue".to_string()
     } else {
         "needs_structural_change".to_string()
@@ -12822,7 +12910,14 @@ fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
     evidence.push(format!("autoresearch_attempts={}", attempts.len()));
     evidence.push(format!("research_runs={}", research_runs.len()));
     evidence.push(format!("backtest_runs={}", backtest_runs.len()));
+    evidence.push(format!("factor_mutation_runs={}", mutation_runs.len()));
     evidence.push(format!("artifact_rows={}", artifact_ledger.len()));
+    if let Some((cluster, (attempts, avg_delta, best_delta))) = best_cluster {
+        evidence.push(format!(
+            "best_cluster={} attempts={} avg_score_delta={:.3} best_score_delta={:.3}",
+            cluster, attempts, avg_delta / *attempts as f64, best_delta
+        ));
+    }
 
     let report = ResearchVerdictReport {
         symbol: symbol.to_string(),

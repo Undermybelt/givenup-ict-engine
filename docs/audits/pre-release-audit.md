@@ -49,10 +49,18 @@ Blocking release issues found: none.
 
 ## Remaining non-blocking gaps
 
-### 1. research truth closure surface is now present, but still intentionally shallow
+### 1. research truth closure surface is now present, and now ingests more experiment evidence
 
 Added surface:
 - `research-verdict`
+
+It now ingests and summarizes:
+- autoresearch sessions
+- autoresearch attempts
+- research runs
+- backtest runs
+- factor mutation runs / cluster hints
+- artifact ledger
 
 It emits:
 - `best_known_baseline`
@@ -61,10 +69,10 @@ It emits:
 - `recommended_next_experiment`
 - `stop_or_continue`
 - `comparison_contaminated`
+- `contamination_reasons`
 
 Remaining caveat:
-- this is a compact release-grade closure surface, not a full experiment analytics engine
-- deeper local-search / cluster-result ingestion can still improve later
+- still compact by design; it is a release-grade closure surface, not yet a full experiment analytics warehouse
 
 ### 2. evidence-quality breakdown surface is now present
 
