@@ -7,4 +7,5 @@ pub mod factor_lifecycle;
 pub mod multi_timeframe_inputs;
 pub mod orchestration;
 pub mod reflection;
+pub mod release_closure;
 pub mod reporting;
