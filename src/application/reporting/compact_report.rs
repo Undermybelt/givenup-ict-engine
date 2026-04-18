@@ -3,6 +3,7 @@ use serde::Serialize;
 #[derive(Debug, Clone, Serialize, Default)]
 pub struct CompactAnalyzeReport {
     pub verdict: String,
+    pub decision_summary: String,
     pub direction: Option<String>,
     pub entry_state: Option<String>,
     pub pre_bayes_gate: Option<String>,
@@ -32,6 +33,25 @@ fn top_k(items: &[String], limit: usize) -> Vec<String> {
     items.iter().take(limit).cloned().collect()
 }
 
+pub fn humanize_decision_hint(hint: &str) -> String {
+    let first = hint.split('|').next().unwrap_or(hint).trim();
+    let base = first.split(':').next().unwrap_or(first).trim();
+    match base {
+        "observe_only_not_comparable_to_last_analyze" => {
+            "Observe only: current data is not comparable to the previous analyze run".to_string()
+        }
+        "market_view_is_comparable_but_factor_backlog_requires_tuning" => {
+            "Tune factor backlog before treating this as a trade-ready signal".to_string()
+        }
+        "observe_only" => "Observe only: gate is not trade-ready".to_string(),
+        "pass_hard" => "High-confidence pass: trade setup cleared the hard gate".to_string(),
+        "pass_neutralized" => "Passed with caveats: confirm before execution".to_string(),
+        "recommended_command_unavailable" => "No next command is available yet".to_string(),
+        "" => "Decision unavailable".to_string(),
+        other => other.replace('_', " "),
+    }
+}
+
 pub fn build_compact_analyze_report(
     verdict: impl Into<String>,
     direction: Option<String>,
@@ -42,8 +62,10 @@ pub fn build_compact_analyze_report(
     risks: &[String],
     next_actions: &[String],
 ) -> CompactAnalyzeReport {
+    let verdict = verdict.into();
     CompactAnalyzeReport {
-        verdict: verdict.into(),
+        decision_summary: humanize_decision_hint(&verdict),
+        verdict,
         direction,
         entry_state,
         pre_bayes_gate,

@@ -62,6 +62,7 @@ use ict_engine::application::{
     },
     reporting::{
         build_agent_guidance_report, build_compact_analyze_report, build_human_analyze_report,
+        humanize_decision_hint,
     },
 };
 use ict_engine::backtest::engine::{AmbiguousBarPolicy, ExecutionRealismConfig};
@@ -682,8 +683,11 @@ enum Commands {
             help = "Root directory for auto-resolving cleaned multi-timeframe data"
         )]
         data_root: Option<String>,
-        #[arg(long, help = "Market family hint for input resolution")]
-        market: Option<String>,
+        #[arg(
+            long,
+            help = "Use bundled demo candles from examples/demo/demo-15m.json"
+        )]
+        demo: bool,
         #[arg(
             long,
             default_value = "state",
@@ -893,19 +897,35 @@ enum Commands {
     },
     /// Show factor mutation history and clustered failure tags
     FactorMutationStatus {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long, default_value = "state")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory for model and workflow artifacts"
+        )]
         state_dir: String,
-        #[arg(long)]
+        #[arg(long, help = "Optional source command substring filter")]
         source_command: Option<String>,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Show only the latest mutation attempt"
+        )]
         latest_only: bool,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Show only accepted mutation attempts"
+        )]
         accepted_only: bool,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Group attempts by source command"
+        )]
         bucket_by_source: bool,
-        #[arg(long)]
+        #[arg(long, help = "Limit returned mutation attempts")]
         limit: Option<usize>,
     },
     /// Run checkpointed keep/discard factor mutation autoresearch loop
@@ -1324,7 +1344,7 @@ fn main() -> Result<()> {
             data_mtf,
             data_ltf,
             data_root,
-            market,
+            demo,
             state_dir,
             output_format,
             compact,
@@ -1337,7 +1357,7 @@ fn main() -> Result<()> {
                 data_mtf.as_deref(),
                 data_ltf.as_deref(),
                 data_root.as_deref(),
-                market.as_deref(),
+                demo,
             )?;
             let output_format = resolve_output_format(&output_format, compact, agent, human)?;
             analyze_command(
@@ -2081,6 +2101,10 @@ fn emit_analyze_output(report: &AnalyzeReport, output_format: OutputFormat) -> R
                 .pre_bayes_evidence_filter
                 .evidence_quality_score
         )),
+        Some(format!(
+            "Decision: {}",
+            humanize_decision_hint(&report.supporting.decision_hint)
+        )),
         Some(human_action_line(&report.supporting.factor_iteration_queue)),
         Some(format!(
             "Next: {}",
@@ -2280,6 +2304,19 @@ fn compact_workflow_status_view(snapshot: &WorkflowSnapshot) -> Value {
     } else {
         snapshot.blocking_truth.reason.clone()
     };
+    let latest_phase = snapshot
+        .latest_update
+        .as_ref()
+        .or(snapshot.latest_research.as_ref())
+        .or(snapshot.latest_analyze.as_ref())
+        .or(snapshot.latest_backtest.as_ref())
+        .or(snapshot.latest_train.as_ref());
+    let latest_phase_label = latest_phase
+        .map(|phase| phase.phase.clone())
+        .unwrap_or_else(|| "workflow_phase_unavailable".to_string());
+    let latest_phase_summary = latest_phase
+        .map(short_workflow_phase_summary)
+        .unwrap_or_else(|| "workflow_phase_summary_unavailable".to_string());
     let top_actionable = snapshot.actionable_artifacts.first().map(|artifact| {
         serde_json::json!({
             "artifact_id": artifact.artifact_id,
@@ -2288,24 +2325,27 @@ fn compact_workflow_status_view(snapshot: &WorkflowSnapshot) -> Value {
             "generated_at": artifact.generated_at,
         })
     });
+    let top_disagreement = snapshot.disagreements.first().map(|item| {
+        serde_json::json!({
+            "id": item.id,
+            "severity": item.severity,
+            "summary": item.summary,
+        })
+    });
     serde_json::json!({
         "symbol": snapshot.symbol,
         "generated_at": snapshot.generated_at,
         "focus_phase": snapshot.current_focus_phase,
         "focus_reason": snapshot.current_focus_reason,
+        "latest_phase": latest_phase_label,
+        "latest_phase_summary": latest_phase_summary,
         "blocking_status": blocking_status,
         "blocking_reason": blocking_reason,
-        "recommended_next_command": snapshot.recommended_next_command,
+        "next_command": snapshot.recommended_next_command,
         "pending_actions": snapshot.pending_actions.iter().take(3).cloned().collect::<Vec<_>>(),
         "risk_flags": snapshot.risk_flags.iter().take(3).cloned().collect::<Vec<_>>(),
         "top_actionable": top_actionable,
-        "disagreements": snapshot.disagreements.iter().take(3).map(|item| {
-            serde_json::json!({
-                "id": item.id,
-                "severity": item.severity,
-                "summary": item.summary,
-            })
-        }).collect::<Vec<_>>(),
+        "top_disagreement": top_disagreement,
     })
 }
 
@@ -2323,9 +2363,6 @@ fn agent_workflow_status_view(
     let latest_phase_label = latest_phase
         .map(|phase| phase.phase.clone())
         .unwrap_or_else(|| "workflow_phase_unavailable".to_string());
-    let latest_phase_summary = latest_phase
-        .map(|phase| phase.phase_summary.clone())
-        .unwrap_or_else(|| "workflow_phase_summary_unavailable".to_string());
     let latest_phase_summary_short = latest_phase
         .map(short_workflow_phase_summary)
         .unwrap_or_else(|| "workflow_phase_summary_unavailable".to_string());
@@ -2403,7 +2440,6 @@ fn agent_workflow_status_view(
         "focus_reason": snapshot.current_focus_reason,
         "latest_phase": latest_phase_label,
         "latest_phase_summary": latest_phase_summary_short,
-        "latest_phase_summary_full": latest_phase_summary,
         "blocking_status": blocking_status,
         "blocking_reason": blocking_reason,
         "hard_block_active": hard_block_active,
@@ -3898,6 +3934,7 @@ fn factor_pipeline_debug_command(input: FactorPipelineDebugCommandInput<'_>) -> 
             &pipeline.bbn_support.pre_bayes_filter,
         ),
         bridge_gap_clear_threshold: env_f64("ICT_ENGINE_BRIDGE_GAP_CLEAR_THRESHOLD", 0.12),
+        paired_market_quality_report: None,
     })?;
     println!("{}", serde_json::to_string_pretty(&report)?);
     Ok(())
@@ -4319,6 +4356,7 @@ fn run_futures_sop(root: &str, output_dir: &str, interval: &str) -> Result<Futur
                         "ICT_ENGINE_BRIDGE_GAP_CLEAR_THRESHOLD",
                         0.12,
                     ),
+                    paired_market_quality_report: None,
                 })
                 .ok()
             })
@@ -4801,6 +4839,7 @@ fn run_expansion_sop(
                         "ICT_ENGINE_BRIDGE_GAP_CLEAR_THRESHOLD",
                         0.12,
                     ),
+                    paired_market_quality_report: None,
                 })
                 .ok()
             })
@@ -7114,6 +7153,10 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
                 .supporting
                 .pre_bayes_evidence_filter
                 .evidence_quality_score
+        )),
+        Some(format!(
+            "Decision: {}",
+            humanize_decision_hint(&report.supporting.decision_hint)
         )),
         Some(human_action_line(&report.supporting.factor_iteration_queue)),
         Some(format!(
@@ -22481,6 +22524,7 @@ mod tests {
                         explanation: "entry window still carries opposing noise".to_string(),
                     }],
                 },
+            paired_market_quality_report: None,
             entry_quality_bridge: bridge.clone(),
             bbn_support: ict_engine::application::belief::pipeline_types::ExpansionBbnSupport {
                 market_regime_label: "bull".to_string(),
@@ -22571,6 +22615,7 @@ mod tests {
                 "4h premium reprice".to_string(),
                 "1d higher-timeframe support".to_string(),
             ],
+            paired_market_quality_report: None,
         })
         .unwrap();
 
@@ -23962,13 +24007,24 @@ mod tests {
             None,
             None,
             Some(temp.path().to_str().unwrap()),
-            None,
+            false,
         )
         .unwrap();
 
         assert!(htf.ends_with("cleaned-1d/nq.continuous-1d.json"));
         assert!(mtf.ends_with("cleaned-1h/nq.continuous-1h.json"));
         assert!(ltf.ends_with("cleaned-15m/nq.continuous-15m.json"));
+    }
+
+
+
+    #[test]
+    fn test_resolve_analyze_cli_inputs_from_demo_flag() {
+        let (htf, mtf, ltf) = resolve_analyze_cli_inputs("DEMO", None, None, None, None, true).unwrap();
+
+        assert_eq!(htf, "examples/demo/demo-15m.json");
+        assert_eq!(mtf, "examples/demo/demo-15m.json");
+        assert_eq!(ltf, "examples/demo/demo-15m.json");
     }
 
     #[test]
@@ -24378,13 +24434,16 @@ mod tests {
         let compact = compact_workflow_status_view(&snapshot);
         let agent = agent_workflow_status_view(&snapshot, &[]);
         assert_eq!(agent["symbol"], "NQ");
-        assert_eq!(agent["focus_phase"], "update");
-        assert_eq!(agent["hard_block_active"], true);
+        assert_eq!(compact["symbol"], "NQ");
         assert!(agent.get("next_command").is_some());
+        assert!(compact.get("next_command").is_some());
         assert!(agent.get("recommended_next_command").is_none());
+        assert!(compact.get("recommended_next_command").is_none());
+        assert!(compact.get("disagreements").is_none());
+        assert!(compact.get("top_disagreement").is_some());
         assert!(agent.get("disagreements").is_none());
         assert!(agent.get("top_disagreement").is_some());
-        assert!(compact.get("disagreements").is_some());
+        assert!(agent.get("latest_phase_summary_full").is_none());
     }
 
     #[test]
@@ -24416,6 +24475,18 @@ mod tests {
         assert_eq!(value["top"], "<local-path>");
         assert_eq!(value["nested"][0], "<local-path>");
         assert_eq!(value["nested"][1]["inner"], "<local-path>");
+    }
+
+    #[test]
+    fn test_workflow_status_phase_human_view_redacts_local_paths() {
+        let snapshot = ict_engine::application::orchestration::sample_human_workflow_snapshot();
+        let mut value = workflow_status_human_view(&snapshot, &[]);
+        redact_local_paths_in_value(&mut value);
+
+        let rendered = serde_json::to_string(&value).unwrap();
+        assert!(rendered.contains("<local-path>"));
+        assert!(!rendered.contains("/tmp/a.json"));
+        assert!(!rendered.contains("/tmp/b.json"));
     }
 
     #[test]

@@ -39,18 +39,24 @@ Next: cargo run -- factor-research --symbol NQ --data <15m.json> --factor struct
 ### Demo smoke run
 
 ```bash
-cargo run -- analyze \
-  --symbol DEMO \
-  --data-htf examples/demo/demo-15m.json \
-  --data-mtf examples/demo/demo-15m.json \
-  --data-ltf examples/demo/demo-15m.json \
-  --human
+cargo run -- analyze --symbol DEMO --demo --human
 
 cargo run -- factor-pipeline-debug \
   --symbol DEMO \
   --data examples/demo/demo-15m.json \
   --factor structure_ict \
   --objective expansion_manipulation
+```
+
+Equivalent explicit-path form:
+
+```bash
+cargo run -- analyze \
+  --symbol DEMO \
+  --data-htf examples/demo/demo-15m.json \
+  --data-mtf examples/demo/demo-15m.json \
+  --data-ltf examples/demo/demo-15m.json \
+  --human
 ```
 
 This synthetic dataset is for first-run CLI verification only.
@@ -111,7 +117,7 @@ Use:
 - `agent` for next-step automation surface
 - `human` for release-style readable summary
 
-`analyze --agent` keeps: direction, entry state, pre-Bayes gate, next command, decision hint, top evidence, top risks, and top next actions.
+`analyze --agent` keeps: direction, entry state, pre-Bayes gate, next command, machine `decision_hint`, human `decision_summary`, top evidence, top risks, and top next actions.
 
 `workflow-status --agent` is thinner than `--compact`. It keeps: focus, block state, next command, top disagreement, top actionable artifact, and ensemble headline.
 
@@ -199,14 +205,17 @@ Using the wrong input surface:
 - `factor_mutation_runs.json` as `--mutation-spec`
 - shared state dirs for fair comparison experiments
 
-## Deeper docs
+## Public docs
 
-1. `docs/first-run.md`
-2. `docs/research-system-map.md`
-3. `docs/objective-scoring-map.md`
-4. `docs/agent-first-runbook.md`
-5. `docs/smoke-acceptance.md`
-6. `docs/release-notes-draft.md`
+- `docs/first-run.md`
+- `docs/research-system-map.md`
+- `docs/objective-scoring-map.md`
+- `docs/smoke-acceptance.md`
+
+## Internal release/agent docs
+
+- `docs/agent-first-runbook.md`
+- `docs/release-notes-draft.md`
 
 ## 中文简介
 

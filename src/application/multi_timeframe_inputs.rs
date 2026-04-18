@@ -166,17 +166,19 @@ pub fn resolve_analyze_cli_inputs(
     data_mtf: Option<&str>,
     data_ltf: Option<&str>,
     data_root: Option<&str>,
-    market: Option<&str>,
+    demo: bool,
 ) -> Result<(String, String, String)> {
+    if demo {
+        let demo_path = "examples/demo/demo-15m.json".to_string();
+        return Ok((demo_path.clone(), demo_path.clone(), demo_path));
+    }
     if let (Some(htf), Some(mtf), Some(ltf)) = (data_htf, data_mtf, data_ltf) {
         return Ok((htf.to_string(), mtf.to_string(), ltf.to_string()));
     }
     let data_root = data_root.ok_or_else(|| {
-        anyhow!("analyze requires either --data-htf/--data-mtf/--data-ltf or --data-root")
+        anyhow!("analyze requires either --demo, --data-htf/--data-mtf/--data-ltf, or --data-root")
     })?;
-    let market = market
-        .map(|value| value.to_ascii_lowercase())
-        .unwrap_or_else(|| symbol.to_ascii_lowercase());
+    let market = symbol.to_ascii_lowercase();
     let resolve = |interval: &str| -> Result<String> {
         let path = std::path::Path::new(data_root)
             .join(format!("cleaned-{}", interval))

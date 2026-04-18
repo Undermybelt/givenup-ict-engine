@@ -1,5 +1,7 @@
 use serde::Serialize;
 
+use super::compact_report::humanize_decision_hint;
+
 #[derive(Debug, Clone, Serialize, Default)]
 pub struct AgentGuidanceReport {
     pub direction: Option<String>,
@@ -7,6 +9,7 @@ pub struct AgentGuidanceReport {
     pub pre_bayes_gate: Option<String>,
     pub next_command: Option<String>,
     pub decision: Option<String>,
+    pub decision_summary: Option<String>,
     pub evidence: Vec<String>,
     pub risks: Vec<String>,
     pub recommended_next_actions: Vec<String>,
@@ -31,6 +34,7 @@ pub fn build_agent_guidance_report(
         entry_state,
         pre_bayes_gate,
         next_command,
+        decision_summary: decision.as_ref().map(|hint| humanize_decision_hint(hint)),
         decision,
         evidence: top_k(evidence, 3),
         risks: top_k(risks, 3),
