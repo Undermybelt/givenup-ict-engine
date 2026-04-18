@@ -36,6 +36,25 @@ Action: TUNE structure_ict
 Next: cargo run -- factor-research --symbol NQ --data <15m.json> --factor structure_ict
 ```
 
+### Demo smoke run
+
+```bash
+cargo run -- analyze \
+  --symbol DEMO \
+  --data-htf examples/demo/demo-15m.json \
+  --data-mtf examples/demo/demo-15m.json \
+  --data-ltf examples/demo/demo-15m.json \
+  --human
+
+cargo run -- factor-pipeline-debug \
+  --symbol DEMO \
+  --data examples/demo/demo-15m.json \
+  --factor structure_ict \
+  --objective expansion_manipulation
+```
+
+This synthetic dataset is for first-run CLI verification only.
+
 ### Diagnose why a factor or gate did not pass
 
 ```bash

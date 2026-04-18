@@ -25,14 +25,14 @@ impl HumanAnalyzeReport {
             sections.push(next_action_line.clone());
         }
         sections.extend([
-            format!("基本价格结构分析\n{}", self.basic_price_structure_analysis),
-            format!("技术面价格分析\n{}", self.technical_price_analysis),
-            format!("SMT相关性分析\n{}", self.smt_correlation_analysis),
             format!(
-                "Regime分类结合贝叶斯分析并给推测概率\n{}",
-                self.regime_bayes_analysis
+                "Basic price structure\n{}",
+                self.basic_price_structure_analysis
             ),
-            format!("交易计划\n{}", self.trade_plan),
+            format!("Technical price\n{}", self.technical_price_analysis),
+            format!("SMT correlation\n{}", self.smt_correlation_analysis),
+            format!("Regime + Bayesian view\n{}", self.regime_bayes_analysis),
+            format!("Trade plan\n{}", self.trade_plan),
         ]);
         sections.join("\n\n")
     }
@@ -68,8 +68,8 @@ mod tests {
     fn human_report_renders_five_sections() {
         let report = build_human_analyze_report(None, None, None, "a", "b", "c", "d", "e");
         let rendered = report.render();
-        assert!(rendered.contains("基本价格结构分析"));
-        assert!(rendered.contains("交易计划"));
+        assert!(rendered.contains("Basic price structure"));
+        assert!(rendered.contains("Trade plan"));
     }
 
     #[test]

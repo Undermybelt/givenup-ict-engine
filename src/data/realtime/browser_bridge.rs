@@ -2,7 +2,7 @@ use anyhow::{anyhow, bail, Context, Result};
 use chrono::Utc;
 use reqwest::blocking::Client;
 use serde_json::{json, Value};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process::Command;
 use std::sync::atomic::{AtomicU64, Ordering};
 
@@ -314,26 +314,19 @@ fn send_command(client: &Client, body: Value) -> Result<Value> {
 }
 
 fn find_executable(name: &str) -> Option<PathBuf> {
-    let mut candidates = vec![
-        PathBuf::from(name),
-        PathBuf::from(format!("/opt/homebrew/bin/{name}")),
-        PathBuf::from(format!("/usr/local/bin/{name}")),
-    ];
-    if let Ok(home) = std::env::var("HOME") {
-        candidates.insert(1, PathBuf::from(format!("{home}/.npm-global/bin/{name}")));
+    let path_lookup = std::env::var_os("PATH").and_then(|paths| {
+        std::env::split_paths(&paths)
+            .map(|dir| dir.join(name))
+            .find(|candidate| candidate.exists())
+    });
+    if path_lookup.is_some() {
+        return path_lookup;
     }
 
-    candidates.into_iter().find(|path| {
-        if path.components().count() == 1 {
-            Command::new("command")
-                .args(["-v", name])
-                .output()
-                .map(|output| output.status.success())
-                .unwrap_or(false)
-        } else {
-            Path::new(path).exists()
-        }
-    })
+    ["/opt/homebrew/bin", "/usr/local/bin"]
+        .into_iter()
+        .map(|dir| PathBuf::from(dir).join(name))
+        .find(|candidate| candidate.exists())
 }
 
 fn find_number(map: &serde_json::Map<String, Value>, keys: &[&str]) -> Option<f64> {
