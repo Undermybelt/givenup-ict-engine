@@ -3,6 +3,9 @@ name = "ict-engine"
 version = "0.1.0"
 edition = "2021"
 description = "ICT Expansion Trading Engine - Probability-based trading analysis"
+license = "MIT"
+repository = "https://github.com/thrill3r/ict-engine"
+authors = ["ICT Engine contributors"]
 
 [dependencies]
 ndarray = "0.15"
@@ -24,7 +27,7 @@ reqwest = { version = "0.12", default-features = false, features = ["blocking", 
 async-trait = "0.1"
 futures = "0.3"
 urlencoding = "2.1"
-loopybayesnet = { path = "/Users/thrill3r/loopybayesnet" }
+loopybayesnet = { git = "https://github.com/elinorbgr/loopybayesnet", rev = "4453893" }
 
 [dev-dependencies]
 tempfile = "3"

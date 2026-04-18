@@ -314,12 +314,14 @@ fn send_command(client: &Client, body: Value) -> Result<Value> {
 }
 
 fn find_executable(name: &str) -> Option<PathBuf> {
-    let candidates = vec![
+    let mut candidates = vec![
         PathBuf::from(name),
-        PathBuf::from(format!("/Users/thrill3r/.npm-global/bin/{name}")),
         PathBuf::from(format!("/opt/homebrew/bin/{name}")),
         PathBuf::from(format!("/usr/local/bin/{name}")),
     ];
+    if let Ok(home) = std::env::var("HOME") {
+        candidates.insert(1, PathBuf::from(format!("{home}/.npm-global/bin/{name}")));
+    }
 
     candidates.into_iter().find(|path| {
         if path.components().count() == 1 {

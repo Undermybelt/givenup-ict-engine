@@ -154,6 +154,29 @@ use ict_engine::types::{
 };
 use serde::Serialize;
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum OutputFormat {
+    Json,
+    Compact,
+    Agent,
+    Human,
+}
+
+impl OutputFormat {
+    fn parse(value: &str) -> Result<Self> {
+        match value.trim().to_ascii_lowercase().as_str() {
+            "json" => Ok(Self::Json),
+            "compact" => Ok(Self::Compact),
+            "agent" => Ok(Self::Agent),
+            "human" => Ok(Self::Human),
+            other => bail!(
+                "unsupported output format '{}'; expected json, compact, agent, or human",
+                other
+            ),
+        }
+    }
+}
+
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::env;
 
@@ -613,7 +636,7 @@ struct NativeFrameComputation {
 
 #[derive(Parser)]
 #[command(name = "ict-engine")]
-#[command(about = "ICT Expansion Trading Engine", long_about = None)]
+#[command(about = "ICT Expansion Trading Engine", long_about = None, version)]
 struct Cli {
     #[command(subcommand)]
     command: Commands,
@@ -623,20 +646,28 @@ struct Cli {
 enum Commands {
     /// Analyze market data
     Analyze {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long)]
+        #[arg(long, help = "Higher-timeframe cleaned candle JSON path")]
         data_htf: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Middle-timeframe cleaned candle JSON path")]
         data_mtf: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Lower-timeframe cleaned candle JSON path")]
         data_ltf: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Root directory for auto-resolving cleaned multi-timeframe data")]
         data_root: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Market family hint for input resolution")]
         market: Option<String>,
-        #[arg(long, default_value = "state")]
+        #[arg(long, default_value = "state", help = "State directory for model and workflow artifacts")]
         state_dir: String,
+        #[arg(long, default_value = "json", help = "Output format: json, compact, agent, or human")]
+        output_format: String,
+        #[arg(long, help = "Alias for --output-format compact")]
+        compact: bool,
+        #[arg(long, help = "Alias for --output-format agent")]
+        agent: bool,
+        #[arg(long, help = "Alias for --output-format human")]
+        human: bool,
     },
     /// Analyze live futures with integrated backends and spot/options auxiliary evidence
     AnalyzeLive {
@@ -905,26 +936,34 @@ enum Commands {
     },
     /// Show the latest cross-phase workflow snapshot
     WorkflowStatus {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long, default_value = "state")]
+        #[arg(long, default_value = "state", help = "State directory containing workflow artifacts")]
         state_dir: String,
-        #[arg(long, default_value_t = true)]
+        #[arg(long, default_value_t = true, help = "Refresh snapshot from current artifacts before printing")]
         refresh: bool,
-        #[arg(long)]
+        #[arg(long, help = "Print a named workflow phase surface instead of the full snapshot")]
         phase: Option<String>,
-        #[arg(long, default_value_t = false)]
+        #[arg(long, default_value_t = false, help = "Print only actionable artifacts")]
         actionable_only: bool,
-        #[arg(long, default_value_t = false)]
+        #[arg(long, default_value_t = false, help = "Print only workflow disagreements")]
         conflicts_only: bool,
-        #[arg(long, default_value_t = false)]
+        #[arg(long, default_value_t = false, help = "Print only the latest promotable artifact")]
         latest_promotable: bool,
-        #[arg(long, default_value_t = false)]
+        #[arg(long, default_value_t = false, help = "Print only hard-block rows")]
         hard_block_only: bool,
-        #[arg(long)]
+        #[arg(long, help = "Filter hard-block rows by reason substring")]
         hard_block_reason: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Limit hard-block rows")]
         limit: Option<usize>,
+        #[arg(long, default_value = "json", help = "Output format: json, compact, agent, or human")]
+        output_format: String,
+        #[arg(long, help = "Alias for --output-format compact")]
+        compact: bool,
+        #[arg(long, help = "Alias for --output-format agent")]
+        agent: bool,
+        #[arg(long, help = "Alias for --output-format human")]
+        human: bool,
     },
     /// Show the latest Pre-Bayes status directly
     PreBayesStatus {
@@ -1022,6 +1061,10 @@ fn main() -> Result<()> {
             data_root,
             market,
             state_dir,
+            output_format,
+            compact,
+            agent,
+            human,
         } => {
             let (data_htf, data_mtf, data_ltf) = resolve_analyze_cli_inputs(
                 &symbol,
@@ -1031,7 +1074,15 @@ fn main() -> Result<()> {
                 data_root.as_deref(),
                 market.as_deref(),
             )?;
-            analyze_command(&symbol, &data_htf, &data_mtf, &data_ltf, &state_dir)?
+            let output_format = resolve_output_format(&output_format, compact, agent, human)?;
+            analyze_command(
+                &symbol,
+                &data_htf,
+                &data_mtf,
+                &data_ltf,
+                &state_dir,
+                output_format,
+            )?
         }
         Commands::AnalyzeLive {
             symbol,
@@ -1286,6 +1337,10 @@ fn main() -> Result<()> {
             hard_block_only,
             hard_block_reason,
             limit,
+            output_format,
+            compact,
+            agent,
+            human,
         } => workflow_status_command(WorkflowStatusCommandInput {
             symbol: &symbol,
             state_dir: &state_dir,
@@ -1297,6 +1352,7 @@ fn main() -> Result<()> {
             hard_block_only,
             hard_block_reason: hard_block_reason.as_deref(),
             limit,
+            output_format: resolve_output_format(&output_format, compact, agent, human)?,
         })?,
         Commands::PreBayesStatus {
             symbol,
@@ -1376,6 +1432,7 @@ fn analyze_command(
     data_mtf: &str,
     data_ltf: &str,
     state_dir: &str,
+    output_format: OutputFormat,
 ) -> Result<()> {
     let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
     let htf = load_candles(data_htf)?;
@@ -1573,7 +1630,7 @@ fn analyze_command(
         &mut report.supporting.rollback_recommendation,
     );
 
-    emit_analyze_output(&report)
+    emit_analyze_output(&report, output_format)
 }
 
 fn build_analyze_policy_outputs(
@@ -1622,7 +1679,7 @@ fn resolved_vote_scorecards<'a>(
     }
 }
 
-fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
+fn emit_analyze_output(report: &AnalyzeReport, output_format: OutputFormat) -> Result<()> {
     let objective_jump_weight = report
         .supporting
         .objective_jump_weight
@@ -1795,25 +1852,150 @@ fn emit_analyze_output(report: &AnalyzeReport) -> Result<()> {
         &persisted_scorecards,
         &[],
     );
-    println!(
-        "{}",
-        serde_json::to_string_pretty(&serde_json::json!({
-            "report": report,
-            "compact_report": compact_report,
-            "agent_report": agent_report,
-            "human_report": human_report.render(),
-            "market_family_summary": {
-                "market_family": report.supporting.canonical_belief_report.market_family,
-                "market_behavior_profile": report.supporting.canonical_belief_report.market_behavior_profile,
-                "selected_market_subgraph": report.supporting.canonical_belief_report.selected_market_subgraph,
-            },
-            "belief_shadow_policy": belief_shadow_policy,
-            "belief_policy_lineage": belief_policy_lineage,
-            "ensemble_vote": ensemble_vote,
-            "executor_scorecard_summary": scorecard_summary,
-            "executor_scorecard_source": scorecard_source,
-        }))?
-    );
+    let full_output = serde_json::json!({
+        "report": report,
+        "compact_report": compact_report,
+        "agent_report": agent_report,
+        "human_report": human_report.render(),
+        "market_family_summary": {
+            "market_family": report.supporting.canonical_belief_report.market_family,
+            "market_behavior_profile": report.supporting.canonical_belief_report.market_behavior_profile,
+            "selected_market_subgraph": report.supporting.canonical_belief_report.selected_market_subgraph,
+        },
+        "belief_shadow_policy": belief_shadow_policy,
+        "belief_policy_lineage": belief_policy_lineage,
+        "ensemble_vote": ensemble_vote,
+        "executor_scorecard_summary": scorecard_summary,
+        "executor_scorecard_source": scorecard_source,
+    });
+    match output_format {
+        OutputFormat::Json => println!("{}", serde_json::to_string_pretty(&full_output)?),
+        OutputFormat::Compact => println!("{}", serde_json::to_string_pretty(&compact_report)?),
+        OutputFormat::Agent => println!("{}", serde_json::to_string_pretty(&agent_report)?),
+        OutputFormat::Human => println!("{}", human_report.render()),
+    }
+    Ok(())
+}
+
+fn resolve_output_format(
+    value: &str,
+    compact: bool,
+    agent: bool,
+    human: bool,
+) -> Result<OutputFormat> {
+    let alias_count = compact as u8 + agent as u8 + human as u8;
+    if alias_count > 1 {
+        bail!("choose at most one of --compact, --agent, or --human");
+    }
+    if compact {
+        return Ok(OutputFormat::Compact);
+    }
+    if agent {
+        return Ok(OutputFormat::Agent);
+    }
+    if human {
+        return Ok(OutputFormat::Human);
+    }
+    OutputFormat::parse(value)
+}
+
+fn redact_local_paths(text: &str) -> String {
+    let bytes = text.as_bytes();
+    let mut out = String::with_capacity(text.len());
+    let mut i = 0;
+    while i < bytes.len() {
+        if bytes[i] == b'/' {
+            let rest = &text[i..];
+            let is_local = rest.starts_with("/Users/")
+                || rest.starts_with("/home/")
+                || rest.starts_with("/tmp/")
+                || rest.starts_with("/var/")
+                || rest.starts_with("/private/");
+            if is_local {
+                let mut j = i;
+                while j < bytes.len() {
+                    let ch = bytes[j];
+                    if ch.is_ascii_whitespace() || matches!(ch, b',' | b';' | b'|' | b')' | b'(' | b'[' | b']' | b'{' | b'}') {
+                        break;
+                    }
+                    j += 1;
+                }
+                out.push_str("<local-path>");
+                i = j;
+                continue;
+            }
+        }
+        out.push(bytes[i] as char);
+        i += 1;
+    }
+    out
+}
+
+fn redact_local_paths_in_value(value: &mut Value) {
+    match value {
+        Value::String(text) => {
+            *text = redact_local_paths(text);
+        }
+        Value::Array(items) => {
+            for item in items {
+                redact_local_paths_in_value(item);
+            }
+        }
+        Value::Object(map) => {
+            for item in map.values_mut() {
+                redact_local_paths_in_value(item);
+            }
+        }
+        _ => {}
+    }
+}
+
+fn print_redacted_json<T: Serialize>(value: &T) -> Result<()> {
+    let mut rendered = serde_json::to_value(value)?;
+    redact_local_paths_in_value(&mut rendered);
+    println!("{}", serde_json::to_string_pretty(&rendered)?);
+    Ok(())
+}
+
+fn compact_workflow_status_view(snapshot: &WorkflowSnapshot) -> Value {
+    serde_json::json!({
+        "symbol": snapshot.symbol,
+        "generated_at": snapshot.generated_at,
+        "current_focus_phase": snapshot.current_focus_phase,
+        "current_focus_reason": snapshot.current_focus_reason,
+        "blocking_truth": snapshot.blocking_truth,
+        "recommended_next_command": snapshot.recommended_next_command,
+        "pending_actions": snapshot.pending_actions.iter().take(5).cloned().collect::<Vec<_>>(),
+        "risk_flags": snapshot.risk_flags.iter().take(5).cloned().collect::<Vec<_>>(),
+        "latest_promotable_artifact": snapshot.latest_promotable_artifact,
+        "actionable_artifacts": snapshot.actionable_artifacts.iter().take(5).cloned().collect::<Vec<_>>(),
+        "artifact_decision_summary": snapshot.artifact_decision_summary,
+        "disagreements": snapshot.disagreements.iter().take(5).cloned().collect::<Vec<_>>(),
+    })
+}
+
+fn emit_workflow_status_output(
+    snapshot: &WorkflowSnapshot,
+    persisted_scorecards: &[EnsembleExecutorScorecard],
+    output_format: OutputFormat,
+) -> Result<()> {
+    match output_format {
+        OutputFormat::Json => {
+            let mut value = serde_json::to_value(snapshot)?;
+            redact_local_paths_in_value(&mut value);
+            println!("{}", serde_json::to_string_pretty(&value)?);
+        }
+        OutputFormat::Compact | OutputFormat::Agent => {
+            let mut value = compact_workflow_status_view(snapshot);
+            redact_local_paths_in_value(&mut value);
+            println!("{}", serde_json::to_string_pretty(&value)?);
+        }
+        OutputFormat::Human => {
+            let mut value = workflow_status_human_view(snapshot, persisted_scorecards);
+            redact_local_paths_in_value(&mut value);
+            println!("{}", serde_json::to_string_pretty(&value)?);
+        }
+    }
     Ok(())
 }
 
@@ -1838,6 +2020,7 @@ struct WorkflowStatusCommandInput<'a> {
     hard_block_only: bool,
     hard_block_reason: Option<&'a str>,
     limit: Option<usize>,
+    output_format: OutputFormat,
 }
 
 fn workflow_status_command(input: WorkflowStatusCommandInput<'_>) -> Result<()> {
@@ -1852,6 +2035,7 @@ fn workflow_status_command(input: WorkflowStatusCommandInput<'_>) -> Result<()> 
         hard_block_only,
         hard_block_reason,
         limit,
+        output_format,
     } = input;
     let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
     let filter_count = actionable_only as u8
@@ -1874,21 +2058,15 @@ fn workflow_status_command(input: WorkflowStatusCommandInput<'_>) -> Result<()> 
     let persisted_scorecards =
         load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
     if actionable_only {
-        println!(
-            "{}",
-            serde_json::to_string_pretty(&snapshot.actionable_artifacts)?
-        );
+        print_redacted_json(&snapshot.actionable_artifacts)?;
         return Ok(());
     }
     if conflicts_only {
-        println!("{}", serde_json::to_string_pretty(&snapshot.disagreements)?);
+        print_redacted_json(&snapshot.disagreements)?;
         return Ok(());
     }
     if latest_promotable {
-        println!(
-            "{}",
-            serde_json::to_string_pretty(&snapshot.latest_promotable_artifact)?
-        );
+        print_redacted_json(&snapshot.latest_promotable_artifact)?;
         return Ok(());
     }
     if hard_block_only || hard_block_reason.is_some() || limit.is_some() {
@@ -1899,7 +2077,7 @@ fn workflow_status_command(input: WorkflowStatusCommandInput<'_>) -> Result<()> 
             hard_block_reason,
             limit,
         );
-        println!("{}", serde_json::to_string_pretty(&history)?);
+        print_redacted_json(&history)?;
         return Ok(());
     }
     if let Some(phase) = phase {
@@ -2095,9 +2273,9 @@ fn workflow_status_command(input: WorkflowStatusCommandInput<'_>) -> Result<()> 
             )?,
             other => bail!("unsupported workflow-status phase '{}'", other),
         };
-        println!("{}", serde_json::to_string_pretty(&value)?);
+        print_redacted_json(&value)?;
     } else {
-        println!("{}", serde_json::to_string_pretty(&snapshot)?);
+        emit_workflow_status_output(&snapshot, &persisted_scorecards, output_format)?;
     }
     Ok(())
 }
@@ -3197,6 +3375,7 @@ fn factor_pipeline_debug_command(input: FactorPipelineDebugCommandInput<'_>) -> 
         symbol,
         factor,
         &candles,
+        None,
         &multi_timeframe_summary,
         &registry,
     )?;
@@ -3932,6 +4111,7 @@ fn run_expansion_sop(
                     &dataset.market,
                     factor,
                     &candles,
+                    None,
                     &multi_timeframe_summary,
                     &registry,
                 )
@@ -4253,6 +4433,7 @@ fn build_expansion_sop_mutation_metrics(
                     &dataset.market,
                     factor,
                     &candles,
+                    None,
                     &multi_timeframe_summary,
                     registry,
                 )
@@ -4493,6 +4674,7 @@ fn expansion_regression_reasons_by_market(
                     &dataset.market,
                     factor,
                     &candles,
+                    None,
                     &multi_timeframe_summary,
                     baseline_registry,
                 )
@@ -4504,6 +4686,7 @@ fn expansion_regression_reasons_by_market(
                     &dataset.market,
                     factor,
                     &candles,
+                    None,
                     &multi_timeframe_summary,
                     mutated_registry,
                 )
@@ -5454,6 +5637,7 @@ fn apply_expansion_manipulation_objective(
             symbol,
             &scorecard.factor_name,
             candles,
+            None,
             multi_timeframe_summary,
             registry,
         )?;
@@ -13368,6 +13552,12 @@ fn load_factor_mutation_spec(path: &str) -> Result<FactorMutationSpec> {
         .with_context(|| format!("failed to read factor mutation spec '{}'", path))?;
     let parsed: serde_json::Value = serde_json::from_str(&raw)
         .with_context(|| format!("failed to parse factor mutation spec '{}'", path))?;
+    if parsed.is_array() {
+        bail!(
+            "factor mutation spec must be a single JSON object, not a history array: '{}'",
+            path
+        );
+    }
     let Some(obj) = parsed.as_object() else {
         bail!(
             "factor mutation spec must be a single JSON object with mutation_id/base_factor: '{}'",
@@ -13547,6 +13737,7 @@ fn build_factor_mutation_metric_set(
                 symbol,
                 best_factor,
                 candles,
+                None,
                 &report.multi_timeframe_summary,
                 registry,
             )?;
@@ -20369,6 +20560,7 @@ mod tests {
             mtf.to_str().unwrap(),
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
+            OutputFormat::Json,
         )
         .unwrap();
 
@@ -20526,6 +20718,7 @@ mod tests {
             mtf.to_str().unwrap(),
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
+            OutputFormat::Json,
         )
         .unwrap();
 
@@ -20570,6 +20763,7 @@ mod tests {
             mtf.to_str().unwrap(),
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
+            OutputFormat::Json,
         )
         .unwrap();
         analyze_command(
@@ -20578,6 +20772,7 @@ mod tests {
             mtf.to_str().unwrap(),
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
+            OutputFormat::Json,
         )
         .unwrap();
 
@@ -20614,6 +20809,7 @@ mod tests {
             mtf.to_str().unwrap(),
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
+            OutputFormat::Json,
         )
         .unwrap();
 
@@ -20657,6 +20853,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         let loaded = load_workflow_snapshot(temp.path(), "NQ").unwrap();
@@ -20673,6 +20870,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -20686,6 +20884,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -20699,6 +20898,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -20712,6 +20912,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -20725,6 +20926,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -20738,6 +20940,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -20751,6 +20954,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -20764,6 +20968,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -20777,6 +20982,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -20790,6 +20996,7 @@ mod tests {
             hard_block_only: true,
             hard_block_reason: None,
             limit: Some(5),
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -20803,6 +21010,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
     }
@@ -21078,6 +21286,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -21091,6 +21300,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -21104,6 +21314,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         artifact_status_command(ArtifactStatusCommandInput {
@@ -21163,6 +21374,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -21176,6 +21388,7 @@ mod tests {
             hard_block_only: false,
             hard_block_reason: None,
             limit: None,
+            output_format: OutputFormat::Json,
         })
         .unwrap();
         pre_bayes_status_command("NQ", temp.path().to_str().unwrap(), false, Some("policy"))
@@ -21782,6 +21995,7 @@ mod tests {
             },
             pipeline_summary: "latest sample clears pre-bayes and bridge".to_string(),
             recommended_actions: vec!["inspect_latest_sample".to_string()],
+            frame_physics_trace: Vec::new(),
         };
 
         let report = adapt_factor_pipeline_debug_report(AdaptFactorPipelineDebugReportInput {
@@ -21953,6 +22167,7 @@ mod tests {
             mtf.to_str().unwrap(),
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
+            OutputFormat::Json,
         )
         .unwrap();
         update_command(UpdateCommandInput {
