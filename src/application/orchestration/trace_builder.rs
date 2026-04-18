@@ -257,6 +257,31 @@ pub fn build_staged_artifacts(
         entry_price_offset_bps,
         sl_distance_bps,
         tp_rr_ratio: risk_reward,
+        // Flowtree features: defaults in trace_builder (populated via ensemble path)
+        atr_consumption_ratio: 0.0,
+        htf_dol_distance_ratio: 1.0,
+        htf_eqx_swept: filter.raw_liquidity_context_label.contains("sweep")
+            || filter.filtered_liquidity_context_label.contains("sweep"),
+        htf_rb_type: "none".to_string(),
+        event_b_consecutive_count: (filter.stale_pda_count + filter.inversed_pda_count).min(255)
+            as u8,
+        event_a_sequence_stage: 0,
+        ltf_path_label: "none".to_string(),
+        ote_0705_offset: 0.0,
+        structure_break_count: 0,
+        latest_break_type: "none".to_string(),
+        fractal_sync_confirmed: false,
+        killswitch_completion: 0,
+        fvgs_open: 0,
+        order_blocks_nearby: 0,
+        cisd_ltf_confirmed: false,
+        cisd_htf_confirmed: false,
+        rb_pinbar_detected: false,
+        pda_bull_count: 0,
+        liquidity_sweep_count: 0,
+        red_alert_active: (filter.stale_pda_count + filter.inversed_pda_count) >= 3,
+        recovery_event_a_streak: 0,
+        pda_survival_regime: "unknown".to_string(),
     };
     let policy_decision = policy_engine.infer(&features);
 

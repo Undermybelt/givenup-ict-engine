@@ -8,7 +8,7 @@ use crate::analyze::multi_timeframe_parse::{
 };
 use crate::bbn::adapters::belief_evidence_packet_from_pre_bayes_filter;
 use crate::bbn::engine::InferenceEngineRegistry;
-use crate::factor_lab::FactorDiagnostics;
+use crate::factor_lab::{FactorDiagnostics, PairedMarketQualityReport};
 use crate::planner::ProbabilisticDecisionSnapshot;
 use crate::reporting::belief::BeliefReportPacket;
 use crate::state::{
@@ -94,6 +94,7 @@ pub struct FactorPipelineDebugReportInput {
     pub raw_pre_bayes_labels: BTreeMap<String, String>,
     pub soft_evidence_divergence: Vec<PreBayesSoftEvidenceNodeDiff>,
     pub bridge_gap_clear_threshold: f64,
+    pub paired_market_quality_report: Option<PairedMarketQualityReport>,
 }
 
 #[derive(Debug, Clone)]
@@ -173,6 +174,44 @@ pub fn adapt_factor_pipeline_debug_report(
         raw_pre_bayes_labels: input.raw_pre_bayes_labels,
         soft_evidence_divergence: input.soft_evidence_divergence,
         bridge_gap_clear_threshold: input.bridge_gap_clear_threshold,
+        paired_market_quality_report: paired_market_quality_report_from_explanation(
+            &input.pipeline.factor_name,
+            &input.pipeline.latest_signal.explanation,
+        ),
+    })
+}
+
+fn paired_market_quality_report_from_explanation(
+    factor_name: &str,
+    explanation: &str,
+) -> Option<PairedMarketQualityReport> {
+    if factor_name != "cross_market_smt" {
+        return None;
+    }
+    let mut fields = BTreeMap::new();
+    for part in explanation.split(';') {
+        let Some((key, value)) = part.split_once('=') else {
+            continue;
+        };
+        fields.insert(key.trim().to_string(), value.trim().to_string());
+    }
+    let status = fields.get("status")?.clone();
+    let paired_market_quality = fields.get("quality_tier")?.clone();
+    let reason = fields.get("reason")?.clone();
+    let aligned_length = fields.get("aligned_length")?.parse().ok()?;
+    let primary_length = fields.get("primary_length")?.parse().ok()?;
+    let paired_length = fields.get("paired_length")?.parse().ok()?;
+    let overlap_ratio = fields.get("overlap_ratio")?.parse().ok()?;
+    let safe_lookback = fields.get("safe_lookback")?.parse().ok()?;
+    Some(PairedMarketQualityReport {
+        paired_market_quality,
+        aligned_length,
+        primary_length,
+        paired_length,
+        overlap_ratio,
+        safe_lookback,
+        status,
+        reason,
     })
 }
 
@@ -238,6 +277,7 @@ pub struct FactorPipelineDebugReport {
     pub pipeline_summary: String,
     pub recommended_actions: Vec<String>,
     pub frame_physics_trace: BTreeMap<String, f64>,
+    pub paired_market_quality_report: Option<PairedMarketQualityReport>,
     pub entry_quality_bridge: PreBayesEntryQualityBridge,
     pub bbn_support: ExpansionBbnSupport,
     pub shadow_belief_report: BeliefReportPacket,
@@ -396,6 +436,7 @@ pub fn build_factor_pipeline_debug_report(
         raw_pre_bayes_labels,
         soft_evidence_divergence,
         bridge_gap_clear_threshold,
+        paired_market_quality_report,
     } = input;
 
     let filtered_pre_bayes_labels = bbn_support.evidence_assignments.clone();
@@ -464,6 +505,7 @@ pub fn build_factor_pipeline_debug_report(
         pipeline_summary: bbn_support.evidence_policy.clone(),
         recommended_actions,
         frame_physics_trace,
+        paired_market_quality_report,
         entry_quality_bridge,
         bbn_support,
         shadow_belief_report,

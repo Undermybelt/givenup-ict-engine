@@ -70,6 +70,7 @@ fn build_factor_pipeline_debug_report_marks_missing_selected_entry_quality_unava
         raw_pre_bayes_labels: BTreeMap::new(),
         soft_evidence_divergence: vec![],
         bridge_gap_clear_threshold: 0.12,
+        paired_market_quality_report: None,
     })
     .unwrap();
     assert_eq!(report.selected_entry_quality, "entry_quality_unavailable");

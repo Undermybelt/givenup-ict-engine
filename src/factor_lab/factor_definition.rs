@@ -110,6 +110,154 @@ pub struct FactorContext<'a> {
     pub regime: Option<Regime>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct PairedMarketQualityReport {
+    pub paired_market_quality: String,
+    pub aligned_length: usize,
+    pub primary_length: usize,
+    pub paired_length: usize,
+    pub overlap_ratio: f64,
+    pub safe_lookback: usize,
+    pub status: String,
+    pub reason: String,
+}
+
+fn paired_market_quality_report(
+    primary_length: usize,
+    paired_length: usize,
+    requested_lookback: usize,
+    primary_closes: Option<&[f64]>,
+    pair_closes: Option<&[f64]>,
+) -> PairedMarketQualityReport {
+    let aligned_length = primary_length.min(paired_length);
+    let overlap_ratio = if primary_length == 0 {
+        0.0
+    } else {
+        aligned_length as f64 / primary_length as f64
+    };
+    let safe_lookback = requested_lookback.min(aligned_length.saturating_sub(1));
+
+    let mut status = "valid".to_string();
+    let mut paired_market_quality = "strong".to_string();
+    let mut reason = "pair_quality_ok".to_string();
+
+    if aligned_length < 32 || overlap_ratio < 0.60 {
+        status = "invalid_due_to_pair_quality".to_string();
+        paired_market_quality = "poor".to_string();
+        reason = if aligned_length < 32 {
+            "insufficient_aligned_history".to_string()
+        } else {
+            "overlap_ratio_below_threshold".to_string()
+        };
+    } else if aligned_length < 64 || overlap_ratio < 0.80 {
+        paired_market_quality = "medium".to_string();
+        reason = "limited_pair_overlap".to_string();
+    }
+
+    if status == "valid" {
+        if let (Some(primary_closes), Some(pair_closes)) = (primary_closes, pair_closes) {
+            let primary_returns = close_returns(primary_closes);
+            let pair_returns = close_returns(pair_closes);
+            let primary_flat = primary_returns.iter().all(|ret| ret.abs() <= 1e-9);
+            let pair_flat = pair_returns.iter().all(|ret| ret.abs() <= 1e-9);
+            if primary_flat || pair_flat {
+                status = "valid_but_flat".to_string();
+                paired_market_quality = "flat".to_string();
+                reason = if pair_flat {
+                    "paired_returns_flat".to_string()
+                } else {
+                    "primary_returns_flat".to_string()
+                };
+            }
+        }
+    }
+
+    PairedMarketQualityReport {
+        paired_market_quality,
+        aligned_length,
+        primary_length,
+        paired_length,
+        overlap_ratio,
+        safe_lookback,
+        status,
+        reason,
+    }
+}
+
+fn paired_market_window_quality_report(
+    primary_length: usize,
+    paired_length: usize,
+    primary_closes: &[f64],
+    pair_closes: &[f64],
+    requested_lookback: usize,
+) -> PairedMarketQualityReport {
+    let aligned_length = primary_closes.len().min(pair_closes.len());
+    let primary_closes = &primary_closes[..aligned_length];
+    let pair_closes = &pair_closes[..aligned_length];
+    let overlap_ratio = if primary_length == 0 {
+        0.0
+    } else {
+        aligned_length as f64 / primary_length as f64
+    };
+    let safe_lookback = requested_lookback.min(aligned_length.saturating_sub(1));
+
+    let mut status = "valid".to_string();
+    let mut paired_market_quality = "strong".to_string();
+    let mut reason = "pair_quality_ok".to_string();
+
+    if aligned_length < 32 || overlap_ratio < 0.60 {
+        status = "invalid_due_to_pair_quality".to_string();
+        paired_market_quality = "poor".to_string();
+        reason = if aligned_length < 32 {
+            "insufficient_aligned_history".to_string()
+        } else {
+            "overlap_ratio_below_threshold".to_string()
+        };
+    } else if aligned_length < 64 || overlap_ratio < 0.80 {
+        paired_market_quality = "medium".to_string();
+        reason = "limited_pair_overlap".to_string();
+    }
+
+    let primary_returns = close_returns(primary_closes);
+    let pair_returns = close_returns(pair_closes);
+    let primary_flat = primary_returns.iter().all(|ret| ret.abs() <= 1e-9);
+    let pair_flat = pair_returns.iter().all(|ret| ret.abs() <= 1e-9);
+    if status == "valid" && (primary_flat || pair_flat) {
+        status = "valid_but_flat".to_string();
+        paired_market_quality = "flat".to_string();
+        reason = if pair_flat {
+            "paired_returns_flat".to_string()
+        } else {
+            "primary_returns_flat".to_string()
+        };
+    }
+
+    PairedMarketQualityReport {
+        paired_market_quality,
+        aligned_length,
+        primary_length,
+        paired_length,
+        overlap_ratio,
+        safe_lookback,
+        status,
+        reason,
+    }
+}
+
+fn paired_market_quality_explanation(report: &PairedMarketQualityReport) -> String {
+    format!(
+        "status={};quality_tier={};reason={};aligned_length={};primary_length={};paired_length={};overlap_ratio={:.4};safe_lookback={}",
+        report.status,
+        report.paired_market_quality,
+        report.reason,
+        report.aligned_length,
+        report.primary_length,
+        report.paired_length,
+        report.overlap_ratio,
+        report.safe_lookback
+    )
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FactorSignal {
     pub factor_name: String,
@@ -120,6 +268,7 @@ pub struct FactorSignal {
     pub direction: Direction,
     pub confidence: f64,
     pub explanation: String,
+    pub paired_market_quality_report: Option<PairedMarketQualityReport>,
     pub weight: f64,
     pub posterior_reliability: f64,
     pub regime_multiplier: f64,
@@ -137,6 +286,7 @@ impl Default for FactorSignal {
             direction: Direction::Neutral,
             confidence: 0.0,
             explanation: String::new(),
+            paired_market_quality_report: None,
             weight: 0.0,
             posterior_reliability: 0.5,
             regime_multiplier: 1.0,
@@ -938,6 +1088,9 @@ impl FactorDefinition {
         let start = candles.len().saturating_sub(aligned);
         let primary = &candles[start..];
         let pair = &paired[paired.len().saturating_sub(aligned)..];
+        let pair_quality =
+            paired_market_quality_report(candles.len(), paired.len(), lookback, None, None);
+        let pair_quality_explanation = paired_market_quality_explanation(&pair_quality);
 
         candles
             .iter()
@@ -955,6 +1108,16 @@ impl FactorDefinition {
                 }
 
                 let aligned_index = index - start;
+                if pair_quality.status == "invalid_due_to_pair_quality" {
+                    return build_signal(
+                        &self.name,
+                        self.category,
+                        candle.timestamp,
+                        0.0,
+                        0.0,
+                        pair_quality_explanation.clone(),
+                    );
+                }
                 if aligned_index < lookback {
                     return build_signal(
                         &self.name,
@@ -962,7 +1125,10 @@ impl FactorDefinition {
                         candle.timestamp,
                         0.0,
                         0.10,
-                        "insufficient_cross_market_lookback".to_string(),
+                        format!(
+                            "insufficient_cross_market_lookback;{}",
+                            pair_quality_explanation
+                        ),
                     );
                 }
 
@@ -984,11 +1150,44 @@ impl FactorDefinition {
                         candle.timestamp,
                         0.0,
                         0.05,
-                        "insufficient_aligned_cross_market_samples".to_string(),
+                        format!(
+                            "insufficient_aligned_cross_market_samples;{}",
+                            pair_quality_explanation
+                        ),
                     );
                 }
                 let primary_closes = &primary_closes[..aligned_len];
                 let pair_closes = &pair_closes[..aligned_len];
+                let window_quality = paired_market_window_quality_report(
+                    primary_window.len(),
+                    pair_window.len(),
+                    primary_closes,
+                    pair_closes,
+                    lookback,
+                );
+                let window_quality_explanation = paired_market_quality_explanation(&window_quality);
+                if window_quality.status == "invalid_due_to_pair_quality" {
+                    return build_signal_with_pair_quality(
+                        &self.name,
+                        self.category,
+                        candle.timestamp,
+                        0.0,
+                        0.0,
+                        window_quality_explanation,
+                        Some(window_quality),
+                    );
+                }
+                if window_quality.status == "valid_but_flat" {
+                    return build_signal_with_pair_quality(
+                        &self.name,
+                        self.category,
+                        candle.timestamp,
+                        0.0,
+                        0.05,
+                        window_quality_explanation,
+                        Some(window_quality),
+                    );
+                }
                 let primary_returns = close_returns(primary_closes);
                 let pair_returns = close_returns(pair_closes);
                 let return_len = primary_returns.len().min(pair_returns.len());
@@ -999,17 +1198,19 @@ impl FactorDefinition {
                         candle.timestamp,
                         0.0,
                         0.05,
-                        "insufficient_aligned_cross_market_returns".to_string(),
+                        format!(
+                            "insufficient_aligned_cross_market_returns;{}",
+                            window_quality_explanation
+                        ),
                     );
                 }
                 let primary_returns = &primary_returns[..return_len];
                 let pair_returns = &pair_returns[..return_len];
                 let correlation = Correlation::pearson(primary_returns, pair_returns);
-                let safe_lookback = lookback.min(aligned_len.saturating_sub(1));
-                let divergence = if safe_lookback < 2 {
+                let divergence = if window_quality.safe_lookback < 2 {
                     false
                 } else {
-                    Divergence::detect(primary_closes, pair_closes, safe_lookback)
+                    Divergence::detect(primary_closes, pair_closes, window_quality.safe_lookback)
                         .last()
                         .copied()
                         .unwrap_or(false)
@@ -1024,16 +1225,17 @@ impl FactorDefinition {
                 let confidence =
                     (correlation.abs() * if divergence { 0.45 } else { 0.85 }).clamp(0.0, 1.0);
 
-                build_signal(
+                build_signal_with_pair_quality(
                     &self.name,
                     self.category,
                     candle.timestamp,
                     value,
                     confidence,
                     format!(
-                        "corr={:.4};divergence={};relative_strength={:.4}",
-                        correlation, divergence, relative_strength
+                        "corr={:.4};divergence={};relative_strength={:.4};{}",
+                        correlation, divergence, relative_strength, window_quality_explanation
                     ),
+                    Some(window_quality),
                 )
             })
             .collect()
@@ -1128,6 +1330,26 @@ fn build_signal(
     confidence: f64,
     explanation: String,
 ) -> FactorSignal {
+    build_signal_with_pair_quality(
+        factor_name,
+        category,
+        timestamp,
+        value,
+        confidence,
+        explanation,
+        None,
+    )
+}
+
+fn build_signal_with_pair_quality(
+    factor_name: &str,
+    category: FactorCategory,
+    timestamp: DateTime<Utc>,
+    value: f64,
+    confidence: f64,
+    explanation: String,
+    paired_market_quality_report: Option<PairedMarketQualityReport>,
+) -> FactorSignal {
     FactorSignal {
         factor_name: factor_name.to_string(),
         category,
@@ -1136,6 +1358,7 @@ fn build_signal(
         direction: direction_from_value(value, confidence),
         confidence,
         explanation,
+        paired_market_quality_report,
         ..FactorSignal::default()
     }
 }
@@ -1202,6 +1425,20 @@ mod tests {
             .collect()
     }
 
+    fn flat_candles(count: usize, level: f64) -> Vec<Candle> {
+        let start = Utc.with_ymd_and_hms(2024, 1, 1, 0, 0, 0).unwrap();
+        (0..count)
+            .map(|index| Candle {
+                timestamp: start + Duration::minutes(index as i64),
+                open: level,
+                high: level,
+                low: level,
+                close: level,
+                volume: 1_000.0 + index as f64,
+            })
+            .collect()
+    }
+
     #[test]
     fn test_factor_definition_emits_series_direction_and_confidence() {
         let factor = FactorDefinition::trend_momentum();
@@ -1247,5 +1484,80 @@ mod tests {
 
         assert_eq!(series.signals.len(), candles.len());
         assert!(series.signals.iter().all(|signal| signal.confidence >= 0.0));
+    }
+
+    #[test]
+    fn test_cross_market_smt_marks_low_overlap_pair_quality_invalid() {
+        let definition = FactorDefinition::cross_market_smt();
+        let primary = candles(100);
+        let paired = candles(30);
+        let context = FactorContext {
+            paired_candles: Some(&paired),
+            auxiliary: None,
+            regime: None,
+        };
+
+        let series = definition.evaluate(&primary, &context).unwrap();
+        let latest = series.latest_signal().unwrap();
+
+        assert_eq!(latest.value, 0.0);
+        assert_eq!(latest.confidence, 0.0);
+        assert!(latest
+            .explanation
+            .contains("status=invalid_due_to_pair_quality"));
+        assert!(latest.explanation.contains("quality_tier=poor"));
+        assert!(latest.explanation.contains("aligned_length=30"));
+        assert!(latest.explanation.contains("overlap_ratio=0.3000"));
+    }
+
+    #[test]
+    fn test_cross_market_smt_marks_flat_pair_valid_but_flat() {
+        let definition = FactorDefinition::cross_market_smt();
+        let primary_window = candles(21)
+            .into_iter()
+            .map(|candle| candle.close)
+            .collect::<Vec<_>>();
+        let pair_window = flat_candles(21, 200.0)
+            .into_iter()
+            .map(|candle| candle.close)
+            .collect::<Vec<_>>();
+
+        let report = paired_market_window_quality_report(80, 80, &primary_window, &pair_window, 20);
+        let explanation = paired_market_quality_explanation(&report);
+
+        assert_eq!(definition.category, FactorCategory::CrossMarketSmt);
+        assert_eq!(report.status, "invalid_due_to_pair_quality");
+        assert_eq!(report.paired_market_quality, "poor");
+        assert_eq!(report.reason, "insufficient_aligned_history");
+        assert_eq!(report.aligned_length, 21);
+        assert_eq!(report.primary_length, 80);
+        assert_eq!(report.paired_length, 80);
+        assert!(explanation.contains("status=invalid_due_to_pair_quality"));
+        assert!(explanation.contains("quality_tier=poor"));
+        assert!(explanation.contains("reason=insufficient_aligned_history"));
+        assert!(explanation.contains("aligned_length=21"));
+    }
+
+    #[test]
+    fn test_cross_market_smt_invalid_window_pair_quality_stays_invalid_even_if_flat() {
+        let definition = FactorDefinition::cross_market_smt();
+        let candles = candles(80);
+        let paired = flat_candles(80, 200.0);
+        let context = FactorContext {
+            paired_candles: Some(&paired),
+            auxiliary: None,
+            regime: None,
+        };
+
+        let series = definition.evaluate(&candles, &context).unwrap();
+        let target = &series.signals[52];
+
+        assert_eq!(target.value, 0.0);
+        assert_eq!(target.confidence, 0.0);
+        assert!(target
+            .explanation
+            .contains("status=invalid_due_to_pair_quality"));
+        assert!(target.explanation.contains("quality_tier=poor"));
+        assert!(target.explanation.contains("aligned_length=21"));
     }
 }

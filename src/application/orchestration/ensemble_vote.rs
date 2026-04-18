@@ -30,6 +30,8 @@ pub struct AnalyzeEnsembleVoteInput {
     #[serde(default)]
     pub pre_bayes_filter: Option<PreBayesEvidenceFilter>,
     pub belief: BeliefReportPacket,
+    #[serde(default)]
+    pub ict_structure: Option<crate::types::ICTStructureSummary>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -444,6 +446,145 @@ fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeature
         entry_price_offset_bps: 0.0,
         sl_distance_bps: 0.0,
         tp_rr_ratio: 2.0,
+
+        // ── Flowtree-derived ICT features ──────────────────────────
+        atr_consumption_ratio: 0.0,
+        htf_dol_distance_ratio: 1.0,
+        htf_eqx_swept: pre_bayes
+            .map(|f| {
+                f.raw_liquidity_context_label.contains("sweep")
+                    || f.filtered_liquidity_context_label.contains("sweep")
+            })
+            .unwrap_or(false),
+        htf_rb_type: if pre_bayes.map(|f| f.active_pda_count).unwrap_or(0) > 0 {
+            "strong".to_string()
+        } else {
+            "none".to_string()
+        },
+        event_b_consecutive_count: {
+            let stale = pre_bayes.map(|f| f.stale_pda_count).unwrap_or(0);
+            let inversed = pre_bayes.map(|f| f.inversed_pda_count).unwrap_or(0);
+            (stale + inversed).min(255) as u8
+        },
+        event_a_sequence_stage: {
+            let ict = input.ict_structure.as_ref();
+            let has_cisd = ict.map(|s| s.cisd_ltf_confirmed).unwrap_or(false);
+            let has_fvg = ict.map(|s| s.fvgs_open > 0).unwrap_or(false);
+            let has_mss = pre_bayes
+                .map(|f| f.filtered_liquidity_context_label.contains("mss"))
+                .unwrap_or(false);
+            if has_cisd && has_fvg && has_mss {
+                3
+            } else if has_cisd && has_fvg {
+                2
+            } else if has_cisd {
+                1
+            } else {
+                0
+            }
+        },
+        ltf_path_label: {
+            let ict = input.ict_structure.as_ref();
+            let sweeps = ict.map(|s| s.liquidity_sweeps).unwrap_or(0);
+            let cisd = ict.map(|s| s.cisd_ltf_confirmed).unwrap_or(false);
+            let rb = ict.map(|s| s.rb_pinbar_detected).unwrap_or(false);
+            if sweeps >= 2 && cisd {
+                "classic_double_sweep".to_string()
+            } else if sweeps >= 1 && !cisd && rb {
+                "v_reversal".to_string()
+            } else if cisd && !rb {
+                "smt_washout".to_string()
+            } else {
+                "none".to_string()
+            }
+        },
+        ote_0705_offset: 0.0,
+        structure_break_count: 0,
+        latest_break_type: "none".to_string(),
+        fractal_sync_confirmed: {
+            let ict = input.ict_structure.as_ref();
+            let htf_cisd = ict.map(|s| s.cisd_htf_confirmed).unwrap_or(false);
+            let ltf_cisd = ict.map(|s| s.cisd_ltf_confirmed).unwrap_or(false);
+            htf_cisd && ltf_cisd
+        },
+        killswitch_completion: {
+            let ict = input.ict_structure.as_ref();
+            let mut count: u8 = 0;
+            if ict.map(|s| s.rb_pinbar_detected).unwrap_or(false) {
+                count += 1;
+            }
+            if ict.map(|s| s.cisd_htf_confirmed).unwrap_or(false) {
+                count += 1;
+            }
+            if ict.map(|s| s.fvgs_open > 0).unwrap_or(false) {
+                count += 1;
+            }
+            if pre_bayes
+                .map(|f| f.filtered_liquidity_context_label.contains("mss"))
+                .unwrap_or(false)
+            {
+                count += 1;
+            }
+            count
+        },
+        fvgs_open: input
+            .ict_structure
+            .as_ref()
+            .map(|s| s.fvgs_open.min(255) as u8)
+            .unwrap_or(0),
+        order_blocks_nearby: input
+            .ict_structure
+            .as_ref()
+            .map(|s| s.order_blocks_nearby.min(255) as u8)
+            .unwrap_or(0),
+        cisd_ltf_confirmed: input
+            .ict_structure
+            .as_ref()
+            .map(|s| s.cisd_ltf_confirmed)
+            .unwrap_or(false),
+        cisd_htf_confirmed: input
+            .ict_structure
+            .as_ref()
+            .map(|s| s.cisd_htf_confirmed)
+            .unwrap_or(false),
+        rb_pinbar_detected: input
+            .ict_structure
+            .as_ref()
+            .map(|s| s.rb_pinbar_detected)
+            .unwrap_or(false),
+        pda_bull_count: input
+            .ict_structure
+            .as_ref()
+            .map(|s| s.pda_bull_count.min(255) as u8)
+            .unwrap_or(0),
+        liquidity_sweep_count: input
+            .ict_structure
+            .as_ref()
+            .map(|s| s.liquidity_sweeps.min(255) as u8)
+            .unwrap_or(0),
+        red_alert_active: {
+            let eb = pre_bayes
+                .map(|f| f.stale_pda_count + f.inversed_pda_count)
+                .unwrap_or(0);
+            eb >= 3
+        },
+        recovery_event_a_streak: 0,
+        pda_survival_regime: {
+            let regime = pre_bayes
+                .map(|f| f.filtered_market_regime_label.as_str())
+                .unwrap_or("unknown");
+            match regime {
+                r if r.contains("bear") || r.contains("distribution") => "bear".to_string(),
+                r if r.contains("chop") || r.contains("range") => "chop".to_string(),
+                r if r.contains("bull")
+                    || r.contains("accumulation")
+                    || r.contains("expansion") =>
+                {
+                    "bull_continuation".to_string()
+                }
+                _ => "unknown".to_string(),
+            }
+        },
     }
 }
 
@@ -751,6 +892,7 @@ pub fn build_stub_ensemble_vote_from_research(report: &ResearchReport) -> Ensemb
             },
             ..BeliefReportPacket::default()
         },
+        ict_structure: None,
     })
 }
 
@@ -799,6 +941,7 @@ mod tests {
             },
             pre_bayes_filter: None,
             belief,
+            ict_structure: None,
         });
         assert_eq!(artifact.posterior.normalization_status, "normalized");
         assert!(!artifact.final_action.is_empty());
@@ -854,6 +997,7 @@ mod tests {
             dataset_comparability: DatasetComparability::default(),
             pre_bayes_filter: None,
             belief,
+            ict_structure: None,
         });
         assert_eq!(artifact.executor_summaries.len(), 2);
     }
@@ -874,6 +1018,7 @@ mod tests {
             dataset_comparability: DatasetComparability::default(),
             pre_bayes_filter: None,
             belief: BeliefReportPacket::default(),
+            ict_structure: None,
         });
         assert!(artifact.hard_block.active);
         assert_eq!(artifact.hard_block.stage.as_deref(), Some("analyze"));

@@ -54,6 +54,7 @@ pub fn build_expansion_factor_pipeline_report(
         symbol,
         factor_name,
         candles,
+        None,
         multi_timeframe_summary,
         &registry,
     )
@@ -63,6 +64,7 @@ pub fn build_expansion_factor_pipeline_report_with_registry(
     symbol: &str,
     factor_name: &str,
     candles: &[Candle],
+    paired_candles: Option<&[Candle]>,
     multi_timeframe_summary: &[String],
     registry: &FactorRegistry,
 ) -> Result<ExpansionFactorPipelineReport> {
@@ -74,6 +76,7 @@ pub fn build_expansion_factor_pipeline_report_with_registry(
     let output = factor_engine.run(
         candles,
         &FactorContext {
+            paired_candles,
             regime: Some(Regime::ManipulationExpansion),
             ..FactorContext::default()
         },

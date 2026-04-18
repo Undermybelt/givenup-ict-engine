@@ -13,6 +13,7 @@ pub use engine::{
 };
 pub use factor_definition::{
     FactorCategory, FactorContext, FactorDefinition, FactorSeries, FactorSignal,
+    PairedMarketQualityReport,
 };
 pub use metrics::BacktestMetrics;
 pub use research::{FactorLab, ResearchReport};
