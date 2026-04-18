@@ -4,9 +4,21 @@ Date: final signoff after release-hygiene, help audit, agent surface polish, pai
 
 ## Final verdict
 
-Ready to tag and release.
+Ready to tag and release from a private release mirror.
 
-No blocking release issues found.
+No blocking release issues found in the codebase.
+
+## Important release routing decision
+
+Primary repository history contains oversized historical state artifacts that GitHub rejects on push.
+
+Therefore the release path for `v0.0.1` is:
+- keep source repo private
+- create a separate private release mirror repo
+- export current tree state only
+- publish tag/release from the private mirror repo
+
+This avoids history rewrite risk on the primary research repo while preserving a clean private release surface.
 
 ## Signoff checklist
 
@@ -82,6 +94,14 @@ cargo run --quiet -- analyze --symbol DEMO --demo --agent
 - emitted `decision_summary`
 - emitted structured `next_step`
 
+## Release transport blocker on primary repo
+
+Primary repo push was rejected by GitHub due to historical oversized files, including:
+- `state100/NQ/learning_state.json` > 100 MB
+- `state_autoresearch_resume_bg/NQ/learning_state.json` > 100 MB
+
+That is a history transport problem, not a code release blocker.
+
 ## Residual non-blocking debt
 
 1. `research-verdict` is compact, not a full experiment analytics engine yet
@@ -91,4 +111,4 @@ cargo run --quiet -- analyze --symbol DEMO --demo --agent
 
 ## Release recommendation
 
-Proceed with tag and release.
+Proceed with private mirror tag and release for `v0.0.1`.
