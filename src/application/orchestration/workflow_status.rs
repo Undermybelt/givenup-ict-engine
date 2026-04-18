@@ -248,6 +248,9 @@ pub fn build_human_workflow_status_view(
     let latest_phase_summary = latest_phase
         .map(|phase| phase.phase_summary.clone())
         .unwrap_or_else(|| "尚无可用阶段摘要。".to_string());
+    let latest_phase_summary_short = latest_phase
+        .map(short_human_phase_summary)
+        .unwrap_or_else(|| "尚无可用阶段摘要。".to_string());
     let selected_data_candidates = historical_data_candidates(snapshot);
     let hard_block_statuses = [
         "blocked",
@@ -307,6 +310,30 @@ pub fn build_human_workflow_status_view(
     } else {
         humanize_workflow_command(&top_level_command)
     };
+    let action_status_label = if user_selection_pending {
+        "action_blocked".to_string()
+    } else if snapshot.blocking_truth.status.is_empty() {
+        "unblocked".to_string()
+    } else {
+        snapshot.blocking_truth.status.clone()
+    };
+    let gate_reason_label = if user_selection_pending {
+        "user_selected_historical_data_missing".to_string()
+    } else if hard_block_active && !snapshot.blocking_truth.reason.is_empty() {
+        snapshot.blocking_truth.reason.clone()
+    } else {
+        "none".to_string()
+    };
+    let summary_line = format!(
+        "{} | {} | {}",
+        snapshot.symbol, snapshot.current_focus_phase, action_status_label
+    );
+    let blocking_line = format!("Block: {}", gate_reason_label);
+    let next_action_line = format!("Next: {}", human_next_action);
+    let phase_summary_line = format!(
+        "Latest: {} | {}",
+        latest_phase_label, latest_phase_summary_short
+    );
     let credibility_risks = snapshot
         .risk_flags
         .iter()
@@ -336,6 +363,10 @@ pub fn build_human_workflow_status_view(
             .collect::<Vec<_>>()
     };
     serde_json::json!({
+        "summary_line": summary_line,
+        "blocking_line": blocking_line,
+        "next_action_line": next_action_line,
+        "phase_summary_line": phase_summary_line,
         "symbol": snapshot.symbol,
         "current_status": {
             "focus_phase": snapshot.current_focus_phase,
@@ -345,16 +376,8 @@ pub fn build_human_workflow_status_view(
             } else {
                 snapshot.blocking_truth.stage.clone()
             },
-            "blocking_status": if historical_data_gate_active {
-                "blocked".to_string()
-            } else {
-                snapshot.blocking_truth.status.clone()
-            },
-            "blocking_reason": if historical_data_gate_active {
-                "user_selected_historical_data_missing".to_string()
-            } else {
-                snapshot.blocking_truth.reason.clone()
-            },
+            "blocking_status": action_status_label,
+            "blocking_reason": gate_reason_label,
             "hard_block_active": hard_block_active || historical_data_gate_active,
             "top_level_command_source": if historical_data_gate_active {
                 "historical_data_selection_gate"
@@ -364,14 +387,26 @@ pub fn build_human_workflow_status_view(
                 "recommended_next_command"
             },
         },
-        "hard_block": if hard_block_active {
+        "hard_block": if hard_block_active || historical_data_gate_active {
             serde_json::json!({
                 "active": true,
-                "stage": snapshot.blocking_truth.stage,
-                "status": snapshot.blocking_truth.status,
-                "reason": snapshot.blocking_truth.reason,
-                "evidence": snapshot.blocking_truth.evidence,
-                "command": snapshot.blocking_truth.next_command,
+                "stage": if historical_data_gate_active {
+                    snapshot.current_focus_phase.clone()
+                } else {
+                    snapshot.blocking_truth.stage.clone()
+                },
+                "status": action_status_label,
+                "reason": gate_reason_label,
+                "evidence": if historical_data_gate_active {
+                    Vec::<String>::new()
+                } else {
+                    snapshot.blocking_truth.evidence.clone()
+                },
+                "command": if hard_block_active {
+                    serde_json::Value::String(snapshot.blocking_truth.next_command.clone())
+                } else {
+                    serde_json::Value::Null
+                },
                 "human_action": human_next_action,
             })
         } else {
@@ -396,6 +431,7 @@ pub fn build_human_workflow_status_view(
         "latest_stage": {
             "phase": latest_phase_label,
             "summary": latest_phase_summary,
+            "summary_short": latest_phase_summary_short,
         },
         "ensemble_consensus": ensemble_summary,
         "credibility_risks": credibility_risks,
@@ -417,6 +453,30 @@ pub fn build_human_workflow_status_view(
                     .cloned()
             }),
     })
+}
+
+fn short_human_phase_summary(phase: &crate::state::WorkflowPhaseSnapshot) -> String {
+    let mut parts = Vec::new();
+    if let Some(direction) = &phase.selected_direction {
+        parts.push(format!("direction={direction}"));
+    }
+    if let Some(entry) = &phase.selected_entry_quality {
+        parts.push(format!("entry={entry}"));
+    }
+    if !phase.pre_bayes_gate_status.is_empty() {
+        parts.push(format!("gate={}", phase.pre_bayes_gate_status));
+    }
+    if phase.pre_bayes_evidence_quality_score > 0.0 {
+        parts.push(format!(
+            "quality={:.3}",
+            phase.pre_bayes_evidence_quality_score
+        ));
+    }
+    if parts.is_empty() {
+        phase.phase_summary.clone()
+    } else {
+        parts.join(" ")
+    }
 }
 
 pub fn build_ensemble_vote_surface(
@@ -737,7 +797,7 @@ mod tests {
         assert_eq!(value["symbol"], "NQ");
         assert_eq!(value["current_status"]["focus_phase"], "update");
         assert_eq!(value["hard_block"]["active"], true);
-        assert_eq!(value["hard_block"]["status"], "blocked");
+        assert_eq!(value["hard_block"]["status"], "action_blocked");
         assert_eq!(
             value["hard_block"]["reason"],
             "user_selected_historical_data_missing"
@@ -790,6 +850,25 @@ mod tests {
         assert_eq!(
             value["ensemble_consensus"]["executor_scorecard_source"],
             "persisted"
+        );
+    }
+
+    #[test]
+    fn human_workflow_status_view_exposes_human_summary_fields() {
+        let snapshot = sample_human_workflow_snapshot();
+        let value = build_human_workflow_status_view(&snapshot, &[]);
+        assert_eq!(value["summary_line"], "NQ | update | action_blocked");
+        assert_eq!(
+            value["next_action_line"],
+            "Next: Ask the user to choose the historical dataset. Please choose one historical data path for the next research/backtest run: /tmp/a.json, /tmp/b.json Reply with one path from the list, or paste another valid file path. Candidates: /tmp/a.json, /tmp/b.json"
+        );
+        assert_eq!(
+            value["blocking_line"],
+            "Block: user_selected_historical_data_missing"
+        );
+        assert_eq!(
+            value["phase_summary_line"],
+            "Latest: update | entry=medium gate=pass_neutralized quality=0.500"
         );
     }
 

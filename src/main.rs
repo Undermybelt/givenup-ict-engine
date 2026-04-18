@@ -177,6 +177,29 @@ impl OutputFormat {
     }
 }
 
+fn human_direction_bias_label(direction: Direction) -> &'static str {
+    match direction {
+        Direction::Bull => "Bull bias",
+        Direction::Bear => "Bear bias",
+        Direction::Neutral => "Neutral bias",
+    }
+}
+
+fn human_action_line(queue: &[FactorIterationPrompt]) -> String {
+    let action = queue
+        .iter()
+        .find(|item| item.iteration_action != "keep" || item.replacement_candidate)
+        .map(|item| {
+            format!(
+                "{} {}",
+                item.iteration_action.to_uppercase(),
+                item.factor_name
+            )
+        })
+        .unwrap_or_else(|| "OBSERVE no_factor_change".to_string());
+    format!("Action: {}", action)
+}
+
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::env;
 
@@ -654,13 +677,24 @@ enum Commands {
         data_mtf: Option<String>,
         #[arg(long, help = "Lower-timeframe cleaned candle JSON path")]
         data_ltf: Option<String>,
-        #[arg(long, help = "Root directory for auto-resolving cleaned multi-timeframe data")]
+        #[arg(
+            long,
+            help = "Root directory for auto-resolving cleaned multi-timeframe data"
+        )]
         data_root: Option<String>,
         #[arg(long, help = "Market family hint for input resolution")]
         market: Option<String>,
-        #[arg(long, default_value = "state", help = "State directory for model and workflow artifacts")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory for model and workflow artifacts"
+        )]
         state_dir: String,
-        #[arg(long, default_value = "json", help = "Output format: json, compact, agent, or human")]
+        #[arg(
+            long,
+            default_value = "json",
+            help = "Output format: json, compact, agent, or human"
+        )]
         output_format: String,
         #[arg(long, help = "Alias for --output-format compact")]
         compact: bool,
@@ -671,113 +705,190 @@ enum Commands {
     },
     /// Analyze live futures with integrated backends and spot/options auxiliary evidence
     AnalyzeLive {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long)]
+        #[arg(long, help = "Explicit futures symbol override for live data provider")]
         futures_symbol: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Explicit spot symbol override for auxiliary evidence")]
         spot_symbol: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Explicit options symbol override for auxiliary evidence")]
         options_symbol: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Spot instrument kind override, e.g. spot, etf, index")]
         spot_kind: Option<String>,
-        #[arg(long, default_value = "openbb")]
+        #[arg(
+            long,
+            default_value = "openbb",
+            help = "Backend for live futures candles"
+        )]
         futures_backend: String,
-        #[arg(long, default_value = "openbb")]
+        #[arg(
+            long,
+            default_value = "openbb",
+            help = "Backend for auxiliary spot/options evidence"
+        )]
         aux_backend: String,
-        #[arg(long, default_value = "http://127.0.0.1:6901/api/v1")]
+        #[arg(
+            long,
+            default_value = "http://127.0.0.1:6901/api/v1",
+            help = "Base URL for OpenAlice-compatible live backend"
+        )]
         openalice_base_url: String,
-        #[arg(long, default_value = "http://127.0.0.1:8080")]
+        #[arg(
+            long,
+            default_value = "http://127.0.0.1:8080",
+            help = "Base URL for NoFX-compatible live backend"
+        )]
         nofx_base_url: String,
-        #[arg(long, default_value = "state")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory for model and workflow artifacts"
+        )]
         state_dir: String,
     },
     /// Train HMM model
     Train {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long)]
+        #[arg(long, help = "Cleaned candle JSON path used for HMM training")]
         data: String,
-        #[arg(short, long, default_value = "100")]
+        #[arg(
+            short,
+            long,
+            default_value = "100",
+            help = "Number of Baum-Welch training epochs"
+        )]
         epochs: usize,
-        #[arg(long, default_value = "state")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory for model and workflow artifacts"
+        )]
         state_dir: String,
     },
     /// Run backtest
     Backtest {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long)]
+        #[arg(long, help = "Primary cleaned candle JSON path")]
         data: String,
-        #[arg(long)]
+        #[arg(long, help = "Optional paired-market candle JSON path")]
         paired_data: Option<String>,
-        #[arg(long, default_value = "state")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory for model and workflow artifacts"
+        )]
         state_dir: String,
-        #[arg(long, default_value = "60")]
+        #[arg(
+            long,
+            default_value = "60",
+            help = "Warmup bars before trade simulation begins"
+        )]
         warmup_bars: usize,
-        #[arg(long, default_value = "10")]
+        #[arg(long, default_value = "10", help = "Maximum holding period in bars")]
         hold_bars: usize,
-        #[arg(long, default_value = "0")]
+        #[arg(long, default_value = "0", help = "Spread cost in basis points")]
         spread_bps: f64,
-        #[arg(long, default_value = "0")]
+        #[arg(long, default_value = "0", help = "Slippage cost in basis points")]
         slippage_bps: f64,
-        #[arg(long, default_value = "0")]
+        #[arg(long, default_value = "0", help = "Fee cost in basis points")]
         fee_bps: f64,
-        #[arg(long, default_value = "favor_stop_loss")]
+        #[arg(
+            long,
+            default_value = "favor_stop_loss",
+            help = "Ambiguous intrabar execution policy"
+        )]
         ambiguous_bar_policy: String,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Update online learning state during backtest"
+        )]
         online_learn: bool,
     },
     /// Update BBN from realized trade outcome
     Update {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long)]
+        #[arg(long, help = "Realized trade outcome label")]
         outcome: String,
-        #[arg(long, default_value = "strong_buy")]
+        #[arg(
+            long,
+            default_value = "strong_buy",
+            help = "Entry signal label applied to the feedback update"
+        )]
         entry_signal: String,
-        #[arg(long, default_value = "state")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory for model and workflow artifacts"
+        )]
         state_dir: String,
-        #[arg(long)]
+        #[arg(long, help = "Optional realized PnL used for outcome normalization")]
         pnl: Option<f64>,
-        #[arg(long)]
+        #[arg(long, help = "Optional regime label override at trade entry")]
         regime: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional direction label override at trade entry")]
         direction: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional feedback JSON artifact to consume")]
         feedback_file: Option<String>,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Also update ensemble executor scorecards"
+        )]
         ensemble: bool,
     },
     /// Run factor research sandbox
     FactorResearch {
-        #[arg(long, default_value = "RESEARCH")]
+        #[arg(
+            long,
+            default_value = "RESEARCH",
+            help = "Market symbol, e.g. NQ, ES, GC"
+        )]
         symbol: String,
-        #[arg(long)]
+        #[arg(long, help = "Primary cleaned candle JSON path")]
         data: String,
-        #[arg(long, default_value = "expansion_manipulation")]
+        #[arg(
+            long,
+            default_value = "expansion_manipulation",
+            help = "Research objective label"
+        )]
         objective: String,
-        #[arg(long)]
+        #[arg(long, help = "Optional 1m candle JSON path")]
         data_1m: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 5m candle JSON path")]
         data_5m: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 15m candle JSON path")]
         data_15m: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 1h candle JSON path")]
         data_1h: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 4h candle JSON path")]
         data_4h: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 1d candle JSON path")]
         data_1d: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional paired-market candle JSON path")]
         paired_data: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional mutation spec JSON path")]
         mutation_spec: Option<String>,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Emit mutation evaluation details in output"
+        )]
         emit_mutation_evaluation: bool,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Also emit ensemble vote artifacts"
+        )]
         ensemble: bool,
-        #[arg(long, default_value = "state")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory for model and workflow artifacts"
+        )]
         state_dir: String,
     },
     /// Show factor mutation history and clustered failure tags
@@ -799,156 +910,239 @@ enum Commands {
     },
     /// Run checkpointed keep/discard factor mutation autoresearch loop
     FactorAutoresearch {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long)]
+        #[arg(long, help = "Primary cleaned candle JSON path")]
         data: String,
-        #[arg(long, default_value = "expansion_manipulation")]
+        #[arg(
+            long,
+            default_value = "expansion_manipulation",
+            help = "Research objective label"
+        )]
         objective: String,
-        #[arg(long)]
+        #[arg(long, help = "Optional mutation spec JSON path")]
         mutation_spec: Option<String>,
-        #[arg(long, default_value_t = 1)]
+        #[arg(
+            long,
+            default_value_t = 1,
+            help = "Number of autoresearch iterations to run"
+        )]
         iterations: usize,
-        #[arg(long)]
+        #[arg(long, help = "Optional 1m candle JSON path")]
         data_1m: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 5m candle JSON path")]
         data_5m: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 15m candle JSON path")]
         data_15m: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 1h candle JSON path")]
         data_1h: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 4h candle JSON path")]
         data_4h: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 1d candle JSON path")]
         data_1d: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional paired-market candle JSON path")]
         paired_data: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Explicit autoresearch session id to resume or inspect")]
         session_id: Option<String>,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Resume the latest known autoresearch session"
+        )]
         resume_latest: bool,
-        #[arg(long, default_value_t = 2)]
+        #[arg(
+            long,
+            default_value_t = 2,
+            help = "Maximum consecutive clustered failures before jumping templates"
+        )]
         max_cluster_fail_streak: usize,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Also emit ensemble vote artifacts"
+        )]
         ensemble: bool,
-        #[arg(long, default_value = "state")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory for model and workflow artifacts"
+        )]
         state_dir: String,
     },
     /// Show factor-autoresearch sessions and attempts
     FactorAutoresearchStatus {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long, default_value = "state")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory for model and workflow artifacts"
+        )]
         state_dir: String,
-        #[arg(long)]
+        #[arg(long, help = "Explicit autoresearch session id to inspect")]
         session_id: Option<String>,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Show only the latest session summary"
+        )]
         latest_only: bool,
-        #[arg(long)]
+        #[arg(long, help = "Limit returned sessions or attempts")]
         limit: Option<usize>,
     },
     /// Run factor walk-forward backtest and learning updates
     FactorBacktest {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long)]
+        #[arg(long, help = "Primary cleaned candle JSON path")]
         data: String,
-        #[arg(long)]
+        #[arg(long, help = "Optional 1m candle JSON path")]
         data_1m: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 5m candle JSON path")]
         data_5m: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 15m candle JSON path")]
         data_15m: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 1h candle JSON path")]
         data_1h: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 4h candle JSON path")]
         data_4h: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 1d candle JSON path")]
         data_1d: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional paired-market candle JSON path")]
         paired_data: Option<String>,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Also emit ensemble vote artifacts"
+        )]
         ensemble: bool,
-        #[arg(long, default_value = "state")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory for model and workflow artifacts"
+        )]
         state_dir: String,
     },
     /// Clean TOMAC-style futures minute CSVs into continuous candles
     CleanFutures {
-        #[arg(long)]
+        #[arg(long, help = "Root directory containing TOMAC-style futures CSV files")]
         root: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Output directory for cleaned candle JSON")]
         output_dir: String,
-        #[arg(long, default_value = "15m")]
+        #[arg(long, default_value = "15m", help = "Target output interval")]
         interval: String,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Also emit sibling multi-timeframe intervals"
+        )]
         multi_timeframe: bool,
     },
     /// Standard futures research SOP: clean, research, summarize best factors
     FuturesSop {
-        #[arg(long)]
+        #[arg(long, help = "Root directory containing TOMAC-style futures CSV files")]
         root: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Output directory for cleaned candle JSON and reports")]
         output_dir: String,
-        #[arg(long, default_value = "15m")]
+        #[arg(long, default_value = "15m", help = "Primary research interval")]
         interval: String,
     },
     /// Expansion-focused futures SOP: rank factors by bull/bear expansion discrimination
     ExpansionSop {
-        #[arg(long)]
+        #[arg(long, help = "Root directory containing TOMAC-style futures CSV files")]
         root: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Output directory for cleaned candle JSON and reports")]
         output_dir: String,
-        #[arg(long, default_value = "15m")]
+        #[arg(long, default_value = "15m", help = "Primary research interval")]
         interval: String,
-        #[arg(long, default_value_t = 20)]
+        #[arg(long, default_value_t = 20, help = "Expansion lookback window in bars")]
         lookback: usize,
-        #[arg(long, default_value_t = 1.5)]
+        #[arg(
+            long,
+            default_value_t = 1.5,
+            help = "ATR multiplier used for expansion thresholding"
+        )]
         atr_multiplier: f64,
-        #[arg(long, default_value = "expansion_manipulation")]
+        #[arg(
+            long,
+            default_value = "expansion_manipulation",
+            help = "Research objective label"
+        )]
         objective: String,
-        #[arg(long)]
+        #[arg(long, help = "Optional mutation spec JSON path")]
         mutation_spec: Option<String>,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Emit mutation evaluation details in output"
+        )]
         emit_mutation_evaluation: bool,
     },
     /// Structured latest-sample trace from factor signal through Pre-Bayes, bridge, and resonance
     FactorPipelineDebug {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long)]
+        #[arg(long, help = "Primary cleaned candle JSON path")]
         data: String,
-        #[arg(long)]
+        #[arg(long, help = "Factor name to inspect")]
         factor: String,
-        #[arg(long, default_value = "expansion_manipulation")]
+        #[arg(
+            long,
+            default_value = "expansion_manipulation",
+            help = "Research objective label"
+        )]
         objective: String,
-        #[arg(long)]
+        #[arg(long, help = "Optional 1m candle JSON path")]
         data_1m: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 5m candle JSON path")]
         data_5m: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 15m candle JSON path")]
         data_15m: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 1h candle JSON path")]
         data_1h: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 4h candle JSON path")]
         data_4h: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional 1d candle JSON path")]
         data_1d: Option<String>,
     },
     /// Show the latest cross-phase workflow snapshot
     WorkflowStatus {
         #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long, default_value = "state", help = "State directory containing workflow artifacts")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory containing workflow artifacts"
+        )]
         state_dir: String,
-        #[arg(long, default_value_t = true, help = "Refresh snapshot from current artifacts before printing")]
+        #[arg(
+            long,
+            default_value_t = true,
+            help = "Refresh snapshot from current artifacts before printing"
+        )]
         refresh: bool,
-        #[arg(long, help = "Print a named workflow phase surface instead of the full snapshot")]
+        #[arg(
+            long,
+            help = "Print a named workflow phase surface instead of the full snapshot"
+        )]
         phase: Option<String>,
-        #[arg(long, default_value_t = false, help = "Print only actionable artifacts")]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Print only actionable artifacts"
+        )]
         actionable_only: bool,
-        #[arg(long, default_value_t = false, help = "Print only workflow disagreements")]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Print only workflow disagreements"
+        )]
         conflicts_only: bool,
-        #[arg(long, default_value_t = false, help = "Print only the latest promotable artifact")]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Print only the latest promotable artifact"
+        )]
         latest_promotable: bool,
         #[arg(long, default_value_t = false, help = "Print only hard-block rows")]
         hard_block_only: bool,
@@ -956,7 +1150,11 @@ enum Commands {
         hard_block_reason: Option<String>,
         #[arg(long, help = "Limit hard-block rows")]
         limit: Option<usize>,
-        #[arg(long, default_value = "json", help = "Output format: json, compact, agent, or human")]
+        #[arg(
+            long,
+            default_value = "json",
+            help = "Output format: json, compact, agent, or human"
+        )]
         output_format: String,
         #[arg(long, help = "Alias for --output-format compact")]
         compact: bool,
@@ -967,83 +1165,150 @@ enum Commands {
     },
     /// Show the latest Pre-Bayes status directly
     PreBayesStatus {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long, default_value = "state")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory containing workflow artifacts"
+        )]
         state_dir: String,
-        #[arg(long, default_value_t = true)]
+        #[arg(
+            long,
+            default_value_t = true,
+            help = "Refresh snapshot from current artifacts before printing"
+        )]
         refresh: bool,
-        #[arg(long)]
+        #[arg(
+            long,
+            help = "Optional Pre-Bayes section to print, e.g. policy or bridge"
+        )]
         section: Option<String>,
     },
     /// Show the latest Pre-Bayes diff package directly
     PreBayesDiff {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long, default_value = "state")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory containing workflow artifacts"
+        )]
         state_dir: String,
-        #[arg(long, default_value_t = true)]
+        #[arg(
+            long,
+            default_value_t = true,
+            help = "Refresh snapshot from current artifacts before printing"
+        )]
         refresh: bool,
     },
     /// Show artifact lineage edges and related nodes
     ArtifactLineage {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long, default_value = "state")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory containing artifact ledger"
+        )]
         state_dir: String,
-        #[arg(long)]
+        #[arg(long, help = "Optional artifact id to focus lineage output")]
         artifact_id: Option<String>,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Show only the latest lineage rows"
+        )]
         latest_only: bool,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Show only improving lineage rows"
+        )]
         improving_only: bool,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Show only regressing lineage rows"
+        )]
         regressing_only: bool,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Show only lineage rows with rule breaks"
+        )]
         rule_break_only: bool,
     },
     /// Show artifact ledger status
     ArtifactStatus {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long, default_value = "state")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory containing artifact ledger"
+        )]
         state_dir: String,
-        #[arg(long)]
+        #[arg(long, help = "Optional artifact id to inspect")]
         artifact_id: Option<String>,
-        #[arg(long)]
+        #[arg(long, help = "Optional artifact kind filter")]
         kind: Option<String>,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Show only the latest artifact row"
+        )]
         latest_only: bool,
-        #[arg(long, default_value_t = false)]
+        #[arg(long, default_value_t = false, help = "Show only actionable artifacts")]
         actionable_only: bool,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Show only artifacts with review rule breaks"
+        )]
         rule_break_only: bool,
-        #[arg(long, default_value = "generated")]
+        #[arg(long, default_value = "generated", help = "Sort key for artifact rows")]
         sort_by: String,
-        #[arg(long, default_value_t = true)]
+        #[arg(
+            long,
+            default_value_t = true,
+            help = "Sort descending instead of ascending"
+        )]
         descending: bool,
-        #[arg(long)]
+        #[arg(long, help = "Maximum artifact rows to print")]
         limit: Option<usize>,
-        #[arg(long)]
+        #[arg(long, help = "Print only the most recent N artifact rows")]
         recent_n: Option<usize>,
-        #[arg(long, default_value_t = false)]
+        #[arg(long, default_value_t = false, help = "Show only consumed artifacts")]
         consumed_only: bool,
-        #[arg(long, default_value_t = false)]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Aggregate artifact rows by kind"
+        )]
         bucket_by_kind: bool,
-        #[arg(long, default_value = "kind")]
+        #[arg(
+            long,
+            default_value = "kind",
+            help = "Sort key for bucketed artifact output"
+        )]
         bucket_order_by: String,
-        #[arg(long)]
+        #[arg(long, help = "Maximum bucket rows to print")]
         bucket_limit: Option<usize>,
     },
     /// Diff two artifacts by id
     ArtifactDiff {
-        #[arg(long)]
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
         symbol: String,
-        #[arg(long, default_value = "state")]
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory containing artifact ledger"
+        )]
         state_dir: String,
-        #[arg(long)]
+        #[arg(long, help = "Left artifact id for diff comparison")]
         left_artifact_id: String,
-        #[arg(long)]
+        #[arg(long, help = "Right artifact id for diff comparison")]
         right_artifact_id: String,
     },
 }
@@ -1691,16 +1956,41 @@ fn emit_analyze_output(report: &AnalyzeReport, output_format: OutputFormat) -> R
         .collect::<Vec<_>>();
     let compact_report = build_compact_analyze_report(
         report.supporting.decision_hint.clone(),
+        Some(format!(
+            "{:?}",
+            report.supporting.decision.selected_direction
+        )),
+        Some(report.supporting.entry_quality.selected_state.clone()),
+        Some(
+            report
+                .supporting
+                .pre_bayes_evidence_filter
+                .gating_status
+                .clone(),
+        ),
+        Some(report.supporting.recommended_next_command.clone()),
         &compact_evidence,
         &report.supporting.artifact_action_summary,
         std::slice::from_ref(&report.supporting.recommended_next_command),
     );
     let agent_report = build_agent_guidance_report(
-        report.supporting.workflow_state.reason.clone(),
+        Some(format!(
+            "{:?}",
+            report.supporting.decision.selected_direction
+        )),
+        Some(report.supporting.entry_quality.selected_state.clone()),
+        Some(
+            report
+                .supporting
+                .pre_bayes_evidence_filter
+                .gating_status
+                .clone(),
+        ),
+        Some(report.supporting.recommended_next_command.clone()),
+        Some(report.supporting.decision_hint.clone()),
         &report.supporting.multi_timeframe_summary,
         &report.supporting.artifact_action_summary,
         std::slice::from_ref(&report.supporting.recommended_next_command),
-        &[],
     );
     let human_market_family = report
         .supporting
@@ -1780,6 +2070,22 @@ fn emit_analyze_output(report: &AnalyzeReport, output_format: OutputFormat) -> R
         },
     };
     let human_report = build_human_analyze_report(
+        Some(format!(
+            "{} | {} | Entry: {} | Gate: {} | Quality: {:.3}",
+            report.symbol,
+            human_direction_bias_label(report.supporting.decision.selected_direction),
+            report.supporting.entry_quality.selected_state,
+            report.supporting.pre_bayes_evidence_filter.gating_status,
+            report
+                .supporting
+                .pre_bayes_evidence_filter
+                .evidence_quality_score
+        )),
+        Some(human_action_line(&report.supporting.factor_iteration_queue)),
+        Some(format!(
+            "Next: {}",
+            report.supporting.recommended_next_command
+        )),
         match human_market_family {
             Some("metals") => format!(
                 "金属结构偏向：{}。这类盘先看流动性是否被扫完，再等回到顺势一侧；原始标签={}。",
@@ -1869,10 +2175,10 @@ fn emit_analyze_output(report: &AnalyzeReport, output_format: OutputFormat) -> R
         "executor_scorecard_source": scorecard_source,
     });
     match output_format {
-        OutputFormat::Json => println!("{}", serde_json::to_string_pretty(&full_output)?),
-        OutputFormat::Compact => println!("{}", serde_json::to_string_pretty(&compact_report)?),
-        OutputFormat::Agent => println!("{}", serde_json::to_string_pretty(&agent_report)?),
-        OutputFormat::Human => println!("{}", human_report.render()),
+        OutputFormat::Json => print_redacted_json(&full_output)?,
+        OutputFormat::Compact => print_redacted_json(&compact_report)?,
+        OutputFormat::Agent => print_redacted_json(&agent_report)?,
+        OutputFormat::Human => println!("{}", redact_local_paths(&human_report.render())),
     }
     Ok(())
 }
@@ -1915,7 +2221,12 @@ fn redact_local_paths(text: &str) -> String {
                 let mut j = i;
                 while j < bytes.len() {
                     let ch = bytes[j];
-                    if ch.is_ascii_whitespace() || matches!(ch, b',' | b';' | b'|' | b')' | b'(' | b'[' | b']' | b'{' | b'}') {
+                    if ch.is_ascii_whitespace()
+                        || matches!(
+                            ch,
+                            b',' | b';' | b'|' | b')' | b'(' | b'[' | b']' | b'{' | b'}'
+                        )
+                    {
                         break;
                     }
                     j += 1;
@@ -1958,20 +2269,175 @@ fn print_redacted_json<T: Serialize>(value: &T) -> Result<()> {
 }
 
 fn compact_workflow_status_view(snapshot: &WorkflowSnapshot) -> Value {
+    let blocking_status = if snapshot.blocking_truth.status.is_empty() {
+        "unblocked".to_string()
+    } else {
+        snapshot.blocking_truth.status.clone()
+    };
+    let blocking_reason = if snapshot.blocking_truth.status.is_empty() {
+        "none".to_string()
+    } else {
+        snapshot.blocking_truth.reason.clone()
+    };
+    let top_actionable = snapshot.actionable_artifacts.first().map(|artifact| {
+        serde_json::json!({
+            "artifact_id": artifact.artifact_id,
+            "artifact_kind": artifact.artifact_kind,
+            "decision_hint": artifact.decision_hint,
+            "generated_at": artifact.generated_at,
+        })
+    });
     serde_json::json!({
         "symbol": snapshot.symbol,
         "generated_at": snapshot.generated_at,
-        "current_focus_phase": snapshot.current_focus_phase,
-        "current_focus_reason": snapshot.current_focus_reason,
-        "blocking_truth": snapshot.blocking_truth,
+        "focus_phase": snapshot.current_focus_phase,
+        "focus_reason": snapshot.current_focus_reason,
+        "blocking_status": blocking_status,
+        "blocking_reason": blocking_reason,
         "recommended_next_command": snapshot.recommended_next_command,
-        "pending_actions": snapshot.pending_actions.iter().take(5).cloned().collect::<Vec<_>>(),
-        "risk_flags": snapshot.risk_flags.iter().take(5).cloned().collect::<Vec<_>>(),
-        "latest_promotable_artifact": snapshot.latest_promotable_artifact,
-        "actionable_artifacts": snapshot.actionable_artifacts.iter().take(5).cloned().collect::<Vec<_>>(),
-        "artifact_decision_summary": snapshot.artifact_decision_summary,
-        "disagreements": snapshot.disagreements.iter().take(5).cloned().collect::<Vec<_>>(),
+        "pending_actions": snapshot.pending_actions.iter().take(3).cloned().collect::<Vec<_>>(),
+        "risk_flags": snapshot.risk_flags.iter().take(3).cloned().collect::<Vec<_>>(),
+        "top_actionable": top_actionable,
+        "disagreements": snapshot.disagreements.iter().take(3).map(|item| {
+            serde_json::json!({
+                "id": item.id,
+                "severity": item.severity,
+                "summary": item.summary,
+            })
+        }).collect::<Vec<_>>(),
     })
+}
+
+fn agent_workflow_status_view(
+    snapshot: &WorkflowSnapshot,
+    persisted_scorecards: &[EnsembleExecutorScorecard],
+) -> Value {
+    let latest_phase = snapshot
+        .latest_update
+        .as_ref()
+        .or(snapshot.latest_research.as_ref())
+        .or(snapshot.latest_analyze.as_ref())
+        .or(snapshot.latest_backtest.as_ref())
+        .or(snapshot.latest_train.as_ref());
+    let latest_phase_label = latest_phase
+        .map(|phase| phase.phase.clone())
+        .unwrap_or_else(|| "workflow_phase_unavailable".to_string());
+    let latest_phase_summary = latest_phase
+        .map(|phase| phase.phase_summary.clone())
+        .unwrap_or_else(|| "workflow_phase_summary_unavailable".to_string());
+    let latest_phase_summary_short = latest_phase
+        .map(short_workflow_phase_summary)
+        .unwrap_or_else(|| "workflow_phase_summary_unavailable".to_string());
+    let hard_block_statuses = [
+        "blocked",
+        "bridge_needs_confirmation",
+        "validated_regressing",
+        "credibility_gate_blocked",
+    ];
+    let hard_block_active = hard_block_statuses
+        .iter()
+        .any(|status| snapshot.blocking_truth.status == *status);
+    let command_source = if hard_block_active {
+        "blocking_truth"
+    } else {
+        "recommended_next_command"
+    };
+    let next_command = if hard_block_active {
+        snapshot.blocking_truth.next_command.clone()
+    } else {
+        snapshot.recommended_next_command.clone()
+    };
+    let blocking_status = if hard_block_active {
+        snapshot.blocking_truth.status.clone()
+    } else {
+        "unblocked".to_string()
+    };
+    let blocking_reason = if hard_block_active {
+        snapshot.blocking_truth.reason.clone()
+    } else {
+        "none".to_string()
+    };
+    let top_disagreement = snapshot.disagreements.first().map(|item| {
+        serde_json::json!({
+            "id": item.id,
+            "severity": item.severity,
+            "summary": item.summary,
+            "recommended_action": item.recommended_action,
+        })
+    });
+    let top_actionable = snapshot.actionable_artifacts.first().map(|artifact| {
+        serde_json::json!({
+            "artifact_id": artifact.artifact_id,
+            "artifact_kind": artifact.artifact_kind,
+            "decision_hint": artifact.decision_hint,
+        })
+    });
+    let ensemble_summary = snapshot.latest_ensemble_vote.as_ref().map(|vote| {
+        let (scorecards, scorecard_source) =
+            ict_engine::application::orchestration::resolved_vote_scorecards(
+                persisted_scorecards,
+                vote,
+            );
+        serde_json::json!({
+            "final_action": vote.final_action,
+            "confidence": vote.confidence,
+            "consensus_strength": vote.consensus_strength,
+            "hard_block_active": vote.hard_block.active,
+            "hard_block_reason": vote.hard_block.reason,
+            "recommended_command": vote.recommended_command,
+            "executor_scorecard_source": scorecard_source,
+            "top_executor": scorecards.first().map(|item| {
+                serde_json::json!({
+                    "executor": item.executor,
+                    "latest_weight_hint": item.latest_weight_hint,
+                    "wins": item.wins,
+                })
+            }),
+        })
+    });
+    serde_json::json!({
+        "symbol": snapshot.symbol,
+        "generated_at": snapshot.generated_at,
+        "focus_phase": snapshot.current_focus_phase,
+        "focus_reason": snapshot.current_focus_reason,
+        "latest_phase": latest_phase_label,
+        "latest_phase_summary": latest_phase_summary_short,
+        "latest_phase_summary_full": latest_phase_summary,
+        "blocking_status": blocking_status,
+        "blocking_reason": blocking_reason,
+        "hard_block_active": hard_block_active,
+        "next_command": next_command,
+        "next_command_source": command_source,
+        "pending_actions": snapshot.pending_actions.iter().take(3).cloned().collect::<Vec<_>>(),
+        "risk_flags": snapshot.risk_flags.iter().take(3).cloned().collect::<Vec<_>>(),
+        "top_disagreement": top_disagreement,
+        "top_actionable": top_actionable,
+        "ensemble": ensemble_summary,
+    })
+}
+
+fn short_workflow_phase_summary(phase: &WorkflowPhaseSnapshot) -> String {
+    let mut parts = Vec::new();
+    if let Some(direction) = &phase.selected_direction {
+        parts.push(format!("direction={direction}"));
+    }
+    if let Some(entry) = &phase.selected_entry_quality {
+        parts.push(format!("entry={entry}"));
+    }
+    if !phase.pre_bayes_gate_status.is_empty() {
+        parts.push(format!("gate={}", phase.pre_bayes_gate_status));
+    }
+    if phase.pre_bayes_evidence_quality_score > 0.0 {
+        parts.push(format!(
+            "quality={:.3}",
+            phase.pre_bayes_evidence_quality_score
+        ));
+    }
+    if parts.is_empty() {
+        phase.phase_summary.clone()
+    } else {
+        parts.join(" ")
+    }
 }
 
 fn emit_workflow_status_output(
@@ -1985,15 +2451,31 @@ fn emit_workflow_status_output(
             redact_local_paths_in_value(&mut value);
             println!("{}", serde_json::to_string_pretty(&value)?);
         }
-        OutputFormat::Compact | OutputFormat::Agent => {
+        OutputFormat::Compact => {
             let mut value = compact_workflow_status_view(snapshot);
+            redact_local_paths_in_value(&mut value);
+            println!("{}", serde_json::to_string_pretty(&value)?);
+        }
+        OutputFormat::Agent => {
+            let mut value = agent_workflow_status_view(snapshot, persisted_scorecards);
             redact_local_paths_in_value(&mut value);
             println!("{}", serde_json::to_string_pretty(&value)?);
         }
         OutputFormat::Human => {
             let mut value = workflow_status_human_view(snapshot, persisted_scorecards);
             redact_local_paths_in_value(&mut value);
-            println!("{}", serde_json::to_string_pretty(&value)?);
+            if let Some(summary) = value.get("summary_line").and_then(Value::as_str) {
+                println!("{}", summary);
+            }
+            if let Some(blocking) = value.get("blocking_line").and_then(Value::as_str) {
+                println!("{}", blocking);
+            }
+            if let Some(latest) = value.get("phase_summary_line").and_then(Value::as_str) {
+                println!("{}", latest);
+            }
+            if let Some(next) = value.get("next_action_line").and_then(Value::as_str) {
+                println!("{}", next);
+            }
         }
     }
     Ok(())
@@ -6507,16 +6989,41 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
         .collect::<Vec<_>>();
     let compact_report = build_compact_analyze_report(
         report.supporting.decision_hint.clone(),
+        Some(format!(
+            "{:?}",
+            report.supporting.decision.selected_direction
+        )),
+        Some(report.supporting.entry_quality.selected_state.clone()),
+        Some(
+            report
+                .supporting
+                .pre_bayes_evidence_filter
+                .gating_status
+                .clone(),
+        ),
+        Some(report.supporting.recommended_next_command.clone()),
         &compact_evidence,
         &report.supporting.artifact_action_summary,
         std::slice::from_ref(&report.supporting.recommended_next_command),
     );
     let agent_report = build_agent_guidance_report(
-        report.supporting.workflow_state.reason.clone(),
+        Some(format!(
+            "{:?}",
+            report.supporting.decision.selected_direction
+        )),
+        Some(report.supporting.entry_quality.selected_state.clone()),
+        Some(
+            report
+                .supporting
+                .pre_bayes_evidence_filter
+                .gating_status
+                .clone(),
+        ),
+        Some(report.supporting.recommended_next_command.clone()),
+        Some(report.supporting.decision_hint.clone()),
         &report.supporting.multi_timeframe_summary,
         &report.supporting.artifact_action_summary,
         std::slice::from_ref(&report.supporting.recommended_next_command),
-        &[],
     );
     let human_market_family = report
         .supporting
@@ -6596,6 +7103,22 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
         },
     };
     let human_report = build_human_analyze_report(
+        Some(format!(
+            "{} | {} | Entry: {} | Gate: {} | Quality: {:.3}",
+            report.symbol,
+            human_direction_bias_label(report.supporting.decision.selected_direction),
+            report.supporting.entry_quality.selected_state,
+            report.supporting.pre_bayes_evidence_filter.gating_status,
+            report
+                .supporting
+                .pre_bayes_evidence_filter
+                .evidence_quality_score
+        )),
+        Some(human_action_line(&report.supporting.factor_iteration_queue)),
+        Some(format!(
+            "Next: {}",
+            report.supporting.recommended_next_command
+        )),
         match human_market_family {
             Some("metals") => format!(
                 "金属结构偏向：{}。这类盘先看流动性是否被扫完，再等回到顺势一侧；原始标签={}。",
@@ -13751,9 +14274,14 @@ fn build_factor_mutation_metric_set(
                 .get(best_factor)
                 .map(|f| f.parameter("expansion_threshold", 1.5))
                 .unwrap_or(1.5);
-            let score = expansion_factor_scores_for_market(registry, candles, expansion_lookback, expansion_atr_mult)?
-                .into_iter()
-                .find(|item| item.factor_name == best_factor);
+            let score = expansion_factor_scores_for_market(
+                registry,
+                candles,
+                expansion_lookback,
+                expansion_atr_mult,
+            )?
+            .into_iter()
+            .find(|item| item.factor_name == best_factor);
             metrics.expansion_selected_direction =
                 Some(pipeline.bbn_support.selected_direction.clone());
             metrics.expansion_selected_win_probability =
@@ -16502,20 +17030,21 @@ fn build_analyze_decision_hint(
 ) -> String {
     if !dataset_comparability.comparable {
         return format!(
-            "observe_only_not_comparable_to_last_analyze:{}",
+            "Observe only: current run not comparable to last analyze ({}).",
             dataset_comparability.reason
         );
     }
     if factor_diagnostics.uncertainty >= 0.45 {
-        return "wait_for_clearer_evidence_due_to_high_uncertainty".to_string();
+        return "Wait: evidence uncertainty remains high; defer action until structure clears."
+            .to_string();
     }
     if let Some(next) = factor_iteration_queue.first() {
         return format!(
-            "market_view_is_comparable_but_factor_backlog_requires_{}:{}",
+            "Comparable run, but factor backlog remains: {} {} first.",
             next.iteration_action, next.factor_name
         );
     }
-    "market_view_comparable_and_factor_stack_stable".to_string()
+    "Comparable run and factor stack stable; no immediate factor action required.".to_string()
 }
 
 fn family_diffs(
@@ -23315,7 +23844,65 @@ mod tests {
             &[],
             &FactorDiagnostics::default(),
         );
-        assert!(hint.contains("observe_only_not_comparable"));
+        assert_eq!(
+            hint,
+            "Observe only: current run not comparable to last analyze (different_data_fingerprint)."
+        );
+    }
+
+    #[test]
+    fn test_build_analyze_decision_hint_for_high_uncertainty() {
+        let hint = build_analyze_decision_hint(
+            &DatasetComparability {
+                comparable: true,
+                ..DatasetComparability::default()
+            },
+            &[],
+            &FactorDiagnostics {
+                uncertainty: 0.52,
+                ..FactorDiagnostics::default()
+            },
+        );
+        assert_eq!(
+            hint,
+            "Wait: evidence uncertainty remains high; defer action until structure clears."
+        );
+    }
+
+    #[test]
+    fn test_build_analyze_decision_hint_for_factor_backlog() {
+        let hint = build_analyze_decision_hint(
+            &DatasetComparability {
+                comparable: true,
+                ..DatasetComparability::default()
+            },
+            &[FactorIterationPrompt {
+                factor_name: "structure_ict".to_string(),
+                iteration_action: "tune".to_string(),
+                ..FactorIterationPrompt::default()
+            }],
+            &FactorDiagnostics::default(),
+        );
+        assert_eq!(
+            hint,
+            "Comparable run, but factor backlog remains: tune structure_ict first."
+        );
+    }
+
+    #[test]
+    fn test_build_analyze_decision_hint_for_stable_factor_stack() {
+        let hint = build_analyze_decision_hint(
+            &DatasetComparability {
+                comparable: true,
+                ..DatasetComparability::default()
+            },
+            &[],
+            &FactorDiagnostics::default(),
+        );
+        assert_eq!(
+            hint,
+            "Comparable run and factor stack stable; no immediate factor action required."
+        );
     }
 
     #[test]
@@ -23785,13 +24372,28 @@ mod tests {
     }
 
     #[test]
+    fn test_workflow_status_agent_view_is_thinner_than_compact() {
+        let snapshot = ict_engine::application::orchestration::sample_human_workflow_snapshot();
+        let compact = compact_workflow_status_view(&snapshot);
+        let agent = agent_workflow_status_view(&snapshot, &[]);
+        assert_eq!(agent["symbol"], "NQ");
+        assert_eq!(agent["focus_phase"], "update");
+        assert_eq!(agent["hard_block_active"], true);
+        assert!(agent.get("next_command").is_some());
+        assert!(agent.get("recommended_next_command").is_none());
+        assert!(agent.get("disagreements").is_none());
+        assert!(agent.get("top_disagreement").is_some());
+        assert!(compact.get("disagreements").is_some());
+    }
+
+    #[test]
     fn test_workflow_status_human_view_exposes_candidates() {
         let snapshot = ict_engine::application::orchestration::sample_human_workflow_snapshot();
         let value = workflow_status_human_view(&snapshot, &[]);
         assert_eq!(value["symbol"], "NQ");
         assert_eq!(value["current_status"]["focus_phase"], "update");
         assert_eq!(value["hard_block"]["active"], true);
-        assert_eq!(value["hard_block"]["status"], "blocked");
+        assert_eq!(value["hard_block"]["status"], "action_blocked");
         assert_eq!(
             value["hard_block"]["reason"],
             "user_selected_historical_data_missing"
@@ -23808,7 +24410,7 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("Next step: ict-engine factor-research"));
-        assert_eq!(value["current_status"]["blocking_status"], "blocked");
+        assert_eq!(value["current_status"]["blocking_status"], "action_blocked");
         assert_eq!(
             value["current_status"]["blocking_reason"],
             "user_selected_historical_data_missing"
