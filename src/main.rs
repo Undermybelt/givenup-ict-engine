@@ -59,12 +59,13 @@ use ict_engine::application::{
         MultiTimeframeCleanReportView, ResolvedMultiTimeframeInputs, MULTI_TIMEFRAME_INTERVALS,
     },
     orchestration::{
-        build_execution_tree_artifact, build_stub_ensemble_vote_from_input,
-        build_stub_ensemble_vote_from_research, persist_execution_tree_artifact, run_stage_plan,
-        staged_orchestration_enabled, AnalyzeEnsembleVoteInput,
-        CatBoostCompatiblePolicyEngine, DefaultExecutionTreeScorer, ExecutionTreeInput,
-        ExecutionTreeScorer, FinalOutputAdapter, FinalSurfaceAdapter, PipelineState, StagePlan,
-        StagedArtifactsInput,
+        build_execution_tree_artifact, build_execution_triage,
+        build_stub_ensemble_vote_from_input, build_stub_ensemble_vote_from_research,
+        persist_execution_tree_artifact, run_stage_plan, staged_orchestration_enabled,
+        AnalyzeEnsembleVoteInput, CatBoostCompatiblePolicyEngine, DefaultExecutionTreeScorer,
+        ExecutionShapProvider, ExecutionTreeArtifact, ExecutionTreeInput, ExecutionTreeScorer,
+        ExecutionTriage, FinalOutputAdapter, FinalSurfaceAdapter, PipelineState, StagePlan,
+        StagedArtifactsInput, StructuralExecutionShap, EXECUTION_TREE_TRACE_FILE,
     },
     reflection::{
         build_reflection_bundle, build_research_reflection_bundle, ReflectionBundleInput,
@@ -285,6 +286,8 @@ struct AnalyzeSupporting {
     staged_orchestration_trace: Option<serde_json::Value>,
     #[serde(skip_serializing_if = "Option::is_none")]
     execution_artifact: Option<ExecutionArtifact>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    execution_triage: Option<ExecutionTriage>,
 }
 
 #[derive(Debug, Serialize)]
@@ -580,6 +583,7 @@ struct BuildAnalyzeReportInput<'a> {
     params: &'a HMMParams,
     network: &'a ict_engine::bbn::BayesianNetwork,
     build_context: AnalyzeBuildContext<'a>,
+    execution_focus: bool,
 }
 
 struct RunProbabilisticBacktestInput<'a> {
@@ -723,6 +727,12 @@ enum Commands {
         agent: bool,
         #[arg(long, help = "Alias for --output-format human")]
         human: bool,
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Disable the leading Execution Triage section / envelope field (default: on)"
+        )]
+        no_execution_focus: bool,
     },
     /// Analyze live futures with integrated backends and spot/options auxiliary evidence
     AnalyzeLive {
@@ -1227,6 +1237,12 @@ enum Commands {
         agent: bool,
         #[arg(long, help = "Alias for --output-format human")]
         human: bool,
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Disable Execution Triage surfacing in workflow-status output (default: on)"
+        )]
+        no_execution_focus: bool,
     },
     /// Show the latest Pre-Bayes status directly
     PreBayesStatus {
@@ -1395,6 +1411,7 @@ fn main() -> Result<()> {
             compact,
             agent,
             human,
+            no_execution_focus,
         } => {
             let (data_htf, data_mtf, data_ltf) = resolve_analyze_cli_inputs(
                 &symbol,
@@ -1412,6 +1429,7 @@ fn main() -> Result<()> {
                 &data_ltf,
                 &state_dir,
                 output_format,
+                !no_execution_focus,
             )?
         }
         Commands::AnalyzeLive {
@@ -1681,6 +1699,7 @@ fn main() -> Result<()> {
             compact,
             agent,
             human,
+            no_execution_focus: _no_execution_focus,
         } => workflow_status_command(WorkflowStatusCommandInput {
             symbol: &symbol,
             state_dir: &state_dir,
@@ -1773,6 +1792,7 @@ fn analyze_command(
     data_ltf: &str,
     state_dir: &str,
     output_format: OutputFormat,
+    execution_focus: bool,
 ) -> Result<()> {
     let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
     let htf = load_candles(data_htf)?;
@@ -1893,6 +1913,7 @@ fn analyze_command(
                 },
             },
         },
+        execution_focus,
     })?;
     let mut report = report;
     let pending_update_file =
@@ -2029,7 +2050,7 @@ fn emit_analyze_output(report: &AnalyzeReport, output_format: OutputFormat) -> R
         .chain(report.supporting.multi_timeframe_summary.iter())
         .cloned()
         .collect::<Vec<_>>();
-    let compact_report = build_compact_analyze_report(
+    let mut compact_report = build_compact_analyze_report(
         report.supporting.decision_hint.clone(),
         Some(format!(
             "{:?}",
@@ -2048,7 +2069,7 @@ fn emit_analyze_output(report: &AnalyzeReport, output_format: OutputFormat) -> R
         &report.supporting.artifact_action_summary,
         std::slice::from_ref(&report.supporting.recommended_next_command),
     );
-    let agent_report = build_agent_guidance_report(
+    let mut agent_report = build_agent_guidance_report(
         Some(format!(
             "{:?}",
             report.supporting.decision.selected_direction
@@ -2144,7 +2165,7 @@ fn emit_analyze_output(report: &AnalyzeReport, output_format: OutputFormat) -> R
             ),
         },
     };
-    let human_report = build_human_analyze_report(
+    let mut human_report = build_human_analyze_report(
         Some(format!(
             "{} | {} | Entry: {} | Gate: {} | Quality: {:.3}",
             report.symbol,
@@ -2215,6 +2236,11 @@ fn emit_analyze_output(report: &AnalyzeReport, output_format: OutputFormat) -> R
         human_regime_bayes_analysis,
         report.analysis.trade_plan.narrative.clone(),
     );
+    if let Some(triage) = report.supporting.execution_triage.as_ref() {
+        human_report.execution_triage_line = Some(triage.one_line.clone());
+        compact_report.execution_triage = Some(triage.clone());
+        agent_report.execution_triage = Some(triage.clone());
+    }
     let (belief_shadow_policy, belief_policy_lineage) = build_analyze_policy_outputs(report)?;
     let ensemble_vote = build_stub_ensemble_vote_from_input(&AnalyzeEnsembleVoteInput {
         symbol: report.symbol.clone(),
@@ -6862,6 +6888,7 @@ fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result<()> {
                 m1: Some(&ltf_1m),
             },
         },
+        execution_focus: true,
     })?;
 
     let trade_outcome_states = &network
@@ -7083,7 +7110,7 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
         .chain(report.supporting.multi_timeframe_summary.iter())
         .cloned()
         .collect::<Vec<_>>();
-    let compact_report = build_compact_analyze_report(
+    let mut compact_report = build_compact_analyze_report(
         report.supporting.decision_hint.clone(),
         Some(format!(
             "{:?}",
@@ -7102,7 +7129,7 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
         &report.supporting.artifact_action_summary,
         std::slice::from_ref(&report.supporting.recommended_next_command),
     );
-    let agent_report = build_agent_guidance_report(
+    let mut agent_report = build_agent_guidance_report(
         Some(format!(
             "{:?}",
             report.supporting.decision.selected_direction
@@ -7198,7 +7225,7 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
             ),
         },
     };
-    let human_report = build_human_analyze_report(
+    let mut human_report = build_human_analyze_report(
         Some(format!(
             "{} | {} | Entry: {} | Gate: {} | Quality: {:.3}",
             report.symbol,
@@ -7269,6 +7296,11 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
         human_regime_bayes_analysis,
         report.analysis.trade_plan.narrative.clone(),
     );
+    if let Some(triage) = report.supporting.execution_triage.as_ref() {
+        human_report.execution_triage_line = Some(triage.one_line.clone());
+        compact_report.execution_triage = Some(triage.clone());
+        agent_report.execution_triage = Some(triage.clone());
+    }
     let policy_record = load_pre_bayes_policy_history(&report.meta.state_dir, &report.symbol)?
         .into_iter()
         .last();
@@ -11740,6 +11772,14 @@ fn emit_update_output(report: &UpdateReport, ensemble: bool) -> Result<()> {
         evidence: reflection_evidence,
         next_candidates: reflection_next_candidates,
     });
+    let mut reflection_bundle = reflection_bundle;
+    if let Ok(artifact) = load_state_or_default::<ExecutionTreeArtifact, _>(
+        &report.state_dir,
+        &report.symbol,
+        EXECUTION_TREE_TRACE_FILE,
+    ) {
+        reflection_bundle.execution_shap_top_k = artifact.execution_shap_top_k;
+    }
     let ensemble_surface = if ensemble {
         report
             .workflow_snapshot
@@ -15183,6 +15223,7 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         params,
         network,
         build_context,
+        execution_focus,
     } = input;
     let htf_features = build_frame_features(htf)?;
     let mtf_features = build_frame_features(mtf)?;
@@ -15688,16 +15729,25 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         persist_mece_recovery_artifact(state_dir, &mece_artifact, "analyze", None, &decision_hint)?;
     }
 
-    let execution_tree_output = DefaultExecutionTreeScorer.score(&ExecutionTreeInput {
+    let execution_tree_input = ExecutionTreeInput {
         execution_features: &execution_artifact.features,
         physics_overlay: &physics_overlay,
         hmm_posterior: &regime_probs,
         mece_recovery_confidence,
         prediction_vote_score: decision.selected_win_probability,
-    })?;
+    };
+    let execution_tree_output = DefaultExecutionTreeScorer.score(&execution_tree_input)?;
+    let execution_shap_top_k = StructuralExecutionShap::default()
+        .attributions(&execution_tree_input, &execution_tree_output);
+    let execution_triage = if execution_focus {
+        Some(build_execution_triage(&execution_tree_output))
+    } else {
+        None
+    };
     let execution_tree_artifact = build_execution_tree_artifact(
         symbol,
         execution_tree_output,
+        execution_shap_top_k,
         analyze_provenance.clone(),
     );
     persist_execution_tree_artifact(state_dir, &execution_tree_artifact, "analyze", None)?;
@@ -15840,6 +15890,7 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
             workflow_snapshot: WorkflowSnapshot::default(),
             staged_orchestration_trace,
             execution_artifact: Some(execution_artifact),
+            execution_triage,
         },
     })
 }
@@ -15916,6 +15967,7 @@ fn run_probabilistic_backtest(
                 multi_timeframe_summary: &[],
                 native_frames: AnalyzeNativeFrames::default(),
             },
+            execution_focus: true,
         })?;
         last_decision = Some(analysis.supporting.decision.clone());
 
@@ -20936,6 +20988,7 @@ mod tests {
                 multi_timeframe_summary: &[],
                 native_frames: AnalyzeNativeFrames::default(),
             },
+            execution_focus: true,
         })
         .unwrap();
 
@@ -21375,6 +21428,7 @@ mod tests {
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
             OutputFormat::Json,
+            true,
         )
         .unwrap();
 
@@ -21437,6 +21491,7 @@ mod tests {
                 multi_timeframe_summary: &[],
                 native_frames: AnalyzeNativeFrames::default(),
             },
+            execution_focus: true,
         })
         .unwrap();
 
@@ -21533,6 +21588,7 @@ mod tests {
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
             OutputFormat::Json,
+            true,
         )
         .unwrap();
 
@@ -21578,6 +21634,7 @@ mod tests {
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
             OutputFormat::Json,
+            true,
         )
         .unwrap();
         analyze_command(
@@ -21587,6 +21644,7 @@ mod tests {
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
             OutputFormat::Json,
+            true,
         )
         .unwrap();
 
@@ -21624,6 +21682,7 @@ mod tests {
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
             OutputFormat::Json,
+            true,
         )
         .unwrap();
 
@@ -22984,6 +23043,7 @@ mod tests {
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
             OutputFormat::Json,
+            true,
         )
         .unwrap();
         update_command(UpdateCommandInput {

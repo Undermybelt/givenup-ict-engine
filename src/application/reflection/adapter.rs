@@ -4,6 +4,7 @@ use super::{
     build_postmortem_artifact, build_prior_artifact, PostmortemArtifact, PostmortemArtifactInput,
     PriorArtifact, PriorArtifactInput,
 };
+use crate::application::orchestration::ExecutionShapAttribution;
 
 #[derive(Debug, Clone, Serialize, Default)]
 pub struct ReflectionBundle {
@@ -33,6 +34,8 @@ pub struct ReflectionBundle {
     pub execution_setup_summary: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub execution_setup_guardrail: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub execution_shap_top_k: Vec<ExecutionShapAttribution>,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -92,6 +95,7 @@ pub fn build_reflection_bundle(input: ReflectionBundleInput) -> ReflectionBundle
         ensemble_disagreement_summary: None,
         execution_setup_summary: None,
         execution_setup_guardrail: None,
+        execution_shap_top_k: Vec::new(),
     }
 }
 

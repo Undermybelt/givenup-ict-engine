@@ -3,6 +3,7 @@ use serde::Serialize;
 
 use crate::analyze_report_shell::AnalyzeReport;
 use crate::application::belief::{BeliefPolicyLineageSurface, BeliefShadowPolicySurface};
+use crate::application::orchestration::ExecutionTriage;
 use crate::application::output_foundation::{
     format_executor_summary_lines, print_redacted_json, redact_local_paths,
 };
@@ -26,6 +27,8 @@ where
     R: Serialize,
     E: Serialize,
 {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub execution_triage: Option<ExecutionTriage>,
     pub report: R,
     pub compact_report: CompactAnalyzeReport,
     pub agent_report: AgentGuidanceReport,
@@ -43,6 +46,8 @@ pub struct AnalyzeLiveOutputEnvelope<R>
 where
     R: Serialize,
 {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub execution_triage: Option<ExecutionTriage>,
     pub report: R,
     pub source_snapshot: Option<serde_json::Value>,
     pub freshness_gate: Option<serde_json::Value>,
@@ -531,6 +536,7 @@ where
         .unwrap_or_default();
 
     AnalyzeOutputEnvelope {
+        execution_triage: None,
         report,
         compact_report,
         agent_report,
@@ -557,6 +563,7 @@ where
     R: Serialize,
 {
     AnalyzeLiveOutputEnvelope {
+        execution_triage: None,
         report,
         source_snapshot: source_snapshot
             .map(|value| serde_json::to_value(value).expect("serialize source snapshot")),

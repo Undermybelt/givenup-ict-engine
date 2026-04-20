@@ -47,7 +47,151 @@ pub struct ExecutionTreeArtifact {
     pub generated_at: DateTime<Utc>,
     pub symbol: String,
     pub output: ExecutionTreeOutput,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub execution_shap_top_k: Vec<ExecutionShapAttribution>,
     pub provenance: RunProvenance,
+}
+
+/// SHAP-like feature attribution row for an Execution Tree branch.
+/// v1 is a structural attribution (deterministic contribution function over
+/// ExecutionTreeInput features), not a CatBoost/XGBoost Shapley value — the
+/// trait `ExecutionShapProvider` lets a real model-SHAP implementation replace
+/// the default without touching reflection_bundle consumers.
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct ExecutionShapAttribution {
+    pub feature: String,
+    pub contribution: f64,
+    pub feature_value: String,
+}
+
+pub trait ExecutionShapProvider {
+    /// Return SHAP attributions ordered by descending |contribution|.
+    fn attributions(
+        &self,
+        input: &ExecutionTreeInput<'_>,
+        output: &ExecutionTreeOutput,
+    ) -> Vec<ExecutionShapAttribution>;
+}
+
+/// Default `ExecutionShapProvider`. Produces a structurally-consistent
+/// attribution: each contribution reflects the *signed distance from its
+/// decision threshold*, so "what pushed the branch" is visible even though
+/// the numbers are not drawn from a trained model. Good enough to satisfy
+/// `reflection_bundle.execution_shap_top_k` without faking model output.
+pub struct StructuralExecutionShap {
+    pub top_k: usize,
+}
+
+impl Default for StructuralExecutionShap {
+    fn default() -> Self {
+        Self { top_k: 5 }
+    }
+}
+
+impl ExecutionShapProvider for StructuralExecutionShap {
+    fn attributions(
+        &self,
+        input: &ExecutionTreeInput<'_>,
+        output: &ExecutionTreeOutput,
+    ) -> Vec<ExecutionShapAttribution> {
+        let features = input.execution_features;
+        let mut rows: Vec<ExecutionShapAttribution> = Vec::new();
+
+        rows.push(ExecutionShapAttribution {
+            feature: "execution_readiness".to_string(),
+            contribution: features.execution_readiness - EXECUTION_GATE_READY,
+            feature_value: format!("{:.4}", features.execution_readiness),
+        });
+        rows.push(ExecutionShapAttribution {
+            feature: "prediction_vote_score".to_string(),
+            contribution: input.prediction_vote_score - PREDICTION_STRONG_THRESHOLD,
+            feature_value: format!("{:.4}", input.prediction_vote_score),
+        });
+        rows.push(ExecutionShapAttribution {
+            feature: "execution_score".to_string(),
+            contribution: features.execution_score - EXECUTION_GATE_OBSERVE,
+            feature_value: format!("{:.4}", features.execution_score),
+        });
+        rows.push(ExecutionShapAttribution {
+            feature: "evidence_quality".to_string(),
+            contribution: features.evidence_quality - 0.5,
+            feature_value: format!("{:.4}", features.evidence_quality),
+        });
+        if let Some(ising) = input.physics_overlay.ising.as_ref() {
+            rows.push(ExecutionShapAttribution {
+                feature: "ising_phase_transition_risk".to_string(),
+                contribution: ISING_HERD_BLOCK_THRESHOLD - ising.phase_transition_risk,
+                feature_value: format!("{:.4}", ising.phase_transition_risk),
+            });
+        }
+        if let Some(pythagorean) = input.physics_overlay.pythagorean.as_ref() {
+            rows.push(ExecutionShapAttribution {
+                feature: "pythagorean_overstretch".to_string(),
+                contribution: PYTHAGOREAN_OVERSTRETCH_WAIT_THRESHOLD
+                    - pythagorean.normalized_overstretch,
+                feature_value: format!("{:.4}", pythagorean.normalized_overstretch),
+            });
+        }
+        if let Some(confidence) = input.mece_recovery_confidence {
+            rows.push(ExecutionShapAttribution {
+                feature: "mece_recovery_confidence".to_string(),
+                contribution: confidence - 0.95,
+                feature_value: format!("{:.4}", confidence),
+            });
+        }
+        rows.push(ExecutionShapAttribution {
+            feature: "branch_probability".to_string(),
+            contribution: output.branch_probability - 0.5,
+            feature_value: format!("{:.4}", output.branch_probability),
+        });
+
+        rows.sort_by(|a, b| {
+            b.contribution
+                .abs()
+                .partial_cmp(&a.contribution.abs())
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
+        rows.truncate(self.top_k);
+        rows
+    }
+}
+
+/// Condensed "can we execute?" summary for the Execution Triage surface
+/// (--execution-focus default-on view). Derived purely from
+/// `ExecutionTreeOutput`, so it is additive to every report without having
+/// to extend build signatures.
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct ExecutionTriage {
+    pub gate_status: String,
+    pub branch: String,
+    pub execution_bias: String,
+    pub decision_hint: String,
+    pub execution_score: f64,
+    pub branch_probability: f64,
+    pub posterior_uncertainty: f64,
+    pub one_line: String,
+}
+
+pub fn build_execution_triage(output: &ExecutionTreeOutput) -> ExecutionTriage {
+    let one_line = format!(
+        "execution {} | branch={} | bias={} | score={:.3} | confidence={:.3} | hint={}",
+        output.gate_status,
+        output.branch,
+        output.execution_bias,
+        output.execution_score,
+        output.branch_probability,
+        output.decision_hint,
+    );
+    ExecutionTriage {
+        gate_status: output.gate_status.clone(),
+        branch: output.branch.clone(),
+        execution_bias: output.execution_bias.clone(),
+        decision_hint: output.decision_hint.clone(),
+        execution_score: output.execution_score,
+        branch_probability: output.branch_probability,
+        posterior_uncertainty: output.posterior_uncertainty,
+        one_line,
+    }
 }
 
 pub trait ExecutionTreeScorer {
@@ -214,6 +358,7 @@ pub fn execution_first_decision(
 pub fn build_execution_tree_artifact(
     symbol: &str,
     output: ExecutionTreeOutput,
+    execution_shap_top_k: Vec<ExecutionShapAttribution>,
     provenance: RunProvenance,
 ) -> ExecutionTreeArtifact {
     let generated_at = Utc::now();
@@ -226,6 +371,7 @@ pub fn build_execution_tree_artifact(
         generated_at,
         symbol: symbol.to_string(),
         output,
+        execution_shap_top_k,
         provenance,
     }
 }
@@ -435,7 +581,7 @@ mod tests {
                 prediction_vote_score: 0.7,
             })
             .unwrap();
-        let artifact = build_execution_tree_artifact("NQ", output, RunProvenance::default());
+        let artifact = build_execution_tree_artifact("NQ", output, Vec::new(), RunProvenance::default());
         let dir = TempDir::new().unwrap();
         persist_execution_tree_artifact(dir.path(), &artifact, "analyze", None).unwrap();
 
@@ -452,5 +598,53 @@ mod tests {
         let ledger = fs::read_to_string(&ledger_path).unwrap();
         assert!(ledger.contains("\"execution_tree_artifact\""));
         assert!(ledger.contains("\"execution-tree-artifact-v1\""));
+    }
+
+    #[test]
+    fn structural_shap_is_deterministic_and_bounded() {
+        let overlay = flat_overlay();
+        let features = baseline_features(0.82);
+        let posterior = neutral_posterior();
+        let input = ExecutionTreeInput {
+            execution_features: &features,
+            physics_overlay: &overlay,
+            hmm_posterior: &posterior,
+            mece_recovery_confidence: Some(0.97),
+            prediction_vote_score: 0.72,
+        };
+        let output = DefaultExecutionTreeScorer.score(&input).unwrap();
+        let provider = StructuralExecutionShap::default();
+        let first = provider.attributions(&input, &output);
+        let second = provider.attributions(&input, &output);
+        assert_eq!(first, second, "structural SHAP must be deterministic");
+        assert!(first.len() <= 5, "top_k default must clamp to 5");
+        // Contributions are ordered by descending |contribution|.
+        for window in first.windows(2) {
+            assert!(
+                window[0].contribution.abs() >= window[1].contribution.abs(),
+                "contributions must be sorted by |contribution| desc"
+            );
+        }
+    }
+
+    #[test]
+    fn triage_one_line_covers_core_fields() {
+        let output = ExecutionTreeOutput {
+            execution_score: 0.82,
+            branch: "fill_viable".to_string(),
+            execution_bias: "aggressive".to_string(),
+            gate_status: "ready".to_string(),
+            branch_probability: 0.6,
+            posterior_uncertainty: 0.4,
+            split_reason_lineage: vec![],
+            decision_hint: "execution_first_fill".to_string(),
+        };
+        let triage = build_execution_triage(&output);
+        assert!(triage.one_line.contains("ready"));
+        assert!(triage.one_line.contains("fill_viable"));
+        assert!(triage.one_line.contains("aggressive"));
+        assert!(triage.one_line.contains("execution_first_fill"));
+        assert_eq!(triage.gate_status, "ready");
+        assert_eq!(triage.branch, "fill_viable");
     }
 }

@@ -1,7 +1,11 @@
 use serde::Serialize;
 
+use crate::application::orchestration::ExecutionTriage;
+
 #[derive(Debug, Clone, Serialize, Default)]
 pub struct CompactAnalyzeReport {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub execution_triage: Option<ExecutionTriage>,
     pub verdict: String,
     pub decision_summary: String,
     pub direction: Option<String>,
@@ -64,6 +68,7 @@ pub fn build_compact_analyze_report(
 ) -> CompactAnalyzeReport {
     let verdict = verdict.into();
     CompactAnalyzeReport {
+        execution_triage: None,
         decision_summary: humanize_decision_hint(&verdict),
         verdict,
         direction,

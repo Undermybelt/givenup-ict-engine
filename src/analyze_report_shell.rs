@@ -2,6 +2,7 @@ use serde::Serialize;
 
 use crate::agent::AgentPromptPack;
 use crate::analyze_sections::AnalyzeSections;
+use crate::application::orchestration::ExecutionTriage;
 use crate::domain::execution::ExecutionArtifact;
 use crate::state::{
     AgentActionPlan, AgentContextBundle, AgentContextBundleMinimal, CommandRecommendations,
@@ -76,6 +77,8 @@ pub struct AnalyzeSupporting {
     pub staged_orchestration_trace: Option<serde_json::Value>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub execution_artifact: Option<ExecutionArtifact>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub execution_triage: Option<ExecutionTriage>,
 }
 
 #[derive(Debug, Serialize)]

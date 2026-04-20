@@ -2,6 +2,7 @@ use super::glossary_map::humanize_term;
 
 #[derive(Debug, Clone, Default)]
 pub struct HumanAnalyzeReport {
+    pub execution_triage_line: Option<String>,
     pub summary_line: Option<String>,
     pub decision_line: Option<String>,
     pub action_line: Option<String>,
@@ -16,6 +17,9 @@ pub struct HumanAnalyzeReport {
 impl HumanAnalyzeReport {
     pub fn render(&self) -> String {
         let mut sections = Vec::new();
+        if let Some(triage_line) = &self.execution_triage_line {
+            sections.push(triage_line.clone());
+        }
         if let Some(summary_line) = &self.summary_line {
             sections.push(summary_line.clone());
         }
@@ -54,6 +58,7 @@ pub fn build_human_analyze_report(
     trade_plan: impl Into<String>,
 ) -> HumanAnalyzeReport {
     HumanAnalyzeReport {
+        execution_triage_line: None,
         summary_line: summary_line.map(|line| humanize_term(&line)),
         decision_line: decision_line.map(|line| humanize_term(&line)),
         action_line: action_line.map(|line| humanize_term(&line)),

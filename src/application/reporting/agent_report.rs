@@ -1,6 +1,7 @@
 use serde::Serialize;
 
 use super::compact_report::humanize_decision_hint;
+use crate::application::orchestration::ExecutionTriage;
 
 #[derive(Debug, Clone, Serialize, Default)]
 pub struct AgentNextStep {
@@ -13,6 +14,8 @@ pub struct AgentNextStep {
 
 #[derive(Debug, Clone, Serialize, Default)]
 pub struct AgentGuidanceReport {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub execution_triage: Option<ExecutionTriage>,
     pub direction: Option<String>,
     pub entry_state: Option<String>,
     pub pre_bayes_gate: Option<String>,
@@ -78,6 +81,7 @@ pub fn build_agent_guidance_report(
     recommended_next_actions: &[String],
 ) -> AgentGuidanceReport {
     AgentGuidanceReport {
+        execution_triage: None,
         direction,
         entry_state,
         pre_bayes_gate,
