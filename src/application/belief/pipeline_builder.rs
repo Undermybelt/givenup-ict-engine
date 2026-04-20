@@ -9,6 +9,7 @@ use crate::bbn::trading::{
     },
 };
 use crate::config::{build_frame_features_for_market, build_pre_bayes_evidence_filter, env_bool};
+use crate::domain::regime::estimate_ising_state;
 use crate::factor_lab::{FactorContext, FactorEngine};
 use crate::factors::FactorRegistry;
 use crate::state::PreBayesEvidencePolicy;
@@ -111,6 +112,50 @@ pub fn build_expansion_factor_pipeline_report_with_registry(
         frame.ou_reversion_speed_per_bar,
         frame.ou_pullback_expectation_zscore,
     );
+    let mut market_regime_trace = market_regime_trace;
+    let mut liquidity_context_trace = liquidity_context_trace;
+    market_regime_trace.evidence.push(format!(
+        "pythagorean_overstretch={:.4}",
+        frame.pythagorean_overstretch.unwrap_or_default()
+    ));
+    liquidity_context_trace.evidence.push(format!(
+        "pythagorean_overstretch={:.4}",
+        frame.pythagorean_overstretch.unwrap_or_default()
+    ));
+    let ising_state = estimate_ising_state(
+        &[
+            match frame.regime_label.as_str() {
+                "bull" => 1.0,
+                "bear" => -1.0,
+                _ => 0.0,
+            },
+            match frame.liquidity_label.as_str() {
+                "favorable" => 0.8,
+                "hostile" => -0.8,
+                _ => 0.0,
+            },
+        ],
+        &[
+            (frame.sweep_count as f64 + 1.0).clamp(1.0, 10.0),
+            (frame.fvg_count as f64 + 1.0).clamp(1.0, 10.0),
+        ],
+    );
+    if let Some(ising_state) = ising_state {
+        market_regime_trace.evidence.push(format!(
+            "ising_phase_transition_risk={:.4}",
+            ising_state.phase_transition_risk
+        ));
+        market_regime_trace
+            .evidence
+            .push(format!("ising_herding_bias={:.4}", ising_state.herding_bias));
+        liquidity_context_trace.evidence.push(format!(
+            "ising_phase_transition_risk={:.4}",
+            ising_state.phase_transition_risk
+        ));
+        liquidity_context_trace
+            .evidence
+            .push(format!("ising_herding_bias={:.4}", ising_state.herding_bias));
+    }
     let network = build_trading_network()?;
     let pre_bayes_policy = pre_bayes_evidence_policy();
     let multi_timeframe_evidence = parse_multi_timeframe_evidence(multi_timeframe_summary);

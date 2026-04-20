@@ -1,5 +1,7 @@
 pub mod agent;
 pub mod analyze;
+pub mod analyze_report_shell;
+pub mod analyze_sections;
 pub mod application;
 pub mod backtest;
 pub mod bayesian;

@@ -323,10 +323,17 @@ fn summarize_frame_physics_trace(frame_physics_trace: &BTreeMap<String, f64>) ->
     let pythagorean_fvg = frame_physics_trace
         .get("pythagorean_distance_to_last_fvg")
         .copied();
+    let pythagorean_overstretch = frame_physics_trace
+        .get("pythagorean_overstretch")
+        .copied();
     let ou_target = frame_physics_trace
         .get("ou_mean_reversion_target_bps")
         .copied();
     let ou_pullback_bps = frame_physics_trace.get("ou_expected_pullback_bps").copied();
+    let ising_phase_risk = frame_physics_trace
+        .get("ising_phase_transition_risk")
+        .copied();
+    let ising_herding = frame_physics_trace.get("ising_herding_bias").copied();
 
     let mut notes = Vec::new();
     if let (Some(range_mid), Some(pullback)) = (range_mid, pullback) {
@@ -396,6 +403,13 @@ fn summarize_frame_physics_trace(frame_physics_trace: &BTreeMap<String, f64>) ->
             }
         }
     }
+    if let Some(overstretch) = pythagorean_overstretch {
+        if overstretch >= 0.5 {
+            notes.push(format!(
+                "pythagorean overstretch is elevated ({overstretch:.2}), so execution extension risk is rising"
+            ));
+        }
+    }
     if let (Some(target), Some(pullback_bps)) = (ou_target, ou_pullback_bps) {
         if target.abs() >= 500.0 && pullback_bps >= 100.0 {
             notes.push(format!(
@@ -403,6 +417,11 @@ fn summarize_frame_physics_trace(frame_physics_trace: &BTreeMap<String, f64>) ->
                 target, pullback_bps
             ));
         }
+    }
+    if let (Some(phase_risk), Some(herding)) = (ising_phase_risk, ising_herding) {
+        notes.push(format!(
+            "ising herding_bias={herding:.2} with phase_transition_risk={phase_risk:.2}"
+        ));
     }
 
     if notes.is_empty() {

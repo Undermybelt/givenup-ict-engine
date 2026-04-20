@@ -1,10 +1,16 @@
+use anyhow::Result;
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
+use serde_json::{json, Value};
 
 use crate::application::belief::{
     jump_calibration_gate_workflow_summary, jump_model_workflow_summary,
 };
+use crate::application::output_foundation::{
+    print_redacted_json, redact_local_paths_in_value, short_workflow_phase_summary,
+};
+use crate::application::release_closure::workflow_next_step_view;
+use crate::config::shell_quote;
 use crate::state::{
     ArtifactConsumedImpactSummary, ArtifactDecisionSummary, ArtifactFactorTrendSummary,
     ArtifactFamilyTrendSummary, ArtifactHistorySummary, ArtifactLineageSummary,
@@ -130,6 +136,90 @@ pub struct WorkflowPhaseSnapshotSurfaces {
     pub research: Option<crate::state::WorkflowPhaseSnapshot>,
     pub backtest: Option<crate::state::WorkflowPhaseSnapshot>,
     pub update: Option<crate::state::WorkflowPhaseSnapshot>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct AgentBootstrapView {
+    pub symbol: String,
+    pub project_role: String,
+    pub closed_loop_chain: Vec<String>,
+    pub agent_brief: Vec<String>,
+    pub guardrails: Vec<String>,
+    pub detected_paths: AgentBootstrapPaths,
+    pub input_acquisition: AgentBootstrapInputs,
+    pub commands: AgentBootstrapCommands,
+    pub latest_snapshot: AgentBootstrapSnapshot,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct AgentBootstrapPaths {
+    pub tomac_history_root: Option<String>,
+    pub multi_timeframe_clean_root: Option<String>,
+    pub state_dir: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct AgentBootstrapCommands {
+    pub clean_multi_timeframe: String,
+    pub train: String,
+    pub analyze: String,
+    pub futures_sop: String,
+    pub expansion_sop: String,
+    pub workflow_status: String,
+    pub recommended_next_command: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct AgentBootstrapSnapshot {
+    pub current_focus_phase: String,
+    pub current_focus_reason: String,
+    pub blocking_truth: crate::state::WorkflowBlockingTruth,
+    pub latest_train_phase: Option<String>,
+    pub latest_analyze_phase: Option<String>,
+    pub latest_pre_bayes_gate_status: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct AgentBootstrapInputs {
+    pub backtest: AgentBootstrapBacktestInput,
+    pub live: AgentBootstrapLiveInput,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct WorkflowStatusDispatchInput<'a> {
+    pub phase: Option<&'a str>,
+    pub actionable_only: bool,
+    pub conflicts_only: bool,
+    pub latest_promotable: bool,
+    pub hard_block_only: bool,
+    pub hard_block_reason: Option<&'a str>,
+    pub limit: Option<usize>,
+    pub output_format: &'a str,
+}
+
+#[derive(Debug, Clone)]
+pub struct WorkflowStatusBootstrapInput<'a> {
+    pub symbol: &'a str,
+    pub state_dir: &'a str,
+    pub detected_tomac_root: Option<String>,
+    pub multi_timeframe_clean_root: Option<String>,
+    pub tomac_root_placeholder: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct AgentBootstrapBacktestInput {
+    pub local_discovery_order: Vec<String>,
+    pub preferred_user_inputs: Vec<String>,
+    pub fallback_user_inputs: Vec<String>,
+    pub should_ask_download_link_if_local_missing: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct AgentBootstrapLiveInput {
+    pub minimum_required_user_inputs: Vec<String>,
+    pub inferable_defaults:
+        std::collections::BTreeMap<String, std::collections::BTreeMap<String, String>>,
+    pub additional_user_inputs_if_not_inferable: Vec<String>,
 }
 
 pub fn build_phase_snapshot_surfaces(snapshot: &WorkflowSnapshot) -> WorkflowPhaseSnapshotSurfaces {
@@ -455,6 +545,458 @@ pub fn build_human_workflow_status_view(
     })
 }
 
+pub fn build_compact_workflow_status_view(snapshot: &WorkflowSnapshot) -> Value {
+    let blocking_status = if snapshot.blocking_truth.status.is_empty() {
+        "unblocked".to_string()
+    } else {
+        snapshot.blocking_truth.status.clone()
+    };
+    let blocking_reason = if snapshot.blocking_truth.status.is_empty() {
+        "none".to_string()
+    } else {
+        snapshot.blocking_truth.reason.clone()
+    };
+    let latest_phase = snapshot
+        .latest_update
+        .as_ref()
+        .or(snapshot.latest_research.as_ref())
+        .or(snapshot.latest_analyze.as_ref())
+        .or(snapshot.latest_backtest.as_ref())
+        .or(snapshot.latest_train.as_ref());
+    let latest_phase_label = latest_phase
+        .map(|phase| phase.phase.clone())
+        .unwrap_or_else(|| "workflow_phase_unavailable".to_string());
+    let latest_phase_summary = latest_phase
+        .map(short_workflow_phase_summary)
+        .unwrap_or_else(|| "workflow_phase_summary_unavailable".to_string());
+    let top_actionable = snapshot.actionable_artifacts.first().map(|artifact| {
+        serde_json::json!({
+            "artifact_id": artifact.artifact_id,
+            "artifact_kind": artifact.artifact_kind,
+            "decision_hint": artifact.decision_hint,
+            "generated_at": artifact.generated_at,
+        })
+    });
+    let top_disagreement = snapshot.disagreements.first().map(|item| {
+        serde_json::json!({
+            "id": item.id,
+            "severity": item.severity,
+            "summary": item.summary,
+        })
+    });
+    serde_json::json!({
+        "symbol": snapshot.symbol,
+        "generated_at": snapshot.generated_at,
+        "focus_phase": snapshot.current_focus_phase,
+        "focus_reason": snapshot.current_focus_reason,
+        "latest_phase": latest_phase_label,
+        "latest_phase_summary": latest_phase_summary,
+        "blocking_status": blocking_status,
+        "blocking_reason": blocking_reason,
+        "next_command": snapshot.recommended_next_command,
+        "pending_actions": snapshot.pending_actions.iter().take(3).cloned().collect::<Vec<_>>(),
+        "risk_flags": snapshot.risk_flags.iter().take(3).cloned().collect::<Vec<_>>(),
+        "top_actionable": top_actionable,
+        "top_disagreement": top_disagreement,
+    })
+}
+
+pub fn build_agent_workflow_status_view(
+    snapshot: &WorkflowSnapshot,
+    persisted_scorecards: &[EnsembleExecutorScorecard],
+) -> Value {
+    let latest_phase = snapshot
+        .latest_update
+        .as_ref()
+        .or(snapshot.latest_research.as_ref())
+        .or(snapshot.latest_analyze.as_ref())
+        .or(snapshot.latest_backtest.as_ref())
+        .or(snapshot.latest_train.as_ref());
+    let latest_phase_label = latest_phase
+        .map(|phase| phase.phase.clone())
+        .unwrap_or_else(|| "workflow_phase_unavailable".to_string());
+    let latest_phase_summary_short = latest_phase
+        .map(short_workflow_phase_summary)
+        .unwrap_or_else(|| "workflow_phase_summary_unavailable".to_string());
+    let hard_block_statuses = [
+        "blocked",
+        "bridge_needs_confirmation",
+        "validated_regressing",
+        "credibility_gate_blocked",
+    ];
+    let hard_block_active = hard_block_statuses
+        .iter()
+        .any(|status| snapshot.blocking_truth.status == *status);
+    let command_source = if hard_block_active {
+        "blocking_truth"
+    } else {
+        "recommended_next_command"
+    };
+    let next_command = if hard_block_active {
+        snapshot.blocking_truth.next_command.clone()
+    } else {
+        snapshot.recommended_next_command.clone()
+    };
+    let blocking_status = if hard_block_active {
+        snapshot.blocking_truth.status.clone()
+    } else {
+        "unblocked".to_string()
+    };
+    let blocking_reason = if hard_block_active {
+        snapshot.blocking_truth.reason.clone()
+    } else {
+        "none".to_string()
+    };
+    let top_disagreement = snapshot.disagreements.first().map(|item| {
+        serde_json::json!({
+            "id": item.id,
+            "severity": item.severity,
+            "summary": item.summary,
+            "recommended_action": item.recommended_action,
+        })
+    });
+    let top_actionable = snapshot.actionable_artifacts.first().map(|artifact| {
+        serde_json::json!({
+            "artifact_id": artifact.artifact_id,
+            "artifact_kind": artifact.artifact_kind,
+            "decision_hint": artifact.decision_hint,
+        })
+    });
+    let ensemble_summary = snapshot.latest_ensemble_vote.as_ref().map(|vote| {
+        let (scorecards, scorecard_source) = resolved_vote_scorecards(persisted_scorecards, vote);
+        serde_json::json!({
+            "final_action": vote.final_action,
+            "confidence": vote.confidence,
+            "consensus_strength": vote.consensus_strength,
+            "hard_block_active": vote.hard_block.active,
+            "hard_block_reason": vote.hard_block.reason,
+            "recommended_command": vote.recommended_command,
+            "executor_scorecard_source": scorecard_source,
+            "top_executor": scorecards.first().map(|item| {
+                serde_json::json!({
+                    "executor": item.executor,
+                    "latest_weight_hint": item.latest_weight_hint,
+                    "wins": item.wins,
+                })
+            }),
+        })
+    });
+    serde_json::json!({
+        "symbol": snapshot.symbol,
+        "generated_at": snapshot.generated_at,
+        "focus_phase": snapshot.current_focus_phase,
+        "focus_reason": snapshot.current_focus_reason,
+        "latest_phase": latest_phase_label,
+        "latest_phase_summary": latest_phase_summary_short,
+        "blocking_status": blocking_status,
+        "blocking_reason": blocking_reason,
+        "hard_block_active": hard_block_active,
+        "next_command": next_command,
+        "next_command_source": command_source,
+        "next_step": workflow_next_step_view(&next_command, if hard_block_active { Some(blocking_reason.as_str()) } else { None }),
+        "pending_actions": snapshot.pending_actions.iter().take(3).cloned().collect::<Vec<_>>(),
+        "risk_flags": snapshot.risk_flags.iter().take(3).cloned().collect::<Vec<_>>(),
+        "top_disagreement": top_disagreement,
+        "top_actionable": top_actionable,
+        "ensemble": ensemble_summary,
+    })
+}
+
+pub fn emit_workflow_status_output(
+    snapshot: &WorkflowSnapshot,
+    persisted_scorecards: &[EnsembleExecutorScorecard],
+    output_format: &str,
+) -> Result<()> {
+    match output_format.trim().to_ascii_lowercase().as_str() {
+        "json" => {
+            let mut value = serde_json::to_value(snapshot)?;
+            redact_local_paths_in_value(&mut value);
+            println!("{}", serde_json::to_string_pretty(&value)?);
+        }
+        "compact" => {
+            let mut value = build_compact_workflow_status_view(snapshot);
+            redact_local_paths_in_value(&mut value);
+            println!("{}", serde_json::to_string_pretty(&value)?);
+        }
+        "agent" => {
+            let mut value = build_agent_workflow_status_view(snapshot, persisted_scorecards);
+            redact_local_paths_in_value(&mut value);
+            println!("{}", serde_json::to_string_pretty(&value)?);
+        }
+        "human" => {
+            let mut value = build_human_workflow_status_view(snapshot, persisted_scorecards);
+            redact_local_paths_in_value(&mut value);
+            if let Some(summary) = value.get("summary_line").and_then(Value::as_str) {
+                println!("{}", summary);
+            }
+            if let Some(blocking) = value.get("blocking_line").and_then(Value::as_str) {
+                println!("{}", blocking);
+            }
+            if let Some(latest) = value.get("phase_summary_line").and_then(Value::as_str) {
+                println!("{}", latest);
+            }
+            if let Some(next) = value.get("next_action_line").and_then(Value::as_str) {
+                println!("{}", next);
+            }
+        }
+        other => anyhow::bail!("unsupported output format '{}'", other),
+    }
+    Ok(())
+}
+
+pub fn dispatch_workflow_status(
+    snapshot: &WorkflowSnapshot,
+    persisted_scorecards: &[EnsembleExecutorScorecard],
+    input: WorkflowStatusDispatchInput<'_>,
+    bootstrap: WorkflowStatusBootstrapInput<'_>,
+) -> Result<()> {
+    let filter_count = input.actionable_only as u8
+        + input.conflicts_only as u8
+        + input.latest_promotable as u8
+        + input.hard_block_only as u8
+        + input.hard_block_reason.is_some() as u8
+        + input.limit.is_some() as u8;
+    if input.phase.is_some() && filter_count > 0 {
+        anyhow::bail!("workflow-status phase and filter flags are mutually exclusive");
+    }
+    if input.actionable_only as u8 + input.conflicts_only as u8 + input.latest_promotable as u8 > 1
+    {
+        anyhow::bail!("workflow-status accepts at most one artifact filter flag");
+    }
+    if input.actionable_only {
+        print_redacted_json(&snapshot.actionable_artifacts)?;
+        return Ok(());
+    }
+    if input.conflicts_only {
+        print_redacted_json(&snapshot.disagreements)?;
+        return Ok(());
+    }
+    if input.latest_promotable {
+        print_redacted_json(&snapshot.latest_promotable_artifact)?;
+        return Ok(());
+    }
+    if input.hard_block_only || input.hard_block_reason.is_some() || input.limit.is_some() {
+        let history = filter_hard_block_rows(
+            snapshot,
+            persisted_scorecards,
+            input.hard_block_only,
+            input.hard_block_reason,
+            input.limit,
+        );
+        print_redacted_json(&history)?;
+        return Ok(());
+    }
+    if let Some(phase) = input.phase {
+        let value = match phase.trim().to_ascii_lowercase().as_str() {
+            "agent-bootstrap" | "bootstrap" => build_workflow_status_bootstrap_phase_value(
+                bootstrap.symbol,
+                bootstrap.state_dir,
+                snapshot,
+                bootstrap.detected_tomac_root,
+                bootstrap.multi_timeframe_clean_root,
+                &bootstrap.tomac_root_placeholder,
+            )?,
+            other => build_workflow_status_phase_value(snapshot, persisted_scorecards, other)?,
+        };
+        print_redacted_json(&value)?;
+    } else {
+        emit_workflow_status_output(snapshot, persisted_scorecards, input.output_format)?;
+    }
+    Ok(())
+}
+
+pub fn build_agent_bootstrap_view(
+    symbol: &str,
+    state_dir: &str,
+    snapshot: &WorkflowSnapshot,
+    detected_tomac_root: Option<String>,
+    multi_timeframe_clean_root: Option<String>,
+    tomac_root_placeholder: &str,
+) -> AgentBootstrapView {
+    let agent_brief = vec![
+        "mission: formalize factor-pipeline debug from latest signal through pre-bayes / bridge / resonance".to_string(),
+        "priority: promote expansion_manipulation to SOP-tier objective, not research-only".to_string(),
+        "guardrail: do not blind-tune structure_ict before evidence pinpoints the blocking surface".to_string(),
+        "success: either find a real structure_ict mutation win or prove near-local-optimum then shift to label refinement / market fork".to_string(),
+    ];
+    let analyze_command = if let Some(clean_root) = &multi_timeframe_clean_root {
+        format!(
+            "ict-engine analyze --symbol {} --data-root {} --market {} --state-dir {}",
+            shell_quote(symbol),
+            shell_quote(clean_root),
+            shell_quote(&symbol.to_ascii_lowercase()),
+            shell_quote(state_dir)
+        )
+    } else {
+        "ict-engine analyze --symbol <symbol> --data-root <clean-root> --market <market> --state-dir <state-dir>".to_string()
+    };
+    let train_command = if let Some(clean_root) = &multi_timeframe_clean_root {
+        format!(
+            "ict-engine train --symbol {} --data {}/cleaned-15m/{}.continuous-15m.json --epochs 200 --state-dir {}",
+            shell_quote(symbol),
+            shell_quote(clean_root),
+            symbol.to_ascii_lowercase(),
+            shell_quote(state_dir)
+        )
+    } else {
+        "ict-engine train --symbol <symbol> --data <clean-root>/cleaned-15m/<market>.continuous-15m.json --epochs 200 --state-dir <state-dir>".to_string()
+    };
+    let clean_command = if let Some(root) = &detected_tomac_root {
+        format!(
+            "ict-engine clean-futures --root {} --output-dir {} --multi-timeframe",
+            shell_quote(root),
+            shell_quote(
+                &multi_timeframe_clean_root
+                    .clone()
+                    .unwrap_or_else(|| format!("{}/ict-engine-mtf", root))
+            )
+        )
+    } else {
+        "ict-engine clean-futures --root <tomac-root> --output-dir <output-dir> --multi-timeframe"
+            .to_string()
+    };
+    let inferable_live_defaults = std::collections::BTreeMap::from([
+        (
+            "NQ".to_string(),
+            std::collections::BTreeMap::from([
+                ("futures_symbol".to_string(), "NQ=F".to_string()),
+                ("spot_symbol".to_string(), "QQQ".to_string()),
+                ("options_symbol".to_string(), "QQQ".to_string()),
+                ("spot_kind".to_string(), "equity".to_string()),
+            ]),
+        ),
+        (
+            "ES".to_string(),
+            std::collections::BTreeMap::from([
+                ("futures_symbol".to_string(), "ES=F".to_string()),
+                ("spot_symbol".to_string(), "SPY".to_string()),
+                ("options_symbol".to_string(), "SPY".to_string()),
+                ("spot_kind".to_string(), "equity".to_string()),
+            ]),
+        ),
+        (
+            "YM".to_string(),
+            std::collections::BTreeMap::from([
+                ("futures_symbol".to_string(), "YM=F".to_string()),
+                ("spot_symbol".to_string(), "DIA".to_string()),
+                ("options_symbol".to_string(), "DIA".to_string()),
+                ("spot_kind".to_string(), "equity".to_string()),
+            ]),
+        ),
+        (
+            "GC".to_string(),
+            std::collections::BTreeMap::from([
+                ("futures_symbol".to_string(), "GC=F".to_string()),
+                ("spot_symbol".to_string(), "GLD".to_string()),
+                ("options_symbol".to_string(), "GLD".to_string()),
+                ("spot_kind".to_string(), "etf".to_string()),
+            ]),
+        ),
+        (
+            "CL".to_string(),
+            std::collections::BTreeMap::from([
+                ("futures_symbol".to_string(), "CL=F".to_string()),
+                ("spot_symbol".to_string(), "USO".to_string()),
+                ("options_symbol".to_string(), "USO".to_string()),
+                ("spot_kind".to_string(), "etf".to_string()),
+            ]),
+        ),
+    ]);
+    AgentBootstrapView {
+        symbol: symbol.to_string(),
+        project_role: "closed_loop_multi_timeframe_pre_bayes_bbn_engine".to_string(),
+        closed_loop_chain: vec![
+            "tomac_history -> clean-futures".to_string(),
+            "clean-futures -> train/research/backtest/analyze".to_string(),
+            "analyze -> pre-bayes-filter -> bridge -> bbn".to_string(),
+            "analyze -> pending/execution artifacts".to_string(),
+            "artifacts -> update -> learning feedback".to_string(),
+        ],
+        agent_brief,
+        guardrails: vec![
+            "do_not_bypass_pre_bayes_evidence_filter".to_string(),
+            "do_not_feed_raw_factor_labels_directly_into_bbn".to_string(),
+            "treat_factors_as_evidence_not_triggers".to_string(),
+            "keep_six_timeframe_resonance_in_train_analyze_bridge_artifact_update".to_string(),
+        ],
+        detected_paths: AgentBootstrapPaths {
+            tomac_history_root: detected_tomac_root,
+            multi_timeframe_clean_root: multi_timeframe_clean_root.clone(),
+            state_dir: state_dir.to_string(),
+        },
+        input_acquisition: AgentBootstrapInputs {
+            backtest: AgentBootstrapBacktestInput {
+                local_discovery_order: vec![
+                    "multi_timeframe_clean_root".to_string(),
+                    "tomac_history_root".to_string(),
+                    "direct_backtest_file".to_string(),
+                ],
+                preferred_user_inputs: vec![
+                    "multi_timeframe_clean_root".to_string(),
+                    "tomac_history_root".to_string(),
+                ],
+                fallback_user_inputs: vec![
+                    "single_backtest_file_path".to_string(),
+                    "download_link_to_backtest_file_or_directory".to_string(),
+                ],
+                should_ask_download_link_if_local_missing: true,
+            },
+            live: AgentBootstrapLiveInput {
+                minimum_required_user_inputs: vec![],
+                inferable_defaults: inferable_live_defaults,
+                additional_user_inputs_if_not_inferable: vec![
+                    "spot_symbol".to_string(),
+                    "options_symbol".to_string(),
+                    "spot_kind".to_string(),
+                    "futures_backend".to_string(),
+                    "aux_backend".to_string(),
+                    "backend_base_urls_if_non_default".to_string(),
+                ],
+            },
+        },
+        commands: AgentBootstrapCommands {
+            clean_multi_timeframe: clean_command,
+            train: train_command,
+            analyze: analyze_command,
+            futures_sop: format!(
+                "ict-engine futures-sop --root {} --output-dir {} --interval 15m",
+                shell_quote(tomac_root_placeholder),
+                shell_quote(
+                    &multi_timeframe_clean_root
+                        .clone()
+                        .unwrap_or_else(|| "<output-dir>".to_string())
+                )
+            ),
+            expansion_sop: format!(
+                "ict-engine expansion-sop --root {} --output-dir {} --interval 15m --lookback 20 --atr-multiplier 1.50",
+                shell_quote(tomac_root_placeholder),
+                shell_quote(
+                    &multi_timeframe_clean_root
+                        .clone()
+                        .unwrap_or_else(|| "<output-dir>".to_string())
+                )
+            ),
+            workflow_status: format!(
+                "ict-engine workflow-status --symbol {} --state-dir {}",
+                shell_quote(symbol),
+                shell_quote(state_dir)
+            ),
+            recommended_next_command: snapshot.recommended_next_command.clone(),
+        },
+        latest_snapshot: AgentBootstrapSnapshot {
+            current_focus_phase: snapshot.current_focus_phase.clone(),
+            current_focus_reason: snapshot.current_focus_reason.clone(),
+            blocking_truth: snapshot.blocking_truth.clone(),
+            latest_train_phase: snapshot.latest_train.as_ref().map(|phase| phase.phase.clone()),
+            latest_analyze_phase: snapshot.latest_analyze.as_ref().map(|phase| phase.phase.clone()),
+            latest_pre_bayes_gate_status: snapshot
+                .latest_analyze
+                .as_ref()
+                .map(|phase| phase.pre_bayes_gate_status.clone()),
+        },
+    }
+}
+
 fn short_human_phase_summary(phase: &crate::state::WorkflowPhaseSnapshot) -> String {
     let mut parts = Vec::new();
     if let Some(direction) = &phase.selected_direction {
@@ -511,6 +1053,230 @@ pub fn build_ensemble_vote_surface(
         posterior_probabilities: vote.posterior_probabilities.clone(),
         posterior_evidence: vote.posterior_evidence.clone(),
     }
+}
+
+pub fn build_workflow_status_phase_value(
+    snapshot: &WorkflowSnapshot,
+    persisted_scorecards: &[EnsembleExecutorScorecard],
+    phase: &str,
+) -> Result<Value> {
+    Ok(match phase.trim().to_ascii_lowercase().as_str() {
+        "human" | "human-next" | "human-next-action" => {
+            build_human_workflow_status_view(snapshot, persisted_scorecards)
+        }
+        "train" => serde_json::to_value(&build_phase_snapshot_surfaces(snapshot).train)?,
+        "analyze" => serde_json::to_value(&build_phase_snapshot_surfaces(snapshot).analyze)?,
+        "research" => serde_json::to_value(&build_phase_snapshot_surfaces(snapshot).research)?,
+        "backtest" => serde_json::to_value(&build_phase_snapshot_surfaces(snapshot).backtest)?,
+        "update" => serde_json::to_value(&build_phase_snapshot_surfaces(snapshot).update)?,
+        "pre-bayes-policy" => {
+            serde_json::to_value(&build_pre_bayes_surfaces(snapshot).pre_bayes_policy)?
+        }
+        "pre-bayes-policy-history" => {
+            serde_json::to_value(&build_pre_bayes_surfaces(snapshot).pre_bayes_policy_history)?
+        }
+        "pre-bayes-policy-diff" => {
+            serde_json::to_value(&build_pre_bayes_surfaces(snapshot).pre_bayes_policy_diff)?
+        }
+        "pre-bayes-policy-lineage" => {
+            serde_json::to_value(&build_pre_bayes_surfaces(snapshot).pre_bayes_policy_lineage)?
+        }
+        "pre-bayes-entry-quality-bridge" => serde_json::to_value(
+            &build_pre_bayes_surfaces(snapshot).pre_bayes_entry_quality_bridge,
+        )?,
+        "pre-bayes-entry-quality-bridge-diff" => serde_json::to_value(
+            &build_pre_bayes_surfaces(snapshot).pre_bayes_entry_quality_bridge_diff,
+        )?,
+        "pre-bayes-soft-evidence" => {
+            serde_json::to_value(&build_pre_bayes_surfaces(snapshot).pre_bayes_soft_evidence)?
+        }
+        "pre-bayes-soft-evidence-diff" => {
+            serde_json::to_value(&build_pre_bayes_surfaces(snapshot).pre_bayes_soft_evidence_diff)?
+        }
+        "pending-update" => {
+            serde_json::to_value(&build_auxiliary_artifact_surfaces(snapshot).pending_update)?
+        }
+        "pending-update-history" => serde_json::to_value(
+            &build_auxiliary_artifact_surfaces(snapshot).pending_update_history,
+        )?,
+        "execution-candidate" => {
+            serde_json::to_value(&build_auxiliary_artifact_surfaces(snapshot).execution_candidate)?
+        }
+        "execution-candidate-history" => serde_json::to_value(
+            &build_auxiliary_artifact_surfaces(snapshot).execution_candidate_history,
+        )?,
+        "ensemble-vote" => serde_json::to_value(
+            snapshot
+                .latest_ensemble_vote
+                .as_ref()
+                .map(|vote| build_ensemble_vote_surface(vote, persisted_scorecards)),
+        )?,
+        "ensemble-vote-history" => serde_json::to_value(build_ensemble_vote_history_view(
+            snapshot,
+            persisted_scorecards,
+        ))?,
+        "ensemble-scorecards" | "ensemble-executor-scorecards" => {
+            serde_json::to_value(persisted_scorecards)?
+        }
+        "artifact-history-summary" => serde_json::to_value(
+            &build_auxiliary_artifact_surfaces(snapshot).artifact_history_summary,
+        )?,
+        "artifact-factor-trends" => serde_json::to_value(
+            &build_auxiliary_artifact_surfaces(snapshot).artifact_factor_trends,
+        )?,
+        "artifact-family-trends" => serde_json::to_value(
+            &build_auxiliary_artifact_surfaces(snapshot).artifact_family_trends,
+        )?,
+        "artifact-consumed-gate" => {
+            serde_json::to_value(&build_artifact_report_surfaces(snapshot).artifact_consumed_gate)?
+        }
+        "artifact-factor-consumed-validation" | "artifact-factor-consumed-leaderboard" => {
+            serde_json::to_value(
+                &build_artifact_report_surfaces(snapshot).artifact_factor_consumed_validation,
+            )?
+        }
+        "artifact-family-consumed-validation" | "artifact-family-consumed-leaderboard" => {
+            serde_json::to_value(
+                &build_artifact_report_surfaces(snapshot).artifact_family_consumed_validation,
+            )?
+        }
+        "artifact-lineage-summaries" => serde_json::to_value(
+            &build_artifact_report_surfaces(snapshot).artifact_lineage_summaries,
+        )?,
+        "artifact-decision-summary" => serde_json::to_value(
+            &build_artifact_report_surfaces(snapshot).artifact_decision_summary,
+        )?,
+        "artifact-rule-breaks" => {
+            serde_json::to_value(&build_artifact_report_surfaces(snapshot).artifact_rule_breaks)?
+        }
+        "artifact-rule-break-effects" => serde_json::to_value(
+            &build_artifact_report_surfaces(snapshot).artifact_rule_break_effects,
+        )?,
+        "artifact-factor-rule-break-impacts" => serde_json::to_value(
+            &build_artifact_report_surfaces(snapshot).artifact_factor_rule_break_impacts,
+        )?,
+        "artifact-family-rule-break-impacts" => serde_json::to_value(
+            &build_artifact_report_surfaces(snapshot).artifact_family_rule_break_impacts,
+        )?,
+        "artifact-impact-leaderboard" => serde_json::to_value(
+            &build_artifact_report_surfaces(snapshot).artifact_impact_leaderboard,
+        )?,
+        "artifact-impact-consumed" => serde_json::to_value(
+            &build_artifact_report_surfaces(snapshot).artifact_impact_consumed,
+        )?,
+        "artifact-impact-consumed-trend" => serde_json::to_value(
+            &build_artifact_report_surfaces(snapshot).artifact_impact_consumed_trend,
+        )?,
+        "artifact-review-rules" => {
+            serde_json::to_value(&build_artifact_report_surfaces(snapshot).artifact_review_rules)?
+        }
+        "artifact-review-rule-sources" => serde_json::to_value(
+            &build_artifact_report_surfaces(snapshot).artifact_review_rule_sources,
+        )?,
+        "disagreements" => {
+            serde_json::to_value(&build_artifact_report_surfaces(snapshot).disagreements)?
+        }
+        "diffs" => serde_json::to_value(&build_artifact_report_surfaces(snapshot).diffs)?,
+        other => anyhow::bail!("unsupported workflow-status phase '{}'", other),
+    })
+}
+
+pub fn build_pre_bayes_status_value(
+    snapshot: &WorkflowSnapshot,
+    section: Option<&str>,
+) -> Result<Value> {
+    let pre = build_pre_bayes_surfaces(snapshot);
+    Ok(
+        match section.map(|value| value.trim().to_ascii_lowercase()) {
+            None => serde_json::to_value(json!({
+                "latest_policy": pre.pre_bayes_policy,
+                "latest_bridge": pre.pre_bayes_entry_quality_bridge,
+                "latest_bridge_diff": pre.pre_bayes_entry_quality_bridge_diff,
+                "latest_policy_diff": pre.pre_bayes_policy_diff,
+                "latest_policy_lineage": pre.pre_bayes_policy_lineage,
+                "latest_gate_status": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_gate_status.clone()),
+                "latest_policy_version": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_policy_version.clone()),
+                "latest_uses_soft_evidence": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_uses_soft_evidence),
+                "latest_soft_evidence_diff": pre.pre_bayes_soft_evidence_diff,
+                "latest_soft_evidence": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_soft_evidence.clone()),
+            }))?,
+            Some(section) if section == "policy" => serde_json::to_value(&pre.pre_bayes_policy)?,
+            Some(section) if section == "bridge" => {
+                serde_json::to_value(&pre.pre_bayes_entry_quality_bridge)?
+            }
+            Some(section) if section == "bridge-diff" => {
+                serde_json::to_value(&pre.pre_bayes_entry_quality_bridge_diff)?
+            }
+            Some(section) if section == "history" => {
+                serde_json::to_value(&pre.pre_bayes_policy_history)?
+            }
+            Some(section) if section == "diff" => serde_json::to_value(&pre.pre_bayes_policy_diff)?,
+            Some(section) if section == "lineage" => {
+                serde_json::to_value(&pre.pre_bayes_policy_lineage)?
+            }
+            Some(section) if section == "gate" => serde_json::to_value(json!({
+                "status": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_gate_status.clone()),
+                "policy_version": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_policy_version.clone()),
+                "uses_soft_evidence": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_uses_soft_evidence),
+            }))?,
+            Some(section) if section == "soft" || section == "soft-evidence" => {
+                serde_json::to_value(
+                    snapshot
+                        .latest_analyze
+                        .as_ref()
+                        .map(|phase| phase.pre_bayes_soft_evidence.clone()),
+                )?
+            }
+            Some(section) if section == "soft-diff" => {
+                serde_json::to_value(&pre.pre_bayes_soft_evidence_diff)?
+            }
+            Some(other) => anyhow::bail!("unsupported pre-bayes-status section '{}'", other),
+        },
+    )
+}
+
+pub fn emit_pre_bayes_status_output(
+    snapshot: &WorkflowSnapshot,
+    section: Option<&str>,
+) -> Result<()> {
+    let value = build_pre_bayes_status_value(snapshot, section)?;
+    print_redacted_json(&value)
+}
+
+pub fn build_pre_bayes_diff_value(snapshot: &WorkflowSnapshot) -> Value {
+    json!({
+        "latest_policy_diff": snapshot.latest_pre_bayes_policy_diff,
+        "latest_policy_lineage": snapshot.latest_pre_bayes_policy_lineage,
+        "latest_gate_status": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_gate_status.clone()),
+        "latest_policy_version": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_policy_version.clone()),
+        "latest_uses_soft_evidence": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_uses_soft_evidence),
+        "latest_soft_evidence_diff": snapshot.latest_pre_bayes_soft_evidence_diff,
+        "latest_bridge": snapshot.latest_pre_bayes_entry_quality_bridge,
+        "latest_bridge_diff": snapshot.latest_pre_bayes_entry_quality_bridge_diff,
+    })
+}
+
+pub fn emit_pre_bayes_diff_output(snapshot: &WorkflowSnapshot) -> Result<()> {
+    let value = build_pre_bayes_diff_value(snapshot);
+    print_redacted_json(&value)
+}
+
+pub fn build_workflow_status_bootstrap_phase_value(
+    symbol: &str,
+    state_dir: &str,
+    snapshot: &WorkflowSnapshot,
+    detected_tomac_root: Option<String>,
+    multi_timeframe_clean_root: Option<String>,
+    tomac_root_placeholder: &str,
+) -> Result<Value> {
+    Ok(serde_json::to_value(build_agent_bootstrap_view(
+        symbol,
+        state_dir,
+        snapshot,
+        detected_tomac_root,
+        multi_timeframe_clean_root,
+        tomac_root_placeholder,
+    ))?)
 }
 
 pub fn build_ensemble_vote_history_view(
@@ -789,6 +1555,199 @@ pub fn sample_human_workflow_snapshot() -> WorkflowSnapshot {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::application::output_foundation::redact_local_paths_in_value;
+    use crate::state::WorkflowPhaseSnapshot;
+
+    #[test]
+    fn build_pre_bayes_status_value_matches_main_policy_section() {
+        let snapshot = WorkflowSnapshot {
+            latest_pre_bayes_policy: Some(PreBayesEvidencePolicy {
+                version: "v-policy".to_string(),
+                ..PreBayesEvidencePolicy::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+        let value = build_pre_bayes_status_value(&snapshot, Some("policy")).unwrap();
+        assert_eq!(value["version"], "v-policy");
+    }
+
+    #[test]
+    fn build_pre_bayes_status_value_default_includes_gate_and_soft_evidence() {
+        let mut analyze = WorkflowPhaseSnapshot::default();
+        analyze.pre_bayes_gate_status = "pass_neutralized".to_string();
+        analyze.pre_bayes_policy_version = "v2".to_string();
+        analyze.pre_bayes_uses_soft_evidence = true;
+        analyze.pre_bayes_soft_evidence = std::collections::BTreeMap::from([(
+            "node".to_string(),
+            std::collections::BTreeMap::from([("state".to_string(), 0.25)]),
+        )]);
+        let snapshot = WorkflowSnapshot {
+            latest_analyze: Some(analyze),
+            latest_pre_bayes_soft_evidence_diff: vec![PreBayesSoftEvidenceNodeDiff::default()],
+            ..WorkflowSnapshot::default()
+        };
+        let value = build_pre_bayes_status_value(&snapshot, None).unwrap();
+        assert_eq!(value["latest_gate_status"], "pass_neutralized");
+        assert_eq!(value["latest_policy_version"], "v2");
+        assert_eq!(value["latest_uses_soft_evidence"], true);
+        assert_eq!(value["latest_soft_evidence"]["node"]["state"], 0.25);
+        assert_eq!(
+            value["latest_soft_evidence_diff"].as_array().unwrap().len(),
+            1
+        );
+    }
+
+    #[test]
+    fn build_pre_bayes_diff_value_matches_main_surface() {
+        let mut analyze = WorkflowPhaseSnapshot::default();
+        analyze.pre_bayes_gate_status = "blocked".to_string();
+        analyze.pre_bayes_policy_version = "v3".to_string();
+        analyze.pre_bayes_uses_soft_evidence = false;
+        let snapshot = WorkflowSnapshot {
+            latest_analyze: Some(analyze),
+            latest_pre_bayes_policy_diff: Some(PreBayesPolicyDiff::default()),
+            latest_pre_bayes_policy_lineage: Some(PreBayesPolicyLineageSummary::default()),
+            latest_pre_bayes_entry_quality_bridge: Some(PreBayesEntryQualityBridge::default()),
+            latest_pre_bayes_entry_quality_bridge_diff: Some(
+                PreBayesEntryQualityBridgeDiff::default(),
+            ),
+            latest_pre_bayes_soft_evidence_diff: vec![PreBayesSoftEvidenceNodeDiff::default()],
+            ..WorkflowSnapshot::default()
+        };
+        let value = build_pre_bayes_diff_value(&snapshot);
+        assert_eq!(value["latest_gate_status"], "blocked");
+        assert_eq!(value["latest_policy_version"], "v3");
+        assert_eq!(value["latest_uses_soft_evidence"], false);
+        assert_eq!(
+            value["latest_soft_evidence_diff"].as_array().unwrap().len(),
+            1
+        );
+    }
+
+    #[test]
+    fn build_workflow_status_bootstrap_phase_value_matches_bootstrap_view() {
+        let snapshot = sample_human_workflow_snapshot();
+        let value = build_workflow_status_bootstrap_phase_value(
+            "NQ",
+            "state",
+            &snapshot,
+            Some("/tmp/tomac".to_string()),
+            Some("/tmp/clean".to_string()),
+            "<root>",
+        )
+        .unwrap();
+        assert_eq!(value["symbol"], "NQ");
+        assert_eq!(value["detected_paths"]["state_dir"], "state");
+        assert_eq!(
+            value["commands"]["workflow_status"],
+            "ict-engine workflow-status --symbol NQ --state-dir state"
+        );
+    }
+
+    #[test]
+    fn build_workflow_status_phase_value_matches_human_surface() {
+        let snapshot = sample_human_workflow_snapshot();
+        let value = build_workflow_status_phase_value(&snapshot, &[], "human").unwrap();
+        assert_eq!(value["summary_line"], "NQ | update | action_blocked");
+        assert_eq!(value["current_status"]["focus_phase"], "update");
+    }
+
+    #[test]
+    fn build_workflow_status_phase_value_supports_artifact_alias() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.artifact_factor_trends = vec![ArtifactFactorTrendSummary {
+            factor_name: "fvg_rebalance".to_string(),
+            consumed_entries: 2,
+            entries: 3,
+            ..ArtifactFactorTrendSummary::default()
+        }];
+
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            "artifact-factor-consumed-leaderboard",
+        )
+        .unwrap();
+        assert_eq!(value.as_array().unwrap()[0]["factor_name"], "fvg_rebalance");
+    }
+
+    #[test]
+    fn build_workflow_status_phase_value_rejects_unknown_phase() {
+        let err = build_workflow_status_phase_value(&WorkflowSnapshot::default(), &[], "wat")
+            .unwrap_err();
+        assert!(err
+            .to_string()
+            .contains("unsupported workflow-status phase 'wat'"));
+    }
+
+    #[test]
+    fn build_workflow_status_phase_value_preserves_redactable_paths() {
+        let snapshot = sample_human_workflow_snapshot();
+        let mut value = build_workflow_status_phase_value(&snapshot, &[], "human").unwrap();
+        redact_local_paths_in_value(&mut value);
+        let rendered = serde_json::to_string(&value).unwrap();
+        assert!(rendered.contains("<local-path>"));
+    }
+
+    #[test]
+    fn dispatch_workflow_status_rejects_phase_and_filter_mix() {
+        let error = dispatch_workflow_status(
+            &sample_human_workflow_snapshot(),
+            &[],
+            WorkflowStatusDispatchInput {
+                phase: Some("human"),
+                actionable_only: true,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+            },
+            WorkflowStatusBootstrapInput {
+                symbol: "NQ",
+                state_dir: "/tmp/state",
+                detected_tomac_root: None,
+                multi_timeframe_clean_root: None,
+                tomac_root_placeholder: "<tomac-root>".to_string(),
+            },
+        )
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("phase and filter flags are mutually exclusive"));
+    }
+
+    #[test]
+    fn dispatch_workflow_status_rejects_multiple_artifact_filters() {
+        let error = dispatch_workflow_status(
+            &sample_human_workflow_snapshot(),
+            &[],
+            WorkflowStatusDispatchInput {
+                phase: None,
+                actionable_only: true,
+                conflicts_only: true,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+            },
+            WorkflowStatusBootstrapInput {
+                symbol: "NQ",
+                state_dir: "/tmp/state",
+                detected_tomac_root: None,
+                multi_timeframe_clean_root: None,
+                tomac_root_placeholder: "<tomac-root>".to_string(),
+            },
+        )
+        .unwrap_err();
+
+        assert!(error
+            .to_string()
+            .contains("accepts at most one artifact filter flag"));
+    }
 
     #[test]
     fn human_workflow_status_view_exposes_candidates() {

@@ -1,6 +1,7 @@
 pub mod artifacts;
 pub mod context;
 pub mod ensemble_vote;
+pub mod execution_tree;
 pub mod final_adapter;
 pub mod policy_engine;
 pub mod stage_plan;
@@ -11,6 +12,7 @@ pub mod workflow_status;
 pub use artifacts::*;
 pub use context::*;
 pub use ensemble_vote::*;
+pub use execution_tree::*;
 pub use final_adapter::*;
 pub use policy_engine::*;
 pub use stage_plan::*;

@@ -1248,6 +1248,16 @@ pub struct ResearchRunRecord {
     pub factor_mutation_evaluation: Option<FactorMutationEvaluation>,
     #[serde(default)]
     pub multi_timeframe_summary: Vec<String>,
+    #[serde(default)]
+    pub execution_artifact_id: Option<String>,
+    #[serde(default)]
+    pub execution_edge_share: Option<f64>,
+    #[serde(default)]
+    pub prediction_edge_share: Option<f64>,
+    #[serde(default)]
+    pub execution_readiness: Option<f64>,
+    #[serde(default)]
+    pub execution_gate_status: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -1459,6 +1469,16 @@ pub struct AnalyzeRunRecord {
     #[serde(default)]
     pub multi_timeframe_summary: Vec<String>,
     #[serde(default)]
+    pub execution_artifact_id: Option<String>,
+    #[serde(default)]
+    pub execution_edge_share: Option<f64>,
+    #[serde(default)]
+    pub prediction_edge_share: Option<f64>,
+    #[serde(default)]
+    pub execution_readiness: Option<f64>,
+    #[serde(default)]
+    pub execution_gate_status: Option<String>,
+    #[serde(default)]
     pub artifact_action_summary: Vec<String>,
     #[serde(default)]
     pub artifact_decision_summary: ArtifactDecisionSummary,
@@ -1506,6 +1526,11 @@ impl Default for AnalyzeRunRecord {
             agent_context_bundle_minimal: AgentContextBundleMinimal::default(),
             feedback_history_summary: FeedbackHistorySummary::default(),
             multi_timeframe_summary: Vec::new(),
+            execution_artifact_id: None,
+            execution_edge_share: None,
+            prediction_edge_share: None,
+            execution_readiness: None,
+            execution_gate_status: None,
             artifact_action_summary: Vec::new(),
             artifact_decision_summary: ArtifactDecisionSummary::default(),
             artifact_decision_section: ArtifactDecisionSection::default(),
@@ -1575,6 +1600,16 @@ pub struct UpdateRunRecord {
     pub feedback_history_summary: FeedbackHistorySummary,
     #[serde(default)]
     pub artifact_action_summary: Vec<String>,
+    #[serde(default)]
+    pub execution_artifact_id: Option<String>,
+    #[serde(default)]
+    pub execution_edge_share: Option<f64>,
+    #[serde(default)]
+    pub prediction_edge_share: Option<f64>,
+    #[serde(default)]
+    pub execution_readiness: Option<f64>,
+    #[serde(default)]
+    pub execution_gate_status: Option<String>,
     #[serde(default)]
     pub artifact_decision_summary: ArtifactDecisionSummary,
     #[serde(default)]
@@ -1665,6 +1700,16 @@ pub struct BacktestRunRecord {
     pub feedback_history_summary: FeedbackHistorySummary,
     #[serde(default)]
     pub artifact_action_summary: Vec<String>,
+    #[serde(default)]
+    pub execution_artifact_id: Option<String>,
+    #[serde(default)]
+    pub execution_edge_share: Option<f64>,
+    #[serde(default)]
+    pub prediction_edge_share: Option<f64>,
+    #[serde(default)]
+    pub execution_readiness: Option<f64>,
+    #[serde(default)]
+    pub execution_gate_status: Option<String>,
     #[serde(default)]
     pub artifact_decision_summary: ArtifactDecisionSummary,
     #[serde(default)]
@@ -1927,6 +1972,14 @@ pub struct WorkflowPhaseSnapshot {
     #[serde(default)]
     pub objective_market_credibility_shrink:
         Option<crate::domain::belief::ObjectiveMarketCredibilityShrink>,
+    #[serde(default)]
+    pub execution_edge_share: Option<f64>,
+    #[serde(default)]
+    pub prediction_edge_share: Option<f64>,
+    #[serde(default)]
+    pub execution_readiness: Option<f64>,
+    #[serde(default)]
+    pub execution_gate_status: Option<String>,
 }
 
 impl Default for WorkflowPhaseSnapshot {
@@ -1971,6 +2024,10 @@ impl Default for WorkflowPhaseSnapshot {
             family_score_map: BTreeMap::new(),
             factor_score_map: BTreeMap::new(),
             objective_market_credibility_shrink: None,
+            execution_edge_share: None,
+            prediction_edge_share: None,
+            execution_readiness: None,
+            execution_gate_status: None,
         }
     }
 }

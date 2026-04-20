@@ -1,3 +1,5 @@
+pub mod geometry;
+
 pub fn wilder_smooth(values: &[f64], period: usize) -> Vec<f64> {
     if values.len() < period {
         return Vec::new();

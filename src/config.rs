@@ -11,15 +11,17 @@ use crate::data::candles_to_prices;
 use crate::factor_lab::FactorDiagnostics;
 use crate::hmm::{build_observations, ObservationInput};
 use crate::ict::{detect_fvg, detect_liquidity_pools, detect_liquidity_sweep};
+use crate::ict::{measure_pythagorean_extension, PythagoreanExtensionMetrics};
 use crate::indicators::{atr_percent, compute_adx, compute_atr, compute_rsi};
 use crate::kalman::KalmanFilter;
+use crate::math::geometry::Point2;
 use crate::state::{
     FactorPipelineLabelSource, PreBayesEvidenceFilter, PreBayesEvidencePolicy,
     PreBayesMarketPolicyOverride,
 };
 use crate::types::{Candle, Direction};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct FrameFeatures {
     pub observations: Vec<Vec<f64>>,
     pub regime_label: String,
@@ -38,6 +40,8 @@ pub struct FrameFeatures {
     pub pythagorean_distance_to_last_sweep: f64,
     /// Pythagorean distance to last FVG (combined price+time)
     pub pythagorean_distance_to_last_fvg: f64,
+    /// Normalized orthogonal displacement vs. projected trendline
+    pub pythagorean_overstretch: Option<f64>,
     /// OU mean reversion target in bps from current price
     pub ou_mean_reversion_target_bps: f64,
     /// OU expected pullback magnitude in bps
@@ -108,6 +112,24 @@ pub fn build_frame_features(candles: &[Candle]) -> anyhow::Result<FrameFeatures>
     };
     let normalized_distance_to_projected_trend_bps =
         (((latest_close - projected_trend) / range_span).clamp(-1.0, 1.0)) * 10_000.0;
+    let pythagorean_extension = if candles.len() >= 2 {
+        Some(measure_pythagorean_extension(
+            Point2 {
+                x: 0.0,
+                y: start_close,
+            },
+            Point2 {
+                x: (candles.len() - 1) as f64,
+                y: projected_trend,
+            },
+            Point2 {
+                x: (candles.len() - 1) as f64,
+                y: latest_close,
+            },
+        ))
+    } else {
+        None
+    };
     let closes = candles
         .iter()
         .map(|candle| candle.close)
@@ -279,6 +301,12 @@ pub fn build_frame_features(candles: &[Candle]) -> anyhow::Result<FrameFeatures>
         pythagorean_speed_bps_per_bar,
         pythagorean_distance_to_last_sweep,
         pythagorean_distance_to_last_fvg,
+        pythagorean_overstretch: pythagorean_extension.map(
+            |PythagoreanExtensionMetrics {
+                 normalized_overstretch,
+                 ..
+             }| normalized_overstretch,
+        ),
         ou_mean_reversion_target_bps,
         ou_expected_pullback_bps,
     })
@@ -388,6 +416,10 @@ pub fn raw_market_regime_trace(
                 frame.pythagorean_distance_to_last_fvg
             ),
             format!(
+                "pythagorean_overstretch={:.4}",
+                frame.pythagorean_overstretch.unwrap_or_default()
+            ),
+            format!(
                 "ou_mean_reversion_target_bps={:.4}",
                 frame.ou_mean_reversion_target_bps
             ),
@@ -438,6 +470,10 @@ pub fn raw_liquidity_context_trace(
             format!(
                 "pythagorean_distance_to_last_fvg={:.4}",
                 frame.pythagorean_distance_to_last_fvg
+            ),
+            format!(
+                "pythagorean_overstretch={:.4}",
+                frame.pythagorean_overstretch.unwrap_or_default()
             ),
             format!(
                 "ou_mean_reversion_target_bps={:.4}",
@@ -1044,6 +1080,7 @@ mod frame_feature_tests {
         assert!(frame.ou_pullback_expectation_zscore.is_finite());
         assert!(frame.ou_half_life_bars.is_finite());
         assert!(frame.pythagorean_speed_bps_per_bar.is_finite());
+        assert!(frame.pythagorean_overstretch.unwrap_or_default().is_finite());
         assert!(
             frame.pythagorean_distance_to_last_sweep.is_nan()
                 || frame.pythagorean_distance_to_last_sweep.is_finite()
@@ -1080,6 +1117,7 @@ mod frame_feature_tests {
 
         // Pythagorean speed should be non-negative
         assert!(frame.pythagorean_speed_bps_per_bar >= 0.0);
+        assert!(frame.pythagorean_overstretch.unwrap_or_default() >= 0.0);
 
         // OU mean reversion target should be finite and within bounds
         assert!(frame.ou_mean_reversion_target_bps.is_finite());

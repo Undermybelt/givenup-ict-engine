@@ -1,6 +1,8 @@
 pub mod debug_report;
+pub mod ising_overlay;
 pub mod jump_model_sidecar;
 pub mod logic_family;
+pub mod ou_overlay;
 pub mod pipeline_builder;
 pub mod pipeline_shared;
 pub mod pipeline_types;
@@ -17,6 +19,8 @@ pub use jump_model_sidecar::{
     persist_market_jump_calibration_from_research_runs,
     persist_market_jump_objective_calibration_from_research_runs,
 };
+pub use ising_overlay::{apply_ising_overlay, IsingOverlayState};
+pub use ou_overlay::{apply_ou_overlay, OuOverlayState};
 pub use pipeline_builder::{
     adapt_factor_pipeline_debug_report, build_canonical_belief_report,
     build_canonical_belief_snapshot, build_expansion_factor_pipeline_report,

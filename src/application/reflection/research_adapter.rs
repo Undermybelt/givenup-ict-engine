@@ -1,3 +1,6 @@
+use crate::application::execution::{
+    apply_execution_artifact_to_reflection_bundle, build_execution_artifact,
+};
 use crate::application::orchestration::build_stub_ensemble_vote_from_research;
 use crate::factor_lab::research::ResearchReport;
 
@@ -38,6 +41,39 @@ pub fn build_research_reflection_bundle(symbol: &str, report: &ResearchReport) -
     if !ensemble_vote.disagreement_flags.is_empty() {
         bundle.ensemble_disagreement_summary = Some(ensemble_vote.disagreement_flags.join(","));
     }
+    let execution_artifact = build_execution_artifact(
+        symbol,
+        0.0,
+        report
+            .recommended_commands
+            .research
+            .ready
+            .then_some(0.8)
+            .unwrap_or(0.35),
+        report
+            .promotion_decision
+            .approved
+            .then_some(0.75)
+            .unwrap_or(0.35),
+        0.5,
+        report.best_factor.as_ref().map(|_| 0.55).unwrap_or(0.25),
+        None,
+        None,
+        None,
+        None,
+        None,
+        None, // physics_overlay
+        &report.provenance,
+    );
+    apply_execution_artifact_to_reflection_bundle(&mut bundle, &execution_artifact);
+    bundle.prediction_summary = Some(format!(
+        "prediction_edge={:.3}; best_factor={}",
+        execution_artifact.features.prediction_edge_share,
+        report
+            .best_factor
+            .clone()
+            .unwrap_or_else(|| "unknown".to_string())
+    ));
     let setup_family = report
         .pre_bayes_evidence_filter
         .nearest_active_pda

@@ -17,6 +17,13 @@ use ict_engine::analyze::smt_correlation_section::{
 use ict_engine::analyze::technical_price_section::{
     build_technical_price_section, TechnicalPriceSection,
 };
+use ict_engine::application::execution::{
+    apply_analyze_run_execution_fields, apply_physics_overlay,
+    build_execution_artifact_from_snapshot, derive_backtest_execution_fields,
+    derive_execution_inputs, derive_research_execution_fields, derive_update_execution_fields,
+    execution_phase_summary_suffix, ExecutionArtifactBuildContext, ExecutionInputSources,
+    ExecutionOuFallback,
+};
 use ict_engine::application::{
     backtest::{
         build_backtest_result_artifact, build_oos_quality_delta_surface,
@@ -52,13 +59,19 @@ use ict_engine::application::{
         MultiTimeframeCleanReportView, ResolvedMultiTimeframeInputs, MULTI_TIMEFRAME_INTERVALS,
     },
     orchestration::{
-        build_stub_ensemble_vote_from_input, build_stub_ensemble_vote_from_research,
-        run_stage_plan, staged_orchestration_enabled, AnalyzeEnsembleVoteInput,
-        CatBoostCompatiblePolicyEngine, FinalOutputAdapter, FinalSurfaceAdapter, PipelineState,
-        StagePlan, StagedArtifactsInput,
+        build_execution_tree_artifact, build_stub_ensemble_vote_from_input,
+        build_stub_ensemble_vote_from_research, persist_execution_tree_artifact, run_stage_plan,
+        staged_orchestration_enabled, AnalyzeEnsembleVoteInput,
+        CatBoostCompatiblePolicyEngine, DefaultExecutionTreeScorer, ExecutionTreeInput,
+        ExecutionTreeScorer, FinalOutputAdapter, FinalSurfaceAdapter, PipelineState, StagePlan,
+        StagedArtifactsInput,
     },
     reflection::{
         build_reflection_bundle, build_research_reflection_bundle, ReflectionBundleInput,
+    },
+    regime::{
+        build_mece_recovery_artifact, persist_mece_recovery_artifact,
+        search_factors_for_mece_recovery,
     },
     reporting::{
         build_agent_guidance_report, build_compact_analyze_report, build_human_analyze_report,
@@ -92,6 +105,8 @@ use ict_engine::data::{
     },
     CleanedContinuousFuturesSummary,
 };
+use ict_engine::domain::execution::ExecutionArtifact;
+use ict_engine::domain::regime::manual_mece_labeler;
 use ict_engine::factor_lab::{
     BacktestConfig as FactorBacktestConfig, FactorContext, FactorDiagnostics, FactorEngine,
     FactorLab,
@@ -268,8 +283,9 @@ struct AnalyzeSupporting {
     workflow_snapshot: ict_engine::state::WorkflowSnapshot,
     #[serde(skip_serializing_if = "Option::is_none")]
     staged_orchestration_trace: Option<serde_json::Value>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    execution_artifact: Option<ExecutionArtifact>,
 }
-
 
 #[derive(Debug, Serialize)]
 struct AnalyzeBars {
@@ -1586,7 +1602,9 @@ fn main() -> Result<()> {
             symbol,
             state_dir,
             refresh,
-        } => ict_engine::application::release_closure::evidence_quality_breakdown_command(&symbol, &state_dir, refresh)?,
+        } => ict_engine::application::release_closure::evidence_quality_breakdown_command(
+            &symbol, &state_dir, refresh,
+        )?,
         Commands::FactorBacktest {
             symbol,
             data,
@@ -2490,7 +2508,6 @@ fn agent_workflow_status_view(
         "ensemble": ensemble_summary,
     })
 }
-
 
 fn short_workflow_phase_summary(phase: &WorkflowPhaseSnapshot) -> String {
     let mut parts = Vec::new();
@@ -7312,6 +7329,31 @@ fn persist_analyze_run(
         selected_direction: report.supporting.decision.selected_direction,
         selected_entry_quality: report.supporting.entry_quality.selected_state.clone(),
         decision_hint: report.supporting.decision_hint.clone(),
+        execution_artifact_id: report
+            .supporting
+            .execution_artifact
+            .as_ref()
+            .map(|artifact| artifact.artifact_id.clone()),
+        execution_edge_share: report
+            .supporting
+            .execution_artifact
+            .as_ref()
+            .map(|artifact| artifact.features.execution_edge_share),
+        prediction_edge_share: report
+            .supporting
+            .execution_artifact
+            .as_ref()
+            .map(|artifact| artifact.features.prediction_edge_share),
+        execution_readiness: report
+            .supporting
+            .execution_artifact
+            .as_ref()
+            .map(|artifact| artifact.features.execution_readiness),
+        execution_gate_status: report
+            .supporting
+            .execution_artifact
+            .as_ref()
+            .map(|artifact| artifact.hard_gate_status.clone()),
         pre_bayes_evidence_filter: report.supporting.pre_bayes_evidence_filter.clone(),
         pre_bayes_entry_quality_bridge: report.supporting.pre_bayes_entry_quality_bridge.clone(),
         factor_family_decisions: report.supporting.factor_family_decisions.clone(),
@@ -9736,7 +9778,7 @@ fn gate_aware_recommended_next_command(stored: &str, commands: &CommandRecommend
 
 fn workflow_phase_snapshot_from_analyze_run(run: &AnalyzeRunRecord) -> WorkflowPhaseSnapshot {
     let bridge_diff = pre_bayes_entry_quality_bridge_diff(&run.pre_bayes_entry_quality_bridge);
-    WorkflowPhaseSnapshot {
+    let mut phase = WorkflowPhaseSnapshot {
         phase: "analyze".to_string(),
         source_command: run.source_command.clone(),
         run_id: run.run_id.clone(),
@@ -9868,7 +9910,18 @@ fn workflow_phase_snapshot_from_analyze_run(run: &AnalyzeRunRecord) -> WorkflowP
             .collect(),
         factor_score_map: BTreeMap::new(),
         objective_market_credibility_shrink: None,
-    }
+        execution_edge_share: None,
+        prediction_edge_share: None,
+        execution_readiness: None,
+        execution_gate_status: None,
+    };
+    apply_analyze_run_execution_fields(&mut phase, run);
+    phase.phase_summary = format!(
+        "{}{}",
+        phase.phase_summary,
+        execution_phase_summary_suffix(&phase)
+    );
+    phase
 }
 
 fn workflow_phase_snapshot_from_train_run(run: &TrainRunRecord) -> WorkflowPhaseSnapshot {
@@ -9929,11 +9982,15 @@ fn workflow_phase_snapshot_from_train_run(run: &TrainRunRecord) -> WorkflowPhase
         family_score_map: BTreeMap::new(),
         factor_score_map: BTreeMap::new(),
         objective_market_credibility_shrink: None,
+        execution_edge_share: None,
+        prediction_edge_share: None,
+        execution_readiness: None,
+        execution_gate_status: None,
     }
 }
 
 fn workflow_phase_snapshot_from_research_run(run: &ResearchRunRecord) -> WorkflowPhaseSnapshot {
-    WorkflowPhaseSnapshot {
+    let mut phase = WorkflowPhaseSnapshot {
         phase: "research".to_string(),
         source_command: run.source_command.clone(),
         run_id: run.run_id.clone(),
@@ -10013,7 +10070,18 @@ fn workflow_phase_snapshot_from_research_run(run: &ResearchRunRecord) -> Workflo
             .map(|item| (item.factor_name.clone(), item.new_score))
             .collect(),
         objective_market_credibility_shrink: None,
-    }
+        execution_edge_share: None,
+        prediction_edge_share: None,
+        execution_readiness: None,
+        execution_gate_status: None,
+    };
+    ict_engine::application::execution::apply_research_run_execution_fields(&mut phase, run);
+    phase.phase_summary = format!(
+        "{}{}",
+        phase.phase_summary,
+        execution_phase_summary_suffix(&phase)
+    );
+    phase
 }
 
 fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> WorkflowPhaseSnapshot {
@@ -10027,7 +10095,7 @@ fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> Workflo
             )
         })
         .unwrap_or_default();
-    WorkflowPhaseSnapshot {
+    let mut phase = WorkflowPhaseSnapshot {
         phase: "backtest".to_string(),
         source_command: run.source_command.clone(),
         run_id: run.run_id.clone(),
@@ -10103,7 +10171,18 @@ fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> Workflo
             .map(|item| (item.factor_name.clone(), item.new_score))
             .collect(),
         objective_market_credibility_shrink: run.objective_market_credibility_shrink.clone(),
-    }
+        execution_edge_share: None,
+        prediction_edge_share: None,
+        execution_readiness: None,
+        execution_gate_status: None,
+    };
+    ict_engine::application::execution::apply_backtest_run_execution_fields(&mut phase, run);
+    phase.phase_summary = format!(
+        "{}{}",
+        phase.phase_summary,
+        execution_phase_summary_suffix(&phase)
+    );
+    phase
 }
 
 fn workflow_phase_snapshot_from_update_run(run: &UpdateRunRecord) -> WorkflowPhaseSnapshot {
@@ -10111,7 +10190,7 @@ fn workflow_phase_snapshot_from_update_run(run: &UpdateRunRecord) -> WorkflowPha
         .consumed_pre_bayes_entry_quality_bridge
         .as_ref()
         .map(pre_bayes_entry_quality_bridge_diff);
-    WorkflowPhaseSnapshot {
+    let mut phase = WorkflowPhaseSnapshot {
         phase: "update".to_string(),
         source_command: run.source_command.clone(),
         run_id: run.run_id.clone(),
@@ -10253,7 +10332,18 @@ fn workflow_phase_snapshot_from_update_run(run: &UpdateRunRecord) -> WorkflowPha
             .map(|item| (item.factor_name.clone(), item.new_score))
             .collect(),
         objective_market_credibility_shrink: None,
-    }
+        execution_edge_share: None,
+        prediction_edge_share: None,
+        execution_readiness: None,
+        execution_gate_status: None,
+    };
+    ict_engine::application::execution::apply_update_run_execution_fields(&mut phase, run);
+    phase.phase_summary = format!(
+        "{}{}",
+        phase.phase_summary,
+        execution_phase_summary_suffix(&phase)
+    );
+    phase
 }
 
 fn workflow_top_actions(plan: &AgentActionPlan) -> Vec<String> {
@@ -12167,6 +12257,12 @@ fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         &report.trade_outcome_deltas,
         &report.decision_thresholds,
     ));
+    let update_execution_fields = derive_update_execution_fields(
+        feedback_records_applied,
+        &report.realized_outcome,
+        report.duplicate_feedback_skipped,
+        report.promotion_decision.approved,
+    );
     append_update_run(
         state_dir,
         symbol,
@@ -12214,6 +12310,11 @@ fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
             agent_context_bundle_minimal: report.agent_context_bundle_minimal.clone(),
             feedback_history_summary: report.feedback_history_summary.clone(),
             artifact_action_summary: report.artifact_action_summary.clone(),
+            execution_artifact_id: report.consumed_execution_candidate_artifact_id.clone(),
+            execution_edge_share: update_execution_fields.execution_edge_share,
+            prediction_edge_share: update_execution_fields.prediction_edge_share,
+            execution_readiness: update_execution_fields.execution_readiness,
+            execution_gate_status: update_execution_fields.execution_gate_status.clone(),
             artifact_decision_summary: report.artifact_decision_summary.clone(),
             artifact_decision_section: report.artifact_decision_section.clone(),
             agent_prompts: report.agent_prompts.clone(),
@@ -12646,7 +12747,6 @@ fn factor_autoresearch_command(input: FactorAutoresearchCommandInput<'_>) -> Res
     println!("{}", serde_json::to_string_pretty(&summary)?);
     Ok(())
 }
-
 
 fn factor_autoresearch_status_command(
     symbol: &str,
@@ -14023,6 +14123,14 @@ fn run_factor_research(
         save_state(state_dir, symbol, BBN_STATE_FILE, &network)?;
     }
     save_learning_state(state_dir, symbol, &learning_state)?;
+    let research_execution_fields = derive_research_execution_fields(
+        report.dataset_comparability.comparable,
+        report.promotion_decision.approved,
+        report.rollback_recommendation.should_rollback,
+        report.feedback_records_applied,
+        report.aggregate_return,
+        report.best_factor.is_some(),
+    );
     let research_run_record = ResearchRunRecord {
         run_id,
         timestamp: run_timestamp,
@@ -14065,6 +14173,11 @@ fn run_factor_research(
         prompt_workflow: report.agent_prompts.workflow.clone(),
         factor_mutation_evaluation: mutation_evaluation.clone(),
         multi_timeframe_summary: report.multi_timeframe_summary.clone(),
+        execution_artifact_id: None,
+        execution_edge_share: research_execution_fields.execution_edge_share,
+        prediction_edge_share: research_execution_fields.prediction_edge_share,
+        execution_readiness: research_execution_fields.execution_readiness,
+        execution_gate_status: research_execution_fields.execution_gate_status.clone(),
     };
     let research_runs = append_research_run(state_dir, symbol, research_run_record.clone())?;
     let market_family = market_category_for_symbol(symbol);
@@ -14888,6 +15001,16 @@ fn run_factor_backtest(
         .latest_analyze
         .as_ref()
         .and_then(|snapshot| snapshot.objective_market_credibility_shrink.clone());
+    let backtest_execution_fields = derive_backtest_execution_fields(
+        report.factor_results.iter().map(|result| result.trades.len()).sum(),
+        report.aggregate_return,
+        report
+            .factor_results
+            .first()
+            .map(|result| result.metrics.regime_break_penalty)
+            .unwrap_or_default(),
+        report.promotion_decision.approved,
+    );
     let backtest_runs = append_backtest_run(
         state_dir,
         symbol,
@@ -15011,6 +15134,11 @@ fn run_factor_backtest(
             agent_context_bundle_minimal: report.agent_context_bundle_minimal.clone(),
             feedback_history_summary: report.feedback_history_summary.clone(),
             artifact_action_summary: report.artifact_action_summary.clone(),
+            execution_artifact_id: None,
+            execution_edge_share: backtest_execution_fields.execution_edge_share,
+            prediction_edge_share: backtest_execution_fields.prediction_edge_share,
+            execution_readiness: backtest_execution_fields.execution_readiness,
+            execution_gate_status: backtest_execution_fields.execution_gate_status.clone(),
             artifact_decision_summary: report.artifact_decision_summary.clone(),
             artifact_decision_section: report.artifact_decision_section.clone(),
             agent_prompts: report.agent_prompts.clone(),
@@ -15508,13 +15636,73 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         Some(infer_market_from_symbol(symbol).as_str()),
         &pre_bayes_evidence_filter,
     )?;
+    let execution_inputs = derive_execution_inputs(&ExecutionInputSources {
+        pre_bayes_evidence_filter: &pre_bayes_evidence_filter,
+        pre_bayes_entry_quality_bridge: &pre_bayes_entry_quality_bridge,
+        selected_entry_quality_distribution,
+        selected_win_probability: decision.selected_win_probability,
+    });
+    let ltf_prices = native_ltf.iter().map(|candle| candle.close).collect::<Vec<_>>();
+    let ltf_timestamps = native_ltf
+        .iter()
+        .map(|candle| candle.timestamp)
+        .collect::<Vec<_>>();
+    let ltf_ou_fallback = ExecutionOuFallback {
+        normalized_distance_to_projected_trend_bps: ltf_features
+            .normalized_distance_to_projected_trend_bps,
+        ou_half_life_bars: ltf_features.ou_half_life_bars,
+        ou_pullback_expectation_zscore: ltf_features.ou_pullback_expectation_zscore,
+        ou_reversion_speed_per_bar: ltf_features.ou_reversion_speed_per_bar,
+        ou_expected_pullback_bps: ltf_features.ou_expected_pullback_bps,
+    };
+    let mut pipeline_state = PipelineState::new(
+        symbol,
+        Some(infer_market_from_symbol(symbol).as_str()),
+        "ict_engine_staged_orchestration",
+    );
+    let physics_overlay =
+        apply_physics_overlay(&mut pipeline_state, native_ltf, &ltf_features);
+    let execution_artifact = build_execution_artifact_from_snapshot(
+        symbol,
+        &execution_inputs,
+        ExecutionArtifactBuildContext {
+            prices: Some(&ltf_prices),
+            timestamps: Some(&ltf_timestamps),
+            fallback_ou: Some(&ltf_ou_fallback),
+            physics_overlay: Some(&physics_overlay),
+        },
+        &analyze_provenance,
+    );
+
+    let mece_labels = manual_mece_labeler(native_ltf, &ltf_features);
+    let mece_recovery_report = search_factors_for_mece_recovery(
+        native_ltf,
+        &mece_labels,
+        &factor_engine.registry,
+        analyze_provenance.clone(),
+    )
+    .ok();
+    let mece_recovery_confidence = mece_recovery_report.as_ref().map(|report| report.accuracy);
+    if let Some(report) = mece_recovery_report.as_ref() {
+        let mece_artifact = build_mece_recovery_artifact(symbol, report, &[], &mece_labels);
+        persist_mece_recovery_artifact(state_dir, &mece_artifact, "analyze", None, &decision_hint)?;
+    }
+
+    let execution_tree_output = DefaultExecutionTreeScorer.score(&ExecutionTreeInput {
+        execution_features: &execution_artifact.features,
+        physics_overlay: &physics_overlay,
+        hmm_posterior: &regime_probs,
+        mece_recovery_confidence,
+        prediction_vote_score: decision.selected_win_probability,
+    })?;
+    let execution_tree_artifact = build_execution_tree_artifact(
+        symbol,
+        execution_tree_output,
+        analyze_provenance.clone(),
+    );
+    persist_execution_tree_artifact(state_dir, &execution_tree_artifact, "analyze", None)?;
 
     let staged_orchestration_trace = if staged_orchestration_enabled() {
-        let mut pipeline_state = PipelineState::new(
-            symbol,
-            Some(infer_market_from_symbol(symbol).as_str()),
-            "ict_engine_staged_orchestration",
-        );
         let stage_trace = run_stage_plan(&StagePlan::analyze_risk_execution(), &mut pipeline_state);
         let policy_engine = CatBoostCompatiblePolicyEngine::load_default_or_placeholder();
         let staged_artifacts = ict_engine::application::orchestration::build_staged_artifacts(
@@ -15651,6 +15839,7 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
             raw_trade_plan: trade_plan,
             workflow_snapshot: WorkflowSnapshot::default(),
             staged_orchestration_trace,
+            execution_artifact: Some(execution_artifact),
         },
     })
 }
@@ -19327,6 +19516,12 @@ fn finalize_backtest_report(input: FinalizeBacktestReportInput<'_>) -> Result<Ba
         &probability_deltas,
         &report.decision_thresholds,
     ));
+    let backtest_execution_fields = derive_backtest_execution_fields(
+        report.trades,
+        report.metrics.total_return,
+        report.metrics.regime_break_penalty,
+        report.promotion_decision.approved,
+    );
 
     let backtest_runs = append_backtest_run(
         state_dir,
@@ -19389,6 +19584,11 @@ fn finalize_backtest_report(input: FinalizeBacktestReportInput<'_>) -> Result<Ba
             agent_context_bundle_minimal: report.agent_context_bundle_minimal.clone(),
             feedback_history_summary: report.feedback_history_summary.clone(),
             artifact_action_summary: report.artifact_action_summary.clone(),
+            execution_artifact_id: None,
+            execution_edge_share: backtest_execution_fields.execution_edge_share,
+            prediction_edge_share: backtest_execution_fields.prediction_edge_share,
+            execution_readiness: backtest_execution_fields.execution_readiness,
+            execution_gate_status: backtest_execution_fields.execution_gate_status.clone(),
             artifact_decision_summary: report.artifact_decision_summary.clone(),
             artifact_decision_section: report.artifact_decision_section.clone(),
             agent_prompts: report.agent_prompts.clone(),
@@ -19898,6 +20098,7 @@ fn neutral_options_summary(
 ) -> ict_engine::data::realtime::openalice::OptionsChainSummary {
     ict_engine::data::realtime::openalice::OptionsChainSummary {
         symbol: symbol.to_string(),
+        source: Some("fallback:neutral_options_summary".to_string()),
         underlying_price: None,
         call_open_interest: 0.0,
         put_open_interest: 0.0,
@@ -24056,11 +24257,10 @@ mod tests {
         assert!(ltf.ends_with("cleaned-15m/nq.continuous-15m.json"));
     }
 
-
-
     #[test]
     fn test_resolve_analyze_cli_inputs_from_demo_flag() {
-        let (htf, mtf, ltf) = resolve_analyze_cli_inputs("DEMO", None, None, None, None, true).unwrap();
+        let (htf, mtf, ltf) =
+            resolve_analyze_cli_inputs("DEMO", None, None, None, None, true).unwrap();
 
         assert_eq!(htf, "examples/demo/demo-15m.json");
         assert_eq!(mtf, "examples/demo/demo-15m.json");

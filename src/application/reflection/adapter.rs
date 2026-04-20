@@ -10,6 +10,20 @@ pub struct ReflectionBundle {
     pub prior: PriorArtifact,
     pub postmortem: PostmortemArtifact,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub execution_edge_share: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub prediction_edge_share: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub execution_readiness: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub why_execution_dominates: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub why_prediction_is_demoted: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub execution_summary: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub prediction_summary: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ensemble_vote_summary: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ensemble_vote_artifact_id: Option<String>,
@@ -66,6 +80,13 @@ pub fn build_reflection_bundle(input: ReflectionBundleInput) -> ReflectionBundle
             what_failed: next_candidates.clone(),
             next_candidates,
         }),
+        execution_edge_share: None,
+        prediction_edge_share: None,
+        execution_readiness: None,
+        why_execution_dominates: None,
+        why_prediction_is_demoted: None,
+        execution_summary: None,
+        prediction_summary: None,
         ensemble_vote_summary: None,
         ensemble_vote_artifact_id: None,
         ensemble_disagreement_summary: None,
@@ -92,5 +113,9 @@ mod tests {
         });
         assert_eq!(bundle.prior.symbol, "NQ");
         assert_eq!(bundle.postmortem.realized_outcome, "win");
+        assert!(bundle.execution_edge_share.is_none());
+        assert!(bundle.execution_readiness.is_none());
+        assert!(bundle.why_execution_dominates.is_none());
+        assert!(bundle.why_prediction_is_demoted.is_none());
     }
 }

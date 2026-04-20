@@ -11,7 +11,6 @@ use crate::state::{
     FACTOR_MUTATION_RUNS_FILE, RESEARCH_RUNS_FILE,
 };
 
-
 #[derive(Debug, Serialize)]
 pub struct ResearchVerdictReport {
     symbol: String,
@@ -49,7 +48,6 @@ pub struct EvidenceQualityBreakdownReport {
     rationale: Vec<String>,
 }
 
-
 pub fn workflow_next_step_view(command: &str, blocked_reason: Option<&str>) -> Value {
     let trimmed = command.trim();
     if trimmed.is_empty() || trimmed == "recommended_command_unavailable" {
@@ -85,8 +83,10 @@ pub fn workflow_next_step_view(command: &str, blocked_reason: Option<&str>) -> V
 pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
     let sessions = load_factor_autoresearch_sessions(state_dir, symbol)?;
     let attempts = load_factor_autoresearch_attempts(state_dir, symbol)?;
-    let research_runs: Vec<ResearchRunRecord> = load_state_or_default(state_dir, symbol, RESEARCH_RUNS_FILE)?;
-    let backtest_runs: Vec<BacktestRunRecord> = load_state_or_default(state_dir, symbol, BACKTEST_RUNS_FILE)?;
+    let research_runs: Vec<ResearchRunRecord> =
+        load_state_or_default(state_dir, symbol, RESEARCH_RUNS_FILE)?;
+    let backtest_runs: Vec<BacktestRunRecord> =
+        load_state_or_default(state_dir, symbol, BACKTEST_RUNS_FILE)?;
     let mutation_runs: Vec<FactorMutationRunRecord> =
         load_state_or_default(state_dir, symbol, FACTOR_MUTATION_RUNS_FILE)?;
     let artifact_ledger = load_artifact_ledger(state_dir, symbol)?;
@@ -174,9 +174,11 @@ pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
             acc
         },
     );
-    let best_cluster = cluster_scoreboard
-        .iter()
-        .max_by(|a, b| a.1 .2.partial_cmp(&b.1 .2).unwrap_or(std::cmp::Ordering::Equal));
+    let best_cluster = cluster_scoreboard.iter().max_by(|a, b| {
+        a.1 .2
+            .partial_cmp(&b.1 .2)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
 
     let best_known_baseline = if let Some(run) = best_research {
         format!(
@@ -187,7 +189,10 @@ pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
             run.aggregate_return
         )
     } else if let Some(run) = best_backtest {
-        format!("backtest return={:.3} trades={}", run.total_return, run.trade_count)
+        format!(
+            "backtest return={:.3} trades={}",
+            run.total_return, run.trade_count
+        )
     } else {
         "no_persisted_research_baseline".to_string()
     };
@@ -195,7 +200,11 @@ pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
     let mut proven_bad_regions = attempts
         .iter()
         .flat_map(|attempt| attempt.evaluation.failure_tags.clone())
-        .chain(mutation_runs.iter().flat_map(|run| run.evaluation.failure_tags.clone()))
+        .chain(
+            mutation_runs
+                .iter()
+                .flat_map(|run| run.evaluation.failure_tags.clone()),
+        )
         .collect::<BTreeSet<_>>()
         .into_iter()
         .collect::<Vec<_>>();
@@ -280,7 +289,10 @@ pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
     if let Some((cluster, (attempts, avg_delta, best_delta))) = best_cluster {
         evidence.push(format!(
             "best_cluster={} attempts={} avg_score_delta={:.3} best_score_delta={:.3}",
-            cluster, attempts, avg_delta / *attempts as f64, best_delta
+            cluster,
+            attempts,
+            avg_delta / *attempts as f64,
+            best_delta
         ));
     }
 
@@ -300,7 +312,11 @@ pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
     Ok(())
 }
 
-pub fn evidence_quality_breakdown_command(symbol: &str, state_dir: &str, refresh: bool) -> Result<()> {
+pub fn evidence_quality_breakdown_command(
+    symbol: &str,
+    state_dir: &str,
+    refresh: bool,
+) -> Result<()> {
     let snapshot = if refresh {
         load_workflow_snapshot(state_dir, symbol)?
     } else {
@@ -310,7 +326,8 @@ pub fn evidence_quality_breakdown_command(symbol: &str, state_dir: &str, refresh
         .latest_analyze
         .as_ref()
         .ok_or_else(|| anyhow!("no latest analyze phase found for '{}'", symbol))?;
-    let latest_analyze_runs: Vec<AnalyzeRunRecord> = load_state_or_default(state_dir, symbol, ANALYZE_RUNS_FILE)?;
+    let latest_analyze_runs: Vec<AnalyzeRunRecord> =
+        load_state_or_default(state_dir, symbol, ANALYZE_RUNS_FILE)?;
     let analyze_run = latest_analyze_runs
         .last()
         .ok_or_else(|| anyhow!("no latest analyze run found for '{}'", symbol))?;
@@ -320,8 +337,16 @@ pub fn evidence_quality_breakdown_command(symbol: &str, state_dir: &str, refresh
     let support_gap = policy.min_directional_support_gap.clamp(0.0, 0.5);
     let base_score = 0.55;
     let support_gap_contribution = support_gap * 0.50;
-    let uncertainty_penalty = if filter.filtered_factor_uncertainty == "high" { policy.high_uncertainty_threshold * 0.35 } else { 0.0 };
-    let directional_conflict_penalty = if filter.conflict_flags.iter().any(|flag| flag == "directional_conflict") {
+    let uncertainty_penalty = if filter.filtered_factor_uncertainty == "high" {
+        policy.high_uncertainty_threshold * 0.35
+    } else {
+        0.0
+    };
+    let directional_conflict_penalty = if filter
+        .conflict_flags
+        .iter()
+        .any(|flag| flag == "directional_conflict")
+    {
         policy.directional_conflict_penalty
     } else {
         0.0
@@ -380,11 +405,23 @@ pub fn evidence_quality_breakdown_command(symbol: &str, state_dir: &str, refresh
     let bridge_gap = Some((bridge.long_signal_probability - bridge.short_signal_probability).abs());
     let rationale = vec![
         format!("raw_market_regime_label={}", filter.raw_market_regime_label),
-        format!("filtered_market_regime_label={}", filter.filtered_market_regime_label),
-        format!("raw_liquidity_context_label={}", filter.raw_liquidity_context_label),
-        format!("filtered_liquidity_context_label={}", filter.filtered_liquidity_context_label),
+        format!(
+            "filtered_market_regime_label={}",
+            filter.filtered_market_regime_label
+        ),
+        format!(
+            "raw_liquidity_context_label={}",
+            filter.raw_liquidity_context_label
+        ),
+        format!(
+            "filtered_liquidity_context_label={}",
+            filter.filtered_liquidity_context_label
+        ),
         format!("raw_factor_alignment_label={}", filter.raw_factor_alignment),
-        format!("filtered_factor_alignment_label={}", filter.filtered_factor_alignment),
+        format!(
+            "filtered_factor_alignment_label={}",
+            filter.filtered_factor_alignment
+        ),
         format!("conflict_flags={}", filter.conflict_flags.join(",")),
     ];
     let report = EvidenceQualityBreakdownReport {
@@ -411,4 +448,3 @@ pub fn evidence_quality_breakdown_command(symbol: &str, state_dir: &str, refresh
     println!("{}", serde_json::to_string_pretty(&report)?);
     Ok(())
 }
-
