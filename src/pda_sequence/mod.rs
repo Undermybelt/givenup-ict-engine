@@ -11,13 +11,18 @@
 //! can start consuming it as soon as the PDA detection layer learns to emit
 //! `PdaToken` sequences.
 
+pub mod analysis;
 pub mod cluster;
 pub mod dtw;
 pub mod emitter;
 pub mod hmm_cluster;
 pub mod kmedoids;
+pub mod persistence;
 pub mod token;
 
+pub use analysis::{
+    analyze_pda_sequences, PdaSequenceAnalysisArtifact, PDA_SEQUENCE_ANALYSIS_METHOD,
+};
 pub use cluster::{cluster_pda_sequences, PdaDtwClusterPacket, PDA_DTW_CLUSTER_METHOD};
 pub use dtw::{dtw_alignment, dtw_distance, dtw_distance_matrix, DtwAlignment};
 pub use emitter::{
@@ -33,4 +38,9 @@ pub use hmm_cluster::{
     HMM_TRAIN_MAX_ITER, HMM_TRAIN_TOLERANCE, PDA_TOKEN_OBS_DIM,
 };
 pub use kmedoids::{pam_cluster, PamOutcome};
+pub use persistence::{
+    classify_pda_sequence_ledger_status, persist_pda_sequence_analysis,
+    PDA_SEQUENCE_ARTIFACT_FILE, PDA_SEQUENCE_CONSISTENCY_ACTIONABLE,
+    PDA_SEQUENCE_SILHOUETTE_ACTIONABLE,
+};
 pub use token::{pda_token_cost, PdaToken, PdaTokenKind};
