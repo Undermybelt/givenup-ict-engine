@@ -14,6 +14,7 @@
 pub mod cluster;
 pub mod dtw;
 pub mod emitter;
+pub mod hmm_cluster;
 pub mod kmedoids;
 pub mod token;
 
@@ -25,6 +26,11 @@ pub use emitter::{
     EMITTER_LIQUIDITY_SWEEP_RETURN_BARS, EMITTER_NEAR_SWEEP_WINDOW_BARS,
     EMITTER_OVERLAP_WINDOW_BARS, EMITTER_RB_BODY_WICK_RATIO, EMITTER_RB_MIN_RANGE_ATR,
     EMITTER_SWING_STRENGTH,
+};
+pub use hmm_cluster::{
+    classify_pda_sequence, encode_pda_token, encode_sequence, train_hmm_sequence_cluster,
+    HmmSequenceClassification, HmmSequenceCluster, HMM_SEQUENCE_CLUSTER_METHOD,
+    HMM_TRAIN_MAX_ITER, HMM_TRAIN_TOLERANCE, PDA_TOKEN_OBS_DIM,
 };
 pub use kmedoids::{pam_cluster, PamOutcome};
 pub use token::{pda_token_cost, PdaToken, PdaTokenKind};
