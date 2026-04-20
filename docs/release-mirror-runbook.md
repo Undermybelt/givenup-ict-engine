@@ -8,8 +8,16 @@ Repos
 - source repo: `Undermybelt/ict-engine`
 - private release mirror: `Undermybelt/ict-engine-release`
 
+## Hard constraint (post-v0.0.1)
+
+- The source repo has **no working publishing origin**. GitHub rejects pushes because the repo's history contains state artifacts over 100 MB (e.g. `state100/NQ/learning_state.json`, `state_autoresearch_resume_bg/NQ/learning_state.json`).
+- All outward publishing happens **only** through the release mirror `Undermybelt/ict-engine-release`.
+- Do not run `git push origin …` from the source repo. Do not add a public remote to the source repo.
+- Local commits on the source repo accumulate on the local clone(s) only — source repo is the private development truth.
+- Every external release (tag + GitHub release) is a fresh `git archive` export into the mirror, not an incremental push.
+
 When to use
-- primary repo history contains oversized state artifacts or other research-only history that should not ship
+- whenever a new release tag is needed
 - release should represent current tree state, not full experimental history
 
 Release flow
@@ -57,9 +65,10 @@ gh release create v0.0.1 \
 
 Rules
 - do not push release tags from the source repo when history contains oversized research artifacts
-- source repo remains the development / experiment truth
-- mirror repo remains the release transport surface
+- source repo remains the development / experiment truth — never push it to any public or shared remote
+- mirror repo remains the sole release transport surface
 - release notes should point back to source-repo docs where needed
+- bump the version (`v0.0.1` → `v0.0.2` → …) every release; refresh `docs/audits/release-signoff.md` and `docs/release-notes-draft.md` before running the runbook
 
 Post-release follow-up
 - if mirror release flow becomes standard, automate it with a small script

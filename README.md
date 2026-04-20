@@ -221,6 +221,14 @@ Using the wrong input surface:
 
 - `docs/agent-first-runbook.md`
 - `docs/release-notes-draft.md`
+- `docs/release-mirror-runbook.md` — **authoritative release procedure**
+
+### Publishing policy (post-v0.0.1)
+
+- The source repo has no working publishing origin; GitHub rejects pushes because of oversized historical state artifacts.
+- Every external release goes through the private release mirror `Undermybelt/ict-engine-release` via the mirror runbook (`git archive HEAD` export, fresh init, tag, push).
+- Do **not** run `git push origin …` from the source repo and do **not** add a public remote to it. Local commits accumulate on the local clone(s) only.
+- See `docs/release-mirror-runbook.md` for the full flow and version-bump rules.
 
 ## 中文简介
 
