@@ -6,7 +6,11 @@ use crate::factor_lab::research::ResearchReport;
 
 use super::{build_reflection_bundle, ReflectionBundle, ReflectionBundleInput};
 
-pub fn build_research_reflection_bundle(symbol: &str, report: &ResearchReport) -> ReflectionBundle {
+pub fn build_research_reflection_bundle(
+    symbol: &str,
+    report: &ResearchReport,
+    compare_summary: Option<&str>,
+) -> ReflectionBundle {
     let next_candidates = if report.recommended_next_command.is_empty() {
         vec![format!(
             "research={}",
@@ -32,6 +36,21 @@ pub fn build_research_reflection_bundle(symbol: &str, report: &ResearchReport) -
         evidence: report.multi_timeframe_summary.clone(),
         next_candidates: next_candidates.clone(),
     });
+    if let Some(compare_summary) = compare_summary {
+        bundle.compare_summary = Some(compare_summary.to_string());
+        bundle
+            .prior
+            .expected_key_evidence
+            .push(compare_summary.to_string());
+        bundle
+            .postmortem
+            .evidence_drift
+            .push(compare_summary.to_string());
+        bundle
+            .postmortem
+            .what_worked
+            .push(compare_summary.to_string());
+    }
     let ensemble_vote = build_stub_ensemble_vote_from_research(report);
     bundle.ensemble_vote_summary = Some(ensemble_vote.human_next_triage.clone());
     bundle.ensemble_vote_artifact_id = Some(format!(
@@ -145,10 +164,23 @@ mod tests {
             ],
             ..ResearchReport::default()
         };
-        let bundle = build_research_reflection_bundle("NQ", &report);
+        let bundle = build_research_reflection_bundle(
+            "NQ",
+            &report,
+            Some("Research compare: duration_sizing_direction=scaled_up"),
+        );
         assert_eq!(bundle.prior.symbol, "NQ");
         assert_eq!(bundle.postmortem.realized_outcome, "research_completed");
         assert!(bundle.ensemble_vote_summary.is_some());
+        assert_eq!(
+            bundle.compare_summary.as_deref(),
+            Some("Research compare: duration_sizing_direction=scaled_up")
+        );
+        assert!(bundle
+            .prior
+            .expected_key_evidence
+            .iter()
+            .any(|line| line.contains("Research compare:")));
         assert!(bundle.execution_setup_summary.is_some());
         assert!(bundle
             .execution_setup_summary

@@ -1238,6 +1238,16 @@ pub struct ResearchRunRecord {
     #[serde(default)]
     pub artifact_action_summary: Vec<String>,
     #[serde(default)]
+    pub duration_sizing_scale: Option<f64>,
+    #[serde(default)]
+    pub hybrid_duration_model: Option<String>,
+    #[serde(default)]
+    pub hybrid_remaining_expected_bars: Option<f64>,
+    #[serde(default)]
+    pub backtest_conformal_coverage_1sigma: f64,
+    #[serde(default)]
+    pub backtest_trade_count: usize,
+    #[serde(default)]
     pub artifact_decision_summary: ArtifactDecisionSummary,
     #[serde(default)]
     pub artifact_decision_section: ArtifactDecisionSection,
@@ -1258,6 +1268,8 @@ pub struct ResearchRunRecord {
     pub execution_readiness: Option<f64>,
     #[serde(default)]
     pub execution_gate_status: Option<String>,
+    #[serde(default)]
+    pub pda_cluster_label: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -1451,6 +1463,14 @@ pub struct AnalyzeRunRecord {
     pub selected_entry_quality: String,
     pub decision_hint: String,
     #[serde(default)]
+    pub hybrid_regime_label: Option<String>,
+    #[serde(default)]
+    pub hybrid_regime_age_bars: Option<usize>,
+    #[serde(default)]
+    pub hybrid_duration_model: Option<String>,
+    #[serde(default)]
+    pub hybrid_remaining_expected_bars: Option<f64>,
+    #[serde(default)]
     pub pre_bayes_evidence_filter: PreBayesEvidenceFilter,
     #[serde(default)]
     pub pre_bayes_entry_quality_bridge: PreBayesEntryQualityBridge,
@@ -1511,6 +1531,10 @@ impl Default for AnalyzeRunRecord {
             selected_direction: Direction::Neutral,
             selected_entry_quality: String::new(),
             decision_hint: String::new(),
+            hybrid_regime_label: None,
+            hybrid_regime_age_bars: None,
+            hybrid_duration_model: None,
+            hybrid_remaining_expected_bars: None,
             pre_bayes_evidence_filter: PreBayesEvidenceFilter::default(),
             pre_bayes_entry_quality_bridge: PreBayesEntryQualityBridge::default(),
             factor_family_decisions: Vec::new(),
@@ -1600,6 +1624,12 @@ pub struct UpdateRunRecord {
     pub feedback_history_summary: FeedbackHistorySummary,
     #[serde(default)]
     pub artifact_action_summary: Vec<String>,
+    #[serde(default)]
+    pub duration_sizing_scale: Option<f64>,
+    #[serde(default)]
+    pub hybrid_duration_model: Option<String>,
+    #[serde(default)]
+    pub hybrid_remaining_expected_bars: Option<f64>,
     #[serde(default)]
     pub execution_artifact_id: Option<String>,
     #[serde(default)]
@@ -1700,6 +1730,12 @@ pub struct BacktestRunRecord {
     pub feedback_history_summary: FeedbackHistorySummary,
     #[serde(default)]
     pub artifact_action_summary: Vec<String>,
+    #[serde(default)]
+    pub duration_sizing_scale: Option<f64>,
+    #[serde(default)]
+    pub hybrid_duration_model: Option<String>,
+    #[serde(default)]
+    pub hybrid_remaining_expected_bars: Option<f64>,
     #[serde(default)]
     pub execution_artifact_id: Option<String>,
     #[serde(default)]
@@ -1980,6 +2016,25 @@ pub struct WorkflowPhaseSnapshot {
     pub execution_readiness: Option<f64>,
     #[serde(default)]
     pub execution_gate_status: Option<String>,
+    #[serde(default)]
+    pub pda_cluster_label: Option<String>,
+    #[serde(default)]
+    pub hybrid_duration_model: Option<String>,
+    #[serde(default)]
+    pub hybrid_remaining_expected_bars: Option<f64>,
+    /// Round 2 §3.4: spectral entropy from the latest execution_artifact. None
+    /// when the spectral layer did not fit (window too short) or when the
+    /// artifact has not been populated yet.
+    #[serde(default)]
+    pub spectral_entropy: Option<f64>,
+    /// Round 2 §3.4: softshrink sparsity ratio from the latest mece_recovery
+    /// artifact. None when MECE recovery has not been run.
+    #[serde(default)]
+    pub sparsity_ratio: Option<f64>,
+    /// Round 2 §3.4: "promote" / "blocked" verdict from the MECE recovery
+    /// segments gate. None when recovery segments are empty or unrun.
+    #[serde(default)]
+    pub segments_gate: Option<String>,
 }
 
 impl Default for WorkflowPhaseSnapshot {
@@ -2028,6 +2083,12 @@ impl Default for WorkflowPhaseSnapshot {
             prediction_edge_share: None,
             execution_readiness: None,
             execution_gate_status: None,
+            pda_cluster_label: None,
+            hybrid_duration_model: None,
+            hybrid_remaining_expected_bars: None,
+            spectral_entropy: None,
+            sparsity_ratio: None,
+            segments_gate: None,
         }
     }
 }
@@ -2255,6 +2316,12 @@ pub struct AgentContextBundle {
     pub artifact_consumed_gate_reason: String,
     #[serde(default)]
     pub artifact_consumed_gate_targets: Vec<String>,
+    #[serde(default)]
+    pub pda_sequence_summary: Option<String>,
+    #[serde(default)]
+    pub pda_cluster_label: Option<String>,
+    #[serde(default)]
+    pub pda_cluster_confidence: Option<f64>,
     pub top_factor_actions: Vec<String>,
     pub family_actions: Vec<String>,
     pub stage_views: Vec<StageAgentContext>,
@@ -2304,6 +2371,8 @@ pub struct AgentContextBundleMinimal {
     pub multi_timeframe_summary: Vec<String>,
     #[serde(default)]
     pub artifact_consumed_gate_status: String,
+    #[serde(default)]
+    pub pda_cluster_label: Option<String>,
     pub top_factor_actions: Vec<String>,
     pub stage_views: Vec<StageAgentContextMinimal>,
 }

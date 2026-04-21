@@ -21,6 +21,7 @@ pub struct CompactAnalyzeReport {
 pub struct CompactBacktestReport {
     pub summary: String,
     pub highlights: Vec<String>,
+    pub comparisons: Vec<String>,
     pub risks: Vec<String>,
     pub next_actions: Vec<String>,
 }
@@ -84,12 +85,14 @@ pub fn build_compact_analyze_report(
 pub fn build_compact_backtest_report(
     summary: impl Into<String>,
     highlights: &[String],
+    comparisons: &[String],
     risks: &[String],
     next_actions: &[String],
 ) -> CompactBacktestReport {
     CompactBacktestReport {
         summary: summary.into(),
         highlights: top_k(highlights, 5),
+        comparisons: top_k(comparisons, 5),
         risks: top_k(risks, 5),
         next_actions: top_k(next_actions, 5),
     }
@@ -152,9 +155,23 @@ mod tests {
             "e".to_string(),
             "f".to_string(),
         ];
-        let report = build_compact_backtest_report("ok", &items, &items, &items);
+        let report = build_compact_backtest_report("ok", &items, &items, &items, &items);
         assert_eq!(report.highlights.len(), 5);
+        assert_eq!(report.comparisons.len(), 5);
         assert_eq!(report.risks.len(), 5);
         assert_eq!(report.next_actions.len(), 5);
+    }
+
+    #[test]
+    fn compact_backtest_report_keeps_comparisons_separate_from_highlights() {
+        let report = build_compact_backtest_report(
+            "ok",
+            &["highlight".to_string()],
+            &["compare".to_string()],
+            &["risk".to_string()],
+            &["next".to_string()],
+        );
+        assert_eq!(report.highlights, vec!["highlight".to_string()]);
+        assert_eq!(report.comparisons, vec!["compare".to_string()]);
     }
 }
