@@ -8,12 +8,16 @@ use chrono::Utc;
 
 use crate::application::regime::recovery::MeceRecoveryReport;
 use crate::domain::regime::{
-    classify_mece_recovery_gate, MeceRecoveryArtifact, MeceRegimeLabel,
-    MECE_RECOVERY_ACCURACY_GATE,
+    classify_mece_recovery_combined_gate, classify_mece_recovery_gate, MeceRecoveryArtifact,
+    MeceRegimeLabel,
 };
 use crate::state::{append_artifact_ledger_entry, save_state, ArtifactLedgerEntry};
 
 pub const MECE_RECOVERY_ARTIFACT_FILE: &str = "mece_recovery_artifact.json";
+/// Bumped to 2 when the artifact gained sparsity_ratio / pruned_factor_trail
+/// / segments. Readers of v1 entries must tolerate their absence.
+pub const MECE_RECOVERY_ARTIFACT_LEDGER_VERSION: usize = 2;
+pub const MECE_RECOVERY_ARTIFACT_REVIEW_RULE_VERSION: &str = "mece-recovery-artifact-v2";
 
 pub fn build_mece_recovery_artifact(
     symbol: &str,
@@ -39,6 +43,9 @@ pub fn build_mece_recovery_artifact(
         execution_validity_summary: format_execution_summary(
             &report.execution_validity_histogram,
         ),
+        sparsity_ratio: report.sparsity_ratio,
+        pruned_factor_trail: report.pruned_factor_trail.clone(),
+        segments: report.segments.clone(),
         provenance: report.provenance.clone(),
     }
 }
@@ -56,7 +63,24 @@ pub fn persist_mece_recovery_artifact<P: AsRef<Path>>(
         MECE_RECOVERY_ARTIFACT_FILE,
         artifact,
     )?;
-    let promote = artifact.accuracy >= MECE_RECOVERY_ACCURACY_GATE;
+    let accuracy_gate = classify_mece_recovery_gate(artifact.accuracy);
+    let combined_gate = classify_mece_recovery_combined_gate(artifact);
+    let promote = combined_gate == "promote";
+    let segment_summary = if artifact.segments.is_empty() {
+        "segments=none".to_string()
+    } else {
+        let parts: Vec<String> = artifact
+            .segments
+            .iter()
+            .map(|segment| {
+                format!(
+                    "{}..{}:{:.3}",
+                    segment.horizon_bars.0, segment.horizon_bars.1, segment.accuracy
+                )
+            })
+            .collect();
+        format!("segments={}", parts.join(","))
+    };
     append_artifact_ledger_entry(
         dir,
         &artifact.symbol,
@@ -64,7 +88,7 @@ pub fn persist_mece_recovery_artifact<P: AsRef<Path>>(
             entry_id: format!("ledger:{}", artifact.artifact_id),
             artifact_kind: "mece_recovery_artifact".to_string(),
             artifact_id: artifact.artifact_id.clone(),
-            version: 1,
+            version: MECE_RECOVERY_ARTIFACT_LEDGER_VERSION,
             generated_at: artifact.generated_at,
             symbol: artifact.symbol.clone(),
             source_phase: source_phase.to_string(),
@@ -74,20 +98,26 @@ pub fn persist_mece_recovery_artifact<P: AsRef<Path>>(
                 .join(MECE_RECOVERY_ARTIFACT_FILE)
                 .to_string_lossy()
                 .to_string(),
-            status: classify_mece_recovery_gate(artifact.accuracy).to_string(),
+            status: combined_gate.to_string(),
             promote_candidate: promote,
             actionable: promote,
             decision_hint: decision_hint.to_string(),
             review_reason: format!(
-                "accuracy={:.4};macro_f1={:.4};{}",
-                artifact.accuracy, artifact.macro_f1, artifact.execution_validity_summary
+                "accuracy={:.4};accuracy_gate={};macro_f1={:.4};sparsity_ratio={:.3};{};{}",
+                artifact.accuracy,
+                accuracy_gate,
+                artifact.macro_f1,
+                artifact.sparsity_ratio,
+                segment_summary,
+                artifact.execution_validity_summary
             ),
-            review_rule_version: "mece-recovery-artifact-v1".to_string(),
+            review_rule_version: MECE_RECOVERY_ARTIFACT_REVIEW_RULE_VERSION.to_string(),
             top_factor_name: artifact.selected_factors.first().cloned(),
             top_factor_action: None,
             family_scores: BTreeMap::from([
                 ("mece_accuracy".to_string(), artifact.accuracy),
                 ("mece_macro_f1".to_string(), artifact.macro_f1),
+                ("mece_sparsity_ratio".to_string(), artifact.sparsity_ratio),
             ]),
             supersedes_artifact_id: None,
             quality_score: (artifact.accuracy * 100.0).round() as i32,
@@ -131,7 +161,7 @@ mod tests {
     use super::*;
     use crate::application::regime::recovery::search_factors_for_mece_recovery;
     use crate::config::FrameFeatures;
-    use crate::domain::regime::manual_mece_labeler;
+    use crate::domain::regime::{manual_mece_labeler, MECE_RECOVERY_ACCURACY_GATE};
     use crate::factors::FactorRegistry;
     use crate::state::RunProvenance;
     use crate::types::Candle;
@@ -257,7 +287,7 @@ mod tests {
         assert!(ledger_path.exists(), "ledger file not written");
         let ledger = fs::read_to_string(&ledger_path).unwrap();
         assert!(ledger.contains("\"mece_recovery_artifact\""));
-        assert!(ledger.contains("\"mece-recovery-artifact-v1\""));
+        assert!(ledger.contains("\"mece-recovery-artifact-v2\""));
     }
 
     #[test]
@@ -280,6 +310,10 @@ mod tests {
 
         let mut promote_artifact = artifact.clone();
         promote_artifact.accuracy = MECE_RECOVERY_ACCURACY_GATE;
+        // Combined gate also checks sparsity & segments; make those healthy so
+        // we isolate the accuracy gate behaviour in this test.
+        promote_artifact.sparsity_ratio = 0.50;
+        promote_artifact.segments.clear();
         promote_artifact.artifact_id = "mece-recovery-NQ-promote".to_string();
         let dir2 = TempDir::new().unwrap();
         persist_mece_recovery_artifact(dir2.path(), &promote_artifact, "analyze", None, "test")

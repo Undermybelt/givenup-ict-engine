@@ -4,10 +4,19 @@ use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 
 use crate::domain::execution::classify_execution_gate;
-use crate::domain::regime::MeceRegimeLabel;
+use crate::domain::regime::{
+    compute_rollout_segments, default_segment_bounds, MeceRegimeLabel, RolloutSegment,
+};
+use crate::factor_lab::{adaptive_lambda, sparse_select_by_softshrink};
 use crate::factors::FactorRegistry;
 use crate::state::RunProvenance;
 use crate::types::Candle;
+
+/// Softshrink lambda ratio used when pruning the best factor set. Matches
+/// `SPECTRAL_DEFAULT_LAMBDA_RATIO` in spirit: anchor the threshold at 5% of
+/// the peak weight, so the pruning decision is scale-invariant across
+/// different registries or accuracy ranges.
+pub const MECE_SOFTSHRINK_LAMBDA_RATIO: f64 = 0.05;
 
 /// Output of `search_factors_for_mece_recovery` — feeds directly into the
 /// Sprint 3.3 `MeceRecoveryArtifact` and the hard gate that requires
@@ -22,6 +31,22 @@ pub struct MeceRecoveryReport {
     pub confusion_matrix: BTreeMap<String, BTreeMap<String, usize>>,
     pub best_factor_set: Vec<String>,
     pub execution_validity_histogram: BTreeMap<String, usize>,
+    /// Kept/total ratio after softshrink on the best factor set's
+    /// removal-impact weights. 1.0 = every factor is pulling weight;
+    /// < 0.1 or > 0.9 trips the sparsity hard gate.
+    #[serde(default)]
+    pub sparsity_ratio: f64,
+    /// (factor_name, pre-shrink weight) for factors softshrink pruned from
+    /// the best set. Ordered by descending |weight| so the top rows explain
+    /// the most-impactful near-misses.
+    #[serde(default)]
+    pub pruned_factor_trail: Vec<(String, f64)>,
+    /// Short / medium / long horizon recovery segments. Populated only when
+    /// the search has at least three bars per segment; empty otherwise so
+    /// callers can distinguish "blocked by segment gate" from "segment gate
+    /// not applicable".
+    #[serde(default)]
+    pub segments: Vec<RolloutSegment>,
     pub provenance: RunProvenance,
 }
 
@@ -60,7 +85,7 @@ pub fn search_factors_for_mece_recovery(
         .map(|factor| factor.name.clone())
         .collect();
 
-    let mut best: Option<(EvalOutcome, Vec<String>)> = None;
+    let mut best: Option<(EvalOutcome, Vec<String>, Vec<MeceRegimeLabel>)> = None;
     for subset_indices in non_empty_subsets(factor_names.len(), MAX_SUBSET_SIZE) {
         let subset: Vec<String> = subset_indices
             .iter()
@@ -69,14 +94,45 @@ pub fn search_factors_for_mece_recovery(
         let predicted = predict_with_factor_subset(candles, &subset);
         let outcome = evaluate(&predicted, labels);
         match &best {
-            Some((current, _)) if outcome.accuracy <= current.accuracy => {}
-            _ => best = Some((outcome, subset)),
+            Some((current, _, _)) if outcome.accuracy <= current.accuracy => {}
+            _ => best = Some((outcome, subset, predicted)),
         }
     }
 
-    let (outcome, best_factor_set) =
+    let (outcome, best_factor_set, best_predicted) =
         best.context("no factor subsets were evaluated")?;
     let execution_validity_histogram = build_execution_histogram(candles);
+
+    // Sparse pruning of the best factor set. Each factor's weight is the
+    // *drop* in accuracy when that factor is removed — bigger drop means
+    // the factor is doing more work. Softshrink then zeroes out factors
+    // whose contribution is below 5% of the peak.
+    let factor_weights = removal_impact_weights(candles, labels, &best_factor_set, outcome.accuracy);
+    let lambda = adaptive_lambda(&factor_weights, MECE_SOFTSHRINK_LAMBDA_RATIO);
+    let sparse = sparse_select_by_softshrink(&factor_weights, lambda);
+
+    // Rollout segments on per-bar correctness + per-bar readiness.
+    let per_bar_correct: Vec<bool> = best_predicted
+        .iter()
+        .zip(labels.iter())
+        .map(|(pred, truth)| pred == truth)
+        .collect();
+    let per_bar_readiness: Vec<f64> = candles
+        .iter()
+        .enumerate()
+        .map(|(idx, candle)| per_bar_execution_score(candles, idx, candle))
+        .collect();
+    let segments = if candles.len() >= 9 {
+        let bounds = default_segment_bounds(candles.len());
+        compute_rollout_segments(
+            &bounds,
+            &per_bar_correct,
+            &per_bar_readiness,
+            |(start, end)| (*start, *end),
+        )
+    } else {
+        Vec::new()
+    };
 
     Ok(MeceRecoveryReport {
         accuracy: outcome.accuracy,
@@ -84,6 +140,9 @@ pub fn search_factors_for_mece_recovery(
         confusion_matrix: outcome.confusion_matrix,
         best_factor_set,
         execution_validity_histogram,
+        sparsity_ratio: sparse.sparsity_ratio,
+        pruned_factor_trail: sparse.pruned_factors,
+        segments,
         provenance,
     })
 }
@@ -92,6 +151,45 @@ struct EvalOutcome {
     accuracy: f64,
     macro_f1: f64,
     confusion_matrix: BTreeMap<String, BTreeMap<String, usize>>,
+}
+
+fn removal_impact_weights(
+    candles: &[Candle],
+    labels: &[MeceRegimeLabel],
+    best_factor_set: &[String],
+    baseline_accuracy: f64,
+) -> BTreeMap<String, f64> {
+    let mut weights = BTreeMap::new();
+    if best_factor_set.is_empty() {
+        return weights;
+    }
+    for leave_out in best_factor_set {
+        let reduced: Vec<String> = best_factor_set
+            .iter()
+            .filter(|name| *name != leave_out)
+            .cloned()
+            .collect();
+        let predicted = predict_with_factor_subset(candles, &reduced);
+        let accuracy = accuracy_of(&predicted, labels);
+        // Positive drop → factor contributed. Negative drop → factor was
+        // actually hurting (rare) and gets a near-zero weight in softshrink.
+        let drop = (baseline_accuracy - accuracy).max(0.0);
+        weights.insert(leave_out.clone(), drop);
+    }
+    weights
+}
+
+fn accuracy_of(predicted: &[MeceRegimeLabel], truth: &[MeceRegimeLabel]) -> f64 {
+    let total = predicted.len();
+    if total == 0 {
+        return 0.0;
+    }
+    let correct = predicted
+        .iter()
+        .zip(truth.iter())
+        .filter(|(pred, real)| pred == real)
+        .count();
+    correct as f64 / total as f64
 }
 
 fn evaluate(predicted: &[MeceRegimeLabel], truth: &[MeceRegimeLabel]) -> EvalOutcome {

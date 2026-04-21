@@ -65,6 +65,7 @@ mod tests {
                 orthogonal_extension: 0.0,
                 normalized_overstretch: 0.4,
             }),
+            spectral: None,
         }
     }
 

@@ -8,6 +8,11 @@ use crate::domain::execution::{
 use crate::state::{append_artifact_ledger_entry, save_state, ArtifactLedgerEntry};
 
 pub const EXECUTION_ARTIFACT_FILE: &str = "execution_artifact.json";
+/// Bumped to 2 when ExecutionFeatures gained spectral_metrics and the
+/// dominant_cycle_energy / cycle_phase_alignment / spectral_entropy scalars.
+/// Readers of old v1 entries must tolerate missing spectral fields.
+pub const EXECUTION_ARTIFACT_LEDGER_VERSION: usize = 2;
+pub const EXECUTION_ARTIFACT_REVIEW_RULE_VERSION: &str = "execution-artifact-v2";
 
 pub fn persist_execution_artifact<P: AsRef<Path>>(
     dir: P,
@@ -17,6 +22,17 @@ pub fn persist_execution_artifact<P: AsRef<Path>>(
     decision_hint: &str,
 ) -> Result<()> {
     save_state(&dir, &artifact.symbol, EXECUTION_ARTIFACT_FILE, artifact)?;
+    let spectral_summary = artifact
+        .features
+        .spectral_metrics
+        .as_ref()
+        .map(|metrics| {
+            format!(
+                ";spectral_entropy={:.3};dominant_cycle_energy={:.3}",
+                metrics.spectral_entropy, metrics.dominant_cycle_energy,
+            )
+        })
+        .unwrap_or_default();
     append_artifact_ledger_entry(
         dir,
         &artifact.symbol,
@@ -24,7 +40,7 @@ pub fn persist_execution_artifact<P: AsRef<Path>>(
             entry_id: format!("ledger:{}", artifact.artifact_id),
             artifact_kind: "execution_artifact".to_string(),
             artifact_id: artifact.artifact_id.clone(),
-            version: 1,
+            version: EXECUTION_ARTIFACT_LEDGER_VERSION,
             generated_at: artifact.generated_at,
             symbol: artifact.symbol.clone(),
             source_phase: source_phase.to_string(),
@@ -39,10 +55,12 @@ pub fn persist_execution_artifact<P: AsRef<Path>>(
             actionable: artifact.features.execution_readiness >= EXECUTION_GATE_OBSERVE,
             decision_hint: decision_hint.to_string(),
             review_reason: format!(
-                "execution_edge_share={:.3};prediction_edge_share={:.3}",
-                artifact.features.execution_edge_share, artifact.features.prediction_edge_share
+                "execution_edge_share={:.3};prediction_edge_share={:.3}{}",
+                artifact.features.execution_edge_share,
+                artifact.features.prediction_edge_share,
+                spectral_summary,
             ),
-            review_rule_version: "execution-artifact-v1".to_string(),
+            review_rule_version: EXECUTION_ARTIFACT_REVIEW_RULE_VERSION.to_string(),
             top_factor_name: None,
             top_factor_action: None,
             family_scores: std::collections::BTreeMap::from([(

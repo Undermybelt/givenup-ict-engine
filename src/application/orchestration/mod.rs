@@ -1,4 +1,5 @@
 pub mod artifacts;
+pub mod axial_pool;
 pub mod context;
 pub mod ensemble_vote;
 pub mod execution_tree;
@@ -10,6 +11,7 @@ pub mod trace_builder;
 pub mod workflow_status;
 
 pub use artifacts::*;
+pub use axial_pool::*;
 pub use context::*;
 pub use ensemble_vote::*;
 pub use execution_tree::*;

@@ -18,6 +18,19 @@ fn build_execution_explanation(
     if let Some(speed) = artifact.features.reversion_speed {
         dominant_reasons.push(format!("reversion_speed={speed:.3}"));
     }
+    // Spectral evidence lands in why_execution_dominates when the series has
+    // rhythmic structure (dominant mode + bounded entropy). The chaotic path
+    // is already reflected in execution_readiness via the spectral penalty,
+    // so we don't duplicate that failure mode here.
+    if let Some(energy) = artifact.features.dominant_cycle_energy {
+        dominant_reasons.push(format!("dominant_cycle_energy={energy:.3}"));
+    }
+    if let Some(alignment) = artifact.features.cycle_phase_alignment {
+        dominant_reasons.push(format!("cycle_phase_alignment={alignment:.3}"));
+    }
+    if let Some(entropy) = artifact.features.spectral_entropy {
+        dominant_reasons.push(format!("spectral_entropy={entropy:.3}"));
+    }
 
     (
         Some(format!(
@@ -81,9 +94,7 @@ mod tests {
                 evidence_quality: 0.88,
                 overextension_distance: Some(0.14),
                 reversion_speed: Some(0.33),
-                ou_metrics: None,
-                ising_state: None,
-                pythagorean_metrics: None,
+                ..ExecutionFeatures::default()
             },
             hard_gate_status: "execution_ready".to_string(),
             provenance: RunProvenance::default(),
@@ -109,5 +120,19 @@ mod tests {
 
         assert!(bundle.why_execution_dominates.is_none());
         assert!(bundle.why_prediction_is_demoted.is_none());
+    }
+
+    #[test]
+    fn includes_spectral_evidence_when_execution_dominates() {
+        let mut art = artifact(0.72, 0.28);
+        art.features.dominant_cycle_energy = Some(0.88);
+        art.features.cycle_phase_alignment = Some(0.55);
+        art.features.spectral_entropy = Some(0.12);
+        let mut bundle = ReflectionBundle::default();
+        apply_execution_artifact_to_reflection_bundle(&mut bundle, &art);
+        let why = bundle.why_execution_dominates.expect("execution dominates");
+        assert!(why.contains("dominant_cycle_energy"));
+        assert!(why.contains("cycle_phase_alignment"));
+        assert!(why.contains("spectral_entropy"));
     }
 }

@@ -9,7 +9,9 @@ pub mod pipeline_types;
 pub mod policy_lineage_surface;
 pub mod shadow_policy_surface;
 pub mod shared;
+pub mod spectral_overlay;
 
+pub use ising_overlay::{apply_ising_overlay, IsingOverlayState};
 pub use jump_model_sidecar::{
     backtest_calibrated_market_jump_weight, build_jump_model_regime_sidecar,
     build_jump_model_regime_sidecar_with_history, build_regime_disagreement_summary,
@@ -19,11 +21,12 @@ pub use jump_model_sidecar::{
     persist_market_jump_calibration_from_research_runs,
     persist_market_jump_objective_calibration_from_research_runs,
 };
-pub use ising_overlay::{apply_ising_overlay, IsingOverlayState};
 pub use ou_overlay::{apply_ou_overlay, OuOverlayState};
+pub use spectral_overlay::{apply_spectral_overlay, SpectralOverlayState};
 pub use pipeline_builder::{
     adapt_factor_pipeline_debug_report, build_canonical_belief_report,
-    build_canonical_belief_snapshot, build_expansion_factor_pipeline_report,
+    build_canonical_belief_report_with_pda, build_canonical_belief_snapshot,
+    build_canonical_belief_snapshot_with_pda, build_expansion_factor_pipeline_report,
     build_expansion_factor_pipeline_report_with_registry, build_factor_pipeline_debug_report,
     infer_market_from_symbol, pre_bayes_evidence_policy, FactorPipelineDebugReport,
 };

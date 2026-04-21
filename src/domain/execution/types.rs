@@ -2,6 +2,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 use crate::domain::execution::OuExecutionMetrics;
+use crate::domain::execution::SpectralExecutionMetrics;
 use crate::domain::regime::IsingState;
 use crate::ict::PythagoreanExtensionMetrics;
 use crate::state::RunProvenance;
@@ -20,11 +21,19 @@ pub struct ExecutionFeatures {
     pub overextension_distance: Option<f64>,
     pub reversion_speed: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub dominant_cycle_energy: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cycle_phase_alignment: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spectral_entropy: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub ou_metrics: Option<OuExecutionMetrics>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ising_state: Option<IsingState>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pythagorean_metrics: Option<PythagoreanExtensionMetrics>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spectral_metrics: Option<SpectralExecutionMetrics>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]

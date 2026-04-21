@@ -2,7 +2,10 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 use crate::config::FrameFeatures;
-use crate::domain::execution::{estimate_ou_execution_metrics, OuExecutionMetrics};
+use crate::domain::execution::{
+    estimate_ou_execution_metrics, estimate_spectral_execution_metrics, OuExecutionMetrics,
+    SpectralExecutionMetrics, SPECTRAL_DEFAULT_LAMBDA_RATIO,
+};
 use crate::domain::regime::{estimate_ising_state, IsingState};
 use crate::ict::{measure_pythagorean_extension, PythagoreanExtensionMetrics};
 use crate::math::geometry::Point2;
@@ -13,6 +16,8 @@ pub struct ExecutionPhysicsOverlay {
     pub ou: Option<OuExecutionMetrics>,
     pub ising: Option<IsingState>,
     pub pythagorean: Option<PythagoreanExtensionMetrics>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub spectral: Option<SpectralExecutionMetrics>,
 }
 
 pub fn build_execution_physics_overlay(
@@ -25,6 +30,7 @@ pub fn build_execution_physics_overlay(
         .map(|candle| candle.timestamp)
         .collect::<Vec<DateTime<Utc>>>();
     let ou = estimate_ou_execution_metrics(&prices, &timestamps);
+    let spectral = estimate_spectral_execution_metrics(&prices, SPECTRAL_DEFAULT_LAMBDA_RATIO);
 
     let pythagorean = if candles.len() >= 2 {
         let anchor_a = Point2 {
@@ -72,6 +78,7 @@ pub fn build_execution_physics_overlay(
         ou,
         ising,
         pythagorean,
+        spectral,
     }
 }
 
@@ -105,5 +112,30 @@ mod tests {
 
         assert!(overlay.pythagorean.is_some());
         assert!(overlay.ising.is_some());
+        assert!(overlay.spectral.is_some(), "spectral should fit on 48 rhythmic candles");
+    }
+
+    #[test]
+    fn spectral_overlay_records_dominant_cycle_for_rhythmic_candles() {
+        let start = Utc.with_ymd_and_hms(2026, 1, 1, 0, 0, 0).unwrap();
+        let candles: Vec<Candle> = (0..128)
+            .map(|i| {
+                let close =
+                    100.0 + (2.0 * std::f64::consts::PI * i as f64 / 32.0).sin() * 2.0;
+                Candle {
+                    timestamp: start + Duration::minutes(i as i64),
+                    open: close,
+                    high: close,
+                    low: close,
+                    close,
+                    volume: 1_000.0,
+                }
+            })
+            .collect();
+        let frame = crate::config::build_frame_features(&candles).unwrap();
+        let overlay = build_execution_physics_overlay(&candles, &frame);
+        let spectral = overlay.spectral.expect("rhythmic candles yield spectral metrics");
+        assert!(spectral.dominant_cycle_energy > 0.8);
+        assert!(spectral.spectral_entropy < 0.3);
     }
 }

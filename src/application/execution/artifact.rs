@@ -2,8 +2,9 @@ use chrono::{DateTime, Utc};
 
 use crate::application::execution::ExecutionPhysicsOverlay;
 use crate::domain::execution::{
-    build_ou_execution_metrics, classify_execution_gate, estimate_ou_execution_metrics,
-    execution_edge_split, execution_readiness, ExecutionArtifact, ExecutionFeatures,
+    apply_spectral_execution_penalty, build_ou_execution_metrics, classify_execution_gate,
+    estimate_ou_execution_metrics, estimate_spectral_execution_metrics, execution_edge_split,
+    execution_readiness, ExecutionArtifact, ExecutionFeatures, SPECTRAL_DEFAULT_LAMBDA_RATIO,
 };
 use crate::state::RunProvenance;
 
@@ -123,12 +124,33 @@ pub fn build_execution_artifact_from_snapshot(
     let reversion_speed = ou_metrics
         .as_ref()
         .map(|value| value.reversion_speed_per_bar);
-    let readiness = execution_readiness(
+    let base_readiness = execution_readiness(
         execution_score,
         snapshot.evidence_quality,
         overextension_distance,
         reversion_speed,
     );
+    // Spectral metrics: prefer the overlay's cached fit, otherwise re-estimate
+    // from prices. This matches the OU fallback pattern so the artifact stays
+    // self-sufficient when called with prices-only contexts.
+    let spectral_metrics = context
+        .physics_overlay
+        .and_then(|overlay| overlay.spectral.clone())
+        .or_else(|| {
+            context
+                .prices
+                .and_then(|prices| estimate_spectral_execution_metrics(prices, SPECTRAL_DEFAULT_LAMBDA_RATIO))
+        });
+    let dominant_cycle_energy = spectral_metrics
+        .as_ref()
+        .map(|value| value.dominant_cycle_energy);
+    let cycle_phase_alignment = spectral_metrics
+        .as_ref()
+        .map(|value| value.cycle_phase_alignment);
+    let spectral_entropy = spectral_metrics
+        .as_ref()
+        .map(|value| value.spectral_entropy);
+    let readiness = apply_spectral_execution_penalty(base_readiness, spectral_metrics.as_ref());
 
     ExecutionArtifact {
         artifact_id: format!("execution:{}:{}", symbol, provenance.data_fingerprint),
@@ -146,9 +168,13 @@ pub fn build_execution_artifact_from_snapshot(
             evidence_quality: snapshot.evidence_quality,
             overextension_distance,
             reversion_speed,
+            dominant_cycle_energy,
+            cycle_phase_alignment,
+            spectral_entropy,
             ou_metrics,
             ising_state: context.physics_overlay.and_then(|p| p.ising.clone()),
             pythagorean_metrics: context.physics_overlay.and_then(|p| p.pythagorean.clone()),
+            spectral_metrics,
         },
         hard_gate_status: classify_execution_gate(readiness).to_string(),
         provenance: provenance.clone(),
