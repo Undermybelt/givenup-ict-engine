@@ -5,6 +5,7 @@ pub mod metrics;
 pub mod research;
 pub mod sparse;
 pub mod tucker;
+pub mod tucker_driver;
 pub mod tucker_persistence;
 
 pub use backtest::{
@@ -25,6 +26,10 @@ pub use sparse::{
     MECE_SPARSITY_LOWER_BOUND, MECE_SPARSITY_UPPER_BOUND,
 };
 pub use tucker::{fit_tucker_core, TuckerCore};
+pub use tucker_driver::{
+    build_factor_tensor_from_learning_state, build_factor_tensor_from_state_dir, default_ranks,
+    fit_tucker_core_from_state_dir, FactorTensor, DEFAULT_METRIC_AXIS_LABELS,
+};
 pub use tucker_persistence::{
     build_factor_tucker_core_artifact, persist_factor_tucker_core_artifact,
     tucker_attribution_confidence_is_high, FactorTuckerCoreArtifact,

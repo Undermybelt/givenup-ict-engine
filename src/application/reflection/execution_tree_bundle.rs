@@ -48,6 +48,7 @@ mod tests {
             posterior_uncertainty: 0.4,
             split_reason_lineage: vec!["ready".to_string()],
             decision_hint: "execution_first_fill".to_string(),
+            axial_attention_trace: Vec::new(),
         }
     }
 
@@ -93,6 +94,7 @@ mod tests {
             hmm_posterior: &posterior,
             mece_recovery_confidence: Some(0.97),
             prediction_vote_score: 0.72,
+            axial_trace: None,
         };
         let output = sample_output();
 
@@ -132,6 +134,7 @@ mod tests {
             hmm_posterior: &posterior,
             mece_recovery_confidence: Some(0.97),
             prediction_vote_score: 0.72,
+            axial_trace: None,
         };
         let output = sample_output();
 

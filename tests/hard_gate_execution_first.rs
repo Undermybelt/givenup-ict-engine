@@ -53,6 +53,7 @@ fn score(prediction_score: f64, execution_readiness: f64) -> ict_engine::applica
         hmm_posterior: &posterior,
         mece_recovery_confidence: Some(0.96),
         prediction_vote_score: prediction_score,
+        axial_trace: None,
     };
     DefaultExecutionTreeScorer
         .score(&input)

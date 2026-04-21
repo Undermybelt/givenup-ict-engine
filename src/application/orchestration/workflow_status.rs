@@ -338,6 +338,30 @@ pub fn build_human_workflow_status_view(
     let latest_phase_summary = latest_phase
         .map(|phase| phase.phase_summary.clone())
         .unwrap_or_else(|| "尚无可用阶段摘要。".to_string());
+    let latest_pda_cluster = latest_phase
+        .and_then(|phase| phase.pda_cluster_label.clone())
+        .unwrap_or_else(|| "unavailable".to_string());
+    let latest_duration_model = latest_phase
+        .and_then(|phase| phase.hybrid_duration_model.clone())
+        .unwrap_or_else(|| "unavailable".to_string());
+    let latest_remaining_bars = latest_phase
+        .and_then(|phase| phase.hybrid_remaining_expected_bars)
+        .map(|value| format!("{value:.2}"))
+        .unwrap_or_else(|| "unavailable".to_string());
+    // Round 2 §3.4: surface spectral / sparsity / segment gate on the main
+    // summary line so operators can spot a chaotic-regime or sparsity-collapse
+    // without hunting through artifact files.
+    let latest_spectral_entropy = latest_phase
+        .and_then(|phase| phase.spectral_entropy)
+        .map(|value| format!("{value:.3}"))
+        .unwrap_or_else(|| "unavailable".to_string());
+    let latest_sparsity_ratio = latest_phase
+        .and_then(|phase| phase.sparsity_ratio)
+        .map(|value| format!("{value:.3}"))
+        .unwrap_or_else(|| "unavailable".to_string());
+    let latest_segments_gate = latest_phase
+        .and_then(|phase| phase.segments_gate.clone())
+        .unwrap_or_else(|| "unavailable".to_string());
     let latest_phase_summary_short = latest_phase
         .map(short_human_phase_summary)
         .unwrap_or_else(|| "尚无可用阶段摘要。".to_string());
@@ -415,8 +439,16 @@ pub fn build_human_workflow_status_view(
         "none".to_string()
     };
     let summary_line = format!(
-        "{} | {} | {}",
-        snapshot.symbol, snapshot.current_focus_phase, action_status_label
+        "{} | {} | {} | pda_cluster={} | duration={} | remaining_bars={} | spectral_entropy={} | sparsity={} | segments_gate={}",
+        snapshot.symbol,
+        snapshot.current_focus_phase,
+        action_status_label,
+        latest_pda_cluster,
+        latest_duration_model,
+        latest_remaining_bars,
+        latest_spectral_entropy,
+        latest_sparsity_ratio,
+        latest_segments_gate
     );
     let blocking_line = format!("Block: {}", gate_reason_label);
     let next_action_line = format!("Next: {}", human_next_action);
@@ -458,6 +490,36 @@ pub fn build_human_workflow_status_view(
         "next_action_line": next_action_line,
         "phase_summary_line": phase_summary_line,
         "symbol": snapshot.symbol,
+        "pda_cluster_label": if latest_pda_cluster == "unavailable" {
+            serde_json::Value::Null
+        } else {
+            serde_json::Value::String(latest_pda_cluster.clone())
+        },
+        "hybrid_duration_model": if latest_duration_model == "unavailable" {
+            serde_json::Value::Null
+        } else {
+            serde_json::Value::String(latest_duration_model.clone())
+        },
+        "hybrid_remaining_expected_bars": if latest_remaining_bars == "unavailable" {
+            serde_json::Value::Null
+        } else {
+            serde_json::Value::String(latest_remaining_bars.clone())
+        },
+        "spectral_entropy": if latest_spectral_entropy == "unavailable" {
+            serde_json::Value::Null
+        } else {
+            serde_json::Value::String(latest_spectral_entropy.clone())
+        },
+        "sparsity_ratio": if latest_sparsity_ratio == "unavailable" {
+            serde_json::Value::Null
+        } else {
+            serde_json::Value::String(latest_sparsity_ratio.clone())
+        },
+        "segments_gate": if latest_segments_gate == "unavailable" {
+            serde_json::Value::Null
+        } else {
+            serde_json::Value::String(latest_segments_gate.clone())
+        },
         "current_status": {
             "focus_phase": snapshot.current_focus_phase,
             "focus_reason": snapshot.current_focus_reason,
@@ -594,6 +656,7 @@ pub fn build_compact_workflow_status_view(snapshot: &WorkflowSnapshot) -> Value 
         "blocking_status": blocking_status,
         "blocking_reason": blocking_reason,
         "next_command": snapshot.recommended_next_command,
+        "pda_cluster_label": latest_phase.and_then(|phase| phase.pda_cluster_label.clone()),
         "pending_actions": snapshot.pending_actions.iter().take(3).cloned().collect::<Vec<_>>(),
         "risk_flags": snapshot.risk_flags.iter().take(3).cloned().collect::<Vec<_>>(),
         "top_actionable": top_actionable,
@@ -693,6 +756,9 @@ pub fn build_agent_workflow_status_view(
         "hard_block_active": hard_block_active,
         "next_command": next_command,
         "next_command_source": command_source,
+        "pda_cluster_label": latest_phase.and_then(|phase| phase.pda_cluster_label.clone()),
+        "hybrid_duration_model": latest_phase.and_then(|phase| phase.hybrid_duration_model.clone()),
+        "hybrid_remaining_expected_bars": latest_phase.and_then(|phase| phase.hybrid_remaining_expected_bars),
         "next_step": workflow_next_step_view(&next_command, if hard_block_active { Some(blocking_reason.as_str()) } else { None }),
         "pending_actions": snapshot.pending_actions.iter().take(3).cloned().collect::<Vec<_>>(),
         "risk_flags": snapshot.risk_flags.iter().take(3).cloned().collect::<Vec<_>>(),
@@ -1542,9 +1608,12 @@ pub fn sample_human_workflow_snapshot() -> WorkflowSnapshot {
         selected_entry_quality: Some("medium".to_string()),
         pre_bayes_bridge_selected_entry_quality: Some("medium".to_string()),
         pre_bayes_bridge_probability_gap: Some(0.01),
+        hybrid_duration_model: Some("negative_binomial".to_string()),
+        hybrid_remaining_expected_bars: Some(2.5),
         comparable_to_previous: true,
         comparison_class: "same_data_different_config".to_string(),
         recommended_next_command: snapshot.recommended_next_command.clone(),
+        pda_cluster_label: Some("cluster_1".to_string()),
         realized_outcome: Some("win".to_string()),
         objective_market_credibility_shrink: None,
         ..crate::state::WorkflowPhaseSnapshot::default()
@@ -1648,7 +1717,10 @@ mod tests {
     fn build_workflow_status_phase_value_matches_human_surface() {
         let snapshot = sample_human_workflow_snapshot();
         let value = build_workflow_status_phase_value(&snapshot, &[], "human").unwrap();
-        assert_eq!(value["summary_line"], "NQ | update | action_blocked");
+        assert_eq!(
+            value["summary_line"],
+            "NQ | update | action_blocked | pda_cluster=cluster_1 | duration=negative_binomial | remaining_bars=2.50 | spectral_entropy=unavailable | sparsity=unavailable | segments_gate=unavailable"
+        );
         assert_eq!(value["current_status"]["focus_phase"], "update");
     }
 
@@ -1755,6 +1827,7 @@ mod tests {
         let value = build_human_workflow_status_view(&snapshot, &[]);
         assert_eq!(value["symbol"], "NQ");
         assert_eq!(value["current_status"]["focus_phase"], "update");
+        assert_eq!(value["pda_cluster_label"], "cluster_1");
         assert_eq!(value["hard_block"]["active"], true);
         assert_eq!(value["hard_block"]["status"], "action_blocked");
         assert_eq!(
@@ -1816,7 +1889,10 @@ mod tests {
     fn human_workflow_status_view_exposes_human_summary_fields() {
         let snapshot = sample_human_workflow_snapshot();
         let value = build_human_workflow_status_view(&snapshot, &[]);
-        assert_eq!(value["summary_line"], "NQ | update | action_blocked");
+        assert_eq!(
+            value["summary_line"],
+            "NQ | update | action_blocked | pda_cluster=cluster_1 | duration=negative_binomial | remaining_bars=2.50 | spectral_entropy=unavailable | sparsity=unavailable | segments_gate=unavailable"
+        );
         assert_eq!(
             value["next_action_line"],
             "Next: Ask the user to choose the historical dataset. Please choose one historical data path for the next research/backtest run: /tmp/a.json, /tmp/b.json Reply with one path from the list, or paste another valid file path. Candidates: /tmp/a.json, /tmp/b.json"
@@ -1829,6 +1905,8 @@ mod tests {
             value["phase_summary_line"],
             "Latest: update | entry=medium gate=pass_neutralized quality=0.500"
         );
+        assert_eq!(value["hybrid_duration_model"], "negative_binomial");
+        assert_eq!(value["hybrid_remaining_expected_bars"], "2.50");
     }
 
     #[test]

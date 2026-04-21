@@ -23,5 +23,6 @@ pub use run_fields::{
 pub use workflow::{
     apply_analyze_run_execution_fields, apply_backtest_run_execution_fields,
     apply_execution_fields_to_workflow_phase, apply_research_run_execution_fields,
-    apply_update_run_execution_fields, execution_phase_summary_suffix,
+    apply_round2_summary_fields_to_workflow_phase, apply_update_run_execution_fields,
+    execution_phase_summary_suffix,
 };

@@ -6,8 +6,10 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 use crate::application::execution::ExecutionPhysicsOverlay;
+use crate::application::orchestration::AxialAttentionTrace;
 use crate::domain::execution::{
-    classify_execution_gate, ExecutionFeatures, EXECUTION_GATE_OBSERVE, EXECUTION_GATE_READY,
+    classify_execution_gate, ExecutionFeatures, DOMINANT_ENERGY_FLOOR, EXECUTION_GATE_OBSERVE,
+    EXECUTION_GATE_READY, SPECTRAL_ENTROPY_CHAOS_CAP,
 };
 use crate::state::{
     append_artifact_ledger_entry, save_state, ArtifactLedgerEntry, RunProvenance,
@@ -27,6 +29,11 @@ pub struct ExecutionTreeInput<'a> {
     pub hmm_posterior: &'a RegimeProbs,
     pub mece_recovery_confidence: Option<f64>,
     pub prediction_vote_score: f64,
+    /// Axial pooling trace over the MTF tensor. When `force_observe` is true
+    /// the scorer downgrades an `aggressive` bias to `passive` because no
+    /// timeframe is meaningfully dominant. Optional so legacy callers that
+    /// do not (yet) run axial pooling keep compiling; None = neutral.
+    pub axial_trace: Option<&'a AxialAttentionTrace>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -39,6 +46,10 @@ pub struct ExecutionTreeOutput {
     pub posterior_uncertainty: f64,
     pub split_reason_lineage: Vec<String>,
     pub decision_hint: String,
+    /// Top axial attention weights (feature_name, weight) carried into the
+    /// trace artifact. Empty when no axial trace was provided to the scorer.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub axial_attention_trace: Vec<(String, f64)>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -130,6 +141,33 @@ impl ExecutionShapProvider for StructuralExecutionShap {
                 contribution: PYTHAGOREAN_OVERSTRETCH_WAIT_THRESHOLD
                     - pythagorean.normalized_overstretch,
                 feature_value: format!("{:.4}", pythagorean.normalized_overstretch),
+            });
+        }
+        // Spectral attribution rows (Round 2 §3.3). Only emitted when the
+        // spectral layer actually fit — keeps top_k stable for runs where the
+        // series was too short for the FFT. Sign convention:
+        // - spectral_entropy: negative contribution = chaotic (pushes towards block)
+        // - dominant_cycle_energy: positive = rhythmic (pushes towards fill)
+        // - cycle_phase_alignment: positive = aligned to dominant mode peak
+        if let Some(entropy) = features.spectral_entropy {
+            rows.push(ExecutionShapAttribution {
+                feature: "spectral_entropy".to_string(),
+                contribution: SPECTRAL_ENTROPY_CHAOS_CAP - entropy,
+                feature_value: format!("{:.4}", entropy),
+            });
+        }
+        if let Some(energy) = features.dominant_cycle_energy {
+            rows.push(ExecutionShapAttribution {
+                feature: "dominant_cycle_energy".to_string(),
+                contribution: energy - DOMINANT_ENERGY_FLOOR,
+                feature_value: format!("{:.4}", energy),
+            });
+        }
+        if let Some(alignment) = features.cycle_phase_alignment {
+            rows.push(ExecutionShapAttribution {
+                feature: "cycle_phase_alignment".to_string(),
+                contribution: alignment,
+                feature_value: format!("{:.4}", alignment),
             });
         }
         if let Some(confidence) = input.mece_recovery_confidence {
@@ -263,7 +301,7 @@ impl ExecutionTreeScorer for DefaultExecutionTreeScorer {
 
         let prediction_strength = classify_prediction_strength(input.prediction_vote_score);
         let execution_strength = classify_execution_strength(readiness);
-        let (execution_bias, decision_hint) =
+        let (mut execution_bias, mut decision_hint) =
             execution_first_decision(prediction_strength, execution_strength);
         lineage.push(format!(
             "prediction_vote_score={:.4} ({}) × execution_readiness={:.4} ({}) → bias={}, hint={}",
@@ -274,6 +312,28 @@ impl ExecutionTreeScorer for DefaultExecutionTreeScorer {
             execution_bias,
             decision_hint
         ));
+
+        // Axial pool observation gate (Round 2 §3.1). When the MTF tensor
+        // has no dominant timeframe we downgrade an aggressive fill to
+        // passive — the execution tree should not bet on a specific bar
+        // when the weight distribution is flat. Skip handling is left to
+        // the underlying execution_first_decision (weak execution already
+        // blocks).
+        let mut axial_attention_trace: Vec<(String, f64)> = Vec::new();
+        if let Some(trace) = input.axial_trace {
+            axial_attention_trace = trace.timeframe_weights.iter().take(5).cloned().collect();
+            lineage.push(format!(
+                "axial_timeframe_entropy={:.4} force_observe={}",
+                trace.timeframe_entropy, trace.force_observe
+            ));
+            if trace.force_observe && execution_bias == "aggressive" {
+                lineage.push(format!(
+                    "axial force_observe → bias=aggressive downgraded to passive"
+                ));
+                execution_bias = "passive";
+                decision_hint = "execution_observe_due_to_axial_entropy";
+            }
+        }
 
         if let Some(confidence) = input.mece_recovery_confidence {
             lineage.push(format!("mece_recovery_confidence={:.4}", confidence));
@@ -294,6 +354,7 @@ impl ExecutionTreeScorer for DefaultExecutionTreeScorer {
             posterior_uncertainty: (1.0 - branch_probability).clamp(0.0, 1.0),
             split_reason_lineage: lineage,
             decision_hint: decision_hint.to_string(),
+            axial_attention_trace,
         })
     }
 }
@@ -504,6 +565,7 @@ mod tests {
             hmm_posterior: &posterior,
             mece_recovery_confidence: Some(0.97),
             prediction_vote_score: 0.7,
+            axial_trace: None,
         };
         let output = DefaultExecutionTreeScorer.score(&input).unwrap();
         assert_eq!(output.branch, "fill_viable");
@@ -526,6 +588,7 @@ mod tests {
             hmm_posterior: &posterior,
             mece_recovery_confidence: None,
             prediction_vote_score: 0.7,
+            axial_trace: None,
         };
         let output = DefaultExecutionTreeScorer.score(&input).unwrap();
         assert_eq!(output.branch, "block_crowded");
@@ -545,6 +608,7 @@ mod tests {
             hmm_posterior: &posterior,
             mece_recovery_confidence: None,
             prediction_vote_score: 0.7,
+            axial_trace: None,
         };
         let output = DefaultExecutionTreeScorer.score(&input).unwrap();
         assert_eq!(output.branch, "wait_for_reversion");
@@ -561,6 +625,7 @@ mod tests {
             hmm_posterior: &posterior,
             mece_recovery_confidence: Some(0.97),
             prediction_vote_score: 0.95,
+            axial_trace: None,
         };
         let output = DefaultExecutionTreeScorer.score(&input).unwrap();
         assert_eq!(output.gate_status, "blocked");
@@ -580,6 +645,7 @@ mod tests {
                 hmm_posterior: &posterior,
                 mece_recovery_confidence: Some(0.97),
                 prediction_vote_score: 0.7,
+            axial_trace: None,
             })
             .unwrap();
         let artifact = build_execution_tree_artifact("NQ", output, Vec::new(), RunProvenance::default());
@@ -612,6 +678,7 @@ mod tests {
             hmm_posterior: &posterior,
             mece_recovery_confidence: Some(0.97),
             prediction_vote_score: 0.72,
+            axial_trace: None,
         };
         let output = DefaultExecutionTreeScorer.score(&input).unwrap();
         let provider = StructuralExecutionShap::default();
@@ -639,6 +706,7 @@ mod tests {
             posterior_uncertainty: 0.4,
             split_reason_lineage: vec![],
             decision_hint: "execution_first_fill".to_string(),
+            axial_attention_trace: Vec::new(),
         };
         let triage = build_execution_triage(&output);
         assert!(triage.one_line.contains("ready"));

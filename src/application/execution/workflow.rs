@@ -80,6 +80,23 @@ pub fn execution_phase_summary_suffix(phase: &WorkflowPhaseSnapshot) -> String {
     }
 }
 
+/// Round 2 §3.4 helper. Populates the spectral / sparsity / segments_gate
+/// fields on a `WorkflowPhaseSnapshot` from explicit values. Round 3 wiring
+/// will call this from whichever run-writer has access to the execution and
+/// MECE recovery artifacts; for now it exists so callers outside main.rs
+/// (tests, future integrators) can set the fields without touching the struct
+/// literal in 17 places.
+pub fn apply_round2_summary_fields_to_workflow_phase(
+    phase: &mut WorkflowPhaseSnapshot,
+    spectral_entropy: Option<f64>,
+    sparsity_ratio: Option<f64>,
+    segments_gate: Option<String>,
+) {
+    phase.spectral_entropy = spectral_entropy;
+    phase.sparsity_ratio = sparsity_ratio;
+    phase.segments_gate = segments_gate;
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
