@@ -29,16 +29,12 @@ pub struct PdaClusteringPacket {
 /// Greedy best-overlap label permutation. For each label in `to_align`,
 /// pick the reference label with the highest co-occurrence count and remap
 /// it. Stable: ties are broken by smaller reference index.
-pub fn align_labels_to_reference(
-    reference: &[usize],
-    to_align: &[usize],
-    k: usize,
-) -> Vec<usize> {
+pub fn align_labels_to_reference(reference: &[usize], to_align: &[usize], k: usize) -> Vec<usize> {
     if reference.len() != to_align.len() || k == 0 {
         return to_align.to_vec();
     }
     let mut mapping = vec![0usize; k];
-    for candidate in 0..k {
+    for (candidate, mapped_label) in mapping.iter_mut().enumerate().take(k) {
         let mut best_overlap: i64 = -1;
         let mut best_ref = candidate;
         for ref_label in 0..k {
@@ -47,14 +43,12 @@ pub fn align_labels_to_reference(
                 .zip(to_align.iter())
                 .filter(|(r, t)| **r == ref_label && **t == candidate)
                 .count() as i64;
-            if overlap > best_overlap
-                || (overlap == best_overlap && ref_label < best_ref)
-            {
+            if overlap > best_overlap || (overlap == best_overlap && ref_label < best_ref) {
                 best_overlap = overlap;
                 best_ref = ref_label;
             }
         }
-        mapping[candidate] = best_ref;
+        *mapped_label = best_ref;
     }
     to_align.iter().map(|c| mapping[*c]).collect()
 }

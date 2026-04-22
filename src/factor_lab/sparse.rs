@@ -93,7 +93,7 @@ pub fn adaptive_lambda(weights: &BTreeMap<String, f64>, ratio: f64) -> f64 {
 /// True when `sparsity_ratio` sits in the healthy band. The MECE recovery
 /// hard gate rejects selections outside this band regardless of accuracy.
 pub fn sparsity_ratio_within_bounds(sparsity_ratio: f64) -> bool {
-    sparsity_ratio >= MECE_SPARSITY_LOWER_BOUND && sparsity_ratio <= MECE_SPARSITY_UPPER_BOUND
+    (MECE_SPARSITY_LOWER_BOUND..=MECE_SPARSITY_UPPER_BOUND).contains(&sparsity_ratio)
 }
 
 #[cfg(test)]
@@ -119,7 +119,10 @@ mod tests {
     fn softshrink_zeroes_small_weights_and_keeps_large_ones() {
         let w = weights(&[("a", 0.05), ("b", 0.30), ("c", -0.45), ("d", 0.08)]);
         let selection = sparse_select_by_softshrink(&w, 0.10);
-        assert_eq!(selection.kept_factors, vec!["b".to_string(), "c".to_string()]);
+        assert_eq!(
+            selection.kept_factors,
+            vec!["b".to_string(), "c".to_string()]
+        );
         assert_eq!(selection.pruned_factors[0].0, "d");
         assert_eq!(selection.pruned_factors[1].0, "a");
         assert!((selection.sparsity_ratio - 0.5).abs() < 1e-9);

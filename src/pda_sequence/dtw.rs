@@ -171,21 +171,33 @@ mod tests {
         ];
         let alignment = dtw_alignment(&a, &b, pda_token_cost).unwrap();
         assert_eq!(alignment.path.first().copied(), Some((0, 0)));
-        assert_eq!(alignment.path.last().copied(), Some((a.len() - 1, b.len() - 1)));
+        assert_eq!(
+            alignment.path.last().copied(),
+            Some((a.len() - 1, b.len() - 1))
+        );
     }
 
     #[test]
     fn distance_matrix_is_symmetric_with_zero_diagonal() {
         let seqs = vec![
-            vec![tok(PdaTokenKind::FairValueGap, 0), tok(PdaTokenKind::OrderBlock, 1)],
-            vec![tok(PdaTokenKind::LiquiditySweep, 0), tok(PdaTokenKind::Cisd, 1)],
-            vec![tok(PdaTokenKind::FairValueGap, 0), tok(PdaTokenKind::Cisd, 1)],
+            vec![
+                tok(PdaTokenKind::FairValueGap, 0),
+                tok(PdaTokenKind::OrderBlock, 1),
+            ],
+            vec![
+                tok(PdaTokenKind::LiquiditySweep, 0),
+                tok(PdaTokenKind::Cisd, 1),
+            ],
+            vec![
+                tok(PdaTokenKind::FairValueGap, 0),
+                tok(PdaTokenKind::Cisd, 1),
+            ],
         ];
         let m = dtw_distance_matrix(&seqs);
-        for i in 0..seqs.len() {
-            assert!(m[i][i].abs() < 1e-9, "diagonal must be zero at {i}");
-            for j in (i + 1)..seqs.len() {
-                assert!((m[i][j] - m[j][i]).abs() < 1e-9, "asymmetric at ({i},{j})");
+        for (i, row) in m.iter().enumerate().take(seqs.len()) {
+            assert!(row[i].abs() < 1e-9, "diagonal must be zero at {i}");
+            for (j, value) in row.iter().enumerate().take(seqs.len()).skip(i + 1) {
+                assert!((*value - m[j][i]).abs() < 1e-9, "asymmetric at ({i},{j})");
             }
         }
     }

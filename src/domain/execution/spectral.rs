@@ -17,14 +17,14 @@ pub const SPECTRAL_DEFAULT_LAMBDA_RATIO: f64 = 0.05;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct SpectralExecutionMetrics {
-    pub dominant_cycle_energy: f64,       // fraction of non-DC energy in top mode, [0, 1]
-    pub dominant_cycle_period_bars: f64,  // length of dominant cycle in bars
-    pub cycle_phase_alignment: f64,       // cos(phase at latest sample), [-1, 1]
-    pub spectral_entropy: f64,            // normalized Shannon entropy, [0, 1]
-    pub high_freq_noise_ratio: f64,       // energy pruned by softshrink, [0, 1]
-    pub softshrink_lambda: f64,           // threshold used (absolute magnitude)
-    pub sample_count: usize,              // samples fed to the FFT
-    pub padded_length: usize,             // zero-padded FFT length
+    pub dominant_cycle_energy: f64, // fraction of non-DC energy in top mode, [0, 1]
+    pub dominant_cycle_period_bars: f64, // length of dominant cycle in bars
+    pub cycle_phase_alignment: f64, // cos(phase at latest sample), [-1, 1]
+    pub spectral_entropy: f64,      // normalized Shannon entropy, [0, 1]
+    pub high_freq_noise_ratio: f64, // energy pruned by softshrink, [0, 1]
+    pub softshrink_lambda: f64,     // threshold used (absolute magnitude)
+    pub sample_count: usize,        // samples fed to the FFT
+    pub padded_length: usize,       // zero-padded FFT length
 }
 
 fn next_power_of_two(n: usize) -> usize {
@@ -61,7 +61,7 @@ pub fn estimate_spectral_execution_metrics(
     let padded_length = next_power_of_two(prices.len());
 
     let total_energy: f64 = bins.iter().skip(1).map(|bin| bin.norm_sq()).sum();
-    if !(total_energy > 0.0) {
+    if total_energy <= 0.0 {
         return None;
     }
 
@@ -97,20 +97,26 @@ mod tests {
     #[test]
     fn rejects_short_windows() {
         let prices: Vec<f64> = (0..16).map(|i| i as f64).collect();
-        assert!(estimate_spectral_execution_metrics(&prices, SPECTRAL_DEFAULT_LAMBDA_RATIO).is_none());
+        assert!(
+            estimate_spectral_execution_metrics(&prices, SPECTRAL_DEFAULT_LAMBDA_RATIO).is_none()
+        );
     }
 
     #[test]
     fn rejects_non_finite_values() {
         let mut prices: Vec<f64> = (0..64).map(|i| (i as f64 * 0.1).sin()).collect();
         prices[10] = f64::NAN;
-        assert!(estimate_spectral_execution_metrics(&prices, SPECTRAL_DEFAULT_LAMBDA_RATIO).is_none());
+        assert!(
+            estimate_spectral_execution_metrics(&prices, SPECTRAL_DEFAULT_LAMBDA_RATIO).is_none()
+        );
     }
 
     #[test]
     fn rejects_constant_series() {
         let prices = vec![100.0_f64; 128];
-        assert!(estimate_spectral_execution_metrics(&prices, SPECTRAL_DEFAULT_LAMBDA_RATIO).is_none());
+        assert!(
+            estimate_spectral_execution_metrics(&prices, SPECTRAL_DEFAULT_LAMBDA_RATIO).is_none()
+        );
     }
 
     #[test]

@@ -91,10 +91,7 @@ pub fn axial_pool_mtf_features(
             (label, *w)
         })
         .collect();
-    tf_trace.sort_by(|a, b| {
-        b.1.partial_cmp(&a.1)
-            .unwrap_or(std::cmp::Ordering::Equal)
-    });
+    tf_trace.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
 
     let mut feature_trace: Vec<(String, f64)> = feature_weights
         .iter()
@@ -107,10 +104,7 @@ pub fn axial_pool_mtf_features(
             (label, *w)
         })
         .collect();
-    feature_trace.sort_by(|a, b| {
-        b.1.partial_cmp(&a.1)
-            .unwrap_or(std::cmp::Ordering::Equal)
-    });
+    feature_trace.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
 
     let timeframe_entropy = normalized_entropy(&tf_weights);
     let force_observe = timeframe_entropy > AXIAL_TIMEFRAME_ENTROPY_CAP;
@@ -152,7 +146,7 @@ fn softmax(values: &[f64], temperature: f64) -> Vec<f64> {
         .map(|value| ((value - max) / temperature).exp())
         .collect();
     let sum: f64 = exps.iter().sum();
-    if !(sum > 0.0) {
+    if sum <= 0.0 {
         return vec![1.0 / values.len() as f64; values.len()];
     }
     exps.into_iter().map(|value| value / sum).collect()
@@ -207,7 +201,10 @@ mod tests {
         // Uniform weights → each entry is mean across tf × feature
         let expected = (1.0 + 0.1 + 0.1) / 3.0 * 0.5;
         let got = pooled[[0, 0]];
-        assert!((got - expected).abs() < 1e-9, "got={got} expected={expected}");
+        assert!(
+            (got - expected).abs() < 1e-9,
+            "got={got} expected={expected}"
+        );
         assert!(trace.timeframe_entropy > 0.95); // near-uniform softmax
         assert!(trace.force_observe);
     }

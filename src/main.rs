@@ -77,8 +77,10 @@ use ict_engine::application::{
         search_factors_for_mece_recovery,
     },
     reporting::{
-        build_agent_guidance_report, build_compact_analyze_report, build_compact_backtest_report,
-        build_human_analyze_report, humanize_decision_hint,
+        build_agent_guidance_report, build_analyze_reporting_bundle,
+        build_compact_analyze_report, build_compact_backtest_report,
+        build_human_analyze_report, emit_analyze_output_envelope, humanize_decision_hint,
+        humanize_next_step_line, AnalyzeHumanInput, AnalyzeMarketFamilySummary,
     },
 };
 use ict_engine::backtest::engine::{AmbiguousBarPolicy, ExecutionRealismConfig};
@@ -113,8 +115,8 @@ use ict_engine::domain::regime::{
     build_hybrid_regime_packet, manual_mece_labeler, RegimeSegmentationPacket,
 };
 use ict_engine::factor_lab::{
-    BacktestConfig as FactorBacktestConfig, FactorContext, FactorDiagnostics, FactorEngine,
-    FactorLab,
+    BacktestConfig as FactorBacktestConfig, BacktestResult as FactorBacktestRunResult,
+    FactorContext, FactorDiagnostics, FactorEngine, FactorLab,
 };
 use ict_engine::factors::{FactorRegistry, WeightUpdater};
 use ict_engine::hmm::{init_hmm_params, state_name, BaumWelch, ForwardBackward, Viterbi};
@@ -142,30 +144,30 @@ use ict_engine::state::{
     load_factor_autoresearch_live_snapshot, load_factor_autoresearch_sessions, load_learning_state,
     load_pending_update_artifact, load_pending_update_history, load_pre_bayes_policy_history,
     load_state, load_state_or_default, load_workflow_snapshot, mark_artifact_consumed,
-    migrate_ensemble_executor_scorecards, save_ensemble_executor_scorecards,
-    save_ensemble_vote_artifact, save_execution_candidate_artifact,
-    save_factor_autoresearch_final_summary, save_factor_autoresearch_live_snapshot,
-    save_factor_autoresearch_sessions, save_learning_state, save_pending_update_artifact,
-    save_state, save_workflow_snapshot, state_exists, AgentActionItem, AgentActionPlan,
-    AgentContextBundle, AgentContextBundleMinimal, AnalyzeRunRecord, ArtifactLedgerEntry,
-    BacktestRunRecord, CommandRecommendations, DatasetComparability, DecisionHistorySummary,
-    DecisionThresholds, EnsembleExecutorScorecard, EnsembleVoteRecord, ExecutionCandidateArtifact,
-    ExecutionCandidateArtifactDecision, ExecutionCandidateArtifactDiff,
-    ExecutionCandidateArtifactSummary, ExpectedStateChange, FactorAutoresearchAttempt,
-    FactorAutoresearchDecision, FactorAutoresearchLiveSnapshot, FactorAutoresearchSession,
-    FactorAutoresearchSummary, FactorFamilyDecision, FactorFamilyDiff, FactorFamilyHistory,
-    FactorFamilyOutcome, FactorIterationPrompt, FactorMutationEvaluation, FactorMutationMetricSet,
-    FactorMutationRunRecord, FactorMutationSpec, FeedbackFactorUsage, FeedbackHistorySummary,
-    FeedbackRecord, LearningState, LiveDataSourceProvenance, ModelProbabilitySnapshot,
-    PendingUpdateArtifact, PendingUpdateArtifactDecision, PendingUpdateArtifactDiff,
-    PendingUpdateArtifactSummary, PersistedFactorRanking, PreBayesEvidenceFilter,
-    PreBayesPolicyRecord, ProbabilityDiff, PromotionDecision, RankingDiffItem, RecommendedCommand,
-    ResearchRunRecord, RollbackRecommendation, RunProvenance, StageAgentContext,
-    StageAgentContextMinimal, TrainRunRecord, UpdateRunRecord, WorkflowBlockingTruth,
-    WorkflowConflictSource, WorkflowDisagreement, WorkflowFieldDiff, WorkflowPhaseSnapshot,
-    WorkflowSnapshot, WorkflowState, ANALYZE_RUNS_FILE, BACKTEST_RUNS_FILE, ENSEMBLE_VOTE_FILE,
-    EXECUTION_CANDIDATE_FILE, FACTOR_MUTATION_RUNS_FILE, PENDING_UPDATE_ARTIFACT_FILE,
-    RESEARCH_RUNS_FILE, TRAIN_RUNS_FILE, UPDATE_RUNS_FILE,
+    migrate_ensemble_executor_scorecards, recommended_next_command_meta,
+    save_ensemble_executor_scorecards, save_ensemble_vote_artifact,
+    save_execution_candidate_artifact, save_factor_autoresearch_final_summary,
+    save_factor_autoresearch_live_snapshot, save_factor_autoresearch_sessions, save_learning_state,
+    save_pending_update_artifact, save_state, save_workflow_snapshot, state_exists,
+    AgentActionItem, AgentActionPlan, AgentContextBundle, AgentContextBundleMinimal,
+    AnalyzeRunRecord, ArtifactLedgerEntry, BacktestRunRecord, CommandRecommendations,
+    DatasetComparability, DecisionHistorySummary, DecisionThresholds, EnsembleExecutorScorecard,
+    EnsembleVoteRecord, ExecutionCandidateArtifact, ExecutionCandidateArtifactDecision,
+    ExecutionCandidateArtifactDiff, ExecutionCandidateArtifactSummary, ExpectedStateChange,
+    FactorAutoresearchAttempt, FactorAutoresearchDecision, FactorAutoresearchLiveSnapshot,
+    FactorAutoresearchSession, FactorAutoresearchSummary, FactorFamilyDecision, FactorFamilyDiff,
+    FactorFamilyHistory, FactorFamilyOutcome, FactorIterationPrompt, FactorMutationEvaluation,
+    FactorMutationMetricSet, FactorMutationRunRecord, FactorMutationSpec, FeedbackFactorUsage,
+    FeedbackHistorySummary, FeedbackRecord, LearningState, LiveDataSourceProvenance,
+    ModelProbabilitySnapshot, PendingUpdateArtifact, PendingUpdateArtifactDecision,
+    PendingUpdateArtifactDiff, PendingUpdateArtifactSummary, PersistedFactorRanking,
+    PreBayesEvidenceFilter, PreBayesPolicyRecord, ProbabilityDiff, PromotionDecision,
+    RankingDiffItem, RecommendedCommand, ResearchRunRecord, RollbackRecommendation, RunProvenance,
+    StageAgentContext, StageAgentContextMinimal, TrainRunRecord, UpdateRunRecord,
+    WorkflowBlockingTruth, WorkflowConflictSource, WorkflowDisagreement, WorkflowFieldDiff,
+    WorkflowPhaseSnapshot, WorkflowSnapshot, WorkflowState, ANALYZE_RUNS_FILE, BACKTEST_RUNS_FILE,
+    ENSEMBLE_VOTE_FILE, EXECUTION_CANDIDATE_FILE, FACTOR_MUTATION_RUNS_FILE,
+    PENDING_UPDATE_ARTIFACT_FILE, RESEARCH_RUNS_FILE, TRAIN_RUNS_FILE, UPDATE_RUNS_FILE,
 };
 #[cfg(test)]
 use ict_engine::types::Symbol;
@@ -659,6 +661,7 @@ struct BacktestCommandInput<'a> {
     data: &'a str,
     paired_data: Option<&'a str>,
     state_dir: &'a str,
+    output_format: OutputFormat,
     warmup_bars: usize,
     hold_bars: usize,
     spread_bps: f64,
@@ -697,6 +700,9 @@ struct Cli {
     command: Commands,
 }
 
+const DEFAULT_STATE_DIR: &str = "state";
+const STATE_DIR_ENV_VAR: &str = "ICT_ENGINE_STATE_DIR";
+
 #[derive(Subcommand)]
 enum Commands {
     /// Analyze market data
@@ -721,14 +727,15 @@ enum Commands {
         demo: bool,
         #[arg(
             long,
+            env = "ICT_ENGINE_STATE_DIR",
             default_value = "state",
             help = "State directory for model and workflow artifacts"
         )]
         state_dir: String,
         #[arg(
             long,
-            default_value = "json",
-            help = "Output format: json, compact, agent, or human"
+            default_value = "",
+            help = "Output format: json (default), compact, agent, or human. `--compact`, `--agent`, `--human` are aliases; do not combine them with `--output-format`."
         )]
         output_format: String,
         #[arg(long, help = "Alias for --output-format compact")]
@@ -782,6 +789,7 @@ enum Commands {
         nofx_base_url: String,
         #[arg(
             long,
+            env = "ICT_ENGINE_STATE_DIR",
             default_value = "state",
             help = "State directory for model and workflow artifacts"
         )]
@@ -802,6 +810,7 @@ enum Commands {
         epochs: usize,
         #[arg(
             long,
+            env = "ICT_ENGINE_STATE_DIR",
             default_value = "state",
             help = "State directory for model and workflow artifacts"
         )]
@@ -817,10 +826,23 @@ enum Commands {
         paired_data: Option<String>,
         #[arg(
             long,
+            env = "ICT_ENGINE_STATE_DIR",
             default_value = "state",
             help = "State directory for model and workflow artifacts"
         )]
         state_dir: String,
+        #[arg(
+            long,
+            default_value = "",
+            help = "Output format: json (default), compact, agent, or human. `--compact`, `--agent`, `--human` are aliases; do not combine them with `--output-format`."
+        )]
+        output_format: String,
+        #[arg(long, help = "Alias for --output-format compact")]
+        compact: bool,
+        #[arg(long, help = "Alias for --output-format agent")]
+        agent: bool,
+        #[arg(long, help = "Alias for --output-format human")]
+        human: bool,
         #[arg(
             long,
             default_value = "60",
@@ -862,6 +884,7 @@ enum Commands {
         entry_signal: String,
         #[arg(
             long,
+            env = "ICT_ENGINE_STATE_DIR",
             default_value = "state",
             help = "State directory for model and workflow artifacts"
         )]
@@ -927,10 +950,23 @@ enum Commands {
         ensemble: bool,
         #[arg(
             long,
+            env = "ICT_ENGINE_STATE_DIR",
             default_value = "state",
             help = "State directory for model and workflow artifacts"
         )]
         state_dir: String,
+        #[arg(
+            long,
+            default_value = "",
+            help = "Output format: json (default), compact, agent, or human. `--compact`, `--agent`, `--human` are aliases; do not combine them with `--output-format`."
+        )]
+        output_format: String,
+        #[arg(long, help = "Alias for --output-format compact")]
+        compact: bool,
+        #[arg(long, help = "Alias for --output-format agent")]
+        agent: bool,
+        #[arg(long, help = "Alias for --output-format human")]
+        human: bool,
     },
     /// Show factor mutation history and clustered failure tags
     FactorMutationStatus {
@@ -1021,11 +1057,14 @@ enum Commands {
         ensemble: bool,
         #[arg(
             long,
+            env = "ICT_ENGINE_STATE_DIR",
             default_value = "state",
             help = "State directory for model and workflow artifacts"
         )]
         state_dir: String,
     },
+    /// Show the currently effective ICT-related environment settings
+    Env,
     /// Show factor-autoresearch sessions and attempts
     FactorAutoresearchStatus {
         #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
@@ -1107,6 +1146,18 @@ enum Commands {
             help = "State directory for model and workflow artifacts"
         )]
         state_dir: String,
+        #[arg(
+            long,
+            default_value = "",
+            help = "Output format: json (default), compact, agent, or human. `--compact`, `--agent`, `--human` are aliases; do not combine them with `--output-format`."
+        )]
+        output_format: String,
+        #[arg(long, help = "Alias for --output-format compact")]
+        compact: bool,
+        #[arg(long, help = "Alias for --output-format agent")]
+        agent: bool,
+        #[arg(long, help = "Alias for --output-format human")]
+        human: bool,
     },
     /// Clean TOMAC-style futures minute CSVs into continuous candles
     CleanFutures {
@@ -1237,8 +1288,8 @@ enum Commands {
         limit: Option<usize>,
         #[arg(
             long,
-            default_value = "json",
-            help = "Output format: json, compact, agent, or human"
+            default_value = "",
+            help = "Output format: json (default), compact, agent, or human. `--compact`, `--agent`, `--human` are aliases; do not combine them with `--output-format`."
         )]
         output_format: String,
         #[arg(long, help = "Alias for --output-format compact")]
@@ -1347,7 +1398,7 @@ enum Commands {
         #[arg(
             long,
             default_value_t = false,
-            help = "Show only the latest artifact row"
+            help = "Keep only the latest artifact per kind (one row per artifact_kind, most recent by generated_at)"
         )]
         latest_only: bool,
         #[arg(long, default_value_t = false, help = "Show only actionable artifacts")]
@@ -1423,6 +1474,7 @@ fn main() -> Result<()> {
             human,
             no_execution_focus,
         } => {
+            ensure_state_dir_ready(&state_dir)?;
             let (data_htf, data_mtf, data_ltf) = resolve_analyze_cli_inputs(
                 &symbol,
                 data_htf.as_deref(),
@@ -1454,6 +1506,7 @@ fn main() -> Result<()> {
             nofx_base_url,
             state_dir,
         } => {
+            ensure_state_dir_ready(&state_dir)?;
             let futures_base_url = resolve_live_backend_base_url(
                 &futures_backend,
                 &openalice_base_url,
@@ -1479,12 +1532,19 @@ fn main() -> Result<()> {
             data,
             epochs,
             state_dir,
-        } => train_command(&symbol, &data, epochs, &state_dir)?,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            train_command(&symbol, &data, epochs, &state_dir)?
+        }
         Commands::Backtest {
             symbol,
             data,
             paired_data,
             state_dir,
+            output_format,
+            compact,
+            agent,
+            human,
             warmup_bars,
             hold_bars,
             spread_bps,
@@ -1492,19 +1552,23 @@ fn main() -> Result<()> {
             fee_bps,
             ambiguous_bar_policy,
             online_learn,
-        } => backtest_command(BacktestCommandInput {
-            symbol: &symbol,
-            data: &data,
-            paired_data: paired_data.as_deref(),
-            state_dir: &state_dir,
-            warmup_bars,
-            hold_bars,
-            spread_bps,
-            slippage_bps,
-            fee_bps,
-            ambiguous_bar_policy: &ambiguous_bar_policy,
-            online_learn,
-        })?,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            backtest_command(BacktestCommandInput {
+                symbol: &symbol,
+                data: &data,
+                paired_data: paired_data.as_deref(),
+                state_dir: &state_dir,
+                output_format: resolve_output_format(&output_format, compact, agent, human)?,
+                warmup_bars,
+                hold_bars,
+                spread_bps,
+                slippage_bps,
+                fee_bps,
+                ambiguous_bar_policy: &ambiguous_bar_policy,
+                online_learn,
+            })?
+        }
         Commands::Update {
             symbol,
             outcome,
@@ -1515,17 +1579,20 @@ fn main() -> Result<()> {
             direction,
             feedback_file,
             ensemble,
-        } => update_command(UpdateCommandInput {
-            symbol: &symbol,
-            outcome: &outcome,
-            entry_signal: Some(&entry_signal),
-            feedback_file: feedback_file.as_deref(),
-            state_dir: &state_dir,
-            pnl,
-            regime: regime.as_deref(),
-            direction: direction.as_deref(),
-            ensemble,
-        })?,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            update_command(UpdateCommandInput {
+                symbol: &symbol,
+                outcome: &outcome,
+                entry_signal: Some(&entry_signal),
+                feedback_file: feedback_file.as_deref(),
+                state_dir: &state_dir,
+                pnl,
+                regime: regime.as_deref(),
+                direction: direction.as_deref(),
+                ensemble,
+            })?
+        }
         Commands::FactorResearch {
             symbol,
             data,
@@ -1541,22 +1608,30 @@ fn main() -> Result<()> {
             emit_mutation_evaluation,
             ensemble,
             state_dir,
-        } => factor_research_command(FactorResearchCommandInput {
-            symbol: &symbol,
-            data: &data,
-            objective: &objective,
-            data_1m: data_1m.as_deref(),
-            data_5m: data_5m.as_deref(),
-            data_15m: data_15m.as_deref(),
-            data_1h: data_1h.as_deref(),
-            data_4h: data_4h.as_deref(),
-            data_1d: data_1d.as_deref(),
-            paired_data: paired_data.as_deref(),
-            mutation_spec_path: mutation_spec.as_deref(),
-            emit_mutation_evaluation,
-            ensemble,
-            state_dir: &state_dir,
-        })?,
+            output_format,
+            compact,
+            agent,
+            human,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            factor_research_command(FactorResearchCommandInput {
+                symbol: &symbol,
+                data: &data,
+                objective: &objective,
+                data_1m: data_1m.as_deref(),
+                data_5m: data_5m.as_deref(),
+                data_15m: data_15m.as_deref(),
+                data_1h: data_1h.as_deref(),
+                data_4h: data_4h.as_deref(),
+                data_1d: data_1d.as_deref(),
+                paired_data: paired_data.as_deref(),
+                mutation_spec_path: mutation_spec.as_deref(),
+                emit_mutation_evaluation,
+                ensemble,
+                state_dir: &state_dir,
+                output_format: resolve_output_format(&output_format, compact, agent, human)?,
+            })?
+        }
         Commands::FactorMutationStatus {
             symbol,
             state_dir,
@@ -1639,8 +1714,23 @@ fn main() -> Result<()> {
             paired_data,
             ensemble,
             state_dir,
+            output_format,
+            compact,
+            agent,
+            human,
             ..
-        } => factor_backtest_command(&symbol, &data, paired_data.as_deref(), ensemble, &state_dir)?,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            factor_backtest_command(
+                &symbol,
+                &data,
+                paired_data.as_deref(),
+                ensemble,
+                &state_dir,
+                resolve_output_format(&output_format, compact, agent, human)?,
+            )?
+        }
+        Commands::Env => env_command()?,
         Commands::CleanFutures {
             root,
             output_dir,
@@ -2038,6 +2128,7 @@ fn build_analyze_policy_outputs(
     Ok((shadow, lineage))
 }
 
+#[cfg(test)]
 fn format_executor_summary_lines(executor_summaries: &[String]) -> Vec<String> {
     executor_summaries
         .iter()
@@ -2062,208 +2153,52 @@ fn resolved_vote_scorecards<'a>(
 }
 
 fn emit_analyze_output(report: &AnalyzeReport, output_format: OutputFormat) -> Result<()> {
-    let objective_jump_weight = report
-        .supporting
-        .objective_jump_weight
-        .map(|weight| format!("objective_jump_weight={weight:.3}"));
-    let compact_evidence = objective_jump_weight
-        .iter()
-        .chain(report.supporting.multi_timeframe_summary.iter())
-        .cloned()
-        .collect::<Vec<_>>();
-    let mut compact_report = build_compact_analyze_report(
-        report.supporting.decision_hint.clone(),
-        Some(format!(
-            "{:?}",
-            report.supporting.decision.selected_direction
-        )),
-        Some(report.supporting.entry_quality.selected_state.clone()),
-        Some(
-            report
-                .supporting
-                .pre_bayes_evidence_filter
-                .gating_status
-                .clone(),
-        ),
-        Some(report.supporting.recommended_next_command.clone()),
-        &compact_evidence,
-        &report.supporting.artifact_action_summary,
-        std::slice::from_ref(&report.supporting.recommended_next_command),
-    );
-    let mut agent_report = build_agent_guidance_report(
-        Some(format!(
-            "{:?}",
-            report.supporting.decision.selected_direction
-        )),
-        Some(report.supporting.entry_quality.selected_state.clone()),
-        Some(
-            report
-                .supporting
-                .pre_bayes_evidence_filter
-                .gating_status
-                .clone(),
-        ),
-        Some(report.supporting.recommended_next_command.clone()),
-        Some(report.supporting.decision_hint.clone()),
-        &report.supporting.multi_timeframe_summary,
-        &report.supporting.artifact_action_summary,
-        std::slice::from_ref(&report.supporting.recommended_next_command),
-    );
-    let human_market_family = report
-        .supporting
-        .canonical_belief_report
-        .market_family
-        .as_deref();
-    let human_market_subgraph = report
-        .supporting
-        .canonical_belief_report
-        .selected_market_subgraph
-        .as_deref()
-        .unwrap_or("unknown");
-    let human_regime_bayes_analysis = match human_market_family {
-        Some("metals") => match report.supporting.objective_jump_weight {
-            Some(weight) => format!(
-                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}；objective_jump_weight={weight:.3}{}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph,
-                regime_companion_human_suffix(&report.analysis.regime_bayesian)
-            ),
-            None => format!(
-                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}{}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph,
-                regime_companion_human_suffix(&report.analysis.regime_bayesian)
-            ),
-        },
-        Some("energy") => match report.supporting.objective_jump_weight {
-            Some(weight) => format!(
-                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}；objective_jump_weight={weight:.3}{}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph,
-                regime_companion_human_suffix(&report.analysis.regime_bayesian)
-            ),
-            None => format!(
-                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}{}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph,
-                regime_companion_human_suffix(&report.analysis.regime_bayesian)
-            ),
-        },
-        Some("futures_index") => match report.supporting.objective_jump_weight {
-            Some(weight) => format!(
-                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}；objective_jump_weight={weight:.3}{}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph,
-                regime_companion_human_suffix(&report.analysis.regime_bayesian)
-            ),
-            None => format!(
-                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}{}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph,
-                regime_companion_human_suffix(&report.analysis.regime_bayesian)
-            ),
-        },
-        _ => match report.supporting.objective_jump_weight {
-            Some(weight) => format!(
-                "regime={} liquidity={} direction={:?} subgraph={} objective_jump_weight={weight:.3}{}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph,
-                regime_companion_human_suffix(&report.analysis.regime_bayesian)
-            ),
-            None => format!(
-                "regime={} liquidity={} direction={:?} subgraph={}{}",
-                report.analysis.regime_bayesian.regime_label,
-                report.analysis.regime_bayesian.liquidity_label,
-                report.analysis.regime_bayesian.selected_direction,
-                human_market_subgraph,
-                regime_companion_human_suffix(&report.analysis.regime_bayesian)
-            ),
-        },
+    let output_format = match output_format {
+        OutputFormat::Json => "json",
+        OutputFormat::Compact => "compact",
+        OutputFormat::Agent => "agent",
+        OutputFormat::Human => "human",
     };
-    let mut human_report = build_human_analyze_report(
-        Some(format!(
-            "{} | {} | Entry: {} | Gate: {} | Quality: {:.3}",
-            report.symbol,
-            human_direction_bias_label(report.supporting.decision.selected_direction),
-            report.supporting.entry_quality.selected_state,
-            report.supporting.pre_bayes_evidence_filter.gating_status,
-            report
+    let (mut compact_report, mut agent_report, mut human_report) = build_analyze_reporting_bundle(
+        AnalyzeHumanInput {
+            symbol: &report.symbol,
+            selected_direction: report.supporting.decision.selected_direction,
+            entry_quality: &report.supporting.entry_quality.selected_state,
+            gate_status: &report.supporting.pre_bayes_evidence_filter.gating_status,
+            evidence_quality_score: report
                 .supporting
                 .pre_bayes_evidence_filter
-                .evidence_quality_score
-        )),
-        Some(format!(
-            "Decision: {}",
-            humanize_decision_hint(&report.supporting.decision_hint)
-        )),
-        Some(human_action_line(&report.supporting.factor_iteration_queue)),
-        Some(format!(
-            "Next: {}",
-            report.supporting.recommended_next_command
-        )),
-        match human_market_family {
-            Some("metals") => format!(
-                "金属结构偏向：{}。这类盘先看流动性是否被扫完，再等回到顺势一侧；原始标签={}。",
-                if report.analysis.regime_bayesian.selected_direction == Direction::Bull {
-                    "偏多，但不宜追"
-                } else if report.analysis.regime_bayesian.selected_direction == Direction::Bear {
-                    "偏空，但更重确认"
-                } else {
-                    "先观望，等再定向"
-                },
-                report.analysis.price_action.narrative
-            ),
-            Some("energy") => format!(
-                "能源结构偏向：{}。这类盘最怕突发冲击，先防假突破和急反转；原始标签={}。",
-                if report.analysis.regime_bayesian.selected_direction == Direction::Bear {
-                    "空头占优，但随时防剧烈反抽"
-                } else if report.analysis.regime_bayesian.selected_direction == Direction::Bull {
-                    "多头占优，但别忽视突发回吐"
-                } else {
-                    "方向未完全站稳，先等波动收敛"
-                },
-                report.analysis.price_action.narrative
-            ),
-            _ => report.analysis.price_action.narrative.clone(),
+                .evidence_quality_score,
+            decision_hint: &report.supporting.decision_hint,
+            factor_iteration_queue: &report.supporting.factor_iteration_queue,
+            recommended_next_command: &report.supporting.recommended_next_command,
+            price_action_narrative: &report.analysis.price_action.narrative,
+            technical_price_narrative: &report.analysis.technical_price.narrative,
+            smt_correlation_narrative: &report.analysis.smt_correlation.narrative,
+            regime_label: &report.analysis.regime_bayesian.regime_label,
+            liquidity_label: &report.analysis.regime_bayesian.liquidity_label,
+            regime_selected_direction: report.analysis.regime_bayesian.selected_direction,
+            trade_plan_narrative: &report.analysis.trade_plan.narrative,
+            market_family: report
+                .supporting
+                .canonical_belief_report
+                .market_family
+                .as_deref(),
+            market_subgraph: report
+                .supporting
+                .canonical_belief_report
+                .selected_market_subgraph
+                .as_deref()
+                .unwrap_or("unknown"),
+            objective_jump_weight: report.supporting.objective_jump_weight,
         },
-        match human_market_family {
-            Some("metals") => format!(
-                "金属技术面：更重均值回归后的二次确认，别把一次拉伸当延续；原始标签={}。",
-                report.analysis.technical_price.narrative
-            ),
-            Some("energy") => format!(
-                "能源技术面：指标易被波动放大，先看节奏是否稳定，再看趋势是否继续；原始标签={}。",
-                report.analysis.technical_price.narrative
-            ),
-            _ => report.analysis.technical_price.narrative.clone(),
-        },
-        match human_market_family {
-            Some("metals") => format!(
-                "金属联动面：相关性可参考，但最终仍以本品种流动性反应为主；原始标签={}。",
-                report.analysis.smt_correlation.narrative
-            ),
-            Some("energy") => format!(
-                "能源联动面：相关市场常会同步放大波动，若联动发散，先减信号强度；原始标签={}。",
-                report.analysis.smt_correlation.narrative
-            ),
-            _ => report.analysis.smt_correlation.narrative.clone(),
-        },
-        human_regime_bayes_analysis,
-        report.analysis.trade_plan.narrative.clone(),
+        &report.supporting.artifact_action_summary,
+        &report.supporting.multi_timeframe_summary,
+        &report.supporting.decision_hint,
+        report.supporting.decision.selected_direction,
+        &report.supporting.entry_quality.selected_state,
+        &report.supporting.pre_bayes_evidence_filter.gating_status,
+        &report.supporting.recommended_next_command,
     );
     if let Some(triage) = report.supporting.execution_triage.as_ref() {
         human_report.execution_triage_line = Some(triage.one_line.clone());
@@ -2284,7 +2219,6 @@ fn emit_analyze_output(report: &AnalyzeReport, output_format: OutputFormat) -> R
         belief: report.supporting.canonical_belief_report.clone(),
         ict_structure: None,
     });
-    let scorecard_summary = format_executor_summary_lines(&ensemble_vote.executor_summaries);
     let persisted_scorecards =
         load_ensemble_executor_scorecards(&report.meta.state_dir, &report.symbol)
             .unwrap_or_default();
@@ -2292,29 +2226,31 @@ fn emit_analyze_output(report: &AnalyzeReport, output_format: OutputFormat) -> R
         &persisted_scorecards,
         &[],
     );
-    let full_output = serde_json::json!({
-        "report": report,
-        "compact_report": compact_report,
-        "agent_report": agent_report,
-        "human_report": human_report.render(),
-        "market_family_summary": {
-            "market_family": report.supporting.canonical_belief_report.market_family,
-            "market_behavior_profile": report.supporting.canonical_belief_report.market_behavior_profile,
-            "selected_market_subgraph": report.supporting.canonical_belief_report.selected_market_subgraph,
+    emit_analyze_output_envelope(
+        report,
+        output_format,
+        &compact_report,
+        &agent_report,
+        &human_report,
+        AnalyzeMarketFamilySummary {
+            market_family: report.supporting.canonical_belief_report.market_family.clone(),
+            market_behavior_profile: report
+                .supporting
+                .canonical_belief_report
+                .market_behavior_profile
+                .clone(),
+            selected_market_subgraph: report
+                .supporting
+                .canonical_belief_report
+                .selected_market_subgraph
+                .clone(),
         },
-        "belief_shadow_policy": belief_shadow_policy,
-        "belief_policy_lineage": belief_policy_lineage,
-        "ensemble_vote": ensemble_vote,
-        "executor_scorecard_summary": scorecard_summary,
-        "executor_scorecard_source": scorecard_source,
-    });
-    match output_format {
-        OutputFormat::Json => print_redacted_json(&full_output)?,
-        OutputFormat::Compact => print_redacted_json(&compact_report)?,
-        OutputFormat::Agent => print_redacted_json(&agent_report)?,
-        OutputFormat::Human => println!("{}", redact_local_paths(&human_report.render())),
-    }
-    Ok(())
+        belief_shadow_policy,
+        belief_policy_lineage,
+        &ensemble_vote,
+        None,
+        scorecard_source,
+    )
 }
 
 fn resolve_output_format(
@@ -2327,6 +2263,9 @@ fn resolve_output_format(
     if alias_count > 1 {
         bail!("choose at most one of --compact, --agent, or --human");
     }
+    if alias_count == 1 && !value.trim().is_empty() {
+        bail!("do not combine --output-format with --compact/--agent/--human");
+    }
     if compact {
         return Ok(OutputFormat::Compact);
     }
@@ -2336,7 +2275,87 @@ fn resolve_output_format(
     if human {
         return Ok(OutputFormat::Human);
     }
+    if value.trim().is_empty() {
+        return Ok(OutputFormat::Json);
+    }
     OutputFormat::parse(value)
+}
+
+fn should_warn_about_default_state_dir(state_dir: &str) -> bool {
+    if state_dir != DEFAULT_STATE_DIR || env::var_os(STATE_DIR_ENV_VAR).is_some() {
+        return false;
+    }
+    let path = std::path::Path::new(state_dir);
+    if path.exists() {
+        return false;
+    }
+    let Ok(cwd) = env::current_dir() else {
+        return false;
+    };
+    !cwd.join("Cargo.toml").exists() && !cwd.join(".ict-engine").exists()
+}
+
+fn ensure_state_dir_ready(state_dir: &str) -> Result<()> {
+    if should_warn_about_default_state_dir(state_dir) {
+        eprintln!(
+            "auto-creating state dir at ./state; set --state-dir or {} to customize",
+            STATE_DIR_ENV_VAR
+        );
+    }
+    std::fs::create_dir_all(state_dir)
+        .with_context(|| format!("creating state directory '{}'", state_dir))?;
+    Ok(())
+}
+
+fn build_env_report() -> Value {
+    let variables = [
+        (
+            "ICT_ENGINE_STATE_DIR",
+            "default state directory for CLI commands",
+        ),
+        (
+            "ICT_ENGINE_STAGED_ORCHESTRATION",
+            "enable staged orchestration flow",
+        ),
+        (
+            "ICT_ENGINE_BELIEF_PRIMARY",
+            "select the primary belief engine",
+        ),
+        (
+            "ICT_ENGINE_FAMILY_HISTORY_WINDOW",
+            "override family history window length",
+        ),
+        (
+            "ICT_ENGINE_TOMAC_ROOT",
+            "set the TOMAC root for futures cleaning commands",
+        ),
+        (
+            "ICT_EXECUTION_FOCUS",
+            "enable execution-focus reporting surfaces",
+        ),
+        ("HOME", "OS-provided home directory used for path discovery"),
+    ]
+    .into_iter()
+    .map(|(key, description)| {
+        let value = env::var(key).ok();
+        serde_json::json!({
+            "name": key,
+            "description": description,
+            "set": value.is_some(),
+            "value": value,
+        })
+    })
+    .collect::<Vec<_>>();
+    serde_json::json!({
+        "state_dir_env_var": STATE_DIR_ENV_VAR,
+        "default_state_dir": DEFAULT_STATE_DIR,
+        "variables": variables,
+    })
+}
+
+fn env_command() -> Result<()> {
+    println!("{}", serde_json::to_string_pretty(&build_env_report())?);
+    Ok(())
 }
 
 fn redact_local_paths(text: &str) -> String {
@@ -2404,188 +2423,17 @@ fn print_redacted_json<T: Serialize>(value: &T) -> Result<()> {
 }
 
 fn compact_workflow_status_view(snapshot: &WorkflowSnapshot) -> Value {
-    let blocking_status = if snapshot.blocking_truth.status.is_empty() {
-        "unblocked".to_string()
-    } else {
-        snapshot.blocking_truth.status.clone()
-    };
-    let blocking_reason = if snapshot.blocking_truth.status.is_empty() {
-        "none".to_string()
-    } else {
-        snapshot.blocking_truth.reason.clone()
-    };
-    let latest_phase = snapshot
-        .latest_update
-        .as_ref()
-        .or(snapshot.latest_research.as_ref())
-        .or(snapshot.latest_analyze.as_ref())
-        .or(snapshot.latest_backtest.as_ref())
-        .or(snapshot.latest_train.as_ref());
-    let latest_phase_label = latest_phase
-        .map(|phase| phase.phase.clone())
-        .unwrap_or_else(|| "workflow_phase_unavailable".to_string());
-    let latest_phase_summary = latest_phase
-        .map(short_workflow_phase_summary)
-        .unwrap_or_else(|| "workflow_phase_summary_unavailable".to_string());
-    let top_actionable = snapshot.actionable_artifacts.first().map(|artifact| {
-        serde_json::json!({
-            "artifact_id": artifact.artifact_id,
-            "artifact_kind": artifact.artifact_kind,
-            "decision_hint": artifact.decision_hint,
-            "generated_at": artifact.generated_at,
-        })
-    });
-    let top_disagreement = snapshot.disagreements.first().map(|item| {
-        serde_json::json!({
-            "id": item.id,
-            "severity": item.severity,
-            "summary": item.summary,
-        })
-    });
-    serde_json::json!({
-        "symbol": snapshot.symbol,
-        "generated_at": snapshot.generated_at,
-        "focus_phase": snapshot.current_focus_phase,
-        "focus_reason": snapshot.current_focus_reason,
-        "latest_phase": latest_phase_label,
-        "latest_phase_summary": latest_phase_summary,
-        "blocking_status": blocking_status,
-        "blocking_reason": blocking_reason,
-        "next_command": snapshot.recommended_next_command,
-        "pending_actions": snapshot.pending_actions.iter().take(3).cloned().collect::<Vec<_>>(),
-        "risk_flags": snapshot.risk_flags.iter().take(3).cloned().collect::<Vec<_>>(),
-        "top_actionable": top_actionable,
-        "top_disagreement": top_disagreement,
-    })
+    ict_engine::application::orchestration::build_compact_workflow_status_view(snapshot)
 }
 
 fn agent_workflow_status_view(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
 ) -> Value {
-    let latest_phase = snapshot
-        .latest_update
-        .as_ref()
-        .or(snapshot.latest_research.as_ref())
-        .or(snapshot.latest_analyze.as_ref())
-        .or(snapshot.latest_backtest.as_ref())
-        .or(snapshot.latest_train.as_ref());
-    let latest_phase_label = latest_phase
-        .map(|phase| phase.phase.clone())
-        .unwrap_or_else(|| "workflow_phase_unavailable".to_string());
-    let latest_phase_summary_short = latest_phase
-        .map(short_workflow_phase_summary)
-        .unwrap_or_else(|| "workflow_phase_summary_unavailable".to_string());
-    let hard_block_statuses = [
-        "blocked",
-        "bridge_needs_confirmation",
-        "validated_regressing",
-        "credibility_gate_blocked",
-    ];
-    let hard_block_active = hard_block_statuses
-        .iter()
-        .any(|status| snapshot.blocking_truth.status == *status);
-    let command_source = if hard_block_active {
-        "blocking_truth"
-    } else {
-        "recommended_next_command"
-    };
-    let next_command = if hard_block_active {
-        snapshot.blocking_truth.next_command.clone()
-    } else {
-        snapshot.recommended_next_command.clone()
-    };
-    let blocking_status = if hard_block_active {
-        snapshot.blocking_truth.status.clone()
-    } else {
-        "unblocked".to_string()
-    };
-    let blocking_reason = if hard_block_active {
-        snapshot.blocking_truth.reason.clone()
-    } else {
-        "none".to_string()
-    };
-    let top_disagreement = snapshot.disagreements.first().map(|item| {
-        serde_json::json!({
-            "id": item.id,
-            "severity": item.severity,
-            "summary": item.summary,
-            "recommended_action": item.recommended_action,
-        })
-    });
-    let top_actionable = snapshot.actionable_artifacts.first().map(|artifact| {
-        serde_json::json!({
-            "artifact_id": artifact.artifact_id,
-            "artifact_kind": artifact.artifact_kind,
-            "decision_hint": artifact.decision_hint,
-        })
-    });
-    let ensemble_summary = snapshot.latest_ensemble_vote.as_ref().map(|vote| {
-        let (scorecards, scorecard_source) =
-            ict_engine::application::orchestration::resolved_vote_scorecards(
-                persisted_scorecards,
-                vote,
-            );
-        serde_json::json!({
-            "final_action": vote.final_action,
-            "confidence": vote.confidence,
-            "consensus_strength": vote.consensus_strength,
-            "hard_block_active": vote.hard_block.active,
-            "hard_block_reason": vote.hard_block.reason,
-            "recommended_command": vote.recommended_command,
-            "executor_scorecard_source": scorecard_source,
-            "top_executor": scorecards.first().map(|item| {
-                serde_json::json!({
-                    "executor": item.executor,
-                    "latest_weight_hint": item.latest_weight_hint,
-                    "wins": item.wins,
-                })
-            }),
-        })
-    });
-    serde_json::json!({
-        "symbol": snapshot.symbol,
-        "generated_at": snapshot.generated_at,
-        "focus_phase": snapshot.current_focus_phase,
-        "focus_reason": snapshot.current_focus_reason,
-        "latest_phase": latest_phase_label,
-        "latest_phase_summary": latest_phase_summary_short,
-        "blocking_status": blocking_status,
-        "blocking_reason": blocking_reason,
-        "hard_block_active": hard_block_active,
-        "next_command": next_command,
-        "next_command_source": command_source,
-        "next_step": ict_engine::application::release_closure::workflow_next_step_view(&next_command, if hard_block_active { Some(blocking_reason.as_str()) } else { None }),
-        "pending_actions": snapshot.pending_actions.iter().take(3).cloned().collect::<Vec<_>>(),
-        "risk_flags": snapshot.risk_flags.iter().take(3).cloned().collect::<Vec<_>>(),
-        "top_disagreement": top_disagreement,
-        "top_actionable": top_actionable,
-        "ensemble": ensemble_summary,
-    })
-}
-
-fn short_workflow_phase_summary(phase: &WorkflowPhaseSnapshot) -> String {
-    let mut parts = Vec::new();
-    if let Some(direction) = &phase.selected_direction {
-        parts.push(format!("direction={direction}"));
-    }
-    if let Some(entry) = &phase.selected_entry_quality {
-        parts.push(format!("entry={entry}"));
-    }
-    if !phase.pre_bayes_gate_status.is_empty() {
-        parts.push(format!("gate={}", phase.pre_bayes_gate_status));
-    }
-    if phase.pre_bayes_evidence_quality_score > 0.0 {
-        parts.push(format!(
-            "quality={:.3}",
-            phase.pre_bayes_evidence_quality_score
-        ));
-    }
-    if parts.is_empty() {
-        phase.phase_summary.clone()
-    } else {
-        parts.join(" ")
-    }
+    ict_engine::application::orchestration::build_agent_workflow_status_view(
+        snapshot,
+        persisted_scorecards,
+    )
 }
 
 fn emit_workflow_status_output(
@@ -2639,6 +2487,37 @@ fn workflow_status_human_view(
     )
 }
 
+fn hydrate_recommended_next_command_meta(
+    command: &str,
+    meta: &mut ict_engine::state::RecommendedNextCommandMeta,
+) {
+    if meta.kind == ict_engine::state::RecommendedNextCommandKind::Unknown && !command.is_empty() {
+        *meta = recommended_next_command_meta(command);
+    }
+}
+
+fn hydrate_workflow_snapshot_recommended_next_command_meta(snapshot: &mut WorkflowSnapshot) {
+    hydrate_recommended_next_command_meta(
+        &snapshot.recommended_next_command,
+        &mut snapshot.recommended_next_command_meta,
+    );
+    for phase in [
+        snapshot.latest_train.as_mut(),
+        snapshot.latest_analyze.as_mut(),
+        snapshot.latest_research.as_mut(),
+        snapshot.latest_backtest.as_mut(),
+        snapshot.latest_update.as_mut(),
+    ]
+    .into_iter()
+    .flatten()
+    {
+        hydrate_recommended_next_command_meta(
+            &phase.recommended_next_command,
+            &mut phase.recommended_next_command_meta,
+        );
+    }
+}
+
 struct WorkflowStatusCommandInput<'a> {
     symbol: &'a str,
     state_dir: &'a str,
@@ -2680,11 +2559,12 @@ fn workflow_status_command(input: WorkflowStatusCommandInput<'_>) -> Result<()> 
     if actionable_only as u8 + conflicts_only as u8 + latest_promotable as u8 > 1 {
         bail!("workflow-status accepts at most one artifact filter flag");
     }
-    let snapshot = if refresh {
+    let mut snapshot = if refresh {
         refresh_workflow_snapshot(state_dir, symbol)?
     } else {
         load_workflow_snapshot(state_dir, symbol)?
     };
+    hydrate_workflow_snapshot_recommended_next_command_meta(&mut snapshot);
     let persisted_scorecards =
         load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
     if actionable_only {
@@ -7010,19 +6890,19 @@ fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result<()> {
     report.supporting.trade_outcome.long = probability_map(trade_outcome_states, &long_adjusted);
     report.supporting.trade_outcome.short = probability_map(trade_outcome_states, &short_adjusted);
     report.supporting.raw_trade_plan = live_trade_plan;
+    let auxiliary = report
+        .supporting
+        .auxiliary
+        .as_ref()
+        .context("missing auxiliary live evidence after live data assembly")?;
     report.analysis.technical_price = build_technical_price_section(
         &ltf,
         futures_live_price,
         spot_live_price,
         report.supporting.auxiliary.as_ref(),
     );
-    report.analysis.smt_correlation = build_smt_correlation_section(
-        futures_symbol,
-        spot_symbol,
-        &ltf,
-        &spot_candles,
-        report.supporting.auxiliary.as_ref().unwrap(),
-    );
+    report.analysis.smt_correlation =
+        build_smt_correlation_section(futures_symbol, spot_symbol, &ltf, &spot_candles, auxiliary);
     report.analysis.regime_bayesian = build_regime_bayesian_section(
         &report.supporting.model_state.hmm_state,
         &report.supporting.model_state.regime_probs,
@@ -7284,7 +7164,7 @@ fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
         Some(human_action_line(&report.supporting.factor_iteration_queue)),
         Some(format!(
             "Next: {}",
-            report.supporting.recommended_next_command
+            humanize_next_step_line(&report.supporting.recommended_next_command)
         )),
         match human_market_family {
             Some("metals") => format!(
@@ -7453,6 +7333,9 @@ fn persist_analyze_run(
         agent_action_plan: report.supporting.agent_action_plan.clone(),
         recommended_commands: report.supporting.recommended_commands.clone(),
         recommended_next_command: report.supporting.recommended_next_command.clone(),
+        recommended_next_command_meta: recommended_next_command_meta(
+            &report.supporting.recommended_next_command,
+        ),
         agent_context_bundle: report.supporting.agent_context_bundle.clone(),
         agent_context_bundle_minimal: report.supporting.agent_context_bundle_minimal.clone(),
         feedback_history_summary: report.supporting.feedback_history_summary.clone(),
@@ -8837,6 +8720,24 @@ fn build_workflow_snapshot(input: BuildWorkflowSnapshotInput<'_>) -> WorkflowSna
         }
     }
 
+    let current_recommended_next_command = current
+        .as_ref()
+        .map(|phase| phase.recommended_next_command.clone())
+        .unwrap_or_default();
+    let current_recommended_next_command_meta = current
+        .as_ref()
+        .map(|phase| {
+            if phase.recommended_next_command_meta.kind
+                == ict_engine::state::RecommendedNextCommandKind::Unknown
+                && !phase.recommended_next_command.is_empty()
+            {
+                recommended_next_command_meta(&phase.recommended_next_command)
+            } else {
+                phase.recommended_next_command_meta.clone()
+            }
+        })
+        .unwrap_or_else(|| recommended_next_command_meta(&current_recommended_next_command));
+
     WorkflowSnapshot {
         symbol: symbol.to_string(),
         generated_at: Utc::now(),
@@ -8849,10 +8750,8 @@ fn build_workflow_snapshot(input: BuildWorkflowSnapshotInput<'_>) -> WorkflowSna
             .map(|phase| phase.workflow_reason.clone())
             .unwrap_or_default(),
         blocking_truth,
-        recommended_next_command: current
-            .as_ref()
-            .map(|phase| phase.recommended_next_command.clone())
-            .unwrap_or_default(),
+        recommended_next_command: current_recommended_next_command,
+        recommended_next_command_meta: current_recommended_next_command_meta,
         pending_actions: current.map(|phase| phase.top_actions).unwrap_or_default(),
         risk_flags: risk_flags
             .into_iter()
@@ -9893,6 +9792,12 @@ fn workflow_phase_snapshot_from_analyze_run(run: &AnalyzeRunRecord) -> WorkflowP
             &run.recommended_next_command,
             &run.recommended_commands,
         ),
+        recommended_next_command_meta: recommended_next_command_meta(
+            &gate_aware_recommended_next_command(
+                &run.recommended_next_command,
+                &run.recommended_commands,
+            ),
+        ),
         phase_summary: format!(
             "selected_direction={:?} selected_entry_quality={} pre_bayes_status={} pre_bayes_quality={:.3} decision_hint={}{} {}",
             run.selected_direction,
@@ -10047,6 +9952,12 @@ fn workflow_phase_snapshot_from_train_run(run: &TrainRunRecord) -> WorkflowPhase
             &run.recommended_next_command,
             &run.recommended_commands,
         ),
+        recommended_next_command_meta: recommended_next_command_meta(
+            &gate_aware_recommended_next_command(
+                &run.recommended_next_command,
+                &run.recommended_commands,
+            ),
+        ),
         phase_summary: format!(
             "final_state={} observations={} epochs={} log_likelihood={:.4} {}",
             run.final_state,
@@ -10117,6 +10028,12 @@ fn workflow_phase_snapshot_from_research_run(run: &ResearchRunRecord) -> Workflo
         recommended_next_command: gate_aware_recommended_next_command(
             &run.recommended_next_command,
             &run.recommended_commands,
+        ),
+        recommended_next_command_meta: recommended_next_command_meta(
+            &gate_aware_recommended_next_command(
+                &run.recommended_next_command,
+                &run.recommended_commands,
+            ),
         ),
         phase_summary: format!(
             "objective={} best_factor={:?} aggregate_return={:.4} feedback_applied={} credibility={} {}",
@@ -10229,6 +10146,12 @@ fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> Workflo
             &run.recommended_next_command,
             &run.recommended_commands,
         ),
+        recommended_next_command_meta: recommended_next_command_meta(
+            &gate_aware_recommended_next_command(
+                &run.recommended_next_command,
+                &run.recommended_commands,
+            ),
+        ),
         phase_summary: format!(
             "total_return={:.4} trade_count={} source={} coverage_1sigma={:.3} break_penalty={:.3} structural_break_detected={} structural_break_score={:.3} structural_break_index={:?}{} {}",
             run.total_return,
@@ -10329,6 +10252,12 @@ fn workflow_phase_snapshot_from_update_run(run: &UpdateRunRecord) -> WorkflowPha
         recommended_next_command: gate_aware_recommended_next_command(
             &run.recommended_next_command,
             &run.recommended_commands,
+        ),
+        recommended_next_command_meta: recommended_next_command_meta(
+            &gate_aware_recommended_next_command(
+                &run.recommended_next_command,
+                &run.recommended_commands,
+            ),
         ),
         phase_summary: format!(
             "realized_outcome={} feedback_applied={} duplicate_feedback_skipped={} consumed_pre_bayes_gate_status={} {}",
@@ -11678,6 +11607,7 @@ fn train_command(symbol: &str, data: &str, epochs: usize, state_dir: &str) -> Re
             workflow_state,
             agent_action_plan,
             recommended_commands,
+            recommended_next_command_meta: recommended_next_command_meta(&recommended_next_command),
             recommended_next_command,
             agent_context_bundle,
             agent_context_bundle_minimal,
@@ -11712,6 +11642,7 @@ fn backtest_command(input: BacktestCommandInput<'_>) -> Result<()> {
         data,
         paired_data,
         state_dir,
+        output_format,
         warmup_bars,
         hold_bars,
         spread_bps,
@@ -11852,7 +11783,16 @@ fn backtest_command(input: BacktestCommandInput<'_>) -> Result<()> {
         backtest_compare_report,
         human_backtest_summary,
     );
-    println!("{}", serde_json::to_string_pretty(&payload)?);
+    match output_format {
+        OutputFormat::Json | OutputFormat::Agent => {
+            println!("{}", serde_json::to_string_pretty(&payload)?);
+        }
+        OutputFormat::Compact => print_redacted_json(&compact_report)?,
+        OutputFormat::Human => println!(
+            "{}",
+            redact_local_paths(payload["human_output"].as_str().unwrap_or_default())
+        ),
+    }
     Ok(())
 }
 
@@ -12469,6 +12409,9 @@ fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
             agent_action_plan: report.agent_action_plan.clone(),
             recommended_commands: report.recommended_commands.clone(),
             recommended_next_command: report.recommended_next_command.clone(),
+            recommended_next_command_meta: recommended_next_command_meta(
+                &report.recommended_next_command,
+            ),
             agent_context_bundle: report.agent_context_bundle.clone(),
             agent_context_bundle_minimal: report.agent_context_bundle_minimal.clone(),
             feedback_history_summary: report.feedback_history_summary.clone(),
@@ -12543,6 +12486,7 @@ struct FactorResearchCommandInput<'a> {
     emit_mutation_evaluation: bool,
     ensemble: bool,
     state_dir: &'a str,
+    output_format: OutputFormat,
 }
 
 struct FactorAutoresearchCommandInput<'a> {
@@ -12580,6 +12524,7 @@ fn factor_research_command(input: FactorResearchCommandInput<'_>) -> Result<()> 
         emit_mutation_evaluation,
         ensemble,
         state_dir,
+        output_format,
     } = input;
     let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
     let objective = parse_research_objective(objective)?;
@@ -12690,7 +12635,18 @@ fn factor_research_command(input: FactorResearchCommandInput<'_>) -> Result<()> 
             ensemble_surface,
             serde_json::to_value(&lifecycle_view)?,
         );
-        println!("{}", serde_json::to_string_pretty(&payload)?);
+        match output_format {
+            OutputFormat::Json | OutputFormat::Agent => {
+                println!("{}", serde_json::to_string_pretty(&payload)?);
+            }
+            OutputFormat::Compact => {
+                print_redacted_json(&payload["compact_compare_report"])?;
+            }
+            OutputFormat::Human => println!(
+                "{}",
+                redact_local_paths(payload["human_output"].as_str().unwrap_or_default())
+            ),
+        }
     }
     Ok(())
 }
@@ -12955,10 +12911,24 @@ fn factor_autoresearch_status_command(
     attempts.reverse();
 
     let live_snapshot = load_factor_autoresearch_live_snapshot(state_dir, symbol).ok();
+    let live_snapshot_file_exists = std::path::Path::new(state_dir)
+        .join(symbol)
+        .join(ict_engine::state::FACTOR_AUTORESEARCH_LIVE_FILE)
+        .is_file();
     let final_summary_path = std::path::Path::new(state_dir)
         .join(symbol)
         .join(ict_engine::state::FACTOR_AUTORESEARCH_FINAL_FILE);
     let final_summary_exists = final_summary_path.is_file();
+
+    if sessions.is_empty()
+        && attempts.is_empty()
+        && !live_snapshot_file_exists
+        && !final_summary_exists
+    {
+        let empty = ict_engine::application::orchestration::workflow_status::factor_autoresearch_status_value_for_empty_state(symbol, state_dir);
+        println!("{}", serde_json::to_string_pretty(&empty)?);
+        return Ok(());
+    }
 
     // Staleness threshold: if snapshot says "running" but hasn't been
     // updated in >10 minutes and no final summary exists, it was interrupted.
@@ -13617,6 +13587,7 @@ fn factor_backtest_command(
     paired_data: Option<&str>,
     ensemble: bool,
     state_dir: &str,
+    output_format: OutputFormat,
 ) -> Result<()> {
     let report = run_factor_backtest(symbol, data, paired_data, state_dir)?;
     let credibility_summary = serde_json::json!({
@@ -13788,7 +13759,16 @@ fn factor_backtest_command(
         credibility_summary,
         ensemble_surface,
     );
-    println!("{}", serde_json::to_string_pretty(&payload)?);
+    match output_format {
+        OutputFormat::Json | OutputFormat::Agent => {
+            println!("{}", serde_json::to_string_pretty(&payload)?);
+        }
+        OutputFormat::Compact => print_redacted_json(&compact_report)?,
+        OutputFormat::Human => println!(
+            "{}",
+            redact_local_paths(payload["human_output"].as_str().unwrap_or_default())
+        ),
+    }
     Ok(())
 }
 
@@ -14355,12 +14335,15 @@ fn run_factor_research(
         agent_action_plan: report.agent_action_plan.clone(),
         recommended_commands: report.recommended_commands.clone(),
         recommended_next_command: report.recommended_next_command.clone(),
+        recommended_next_command_meta: recommended_next_command_meta(
+            &report.recommended_next_command,
+        ),
         agent_context_bundle: report.agent_context_bundle.clone(),
         agent_context_bundle_minimal: report.agent_context_bundle_minimal.clone(),
         feedback_history_summary: report.feedback_history_summary.clone(),
         artifact_action_summary: report.artifact_action_summary.clone(),
-        duration_sizing_scale: parse_duration_sizing_scale(
-            &report.backtest.artifact_action_summary,
+        duration_sizing_scale: Some(
+            parse_duration_sizing_scale(&report.backtest.artifact_action_summary).unwrap_or(1.0),
         ),
         hybrid_duration_model: report
             .workflow_snapshot
@@ -15356,11 +15339,16 @@ fn run_factor_backtest(
             agent_action_plan: report.agent_action_plan.clone(),
             recommended_commands: report.recommended_commands.clone(),
             recommended_next_command: report.recommended_next_command.clone(),
+            recommended_next_command_meta: recommended_next_command_meta(
+                &report.recommended_next_command,
+            ),
             agent_context_bundle: report.agent_context_bundle.clone(),
             agent_context_bundle_minimal: report.agent_context_bundle_minimal.clone(),
             feedback_history_summary: report.feedback_history_summary.clone(),
             artifact_action_summary: report.artifact_action_summary.clone(),
-            duration_sizing_scale: parse_duration_sizing_scale(&report.artifact_action_summary),
+            duration_sizing_scale: Some(
+                parse_duration_sizing_scale(&report.artifact_action_summary).unwrap_or(1.0),
+            ),
             hybrid_duration_model: report
                 .workflow_snapshot
                 .latest_backtest
@@ -16564,6 +16552,7 @@ fn build_price_action_section(
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn build_regime_bayesian_section(
     hmm_state: &str,
     regime_probs: &RegimeProbs,
@@ -16729,9 +16718,9 @@ fn duration_sizing_scale(market: &str, family: &str, remaining_expected_bars: f6
     }
 }
 
-fn latest_duration_phase<'a>(
-    snapshot: &'a WorkflowSnapshot,
-) -> Option<&'a ict_engine::state::WorkflowPhaseSnapshot> {
+fn latest_duration_phase(
+    snapshot: &WorkflowSnapshot,
+) -> Option<&ict_engine::state::WorkflowPhaseSnapshot> {
     snapshot
         .latest_backtest
         .as_ref()
@@ -16841,7 +16830,7 @@ fn build_backtest_output_payload(
 }
 
 fn build_factor_backtest_output_payload(
-    report: &impl Serialize,
+    report: &FactorBacktestRunResult,
     compact_backtest_report: &impl Serialize,
     compare: Option<ict_engine::application::backtest::BacktestCompareReport>,
     credibility_summary: Value,
@@ -16917,14 +16906,48 @@ fn render_backtest_human_output(
 }
 
 fn render_factor_backtest_human_output(
-    report: &impl Serialize,
+    report: &FactorBacktestRunResult,
     compare: Option<&ict_engine::application::backtest::BacktestCompareReport>,
 ) -> String {
-    let mut lines = vec![format!(
-        "Factor backtest summary: {}",
-        serde_json::to_string(report).unwrap_or_else(|_| "unavailable".to_string())
-    )];
+    let best = report.best_factor.as_deref().unwrap_or("n/a");
+    let aggregate_return_pct = report.aggregate_return * 100.0;
+    let total_trades: usize = report
+        .factor_results
+        .iter()
+        .map(|result| result.metrics.trade_count)
+        .sum();
+    let top = report.factor_results.first();
+    let top_coverage = top
+        .map(|result| result.metrics.conformal_coverage_1sigma)
+        .unwrap_or_default();
+    let top_regime_penalty = top
+        .map(|result| result.metrics.regime_break_penalty)
+        .unwrap_or_default();
+    let top_structural_break = top
+        .map(|result| result.metrics.structural_break_detected)
+        .unwrap_or(false);
+
+    let mut lines = vec![
+        "Factor backtest summary".to_string(),
+        format!("- Best factor: {best}"),
+        format!("- Aggregate return: {aggregate_return_pct:+.2}%"),
+        format!("- Trades: {total_trades}"),
+    ];
+    let mut credibility_parts = vec![
+        format!("conformal_coverage_1sigma={top_coverage:.3}"),
+        format!("regime_break_penalty={top_regime_penalty:.3}"),
+    ];
+    if top_structural_break {
+        credibility_parts.push("structural_break=detected".to_string());
+    }
+    lines.push(format!("- Credibility: {}", credibility_parts.join(" | ")));
+    lines.push(format!(
+        "- Next: {}",
+        humanize_next_step_line(&report.recommended_next_command)
+    ));
+
     if let Some(compare_summary) = human_backtest_compare_summary(compare) {
+        lines.push(String::new());
         lines.push(compare_summary);
     }
     lines.join("\n")
@@ -19073,6 +19096,7 @@ fn build_agent_context_bundle(input: BuildAgentContextBundleInput<'_>) -> AgentC
         workflow_state: workflow_state.clone(),
         decision_hint: decision_hint.to_string(),
         recommended_next_command: recommended_next_command.to_string(),
+        recommended_next_command_meta: recommended_next_command_meta(recommended_next_command),
         recommended_commands: recommended_commands.clone(),
         family_history_window: family_history_window(),
         comparable_to_last_run: dataset_comparability.comparable,
@@ -19150,6 +19174,7 @@ fn build_agent_context_bundle_minimal(bundle: &AgentContextBundle) -> AgentConte
     AgentContextBundleMinimal {
         workflow_phase: bundle.workflow_state.phase.clone(),
         recommended_next_command: bundle.recommended_next_command.clone(),
+        recommended_next_command_meta: bundle.recommended_next_command_meta.clone(),
         family_history_window: bundle.family_history_window,
         comparable_to_last_run: bundle.comparable_to_last_run,
         pre_bayes_gate_status: bundle.pre_bayes_gate_status.clone(),
@@ -19323,9 +19348,12 @@ fn build_stage_views(
             stage: "pda_sequence_review".to_string(),
             blocking_items: 1,
             recommended_command: render_recommended_command(&recommended_commands.analyze),
-            actions: vec![pda_sequence_review_rationale(
-                pre_bayes_evidence_filter.expect("pda review stage requires pre_bayes filter"),
-            )],
+            actions: vec![pre_bayes_evidence_filter
+                .map(pda_sequence_review_rationale)
+                .unwrap_or_else(|| {
+                    "PDA sequence reinforcement requires manual review before it can influence gating"
+                        .to_string()
+                })],
             gate_status: pre_bayes_gate_status.clone(),
             gate_reason: pre_bayes_gate_reason.clone(),
         });
@@ -20601,11 +20629,16 @@ fn finalize_backtest_report(input: FinalizeBacktestReportInput<'_>) -> Result<Ba
             agent_action_plan: report.agent_action_plan.clone(),
             recommended_commands: report.recommended_commands.clone(),
             recommended_next_command: report.recommended_next_command.clone(),
+            recommended_next_command_meta: recommended_next_command_meta(
+                &report.recommended_next_command,
+            ),
             agent_context_bundle: report.agent_context_bundle.clone(),
             agent_context_bundle_minimal: report.agent_context_bundle_minimal.clone(),
             feedback_history_summary: report.feedback_history_summary.clone(),
             artifact_action_summary: report.artifact_action_summary.clone(),
-            duration_sizing_scale: parse_duration_sizing_scale(&report.artifact_action_summary),
+            duration_sizing_scale: Some(
+                parse_duration_sizing_scale(&report.artifact_action_summary).unwrap_or(1.0),
+            ),
             hybrid_duration_model: report
                 .workflow_snapshot
                 .latest_backtest
@@ -21756,7 +21789,7 @@ mod tests {
             hypothesis: "later".to_string(),
             ..FactorMutationSpec::default()
         };
-        let attempts = vec![
+        let attempts = [
             FactorAutoresearchAttempt {
                 candidate_mutation_spec: initial_spec.clone(),
                 decision: FactorAutoresearchDecision {
@@ -25627,12 +25660,14 @@ mod tests {
 
     #[test]
     fn test_build_duration_surface_from_artifacts_uses_snapshot_and_scale_summary() {
-        let mut snapshot = WorkflowSnapshot::default();
-        snapshot.latest_backtest = Some(ict_engine::state::WorkflowPhaseSnapshot {
-            hybrid_duration_model: Some("negative_binomial".to_string()),
-            hybrid_remaining_expected_bars: Some(2.5),
-            ..ict_engine::state::WorkflowPhaseSnapshot::default()
-        });
+        let snapshot = WorkflowSnapshot {
+            latest_backtest: Some(ict_engine::state::WorkflowPhaseSnapshot {
+                hybrid_duration_model: Some("negative_binomial".to_string()),
+                hybrid_remaining_expected_bars: Some(2.5),
+                ..ict_engine::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
 
         let surface = build_duration_surface_from_artifacts(
             &snapshot,
@@ -25858,7 +25893,7 @@ mod tests {
     #[test]
     fn test_factor_backtest_output_payload_includes_human_compare_summary() {
         let payload = build_factor_backtest_output_payload(
-            &serde_json::json!({"report": "factor_backtest"}),
+            &FactorBacktestRunResult::default(),
             &serde_json::json!({"compact": true}),
             Some(sample_compare_report("scaled_down")),
             serde_json::json!({"credibility": true}),
@@ -25873,6 +25908,9 @@ mod tests {
         );
         assert!(payload.get("compact_compare_report").is_some());
         assert!(payload.get("backtest_compare_report").is_some());
+        let human_output = payload["human_output"].as_str().unwrap_or_default();
+        assert!(human_output.contains("Factor backtest"));
+        assert!(!human_output.contains("\"factor_results\""));
     }
 
     #[test]
@@ -27488,5 +27526,215 @@ mod tests {
         assert_eq!(summary.promotion_approved_runs, 1);
         assert_eq!(summary.rollback_recommended_runs, 1);
         assert_eq!(summary.latest_rollback_scope.as_deref(), Some("targeted"));
+    }
+
+    #[test]
+    fn test_resolve_output_format_rejects_alias_and_explicit_mix() {
+        let err = resolve_output_format("agent", false, false, true).unwrap_err();
+        assert!(err
+            .to_string()
+            .contains("do not combine --output-format with --compact/--agent/--human"));
+    }
+
+    #[test]
+    fn test_build_env_report_lists_state_dir_env_var() {
+        let report = build_env_report();
+        assert_eq!(report["state_dir_env_var"], STATE_DIR_ENV_VAR);
+        assert_eq!(report["default_state_dir"], DEFAULT_STATE_DIR);
+        assert!(report["variables"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item["name"] == STATE_DIR_ENV_VAR));
+    }
+
+    #[test]
+    fn test_cli_backtest_accepts_human_output_alias() {
+        let cli = Cli::try_parse_from([
+            "ict-engine",
+            "backtest",
+            "--symbol",
+            "NQ",
+            "--data",
+            "candles.json",
+            "--human",
+        ])
+        .unwrap();
+        match cli.command {
+            Commands::Backtest { human, .. } => assert!(human),
+            other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
+        }
+    }
+
+    #[test]
+    fn test_cli_factor_research_accepts_output_format() {
+        let cli = Cli::try_parse_from([
+            "ict-engine",
+            "factor-research",
+            "--symbol",
+            "NQ",
+            "--data",
+            "candles.json",
+            "--output-format",
+            "compact",
+        ])
+        .unwrap();
+        match cli.command {
+            Commands::FactorResearch { output_format, .. } => {
+                assert_eq!(output_format, "compact");
+            }
+            other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
+        }
+    }
+
+    #[test]
+    fn test_cli_env_command_parses() {
+        let cli = Cli::try_parse_from(["ict-engine", "env"]).unwrap();
+        match cli.command {
+            Commands::Env => {}
+            other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
+        }
+    }
+
+    #[test]
+    fn test_recommended_next_command_meta_classifies_ask_user_gate() {
+        let meta = recommended_next_command_meta(
+            "ask-user: Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=/tmp/a.json, /tmp/b.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ --data /tmp/a.json --state-dir state"
+        );
+        assert!(meta.requires_user_input);
+        assert!(meta.blocked);
+        assert_eq!(
+            meta.executable_command.as_deref(),
+            Some("ict-engine factor-research --symbol NQ --data /tmp/a.json --state-dir state")
+        );
+        assert_eq!(meta.recorded_data_paths.len(), 2);
+    }
+
+    #[test]
+    fn test_recommended_next_command_meta_classifies_ict_engine_command() {
+        let meta = recommended_next_command_meta(
+            "ict-engine workflow-status --symbol NQ --state-dir state --phase artifact-consumed-gate",
+        );
+        assert!(!meta.requires_user_input);
+        assert!(!meta.blocked);
+        assert_eq!(
+            meta.executable_command.as_deref(),
+            Some(
+                "ict-engine workflow-status --symbol NQ --state-dir state --phase artifact-consumed-gate"
+            )
+        );
+    }
+
+    #[test]
+    fn test_output_format_resolve_rejects_human_and_explicit_json_mix() {
+        let error = resolve_output_format("json", false, false, true).unwrap_err();
+        assert!(error
+            .to_string()
+            .contains("do not combine --output-format with --compact/--agent/--human"));
+    }
+
+    #[test]
+    fn test_output_format_resolve_rejects_compact_and_explicit_json_mix() {
+        let error = resolve_output_format("json", true, false, false).unwrap_err();
+        assert!(error
+            .to_string()
+            .contains("do not combine --output-format with --compact/--agent/--human"));
+    }
+
+    #[test]
+    fn test_output_format_resolve_allows_alias_with_default_empty_value() {
+        let resolved = resolve_output_format("", false, false, true).unwrap();
+        assert_eq!(resolved, OutputFormat::Human);
+    }
+
+    #[test]
+    fn test_output_format_resolve_empty_defaults_to_json() {
+        let resolved = resolve_output_format("", false, false, false).unwrap();
+        assert_eq!(resolved, OutputFormat::Json);
+    }
+
+    #[test]
+    fn test_cli_analyze_accepts_json_alias_mix_at_parse_level() {
+        let cli = Cli::try_parse_from([
+            "ict-engine",
+            "analyze",
+            "--symbol",
+            "DEMO",
+            "--demo",
+            "--human",
+            "--output-format",
+            "json",
+        ]);
+        assert!(cli.is_ok(), "cli parse should succeed; runtime guard handles conflict");
+    }
+
+    #[test]
+    fn test_artifact_status_latest_only_contract_is_latest_per_kind() {
+        let entries = vec![
+            ArtifactLedgerEntry {
+                entry_id: "entry-old-pending".into(),
+                artifact_id: "pending-1".into(),
+                artifact_kind: "pending_update".into(),
+                generated_at: Utc.with_ymd_and_hms(2026, 1, 1, 0, 0, 0).unwrap(),
+                version: 1,
+                ..ArtifactLedgerEntry::default()
+            },
+            ArtifactLedgerEntry {
+                entry_id: "entry-new-pending".into(),
+                artifact_id: "pending-2".into(),
+                artifact_kind: "pending_update".into(),
+                generated_at: Utc.with_ymd_and_hms(2026, 2, 1, 0, 0, 0).unwrap(),
+                version: 2,
+                ..ArtifactLedgerEntry::default()
+            },
+            ArtifactLedgerEntry {
+                entry_id: "entry-vote".into(),
+                artifact_id: "vote-1".into(),
+                artifact_kind: "ensemble_vote".into(),
+                generated_at: Utc.with_ymd_and_hms(2026, 1, 15, 0, 0, 0).unwrap(),
+                version: 1,
+                ..ArtifactLedgerEntry::default()
+            },
+        ];
+
+        let latest = latest_artifact_entries_by_kind(&entries);
+
+        assert_eq!(
+            latest.len(),
+            2,
+            "--latest-only contract: one entry per artifact_kind"
+        );
+        let ids: std::collections::BTreeSet<_> =
+            latest.iter().map(|entry| entry.artifact_id.clone()).collect();
+        assert!(
+            ids.contains("pending-2"),
+            "newer pending_update must win within its kind"
+        );
+        assert!(
+            !ids.contains("pending-1"),
+            "older pending_update must be dropped within its kind"
+        );
+        assert!(
+            ids.contains("vote-1"),
+            "single-kind entries must be preserved"
+        );
+    }
+
+    #[test]
+    fn test_cli_analyze_default_output_format_is_empty_sentinel() {
+        let cli = Cli::try_parse_from([
+            "ict-engine",
+            "analyze",
+            "--symbol",
+            "DEMO",
+            "--demo",
+        ])
+        .unwrap();
+        match cli.command {
+            Commands::Analyze { output_format, .. } => {
+                assert_eq!(output_format, "");
+            }
+            other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
+        }
     }
 }

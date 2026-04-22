@@ -57,6 +57,7 @@ pub fn humanize_decision_hint(hint: &str) -> String {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn build_compact_analyze_report(
     verdict: impl Into<String>,
     direction: Option<String>,

@@ -23,4 +23,4 @@ pub use execution_focus::{
     build_execution_focus_surface, execution_focus_enabled, ExecutionFocusSurface,
     EXECUTION_FOCUS_ENV_VAR,
 };
-pub use human_report::{build_human_analyze_report, HumanAnalyzeReport};
+pub use human_report::{build_human_analyze_report, humanize_next_step_line, HumanAnalyzeReport};

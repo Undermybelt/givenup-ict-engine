@@ -58,7 +58,7 @@ pub fn estimate_ou_execution_metrics(
     }
     intervals.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
     let median_dt_seconds = intervals[intervals.len() / 2];
-    if !(median_dt_seconds > 0.0) {
+    if median_dt_seconds <= 0.0 {
         return None;
     }
 
@@ -75,11 +75,11 @@ pub fn estimate_ou_execution_metrics(
         lag_num += demeaned[i + 1] * demeaned[i];
         lag_den += demeaned[i] * demeaned[i];
     }
-    if !(lag_den > 0.0) {
+    if lag_den <= 0.0 {
         return None;
     }
     let phi = lag_num / lag_den;
-    if !(phi > 0.0 && phi < 1.0) {
+    if phi <= 0.0 || phi >= 1.0 {
         return None;
     }
 
@@ -90,12 +90,12 @@ pub fn estimate_ou_execution_metrics(
     }
     let residual_dof = (n - 2).max(1) as f64;
     let residual_variance = residual_sq / residual_dof;
-    if !(residual_variance > 0.0) {
+    if residual_variance <= 0.0 {
         return None;
     }
     let phi_sq_gap = (1.0_f64 - phi * phi).max(f64::EPSILON);
     let unconditional_sd = (residual_variance / phi_sq_gap).sqrt();
-    if !(unconditional_sd > 0.0) {
+    if unconditional_sd <= 0.0 {
         return None;
     }
 
@@ -117,8 +117,7 @@ pub fn estimate_ou_execution_metrics(
     let pullback_expectation_zscore = deviation / unconditional_sd;
     // Saturate at |z| = 3: beyond that, overextension is effectively maxed.
     let overextension_distance = (pullback_expectation_zscore.abs() / 3.0).clamp(0.0, 1.0);
-    let expected_pullback_bps =
-        (reversion_speed_per_bar * deviation / last).abs() * 10_000.0;
+    let expected_pullback_bps = (reversion_speed_per_bar * deviation / last).abs() * 10_000.0;
 
     Some(OuExecutionMetrics {
         half_life_bars,

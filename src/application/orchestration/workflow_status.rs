@@ -232,9 +232,47 @@ pub fn build_phase_snapshot_surfaces(snapshot: &WorkflowSnapshot) -> WorkflowPha
     }
 }
 
+pub fn factor_autoresearch_status_value_for_empty_state(symbol: &str, state_dir: &str) -> Value {
+    let recommended_next_step = format!(
+        "ict-engine factor-autoresearch --symbol {} --state-dir {}",
+        shell_quote(symbol),
+        shell_quote(state_dir)
+    );
+    json!({
+        "symbol": symbol,
+        "state_dir": state_dir,
+        "status": "no_autoresearch_state",
+        "live_snapshot": Value::Null,
+        "sessions": [],
+        "attempts": [],
+        "final_summary_exists": false,
+        "recommended_next_step": recommended_next_step,
+    })
+}
+
+const NO_WORKFLOW_STATE: &str = "no_workflow_state";
+const NO_WORKFLOW_PHASE_SUMMARY: &str = "No workflow phase summary available yet.";
+const WORKFLOW_STATUS_FOCUS_PHASE: &str = "workflow_status";
+
+fn workflow_status_empty_state(snapshot: &WorkflowSnapshot) -> bool {
+    snapshot.latest_update.is_none()
+        && snapshot.latest_research.is_none()
+        && snapshot.latest_analyze.is_none()
+        && snapshot.latest_backtest.is_none()
+        && snapshot.latest_train.is_none()
+}
+
+fn workflow_status_focus_phase(snapshot: &WorkflowSnapshot) -> String {
+    if snapshot.current_focus_phase.trim().is_empty() {
+        WORKFLOW_STATUS_FOCUS_PHASE.to_string()
+    } else {
+        snapshot.current_focus_phase.clone()
+    }
+}
+
 pub fn humanize_workflow_command(command: &str) -> String {
     let trimmed = command.trim();
-    if trimmed.is_empty() {
+    if trimmed.is_empty() || trimmed == "recommended_command_unavailable" || trimmed == "next_command_unavailable" {
         return "No actionable command available.".to_string();
     }
     if let Some(rest) = trimmed.strip_prefix("ask-user: ") {
@@ -325,6 +363,7 @@ pub fn build_human_workflow_status_view(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
 ) -> Value {
+    let no_workflow_state = workflow_status_empty_state(snapshot);
     let latest_phase = snapshot
         .latest_update
         .as_ref()
@@ -334,10 +373,10 @@ pub fn build_human_workflow_status_view(
         .or(snapshot.latest_train.as_ref());
     let latest_phase_label = latest_phase
         .map(|phase| phase.phase.clone())
-        .unwrap_or_else(|| "workflow_phase_unavailable".to_string());
+        .unwrap_or_else(|| NO_WORKFLOW_STATE.to_string());
     let latest_phase_summary = latest_phase
         .map(|phase| phase.phase_summary.clone())
-        .unwrap_or_else(|| "尚无可用阶段摘要。".to_string());
+        .unwrap_or_else(|| NO_WORKFLOW_PHASE_SUMMARY.to_string());
     let latest_pda_cluster = latest_phase
         .and_then(|phase| phase.pda_cluster_label.clone())
         .unwrap_or_else(|| "unavailable".to_string());
@@ -364,7 +403,7 @@ pub fn build_human_workflow_status_view(
         .unwrap_or_else(|| "unavailable".to_string());
     let latest_phase_summary_short = latest_phase
         .map(short_human_phase_summary)
-        .unwrap_or_else(|| "尚无可用阶段摘要。".to_string());
+        .unwrap_or_else(|| NO_WORKFLOW_PHASE_SUMMARY.to_string());
     let selected_data_candidates = historical_data_candidates(snapshot);
     let hard_block_statuses = [
         "blocked",
@@ -426,6 +465,8 @@ pub fn build_human_workflow_status_view(
     };
     let action_status_label = if user_selection_pending {
         "action_blocked".to_string()
+    } else if no_workflow_state {
+        NO_WORKFLOW_STATE.to_string()
     } else if snapshot.blocking_truth.status.is_empty() {
         "unblocked".to_string()
     } else {
@@ -433,6 +474,8 @@ pub fn build_human_workflow_status_view(
     };
     let gate_reason_label = if user_selection_pending {
         "user_selected_historical_data_missing".to_string()
+    } else if no_workflow_state {
+        NO_WORKFLOW_STATE.to_string()
     } else if hard_block_active && !snapshot.blocking_truth.reason.is_empty() {
         snapshot.blocking_truth.reason.clone()
     } else {
@@ -441,7 +484,7 @@ pub fn build_human_workflow_status_view(
     let summary_line = format!(
         "{} | {} | {} | pda_cluster={} | duration={} | remaining_bars={} | spectral_entropy={} | sparsity={} | segments_gate={}",
         snapshot.symbol,
-        snapshot.current_focus_phase,
+        workflow_status_focus_phase(snapshot),
         action_status_label,
         latest_pda_cluster,
         latest_duration_model,
@@ -469,7 +512,7 @@ pub fn build_human_workflow_status_view(
         .collect::<Vec<_>>();
     let ensemble_summary = snapshot.latest_ensemble_vote.as_ref().map(|vote| {
         let surface = build_ensemble_vote_surface(vote, persisted_scorecards);
-        serde_json::to_value(surface).expect("serialize ensemble vote surface")
+        serde_json::to_value(surface).unwrap_or_default()
     });
     let agent_fill_path_instructions = if selected_data_candidates.is_empty() {
         Vec::new()
@@ -485,6 +528,11 @@ pub fn build_human_workflow_status_view(
             .collect::<Vec<_>>()
     };
     serde_json::json!({
+        "status": if no_workflow_state {
+            serde_json::Value::String(NO_WORKFLOW_STATE.to_string())
+        } else {
+            serde_json::Value::Null
+        },
         "summary_line": summary_line,
         "blocking_line": blocking_line,
         "next_action_line": next_action_line,
@@ -521,10 +569,10 @@ pub fn build_human_workflow_status_view(
             serde_json::Value::String(latest_segments_gate.clone())
         },
         "current_status": {
-            "focus_phase": snapshot.current_focus_phase,
+            "focus_phase": workflow_status_focus_phase(snapshot),
             "focus_reason": snapshot.current_focus_reason,
             "blocking_stage": if historical_data_gate_active {
-                snapshot.current_focus_phase.clone()
+                workflow_status_focus_phase(snapshot)
             } else {
                 snapshot.blocking_truth.stage.clone()
             },
@@ -668,6 +716,7 @@ pub fn build_agent_workflow_status_view(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
 ) -> Value {
+    let no_workflow_state = workflow_status_empty_state(snapshot);
     let latest_phase = snapshot
         .latest_update
         .as_ref()
@@ -677,10 +726,10 @@ pub fn build_agent_workflow_status_view(
         .or(snapshot.latest_train.as_ref());
     let latest_phase_label = latest_phase
         .map(|phase| phase.phase.clone())
-        .unwrap_or_else(|| "workflow_phase_unavailable".to_string());
+        .unwrap_or_else(|| NO_WORKFLOW_STATE.to_string());
     let latest_phase_summary_short = latest_phase
         .map(short_workflow_phase_summary)
-        .unwrap_or_else(|| "workflow_phase_summary_unavailable".to_string());
+        .unwrap_or_else(|| NO_WORKFLOW_PHASE_SUMMARY.to_string());
     let hard_block_statuses = [
         "blocked",
         "bridge_needs_confirmation",
@@ -700,13 +749,22 @@ pub fn build_agent_workflow_status_view(
     } else {
         snapshot.recommended_next_command.clone()
     };
+    let next_command_value = if no_workflow_state && next_command.trim().is_empty() {
+        serde_json::Value::Null
+    } else {
+        serde_json::Value::String(next_command.clone())
+    };
     let blocking_status = if hard_block_active {
         snapshot.blocking_truth.status.clone()
+    } else if no_workflow_state {
+        NO_WORKFLOW_STATE.to_string()
     } else {
         "unblocked".to_string()
     };
     let blocking_reason = if hard_block_active {
         snapshot.blocking_truth.reason.clone()
+    } else if no_workflow_state {
+        NO_WORKFLOW_STATE.to_string()
     } else {
         "none".to_string()
     };
@@ -745,16 +803,21 @@ pub fn build_agent_workflow_status_view(
         })
     });
     serde_json::json!({
+        "status": if no_workflow_state {
+            serde_json::Value::String(NO_WORKFLOW_STATE.to_string())
+        } else {
+            serde_json::Value::Null
+        },
         "symbol": snapshot.symbol,
         "generated_at": snapshot.generated_at,
-        "focus_phase": snapshot.current_focus_phase,
+        "focus_phase": workflow_status_focus_phase(snapshot),
         "focus_reason": snapshot.current_focus_reason,
         "latest_phase": latest_phase_label,
         "latest_phase_summary": latest_phase_summary_short,
         "blocking_status": blocking_status,
         "blocking_reason": blocking_reason,
         "hard_block_active": hard_block_active,
-        "next_command": next_command,
+        "next_command": next_command_value,
         "next_command_source": command_source,
         "pda_cluster_label": latest_phase.and_then(|phase| phase.pda_cluster_label.clone()),
         "hybrid_duration_model": latest_phase.and_then(|phase| phase.hybrid_duration_model.clone()),
@@ -1642,14 +1705,16 @@ mod tests {
 
     #[test]
     fn build_pre_bayes_status_value_default_includes_gate_and_soft_evidence() {
-        let mut analyze = WorkflowPhaseSnapshot::default();
-        analyze.pre_bayes_gate_status = "pass_neutralized".to_string();
-        analyze.pre_bayes_policy_version = "v2".to_string();
-        analyze.pre_bayes_uses_soft_evidence = true;
-        analyze.pre_bayes_soft_evidence = std::collections::BTreeMap::from([(
-            "node".to_string(),
-            std::collections::BTreeMap::from([("state".to_string(), 0.25)]),
-        )]);
+        let analyze = WorkflowPhaseSnapshot {
+            pre_bayes_gate_status: "pass_neutralized".to_string(),
+            pre_bayes_policy_version: "v2".to_string(),
+            pre_bayes_uses_soft_evidence: true,
+            pre_bayes_soft_evidence: std::collections::BTreeMap::from([(
+                "node".to_string(),
+                std::collections::BTreeMap::from([("state".to_string(), 0.25)]),
+            )]),
+            ..WorkflowPhaseSnapshot::default()
+        };
         let snapshot = WorkflowSnapshot {
             latest_analyze: Some(analyze),
             latest_pre_bayes_soft_evidence_diff: vec![PreBayesSoftEvidenceNodeDiff::default()],
@@ -1668,10 +1733,12 @@ mod tests {
 
     #[test]
     fn build_pre_bayes_diff_value_matches_main_surface() {
-        let mut analyze = WorkflowPhaseSnapshot::default();
-        analyze.pre_bayes_gate_status = "blocked".to_string();
-        analyze.pre_bayes_policy_version = "v3".to_string();
-        analyze.pre_bayes_uses_soft_evidence = false;
+        let analyze = WorkflowPhaseSnapshot {
+            pre_bayes_gate_status: "blocked".to_string(),
+            pre_bayes_policy_version: "v3".to_string(),
+            pre_bayes_uses_soft_evidence: false,
+            ..WorkflowPhaseSnapshot::default()
+        };
         let snapshot = WorkflowSnapshot {
             latest_analyze: Some(analyze),
             latest_pre_bayes_policy_diff: Some(PreBayesPolicyDiff::default()),
@@ -1726,13 +1793,15 @@ mod tests {
 
     #[test]
     fn build_workflow_status_phase_value_supports_artifact_alias() {
-        let mut snapshot = WorkflowSnapshot::default();
-        snapshot.artifact_factor_trends = vec![ArtifactFactorTrendSummary {
-            factor_name: "fvg_rebalance".to_string(),
-            consumed_entries: 2,
-            entries: 3,
-            ..ArtifactFactorTrendSummary::default()
-        }];
+        let snapshot = WorkflowSnapshot {
+            artifact_factor_trends: vec![ArtifactFactorTrendSummary {
+                factor_name: "fvg_rebalance".to_string(),
+                consumed_entries: 2,
+                entries: 3,
+                ..ArtifactFactorTrendSummary::default()
+            }],
+            ..WorkflowSnapshot::default()
+        };
 
         let value = build_workflow_status_phase_value(
             &snapshot,
@@ -1910,6 +1979,30 @@ mod tests {
     }
 
     #[test]
+    fn human_workflow_status_empty_state_uses_explicit_no_state_contract() {
+        let value = build_human_workflow_status_view(&WorkflowSnapshot::default(), &[]);
+        assert_eq!(value["status"], "no_workflow_state");
+        assert_eq!(value["current_status"]["focus_phase"], "workflow_status");
+        assert_eq!(value["current_status"]["blocking_status"], "no_workflow_state");
+        assert_eq!(value["latest_stage"]["phase"], "no_workflow_state");
+        assert_eq!(
+            value["latest_stage"]["summary_short"],
+            "No workflow phase summary available yet."
+        );
+    }
+
+    #[test]
+    fn agent_workflow_status_empty_state_uses_explicit_no_state_contract() {
+        let value = build_agent_workflow_status_view(&WorkflowSnapshot::default(), &[]);
+        assert_eq!(value["status"], "no_workflow_state");
+        assert_eq!(value["latest_phase"], "no_workflow_state");
+        assert_eq!(value["blocking_status"], "no_workflow_state");
+        assert_eq!(value["blocking_reason"], "no_workflow_state");
+        assert!(value["next_command"].is_null());
+        assert_eq!(value["next_step"]["action_type"], "none");
+    }
+
+    #[test]
     fn ensemble_vote_history_view_uses_resolved_scorecard_source() {
         let vote = sample_human_workflow_snapshot()
             .latest_ensemble_vote
@@ -2066,5 +2159,18 @@ mod tests {
         assert_eq!(phases.research.as_ref().unwrap().phase, "research");
         assert_eq!(phases.backtest.as_ref().unwrap().phase, "backtest");
         assert_eq!(phases.update.as_ref().unwrap().phase, "update");
+    }
+
+    #[test]
+    fn factor_autoresearch_status_empty_state_returns_explicit_no_state_contract() {
+        let value = factor_autoresearch_status_value_for_empty_state("DEMO", "state");
+        assert_eq!(value["status"], "no_autoresearch_state");
+        assert!(value["live_snapshot"].is_null());
+        assert!(value["sessions"].as_array().unwrap().is_empty());
+        assert!(value["attempts"].as_array().unwrap().is_empty());
+        assert!(value["recommended_next_step"]
+            .as_str()
+            .unwrap()
+            .contains("ict-engine factor-autoresearch"));
     }
 }

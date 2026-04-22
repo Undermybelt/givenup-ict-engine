@@ -46,8 +46,7 @@ pub fn build_factor_tensor_from_state_dir(
     }
     let raw = fs::read_to_string(&learning_path)
         .with_context(|| format!("reading {}", learning_path.display()))?;
-    let state: LearningState =
-        serde_json::from_str(&raw).context("parsing learning_state.json")?;
+    let state: LearningState = serde_json::from_str(&raw).context("parsing learning_state.json")?;
     Ok(build_factor_tensor_from_learning_state(&state))
 }
 
@@ -59,8 +58,7 @@ pub fn build_factor_tensor_from_learning_state(state: &LearningState) -> Option<
 
     // Collect the union of regime names across all factors — keeps the tensor
     // dense even when one factor was never observed in a regime.
-    let mut regime_set: std::collections::BTreeSet<String> =
-        std::collections::BTreeSet::new();
+    let mut regime_set: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
     for profile in state.factor_profiles.values() {
         regime_set.extend(profile.regime_stats.keys().cloned());
     }
@@ -110,12 +108,13 @@ pub fn build_factor_tensor_from_learning_state(state: &LearningState) -> Option<
 /// tensor exactly. Caller can override by invoking `fit_tucker_core` directly.
 pub fn default_ranks(tensor: &Array3<f64>) -> (usize, usize, usize) {
     let (nf, nr, nm) = tensor.dim();
-    (nf.min(3).max(1), nr.min(3).max(1), nm.min(3).max(1))
+    (nf.clamp(1, 3), nr.clamp(1, 3), nm.clamp(1, 3))
 }
 
 /// End-to-end helper: reads state dir → builds tensor → fits tucker core.
 /// Returns `(tucker, factor_labels, regime_labels, metric_labels)`. When the
 /// state dir has no regime_stats (fresh project) returns Ok(None).
+#[allow(clippy::type_complexity)]
 pub fn fit_tucker_core_from_state_dir(
     state_dir: &Path,
     symbol: &str,
@@ -141,9 +140,7 @@ mod tests {
 
     fn sample_learning_state() -> LearningState {
         let mut state = LearningState::default();
-        for (name, seed) in [("trend_momentum", 1.0), ("volatility_mean_reversion", 0.8)]
-            .iter()
-        {
+        for (name, seed) in [("trend_momentum", 1.0), ("volatility_mean_reversion", 0.8)].iter() {
             let mut profile = FactorLearningProfile::default();
             for regime in ["accumulation", "distribution", "manipulation_expansion"] {
                 profile.regime_stats.insert(
@@ -170,8 +167,7 @@ mod tests {
     #[test]
     fn builds_dense_tensor_from_learning_state() {
         let state = sample_learning_state();
-        let factor_tensor =
-            build_factor_tensor_from_learning_state(&state).expect("non-empty");
+        let factor_tensor = build_factor_tensor_from_learning_state(&state).expect("non-empty");
         assert_eq!(factor_tensor.factor_labels.len(), 2);
         assert_eq!(factor_tensor.regime_labels.len(), 3);
         assert_eq!(factor_tensor.metric_labels.len(), 3);
@@ -189,8 +185,7 @@ mod tests {
     #[test]
     fn fits_tucker_core_from_synthetic_learning_state() {
         let state = sample_learning_state();
-        let factor_tensor =
-            build_factor_tensor_from_learning_state(&state).expect("non-empty");
+        let factor_tensor = build_factor_tensor_from_learning_state(&state).expect("non-empty");
         let ranks = default_ranks(&factor_tensor.tensor);
         let tucker = fit_tucker_core(&factor_tensor.tensor, ranks).expect("fit");
         assert!(tucker.reconstruction_error < 1e-6);

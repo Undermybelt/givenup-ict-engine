@@ -9,7 +9,11 @@ use crate::application::output_foundation::{
 };
 use crate::application::reporting::{
     build_agent_guidance_report, build_compact_analyze_report, build_human_analyze_report,
-    humanize_decision_hint, AgentGuidanceReport, CompactAnalyzeReport, HumanAnalyzeReport,
+    humanize_decision_hint, humanize_next_step_line, AgentGuidanceReport, CompactAnalyzeReport,
+    HumanAnalyzeReport,
+};
+use crate::pda_sequence::{
+    load_pda_sequence_analysis, summarize_pda_sequence_artifact, PdaSequenceArtifactSummary,
 };
 
 use crate::types::Direction;
@@ -37,6 +41,8 @@ where
     pub belief_shadow_policy: BeliefShadowPolicySurface,
     pub belief_policy_lineage: BeliefPolicyLineageSurface,
     pub ensemble_vote: E,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pda_sequence_summary: Option<PdaSequenceArtifactSummary>,
     pub executor_scorecard_summary: Vec<String>,
     pub executor_scorecard_source: String,
 }
@@ -55,6 +61,8 @@ where
     pub agent_report: AgentGuidanceReport,
     pub human_report: String,
     pub belief_shadow_policy: BeliefShadowPolicySurface,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pda_sequence_summary: Option<PdaSequenceArtifactSummary>,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -100,6 +108,7 @@ pub fn build_analyze_compact_evidence(
         .collect::<Vec<_>>()
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn build_analyze_reporting_bundle(
     input: AnalyzeHumanInput<'_>,
     artifact_action_summary: &[String],
@@ -231,6 +240,9 @@ pub fn dispatch_analyze_output(
             .unwrap_or_default();
     let (_, scorecard_source) =
         crate::application::orchestration::executor_scorecard_surface(&persisted_scorecards, &[]);
+    let pda_sequence_summary = load_pda_sequence_analysis(&report.meta.state_dir, &report.symbol)
+        .ok()
+        .map(|artifact| summarize_pda_sequence_artifact(&artifact));
 
     emit_analyze_output_envelope(
         report,
@@ -258,6 +270,7 @@ pub fn dispatch_analyze_output(
         belief_shadow_policy,
         belief_policy_lineage,
         &ensemble_vote,
+        pda_sequence_summary,
         scorecard_source,
     )
 }
@@ -331,6 +344,9 @@ pub fn dispatch_analyze_live_output(
         &report.supporting.canonical_belief_report,
         policy_record.as_ref(),
     );
+    let pda_sequence_summary = load_pda_sequence_analysis(&report.meta.state_dir, &report.symbol)
+        .ok()
+        .map(|artifact| summarize_pda_sequence_artifact(&artifact));
 
     emit_analyze_live_output_envelope(
         report,
@@ -340,6 +356,7 @@ pub fn dispatch_analyze_live_output(
         agent_report,
         &human_report,
         belief_shadow_policy,
+        pda_sequence_summary,
     )
 }
 
@@ -498,7 +515,10 @@ pub fn build_human_analyze_surface(input: AnalyzeHumanInput<'_>) -> HumanAnalyze
             humanize_decision_hint(input.decision_hint)
         )),
         Some(human_action_line(input.factor_iteration_queue)),
-        Some(format!("Next: {}", input.recommended_next_command)),
+        Some(format!(
+            "Next: {}",
+            humanize_next_step_line(input.recommended_next_command)
+        )),
         basic_price_structure_analysis,
         technical_price_analysis,
         smt_correlation_analysis,
@@ -507,6 +527,7 @@ pub fn build_human_analyze_surface(input: AnalyzeHumanInput<'_>) -> HumanAnalyze
     )
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn build_analyze_output_envelope<R, E>(
     report: R,
     compact_report: CompactAnalyzeReport,
@@ -516,13 +537,14 @@ pub fn build_analyze_output_envelope<R, E>(
     belief_shadow_policy: BeliefShadowPolicySurface,
     belief_policy_lineage: BeliefPolicyLineageSurface,
     ensemble_vote: E,
+    pda_sequence_summary: Option<PdaSequenceArtifactSummary>,
     executor_scorecard_source: impl Into<String>,
 ) -> AnalyzeOutputEnvelope<R, E>
 where
     R: Serialize,
     E: Serialize,
 {
-    let ensemble_value = serde_json::to_value(&ensemble_vote).expect("serialize ensemble vote");
+    let ensemble_value = serde_json::to_value(&ensemble_vote).unwrap_or_default();
     let executor_summaries = ensemble_value
         .get("executor_summaries")
         .and_then(serde_json::Value::as_array)
@@ -545,11 +567,13 @@ where
         belief_shadow_policy,
         belief_policy_lineage,
         ensemble_vote,
+        pda_sequence_summary,
         executor_scorecard_summary: format_executor_summary_lines(&executor_summaries),
         executor_scorecard_source: executor_scorecard_source.into(),
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn build_analyze_live_output_envelope<R>(
     report: R,
     source_snapshot: Option<impl Serialize>,
@@ -558,6 +582,7 @@ pub fn build_analyze_live_output_envelope<R>(
     agent_report: AgentGuidanceReport,
     human_report: &HumanAnalyzeReport,
     belief_shadow_policy: BeliefShadowPolicySurface,
+    pda_sequence_summary: Option<PdaSequenceArtifactSummary>,
 ) -> AnalyzeLiveOutputEnvelope<R>
 where
     R: Serialize,
@@ -565,17 +590,17 @@ where
     AnalyzeLiveOutputEnvelope {
         execution_triage: None,
         report,
-        source_snapshot: source_snapshot
-            .map(|value| serde_json::to_value(value).expect("serialize source snapshot")),
-        freshness_gate: freshness_gate
-            .map(|value| serde_json::to_value(value).expect("serialize freshness gate")),
+        source_snapshot: source_snapshot.and_then(|value| serde_json::to_value(value).ok()),
+        freshness_gate: freshness_gate.and_then(|value| serde_json::to_value(value).ok()),
         compact_report,
         agent_report,
         human_report: human_report.render(),
         belief_shadow_policy,
+        pda_sequence_summary,
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn emit_analyze_output_envelope<R, E>(
     report: &R,
     output_format: &str,
@@ -586,6 +611,7 @@ pub fn emit_analyze_output_envelope<R, E>(
     belief_shadow_policy: BeliefShadowPolicySurface,
     belief_policy_lineage: BeliefPolicyLineageSurface,
     ensemble_vote: &E,
+    pda_sequence_summary: Option<PdaSequenceArtifactSummary>,
     executor_scorecard_source: impl Into<String>,
 ) -> Result<()>
 where
@@ -601,6 +627,7 @@ where
         belief_shadow_policy,
         belief_policy_lineage,
         ensemble_vote,
+        pda_sequence_summary,
         executor_scorecard_source,
     );
 
@@ -614,6 +641,7 @@ where
     Ok(())
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn emit_analyze_live_output_envelope<R>(
     report: &R,
     source_snapshot: Option<impl Serialize>,
@@ -622,6 +650,7 @@ pub fn emit_analyze_live_output_envelope<R>(
     agent_report: AgentGuidanceReport,
     human_report: &HumanAnalyzeReport,
     belief_shadow_policy: BeliefShadowPolicySurface,
+    pda_sequence_summary: Option<PdaSequenceArtifactSummary>,
 ) -> Result<()>
 where
     R: Serialize,
@@ -634,6 +663,7 @@ where
         agent_report,
         human_report,
         belief_shadow_policy,
+        pda_sequence_summary,
     );
     print_redacted_json(&output)
 }
@@ -739,12 +769,108 @@ mod tests {
             BeliefShadowPolicySurface::default(),
             BeliefPolicyLineageSurface::default(),
             vote,
+            None,
             "persisted",
         );
 
         assert_eq!(output.executor_scorecard_summary.len(), 1);
         assert_eq!(output.executor_scorecard_source, "persisted");
         assert!(output.human_report.contains("Trade plan"));
+    }
+
+    #[test]
+    fn build_analyze_output_envelope_includes_pda_sequence_summary_when_present() {
+        let report = StubReport {
+            symbol: "NQ".to_string(),
+        };
+        let output = build_analyze_output_envelope(
+            report,
+            build_compact_analyze_report("observe_only", None, None, None, None, &[], &[], &[]),
+            build_agent_guidance_report(None, None, None, None, None, &[], &[], &[]),
+            &build_human_analyze_surface(AnalyzeHumanInput {
+                symbol: "NQ",
+                selected_direction: Direction::Bull,
+                entry_quality: "medium",
+                gate_status: "pass_neutralized",
+                evidence_quality_score: 0.5,
+                decision_hint: "observe_only",
+                factor_iteration_queue: &[],
+                recommended_next_command: "ict-engine analyze",
+                price_action_narrative: "price",
+                technical_price_narrative: "tech",
+                smt_correlation_narrative: "smt",
+                regime_label: "trend",
+                liquidity_label: "sweep",
+                regime_selected_direction: Direction::Bull,
+                trade_plan_narrative: "plan",
+                market_family: Some("futures_index"),
+                market_subgraph: "index_beta",
+                objective_jump_weight: Some(0.25),
+            }),
+            AnalyzeMarketFamilySummary {
+                market_family: Some("futures_index".to_string()),
+                market_behavior_profile: Some("index_beta_regime_sensitive".to_string()),
+                selected_market_subgraph: Some("index_beta".to_string()),
+            },
+            BeliefShadowPolicySurface::default(),
+            BeliefPolicyLineageSurface::default(),
+            StubEnsembleVote {
+                executor_summaries: Vec::new(),
+                final_action: "observe".to_string(),
+            },
+            Some(PdaSequenceArtifactSummary {
+                method: "pda_sequence_analysis_v2".to_string(),
+                primary_cluster: Some(1),
+                primary_cluster_label: Some("cluster_1".to_string()),
+                primary_cluster_family: Some("trend".to_string()),
+                primary_cluster_confidence: Some(0.88),
+                consistency_ratio: 0.75,
+                ensemble_mean_confidence: 0.83,
+                valid_sessions: 8,
+                kmer_k: 2,
+            }),
+            "persisted",
+        );
+        assert_eq!(
+            output
+                .pda_sequence_summary
+                .as_ref()
+                .and_then(|summary| summary.primary_cluster_label.as_deref()),
+            Some("cluster_1")
+        );
+    }
+
+    #[test]
+    fn analyze_human_surface_does_not_leak_ask_user_wire_protocol() {
+        let report = build_human_analyze_surface(AnalyzeHumanInput {
+            symbol: "NQ",
+            selected_direction: Direction::Bull,
+            entry_quality: "medium",
+            gate_status: "observe_only",
+            evidence_quality_score: 0.5,
+            decision_hint: "observe_only",
+            factor_iteration_queue: &[],
+            recommended_next_command: "ask-user: Before using historical data for NQ again, ask the user which dataset to use. recorded_paths=/tmp/a.json | blocked until user_selected_historical_data | then ict-engine factor-research --symbol NQ --data /tmp/a.json --state-dir state",
+            price_action_narrative: "price",
+            technical_price_narrative: "tech",
+            smt_correlation_narrative: "smt",
+            regime_label: "trend",
+            liquidity_label: "sweep",
+            regime_selected_direction: Direction::Bull,
+            trade_plan_narrative: "plan",
+            market_family: None,
+            market_subgraph: "unknown",
+            objective_jump_weight: None,
+        });
+        let rendered = report.render();
+        assert!(
+            !rendered.contains("ask-user:"),
+            "human output must not leak wire protocol:\n{rendered}"
+        );
+        assert!(
+            rendered.contains("Ask the user"),
+            "human output should surface user-readable ask; got:\n{rendered}"
+        );
     }
 
     #[test]
@@ -784,6 +910,7 @@ mod tests {
             build_agent_guidance_report(None, None, None, None, None, &[], &[], &[]),
             &human_report,
             BeliefShadowPolicySurface::default(),
+            None,
         );
 
         assert_eq!(output.source_snapshot.unwrap()["status"], "fresh");

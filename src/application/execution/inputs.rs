@@ -44,9 +44,11 @@ mod tests {
 
     #[test]
     fn derives_execution_inputs_from_pre_bayes_sources() {
-        let mut filter = PreBayesEvidenceFilter::default();
-        filter.gating_status = "pass_hard".to_string();
-        filter.evidence_quality_score = 0.91;
+        let filter = PreBayesEvidenceFilter {
+            gating_status: "pass_hard".to_string(),
+            evidence_quality_score: 0.91,
+            ..PreBayesEvidenceFilter::default()
+        };
 
         let bridge = PreBayesEntryQualityBridge {
             long_signal_probability: 0.72,

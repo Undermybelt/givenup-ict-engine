@@ -6,7 +6,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use crate::config::shell_quote;
 use crate::state::{
     load_artifact_ledger, load_factor_autoresearch_attempts, load_factor_autoresearch_sessions,
-    load_state_or_default, load_workflow_snapshot, AnalyzeRunRecord, BacktestRunRecord,
+    load_state_or_default, load_workflow_snapshot, AnalyzeRunRecord, ArtifactLedgerEntry,
+    BacktestRunRecord, FactorAutoresearchAttempt, FactorAutoresearchSession,
     FactorMutationRunRecord, ResearchRunRecord, ANALYZE_RUNS_FILE, BACKTEST_RUNS_FILE,
     FACTOR_MUTATION_RUNS_FILE, RESEARCH_RUNS_FILE,
 };
@@ -50,7 +51,10 @@ pub struct EvidenceQualityBreakdownReport {
 
 pub fn workflow_next_step_view(command: &str, blocked_reason: Option<&str>) -> Value {
     let trimmed = command.trim();
-    if trimmed.is_empty() || trimmed == "recommended_command_unavailable" {
+    if trimmed.is_empty()
+        || trimmed == "recommended_command_unavailable"
+        || trimmed == "next_command_unavailable"
+    {
         return serde_json::json!({
             "action_type": "none",
             "user_input_required": false,
@@ -91,6 +95,31 @@ pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
         load_state_or_default(state_dir, symbol, FACTOR_MUTATION_RUNS_FILE)?;
     let artifact_ledger = load_artifact_ledger(state_dir, symbol)?;
 
+    let report = build_research_verdict_report(
+        symbol,
+        state_dir,
+        &sessions,
+        &attempts,
+        &research_runs,
+        &backtest_runs,
+        &mutation_runs,
+        &artifact_ledger,
+    );
+    println!("{}", serde_json::to_string_pretty(&report)?);
+    Ok(())
+}
+
+#[allow(clippy::too_many_arguments)]
+pub fn build_research_verdict_report(
+    symbol: &str,
+    state_dir: &str,
+    sessions: &[FactorAutoresearchSession],
+    attempts: &[FactorAutoresearchAttempt],
+    research_runs: &[ResearchRunRecord],
+    backtest_runs: &[BacktestRunRecord],
+    mutation_runs: &[FactorMutationRunRecord],
+    artifact_ledger: &[ArtifactLedgerEntry],
+) -> ResearchVerdictReport {
     let mut contamination_reasons = Vec::new();
     if sessions.len() > 1 {
         let unique_objectives = sessions
@@ -180,6 +209,12 @@ pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
             .unwrap_or(std::cmp::Ordering::Equal)
     });
 
+    let no_research_activity = research_runs.is_empty()
+        && sessions.is_empty()
+        && attempts.is_empty()
+        && mutation_runs.is_empty()
+        && backtest_runs.is_empty();
+
     let best_known_baseline = if let Some(run) = best_research {
         format!(
             "research best_factor={} aggregate_return={:.3}",
@@ -210,7 +245,9 @@ pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
         .collect::<Vec<_>>();
     proven_bad_regions.sort();
 
-    let current_bottleneck = if proven_bad_regions
+    let current_bottleneck = if no_research_activity {
+        "no_research_runs".to_string()
+    } else if proven_bad_regions
         .iter()
         .any(|tag| tag.contains("bridge_gap"))
     {
@@ -234,6 +271,11 @@ pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
     };
 
     let recommended_next_experiment = match current_bottleneck.as_str() {
+        "no_research_runs" => format!(
+            "ict-engine factor-research --symbol {} --data <cleaned-candles.json> --state-dir {}",
+            shell_quote(symbol),
+            shell_quote(state_dir)
+        ),
         "bridge_gap" => format!(
             "ict-engine evidence-quality-breakdown --symbol {} --state-dir {}",
             shell_quote(symbol),
@@ -265,7 +307,9 @@ pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
         ),
     };
 
-    let stop_or_continue = if comparison_contaminated {
+    let stop_or_continue = if no_research_activity {
+        "bootstrap_required".to_string()
+    } else if comparison_contaminated {
         "pivot".to_string()
     } else if best_research
         .map(|run| run.aggregate_return >= 0.0)
@@ -286,17 +330,17 @@ pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
     evidence.push(format!("backtest_runs={}", backtest_runs.len()));
     evidence.push(format!("factor_mutation_runs={}", mutation_runs.len()));
     evidence.push(format!("artifact_rows={}", artifact_ledger.len()));
-    if let Some((cluster, (attempts, avg_delta, best_delta))) = best_cluster {
+    if let Some((cluster, (attempts_count, avg_delta, best_delta))) = best_cluster {
         evidence.push(format!(
             "best_cluster={} attempts={} avg_score_delta={:.3} best_score_delta={:.3}",
             cluster,
-            attempts,
-            avg_delta / *attempts as f64,
+            attempts_count,
+            avg_delta / *attempts_count as f64,
             best_delta
         ));
     }
 
-    let report = ResearchVerdictReport {
+    ResearchVerdictReport {
         symbol: symbol.to_string(),
         state_dir: state_dir.to_string(),
         best_known_baseline,
@@ -307,21 +351,15 @@ pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
         comparison_contaminated,
         contamination_reasons,
         evidence,
-    };
-    println!("{}", serde_json::to_string_pretty(&report)?);
-    Ok(())
+    }
 }
 
 pub fn evidence_quality_breakdown_command(
     symbol: &str,
     state_dir: &str,
-    refresh: bool,
+    _refresh: bool,
 ) -> Result<()> {
-    let snapshot = if refresh {
-        load_workflow_snapshot(state_dir, symbol)?
-    } else {
-        load_workflow_snapshot(state_dir, symbol)?
-    };
+    let snapshot = load_workflow_snapshot(state_dir, symbol)?;
     snapshot
         .latest_analyze
         .as_ref()
@@ -447,4 +485,22 @@ pub fn evidence_quality_breakdown_command(
     };
     println!("{}", serde_json::to_string_pretty(&report)?);
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn research_verdict_requires_bootstrap_when_no_research_runs_exist() {
+        let report =
+            build_research_verdict_report("DEMO", "state", &[], &[], &[], &[], &[], &[]);
+        let verdict = serde_json::to_value(&report).expect("serialize verdict");
+        assert_eq!(verdict["stop_or_continue"], "bootstrap_required");
+        assert_eq!(verdict["current_bottleneck"], "no_research_runs");
+        assert!(verdict["recommended_next_experiment"]
+            .as_str()
+            .unwrap()
+            .contains("ict-engine factor-research"));
+    }
 }

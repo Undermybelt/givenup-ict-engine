@@ -102,13 +102,15 @@ fn artifact_readiness_downgrades_when_physics_overlay_carries_chaotic_spectral()
         ..RunProvenance::default()
     };
 
-    let mut chaotic_overlay =
-        ict_engine::application::execution::ExecutionPhysicsOverlay::default();
-    chaotic_overlay.spectral = Some(chaotic_metrics());
+    let chaotic_overlay = ict_engine::application::execution::ExecutionPhysicsOverlay {
+        spectral: Some(chaotic_metrics()),
+        ..ict_engine::application::execution::ExecutionPhysicsOverlay::default()
+    };
 
-    let mut rhythmic_overlay =
-        ict_engine::application::execution::ExecutionPhysicsOverlay::default();
-    rhythmic_overlay.spectral = Some(rhythmic_metrics());
+    let rhythmic_overlay = ict_engine::application::execution::ExecutionPhysicsOverlay {
+        spectral: Some(rhythmic_metrics()),
+        ..ict_engine::application::execution::ExecutionPhysicsOverlay::default()
+    };
 
     let chaotic_artifact = build_execution_artifact_from_snapshot(
         "NQ",

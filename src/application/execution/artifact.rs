@@ -34,6 +34,7 @@ pub struct ExecutionArtifactBuildContext<'a> {
     pub physics_overlay: Option<&'a ExecutionPhysicsOverlay>,
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn build_execution_artifact(
     symbol: &str,
     aggression_bias: f64,
@@ -137,9 +138,9 @@ pub fn build_execution_artifact_from_snapshot(
         .physics_overlay
         .and_then(|overlay| overlay.spectral.clone())
         .or_else(|| {
-            context
-                .prices
-                .and_then(|prices| estimate_spectral_execution_metrics(prices, SPECTRAL_DEFAULT_LAMBDA_RATIO))
+            context.prices.and_then(|prices| {
+                estimate_spectral_execution_metrics(prices, SPECTRAL_DEFAULT_LAMBDA_RATIO)
+            })
         });
     let dominant_cycle_energy = spectral_metrics
         .as_ref()
@@ -173,7 +174,7 @@ pub fn build_execution_artifact_from_snapshot(
             spectral_entropy,
             ou_metrics,
             ising_state: context.physics_overlay.and_then(|p| p.ising.clone()),
-            pythagorean_metrics: context.physics_overlay.and_then(|p| p.pythagorean.clone()),
+            pythagorean_metrics: context.physics_overlay.and_then(|p| p.pythagorean),
             spectral_metrics,
         },
         hard_gate_status: classify_execution_gate(readiness).to_string(),
@@ -205,9 +206,7 @@ mod tests {
 
     fn stamps(n: usize) -> Vec<DateTime<Utc>> {
         let base = Utc.with_ymd_and_hms(2026, 1, 1, 0, 0, 0).unwrap();
-        (0..n)
-            .map(|i| base + Duration::minutes(i as i64))
-            .collect()
+        (0..n).map(|i| base + Duration::minutes(i as i64)).collect()
     }
 
     fn mean_reverting_prices(n: usize) -> Vec<f64> {

@@ -60,7 +60,13 @@ pub fn build_execution_focus_surface(
                 .execution_shap_top_k
                 .iter()
                 .take(3)
-                .map(|row| (row.feature.clone(), row.contribution, row.feature_value.clone()))
+                .map(|row| {
+                    (
+                        row.feature.clone(),
+                        row.contribution,
+                        row.feature_value.clone(),
+                    )
+                })
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default();
@@ -92,8 +98,8 @@ pub fn build_execution_focus_surface(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::application::reflection::ReflectionBundle;
     use crate::application::orchestration::ExecutionShapAttribution;
+    use crate::application::reflection::ReflectionBundle;
     use crate::domain::execution::ExecutionFeatures;
     use crate::state::RunProvenance;
     use chrono::Utc;
@@ -138,32 +144,33 @@ mod tests {
     #[test]
     fn focus_surface_pulls_shap_top_3_from_reflection() {
         let artifact = sample_artifact();
-        let mut reflection = ReflectionBundle::default();
-        reflection.why_execution_dominates = Some("execution_score=0.80".to_string());
-        reflection.execution_shap_top_k = vec![
-            ExecutionShapAttribution {
-                feature: "execution_readiness".to_string(),
-                contribution: 0.15,
-                feature_value: "0.8000".to_string(),
-            },
-            ExecutionShapAttribution {
-                feature: "evidence_quality".to_string(),
-                contribution: 0.30,
-                feature_value: "0.8800".to_string(),
-            },
-            ExecutionShapAttribution {
-                feature: "ising_phase_transition_risk".to_string(),
-                contribution: 0.50,
-                feature_value: "0.2000".to_string(),
-            },
-            ExecutionShapAttribution {
-                feature: "spectral_entropy".to_string(),
-                contribution: 0.68,
-                feature_value: "0.1200".to_string(),
-            },
-        ];
-        let surface =
-            build_execution_focus_surface(&artifact, Some(&reflection), Some("passive"));
+        let reflection = ReflectionBundle {
+            why_execution_dominates: Some("execution_score=0.80".to_string()),
+            execution_shap_top_k: vec![
+                ExecutionShapAttribution {
+                    feature: "execution_readiness".to_string(),
+                    contribution: 0.15,
+                    feature_value: "0.8000".to_string(),
+                },
+                ExecutionShapAttribution {
+                    feature: "evidence_quality".to_string(),
+                    contribution: 0.30,
+                    feature_value: "0.8800".to_string(),
+                },
+                ExecutionShapAttribution {
+                    feature: "ising_phase_transition_risk".to_string(),
+                    contribution: 0.50,
+                    feature_value: "0.2000".to_string(),
+                },
+                ExecutionShapAttribution {
+                    feature: "spectral_entropy".to_string(),
+                    contribution: 0.68,
+                    feature_value: "0.1200".to_string(),
+                },
+            ],
+            ..ReflectionBundle::default()
+        };
+        let surface = build_execution_focus_surface(&artifact, Some(&reflection), Some("passive"));
         assert_eq!(surface.shap_top_3.len(), 3);
         assert_eq!(surface.shap_top_3[0].0, "execution_readiness");
         assert_eq!(

@@ -11,9 +11,7 @@ use crate::domain::execution::{
     classify_execution_gate, ExecutionFeatures, DOMINANT_ENERGY_FLOOR, EXECUTION_GATE_OBSERVE,
     EXECUTION_GATE_READY, SPECTRAL_ENTROPY_CHAOS_CAP,
 };
-use crate::state::{
-    append_artifact_ledger_entry, save_state, ArtifactLedgerEntry, RunProvenance,
-};
+use crate::state::{append_artifact_ledger_entry, save_state, ArtifactLedgerEntry, RunProvenance};
 use crate::types::RegimeProbs;
 
 pub const EXECUTION_TREE_TRACE_FILE: &str = "execution_tree_trace.json";
@@ -327,9 +325,9 @@ impl ExecutionTreeScorer for DefaultExecutionTreeScorer {
                 trace.timeframe_entropy, trace.force_observe
             ));
             if trace.force_observe && execution_bias == "aggressive" {
-                lineage.push(format!(
-                    "axial force_observe → bias=aggressive downgraded to passive"
-                ));
+                lineage.push(
+                    "axial force_observe → bias=aggressive downgraded to passive".to_string(),
+                );
                 execution_bias = "passive";
                 decision_hint = "execution_observe_due_to_axial_entropy";
             }
@@ -443,16 +441,10 @@ pub fn persist_execution_tree_artifact<P: AsRef<Path>>(
     source_phase: &str,
     source_run_id: Option<String>,
 ) -> Result<()> {
-    save_state(
-        &dir,
-        &artifact.symbol,
-        EXECUTION_TREE_TRACE_FILE,
-        artifact,
-    )?;
-    let promote = artifact.output.branch == "fill_viable"
-        && artifact.output.gate_status == "ready";
-    let actionable = artifact.output.gate_status != "blocked"
-        && artifact.output.branch != "block_crowded";
+    save_state(&dir, &artifact.symbol, EXECUTION_TREE_TRACE_FILE, artifact)?;
+    let promote = artifact.output.branch == "fill_viable" && artifact.output.gate_status == "ready";
+    let actionable =
+        artifact.output.gate_status != "blocked" && artifact.output.branch != "block_crowded";
     let quality_score = (artifact.output.branch_probability * 100.0).round() as i32;
     append_artifact_ledger_entry(
         dir,
@@ -630,7 +622,10 @@ mod tests {
         let output = DefaultExecutionTreeScorer.score(&input).unwrap();
         assert_eq!(output.gate_status, "blocked");
         assert_eq!(output.execution_bias, "skip");
-        assert_eq!(output.decision_hint, "execution_blocked_regardless_of_prediction");
+        assert_eq!(
+            output.decision_hint,
+            "execution_blocked_regardless_of_prediction"
+        );
     }
 
     #[test]
@@ -645,10 +640,11 @@ mod tests {
                 hmm_posterior: &posterior,
                 mece_recovery_confidence: Some(0.97),
                 prediction_vote_score: 0.7,
-            axial_trace: None,
+                axial_trace: None,
             })
             .unwrap();
-        let artifact = build_execution_tree_artifact("NQ", output, Vec::new(), RunProvenance::default());
+        let artifact =
+            build_execution_tree_artifact("NQ", output, Vec::new(), RunProvenance::default());
         let dir = TempDir::new().unwrap();
         persist_execution_tree_artifact(dir.path(), &artifact, "analyze", None).unwrap();
 

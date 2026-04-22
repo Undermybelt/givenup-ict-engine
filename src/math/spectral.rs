@@ -67,7 +67,10 @@ fn fft_radix2_in_place(buffer: &mut [Complex]) {
     if n <= 1 {
         return;
     }
-    debug_assert!(n.is_power_of_two(), "fft_radix2_in_place requires power-of-2 length");
+    debug_assert!(
+        n.is_power_of_two(),
+        "fft_radix2_in_place requires power-of-2 length"
+    );
 
     // Bit-reversal permutation.
     let bits = n.trailing_zeros();
@@ -195,7 +198,7 @@ pub fn normalized_spectral_entropy(bins: &[Complex]) -> f64 {
     }
     let energies: Vec<f64> = bins.iter().skip(1).map(|bin| bin.norm_sq()).collect();
     let total: f64 = energies.iter().sum();
-    if !(total > 0.0) {
+    if total <= 0.0 {
         return 0.0;
     }
     let n = energies.len() as f64;
@@ -221,7 +224,7 @@ pub fn dominant_energy_ratio(bins: &[Complex]) -> f64 {
         return 0.0;
     }
     let total: f64 = bins.iter().skip(1).map(|bin| bin.norm_sq()).sum();
-    if !(total > 0.0) {
+    if total <= 0.0 {
         return 0.0;
     }
     let dominant_energy = bins
@@ -235,13 +238,16 @@ pub fn dominant_energy_ratio(bins: &[Complex]) -> f64 {
 // Cosine of the phase the dominant mode would have at the end of the window.
 // Value in [-1, 1]. +1 = dominant mode's "peak phase" aligned with the most
 // recent sample (expect near-term mean reversion); -1 = anti-aligned.
-pub fn dominant_phase_alignment(dominant: DominantMode, samples_len: usize, padded_len: usize) -> f64 {
+pub fn dominant_phase_alignment(
+    dominant: DominantMode,
+    samples_len: usize,
+    padded_len: usize,
+) -> f64 {
     if samples_len == 0 || padded_len == 0 {
         return 0.0;
     }
     let t_last = (samples_len as f64 - 1.0).max(0.0);
-    let angle = 2.0 * PI * dominant.bin_index as f64 * t_last / padded_len as f64
-        + dominant.phase;
+    let angle = 2.0 * PI * dominant.bin_index as f64 * t_last / padded_len as f64 + dominant.phase;
     angle.cos().clamp(-1.0, 1.0)
 }
 
@@ -250,7 +256,7 @@ pub fn dominant_phase_alignment(dominant: DominantMode, samples_len: usize, padd
 // pruned as noise." Returns 0 when total is zero.
 pub fn high_frequency_noise_ratio(bins: &[Complex], pruned_bins: &[Complex]) -> f64 {
     let total: f64 = bins.iter().map(|bin| bin.norm_sq()).sum();
-    if !(total > 0.0) {
+    if total <= 0.0 {
         return 0.0;
     }
     let retained: f64 = pruned_bins.iter().map(|bin| bin.norm_sq()).sum();
@@ -329,8 +335,7 @@ mod tests {
     fn high_frequency_noise_ratio_matches_softshrink_reduction() {
         let samples: Vec<f64> = (0..64)
             .map(|i| {
-                (2.0 * PI * i as f64 / 16.0).sin() * 1.0
-                    + (2.0 * PI * i as f64 / 4.0).sin() * 0.1
+                (2.0 * PI * i as f64 / 16.0).sin() * 1.0 + (2.0 * PI * i as f64 / 4.0).sin() * 0.1
             })
             .collect();
         let full = rfft_one_sided(&samples);
@@ -349,7 +354,7 @@ mod tests {
         let padded = next_power_of_two(samples.len());
         let dominant = dominant_mode(&bins, padded).expect("sine has dominant mode");
         let alignment = dominant_phase_alignment(dominant, samples.len(), padded);
-        assert!(alignment >= -1.0 && alignment <= 1.0);
+        assert!((-1.0..=1.0).contains(&alignment));
     }
 
     #[test]

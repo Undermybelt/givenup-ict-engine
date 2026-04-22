@@ -30,7 +30,10 @@ pub fn pam_cluster(distance_matrix: &[Vec<f64>], k: usize) -> Result<PamOutcome>
     }
     for (i, row) in distance_matrix.iter().enumerate() {
         if row.len() != n {
-            anyhow::bail!("distance matrix must be square; row {i} has length {}", row.len());
+            anyhow::bail!(
+                "distance matrix must be square; row {i} has length {}",
+                row.len()
+            );
         }
     }
 
@@ -77,21 +80,19 @@ fn initial_medoids(distance_matrix: &[Vec<f64>], k: usize) -> Vec<usize> {
     // pick the candidate whose minimum distance to any existing medoid is
     // largest. Deterministic: ties broken by smallest index.
     while medoids.len() < k {
-        let next = (0..n)
-            .filter(|i| !medoids.contains(i))
-            .max_by(|a, b| {
-                let da = medoids
-                    .iter()
-                    .map(|m| distance_matrix[*a][*m])
-                    .fold(f64::INFINITY, f64::min);
-                let db = medoids
-                    .iter()
-                    .map(|m| distance_matrix[*b][*m])
-                    .fold(f64::INFINITY, f64::min);
-                da.partial_cmp(&db)
-                    .unwrap_or(std::cmp::Ordering::Equal)
-                    .then_with(|| b.cmp(a)) // prefer the smaller index on ties
-            });
+        let next = (0..n).filter(|i| !medoids.contains(i)).max_by(|a, b| {
+            let da = medoids
+                .iter()
+                .map(|m| distance_matrix[*a][*m])
+                .fold(f64::INFINITY, f64::min);
+            let db = medoids
+                .iter()
+                .map(|m| distance_matrix[*b][*m])
+                .fold(f64::INFINITY, f64::min);
+            da.partial_cmp(&db)
+                .unwrap_or(std::cmp::Ordering::Equal)
+                .then_with(|| b.cmp(a)) // prefer the smaller index on ties
+        });
         match next {
             Some(idx) => medoids.push(idx),
             None => break,
@@ -120,12 +121,12 @@ fn assign_labels(distance_matrix: &[Vec<f64>], medoids: &[usize]) -> Vec<usize> 
 fn update_medoids(distance_matrix: &[Vec<f64>], labels: &[usize], k: usize) -> Vec<usize> {
     let n = distance_matrix.len();
     let mut new_medoids = vec![0usize; k];
-    for cluster_idx in 0..k {
+    for (cluster_idx, medoid_slot) in new_medoids.iter_mut().enumerate().take(k) {
         let members: Vec<usize> = (0..n).filter(|i| labels[*i] == cluster_idx).collect();
         if members.is_empty() {
             // No reassignment possible — keep whatever the assignment step picked;
             // fall back to an arbitrary in-range index so downstream code stays sane.
-            new_medoids[cluster_idx] = cluster_idx.min(n.saturating_sub(1));
+            *medoid_slot = cluster_idx.min(n.saturating_sub(1));
             continue;
         }
         let best = members
@@ -145,7 +146,7 @@ fn update_medoids(distance_matrix: &[Vec<f64>], labels: &[usize], k: usize) -> V
                     .unwrap_or(std::cmp::Ordering::Equal)
             })
             .unwrap();
-        new_medoids[cluster_idx] = best;
+        *medoid_slot = best;
     }
     new_medoids
 }
@@ -181,8 +182,8 @@ fn silhouette_score(distance_matrix: &[Vec<f64>], labels: &[usize], k: usize) ->
             if members.is_empty() {
                 continue;
             }
-            let mean: f64 = members.iter().map(|j| distance_matrix[i][*j]).sum::<f64>()
-                / members.len() as f64;
+            let mean: f64 =
+                members.iter().map(|j| distance_matrix[i][*j]).sum::<f64>() / members.len() as f64;
             if mean < b {
                 b = mean;
             }

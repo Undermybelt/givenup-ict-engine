@@ -12,8 +12,8 @@
 //!   own `PdaToken` pipeline rather than mutate these constants
 
 use crate::ict::{
-    detect_cisd, detect_fvg, detect_liquidity_pools, detect_liquidity_sweep,
-    detect_order_blocks, detect_rb, detect_structure_breaks, find_swing_highs, find_swing_lows,
+    detect_cisd, detect_fvg, detect_liquidity_pools, detect_liquidity_sweep, detect_order_blocks,
+    detect_rb, detect_structure_breaks, find_swing_highs, find_swing_lows,
 };
 use crate::indicators::compute_atr;
 use crate::types::{Candle, LiquiditySweep};
@@ -129,11 +129,7 @@ fn make_token(
 
 fn is_near_sweep(bar_index: usize, sweeps: &[LiquiditySweep]) -> bool {
     sweeps.iter().any(|sweep| {
-        let delta = if sweep.sweep_bar >= bar_index {
-            sweep.sweep_bar - bar_index
-        } else {
-            bar_index - sweep.sweep_bar
-        };
+        let delta = sweep.sweep_bar.abs_diff(bar_index);
         delta <= EMITTER_NEAR_SWEEP_WINDOW_BARS
     })
 }

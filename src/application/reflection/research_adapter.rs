@@ -63,17 +63,16 @@ pub fn build_research_reflection_bundle(
     let execution_artifact = build_execution_artifact(
         symbol,
         0.0,
-        report
-            .recommended_commands
-            .research
-            .ready
-            .then_some(0.8)
-            .unwrap_or(0.35),
-        report
-            .promotion_decision
-            .approved
-            .then_some(0.75)
-            .unwrap_or(0.35),
+        if report.recommended_commands.research.ready {
+            0.8
+        } else {
+            0.35
+        },
+        if report.promotion_decision.approved {
+            0.75
+        } else {
+            0.35
+        },
         0.5,
         report.best_factor.as_ref().map(|_| 0.55).unwrap_or(0.25),
         None,

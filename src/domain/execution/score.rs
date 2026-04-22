@@ -22,7 +22,7 @@ pub fn execution_readiness(
 ) -> f64 {
     let mut score = execution_score.max(0.0) * 0.50 + evidence_quality.max(0.0) * 0.30;
     if let Some(speed) = reversion_speed {
-        score += speed.max(0.0).min(1.0) * 0.20;
+        score += speed.clamp(0.0, 1.0) * 0.20;
     }
     if let Some(distance) = overextension_distance {
         score -= distance.abs().min(1.0) * 0.20;

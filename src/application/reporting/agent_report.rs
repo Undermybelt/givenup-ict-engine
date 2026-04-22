@@ -70,6 +70,7 @@ fn parse_next_step(next_command: Option<&str>) -> AgentNextStep {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn build_agent_guidance_report(
     direction: Option<String>,
     entry_state: Option<String>,
