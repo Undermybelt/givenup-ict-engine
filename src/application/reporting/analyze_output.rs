@@ -6,6 +6,7 @@ use crate::application::belief::{BeliefPolicyLineageSurface, BeliefShadowPolicyS
 use crate::application::orchestration::ExecutionTriage;
 use crate::application::output_foundation::{
     format_executor_summary_lines, print_redacted_json, redact_local_paths,
+    redact_local_paths_in_value,
 };
 use crate::application::reporting::{
     build_agent_guidance_report, build_compact_analyze_report, build_human_analyze_report,
@@ -73,6 +74,45 @@ pub struct AnalyzeOutputDispatchInput<'a> {
 #[derive(Debug, Clone, Copy, Default)]
 pub struct AnalyzeLiveOutputDispatchInput;
 
+#[derive(Debug, Clone, Copy)]
+pub struct AnalyzeLiveOutputEmitInput {
+    pub include_pda_sequence_summary: bool,
+    pub redact_paths: bool,
+}
+
+impl Default for AnalyzeLiveOutputEmitInput {
+    fn default() -> Self {
+        Self {
+            include_pda_sequence_summary: true,
+            redact_paths: true,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct AnalyzeLiveReportingBundleInput {
+    pub include_pda_sequence_summary: bool,
+}
+
+impl Default for AnalyzeLiveReportingBundleInput {
+    fn default() -> Self {
+        Self {
+            include_pda_sequence_summary: true,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct AnalyzeLiveReportingBundle {
+    pub source_snapshot: Option<serde_json::Value>,
+    pub freshness_gate: Option<serde_json::Value>,
+    pub compact_report: CompactAnalyzeReport,
+    pub agent_report: AgentGuidanceReport,
+    pub human_report: HumanAnalyzeReport,
+    pub belief_shadow_policy: BeliefShadowPolicySurface,
+    pub pda_sequence_summary: Option<PdaSequenceArtifactSummary>,
+}
+
 #[derive(Debug, Clone)]
 pub struct AnalyzeHumanInput<'a> {
     pub symbol: &'a str,
@@ -93,6 +133,7 @@ pub struct AnalyzeHumanInput<'a> {
     pub market_family: Option<&'a str>,
     pub market_subgraph: &'a str,
     pub objective_jump_weight: Option<f64>,
+    pub regime_companion_suffix: Option<&'a str>,
 }
 
 pub fn build_analyze_compact_evidence(
@@ -210,6 +251,7 @@ pub fn dispatch_analyze_output(
                 .as_deref()
                 .unwrap_or("unknown"),
             objective_jump_weight: report.supporting.objective_jump_weight,
+            regime_companion_suffix: None,
         },
         &report.supporting.artifact_action_summary,
         &report.supporting.multi_timeframe_summary,
@@ -275,14 +317,10 @@ pub fn dispatch_analyze_output(
     )
 }
 
-pub fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
-    dispatch_analyze_live_output(report, AnalyzeLiveOutputDispatchInput)
-}
-
-pub fn dispatch_analyze_live_output(
+pub fn build_analyze_live_reporting_bundle(
     report: &AnalyzeReport,
-    _input: AnalyzeLiveOutputDispatchInput,
-) -> Result<()> {
+    input: AnalyzeLiveReportingBundleInput,
+) -> Result<AnalyzeLiveReportingBundle> {
     let source_snapshot = report.meta.data_source.as_ref().map(|source| {
         crate::application::data_sources::build_source_snapshot(source, report.timestamp)
     });
@@ -295,7 +333,8 @@ pub fn dispatch_analyze_live_output(
                 .num_seconds(),
         )
     });
-    let (compact_report, agent_report, human_report) = build_analyze_reporting_bundle(
+    let regime_companion_suffix = regime_companion_human_suffix(&report.analysis.regime_bayesian);
+    let (mut compact_report, mut agent_report, mut human_report) = build_analyze_reporting_bundle(
         AnalyzeHumanInput {
             symbol: &report.symbol,
             selected_direction: report.supporting.decision.selected_direction,
@@ -327,6 +366,8 @@ pub fn dispatch_analyze_live_output(
                 .as_deref()
                 .unwrap_or("unknown"),
             objective_jump_weight: report.supporting.objective_jump_weight,
+            regime_companion_suffix: (!regime_companion_suffix.is_empty())
+                .then_some(regime_companion_suffix.as_str()),
         },
         &report.supporting.artifact_action_summary,
         &report.supporting.multi_timeframe_summary,
@@ -336,6 +377,11 @@ pub fn dispatch_analyze_live_output(
         &report.supporting.pre_bayes_evidence_filter.gating_status,
         &report.supporting.recommended_next_command,
     );
+    if let Some(triage) = report.supporting.execution_triage.as_ref() {
+        human_report.execution_triage_line = Some(triage.one_line.clone());
+        compact_report.execution_triage = Some(triage.clone());
+        agent_report.execution_triage = Some(triage.clone());
+    }
     let policy_record =
         crate::state::load_pre_bayes_policy_history(&report.meta.state_dir, &report.symbol)?
             .into_iter()
@@ -344,20 +390,57 @@ pub fn dispatch_analyze_live_output(
         &report.supporting.canonical_belief_report,
         policy_record.as_ref(),
     );
-    let pda_sequence_summary = load_pda_sequence_analysis(&report.meta.state_dir, &report.symbol)
-        .ok()
+    let pda_sequence_summary = input
+        .include_pda_sequence_summary
+        .then(|| load_pda_sequence_analysis(&report.meta.state_dir, &report.symbol).ok())
+        .flatten()
         .map(|artifact| summarize_pda_sequence_artifact(&artifact));
 
-    emit_analyze_live_output_envelope(
-        report,
-        source_snapshot,
-        freshness_gate,
+    Ok(AnalyzeLiveReportingBundle {
+        source_snapshot: source_snapshot.and_then(|value| serde_json::to_value(value).ok()),
+        freshness_gate: freshness_gate.and_then(|value| serde_json::to_value(value).ok()),
         compact_report,
         agent_report,
-        &human_report,
+        human_report,
         belief_shadow_policy,
         pda_sequence_summary,
-    )
+    })
+}
+
+pub fn emit_analyze_live_output(report: &AnalyzeReport) -> Result<()> {
+    emit_analyze_live_output_with_input(report, AnalyzeLiveOutputEmitInput::default())
+}
+
+pub fn emit_analyze_live_output_with_input(
+    report: &AnalyzeReport,
+    input: AnalyzeLiveOutputEmitInput,
+) -> Result<()> {
+    let bundle = build_analyze_live_reporting_bundle(
+        report,
+        AnalyzeLiveReportingBundleInput {
+            include_pda_sequence_summary: input.include_pda_sequence_summary,
+        },
+    )?;
+    let output = build_analyze_live_output_value(
+        report,
+        bundle.source_snapshot,
+        bundle.freshness_gate,
+        bundle.compact_report,
+        bundle.agent_report,
+        &bundle.human_report,
+        bundle.belief_shadow_policy,
+        bundle.pda_sequence_summary,
+        input.redact_paths,
+    )?;
+    println!("{}", serde_json::to_string_pretty(&output)?);
+    Ok(())
+}
+
+pub fn dispatch_analyze_live_output(
+    report: &AnalyzeReport,
+    _input: AnalyzeLiveOutputDispatchInput,
+) -> Result<()> {
+    emit_analyze_live_output(report)
 }
 
 fn human_direction_bias_label(direction: Direction) -> &'static str {
@@ -383,70 +466,108 @@ fn human_action_line(queue: &[crate::state::FactorIterationPrompt]) -> String {
     format!("Action: {}", action)
 }
 
+fn regime_companion_human_suffix(
+    section: &crate::analyze_sections::RegimeBayesianSection,
+) -> String {
+    let mut fragments = Vec::new();
+    if let Some(label) = &section.hybrid_regime_label {
+        fragments.push(format!("hybrid_regime={label}"));
+    }
+    if let Some(hazard) = section.hybrid_transition_hazard {
+        fragments.push(format!("hybrid_transition_hazard={hazard:.3}"));
+    }
+    if let Some(model) = &section.hybrid_duration_model {
+        fragments.push(format!("hybrid_duration_model={model}"));
+    }
+    if let Some(remaining) = section.hybrid_remaining_expected_bars {
+        fragments.push(format!("hybrid_remaining_expected_bars={remaining:.2}"));
+    }
+    if let Some(family) = &section.pda_cluster_family {
+        fragments.push(format!("pda_family={family}"));
+    }
+    if let Some(aligned) = section.pda_hybrid_alignment {
+        fragments.push(format!("pda_hybrid_alignment={aligned}"));
+    }
+    if fragments.is_empty() {
+        String::new()
+    } else {
+        format!("; {}", fragments.join(" "))
+    }
+}
+
 pub fn build_human_analyze_surface(input: AnalyzeHumanInput<'_>) -> HumanAnalyzeReport {
+    let regime_companion_suffix = input.regime_companion_suffix.unwrap_or("");
     let regime_bayes_analysis = match input.market_family {
         Some("metals") => match input.objective_jump_weight {
             Some(weight) => format!(
-                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}；objective_jump_weight={weight:.3}",
+                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}；objective_jump_weight={weight:.3}{}",
                 input.regime_label,
                 input.liquidity_label,
                 input.regime_selected_direction,
-                input.market_subgraph
+                input.market_subgraph,
+                regime_companion_suffix
             ),
             None => format!(
-                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}",
+                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}{}",
                 input.regime_label,
                 input.liquidity_label,
                 input.regime_selected_direction,
-                input.market_subgraph
+                input.market_subgraph,
+                regime_companion_suffix
             ),
         },
         Some("energy") => match input.objective_jump_weight {
             Some(weight) => format!(
-                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}；objective_jump_weight={weight:.3}",
+                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}；objective_jump_weight={weight:.3}{}",
                 input.regime_label,
                 input.liquidity_label,
                 input.regime_selected_direction,
-                input.market_subgraph
+                input.market_subgraph,
+                regime_companion_suffix
             ),
             None => format!(
-                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}",
+                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}{}",
                 input.regime_label,
                 input.liquidity_label,
                 input.regime_selected_direction,
-                input.market_subgraph
+                input.market_subgraph,
+                regime_companion_suffix
             ),
         },
         Some("futures_index") => match input.objective_jump_weight {
             Some(weight) => format!(
-                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}；objective_jump_weight={weight:.3}",
+                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}；objective_jump_weight={weight:.3}{}",
                 input.regime_label,
                 input.liquidity_label,
                 input.regime_selected_direction,
-                input.market_subgraph
+                input.market_subgraph,
+                regime_companion_suffix
             ),
             None => format!(
-                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}",
+                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}{}",
                 input.regime_label,
                 input.liquidity_label,
                 input.regime_selected_direction,
-                input.market_subgraph
+                input.market_subgraph,
+                regime_companion_suffix
             ),
         },
         _ => match input.objective_jump_weight {
             Some(weight) => format!(
-                "regime={} liquidity={} direction={:?} subgraph={} objective_jump_weight={weight:.3}",
+                "regime={} liquidity={} direction={:?} subgraph={} objective_jump_weight={weight:.3}{}",
                 input.regime_label,
                 input.liquidity_label,
                 input.regime_selected_direction,
-                input.market_subgraph
+                input.market_subgraph,
+                regime_companion_suffix
             ),
             None => format!(
-                "regime={} liquidity={} direction={:?} subgraph={}",
+                "regime={} liquidity={} direction={:?} subgraph={}{}",
                 input.regime_label,
                 input.liquidity_label,
                 input.regime_selected_direction,
-                input.market_subgraph
+                input.market_subgraph,
+                regime_companion_suffix
             ),
         },
     };
@@ -601,6 +722,37 @@ where
 }
 
 #[allow(clippy::too_many_arguments)]
+pub fn build_analyze_live_output_value<R>(
+    report: R,
+    source_snapshot: Option<impl Serialize>,
+    freshness_gate: Option<impl Serialize>,
+    compact_report: CompactAnalyzeReport,
+    agent_report: AgentGuidanceReport,
+    human_report: &HumanAnalyzeReport,
+    belief_shadow_policy: BeliefShadowPolicySurface,
+    pda_sequence_summary: Option<PdaSequenceArtifactSummary>,
+    redact_paths: bool,
+) -> Result<serde_json::Value>
+where
+    R: Serialize,
+{
+    let mut output = serde_json::to_value(build_analyze_live_output_envelope(
+        report,
+        source_snapshot,
+        freshness_gate,
+        compact_report,
+        agent_report,
+        human_report,
+        belief_shadow_policy,
+        pda_sequence_summary,
+    ))?;
+    if redact_paths {
+        redact_local_paths_in_value(&mut output);
+    }
+    Ok(output)
+}
+
+#[allow(clippy::too_many_arguments)]
 pub fn emit_analyze_output_envelope<R, E>(
     report: &R,
     output_format: &str,
@@ -655,7 +807,7 @@ pub fn emit_analyze_live_output_envelope<R>(
 where
     R: Serialize,
 {
-    let output = build_analyze_live_output_envelope(
+    let output = build_analyze_live_output_value(
         report,
         source_snapshot,
         freshness_gate,
@@ -664,8 +816,10 @@ where
         human_report,
         belief_shadow_policy,
         pda_sequence_summary,
-    );
-    print_redacted_json(&output)
+        true,
+    )?;
+    println!("{}", serde_json::to_string_pretty(&output)?);
+    Ok(())
 }
 
 #[cfg(test)]
@@ -678,6 +832,7 @@ mod tests {
     #[derive(Debug, Clone, Serialize)]
     struct StubReport {
         symbol: String,
+        path: Option<String>,
     }
 
     #[derive(Debug, Clone, Serialize)]
@@ -708,6 +863,7 @@ mod tests {
     fn build_analyze_output_envelope_collects_executor_summary() {
         let report = StubReport {
             symbol: "NQ".to_string(),
+            path: None,
         };
         let compact_report = build_compact_analyze_report(
             "observe_only",
@@ -748,6 +904,7 @@ mod tests {
             market_family: Some("futures_index"),
             market_subgraph: "index_beta",
             objective_jump_weight: Some(0.25),
+            regime_companion_suffix: None,
         });
         let vote = StubEnsembleVote {
             executor_summaries: vec![
@@ -782,6 +939,7 @@ mod tests {
     fn build_analyze_output_envelope_includes_pda_sequence_summary_when_present() {
         let report = StubReport {
             symbol: "NQ".to_string(),
+            path: None,
         };
         let output = build_analyze_output_envelope(
             report,
@@ -806,6 +964,7 @@ mod tests {
                 market_family: Some("futures_index"),
                 market_subgraph: "index_beta",
                 objective_jump_weight: Some(0.25),
+                regime_companion_suffix: None,
             }),
             AnalyzeMarketFamilySummary {
                 market_family: Some("futures_index".to_string()),
@@ -861,6 +1020,7 @@ mod tests {
             market_family: None,
             market_subgraph: "unknown",
             objective_jump_weight: None,
+            regime_companion_suffix: None,
         });
         let rendered = report.render();
         assert!(
@@ -877,6 +1037,7 @@ mod tests {
     fn build_analyze_live_output_envelope_serializes_optional_surfaces() {
         let report = StubReport {
             symbol: "NQ".to_string(),
+            path: None,
         };
         let human_report = build_human_analyze_surface(AnalyzeHumanInput {
             symbol: "NQ",
@@ -897,6 +1058,7 @@ mod tests {
             market_family: None,
             market_subgraph: "unknown",
             objective_jump_weight: None,
+            regime_companion_suffix: None,
         });
         let output = build_analyze_live_output_envelope(
             report,
@@ -916,5 +1078,73 @@ mod tests {
         assert_eq!(output.source_snapshot.unwrap()["status"], "fresh");
         assert_eq!(output.freshness_gate.unwrap()["status"], "ok");
         assert!(output.human_report.contains("Trade plan"));
+    }
+
+    #[test]
+    fn build_analyze_live_output_value_respects_redaction_flag() {
+        let report = StubReport {
+            symbol: "NQ".to_string(),
+            path: Some("/tmp/ict-live-state/report.json".to_string()),
+        };
+        let human_report = build_human_analyze_surface(AnalyzeHumanInput {
+            symbol: "NQ",
+            selected_direction: Direction::Bull,
+            entry_quality: "medium",
+            gate_status: "pass_neutralized",
+            evidence_quality_score: 0.5,
+            decision_hint: "observe_only",
+            factor_iteration_queue: &[],
+            recommended_next_command: "ict-engine analyze",
+            price_action_narrative: "price",
+            technical_price_narrative: "tech",
+            smt_correlation_narrative: "smt",
+            regime_label: "trend",
+            liquidity_label: "sweep",
+            regime_selected_direction: Direction::Bull,
+            trade_plan_narrative: "plan",
+            market_family: None,
+            market_subgraph: "unknown",
+            objective_jump_weight: None,
+            regime_companion_suffix: None,
+        });
+        let raw_output = build_analyze_live_output_value(
+            report.clone(),
+            Some(StubSnapshot {
+                status: "/tmp/ict-live-state/fresh.json".to_string(),
+            }),
+            None::<StubSnapshot>,
+            build_compact_analyze_report("observe_only", None, None, None, None, &[], &[], &[]),
+            build_agent_guidance_report(None, None, None, None, None, &[], &[], &[]),
+            &human_report,
+            BeliefShadowPolicySurface::default(),
+            None,
+            false,
+        )
+        .unwrap();
+        let redacted_output = build_analyze_live_output_value(
+            report,
+            Some(StubSnapshot {
+                status: "/tmp/ict-live-state/fresh.json".to_string(),
+            }),
+            None::<StubSnapshot>,
+            build_compact_analyze_report("observe_only", None, None, None, None, &[], &[], &[]),
+            build_agent_guidance_report(None, None, None, None, None, &[], &[], &[]),
+            &human_report,
+            BeliefShadowPolicySurface::default(),
+            None,
+            true,
+        )
+        .unwrap();
+
+        assert_eq!(
+            raw_output["report"]["path"],
+            "/tmp/ict-live-state/report.json"
+        );
+        assert_eq!(
+            raw_output["source_snapshot"]["status"],
+            "/tmp/ict-live-state/fresh.json"
+        );
+        assert_eq!(redacted_output["report"]["path"], "<local-path>");
+        assert_eq!(redacted_output["source_snapshot"]["status"], "<local-path>");
     }
 }

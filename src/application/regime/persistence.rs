@@ -11,7 +11,9 @@ use crate::domain::regime::{
     classify_mece_recovery_combined_gate, classify_mece_recovery_gate, MeceRecoveryArtifact,
     MeceRegimeLabel,
 };
-use crate::state::{append_artifact_ledger_entry, save_state, ArtifactLedgerEntry};
+use crate::state::{
+    append_artifact_ledger_entry, artifact_state_path, save_state, ArtifactLedgerEntry,
+};
 
 pub const MECE_RECOVERY_ARTIFACT_FILE: &str = "mece_recovery_artifact.json";
 /// Bumped to 2 when the artifact gained sparsity_ratio / pruned_factor_trail
@@ -40,9 +42,7 @@ pub fn build_mece_recovery_artifact(
         selected_factors: report.best_factor_set.clone(),
         hmm_viterbi_hash: hash_viterbi_path(viterbi_path),
         label_hash: hash_labels(labels),
-        execution_validity_summary: format_execution_summary(
-            &report.execution_validity_histogram,
-        ),
+        execution_validity_summary: format_execution_summary(&report.execution_validity_histogram),
         sparsity_ratio: report.sparsity_ratio,
         pruned_factor_trail: report.pruned_factor_trail.clone(),
         segments: report.segments.clone(),
@@ -82,7 +82,7 @@ pub fn persist_mece_recovery_artifact<P: AsRef<Path>>(
         format!("segments={}", parts.join(","))
     };
     append_artifact_ledger_entry(
-        dir,
+        &dir,
         &artifact.symbol,
         ArtifactLedgerEntry {
             entry_id: format!("ledger:{}", artifact.artifact_id),
@@ -93,11 +93,7 @@ pub fn persist_mece_recovery_artifact<P: AsRef<Path>>(
             symbol: artifact.symbol.clone(),
             source_phase: source_phase.to_string(),
             source_run_id,
-            path: Path::new("state")
-                .join(&artifact.symbol)
-                .join(MECE_RECOVERY_ARTIFACT_FILE)
-                .to_string_lossy()
-                .to_string(),
+            path: artifact_state_path(&dir, &artifact.symbol, MECE_RECOVERY_ARTIFACT_FILE),
             status: combined_gate.to_string(),
             promote_candidate: promote,
             actionable: promote,
@@ -270,8 +266,7 @@ mod tests {
         let labels = manual_mece_labeler(&synthetic_series(), &FrameFeatures::default());
         let artifact = build_mece_recovery_artifact("NQ", &report, &[0, 1, 0, 2], &labels);
         let dir = TempDir::new().unwrap();
-        persist_mece_recovery_artifact(dir.path(), &artifact, "analyze", None, "test")
-            .unwrap();
+        persist_mece_recovery_artifact(dir.path(), &artifact, "analyze", None, "test").unwrap();
 
         let artifact_path = dir.path().join("NQ").join(MECE_RECOVERY_ARTIFACT_FILE);
         assert!(artifact_path.exists(), "artifact file not written");
@@ -288,6 +283,12 @@ mod tests {
         let ledger = fs::read_to_string(&ledger_path).unwrap();
         assert!(ledger.contains("\"mece_recovery_artifact\""));
         assert!(ledger.contains("\"mece-recovery-artifact-v2\""));
+        let entries: Vec<ArtifactLedgerEntry> = serde_json::from_str(&ledger).unwrap();
+        assert_eq!(
+            entries[0].path,
+            artifact_path.to_string_lossy(),
+            "ledger path must point at the selected state_dir artifact"
+        );
     }
 
     #[test]
@@ -298,8 +299,7 @@ mod tests {
 
         artifact.accuracy = MECE_RECOVERY_ACCURACY_GATE - 0.01;
         let dir = TempDir::new().unwrap();
-        persist_mece_recovery_artifact(dir.path(), &artifact, "analyze", None, "test")
-            .unwrap();
+        persist_mece_recovery_artifact(dir.path(), &artifact, "analyze", None, "test").unwrap();
         let ledger_path = dir
             .path()
             .join("NQ")

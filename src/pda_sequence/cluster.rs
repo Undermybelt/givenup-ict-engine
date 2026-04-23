@@ -187,8 +187,7 @@ mod tests {
             std::collections::HashSet::new();
         for packet in &packets {
             assert!(
-                packet.dtw_distance_to_medoid.is_finite()
-                    && packet.dtw_distance_to_medoid >= 0.0,
+                packet.dtw_distance_to_medoid.is_finite() && packet.dtw_distance_to_medoid >= 0.0,
                 "distance must be finite and non-negative"
             );
             if packet.dtw_distance_to_medoid.abs() < 1e-9 {

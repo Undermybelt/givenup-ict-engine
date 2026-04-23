@@ -107,7 +107,8 @@ pub fn search_factors_for_mece_recovery(
     // *drop* in accuracy when that factor is removed — bigger drop means
     // the factor is doing more work. Softshrink then zeroes out factors
     // whose contribution is below 5% of the peak.
-    let factor_weights = removal_impact_weights(candles, labels, &best_factor_set, outcome.accuracy);
+    let factor_weights =
+        removal_impact_weights(candles, labels, &best_factor_set, outcome.accuracy);
     let lambda = adaptive_lambda(&factor_weights, MECE_SOFTSHRINK_LAMBDA_RATIO);
     let sparse = sparse_select_by_softshrink(&factor_weights, lambda);
 
@@ -330,10 +331,7 @@ fn predict_with_factor_subset(
             .iter()
             .map(|c| c.high)
             .fold(f64::NEG_INFINITY, f64::max);
-        let prev_min_low = lookback
-            .iter()
-            .map(|c| c.low)
-            .fold(f64::INFINITY, f64::min);
+        let prev_min_low = lookback.iter().map(|c| c.low).fold(f64::INFINITY, f64::min);
 
         let range = (candle.high - candle.low).max(0.0);
         let body = (candle.close - candle.open).abs();
@@ -344,8 +342,7 @@ fn predict_with_factor_subset(
         if rules.manipulation && range > 0.0 {
             let swept_high =
                 candle.high > prev_max_high && candle.close < (candle.high - 0.6 * range);
-            let swept_low =
-                candle.low < prev_min_low && candle.close > (candle.low + 0.6 * range);
+            let swept_low = candle.low < prev_min_low && candle.close > (candle.low + 0.6 * range);
             if swept_high || swept_low {
                 out.push(MeceRegimeLabel::Manipulation);
                 continue;
@@ -359,17 +356,13 @@ fn predict_with_factor_subset(
             out.push(MeceRegimeLabel::Expansion);
             continue;
         }
-        if rules.trend_continuation
-            && curr_dir != 0.0
-            && curr_dir == prev_dir
-            && body > 0.5 * range
+        if rules.trend_continuation && curr_dir != 0.0 && curr_dir == prev_dir && body > 0.5 * range
         {
             out.push(MeceRegimeLabel::TrendContinuation);
             continue;
         }
         if rules.reversion {
-            let lookback_mean =
-                lookback.iter().map(|c| c.close).sum::<f64>() / LOOKBACK as f64;
+            let lookback_mean = lookback.iter().map(|c| c.close).sum::<f64>() / LOOKBACK as f64;
             if curr_dir != 0.0
                 && curr_dir != prev_dir
                 && (candle.close - lookback_mean).abs() < (candle.open - lookback_mean).abs()
@@ -434,8 +427,8 @@ fn non_empty_subsets(n: usize, max_size: usize) -> Vec<Vec<usize>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::regime::manual_mece_labeler;
     use crate::config::FrameFeatures;
+    use crate::domain::regime::manual_mece_labeler;
     use chrono::{Duration, TimeZone, Utc};
 
     fn ts(n: i64) -> chrono::DateTime<Utc> {
@@ -526,7 +519,11 @@ mod tests {
         )
         .unwrap();
 
-        for bucket in ["execution_ready", "execution_observe_only", "execution_blocked"] {
+        for bucket in [
+            "execution_ready",
+            "execution_observe_only",
+            "execution_blocked",
+        ] {
             assert!(
                 report.execution_validity_histogram.contains_key(bucket),
                 "histogram missing {bucket}"

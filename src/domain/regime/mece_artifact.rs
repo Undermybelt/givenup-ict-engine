@@ -1,9 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use crate::domain::regime::{
-    classify_mece_recovery_segments_gate, RolloutSegment,
-};
+use crate::domain::regime::{classify_mece_recovery_segments_gate, RolloutSegment};
 use crate::factor_lab::sparsity_ratio_within_bounds;
 use crate::state::RunProvenance;
 
@@ -86,7 +84,8 @@ mod tests {
             selected_factors: vec!["structure_ict".to_string()],
             hmm_viterbi_hash: "abc".to_string(),
             label_hash: "def".to_string(),
-            execution_validity_summary: "execution_ready=10;execution_observe_only=5;execution_blocked=2".to_string(),
+            execution_validity_summary:
+                "execution_ready=10;execution_observe_only=5;execution_blocked=2".to_string(),
             sparsity_ratio: 0.5,
             pruned_factor_trail: Vec::new(),
             segments: Vec::new(),

@@ -138,7 +138,10 @@ mod tests {
         ];
         let v = pda_sequence_to_fcgr_vector(&tokens, 2);
         let sum: f64 = v.iter().sum();
-        assert!((sum - 1.0).abs() < 1e-9, "frequencies must sum to 1, got {sum}");
+        assert!(
+            (sum - 1.0).abs() < 1e-9,
+            "frequencies must sum to 1, got {sum}"
+        );
     }
 
     #[test]
@@ -168,7 +171,10 @@ mod tests {
         let va = pda_sequence_to_fcgr_vector(&a, 2);
         let vb = pda_sequence_to_fcgr_vector(&b, 2);
         let d = fcgr_cosine_distance(&va, &vb);
-        assert!(d > 0.5, "fully-disjoint k-mers should yield high distance, got {d}");
+        assert!(
+            d > 0.5,
+            "fully-disjoint k-mers should yield high distance, got {d}"
+        );
     }
 
     #[test]
@@ -208,7 +214,11 @@ mod tests {
         for label in &outcome.labels[3..6] {
             assert_eq!(*label, label_b);
         }
-        assert!(outcome.silhouette > 0.4, "silhouette={}", outcome.silhouette);
+        assert!(
+            outcome.silhouette > 0.4,
+            "silhouette={}",
+            outcome.silhouette
+        );
     }
 
     #[test]

@@ -2,8 +2,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::application::orchestration::PipelineState;
 use crate::domain::execution::{
-    DOMINANT_ENERGY_FLOOR, EXECUTION_GATE_OBSERVE, SPECTRAL_ENTROPY_CHAOS_CAP,
-    SpectralExecutionMetrics,
+    SpectralExecutionMetrics, DOMINANT_ENERGY_FLOOR, EXECUTION_GATE_OBSERVE,
+    SPECTRAL_ENTROPY_CHAOS_CAP,
 };
 
 /// Snapshot of the spectral overlay's execution-relevant decisions. Lives on

@@ -263,12 +263,9 @@ mod tests {
         let predicted: Vec<bool> = (0..10).map(|i| i < 8).collect();
         let readiness: Vec<f64> = (0..10).map(|i| 0.9 - (i as f64) * 0.05).collect();
         let bounds = default_segment_bounds(10);
-        let segments = compute_rollout_segments(
-            &bounds,
-            &predicted,
-            &readiness,
-            |(start, end)| (*start, *end),
-        );
+        let segments = compute_rollout_segments(&bounds, &predicted, &readiness, |(start, end)| {
+            (*start, *end)
+        });
         assert_eq!(segments.len(), 3);
         for segment in &segments {
             assert!(segment.sample_count > 0);

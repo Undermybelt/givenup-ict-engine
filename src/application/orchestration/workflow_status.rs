@@ -272,7 +272,10 @@ fn workflow_status_focus_phase(snapshot: &WorkflowSnapshot) -> String {
 
 pub fn humanize_workflow_command(command: &str) -> String {
     let trimmed = command.trim();
-    if trimmed.is_empty() || trimmed == "recommended_command_unavailable" || trimmed == "next_command_unavailable" {
+    if trimmed.is_empty()
+        || trimmed == "recommended_command_unavailable"
+        || trimmed == "next_command_unavailable"
+    {
         return "No actionable command available.".to_string();
     }
     if let Some(rest) = trimmed.strip_prefix("ask-user: ") {
@@ -1983,7 +1986,10 @@ mod tests {
         let value = build_human_workflow_status_view(&WorkflowSnapshot::default(), &[]);
         assert_eq!(value["status"], "no_workflow_state");
         assert_eq!(value["current_status"]["focus_phase"], "workflow_status");
-        assert_eq!(value["current_status"]["blocking_status"], "no_workflow_state");
+        assert_eq!(
+            value["current_status"]["blocking_status"],
+            "no_workflow_state"
+        );
         assert_eq!(value["latest_stage"]["phase"], "no_workflow_state");
         assert_eq!(
             value["latest_stage"]["summary_short"],

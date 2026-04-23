@@ -11,7 +11,10 @@ use crate::domain::execution::{
     classify_execution_gate, ExecutionFeatures, DOMINANT_ENERGY_FLOOR, EXECUTION_GATE_OBSERVE,
     EXECUTION_GATE_READY, SPECTRAL_ENTROPY_CHAOS_CAP,
 };
-use crate::state::{append_artifact_ledger_entry, save_state, ArtifactLedgerEntry, RunProvenance};
+use crate::state::{
+    append_artifact_ledger_entry, artifact_state_path, save_state, ArtifactLedgerEntry,
+    RunProvenance,
+};
 use crate::types::RegimeProbs;
 
 pub const EXECUTION_TREE_TRACE_FILE: &str = "execution_tree_trace.json";
@@ -447,7 +450,7 @@ pub fn persist_execution_tree_artifact<P: AsRef<Path>>(
         artifact.output.gate_status != "blocked" && artifact.output.branch != "block_crowded";
     let quality_score = (artifact.output.branch_probability * 100.0).round() as i32;
     append_artifact_ledger_entry(
-        dir,
+        &dir,
         &artifact.symbol,
         ArtifactLedgerEntry {
             entry_id: format!("ledger:{}", artifact.artifact_id),
@@ -458,11 +461,7 @@ pub fn persist_execution_tree_artifact<P: AsRef<Path>>(
             symbol: artifact.symbol.clone(),
             source_phase: source_phase.to_string(),
             source_run_id,
-            path: Path::new("state")
-                .join(&artifact.symbol)
-                .join(EXECUTION_TREE_TRACE_FILE)
-                .to_string_lossy()
-                .to_string(),
+            path: artifact_state_path(&dir, &artifact.symbol, EXECUTION_TREE_TRACE_FILE),
             status: artifact.output.gate_status.clone(),
             promote_candidate: promote,
             actionable,
@@ -661,6 +660,12 @@ mod tests {
         let ledger = fs::read_to_string(&ledger_path).unwrap();
         assert!(ledger.contains("\"execution_tree_artifact\""));
         assert!(ledger.contains("\"execution-tree-artifact-v1\""));
+        let entries: Vec<ArtifactLedgerEntry> = serde_json::from_str(&ledger).unwrap();
+        assert_eq!(
+            entries[0].path,
+            trace_path.to_string_lossy(),
+            "ledger path must point at the selected state_dir artifact"
+        );
     }
 
     #[test]

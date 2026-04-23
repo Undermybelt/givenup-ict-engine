@@ -92,7 +92,8 @@ fn force_observe_downgrades_aggressive_fill_to_passive() {
         "aggressive downgraded because axial entropy is uniform"
     );
     assert_eq!(
-        output.decision_hint, "execution_observe_due_to_axial_entropy"
+        output.decision_hint,
+        "execution_observe_due_to_axial_entropy"
     );
     assert!(
         !output.axial_attention_trace.is_empty(),

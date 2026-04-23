@@ -107,7 +107,12 @@ pub fn train_hmm_sequence_cluster(
             );
         }
         let init = initial_params(n_states, &observations);
-        let fitted = BaumWelch::fit(&observations, &init, HMM_TRAIN_MAX_ITER, HMM_TRAIN_TOLERANCE);
+        let fitted = BaumWelch::fit(
+            &observations,
+            &init,
+            HMM_TRAIN_MAX_ITER,
+            HMM_TRAIN_TOLERANCE,
+        );
         models.push(fitted);
     }
     Ok(HmmSequenceCluster {
@@ -264,11 +269,9 @@ mod tests {
     fn rejects_zero_states() {
         let expansions = vec![expansion_sequence(0), expansion_sequence(5)];
         let reversions = vec![reversion_sequence(0), reversion_sequence(5)];
-        assert!(train_hmm_sequence_cluster(
-            &[expansions.as_slice(), reversions.as_slice()],
-            0
-        )
-        .is_err());
+        assert!(
+            train_hmm_sequence_cluster(&[expansions.as_slice(), reversions.as_slice()], 0).is_err()
+        );
     }
 
     #[test]
@@ -285,11 +288,9 @@ mod tests {
             reversion_sequence(10),
             reversion_sequence(15),
         ];
-        let cluster = train_hmm_sequence_cluster(
-            &[expansions.as_slice(), reversions.as_slice()],
-            3,
-        )
-        .expect("training must succeed");
+        let cluster =
+            train_hmm_sequence_cluster(&[expansions.as_slice(), reversions.as_slice()], 3)
+                .expect("training must succeed");
 
         let new_expansion = expansion_sequence(40);
         let new_reversion = reversion_sequence(40);
@@ -297,8 +298,14 @@ mod tests {
         let expansion_class = classify_pda_sequence(&new_expansion, &cluster).unwrap();
         let reversion_class = classify_pda_sequence(&new_reversion, &cluster).unwrap();
 
-        assert_eq!(expansion_class.cluster, 0, "expansion-like must match cluster 0");
-        assert_eq!(reversion_class.cluster, 1, "reversion-like must match cluster 1");
+        assert_eq!(
+            expansion_class.cluster, 0,
+            "expansion-like must match cluster 0"
+        );
+        assert_eq!(
+            reversion_class.cluster, 1,
+            "reversion-like must match cluster 1"
+        );
         assert_eq!(expansion_class.method, HMM_SEQUENCE_CLUSTER_METHOD);
     }
 
@@ -307,12 +314,14 @@ mod tests {
         let expansions = vec![expansion_sequence(0), expansion_sequence(5)];
         let reversions = vec![reversion_sequence(0), reversion_sequence(5)];
         let cluster =
-            train_hmm_sequence_cluster(&[expansions.as_slice(), reversions.as_slice()], 2)
-                .unwrap();
+            train_hmm_sequence_cluster(&[expansions.as_slice(), reversions.as_slice()], 2).unwrap();
         let class = classify_pda_sequence(&expansion_sequence(20), &cluster).unwrap();
         assert_eq!(class.posterior.len(), 2);
         let sum: f64 = class.posterior.iter().sum();
-        assert!((sum - 1.0).abs() < 1e-6, "posterior must sum to 1, got {sum}");
+        assert!(
+            (sum - 1.0).abs() < 1e-6,
+            "posterior must sum to 1, got {sum}"
+        );
         for value in &class.posterior {
             assert!(
                 (0.0..=1.0).contains(value),
@@ -326,8 +335,7 @@ mod tests {
         let expansions = vec![expansion_sequence(0), expansion_sequence(5)];
         let reversions = vec![reversion_sequence(0), reversion_sequence(5)];
         let cluster =
-            train_hmm_sequence_cluster(&[expansions.as_slice(), reversions.as_slice()], 2)
-                .unwrap();
+            train_hmm_sequence_cluster(&[expansions.as_slice(), reversions.as_slice()], 2).unwrap();
         assert!(classify_pda_sequence(&[], &cluster).is_err());
     }
 }

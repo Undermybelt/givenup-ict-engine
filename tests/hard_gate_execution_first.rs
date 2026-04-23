@@ -43,7 +43,10 @@ fn features(readiness: f64) -> ExecutionFeatures {
     }
 }
 
-fn score(prediction_score: f64, execution_readiness: f64) -> ict_engine::application::orchestration::ExecutionTreeOutput {
+fn score(
+    prediction_score: f64,
+    execution_readiness: f64,
+) -> ict_engine::application::orchestration::ExecutionTreeOutput {
     let features = features(execution_readiness);
     let overlay = flat_overlay();
     let posterior = neutral_posterior();
@@ -99,7 +102,10 @@ fn weak_prediction_weak_execution_blocks() {
     assert_eq!(output.gate_status, "blocked");
     assert_eq!(output.branch, "block_crowded");
     assert_eq!(output.execution_bias, "skip");
-    assert_eq!(output.decision_hint, "execution_blocked_regardless_of_prediction");
+    assert_eq!(
+        output.decision_hint,
+        "execution_blocked_regardless_of_prediction"
+    );
 }
 
 #[test]
@@ -109,7 +115,8 @@ fn medium_prediction_strong_execution_fills() {
     assert_eq!(output.branch, "fill_viable");
     assert_eq!(output.execution_bias, "aggressive");
     assert_eq!(
-        output.decision_hint, "execution_first_fill_with_medium_prediction"
+        output.decision_hint,
+        "execution_first_fill_with_medium_prediction"
     );
 }
 

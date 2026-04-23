@@ -15,7 +15,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::factor_lab::TuckerCore;
 use crate::state::{
-    append_artifact_ledger_entry, save_state, ArtifactLedgerEntry, RunProvenance,
+    append_artifact_ledger_entry, artifact_state_path, save_state, ArtifactLedgerEntry,
+    RunProvenance,
 };
 
 pub const FACTOR_TUCKER_CORE_ARTIFACT_FILE: &str = "factor_tucker_core.json";
@@ -51,7 +52,11 @@ pub fn build_factor_tucker_core_artifact(
 ) -> FactorTuckerCoreArtifact {
     let generated_at = Utc::now();
     FactorTuckerCoreArtifact {
-        artifact_id: format!("factor-tucker-{}-{}", symbol, generated_at.timestamp_millis()),
+        artifact_id: format!(
+            "factor-tucker-{}-{}",
+            symbol,
+            generated_at.timestamp_millis()
+        ),
         generated_at,
         symbol: symbol.to_string(),
         tucker,
@@ -89,7 +94,7 @@ pub fn persist_factor_tucker_core_artifact<P: AsRef<Path>>(
         "low"
     };
     append_artifact_ledger_entry(
-        dir,
+        &dir,
         &artifact.symbol,
         ArtifactLedgerEntry {
             entry_id: format!("ledger:{}", artifact.artifact_id),
@@ -100,11 +105,7 @@ pub fn persist_factor_tucker_core_artifact<P: AsRef<Path>>(
             symbol: artifact.symbol.clone(),
             source_phase: source_phase.to_string(),
             source_run_id,
-            path: Path::new("state")
-                .join(&artifact.symbol)
-                .join(FACTOR_TUCKER_CORE_ARTIFACT_FILE)
-                .to_string_lossy()
-                .to_string(),
+            path: artifact_state_path(&dir, &artifact.symbol, FACTOR_TUCKER_CORE_ARTIFACT_FILE),
             status: confidence.to_string(),
             // Tucker core is a lineage artifact, not a gate — never promote by
             // itself. The SHAP consumer reads attribution_confidence from the
@@ -185,10 +186,7 @@ mod tests {
         persist_factor_tucker_core_artifact(dir.path(), &artifact, "analyze", None, "test")
             .unwrap();
 
-        let artifact_path = dir
-            .path()
-            .join("NQ")
-            .join(FACTOR_TUCKER_CORE_ARTIFACT_FILE);
+        let artifact_path = dir.path().join("NQ").join(FACTOR_TUCKER_CORE_ARTIFACT_FILE);
         assert!(artifact_path.exists(), "artifact file not written");
         let raw = fs::read_to_string(&artifact_path).unwrap();
         assert!(raw.contains("\"tucker\""));
@@ -206,5 +204,11 @@ mod tests {
         // Lineage artifact: never promotes or actionable.
         assert!(ledger.contains("\"promote_candidate\": false"));
         assert!(ledger.contains("\"actionable\": false"));
+        let entries: Vec<ArtifactLedgerEntry> = serde_json::from_str(&ledger).unwrap();
+        assert_eq!(
+            entries[0].path,
+            artifact_path.to_string_lossy(),
+            "ledger path must point at the selected state_dir artifact"
+        );
     }
 }

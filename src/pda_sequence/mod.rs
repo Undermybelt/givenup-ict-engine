@@ -23,7 +23,8 @@ pub mod persistence;
 pub mod token;
 
 pub use analysis::{
-    analyze_pda_sequences, PdaSequenceAnalysisArtifact, PDA_SEQUENCE_ANALYSIS_METHOD,
+    analyze_pda_sequences, summarize_pda_sequence_artifact, PdaSequenceAnalysisArtifact,
+    PdaSequenceArtifactSummary, PDA_SEQUENCE_ANALYSIS_METHOD, PDA_SEQUENCE_DEFAULT_KMER_K,
 };
 pub use cluster::{cluster_pda_sequences, PdaDtwClusterPacket, PDA_DTW_CLUSTER_METHOD};
 pub use dtw::{dtw_alignment, dtw_distance, dtw_distance_matrix, DtwAlignment};
@@ -44,12 +45,12 @@ pub use fcgr::{
 };
 pub use hmm_cluster::{
     classify_pda_sequence, encode_pda_token, encode_sequence, train_hmm_sequence_cluster,
-    HmmSequenceClassification, HmmSequenceCluster, HMM_SEQUENCE_CLUSTER_METHOD,
-    HMM_TRAIN_MAX_ITER, HMM_TRAIN_TOLERANCE, PDA_TOKEN_OBS_DIM,
+    HmmSequenceClassification, HmmSequenceCluster, HMM_SEQUENCE_CLUSTER_METHOD, HMM_TRAIN_MAX_ITER,
+    HMM_TRAIN_TOLERANCE, PDA_TOKEN_OBS_DIM,
 };
 pub use kmedoids::{pam_cluster, PamOutcome};
 pub use persistence::{
-    classify_pda_sequence_ledger_status, persist_pda_sequence_analysis,
+    classify_pda_sequence_ledger_status, load_pda_sequence_analysis, persist_pda_sequence_analysis,
     PDA_SEQUENCE_ARTIFACT_FILE, PDA_SEQUENCE_CONSISTENCY_ACTIONABLE,
     PDA_SEQUENCE_SILHOUETTE_ACTIONABLE,
 };

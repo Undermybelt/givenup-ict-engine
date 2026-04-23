@@ -39,10 +39,7 @@ pub fn manual_mece_labeler(
             .iter()
             .map(|c| c.high)
             .fold(f64::NEG_INFINITY, f64::max);
-        let prev_min_low = lookback
-            .iter()
-            .map(|c| c.low)
-            .fold(f64::INFINITY, f64::min);
+        let prev_min_low = lookback.iter().map(|c| c.low).fold(f64::INFINITY, f64::min);
 
         let range = (candle.high - candle.low).max(0.0);
         let body = (candle.close - candle.open).abs();
@@ -143,7 +140,9 @@ mod tests {
             .collect();
         let labels = manual_mece_labeler(&series, &frame());
         assert_eq!(labels.len(), series.len());
-        assert!(labels.iter().all(|label| *label == MeceRegimeLabel::Unknown));
+        assert!(labels
+            .iter()
+            .all(|label| *label == MeceRegimeLabel::Unknown));
     }
 
     #[test]

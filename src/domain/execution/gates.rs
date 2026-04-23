@@ -86,7 +86,10 @@ mod tests {
     #[test]
     fn spectral_penalty_is_noop_when_structure_is_present() {
         let rhythmic = metrics(0.10, 0.90);
-        assert_eq!(apply_spectral_execution_penalty(0.80, Some(&rhythmic)), 0.80);
+        assert_eq!(
+            apply_spectral_execution_penalty(0.80, Some(&rhythmic)),
+            0.80
+        );
     }
 
     #[test]

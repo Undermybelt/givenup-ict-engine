@@ -3,7 +3,9 @@ use std::path::Path;
 
 use anyhow::Result;
 
-use crate::state::{append_artifact_ledger_entry, save_state, ArtifactLedgerEntry};
+use crate::state::{
+    append_artifact_ledger_entry, artifact_state_path, load_state, save_state, ArtifactLedgerEntry,
+};
 
 use super::analysis::PdaSequenceAnalysisArtifact;
 
@@ -36,17 +38,12 @@ pub fn persist_pda_sequence_analysis<P: AsRef<Path>>(
     source_phase: &str,
     source_run_id: Option<String>,
 ) -> Result<()> {
-    save_state(
-        &dir,
-        &artifact.symbol,
-        PDA_SEQUENCE_ARTIFACT_FILE,
-        artifact,
-    )?;
+    save_state(&dir, &artifact.symbol, PDA_SEQUENCE_ARTIFACT_FILE, artifact)?;
     let status =
         classify_pda_sequence_ledger_status(artifact.silhouette_score, artifact.consistency_ratio);
     let actionable = status == "strong" || status == "observe";
     append_artifact_ledger_entry(
-        dir,
+        &dir,
         &artifact.symbol,
         ArtifactLedgerEntry {
             entry_id: format!("ledger:{}", artifact.artifact_id),
@@ -57,11 +54,7 @@ pub fn persist_pda_sequence_analysis<P: AsRef<Path>>(
             symbol: artifact.symbol.clone(),
             source_phase: source_phase.to_string(),
             source_run_id,
-            path: Path::new("state")
-                .join(&artifact.symbol)
-                .join(PDA_SEQUENCE_ARTIFACT_FILE)
-                .to_string_lossy()
-                .to_string(),
+            path: artifact_state_path(&dir, &artifact.symbol, PDA_SEQUENCE_ARTIFACT_FILE),
             status: status.to_string(),
             // Clustering alone cannot promote — it is a diagnostic surface.
             promote_candidate: false,
@@ -92,6 +85,13 @@ pub fn persist_pda_sequence_analysis<P: AsRef<Path>>(
         },
     )?;
     Ok(())
+}
+
+pub fn load_pda_sequence_analysis<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+) -> Result<PdaSequenceAnalysisArtifact> {
+    load_state(dir, symbol, PDA_SEQUENCE_ARTIFACT_FILE)
 }
 
 #[cfg(test)]
@@ -157,7 +157,15 @@ mod tests {
         for seed in 0..4 {
             sessions.push(trending_down(60 + seed, seed));
         }
-        analyze_pda_sequences("NQ", &sessions, 2, 3, RunProvenance::default()).unwrap()
+        analyze_pda_sequences(
+            "NQ",
+            &sessions,
+            2,
+            3,
+            crate::pda_sequence::PDA_SEQUENCE_DEFAULT_KMER_K,
+            RunProvenance::default(),
+        )
+        .unwrap()
     }
 
     #[test]
@@ -191,5 +199,24 @@ mod tests {
         assert!(ledger.contains("\"pda-sequence-artifact-v1\""));
         // Clustering is never a promote source on its own.
         assert!(ledger.contains("\"promote_candidate\": false"));
+        let entries: Vec<ArtifactLedgerEntry> = serde_json::from_str(&ledger).unwrap();
+        assert_eq!(
+            entries[0].path,
+            artifact_path.to_string_lossy(),
+            "ledger path must point at the selected state_dir artifact"
+        );
+    }
+
+    #[test]
+    fn load_round_trips_persisted_artifact() {
+        let artifact = sample_artifact();
+        let dir = TempDir::new().unwrap();
+        persist_pda_sequence_analysis(dir.path(), &artifact, "analyze", None).unwrap();
+
+        let loaded = load_pda_sequence_analysis(dir.path(), "NQ").unwrap();
+        assert_eq!(loaded.method, artifact.method);
+        assert_eq!(loaded.kmer_k, artifact.kmer_k);
+        assert_eq!(loaded.fcgr_labels, artifact.fcgr_labels);
+        assert_eq!(loaded.ensemble_packets, artifact.ensemble_packets);
     }
 }

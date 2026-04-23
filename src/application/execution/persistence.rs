@@ -5,7 +5,9 @@ use anyhow::Result;
 use crate::domain::execution::{
     classify_execution_gate, ExecutionArtifact, EXECUTION_GATE_OBSERVE, EXECUTION_GATE_READY,
 };
-use crate::state::{append_artifact_ledger_entry, save_state, ArtifactLedgerEntry};
+use crate::state::{
+    append_artifact_ledger_entry, artifact_state_path, save_state, ArtifactLedgerEntry,
+};
 
 pub const EXECUTION_ARTIFACT_FILE: &str = "execution_artifact.json";
 /// Bumped to 2 when ExecutionFeatures gained spectral_metrics and the
@@ -34,7 +36,7 @@ pub fn persist_execution_artifact<P: AsRef<Path>>(
         })
         .unwrap_or_default();
     append_artifact_ledger_entry(
-        dir,
+        &dir,
         &artifact.symbol,
         ArtifactLedgerEntry {
             entry_id: format!("ledger:{}", artifact.artifact_id),
@@ -45,11 +47,7 @@ pub fn persist_execution_artifact<P: AsRef<Path>>(
             symbol: artifact.symbol.clone(),
             source_phase: source_phase.to_string(),
             source_run_id,
-            path: std::path::Path::new("state")
-                .join(&artifact.symbol)
-                .join(EXECUTION_ARTIFACT_FILE)
-                .to_string_lossy()
-                .to_string(),
+            path: artifact_state_path(&dir, &artifact.symbol, EXECUTION_ARTIFACT_FILE),
             status: classify_execution_gate(artifact.features.execution_readiness).to_string(),
             promote_candidate: artifact.features.execution_readiness >= EXECUTION_GATE_READY,
             actionable: artifact.features.execution_readiness >= EXECUTION_GATE_OBSERVE,
@@ -78,4 +76,50 @@ pub fn persist_execution_artifact<P: AsRef<Path>>(
         },
     )?;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::domain::execution::{ExecutionArtifact, ExecutionFeatures};
+    use crate::state::RunProvenance;
+    use chrono::Utc;
+    use std::fs;
+    use tempfile::TempDir;
+
+    #[test]
+    fn persist_writes_artifact_and_ledger_entry_with_selected_state_dir_path() {
+        let artifact = ExecutionArtifact {
+            artifact_id: "execution-artifact-NQ-test".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            features: ExecutionFeatures {
+                execution_score: 0.70,
+                execution_readiness: 0.60,
+                execution_edge_share: 0.55,
+                prediction_edge_share: 0.45,
+                ..ExecutionFeatures::default()
+            },
+            hard_gate_status: "observe".to_string(),
+            provenance: RunProvenance::default(),
+        };
+        let dir = TempDir::new().unwrap();
+
+        persist_execution_artifact(dir.path(), &artifact, "analyze", None, "test").unwrap();
+
+        let artifact_path = dir.path().join("NQ").join(EXECUTION_ARTIFACT_FILE);
+        assert!(artifact_path.exists(), "artifact file not written");
+        let ledger = fs::read_to_string(
+            dir.path()
+                .join("NQ")
+                .join(crate::state::ARTIFACT_LEDGER_FILE),
+        )
+        .unwrap();
+        let entries: Vec<ArtifactLedgerEntry> = serde_json::from_str(&ledger).unwrap();
+        assert_eq!(
+            entries[0].path,
+            artifact_path.to_string_lossy(),
+            "ledger path must point at the selected state_dir artifact"
+        );
+    }
 }

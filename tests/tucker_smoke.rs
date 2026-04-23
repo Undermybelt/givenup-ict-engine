@@ -22,7 +22,9 @@ fn rank_one_tensor_reconstructs_exactly() {
     let tensor = rank_one_tensor(4, 3, 2);
     let core = fit_tucker_core(&tensor, (1, 1, 1)).expect("fit");
     assert!(core.reconstruction_error < 1e-10);
-    assert!(tucker_attribution_confidence_is_high(core.reconstruction_error));
+    assert!(tucker_attribution_confidence_is_high(
+        core.reconstruction_error
+    ));
     assert_eq!(core.rank_triplet, (1, 1, 1));
 }
 
@@ -57,10 +59,7 @@ fn artifact_persists_with_lineage_metadata() {
     let dir = TempDir::new().unwrap();
     persist_factor_tucker_core_artifact(dir.path(), &artifact, "analyze", None, "test").unwrap();
 
-    let artifact_path = dir
-        .path()
-        .join("NQ")
-        .join(FACTOR_TUCKER_CORE_ARTIFACT_FILE);
+    let artifact_path = dir.path().join("NQ").join(FACTOR_TUCKER_CORE_ARTIFACT_FILE);
     assert!(artifact_path.exists());
     let raw = fs::read_to_string(&artifact_path).unwrap();
     assert!(raw.contains("\"factor_labels\""));

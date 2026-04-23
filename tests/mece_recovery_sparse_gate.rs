@@ -1,10 +1,11 @@
 //! Sprint 3 2.2 acceptance: combined hard gate — accuracy + sparsity + segments.
 //! Blocks promotion if any sub-gate fails, even when accuracy alone would pass.
 
+use chrono::{Duration, TimeZone, Utc};
+use ict_engine::application::regime::search_factors_for_mece_recovery;
 use ict_engine::application::regime::{
     build_mece_recovery_artifact, persist_mece_recovery_artifact,
 };
-use ict_engine::application::regime::search_factors_for_mece_recovery;
 use ict_engine::config::FrameFeatures;
 use ict_engine::domain::regime::{
     classify_mece_recovery_combined_gate, manual_mece_labeler, RolloutSegment,
@@ -13,7 +14,6 @@ use ict_engine::domain::regime::{
 use ict_engine::factors::FactorRegistry;
 use ict_engine::state::RunProvenance;
 use ict_engine::types::Candle;
-use chrono::{Duration, TimeZone, Utc};
 use std::fs;
 use tempfile::TempDir;
 
@@ -94,16 +94,10 @@ fn combined_gate_blocks_when_sparsity_is_out_of_band() {
     artifact.accuracy = MECE_RECOVERY_ACCURACY_GATE + 0.01;
 
     artifact.sparsity_ratio = 0.05; // below lower bound
-    assert_eq!(
-        classify_mece_recovery_combined_gate(&artifact),
-        "blocked"
-    );
+    assert_eq!(classify_mece_recovery_combined_gate(&artifact), "blocked");
 
     artifact.sparsity_ratio = 0.95; // above upper bound
-    assert_eq!(
-        classify_mece_recovery_combined_gate(&artifact),
-        "blocked"
-    );
+    assert_eq!(classify_mece_recovery_combined_gate(&artifact), "blocked");
 
     artifact.sparsity_ratio = 0.50;
     artifact.segments.clear();

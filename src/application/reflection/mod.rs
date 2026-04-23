@@ -5,7 +5,10 @@ pub mod postmortem_artifact;
 pub mod prior_artifact;
 pub mod research_adapter;
 
-pub use adapter::{build_reflection_bundle, ReflectionBundle, ReflectionBundleInput};
+pub use adapter::{
+    apply_pda_sequence_artifact_to_reflection_bundle, build_reflection_bundle, ReflectionBundle,
+    ReflectionBundleInput,
+};
 pub use attribution::{
     build_decision_attribution, BeliefAttributionItem, DecisionAttribution, FactorAttributionItem,
 };

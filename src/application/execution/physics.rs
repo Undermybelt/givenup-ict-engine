@@ -24,7 +24,10 @@ pub fn build_execution_physics_overlay(
     candles: &[Candle],
     frame_features: &FrameFeatures,
 ) -> ExecutionPhysicsOverlay {
-    let prices = candles.iter().map(|candle| candle.close).collect::<Vec<_>>();
+    let prices = candles
+        .iter()
+        .map(|candle| candle.close)
+        .collect::<Vec<_>>();
     let timestamps = candles
         .iter()
         .map(|candle| candle.timestamp)
@@ -35,7 +38,10 @@ pub fn build_execution_physics_overlay(
     let pythagorean = if candles.len() >= 2 {
         let anchor_a = Point2 {
             x: 0.0,
-            y: candles.first().map(|candle| candle.close).unwrap_or_default(),
+            y: candles
+                .first()
+                .map(|candle| candle.close)
+                .unwrap_or_default(),
         };
         let anchor_b = Point2 {
             x: (candles.len() - 1) as f64,
@@ -47,7 +53,10 @@ pub fn build_execution_physics_overlay(
         };
         let current = Point2 {
             x: (candles.len() - 1) as f64,
-            y: candles.last().map(|candle| candle.close).unwrap_or_default(),
+            y: candles
+                .last()
+                .map(|candle| candle.close)
+                .unwrap_or_default(),
         };
         Some(measure_pythagorean_extension(anchor_a, anchor_b, current))
     } else {
@@ -112,7 +121,10 @@ mod tests {
 
         assert!(overlay.pythagorean.is_some());
         assert!(overlay.ising.is_some());
-        assert!(overlay.spectral.is_some(), "spectral should fit on 48 rhythmic candles");
+        assert!(
+            overlay.spectral.is_some(),
+            "spectral should fit on 48 rhythmic candles"
+        );
     }
 
     #[test]
@@ -120,8 +132,7 @@ mod tests {
         let start = Utc.with_ymd_and_hms(2026, 1, 1, 0, 0, 0).unwrap();
         let candles: Vec<Candle> = (0..128)
             .map(|i| {
-                let close =
-                    100.0 + (2.0 * std::f64::consts::PI * i as f64 / 32.0).sin() * 2.0;
+                let close = 100.0 + (2.0 * std::f64::consts::PI * i as f64 / 32.0).sin() * 2.0;
                 Candle {
                     timestamp: start + Duration::minutes(i as i64),
                     open: close,
@@ -134,7 +145,9 @@ mod tests {
             .collect();
         let frame = crate::config::build_frame_features(&candles).unwrap();
         let overlay = build_execution_physics_overlay(&candles, &frame);
-        let spectral = overlay.spectral.expect("rhythmic candles yield spectral metrics");
+        let spectral = overlay
+            .spectral
+            .expect("rhythmic candles yield spectral metrics");
         assert!(spectral.dominant_cycle_energy > 0.8);
         assert!(spectral.spectral_entropy < 0.3);
     }

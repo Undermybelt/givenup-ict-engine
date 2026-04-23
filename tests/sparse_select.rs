@@ -54,13 +54,7 @@ fn full_collapse_flagged_by_sparsity_bounds() {
 
 #[test]
 fn zero_prune_flagged_as_degenerate() {
-    let w = weights(&[
-        ("a", 1.0),
-        ("b", 1.0),
-        ("c", 1.0),
-        ("d", 1.0),
-        ("e", 1.0),
-    ]);
+    let w = weights(&[("a", 1.0), ("b", 1.0), ("c", 1.0), ("d", 1.0), ("e", 1.0)]);
     let selection = sparse_select_by_softshrink(&w, 0.0);
     assert_eq!(selection.sparsity_ratio, 1.0);
     assert!(selection.sparsity_ratio > MECE_SPARSITY_UPPER_BOUND);

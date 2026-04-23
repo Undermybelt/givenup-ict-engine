@@ -25,12 +25,8 @@ fn single_dominant_timeframe_concentrates_top_weight() {
         feature_axis_weights: vec![1.0, 1.0],
         softmax_temperature: 1.0,
     };
-    let (pooled, trace) = axial_pool_mtf_features(
-        &tensor,
-        &config,
-        &labels("tf", 3),
-        &labels("feat", 2),
-    );
+    let (pooled, trace) =
+        axial_pool_mtf_features(&tensor, &config, &labels("tf", 3), &labels("feat", 2));
     assert_eq!(pooled.dim(), (2, 4));
     assert_eq!(trace.timeframe_weights[0].0, "tf0");
     assert!(trace.timeframe_weights[0].1 > 0.9);
@@ -41,12 +37,8 @@ fn single_dominant_timeframe_concentrates_top_weight() {
 fn uniform_weights_force_observe_gate() {
     let tensor = Array3::<f64>::from_elem((5, 2, 3), 1.0);
     let config = AxialPoolConfig::default();
-    let (_pooled, trace) = axial_pool_mtf_features(
-        &tensor,
-        &config,
-        &labels("tf", 5),
-        &labels("feat", 2),
-    );
+    let (_pooled, trace) =
+        axial_pool_mtf_features(&tensor, &config, &labels("tf", 5), &labels("feat", 2));
     assert!(axial_branch_gate_triggers_observe(&trace));
 }
 
@@ -72,27 +64,20 @@ fn temperature_sharpens_timeframe_distribution() {
 
 #[test]
 fn pooling_is_deterministic_across_reruns() {
-    let tensor = Array3::<f64>::from_shape_fn((3, 2, 2), |(t, f, u)| {
-        (t * 3 + f * 2 + u) as f64
-    });
+    let tensor = Array3::<f64>::from_shape_fn((3, 2, 2), |(t, f, u)| (t * 3 + f * 2 + u) as f64);
     let config = AxialPoolConfig {
         timeframe_axis_weights: vec![1.0, 2.0, 3.0],
         feature_axis_weights: vec![1.0, 0.5],
         softmax_temperature: 1.0,
     };
-    let (pool_a, trace_a) = axial_pool_mtf_features(
-        &tensor,
-        &config,
-        &labels("tf", 3),
-        &labels("feat", 2),
-    );
-    let (pool_b, trace_b) = axial_pool_mtf_features(
-        &tensor,
-        &config,
-        &labels("tf", 3),
-        &labels("feat", 2),
-    );
+    let (pool_a, trace_a) =
+        axial_pool_mtf_features(&tensor, &config, &labels("tf", 3), &labels("feat", 2));
+    let (pool_b, trace_b) =
+        axial_pool_mtf_features(&tensor, &config, &labels("tf", 3), &labels("feat", 2));
     assert_eq!(pool_a, pool_b);
     assert_eq!(trace_a.timeframe_entropy, trace_b.timeframe_entropy);
-    assert_eq!(trace_a.timeframe_weights.len(), trace_b.timeframe_weights.len());
+    assert_eq!(
+        trace_a.timeframe_weights.len(),
+        trace_b.timeframe_weights.len()
+    );
 }

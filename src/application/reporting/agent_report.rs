@@ -2,6 +2,7 @@ use serde::Serialize;
 
 use super::compact_report::humanize_decision_hint;
 use crate::application::orchestration::ExecutionTriage;
+use crate::state::{recommended_next_command_meta, RecommendedNextCommandKind};
 
 #[derive(Debug, Clone, Serialize, Default)]
 pub struct AgentNextStep {
@@ -45,28 +46,33 @@ fn parse_next_step(next_command: Option<&str>) -> AgentNextStep {
             deferred_command: None,
         };
     };
-    if let Some(rest) = next_command.strip_prefix("ask-user: ") {
-        let mut parts = rest.split(" | blocked until user_selected_historical_data | then ");
-        let prompt = parts.next().unwrap_or("").trim();
-        let deferred_command = parts.next().unwrap_or("").trim();
-        return AgentNextStep {
+    let meta = recommended_next_command_meta(next_command);
+    match meta.kind {
+        RecommendedNextCommandKind::AskUser => AgentNextStep {
             action_type: "ask_user_choose_historical_data".to_string(),
             user_input_required: true,
             blocked_reason: Some("user_selected_historical_data_missing".to_string()),
-            prompt: Some(prompt.to_string()),
-            deferred_command: if deferred_command.is_empty() {
-                None
-            } else {
-                Some(deferred_command.to_string())
-            },
-        };
-    }
-    AgentNextStep {
-        action_type: "run_command".to_string(),
-        user_input_required: false,
-        blocked_reason: None,
-        prompt: None,
-        deferred_command: Some(next_command.to_string()),
+            prompt: meta.prompt,
+            deferred_command: meta.executable_command,
+        },
+        RecommendedNextCommandKind::Unavailable | RecommendedNextCommandKind::Unknown => {
+            AgentNextStep {
+                action_type: "none".to_string(),
+                user_input_required: false,
+                blocked_reason: None,
+                prompt: None,
+                deferred_command: None,
+            }
+        }
+        _ => AgentNextStep {
+            action_type: "run_command".to_string(),
+            user_input_required: false,
+            blocked_reason: None,
+            prompt: None,
+            deferred_command: meta
+                .executable_command
+                .or_else(|| Some(next_command.to_string())),
+        },
     }
 }
 

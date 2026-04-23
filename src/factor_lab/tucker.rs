@@ -31,10 +31,7 @@ pub struct TuckerCore {
 /// or exceeds the corresponding input dimension. Reconstruction error is the
 /// Frobenius norm of `T - T̂` over the Frobenius norm of `T`, so it is
 /// dimensionless and comparable across runs.
-pub fn fit_tucker_core(
-    tensor: &Array3<f64>,
-    ranks: (usize, usize, usize),
-) -> Option<TuckerCore> {
+pub fn fit_tucker_core(tensor: &Array3<f64>, ranks: (usize, usize, usize)) -> Option<TuckerCore> {
     let shape = tensor.dim();
     let (nf, nr, nt) = shape;
     let (rf, rr, rt) = ranks;
@@ -143,11 +140,7 @@ fn unfold(tensor: &Array3<f64>, mode: usize) -> Array2<f64> {
 // Top-`rank` left singular vectors of the mode-n unfolding. Computed via
 // eigendecomposition of M * M^T — valid because left singular vectors are
 // the eigenvectors of the Gram matrix, with singular values = sqrt(eigen).
-fn mode_n_left_singular_vectors(
-    tensor: &Array3<f64>,
-    mode: usize,
-    rank: usize,
-) -> Array2<f64> {
+fn mode_n_left_singular_vectors(tensor: &Array3<f64>, mode: usize, rank: usize) -> Array2<f64> {
     let unfolded = unfold(tensor, mode);
     let gram = unfolded.dot(&unfolded.t());
     let (eigenvalues, eigenvectors) = jacobi_eigendecomposition(&gram);

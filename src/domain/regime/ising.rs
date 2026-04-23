@@ -47,8 +47,7 @@ pub fn estimate_ising_state(
         .clamp(0.0, 1.0);
     let coupling_strength =
         ((herding_bias * 0.65) + (participation_concentration * 0.35)).clamp(0.0, 1.0);
-    let phase_transition_risk =
-        (coupling_strength * (1.0 - herding_bias + 0.25)).clamp(0.0, 1.0);
+    let phase_transition_risk = (coupling_strength * (1.0 - herding_bias + 0.25)).clamp(0.0, 1.0);
 
     Some(IsingState {
         magnetization,

@@ -4,8 +4,9 @@
 //! any segment collapses or drifts.
 
 use ict_engine::domain::regime::{
-    classify_mece_recovery_segments_gate, default_segment_bounds, MECE_SEGMENT_DRIFT_FLOOR,
-    MECE_SEGMENT_LONG_FLOOR, MECE_SEGMENT_MEDIUM_FLOOR, MECE_SEGMENT_SHORT_FLOOR, RolloutSegment,
+    classify_mece_recovery_segments_gate, default_segment_bounds, RolloutSegment,
+    MECE_SEGMENT_DRIFT_FLOOR, MECE_SEGMENT_LONG_FLOOR, MECE_SEGMENT_MEDIUM_FLOOR,
+    MECE_SEGMENT_SHORT_FLOOR,
 };
 
 fn segment(accuracy: f64, drift: f64, sample_count: usize) -> RolloutSegment {
@@ -64,7 +65,10 @@ fn gate_blocks_when_drift_exceeds_floor() {
 #[test]
 fn gate_blocks_on_empty_segments() {
     assert_eq!(classify_mece_recovery_segments_gate(&[]), "blocked");
-    assert_eq!(classify_mece_recovery_segments_gate(&[segment(0.99, 0.0, 10)]), "blocked");
+    assert_eq!(
+        classify_mece_recovery_segments_gate(&[segment(0.99, 0.0, 10)]),
+        "blocked"
+    );
 }
 
 #[test]

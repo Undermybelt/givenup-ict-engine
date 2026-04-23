@@ -18,6 +18,14 @@ use crate::state::types::{
     WORKFLOW_SNAPSHOT_FILE,
 };
 
+pub fn artifact_state_path<P: AsRef<Path>>(dir: P, symbol: &str, filename: &str) -> String {
+    dir.as_ref()
+        .join(symbol)
+        .join(filename)
+        .to_string_lossy()
+        .to_string()
+}
+
 /// Load state from JSON file
 pub fn load_state<T: DeserializeOwned, P: AsRef<Path>>(
     dir: P,
@@ -702,6 +710,7 @@ mod tests {
             agent_action_plan: crate::state::AgentActionPlan::default(),
             recommended_commands: crate::state::CommandRecommendations::default(),
             recommended_next_command: String::new(),
+            recommended_next_command_meta: crate::state::types::recommended_next_command_meta(""),
             agent_context_bundle: crate::state::AgentContextBundle::default(),
             agent_context_bundle_minimal: crate::state::AgentContextBundleMinimal::default(),
             feedback_history_summary: crate::state::FeedbackHistorySummary::default(),
@@ -711,7 +720,13 @@ mod tests {
             prediction_edge_share: None,
             execution_readiness: None,
             execution_gate_status: None,
+            pda_cluster_label: None,
             artifact_action_summary: Vec::new(),
+            duration_sizing_scale: None,
+            hybrid_duration_model: None,
+            hybrid_remaining_expected_bars: None,
+            backtest_conformal_coverage_1sigma: 0.0,
+            backtest_trade_count: 0,
             artifact_decision_summary: crate::state::ArtifactDecisionSummary::default(),
             artifact_decision_section: crate::state::ArtifactDecisionSection::default(),
             agent_prompts: crate::agent::AgentPromptPack::default(),
@@ -744,6 +759,7 @@ mod tests {
             agent_action_plan: crate::state::AgentActionPlan::default(),
             recommended_commands: crate::state::CommandRecommendations::default(),
             recommended_next_command: String::new(),
+            recommended_next_command_meta: crate::state::types::recommended_next_command_meta(""),
             agent_context_bundle: crate::state::AgentContextBundle::default(),
             agent_context_bundle_minimal: crate::state::AgentContextBundleMinimal::default(),
             agent_prompts: crate::agent::AgentPromptPack::default(),
@@ -806,12 +822,16 @@ mod tests {
             agent_action_plan: crate::state::AgentActionPlan::default(),
             recommended_commands: crate::state::CommandRecommendations::default(),
             recommended_next_command: String::new(),
+            recommended_next_command_meta: crate::state::types::recommended_next_command_meta(""),
             agent_context_bundle: crate::state::AgentContextBundle::default(),
             agent_context_bundle_minimal: crate::state::AgentContextBundleMinimal::default(),
             feedback_history_summary: crate::state::FeedbackHistorySummary::default(),
             multi_timeframe_summary: Vec::new(),
             objective_market_credibility_shrink: None,
             artifact_action_summary: Vec::new(),
+            duration_sizing_scale: None,
+            hybrid_duration_model: None,
+            hybrid_remaining_expected_bars: None,
             execution_artifact_id: None,
             execution_edge_share: None,
             prediction_edge_share: None,
@@ -851,6 +871,10 @@ mod tests {
             selected_direction: crate::types::Direction::Bull,
             selected_entry_quality: "high".to_string(),
             decision_hint: "observe".to_string(),
+            hybrid_regime_label: None,
+            hybrid_regime_age_bars: None,
+            hybrid_duration_model: None,
+            hybrid_remaining_expected_bars: None,
             pre_bayes_evidence_filter: crate::state::PreBayesEvidenceFilter::default(),
             pre_bayes_entry_quality_bridge: crate::state::PreBayesEntryQualityBridge::default(),
             factor_family_decisions: Vec::new(),
@@ -862,6 +886,7 @@ mod tests {
             agent_action_plan: crate::state::AgentActionPlan::default(),
             recommended_commands: crate::state::CommandRecommendations::default(),
             recommended_next_command: String::new(),
+            recommended_next_command_meta: crate::state::types::recommended_next_command_meta(""),
             agent_context_bundle: crate::state::AgentContextBundle::default(),
             agent_context_bundle_minimal: crate::state::AgentContextBundleMinimal::default(),
             feedback_history_summary: crate::state::FeedbackHistorySummary::default(),

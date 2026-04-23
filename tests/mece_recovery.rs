@@ -2,7 +2,9 @@ use chrono::{Duration, TimeZone, Utc};
 
 use ict_engine::application::regime::search_factors_for_mece_recovery;
 use ict_engine::config::FrameFeatures;
-use ict_engine::domain::regime::{manual_mece_labeler, MeceRegimeLabel, MECE_RECOVERY_ACCURACY_GATE};
+use ict_engine::domain::regime::{
+    manual_mece_labeler, MeceRegimeLabel, MECE_RECOVERY_ACCURACY_GATE,
+};
 use ict_engine::factors::FactorRegistry;
 use ict_engine::state::RunProvenance;
 use ict_engine::types::Candle;

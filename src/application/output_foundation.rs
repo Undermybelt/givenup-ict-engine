@@ -42,19 +42,32 @@ pub fn redact_local_paths(text: &str) -> String {
     out
 }
 
+fn preserves_machine_command_value(key: &str) -> bool {
+    matches!(
+        key,
+        "next_command" | "recommended_command" | "deferred_command" | "executable_command"
+    )
+}
+
 pub fn redact_local_paths_in_value(value: &mut Value) {
+    redact_local_paths_in_value_for_key(None, value);
+}
+
+fn redact_local_paths_in_value_for_key(key: Option<&str>, value: &mut Value) {
     match value {
         Value::String(text) => {
-            *text = redact_local_paths(text);
+            if !key.is_some_and(preserves_machine_command_value) {
+                *text = redact_local_paths(text);
+            }
         }
         Value::Array(items) => {
             for item in items {
-                redact_local_paths_in_value(item);
+                redact_local_paths_in_value_for_key(key, item);
             }
         }
         Value::Object(map) => {
-            for item in map.values_mut() {
-                redact_local_paths_in_value(item);
+            for (child_key, item) in map.iter_mut() {
+                redact_local_paths_in_value_for_key(Some(child_key.as_str()), item);
             }
         }
         _ => {}
@@ -96,5 +109,45 @@ pub fn short_workflow_phase_summary(phase: &WorkflowPhaseSnapshot) -> String {
         phase.phase_summary.clone()
     } else {
         parts.join(" ")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn redaction_preserves_agent_machine_command_fields() {
+        let mut value = serde_json::json!({
+            "next_command": "ict-engine factor-research --state-dir /tmp/ict-agent-state",
+            "recommended_command": "ict-engine workflow-status --state-dir /tmp/ict-agent-state",
+            "next_step": {
+                "deferred_command": "ict-engine factor-research --data /tmp/data.json --state-dir /tmp/ict-agent-state",
+                "prompt": "Ask about /tmp/data.json"
+            },
+            "display_command": "ict-engine factor-research --state-dir /tmp/ict-agent-state",
+            "path": "/tmp/ict-agent-state/NQ/artifact.json"
+        });
+
+        redact_local_paths_in_value(&mut value);
+
+        assert_eq!(
+            value["next_command"],
+            "ict-engine factor-research --state-dir /tmp/ict-agent-state"
+        );
+        assert_eq!(
+            value["recommended_command"],
+            "ict-engine workflow-status --state-dir /tmp/ict-agent-state"
+        );
+        assert_eq!(
+            value["next_step"]["deferred_command"],
+            "ict-engine factor-research --data /tmp/data.json --state-dir /tmp/ict-agent-state"
+        );
+        assert_eq!(value["next_step"]["prompt"], "Ask about <local-path>");
+        assert_eq!(
+            value["display_command"],
+            "ict-engine factor-research --state-dir <local-path>"
+        );
+        assert_eq!(value["path"], "<local-path>");
     }
 }

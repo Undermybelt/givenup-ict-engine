@@ -6,10 +6,10 @@ use std::collections::{BTreeMap, BTreeSet};
 use crate::config::shell_quote;
 use crate::state::{
     load_artifact_ledger, load_factor_autoresearch_attempts, load_factor_autoresearch_sessions,
-    load_state_or_default, load_workflow_snapshot, AnalyzeRunRecord, ArtifactLedgerEntry,
-    BacktestRunRecord, FactorAutoresearchAttempt, FactorAutoresearchSession,
-    FactorMutationRunRecord, ResearchRunRecord, ANALYZE_RUNS_FILE, BACKTEST_RUNS_FILE,
-    FACTOR_MUTATION_RUNS_FILE, RESEARCH_RUNS_FILE,
+    load_state_or_default, load_workflow_snapshot, recommended_next_command_meta, AnalyzeRunRecord,
+    ArtifactLedgerEntry, BacktestRunRecord, FactorAutoresearchAttempt, FactorAutoresearchSession,
+    FactorMutationRunRecord, RecommendedNextCommandKind, ResearchRunRecord, ANALYZE_RUNS_FILE,
+    BACKTEST_RUNS_FILE, FACTOR_MUTATION_RUNS_FILE, RESEARCH_RUNS_FILE,
 };
 
 #[derive(Debug, Serialize)]
@@ -50,38 +50,32 @@ pub struct EvidenceQualityBreakdownReport {
 }
 
 pub fn workflow_next_step_view(command: &str, blocked_reason: Option<&str>) -> Value {
-    let trimmed = command.trim();
-    if trimmed.is_empty()
-        || trimmed == "recommended_command_unavailable"
-        || trimmed == "next_command_unavailable"
-    {
-        return serde_json::json!({
-            "action_type": "none",
-            "user_input_required": false,
-            "blocked_reason": blocked_reason,
-            "prompt": null,
-            "deferred_command": null,
-        });
-    }
-    if let Some(rest) = trimmed.strip_prefix("ask-user: ") {
-        let mut parts = rest.split(" | blocked until user_selected_historical_data | then ");
-        let prompt = parts.next().unwrap_or("").trim();
-        let deferred_command = parts.next().unwrap_or("").trim();
-        return serde_json::json!({
+    let meta = recommended_next_command_meta(command);
+    match meta.kind {
+        RecommendedNextCommandKind::Unavailable | RecommendedNextCommandKind::Unknown => {
+            serde_json::json!({
+                "action_type": "none",
+                "user_input_required": false,
+                "blocked_reason": blocked_reason,
+                "prompt": null,
+                "deferred_command": null,
+            })
+        }
+        RecommendedNextCommandKind::AskUser => serde_json::json!({
             "action_type": "ask_user_choose_historical_data",
             "user_input_required": true,
             "blocked_reason": blocked_reason.unwrap_or("user_selected_historical_data_missing"),
-            "prompt": prompt,
-            "deferred_command": if deferred_command.is_empty() { Value::Null } else { serde_json::json!(deferred_command) },
-        });
+            "prompt": meta.prompt,
+            "deferred_command": meta.executable_command,
+        }),
+        _ => serde_json::json!({
+            "action_type": "run_command",
+            "user_input_required": false,
+            "blocked_reason": blocked_reason,
+            "prompt": null,
+            "deferred_command": meta.executable_command.unwrap_or_else(|| command.trim().to_string()),
+        }),
     }
-    serde_json::json!({
-        "action_type": "run_command",
-        "user_input_required": false,
-        "blocked_reason": blocked_reason,
-        "prompt": null,
-        "deferred_command": trimmed,
-    })
 }
 
 pub fn research_verdict_command(symbol: &str, state_dir: &str) -> Result<()> {
@@ -493,8 +487,7 @@ mod tests {
 
     #[test]
     fn research_verdict_requires_bootstrap_when_no_research_runs_exist() {
-        let report =
-            build_research_verdict_report("DEMO", "state", &[], &[], &[], &[], &[], &[]);
+        let report = build_research_verdict_report("DEMO", "state", &[], &[], &[], &[], &[], &[]);
         let verdict = serde_json::to_value(&report).expect("serialize verdict");
         assert_eq!(verdict["stop_or_continue"], "bootstrap_required");
         assert_eq!(verdict["current_bottleneck"], "no_research_runs");

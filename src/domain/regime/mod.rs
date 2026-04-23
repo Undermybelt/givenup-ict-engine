@@ -1,6 +1,6 @@
 pub mod governor;
-pub mod hybrid;
 pub mod hsmm;
+pub mod hybrid;
 pub mod ising;
 pub mod mece_artifact;
 pub mod mece_labeler;
@@ -13,8 +13,8 @@ pub mod wasserstein;
 mod tests;
 
 pub use governor::*;
-pub use hybrid::*;
 pub use hsmm::*;
+pub use hybrid::*;
 pub use ising::*;
 pub use mece_artifact::*;
 pub use mece_labeler::*;

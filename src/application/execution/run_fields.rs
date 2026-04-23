@@ -30,7 +30,11 @@ pub fn derive_research_execution_fields(
     has_best_factor: bool,
 ) -> ExecutionPhaseFields {
     let execution_edge_share = if has_best_factor {
-        if approved { 0.62 } else { 0.54 }
+        if approved {
+            0.62
+        } else {
+            0.54
+        }
     } else {
         45.0 / 100.0
     };
@@ -40,7 +44,7 @@ pub fn derive_research_execution_fields(
         + should_rollback as u8 as f64 * -0.20
         + feedback_records_applied.min(5) as f64 * 0.05
         + if aggregate_return > 0.0 { 0.20 } else { 0.05 })
-        .clamp(0.0, 1.0);
+    .clamp(0.0, 1.0);
     build_execution_phase_fields(
         execution_edge_share,
         prediction_edge_share,
@@ -74,10 +78,17 @@ pub fn derive_update_execution_fields(
     duplicate_feedback_skipped: bool,
     approved: bool,
 ) -> ExecutionPhaseFields {
-    let execution_edge_share = if feedback_records_applied > 0 { 0.60 } else { 0.50 };
+    let execution_edge_share = if feedback_records_applied > 0 {
+        0.60
+    } else {
+        0.50
+    };
     let prediction_edge_share = (1.0_f64 - execution_edge_share).clamp(0.0, 1.0);
-    let execution_readiness = (if realized_outcome == "win" { 0.35 } else { 0.15 }
-        + feedback_records_applied.min(5) as f64 * 0.07
+    let execution_readiness = (if realized_outcome == "win" {
+        0.35
+    } else {
+        0.15
+    } + feedback_records_applied.min(5) as f64 * 0.07
         + (!duplicate_feedback_skipped) as u8 as f64 * 0.15
         + approved as u8 as f64 * 0.15)
         .clamp(0.0, 1.0);

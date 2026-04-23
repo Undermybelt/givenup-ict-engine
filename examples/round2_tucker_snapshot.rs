@@ -25,7 +25,9 @@ fn main() -> ExitCode {
     if args.len() < 3 {
         eprintln!(
             "usage: {} <state_dir> <symbol>",
-            args.first().map(String::as_str).unwrap_or("round2_tucker_snapshot")
+            args.first()
+                .map(String::as_str)
+                .unwrap_or("round2_tucker_snapshot")
         );
         return ExitCode::from(2);
     }

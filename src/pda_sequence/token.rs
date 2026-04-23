@@ -110,7 +110,10 @@ mod tests {
         let a = PdaToken::new(PdaTokenKind::FairValueGap, 1);
         let b = PdaToken::new(PdaTokenKind::LiquiditySweep, 1);
         let cost = pda_token_cost(&a, &b);
-        assert!(cost >= 0.6, "kind mismatch should contribute at least 0.6, got {cost}");
+        assert!(
+            cost >= 0.6,
+            "kind mismatch should contribute at least 0.6, got {cost}"
+        );
     }
 
     #[test]
@@ -125,7 +128,10 @@ mod tests {
             .with_volume_imbalance(1.0);
         let cost = pda_token_cost(&a, &b);
         // kind matches → kind_cost=0; max metadata delta = 0.15 + 0.15 + 0.10 = 0.40
-        assert!(cost <= 0.40 + 1e-9, "metadata-only cost must stay ≤ 0.40, got {cost}");
+        assert!(
+            cost <= 0.40 + 1e-9,
+            "metadata-only cost must stay ≤ 0.40, got {cost}"
+        );
     }
 
     #[test]

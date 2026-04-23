@@ -60,6 +60,11 @@ mod tests {
         // Ising should always be present (derived from frame features)
         assert!(state.physics_overlay.as_ref().unwrap().ising.is_some());
         // Pythagorean requires at least 2 candles
-        assert!(state.physics_overlay.as_ref().unwrap().pythagorean.is_some());
+        assert!(state
+            .physics_overlay
+            .as_ref()
+            .unwrap()
+            .pythagorean
+            .is_some());
     }
 }

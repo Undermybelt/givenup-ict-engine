@@ -1,9 +1,7 @@
 use crate::application::reflection::ReflectionBundle;
 use crate::domain::execution::ExecutionArtifact;
 
-fn build_execution_explanation(
-    artifact: &ExecutionArtifact,
-) -> (Option<String>, Option<String>) {
+fn build_execution_explanation(artifact: &ExecutionArtifact) -> (Option<String>, Option<String>) {
     if artifact.features.execution_edge_share <= artifact.features.prediction_edge_share {
         return (None, None);
     }
@@ -113,10 +111,7 @@ mod tests {
     #[test]
     fn omits_explanations_when_prediction_dominates() {
         let mut bundle = ReflectionBundle::default();
-        apply_execution_artifact_to_reflection_bundle(
-            &mut bundle,
-            &artifact(0.35, 65.0 / 100.0),
-        );
+        apply_execution_artifact_to_reflection_bundle(&mut bundle, &artifact(0.35, 65.0 / 100.0));
 
         assert!(bundle.why_execution_dominates.is_none());
         assert!(bundle.why_prediction_is_demoted.is_none());

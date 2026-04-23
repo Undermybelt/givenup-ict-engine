@@ -15,6 +15,17 @@ cargo run -- factor-research --help
 
 If you only want the core CLI, Rust is enough. Python scripts are optional research helpers.
 
+## Contributor baseline
+
+Before sending a PR, please run locally:
+
+- `cargo check --all-targets`
+- `cargo test`
+
+Both must be green. CI (`.github/workflows/ci.yml`) runs these on every push.
+
+`cargo clippy --all-targets --no-deps` is advisory today — the codebase still has a small number of test-only lints. Don't introduce new warnings, but passing clippy is not yet a merge gate.
+
 ## Common workflows
 
 ### Analyze market data
@@ -97,7 +108,7 @@ python3 scripts/research_verdict.py <state-or-result-dir>
 
 ## Output modes
 
-`analyze` and `workflow-status` support four output surfaces:
+`analyze`, `backtest`, `factor-backtest`, `factor-research`, and `workflow-status` support four output surfaces:
 
 ```bash
 cargo run -- analyze --symbol NQ --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --output-format json
@@ -112,10 +123,15 @@ cargo run -- workflow-status --symbol NQ --state-dir state --human
 ```
 
 Use:
-- `json` for full archival/debug output
+- `json` for full archival/debug output (default when no flag is passed)
 - `compact` for low-token summary
 - `agent` for next-step automation surface
 - `human` for release-style readable summary
+
+Notes:
+- `--compact`, `--agent`, and `--human` are sugar for `--output-format <mode>`. Do not combine them with `--output-format`.
+- There is no `--json` alias; JSON is the default, so `workflow-status --output-format json` is the explicit form and plain `workflow-status` already prints JSON.
+- `backtest` requires roughly 70+ candles (warmup + hold bars). The bundled `examples/demo/demo-15m.json` (~52 candles) is sized for `analyze`/`factor-backtest` and will error out from `backtest`. Point `--data` at a larger cleaned dataset when running `backtest`.
 
 Agent consumers should prefer:
 - `decision_summary` over `decision_hint_raw`
@@ -169,6 +185,17 @@ Important files:
 - `artifact_ledger.json`
 
 Runtime state directories are ignored by git via `state*/`.
+
+Query the ledger via `ict-engine artifact-status`. Filter flags have the following semantics:
+- `--latest-only` keeps the latest row **per `artifact_kind`** (one entry per kind, chosen by `generated_at` then `version`), not a single global latest row. Combine with `--kind <name>` to reduce to one row for a specific kind.
+- `--recent-n <N>` keeps the N most recent rows across all kinds.
+- `--actionable-only` / `--rule-break-only` / `--consumed-only` are additive filters.
+
+State defaults and environment knobs:
+- `ICT_ENGINE_STATE_DIR` overrides the default `./state` location
+- `ict-engine env` prints the currently effective ICT-related environment settings
+- `docs/environment-variables.md` documents supported variables
+- `docs/state-directory-lifecycle.md` documents cleanup and lifecycle guidance
 
 ## Historical data reuse rule
 

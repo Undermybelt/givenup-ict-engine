@@ -1177,6 +1177,8 @@ pub struct TrainRunRecord {
     #[serde(default)]
     pub recommended_next_command: String,
     #[serde(default)]
+    pub recommended_next_command_meta: RecommendedNextCommandMeta,
+    #[serde(default)]
     pub agent_context_bundle: AgentContextBundle,
     #[serde(default)]
     pub agent_context_bundle_minimal: AgentContextBundleMinimal,
@@ -1229,6 +1231,8 @@ pub struct ResearchRunRecord {
     pub recommended_commands: CommandRecommendations,
     #[serde(default)]
     pub recommended_next_command: String,
+    #[serde(default)]
+    pub recommended_next_command_meta: RecommendedNextCommandMeta,
     #[serde(default)]
     pub agent_context_bundle: AgentContextBundle,
     #[serde(default)]
@@ -1483,6 +1487,8 @@ pub struct AnalyzeRunRecord {
     pub agent_action_plan: AgentActionPlan,
     pub recommended_commands: CommandRecommendations,
     pub recommended_next_command: String,
+    #[serde(default)]
+    pub recommended_next_command_meta: RecommendedNextCommandMeta,
     pub agent_context_bundle: AgentContextBundle,
     pub agent_context_bundle_minimal: AgentContextBundleMinimal,
     pub feedback_history_summary: FeedbackHistorySummary,
@@ -1546,6 +1552,7 @@ impl Default for AnalyzeRunRecord {
             agent_action_plan: AgentActionPlan::default(),
             recommended_commands: CommandRecommendations::default(),
             recommended_next_command: String::new(),
+            recommended_next_command_meta: RecommendedNextCommandMeta::default(),
             agent_context_bundle: AgentContextBundle::default(),
             agent_context_bundle_minimal: AgentContextBundleMinimal::default(),
             feedback_history_summary: FeedbackHistorySummary::default(),
@@ -1616,6 +1623,8 @@ pub struct UpdateRunRecord {
     pub recommended_commands: CommandRecommendations,
     #[serde(default)]
     pub recommended_next_command: String,
+    #[serde(default)]
+    pub recommended_next_command_meta: RecommendedNextCommandMeta,
     #[serde(default)]
     pub agent_context_bundle: AgentContextBundle,
     #[serde(default)]
@@ -1722,6 +1731,8 @@ pub struct BacktestRunRecord {
     pub recommended_commands: CommandRecommendations,
     #[serde(default)]
     pub recommended_next_command: String,
+    #[serde(default)]
+    pub recommended_next_command_meta: RecommendedNextCommandMeta,
     #[serde(default)]
     pub agent_context_bundle: AgentContextBundle,
     #[serde(default)]
@@ -1888,6 +1899,98 @@ pub struct RecommendedCommand {
     pub recorded_data_paths: Vec<String>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
+#[serde(rename_all = "snake_case")]
+pub enum RecommendedNextCommandKind {
+    IctEngine,
+    AskUser,
+    Blocked,
+    Unavailable,
+    Other,
+    #[default]
+    Unknown,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct RecommendedNextCommandMeta {
+    #[serde(default)]
+    pub kind: RecommendedNextCommandKind,
+    #[serde(default)]
+    pub requires_user_input: bool,
+    #[serde(default)]
+    pub blocked: bool,
+    #[serde(default)]
+    pub prompt: Option<String>,
+    #[serde(default)]
+    pub executable_command: Option<String>,
+    #[serde(default)]
+    pub recorded_data_paths: Vec<String>,
+}
+
+pub fn recommended_next_command_meta(raw: &str) -> RecommendedNextCommandMeta {
+    let trimmed = raw.trim();
+    if trimmed.is_empty() || trimmed == "recommended_command_unavailable" {
+        return RecommendedNextCommandMeta {
+            kind: RecommendedNextCommandKind::Unavailable,
+            ..RecommendedNextCommandMeta::default()
+        };
+    }
+    if let Some(rest) = trimmed.strip_prefix("ask-user: ") {
+        let prompt = rest
+            .split(" | blocked until ")
+            .next()
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+            .map(str::to_string);
+        let executable_command = rest
+            .split("| then ")
+            .nth(1)
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+            .map(str::to_string);
+        let recorded_data_paths = rest
+            .split("recorded_paths=")
+            .nth(1)
+            .and_then(|tail| tail.split('|').next())
+            .map(|paths| {
+                paths
+                    .split(',')
+                    .map(str::trim)
+                    .filter(|value| !value.is_empty())
+                    .map(str::to_string)
+                    .collect::<Vec<_>>()
+            })
+            .unwrap_or_default();
+        return RecommendedNextCommandMeta {
+            kind: RecommendedNextCommandKind::AskUser,
+            requires_user_input: true,
+            blocked: true,
+            prompt,
+            executable_command,
+            recorded_data_paths,
+        };
+    }
+    if trimmed.starts_with("blocked:") {
+        return RecommendedNextCommandMeta {
+            kind: RecommendedNextCommandKind::Blocked,
+            blocked: true,
+            ..RecommendedNextCommandMeta::default()
+        };
+    }
+    if trimmed.starts_with("ict-engine ") {
+        return RecommendedNextCommandMeta {
+            kind: RecommendedNextCommandKind::IctEngine,
+            executable_command: Some(trimmed.to_string()),
+            ..RecommendedNextCommandMeta::default()
+        };
+    }
+    RecommendedNextCommandMeta {
+        kind: RecommendedNextCommandKind::Other,
+        executable_command: Some(trimmed.to_string()),
+        ..RecommendedNextCommandMeta::default()
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct CommandRecommendations {
     pub analyze: RecommendedCommand,
@@ -1954,6 +2057,8 @@ pub struct WorkflowPhaseSnapshot {
     pub comparable_to_previous: bool,
     pub comparison_class: String,
     pub recommended_next_command: String,
+    #[serde(default)]
+    pub recommended_next_command_meta: RecommendedNextCommandMeta,
     pub phase_summary: String,
     pub top_actions: Vec<String>,
     pub risk_flags: Vec<String>,
@@ -2051,6 +2156,7 @@ impl Default for WorkflowPhaseSnapshot {
             comparable_to_previous: false,
             comparison_class: String::new(),
             recommended_next_command: String::new(),
+            recommended_next_command_meta: RecommendedNextCommandMeta::default(),
             phase_summary: String::new(),
             top_actions: Vec::new(),
             risk_flags: Vec::new(),
@@ -2136,6 +2242,8 @@ pub struct WorkflowSnapshot {
     #[serde(default)]
     pub blocking_truth: WorkflowBlockingTruth,
     pub recommended_next_command: String,
+    #[serde(default)]
+    pub recommended_next_command_meta: RecommendedNextCommandMeta,
     pub pending_actions: Vec<String>,
     pub risk_flags: Vec<String>,
     #[serde(default)]
@@ -2213,6 +2321,7 @@ impl Default for WorkflowSnapshot {
             current_focus_reason: String::new(),
             blocking_truth: WorkflowBlockingTruth::default(),
             recommended_next_command: String::new(),
+            recommended_next_command_meta: RecommendedNextCommandMeta::default(),
             pending_actions: Vec::new(),
             risk_flags: Vec::new(),
             latest_train: None,
@@ -2267,6 +2376,8 @@ pub struct AgentContextBundle {
     pub workflow_state: WorkflowState,
     pub decision_hint: String,
     pub recommended_next_command: String,
+    #[serde(default)]
+    pub recommended_next_command_meta: RecommendedNextCommandMeta,
     pub recommended_commands: CommandRecommendations,
     pub family_history_window: usize,
     pub comparable_to_last_run: bool,
@@ -2343,6 +2454,8 @@ pub struct StageAgentContext {
 pub struct AgentContextBundleMinimal {
     pub workflow_phase: String,
     pub recommended_next_command: String,
+    #[serde(default)]
+    pub recommended_next_command_meta: RecommendedNextCommandMeta,
     pub family_history_window: usize,
     pub comparable_to_last_run: bool,
     #[serde(default)]
