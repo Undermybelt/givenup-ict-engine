@@ -21,7 +21,8 @@ pub use autoresearch_surface::{
 };
 pub use command_entry::{
     factor_autoresearch_branch_summary, factor_autoresearch_command, factor_autoresearch_decision,
-    factor_mutation_status_command, FactorAutoresearchCommandInput,
+    factor_autoresearch_status_command, factor_mutation_status_command,
+    FactorAutoresearchCommandInput,
 };
 
 pub use expansion_evaluation::{

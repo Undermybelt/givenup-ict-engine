@@ -83,11 +83,11 @@ use ict_engine::application::{
     },
     factor_lifecycle::build_factor_lifecycle_view,
     factor_lifecycle::{
-        apply_expansion_manipulation_objective, build_factor_autoresearch_status_surface,
-        expansion_factor_scores_for_market, factor_mutation_focus_prompt,
-        factor_mutation_priority_markets, factor_mutation_priority_reasons,
-        factor_mutation_recommended_focus, mechanical_mutation_score, next_mutation_spec_template,
-        no_superior_mutation_found, recommended_mutation_directions_from_failure_tags,
+        apply_expansion_manipulation_objective, expansion_factor_scores_for_market,
+        factor_mutation_focus_prompt, factor_mutation_priority_markets,
+        factor_mutation_priority_reasons, factor_mutation_recommended_focus,
+        mechanical_mutation_score, next_mutation_spec_template, no_superior_mutation_found,
+        recommended_mutation_directions_from_failure_tags,
     },
     multi_timeframe_inputs::{
         build_live_multi_timeframe_signal, build_multi_timeframe_research_signal,
@@ -1510,7 +1510,7 @@ fn main() -> Result<()> {
             session_id,
             latest_only,
             limit,
-        } => factor_autoresearch_status_command(
+        } => ict_engine::application::factor_lifecycle::factor_autoresearch_status_command(
             &symbol,
             &state_dir,
             session_id.as_deref(),
@@ -6387,30 +6387,6 @@ fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
     );
 
     emit_update_output(&report, ensemble)
-}
-
-fn factor_autoresearch_status_command(
-    symbol: &str,
-    state_dir: &str,
-    session_id: Option<&str>,
-    latest_only: bool,
-    limit: Option<usize>,
-) -> Result<()> {
-    let Some(surface) = build_factor_autoresearch_status_surface(
-        state_dir,
-        symbol,
-        session_id,
-        latest_only,
-        limit,
-    )?
-    else {
-        let empty = ict_engine::application::orchestration::workflow_status::factor_autoresearch_status_value_for_empty_state(symbol, state_dir);
-        println!("{}", serde_json::to_string_pretty(&empty)?);
-        return Ok(());
-    };
-
-    println!("{}", serde_json::to_string_pretty(&surface)?);
-    Ok(())
 }
 
 fn build_live_multi_timeframe_summary(source: &str, frames: &[(&str, &[Candle])]) -> Vec<String> {

@@ -5,11 +5,11 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use crate::application::decision_utils::parse_research_objective;
 use crate::application::factor_lifecycle::{
-    build_hint_effectiveness_summary, compare_hint_effectiveness,
-    factor_mutation_direction_hint_summary, factor_mutation_recommended_focus,
-    factor_mutation_step_size_hint_summary, next_mutation_spec_template,
-    sync_factor_autoresearch_experiments_tsv, sync_factor_autoresearch_retrospective,
-    FactorMutationPerFactorHintSummary,
+    build_factor_autoresearch_status_surface, build_hint_effectiveness_summary,
+    compare_hint_effectiveness, factor_mutation_direction_hint_summary,
+    factor_mutation_recommended_focus, factor_mutation_step_size_hint_summary,
+    next_mutation_spec_template, sync_factor_autoresearch_experiments_tsv,
+    sync_factor_autoresearch_retrospective, FactorMutationPerFactorHintSummary,
 };
 use crate::config::shell_quote;
 use crate::state::{
@@ -655,5 +655,30 @@ where
         );
     }
     println!("{}", serde_json::to_string_pretty(&summary)?);
+    Ok(())
+}
+
+pub fn factor_autoresearch_status_command(
+    symbol: &str,
+    state_dir: &str,
+    session_id: Option<&str>,
+    latest_only: bool,
+    limit: Option<usize>,
+) -> Result<()> {
+    let Some(surface) = build_factor_autoresearch_status_surface(
+        state_dir,
+        symbol,
+        session_id,
+        latest_only,
+        limit,
+    )?
+    else {
+        let empty =
+            crate::application::orchestration::workflow_status::factor_autoresearch_status_value_for_empty_state(symbol, state_dir);
+        println!("{}", serde_json::to_string_pretty(&empty)?);
+        return Ok(());
+    };
+
+    println!("{}", serde_json::to_string_pretty(&surface)?);
     Ok(())
 }
