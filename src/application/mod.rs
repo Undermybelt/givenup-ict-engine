@@ -7,6 +7,7 @@ pub mod decision_freshness;
 pub mod decision_utils;
 pub mod execution;
 pub mod factor_lifecycle;
+pub mod factor_pipeline_debug;
 pub mod multi_timeframe_inputs;
 pub mod orchestration;
 pub mod output_foundation;

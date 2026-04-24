@@ -62,8 +62,7 @@ use ict_engine::application::{
         CommandContext,
     },
     belief::{
-        adapt_factor_pipeline_debug_report, apply_factor_outcome_overlay,
-        build_canonical_belief_snapshot_with_pda,
+        apply_factor_outcome_overlay, build_canonical_belief_snapshot_with_pda,
         build_expansion_factor_pipeline_report as build_expansion_factor_pipeline_report_v2,
         build_expansion_factor_pipeline_report_with_registry as build_expansion_factor_pipeline_report_with_registry_v2,
         build_pre_bayes_entry_quality_bridge, combine_bias_vectors, combine_liquidity_labels,
@@ -72,8 +71,7 @@ use ict_engine::application::{
         multi_timeframe_entry_quality_bias, persist_market_jump_calibration_from_backtest_runs,
         persist_market_jump_calibration_from_research_runs,
         persist_market_jump_objective_calibration_from_research_runs, pre_bayes_evidence_policy,
-        pre_bayes_policy_lineage_summary, probability_map, AdaptFactorPipelineDebugReportInput,
-        PreBayesEntryQualityBridgeInput,
+        pre_bayes_policy_lineage_summary, probability_map, PreBayesEntryQualityBridgeInput,
     },
     data_sources::{
         build_expansion_sop_market_report, run_clean_futures, run_clean_futures_multi_timeframe,
@@ -1578,18 +1576,20 @@ fn main() -> Result<()> {
             data_1h,
             data_4h,
             data_1d,
-        } => factor_pipeline_debug_command(FactorPipelineDebugCommandInput {
-            symbol: &symbol,
-            data: &data,
-            factor: &factor,
-            objective: &objective,
-            data_1m: data_1m.as_deref(),
-            data_5m: data_5m.as_deref(),
-            data_15m: data_15m.as_deref(),
-            data_1h: data_1h.as_deref(),
-            data_4h: data_4h.as_deref(),
-            data_1d: data_1d.as_deref(),
-        })?,
+        } => ict_engine::application::factor_pipeline_debug::factor_pipeline_debug_command(
+            ict_engine::application::factor_pipeline_debug::FactorPipelineDebugCommandInput {
+                symbol: &symbol,
+                data: &data,
+                factor: &factor,
+                objective: &objective,
+                data_1m: data_1m.as_deref(),
+                data_5m: data_5m.as_deref(),
+                data_15m: data_15m.as_deref(),
+                data_1h: data_1h.as_deref(),
+                data_4h: data_4h.as_deref(),
+                data_1d: data_1d.as_deref(),
+            },
+        )?,
         Commands::WorkflowStatus {
             symbol,
             state_dir,
@@ -2153,92 +2153,6 @@ struct FactorMutationMarketSummary {
 #[derive(Debug, Serialize)]
 struct PersistedCandlesFile {
     candles: Vec<Candle>,
-}
-
-struct FactorPipelineDebugCommandInput<'a> {
-    symbol: &'a str,
-    data: &'a str,
-    factor: &'a str,
-    objective: &'a str,
-    data_1m: Option<&'a str>,
-    data_5m: Option<&'a str>,
-    data_15m: Option<&'a str>,
-    data_1h: Option<&'a str>,
-    data_4h: Option<&'a str>,
-    data_1d: Option<&'a str>,
-}
-
-fn factor_pipeline_debug_command(input: FactorPipelineDebugCommandInput<'_>) -> Result<()> {
-    let FactorPipelineDebugCommandInput {
-        symbol,
-        data,
-        factor,
-        objective,
-        data_1m,
-        data_5m,
-        data_15m,
-        data_1h,
-        data_4h,
-        data_1d,
-    } = input;
-    let objective_mode = parse_research_objective(objective)?;
-    let resolved_multi_timeframe_inputs =
-        resolve_multi_timeframe_inputs(data, data_1m, data_5m, data_15m, data_1h, data_4h, data_1d);
-    let multi_timeframe_summary =
-        build_multi_timeframe_summary(data, &resolved_multi_timeframe_inputs)?
-            .into_iter()
-            .chain(build_multi_timeframe_research_signal(&resolved_multi_timeframe_inputs)?.summary)
-            .collect::<Vec<_>>();
-    let candles = load_candles(data)?;
-    let registry = FactorRegistry::default();
-    let pipeline = build_expansion_factor_pipeline_report_with_registry_v2(
-        symbol,
-        factor,
-        &candles,
-        None,
-        &multi_timeframe_summary,
-        &registry,
-    )?;
-    let report = adapt_factor_pipeline_debug_report(AdaptFactorPipelineDebugReportInput {
-        symbol,
-        data,
-        objective: research_objective_label(objective_mode),
-        pipeline: &pipeline,
-        multi_timeframe_summary: &multi_timeframe_summary,
-        raw_pre_bayes_labels: BTreeMap::from([
-            (
-                "market_regime".to_string(),
-                pipeline.bbn_support.market_regime_label.clone(),
-            ),
-            (
-                "liquidity_context".to_string(),
-                pipeline.bbn_support.liquidity_context_label.clone(),
-            ),
-            (
-                "factor_alignment".to_string(),
-                pipeline.probability_support.alignment_label.clone(),
-            ),
-            (
-                "factor_uncertainty".to_string(),
-                pipeline.probability_support.uncertainty_label.clone(),
-            ),
-            (
-                "multi_timeframe_resonance".to_string(),
-                pipeline
-                    .bbn_support
-                    .pre_bayes_filter
-                    .raw_multi_timeframe_resonance_label
-                    .clone(),
-            ),
-        ]),
-        soft_evidence_divergence: pre_bayes_soft_evidence_diff(
-            &pipeline.bbn_support.pre_bayes_filter,
-        ),
-        bridge_gap_clear_threshold: env_f64("ICT_ENGINE_BRIDGE_GAP_CLEAR_THRESHOLD", 0.12),
-        paired_market_quality_report: None,
-    })?;
-    println!("{}", serde_json::to_string_pretty(&report)?);
-    Ok(())
 }
 
 fn persist_candle_snapshot(
@@ -15200,51 +15114,53 @@ mod tests {
             frame_physics_trace: Vec::new(),
         };
 
-        let report = adapt_factor_pipeline_debug_report(AdaptFactorPipelineDebugReportInput {
-            symbol: "NQ",
-            data: "/tmp/nq.json",
-            objective: "expansion_manipulation",
-            pipeline: &pipeline,
-            raw_pre_bayes_labels: BTreeMap::from([
-                (
-                    "market_regime".to_string(),
-                    pipeline.bbn_support.market_regime_label.clone(),
+        let report = ict_engine::application::belief::adapt_factor_pipeline_debug_report(
+            ict_engine::application::belief::AdaptFactorPipelineDebugReportInput {
+                symbol: "NQ",
+                data: "/tmp/nq.json",
+                objective: "expansion_manipulation",
+                pipeline: &pipeline,
+                raw_pre_bayes_labels: BTreeMap::from([
+                    (
+                        "market_regime".to_string(),
+                        pipeline.bbn_support.market_regime_label.clone(),
+                    ),
+                    (
+                        "liquidity_context".to_string(),
+                        pipeline.bbn_support.liquidity_context_label.clone(),
+                    ),
+                    (
+                        "factor_alignment".to_string(),
+                        pipeline.probability_support.alignment_label.clone(),
+                    ),
+                    (
+                        "factor_uncertainty".to_string(),
+                        pipeline.probability_support.uncertainty_label.clone(),
+                    ),
+                    (
+                        "multi_timeframe_resonance".to_string(),
+                        pipeline
+                            .bbn_support
+                            .pre_bayes_filter
+                            .raw_multi_timeframe_resonance_label
+                            .clone(),
+                    ),
+                ]),
+                soft_evidence_divergence: pre_bayes_soft_evidence_diff(
+                    &pipeline.bbn_support.pre_bayes_filter,
                 ),
-                (
-                    "liquidity_context".to_string(),
-                    pipeline.bbn_support.liquidity_context_label.clone(),
-                ),
-                (
-                    "factor_alignment".to_string(),
-                    pipeline.probability_support.alignment_label.clone(),
-                ),
-                (
-                    "factor_uncertainty".to_string(),
-                    pipeline.probability_support.uncertainty_label.clone(),
-                ),
-                (
-                    "multi_timeframe_resonance".to_string(),
-                    pipeline
-                        .bbn_support
-                        .pre_bayes_filter
-                        .raw_multi_timeframe_resonance_label
-                        .clone(),
-                ),
-            ]),
-            soft_evidence_divergence: pre_bayes_soft_evidence_diff(
-                &pipeline.bbn_support.pre_bayes_filter,
-            ),
-            bridge_gap_clear_threshold: 0.12,
-            multi_timeframe_summary: &[
-                "1m bull continuation".to_string(),
-                "5m aligned".to_string(),
-                "15m displacement confirmed".to_string(),
-                "1h bullish structure".to_string(),
-                "4h premium reprice".to_string(),
-                "1d higher-timeframe support".to_string(),
-            ],
-            paired_market_quality_report: None,
-        })
+                bridge_gap_clear_threshold: 0.12,
+                multi_timeframe_summary: &[
+                    "1m bull continuation".to_string(),
+                    "5m aligned".to_string(),
+                    "15m displacement confirmed".to_string(),
+                    "1h bullish structure".to_string(),
+                    "4h premium reprice".to_string(),
+                    "1d higher-timeframe support".to_string(),
+                ],
+                paired_market_quality_report: None,
+            },
+        )
         .unwrap();
 
         assert_eq!(report.symbol, "NQ");
