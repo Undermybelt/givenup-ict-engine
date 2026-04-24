@@ -88,7 +88,6 @@ use ict_engine::application::{
         factor_mutation_priority_markets, factor_mutation_priority_reasons,
         factor_mutation_recommended_focus, mechanical_mutation_score, next_mutation_spec_template,
         no_superior_mutation_found, recommended_mutation_directions_from_failure_tags,
-        sync_factor_autoresearch_experiments_tsv, sync_factor_autoresearch_retrospective,
     },
     multi_timeframe_inputs::{
         build_live_multi_timeframe_signal, build_multi_timeframe_research_signal,
@@ -172,27 +171,22 @@ use ict_engine::state::FeedbackFactorUsage;
 use ict_engine::state::RecommendedCommand;
 use ict_engine::state::{
     append_analyze_run, append_artifact_ledger_entry, append_backtest_run,
-    append_ensemble_vote_history, append_execution_candidate_history,
-    append_factor_autoresearch_attempt, append_factor_mutation_run,
+    append_ensemble_vote_history, append_execution_candidate_history, append_factor_mutation_run,
     append_pending_update_artifact_history, append_pre_bayes_policy_history, append_research_run,
     append_trade_history, append_train_run, append_update_run, load_artifact_ledger,
     load_ensemble_executor_scorecards, load_ensemble_vote_history,
-    load_execution_candidate_history, load_factor_autoresearch_attempts,
-    load_factor_autoresearch_sessions, load_learning_state, load_pending_update_artifact,
+    load_execution_candidate_history, load_learning_state, load_pending_update_artifact,
     load_pending_update_history, load_pre_bayes_policy_history, load_state, load_state_or_default,
     mark_artifact_consumed, migrate_ensemble_executor_scorecards, recommended_next_command_meta,
     save_ensemble_executor_scorecards, save_ensemble_vote_artifact,
-    save_execution_candidate_artifact, save_factor_autoresearch_final_summary,
-    save_factor_autoresearch_live_snapshot, save_factor_autoresearch_sessions, save_learning_state,
-    save_pending_update_artifact, save_state, save_workflow_snapshot, state_exists,
-    AgentActionItem, AgentActionPlan, AgentContextBundle, AgentContextBundleMinimal,
-    AnalyzeRunRecord, ArtifactLedgerEntry, BacktestRunRecord, CommandRecommendations,
-    DatasetComparability, DecisionHistorySummary, DecisionThresholds, EnsembleExecutorScorecard,
-    EnsembleVoteRecord, ExecutionCandidateArtifact, ExecutionCandidateArtifactDecision,
-    ExecutionCandidateArtifactDiff, ExpectedStateChange, FactorAutoresearchAttempt,
-    FactorAutoresearchDecision, FactorAutoresearchLiveSnapshot, FactorAutoresearchSession,
-    FactorAutoresearchSummary, FactorFamilyDecision, FactorFamilyDiff, FactorFamilyHistory,
-    FactorFamilyOutcome, FactorIterationPrompt, FactorMutationEvaluation, FactorMutationMetricSet,
+    save_execution_candidate_artifact, save_learning_state, save_pending_update_artifact,
+    save_state, save_workflow_snapshot, state_exists, AgentActionItem, AgentActionPlan,
+    AgentContextBundle, AgentContextBundleMinimal, AnalyzeRunRecord, ArtifactLedgerEntry,
+    BacktestRunRecord, CommandRecommendations, DatasetComparability, DecisionHistorySummary,
+    DecisionThresholds, EnsembleExecutorScorecard, EnsembleVoteRecord, ExecutionCandidateArtifact,
+    ExecutionCandidateArtifactDecision, ExecutionCandidateArtifactDiff, ExpectedStateChange,
+    FactorFamilyDecision, FactorFamilyDiff, FactorFamilyHistory, FactorFamilyOutcome,
+    FactorIterationPrompt, FactorMutationEvaluation, FactorMutationMetricSet,
     FactorMutationRunRecord, FactorMutationSpec, FeedbackHistorySummary, FeedbackRecord,
     LearningState, LiveDataSourceProvenance, ModelProbabilitySnapshot, PendingUpdateArtifact,
     PendingUpdateArtifactDecision, PendingUpdateArtifactDiff, PersistedFactorRanking,
@@ -1473,24 +1467,43 @@ fn main() -> Result<()> {
             max_cluster_fail_streak,
             ensemble: _,
             state_dir,
-        } => factor_autoresearch_command(FactorAutoresearchCommandInput {
-            symbol: &symbol,
-            data: &data,
-            objective: &objective,
-            mutation_spec_path: mutation_spec.as_deref(),
-            iterations,
-            data_1m: data_1m.as_deref(),
-            data_5m: data_5m.as_deref(),
-            data_15m: data_15m.as_deref(),
-            data_1h: data_1h.as_deref(),
-            data_4h: data_4h.as_deref(),
-            data_1d: data_1d.as_deref(),
-            paired_data: paired_data.as_deref(),
-            session_id: session_id.as_deref(),
-            resume_latest,
-            max_cluster_fail_streak,
-            state_dir: &state_dir,
-        })?,
+        } => ict_engine::application::factor_lifecycle::factor_autoresearch_command(
+            ict_engine::application::factor_lifecycle::FactorAutoresearchCommandInput {
+                symbol: &symbol,
+                data: &data,
+                objective: &objective,
+                mutation_spec_path: mutation_spec.as_deref(),
+                iterations,
+                data_1m: data_1m.as_deref(),
+                data_5m: data_5m.as_deref(),
+                data_15m: data_15m.as_deref(),
+                data_1h: data_1h.as_deref(),
+                data_4h: data_4h.as_deref(),
+                data_1d: data_1d.as_deref(),
+                paired_data: paired_data.as_deref(),
+                session_id: session_id.as_deref(),
+                resume_latest,
+                max_cluster_fail_streak,
+                state_dir: &state_dir,
+            },
+            load_factor_mutation_spec,
+            |objective_mode, mutation_spec| {
+                run_factor_research(RunFactorResearchInput {
+                    symbol: &symbol,
+                    data: &data,
+                    objective: objective_mode,
+                    data_1m: data_1m.as_deref(),
+                    data_5m: data_5m.as_deref(),
+                    data_15m: data_15m.as_deref(),
+                    data_1h: data_1h.as_deref(),
+                    data_4h: data_4h.as_deref(),
+                    data_1d: data_1d.as_deref(),
+                    paired_data: paired_data.as_deref(),
+                    mutation_spec: Some(mutation_spec),
+                    state_dir: &state_dir,
+                })
+            },
+        )?,
         Commands::FactorAutoresearchStatus {
             symbol,
             state_dir,
@@ -6376,272 +6389,6 @@ fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
     emit_update_output(&report, ensemble)
 }
 
-struct FactorAutoresearchCommandInput<'a> {
-    symbol: &'a str,
-    data: &'a str,
-    objective: &'a str,
-    mutation_spec_path: Option<&'a str>,
-    iterations: usize,
-    data_1m: Option<&'a str>,
-    data_5m: Option<&'a str>,
-    data_15m: Option<&'a str>,
-    data_1h: Option<&'a str>,
-    data_4h: Option<&'a str>,
-    data_1d: Option<&'a str>,
-    paired_data: Option<&'a str>,
-    session_id: Option<&'a str>,
-    resume_latest: bool,
-    max_cluster_fail_streak: usize,
-    state_dir: &'a str,
-}
-
-fn factor_autoresearch_branch_summary(evaluation: &FactorMutationEvaluation) -> Vec<String> {
-    let mut summary = Vec::new();
-    if !evaluation.reason.is_empty() {
-        summary.push(format!("reason={}", evaluation.reason));
-    }
-    if !evaluation.failure_tags.is_empty() {
-        summary.push(format!(
-            "failure_tags={}",
-            evaluation.failure_tags.join("|")
-        ));
-    }
-    if !evaluation.recommended_mutation_directions.is_empty() {
-        summary.push(format!(
-            "next_focus={}",
-            evaluation.recommended_mutation_directions.join(" | ")
-        ));
-    }
-    summary
-}
-
-fn factor_autoresearch_decision(
-    evaluation: &FactorMutationEvaluation,
-) -> FactorAutoresearchDecision {
-    FactorAutoresearchDecision {
-        status: if evaluation.accepted {
-            "keep".to_string()
-        } else {
-            "discard".to_string()
-        },
-        reason: evaluation.reason.clone(),
-        promoted_to_baseline: evaluation.accepted,
-        baseline_score_before: evaluation.score_before,
-        candidate_score: evaluation.score_after,
-        score_delta: evaluation.score_delta,
-    }
-}
-
-fn factor_autoresearch_command(input: FactorAutoresearchCommandInput<'_>) -> Result<()> {
-    let objective = parse_research_objective(input.objective)?;
-    let _ = migrate_ensemble_executor_scorecards(input.state_dir, input.symbol)?;
-    let initial_spec = match (input.mutation_spec_path, input.resume_latest) {
-        (Some(path), _) => load_factor_mutation_spec(path)?,
-        (None, true) => {
-            let attempts = load_factor_autoresearch_attempts(input.state_dir, input.symbol)?;
-            attempts
-                .into_iter()
-                .last()
-                .map(|attempt| attempt.candidate_mutation_spec)
-                .ok_or_else(|| {
-                    anyhow!("--resume-latest requested but no prior autoresearch attempts found")
-                })?
-        }
-        (None, false) => {
-            bail!("factor-autoresearch requires --mutation-spec unless --resume-latest is set")
-        }
-    };
-    let now = Utc::now();
-    let session_id = input
-        .session_id
-        .map(str::to_string)
-        .unwrap_or_else(|| format!("factor-autoresearch:{}", now.format("%Y%m%dT%H%M%S%.3fZ")));
-
-    let mut sessions = load_factor_autoresearch_sessions(input.state_dir, input.symbol)?;
-    let mut session = sessions
-        .iter()
-        .find(|session| session.session_id == session_id)
-        .cloned()
-        .unwrap_or_else(|| FactorAutoresearchSession {
-            session_id: session_id.clone(),
-            started_at: now,
-            updated_at: now,
-            symbol: input.symbol.to_string(),
-            objective: input.objective.to_string(),
-            source_command: "factor-autoresearch".to_string(),
-            base_factor: initial_spec.base_factor.clone(),
-            baseline_mutation_id: Some(initial_spec.mutation_id.clone())
-                .filter(|id| !id.is_empty()),
-            baseline_score: 0.0,
-            attempts_total: 0,
-            kept_attempts: 0,
-            discarded_attempts: 0,
-            last_attempt_id: None,
-            status: "running".to_string(),
-        });
-
-    let prior_attempts = load_factor_autoresearch_attempts(input.state_dir, input.symbol)?;
-    let prior_session_attempts = prior_attempts
-        .into_iter()
-        .filter(|attempt| attempt.session_id == session_id)
-        .collect::<Vec<_>>();
-    let mut current_spec = prior_session_attempts
-        .iter()
-        .rev()
-        .find(|attempt| attempt.decision.promoted_to_baseline)
-        .map(|attempt| attempt.candidate_mutation_spec.clone())
-        .or_else(|| {
-            prior_session_attempts
-                .last()
-                .map(|attempt| attempt.candidate_mutation_spec.clone())
-        })
-        .unwrap_or_else(|| initial_spec.clone());
-
-    let mut latest_attempt = None;
-    let mut cluster_fail_streaks = BTreeMap::<String, usize>::new();
-    let mut live_snapshot = FactorAutoresearchLiveSnapshot {
-        session_id: session_id.clone(),
-        started_at: session.started_at,
-        updated_at: now,
-        symbol: input.symbol.to_string(),
-        objective: input.objective.to_string(),
-        current_iteration: 0,
-        attempts_total: session.attempts_total,
-        kept_attempts: session.kept_attempts,
-        discarded_attempts: session.discarded_attempts,
-        current_candidate_spec: Some(current_spec.clone()),
-        latest_attempt_id: session.last_attempt_id.clone(),
-        status: "running".to_string(),
-    };
-    save_factor_autoresearch_live_snapshot(input.state_dir, input.symbol, &live_snapshot)?;
-    for iteration_index in 0..input.iterations {
-        live_snapshot.current_iteration = iteration_index + 1;
-        live_snapshot.updated_at = Utc::now();
-        live_snapshot.current_candidate_spec = Some(current_spec.clone());
-        live_snapshot.status = "running".to_string();
-        save_factor_autoresearch_live_snapshot(input.state_dir, input.symbol, &live_snapshot)?;
-        let report = run_factor_research(RunFactorResearchInput {
-            symbol: input.symbol,
-            data: input.data,
-            objective,
-            data_1m: input.data_1m,
-            data_5m: input.data_5m,
-            data_15m: input.data_15m,
-            data_1h: input.data_1h,
-            data_4h: input.data_4h,
-            data_1d: input.data_1d,
-            paired_data: input.paired_data,
-            mutation_spec: Some(&current_spec),
-            state_dir: input.state_dir,
-        })?;
-        let evaluation = report
-            .factor_mutation_evaluation
-            .clone()
-            .ok_or_else(|| anyhow!("factor-autoresearch requires factor_mutation_evaluation"))?;
-        let decision = factor_autoresearch_decision(&evaluation);
-        let timestamp = Utc::now();
-        let attempt = FactorAutoresearchAttempt {
-            session_id: session_id.clone(),
-            attempt_id: format!("{}:attempt-{:03}", session_id, session.attempts_total + 1),
-            timestamp,
-            symbol: input.symbol.to_string(),
-            source_command: "factor-autoresearch".to_string(),
-            base_factor: current_spec.base_factor.clone(),
-            baseline_mutation_id_before: session.baseline_mutation_id.clone(),
-            candidate_mutation_spec: current_spec.clone(),
-            evaluation: evaluation.clone(),
-            decision: decision.clone(),
-            branch_summary: factor_autoresearch_branch_summary(&evaluation),
-        };
-        append_factor_autoresearch_attempt(input.state_dir, input.symbol, attempt.clone())?;
-        if let Err(err) = sync_factor_autoresearch_experiments_tsv(input.state_dir, input.symbol) {
-            eprintln!(
-                "warning: failed to sync derived artifact experiments.tsv for {}: {err:#}",
-                input.symbol
-            );
-        }
-        let cluster = attempt
-            .candidate_mutation_spec
-            .direction_hints
-            .get("cluster_jump")
-            .cloned()
-            .unwrap_or_else(|| "none".to_string());
-        session.attempts_total += 1;
-        session.updated_at = timestamp;
-        session.last_attempt_id = Some(attempt.attempt_id.clone());
-        if decision.promoted_to_baseline {
-            session.kept_attempts += 1;
-            session.baseline_mutation_id =
-                Some(attempt.candidate_mutation_spec.mutation_id.clone())
-                    .filter(|id| !id.is_empty());
-            session.baseline_score = decision.candidate_score;
-            session.base_factor = attempt.candidate_mutation_spec.base_factor.clone();
-            cluster_fail_streaks.insert(cluster.clone(), 0);
-        } else {
-            session.discarded_attempts += 1;
-            *cluster_fail_streaks.entry(cluster.clone()).or_default() += 1;
-        }
-        current_spec = next_mutation_spec_template(
-            Some(&attempt.candidate_mutation_spec),
-            &evaluation,
-            attempt.candidate_mutation_spec.evaluate_expansion_preview,
-        );
-        if cluster_fail_streaks.get(&cluster).copied().unwrap_or(0) >= input.max_cluster_fail_streak
-        {
-            if let Some(cycle) = current_spec
-                .direction_hints
-                .get("cluster_jump_cycle")
-                .and_then(|value| value.parse::<usize>().ok())
-            {
-                current_spec
-                    .direction_hints
-                    .insert("cluster_jump_cycle".to_string(), (cycle + 1).to_string());
-            }
-        }
-        latest_attempt = Some(attempt);
-    }
-
-    session.status = "completed".to_string();
-    live_snapshot.updated_at = Utc::now();
-    live_snapshot.attempts_total = session.attempts_total;
-    live_snapshot.kept_attempts = session.kept_attempts;
-    live_snapshot.discarded_attempts = session.discarded_attempts;
-    live_snapshot.current_candidate_spec = Some(current_spec.clone());
-    live_snapshot.latest_attempt_id = session.last_attempt_id.clone();
-    live_snapshot.status = "completed".to_string();
-    save_factor_autoresearch_live_snapshot(input.state_dir, input.symbol, &live_snapshot)?;
-    if let Some(existing) = sessions
-        .iter_mut()
-        .find(|entry| entry.session_id == session_id)
-    {
-        *existing = session.clone();
-    } else {
-        sessions.push(session.clone());
-    }
-    save_factor_autoresearch_sessions(input.state_dir, input.symbol, &sessions)?;
-
-    let summary = FactorAutoresearchSummary {
-        session,
-        latest_attempt,
-        next_mutation_spec_template: Some(current_spec),
-        live_snapshot: Some(live_snapshot),
-    };
-    save_factor_autoresearch_final_summary(input.state_dir, input.symbol, &summary)?;
-    if let Err(err) = sync_factor_autoresearch_retrospective(
-        input.state_dir,
-        input.symbol,
-        Some(&summary.session.session_id),
-    ) {
-        eprintln!(
-            "warning: failed to sync derived artifact factor_autoresearch_retrospective.md for {} session {}: {err:#}",
-            input.symbol,
-            summary.session.session_id
-        );
-    }
-    println!("{}", serde_json::to_string_pretty(&summary)?);
-    Ok(())
-}
-
 fn factor_autoresearch_status_command(
     symbol: &str,
     state_dir: &str,
@@ -10653,7 +10400,10 @@ mod tests {
     use ict_engine::application::multi_timeframe_inputs::MULTI_TIMEFRAME_INTERVALS;
     use ict_engine::bbn::trading::topology::build_trading_network;
     use ict_engine::config::build_frame_features_for_market;
-    use ict_engine::state::{BacktestRunRecord, FactorPipelineLabelSource, ResearchRunRecord};
+    use ict_engine::state::{
+        BacktestRunRecord, FactorAutoresearchAttempt, FactorAutoresearchDecision,
+        FactorAutoresearchLiveSnapshot, FactorPipelineLabelSource, ResearchRunRecord,
+    };
 
     fn workflow_status_command(
         input: ict_engine::application::orchestration::WorkflowStatusCommandInput<'_>,
@@ -11226,7 +10976,9 @@ mod tests {
             ..FactorMutationEvaluation::default()
         };
 
-        let summary = factor_autoresearch_branch_summary(&evaluation);
+        let summary = ict_engine::application::factor_lifecycle::factor_autoresearch_branch_summary(
+            &evaluation,
+        );
 
         assert_eq!(summary[0], "reason=mutation_flagged:bridge_gap_too_small");
         assert_eq!(
@@ -11248,7 +11000,8 @@ mod tests {
             ..FactorMutationEvaluation::default()
         };
 
-        let decision = factor_autoresearch_decision(&evaluation);
+        let decision =
+            ict_engine::application::factor_lifecycle::factor_autoresearch_decision(&evaluation);
 
         assert_eq!(decision.status, "keep");
         assert!(decision.promoted_to_baseline);

@@ -19,7 +19,10 @@ pub use autoresearch_surface::{
     FactorAutoresearchExperimentRow, FactorAutoresearchRetrospective,
     FactorAutoresearchStatusSurface,
 };
-pub use command_entry::factor_mutation_status_command;
+pub use command_entry::{
+    factor_autoresearch_branch_summary, factor_autoresearch_command, factor_autoresearch_decision,
+    factor_mutation_status_command, FactorAutoresearchCommandInput,
+};
 
 pub use expansion_evaluation::{
     build_expansion_sop_metrics_from_market_reports, build_expansion_sop_mutation_metrics,
