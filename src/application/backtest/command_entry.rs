@@ -5,11 +5,18 @@ use crate::application::backtest::{
     build_duration_sizing_delta_surface, build_oos_quality_delta_surface,
     build_shrink_on_off_comparison_summary, BacktestResultArtifactInput,
 };
+use crate::application::decision_utils::{parse_research_objective, ResearchObjectiveMode};
+use crate::application::factor_lifecycle::{
+    build_factor_lifecycle_view, factor_specific_hint_preferences,
+    next_mutation_spec_template_with_preferences,
+};
 use crate::application::orchestration::resolved_vote_scorecards;
+use crate::application::reflection::build_research_reflection_bundle;
 use crate::config::shell_quote;
 use crate::state::{
-    load_ensemble_executor_scorecards, load_state_or_default, BacktestRunRecord, WorkflowSnapshot,
-    BACKTEST_RUNS_FILE,
+    load_ensemble_executor_scorecards, load_state_or_default, migrate_ensemble_executor_scorecards,
+    BacktestRunRecord, FactorMutationSpec, ResearchRunRecord, WorkflowSnapshot, BACKTEST_RUNS_FILE,
+    RESEARCH_RUNS_FILE,
 };
 
 fn latest_duration_phase(
@@ -250,5 +257,143 @@ where
         &payload,
         &compact_report,
     )?;
+    Ok(())
+}
+
+pub struct FactorResearchCommandInput<'a> {
+    pub symbol: &'a str,
+    pub data: &'a str,
+    pub objective: &'a str,
+    pub mutation_spec_path: Option<&'a str>,
+    pub emit_mutation_evaluation: bool,
+    pub ensemble: bool,
+    pub state_dir: &'a str,
+    pub output_format: &'a str,
+}
+
+pub fn factor_research_command<FLoad, FRun>(
+    input: FactorResearchCommandInput<'_>,
+    load_mutation_spec: FLoad,
+    run_research: FRun,
+) -> Result<()>
+where
+    FLoad: Fn(&str) -> Result<FactorMutationSpec>,
+    FRun: Fn(
+        ResearchObjectiveMode,
+        Option<&FactorMutationSpec>,
+    ) -> Result<crate::factor_lab::research::ResearchReport>,
+{
+    let FactorResearchCommandInput {
+        symbol,
+        data: _,
+        objective,
+        mutation_spec_path,
+        emit_mutation_evaluation,
+        ensemble,
+        state_dir,
+        output_format,
+    } = input;
+    let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
+    let objective = parse_research_objective(objective)?;
+    let mutation_spec = mutation_spec_path.map(load_mutation_spec).transpose()?;
+    let report = run_research(objective, mutation_spec.as_ref())?;
+    if emit_mutation_evaluation {
+        let next_mutation_spec_template =
+            report
+                .factor_mutation_evaluation
+                .as_ref()
+                .map(|evaluation| {
+                    let base_factor = mutation_spec
+                        .as_ref()
+                        .map(|spec| spec.base_factor.as_str())
+                        .filter(|value| !value.is_empty())
+                        .or_else(|| {
+                            evaluation
+                                .metrics_after
+                                .top_factor_names
+                                .first()
+                                .map(String::as_str)
+                        })
+                        .unwrap_or("");
+                    let (preferred_direction_hints, preferred_step_size_hints) =
+                        factor_specific_hint_preferences(state_dir, symbol, base_factor);
+                    next_mutation_spec_template_with_preferences(
+                        mutation_spec.as_ref(),
+                        evaluation,
+                        mutation_spec
+                            .as_ref()
+                            .map(|spec| spec.evaluate_expansion_preview)
+                            .unwrap_or(false),
+                        Some(&preferred_direction_hints),
+                        Some(&preferred_step_size_hints),
+                    )
+                });
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&serde_json::json!({
+                "symbol": symbol,
+                "mutation_spec": mutation_spec,
+                "factor_mutation_evaluation": report.factor_mutation_evaluation,
+                "next_mutation_spec_template": next_mutation_spec_template,
+                "multi_timeframe_summary": report.multi_timeframe_summary,
+                "recommended_next_command": report.recommended_next_command,
+                "top_factor": report.best_factor,
+                "artifact_gate_status": report.artifact_decision_summary.consumed_trend_status,
+            }))?
+        );
+    } else {
+        let lifecycle_view = build_factor_lifecycle_view(
+            mutation_spec.as_ref(),
+            report.factor_mutation_evaluation.as_ref(),
+            &report.promotion_decision,
+            &report.rollback_recommendation,
+        );
+        let ensemble_surface = if ensemble {
+            report
+                .workflow_snapshot
+                .latest_ensemble_vote
+                .as_ref()
+                .map(|vote| {
+                    let persisted_scorecards =
+                        load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
+                    let (scorecards, scorecard_source) =
+                        resolved_vote_scorecards(&persisted_scorecards, vote);
+                    serde_json::json!({
+                        "ensemble_vote": vote,
+                        "executor_scorecards": scorecards,
+                        "executor_scorecard_source": scorecard_source,
+                    })
+                })
+        } else {
+            None
+        };
+        let persisted_research_runs: Vec<ResearchRunRecord> =
+            load_state_or_default(state_dir, symbol, RESEARCH_RUNS_FILE)?;
+        let research_compare_report =
+            persisted_research_runs
+                .split_last()
+                .and_then(|(current, previous)| {
+                    previous.last().and_then(|prior| {
+                        crate::application::backtest::build_research_compare_report(prior, current)
+                    })
+                });
+        let compare_summary = crate::application::reporting::human_research_compare_summary(
+            research_compare_report.as_ref(),
+        );
+        let reflection_bundle =
+            build_research_reflection_bundle(symbol, &report, compare_summary.as_deref());
+        let payload = crate::application::reporting::build_factor_research_output_payload(
+            &report,
+            research_compare_report,
+            serde_json::to_value(&reflection_bundle)?,
+            ensemble_surface,
+            serde_json::to_value(&lifecycle_view)?,
+        );
+        crate::application::reporting::emit_structured_output_payload(
+            output_format,
+            &payload,
+            &payload["compact_compare_report"],
+        )?;
+    }
     Ok(())
 }

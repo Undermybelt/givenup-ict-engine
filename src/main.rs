@@ -48,10 +48,9 @@ use ict_engine::application::{
         build_agent_context_bundle, build_agent_context_bundle_minimal,
         build_backtest_compare_report, build_backtest_result_artifact,
         build_duration_sizing_delta_surface, build_feedback_record,
-        build_oos_quality_delta_surface, build_research_compare_report,
-        build_shrink_on_off_comparison_summary, command_recommendations,
-        concretize_action_plan_commands, cpt_probability_diffs, data_fingerprint,
-        dataset_comparability, decision_history_summary, decision_thresholds,
+        build_oos_quality_delta_surface, build_shrink_on_off_comparison_summary,
+        command_recommendations, concretize_action_plan_commands, cpt_probability_diffs,
+        data_fingerprint, dataset_comparability, decision_history_summary, decision_thresholds,
         enrich_feedback_record, factor_alignment_label_from_feedback,
         factor_uncertainty_label_from_feedback, family_diffs, family_history_from_runs,
         link_artifact_decision_summary_to_decisions, pre_bayes_entry_quality_bridge_diff,
@@ -91,9 +90,8 @@ use ict_engine::application::{
         expansion_factor_scores_for_market, factor_mutation_direction_hint_summary,
         factor_mutation_focus_prompt, factor_mutation_priority_markets,
         factor_mutation_priority_reasons, factor_mutation_recommended_focus,
-        factor_mutation_step_size_hint_summary, factor_specific_hint_preferences,
-        mechanical_mutation_score, next_mutation_spec_template,
-        next_mutation_spec_template_with_preferences, no_superior_mutation_found,
+        factor_mutation_step_size_hint_summary, mechanical_mutation_score,
+        next_mutation_spec_template, no_superior_mutation_found,
         recommended_mutation_directions_from_failure_tags,
         sync_factor_autoresearch_experiments_tsv, sync_factor_autoresearch_retrospective,
         FactorMutationPerFactorHintSummary,
@@ -113,9 +111,7 @@ use ict_engine::application::{
         PipelineState, StagePlan, StagedArtifactsInput, StructuralExecutionShap,
         EXECUTION_TREE_TRACE_FILE,
     },
-    reflection::{
-        build_reflection_bundle, build_research_reflection_bundle, ReflectionBundleInput,
-    },
+    reflection::{build_reflection_bundle, ReflectionBundleInput},
     regime::{
         build_mece_recovery_artifact, build_multi_timeframe_training_observations,
         native_frame_computations, persist_mece_recovery_artifact,
@@ -1331,23 +1327,45 @@ fn main() -> Result<()> {
             human,
         } => {
             ensure_state_dir_ready(&state_dir)?;
-            factor_research_command(FactorResearchCommandInput {
-                symbol: &symbol,
-                data: &data,
-                objective: &objective,
-                data_1m: data_1m.as_deref(),
-                data_5m: data_5m.as_deref(),
-                data_15m: data_15m.as_deref(),
-                data_1h: data_1h.as_deref(),
-                data_4h: data_4h.as_deref(),
-                data_1d: data_1d.as_deref(),
-                paired_data: paired_data.as_deref(),
-                mutation_spec_path: mutation_spec.as_deref(),
-                emit_mutation_evaluation,
-                ensemble,
-                state_dir: &state_dir,
-                output_format: resolve_output_format(&output_format, compact, agent, human)?,
-            })?
+            ict_engine::application::backtest::factor_research_command(
+                ict_engine::application::backtest::FactorResearchCommandInput {
+                    symbol: &symbol,
+                    data: &data,
+                    objective: &objective,
+                    mutation_spec_path: mutation_spec.as_deref(),
+                    emit_mutation_evaluation,
+                    ensemble,
+                    state_dir: &state_dir,
+                    output_format: match resolve_output_format(
+                        &output_format,
+                        compact,
+                        agent,
+                        human,
+                    )? {
+                        OutputFormat::Json => "json",
+                        OutputFormat::Compact => "compact",
+                        OutputFormat::Agent => "agent",
+                        OutputFormat::Human => "human",
+                    },
+                },
+                load_factor_mutation_spec,
+                |objective_mode, mutation_spec| {
+                    run_factor_research(RunFactorResearchInput {
+                        symbol: &symbol,
+                        data: &data,
+                        objective: objective_mode,
+                        data_1m: data_1m.as_deref(),
+                        data_5m: data_5m.as_deref(),
+                        data_15m: data_15m.as_deref(),
+                        data_1h: data_1h.as_deref(),
+                        data_4h: data_4h.as_deref(),
+                        data_1d: data_1d.as_deref(),
+                        paired_data: paired_data.as_deref(),
+                        mutation_spec,
+                        state_dir: &state_dir,
+                    })
+                },
+            )?
         }
         Commands::FactorMutationStatus {
             symbol,
@@ -6479,24 +6497,6 @@ fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
     emit_update_output(&report, ensemble)
 }
 
-struct FactorResearchCommandInput<'a> {
-    symbol: &'a str,
-    data: &'a str,
-    objective: &'a str,
-    data_1m: Option<&'a str>,
-    data_5m: Option<&'a str>,
-    data_15m: Option<&'a str>,
-    data_1h: Option<&'a str>,
-    data_4h: Option<&'a str>,
-    data_1d: Option<&'a str>,
-    paired_data: Option<&'a str>,
-    mutation_spec_path: Option<&'a str>,
-    emit_mutation_evaluation: bool,
-    ensemble: bool,
-    state_dir: &'a str,
-    output_format: OutputFormat,
-}
-
 struct FactorAutoresearchCommandInput<'a> {
     symbol: &'a str,
     data: &'a str,
@@ -6514,149 +6514,6 @@ struct FactorAutoresearchCommandInput<'a> {
     resume_latest: bool,
     max_cluster_fail_streak: usize,
     state_dir: &'a str,
-}
-
-fn factor_research_command(input: FactorResearchCommandInput<'_>) -> Result<()> {
-    let FactorResearchCommandInput {
-        symbol,
-        data,
-        objective,
-        data_1m,
-        data_5m,
-        data_15m,
-        data_1h,
-        data_4h,
-        data_1d,
-        paired_data,
-        mutation_spec_path,
-        emit_mutation_evaluation,
-        ensemble,
-        state_dir,
-        output_format,
-    } = input;
-    let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
-    let objective = parse_research_objective(objective)?;
-    let mutation_spec = mutation_spec_path
-        .map(load_factor_mutation_spec)
-        .transpose()?;
-    let report = run_factor_research(RunFactorResearchInput {
-        symbol,
-        data,
-        objective,
-        data_1m,
-        data_5m,
-        data_15m,
-        data_1h,
-        data_4h,
-        data_1d,
-        paired_data,
-        mutation_spec: mutation_spec.as_ref(),
-        state_dir,
-    })?;
-    if emit_mutation_evaluation {
-        let next_mutation_spec_template =
-            report
-                .factor_mutation_evaluation
-                .as_ref()
-                .map(|evaluation| {
-                    let base_factor = mutation_spec
-                        .as_ref()
-                        .map(|spec| spec.base_factor.as_str())
-                        .filter(|value| !value.is_empty())
-                        .or_else(|| {
-                            evaluation
-                                .metrics_after
-                                .top_factor_names
-                                .first()
-                                .map(String::as_str)
-                        })
-                        .unwrap_or("");
-                    let (preferred_direction_hints, preferred_step_size_hints) =
-                        factor_specific_hint_preferences(state_dir, symbol, base_factor);
-                    next_mutation_spec_template_with_preferences(
-                        mutation_spec.as_ref(),
-                        evaluation,
-                        mutation_spec
-                            .as_ref()
-                            .map(|spec| spec.evaluate_expansion_preview)
-                            .unwrap_or(false),
-                        Some(&preferred_direction_hints),
-                        Some(&preferred_step_size_hints),
-                    )
-                });
-        println!(
-            "{}",
-            serde_json::to_string_pretty(&serde_json::json!({
-                "symbol": symbol,
-                "mutation_spec": mutation_spec,
-                "factor_mutation_evaluation": report.factor_mutation_evaluation,
-                "next_mutation_spec_template": next_mutation_spec_template,
-                "multi_timeframe_summary": report.multi_timeframe_summary,
-                "recommended_next_command": report.recommended_next_command,
-                "top_factor": report.best_factor,
-                "artifact_gate_status": report.artifact_decision_summary.consumed_trend_status,
-            }))?
-        );
-    } else {
-        let lifecycle_view = build_factor_lifecycle_view(
-            mutation_spec.as_ref(),
-            report.factor_mutation_evaluation.as_ref(),
-            &report.promotion_decision,
-            &report.rollback_recommendation,
-        );
-        let ensemble_surface = if ensemble {
-            report
-                .workflow_snapshot
-                .latest_ensemble_vote
-                .as_ref()
-                .map(|vote| {
-                    let persisted_scorecards =
-                        load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
-                    let (scorecards, scorecard_source) =
-                        resolved_vote_scorecards(&persisted_scorecards, vote);
-                    serde_json::json!({
-                        "ensemble_vote": vote,
-                        "executor_scorecards": scorecards,
-                        "executor_scorecard_source": scorecard_source,
-                    })
-                })
-        } else {
-            None
-        };
-        let persisted_research_runs: Vec<ResearchRunRecord> =
-            load_state_or_default(state_dir, symbol, RESEARCH_RUNS_FILE)?;
-        let research_compare_report =
-            persisted_research_runs
-                .split_last()
-                .and_then(|(current, previous)| {
-                    previous
-                        .last()
-                        .and_then(|prior| build_research_compare_report(prior, current))
-                });
-        let compare_summary = ict_engine::application::reporting::human_research_compare_summary(
-            research_compare_report.as_ref(),
-        );
-        let reflection_bundle =
-            build_research_reflection_bundle(symbol, &report, compare_summary.as_deref());
-        let payload = ict_engine::application::reporting::build_factor_research_output_payload(
-            &report,
-            research_compare_report,
-            serde_json::to_value(&reflection_bundle)?,
-            ensemble_surface,
-            serde_json::to_value(&lifecycle_view)?,
-        );
-        ict_engine::application::reporting::emit_structured_output_payload(
-            match output_format {
-                OutputFormat::Json => "json",
-                OutputFormat::Compact => "compact",
-                OutputFormat::Agent => "agent",
-                OutputFormat::Human => "human",
-            },
-            &payload,
-            &payload["compact_compare_report"],
-        )?;
-    }
-    Ok(())
 }
 
 fn factor_autoresearch_branch_summary(evaluation: &FactorMutationEvaluation) -> Vec<String> {
@@ -13239,9 +13096,11 @@ mod tests {
         let runs: Vec<ResearchRunRecord> =
             load_state(temp.path(), "NQ", ict_engine::state::RESEARCH_RUNS_FILE).unwrap();
         let (current, previous) = runs.split_last().expect("missing current run");
-        let compare =
-            build_research_compare_report(previous.last().expect("missing previous run"), current)
-                .expect("missing compare report");
+        let compare = ict_engine::application::backtest::build_research_compare_report(
+            previous.last().expect("missing previous run"),
+            current,
+        )
+        .expect("missing compare report");
 
         assert!(compare.summary.contains("same_data_same_config"));
         assert!(!compare.duration_sizing_delta_surface.is_empty());
