@@ -1,5 +1,6 @@
 use super::*;
 
+#[allow(clippy::too_many_arguments)]
 pub(crate) fn analyze_command(
     symbol: &str,
     data_htf: &str,
