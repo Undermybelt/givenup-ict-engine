@@ -3,13 +3,13 @@ use chrono::Utc;
 use serde::Serialize;
 use serde_json::Value;
 
-use crate::application::release_closure::workflow_next_step_view;
 use crate::state::{
     append_artifact_ledger_entry, artifact_state_path, load_artifact_ledger, load_state,
-    recommended_next_command_meta, save_state, ArtifactLedgerEntry, RecommendedNextCommandMeta,
+    save_state, ArtifactLedgerEntry, RecommendedNextCommandMeta,
 };
 
 use super::handoff::AutoQuantResearchHandoffPayload;
+use super::readiness::auto_quant_readiness_from_status_and_data;
 use super::types::AutoQuantAdoptionDecisionArtifact;
 
 #[derive(Debug, Clone, Serialize)]
@@ -47,33 +47,6 @@ fn load_handoff_payload(
     load_state(state_dir, symbol, filename)
 }
 
-fn auto_quant_recommended_next_command(
-    payload: &AutoQuantResearchHandoffPayload,
-) -> (String, Option<String>) {
-    if !payload.dependency_status.healthy {
-        let blocked_reason = "auto_quant_dependency_unhealthy".to_string();
-        let command = format!(
-            "ict-engine auto-quant-update --state-dir {}",
-            payload.state_dir
-        );
-        return (command, Some(blocked_reason));
-    }
-    if !payload.data_ready {
-        let command = payload
-            .suggested_commands
-            .first()
-            .cloned()
-            .unwrap_or_else(|| "uv run prepare.py".to_string());
-        return (command, Some("auto_quant_prepare_required".to_string()));
-    }
-    let command = payload
-        .suggested_commands
-        .first()
-        .cloned()
-        .unwrap_or_else(|| payload.workspace.program_md.clone());
-    (command, None)
-}
-
 pub fn build_auto_quant_adoption_review(
     symbol: &str,
     state_dir: &str,
@@ -85,7 +58,13 @@ pub fn build_auto_quant_adoption_review(
             .iter()
             .rev()
             .find(|entry| entry.artifact_id == artifact_id)
-            .ok_or_else(|| anyhow!("no auto-quant handoff artifact '{}' for '{}'", artifact_id, symbol))?
+            .ok_or_else(|| {
+                anyhow!(
+                    "no auto-quant handoff artifact '{}' for '{}'",
+                    artifact_id,
+                    symbol
+                )
+            })?
     } else {
         ledger
             .iter()
@@ -94,13 +73,19 @@ pub fn build_auto_quant_adoption_review(
             .ok_or_else(|| anyhow!("no auto-quant handoff artifact found for '{}'", symbol))?
     };
     let payload = load_handoff_payload(state_dir, symbol, entry)?;
-    let (review_status, review_summary) = if !payload.dependency_status.healthy {
+    let readiness = auto_quant_readiness_from_status_and_data(
+        &payload.dependency_status,
+        &payload.state_dir,
+        payload.workspace.clone(),
+        payload.data_ready,
+    );
+    let (review_status, review_summary) = if !readiness.dependency_healthy {
         (
             "blocked_dependency_unhealthy".to_string(),
             "managed Auto-Quant checkout is unhealthy; repair dependency before adoption review"
                 .to_string(),
         )
-    } else if !payload.data_ready {
+    } else if !readiness.data_ready {
         (
             "prepare_required".to_string(),
             "Auto-Quant workspace is healthy but research data is not ready yet".to_string(),
@@ -111,24 +96,20 @@ pub fn build_auto_quant_adoption_review(
             "handoff is ready for Auto-Quant execution and candidate export".to_string(),
         )
     };
-    let (recommended_next_command, blocked_reason) = auto_quant_recommended_next_command(&payload);
     Ok(AutoQuantAdoptionReview {
         symbol: symbol.to_string(),
         state_dir: state_dir.to_string(),
         artifact_id: payload.artifact_id,
         handoff_kind: payload.handoff_kind,
         backend: payload.backend,
-        data_ready: payload.data_ready,
-        dependency_healthy: payload.dependency_status.healthy,
+        data_ready: readiness.data_ready,
+        dependency_healthy: readiness.dependency_healthy,
         workspace_repo_root: payload.workspace.repo_root,
         suggested_commands: payload.suggested_commands,
         suggested_next_steps: payload.suggested_next_steps,
-        recommended_next_command_meta: recommended_next_command_meta(&recommended_next_command),
-        next_step: workflow_next_step_view(
-            &recommended_next_command,
-            blocked_reason.as_deref(),
-        ),
-        recommended_next_command,
+        recommended_next_command_meta: readiness.recommended_next_command_meta,
+        next_step: readiness.next_step,
+        recommended_next_command: readiness.recommended_next_command,
         review_status,
         review_summary,
         notes: payload.notes,
@@ -199,62 +180,25 @@ pub fn persist_auto_quant_adoption_decision(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::application::auto_quant::handoff::build_factor_research_handoff_payload;
     use crate::application::auto_quant::persistence::persist_handoff_payload;
     use crate::application::auto_quant::types::{
         AutoQuantAdoptionDecisionArtifact, AutoQuantDependencyStatus,
     };
-    use crate::application::auto_quant::AutoQuantResearchHandoffPayload;
-    use crate::application::auto_quant::AutoQuantWorkspaceConfig;
     use crate::state::ARTIFACT_LEDGER_FILE;
 
     #[test]
     fn review_marks_prepare_required_when_data_is_missing() {
         let temp = tempfile::tempdir().unwrap();
-        let payload = AutoQuantResearchHandoffPayload {
-            artifact_id: "auto-quant-handoff:test".to_string(),
-            handoff_kind: "factor_research".to_string(),
-            symbol: "NQ".to_string(),
-            state_dir: temp.path().to_string_lossy().to_string(),
-            objective: "expansion_manipulation".to_string(),
-            backend: "auto-quant".to_string(),
-            data_path: "demo.json".to_string(),
-            paired_data_path: None,
-            mutation_spec_path: None,
-            iterations: None,
-            session_id: None,
-            dependency_status: AutoQuantDependencyStatus {
-                repo_url: "repo".to_string(),
-                managed_dir: "dir".to_string(),
-                tracked_branch: "master".to_string(),
-                pinned_ref: None,
-                current_commit: None,
-                upstream_commit: None,
-                bootstrap_needed: false,
-                config_present: true,
-                managed_repo_present: true,
-                healthy: true,
-                update_available: false,
-                required_files: Vec::new(),
-                notes: Vec::new(),
-                adapter_version: "v1".to_string(),
-                last_sync: None,
-            },
-            workspace: AutoQuantWorkspaceConfig {
-                repo_root: "repo".to_string(),
-                program_md: "program".to_string(),
-                prepare_script: "prepare".to_string(),
-                run_script: "run".to_string(),
-                config_json: "config".to_string(),
-                strategies_dir: "strategies".to_string(),
-                data_dir: "data".to_string(),
-            },
-            data_ready: false,
-            handoff_artifact_path: String::new(),
-            suggested_commands: vec!["prepare".to_string()],
-            suggested_next_steps: vec!["step".to_string()],
-            agent_prompt: "prompt".to_string(),
-            notes: vec!["note".to_string()],
-        };
+        let payload = build_factor_research_handoff_payload(
+            "NQ",
+            "demo.json",
+            "expansion_manipulation",
+            None,
+            None,
+            temp.path().to_str().unwrap(),
+            healthy_dependency_status(),
+        );
         persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
         let review =
             build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None).unwrap();
@@ -265,51 +209,15 @@ mod tests {
     #[test]
     fn persist_adoption_decision_writes_decision_artifact_and_ledger_entry() {
         let temp = tempfile::tempdir().unwrap();
-        let payload = AutoQuantResearchHandoffPayload {
-            artifact_id: "auto-quant-handoff:test".to_string(),
-            handoff_kind: "factor_research".to_string(),
-            symbol: "NQ".to_string(),
-            state_dir: temp.path().to_string_lossy().to_string(),
-            objective: "expansion_manipulation".to_string(),
-            backend: "auto-quant".to_string(),
-            data_path: "demo.json".to_string(),
-            paired_data_path: None,
-            mutation_spec_path: None,
-            iterations: None,
-            session_id: None,
-            dependency_status: AutoQuantDependencyStatus {
-                repo_url: "repo".to_string(),
-                managed_dir: "dir".to_string(),
-                tracked_branch: "master".to_string(),
-                pinned_ref: None,
-                current_commit: None,
-                upstream_commit: None,
-                bootstrap_needed: false,
-                config_present: true,
-                managed_repo_present: true,
-                healthy: true,
-                update_available: false,
-                required_files: Vec::new(),
-                notes: Vec::new(),
-                adapter_version: "v1".to_string(),
-                last_sync: None,
-            },
-            workspace: AutoQuantWorkspaceConfig {
-                repo_root: "repo".to_string(),
-                program_md: "program".to_string(),
-                prepare_script: "prepare".to_string(),
-                run_script: "run".to_string(),
-                config_json: "config".to_string(),
-                strategies_dir: "strategies".to_string(),
-                data_dir: "data".to_string(),
-            },
-            data_ready: true,
-            handoff_artifact_path: String::new(),
-            suggested_commands: vec!["cmd".to_string()],
-            suggested_next_steps: vec!["step".to_string()],
-            agent_prompt: "prompt".to_string(),
-            notes: vec!["note".to_string()],
-        };
+        let payload = build_factor_research_handoff_payload(
+            "NQ",
+            "demo.json",
+            "expansion_manipulation",
+            None,
+            None,
+            temp.path().to_str().unwrap(),
+            healthy_dependency_status(),
+        );
         persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
         let artifact: AutoQuantAdoptionDecisionArtifact = persist_auto_quant_adoption_decision(
             "NQ",
@@ -321,9 +229,29 @@ mod tests {
         )
         .unwrap();
         assert_eq!(artifact.decision, "adopt");
-        let ledger = std::fs::read_to_string(temp.path().join("NQ").join(ARTIFACT_LEDGER_FILE))
-            .unwrap();
+        let ledger =
+            std::fs::read_to_string(temp.path().join("NQ").join(ARTIFACT_LEDGER_FILE)).unwrap();
         assert!(ledger.contains("auto_quant_adoption_decision"));
         assert!(ledger.contains(AUTO_QUANT_ADOPTION_DECISION_REVIEW_RULE_VERSION));
+    }
+
+    fn healthy_dependency_status() -> AutoQuantDependencyStatus {
+        AutoQuantDependencyStatus {
+            repo_url: "repo".to_string(),
+            managed_dir: "dir".to_string(),
+            tracked_branch: "master".to_string(),
+            pinned_ref: None,
+            current_commit: None,
+            upstream_commit: None,
+            bootstrap_needed: false,
+            config_present: true,
+            managed_repo_present: true,
+            healthy: true,
+            update_available: false,
+            required_files: Vec::new(),
+            notes: Vec::new(),
+            adapter_version: "v1".to_string(),
+            last_sync: None,
+        }
     }
 }

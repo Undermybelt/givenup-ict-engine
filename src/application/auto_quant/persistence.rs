@@ -58,6 +58,7 @@ pub fn persist_handoff_payload(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::application::auto_quant::handoff::build_factor_research_handoff_payload;
     use crate::application::auto_quant::types::AutoQuantDependencyStatus;
     use crate::state::ARTIFACT_LEDGER_FILE;
     use std::path::Path;
@@ -65,57 +66,41 @@ mod tests {
     #[test]
     fn persist_handoff_writes_artifact_and_ledger_entry() {
         let temp = tempfile::tempdir().unwrap();
-        let payload = AutoQuantResearchHandoffPayload {
-            artifact_id: "auto-quant-handoff:test".to_string(),
-            handoff_kind: "factor_research".to_string(),
-            symbol: "NQ".to_string(),
-            state_dir: temp.path().to_string_lossy().to_string(),
-            objective: "expansion_manipulation".to_string(),
-            backend: "auto-quant".to_string(),
-            data_path: "demo.json".to_string(),
-            paired_data_path: None,
-            mutation_spec_path: None,
-            iterations: None,
-            session_id: None,
-            dependency_status: AutoQuantDependencyStatus {
-                repo_url: "repo".to_string(),
-                managed_dir: "dir".to_string(),
-                tracked_branch: "master".to_string(),
-                pinned_ref: None,
-                current_commit: None,
-                upstream_commit: None,
-                bootstrap_needed: false,
-                config_present: true,
-                managed_repo_present: true,
-                healthy: true,
-                update_available: false,
-                required_files: Vec::new(),
-                notes: Vec::new(),
-                adapter_version: "v1".to_string(),
-                last_sync: None,
-            },
-            workspace: crate::application::auto_quant::handoff::AutoQuantWorkspaceConfig {
-                repo_root: "repo".to_string(),
-                program_md: "program".to_string(),
-                prepare_script: "prepare".to_string(),
-                run_script: "run".to_string(),
-                config_json: "config".to_string(),
-                strategies_dir: "strategies".to_string(),
-                data_dir: "data".to_string(),
-            },
-            data_ready: false,
-            handoff_artifact_path: String::new(),
-            suggested_commands: vec!["cmd".to_string()],
-            suggested_next_steps: vec!["step".to_string()],
-            agent_prompt: "prompt".to_string(),
-            notes: vec!["note".to_string()],
-        };
+        let payload = build_factor_research_handoff_payload(
+            "NQ",
+            "demo.json",
+            "expansion_manipulation",
+            None,
+            None,
+            temp.path().to_str().unwrap(),
+            healthy_dependency_status(),
+        );
 
         let path = persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
         assert!(Path::new(&path).exists());
-        let ledger = std::fs::read_to_string(temp.path().join("NQ").join(ARTIFACT_LEDGER_FILE))
-            .unwrap();
+        let ledger =
+            std::fs::read_to_string(temp.path().join("NQ").join(ARTIFACT_LEDGER_FILE)).unwrap();
         assert!(ledger.contains("auto_quant_handoff_candidate"));
         assert!(ledger.contains(AUTO_QUANT_HANDOFF_REVIEW_RULE_VERSION));
+    }
+
+    fn healthy_dependency_status() -> AutoQuantDependencyStatus {
+        AutoQuantDependencyStatus {
+            repo_url: "repo".to_string(),
+            managed_dir: "dir".to_string(),
+            tracked_branch: "master".to_string(),
+            pinned_ref: None,
+            current_commit: None,
+            upstream_commit: None,
+            bootstrap_needed: false,
+            config_present: true,
+            managed_repo_present: true,
+            healthy: true,
+            update_available: false,
+            required_files: Vec::new(),
+            notes: Vec::new(),
+            adapter_version: "v1".to_string(),
+            last_sync: None,
+        }
     }
 }

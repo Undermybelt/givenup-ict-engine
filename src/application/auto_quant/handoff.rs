@@ -2,6 +2,7 @@ use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
+use super::readiness::{auto_quant_readiness_from_status_and_data, AutoQuantReadinessSurface};
 use super::types::AutoQuantDependencyStatus;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -29,6 +30,8 @@ pub struct AutoQuantResearchHandoffPayload {
     pub iterations: Option<usize>,
     pub session_id: Option<String>,
     pub dependency_status: AutoQuantDependencyStatus,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub readiness: Option<AutoQuantReadinessSurface>,
     pub workspace: AutoQuantWorkspaceConfig,
     pub data_ready: bool,
     pub handoff_artifact_path: String,
@@ -70,7 +73,10 @@ pub fn auto_quant_workspace_config(managed_dir: &str) -> AutoQuantWorkspaceConfi
             .join("user_data/strategies")
             .to_string_lossy()
             .to_string(),
-        data_dir: repo_root.join("user_data/data").to_string_lossy().to_string(),
+        data_dir: repo_root
+            .join("user_data/data")
+            .to_string_lossy()
+            .to_string(),
     }
 }
 
@@ -123,6 +129,12 @@ pub fn build_factor_research_handoff_payload(
 ) -> AutoQuantResearchHandoffPayload {
     let workspace = auto_quant_workspace_config(&dependency_status.managed_dir);
     let data_ready = auto_quant_data_ready(&workspace);
+    let readiness = auto_quant_readiness_from_status_and_data(
+        &dependency_status,
+        state_dir,
+        workspace.clone(),
+        data_ready,
+    );
     let mut payload = AutoQuantResearchHandoffPayload {
         artifact_id: format!(
             "auto-quant-handoff:factor_research:{}:{}",
@@ -140,6 +152,7 @@ pub fn build_factor_research_handoff_payload(
         iterations: None,
         session_id: None,
         dependency_status,
+        readiness: Some(readiness),
         workspace,
         data_ready,
         handoff_artifact_path: String::new(),
@@ -192,6 +205,12 @@ pub fn build_factor_autoresearch_handoff_payload(
 ) -> AutoQuantResearchHandoffPayload {
     let workspace = auto_quant_workspace_config(&dependency_status.managed_dir);
     let data_ready = auto_quant_data_ready(&workspace);
+    let readiness = auto_quant_readiness_from_status_and_data(
+        &dependency_status,
+        state_dir,
+        workspace.clone(),
+        data_ready,
+    );
     let mut payload = AutoQuantResearchHandoffPayload {
         artifact_id: format!(
             "auto-quant-handoff:factor_autoresearch:{}:{}",
@@ -209,6 +228,7 @@ pub fn build_factor_autoresearch_handoff_payload(
         iterations: Some(iterations),
         session_id: session_id.map(str::to_string),
         dependency_status,
+        readiness: Some(readiness),
         workspace,
         data_ready,
         handoff_artifact_path: String::new(),
@@ -226,7 +246,8 @@ pub fn build_factor_autoresearch_handoff_payload(
     } else {
         vec![
             "prepare Auto-Quant market data before attempting the autoresearch loop".to_string(),
-            "re-run factor-autoresearch with backend=auto-quant after data becomes ready".to_string(),
+            "re-run factor-autoresearch with backend=auto-quant after data becomes ready"
+                .to_string(),
         ]
     };
     payload.agent_prompt = format!(

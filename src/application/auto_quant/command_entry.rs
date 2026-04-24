@@ -1,13 +1,14 @@
-use anyhow::Result;
-use super::adoption::{
-    build_auto_quant_adoption_review, persist_auto_quant_adoption_decision,
-};
+use super::adoption::{build_auto_quant_adoption_review, persist_auto_quant_adoption_decision};
 use super::handoff::{
     build_factor_autoresearch_handoff_payload, build_factor_research_handoff_payload,
     AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput,
 };
 use super::persistence::persist_handoff_payload;
-use super::{auto_quant_bootstrap, auto_quant_status, auto_quant_update, AutoQuantDependencyStatus};
+use super::{
+    auto_quant_bootstrap, auto_quant_readiness, auto_quant_status, auto_quant_update,
+    AutoQuantDependencyStatus,
+};
+use anyhow::Result;
 
 fn ensure_dependency_ready(
     state_dir: &str,
@@ -23,8 +24,8 @@ fn ensure_dependency_ready(
 }
 
 pub fn auto_quant_status_command(state_dir: &str) -> Result<()> {
-    let status = auto_quant_status(state_dir)?;
-    println!("{}", serde_json::to_string_pretty(&status)?);
+    let readiness = auto_quant_readiness(state_dir)?;
+    println!("{}", serde_json::to_string_pretty(&readiness)?);
     Ok(())
 }
 
