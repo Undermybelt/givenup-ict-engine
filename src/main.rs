@@ -163,7 +163,10 @@ use ict_engine::planner::{
     ProbabilisticDecisionSnapshot, ProbabilisticPlanConfig, ProbabilisticTradePlanInput,
 };
 use serde_json::Value;
-use update_output::emit_update_output;
+use update_output::{
+    apply_update_outcome_to_executor_scorecards, emit_update_output, feedback_record_from_artifact,
+    latest_execution_candidate_for_source_run, load_canonical_executor_scorecards,
+};
 
 #[cfg(test)]
 use ict_engine::application::backtest::recommended_command;
@@ -2546,30 +2549,6 @@ fn artifact_ledger_entry_from_pending_update(
     }
 }
 
-fn feedback_record_from_artifact(
-    artifact: PendingUpdateArtifact,
-    outcome_label: &str,
-    pnl: Option<f64>,
-    regime: Option<&str>,
-    direction: Option<&str>,
-) -> FeedbackRecord {
-    let mut feedback = artifact.template_feedback;
-    feedback.realized_outcome = outcome_label.to_string();
-    feedback.pnl = pnl.unwrap_or_else(|| match outcome_label {
-        "win" => 0.01,
-        "loss" => -0.01,
-        _ => 0.0,
-    });
-    if let Some(regime) = regime {
-        feedback.regime_at_entry = normalize_regime_label(regime);
-    }
-    if let Some(direction) = direction {
-        feedback.model_probabilities_before_trade.selected_direction =
-            normalize_direction_label(direction);
-    }
-    feedback
-}
-
 fn execution_candidate_artifact_decision(
     previous: &ExecutionCandidateArtifact,
     current: &ExecutionCandidateArtifact,
@@ -2849,98 +2828,6 @@ fn persist_ensemble_vote_record(
     save_ensemble_executor_scorecards(state_dir, &record.symbol, canonical_scorecards)?;
     append_ensemble_vote_history(state_dir, &record.symbol, record.clone())?;
     Ok(())
-}
-
-fn latest_execution_candidate_for_source_run(
-    state_dir: &str,
-    symbol: &str,
-    source_run_id: Option<&str>,
-) -> Result<Option<ExecutionCandidateArtifact>> {
-    let Some(source_run_id) = source_run_id else {
-        return Ok(None);
-    };
-    Ok(load_execution_candidate_history(state_dir, symbol)?
-        .into_iter()
-        .rev()
-        .find(|artifact| artifact.source_run_id.as_deref() == Some(source_run_id)))
-}
-
-fn latest_ensemble_vote_for_source_run(
-    state_dir: &str,
-    symbol: &str,
-    source_run_id: Option<&str>,
-) -> Result<Option<EnsembleVoteRecord>> {
-    let Some(source_run_id) = source_run_id else {
-        return Ok(None);
-    };
-    Ok(load_ensemble_vote_history(state_dir, symbol)?
-        .into_iter()
-        .rev()
-        .find(|artifact| artifact.source_run_id.as_deref() == Some(source_run_id)))
-}
-
-fn derive_executor_scorecards_from_summaries(
-    executor_summaries: &[String],
-) -> Vec<EnsembleExecutorScorecard> {
-    executor_summaries
-        .iter()
-        .map(|summary| EnsembleExecutorScorecard {
-            executor: summary
-                .split_whitespace()
-                .find_map(|part| part.strip_prefix("executor="))
-                .unwrap_or("executor_unavailable")
-                .to_string(),
-            latest_weight_hint: summary
-                .split_whitespace()
-                .find_map(|part| part.strip_prefix("weight="))
-                .and_then(|value| value.parse::<f64>().ok()),
-            ..EnsembleExecutorScorecard::default()
-        })
-        .collect()
-}
-
-fn load_canonical_executor_scorecards(
-    state_dir: &str,
-    symbol: &str,
-    source_run_id: Option<&str>,
-) -> Result<Vec<EnsembleExecutorScorecard>> {
-    let persisted = load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
-    if !persisted.is_empty() {
-        return Ok(persisted);
-    }
-    Ok(
-        latest_ensemble_vote_for_source_run(state_dir, symbol, source_run_id)?
-            .map(|artifact| {
-                if artifact.executor_scorecards.is_empty() {
-                    derive_executor_scorecards_from_summaries(&artifact.executor_summaries)
-                } else {
-                    artifact.executor_scorecards
-                }
-            })
-            .unwrap_or_default(),
-    )
-}
-
-fn apply_update_outcome_to_executor_scorecards(
-    scorecards: &mut [EnsembleExecutorScorecard],
-    realized_outcome: &str,
-    quality_adjustment: i64,
-) {
-    for scorecard in scorecards {
-        match realized_outcome {
-            "win" => scorecard.wins += 1,
-            "loss" => scorecard.losses += 1,
-            _ => scorecard.breakevens += 1,
-        }
-        match realized_outcome {
-            "win" => scorecard.validated_positive += 1,
-            "loss" => scorecard.validated_negative += 1,
-            _ => {}
-        }
-        scorecard.cumulative_quality_score += quality_adjustment;
-        scorecard.last_outcome = Some(realized_outcome.to_string());
-        scorecard.last_updated_at = Some(Utc::now());
-    }
 }
 
 fn apply_command_context_to_analyze_report(
