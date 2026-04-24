@@ -118,6 +118,29 @@ pub fn base_suggested_commands(
     commands
 }
 
+pub fn suggested_next_steps_for_handoff(handoff_kind: &str, data_ready: bool) -> Vec<String> {
+    match (handoff_kind, data_ready) {
+        ("factor_autoresearch", true) => vec![
+            "resume or start the Auto-Quant autonomous loop with factor retention and explicit keep/discard review".to_string(),
+            "export candidate/retrospective summary back to ict-engine after each iteration checkpoint".to_string(),
+        ],
+        ("factor_autoresearch", false) => vec![
+            "prepare Auto-Quant market data before attempting the autoresearch loop".to_string(),
+            "re-run factor-autoresearch with backend=auto-quant after data becomes ready".to_string(),
+        ],
+        (_, true) => vec![
+            "open Auto-Quant program.md and stage a research loop for the requested objective"
+                .to_string(),
+            "run Auto-Quant backtest loop and export a stable candidate package for ict-engine"
+                .to_string(),
+        ],
+        (_, false) => vec![
+            "prepare Auto-Quant market data before attempting the research loop".to_string(),
+            "re-run factor-research with backend=auto-quant after data becomes ready".to_string(),
+        ],
+    }
+}
+
 pub fn build_factor_research_handoff_payload(
     symbol: &str,
     data: &str,
@@ -162,19 +185,8 @@ pub fn build_factor_research_handoff_payload(
         notes: Vec::new(),
     };
     payload.suggested_commands = base_suggested_commands(&payload.workspace, payload.data_ready);
-    payload.suggested_next_steps = if payload.data_ready {
-        vec![
-            "open Auto-Quant program.md and stage a research loop for the requested objective"
-                .to_string(),
-            "run Auto-Quant backtest loop and export a stable candidate package for ict-engine"
-                .to_string(),
-        ]
-    } else {
-        vec![
-            "prepare Auto-Quant market data before attempting the research loop".to_string(),
-            "re-run factor-research with backend=auto-quant after data becomes ready".to_string(),
-        ]
-    };
+    payload.suggested_next_steps =
+        suggested_next_steps_for_handoff(&payload.handoff_kind, payload.data_ready);
     payload.agent_prompt = format!(
         "Auto-Quant is the research execution backend for this request. Keep ict-engine as the control plane, preserve old factors, use {}, and export a candidate package back into ict-engine state.",
         payload.workspace.program_md
@@ -238,18 +250,8 @@ pub fn build_factor_autoresearch_handoff_payload(
         notes: Vec::new(),
     };
     payload.suggested_commands = base_suggested_commands(&payload.workspace, payload.data_ready);
-    payload.suggested_next_steps = if payload.data_ready {
-        vec![
-            "resume or start the Auto-Quant autonomous loop with factor retention and explicit keep/discard review".to_string(),
-            "export candidate/retrospective summary back to ict-engine after each iteration checkpoint".to_string(),
-        ]
-    } else {
-        vec![
-            "prepare Auto-Quant market data before attempting the autoresearch loop".to_string(),
-            "re-run factor-autoresearch with backend=auto-quant after data becomes ready"
-                .to_string(),
-        ]
-    };
+    payload.suggested_next_steps =
+        suggested_next_steps_for_handoff(&payload.handoff_kind, payload.data_ready);
     payload.agent_prompt = format!(
         "Auto-Quant is the autoresearch execution backend for this request. Preserve existing ict-engine factors, use {}, and return a candidate package plus retrospective signals to ict-engine.",
         payload.workspace.program_md

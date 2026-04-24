@@ -8,7 +8,10 @@ use crate::state::{
     save_state, ArtifactLedgerEntry, RecommendedNextCommandMeta,
 };
 
-use super::handoff::AutoQuantResearchHandoffPayload;
+use super::handoff::{
+    auto_quant_data_ready, base_suggested_commands, suggested_next_steps_for_handoff,
+    AutoQuantResearchHandoffPayload,
+};
 use super::readiness::auto_quant_readiness_from_status_and_data;
 use super::types::AutoQuantAdoptionDecisionArtifact;
 
@@ -73,11 +76,12 @@ pub fn build_auto_quant_adoption_review(
             .ok_or_else(|| anyhow!("no auto-quant handoff artifact found for '{}'", symbol))?
     };
     let payload = load_handoff_payload(state_dir, symbol, entry)?;
+    let data_ready = auto_quant_data_ready(&payload.workspace);
     let readiness = auto_quant_readiness_from_status_and_data(
         &payload.dependency_status,
         &payload.state_dir,
         payload.workspace.clone(),
-        payload.data_ready,
+        data_ready,
     );
     let (review_status, review_summary) = if !readiness.dependency_healthy {
         (
@@ -96,6 +100,9 @@ pub fn build_auto_quant_adoption_review(
             "handoff is ready for Auto-Quant execution and candidate export".to_string(),
         )
     };
+    let suggested_commands = base_suggested_commands(&payload.workspace, readiness.data_ready);
+    let suggested_next_steps =
+        suggested_next_steps_for_handoff(&payload.handoff_kind, readiness.data_ready);
     Ok(AutoQuantAdoptionReview {
         symbol: symbol.to_string(),
         state_dir: state_dir.to_string(),
@@ -105,8 +112,8 @@ pub fn build_auto_quant_adoption_review(
         data_ready: readiness.data_ready,
         dependency_healthy: readiness.dependency_healthy,
         workspace_repo_root: payload.workspace.repo_root,
-        suggested_commands: payload.suggested_commands,
-        suggested_next_steps: payload.suggested_next_steps,
+        suggested_commands,
+        suggested_next_steps,
         recommended_next_command_meta: readiness.recommended_next_command_meta,
         next_step: readiness.next_step,
         recommended_next_command: readiness.recommended_next_command,
@@ -207,6 +214,65 @@ mod tests {
     }
 
     #[test]
+    fn review_uses_current_data_readiness_after_handoff_is_prepared() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed = temp.path().join("auto-quant");
+        let payload = build_factor_research_handoff_payload(
+            "NQ",
+            "demo.json",
+            "expansion_manipulation",
+            None,
+            None,
+            temp.path().to_str().unwrap(),
+            healthy_dependency_status_for(managed.to_str().unwrap()),
+        );
+        assert!(!payload.data_ready);
+        persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
+
+        std::fs::create_dir_all(&payload.workspace.data_dir).unwrap();
+        for index in 0..15 {
+            std::fs::write(
+                std::path::Path::new(&payload.workspace.data_dir)
+                    .join(format!("prepared-{index}.feather")),
+                "prepared",
+            )
+            .unwrap();
+        }
+
+        let review =
+            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None).unwrap();
+        assert_eq!(review.review_status, "ready_for_external_execution");
+        assert!(review.data_ready);
+        assert!(!review
+            .suggested_commands
+            .iter()
+            .any(|command| command.contains("prepare.py")));
+        assert_eq!(review.next_step["blocked_reason"], serde_json::Value::Null);
+    }
+
+    #[test]
+    fn review_accepts_legacy_handoff_without_readiness_field() {
+        let temp = tempfile::tempdir().unwrap();
+        let payload = build_factor_research_handoff_payload(
+            "NQ",
+            "demo.json",
+            "expansion_manipulation",
+            None,
+            None,
+            temp.path().to_str().unwrap(),
+            healthy_dependency_status(),
+        );
+        let mut value = serde_json::to_value(&payload).unwrap();
+        value.as_object_mut().unwrap().remove("readiness");
+        let path = persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
+        std::fs::write(&path, serde_json::to_string_pretty(&value).unwrap()).unwrap();
+
+        let review =
+            build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None).unwrap();
+        assert_eq!(review.review_status, "prepare_required");
+    }
+
+    #[test]
     fn persist_adoption_decision_writes_decision_artifact_and_ledger_entry() {
         let temp = tempfile::tempdir().unwrap();
         let payload = build_factor_research_handoff_payload(
@@ -236,9 +302,13 @@ mod tests {
     }
 
     fn healthy_dependency_status() -> AutoQuantDependencyStatus {
+        healthy_dependency_status_for("dir")
+    }
+
+    fn healthy_dependency_status_for(managed_dir: &str) -> AutoQuantDependencyStatus {
         AutoQuantDependencyStatus {
             repo_url: "repo".to_string(),
-            managed_dir: "dir".to_string(),
+            managed_dir: managed_dir.to_string(),
             tracked_branch: "master".to_string(),
             pinned_ref: None,
             current_commit: None,
