@@ -1,4 +1,5 @@
 pub mod artifacts;
+pub mod auto_quant;
 pub mod backtest;
 pub mod belief;
 pub mod command_inputs;

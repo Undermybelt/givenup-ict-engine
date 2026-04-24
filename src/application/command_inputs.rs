@@ -79,6 +79,26 @@ pub struct ArtifactDiffCommandInput<'a> {
     pub right_artifact_id: &'a str,
 }
 
+#[derive(Debug, Clone, Copy)]
+pub struct AutoQuantStatusCommandInput<'a> {
+    pub state_dir: &'a str,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct AutoQuantBootstrapCommandInput<'a> {
+    pub state_dir: &'a str,
+    pub repo_url: Option<&'a str>,
+    pub tracked_branch: Option<&'a str>,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct AutoQuantUpdateCommandInput<'a> {
+    pub state_dir: &'a str,
+    pub repo_url: Option<&'a str>,
+    pub tracked_branch: Option<&'a str>,
+    pub target_ref: Option<&'a str>,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -207,5 +227,39 @@ mod tests {
         assert_eq!(input.symbol, "NQ");
         assert_eq!(input.left_artifact_id, "left-1");
         assert_eq!(input.right_artifact_id, "right-1");
+    }
+
+    #[test]
+    fn auto_quant_status_command_input_carries_state_dir() {
+        let input = AutoQuantStatusCommandInput {
+            state_dir: "/tmp/state",
+        };
+
+        assert_eq!(input.state_dir, "/tmp/state");
+    }
+
+    #[test]
+    fn auto_quant_bootstrap_command_input_carries_overrides() {
+        let input = AutoQuantBootstrapCommandInput {
+            state_dir: "/tmp/state",
+            repo_url: Some("https://example.com/repo.git"),
+            tracked_branch: Some("main"),
+        };
+
+        assert_eq!(input.repo_url, Some("https://example.com/repo.git"));
+        assert_eq!(input.tracked_branch, Some("main"));
+    }
+
+    #[test]
+    fn auto_quant_update_command_input_carries_target_ref() {
+        let input = AutoQuantUpdateCommandInput {
+            state_dir: "/tmp/state",
+            repo_url: None,
+            tracked_branch: Some("master"),
+            target_ref: Some("v0.3.0"),
+        };
+
+        assert_eq!(input.tracked_branch, Some("master"));
+        assert_eq!(input.target_ref, Some("v0.3.0"));
     }
 }

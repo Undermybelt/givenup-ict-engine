@@ -13,6 +13,12 @@ Expected:
 - `cargo check` succeeds
 - CLI help lists commands such as `analyze`, `factor-research`, `factor-pipeline-debug`, `factor-autoresearch-status`
 
+Optional dependency management:
+
+```bash
+cargo run -- auto-quant-status --state-dir state
+```
+
 ## 2. Learn the safe command surface
 
 Rust CLI:

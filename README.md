@@ -27,6 +27,16 @@ All three must be green. CI (`.github/workflows/ci.yml`) runs these on every pus
 
 ## Common workflows
 
+### Manage Auto-Quant dependency
+
+```bash
+cargo run -- auto-quant-status --state-dir state
+cargo run -- auto-quant-bootstrap --state-dir state
+cargo run -- auto-quant-update --state-dir state
+```
+
+These commands manage the local, pinned Auto-Quant checkout used by the integration work.
+
 ### Analyze market data
 
 ```bash

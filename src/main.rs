@@ -56,6 +56,9 @@ use ict_engine::application::{
         pending_update_quality_score, pending_update_review_rule_version, pending_update_summary,
         ArtifactDiffCommandInput, ArtifactLineageCommandInput, ArtifactStatusCommandInput,
     },
+    auto_quant::command_entry::{
+        auto_quant_bootstrap_command, auto_quant_status_command, auto_quant_update_command,
+    },
     backtest::{
         apply_feedback_to_trade_outcome_network, artifact_consumed_decision_gate,
         augment_action_plan_with_artifact_trends,
@@ -397,6 +400,9 @@ struct Cli {
 
 const DEFAULT_STATE_DIR: &str = "state";
 const STATE_DIR_ENV_VAR: &str = "ICT_ENGINE_STATE_DIR";
+const AUTO_QUANT_REPO_URL_ENV_VAR: &str = "ICT_ENGINE_AUTO_QUANT_REPO_URL";
+const AUTO_QUANT_BRANCH_ENV_VAR: &str = "ICT_ENGINE_AUTO_QUANT_BRANCH";
+const AUTO_QUANT_DIR_ENV_VAR: &str = "ICT_ENGINE_AUTO_QUANT_DIR";
 
 #[derive(Subcommand)]
 enum Commands {
@@ -766,6 +772,62 @@ enum Commands {
     },
     /// Show the currently effective ICT-related environment settings
     Env,
+    /// Show managed Auto-Quant dependency status
+    AutoQuantStatus {
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding Auto-Quant dependency metadata"
+        )]
+        state_dir: String,
+    },
+    /// Bootstrap the managed Auto-Quant dependency checkout
+    AutoQuantBootstrap {
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding Auto-Quant dependency metadata"
+        )]
+        state_dir: String,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_AUTO_QUANT_REPO_URL",
+            help = "Override Auto-Quant upstream repository URL"
+        )]
+        repo_url: Option<String>,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_AUTO_QUANT_BRANCH",
+            help = "Override tracked Auto-Quant branch"
+        )]
+        tracked_branch: Option<String>,
+    },
+    /// Update the managed Auto-Quant dependency checkout
+    AutoQuantUpdate {
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding Auto-Quant dependency metadata"
+        )]
+        state_dir: String,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_AUTO_QUANT_REPO_URL",
+            help = "Override Auto-Quant upstream repository URL"
+        )]
+        repo_url: Option<String>,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_AUTO_QUANT_BRANCH",
+            help = "Override tracked Auto-Quant branch"
+        )]
+        tracked_branch: Option<String>,
+        #[arg(long, help = "Explicit Auto-Quant target ref to checkout")]
+        target_ref: Option<String>,
+    },
     /// Show factor-autoresearch sessions and attempts
     FactorAutoresearchStatus {
         #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
@@ -1579,6 +1641,33 @@ fn main() -> Result<()> {
             )?
         }
         Commands::Env => env_command()?,
+        Commands::AutoQuantStatus { state_dir } => auto_quant_status_command(&state_dir)?,
+        Commands::AutoQuantBootstrap {
+            state_dir,
+            repo_url,
+            tracked_branch,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            auto_quant_bootstrap_command(
+                &state_dir,
+                repo_url.as_deref(),
+                tracked_branch.as_deref(),
+            )?
+        }
+        Commands::AutoQuantUpdate {
+            state_dir,
+            repo_url,
+            tracked_branch,
+            target_ref,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            auto_quant_update_command(
+                &state_dir,
+                repo_url.as_deref(),
+                tracked_branch.as_deref(),
+                target_ref.as_deref(),
+            )?
+        }
         Commands::CleanFutures {
             root,
             output_dir,
@@ -1972,6 +2061,18 @@ fn build_env_report() -> Value {
         (
             "ICT_ENGINE_TOMAC_ROOT",
             "set the TOMAC root for futures cleaning commands",
+        ),
+        (
+            AUTO_QUANT_REPO_URL_ENV_VAR,
+            "override the Auto-Quant upstream repository URL",
+        ),
+        (
+            AUTO_QUANT_BRANCH_ENV_VAR,
+            "override the tracked Auto-Quant branch",
+        ),
+        (
+            AUTO_QUANT_DIR_ENV_VAR,
+            "override the managed Auto-Quant checkout directory",
         ),
         (
             "ICT_EXECUTION_FOCUS",
