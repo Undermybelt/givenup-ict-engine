@@ -102,9 +102,9 @@ use ict_engine::application::{
     },
     multi_timeframe_inputs::{
         build_live_multi_timeframe_signal, build_multi_timeframe_research_signal,
-        build_multi_timeframe_summary, detected_multi_timeframe_clean_root,
-        infer_interval_for_analyze_frame, resolve_analyze_cli_inputs,
-        resolve_analyze_multi_timeframe_inputs, resolve_multi_timeframe_inputs,
+        build_multi_timeframe_summary, infer_interval_for_analyze_frame,
+        resolve_analyze_cli_inputs, resolve_analyze_multi_timeframe_inputs,
+        resolve_multi_timeframe_inputs,
     },
     orchestration::{
         build_execution_tree_artifact, build_execution_triage, build_stub_ensemble_vote_from_input,
@@ -192,8 +192,8 @@ use ict_engine::state::{
     load_execution_candidate_history, load_factor_autoresearch_attempts,
     load_factor_autoresearch_sessions, load_learning_state, load_pending_update_artifact,
     load_pending_update_history, load_pre_bayes_policy_history, load_state, load_state_or_default,
-    load_workflow_snapshot, mark_artifact_consumed, migrate_ensemble_executor_scorecards,
-    recommended_next_command_meta, save_ensemble_executor_scorecards, save_ensemble_vote_artifact,
+    mark_artifact_consumed, migrate_ensemble_executor_scorecards, recommended_next_command_meta,
+    save_ensemble_executor_scorecards, save_ensemble_vote_artifact,
     save_execution_candidate_artifact, save_factor_autoresearch_final_summary,
     save_factor_autoresearch_live_snapshot, save_factor_autoresearch_sessions, save_learning_state,
     save_pending_update_artifact, save_state, save_workflow_snapshot, state_exists,
@@ -1520,31 +1520,50 @@ fn main() -> Result<()> {
             human,
             stable,
             no_execution_focus: _no_execution_focus,
-        } => workflow_status_command(WorkflowStatusCommandInput {
-            symbol: &symbol,
-            state_dir: &state_dir,
-            refresh,
-            phase: phase.as_deref(),
-            actionable_only,
-            conflicts_only,
-            latest_promotable,
-            hard_block_only,
-            hard_block_reason: hard_block_reason.as_deref(),
-            limit,
-            output_format: resolve_output_format(&output_format, compact, agent, human)?,
-            stable,
-        })?,
+        } => ict_engine::application::orchestration::workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: &symbol,
+                state_dir: &state_dir,
+                refresh,
+                phase: phase.as_deref(),
+                actionable_only,
+                conflicts_only,
+                latest_promotable,
+                hard_block_only,
+                hard_block_reason: hard_block_reason.as_deref(),
+                limit,
+                output_format: match resolve_output_format(&output_format, compact, agent, human)? {
+                    OutputFormat::Json => "json",
+                    OutputFormat::Compact => "compact",
+                    OutputFormat::Agent => "agent",
+                    OutputFormat::Human => "human",
+                },
+                stable,
+            },
+            refresh_workflow_snapshot,
+        )?,
         Commands::PreBayesStatus {
             symbol,
             state_dir,
             refresh,
             section,
-        } => pre_bayes_status_command(&symbol, &state_dir, refresh, section.as_deref())?,
+        } => ict_engine::application::orchestration::pre_bayes_status_command(
+            &symbol,
+            &state_dir,
+            refresh,
+            section.as_deref(),
+            refresh_workflow_snapshot,
+        )?,
         Commands::PreBayesDiff {
             symbol,
             state_dir,
             refresh,
-        } => pre_bayes_diff_command(&symbol, &state_dir, refresh)?,
+        } => ict_engine::application::orchestration::pre_bayes_diff_command(
+            &symbol,
+            &state_dir,
+            refresh,
+            refresh_workflow_snapshot,
+        )?,
         Commands::ArtifactStatus {
             symbol,
             state_dir,
@@ -1984,134 +2003,6 @@ fn build_env_report() -> Value {
 fn env_command() -> Result<()> {
     println!("{}", serde_json::to_string_pretty(&build_env_report())?);
     Ok(())
-}
-
-fn hydrate_recommended_next_command_meta(
-    command: &str,
-    meta: &mut ict_engine::state::RecommendedNextCommandMeta,
-) {
-    if meta.kind == ict_engine::state::RecommendedNextCommandKind::Unknown && !command.is_empty() {
-        *meta = recommended_next_command_meta(command);
-    }
-}
-
-fn hydrate_workflow_snapshot_recommended_next_command_meta(snapshot: &mut WorkflowSnapshot) {
-    hydrate_recommended_next_command_meta(
-        &snapshot.recommended_next_command,
-        &mut snapshot.recommended_next_command_meta,
-    );
-    for phase in [
-        snapshot.latest_train.as_mut(),
-        snapshot.latest_analyze.as_mut(),
-        snapshot.latest_research.as_mut(),
-        snapshot.latest_backtest.as_mut(),
-        snapshot.latest_update.as_mut(),
-    ]
-    .into_iter()
-    .flatten()
-    {
-        hydrate_recommended_next_command_meta(
-            &phase.recommended_next_command,
-            &mut phase.recommended_next_command_meta,
-        );
-    }
-}
-
-struct WorkflowStatusCommandInput<'a> {
-    symbol: &'a str,
-    state_dir: &'a str,
-    refresh: bool,
-    phase: Option<&'a str>,
-    actionable_only: bool,
-    conflicts_only: bool,
-    latest_promotable: bool,
-    hard_block_only: bool,
-    hard_block_reason: Option<&'a str>,
-    limit: Option<usize>,
-    output_format: OutputFormat,
-    stable: bool,
-}
-
-fn workflow_status_command(input: WorkflowStatusCommandInput<'_>) -> Result<()> {
-    let WorkflowStatusCommandInput {
-        symbol,
-        state_dir,
-        refresh,
-        phase,
-        actionable_only,
-        conflicts_only,
-        latest_promotable,
-        hard_block_only,
-        hard_block_reason,
-        limit,
-        output_format,
-        stable,
-    } = input;
-    let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
-    let mut snapshot = if refresh {
-        refresh_workflow_snapshot(state_dir, symbol)?
-    } else {
-        load_workflow_snapshot(state_dir, symbol)?
-    };
-    hydrate_workflow_snapshot_recommended_next_command_meta(&mut snapshot);
-    let persisted_scorecards =
-        load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
-    let detected_tomac_root =
-        ict_engine::application::multi_timeframe_inputs::detected_tomac_root();
-    let multi_timeframe_clean_root =
-        detected_multi_timeframe_clean_root(detected_tomac_root.as_deref());
-    ict_engine::application::orchestration::dispatch_workflow_status(
-        &snapshot,
-        &persisted_scorecards,
-        ict_engine::application::orchestration::WorkflowStatusDispatchInput {
-            phase,
-            actionable_only,
-            conflicts_only,
-            latest_promotable,
-            hard_block_only,
-            hard_block_reason,
-            limit,
-            output_format: match output_format {
-                OutputFormat::Json => "json",
-                OutputFormat::Compact => "compact",
-                OutputFormat::Agent => "agent",
-                OutputFormat::Human => "human",
-            },
-            stable,
-        },
-        ict_engine::application::orchestration::WorkflowStatusBootstrapInput {
-            symbol,
-            state_dir,
-            detected_tomac_root,
-            multi_timeframe_clean_root,
-            tomac_root_placeholder:
-                ict_engine::application::multi_timeframe_inputs::detected_tomac_root_or_placeholder(
-                ),
-        },
-    )
-}
-
-fn pre_bayes_status_command(
-    symbol: &str,
-    state_dir: &str,
-    refresh: bool,
-    section: Option<&str>,
-) -> Result<()> {
-    let snapshot = if refresh {
-        refresh_workflow_snapshot(state_dir, symbol)?
-    } else {
-        load_workflow_snapshot(state_dir, symbol)?
-    };
-    ict_engine::application::orchestration::emit_pre_bayes_status_output(&snapshot, section)
-}
-
-fn pre_bayes_diff_command(symbol: &str, state_dir: &str, refresh: bool) -> Result<()> {
-    let snapshot = if refresh {
-        refresh_workflow_snapshot(state_dir, symbol)?
-    } else {
-        load_workflow_snapshot(state_dir, symbol)?
-    };
-    ict_engine::application::orchestration::emit_pre_bayes_diff_output(&snapshot)
 }
 
 fn multi_timeframe_phase_hint(summary: &[String]) -> String {
@@ -11706,6 +11597,30 @@ mod tests {
     use ict_engine::config::build_frame_features_for_market;
     use ict_engine::state::{BacktestRunRecord, FactorPipelineLabelSource, ResearchRunRecord};
 
+    fn workflow_status_command(
+        input: ict_engine::application::orchestration::WorkflowStatusCommandInput<'_>,
+    ) -> Result<()> {
+        ict_engine::application::orchestration::workflow_status_command(
+            input,
+            refresh_workflow_snapshot,
+        )
+    }
+
+    fn pre_bayes_status_command(
+        symbol: &str,
+        state_dir: &str,
+        refresh: bool,
+        section: Option<&str>,
+    ) -> Result<()> {
+        ict_engine::application::orchestration::pre_bayes_status_command(
+            symbol,
+            state_dir,
+            refresh,
+            section,
+            refresh_workflow_snapshot,
+        )
+    }
+
     fn sample_candles(count: usize) -> Vec<Candle> {
         let start = Utc.with_ymd_and_hms(2024, 1, 1, 0, 0, 0).unwrap();
         (0..count)
@@ -13992,188 +13907,212 @@ mod tests {
         };
         save_workflow_snapshot(temp.path(), "NQ", &snapshot).unwrap();
 
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: None,
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: None,
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
-        let loaded = load_workflow_snapshot(temp.path(), "NQ").unwrap();
+        let loaded = ict_engine::state::load_workflow_snapshot(temp.path(), "NQ").unwrap();
 
         assert_eq!(loaded.current_focus_phase, "research");
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: Some("diffs"),
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: Some("diffs"),
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: Some("execution-candidate-history"),
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: Some("execution-candidate-history"),
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: Some("ensemble-vote"),
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: Some("ensemble-vote"),
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: Some("ensemble-vote-history"),
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: Some("ensemble-vote-history"),
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: Some("ensemble-scorecards"),
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: Some("ensemble-scorecards"),
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: None,
-            actionable_only: true,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: None,
+                actionable_only: true,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: None,
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: true,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: None,
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: true,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: Some("artifact-history-summary"),
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: Some("artifact-history-summary"),
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: Some("artifact-review-rules"),
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: Some("artifact-review-rules"),
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: None,
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: true,
-            hard_block_reason: None,
-            limit: Some(5),
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: None,
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: true,
+                hard_block_reason: None,
+                limit: Some(5),
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: Some("agent-bootstrap"),
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: Some("agent-bootstrap"),
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
     }
 
@@ -14440,50 +14379,56 @@ mod tests {
             rule_break_only: false,
         })
         .unwrap();
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: Some("artifact-factor-trends"),
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: Some("artifact-factor-trends"),
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: Some("artifact-lineage-summaries"),
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: Some("artifact-lineage-summaries"),
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: Some("artifact-decision-summary"),
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: Some("artifact-decision-summary"),
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
         artifact_status_command(ArtifactStatusCommandInput {
             symbol: "NQ",
@@ -14533,35 +14478,39 @@ mod tests {
             rule_break_only: true,
         })
         .unwrap();
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: Some("artifact-impact-leaderboard"),
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: Some("artifact-impact-leaderboard"),
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
-        workflow_status_command(WorkflowStatusCommandInput {
-            symbol: "NQ",
-            state_dir: temp.path().to_str().unwrap(),
-            refresh: false,
-            phase: Some("artifact-impact-consumed-trend"),
-            actionable_only: false,
-            conflicts_only: false,
-            latest_promotable: false,
-            hard_block_only: false,
-            hard_block_reason: None,
-            limit: None,
-            output_format: OutputFormat::Json,
-            stable: false,
-        })
+        workflow_status_command(
+            ict_engine::application::orchestration::WorkflowStatusCommandInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                refresh: false,
+                phase: Some("artifact-impact-consumed-trend"),
+                actionable_only: false,
+                conflicts_only: false,
+                latest_promotable: false,
+                hard_block_only: false,
+                hard_block_reason: None,
+                limit: None,
+                output_format: "json",
+                stable: false,
+            },
+        )
         .unwrap();
         pre_bayes_status_command("NQ", temp.path().to_str().unwrap(), false, Some("policy"))
             .unwrap();
