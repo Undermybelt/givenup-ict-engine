@@ -104,6 +104,11 @@ That is a history transport problem, not a code release blocker.
 
 ## Residual non-blocking debt
 
+Status note (2026-04-24)
+
+Item 4 below is stale after the `main.rs` runtime-hotspot extraction line landed in commits `8ce1024` and `3e45254`.
+Current post-`main.rs` debt inventory now lives in `docs/plans/2026-04-24-post-main-debt-inventory.md`.
+
 1. `research-verdict` is compact, not a full experiment analytics engine yet
 2. contamination heuristics are useful but still conservative
 3. `evidence-quality-breakdown` still infers some terms from persisted policy/filter state rather than storing every raw intermediate
