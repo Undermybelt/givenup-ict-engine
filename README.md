@@ -37,6 +37,14 @@ cargo run -- auto-quant-update --state-dir state
 
 These commands manage the local, pinned Auto-Quant checkout used by the integration work.
 
+For the Auto-Quant review loop:
+
+```bash
+cargo run -- factor-research --symbol DEMO --data examples/demo/demo-15m.json --backend auto-quant --state-dir /tmp/aq
+cargo run -- auto-quant-adoption-review --symbol DEMO --state-dir /tmp/aq
+cargo run -- auto-quant-adoption-decision --symbol DEMO --state-dir /tmp/aq --decision adopt --rationale "approved for next bridge step"
+```
+
 ### Analyze market data
 
 ```bash

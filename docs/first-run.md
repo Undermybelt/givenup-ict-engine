@@ -19,6 +19,13 @@ Optional dependency management:
 cargo run -- auto-quant-status --state-dir state
 ```
 
+Optional Auto-Quant review loop:
+
+```bash
+cargo run -- factor-research --symbol DEMO --data examples/demo/demo-15m.json --backend auto-quant --state-dir /tmp/aq
+cargo run -- auto-quant-adoption-review --symbol DEMO --state-dir /tmp/aq
+```
+
 ## 2. Learn the safe command surface
 
 Rust CLI:
