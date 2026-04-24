@@ -89,14 +89,17 @@ use ict_engine::application::{
     },
     factor_lifecycle::build_factor_lifecycle_view,
     factor_lifecycle::{
-        apply_expansion_manipulation_objective, build_hint_effectiveness_summary,
-        compare_hint_effectiveness, expansion_factor_scores_for_market,
-        factor_mutation_direction_hint_summary, factor_mutation_focus_prompt,
-        factor_mutation_priority_markets, factor_mutation_priority_reasons,
-        factor_mutation_recommended_focus, factor_mutation_step_size_hint_summary,
-        factor_specific_hint_preferences, mechanical_mutation_score, next_mutation_spec_template,
+        apply_expansion_manipulation_objective, build_factor_autoresearch_status_surface,
+        build_hint_effectiveness_summary, compare_hint_effectiveness,
+        expansion_factor_scores_for_market, factor_mutation_direction_hint_summary,
+        factor_mutation_focus_prompt, factor_mutation_priority_markets,
+        factor_mutation_priority_reasons, factor_mutation_recommended_focus,
+        factor_mutation_step_size_hint_summary, factor_specific_hint_preferences,
+        mechanical_mutation_score, next_mutation_spec_template,
         next_mutation_spec_template_with_preferences, no_superior_mutation_found,
-        recommended_mutation_directions_from_failure_tags, FactorMutationPerFactorHintSummary,
+        recommended_mutation_directions_from_failure_tags,
+        sync_factor_autoresearch_experiments_tsv, sync_factor_autoresearch_retrospective,
+        FactorMutationPerFactorHintSummary,
     },
     multi_timeframe_inputs::{
         build_live_multi_timeframe_signal, build_multi_timeframe_research_signal,
@@ -171,7 +174,6 @@ use ict_engine::planner::{
 use serde_json::Value;
 
 #[cfg(test)]
-#[cfg(test)]
 use ict_engine::application::backtest::recommended_command;
 #[cfg(test)]
 use ict_engine::application::factor_lifecycle::forced_cluster_jump_template;
@@ -179,7 +181,6 @@ use ict_engine::application::factor_lifecycle::forced_cluster_jump_template;
 use ict_engine::application::output_foundation::{redact_local_paths, redact_local_paths_in_value};
 #[cfg(test)]
 use ict_engine::state::FeedbackFactorUsage;
-#[cfg(test)]
 #[cfg(test)]
 use ict_engine::state::RecommendedCommand;
 use ict_engine::state::{
@@ -190,11 +191,10 @@ use ict_engine::state::{
     append_trade_history, append_train_run, append_update_run, load_artifact_ledger,
     load_ensemble_executor_scorecards, load_ensemble_vote_history,
     load_execution_candidate_history, load_factor_autoresearch_attempts,
-    load_factor_autoresearch_live_snapshot, load_factor_autoresearch_sessions, load_learning_state,
-    load_pending_update_artifact, load_pending_update_history, load_pre_bayes_policy_history,
-    load_state, load_state_or_default, load_workflow_snapshot, mark_artifact_consumed,
-    migrate_ensemble_executor_scorecards, recommended_next_command_meta,
-    save_ensemble_executor_scorecards, save_ensemble_vote_artifact,
+    load_factor_autoresearch_sessions, load_learning_state, load_pending_update_artifact,
+    load_pending_update_history, load_pre_bayes_policy_history, load_state, load_state_or_default,
+    load_workflow_snapshot, mark_artifact_consumed, migrate_ensemble_executor_scorecards,
+    recommended_next_command_meta, save_ensemble_executor_scorecards, save_ensemble_vote_artifact,
     save_execution_candidate_artifact, save_factor_autoresearch_final_summary,
     save_factor_autoresearch_live_snapshot, save_factor_autoresearch_sessions, save_learning_state,
     save_pending_update_artifact, save_state, save_workflow_snapshot, state_exists,
@@ -7031,6 +7031,12 @@ fn factor_autoresearch_command(input: FactorAutoresearchCommandInput<'_>) -> Res
             branch_summary: factor_autoresearch_branch_summary(&evaluation),
         };
         append_factor_autoresearch_attempt(input.state_dir, input.symbol, attempt.clone())?;
+        if let Err(err) = sync_factor_autoresearch_experiments_tsv(input.state_dir, input.symbol) {
+            eprintln!(
+                "warning: failed to sync derived artifact experiments.tsv for {}: {err:#}",
+                input.symbol
+            );
+        }
         let cluster = attempt
             .candidate_mutation_spec
             .direction_hints
@@ -7098,6 +7104,17 @@ fn factor_autoresearch_command(input: FactorAutoresearchCommandInput<'_>) -> Res
         live_snapshot: Some(live_snapshot),
     };
     save_factor_autoresearch_final_summary(input.state_dir, input.symbol, &summary)?;
+    if let Err(err) = sync_factor_autoresearch_retrospective(
+        input.state_dir,
+        input.symbol,
+        Some(&summary.session.session_id),
+    ) {
+        eprintln!(
+            "warning: failed to sync derived artifact factor_autoresearch_retrospective.md for {} session {}: {err:#}",
+            input.symbol,
+            summary.session.session_id
+        );
+    }
     println!("{}", serde_json::to_string_pretty(&summary)?);
     Ok(())
 }
@@ -7109,140 +7126,20 @@ fn factor_autoresearch_status_command(
     latest_only: bool,
     limit: Option<usize>,
 ) -> Result<()> {
-    let mut sessions = load_factor_autoresearch_sessions(state_dir, symbol)?;
-    sessions.sort_by_key(|session| session.updated_at);
-    sessions.reverse();
-    if let Some(session_id) = session_id {
-        sessions.retain(|session| session.session_id == session_id);
-    }
-    if latest_only {
-        sessions.truncate(1);
-    }
-    if let Some(limit) = limit {
-        sessions.truncate(limit);
-    }
-
-    let selected_session_ids = sessions
-        .iter()
-        .map(|session| session.session_id.clone())
-        .collect::<BTreeSet<_>>();
-    let mut attempts = load_factor_autoresearch_attempts(state_dir, symbol)?;
-    attempts.retain(|attempt| selected_session_ids.contains(&attempt.session_id));
-    attempts.sort_by_key(|attempt| attempt.timestamp);
-    attempts.reverse();
-
-    let live_snapshot = load_factor_autoresearch_live_snapshot(state_dir, symbol).ok();
-    let live_snapshot_file_exists = std::path::Path::new(state_dir)
-        .join(symbol)
-        .join(ict_engine::state::FACTOR_AUTORESEARCH_LIVE_FILE)
-        .is_file();
-    let final_summary_path = std::path::Path::new(state_dir)
-        .join(symbol)
-        .join(ict_engine::state::FACTOR_AUTORESEARCH_FINAL_FILE);
-    let final_summary_exists = final_summary_path.is_file();
-
-    if sessions.is_empty()
-        && attempts.is_empty()
-        && !live_snapshot_file_exists
-        && !final_summary_exists
-    {
+    let Some(surface) = build_factor_autoresearch_status_surface(
+        state_dir,
+        symbol,
+        session_id,
+        latest_only,
+        limit,
+    )?
+    else {
         let empty = ict_engine::application::orchestration::workflow_status::factor_autoresearch_status_value_for_empty_state(symbol, state_dir);
         println!("{}", serde_json::to_string_pretty(&empty)?);
         return Ok(());
-    }
-
-    // Staleness threshold: if snapshot says "running" but hasn't been
-    // updated in >10 minutes and no final summary exists, it was interrupted.
-    let staleness_threshold = chrono::Duration::minutes(10);
-    let snapshot_is_stale = live_snapshot
-        .as_ref()
-        .map(|s| Utc::now().signed_duration_since(s.updated_at) > staleness_threshold)
-        .unwrap_or(false);
-    let snapshot_says_running = live_snapshot
-        .as_ref()
-        .map(|s| s.status == "running")
-        .unwrap_or(false);
-    let snapshot_says_completed = live_snapshot
-        .as_ref()
-        .map(|s| s.status == "completed")
-        .unwrap_or(false);
-
-    // Priority: final_summary > snapshot.status=="completed" > stale running > fresh running > unknown
-    let (effective_status, interrupted) = if final_summary_exists || snapshot_says_completed {
-        ("completed", false)
-    } else if snapshot_says_running && snapshot_is_stale {
-        ("interrupted", true)
-    } else if snapshot_says_running {
-        ("running", false)
-    } else {
-        ("unknown", false)
     };
 
-    let mut decision_counts = BTreeMap::<String, usize>::new();
-    let mut failure_tag_counts = BTreeMap::<String, usize>::new();
-    let mut cluster_scoreboard = BTreeMap::<String, (usize, f64, f64)>::new();
-    let mut best_attempt = None;
-    let mut best_score_delta = f64::MIN;
-    let mut cluster_fail_streaks = BTreeMap::<String, usize>::new();
-    for attempt in &attempts {
-        *decision_counts
-            .entry(attempt.decision.status.clone())
-            .or_default() += 1;
-        for tag in &attempt.evaluation.failure_tags {
-            *failure_tag_counts.entry(tag.clone()).or_default() += 1;
-        }
-        let cluster = attempt
-            .candidate_mutation_spec
-            .direction_hints
-            .get("cluster_jump")
-            .cloned()
-            .unwrap_or_else(|| "none".to_string());
-        let entry = cluster_scoreboard
-            .entry(cluster.clone())
-            .or_insert((0, 0.0, f64::MIN));
-        entry.0 += 1;
-        entry.1 += attempt.decision.score_delta;
-        entry.2 = entry.2.max(attempt.decision.score_delta);
-        if attempt.decision.score_delta > best_score_delta {
-            best_score_delta = attempt.decision.score_delta;
-            best_attempt = Some(attempt.clone());
-        }
-        if attempt.decision.status == "discard" {
-            *cluster_fail_streaks.entry(cluster).or_default() += 1;
-        }
-    }
-
-    let cluster_scoreboard = cluster_scoreboard
-        .into_iter()
-        .map(|(cluster, (attempts, sum_delta, best_delta))| {
-            serde_json::json!({
-                "cluster": cluster,
-                "attempts": attempts,
-                "avg_score_delta": if attempts == 0 { 0.0 } else { sum_delta / attempts as f64 },
-                "best_score_delta": if best_delta == f64::MIN { 0.0 } else { best_delta },
-            })
-        })
-        .collect::<Vec<_>>();
-
-    println!(
-        "{}",
-        serde_json::to_string_pretty(&serde_json::json!({
-            "symbol": symbol,
-            "state_dir": state_dir,
-            "session_filter": session_id,
-            "effective_status": effective_status,
-            "interrupted": interrupted,
-            "final_summary_exists": final_summary_exists,
-            "live_snapshot": live_snapshot,
-            "sessions": sessions,
-            "attempts": attempts,
-            "decision_counts": decision_counts,
-            "failure_tag_counts": failure_tag_counts,
-            "cluster_scoreboard": cluster_scoreboard,
-            "cluster_fail_streaks": cluster_fail_streaks,
-            "best_attempt": best_attempt,
-        }))?
-    );
+    println!("{}", serde_json::to_string_pretty(&surface)?);
     Ok(())
 }
 

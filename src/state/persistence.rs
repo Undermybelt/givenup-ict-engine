@@ -70,6 +70,23 @@ pub fn save_state<T: Serialize + ?Sized, P: AsRef<Path>>(
     Ok(())
 }
 
+pub fn save_text_state<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+    filename: &str,
+    content: &str,
+) -> Result<()> {
+    let dir_path = dir.as_ref().join(symbol);
+    std::fs::create_dir_all(&dir_path)
+        .with_context(|| format!("Failed to create directory: {:?}", dir_path))?;
+
+    let path = dir_path.join(filename);
+    std::fs::write(&path, content)
+        .with_context(|| format!("Failed to write state file: {:?}", path))?;
+
+    Ok(())
+}
+
 pub fn load_learning_state<P: AsRef<Path>>(dir: P, symbol: &str) -> Result<LearningState> {
     load_state_or_default(dir, symbol, LEARNING_STATE_FILE)
 }
