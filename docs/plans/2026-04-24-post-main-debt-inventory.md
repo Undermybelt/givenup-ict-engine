@@ -40,35 +40,27 @@ One-shot feasibility
 ### 2. Release transport/history debt
 
 Status
-- real
-- not fixable by ordinary in-tree code edits alone
-- not a runtime bug
+- closed on 2026-04-24
+- no longer an active repo blocker
 
 Evidence
 - `docs/audits/release-signoff.md`
 - `docs/release-mirror-runbook.md`
 
-What is still wrong
-- primary repo history contains oversized tracked artifacts
-- GitHub rejects normal pushes because historical blobs exceed transport limits
+What changed
+- generated `state*` artifacts were removed from git history
+- source-repo pushes are now available again
+- the historical >100 MB blocker is no longer present in the rewritten history
 
-Named examples already documented
-- `state100/NQ/learning_state.json`
-- `state_autoresearch_resume_bg/NQ/learning_state.json`
-
-One-shot feasibility
-- no, not as a normal code-only branch
-- requires one of:
-  - accepted permanent mirror-only release process
-  - explicit history rewrite / filter-repo line
-  - repository split / archival strategy
+Residual caveat
+- mirror release is still useful as a clean tree-state publication flow
+- but it is no longer required by an unresolved source-repo history debt
 
 ### 3. Analytics depth debt in release-facing research surfaces
 
 Status
-- real
-- behavior/product debt
-- closable, but not just by refactor
+- materially reduced on 2026-04-24
+- no longer the primary debt hotspot
 
 Evidence
 - `docs/audits/release-signoff.md`
@@ -79,14 +71,14 @@ Surfaces
 - contamination heuristics
 - `evidence-quality-breakdown`
 
-What is still wrong
-- `research-verdict` is still compact, not a richer experiment analytics engine
-- contamination heuristics remain conservative
-- `evidence-quality-breakdown` still infers some terms from persisted state instead of persisting every raw intermediate directly
+What changed
+- `research-verdict` now emits richer contamination evidence and isolated-comparison recommendation
+- contamination signal now considers mixed data paths, paired data paths, mutation sources, and artifact source phases
+- `evidence-quality-breakdown` now surfaces policy version, soft-evidence usage, bridge-selected quality, MTF raw/filtered scores, and soft-evidence divergence summary
 
-One-shot feasibility
-- maybe, but only if treated as feature work with contract review and tests
-- not a pure debt-only refactor
+Residual caveat
+- the surfaces are still compact by design rather than a full experiment dashboard
+- that is a product-scope choice more than an immediate debt blocker
 
 ### 4. Historical docs still describing stale debt state
 
@@ -112,7 +104,7 @@ One-shot feasibility
 If the goal is "clear the remaining fixable debt in one branch", the best target is:
 
 1. stale docs that still describe old debt state
-2. any optional feature-depth work on `research-verdict` / contamination / evidence-quality surfaces
+2. optional product-surface expansion beyond the current compact release-closure design
 
 Do not mix in release-history rewrite unless the branch is explicitly approved as a history surgery branch.
 
@@ -123,9 +115,4 @@ After the `main.rs` extraction line, the remaining debt picture is:
 - fixable in-tree:
   - archived backend portability
   - stale debt docs
-- not fixable by ordinary code edits:
-  - primary repo oversized-history transport blocker
-- feature/depth debt rather than structural debt:
-  - `research-verdict`
-  - contamination heuristics
-  - `evidence-quality-breakdown`
+- remaining meaningful debt is mostly documentation and product-scope tradeoff, not repo-structure or transport blockage

@@ -9,6 +9,10 @@ Status: draft
   - `scripts/search_local.py`
   - `scripts/search_cluster.py`
   - `scripts/evaluate_bottleneck.py`
+- Cleared source-repo oversized-history debt by removing generated `state*` artifacts from git history.
+- Deepened release-closure surfaces:
+  - richer `research-verdict` contamination evidence
+  - richer `evidence-quality-breakdown` policy / bridge / soft-evidence fields
 - Public wrappers now default to help-only mode instead of launching long runs.
 - Added non-executing backend summaries via `--backend-help`.
 - Added release-facing onboarding docs:
@@ -82,4 +86,6 @@ Reason:
 - core CLI is real and usable
 - release-facing docs are now present
 - wrapper UX is much safer
+- source repo history is pushable again
+- release-closure surfaces are deeper and less placeholder-like
 - backend path portability landed, but the public experiment surface is still preview-grade

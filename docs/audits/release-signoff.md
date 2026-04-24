@@ -10,15 +10,12 @@ No blocking release issues found in the codebase.
 
 ## Important release routing decision
 
-Primary repository history contains oversized historical state artifacts that GitHub rejects on push.
+Status note (2026-04-24)
 
-Therefore the release path for `v0.0.1` is:
-- keep source repo private
-- create a separate private release mirror repo
-- export current tree state only
-- publish tag/release from the private mirror repo
+The historical oversized-artifact blocker on the source repo has now been cleared by history rewrite.
+Normal pushes to the source repo are available again.
 
-This avoids history rewrite risk on the primary research repo while preserving a clean private release surface.
+Mirror release remains a valid release transport surface for clean tree-state publishing, but it is no longer required by an unsolved source-repo history blocker.
 
 ## Signoff checklist
 
@@ -94,13 +91,10 @@ cargo run --quiet -- analyze --symbol DEMO --demo --agent
 - emitted `decision_summary`
 - emitted structured `next_step`
 
-## Release transport blocker on primary repo
+## Source repo history status
 
-Primary repo push was rejected by GitHub due to historical oversized files, including:
-- `state100/NQ/learning_state.json` > 100 MB
-- `state_autoresearch_resume_bg/NQ/learning_state.json` > 100 MB
-
-That is a history transport problem, not a code release blocker.
+Previously oversized historical state artifacts blocked normal source-repo pushes.
+That blocker was cleared on `2026-04-24` by removing generated `state*` artifacts from history.
 
 ## Residual non-blocking debt
 
@@ -109,11 +103,9 @@ Status note (2026-04-24)
 Item 4 below is stale after the `main.rs` runtime-hotspot extraction line landed in commits `8ce1024` and `3e45254`.
 Current post-`main.rs` debt inventory now lives in `docs/plans/2026-04-24-post-main-debt-inventory.md`.
 
-1. `research-verdict` is compact, not a full experiment analytics engine yet
-2. contamination heuristics are useful but still conservative
-3. `evidence-quality-breakdown` still infers some terms from persisted policy/filter state rather than storing every raw intermediate
-4. `src/main.rs` remains a structural debt hotspot, with plan already documented in `docs/plans/main-rs-extraction-plan.md`
+1. public experiment wrappers are still preview-grade rather than a stable packaged interface
+2. some experiment flows still assume a Tomac-style cleaned-data layout unless env vars are overridden
 
 ## Release recommendation
 
-Proceed with private mirror tag and release for `v0.0.1`.
+Proceed with source-repo development truth plus mirror tag/release for `v0.1.0`.
