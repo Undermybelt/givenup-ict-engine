@@ -1438,13 +1438,19 @@ fn main() -> Result<()> {
             ..
         } => {
             ensure_state_dir_ready(&state_dir)?;
-            factor_backtest_command(
+            ict_engine::application::backtest::factor_backtest_command(
                 &symbol,
                 &data,
                 paired_data.as_deref(),
                 ensemble,
                 &state_dir,
-                resolve_output_format(&output_format, compact, agent, human)?,
+                match resolve_output_format(&output_format, compact, agent, human)? {
+                    OutputFormat::Json => "json",
+                    OutputFormat::Compact => "compact",
+                    OutputFormat::Agent => "agent",
+                    OutputFormat::Human => "human",
+                },
+                run_factor_backtest,
             )?
         }
         Commands::Env => env_command()?,
@@ -7279,209 +7285,6 @@ fn build_live_multi_timeframe_summary(source: &str, frames: &[(&str, &[Candle])]
         summary.push(format!("{}:{} bars source=live", interval, candles.len()));
     }
     summary
-}
-
-fn factor_backtest_command(
-    symbol: &str,
-    data: &str,
-    paired_data: Option<&str>,
-    ensemble: bool,
-    state_dir: &str,
-    output_format: OutputFormat,
-) -> Result<()> {
-    let report = run_factor_backtest(symbol, data, paired_data, state_dir)?;
-    let credibility_summary = serde_json::json!({
-        "conformal_coverage_1sigma": report
-            .factor_results
-            .iter()
-            .map(|result| (result.factor_name.clone(), result.metrics.conformal_coverage_1sigma))
-            .collect::<Vec<_>>(),
-        "conformal_miscoverage_1sigma": report
-            .factor_results
-            .iter()
-            .map(|result| (result.factor_name.clone(), result.metrics.conformal_miscoverage_1sigma))
-            .collect::<Vec<_>>(),
-        "regime_break_penalty": report
-            .factor_results
-            .iter()
-            .map(|result| (result.factor_name.clone(), result.metrics.regime_break_penalty))
-            .collect::<Vec<_>>(),
-        "structural_break_score": report
-            .factor_results
-            .iter()
-            .map(|result| (result.factor_name.clone(), result.metrics.structural_break_score))
-            .collect::<Vec<_>>(),
-        "structural_break_detected": report
-            .factor_results
-            .iter()
-            .map(|result| (result.factor_name.clone(), result.metrics.structural_break_detected))
-            .collect::<Vec<_>>(),
-        "structural_break_index": report
-            .factor_results
-            .iter()
-            .map(|result| (result.factor_name.clone(), result.metrics.structural_break_index))
-            .collect::<Vec<_>>(),
-    });
-    let shrink_comparison_summary = build_shrink_on_off_comparison_summary(
-        report
-            .factor_results
-            .first()
-            .map(|result| result.metrics.conformal_coverage_1sigma)
-            .unwrap_or_default(),
-        report
-            .factor_results
-            .first()
-            .map(|result| {
-                (result.metrics.conformal_coverage_1sigma + result.metrics.regime_break_penalty)
-                    .clamp(0.0, 1.0)
-            })
-            .unwrap_or_default(),
-        report.aggregate_return,
-        report.aggregate_return
-            + report
-                .factor_results
-                .first()
-                .map(|result| result.metrics.regime_break_penalty)
-                .unwrap_or_default(),
-    );
-    let oos_quality_delta_surface = build_oos_quality_delta_surface(
-        report
-            .factor_results
-            .first()
-            .map(|result| result.metrics.conformal_coverage_1sigma)
-            .unwrap_or_default(),
-        report
-            .factor_results
-            .first()
-            .map(|result| {
-                (result.metrics.conformal_coverage_1sigma - result.metrics.regime_break_penalty)
-                    .clamp(0.0, 1.0)
-            })
-            .unwrap_or_default(),
-        report
-            .factor_results
-            .iter()
-            .map(|result| result.metrics.trade_count)
-            .sum(),
-        report
-            .factor_results
-            .iter()
-            .map(|result| result.metrics.trade_count)
-            .sum(),
-    );
-    let duration_sizing_delta_surface = build_duration_surface_from_artifacts(
-        &report.workflow_snapshot,
-        &report.artifact_action_summary,
-    );
-    let compact_report = build_backtest_result_artifact(BacktestResultArtifactInput {
-        summary: format!("factor_backtest:{}", symbol),
-        scorecards: report
-            .scorecards
-            .iter()
-            .map(|item| format!("{}:{:.3}", item.factor_name, item.composite_score))
-            .collect::<Vec<_>>(),
-        shrink_comparison_summary,
-        duration_sizing_delta_surface,
-        oos_quality_delta_surface,
-        market_breakdown: vec![
-            format!("best_factor={:?}", report.best_factor),
-            format!(
-                "coverage_1sigma={:.3}",
-                report
-                    .factor_results
-                    .first()
-                    .map(|result| result.metrics.conformal_coverage_1sigma)
-                    .unwrap_or_default()
-            ),
-            format!(
-                "regime_break_penalty={:.3}",
-                report
-                    .factor_results
-                    .first()
-                    .map(|result| result.metrics.regime_break_penalty)
-                    .unwrap_or_default()
-            ),
-            format!(
-                "structural_break_detected={}",
-                report
-                    .factor_results
-                    .first()
-                    .map(|result| result.metrics.structural_break_detected)
-                    .unwrap_or(false)
-            ),
-            format!(
-                "structural_break_score={:.3}",
-                report
-                    .factor_results
-                    .first()
-                    .map(|result| result.metrics.structural_break_score)
-                    .unwrap_or_default()
-            ),
-        ],
-        regime_breakdown: vec![],
-        window_breakdown: vec![],
-        comparable: true,
-        artifacts: vec![],
-    });
-    let persisted_backtest_runs: Vec<BacktestRunRecord> =
-        load_state_or_default(state_dir, symbol, BACKTEST_RUNS_FILE)?;
-    let backtest_compare_report =
-        persisted_backtest_runs
-            .split_last()
-            .and_then(|(current, previous)| {
-                previous
-                    .last()
-                    .and_then(|prior| build_backtest_compare_report(prior, current))
-            });
-    let ensemble_surface = if ensemble {
-        report
-            .workflow_snapshot
-            .latest_ensemble_vote
-            .as_ref()
-            .map(|vote| {
-                let persisted_scorecards =
-                    load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
-                let (scorecards, scorecard_source) =
-                    resolved_vote_scorecards(&persisted_scorecards, vote);
-                serde_json::json!({
-                    "ensemble_vote": vote,
-                    "executor_scorecards": scorecards,
-                    "executor_scorecard_source": scorecard_source,
-                })
-            })
-    } else {
-        None
-    };
-    let suggested_update_command = if !report.recommended_commands.update.command.is_empty()
-        && report.recommended_commands.update.command != "recommended_command_unavailable"
-    {
-        report.recommended_commands.update.command.clone()
-    } else {
-        format!(
-            "ict-engine update --symbol {} --outcome <win|loss|breakeven> --state-dir {}",
-            shell_quote(symbol),
-            shell_quote(state_dir)
-        )
-    };
-    let payload = ict_engine::application::reporting::build_factor_backtest_output_payload(
-        &report,
-        &compact_report,
-        backtest_compare_report,
-        credibility_summary,
-        ensemble_surface,
-        &suggested_update_command,
-    );
-    ict_engine::application::reporting::emit_structured_output_payload(
-        match output_format {
-            OutputFormat::Json => "json",
-            OutputFormat::Compact => "compact",
-            OutputFormat::Agent => "agent",
-            OutputFormat::Human => "human",
-        },
-        &payload,
-        &compact_report,
-    )?;
-    Ok(())
 }
 
 struct RunFactorResearchInput<'a> {

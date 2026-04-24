@@ -1,6 +1,7 @@
 pub mod backtest_compare;
 pub mod backtest_request;
 pub mod backtest_result;
+pub mod command_entry;
 pub mod feedback;
 pub mod finalize_actions;
 pub mod finalize_artifacts;
@@ -25,6 +26,7 @@ pub use backtest_request::{build_backtest_request, BacktestRequest, BacktestRequ
 pub use backtest_result::{
     build_backtest_result_artifact, BacktestResultArtifact, BacktestResultArtifactInput,
 };
+pub use command_entry::factor_backtest_command;
 pub use feedback::{
     apply_feedback_to_trade_outcome_network, build_feedback_record, enrich_feedback_record,
     factor_alignment_label_from_feedback, factor_uncertainty_label_from_feedback,
