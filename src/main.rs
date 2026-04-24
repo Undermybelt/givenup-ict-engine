@@ -46,11 +46,9 @@ use ict_engine::application::{
         augment_action_plan_with_consumed_pre_bayes_context,
         augment_action_plan_with_pre_bayes_filter, build_agent_action_plan,
         build_agent_context_bundle, build_agent_context_bundle_minimal,
-        build_backtest_compare_report, build_backtest_result_artifact,
-        build_duration_sizing_delta_surface, build_feedback_record,
-        build_oos_quality_delta_surface, build_shrink_on_off_comparison_summary,
-        command_recommendations, concretize_action_plan_commands, cpt_probability_diffs,
-        data_fingerprint, dataset_comparability, decision_history_summary, decision_thresholds,
+        build_backtest_result_artifact, build_feedback_record, command_recommendations,
+        concretize_action_plan_commands, cpt_probability_diffs, data_fingerprint,
+        dataset_comparability, decision_history_summary, decision_thresholds,
         enrich_feedback_record, factor_alignment_label_from_feedback,
         factor_uncertainty_label_from_feedback, family_diffs, family_history_from_runs,
         link_artifact_decision_summary_to_decisions, pre_bayes_entry_quality_bridge_diff,
@@ -362,21 +360,6 @@ struct BuildWorkflowSnapshotInput<'a> {
     pending_update_history: &'a [PendingUpdateArtifact],
     execution_candidate_history: &'a [ExecutionCandidateArtifact],
     artifact_ledger: &'a [ArtifactLedgerEntry],
-}
-
-struct BacktestCommandInput<'a> {
-    symbol: &'a str,
-    data: &'a str,
-    paired_data: Option<&'a str>,
-    state_dir: &'a str,
-    output_format: OutputFormat,
-    warmup_bars: usize,
-    hold_bars: usize,
-    spread_bps: f64,
-    slippage_bps: f64,
-    fee_bps: f64,
-    ambiguous_bar_policy: &'a str,
-    online_learn: bool,
 }
 
 struct UpdateCommandInput<'a> {
@@ -1267,20 +1250,112 @@ fn main() -> Result<()> {
             online_learn,
         } => {
             ensure_state_dir_ready(&state_dir)?;
-            backtest_command(BacktestCommandInput {
-                symbol: &symbol,
-                data: &data,
-                paired_data: paired_data.as_deref(),
-                state_dir: &state_dir,
-                output_format: resolve_output_format(&output_format, compact, agent, human)?,
-                warmup_bars,
-                hold_bars,
-                spread_bps,
-                slippage_bps,
-                fee_bps,
-                ambiguous_bar_policy: &ambiguous_bar_policy,
-                online_learn,
-            })?
+            ict_engine::application::backtest::backtest_command(
+                ict_engine::application::backtest::BacktestCommandInput {
+                    symbol: &symbol,
+                    data: &data,
+                    paired_data: paired_data.as_deref(),
+                    state_dir: &state_dir,
+                    output_format: match resolve_output_format(
+                        &output_format,
+                        compact,
+                        agent,
+                        human,
+                    )? {
+                        OutputFormat::Json => "json",
+                        OutputFormat::Compact => "compact",
+                        OutputFormat::Agent => "agent",
+                        OutputFormat::Human => "human",
+                    },
+                    warmup_bars,
+                    hold_bars,
+                    spread_bps,
+                    slippage_bps,
+                    fee_bps,
+                    ambiguous_bar_policy: &ambiguous_bar_policy,
+                    online_learn,
+                },
+                || {
+                    run_factor_research(RunFactorResearchInput {
+                        symbol: &symbol,
+                        data: &data,
+                        objective: ResearchObjectiveMode::ExpansionManipulation,
+                        data_1m: None,
+                        data_5m: None,
+                        data_15m: None,
+                        data_1h: None,
+                        data_4h: None,
+                        data_1d: None,
+                        paired_data: paired_data.as_deref(),
+                        mutation_spec: None,
+                        state_dir: &state_dir,
+                    })
+                    .map(|_| ())
+                },
+                parse_execution_realism_config,
+                |realism| {
+                    let candles = load_candles(&data)?;
+                    let paired_candles = paired_data.as_deref().map(load_candles).transpose()?;
+                    let params = load_or_init_hmm_params(&symbol, &state_dir);
+                    let network = load_or_init_trading_network(&symbol, &state_dir)?;
+                    let mut learning_state = load_learning_state(&state_dir, &symbol)?;
+                    let previous_rankings = learning_state.factor_rankings.clone();
+                    let previous_trade_outcome_cpt =
+                        ict_engine::application::backtest::trade_outcome_cpt_snapshot(&network)?;
+                    let tuple = run_probabilistic_backtest(RunProbabilisticBacktestInput {
+                        symbol: &symbol,
+                        state_dir: &state_dir,
+                        candles: &candles,
+                        paired_candles: paired_candles.as_deref(),
+                        warmup_bars,
+                        hold_bars,
+                        realism,
+                        online_learn,
+                        params: &params,
+                        network: &network,
+                        learning_state: &mut learning_state,
+                    })?;
+                    Ok((
+                        tuple,
+                        candles,
+                        paired_candles,
+                        learning_state,
+                        previous_rankings,
+                        previous_trade_outcome_cpt,
+                    ))
+                },
+                |(
+                    tuple,
+                    candles,
+                    paired_candles,
+                    learning_state,
+                    previous_rankings,
+                    previous_trade_outcome_cpt,
+                ),
+                 realism| {
+                    let (report, updated_network, trades) = tuple;
+                    save_learning_state(&state_dir, &symbol, &learning_state)?;
+                    save_state(&state_dir, &symbol, BBN_STATE_FILE, &updated_network)?;
+                    append_trade_history(&state_dir, &symbol, &trades)?;
+                    finalize_backtest_report(FinalizeBacktestReportInput {
+                        report,
+                        symbol: &symbol,
+                        data: &data,
+                        paired_data: paired_data.as_deref(),
+                        candles: &candles,
+                        paired_candles_slice: paired_candles.as_deref(),
+                        learning_state: &learning_state,
+                        previous_rankings: &previous_rankings,
+                        previous_trade_outcome_cpt: &previous_trade_outcome_cpt,
+                        updated_network: &updated_network,
+                        state_dir: &state_dir,
+                        warmup_bars,
+                        hold_bars,
+                        realism,
+                        online_learning: online_learn,
+                    })
+                },
+            )?
         }
         Commands::Update {
             symbol,
@@ -5657,167 +5732,6 @@ fn train_command(symbol: &str, data: &str, epochs: usize, state_dir: &str) -> Re
     Ok(())
 }
 
-fn backtest_command(input: BacktestCommandInput<'_>) -> Result<()> {
-    let BacktestCommandInput {
-        symbol,
-        data,
-        paired_data,
-        state_dir,
-        output_format,
-        warmup_bars,
-        hold_bars,
-        spread_bps,
-        slippage_bps,
-        fee_bps,
-        ambiguous_bar_policy,
-        online_learn,
-    } = input;
-
-    let candles = load_candles(data)?;
-    let paired_candles = paired_data.map(load_candles).transpose()?;
-    let params = load_or_init_hmm_params(symbol, state_dir);
-    let network = load_or_init_trading_network(symbol, state_dir)?;
-    let _ = run_factor_research(RunFactorResearchInput {
-        symbol,
-        data,
-        objective: ResearchObjectiveMode::ExpansionManipulation,
-        data_1m: None,
-        data_5m: None,
-        data_15m: None,
-        data_1h: None,
-        data_4h: None,
-        data_1d: None,
-        paired_data,
-        mutation_spec: None,
-        state_dir,
-    })?;
-    let mut learning_state = load_learning_state(state_dir, symbol)?;
-    let previous_rankings = learning_state.factor_rankings.clone();
-    let previous_trade_outcome_cpt =
-        ict_engine::application::backtest::trade_outcome_cpt_snapshot(&network)?;
-    let realism =
-        parse_execution_realism_config(spread_bps, slippage_bps, fee_bps, ambiguous_bar_policy)?;
-    let (report, updated_network, trades) =
-        run_probabilistic_backtest(RunProbabilisticBacktestInput {
-            symbol,
-            state_dir,
-            candles: &candles,
-            paired_candles: paired_candles.as_deref(),
-            warmup_bars,
-            hold_bars,
-            realism: &realism,
-            online_learn,
-            params: &params,
-            network: &network,
-            learning_state: &mut learning_state,
-        })?;
-    save_learning_state(state_dir, symbol, &learning_state)?;
-    save_state(state_dir, symbol, BBN_STATE_FILE, &updated_network)?;
-    append_trade_history(state_dir, symbol, &trades)?;
-    let report = finalize_backtest_report(FinalizeBacktestReportInput {
-        report,
-        symbol,
-        data,
-        paired_data,
-        candles: &candles,
-        paired_candles_slice: paired_candles.as_deref(),
-        learning_state: &learning_state,
-        previous_rankings: &previous_rankings,
-        previous_trade_outcome_cpt: &previous_trade_outcome_cpt,
-        updated_network: &updated_network,
-        state_dir,
-        warmup_bars,
-        hold_bars,
-        realism: &realism,
-        online_learning: online_learn,
-    })?;
-    let realism_summary = format!(
-        "execution_realism=spread:{:.2}bps slippage:{:.2}bps fee:{:.2}bps policy={} trades={} comparable={}",
-        report.spread_bps,
-        report.slippage_bps,
-        report.fee_bps,
-        report.ambiguous_bar_policy,
-        report.trades,
-        report.dataset_comparability.comparable
-    );
-    let zero_trade_risk = if report.trades == 0 {
-        vec!["no_trades_generated_under_current_constraints".to_string()]
-    } else {
-        Vec::new()
-    };
-    let shrink_comparison_summary = build_shrink_on_off_comparison_summary(
-        report.metrics.conformal_coverage_1sigma,
-        (report.metrics.conformal_coverage_1sigma + report.metrics.regime_break_penalty)
-            .clamp(0.0, 1.0),
-        report.metrics.total_return,
-        report.metrics.total_return + report.metrics.regime_break_penalty,
-    );
-    let oos_quality_delta_surface = build_oos_quality_delta_surface(
-        report.metrics.conformal_coverage_1sigma,
-        (report.metrics.conformal_coverage_1sigma - report.metrics.regime_break_penalty)
-            .clamp(0.0, 1.0),
-        report.trades,
-        report.trades,
-    );
-    let duration_sizing_delta_surface = build_duration_surface_from_artifacts(
-        &report.workflow_snapshot,
-        &report.artifact_action_summary,
-    );
-    let compact_report = build_backtest_result_artifact(BacktestResultArtifactInput {
-        summary: format!("backtest:{}", symbol),
-        scorecards: vec![realism_summary.clone()],
-        shrink_comparison_summary,
-        duration_sizing_delta_surface,
-        oos_quality_delta_surface,
-        market_breakdown: vec![
-            format!("symbol={}", symbol),
-            format!("trades={}", report.trades),
-        ],
-        regime_breakdown: zero_trade_risk,
-        window_breakdown: vec![],
-        comparable: report.dataset_comparability.comparable,
-        artifacts: vec![],
-    });
-    let persisted_backtest_runs: Vec<BacktestRunRecord> =
-        load_state_or_default(state_dir, symbol, BACKTEST_RUNS_FILE)?;
-    let backtest_compare_report =
-        persisted_backtest_runs
-            .split_last()
-            .and_then(|(current, previous)| {
-                previous
-                    .last()
-                    .and_then(|prior| build_backtest_compare_report(prior, current))
-            });
-    let human_backtest_summary = if report.trades == 0 {
-        format!(
-            "Backtest ran with {} and produced no trades under the current constraints.",
-            realism_summary
-        )
-    } else {
-        format!(
-            "Backtest ran with {} and produced {} trades.",
-            realism_summary, report.trades
-        )
-    };
-    let payload = ict_engine::application::reporting::build_backtest_output_payload(
-        &report,
-        &compact_report,
-        backtest_compare_report,
-        human_backtest_summary,
-    );
-    ict_engine::application::reporting::emit_structured_output_payload(
-        match output_format {
-            OutputFormat::Json => "json",
-            OutputFormat::Compact => "compact",
-            OutputFormat::Agent => "agent",
-            OutputFormat::Human => "human",
-        },
-        &payload,
-        &compact_report,
-    )?;
-    Ok(())
-}
-
 fn emit_update_output(report: &UpdateReport, ensemble: bool) -> Result<()> {
     let reflection_evidence = report
         .agent_prompts
@@ -9967,6 +9881,7 @@ fn duration_sizing_scale(market: &str, family: &str, remaining_expected_bars: f6
     }
 }
 
+#[cfg(test)]
 fn latest_duration_phase(
     snapshot: &WorkflowSnapshot,
 ) -> Option<&ict_engine::state::WorkflowPhaseSnapshot> {
@@ -9988,6 +9903,7 @@ fn parse_duration_sizing_scale(summary: &[String]) -> Option<f64> {
     })
 }
 
+#[cfg(test)]
 fn build_duration_surface_from_artifacts(
     snapshot: &WorkflowSnapshot,
     artifact_action_summary: &[String],
@@ -9996,7 +9912,7 @@ fn build_duration_surface_from_artifacts(
     let duration_model = phase.and_then(|phase| phase.hybrid_duration_model.as_deref());
     let remaining_expected_bars = phase.and_then(|phase| phase.hybrid_remaining_expected_bars);
     let scale = parse_duration_sizing_scale(artifact_action_summary).unwrap_or(1.0);
-    build_duration_sizing_delta_surface(
+    ict_engine::application::backtest::build_duration_sizing_delta_surface(
         1.0,
         scale,
         1.0,
@@ -12678,9 +12594,11 @@ mod tests {
         let runs: Vec<BacktestRunRecord> =
             load_state(temp.path(), "NQ", ict_engine::state::BACKTEST_RUNS_FILE).unwrap();
         let (current, previous) = runs.split_last().expect("missing current run");
-        let compare =
-            build_backtest_compare_report(previous.last().expect("missing previous run"), current)
-                .expect("missing compare report");
+        let compare = ict_engine::application::backtest::build_backtest_compare_report(
+            previous.last().expect("missing previous run"),
+            current,
+        )
+        .expect("missing compare report");
 
         assert!(compare.summary.contains("same_data_same_config"));
         assert!(!compare.duration_sizing_delta_surface.is_empty());

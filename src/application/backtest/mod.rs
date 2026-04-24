@@ -27,7 +27,8 @@ pub use backtest_result::{
     build_backtest_result_artifact, BacktestResultArtifact, BacktestResultArtifactInput,
 };
 pub use command_entry::{
-    factor_backtest_command, factor_research_command, FactorResearchCommandInput,
+    backtest_command, factor_backtest_command, factor_research_command, BacktestCommandInput,
+    FactorResearchCommandInput,
 };
 pub use feedback::{
     apply_feedback_to_trade_outcome_network, build_feedback_record, enrich_feedback_record,

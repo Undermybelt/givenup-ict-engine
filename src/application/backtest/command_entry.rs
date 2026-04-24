@@ -397,3 +397,139 @@ where
     }
     Ok(())
 }
+
+pub struct BacktestCommandInput<'a> {
+    pub symbol: &'a str,
+    pub data: &'a str,
+    pub paired_data: Option<&'a str>,
+    pub state_dir: &'a str,
+    pub output_format: &'a str,
+    pub warmup_bars: usize,
+    pub hold_bars: usize,
+    pub spread_bps: f64,
+    pub slippage_bps: f64,
+    pub fee_bps: f64,
+    pub ambiguous_bar_policy: &'a str,
+    pub online_learn: bool,
+}
+
+pub fn backtest_command<
+    FRunResearch,
+    FParseRealism,
+    FRunBacktest,
+    FFinalize,
+    TRealism,
+    TBacktestTuple,
+>(
+    input: BacktestCommandInput<'_>,
+    run_research: FRunResearch,
+    parse_realism: FParseRealism,
+    run_backtest: FRunBacktest,
+    finalize_report: FFinalize,
+) -> Result<()>
+where
+    FRunResearch: Fn() -> Result<()>,
+    FParseRealism: Fn(f64, f64, f64, &str) -> Result<TRealism>,
+    FRunBacktest: Fn(&TRealism) -> Result<TBacktestTuple>,
+    FFinalize:
+        Fn(TBacktestTuple, &TRealism) -> Result<crate::backtest_report_shell::BacktestReport>,
+{
+    let BacktestCommandInput {
+        symbol,
+        data: _,
+        paired_data: _,
+        state_dir,
+        output_format,
+        warmup_bars: _,
+        hold_bars: _,
+        spread_bps,
+        slippage_bps,
+        fee_bps,
+        ambiguous_bar_policy,
+        online_learn: _,
+    } = input;
+
+    run_research()?;
+    let realism = parse_realism(spread_bps, slippage_bps, fee_bps, ambiguous_bar_policy)?;
+    let report = finalize_report(run_backtest(&realism)?, &realism)?;
+    let realism_summary = format!(
+        "execution_realism=spread:{:.2}bps slippage:{:.2}bps fee:{:.2}bps policy={} trades={} comparable={}",
+        report.spread_bps,
+        report.slippage_bps,
+        report.fee_bps,
+        report.ambiguous_bar_policy,
+        report.trades,
+        report.dataset_comparability.comparable
+    );
+    let zero_trade_risk = if report.trades == 0 {
+        vec!["no_trades_generated_under_current_constraints".to_string()]
+    } else {
+        Vec::new()
+    };
+    let shrink_comparison_summary = build_shrink_on_off_comparison_summary(
+        report.metrics.conformal_coverage_1sigma,
+        (report.metrics.conformal_coverage_1sigma + report.metrics.regime_break_penalty)
+            .clamp(0.0, 1.0),
+        report.metrics.total_return,
+        report.metrics.total_return + report.metrics.regime_break_penalty,
+    );
+    let oos_quality_delta_surface = build_oos_quality_delta_surface(
+        report.metrics.conformal_coverage_1sigma,
+        (report.metrics.conformal_coverage_1sigma - report.metrics.regime_break_penalty)
+            .clamp(0.0, 1.0),
+        report.trades,
+        report.trades,
+    );
+    let duration_sizing_delta_surface = build_duration_surface_from_artifacts(
+        &report.workflow_snapshot,
+        &report.artifact_action_summary,
+    );
+    let compact_report = build_backtest_result_artifact(BacktestResultArtifactInput {
+        summary: format!("backtest:{}", symbol),
+        scorecards: vec![realism_summary.clone()],
+        shrink_comparison_summary,
+        duration_sizing_delta_surface,
+        oos_quality_delta_surface,
+        market_breakdown: vec![
+            format!("symbol={}", symbol),
+            format!("trades={}", report.trades),
+        ],
+        regime_breakdown: zero_trade_risk,
+        window_breakdown: vec![],
+        comparable: report.dataset_comparability.comparable,
+        artifacts: vec![],
+    });
+    let persisted_backtest_runs: Vec<BacktestRunRecord> =
+        load_state_or_default(state_dir, symbol, BACKTEST_RUNS_FILE)?;
+    let backtest_compare_report =
+        persisted_backtest_runs
+            .split_last()
+            .and_then(|(current, previous)| {
+                previous
+                    .last()
+                    .and_then(|prior| build_backtest_compare_report(prior, current))
+            });
+    let human_backtest_summary = if report.trades == 0 {
+        format!(
+            "Backtest ran with {} and produced no trades under the current constraints.",
+            realism_summary
+        )
+    } else {
+        format!(
+            "Backtest ran with {} and produced {} trades.",
+            realism_summary, report.trades
+        )
+    };
+    let payload = crate::application::reporting::build_backtest_output_payload(
+        &report,
+        &compact_report,
+        backtest_compare_report,
+        human_backtest_summary,
+    );
+    crate::application::reporting::emit_structured_output_payload(
+        output_format,
+        &payload,
+        &compact_report,
+    )?;
+    Ok(())
+}
