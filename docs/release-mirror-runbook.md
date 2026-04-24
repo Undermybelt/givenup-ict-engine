@@ -4,17 +4,20 @@ Purpose
 - publish release tags without rewriting the primary research repo history
 - keep both source repo and release repo private
 
+Status note (2026-04-24)
+- the original source-repo oversized-history blocker has been cleared
+- source repo pushes are available again
+- this runbook remains valid as a clean tree-state release flow, but it is no longer required by an unresolved history transport failure
+
 Repos
 - source repo: `Undermybelt/ict-engine`
 - private release mirror: `Undermybelt/ict-engine-release`
 
-## Hard constraint (post-v0.0.1)
+## Current constraint
 
-- The source repo has **no working publishing origin**. GitHub rejects pushes because the repo's history contains state artifacts over 100 MB (e.g. `state100/NQ/learning_state.json`, `state_autoresearch_resume_bg/NQ/learning_state.json`).
-- All outward publishing happens **only** through the release mirror `Undermybelt/ict-engine-release`.
-- Do not run `git push origin …` from the source repo. Do not add a public remote to the source repo.
-- Local commits on the source repo accumulate on the local clone(s) only — source repo is the private development truth.
-- Every external release (tag + GitHub release) is a fresh `git archive` export into the mirror, not an incremental push.
+- Source repo history is now pushable after generated `state*` artifacts were removed from git history.
+- Mirror release is still the preferred clean release transport when you want the published repo to reflect current tree state rather than full development history.
+- Source repo remains the development truth; mirror repo remains the curated release surface.
 
 When to use
 - whenever a new release tag is needed
@@ -64,9 +67,8 @@ gh release create v0.0.1 \
 ```
 
 Rules
-- do not push release tags from the source repo when history contains oversized research artifacts
-- source repo remains the development / experiment truth — never push it to any public or shared remote
-- mirror repo remains the sole release transport surface
+- source repo remains the development / experiment truth
+- mirror repo remains the preferred clean release transport surface
 - release notes should point back to source-repo docs where needed
 - bump the version (`v0.0.1` → `v0.0.2` → …) every release; refresh `docs/audits/release-signoff.md` and `docs/release-notes-draft.md` before running the runbook
 
