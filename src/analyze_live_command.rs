@@ -1,5 +1,148 @@
 use super::*;
 
+#[derive(Debug, Serialize)]
+struct PersistedCandlesFile {
+    candles: Vec<Candle>,
+}
+
+fn persist_candle_snapshot(
+    state_dir: &str,
+    symbol: &str,
+    filename: &str,
+    candles: &[Candle],
+) -> Result<String> {
+    let path = std::path::Path::new(state_dir)
+        .join(symbol)
+        .join(filename)
+        .to_string_lossy()
+        .to_string();
+    save_state(
+        state_dir,
+        symbol,
+        filename,
+        &PersistedCandlesFile {
+            candles: candles.to_vec(),
+        },
+    )?;
+    Ok(path)
+}
+
+struct PersistLiveDataSourceInput<'a> {
+    state_dir: &'a str,
+    symbol: &'a str,
+    timestamp: chrono::DateTime<Utc>,
+    futures_backend: &'a str,
+    aux_backend: &'a str,
+    futures_base_url: &'a str,
+    aux_base_url: &'a str,
+    futures_symbol: &'a str,
+    spot_symbol: &'a str,
+    options_symbol: &'a str,
+    spot_kind: &'a str,
+    htf: &'a [Candle],
+    h4: &'a [Candle],
+    mtf: &'a [Candle],
+    m5: &'a [Candle],
+    ltf: &'a [Candle],
+    m1: &'a [Candle],
+    spot_candles: &'a [Candle],
+}
+
+fn persist_live_data_source(
+    input: PersistLiveDataSourceInput<'_>,
+) -> Result<LiveDataSourceProvenance> {
+    let PersistLiveDataSourceInput {
+        state_dir,
+        symbol,
+        timestamp,
+        futures_backend,
+        aux_backend,
+        futures_base_url,
+        aux_base_url,
+        futures_symbol,
+        spot_symbol,
+        options_symbol,
+        spot_kind,
+        htf,
+        h4,
+        mtf,
+        m5,
+        ltf,
+        m1,
+        spot_candles,
+    } = input;
+    let stamp = timestamp.format("%Y%m%dT%H%M%S").to_string();
+    Ok(LiveDataSourceProvenance {
+        futures_backend: futures_backend.to_string(),
+        aux_backend: aux_backend.to_string(),
+        futures_base_url: futures_base_url.to_string(),
+        aux_base_url: aux_base_url.to_string(),
+        futures_symbol: futures_symbol.to_string(),
+        spot_symbol: spot_symbol.to_string(),
+        options_symbol: options_symbol.to_string(),
+        spot_kind: spot_kind.to_string(),
+        fetched_at: timestamp,
+        persisted_htf_path: Some(persist_candle_snapshot(
+            state_dir,
+            symbol,
+            &format!("analyze_live_{}_htf.json", stamp),
+            htf,
+        )?),
+        persisted_h4_path: Some(persist_candle_snapshot(
+            state_dir,
+            symbol,
+            &format!("analyze_live_{}_h4.json", stamp),
+            h4,
+        )?),
+        persisted_mtf_path: Some(persist_candle_snapshot(
+            state_dir,
+            symbol,
+            &format!("analyze_live_{}_mtf.json", stamp),
+            mtf,
+        )?),
+        persisted_m5_path: Some(persist_candle_snapshot(
+            state_dir,
+            symbol,
+            &format!("analyze_live_{}_m5.json", stamp),
+            m5,
+        )?),
+        persisted_ltf_path: Some(persist_candle_snapshot(
+            state_dir,
+            symbol,
+            &format!("analyze_live_{}_ltf.json", stamp),
+            ltf,
+        )?),
+        persisted_m1_path: Some(persist_candle_snapshot(
+            state_dir,
+            symbol,
+            &format!("analyze_live_{}_m1.json", stamp),
+            m1,
+        )?),
+        persisted_spot_path: Some(persist_candle_snapshot(
+            state_dir,
+            symbol,
+            &format!("analyze_live_{}_spot.json", stamp),
+            spot_candles,
+        )?),
+    })
+}
+
+fn build_live_multi_timeframe_summary(source: &str, frames: &[(&str, &[Candle])]) -> Vec<String> {
+    let covered = frames
+        .iter()
+        .map(|(interval, _)| *interval)
+        .collect::<Vec<_>>();
+    let mut summary = vec![format!(
+        "multi_timeframe_source={} covered_intervals={}",
+        source,
+        covered.join(",")
+    )];
+    for (interval, candles) in frames {
+        summary.push(format!("{}:{} bars source=live", interval, candles.len()));
+    }
+    summary
+}
+
 pub(crate) struct AnalyzeLiveCommandInput<'a> {
     pub symbol: &'a str,
     pub futures_symbol: Option<&'a str>,
