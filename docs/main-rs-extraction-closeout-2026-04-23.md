@@ -2,6 +2,13 @@
 
 Date: 2026-04-23
 
+Status note (2026-04-24)
+
+This closeout is no longer the current source of truth for structural debt status.
+It is superseded by `docs/plans/2026-04-24-one-shot-structural-debt-closure-plan.md`.
+
+The statement below that the extraction debt was "substantially closed" became stale after later fact-based review and subsequent extraction work. Keep this file as historical context, not as the current debt assessment.
+
 ## Scope
 
 This closeout covers the long-running extraction of report shells, helper chains, and command/report orchestration glue from [`src/main.rs`](../src/main.rs) into library modules under [`src/application/`](../src/application/) and a small number of shared shell modules.
