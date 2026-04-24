@@ -1455,12 +1455,24 @@ fn main() -> Result<()> {
             output_dir,
             interval,
             multi_timeframe,
-        } => clean_futures_command(root.as_deref(), &output_dir, &interval, multi_timeframe)?,
+        } => ict_engine::application::data_sources::clean_futures_command(
+            root.as_deref(),
+            &output_dir,
+            &interval,
+            multi_timeframe,
+            run_clean_futures_multi_timeframe,
+            run_clean_futures,
+        )?,
         Commands::FuturesSop {
             root,
             output_dir,
             interval,
-        } => futures_sop_command(root.as_deref(), &output_dir, &interval)?,
+        } => ict_engine::application::data_sources::futures_sop_command(
+            root.as_deref(),
+            &output_dir,
+            &interval,
+            run_futures_sop,
+        )?,
         Commands::ExpansionSop {
             root,
             output_dir,
@@ -1470,16 +1482,91 @@ fn main() -> Result<()> {
             objective,
             mutation_spec,
             emit_mutation_evaluation,
-        } => expansion_sop_command(ExpansionSopCommandInput {
-            root: root.as_deref(),
-            output_dir: &output_dir,
-            interval: &interval,
-            lookback,
-            atr_multiplier,
-            objective: &objective,
-            mutation_spec_path: mutation_spec.as_deref(),
-            emit_mutation_evaluation,
-        })?,
+        } => ict_engine::application::data_sources::expansion_sop_command(
+            ict_engine::application::data_sources::ExpansionSopCommandInput {
+                root: root.as_deref(),
+                output_dir: &output_dir,
+                interval: &interval,
+                lookback,
+                atr_multiplier,
+                objective: &objective,
+                mutation_spec_path: mutation_spec.as_deref(),
+                emit_mutation_evaluation,
+            },
+            parse_research_objective,
+            load_factor_mutation_spec,
+            run_expansion_sop,
+            |report, mutation_spec, emit_mutation_evaluation| {
+                if emit_mutation_evaluation {
+                    let next_mutation_spec_template = report
+                        .factor_mutation_evaluation
+                        .as_ref()
+                        .map(|evaluation| {
+                            next_mutation_spec_template(mutation_spec, evaluation, true)
+                        });
+                    Ok(serde_json::json!({
+                        "mutation_spec": mutation_spec,
+                        "factor_mutation_evaluation": report.factor_mutation_evaluation,
+                        "next_mutation_spec_template": next_mutation_spec_template,
+                        "recommended_global_factor": report.recommended_global_factor,
+                        "recommended_global_pre_bayes_summary": report.recommended_global_pre_bayes_summary,
+                        "recommended_commands": report.recommended_commands,
+                    }))
+                } else {
+                    let compact_report =
+                        build_backtest_result_artifact(BacktestResultArtifactInput {
+                            summary: format!("expansion_sop:{}", interval),
+                            scorecards: report
+                                .recommended_market_factors
+                                .iter()
+                                .map(|(market, factor)| format!("{}:{}", market, factor))
+                                .collect::<Vec<_>>(),
+                            shrink_comparison_summary: vec![],
+                            duration_sizing_delta_surface: vec![],
+                            oos_quality_delta_surface: vec![],
+                            market_breakdown: vec![format!(
+                                "recommended_global_factor={:?}",
+                                report.recommended_global_factor
+                            )],
+                            regime_breakdown: vec![],
+                            window_breakdown: vec![],
+                            comparable: true,
+                            artifacts: report.recommended_commands.clone(),
+                        });
+                    let factor_lifecycle = build_factor_lifecycle_view(
+                        report.mutation_spec.as_ref(),
+                        report.factor_mutation_evaluation.as_ref(),
+                        &PromotionDecision {
+                            approved: report.recommended_global_factor.is_some(),
+                            status: if report.recommended_global_factor.is_some() {
+                                "promote".to_string()
+                            } else {
+                                "hold".to_string()
+                            },
+                            reason: "expansion_sop_global_selection".to_string(),
+                            target_factors: report
+                                .recommended_global_factor
+                                .iter()
+                                .cloned()
+                                .collect(),
+                            target_families: vec![],
+                        },
+                        &RollbackRecommendation {
+                            should_rollback: false,
+                            scope: "none".to_string(),
+                            reason: "no_global_rollback".to_string(),
+                            target_factors: vec![],
+                            target_families: vec![],
+                        },
+                    );
+                    Ok(serde_json::json!({
+                        "report": report,
+                        "compact_backtest_report": compact_report,
+                        "factor_lifecycle": factor_lifecycle,
+                    }))
+                }
+            },
+        )?,
         Commands::FactorPipelineDebug {
             symbol,
             data,
@@ -2176,35 +2263,6 @@ fn persist_candle_snapshot(
     Ok(path)
 }
 
-fn clean_futures_command(
-    root: Option<&str>,
-    output_dir: &str,
-    interval: &str,
-    multi_timeframe: bool,
-) -> Result<()> {
-    let root = ict_engine::application::multi_timeframe_inputs::resolve_tomac_root(root)?;
-    if multi_timeframe {
-        let report = run_clean_futures_multi_timeframe(&root, output_dir)?;
-        println!("{}", serde_json::to_string_pretty(&report)?);
-    } else {
-        let report = run_clean_futures(&root, output_dir, interval)?;
-        println!("{}", serde_json::to_string_pretty(&report)?);
-    }
-    Ok(())
-}
-
-fn futures_sop_command(root: Option<&str>, output_dir: &str, interval: &str) -> Result<()> {
-    let root = ict_engine::application::multi_timeframe_inputs::resolve_tomac_root(root)?;
-    let report = run_futures_sop(&root, output_dir, interval)?;
-    let report_path = std::path::Path::new(output_dir)
-        .join(format!("futures_sop_report.{}.json", interval))
-        .to_string_lossy()
-        .to_string();
-    std::fs::write(&report_path, serde_json::to_string_pretty(&report)?)?;
-    println!("{}", serde_json::to_string_pretty(&report)?);
-    Ok(())
-}
-
 fn run_futures_sop(root: &str, output_dir: &str, interval: &str) -> Result<FuturesSopReport> {
     run_futures_sop_with(
         root,
@@ -2241,120 +2299,6 @@ fn run_futures_sop(root: &str, output_dir: &str, interval: &str) -> Result<Futur
             Ok((report, pipeline))
         },
     )
-}
-
-struct ExpansionSopCommandInput<'a> {
-    root: Option<&'a str>,
-    output_dir: &'a str,
-    interval: &'a str,
-    lookback: usize,
-    atr_multiplier: f64,
-    objective: &'a str,
-    mutation_spec_path: Option<&'a str>,
-    emit_mutation_evaluation: bool,
-}
-
-fn expansion_sop_command(input: ExpansionSopCommandInput<'_>) -> Result<()> {
-    let ExpansionSopCommandInput {
-        root,
-        output_dir,
-        interval,
-        lookback,
-        atr_multiplier,
-        objective,
-        mutation_spec_path,
-        emit_mutation_evaluation,
-    } = input;
-    let objective_mode = parse_research_objective(objective)?;
-    let root = ict_engine::application::multi_timeframe_inputs::resolve_tomac_root(root)?;
-    let mutation_spec = mutation_spec_path
-        .map(load_factor_mutation_spec)
-        .transpose()?;
-    let report = run_expansion_sop(
-        &root,
-        output_dir,
-        interval,
-        lookback,
-        atr_multiplier,
-        objective_mode,
-        mutation_spec.as_ref(),
-    )?;
-    let report_path = std::path::Path::new(output_dir)
-        .join(format!("expansion_sop_report.{}.json", interval))
-        .to_string_lossy()
-        .to_string();
-    std::fs::write(&report_path, serde_json::to_string_pretty(&report)?)?;
-    if emit_mutation_evaluation {
-        let next_mutation_spec_template =
-            report
-                .factor_mutation_evaluation
-                .as_ref()
-                .map(|evaluation| {
-                    next_mutation_spec_template(mutation_spec.as_ref(), evaluation, true)
-                });
-        println!(
-            "{}",
-            serde_json::to_string_pretty(&serde_json::json!({
-                "mutation_spec": mutation_spec,
-                "factor_mutation_evaluation": report.factor_mutation_evaluation,
-                "next_mutation_spec_template": next_mutation_spec_template,
-                "recommended_global_factor": report.recommended_global_factor,
-                "recommended_global_pre_bayes_summary": report.recommended_global_pre_bayes_summary,
-                "recommended_commands": report.recommended_commands,
-            }))?
-        );
-    } else {
-        let compact_report = build_backtest_result_artifact(BacktestResultArtifactInput {
-            summary: format!("expansion_sop:{}", interval),
-            scorecards: report
-                .recommended_market_factors
-                .iter()
-                .map(|(market, factor)| format!("{}:{}", market, factor))
-                .collect::<Vec<_>>(),
-            shrink_comparison_summary: vec![],
-            duration_sizing_delta_surface: vec![],
-            oos_quality_delta_surface: vec![],
-            market_breakdown: vec![format!(
-                "recommended_global_factor={:?}",
-                report.recommended_global_factor
-            )],
-            regime_breakdown: vec![],
-            window_breakdown: vec![],
-            comparable: true,
-            artifacts: report.recommended_commands.clone(),
-        });
-        let factor_lifecycle = build_factor_lifecycle_view(
-            report.mutation_spec.as_ref(),
-            report.factor_mutation_evaluation.as_ref(),
-            &PromotionDecision {
-                approved: report.recommended_global_factor.is_some(),
-                status: if report.recommended_global_factor.is_some() {
-                    "promote".to_string()
-                } else {
-                    "hold".to_string()
-                },
-                reason: "expansion_sop_global_selection".to_string(),
-                target_factors: report.recommended_global_factor.iter().cloned().collect(),
-                target_families: vec![],
-            },
-            &RollbackRecommendation {
-                should_rollback: false,
-                scope: "none".to_string(),
-                reason: "no_global_rollback".to_string(),
-                target_factors: vec![],
-                target_families: vec![],
-            },
-        );
-        println!(
-            "{}",
-            serde_json::to_string_pretty(&serde_json::json!({
-                "report": report,
-                "compact_backtest_report": compact_report,
-                "factor_lifecycle": factor_lifecycle,
-            }))?
-        );
-    }
-    Ok(())
 }
 
 fn run_expansion_sop(

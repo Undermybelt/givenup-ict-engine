@@ -1,4 +1,5 @@
 pub mod clean_futures;
+pub mod command_entry;
 pub mod live_defaults;
 pub mod sop_reports;
 pub mod source_freshness;
@@ -9,6 +10,9 @@ pub use clean_futures::{
     discover_tomac_futures_datasets, infer_market_code_from_path, run_clean_futures,
     run_clean_futures_multi_timeframe, CleanFuturesDatasetReport, CleanFuturesReport,
     CleanedCandleOutput, MultiTimeframeCleanFuturesReport,
+};
+pub use command_entry::{
+    clean_futures_command, expansion_sop_command, futures_sop_command, ExpansionSopCommandInput,
 };
 pub use live_defaults::{
     analyze_live_inferred_symbols, parse_live_backend, resolve_live_backend_base_url,
