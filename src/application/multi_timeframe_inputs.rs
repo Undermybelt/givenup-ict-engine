@@ -1,6 +1,7 @@
 use anyhow::{anyhow, bail, Result};
 use std::collections::BTreeMap;
 
+use crate::application::data_sources::discover_tomac_futures_datasets;
 use crate::data::load_candles;
 
 pub const MULTI_TIMEFRAME_INTERVALS: [&str; 6] = ["1m", "5m", "15m", "1h", "4h", "1d"];
@@ -201,6 +202,58 @@ pub fn resolve_analyze_cli_inputs(
         }
     };
     Ok((resolve("1d")?, resolve("1h")?, resolve("15m")?))
+}
+
+pub fn default_tomac_root_candidates() -> Vec<String> {
+    let mut candidates = Vec::new();
+    if let Ok(root) = std::env::var("ICT_ENGINE_TOMAC_ROOT") {
+        if !root.trim().is_empty() {
+            candidates.push(root);
+        }
+    }
+    if let Ok(home) = std::env::var("HOME") {
+        for candidate in [
+            format!("{home}/Downloads/Tomac"),
+            format!("{home}/Downloads/tomac"),
+            format!("{home}/Documents/Tomac"),
+            format!("{home}/Documents/tomac"),
+        ] {
+            candidates.push(candidate);
+        }
+    }
+    candidates
+}
+
+pub fn find_tomac_root_from_candidates(candidates: &[String]) -> Option<String> {
+    candidates.iter().find_map(|candidate| {
+        let path = std::path::Path::new(candidate);
+        if !path.is_dir() {
+            return None;
+        }
+        discover_tomac_futures_datasets(candidate)
+            .ok()
+            .filter(|datasets| !datasets.is_empty())
+            .map(|_| candidate.clone())
+    })
+}
+
+pub fn detected_tomac_root() -> Option<String> {
+    find_tomac_root_from_candidates(&default_tomac_root_candidates())
+}
+
+pub fn resolve_tomac_root(root: Option<&str>) -> Result<String> {
+    if let Some(root) = root {
+        return Ok(root.to_string());
+    }
+    detected_tomac_root().ok_or_else(|| {
+        anyhow!(
+            "no TOMAC root provided and no default TOMAC history directory detected; set --root or ICT_ENGINE_TOMAC_ROOT"
+        )
+    })
+}
+
+pub fn detected_tomac_root_or_placeholder() -> String {
+    detected_tomac_root().unwrap_or_else(|| "<root>".to_string())
 }
 
 pub fn build_multi_timeframe_summary(

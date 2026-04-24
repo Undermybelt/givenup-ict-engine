@@ -5,7 +5,7 @@
 This audit grades the current `green-baseline` tree against ten explicit project criteria. The intent is to lock a fact-based baseline that future work can be measured against.
 
 - branch: `green-baseline`
-- HEAD at audit time: `03b1955 docs: add open-source shakedown handoff for 2026-04-24`
+- HEAD at audit time: `6b34fc6 Tighten workflow status and update templates`
 - CI gates all green: `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, `cargo test`
 - Smoke baseline: `/tmp/ict-engine-smoke-2026-04-24/final-summary.md` from the same date
 
@@ -28,16 +28,16 @@ This audit grades the current `green-baseline` tree against ten explicit project
 | --- | --- | --- | --- |
 | 1 | Lightweight | Met | single Rust binary, cold-start 0.03-0.2 s, `--state-dir` is the only required side-effect, CI only runs fmt / clippy / test |
 | 2 | Agent-friendly | Met | `--agent` and `--compact` output modes, `workflow-status` emits `next_step` / `next_command`, `docs/agent-first-runbook.md` defines agent intent routing |
-| 3 | Token-friendly | Partial | compact / agent / human outputs are small and stable; `analyze --output-format json` grows monotonically across repeated calls in the same state dir |
+| 3 | Token-friendly | Met | compact / agent / human outputs are small and stable; `analyze --output-format json` now trims growing ledger arrays by default and preserves opt-in full inline mode via `--inline-ledger` |
 | 4 | Guidance-friendly | Met | `README.md` + `docs/first-run.md` + `docs/agent-first-runbook.md`; `src/application/reporting/human_report.rs::humanize_next_step_line` prevents raw `ask-user:` syntax from leaking into human output |
 | 5 | Data source | Met | `analyze-live` over openbb / openalice / nofx backends; `clean-futures` for TOMAC CSV ingest; `examples/demo/demo-15m.json` bundled demo; `src/application/data_sources/` submodule |
 | 6 | Historical backtest path | Met | `backtest`, `factor-backtest` (walk-forward + learning updates), `futures-sop`, `expansion-sop` |
 | 7 | Factor creation / backtest / iteration / evolution / promotion | Met | `factor-research` -> `factor-mutation-status` -> `factor-autoresearch` -> `factor-autoresearch-status` -> `research-verdict` -> `update` |
 | 8 | Live-decision timeliness | Met | `src/application/decision_freshness.rs`, `data_sources/source_freshness.rs`, `data_sources/source_health.rs`, freshness/staleness handling in `analyze_output.rs`, 10-minute stale threshold on autoresearch live snapshots |
 | 9 | Prior validation and post-hoc reflection | Met | `src/application/reflection/`: `prior_artifact.rs`, `postmortem_artifact.rs`, `attribution.rs`, `research_adapter.rs`; `factor_autoresearch_retrospective.md` derived surface |
-| 10 | Painless BBN iteration | Met (with polish room) | `src/bbn/` covers dag / evidence / inference / nodes / schema; `src/bbn/engine/`, `bbn/learning/cpt_updater.rs`, `bbn/trading/cpt_init.rs`, `bbn/trading/update.rs`, `bbn/trading/family_overlay.rs`; `update --symbol X --outcome <label>` is a single-command update; `pre-bayes-status`, `pre-bayes-diff`, `evidence-quality-breakdown`, `artifact-lineage/status/diff` are all present |
+| 10 | Painless BBN iteration | Met | `src/bbn/` covers dag / evidence / inference / nodes / schema; `src/bbn/engine/`, `bbn/learning/cpt_updater.rs`, `bbn/trading/cpt_init.rs`, `bbn/trading/update.rs`, `bbn/trading/family_overlay.rs`; `update --symbol X --outcome <label>` is a single-command update; `factor-backtest` now emits `suggested_update_command` and the update recommendation surface exposes a ready=false command template when the realized outcome is still missing |
 
-Final count: **9 met, 1 partial.**
+Final count: **10 met, 0 partial.**
 
 ## Evidence details
 
@@ -55,22 +55,26 @@ Final count: **9 met, 1 partial.**
 - `docs/agent-first-runbook.md` defines six common agent intents and maps them onto CLI routes.
 - `src/agent/prompts.rs` carries machine-targeted prompt surfaces.
 
-### 3. Token-friendly (the one partial)
+### 3. Token-friendly
 
-Observed in `/tmp/ict-engine-smoke-2026-04-24/final-summary.md` Phase A:
+Original issue observed in `/tmp/ict-engine-smoke-2026-04-24/final-summary.md` Phase A:
 
 - `analyze --demo --human`: 22 lines, stable after first warm-up run
 - `analyze --demo --agent`: 28 lines, constant
 - `analyze --demo --compact`: 24 lines, constant
 - `analyze --demo --output-format json`: **3892 -> 6438 lines across 10 repeated invocations in the same state dir**, ~144 line growth per invocation after bootstrap
 
-This is not a crash and `rc` stays 0 across all 10 invocations. It does however mean that:
+That was not a crash and `rc` stayed 0 across all 10 invocations. It did however mean that:
 
-- long-running agents that repeatedly call `analyze` on the same state dir will eat their own context
-- human users will see a monotonically growing JSON report
-- the JSON surface is the one that does not respect a token budget
+- long-running agents that repeatedly call `analyze` on the same state dir would eat their own context
+- human users would see a monotonically growing JSON report
+- the JSON surface was the one that did not respect a token budget
 
-Recommended follow-up (not applied in this audit pass): move cumulative history / ledger segments out of the inline JSON and expose them as `"..._history_path"` pointers instead, with an opt-in `--include-inline-history` flag for consumers that need the full inlined payload.
+Status now:
+
+- `analyze --output-format json` trims the growing `workflow_snapshot.actionable_artifacts` and `workflow_snapshot.artifact_lineage_summaries` arrays to a fixed tail by default
+- sibling `*_inline_meta` objects expose `total_count`, `omitted_count`, and `pointer_command`
+- `--inline-ledger` restores the legacy full-inline behavior when needed
 
 ### 4. Guidance-friendly
 
@@ -139,23 +143,23 @@ Agent / human surfaces into BBN:
 - `evidence-quality-breakdown`: composition of the latest Pre-Bayes evidence quality score.
 - `artifact-lineage`, `artifact-status`, `artifact-diff`: artifact-level lineage, status, and diff.
 
-The one polish point (not a failure) is that the iteration loop is not a literal single-command closure today: after `factor-backtest` finishes, the caller still has to type the `update --symbol ... --outcome ...` by hand. The `agent-first-runbook` covers this via `next_command` routing, but `factor-backtest --agent` does not yet emit a `suggested_update_command` pointing directly at the right `update` invocation.
+The remaining polish point here is no longer command discoverability. `factor-backtest` now emits `suggested_update_command`, and the update recommendation contract surfaces a template command even when `ready=false` because the realized outcome is still missing.
 
-## Yellow-only findings
+## Closed Follow-Ups
 
-Only one item falls into yellow, and it is strictly criterion 3:
+The three follow-ups called out in the original audit have now landed:
 
-- `analyze --output-format json` grows monotonically across repeated invocations in the same state dir. All modes still return `rc=0`. Non-JSON modes remain small and stable.
-
-Everything else is green under the current baseline.
+1. `factor-backtest -> update` now emits `suggested_update_command`.
+2. `analyze --output-format json` now respects a token budget by default, with `--inline-ledger` as the explicit opt-out.
+3. `workflow-status --stable` now strips volatile timestamp-like fields so agents can cache or diff stable output.
 
 ## Recommended follow-ups
 
 Ordered by impact-to-effort:
 
-1. Close the "factor-backtest -> update" step into a single suggested command (add `suggested_update_command` and/or `next_command` to `factor-backtest --agent`).
-2. Make `analyze --output-format json` respect a token budget by default, with an opt-in flag to restore the fully-inlined payload.
-3. Optional: add a `--stable` mode on `workflow-status` that strips `generated_at`-style timestamps so agents can cache by hash.
+1. Keep reducing `src/main.rs` by continuing the extraction plan in `docs/plans/main-rs-extraction-plan.md`.
+2. Deepen `research-verdict` only if the project truly needs a fuller experiment analytics engine.
+3. Persist richer raw evidence-quality intermediates so `evidence-quality-breakdown` can stop inferring some terms from persisted policy/filter state.
 
 Items 1 and 2 are explicitly scheduled as the two follow-up commits after this audit lands.
 

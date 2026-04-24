@@ -76,10 +76,9 @@ use ict_engine::application::{
         PreBayesEntryQualityBridgeInput,
     },
     data_sources::{
-        build_expansion_sop_market_report, discover_tomac_futures_datasets, run_clean_futures,
-        run_clean_futures_multi_timeframe, run_expansion_sop_with, run_futures_sop_with,
-        ExpansionSopMarketInput, ExpansionSopReport, FuturesSopMarketInput, FuturesSopReport,
-        RunExpansionSopInput,
+        build_expansion_sop_market_report, run_clean_futures, run_clean_futures_multi_timeframe,
+        run_expansion_sop_with, run_futures_sop_with, ExpansionSopMarketInput, ExpansionSopReport,
+        FuturesSopMarketInput, FuturesSopReport, RunExpansionSopInput,
     },
     decision_utils::{
         append_pda_sequence_hint, build_analyze_decision_hint, derive_family_outcomes,
@@ -103,9 +102,10 @@ use ict_engine::application::{
     },
     multi_timeframe_inputs::{
         build_live_multi_timeframe_signal, build_multi_timeframe_research_signal,
-        build_multi_timeframe_summary, detected_multi_timeframe_clean_root,
-        infer_interval_for_analyze_frame, resolve_analyze_cli_inputs,
-        resolve_analyze_multi_timeframe_inputs, resolve_multi_timeframe_inputs,
+        build_multi_timeframe_summary, detected_multi_timeframe_clean_root, detected_tomac_root,
+        detected_tomac_root_or_placeholder, infer_interval_for_analyze_frame,
+        resolve_analyze_cli_inputs, resolve_analyze_multi_timeframe_inputs,
+        resolve_multi_timeframe_inputs, resolve_tomac_root,
     },
     orchestration::{
         build_execution_tree_artifact, build_execution_triage, build_stub_ensemble_vote_from_input,
@@ -7510,58 +7510,6 @@ fn factor_mutation_research_command(symbol: &str, data: &str, state_dir: &str) -
         shell_quote(data),
         shell_quote(state_dir)
     )
-}
-
-fn default_tomac_root_candidates() -> Vec<String> {
-    let mut candidates = Vec::new();
-    if let Ok(root) = env::var("ICT_ENGINE_TOMAC_ROOT") {
-        if !root.trim().is_empty() {
-            candidates.push(root);
-        }
-    }
-    if let Ok(home) = env::var("HOME") {
-        for candidate in [
-            format!("{home}/Downloads/Tomac"),
-            format!("{home}/Downloads/tomac"),
-            format!("{home}/Documents/Tomac"),
-            format!("{home}/Documents/tomac"),
-        ] {
-            candidates.push(candidate);
-        }
-    }
-    candidates
-}
-
-fn find_tomac_root_from_candidates(candidates: &[String]) -> Option<String> {
-    candidates.iter().find_map(|candidate| {
-        let path = std::path::Path::new(candidate);
-        if !path.is_dir() {
-            return None;
-        }
-        discover_tomac_futures_datasets(candidate)
-            .ok()
-            .filter(|datasets| !datasets.is_empty())
-            .map(|_| candidate.clone())
-    })
-}
-
-fn detected_tomac_root() -> Option<String> {
-    find_tomac_root_from_candidates(&default_tomac_root_candidates())
-}
-
-fn resolve_tomac_root(root: Option<&str>) -> Result<String> {
-    if let Some(root) = root {
-        return Ok(root.to_string());
-    }
-    detected_tomac_root().ok_or_else(|| {
-        anyhow!(
-            "no TOMAC root provided and no default TOMAC history directory detected; set --root or ICT_ENGINE_TOMAC_ROOT"
-        )
-    })
-}
-
-fn detected_tomac_root_or_placeholder() -> String {
-    detected_tomac_root().unwrap_or_else(|| "<root>".to_string())
 }
 
 fn build_live_multi_timeframe_summary(source: &str, frames: &[(&str, &[Candle])]) -> Vec<String> {
@@ -17742,7 +17690,11 @@ mod tests {
             invalid.to_string_lossy().to_string(),
             valid.to_string_lossy().to_string(),
         ];
-        let detected = find_tomac_root_from_candidates(&candidates).unwrap();
+        let detected =
+            ict_engine::application::multi_timeframe_inputs::find_tomac_root_from_candidates(
+                &candidates,
+            )
+            .unwrap();
 
         assert_eq!(detected, valid.to_string_lossy());
     }

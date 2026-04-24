@@ -2,6 +2,11 @@
 
 Status: release-adjacent structural debt, non-blocking.
 
+Progress note
+- Stage 1 is landed: analyze output helpers live under `src/application/reporting/`
+- Stage 2 is landed: workflow-status output helpers live under `src/application/orchestration/`
+- Stage 4 has started: TOMAC root discovery helpers now live under `src/application/multi_timeframe_inputs.rs`
+
 Goals
 - shrink `src/main.rs`
 - move stable command surfaces into focused modules
