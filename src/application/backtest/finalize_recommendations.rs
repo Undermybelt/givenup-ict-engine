@@ -216,6 +216,21 @@ pub fn command_recommendations(context: &CommandContext) -> CommandRecommendatio
         }
     }
 
+    let update_command_template = format!(
+        "ict-engine update --symbol {} --outcome {}{} --state-dir {}",
+        shell_quote(&context.symbol),
+        context
+            .update_outcome
+            .as_deref()
+            .unwrap_or("<win|loss|breakeven>"),
+        context
+            .update_entry_signal
+            .as_ref()
+            .map(|signal| format!(" --entry-signal {}", shell_quote(signal)))
+            .unwrap_or_default(),
+        shell_quote(&context.state_dir)
+    );
+
     let mut update = if let Some(feedback_file) = &context.update_feedback_file {
         let command = format!(
             "ict-engine update --symbol {} --outcome {} --state-dir {}",
@@ -266,10 +281,13 @@ pub fn command_recommendations(context: &CommandContext) -> CommandRecommendatio
         )
     } else {
         recommended_command(
-            "recommended_command_unavailable".to_string(),
+            update_command_template,
             false,
-            vec!["outcome_or_feedback_file".to_string()],
-            "update requires a realized outcome or feedback file",
+            vec![
+                "realized_outcome".to_string(),
+                "pending_update_artifact_if_context_needed".to_string(),
+            ],
+            "update template is available, but a realized outcome is still required before it can be executed",
         )
     };
 

@@ -1013,6 +1013,12 @@ enum Commands {
         #[arg(
             long,
             default_value_t = false,
+            help = "Strip volatile timestamp-like fields from workflow-status output so repeated calls are stable for caching/diffing"
+        )]
+        stable: bool,
+        #[arg(
+            long,
+            default_value_t = false,
             help = "Disable Execution Triage surfacing in workflow-status output (default: on)"
         )]
         no_execution_focus: bool,
@@ -1513,6 +1519,7 @@ fn main() -> Result<()> {
             compact,
             agent,
             human,
+            stable,
             no_execution_focus: _no_execution_focus,
         } => workflow_status_command(WorkflowStatusCommandInput {
             symbol: &symbol,
@@ -1526,6 +1533,7 @@ fn main() -> Result<()> {
             hard_block_reason: hard_block_reason.as_deref(),
             limit,
             output_format: resolve_output_format(&output_format, compact, agent, human)?,
+            stable,
         })?,
         Commands::PreBayesStatus {
             symbol,
@@ -2022,6 +2030,7 @@ struct WorkflowStatusCommandInput<'a> {
     hard_block_reason: Option<&'a str>,
     limit: Option<usize>,
     output_format: OutputFormat,
+    stable: bool,
 }
 
 fn workflow_status_command(input: WorkflowStatusCommandInput<'_>) -> Result<()> {
@@ -2037,6 +2046,7 @@ fn workflow_status_command(input: WorkflowStatusCommandInput<'_>) -> Result<()> 
         hard_block_reason,
         limit,
         output_format,
+        stable,
     } = input;
     let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
     let mut snapshot = if refresh {
@@ -2067,6 +2077,7 @@ fn workflow_status_command(input: WorkflowStatusCommandInput<'_>) -> Result<()> 
                 OutputFormat::Agent => "agent",
                 OutputFormat::Human => "human",
             },
+            stable,
         },
         ict_engine::application::orchestration::WorkflowStatusBootstrapInput {
             symbol,
@@ -14041,6 +14052,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         let loaded = load_workflow_snapshot(temp.path(), "NQ").unwrap();
@@ -14058,6 +14070,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -14072,6 +14085,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -14086,6 +14100,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -14100,6 +14115,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -14114,6 +14130,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -14128,6 +14145,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -14142,6 +14160,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -14156,6 +14175,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -14170,6 +14190,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -14184,6 +14205,7 @@ mod tests {
             hard_block_reason: None,
             limit: Some(5),
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -14198,6 +14220,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
     }
@@ -14477,6 +14500,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -14491,6 +14515,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -14505,6 +14530,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         artifact_status_command(ArtifactStatusCommandInput {
@@ -14567,6 +14593,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         workflow_status_command(WorkflowStatusCommandInput {
@@ -14581,6 +14608,7 @@ mod tests {
             hard_block_reason: None,
             limit: None,
             output_format: OutputFormat::Json,
+            stable: false,
         })
         .unwrap();
         pre_bayes_status_command("NQ", temp.path().to_str().unwrap(), false, Some("policy"))
@@ -18814,6 +18842,31 @@ mod tests {
     }
 
     #[test]
+    fn test_command_recommendations_expose_update_template_without_outcome() {
+        let commands = command_recommendations(&CommandContext {
+            symbol: "NQ".to_string(),
+            state_dir: "state".to_string(),
+            analyze: None,
+            research_data: Some("a.json".to_string()),
+            paired_data: None,
+            update_outcome: None,
+            update_entry_signal: None,
+            update_feedback_file: None,
+            user_data_selection_required: false,
+        });
+
+        assert_eq!(
+            commands.update.command,
+            "ict-engine update --symbol NQ --outcome <win|loss|breakeven> --state-dir state"
+        );
+        assert!(!commands.update.ready);
+        assert!(commands
+            .update
+            .missing_inputs
+            .contains(&"realized_outcome".to_string()));
+    }
+
+    #[test]
     fn test_build_agent_context_bundle_contains_stage_views_and_window() {
         let bundle = ict_engine::application::backtest::build_agent_context_bundle(
             ict_engine::application::backtest::BuildAgentContextBundleInput {
@@ -19244,6 +19297,25 @@ mod tests {
         match cli.command {
             Commands::Analyze { output_format, .. } => {
                 assert_eq!(output_format, "");
+            }
+            other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
+        }
+    }
+
+    #[test]
+    fn test_cli_workflow_status_accepts_stable_flag() {
+        let cli = Cli::try_parse_from([
+            "ict-engine",
+            "workflow-status",
+            "--symbol",
+            "NQ",
+            "--stable",
+        ])
+        .unwrap();
+
+        match cli.command {
+            Commands::WorkflowStatus { stable, .. } => {
+                assert!(stable);
             }
             other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
         }

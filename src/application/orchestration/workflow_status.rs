@@ -195,6 +195,7 @@ pub struct WorkflowStatusDispatchInput<'a> {
     pub hard_block_reason: Option<&'a str>,
     pub limit: Option<usize>,
     pub output_format: &'a str,
+    pub stable: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -834,24 +835,59 @@ pub fn build_agent_workflow_status_view(
     })
 }
 
+fn normalize_workflow_status_value_for_stability(value: &mut Value) {
+    match value {
+        Value::Object(map) => {
+            for key in [
+                "generated_at",
+                "timestamp",
+                "updated_at",
+                "last_updated_at",
+                "fetched_at",
+            ] {
+                map.remove(key);
+            }
+            for child in map.values_mut() {
+                normalize_workflow_status_value_for_stability(child);
+            }
+        }
+        Value::Array(items) => {
+            for item in items {
+                normalize_workflow_status_value_for_stability(item);
+            }
+        }
+        _ => {}
+    }
+}
+
 pub fn emit_workflow_status_output(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
     output_format: &str,
+    stable: bool,
 ) -> Result<()> {
     match output_format.trim().to_ascii_lowercase().as_str() {
         "json" => {
             let mut value = serde_json::to_value(snapshot)?;
+            if stable {
+                normalize_workflow_status_value_for_stability(&mut value);
+            }
             redact_local_paths_in_value(&mut value);
             println!("{}", serde_json::to_string_pretty(&value)?);
         }
         "compact" => {
             let mut value = build_compact_workflow_status_view(snapshot);
+            if stable {
+                normalize_workflow_status_value_for_stability(&mut value);
+            }
             redact_local_paths_in_value(&mut value);
             println!("{}", serde_json::to_string_pretty(&value)?);
         }
         "agent" => {
             let mut value = build_agent_workflow_status_view(snapshot, persisted_scorecards);
+            if stable {
+                normalize_workflow_status_value_for_stability(&mut value);
+            }
             redact_local_paths_in_value(&mut value);
             println!("{}", serde_json::to_string_pretty(&value)?);
         }
@@ -915,11 +951,16 @@ pub fn dispatch_workflow_status(
             input.hard_block_reason,
             input.limit,
         );
-        print_redacted_json(&history)?;
+        let mut value = serde_json::to_value(history)?;
+        if input.stable {
+            normalize_workflow_status_value_for_stability(&mut value);
+        }
+        redact_local_paths_in_value(&mut value);
+        println!("{}", serde_json::to_string_pretty(&value)?);
         return Ok(());
     }
     if let Some(phase) = input.phase {
-        let value = match phase.trim().to_ascii_lowercase().as_str() {
+        let mut value = match phase.trim().to_ascii_lowercase().as_str() {
             "agent-bootstrap" | "bootstrap" => build_workflow_status_bootstrap_phase_value(
                 bootstrap.symbol,
                 bootstrap.state_dir,
@@ -930,9 +971,18 @@ pub fn dispatch_workflow_status(
             )?,
             other => build_workflow_status_phase_value(snapshot, persisted_scorecards, other)?,
         };
-        print_redacted_json(&value)?;
+        if input.stable {
+            normalize_workflow_status_value_for_stability(&mut value);
+        }
+        redact_local_paths_in_value(&mut value);
+        println!("{}", serde_json::to_string_pretty(&value)?);
     } else {
-        emit_workflow_status_output(snapshot, persisted_scorecards, input.output_format)?;
+        emit_workflow_status_output(
+            snapshot,
+            persisted_scorecards,
+            input.output_format,
+            input.stable,
+        )?;
     }
     Ok(())
 }
@@ -1847,6 +1897,7 @@ mod tests {
                 hard_block_reason: None,
                 limit: None,
                 output_format: "json",
+                stable: false,
             },
             WorkflowStatusBootstrapInput {
                 symbol: "NQ",
@@ -1877,6 +1928,7 @@ mod tests {
                 hard_block_reason: None,
                 limit: None,
                 output_format: "json",
+                stable: false,
             },
             WorkflowStatusBootstrapInput {
                 symbol: "NQ",
@@ -1891,6 +1943,41 @@ mod tests {
         assert!(error
             .to_string()
             .contains("accepts at most one artifact filter flag"));
+    }
+
+    #[test]
+    fn normalize_workflow_status_value_for_stability_removes_timestamp_like_fields() {
+        let mut value = serde_json::json!({
+            "generated_at": "2024-01-01T00:00:00Z",
+            "timestamp": "2024-01-01T00:00:00Z",
+            "updated_at": "2024-01-01T00:00:00Z",
+            "last_updated_at": "2024-01-01T00:00:00Z",
+            "fetched_at": "2024-01-01T00:00:00Z",
+            "kept": "yes",
+            "nested": {
+                "generated_at": "2024-01-01T00:00:00Z",
+                "kept": "still-here"
+            },
+            "items": [
+                {
+                    "generated_at": "2024-01-01T00:00:00Z",
+                    "kept": 1
+                }
+            ]
+        });
+
+        normalize_workflow_status_value_for_stability(&mut value);
+
+        assert!(value.get("generated_at").is_none());
+        assert!(value.get("timestamp").is_none());
+        assert!(value.get("updated_at").is_none());
+        assert!(value.get("last_updated_at").is_none());
+        assert!(value.get("fetched_at").is_none());
+        assert_eq!(value["kept"], "yes");
+        assert!(value["nested"].get("generated_at").is_none());
+        assert_eq!(value["nested"]["kept"], "still-here");
+        assert!(value["items"][0].get("generated_at").is_none());
+        assert_eq!(value["items"][0]["kept"], 1);
     }
 
     #[test]
