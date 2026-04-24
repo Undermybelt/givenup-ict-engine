@@ -7721,12 +7721,24 @@ fn factor_backtest_command(
     } else {
         None
     };
+    let suggested_update_command = if !report.recommended_commands.update.command.is_empty()
+        && report.recommended_commands.update.command != "recommended_command_unavailable"
+    {
+        report.recommended_commands.update.command.clone()
+    } else {
+        format!(
+            "ict-engine update --symbol {} --outcome <win|loss|breakeven> --state-dir {}",
+            shell_quote(symbol),
+            shell_quote(state_dir)
+        )
+    };
     let payload = ict_engine::application::reporting::build_factor_backtest_output_payload(
         &report,
         &compact_report,
         backtest_compare_report,
         credibility_summary,
         ensemble_surface,
+        &suggested_update_command,
     );
     ict_engine::application::reporting::emit_structured_output_payload(
         match output_format {
@@ -17299,6 +17311,7 @@ mod tests {
             Some(sample_compare_report("scaled_down")),
             serde_json::json!({"credibility": true}),
             None,
+            "ict-engine update --symbol NQ --outcome <win|loss|breakeven> --state-dir state",
         );
 
         assert_eq!(
@@ -17312,6 +17325,25 @@ mod tests {
         let human_output = payload["human_output"].as_str().unwrap_or_default();
         assert!(human_output.contains("Factor backtest"));
         assert!(!human_output.contains("\"factor_results\""));
+    }
+
+    #[test]
+    fn test_factor_backtest_output_payload_includes_suggested_update_command() {
+        let expected =
+            "ict-engine update --symbol NQ --outcome <win|loss|breakeven> --state-dir state";
+        let payload = ict_engine::application::reporting::build_factor_backtest_output_payload(
+            &FactorBacktestRunResult::default(),
+            &serde_json::json!({"compact": true}),
+            None,
+            serde_json::json!({"credibility": true}),
+            None,
+            expected,
+        );
+
+        assert_eq!(
+            payload["suggested_update_command"],
+            serde_json::json!(expected)
+        );
     }
 
     #[test]

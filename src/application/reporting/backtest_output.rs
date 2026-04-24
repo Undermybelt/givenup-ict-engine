@@ -174,6 +174,7 @@ pub fn build_factor_backtest_output_payload(
     compare: Option<BacktestCompareReport>,
     credibility_summary: Value,
     ensemble_surface: Option<Value>,
+    suggested_update_command: &str,
 ) -> Value {
     let compact_compare_report = build_compact_compare_report(compare.as_ref());
     let human_backtest_compare_summary = human_backtest_compare_summary(compare.as_ref());
@@ -187,6 +188,7 @@ pub fn build_factor_backtest_output_payload(
         "credibility_summary": credibility_summary,
         "ensemble": ensemble_surface,
         "human_output": human_output,
+        "suggested_update_command": suggested_update_command,
     })
 }
 
