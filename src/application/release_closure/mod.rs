@@ -3,6 +3,9 @@ use serde::Serialize;
 use serde_json::Value;
 use std::collections::{BTreeMap, BTreeSet};
 
+use crate::application::backtest::{
+    pre_bayes_entry_quality_bridge_diff, pre_bayes_soft_evidence_diff,
+};
 use crate::config::shell_quote;
 use crate::state::{
     load_artifact_ledger, load_factor_autoresearch_attempts, load_factor_autoresearch_sessions,
@@ -23,6 +26,16 @@ pub struct ResearchVerdictReport {
     stop_or_continue: String,
     comparison_contaminated: bool,
     contamination_reasons: Vec<String>,
+    isolated_comparison_recommended: bool,
+    session_objectives: Vec<String>,
+    session_base_factors: Vec<String>,
+    research_objectives: Vec<String>,
+    research_data_paths: Vec<String>,
+    paired_data_paths: Vec<String>,
+    mutation_source_commands: Vec<String>,
+    artifact_source_phases: Vec<String>,
+    actionable_artifact_count: usize,
+    top_cluster_scoreboard: Vec<String>,
     evidence: Vec<String>,
 }
 
@@ -31,8 +44,10 @@ pub struct EvidenceQualityBreakdownReport {
     symbol: String,
     state_dir: String,
     generated_from_run_id: Option<String>,
+    policy_version: String,
     gating_status: String,
     final_evidence_quality_score: f64,
+    uses_soft_evidence: bool,
     hard_pass_gap: f64,
     neutralized_gap: f64,
     base_score: f64,
@@ -46,6 +61,15 @@ pub struct EvidenceQualityBreakdownReport {
     mtf_entry_penalty: f64,
     liquidity_penalty_or_bonus: f64,
     bridge_gap: Option<f64>,
+    bridge_selected_entry_quality: Option<String>,
+    bridge_selected_entry_quality_probability: f64,
+    bridge_multi_timeframe_direction_bias: String,
+    raw_multi_timeframe_alignment_score: Option<f64>,
+    raw_multi_timeframe_entry_alignment_score: Option<f64>,
+    filtered_multi_timeframe_alignment_score: Option<f64>,
+    filtered_multi_timeframe_entry_alignment_score: Option<f64>,
+    soft_evidence_divergence_count: usize,
+    soft_evidence_summary: Vec<String>,
     rationale: Vec<String>,
 }
 
@@ -115,22 +139,63 @@ pub fn build_research_verdict_report(
     artifact_ledger: &[ArtifactLedgerEntry],
 ) -> ResearchVerdictReport {
     let mut contamination_reasons = Vec::new();
+    let session_objectives = sessions
+        .iter()
+        .map(|session| session.objective.clone())
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
+    let session_base_factors = sessions
+        .iter()
+        .map(|session| session.base_factor.clone())
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
+    let research_objectives = research_runs
+        .iter()
+        .map(|run| run.research_objective.clone())
+        .filter(|value| !value.is_empty())
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
+    let research_data_paths = research_runs
+        .iter()
+        .map(|run| run.data_path.clone())
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
+    let paired_data_paths = research_runs
+        .iter()
+        .filter_map(|run| run.paired_data_path.clone())
+        .chain(
+            backtest_runs
+                .iter()
+                .filter_map(|run| run.paired_data_path.clone()),
+        )
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
+    let mutation_source_commands = mutation_runs
+        .iter()
+        .map(|run| run.source_command.clone())
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
+    let artifact_source_phases = artifact_ledger
+        .iter()
+        .map(|item| item.source_phase.clone())
+        .filter(|value| !value.is_empty())
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
     if sessions.len() > 1 {
-        let unique_objectives = sessions
-            .iter()
-            .map(|session| session.objective.clone())
-            .collect::<BTreeSet<_>>();
-        if unique_objectives.len() > 1 {
+        if session_objectives.len() > 1 {
             contamination_reasons.push(
                 "multiple_autoresearch_sessions_share_one_state_dir_with_different_objectives"
                     .to_string(),
             );
         }
-        let unique_base_factors = sessions
-            .iter()
-            .map(|session| session.base_factor.clone())
-            .collect::<BTreeSet<_>>();
-        if unique_base_factors.len() > 1 {
+        if session_base_factors.len() > 1 {
             contamination_reasons.push(
                 "multiple_autoresearch_sessions_share_one_state_dir_with_different_base_factors"
                     .to_string(),
@@ -149,27 +214,27 @@ pub fn build_research_verdict_report(
                 .push("attempt_score_deltas_are_monotonic_within_shared_state".to_string());
         }
     }
-    if !research_runs.is_empty() && !backtest_runs.is_empty() {
-        let research_objectives = research_runs
-            .iter()
-            .map(|run| run.research_objective.clone())
-            .collect::<BTreeSet<_>>();
-        if research_objectives.len() > 1 {
-            contamination_reasons
-                .push("research_runs_mix_multiple_objectives_in_one_state_dir".to_string());
-        }
+    if research_objectives.len() > 1 {
+        contamination_reasons.push("research_runs_mix_multiple_objectives_in_one_state_dir".to_string());
+    }
+    if research_data_paths.len() > 1 {
+        contamination_reasons.push("research_runs_mix_multiple_primary_data_paths".to_string());
+    }
+    if paired_data_paths.len() > 1 {
+        contamination_reasons.push("comparison_runs_mix_multiple_paired_data_paths".to_string());
     }
     if mutation_runs.len() > 3 {
-        let unique_sources = mutation_runs
-            .iter()
-            .map(|run| run.source_command.clone())
-            .collect::<BTreeSet<_>>();
-        if unique_sources.len() > 1 {
+        if mutation_source_commands.len() > 1 {
             contamination_reasons
                 .push("factor_mutation_runs_mix_multiple_sources_in_one_state_dir".to_string());
         }
     }
+    if artifact_source_phases.len() > 3 {
+        contamination_reasons
+            .push("artifact_ledger_contains_many_source_phases_in_one_state_dir".to_string());
+    }
     let comparison_contaminated = !contamination_reasons.is_empty();
+    let isolated_comparison_recommended = comparison_contaminated;
 
     let best_research = research_runs.iter().max_by(|a, b| {
         a.aggregate_return
@@ -202,6 +267,18 @@ pub fn build_research_verdict_report(
             .partial_cmp(&b.1 .2)
             .unwrap_or(std::cmp::Ordering::Equal)
     });
+    let top_cluster_scoreboard = cluster_scoreboard
+        .iter()
+        .map(|(cluster, (attempts_count, total_delta, best_delta))| {
+            format!(
+                "{} attempts={} avg_score_delta={:.3} best_score_delta={:.3}",
+                cluster,
+                attempts_count,
+                total_delta / *attempts_count as f64,
+                best_delta
+            )
+        })
+        .collect::<Vec<_>>();
 
     let no_research_activity = research_runs.is_empty()
         && sessions.is_empty()
@@ -344,6 +421,19 @@ pub fn build_research_verdict_report(
         stop_or_continue,
         comparison_contaminated,
         contamination_reasons,
+        isolated_comparison_recommended,
+        session_objectives,
+        session_base_factors,
+        research_objectives,
+        research_data_paths,
+        paired_data_paths,
+        mutation_source_commands,
+        artifact_source_phases,
+        actionable_artifact_count: artifact_ledger
+            .iter()
+            .filter(|item| item.actionable)
+            .count(),
+        top_cluster_scoreboard,
         evidence,
     }
 }
@@ -363,9 +453,21 @@ pub fn evidence_quality_breakdown_command(
     let analyze_run = latest_analyze_runs
         .last()
         .ok_or_else(|| anyhow!("no latest analyze run found for '{}'", symbol))?;
+    let report = build_evidence_quality_breakdown_report(symbol, state_dir, analyze_run);
+    println!("{}", serde_json::to_string_pretty(&report)?);
+    Ok(())
+}
+
+pub fn build_evidence_quality_breakdown_report(
+    symbol: &str,
+    state_dir: &str,
+    analyze_run: &AnalyzeRunRecord,
+) -> EvidenceQualityBreakdownReport {
     let filter = &analyze_run.pre_bayes_evidence_filter;
     let bridge = &analyze_run.pre_bayes_entry_quality_bridge;
     let policy = &filter.policy;
+    let bridge_diff = pre_bayes_entry_quality_bridge_diff(bridge);
+    let soft_evidence_diff = pre_bayes_soft_evidence_diff(filter);
     let support_gap = policy.min_directional_support_gap.clamp(0.0, 0.5);
     let base_score = 0.55;
     let support_gap_contribution = support_gap * 0.50;
@@ -434,8 +536,8 @@ pub fn evidence_quality_breakdown_command(
     };
     let hard_pass_gap = filter.evidence_quality_score - policy.hard_pass_quality_threshold;
     let neutralized_gap = filter.evidence_quality_score - policy.neutralized_quality_threshold;
-    let bridge_gap = Some((bridge.long_signal_probability - bridge.short_signal_probability).abs());
-    let rationale = vec![
+    let bridge_gap = Some(bridge_diff.long_short_signal_probability_gap);
+    let mut rationale = vec![
         format!("raw_market_regime_label={}", filter.raw_market_regime_label),
         format!(
             "filtered_market_regime_label={}",
@@ -454,14 +556,25 @@ pub fn evidence_quality_breakdown_command(
             "filtered_factor_alignment_label={}",
             filter.filtered_factor_alignment
         ),
+        format!(
+            "raw_multi_timeframe_direction_bias={}",
+            filter.raw_multi_timeframe_direction_bias
+        ),
+        format!(
+            "filtered_multi_timeframe_direction_bias={}",
+            filter.filtered_multi_timeframe_direction_bias
+        ),
         format!("conflict_flags={}", filter.conflict_flags.join(",")),
     ];
-    let report = EvidenceQualityBreakdownReport {
+    rationale.extend(filter.rationale.iter().take(5).cloned());
+    EvidenceQualityBreakdownReport {
         symbol: symbol.to_string(),
         state_dir: state_dir.to_string(),
         generated_from_run_id: Some(analyze_run.run_id.clone()),
+        policy_version: policy.version.clone(),
         gating_status: filter.gating_status.clone(),
         final_evidence_quality_score: filter.evidence_quality_score,
+        uses_soft_evidence: filter.uses_soft_evidence,
         hard_pass_gap,
         neutralized_gap,
         base_score,
@@ -475,15 +588,40 @@ pub fn evidence_quality_breakdown_command(
         mtf_entry_penalty,
         liquidity_penalty_or_bonus,
         bridge_gap,
+        bridge_selected_entry_quality: bridge_diff.selected_entry_quality,
+        bridge_selected_entry_quality_probability: bridge_diff.selected_entry_quality_probability,
+        bridge_multi_timeframe_direction_bias: bridge_diff.multi_timeframe_direction_bias,
+        raw_multi_timeframe_alignment_score: filter.raw_multi_timeframe_alignment_score,
+        raw_multi_timeframe_entry_alignment_score: filter.raw_multi_timeframe_entry_alignment_score,
+        filtered_multi_timeframe_alignment_score: filter.filtered_multi_timeframe_alignment_score,
+        filtered_multi_timeframe_entry_alignment_score: filter
+            .filtered_multi_timeframe_entry_alignment_score,
+        soft_evidence_divergence_count: soft_evidence_diff
+            .iter()
+            .filter(|item| item.diverges_from_filtered_state)
+            .count(),
+        soft_evidence_summary: soft_evidence_diff
+            .into_iter()
+            .map(|item| {
+                format!(
+                    "{} filtered={} dominant={:?} p={:.3} diverges={}",
+                    item.node,
+                    item.filtered_state,
+                    item.dominant_soft_state,
+                    item.dominant_soft_probability,
+                    item.diverges_from_filtered_state
+                )
+            })
+            .collect(),
         rationale,
-    };
-    println!("{}", serde_json::to_string_pretty(&report)?);
-    Ok(())
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use chrono::Utc;
+    use std::collections::BTreeMap;
 
     #[test]
     fn research_verdict_requires_bootstrap_when_no_research_runs_exist() {
@@ -495,5 +633,204 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("ict-engine factor-research"));
+    }
+
+    #[test]
+    fn research_verdict_flags_mixed_data_paths_and_artifact_sources_as_contamination() {
+        let sessions = vec![
+            FactorAutoresearchSession {
+                objective: "expansion_manipulation".to_string(),
+                base_factor: "structure_ict".to_string(),
+                ..FactorAutoresearchSession::default()
+            },
+            FactorAutoresearchSession {
+                objective: "cross_market".to_string(),
+                base_factor: "cross_market_smt".to_string(),
+                ..FactorAutoresearchSession::default()
+            },
+        ];
+        let research_runs = vec![
+            ResearchRunRecord {
+                data_path: "a.json".to_string(),
+                paired_data_path: Some("es.json".to_string()),
+                research_objective: "expansion_manipulation".to_string(),
+                ..ResearchRunRecord::default()
+            },
+            ResearchRunRecord {
+                data_path: "b.json".to_string(),
+                paired_data_path: Some("ym.json".to_string()),
+                research_objective: "cross_market".to_string(),
+                ..ResearchRunRecord::default()
+            },
+        ];
+        let mutation_runs = vec![
+            FactorMutationRunRecord {
+                source_command: "factor-research".to_string(),
+                ..FactorMutationRunRecord::default()
+            },
+            FactorMutationRunRecord {
+                source_command: "factor-autoresearch".to_string(),
+                ..FactorMutationRunRecord::default()
+            },
+            FactorMutationRunRecord {
+                source_command: "factor-autoresearch".to_string(),
+                ..FactorMutationRunRecord::default()
+            },
+            FactorMutationRunRecord {
+                source_command: "cluster-jump".to_string(),
+                ..FactorMutationRunRecord::default()
+            },
+        ];
+        let artifact_ledger = vec![
+            ArtifactLedgerEntry {
+                source_phase: "analyze".to_string(),
+                actionable: true,
+                ..ArtifactLedgerEntry::default()
+            },
+            ArtifactLedgerEntry {
+                source_phase: "research".to_string(),
+                actionable: true,
+                ..ArtifactLedgerEntry::default()
+            },
+            ArtifactLedgerEntry {
+                source_phase: "backtest".to_string(),
+                actionable: false,
+                ..ArtifactLedgerEntry::default()
+            },
+            ArtifactLedgerEntry {
+                source_phase: "update".to_string(),
+                actionable: false,
+                ..ArtifactLedgerEntry::default()
+            },
+        ];
+
+        let report = build_research_verdict_report(
+            "DEMO",
+            "state",
+            &sessions,
+            &[],
+            &research_runs,
+            &[],
+            &mutation_runs,
+            &artifact_ledger,
+        );
+        let verdict = serde_json::to_value(&report).expect("serialize verdict");
+        assert_eq!(verdict["comparison_contaminated"], true);
+        assert_eq!(verdict["isolated_comparison_recommended"], true);
+        assert!(verdict["contamination_reasons"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item == "research_runs_mix_multiple_objectives_in_one_state_dir"));
+        assert!(verdict["contamination_reasons"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item == "research_runs_mix_multiple_primary_data_paths"));
+        assert_eq!(verdict["actionable_artifact_count"], 2);
+    }
+
+    #[test]
+    fn evidence_quality_breakdown_surfaces_policy_bridge_and_soft_evidence_fields() {
+        let mut analyze_run = AnalyzeRunRecord::default();
+        analyze_run.run_id = "analyze:demo:1".to_string();
+        analyze_run.timestamp = Utc::now();
+        analyze_run.pre_bayes_evidence_filter.policy.version = "policy-v3".to_string();
+        analyze_run.pre_bayes_evidence_filter.gating_status = "pass_neutralized".to_string();
+        analyze_run.pre_bayes_evidence_filter.evidence_quality_score = 0.72;
+        analyze_run.pre_bayes_evidence_filter.uses_soft_evidence = true;
+        analyze_run
+            .pre_bayes_evidence_filter
+            .raw_market_regime_label = "bull".to_string();
+        analyze_run
+            .pre_bayes_evidence_filter
+            .filtered_market_regime_label = "range".to_string();
+        analyze_run
+            .pre_bayes_evidence_filter
+            .raw_liquidity_context_label = "favorable".to_string();
+        analyze_run
+            .pre_bayes_evidence_filter
+            .filtered_liquidity_context_label = "neutral".to_string();
+        analyze_run.pre_bayes_evidence_filter.raw_factor_alignment = "bullish".to_string();
+        analyze_run
+            .pre_bayes_evidence_filter
+            .filtered_factor_alignment = "mixed".to_string();
+        analyze_run
+            .pre_bayes_evidence_filter
+            .raw_multi_timeframe_direction_bias = "bull".to_string();
+        analyze_run
+            .pre_bayes_evidence_filter
+            .filtered_multi_timeframe_direction_bias = "neutral".to_string();
+        analyze_run
+            .pre_bayes_evidence_filter
+            .raw_multi_timeframe_alignment_score = Some(0.81);
+        analyze_run
+            .pre_bayes_evidence_filter
+            .raw_multi_timeframe_entry_alignment_score = Some(0.43);
+        analyze_run
+            .pre_bayes_evidence_filter
+            .filtered_multi_timeframe_alignment_score = Some(0.81);
+        analyze_run
+            .pre_bayes_evidence_filter
+            .filtered_multi_timeframe_entry_alignment_score = Some(0.43);
+        analyze_run
+            .pre_bayes_evidence_filter
+            .filtered_factor_uncertainty = "high".to_string();
+        analyze_run.pre_bayes_evidence_filter.conflict_flags = vec![
+            "directional_conflict".to_string(),
+            "multi_timeframe_direction_conflict".to_string(),
+        ];
+        analyze_run.pre_bayes_evidence_filter.rationale =
+            vec!["soft evidence forced observe-only review".to_string()];
+        analyze_run
+            .pre_bayes_evidence_filter
+            .soft_market_regime_distribution =
+            BTreeMap::from([("range".to_string(), 0.7), ("bull".to_string(), 0.3)]);
+        analyze_run
+            .pre_bayes_evidence_filter
+            .soft_liquidity_context_distribution =
+            BTreeMap::from([("neutral".to_string(), 0.8), ("favorable".to_string(), 0.2)]);
+        analyze_run
+            .pre_bayes_evidence_filter
+            .soft_factor_alignment_distribution =
+            BTreeMap::from([("bullish".to_string(), 0.8), ("mixed".to_string(), 0.2)]);
+        analyze_run
+            .pre_bayes_evidence_filter
+            .soft_factor_uncertainty_distribution =
+            BTreeMap::from([("high".to_string(), 0.9), ("low".to_string(), 0.1)]);
+        analyze_run
+            .pre_bayes_evidence_filter
+            .soft_multi_timeframe_resonance_distribution = BTreeMap::from([
+            ("dislocated".to_string(), 0.65),
+            ("aligned".to_string(), 0.35),
+        ]);
+        analyze_run
+            .pre_bayes_entry_quality_bridge
+            .long_signal_probability = 0.62;
+        analyze_run
+            .pre_bayes_entry_quality_bridge
+            .short_signal_probability = 0.31;
+        analyze_run
+            .pre_bayes_entry_quality_bridge
+            .selected_entry_quality =
+            BTreeMap::from([("medium".to_string(), 0.7), ("high".to_string(), 0.3)]);
+        analyze_run
+            .pre_bayes_entry_quality_bridge
+            .multi_timeframe_direction_bias = "bull".to_string();
+        analyze_run
+            .pre_bayes_entry_quality_bridge
+            .multi_timeframe_alignment_score = Some(0.81);
+        analyze_run
+            .pre_bayes_entry_quality_bridge
+            .multi_timeframe_entry_alignment_score = Some(0.43);
+
+        let report = build_evidence_quality_breakdown_report("DEMO", "state", &analyze_run);
+        let value = serde_json::to_value(report).expect("serialize report");
+        assert_eq!(value["policy_version"], "policy-v3");
+        assert_eq!(value["uses_soft_evidence"], true);
+        assert_eq!(value["bridge_selected_entry_quality"], "medium");
+        assert_eq!(value["bridge_multi_timeframe_direction_bias"], "bull");
+        assert_eq!(value["soft_evidence_divergence_count"], 2);
+        assert!(value["soft_evidence_summary"].as_array().unwrap().len() >= 5);
     }
 }
