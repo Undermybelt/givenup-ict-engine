@@ -102,10 +102,9 @@ use ict_engine::application::{
     },
     multi_timeframe_inputs::{
         build_live_multi_timeframe_signal, build_multi_timeframe_research_signal,
-        build_multi_timeframe_summary, detected_multi_timeframe_clean_root, detected_tomac_root,
-        detected_tomac_root_or_placeholder, infer_interval_for_analyze_frame,
-        resolve_analyze_cli_inputs, resolve_analyze_multi_timeframe_inputs,
-        resolve_multi_timeframe_inputs, resolve_tomac_root,
+        build_multi_timeframe_summary, detected_multi_timeframe_clean_root,
+        infer_interval_for_analyze_frame, resolve_analyze_cli_inputs,
+        resolve_analyze_multi_timeframe_inputs, resolve_multi_timeframe_inputs,
     },
     orchestration::{
         build_execution_tree_artifact, build_execution_triage, build_stub_ensemble_vote_from_input,
@@ -2057,7 +2056,8 @@ fn workflow_status_command(input: WorkflowStatusCommandInput<'_>) -> Result<()> 
     hydrate_workflow_snapshot_recommended_next_command_meta(&mut snapshot);
     let persisted_scorecards =
         load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
-    let detected_tomac_root = detected_tomac_root();
+    let detected_tomac_root =
+        ict_engine::application::multi_timeframe_inputs::detected_tomac_root();
     let multi_timeframe_clean_root =
         detected_multi_timeframe_clean_root(detected_tomac_root.as_deref());
     ict_engine::application::orchestration::dispatch_workflow_status(
@@ -2084,7 +2084,9 @@ fn workflow_status_command(input: WorkflowStatusCommandInput<'_>) -> Result<()> 
             state_dir,
             detected_tomac_root,
             multi_timeframe_clean_root,
-            tomac_root_placeholder: detected_tomac_root_or_placeholder(),
+            tomac_root_placeholder:
+                ict_engine::application::multi_timeframe_inputs::detected_tomac_root_or_placeholder(
+                ),
         },
     )
 }
@@ -2289,7 +2291,7 @@ fn clean_futures_command(
     interval: &str,
     multi_timeframe: bool,
 ) -> Result<()> {
-    let root = resolve_tomac_root(root)?;
+    let root = ict_engine::application::multi_timeframe_inputs::resolve_tomac_root(root)?;
     if multi_timeframe {
         let report = run_clean_futures_multi_timeframe(&root, output_dir)?;
         println!("{}", serde_json::to_string_pretty(&report)?);
@@ -2301,7 +2303,7 @@ fn clean_futures_command(
 }
 
 fn futures_sop_command(root: Option<&str>, output_dir: &str, interval: &str) -> Result<()> {
-    let root = resolve_tomac_root(root)?;
+    let root = ict_engine::application::multi_timeframe_inputs::resolve_tomac_root(root)?;
     let report = run_futures_sop(&root, output_dir, interval)?;
     let report_path = std::path::Path::new(output_dir)
         .join(format!("futures_sop_report.{}.json", interval))
@@ -2373,7 +2375,7 @@ fn expansion_sop_command(input: ExpansionSopCommandInput<'_>) -> Result<()> {
         emit_mutation_evaluation,
     } = input;
     let objective_mode = parse_research_objective(objective)?;
-    let root = resolve_tomac_root(root)?;
+    let root = ict_engine::application::multi_timeframe_inputs::resolve_tomac_root(root)?;
     let mutation_spec = mutation_spec_path
         .map(load_factor_mutation_spec)
         .transpose()?;
@@ -7495,7 +7497,9 @@ fn factor_mutation_status_command(
                 ),
                 format!(
                     "ict-engine expansion-sop --root {} --output-dir <output> --interval 15m --lookback 20 --atr-multiplier 1.50 --mutation-spec <spec.json> --emit-mutation-evaluation",
-                    shell_quote(&detected_tomac_root_or_placeholder())
+                    shell_quote(
+                        &ict_engine::application::multi_timeframe_inputs::detected_tomac_root_or_placeholder()
+                    )
                 ),
             ]
         }))?
@@ -17701,7 +17705,10 @@ mod tests {
 
     #[test]
     fn test_resolve_tomac_root_prefers_explicit_argument() {
-        let resolved = resolve_tomac_root(Some("/tmp/custom-tomac")).unwrap();
+        let resolved = ict_engine::application::multi_timeframe_inputs::resolve_tomac_root(Some(
+            "/tmp/custom-tomac",
+        ))
+        .unwrap();
         assert_eq!(resolved, "/tmp/custom-tomac");
     }
 
