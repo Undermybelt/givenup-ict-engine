@@ -105,7 +105,8 @@ Read the key fields first:
 cargo run -- factor-research \
   --symbol NQ \
   --data <cleaned-15m.json> \
-  --objective expansion_manipulation
+  --objective expansion_manipulation \
+  --backend auto-quant
 ```
 
 ### Read current research truth
@@ -114,6 +115,10 @@ cargo run -- factor-research \
 cargo run -- factor-autoresearch-status --symbol <SYM> --state-dir <dir> --latest-only
 python3 scripts/research_verdict.py <state-or-result-dir>
 ```
+
+Auto-Quant integration note:
+- `factor-research` and `factor-autoresearch` now default to `--backend auto-quant`
+- pass `--backend native` if you explicitly want the legacy in-process path
 
 ## Output modes
 

@@ -28,6 +28,7 @@ cargo run -- analyze --help
 cargo run -- factor-research --help
 cargo run -- factor-pipeline-debug --help
 cargo run -- factor-autoresearch-status --help
+cargo run -- auto-quant-status --state-dir state
 ```
 
 Python experiment scripts:

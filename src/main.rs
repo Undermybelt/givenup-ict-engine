@@ -57,7 +57,9 @@ use ict_engine::application::{
         ArtifactDiffCommandInput, ArtifactLineageCommandInput, ArtifactStatusCommandInput,
     },
     auto_quant::command_entry::{
-        auto_quant_bootstrap_command, auto_quant_status_command, auto_quant_update_command,
+        auto_quant_bootstrap_command, auto_quant_factor_autoresearch_command,
+        auto_quant_factor_research_command, auto_quant_status_command, auto_quant_update_command,
+        AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput,
     },
     backtest::{
         apply_feedback_to_trade_outcome_network, artifact_consumed_decision_gate,
@@ -674,6 +676,12 @@ enum Commands {
         agent: bool,
         #[arg(long, help = "Alias for --output-format human")]
         human: bool,
+        #[arg(
+            long,
+            default_value = "auto-quant",
+            help = "Research backend: auto-quant (default) or native"
+        )]
+        backend: String,
     },
     /// Show factor mutation history and clustered failure tags
     FactorMutationStatus {
@@ -769,6 +777,12 @@ enum Commands {
             help = "State directory for model and workflow artifacts"
         )]
         state_dir: String,
+        #[arg(
+            long,
+            default_value = "auto-quant",
+            help = "Autoresearch backend: auto-quant (default) or native"
+        )]
+        backend: String,
     },
     /// Show the currently effective ICT-related environment settings
     Env,
@@ -1475,47 +1489,59 @@ fn main() -> Result<()> {
             compact,
             agent,
             human,
+            backend,
         } => {
             ensure_state_dir_ready(&state_dir)?;
-            ict_engine::application::backtest::factor_research_command(
-                ict_engine::application::backtest::FactorResearchCommandInput {
+            if backend == "auto-quant" {
+                auto_quant_factor_research_command(AutoQuantFactorResearchCommandInput {
                     symbol: &symbol,
                     data: &data,
                     objective: &objective,
+                    paired_data: paired_data.as_deref(),
                     mutation_spec_path: mutation_spec.as_deref(),
-                    emit_mutation_evaluation,
-                    ensemble,
                     state_dir: &state_dir,
-                    output_format: match resolve_output_format(
-                        &output_format,
-                        compact,
-                        agent,
-                        human,
-                    )? {
-                        OutputFormat::Json => "json",
-                        OutputFormat::Compact => "compact",
-                        OutputFormat::Agent => "agent",
-                        OutputFormat::Human => "human",
-                    },
-                },
-                load_factor_mutation_spec,
-                |objective_mode, mutation_spec| {
-                    run_factor_research(RunFactorResearchInput {
+                })?;
+            } else {
+                ict_engine::application::backtest::factor_research_command(
+                    ict_engine::application::backtest::FactorResearchCommandInput {
                         symbol: &symbol,
                         data: &data,
-                        objective: objective_mode,
-                        data_1m: data_1m.as_deref(),
-                        data_5m: data_5m.as_deref(),
-                        data_15m: data_15m.as_deref(),
-                        data_1h: data_1h.as_deref(),
-                        data_4h: data_4h.as_deref(),
-                        data_1d: data_1d.as_deref(),
-                        paired_data: paired_data.as_deref(),
-                        mutation_spec,
+                        objective: &objective,
+                        mutation_spec_path: mutation_spec.as_deref(),
+                        emit_mutation_evaluation,
+                        ensemble,
                         state_dir: &state_dir,
-                    })
-                },
-            )?
+                        output_format: match resolve_output_format(
+                            &output_format,
+                            compact,
+                            agent,
+                            human,
+                        )? {
+                            OutputFormat::Json => "json",
+                            OutputFormat::Compact => "compact",
+                            OutputFormat::Agent => "agent",
+                            OutputFormat::Human => "human",
+                        },
+                    },
+                    load_factor_mutation_spec,
+                    |objective_mode, mutation_spec| {
+                        run_factor_research(RunFactorResearchInput {
+                            symbol: &symbol,
+                            data: &data,
+                            objective: objective_mode,
+                            data_1m: data_1m.as_deref(),
+                            data_5m: data_5m.as_deref(),
+                            data_15m: data_15m.as_deref(),
+                            data_1h: data_1h.as_deref(),
+                            data_4h: data_4h.as_deref(),
+                            data_1d: data_1d.as_deref(),
+                            paired_data: paired_data.as_deref(),
+                            mutation_spec,
+                            state_dir: &state_dir,
+                        })
+                    },
+                )?;
+            }
         }
         Commands::FactorMutationStatus {
             symbol,
@@ -1552,43 +1578,60 @@ fn main() -> Result<()> {
             max_cluster_fail_streak,
             ensemble: _,
             state_dir,
-        } => ict_engine::application::factor_lifecycle::factor_autoresearch_command(
-            ict_engine::application::factor_lifecycle::FactorAutoresearchCommandInput {
-                symbol: &symbol,
-                data: &data,
-                objective: &objective,
-                mutation_spec_path: mutation_spec.as_deref(),
-                iterations,
-                data_1m: data_1m.as_deref(),
-                data_5m: data_5m.as_deref(),
-                data_15m: data_15m.as_deref(),
-                data_1h: data_1h.as_deref(),
-                data_4h: data_4h.as_deref(),
-                data_1d: data_1d.as_deref(),
-                paired_data: paired_data.as_deref(),
-                session_id: session_id.as_deref(),
-                resume_latest,
-                max_cluster_fail_streak,
-                state_dir: &state_dir,
-            },
-            load_factor_mutation_spec,
-            |objective_mode, mutation_spec| {
-                run_factor_research(RunFactorResearchInput {
+            backend,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            if backend == "auto-quant" {
+                auto_quant_factor_autoresearch_command(AutoQuantFactorAutoresearchCommandInput {
                     symbol: &symbol,
                     data: &data,
-                    objective: objective_mode,
-                    data_1m: data_1m.as_deref(),
-                    data_5m: data_5m.as_deref(),
-                    data_15m: data_15m.as_deref(),
-                    data_1h: data_1h.as_deref(),
-                    data_4h: data_4h.as_deref(),
-                    data_1d: data_1d.as_deref(),
+                    objective: &objective,
                     paired_data: paired_data.as_deref(),
-                    mutation_spec: Some(mutation_spec),
+                    mutation_spec_path: mutation_spec.as_deref(),
+                    iterations,
+                    session_id: session_id.as_deref(),
                     state_dir: &state_dir,
-                })
-            },
-        )?,
+                })?;
+            } else {
+                ict_engine::application::factor_lifecycle::factor_autoresearch_command(
+                    ict_engine::application::factor_lifecycle::FactorAutoresearchCommandInput {
+                        symbol: &symbol,
+                        data: &data,
+                        objective: &objective,
+                        mutation_spec_path: mutation_spec.as_deref(),
+                        iterations,
+                        data_1m: data_1m.as_deref(),
+                        data_5m: data_5m.as_deref(),
+                        data_15m: data_15m.as_deref(),
+                        data_1h: data_1h.as_deref(),
+                        data_4h: data_4h.as_deref(),
+                        data_1d: data_1d.as_deref(),
+                        paired_data: paired_data.as_deref(),
+                        session_id: session_id.as_deref(),
+                        resume_latest,
+                        max_cluster_fail_streak,
+                        state_dir: &state_dir,
+                    },
+                    load_factor_mutation_spec,
+                    |objective_mode, mutation_spec| {
+                        run_factor_research(RunFactorResearchInput {
+                            symbol: &symbol,
+                            data: &data,
+                            objective: objective_mode,
+                            data_1m: data_1m.as_deref(),
+                            data_5m: data_5m.as_deref(),
+                            data_15m: data_15m.as_deref(),
+                            data_1h: data_1h.as_deref(),
+                            data_4h: data_4h.as_deref(),
+                            data_1d: data_1d.as_deref(),
+                            paired_data: paired_data.as_deref(),
+                            mutation_spec: Some(mutation_spec),
+                            state_dir: &state_dir,
+                        })
+                    },
+                )?;
+            }
+        }
         Commands::FactorAutoresearchStatus {
             symbol,
             state_dir,
