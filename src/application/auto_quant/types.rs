@@ -53,3 +53,16 @@ pub struct AutoQuantUpdateReport {
     pub adapter_version: String,
     pub last_sync: DateTime<Utc>,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct AutoQuantAdoptionDecisionArtifact {
+    pub artifact_id: String,
+    pub generated_at: DateTime<Utc>,
+    pub symbol: String,
+    pub handoff_artifact_id: String,
+    pub handoff_kind: String,
+    pub decision: String,
+    pub rationale: String,
+    pub requested_by: String,
+    pub state_dir: String,
+}

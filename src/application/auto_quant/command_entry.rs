@@ -1,5 +1,7 @@
 use anyhow::Result;
-use super::adoption::build_auto_quant_adoption_review;
+use super::adoption::{
+    build_auto_quant_adoption_review, persist_auto_quant_adoption_decision,
+};
 use super::handoff::{
     build_factor_autoresearch_handoff_payload, build_factor_research_handoff_payload,
     AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput,
@@ -54,6 +56,26 @@ pub fn auto_quant_adoption_review_command(
 ) -> Result<()> {
     let review = build_auto_quant_adoption_review(symbol, state_dir, artifact_id)?;
     println!("{}", serde_json::to_string_pretty(&review)?);
+    Ok(())
+}
+
+pub fn auto_quant_adoption_decision_command(
+    symbol: &str,
+    state_dir: &str,
+    artifact_id: Option<&str>,
+    decision: &str,
+    rationale: &str,
+    requested_by: &str,
+) -> Result<()> {
+    let artifact = persist_auto_quant_adoption_decision(
+        symbol,
+        state_dir,
+        artifact_id,
+        decision,
+        rationale,
+        requested_by,
+    )?;
+    println!("{}", serde_json::to_string_pretty(&artifact)?);
     Ok(())
 }
 

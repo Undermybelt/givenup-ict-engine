@@ -57,7 +57,8 @@ use ict_engine::application::{
         ArtifactDiffCommandInput, ArtifactLineageCommandInput, ArtifactStatusCommandInput,
     },
     auto_quant::command_entry::{
-        auto_quant_adoption_review_command, auto_quant_bootstrap_command,
+        auto_quant_adoption_decision_command, auto_quant_adoption_review_command,
+        auto_quant_bootstrap_command,
         auto_quant_factor_autoresearch_command,
         auto_quant_factor_research_command, auto_quant_status_command, auto_quant_update_command,
     },
@@ -856,6 +857,30 @@ enum Commands {
         state_dir: String,
         #[arg(long, help = "Optional specific handoff artifact id to review")]
         artifact_id: Option<String>,
+    },
+    /// Record an explicit adoption decision for an Auto-Quant handoff candidate
+    AutoQuantAdoptionDecision {
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        symbol: String,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding Auto-Quant handoff artifacts"
+        )]
+        state_dir: String,
+        #[arg(long, help = "Optional specific handoff artifact id to decide on")]
+        artifact_id: Option<String>,
+        #[arg(long, help = "Decision label, e.g. adopt, discard, defer")]
+        decision: String,
+        #[arg(long, help = "Why this decision was made")]
+        rationale: String,
+        #[arg(
+            long,
+            default_value = "manual",
+            help = "Who or what recorded the decision"
+        )]
+        requested_by: String,
     },
     /// Show factor-autoresearch sessions and attempts
     FactorAutoresearchStatus {
@@ -1731,6 +1756,21 @@ fn main() -> Result<()> {
             state_dir,
             artifact_id,
         } => auto_quant_adoption_review_command(&symbol, &state_dir, artifact_id.as_deref())?,
+        Commands::AutoQuantAdoptionDecision {
+            symbol,
+            state_dir,
+            artifact_id,
+            decision,
+            rationale,
+            requested_by,
+        } => auto_quant_adoption_decision_command(
+            &symbol,
+            &state_dir,
+            artifact_id.as_deref(),
+            &decision,
+            &rationale,
+            &requested_by,
+        )?,
         Commands::CleanFutures {
             root,
             output_dir,
