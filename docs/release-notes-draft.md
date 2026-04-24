@@ -37,7 +37,7 @@ python3 scripts/evaluate_bottleneck.py
 ## Important caveats
 
 - Public wrappers are safer than the archived backends they call.
-- Archived backends still contain machine-local hard-coded paths and are not yet fully portable across machines.
+- Archived backends now use shared repo/data/bin path discovery instead of machine-local absolute paths.
 - Treat this release as an agent-first / researcher-preview surface, not a fully generalized packaged distribution.
 
 ## Best commands for current users
@@ -59,7 +59,6 @@ python3 scripts/evaluate_bottleneck.py
 
 ## Known limitations
 
-- archived backend portability not finished
 - public wrappers summarize backend behavior, but archived backends do not yet expose a stable full public argparse surface
 - some experiments still assume local cleaned-data layouts and repo-root-relative state conventions
 
@@ -83,4 +82,4 @@ Reason:
 - core CLI is real and usable
 - release-facing docs are now present
 - wrapper UX is much safer
-- backend portability cleanup is still pending
+- backend path portability landed, but the public experiment surface is still preview-grade

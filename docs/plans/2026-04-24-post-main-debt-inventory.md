@@ -17,33 +17,25 @@ Current baseline
 ### 1. Archived backend portability debt
 
 Status
-- real
-- code + script debt
-- potentially closable in one focused branch
+- largely closed on 2026-04-24
+- keep as regression-watch debt, not an active hotspot
 
 Evidence
 - `docs/backend-path-audit.md`
 - `docs/release-notes-draft.md`
 
-What is still wrong
-- archived/auxiliary python backends still embed machine-local absolute paths
-- common offenders include:
-  - repo root discovery by hard-coded path
-  - cleaned data root discovery by hard-coded path
-  - release binary lookup by hard-coded path
+What changed
+- active `scripts/` path discovery now routes through `scripts/path_defaults.py`
+- named archived backends no longer embed machine-local `/Users/...` repo/data/bin paths
+- policy-training helper scripts no longer hard-code repo-local absolute paths
 
-Highest-impact files called out by the audit
-- `scripts/archive/factor_local_search_v2d.py`
-- `scripts/archive/factor_cluster_jump_v2.py`
-- `scripts/archive/pre_bayes_policy_tuning.py`
+Residual caveat
+- experiment scripts still assume a Tomac-style cleaned-data layout unless the corresponding env vars are overridden
+- that is a workflow assumption, not the old machine-local absolute-path bug
 
 One-shot feasibility
-- yes
-- preferred shape:
-  - shared helper for repo root discovery
-  - shared helper for cleaned data root selection
-  - shared helper for binary resolution
-  - wrappers and archived backends consume those helpers
+- already landed in-tree
+- future work here is regression prevention, not a remaining one-shot target
 
 ### 2. Release transport/history debt
 
@@ -119,8 +111,8 @@ One-shot feasibility
 
 If the goal is "clear the remaining fixable debt in one branch", the best target is:
 
-1. archived backend portability
-2. stale docs that still describe `main.rs` debt as active
+1. stale docs that still describe old debt state
+2. any optional feature-depth work on `research-verdict` / contamination / evidence-quality surfaces
 
 Do not mix in release-history rewrite unless the branch is explicitly approved as a history surgery branch.
 
