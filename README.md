@@ -20,11 +20,10 @@ If you only want the core CLI, Rust is enough. Python scripts are optional resea
 Before sending a PR, please run locally:
 
 - `cargo check --all-targets`
+- `cargo clippy --all-targets -- -D warnings`
 - `cargo test`
 
-Both must be green. CI (`.github/workflows/ci.yml`) runs these on every push.
-
-`cargo clippy --all-targets --no-deps` is advisory today — the codebase still has a small number of test-only lints. Don't introduce new warnings, but passing clippy is not yet a merge gate.
+All three must be green. CI (`.github/workflows/ci.yml`) runs these on every push.
 
 ## Common workflows
 
@@ -184,12 +183,30 @@ Important files:
 - `workflow_snapshot.json`
 - `artifact_ledger.json`
 
+Derived autoresearch surfaces:
+- `experiments.tsv` — grep/diff-friendly ledger derived from autoresearch attempts
+- `factor_autoresearch_retrospective.md` — human-readable recap derived from autoresearch status/canonical state
+
+Trust rule:
+- if a derived surface disagrees with canonical JSON, canonical JSON wins
+- `docs/autoresearch-derived-surfaces-contract.md` defines the boundary in detail
+
 Runtime state directories are ignored by git via `state*/`.
 
 Query the ledger via `ict-engine artifact-status`. Filter flags have the following semantics:
 - `--latest-only` keeps the latest row **per `artifact_kind`** (one entry per kind, chosen by `generated_at` then `version`), not a single global latest row. Combine with `--kind <name>` to reduce to one row for a specific kind.
 - `--recent-n <N>` keeps the N most recent rows across all kinds.
 - `--actionable-only` / `--rule-break-only` / `--consumed-only` are additive filters.
+
+State precedence:
+- `--state-dir` overrides `ICT_ENGINE_STATE_DIR`
+- if neither is set, `ict-engine` uses `./state`
+- shared state is for intentional cumulative loops only; use isolated state for fair comparison
+
+Trust rule:
+- if a derived surface disagrees with canonical JSON, canonical JSON wins
+- `factor-autoresearch-status` is the preferred read surface for autoresearch session truth
+- `experiments.tsv` and retrospective markdown are convenience surfaces only
 
 State defaults and environment knobs:
 - `ICT_ENGINE_STATE_DIR` overrides the default `./state` location
@@ -241,6 +258,8 @@ Using the wrong input surface:
 
 - `docs/first-run.md`
 - `docs/research-system-map.md`
+- `docs/autoresearch-derived-surfaces-contract.md`
+- `docs/autoresearch-state-transitions.md`
 - `docs/objective-scoring-map.md`
 - `docs/smoke-acceptance.md`
 
@@ -249,6 +268,7 @@ Using the wrong input surface:
 - `docs/agent-first-runbook.md`
 - `docs/release-notes-draft.md`
 - `docs/release-mirror-runbook.md` — **authoritative release procedure**
+- `docs/external/external-patterns-synthesis-2026-04-23.md` — consolidated external pattern absorb/reject matrix
 
 ### Publishing policy (post-v0.0.1)
 
