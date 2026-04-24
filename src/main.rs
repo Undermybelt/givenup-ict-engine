@@ -1,6 +1,6 @@
 use anyhow::{anyhow, bail, Context, Result};
-mod analyze_shared;
 mod analyze_live_command;
+mod analyze_shared;
 mod update_output;
 use chrono::{Duration, Utc};
 use clap::{Parser, Subcommand};
@@ -169,8 +169,9 @@ use ict_engine::planner::{
 };
 use serde_json::Value;
 use update_output::{
-    apply_update_outcome_to_executor_scorecards, emit_update_output, feedback_record_from_artifact,
-    latest_execution_candidate_for_source_run, load_canonical_executor_scorecards,
+    apply_update_outcome_to_executor_scorecards, build_ensemble_vote_record, emit_update_output,
+    feedback_record_from_artifact, latest_execution_candidate_for_source_run,
+    load_canonical_executor_scorecards, persist_ensemble_vote_record,
 };
 
 #[cfg(test)]
@@ -2170,99 +2171,6 @@ fn run_expansion_sop(
         )?;
     }
     Ok(report)
-}
-
-fn build_ensemble_vote_record(
-    symbol: &str,
-    source_phase: &str,
-    source_run_id: Option<String>,
-    provenance: &RunProvenance,
-    dataset_comparability: &DatasetComparability,
-    ensemble_vote: &ict_engine::application::orchestration::EnsembleVoteArtifact,
-    compatibility_scorecards: &[EnsembleExecutorScorecard],
-) -> EnsembleVoteRecord {
-    EnsembleVoteRecord {
-        artifact_id: format!(
-            "ensemble-vote:{}:{}",
-            source_phase,
-            Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true)
-        ),
-        generated_at: Utc::now(),
-        symbol: symbol.to_string(),
-        source_phase: source_phase.to_string(),
-        source_run_id,
-        provenance: provenance.clone(),
-        dataset_comparability: dataset_comparability.clone(),
-        ensemble_version: ensemble_vote.ensemble_version.clone(),
-        final_action: ensemble_vote.final_action.clone(),
-        recommended_command: ensemble_vote.recommended_command.clone(),
-        human_next_triage: ensemble_vote.human_next_triage.clone(),
-        hard_block: ensemble_vote.hard_block.clone(),
-        confidence: ensemble_vote.confidence,
-        consensus_strength: ensemble_vote.consensus_strength,
-        disagreement_flags: ensemble_vote.disagreement_flags.clone(),
-        executor_summaries: ensemble_vote.executor_summaries.clone(),
-        split_explanations: ensemble_vote.split_explanations.clone(),
-        executor_scorecards: compatibility_scorecards.to_vec(),
-        executor_scorecards_source: Some("persisted".to_string()),
-        posterior_fingerprint: ensemble_vote.posterior.fingerprint.clone(),
-        posterior_normalization_status: ensemble_vote.posterior.normalization_status.clone(),
-        posterior_active_regime: ensemble_vote.posterior.active_regime.clone(),
-        posterior_confidence: ensemble_vote.posterior.confidence,
-        posterior_probabilities: ensemble_vote.posterior.probabilities.clone(),
-        posterior_evidence: ensemble_vote.posterior.evidence.clone(),
-    }
-}
-
-fn persist_ensemble_vote_record(
-    state_dir: &str,
-    record: &EnsembleVoteRecord,
-    canonical_scorecards: &[EnsembleExecutorScorecard],
-) -> Result<()> {
-    append_artifact_ledger_entry(
-        state_dir,
-        &record.symbol,
-        ArtifactLedgerEntry {
-            entry_id: format!("ledger:{}", record.artifact_id),
-            artifact_kind: "ensemble_vote".to_string(),
-            artifact_id: record.artifact_id.clone(),
-            version: 1,
-            generated_at: record.generated_at,
-            symbol: record.symbol.clone(),
-            source_phase: record.source_phase.clone(),
-            source_run_id: record.source_run_id.clone(),
-            path: std::path::Path::new(state_dir)
-                .join(&record.symbol)
-                .join(ENSEMBLE_VOTE_FILE)
-                .to_string_lossy()
-                .to_string(),
-            status: if record.disagreement_flags.is_empty() {
-                "consensus".to_string()
-            } else {
-                "mixed".to_string()
-            },
-            promote_candidate: record.confidence >= 0.60 && record.disagreement_flags.is_empty(),
-            actionable: true,
-            decision_hint: record.final_action.clone(),
-            review_reason: record.human_next_triage.clone(),
-            review_rule_version: record.ensemble_version.clone(),
-            top_factor_name: None,
-            top_factor_action: Some(record.final_action.clone()),
-            family_scores: BTreeMap::new(),
-            supersedes_artifact_id: None,
-            quality_score: ((record.confidence + record.consensus_strength) * 50.0) as i32,
-            consumed_by_update_run_id: None,
-            consumed_at: None,
-            consumed_outcome: None,
-            regraded_at: None,
-            consumption_regrade_status: None,
-            consumption_regrade_reason: None,
-        },
-    )?;
-    save_ensemble_vote_artifact(state_dir, &record.symbol, record)?;
-    save_ensemble_executor_scorecards(state_dir, &record.symbol, canonical_scorecards)?;
-    append_ensemble_vote_history(state_dir, &record.symbol, record.clone())?;
-    Ok(())
 }
 
 fn refresh_workflow_snapshot(state_dir: &str, symbol: &str) -> Result<WorkflowSnapshot> {
