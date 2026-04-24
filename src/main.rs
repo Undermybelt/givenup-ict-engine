@@ -57,7 +57,8 @@ use ict_engine::application::{
         ArtifactDiffCommandInput, ArtifactLineageCommandInput, ArtifactStatusCommandInput,
     },
     auto_quant::command_entry::{
-        auto_quant_bootstrap_command, auto_quant_factor_autoresearch_command,
+        auto_quant_adoption_review_command, auto_quant_bootstrap_command,
+        auto_quant_factor_autoresearch_command,
         auto_quant_factor_research_command, auto_quant_status_command, auto_quant_update_command,
     },
     backtest::{
@@ -841,6 +842,20 @@ enum Commands {
         tracked_branch: Option<String>,
         #[arg(long, help = "Explicit Auto-Quant target ref to checkout")]
         target_ref: Option<String>,
+    },
+    /// Review the latest Auto-Quant handoff candidate as an adoption surface
+    AutoQuantAdoptionReview {
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        symbol: String,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding Auto-Quant handoff artifacts"
+        )]
+        state_dir: String,
+        #[arg(long, help = "Optional specific handoff artifact id to review")]
+        artifact_id: Option<String>,
     },
     /// Show factor-autoresearch sessions and attempts
     FactorAutoresearchStatus {
@@ -1711,6 +1726,11 @@ fn main() -> Result<()> {
                 target_ref.as_deref(),
             )?
         }
+        Commands::AutoQuantAdoptionReview {
+            symbol,
+            state_dir,
+            artifact_id,
+        } => auto_quant_adoption_review_command(&symbol, &state_dir, artifact_id.as_deref())?,
         Commands::CleanFutures {
             root,
             output_dir,

@@ -1,4 +1,5 @@
 use anyhow::Result;
+use super::adoption::build_auto_quant_adoption_review;
 use super::handoff::{
     build_factor_autoresearch_handoff_payload, build_factor_research_handoff_payload,
     AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput,
@@ -43,6 +44,16 @@ pub fn auto_quant_update_command(
 ) -> Result<()> {
     let report = auto_quant_update(state_dir, repo_url, tracked_branch, target_ref)?;
     println!("{}", serde_json::to_string_pretty(&report)?);
+    Ok(())
+}
+
+pub fn auto_quant_adoption_review_command(
+    symbol: &str,
+    state_dir: &str,
+    artifact_id: Option<&str>,
+) -> Result<()> {
+    let review = build_auto_quant_adoption_review(symbol, state_dir, artifact_id)?;
+    println!("{}", serde_json::to_string_pretty(&review)?);
     Ok(())
 }
 

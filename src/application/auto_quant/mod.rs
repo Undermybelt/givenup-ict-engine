@@ -1,4 +1,5 @@
 pub mod command_entry;
+mod adoption;
 mod config;
 pub mod handoff;
 mod health;
@@ -10,6 +11,7 @@ mod update;
 
 pub use status::auto_quant_status;
 pub use handoff::{AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput};
+pub use handoff::{AutoQuantResearchHandoffPayload, AutoQuantWorkspaceConfig};
 pub use types::{
     AutoQuantDependencyConfig, AutoQuantDependencyStatus, AutoQuantUpdateReport,
     AUTO_QUANT_ADAPTER_VERSION, AUTO_QUANT_BRANCH_ENV_VAR, AUTO_QUANT_CONFIG_FILE,

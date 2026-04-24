@@ -1,10 +1,10 @@
 use chrono::Utc;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
 use super::types::AutoQuantDependencyStatus;
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AutoQuantWorkspaceConfig {
     pub repo_root: String,
     pub program_md: String,
@@ -15,7 +15,7 @@ pub struct AutoQuantWorkspaceConfig {
     pub data_dir: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AutoQuantResearchHandoffPayload {
     pub artifact_id: String,
     pub handoff_kind: String,
