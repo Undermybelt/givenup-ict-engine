@@ -59,7 +59,6 @@ use ict_engine::application::{
     auto_quant::command_entry::{
         auto_quant_bootstrap_command, auto_quant_factor_autoresearch_command,
         auto_quant_factor_research_command, auto_quant_status_command, auto_quant_update_command,
-        AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput,
     },
     backtest::{
         apply_feedback_to_trade_outcome_network, artifact_consumed_decision_gate,
@@ -131,6 +130,7 @@ use ict_engine::application::{
         native_frame_computations, persist_mece_recovery_artifact,
         search_factors_for_mece_recovery, weighted_majority_label, weighted_regime_probs,
     },
+    auto_quant::{AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput},
 };
 use ict_engine::backtest::engine::{AmbiguousBarPolicy, ExecutionRealismConfig};
 use ict_engine::backtest::BacktestEngine;
