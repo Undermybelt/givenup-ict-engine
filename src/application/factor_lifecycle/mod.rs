@@ -1,4 +1,5 @@
 pub mod autoresearch_surface;
+pub mod command_entry;
 pub mod expansion_evaluation;
 pub mod expansion_objective;
 pub mod expansion_regressions;
@@ -18,6 +19,7 @@ pub use autoresearch_surface::{
     FactorAutoresearchExperimentRow, FactorAutoresearchRetrospective,
     FactorAutoresearchStatusSurface,
 };
+pub use command_entry::factor_mutation_status_command;
 
 pub use expansion_evaluation::{
     build_expansion_sop_metrics_from_market_reports, build_expansion_sop_mutation_metrics,
