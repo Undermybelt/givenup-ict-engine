@@ -1,10 +1,12 @@
 use anyhow::{anyhow, Result};
 use chrono::Utc;
 use serde::Serialize;
+use serde_json::Value;
 
+use crate::application::release_closure::workflow_next_step_view;
 use crate::state::{
-    append_artifact_ledger_entry, artifact_state_path, load_artifact_ledger, load_state, save_state,
-    ArtifactLedgerEntry,
+    append_artifact_ledger_entry, artifact_state_path, load_artifact_ledger, load_state,
+    recommended_next_command_meta, save_state, ArtifactLedgerEntry, RecommendedNextCommandMeta,
 };
 
 use super::handoff::AutoQuantResearchHandoffPayload;
@@ -22,6 +24,9 @@ pub struct AutoQuantAdoptionReview {
     pub workspace_repo_root: String,
     pub suggested_commands: Vec<String>,
     pub suggested_next_steps: Vec<String>,
+    pub recommended_next_command: String,
+    pub recommended_next_command_meta: RecommendedNextCommandMeta,
+    pub next_step: Value,
     pub review_status: String,
     pub review_summary: String,
     pub notes: Vec<String>,
@@ -40,6 +45,33 @@ fn load_handoff_payload(
         .and_then(|value| value.to_str())
         .ok_or_else(|| anyhow!("invalid handoff artifact path '{}'", entry.path))?;
     load_state(state_dir, symbol, filename)
+}
+
+fn auto_quant_recommended_next_command(
+    payload: &AutoQuantResearchHandoffPayload,
+) -> (String, Option<String>) {
+    if !payload.dependency_status.healthy {
+        let blocked_reason = "auto_quant_dependency_unhealthy".to_string();
+        let command = format!(
+            "ict-engine auto-quant-update --state-dir {}",
+            payload.state_dir
+        );
+        return (command, Some(blocked_reason));
+    }
+    if !payload.data_ready {
+        let command = payload
+            .suggested_commands
+            .first()
+            .cloned()
+            .unwrap_or_else(|| "uv run prepare.py".to_string());
+        return (command, Some("auto_quant_prepare_required".to_string()));
+    }
+    let command = payload
+        .suggested_commands
+        .first()
+        .cloned()
+        .unwrap_or_else(|| payload.workspace.program_md.clone());
+    (command, None)
 }
 
 pub fn build_auto_quant_adoption_review(
@@ -79,6 +111,7 @@ pub fn build_auto_quant_adoption_review(
             "handoff is ready for Auto-Quant execution and candidate export".to_string(),
         )
     };
+    let (recommended_next_command, blocked_reason) = auto_quant_recommended_next_command(&payload);
     Ok(AutoQuantAdoptionReview {
         symbol: symbol.to_string(),
         state_dir: state_dir.to_string(),
@@ -90,6 +123,12 @@ pub fn build_auto_quant_adoption_review(
         workspace_repo_root: payload.workspace.repo_root,
         suggested_commands: payload.suggested_commands,
         suggested_next_steps: payload.suggested_next_steps,
+        recommended_next_command_meta: recommended_next_command_meta(&recommended_next_command),
+        next_step: workflow_next_step_view(
+            &recommended_next_command,
+            blocked_reason.as_deref(),
+        ),
+        recommended_next_command,
         review_status,
         review_summary,
         notes: payload.notes,
