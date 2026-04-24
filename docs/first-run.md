@@ -41,9 +41,9 @@ These Python scripts are safe by default: no `--run`, no long experiment.
 | "What does the market look like?" | `analyze` |
 | "Why did the gate fail?" | `factor-pipeline-debug` |
 | "What happened in the previous run?" | `factor-autoresearch-status --latest-only` |
-| "Compare nearby parameters" | `scripts/search_local.py --run` |
-| "Try a bigger research jump" | `scripts/search_cluster.py --run` |
-| "Find current blocker" | `scripts/evaluate_bottleneck.py --run` and `scripts/evidence_quality_breakdown.py` |
+| "Compare nearby parameters" | `scripts/search_local.py --show-config` then `--run --data-root <ict-cleaned-mtf>` |
+| "Try a bigger research jump" | `scripts/search_cluster.py --show-config` then `--run --data-root <ict-cleaned-mtf>` |
+| "Find current blocker" | `scripts/evaluate_bottleneck.py --show-config` then `--run --data-root <ict-cleaned-mtf>` and `scripts/evidence_quality_breakdown.py` |
 | "Summarize existing experiment dirs" | `scripts/research_verdict.py <dir...>` |
 
 ## 4. Minimum useful debug command
@@ -83,12 +83,19 @@ python3 scripts/search_local.py --backend-help
 Run:
 
 ```bash
-python3 scripts/search_local.py --run
+python3 scripts/search_local.py --show-config
+python3 scripts/search_local.py --run --data-root /path/to/ict-cleaned-mtf
 ```
 
 Same pattern applies to:
 - `scripts/search_cluster.py`
 - `scripts/evaluate_bottleneck.py`
+
+Wrapper rule:
+- do not assume a local Tomac cleaned-data layout exists on a fresh machine
+- inspect `--show-config` first
+- pass `--data-root` explicitly when running wrappers outside the maintainer's workstation
+- if `cleaned_data_ready=false`, treat that as a configuration problem, not as permission to guess paths
 
 ## 6. Result-reading order
 

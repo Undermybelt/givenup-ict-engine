@@ -164,6 +164,13 @@ Rules:
 - `--run` = execute backend
 - `--target` = show backend path
 - `--backend-help` = show non-executing backend summary
+- `--show-config` = print resolved repo/data/bin paths and `cleaned_data_ready`
+- wrappers refuse `--run` when the resolved cleaned-data root is not ready
+
+Important:
+- public wrappers must not assume the maintainer's local Tomac cleaned-data layout exists on another machine
+- inspect `--show-config` first
+- pass `--data-root /path/to/ict-cleaned-mtf` explicitly when you want real execution outside the author's workstation
 
 ## State truth
 
@@ -238,6 +245,12 @@ Then inspect the corresponding JSON artifacts.
 ### Why do the Python scripts not expose a full public CLI?
 
 They are public wrappers over archived experiment backends. The wrappers are stable; the archived backends are still research-grade.
+
+### Can I assume the wrappers will find usable data on a fresh machine?
+
+No.
+Wrappers now expose `--show-config` and require explicit cleaned-data readiness before `--run`.
+If `cleaned_data_ready=false`, treat that as a setup error and pass `--data-root` explicitly.
 
 ### Can `--backend-help` show every backend argument?
 
