@@ -1,5 +1,6 @@
 use anyhow::Result;
 use serde::Serialize;
+use serde_json::{json, Value};
 
 use crate::analyze_report_shell::AnalyzeReport;
 use crate::application::belief::{BeliefPolicyLineageSurface, BeliefShadowPolicySurface};
@@ -13,11 +14,18 @@ use crate::application::reporting::{
     humanize_decision_hint, humanize_next_step_line, AgentGuidanceReport, CompactAnalyzeReport,
     HumanAnalyzeReport,
 };
+use crate::config::shell_quote;
 use crate::pda_sequence::{
     load_pda_sequence_analysis, summarize_pda_sequence_artifact, PdaSequenceArtifactSummary,
 };
 
 use crate::types::Direction;
+
+/// Default tail size retained in-place for each growing workflow-snapshot
+/// ledger array when `analyze --output-format json` is emitted without
+/// `--inline-ledger`. Chosen to match the cap already in use for the other
+/// `recent_*` arrays inside the snapshot.
+const ANALYZE_JSON_LEDGER_TAIL_DEFAULT: usize = 5;
 
 #[derive(Debug, Serialize)]
 pub struct AnalyzeMarketFamilySummary {
@@ -69,6 +77,22 @@ where
 #[derive(Debug, Clone, Copy)]
 pub struct AnalyzeOutputDispatchInput<'a> {
     pub output_format: &'a str,
+    /// When `true`, the full workflow-snapshot ledger arrays are inlined into
+    /// the JSON payload (legacy behaviour). When `false` (default), the
+    /// growing arrays are trimmed to the most recent tail and a sibling
+    /// `*_inline_meta` object is added with the total count and a pointer
+    /// command, so repeated `analyze --output-format json` calls respect a
+    /// stable token budget.
+    pub inline_ledger: bool,
+}
+
+impl<'a> AnalyzeOutputDispatchInput<'a> {
+    pub fn new(output_format: &'a str) -> Self {
+        Self {
+            output_format,
+            inline_ledger: false,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, Default)]
@@ -212,7 +236,7 @@ pub fn build_analyze_policy_outputs(
 }
 
 pub fn emit_analyze_output(report: &AnalyzeReport, output_format: &str) -> Result<()> {
-    dispatch_analyze_output(report, AnalyzeOutputDispatchInput { output_format })
+    dispatch_analyze_output(report, AnalyzeOutputDispatchInput::new(output_format))
 }
 
 pub fn dispatch_analyze_output(
@@ -289,6 +313,7 @@ pub fn dispatch_analyze_output(
     emit_analyze_output_envelope(
         report,
         input.output_format,
+        input.inline_ledger,
         &compact_report,
         &agent_report,
         &human_report,
@@ -449,6 +474,77 @@ fn human_direction_bias_label(direction: Direction) -> &'static str {
         Direction::Bear => "Bear bias",
         Direction::Neutral => "Neutral bias",
     }
+}
+
+fn build_workflow_snapshot_pointer_command(symbol: &str, state_dir: &str, field: &str) -> String {
+    let symbol = shell_quote(symbol);
+    let state_dir = shell_quote(state_dir);
+    match field {
+        "actionable_artifacts" => format!(
+            "ict-engine workflow-status --symbol {symbol} --state-dir {state_dir} --artifacts"
+        ),
+        _ => format!(
+            "ict-engine workflow-status --symbol {symbol} --state-dir {state_dir} --output-format json"
+        ),
+    }
+}
+
+fn trim_workflow_snapshot_ledger_field(
+    snapshot: &mut serde_json::Map<String, Value>,
+    field: &str,
+    symbol: &str,
+    state_dir: &str,
+) {
+    let Some(Value::Array(items)) = snapshot.get_mut(field) else {
+        return;
+    };
+
+    let total_count = items.len();
+    let retained_count = total_count.min(ANALYZE_JSON_LEDGER_TAIL_DEFAULT);
+    if total_count > retained_count {
+        let start = total_count - retained_count;
+        let tail = items.split_off(start);
+        *items = tail;
+    }
+
+    snapshot.insert(
+        format!("{field}_inline_meta"),
+        json!({
+            "inline_mode": if total_count > retained_count { "tail" } else { "full" },
+            "tail_limit": ANALYZE_JSON_LEDGER_TAIL_DEFAULT,
+            "retained_count": retained_count,
+            "total_count": total_count,
+            "omitted_count": total_count.saturating_sub(retained_count),
+            "pointer_command": build_workflow_snapshot_pointer_command(symbol, state_dir, field),
+        }),
+    );
+}
+
+fn trim_analyze_output_workflow_snapshot_ledgers(output: &mut Value) {
+    let symbol = output
+        .pointer("/report/symbol")
+        .and_then(Value::as_str)
+        .unwrap_or_default()
+        .to_string();
+    let state_dir = output
+        .pointer("/report/meta/state_dir")
+        .and_then(Value::as_str)
+        .unwrap_or_default()
+        .to_string();
+    let Some(snapshot) = output
+        .pointer_mut("/report/supporting/workflow_snapshot")
+        .and_then(Value::as_object_mut)
+    else {
+        return;
+    };
+
+    trim_workflow_snapshot_ledger_field(snapshot, "actionable_artifacts", &symbol, &state_dir);
+    trim_workflow_snapshot_ledger_field(
+        snapshot,
+        "artifact_lineage_summaries",
+        &symbol,
+        &state_dir,
+    );
 }
 
 fn human_action_line(queue: &[crate::state::FactorIterationPrompt]) -> String {
@@ -753,9 +849,50 @@ where
 }
 
 #[allow(clippy::too_many_arguments)]
+pub fn build_analyze_output_value<R, E>(
+    report: R,
+    compact_report: CompactAnalyzeReport,
+    agent_report: AgentGuidanceReport,
+    human_report: &HumanAnalyzeReport,
+    market_family_summary: AnalyzeMarketFamilySummary,
+    belief_shadow_policy: BeliefShadowPolicySurface,
+    belief_policy_lineage: BeliefPolicyLineageSurface,
+    ensemble_vote: E,
+    pda_sequence_summary: Option<PdaSequenceArtifactSummary>,
+    executor_scorecard_source: impl Into<String>,
+    inline_ledger: bool,
+    redact_paths: bool,
+) -> Result<Value>
+where
+    R: Serialize,
+    E: Serialize,
+{
+    let mut output = serde_json::to_value(build_analyze_output_envelope(
+        report,
+        compact_report,
+        agent_report,
+        human_report,
+        market_family_summary,
+        belief_shadow_policy,
+        belief_policy_lineage,
+        ensemble_vote,
+        pda_sequence_summary,
+        executor_scorecard_source,
+    ))?;
+    if !inline_ledger {
+        trim_analyze_output_workflow_snapshot_ledgers(&mut output);
+    }
+    if redact_paths {
+        redact_local_paths_in_value(&mut output);
+    }
+    Ok(output)
+}
+
+#[allow(clippy::too_many_arguments)]
 pub fn emit_analyze_output_envelope<R, E>(
     report: &R,
     output_format: &str,
+    inline_ledger: bool,
     compact_report: &CompactAnalyzeReport,
     agent_report: &AgentGuidanceReport,
     human_report: &HumanAnalyzeReport,
@@ -770,21 +907,24 @@ where
     R: Serialize,
     E: Serialize,
 {
-    let full_output = build_analyze_output_envelope(
-        report,
-        compact_report.clone(),
-        agent_report.clone(),
-        human_report,
-        market_family_summary,
-        belief_shadow_policy,
-        belief_policy_lineage,
-        ensemble_vote,
-        pda_sequence_summary,
-        executor_scorecard_source,
-    );
-
     match output_format.trim().to_ascii_lowercase().as_str() {
-        "json" => print_redacted_json(&full_output)?,
+        "json" => {
+            let output = build_analyze_output_value(
+                report,
+                compact_report.clone(),
+                agent_report.clone(),
+                human_report,
+                market_family_summary,
+                belief_shadow_policy,
+                belief_policy_lineage,
+                ensemble_vote,
+                pda_sequence_summary,
+                executor_scorecard_source,
+                inline_ledger,
+                true,
+            )?;
+            println!("{}", serde_json::to_string_pretty(&output)?);
+        }
         "compact" => print_redacted_json(compact_report)?,
         "agent" => print_redacted_json(agent_report)?,
         "human" => println!("{}", redact_local_paths(&human_report.render())),
@@ -850,8 +990,10 @@ mod tests {
     fn dispatch_analyze_output_input_preserves_output_format() {
         let input = AnalyzeOutputDispatchInput {
             output_format: "agent",
+            inline_ledger: true,
         };
         assert_eq!(input.output_format, "agent");
+        assert!(input.inline_ledger);
     }
 
     #[test]
@@ -1146,5 +1288,168 @@ mod tests {
         );
         assert_eq!(redacted_output["report"]["path"], "<local-path>");
         assert_eq!(redacted_output["source_snapshot"]["status"], "<local-path>");
+    }
+
+    #[test]
+    fn build_analyze_output_value_trims_workflow_snapshot_ledgers_by_default() {
+        let output = build_analyze_output_value(
+            json!({
+                "symbol": "NQ",
+                "meta": {
+                    "state_dir": "state"
+                },
+                "supporting": {
+                    "workflow_snapshot": {
+                        "actionable_artifacts": (0..7)
+                            .map(|index| json!({ "id": format!("artifact-{index}") }))
+                            .collect::<Vec<_>>(),
+                        "artifact_lineage_summaries": (0..9)
+                            .map(|index| json!({ "id": format!("lineage-{index}") }))
+                            .collect::<Vec<_>>()
+                    }
+                }
+            }),
+            build_compact_analyze_report("observe_only", None, None, None, None, &[], &[], &[]),
+            build_agent_guidance_report(None, None, None, None, None, &[], &[], &[]),
+            &build_human_analyze_surface(AnalyzeHumanInput {
+                symbol: "NQ",
+                selected_direction: Direction::Bull,
+                entry_quality: "medium",
+                gate_status: "pass_neutralized",
+                evidence_quality_score: 0.5,
+                decision_hint: "observe_only",
+                factor_iteration_queue: &[],
+                recommended_next_command: "ict-engine analyze",
+                price_action_narrative: "price",
+                technical_price_narrative: "tech",
+                smt_correlation_narrative: "smt",
+                regime_label: "trend",
+                liquidity_label: "sweep",
+                regime_selected_direction: Direction::Bull,
+                trade_plan_narrative: "plan",
+                market_family: None,
+                market_subgraph: "unknown",
+                objective_jump_weight: None,
+                regime_companion_suffix: None,
+            }),
+            AnalyzeMarketFamilySummary {
+                market_family: None,
+                market_behavior_profile: None,
+                selected_market_subgraph: None,
+            },
+            BeliefShadowPolicySurface::default(),
+            BeliefPolicyLineageSurface::default(),
+            StubEnsembleVote {
+                executor_summaries: Vec::new(),
+                final_action: "observe".to_string(),
+            },
+            None,
+            "persisted",
+            false,
+            false,
+        )
+        .unwrap();
+
+        assert_eq!(
+            output["report"]["supporting"]["workflow_snapshot"]["actionable_artifacts"]
+                .as_array()
+                .unwrap()
+                .len(),
+            ANALYZE_JSON_LEDGER_TAIL_DEFAULT
+        );
+        assert_eq!(
+            output["report"]["supporting"]["workflow_snapshot"]["artifact_lineage_summaries"]
+                .as_array()
+                .unwrap()
+                .len(),
+            ANALYZE_JSON_LEDGER_TAIL_DEFAULT
+        );
+        assert_eq!(
+            output["report"]["supporting"]["workflow_snapshot"]["actionable_artifacts_inline_meta"]
+                ["total_count"],
+            7
+        );
+        assert_eq!(
+            output["report"]["supporting"]["workflow_snapshot"]
+                ["artifact_lineage_summaries_inline_meta"]["omitted_count"],
+            4
+        );
+        assert_eq!(
+            output["report"]["supporting"]["workflow_snapshot"]
+                ["artifact_lineage_summaries_inline_meta"]["pointer_command"],
+            "ict-engine workflow-status --symbol NQ --state-dir state --output-format json"
+        );
+    }
+
+    #[test]
+    fn build_analyze_output_value_keeps_full_ledgers_when_requested() {
+        let output = build_analyze_output_value(
+            json!({
+                "symbol": "NQ",
+                "meta": {
+                    "state_dir": "state"
+                },
+                "supporting": {
+                    "workflow_snapshot": {
+                        "actionable_artifacts": (0..7)
+                            .map(|index| json!({ "id": format!("artifact-{index}") }))
+                            .collect::<Vec<_>>(),
+                        "artifact_lineage_summaries": (0..9)
+                            .map(|index| json!({ "id": format!("lineage-{index}") }))
+                            .collect::<Vec<_>>()
+                    }
+                }
+            }),
+            build_compact_analyze_report("observe_only", None, None, None, None, &[], &[], &[]),
+            build_agent_guidance_report(None, None, None, None, None, &[], &[], &[]),
+            &build_human_analyze_surface(AnalyzeHumanInput {
+                symbol: "NQ",
+                selected_direction: Direction::Bull,
+                entry_quality: "medium",
+                gate_status: "pass_neutralized",
+                evidence_quality_score: 0.5,
+                decision_hint: "observe_only",
+                factor_iteration_queue: &[],
+                recommended_next_command: "ict-engine analyze",
+                price_action_narrative: "price",
+                technical_price_narrative: "tech",
+                smt_correlation_narrative: "smt",
+                regime_label: "trend",
+                liquidity_label: "sweep",
+                regime_selected_direction: Direction::Bull,
+                trade_plan_narrative: "plan",
+                market_family: None,
+                market_subgraph: "unknown",
+                objective_jump_weight: None,
+                regime_companion_suffix: None,
+            }),
+            AnalyzeMarketFamilySummary {
+                market_family: None,
+                market_behavior_profile: None,
+                selected_market_subgraph: None,
+            },
+            BeliefShadowPolicySurface::default(),
+            BeliefPolicyLineageSurface::default(),
+            StubEnsembleVote {
+                executor_summaries: Vec::new(),
+                final_action: "observe".to_string(),
+            },
+            None,
+            "persisted",
+            true,
+            false,
+        )
+        .unwrap();
+
+        assert_eq!(
+            output["report"]["supporting"]["workflow_snapshot"]["actionable_artifacts"]
+                .as_array()
+                .unwrap()
+                .len(),
+            7
+        );
+        assert!(output["report"]["supporting"]["workflow_snapshot"]
+            ["actionable_artifacts_inline_meta"]
+            .is_null());
     }
 }

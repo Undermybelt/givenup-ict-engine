@@ -453,6 +453,12 @@ enum Commands {
         #[arg(
             long,
             default_value_t = false,
+            help = "Inline full workflow snapshot ledger arrays in JSON output instead of trimming them to a token-friendly tail"
+        )]
+        inline_ledger: bool,
+        #[arg(
+            long,
+            default_value_t = false,
             help = "Disable the leading Execution Triage section / envelope field (default: on)"
         )]
         no_execution_focus: bool,
@@ -1178,6 +1184,7 @@ fn main() -> Result<()> {
             compact,
             agent,
             human,
+            inline_ledger,
             no_execution_focus,
         } => {
             ensure_state_dir_ready(&state_dir)?;
@@ -1197,6 +1204,7 @@ fn main() -> Result<()> {
                 &data_ltf,
                 &state_dir,
                 output_format,
+                inline_ledger,
                 !no_execution_focus,
             )?
         }
@@ -1608,6 +1616,7 @@ fn analyze_command(
     data_ltf: &str,
     state_dir: &str,
     output_format: OutputFormat,
+    inline_ledger: bool,
     execution_focus: bool,
 ) -> Result<()> {
     let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
@@ -1818,7 +1827,7 @@ fn analyze_command(
         &mut report.supporting.rollback_recommendation,
     );
 
-    emit_analyze_output(&report, output_format)
+    emit_analyze_output(&report, output_format, inline_ledger)
 }
 
 #[cfg(test)]
@@ -1845,14 +1854,24 @@ fn resolved_vote_scorecards<'a>(
     }
 }
 
-fn emit_analyze_output(report: &AnalyzeReport, output_format: OutputFormat) -> Result<()> {
+fn emit_analyze_output(
+    report: &AnalyzeReport,
+    output_format: OutputFormat,
+    inline_ledger: bool,
+) -> Result<()> {
     let output_format = match output_format {
         OutputFormat::Json => "json",
         OutputFormat::Compact => "compact",
         OutputFormat::Agent => "agent",
         OutputFormat::Human => "human",
     };
-    ict_engine::application::reporting::emit_analyze_output(report, output_format)
+    ict_engine::application::reporting::dispatch_analyze_output(
+        report,
+        ict_engine::application::reporting::AnalyzeOutputDispatchInput {
+            output_format,
+            inline_ledger,
+        },
+    )
 }
 
 fn resolve_output_format(
@@ -13718,6 +13737,7 @@ mod tests {
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
             OutputFormat::Json,
+            false,
             true,
         )
         .unwrap();
@@ -13878,6 +13898,7 @@ mod tests {
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
             OutputFormat::Json,
+            false,
             true,
         )
         .unwrap();
@@ -13924,6 +13945,7 @@ mod tests {
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
             OutputFormat::Json,
+            false,
             true,
         )
         .unwrap();
@@ -13934,6 +13956,7 @@ mod tests {
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
             OutputFormat::Json,
+            false,
             true,
         )
         .unwrap();
@@ -13972,6 +13995,7 @@ mod tests {
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
             OutputFormat::Json,
+            false,
             true,
         )
         .unwrap();
@@ -15625,6 +15649,7 @@ mod tests {
             ltf.to_str().unwrap(),
             temp.path().to_str().unwrap(),
             OutputFormat::Json,
+            false,
             true,
         )
         .unwrap();

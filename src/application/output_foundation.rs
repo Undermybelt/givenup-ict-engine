@@ -45,7 +45,11 @@ pub fn redact_local_paths(text: &str) -> String {
 fn preserves_machine_command_value(key: &str) -> bool {
     matches!(
         key,
-        "next_command" | "recommended_command" | "deferred_command" | "executable_command"
+        "next_command"
+            | "recommended_command"
+            | "deferred_command"
+            | "executable_command"
+            | "pointer_command"
     )
 }
 
@@ -121,6 +125,7 @@ mod tests {
         let mut value = serde_json::json!({
             "next_command": "ict-engine factor-research --state-dir /tmp/ict-agent-state",
             "recommended_command": "ict-engine workflow-status --state-dir /tmp/ict-agent-state",
+            "pointer_command": "ict-engine workflow-status --state-dir /tmp/ict-agent-state --output-format json",
             "next_step": {
                 "deferred_command": "ict-engine factor-research --data /tmp/data.json --state-dir /tmp/ict-agent-state",
                 "prompt": "Ask about /tmp/data.json"
@@ -138,6 +143,10 @@ mod tests {
         assert_eq!(
             value["recommended_command"],
             "ict-engine workflow-status --state-dir /tmp/ict-agent-state"
+        );
+        assert_eq!(
+            value["pointer_command"],
+            "ict-engine workflow-status --state-dir /tmp/ict-agent-state --output-format json"
         );
         assert_eq!(
             value["next_step"]["deferred_command"],
