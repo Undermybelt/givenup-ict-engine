@@ -3,7 +3,9 @@ use serde::Serialize;
 use serde_json::Value;
 
 use crate::application::backtest::BacktestCompareReport;
-use crate::application::output_foundation::{print_redacted_json, redact_local_paths};
+use crate::application::output_foundation::{
+    print_redacted_json, redact_local_paths_in_human_text,
+};
 use crate::application::reporting::{build_compact_backtest_report, humanize_next_step_line};
 use crate::backtest_report_shell::BacktestReport;
 use crate::factor_lab::BacktestResult as FactorBacktestRunResult;
@@ -99,21 +101,95 @@ pub fn render_factor_backtest_human_output(
         lines.push(String::new());
         lines.push(compare_summary);
     }
-    lines.join("\n")
+    redact_local_paths_in_human_text(&lines.join("\n"))
 }
 
 pub fn render_factor_research_human_output(
     report: &impl Serialize,
     compare: Option<&BacktestCompareReport>,
 ) -> String {
-    let mut lines = vec![format!(
-        "Factor research summary: {}",
-        serde_json::to_string(report).unwrap_or_else(|_| "unavailable".to_string())
-    )];
+    let report_value = serde_json::to_value(report).unwrap_or(Value::Null);
+    let mut lines = vec!["Factor research summary".to_string()];
+
+    if let Some(objective) = report_value
+        .get("research_objective")
+        .and_then(Value::as_str)
+        .filter(|value| !value.trim().is_empty())
+    {
+        lines.push(format!("- Objective: {objective}"));
+    }
+
+    let best_factor = report_value
+        .get("best_factor")
+        .and_then(Value::as_str)
+        .filter(|value| !value.trim().is_empty())
+        .unwrap_or("n/a");
+    lines.push(format!("- Best factor: {best_factor}"));
+
+    if let Some(aggregate_return) = report_value.get("aggregate_return").and_then(Value::as_f64) {
+        lines.push(format!(
+            "- Aggregate return: {:+.2}%",
+            aggregate_return * 100.0
+        ));
+    }
+
+    let feedback_generated = report_value
+        .get("feedback_records_generated")
+        .and_then(Value::as_u64)
+        .unwrap_or_default();
+    let feedback_applied = report_value
+        .get("feedback_records_applied")
+        .and_then(Value::as_u64)
+        .unwrap_or_default();
+    lines.push(format!(
+        "- Feedback: generated={} applied={}",
+        feedback_generated, feedback_applied
+    ));
+
+    if let Some(scorecards) = report_value
+        .get("backtest")
+        .and_then(|backtest| backtest.get("scorecards"))
+        .and_then(Value::as_array)
+    {
+        let top_factors = scorecards
+            .iter()
+            .take(3)
+            .filter_map(|scorecard| {
+                let factor_name = scorecard.get("factor_name").and_then(Value::as_str)?;
+                let composite_score = scorecard.get("composite_score").and_then(Value::as_f64)?;
+                let iteration_action = scorecard
+                    .get("iteration_action")
+                    .and_then(Value::as_str)
+                    .unwrap_or("n/a");
+                let grade = scorecard
+                    .get("grade")
+                    .and_then(Value::as_str)
+                    .unwrap_or("n/a");
+                Some(format!(
+                    "{}={:.3} {} {}",
+                    factor_name, composite_score, iteration_action, grade
+                ))
+            })
+            .collect::<Vec<_>>();
+        if !top_factors.is_empty() {
+            lines.push(format!("- Top factors: {}", top_factors.join("; ")));
+        }
+    }
+
+    let next_command = report_value
+        .get("recommended_next_command")
+        .and_then(Value::as_str)
+        .unwrap_or_default();
+    lines.push(format!(
+        "- Next: {}",
+        humanize_next_step_line(next_command)
+    ));
+
     if let Some(compare_summary) = human_research_compare_summary(compare) {
+        lines.push(String::new());
         lines.push(compare_summary);
     }
-    lines.join("\n")
+    redact_local_paths_in_human_text(&lines.join("\n"))
 }
 
 pub fn build_backtest_output_payload(
@@ -224,9 +300,67 @@ pub fn emit_structured_output_payload(
         "compact" => print_redacted_json(compact_surface)?,
         "human" => println!(
             "{}",
-            redact_local_paths(payload["human_output"].as_str().unwrap_or_default())
+            redact_local_paths_in_human_text(payload["human_output"].as_str().unwrap_or_default())
         ),
         other => anyhow::bail!("unsupported output format '{}'", other),
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::factor_lab::research::ResearchReport;
+    use crate::state::PersistedFactorRanking;
+
+    #[test]
+    fn factor_research_human_output_is_short_text_not_json_dump() {
+        let mut report = ResearchReport {
+            factor_count: 2,
+            research_objective: "expansion_manipulation".to_string(),
+            best_factor: Some("trend_momentum".to_string()),
+            aggregate_return: 0.0123,
+            feedback_records_generated: 8,
+            feedback_records_applied: 5,
+            recommended_next_command:
+                "ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state"
+                    .to_string(),
+            ..ResearchReport::default()
+        };
+        report.backtest.scorecards = vec![
+            PersistedFactorRanking {
+                factor_name: "trend_momentum".to_string(),
+                composite_score: 0.82,
+                grade: "B".to_string(),
+                iteration_action: "keep".to_string(),
+                ..PersistedFactorRanking::default()
+            },
+            PersistedFactorRanking {
+                factor_name: "structure_ict".to_string(),
+                composite_score: 0.49,
+                grade: "D".to_string(),
+                iteration_action: "observe".to_string(),
+                ..PersistedFactorRanking::default()
+            },
+        ];
+
+        let rendered = render_factor_research_human_output(&report, None);
+
+        assert!(
+            !rendered.contains("Factor research summary: {"),
+            "human output must not be a serialized JSON dump:\n{rendered}"
+        );
+        assert!(rendered.starts_with("Factor research summary\n"));
+        assert!(rendered.contains("- Objective: expansion_manipulation"));
+        assert!(rendered.contains("- Best factor: trend_momentum"));
+        assert!(rendered.contains("- Aggregate return: +1.23%"));
+        assert!(rendered.contains("- Feedback: generated=8 applied=5"));
+        assert!(rendered
+            .contains("- Top factors: trend_momentum=0.820 keep B; structure_ict=0.490 observe D"));
+        assert!(rendered.contains(
+            "- Next: ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state"
+        ));
+        assert!(rendered.contains("/tmp/demo.json"));
+        assert!(!rendered.contains("<local-path>"));
+    }
 }

@@ -419,6 +419,19 @@ pub(crate) fn run_factor_research(
             shell_quote(report.research_objective.as_str())
         );
     }
+    if report.recommended_commands.research.ready
+        && !report
+            .recommended_commands
+            .research
+            .command
+            .contains(" --backend ")
+    {
+        report
+            .recommended_commands
+            .research
+            .command
+            .push_str(" --backend native");
+    }
     concretize_action_plan_commands(&mut report.agent_action_plan, &report.recommended_commands);
     report.recommended_next_command =
         recommended_next_command(&report.agent_action_plan, &report.recommended_commands);

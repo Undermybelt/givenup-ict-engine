@@ -8,12 +8,13 @@ English first. 中文在后。
 
 ```bash
 cargo check
-cargo run -- --help
-cargo run -- analyze --help
-cargo run -- factor-research --help
+cargo build
+./target/debug/ict-engine --help
+./target/debug/ict-engine analyze --help
+./target/debug/ict-engine factor-research --help
 ```
 
-If you only want the core CLI, Rust is enough. Python scripts are optional research helpers.
+If you only want the core CLI, Rust is enough. For a first run that stays Rust-only, use the native research backend shown below. Python scripts and Auto-Quant are optional research helpers.
 
 ## Contributor baseline
 
@@ -30,9 +31,9 @@ All three must be green. CI (`.github/workflows/ci.yml`) runs these on every pus
 ### Manage Auto-Quant dependency
 
 ```bash
-cargo run -- auto-quant-status --state-dir state
-cargo run -- auto-quant-bootstrap --state-dir state
-cargo run -- auto-quant-update --state-dir state
+cargo run -- auto-quant-status --state-dir /tmp/ict-engine-auto-quant
+cargo run -- auto-quant-bootstrap --state-dir /tmp/ict-engine-auto-quant
+cargo run -- auto-quant-update --state-dir /tmp/ict-engine-auto-quant
 ```
 
 These commands manage the local, pinned Auto-Quant checkout used by the integration work.
@@ -40,9 +41,9 @@ These commands manage the local, pinned Auto-Quant checkout used by the integrat
 For the Auto-Quant review loop:
 
 ```bash
-cargo run -- factor-research --symbol DEMO --data examples/demo/demo-15m.json --backend auto-quant --state-dir /tmp/aq
-cargo run -- auto-quant-adoption-review --symbol DEMO --state-dir /tmp/aq
-cargo run -- auto-quant-adoption-decision --symbol DEMO --state-dir /tmp/aq --decision adopt --rationale "approved for next bridge step"
+cargo run -- factor-research --symbol DEMO --data examples/demo/demo-15m.json --backend auto-quant --state-dir /tmp/ict-engine-auto-quant
+cargo run -- auto-quant-adoption-review --symbol DEMO --state-dir /tmp/ict-engine-auto-quant
+cargo run -- auto-quant-adoption-decision --symbol DEMO --state-dir /tmp/ict-engine-auto-quant --decision adopt --rationale "approved for next bridge step"
 ```
 
 ### Analyze market data
@@ -53,6 +54,7 @@ cargo run -- analyze \
   --data-htf <1d.json> \
   --data-mtf <1h.json> \
   --data-ltf <15m.json> \
+  --state-dir /tmp/ict-engine-analyze \
   --human
 ```
 
@@ -61,19 +63,30 @@ Human output starts with a trading-desk style summary:
 ```text
 NQ | Bull bias | Entry: medium | Gate: observe_only | Quality: 0.244
 Action: TUNE structure_ict
-Next: cargo run -- factor-research --symbol NQ --data <15m.json> --factor structure_ict
+Next: ict-engine factor-research --symbol NQ --data <15m.json> --state-dir /tmp/ict-engine-analyze
 ```
 
 ### Demo smoke run
 
 ```bash
-cargo run -- analyze --symbol DEMO --demo --human
+cargo run -- analyze \
+  --symbol DEMO \
+  --demo \
+  --state-dir /tmp/ict-engine-first-run-native \
+  --human
 
 cargo run -- factor-pipeline-debug \
   --symbol DEMO \
   --data examples/demo/demo-15m.json \
   --factor structure_ict \
   --objective expansion_manipulation
+
+cargo run -- factor-research \
+  --symbol DEMO \
+  --data examples/demo/demo-15m.json \
+  --state-dir /tmp/ict-engine-first-run-native \
+  --backend native \
+  --human
 ```
 
 Equivalent explicit-path form:
@@ -84,10 +97,14 @@ cargo run -- analyze \
   --data-htf examples/demo/demo-15m.json \
   --data-mtf examples/demo/demo-15m.json \
   --data-ltf examples/demo/demo-15m.json \
+  --state-dir /tmp/ict-engine-first-run-native \
   --human
 ```
 
+If you omit `--state-dir`, the CLI defaults to repo-local `state/`.
+
 This synthetic dataset is for first-run CLI verification only.
+It ships with about 52 candles, so it is intentionally too small for `backtest`, which needs at least 71.
 
 ### Diagnose why a factor or gate did not pass
 
@@ -109,13 +126,35 @@ Read the key fields first:
 
 ### Run factor research
 
+Rust-only first run:
+
+Use this path when you want the no-pollution in-process Rust path and do not want to bootstrap Auto-Quant on first run.
+
 ```bash
 cargo run -- factor-research \
   --symbol NQ \
   --data <cleaned-15m.json> \
   --objective expansion_manipulation \
+  --state-dir /tmp/ict-engine-first-run-native \
+  --backend native \
+  --human
+```
+
+Auto-Quant path:
+
+```bash
+cargo run -- factor-research \
+  --symbol NQ \
+  --data <cleaned-15m.json> \
+  --objective expansion_manipulation \
+  --state-dir /tmp/ict-engine-auto-quant \
   --backend auto-quant
 ```
+
+Auto-Quant notes:
+- first run may bootstrap a pinned dependency checkout under your chosen `--state-dir`
+- `uv` is required for the helper scripts
+- `prepare.py` may require `TA-Lib` (`brew install ta-lib`) unless you use the documented container fallback
 
 ### Read current research truth
 
@@ -126,22 +165,22 @@ python3 scripts/research_verdict.py <state-or-result-dir>
 
 Auto-Quant integration note:
 - `factor-research` and `factor-autoresearch` now default to `--backend auto-quant`
-- pass `--backend native` if you explicitly want the legacy in-process path
+- pass `--backend native` if you explicitly want the Rust-only in-process path
 
 ## Output modes
 
 `analyze`, `backtest`, `factor-backtest`, `factor-research`, and `workflow-status` support four output surfaces:
 
 ```bash
-cargo run -- analyze --symbol NQ --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --output-format json
-cargo run -- analyze --symbol NQ --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --compact
-cargo run -- analyze --symbol NQ --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --agent
-cargo run -- analyze --symbol NQ --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --human
+cargo run -- analyze --symbol NQ --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --output-format json
+cargo run -- analyze --symbol NQ --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --compact
+cargo run -- analyze --symbol NQ --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --agent
+cargo run -- analyze --symbol NQ --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --human
 
-cargo run -- workflow-status --symbol NQ --state-dir state --output-format json
-cargo run -- workflow-status --symbol NQ --state-dir state --compact
-cargo run -- workflow-status --symbol NQ --state-dir state --agent
-cargo run -- workflow-status --symbol NQ --state-dir state --human
+cargo run -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-output-modes --output-format json
+cargo run -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-output-modes --compact
+cargo run -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-output-modes --agent
+cargo run -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-output-modes --human
 ```
 
 Use:
@@ -153,6 +192,7 @@ Use:
 Notes:
 - `--compact`, `--agent`, and `--human` are sugar for `--output-format <mode>`. Do not combine them with `--output-format`.
 - There is no `--json` alias; JSON is the default, so `workflow-status --output-format json` is the explicit form and plain `workflow-status` already prints JSON.
+- For no-pollution trials, prefer an explicit `--state-dir /tmp/...` instead of relying on the default repo-local `state/`.
 - `backtest` requires roughly 70+ candles (warmup + hold bars). The bundled `examples/demo/demo-15m.json` (~52 candles) is sized for `analyze`/`factor-backtest` and will error out from `backtest`. Point `--data` at a larger cleaned dataset when running `backtest`.
 
 Agent consumers should prefer:

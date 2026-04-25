@@ -7,7 +7,8 @@ use crate::application::belief::{
     jump_calibration_gate_workflow_summary, jump_model_workflow_summary,
 };
 use crate::application::output_foundation::{
-    print_redacted_json, redact_local_paths_in_value, short_workflow_phase_summary,
+    print_redacted_json, redact_local_paths_in_human_text, redact_local_paths_in_value,
+    short_workflow_phase_summary,
 };
 use crate::application::release_closure::workflow_next_step_view;
 use crate::config::shell_quote;
@@ -297,6 +298,31 @@ pub fn humanize_workflow_command(command: &str) -> String {
     format!("Next step: {}", trimmed)
 }
 
+fn workflow_human_deferred_command(command: &str) -> Option<String> {
+    let trimmed = command.trim();
+    if trimmed.is_empty()
+        || trimmed == "recommended_command_unavailable"
+        || trimmed == "next_command_unavailable"
+    {
+        return None;
+    }
+    if let Some(rest) = trimmed.strip_prefix("ask-user: ") {
+        return rest
+            .split(" | then ")
+            .nth(1)
+            .map(str::trim)
+            .filter(|value| {
+                !value.is_empty()
+                    && *value != "choose historical dataset with user before running command"
+            })
+            .map(str::to_string);
+    }
+    if trimmed.starts_with("blocked:") {
+        return None;
+    }
+    Some(trimmed.to_string())
+}
+
 pub fn executor_scorecard_surface(
     persisted_scorecards: &[EnsembleExecutorScorecard],
     fallback_scorecards: &[EnsembleExecutorScorecard],
@@ -454,15 +480,30 @@ pub fn build_human_workflow_status_view(
             .blocking_truth
             .reason
             .contains("user_selected_historical_data_missing");
+    let deferred_user_selection_command = workflow_human_deferred_command(&top_level_command);
     let human_next_action = if user_selection_pending {
         if !historical_data_request_template.is_empty() {
-            format!(
-                "Ask the user to choose the historical dataset. {} {}",
-                historical_data_request_template, user_path_input_prompt
-            )
+            match deferred_user_selection_command.as_deref() {
+                Some(command) => format!(
+                    "Ask the user to choose the historical dataset. {} {} Then run: {}",
+                    historical_data_request_template, user_path_input_prompt, command
+                ),
+                None => format!(
+                    "Ask the user to choose the historical dataset. {} {}",
+                    historical_data_request_template, user_path_input_prompt
+                ),
+            }
         } else {
-            "Ask the user to provide the historical data path before running research/backtest."
-                .to_string()
+            match deferred_user_selection_command.as_deref() {
+                Some(command) => format!(
+                    "Ask the user to provide the historical data path before running research/backtest. Then run: {}",
+                    command
+                ),
+                None => {
+                    "Ask the user to provide the historical data path before running research/backtest."
+                        .to_string()
+                }
+            }
         }
     } else {
         humanize_workflow_command(&top_level_command)
@@ -498,7 +539,10 @@ pub fn build_human_workflow_status_view(
         latest_segments_gate
     );
     let blocking_line = format!("Block: {}", gate_reason_label);
-    let next_action_line = format!("Next: {}", human_next_action);
+    let next_action_display = human_next_action
+        .strip_prefix("Next step: ")
+        .unwrap_or(&human_next_action);
+    let next_action_line = format!("Next: {}", next_action_display);
     let phase_summary_line = format!(
         "Latest: {} | {}",
         latest_phase_label, latest_phase_summary_short
@@ -892,19 +936,18 @@ pub fn emit_workflow_status_output(
             println!("{}", serde_json::to_string_pretty(&value)?);
         }
         "human" => {
-            let mut value = build_human_workflow_status_view(snapshot, persisted_scorecards);
-            redact_local_paths_in_value(&mut value);
+            let value = build_human_workflow_status_view(snapshot, persisted_scorecards);
             if let Some(summary) = value.get("summary_line").and_then(Value::as_str) {
-                println!("{}", summary);
+                println!("{}", redact_local_paths_in_human_text(summary));
             }
             if let Some(blocking) = value.get("blocking_line").and_then(Value::as_str) {
-                println!("{}", blocking);
+                println!("{}", redact_local_paths_in_human_text(blocking));
             }
             if let Some(latest) = value.get("phase_summary_line").and_then(Value::as_str) {
-                println!("{}", latest);
+                println!("{}", redact_local_paths_in_human_text(latest));
             }
             if let Some(next) = value.get("next_action_line").and_then(Value::as_str) {
-                println!("{}", next);
+                println!("{}", redact_local_paths_in_human_text(next));
             }
         }
         other => anyhow::bail!("unsupported output format '{}'", other),
@@ -2054,7 +2097,7 @@ mod tests {
         );
         assert_eq!(
             value["next_action_line"],
-            "Next: Ask the user to choose the historical dataset. Please choose one historical data path for the next research/backtest run: /tmp/a.json, /tmp/b.json Reply with one path from the list, or paste another valid file path. Candidates: /tmp/a.json, /tmp/b.json"
+            "Next: Ask the user to choose the historical dataset. Please choose one historical data path for the next research/backtest run: /tmp/a.json, /tmp/b.json Reply with one path from the list, or paste another valid file path. Candidates: /tmp/a.json, /tmp/b.json Then run: ict-engine factor-research --symbol NQ --data /tmp/a.json --state-dir state"
         );
         assert_eq!(
             value["blocking_line"],
@@ -2066,6 +2109,28 @@ mod tests {
         );
         assert_eq!(value["hybrid_duration_model"], "negative_binomial");
         assert_eq!(value["hybrid_remaining_expected_bars"], "2.50");
+    }
+
+    #[test]
+    fn human_workflow_status_next_line_does_not_duplicate_next_prefix() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "DEMO".to_string();
+        snapshot.current_focus_phase = "research".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine factor-research --symbol DEMO --backend native".to_string();
+        snapshot.latest_research = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "research".to_string(),
+            phase_summary: "research ready".to_string(),
+            recommended_next_command: snapshot.recommended_next_command.clone(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+
+        let value = build_human_workflow_status_view(&snapshot, &[]);
+
+        assert_eq!(
+            value["next_action_line"],
+            "Next: ict-engine factor-research --symbol DEMO --backend native"
+        );
     }
 
     #[test]

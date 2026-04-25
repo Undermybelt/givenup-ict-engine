@@ -6,7 +6,7 @@ use crate::analyze_report_shell::AnalyzeReport;
 use crate::application::belief::{BeliefPolicyLineageSurface, BeliefShadowPolicySurface};
 use crate::application::orchestration::ExecutionTriage;
 use crate::application::output_foundation::{
-    format_executor_summary_lines, print_redacted_json, redact_local_paths,
+    format_executor_summary_lines, print_redacted_json, redact_local_paths_in_human_text,
     redact_local_paths_in_value,
 };
 use crate::application::reporting::{
@@ -21,10 +21,6 @@ use crate::pda_sequence::{
 
 use crate::types::Direction;
 
-/// Default tail size retained in-place for each growing workflow-snapshot
-/// ledger array when `analyze --output-format json` is emitted without
-/// `--inline-ledger`. Chosen to match the cap already in use for the other
-/// `recent_*` arrays inside the snapshot.
 const ANALYZE_JSON_LEDGER_TAIL_DEFAULT: usize = 5;
 
 #[derive(Debug, Serialize)]
@@ -77,12 +73,6 @@ where
 #[derive(Debug, Clone, Copy)]
 pub struct AnalyzeOutputDispatchInput<'a> {
     pub output_format: &'a str,
-    /// When `true`, the full workflow-snapshot ledger arrays are inlined into
-    /// the JSON payload (legacy behaviour). When `false` (default), the
-    /// growing arrays are trimmed to the most recent tail and a sibling
-    /// `*_inline_meta` object is added with the total count and a pointer
-    /// command, so repeated `analyze --output-format json` calls respect a
-    /// stable token budget.
     pub inline_ledger: bool,
 }
 
@@ -173,7 +163,6 @@ pub fn build_analyze_compact_evidence(
         .collect::<Vec<_>>()
 }
 
-#[allow(clippy::too_many_arguments)]
 pub fn build_analyze_reporting_bundle(
     input: AnalyzeHumanInput<'_>,
     artifact_action_summary: &[String],
@@ -480,12 +469,14 @@ fn build_workflow_snapshot_pointer_command(symbol: &str, state_dir: &str, field:
     let symbol = shell_quote(symbol);
     let state_dir = shell_quote(state_dir);
     match field {
-        "actionable_artifacts" => format!(
-            "ict-engine workflow-status --symbol {symbol} --state-dir {state_dir} --artifacts"
-        ),
-        _ => format!(
-            "ict-engine workflow-status --symbol {symbol} --state-dir {state_dir} --output-format json"
-        ),
+        "actionable_artifacts" => {
+            format!("ict-engine workflow-status --symbol {symbol} --state-dir {state_dir} --artifacts")
+        }
+        _ => {
+            format!(
+                "ict-engine workflow-status --symbol {symbol} --state-dir {state_dir} --output-format json"
+            )
+        }
     }
 }
 
@@ -551,15 +542,9 @@ fn human_action_line(queue: &[crate::state::FactorIterationPrompt]) -> String {
     let action = queue
         .iter()
         .find(|item| item.iteration_action != "keep" || item.replacement_candidate)
-        .map(|item| {
-            format!(
-                "{} {}",
-                item.iteration_action.to_uppercase(),
-                item.factor_name
-            )
-        })
+        .map(|item| format!("{} {}", item.iteration_action.to_uppercase(), item.factor_name))
         .unwrap_or_else(|| "OBSERVE no_factor_change".to_string());
-    format!("Action: {}", action)
+    format!("Action: {action}")
 }
 
 fn regime_companion_human_suffix(
@@ -593,129 +578,27 @@ fn regime_companion_human_suffix(
 
 pub fn build_human_analyze_surface(input: AnalyzeHumanInput<'_>) -> HumanAnalyzeReport {
     let regime_companion_suffix = input.regime_companion_suffix.unwrap_or("");
-    let regime_bayes_analysis = match input.market_family {
-        Some("metals") => match input.objective_jump_weight {
-            Some(weight) => format!(
-                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}；objective_jump_weight={weight:.3}{}",
-                input.regime_label,
-                input.liquidity_label,
-                input.regime_selected_direction,
-                input.market_subgraph,
-                regime_companion_suffix
-            ),
-            None => format!(
-                "金属品种视角：regime={} liquidity={} direction={:?}。现属防御型流动性环境，先看扫流动性后是否回到顺势确认；subgraph={}{}",
-                input.regime_label,
-                input.liquidity_label,
-                input.regime_selected_direction,
-                input.market_subgraph,
-                regime_companion_suffix
-            ),
-        },
-        Some("energy") => match input.objective_jump_weight {
-            Some(weight) => format!(
-                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}；objective_jump_weight={weight:.3}{}",
-                input.regime_label,
-                input.liquidity_label,
-                input.regime_selected_direction,
-                input.market_subgraph,
-                regime_companion_suffix
-            ),
-            None => format!(
-                "能源品种视角：regime={} liquidity={} direction={:?}。当前更该尊重波动冲击与状态切换，先防急拉急杀再谈延续；subgraph={}{}",
-                input.regime_label,
-                input.liquidity_label,
-                input.regime_selected_direction,
-                input.market_subgraph,
-                regime_companion_suffix
-            ),
-        },
-        Some("futures_index") => match input.objective_jump_weight {
-            Some(weight) => format!(
-                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}；objective_jump_weight={weight:.3}{}",
-                input.regime_label,
-                input.liquidity_label,
-                input.regime_selected_direction,
-                input.market_subgraph,
-                regime_companion_suffix
-            ),
-            None => format!(
-                "股指品种视角：regime={} liquidity={} direction={:?}。先看 beta 与多周期共振是否同向，再决定是否执行；subgraph={}{}",
-                input.regime_label,
-                input.liquidity_label,
-                input.regime_selected_direction,
-                input.market_subgraph,
-                regime_companion_suffix
-            ),
-        },
-        _ => match input.objective_jump_weight {
-            Some(weight) => format!(
-                "regime={} liquidity={} direction={:?} subgraph={} objective_jump_weight={weight:.3}{}",
-                input.regime_label,
-                input.liquidity_label,
-                input.regime_selected_direction,
-                input.market_subgraph,
-                regime_companion_suffix
-            ),
-            None => format!(
-                "regime={} liquidity={} direction={:?} subgraph={}{}",
-                input.regime_label,
-                input.liquidity_label,
-                input.regime_selected_direction,
-                input.market_subgraph,
-                regime_companion_suffix
-            ),
-        },
-    };
-
-    let basic_price_structure_analysis = match input.market_family {
-        Some("metals") => format!(
-            "金属结构偏向：{}。这类盘先看流动性是否被扫完，再等回到顺势一侧；原始标签={}。",
-            if input.regime_selected_direction == Direction::Bull {
-                "偏多，但不宜追"
-            } else if input.regime_selected_direction == Direction::Bear {
-                "偏空，但更重确认"
-            } else {
-                "先观望，等再定向"
-            },
-            input.price_action_narrative
+    let market_family_prefix = input
+        .market_family
+        .map(|family| format!("market_family={family} "))
+        .unwrap_or_default();
+    let regime_bayes_analysis = match input.objective_jump_weight {
+        Some(weight) => format!(
+            "{market_family_prefix}regime={} liquidity={} direction={:?} subgraph={} objective_jump_weight={weight:.3}{}",
+            input.regime_label,
+            input.liquidity_label,
+            input.regime_selected_direction,
+            input.market_subgraph,
+            regime_companion_suffix
         ),
-        Some("energy") => format!(
-            "能源结构偏向：{}。这类盘最怕突发冲击，先防假突破和急反转；原始标签={}。",
-            if input.regime_selected_direction == Direction::Bear {
-                "空头占优，但随时防剧烈反抽"
-            } else if input.regime_selected_direction == Direction::Bull {
-                "多头占优，但别忽视突发回吐"
-            } else {
-                "方向未完全站稳，先等波动收敛"
-            },
-            input.price_action_narrative
+        None => format!(
+            "{market_family_prefix}regime={} liquidity={} direction={:?} subgraph={}{}",
+            input.regime_label,
+            input.liquidity_label,
+            input.regime_selected_direction,
+            input.market_subgraph,
+            regime_companion_suffix
         ),
-        _ => input.price_action_narrative.to_string(),
-    };
-
-    let technical_price_analysis = match input.market_family {
-        Some("metals") => format!(
-            "金属技术面：更重均值回归后的二次确认，别把一次拉伸当延续；原始标签={}。",
-            input.technical_price_narrative
-        ),
-        Some("energy") => format!(
-            "能源技术面：指标易被波动放大，先看节奏是否稳定，再看趋势是否继续；原始标签={}。",
-            input.technical_price_narrative
-        ),
-        _ => input.technical_price_narrative.to_string(),
-    };
-
-    let smt_correlation_analysis = match input.market_family {
-        Some("metals") => format!(
-            "金属联动面：相关性可参考，但最终仍以本品种流动性反应为主；原始标签={}。",
-            input.smt_correlation_narrative
-        ),
-        Some("energy") => format!(
-            "能源联动面：相关市场常会同步放大波动，若联动发散，先减信号强度；原始标签={}。",
-            input.smt_correlation_narrative
-        ),
-        _ => input.smt_correlation_narrative.to_string(),
     };
 
     build_human_analyze_report(
@@ -736,15 +619,14 @@ pub fn build_human_analyze_surface(input: AnalyzeHumanInput<'_>) -> HumanAnalyze
             "Next: {}",
             humanize_next_step_line(input.recommended_next_command)
         )),
-        basic_price_structure_analysis,
-        technical_price_analysis,
-        smt_correlation_analysis,
+        input.price_action_narrative.to_string(),
+        input.technical_price_narrative.to_string(),
+        input.smt_correlation_narrative.to_string(),
         regime_bayes_analysis,
         input.trade_plan_narrative,
     )
 }
 
-#[allow(clippy::too_many_arguments)]
 pub fn build_analyze_output_envelope<R, E>(
     report: R,
     compact_report: CompactAnalyzeReport,
@@ -764,11 +646,11 @@ where
     let ensemble_value = serde_json::to_value(&ensemble_vote).unwrap_or_default();
     let executor_summaries = ensemble_value
         .get("executor_summaries")
-        .and_then(serde_json::Value::as_array)
+        .and_then(Value::as_array)
         .map(|items| {
             items
                 .iter()
-                .filter_map(serde_json::Value::as_str)
+                .filter_map(Value::as_str)
                 .map(str::to_string)
                 .collect::<Vec<_>>()
         })
@@ -790,7 +672,6 @@ where
     }
 }
 
-#[allow(clippy::too_many_arguments)]
 pub fn build_analyze_live_output_envelope<R>(
     report: R,
     source_snapshot: Option<impl Serialize>,
@@ -817,7 +698,6 @@ where
     }
 }
 
-#[allow(clippy::too_many_arguments)]
 pub fn build_analyze_live_output_value<R>(
     report: R,
     source_snapshot: Option<impl Serialize>,
@@ -844,11 +724,13 @@ where
     ))?;
     if redact_paths {
         redact_local_paths_in_value(&mut output);
+        if let Some(value) = output.get_mut("human_report") {
+            *value = Value::String(redact_local_paths_in_human_text(&human_report.render()));
+        }
     }
     Ok(output)
 }
 
-#[allow(clippy::too_many_arguments)]
 pub fn build_analyze_output_value<R, E>(
     report: R,
     compact_report: CompactAnalyzeReport,
@@ -884,11 +766,13 @@ where
     }
     if redact_paths {
         redact_local_paths_in_value(&mut output);
+        if let Some(value) = output.get_mut("human_report") {
+            *value = Value::String(redact_local_paths_in_human_text(&human_report.render()));
+        }
     }
     Ok(output)
 }
 
-#[allow(clippy::too_many_arguments)]
 pub fn emit_analyze_output_envelope<R, E>(
     report: &R,
     output_format: &str,
@@ -927,13 +811,12 @@ where
         }
         "compact" => print_redacted_json(compact_report)?,
         "agent" => print_redacted_json(agent_report)?,
-        "human" => println!("{}", redact_local_paths(&human_report.render())),
+        "human" => println!("{}", redact_local_paths_in_human_text(&human_report.render())),
         other => anyhow::bail!("unsupported output format '{}'", other),
     }
     Ok(())
 }
 
-#[allow(clippy::too_many_arguments)]
 pub fn emit_analyze_live_output_envelope<R>(
     report: &R,
     source_snapshot: Option<impl Serialize>,

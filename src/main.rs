@@ -426,14 +426,14 @@ enum Commands {
         data_root: Option<String>,
         #[arg(
             long,
-            help = "Use bundled demo candles from examples/demo/demo-15m.json"
+            help = "Use bundled demo candles from examples/demo/demo-15m.json for first-run analyze checks; too short for backtest"
         )]
         demo: bool,
         #[arg(
             long,
             env = "ICT_ENGINE_STATE_DIR",
             default_value = "state",
-            help = "State directory for model and workflow artifacts"
+            help = "State directory for model and workflow artifacts; pass /tmp/... for no-pollution first runs"
         )]
         state_dir: String,
         #[arg(
@@ -662,7 +662,7 @@ enum Commands {
             long,
             env = "ICT_ENGINE_STATE_DIR",
             default_value = "state",
-            help = "State directory for model and workflow artifacts"
+            help = "State directory for model and workflow artifacts; pass /tmp/... for no-pollution first runs"
         )]
         state_dir: String,
         #[arg(
@@ -680,7 +680,7 @@ enum Commands {
         #[arg(
             long,
             default_value = "auto-quant",
-            help = "Research backend: auto-quant (default) or native"
+            help = "Research backend: auto-quant (default) or native; pass --backend native for the Rust-only first-run path"
         )]
         backend: String,
     },
@@ -12653,7 +12653,7 @@ mod tests {
             Some(&sample_compare_report("scaled_up")),
         );
 
-        assert!(rendered.contains("Factor research summary:"));
+        assert!(rendered.starts_with("Factor research summary"));
         assert!(rendered.contains("Research compare:"));
         assert!(rendered.contains("next=inspect_duration_constraints"));
     }
