@@ -332,6 +332,7 @@ Using the wrong input surface:
 
 ## Public docs
 
+- `docs/ict-engine-docs-catalog-2026-04-25.md` — trust map for canonical, historical, and retained negative-example docs
 - `docs/first-run.md`
 - `docs/research-system-map.md`
 - `docs/autoresearch-derived-surfaces-contract.md`
@@ -342,15 +343,16 @@ Using the wrong input surface:
 ## Internal release/agent docs
 
 - `docs/agent-first-runbook.md`
+- `docs/auto-quant-ictengine-integration-guide.md`
 - `docs/release-notes-draft.md`
 - `docs/release-mirror-runbook.md` — **authoritative release procedure**
 - `docs/external/external-patterns-synthesis-2026-04-23.md` — consolidated external pattern absorb/reject matrix
 
 ### Publishing policy (post-v0.0.1)
 
-- The source repo has no working publishing origin; GitHub rejects pushes because of oversized historical state artifacts.
-- Every external release goes through the private release mirror `Undermybelt/ict-engine-release` via the mirror runbook (`git archive HEAD` export, fresh init, tag, push).
-- Do **not** run `git push origin …` from the source repo and do **not** add a public remote to it. Local commits accumulate on the local clone(s) only.
+- The source-repo oversized-history blocker has been cleared; normal source-repo pushes are available again.
+- The private release mirror `Undermybelt/ict-engine-release` remains the preferred clean tree-state release transport.
+- Treat the source repo as development truth and the mirror repo as the curated release surface.
 - See `docs/release-mirror-runbook.md` for the full flow and version-bump rules.
 
 ## 中文简介

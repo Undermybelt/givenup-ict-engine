@@ -2,6 +2,8 @@
 
 Goal: get a new human or agent from clone to useful output without launching accidental long runs.
 
+For no-pollution first runs, prefer explicit `/tmp/...` state dirs instead of repo-local `./state`.
+
 ## 1. Verify the repo
 
 ```bash
@@ -16,14 +18,14 @@ Expected:
 Optional dependency management:
 
 ```bash
-cargo run -- auto-quant-status --state-dir state
+cargo run -- auto-quant-status --state-dir /tmp/ict-engine-auto-quant
 ```
 
 Optional Auto-Quant review loop:
 
 ```bash
-cargo run -- factor-research --symbol DEMO --data examples/demo/demo-15m.json --backend auto-quant --state-dir /tmp/aq
-cargo run -- auto-quant-adoption-review --symbol DEMO --state-dir /tmp/aq
+cargo run -- factor-research --symbol DEMO --data examples/demo/demo-15m.json --backend auto-quant --state-dir /tmp/ict-engine-auto-quant
+cargo run -- auto-quant-adoption-review --symbol DEMO --state-dir /tmp/ict-engine-auto-quant
 ```
 
 ## 2. Learn the safe command surface
@@ -35,7 +37,7 @@ cargo run -- analyze --help
 cargo run -- factor-research --help
 cargo run -- factor-pipeline-debug --help
 cargo run -- factor-autoresearch-status --help
-cargo run -- auto-quant-status --state-dir state
+cargo run -- auto-quant-status --state-dir /tmp/ict-engine-auto-quant
 ```
 
 Python experiment scripts:
