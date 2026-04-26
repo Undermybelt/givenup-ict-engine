@@ -1,14 +1,18 @@
-use super::adoption::{build_auto_quant_adoption_review, persist_auto_quant_adoption_decision};
-use super::handoff::{
-    build_factor_autoresearch_handoff_payload, build_factor_research_handoff_payload,
-    AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput,
-};
-use super::persistence::persist_handoff_payload;
 use super::{
+    adoption::{build_auto_quant_adoption_review, persist_auto_quant_adoption_decision},
     auto_quant_bootstrap, auto_quant_readiness, auto_quant_status, auto_quant_update,
+    handoff::{
+        auto_quant_workspace_config, build_factor_autoresearch_handoff_payload,
+        build_factor_research_handoff_payload, AutoQuantFactorAutoresearchCommandInput,
+        AutoQuantFactorResearchCommandInput,
+    },
+    persistence::persist_handoff_payload,
+    seed_evidence::{
+        persist_auto_quant_seed_material_evidence, AUTO_QUANT_SEED_MATERIAL_EVIDENCE_DEFAULT_LIMIT,
+    },
     AutoQuantDependencyStatus,
 };
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 
 fn ensure_dependency_ready(
     state_dir: &str,
@@ -80,6 +84,48 @@ pub fn auto_quant_adoption_decision_command(
     Ok(())
 }
 
+pub fn auto_quant_seed_evidence_command(
+    symbol: &str,
+    state_dir: &str,
+    strategy_material_root: &str,
+    limit: usize,
+) -> Result<()> {
+    let dependency_status = ensure_dependency_ready(state_dir, None, None)?;
+    let workspace = auto_quant_workspace_config(&dependency_status.managed_dir);
+    let artifact = persist_auto_quant_seed_material_evidence(
+        symbol,
+        state_dir,
+        Some(strategy_material_root),
+        &workspace,
+        limit,
+    )?
+    .ok_or_else(|| {
+        anyhow!(
+            "no external strategy materials with usable evidence were found under '{}'",
+            strategy_material_root
+        )
+    })?;
+    println!("{}", serde_json::to_string_pretty(&artifact)?);
+    Ok(())
+}
+
+fn maybe_persist_seed_material_evidence(
+    symbol: &str,
+    state_dir: &str,
+    strategy_material_root: Option<&str>,
+    dependency_status: &AutoQuantDependencyStatus,
+) -> Result<Option<String>> {
+    let workspace = auto_quant_workspace_config(&dependency_status.managed_dir);
+    let artifact = persist_auto_quant_seed_material_evidence(
+        symbol,
+        state_dir,
+        strategy_material_root,
+        &workspace,
+        AUTO_QUANT_SEED_MATERIAL_EVIDENCE_DEFAULT_LIMIT,
+    )?;
+    Ok(artifact.map(|item| item.artifact_id))
+}
+
 pub fn auto_quant_factor_research_command(
     input: AutoQuantFactorResearchCommandInput<'_>,
 ) -> Result<()> {
@@ -89,18 +135,41 @@ pub fn auto_quant_factor_research_command(
         objective,
         paired_data,
         mutation_spec_path,
+        strategy_material_root,
         state_dir,
     } = input;
     let dependency_status = ensure_dependency_ready(state_dir, None, None)?;
+    let seed_evidence_artifact_id = maybe_persist_seed_material_evidence(
+        symbol,
+        state_dir,
+        strategy_material_root,
+        &dependency_status,
+    )
+    .map_err(|err| {
+        eprintln!(
+            "warning: failed to persist auto-quant seed material evidence for {}: {err:#}",
+            symbol
+        );
+        err
+    })
+    .ok()
+    .flatten();
     let mut payload = build_factor_research_handoff_payload(
         symbol,
         data,
         objective,
         paired_data,
         mutation_spec_path,
+        strategy_material_root,
         state_dir,
         dependency_status,
     );
+    if let Some(artifact_id) = seed_evidence_artifact_id {
+        payload.notes.push(format!(
+            "auto_quant_seed_material_evidence_artifact_id={}",
+            artifact_id
+        ));
+    }
     let handoff_path = persist_handoff_payload(state_dir, &payload)?;
     payload.handoff_artifact_path = handoff_path;
     println!("{}", serde_json::to_string_pretty(&payload)?);
@@ -116,22 +185,44 @@ pub fn auto_quant_factor_autoresearch_command(
         objective,
         paired_data,
         mutation_spec_path,
+        strategy_material_root,
         iterations,
         session_id,
         state_dir,
     } = input;
     let dependency_status = ensure_dependency_ready(state_dir, None, None)?;
+    let seed_evidence_artifact_id = maybe_persist_seed_material_evidence(
+        symbol,
+        state_dir,
+        strategy_material_root,
+        &dependency_status,
+    )
+    .map_err(|err| {
+        eprintln!(
+            "warning: failed to persist auto-quant seed material evidence for {}: {err:#}",
+            symbol
+        );
+        err
+    })
+    .ok()
+    .flatten();
     let mut payload = build_factor_autoresearch_handoff_payload(
         symbol,
         data,
         objective,
         paired_data,
         mutation_spec_path,
+        strategy_material_root,
         iterations,
         session_id,
         state_dir,
         dependency_status,
     );
+    if let Some(artifact_id) = seed_evidence_artifact_id {
+        payload.notes.push(format!(
+            "auto_quant_seed_material_evidence_artifact_id={artifact_id}"
+        ));
+    }
     let handoff_path = persist_handoff_payload(state_dir, &payload)?;
     payload.handoff_artifact_path = handoff_path;
     println!("{}", serde_json::to_string_pretty(&payload)?);

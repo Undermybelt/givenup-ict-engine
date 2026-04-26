@@ -6,14 +6,18 @@ mod health;
 mod persistence;
 pub mod readiness;
 mod repo_manager;
+mod seed_evidence;
 mod status;
+mod strategy_materials;
 mod types;
 mod update;
 
 pub use handoff::{AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput};
 pub use handoff::{AutoQuantResearchHandoffPayload, AutoQuantWorkspaceConfig};
 pub use readiness::{auto_quant_readiness, AutoQuantReadinessSurface};
+pub use seed_evidence::AutoQuantSeedMaterialEvidenceArtifact;
 pub use status::auto_quant_status;
+pub use strategy_materials::AutoQuantStrategyMaterialSummary;
 pub use types::{
     AutoQuantDependencyConfig, AutoQuantDependencyStatus, AutoQuantUpdateReport,
     AUTO_QUANT_ADAPTER_VERSION, AUTO_QUANT_BRANCH_ENV_VAR, AUTO_QUANT_CONFIG_FILE,
@@ -32,16 +36,38 @@ mod tests {
 
     fn init_repo(path: &Path) {
         std::fs::create_dir_all(path.join("versions")).unwrap();
+        std::fs::create_dir_all(path.join("user_data/strategies")).unwrap();
         std::fs::write(path.join("README.md"), "readme").unwrap();
         std::fs::write(path.join("program.md"), "program").unwrap();
         std::fs::write(path.join("prepare.py"), "print('prepare')").unwrap();
         std::fs::write(path.join("run.py"), "print('run')").unwrap();
+        std::fs::write(
+            path.join("user_data/strategies/_template.py.example"),
+            "class Template: pass",
+        )
+        .unwrap();
         std::fs::write(path.join("versions/README.md"), "versions").unwrap();
         git_output(Some(path), &["init", "-b", "master"]).unwrap();
         git_output(Some(path), &["config", "user.name", "Test User"]).unwrap();
         git_output(Some(path), &["config", "user.email", "test@example.com"]).unwrap();
         git_output(Some(path), &["add", "."]).unwrap();
         git_output(Some(path), &["commit", "-m", "init"]).unwrap();
+    }
+
+    fn seed_data(path: &Path) {
+        let data_dir = path.join("user_data/data");
+        std::fs::create_dir_all(&data_dir).unwrap();
+        for index in 0..15 {
+            std::fs::write(data_dir.join(format!("seed-{index}.feather")), "").unwrap();
+        }
+    }
+
+    fn seed_strategy(path: &Path, name: &str) {
+        std::fs::write(
+            path.join("user_data/strategies").join(format!("{name}.py")),
+            "class SeedStrategy: pass",
+        )
+        .unwrap();
     }
 
     #[test]
@@ -116,6 +142,87 @@ mod tests {
             readiness.next_step["blocked_reason"],
             "auto_quant_prepare_required"
         );
+    }
+
+    #[test]
+    fn readiness_reports_seed_required_when_data_is_ready_but_no_active_strategies_exist() {
+        let upstream = tempfile::tempdir().unwrap();
+        init_repo(upstream.path());
+        let state = tempfile::tempdir().unwrap();
+        let status = auto_quant_bootstrap(
+            state.path().to_str().unwrap(),
+            Some(upstream.path().to_str().unwrap()),
+            Some("master"),
+        )
+        .unwrap();
+        seed_data(Path::new(&status.managed_dir));
+        let readiness = super::readiness::auto_quant_readiness_from_status(&status);
+
+        assert_eq!(readiness.status, "dependency_ready_seed_required");
+        assert!(readiness.data_ready);
+        assert_eq!(
+            readiness.next_step["blocked_reason"],
+            "auto_quant_seed_strategies_required"
+        );
+        assert!(readiness.recommended_next_command.starts_with("blocked:"));
+    }
+
+    #[test]
+    fn readiness_reports_run_ready_after_data_and_active_strategy_exist() {
+        let upstream = tempfile::tempdir().unwrap();
+        init_repo(upstream.path());
+        let state = tempfile::tempdir().unwrap();
+        let status = auto_quant_bootstrap(
+            state.path().to_str().unwrap(),
+            Some(upstream.path().to_str().unwrap()),
+            Some("master"),
+        )
+        .unwrap();
+        seed_data(Path::new(&status.managed_dir));
+        seed_strategy(Path::new(&status.managed_dir), "SeedAlpha");
+        let readiness = super::readiness::auto_quant_readiness_from_status(&status);
+
+        assert_eq!(readiness.status, "dependency_ready_data_ready");
+        assert_eq!(
+            readiness.recommended_next_command,
+            format!("uv run {}/run.py", status.managed_dir)
+        );
+    }
+
+    #[test]
+    fn factor_research_handoff_prompt_demands_strategy_seeding_when_workspace_is_empty() {
+        let upstream = tempfile::tempdir().unwrap();
+        init_repo(upstream.path());
+        let state = tempfile::tempdir().unwrap();
+        let status = auto_quant_bootstrap(
+            state.path().to_str().unwrap(),
+            Some(upstream.path().to_str().unwrap()),
+            Some("master"),
+        )
+        .unwrap();
+        seed_data(Path::new(&status.managed_dir));
+        let payload = super::handoff::build_factor_research_handoff_payload(
+            "NQ",
+            "/tmp/nq.json",
+            "generic",
+            None,
+            None,
+            None,
+            state.path().to_str().unwrap(),
+            status,
+        );
+
+        assert!(payload
+            .agent_prompt
+            .contains("Never treat 'no strategies found' as completion"));
+        assert!(payload
+            .suggested_next_steps
+            .iter()
+            .any(|step| { step.contains("create 2-3 active non-underscore strategy files") }));
+        assert!(payload
+            .notes
+            .iter()
+            .any(|note| note == "auto_quant_seed_strategies_required"));
     }
 
     #[test]

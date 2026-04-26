@@ -59,7 +59,8 @@ use ict_engine::application::{
     auto_quant::command_entry::{
         auto_quant_adoption_decision_command, auto_quant_adoption_review_command,
         auto_quant_bootstrap_command, auto_quant_factor_autoresearch_command,
-        auto_quant_factor_research_command, auto_quant_status_command, auto_quant_update_command,
+        auto_quant_factor_research_command, auto_quant_seed_evidence_command,
+        auto_quant_status_command, auto_quant_update_command,
     },
     auto_quant::{AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput},
     backtest::{
@@ -648,6 +649,11 @@ enum Commands {
         mutation_spec: Option<String>,
         #[arg(
             long,
+            help = "Optional read-only external strategy material root (for example a Tomac py/csv workspace) used only to enrich auto-quant handoff seed guidance"
+        )]
+        strategy_material_root: Option<String>,
+        #[arg(
+            long,
             default_value_t = false,
             help = "Emit mutation evaluation details in output"
         )]
@@ -751,6 +757,11 @@ enum Commands {
         data_1d: Option<String>,
         #[arg(long, help = "Optional paired-market candle JSON path")]
         paired_data: Option<String>,
+        #[arg(
+            long,
+            help = "Optional read-only external strategy material root (for example a Tomac py/csv workspace) used only to enrich auto-quant handoff seed guidance"
+        )]
+        strategy_material_root: Option<String>,
         #[arg(long, help = "Explicit autoresearch session id to resume or inspect")]
         session_id: Option<String>,
         #[arg(
@@ -1275,6 +1286,29 @@ enum Commands {
         #[arg(long, help = "Right artifact id for diff comparison")]
         right_artifact_id: String,
     },
+    /// Persist external strategy materials as seed evidence nodes for Auto-Quant iteration
+    AutoQuantSeedEvidence {
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        symbol: String,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding Auto-Quant seed evidence artifacts"
+        )]
+        state_dir: String,
+        #[arg(
+            long,
+            help = "Explicit read-only external strategy material root, for example a Tomac py/csv workspace"
+        )]
+        strategy_material_root: String,
+        #[arg(
+            long,
+            default_value_t = 5,
+            help = "Maximum number of top external materials to persist into the seed evidence artifact"
+        )]
+        limit: usize,
+    },
 }
 
 fn main() -> Result<()> {
@@ -1521,6 +1555,7 @@ fn main() -> Result<()> {
             data_1d,
             paired_data,
             mutation_spec,
+            strategy_material_root,
             emit_mutation_evaluation,
             ensemble,
             state_dir,
@@ -1538,6 +1573,7 @@ fn main() -> Result<()> {
                     objective: &objective,
                     paired_data: paired_data.as_deref(),
                     mutation_spec_path: mutation_spec.as_deref(),
+                    strategy_material_root: strategy_material_root.as_deref(),
                     state_dir: &state_dir,
                 })?;
             } else {
@@ -1612,6 +1648,7 @@ fn main() -> Result<()> {
             data_4h,
             data_1d,
             paired_data,
+            strategy_material_root,
             session_id,
             resume_latest,
             max_cluster_fail_streak,
@@ -1627,6 +1664,7 @@ fn main() -> Result<()> {
                     objective: &objective,
                     paired_data: paired_data.as_deref(),
                     mutation_spec_path: mutation_spec.as_deref(),
+                    strategy_material_root: strategy_material_root.as_deref(),
                     iterations,
                     session_id: session_id.as_deref(),
                     state_dir: &state_dir,
@@ -1770,6 +1808,15 @@ fn main() -> Result<()> {
             &rationale,
             &requested_by,
         )?,
+        Commands::AutoQuantSeedEvidence {
+            symbol,
+            state_dir,
+            strategy_material_root,
+            limit,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            auto_quant_seed_evidence_command(&symbol, &state_dir, &strategy_material_root, limit)?
+        }
         Commands::CleanFutures {
             root,
             output_dir,
@@ -13610,8 +13657,12 @@ mod tests {
 
         let rendered = serde_json::to_string(&value).unwrap();
         assert!(rendered.contains("<local-path>"));
-        assert!(!rendered.contains("/tmp/a.json"));
-        assert!(!rendered.contains("/tmp/b.json"));
+        assert_eq!(value["historical_data_candidates"][0], "<local-path>");
+        assert_eq!(value["historical_data_candidates"][1], "<local-path>");
+        assert!(value["what_you_should_do_now"]
+            .as_str()
+            .unwrap()
+            .contains("<local-path>"));
     }
 
     #[test]

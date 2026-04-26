@@ -7,7 +7,8 @@ use crate::application::release_closure::workflow_next_step_view;
 use crate::state::{recommended_next_command_meta, RecommendedNextCommandMeta};
 
 use super::handoff::{
-    auto_quant_data_ready, auto_quant_workspace_config, AutoQuantWorkspaceConfig,
+    auto_quant_active_strategy_count, auto_quant_data_ready, auto_quant_workspace_config,
+    AutoQuantWorkspaceConfig,
 };
 use super::status::auto_quant_status;
 use super::types::AutoQuantDependencyStatus;
@@ -62,6 +63,7 @@ pub fn auto_quant_readiness_from_status_and_data(
     workspace: AutoQuantWorkspaceConfig,
     data_ready: bool,
 ) -> AutoQuantReadinessSurface {
+    let active_strategy_count = auto_quant_active_strategy_count(&workspace);
     let (status, command, blocked_reason) = if dependency_status.bootstrap_needed {
         (
             "missing_dependency",
@@ -86,6 +88,15 @@ pub fn auto_quant_readiness_from_status_and_data(
             format!("uv run {}", workspace.prepare_script),
             Some("auto_quant_prepare_required"),
         )
+    } else if active_strategy_count == 0 {
+        (
+            "dependency_ready_seed_required",
+            format!(
+                "blocked: create 2-3 active non-underscore strategy files under {} before uv run {}",
+                workspace.strategies_dir, workspace.run_script
+            ),
+            Some("auto_quant_seed_strategies_required"),
+        )
     } else {
         (
             "dependency_ready_data_ready",
@@ -94,6 +105,10 @@ pub fn auto_quant_readiness_from_status_and_data(
         )
     };
     let command = command.to_string();
+    let mut notes = dependency_status.notes.clone();
+    if data_ready && active_strategy_count == 0 {
+        notes.push("auto_quant_seed_strategies_required".to_string());
+    }
     AutoQuantReadinessSurface {
         status: status.to_string(),
         healthy: dependency_status.healthy && data_ready,
@@ -107,6 +122,6 @@ pub fn auto_quant_readiness_from_status_and_data(
         recommended_next_command_meta: recommended_next_command_meta(&command),
         next_step: workflow_next_step_view(&command, blocked_reason),
         recommended_next_command: command,
-        notes: dependency_status.notes.clone(),
+        notes,
     }
 }

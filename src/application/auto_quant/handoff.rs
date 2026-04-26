@@ -2,7 +2,10 @@ use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
+use crate::config::shell_quote;
+
 use super::readiness::{auto_quant_readiness_from_status_and_data, AutoQuantReadinessSurface};
+use super::strategy_materials::{discover_strategy_materials, AutoQuantStrategyMaterialSummary};
 use super::types::AutoQuantDependencyStatus;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -29,6 +32,10 @@ pub struct AutoQuantResearchHandoffPayload {
     pub mutation_spec_path: Option<String>,
     pub iterations: Option<usize>,
     pub session_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub strategy_material_root: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub external_strategy_materials: Vec<AutoQuantStrategyMaterialSummary>,
     pub dependency_status: AutoQuantDependencyStatus,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub readiness: Option<AutoQuantReadinessSurface>,
@@ -47,6 +54,7 @@ pub struct AutoQuantFactorResearchCommandInput<'a> {
     pub objective: &'a str,
     pub paired_data: Option<&'a str>,
     pub mutation_spec_path: Option<&'a str>,
+    pub strategy_material_root: Option<&'a str>,
     pub state_dir: &'a str,
 }
 
@@ -56,6 +64,7 @@ pub struct AutoQuantFactorAutoresearchCommandInput<'a> {
     pub objective: &'a str,
     pub paired_data: Option<&'a str>,
     pub mutation_spec_path: Option<&'a str>,
+    pub strategy_material_root: Option<&'a str>,
     pub iterations: usize,
     pub session_id: Option<&'a str>,
     pub state_dir: &'a str,
@@ -104,40 +113,187 @@ pub fn auto_quant_data_ready(workspace: &AutoQuantWorkspaceConfig) -> bool {
     }
 }
 
+pub fn auto_quant_active_strategy_count(workspace: &AutoQuantWorkspaceConfig) -> usize {
+    let strategies_dir = Path::new(&workspace.strategies_dir);
+    if !strategies_dir.exists() {
+        return 0;
+    }
+    match std::fs::read_dir(strategies_dir) {
+        Ok(entries) => entries
+            .filter_map(Result::ok)
+            .filter(|entry| {
+                let path = entry.path();
+                let is_python = path
+                    .extension()
+                    .and_then(|ext| ext.to_str())
+                    .map(|ext| ext.eq_ignore_ascii_case("py"))
+                    .unwrap_or(false);
+                let is_active = entry
+                    .file_name()
+                    .to_str()
+                    .map(|name| !name.starts_with('_'))
+                    .unwrap_or(false);
+                is_python && is_active
+            })
+            .count(),
+        Err(_) => 0,
+    }
+}
+
+fn auto_quant_strategy_template_path(workspace: &AutoQuantWorkspaceConfig) -> String {
+    PathBuf::from(&workspace.strategies_dir)
+        .join("_template.py.example")
+        .to_string_lossy()
+        .to_string()
+}
+
+fn strategy_material_full_path(root: &str, material_path: &str) -> String {
+    PathBuf::from(root)
+        .join(material_path)
+        .to_string_lossy()
+        .to_string()
+}
+
+fn format_strategy_material_summary(material: &AutoQuantStrategyMaterialSummary) -> String {
+    let mut parts = vec![format!("{} [{}]", material.name, material.strategy_path)];
+    if let Some(csv_path) = &material.evidence_csv_path {
+        parts.push(format!("csv={csv_path}"));
+    }
+    if material.trade_rows > 0 {
+        parts.push(format!("trades={}", material.trade_rows));
+    }
+    if let Some(total_net_pnl) = material.total_net_pnl {
+        parts.push(format!("net_pnl={total_net_pnl:.2}"));
+    }
+    if material.tp_count > 0 || material.sl_count > 0 || material.be_count > 0 {
+        parts.push(format!(
+            "tp/sl/be={}/{}/{}",
+            material.tp_count, material.sl_count, material.be_count
+        ));
+    }
+    if let Some(average_score) = material.average_score {
+        parts.push(format!("avg_score={average_score:.2}"));
+    }
+    parts.join(", ")
+}
+
 pub fn base_suggested_commands(
     workspace: &AutoQuantWorkspaceConfig,
     data_ready: bool,
+    active_strategy_count: usize,
+    strategy_material_root: Option<&str>,
+    external_strategy_materials: &[AutoQuantStrategyMaterialSummary],
 ) -> Vec<String> {
-    let mut commands = vec![
-        format!("python3 {}", workspace.program_md),
-        format!("uv run {}", workspace.run_script),
-    ];
+    let mut commands = vec![format!("cat {}", workspace.program_md)];
+    if active_strategy_count == 0 {
+        commands.push(format!(
+            "cat {}",
+            auto_quant_strategy_template_path(workspace)
+        ));
+        if let Some(root) = strategy_material_root.filter(|value| !value.trim().is_empty()) {
+            for material in external_strategy_materials.iter().take(2) {
+                let strategy_path = strategy_material_full_path(root, &material.strategy_path);
+                commands.push(format!("sed -n '1,160p' {}", shell_quote(&strategy_path)));
+                if let Some(csv_path) = &material.evidence_csv_path {
+                    let csv_path = strategy_material_full_path(root, csv_path);
+                    commands.push(format!("head -n 20 {}", shell_quote(&csv_path)));
+                }
+            }
+        }
+    }
     if !data_ready {
-        commands.insert(0, format!("uv run {}", workspace.prepare_script));
+        commands.push(format!("uv run {}", workspace.prepare_script));
+    } else {
+        commands.push(format!("uv run {}", workspace.run_script));
     }
     commands
 }
 
-pub fn suggested_next_steps_for_handoff(handoff_kind: &str, data_ready: bool) -> Vec<String> {
-    match (handoff_kind, data_ready) {
-        ("factor_autoresearch", true) => vec![
-            "resume or start the Auto-Quant autonomous loop with factor retention and explicit keep/discard review".to_string(),
-            "export candidate/retrospective summary back to ict-engine after each iteration checkpoint".to_string(),
-        ],
-        ("factor_autoresearch", false) => vec![
+pub fn suggested_next_steps_for_handoff(
+    handoff_kind: &str,
+    data_ready: bool,
+    active_strategy_count: usize,
+    has_external_strategy_materials: bool,
+) -> Vec<String> {
+    let seed_step = if has_external_strategy_materials {
+        "read Auto-Quant program.md, the strategy template, and the attached external strategy material summaries, then create 2-3 active non-underscore strategy files across different paradigms before any run.py execution"
+            .to_string()
+    } else {
+        "read Auto-Quant program.md plus the strategy template, then create 2-3 active non-underscore strategy files across different paradigms before any run.py execution"
+            .to_string()
+    };
+    match (handoff_kind, data_ready, active_strategy_count == 0) {
+        ("factor_autoresearch", false, _) => vec![
             "prepare Auto-Quant market data before attempting the autoresearch loop".to_string(),
             "re-run factor-autoresearch with backend=auto-quant after data becomes ready".to_string(),
         ],
-        (_, true) => vec![
-            "open Auto-Quant program.md and stage a research loop for the requested objective"
-                .to_string(),
-            "run Auto-Quant backtest loop and export a stable candidate package for ict-engine"
-                .to_string(),
-        ],
-        (_, false) => vec![
+        (_, false, _) => vec![
             "prepare Auto-Quant market data before attempting the research loop".to_string(),
             "re-run factor-research with backend=auto-quant after data becomes ready".to_string(),
         ],
+        ("factor_autoresearch", true, true) => vec![
+            seed_step.clone(),
+            "after seeding, run the Auto-Quant loop, keep or discard only from measured backtest results, and export candidate plus retrospective checkpoints back to ict-engine".to_string(),
+        ],
+        (_, true, true) => vec![
+            seed_step,
+            "after seeding, run Auto-Quant backtests, keep the best measured candidate, and export the candidate package back to ict-engine".to_string(),
+        ],
+        ("factor_autoresearch", true, false) => vec![
+            "resume or start the Auto-Quant autonomous loop with factor retention and explicit keep/discard review".to_string(),
+            "export candidate/retrospective summary back to ict-engine after each iteration checkpoint".to_string(),
+        ],
+        (_, true, false) => vec![
+            "open Auto-Quant program.md and stage a research loop for the requested objective".to_string(),
+            "run Auto-Quant backtest loop and export a stable candidate package for ict-engine".to_string(),
+        ],
+    }
+}
+
+fn build_auto_quant_agent_prompt(
+    handoff_kind: &str,
+    objective: &str,
+    workspace: &AutoQuantWorkspaceConfig,
+    active_strategy_count: usize,
+    strategy_material_root: Option<&str>,
+    external_strategy_materials: &[AutoQuantStrategyMaterialSummary],
+) -> String {
+    let template_path = auto_quant_strategy_template_path(workspace);
+    let external_materials_summary = if external_strategy_materials.is_empty() {
+        String::new()
+    } else {
+        let root = strategy_material_root.unwrap_or("<external-strategy-material-root>");
+        let materials = external_strategy_materials
+            .iter()
+            .take(3)
+            .map(format_strategy_material_summary)
+            .collect::<Vec<_>>()
+            .join(" | ");
+        format!(
+            " Read-only external strategy materials from {} are attached as seed inspiration only; do not execute those scripts directly or carry their absolute-path runtime dependencies into the managed Auto-Quant workspace. Highest-evidence materials: {}.",
+            root, materials
+        )
+    };
+    let seed_instruction = if active_strategy_count == 0 {
+        format!(
+            "If {} has no active non-underscore .py strategies, first read {}, create 2-3 seed strategies across different paradigms, prefer archived winners or minimal descendants when available, and only then run uv run {}.{}",
+            workspace.strategies_dir, template_path, workspace.run_script, external_materials_summary
+        )
+    } else {
+        format!(
+            "Run uv run {} on the current active strategy set, review measured results, and iterate only from backtest evidence.{}",
+            workspace.run_script, external_materials_summary
+        )
+    };
+    match handoff_kind {
+        "factor_autoresearch" => format!(
+            "Auto-Quant is the autoresearch execution backend for this request. Keep ict-engine as the control plane, preserve existing ict-engine factors, work the '{}' objective, and read {} before acting. {} Never treat 'no strategies found' as completion. Keep, discard, fork, or kill only from measured results and return a candidate package plus retrospective signals to ict-engine.",
+            objective, workspace.program_md, seed_instruction
+        ),
+        _ => format!(
+            "Auto-Quant is the research execution backend for this request. Keep ict-engine as the control plane, preserve old factors, work the '{}' objective, and read {} before acting. {} Never treat 'no strategies found' as completion. Export the best measured candidate package back into ict-engine state.",
+            objective, workspace.program_md, seed_instruction
+        ),
     }
 }
 
@@ -147,11 +303,14 @@ pub fn build_factor_research_handoff_payload(
     objective: &str,
     paired_data: Option<&str>,
     mutation_spec_path: Option<&str>,
+    strategy_material_root: Option<&str>,
     state_dir: &str,
     dependency_status: AutoQuantDependencyStatus,
 ) -> AutoQuantResearchHandoffPayload {
     let workspace = auto_quant_workspace_config(&dependency_status.managed_dir);
     let data_ready = auto_quant_data_ready(&workspace);
+    let active_strategy_count = auto_quant_active_strategy_count(&workspace);
+    let external_strategy_materials = discover_strategy_materials(strategy_material_root, 3);
     let readiness = auto_quant_readiness_from_status_and_data(
         &dependency_status,
         state_dir,
@@ -174,6 +333,8 @@ pub fn build_factor_research_handoff_payload(
         mutation_spec_path: mutation_spec_path.map(str::to_string),
         iterations: None,
         session_id: None,
+        strategy_material_root: strategy_material_root.map(str::to_string),
+        external_strategy_materials,
         dependency_status,
         readiness: Some(readiness),
         workspace,
@@ -184,17 +345,54 @@ pub fn build_factor_research_handoff_payload(
         agent_prompt: String::new(),
         notes: Vec::new(),
     };
-    payload.suggested_commands = base_suggested_commands(&payload.workspace, payload.data_ready);
-    payload.suggested_next_steps =
-        suggested_next_steps_for_handoff(&payload.handoff_kind, payload.data_ready);
-    payload.agent_prompt = format!(
-        "Auto-Quant is the research execution backend for this request. Keep ict-engine as the control plane, preserve old factors, use {}, and export a candidate package back into ict-engine state.",
-        payload.workspace.program_md
+    payload.suggested_commands = base_suggested_commands(
+        &payload.workspace,
+        payload.data_ready,
+        active_strategy_count,
+        payload.strategy_material_root.as_deref(),
+        &payload.external_strategy_materials,
+    );
+    payload.suggested_next_steps = suggested_next_steps_for_handoff(
+        &payload.handoff_kind,
+        payload.data_ready,
+        active_strategy_count,
+        !payload.external_strategy_materials.is_empty(),
+    );
+    payload.agent_prompt = build_auto_quant_agent_prompt(
+        &payload.handoff_kind,
+        &payload.objective,
+        &payload.workspace,
+        active_strategy_count,
+        payload.strategy_material_root.as_deref(),
+        &payload.external_strategy_materials,
     );
     if !payload.data_ready {
         payload
             .notes
             .push("auto_quant_prepare_required_before_run".to_string());
+    }
+    if active_strategy_count == 0 {
+        payload
+            .notes
+            .push("auto_quant_seed_strategies_required".to_string());
+    }
+    payload.notes.push(format!(
+        "auto_quant_active_strategy_count={active_strategy_count}"
+    ));
+    if let Some(root) = &payload.strategy_material_root {
+        payload
+            .notes
+            .push(format!("auto_quant_strategy_material_root={root}"));
+        payload.notes.push(format!(
+            "auto_quant_external_strategy_material_count={}",
+            payload.external_strategy_materials.len()
+        ));
+    }
+    for material in payload.external_strategy_materials.iter().take(3) {
+        payload.notes.push(format!(
+            "auto_quant_external_strategy_material={}",
+            format_strategy_material_summary(material)
+        ));
     }
     payload.notes.push(format!(
         "requested_at={}",
@@ -210,6 +408,7 @@ pub fn build_factor_autoresearch_handoff_payload(
     objective: &str,
     paired_data: Option<&str>,
     mutation_spec_path: Option<&str>,
+    strategy_material_root: Option<&str>,
     iterations: usize,
     session_id: Option<&str>,
     state_dir: &str,
@@ -217,6 +416,8 @@ pub fn build_factor_autoresearch_handoff_payload(
 ) -> AutoQuantResearchHandoffPayload {
     let workspace = auto_quant_workspace_config(&dependency_status.managed_dir);
     let data_ready = auto_quant_data_ready(&workspace);
+    let active_strategy_count = auto_quant_active_strategy_count(&workspace);
+    let external_strategy_materials = discover_strategy_materials(strategy_material_root, 3);
     let readiness = auto_quant_readiness_from_status_and_data(
         &dependency_status,
         state_dir,
@@ -239,6 +440,8 @@ pub fn build_factor_autoresearch_handoff_payload(
         mutation_spec_path: mutation_spec_path.map(str::to_string),
         iterations: Some(iterations),
         session_id: session_id.map(str::to_string),
+        strategy_material_root: strategy_material_root.map(str::to_string),
+        external_strategy_materials,
         dependency_status,
         readiness: Some(readiness),
         workspace,
@@ -249,21 +452,149 @@ pub fn build_factor_autoresearch_handoff_payload(
         agent_prompt: String::new(),
         notes: Vec::new(),
     };
-    payload.suggested_commands = base_suggested_commands(&payload.workspace, payload.data_ready);
-    payload.suggested_next_steps =
-        suggested_next_steps_for_handoff(&payload.handoff_kind, payload.data_ready);
-    payload.agent_prompt = format!(
-        "Auto-Quant is the autoresearch execution backend for this request. Preserve existing ict-engine factors, use {}, and return a candidate package plus retrospective signals to ict-engine.",
-        payload.workspace.program_md
+    payload.suggested_commands = base_suggested_commands(
+        &payload.workspace,
+        payload.data_ready,
+        active_strategy_count,
+        payload.strategy_material_root.as_deref(),
+        &payload.external_strategy_materials,
+    );
+    payload.suggested_next_steps = suggested_next_steps_for_handoff(
+        &payload.handoff_kind,
+        payload.data_ready,
+        active_strategy_count,
+        !payload.external_strategy_materials.is_empty(),
+    );
+    payload.agent_prompt = build_auto_quant_agent_prompt(
+        &payload.handoff_kind,
+        &payload.objective,
+        &payload.workspace,
+        active_strategy_count,
+        payload.strategy_material_root.as_deref(),
+        &payload.external_strategy_materials,
     );
     if !payload.data_ready {
         payload
             .notes
             .push("auto_quant_prepare_required_before_run".to_string());
     }
+    if active_strategy_count == 0 {
+        payload
+            .notes
+            .push("auto_quant_seed_strategies_required".to_string());
+    }
+    payload.notes.push(format!(
+        "auto_quant_active_strategy_count={active_strategy_count}"
+    ));
+    if let Some(root) = &payload.strategy_material_root {
+        payload
+            .notes
+            .push(format!("auto_quant_strategy_material_root={root}"));
+        payload.notes.push(format!(
+            "auto_quant_external_strategy_material_count={}",
+            payload.external_strategy_materials.len()
+        ));
+    }
+    for material in payload.external_strategy_materials.iter().take(3) {
+        payload.notes.push(format!(
+            "auto_quant_external_strategy_material={}",
+            format_strategy_material_summary(material)
+        ));
+    }
     payload.notes.push(format!(
         "requested_at={}",
         Utc::now().format("%Y%m%dT%H%M%S%.3fZ")
     ));
     payload
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::application::auto_quant::types::AutoQuantDependencyStatus;
+
+    fn healthy_dependency_status_for(managed_dir: &str) -> AutoQuantDependencyStatus {
+        AutoQuantDependencyStatus {
+            repo_url: "repo".to_string(),
+            managed_dir: managed_dir.to_string(),
+            tracked_branch: "master".to_string(),
+            pinned_ref: None,
+            current_commit: None,
+            upstream_commit: None,
+            bootstrap_needed: false,
+            config_present: true,
+            managed_repo_present: true,
+            healthy: true,
+            update_available: false,
+            required_files: Vec::new(),
+            notes: Vec::new(),
+            adapter_version: "v1".to_string(),
+            last_sync: None,
+        }
+    }
+
+    #[test]
+    fn research_handoff_attaches_read_only_strategy_material_summary() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed_dir = temp.path().join("managed-auto-quant");
+        let strategies_dir = managed_dir.join("user_data/strategies");
+        let data_dir = managed_dir.join("user_data/data");
+        std::fs::create_dir_all(&strategies_dir).unwrap();
+        std::fs::create_dir_all(&data_dir).unwrap();
+        std::fs::write(managed_dir.join("program.md"), "program").unwrap();
+        std::fs::write(managed_dir.join("prepare.py"), "print('prepare')").unwrap();
+        std::fs::write(managed_dir.join("run.py"), "print('run')").unwrap();
+        std::fs::write(
+            strategies_dir.join("_template.py.example"),
+            "class Template: pass",
+        )
+        .unwrap();
+        for index in 0..15 {
+            std::fs::write(data_dir.join(format!("prepared-{index}.feather")), "ready").unwrap();
+        }
+
+        let material_root = temp.path().join("Tomac Material Library");
+        std::fs::create_dir_all(&material_root).unwrap();
+        std::fs::write(
+            material_root.join("trend_runner.py"),
+            "class TrendRunner: pass\n",
+        )
+        .unwrap();
+        std::fs::write(
+            material_root.join("trend_runner_results.csv"),
+            "Time,Net PnL,Result,Score\n2024-01-01,12.5,TP,4.5\n2024-01-02,-2.5,BE,3.5\n",
+        )
+        .unwrap();
+
+        let payload = build_factor_research_handoff_payload(
+            "NQ",
+            "demo.json",
+            "expansion_manipulation",
+            None,
+            None,
+            Some(material_root.to_str().unwrap()),
+            temp.path().to_str().unwrap(),
+            healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+        );
+
+        assert_eq!(payload.external_strategy_materials.len(), 1);
+        assert_eq!(
+            payload.external_strategy_materials[0]
+                .evidence_csv_path
+                .as_deref(),
+            Some("trend_runner_results.csv")
+        );
+        assert!(payload
+            .agent_prompt
+            .contains("do not execute those scripts directly"));
+        assert!(payload
+            .notes
+            .iter()
+            .any(|note| note.starts_with("auto_quant_external_strategy_material_count=1")));
+        assert!(payload.suggested_commands.iter().any(|command| {
+            command.starts_with("sed -n '1,160p' ")
+                && command.contains("'")
+                && command.contains("Tomac Material Library/trend_runner.py")
+        }));
+    }
 }

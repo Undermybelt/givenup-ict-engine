@@ -72,6 +72,7 @@ mod tests {
             "expansion_manipulation",
             None,
             None,
+            None,
             temp.path().to_str().unwrap(),
             healthy_dependency_status(),
         );

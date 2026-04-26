@@ -9,8 +9,8 @@ use crate::state::{
 };
 
 use super::handoff::{
-    auto_quant_data_ready, base_suggested_commands, suggested_next_steps_for_handoff,
-    AutoQuantResearchHandoffPayload,
+    auto_quant_active_strategy_count, auto_quant_data_ready, base_suggested_commands,
+    suggested_next_steps_for_handoff, AutoQuantResearchHandoffPayload,
 };
 use super::readiness::auto_quant_readiness_from_status_and_data;
 use super::types::AutoQuantAdoptionDecisionArtifact;
@@ -77,6 +77,7 @@ pub fn build_auto_quant_adoption_review(
     };
     let payload = load_handoff_payload(state_dir, symbol, entry)?;
     let data_ready = auto_quant_data_ready(&payload.workspace);
+    let active_strategy_count = auto_quant_active_strategy_count(&payload.workspace);
     let readiness = auto_quant_readiness_from_status_and_data(
         &payload.dependency_status,
         &payload.state_dir,
@@ -94,15 +95,31 @@ pub fn build_auto_quant_adoption_review(
             "prepare_required".to_string(),
             "Auto-Quant workspace is healthy but research data is not ready yet".to_string(),
         )
+    } else if active_strategy_count == 0 {
+        (
+            "seed_required".to_string(),
+            "Auto-Quant workspace is healthy and data-ready but has no active strategy files; seed strategies before external execution"
+                .to_string(),
+        )
     } else {
         (
             "ready_for_external_execution".to_string(),
             "handoff is ready for Auto-Quant execution and candidate export".to_string(),
         )
     };
-    let suggested_commands = base_suggested_commands(&payload.workspace, readiness.data_ready);
-    let suggested_next_steps =
-        suggested_next_steps_for_handoff(&payload.handoff_kind, readiness.data_ready);
+    let suggested_commands = base_suggested_commands(
+        &payload.workspace,
+        readiness.data_ready,
+        active_strategy_count,
+        payload.strategy_material_root.as_deref(),
+        &payload.external_strategy_materials,
+    );
+    let suggested_next_steps = suggested_next_steps_for_handoff(
+        &payload.handoff_kind,
+        readiness.data_ready,
+        active_strategy_count,
+        !payload.external_strategy_materials.is_empty(),
+    );
     Ok(AutoQuantAdoptionReview {
         symbol: symbol.to_string(),
         state_dir: state_dir.to_string(),
@@ -203,6 +220,7 @@ mod tests {
             "expansion_manipulation",
             None,
             None,
+            None,
             temp.path().to_str().unwrap(),
             healthy_dependency_status(),
         );
@@ -223,6 +241,7 @@ mod tests {
             "expansion_manipulation",
             None,
             None,
+            None,
             temp.path().to_str().unwrap(),
             healthy_dependency_status_for(managed.to_str().unwrap()),
         );
@@ -238,6 +257,13 @@ mod tests {
             )
             .unwrap();
         }
+
+        std::fs::create_dir_all(&payload.workspace.strategies_dir).unwrap();
+        std::fs::write(
+            std::path::Path::new(&payload.workspace.strategies_dir).join("SeedAlpha.py"),
+            "class SeedAlpha: pass",
+        )
+        .unwrap();
 
         let review =
             build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None).unwrap();
@@ -257,6 +283,7 @@ mod tests {
             "NQ",
             "demo.json",
             "expansion_manipulation",
+            None,
             None,
             None,
             temp.path().to_str().unwrap(),
@@ -279,6 +306,7 @@ mod tests {
             "NQ",
             "demo.json",
             "expansion_manipulation",
+            None,
             None,
             None,
             temp.path().to_str().unwrap(),
