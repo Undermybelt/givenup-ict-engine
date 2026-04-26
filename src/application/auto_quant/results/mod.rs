@@ -32,9 +32,9 @@ pub use manifest::{
     StrategyLibraryValidationMetrics, MANIFEST_SUPPORTED_VERSIONS,
 };
 pub use persistence::{
-    find_existing_apply_for_library, mark_prior_libraries_superseded,
-    persist_imported_library, persist_prior_init_outcome, PersistedLibrary,
-    PersistedPriorInit, PriorInitHistoryEntry, ARTIFACT_KIND_LIBRARY,
+    find_any_active_prior_init_apply, find_existing_apply_for_library,
+    mark_prior_libraries_superseded, persist_imported_library, persist_prior_init_outcome,
+    PersistedLibrary, PersistedPriorInit, PriorInitHistoryEntry, ARTIFACT_KIND_LIBRARY,
     ARTIFACT_KIND_PRIOR_INIT, LIBRARY_RULE_VERSION, PRIOR_INIT_HISTORY_FILE,
     PRIOR_INIT_RULE_VERSION, STRATEGY_LIBRARY_FILE,
 };

@@ -101,7 +101,7 @@ pub fn persist_imported_library(
     let artifact_id = format!(
         "auto_quant_strategy_library_{}_{}",
         symbol,
-        timestamp.format("%Y%m%dT%H%M%S%.3fZ")
+        timestamp.format("%Y%m%dT%H%M%S%.9fZ")
     );
 
     let superseded_ids = mark_prior_libraries_superseded(state_dir, symbol, &artifact_id)?;
@@ -229,6 +229,31 @@ pub fn find_existing_apply_for_library(
         .map(|entry| entry.artifact_id))
 }
 
+/// Library-agnostic counterpart to `find_existing_apply_for_library`:
+/// returns the most recent `auto_quant_prior_init_applied` entry
+/// (regardless of source library) whose `status == "applied"`.
+/// Returns `(apply_artifact_id, library_artifact_id)` so the caller
+/// can build a precise cross-library double-apply error message.
+///
+/// This covers the gap where the operator imports v1, applies v1,
+/// then imports v2 (which auto-supersedes v1) and applies v2: the
+/// per-library guard sees no prior apply for v2's id and would let
+/// the second mutation stack on top of v1's still-live effect.
+pub fn find_any_active_prior_init_apply(
+    state_dir: &str,
+    symbol: &str,
+) -> Result<Option<(String, Option<String>)>> {
+    let ledger: Vec<ArtifactLedgerEntry> =
+        crate::state::load_state_or_default(state_dir, symbol, crate::state::ARTIFACT_LEDGER_FILE)?;
+    Ok(ledger
+        .into_iter()
+        .rev()
+        .find(|entry| {
+            entry.artifact_kind == ARTIFACT_KIND_PRIOR_INIT && entry.status == "applied"
+        })
+        .map(|entry| (entry.artifact_id, entry.source_run_id)))
+}
+
 pub fn persist_prior_init_outcome(
     state_dir: &str,
     symbol: &str,
@@ -241,7 +266,7 @@ pub fn persist_prior_init_outcome(
     let run_id = format!(
         "auto_quant_prior_init_{}_{}",
         symbol,
-        timestamp.format("%Y%m%dT%H%M%S%.3fZ")
+        timestamp.format("%Y%m%dT%H%M%S%.9fZ")
     );
     let artifact_id = run_id.clone();
     let outcome_filename = format!("{}.json", run_id);
@@ -598,5 +623,53 @@ mod tests {
         let found =
             find_existing_apply_for_library(state_dir, "NQ", &lib.artifact_id).unwrap();
         assert_eq!(found.as_deref(), Some(applied.artifact_id.as_str()));
+    }
+
+    #[test]
+    fn find_any_active_apply_spans_library_boundaries() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().to_str().unwrap();
+        let manifest = manifest_with_two_ok_one_error();
+
+        // Import v1, apply v1.
+        let v1 =
+            persist_imported_library(state_dir, "NQ", &manifest, "/tmp/v1.json").unwrap();
+        let outcome = AutoQuantPriorInitOutcome {
+            parent_config: vec![0, 0, 0],
+            initial_probs: vec![1.0 / 3.0; 3],
+            final_probs: vec![0.5, 0.0, 0.5],
+            strategies_applied: vec![Default::default()],
+            strategies_skipped: vec![],
+            temper: 0.5,
+            prior_strength: 4.0,
+        };
+        let v1_apply = persist_prior_init_outcome(
+            state_dir,
+            "NQ",
+            &outcome,
+            &v1.artifact_id,
+            &v1.state_path,
+            false,
+        )
+        .unwrap();
+
+        // Import v2 (auto-supersedes v1).
+        let v2 =
+            persist_imported_library(state_dir, "NQ", &manifest, "/tmp/v2.json").unwrap();
+
+        // Per-library guard misses v1's apply when asked about v2.
+        assert!(
+            find_existing_apply_for_library(state_dir, "NQ", &v2.artifact_id)
+                .unwrap()
+                .is_none()
+        );
+
+        // Cross-library guard catches it: an applied prior_init exists,
+        // it points back to v1's library_artifact_id.
+        let any = find_any_active_prior_init_apply(state_dir, "NQ").unwrap();
+        let (apply_id, lib_id) = any.expect("expected active apply");
+        assert_eq!(apply_id, v1_apply.artifact_id);
+        assert_eq!(lib_id.as_deref(), Some(v1.artifact_id.as_str()));
+        assert_ne!(lib_id.as_deref(), Some(v2.artifact_id.as_str()));
     }
 }

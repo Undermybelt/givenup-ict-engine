@@ -9,10 +9,11 @@ use super::{
     persistence::persist_handoff_payload,
     results::{
         apply_strategy_library_prior_init, cross_check_manifest_against_log,
-        find_existing_apply_for_library, load_strategy_library_manifest,
-        parse_run_ibkr_log, persist_imported_library, persist_prior_init_outcome,
-        AutoQuantPriorInitInput, DEFAULT_DEFAULT_PARENT_CONFIG, DEFAULT_PRIOR_STRENGTH,
-        DEFAULT_TEMPER, STRATEGY_LIBRARY_FILE,
+        find_any_active_prior_init_apply, find_existing_apply_for_library,
+        load_strategy_library_manifest, parse_run_ibkr_log, persist_imported_library,
+        persist_prior_init_outcome, AutoQuantPriorInitInput,
+        DEFAULT_DEFAULT_PARENT_CONFIG, DEFAULT_PRIOR_STRENGTH, DEFAULT_TEMPER,
+        STRATEGY_LIBRARY_FILE,
     },
     seed_evidence::{
         persist_auto_quant_seed_material_evidence, AUTO_QUANT_SEED_MATERIAL_EVIDENCE_DEFAULT_LIMIT,
@@ -366,15 +367,37 @@ pub fn auto_quant_prior_init_command(input: AutoQuantPriorInitCommandInput<'_>) 
         symbol,
         &library_artifact_id,
     )?;
+    let cross_library_apply = find_any_active_prior_init_apply(state_dir, symbol)?;
     if !dry_run && !force {
         if let Some(prior_apply) = existing_apply.as_ref() {
             bail!(
                 "library '{lib}' has already been applied via '{prior}'. \
                  Re-applying would silently double the tempered pseudo-counts. \
-                 Roll back the BBN snapshot and pass --force to override, \
-                 or re-run --dry-run to inspect the diff.",
+                 Roll back the BBN snapshot (`rm <state_dir>/<symbol>/bbn_network.json`) \
+                 and pass --force to override, or re-run --dry-run to inspect the diff.",
                 lib = library_artifact_id,
                 prior = prior_apply,
+            );
+        }
+        if let Some((prior_apply, prior_lib)) = cross_library_apply.as_ref() {
+            // The same-library check is exhaustive against `library_artifact_id`,
+            // so if we get here the prior apply belongs to a *different* library
+            // (typically v1, where v2 was just imported and auto-superseded v1).
+            // Without this guard the v2 mutation would stack on top of v1's still-live
+            // CPT effect and silently double the evidence weight.
+            let prior_lib_str = prior_lib
+                .as_deref()
+                .unwrap_or("(unknown library)");
+            bail!(
+                "BBN already carries an Auto-Quant prior init from library '{prior_lib}' \
+                 (apply '{prior_apply}'); current request targets library '{lib}'. \
+                 Re-applying without rollback would stack two pseudo-count layers on the same \
+                 trade_outcome row. Roll back the BBN snapshot \
+                 (`rm <state_dir>/<symbol>/bbn_network.json` and re-run import + prior-init) \
+                 or pass --force to deliberately stack.",
+                prior_lib = prior_lib_str,
+                prior_apply = prior_apply,
+                lib = library_artifact_id,
             );
         }
     }
@@ -410,12 +433,20 @@ pub fn auto_quant_prior_init_command(input: AutoQuantPriorInitCommandInput<'_>) 
         dry_run,
     )?;
 
+    let cross_library_apply_json = cross_library_apply.as_ref().map(|(apply_id, lib_id)| {
+        json!({
+            "apply_artifact_id": apply_id,
+            "library_artifact_id": lib_id,
+        })
+    });
+
     let summary = json!({
         "command": "auto-quant-prior-init",
         "symbol": symbol,
         "library_path": resolved_path,
         "library_artifact_id": library_artifact_id,
         "existing_apply_artifact_id": existing_apply,
+        "cross_library_apply": cross_library_apply_json,
         "force": force,
         "prior_init_artifact_id": persisted.artifact_id,
         "prior_init_state_path": persisted.state_path,
@@ -616,6 +647,83 @@ mod tests {
         .unwrap();
 
         // --force overrides the guard.
+        auto_quant_prior_init_command(AutoQuantPriorInitCommandInput {
+            symbol: "NQ",
+            state_dir,
+            library_path: None,
+            strategy_filter: None,
+            temper: Some(0.5),
+            prior_strength: Some(4.0),
+            parent_config: None,
+            dry_run: false,
+            force: true,
+        })
+        .unwrap();
+    }
+
+    #[test]
+    fn second_apply_against_different_library_is_blocked_without_force() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().to_str().unwrap();
+        let manifest = StrategyLibraryManifest {
+            manifest_version: "1.0".to_string(),
+            strategies: vec![ok_strategy("S1", 100, 75.0)],
+            ..Default::default()
+        };
+        let v1_path = write_manifest_to(temp.path(), &manifest);
+        // Import v1 + apply v1 + import v2 (auto-supersedes v1).
+        auto_quant_results_import_command("NQ", state_dir, &v1_path, None).unwrap();
+        auto_quant_prior_init_command(AutoQuantPriorInitCommandInput {
+            symbol: "NQ",
+            state_dir,
+            library_path: None,
+            strategy_filter: None,
+            temper: Some(0.5),
+            prior_strength: Some(4.0),
+            parent_config: None,
+            dry_run: false,
+            force: false,
+        })
+        .unwrap();
+        // Re-export the same content as v2 by re-importing the same path.
+        auto_quant_results_import_command("NQ", state_dir, &v1_path, None).unwrap();
+
+        // Apply v2 (the latest ready_for_prior_init) → must bail with the
+        // cross-library message. Without the guard the v2 pseudo-counts
+        // would stack on top of v1's still-live CPT mutation.
+        let err = auto_quant_prior_init_command(AutoQuantPriorInitCommandInput {
+            symbol: "NQ",
+            state_dir,
+            library_path: None,
+            strategy_filter: None,
+            temper: Some(0.5),
+            prior_strength: Some(4.0),
+            parent_config: None,
+            dry_run: false,
+            force: false,
+        })
+        .unwrap_err();
+        assert!(
+            err.to_string()
+                .contains("BBN already carries an Auto-Quant prior init"),
+            "unexpected error: {err}"
+        );
+
+        // --dry-run is still allowed (read-only review path).
+        auto_quant_prior_init_command(AutoQuantPriorInitCommandInput {
+            symbol: "NQ",
+            state_dir,
+            library_path: None,
+            strategy_filter: None,
+            temper: Some(0.5),
+            prior_strength: Some(4.0),
+            parent_config: None,
+            dry_run: true,
+            force: false,
+        })
+        .unwrap();
+
+        // --force lets the operator deliberately stack.
         auto_quant_prior_init_command(AutoQuantPriorInitCommandInput {
             symbol: "NQ",
             state_dir,

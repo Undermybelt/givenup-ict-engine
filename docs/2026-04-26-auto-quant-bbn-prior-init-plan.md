@@ -1,7 +1,7 @@
 # Auto-Quant → ict-engine BBN Prior Init (Phase 1)
 
 Date: 2026-04-26
-Status: shipped (commits a7347f6, 8d03a01, plus follow-up cross-check + supersession + apply-guard)
+Status: shipped (commits a7347f6, 8d03a01, 9a2b26e, plus cross-library guard follow-up)
 Phase: 1 of 3 (offline path)
 
 ## Context
@@ -201,19 +201,43 @@ dry_run_preview     ── any --dry-run invocation
 
 ### F'. Apply guard (replaces the loose "idempotent" property)
 
-A second non-dry-run apply against a library_artifact_id that already
-has an `applied` ledger entry is **refused** with an explicit error:
+The math is **not** idempotent under repeated apply — each invocation
+adds tempered pseudo-counts to the trade_outcome row. Two ledger-level
+guards together prevent the silent double-count footgun:
 
-> library 'auto_quant_strategy_library_NQ_…' has already been applied
-> via 'auto_quant_prior_init_NQ_…'. Re-applying would silently double
-> the tempered pseudo-counts. Roll back the BBN snapshot and pass
-> `--force` to override, or re-run `--dry-run` to inspect the diff.
+1. **Same-library guard.** A second non-dry-run apply against a
+   `library_artifact_id` that already has an `applied` ledger entry is
+   refused:
 
-This is the practical safety property: the math is **not** idempotent
-under repeated apply (each call adds tempered counts), so the system
-forbids the unsafe operation and offers two safe ways forward
-(`--dry-run` for read-only review, `--force` for an explicit
-post-rollback re-apply).
+   > library 'auto_quant_strategy_library_NQ_…' has already been
+   > applied via 'auto_quant_prior_init_NQ_…'. Re-applying would
+   > silently double the tempered pseudo-counts. Roll back the BBN
+   > snapshot (`rm <state_dir>/<symbol>/bbn_network.json`) and pass
+   > `--force` to override, or re-run `--dry-run` to inspect the diff.
+
+2. **Cross-library guard.** A non-dry-run apply against library v2
+   when v1 was previously applied (and v1 has since been
+   auto-superseded by the v2 import) is refused:
+
+   > BBN already carries an Auto-Quant prior init from library
+   > 'auto_quant_strategy_library_NQ_…' (apply
+   > 'auto_quant_prior_init_NQ_…'); current request targets library
+   > 'auto_quant_strategy_library_NQ_…'. Re-applying without rollback
+   > would stack two pseudo-count layers on the same trade_outcome
+   > row. Roll back the BBN snapshot
+   > (`rm <state_dir>/<symbol>/bbn_network.json` and re-run import +
+   > prior-init) or pass `--force` to deliberately stack.
+
+Both `--dry-run` (always allowed; emits a `dry_run_preview` ledger
+entry without touching `bbn_network.json`) and `--force` (writes a
+fresh `applied` entry on top of the existing one) bypass these
+guards, so the operator has read-only inspection and explicit-stack
+escape hatches.
+
+Manual rollback recipe (no dedicated subcommand yet — deferred to
+Phase 2): delete the `bbn_network.json` snapshot, then re-run
+`ict-engine auto-quant-prior-init …`. The fresh build_trading_network
+seed is the single source of truth.
 
 ### G. ict-engine — CLI commands
 
@@ -261,8 +285,11 @@ Shipped:
   recognises only `applied` (not `dry_run_preview`).
 - Unit (command_entry): import + dry-run leaves BBN untouched, apply
   writes BBN, missing library yields a directed error, second apply
-  is refused with an `already been applied` error, `--force`
-  overrides the guard, `--log` runs the cross-check informationally.
+  against the same library is refused with an `already been applied`
+  error, second apply against a *different* library after a prior
+  apply is refused with a `BBN already carries an Auto-Quant prior
+  init` cross-library error, `--force` overrides both guards,
+  `--log` runs the cross-check informationally.
 
 Out of scope here (deferred to Phase 2):
 
