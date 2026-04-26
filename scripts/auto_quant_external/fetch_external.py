@@ -39,6 +39,13 @@ Providers (sub-commands):
   polymarket-history Mid-price time series for a Polymarket CLOB token,
                      usable as alternative-data implied-probability series.
 
+  ibkr-historical    OHLCV via local IB Gateway / TWS (single login session)
+                     for stocks, ETFs, futures, indices, forex, options.
+                     Opt-in feature (see scripts/ibkr_bridge/setup.py); reuses
+                     the cross-process IbkrRateLimiter so concurrent bridge.py
+                     traffic is correctly throttled against the same account
+                     budget.
+
 Architectural note: this script's job is FETCH + WRITE-CANONICAL-CSV (or wide
 CSV for option chain / market list). Data cleaning, resampling, and feather
 conversion live in prepare_external.py. Two stages, two tools, no entanglement.
@@ -1022,6 +1029,172 @@ def cmd_polymarket_history(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------
+# IBKR historical (short-lived connection sharing IbkrRateLimiter with bridge)
+
+
+def _import_ibkr_bridge() -> tuple:
+    """Lazily resolve the sibling `ibkr_bridge` package and ib_async.
+
+    The package may live as either:
+        * <here>/../ibkr_bridge/   (ict-engine source layout)
+        * <here>/scripts/ibkr_bridge/   (Auto-Quant deploy layout where
+          fetch_external.py sits at repo root)
+
+    Raises a clear error when not found so users know to run setup first.
+    """
+    here = Path(__file__).resolve().parent
+    candidates = [here.parent, here / "scripts", Path.cwd() / "scripts"]
+    for cand in candidates:
+        if (cand / "ibkr_bridge" / "__init__.py").exists():
+            if str(cand) not in sys.path:
+                sys.path.insert(0, str(cand))
+            break
+    try:
+        from ibkr_bridge.consent import require_ibkr_enabled  # noqa: WPS433
+        from ibkr_bridge.rate_limiter import IbkrRateLimiter  # noqa: WPS433
+    except ImportError as exc:
+        raise SystemExit(
+            "ibkr-historical requires the ibkr_bridge package. "
+            "Make sure scripts/ibkr_bridge/ is reachable from sys.path "
+            f"(searched: {[str(c) for c in candidates]}). "
+            f"Underlying error: {exc}"
+        )
+    try:
+        import ib_async  # noqa: WPS433  (lazy import keeps non-IBKR sub-commands light)
+    except ImportError as exc:
+        raise SystemExit(
+            "ibkr-historical requires `ib_async`. Install via:\n"
+            "    cd ~/Auto-Quant && uv add 'ib_async>=2.0,<3.0'\n"
+            f"Underlying error: {exc}"
+        )
+    return require_ibkr_enabled, IbkrRateLimiter, ib_async
+
+
+def _build_ibkr_contract(args: argparse.Namespace, ib_async_mod):
+    sec = args.sec_type.upper()
+    if sec == "STK":
+        c = ib_async_mod.Stock(args.symbol, args.exchange, args.currency)
+        if args.primary_exchange:
+            c.primaryExchange = args.primary_exchange
+        return c
+    if sec == "CASH":
+        return ib_async_mod.Forex(args.symbol)
+    if sec == "FUT":
+        return ib_async_mod.Future(args.symbol, args.last_trade_date or "",
+                                    args.exchange, currency=args.currency,
+                                    multiplier=args.multiplier or "")
+    if sec == "IND":
+        return ib_async_mod.Index(args.symbol, args.exchange, args.currency)
+    if sec == "OPT":
+        if args.last_trade_date is None or args.strike is None or args.right is None:
+            raise SystemExit("OPT needs --last-trade-date, --strike, --right")
+        return ib_async_mod.Option(args.symbol, args.last_trade_date, args.strike,
+                                    args.right, args.exchange,
+                                    currency=args.currency,
+                                    multiplier=args.multiplier or "100")
+    raise SystemExit(f"unsupported --sec-type {args.sec_type!r}")
+
+
+async def _ibkr_historical_async(args: argparse.Namespace) -> int:
+    require_ibkr_enabled, IbkrRateLimiter, ib_async = _import_ibkr_bridge()
+    require_ibkr_enabled()
+
+    limiter = IbkrRateLimiter(redis_url=args.redis_url)
+    contract = _build_ibkr_contract(args, ib_async)
+
+    # Use the symbol as a stable identifier for the per-contract 6.5s lock.
+    # (conId would be more precise but requires qualifying first, which itself
+    # costs an outbound msg; the symbol-level lock is good enough for fetch.)
+    rl_id = f"{args.symbol}:{args.sec_type}"
+    await limiter.wait_for_historical(rl_id, args.bar_size, args.what_to_show)
+    await limiter.acquire_historical_slot()
+    try:
+        await limiter.wait_for_outbound_msg()
+        ib = ib_async.IB()
+        try:
+            await ib.connectAsync(host=args.host, port=args.port,
+                                   clientId=args.client_id, readonly=True)
+        except (ConnectionError, OSError) as exc:
+            raise SystemExit(
+                f"Cannot reach IBKR Gateway at {args.host}:{args.port} "
+                f"(clientId={args.client_id}). Is IB Gateway / TWS running "
+                f"and API enabled? Underlying error: {exc}"
+            )
+
+        try:
+            await limiter.wait_for_outbound_msg()
+            qualified = await ib.qualifyContractsAsync(contract)
+            if not qualified:
+                raise SystemExit(f"contract not resolved: {args.symbol}")
+            contract = qualified[0]
+
+            await limiter.wait_for_outbound_msg()
+            bars = await ib.reqHistoricalDataAsync(
+                contract,
+                endDateTime=args.end or "",
+                durationStr=args.duration,
+                barSizeSetting=args.bar_size,
+                whatToShow=args.what_to_show,
+                useRTH=bool(args.rth),
+                formatDate=2,           # epoch seconds, easier downstream
+                keepUpToDate=False,
+            )
+        finally:
+            ib.disconnect()
+    finally:
+        limiter.release_historical_slot()
+
+    if not bars:
+        print(f"WARN: ibkr historical empty for {args.symbol} "
+              f"({args.bar_size} {args.duration} {args.what_to_show})",
+              file=sys.stderr)
+        return 3
+
+    rows = []
+    for b in bars:
+        ts = getattr(b, "date", None)
+        # ib_async returns datetime for daily+ bars and epoch seconds for
+        # intraday when formatDate=2; normalise both to UTC ISO strings.
+        if hasattr(ts, "isoformat"):
+            ts_iso = ts.isoformat() if ts.tzinfo else ts.isoformat() + "+00:00"
+        else:
+            try:
+                ts_iso = datetime.fromtimestamp(float(ts), tz=timezone.utc).isoformat()
+            except (TypeError, ValueError):
+                ts_iso = str(ts)
+        rows.append({
+            "ts": ts_iso,
+            "open": getattr(b, "open", None),
+            "high": getattr(b, "high", None),
+            "low": getattr(b, "low", None),
+            "close": getattr(b, "close", None),
+            "volume": getattr(b, "volume", None),
+            "wap": getattr(b, "average", None),
+            "count": getattr(b, "barCount", None),
+        })
+
+    out = Path(args.output).resolve()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fieldnames = ["ts", "open", "high", "low", "close", "volume", "wap", "count"]
+    with out.open("w", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+    first_ts = rows[0]["ts"]
+    last_ts = rows[-1]["ts"]
+    print(f"ibkr historical {args.symbol} ({args.sec_type}) {args.bar_size} "
+          f"{args.duration} {args.what_to_show}: {len(rows):,} rows "
+          f"({first_ts} -> {last_ts}) -> {out}")
+    return 0
+
+
+def cmd_ibkr_historical(args: argparse.Namespace) -> int:
+    import asyncio
+    return asyncio.run(_ibkr_historical_async(args))
+
+
+# ---------------------------------------------------------------------------
 # CLI
 
 
@@ -1111,6 +1284,42 @@ def build_parser() -> argparse.ArgumentParser:
     pmh.add_argument("--fidelity", type=int, help="optional sampling fidelity in resolution units")
     pmh.add_argument("--output", required=True)
 
+    ibh = sub.add_parser("ibkr-historical",
+                          help="OHLCV via local IBKR Gateway (opt-in; see scripts/ibkr_bridge/setup.py)")
+    ibh.add_argument("--symbol", required=True,
+                      help="e.g. AAPL (STK), EURUSD (CASH), ES (FUT), SPX (IND)")
+    ibh.add_argument("--sec-type", default="STK",
+                      choices=["STK", "CASH", "FUT", "IND", "OPT"])
+    ibh.add_argument("--exchange", default="SMART",
+                      help="STK=SMART, CASH=IDEALPRO, FUT=CME/NYMEX/etc., IND=CBOE/NASDAQ, OPT=SMART")
+    ibh.add_argument("--currency", default="USD")
+    ibh.add_argument("--primary-exchange", default=None,
+                      help="STK only; e.g. NASDAQ, NYSE — disambiguates dual-listed tickers")
+    ibh.add_argument("--bar-size", default="1 day",
+                      help="IBKR bar size: '1 sec', '5 secs', '1 min', '5 mins', '1 hour', '1 day', '1 week', '1 month'")
+    ibh.add_argument("--duration", default="1 Y",
+                      help="IBKR duration: e.g. '60 D', '6 M', '1 Y', '5 Y'")
+    ibh.add_argument("--what-to-show", default="TRADES",
+                      choices=["TRADES", "MIDPOINT", "BID", "ASK", "BID_ASK",
+                               "ADJUSTED_LAST", "HISTORICAL_VOLATILITY",
+                               "OPTION_IMPLIED_VOLATILITY"])
+    ibh.add_argument("--end", default="",
+                      help="endDateTime in IBKR format 'YYYYMMDD HH:MM:SS UTC'; empty = now")
+    ibh.add_argument("--rth", action="store_true",
+                      help="Restrict to regular trading hours (default: include all sessions)")
+    ibh.add_argument("--last-trade-date", default=None,
+                      help="FUT/OPT contract month/expiry, e.g. '20260619'")
+    ibh.add_argument("--strike", type=float, default=None, help="OPT strike")
+    ibh.add_argument("--right", choices=["C", "P"], default=None, help="OPT side")
+    ibh.add_argument("--multiplier", default=None, help="FUT/OPT contract multiplier")
+    ibh.add_argument("--host", default="127.0.0.1")
+    ibh.add_argument("--port", type=int, default=7497, help="7497 paper, 7496 live")
+    ibh.add_argument("--client-id", type=int, default=21,
+                      help="Bridge uses 20; this defaults to 21 to avoid clash")
+    ibh.add_argument("--redis-url", default="redis://localhost:6379",
+                      help="Cross-process IbkrRateLimiter coordinator")
+    ibh.add_argument("--output", required=True)
+
     return p
 
 
@@ -1137,6 +1346,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_polymarket_markets(args)
     if args.provider == "polymarket-history":
         return cmd_polymarket_history(args)
+    if args.provider == "ibkr-historical":
+        return cmd_ibkr_historical(args)
     parser.print_help()
     return 2
 

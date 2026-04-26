@@ -111,6 +111,54 @@ endpoints above all work without it): see
 `docs/2026-04-26-multi-exchange-data-source-integration-plan.md` for the
 sign-up URL / scope checklist per provider.
 
+## IBKR live data bridge (2026-04-26 iteration, opt-in)
+
+**Disabled by default. Localhost-only. Bilingual disclaimer + explicit opt-in.**
+
+Solves the "single TWS / IB Gateway login session, multiple Python consumers"
+problem with a single producer + Redis Streams fan-out:
+
+```
+TWS / IB Gateway (single login)
+       ↑ clientId=20
+   ibkr-bridge.py  (this iteration)
+       ↓ XADD bars / ticks / snapshot
+   Redis (localhost:6379, loopback-bound + protected-mode)
+       ↓ XREAD / HGETALL
+  Auto-Quant strategy        ict-engine research script
+  IbkrConsumer               IbkrConsumer
+```
+
+| Surface | Run as | Output |
+| --- | --- | --- |
+| `python -m scripts.ibkr_bridge.setup --enable` | one-time, interactive | bilingual disclaimer + opt-in + Redis/Gateway ping + account probe |
+| `python -m scripts.ibkr_bridge.setup status` | non-interactive | current consent / capabilities / Redis / Gateway state |
+| `python -m scripts.ibkr_bridge.setup revoke --clean-redis` | one-time | wipes consent + capabilities + ibkr:* Redis keys |
+| `python -m scripts.ibkr_bridge.bridge --config <yaml>` | always-on producer | Redis streams `ibkr:bars:{sym}:5sec`, `ibkr:ticks:{sym}`, `ibkr:snapshot:{sym}` |
+| `from ibkr_bridge.consumer import IbkrConsumer` | importable | snapshot/bars/ticks/stream_bars/stream_ticks |
+| `fetch_external.py ibkr-historical --symbol AAPL --bar-size '1 hour' --duration '60 D' --output ...` | one-shot | canonical CSV (ts, open, high, low, close, volume, wap, count) |
+
+Cross-process pacing: `bridge.py`, `fetch_external.py ibkr-historical`, and
+any future ad-hoc IBKR script all share the same `IbkrRateLimiter` state in
+Redis. Hitting IBKR's 6 s/contract or 60-distinct/10-min budgets is
+impossible to do accidentally even when running 3 different processes
+concurrently — each request waits in the same global queue.
+
+OSS user experience guarantees:
+* Default `subscriptions: []` in `example_config.yaml` — fresh clones do
+  not consume any market-data lines if the bridge is launched.
+* Consent gate (`require_ibkr_enabled()`) on all IBKR-touching entry
+  points; non-interactive sessions get a clear instruction message rather
+  than a silent failure.
+* Read-only consumer never requires consent — Auto-Quant strategies that
+  fall back gracefully when the bridge is offline can still be safely
+  imported and CI-tested.
+* No telemetry; no third-party network calls; no IBKR credentials handled
+  by Python (they stay inside IB Gateway/TWS).
+
+Full design + decision log: `docs/2026-04-26-ibkr-live-data-bridge-plan.md`.
+Operator manual + bilingual disclaimer: `scripts/ibkr_bridge/README.md`.
+
 ## Option-chain coverage (NSE)
 
 `fetch_external.py nse-options` implements the distilled NSE flow:
