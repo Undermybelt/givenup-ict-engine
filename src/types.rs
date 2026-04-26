@@ -284,6 +284,74 @@ pub enum StructureType {
     CHoCH,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PropulsionBlock {
+    pub bar_index: usize,
+    pub direction: Direction,
+    pub body_ratio: f64,
+    pub range_atr: f64,
+    pub volume_z: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct InverseFairValueGap {
+    pub top: f64,
+    pub bottom: f64,
+    pub original_direction: Direction,
+    pub direction: Direction,
+    pub origin_bar: usize,
+    pub fill_bar: usize,
+    pub confirm_bar: usize,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct BreakerBlock {
+    pub high: f64,
+    pub low: f64,
+    pub original_direction: Direction,
+    pub direction: Direction,
+    pub origin_bar: usize,
+    pub violation_bar: usize,
+    pub retest_bar: usize,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MitigationBlock {
+    pub level: f64,
+    pub direction: Direction,
+    pub anchor_bar: usize,
+    pub retest_bar: usize,
+    pub confirm_bar: usize,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LiquidityVoid {
+    pub top: f64,
+    pub bottom: f64,
+    pub direction: Direction,
+    pub start_bar: usize,
+    pub gap_atr: f64,
+    pub filled: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct VolumeImbalance {
+    pub bar_index: usize,
+    pub direction: Direction,
+    pub volume: f64,
+    pub mean: f64,
+    pub std_dev: f64,
+    pub z_score: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MarketStructureShift {
+    pub bar_index: usize,
+    pub direction: Direction,
+    pub broken_swing_index: usize,
+    pub broken_swing_price: f64,
+}
+
 // ========== 交易计划 ==========
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TradePlan {
