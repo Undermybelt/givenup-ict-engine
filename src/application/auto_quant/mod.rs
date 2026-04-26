@@ -3,6 +3,7 @@ pub mod command_entry;
 mod config;
 pub mod handoff;
 mod health;
+pub mod live;
 mod persistence;
 pub mod readiness;
 mod repo_manager;

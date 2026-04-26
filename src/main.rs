@@ -58,11 +58,11 @@ use ict_engine::application::{
     },
     auto_quant::command_entry::{
         auto_quant_adoption_decision_command, auto_quant_adoption_review_command,
-        auto_quant_bootstrap_command, auto_quant_factor_autoresearch_command,
-        auto_quant_factor_research_command, auto_quant_prior_init_command,
-        auto_quant_results_import_command, auto_quant_seed_evidence_command,
-        auto_quant_status_command, auto_quant_update_command,
-        AutoQuantPriorInitCommandInput,
+        auto_quant_bootstrap_command, auto_quant_consume_live_signals_command,
+        auto_quant_factor_autoresearch_command, auto_quant_factor_research_command,
+        auto_quant_prior_init_command, auto_quant_results_import_command,
+        auto_quant_seed_evidence_command, auto_quant_status_command, auto_quant_update_command,
+        AutoQuantConsumeLiveSignalsInput, AutoQuantPriorInitCommandInput,
     },
     auto_quant::{AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput},
     backtest::{
@@ -1332,6 +1332,41 @@ enum Commands {
         )]
         log: Option<String>,
     },
+    /// Consume Auto-Quant live factor-signal envelopes from a Redis stream and append them to the local JSONL log + ledger.
+    AutoQuantConsumeLiveSignals {
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        symbol: String,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding Auto-Quant artifacts"
+        )]
+        state_dir: String,
+        #[arg(
+            long,
+            default_value = "redis://localhost:6379",
+            help = "Redis connection URL. Must point to the same instance the Auto-Quant publisher writes to."
+        )]
+        redis_url: String,
+        #[arg(
+            long,
+            help = "Optional cap on XREAD iterations; useful for tests + first-runs. Default: run until shutdown."
+        )]
+        max_iter: Option<u32>,
+        #[arg(
+            long,
+            default_value_t = 2000,
+            help = "XREAD BLOCK timeout in milliseconds per iteration."
+        )]
+        block_ms: u64,
+        #[arg(
+            long,
+            default_value = "$",
+            help = "Initial cursor position when no cursor file exists. '$' = future entries only; '0' = full backlog."
+        )]
+        start_from: String,
+    },
     /// Apply tempered Beta-Binomial pseudo-counts from an imported Auto-Quant strategy library to the trade_outcome CPT prior.
     AutoQuantPriorInit {
         #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
@@ -1925,6 +1960,24 @@ fn main() -> Result<()> {
                 parent_config,
                 dry_run,
                 force,
+            })?
+        }
+        Commands::AutoQuantConsumeLiveSignals {
+            symbol,
+            state_dir,
+            redis_url,
+            max_iter,
+            block_ms,
+            start_from,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            auto_quant_consume_live_signals_command(AutoQuantConsumeLiveSignalsInput {
+                symbol: &symbol,
+                state_dir: &state_dir,
+                redis_url: &redis_url,
+                max_iterations: max_iter,
+                block_ms,
+                initial_id: &start_from,
             })?
         }
         Commands::CleanFutures {

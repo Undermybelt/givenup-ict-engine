@@ -28,6 +28,7 @@ async-trait = "0.1"
 futures = "0.3"
 urlencoding = "2.1"
 loopybayesnet = { git = "https://github.com/elinorbgr/loopybayesnet", rev = "4453893" }
+redis = { version = "0.27", default-features = false, features = ["streams"] }
 
 [dev-dependencies]
 tempfile = "3"

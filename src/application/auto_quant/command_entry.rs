@@ -6,6 +6,10 @@ use super::{
         build_factor_research_handoff_payload, AutoQuantFactorAutoresearchCommandInput,
         AutoQuantFactorResearchCommandInput,
     },
+    live::{
+        consume_live_signals, ConsumeLiveSignalsInput, ConsumeLiveSignalsOutcome, RealRedisSource,
+        StreamSource,
+    },
     persistence::persist_handoff_payload,
     results::{
         apply_strategy_library_prior_init, cross_check_manifest_against_log,
@@ -21,7 +25,16 @@ use super::{
     AutoQuantDependencyStatus,
 };
 use anyhow::{anyhow, bail, Context, Result};
+use chrono::Utc;
 use serde_json::json;
+
+/// Ledger artifact_kind written by `auto-quant-consume-live-signals`.
+pub const ARTIFACT_KIND_LIVE_SIGNALS: &str = "auto_quant_live_signals_ingested";
+
+/// Rule version recorded on every live-signals ledger entry. Bump on
+/// any change to the wire schema, persistence layout, or guard
+/// semantics.
+pub const LIVE_SIGNALS_RULE_VERSION: &str = "auto-quant-live-signals-v1";
 
 use crate::bbn::trading::persistence::load_or_init_trading_network;
 use crate::state::{save_state, state_exists, BBN_STATE_FILE};
@@ -477,6 +490,174 @@ fn resolve_library_artifact_id(state_dir: &str, symbol: &str) -> Option<String> 
         .map(|entry| entry.artifact_id)
 }
 
+/// Operator-facing input for `auto-quant-consume-live-signals`.
+#[derive(Debug, Clone)]
+pub struct AutoQuantConsumeLiveSignalsInput<'a> {
+    pub symbol: &'a str,
+    pub state_dir: &'a str,
+    pub redis_url: &'a str,
+    pub max_iterations: Option<u32>,
+    pub block_ms: u64,
+    pub initial_id: &'a str,
+}
+
+/// Drive the live-signals consumer until shutdown (or `max_iterations`
+/// is reached), persist the JSONL log + cursor, then write a
+/// `auto_quant_live_signals_ingested` ledger entry summarising the
+/// session. The session is **not** required to have processed any
+/// envelopes — a zero-envelope session still emits a ledger entry
+/// with `status = "no_op"`, which makes "did the consumer connect
+/// and run?" auditable independently of "did it see any data?".
+pub fn auto_quant_consume_live_signals_command(
+    input: AutoQuantConsumeLiveSignalsInput<'_>,
+) -> Result<()> {
+    let mut source = RealRedisSource::connect(input.redis_url).with_context(|| {
+        format!(
+            "connecting to redis at '{}' (sanitised: {})",
+            sanitise_redis_url(input.redis_url),
+            sanitise_redis_url(input.redis_url),
+        )
+    })?;
+
+    auto_quant_consume_live_signals_with_source(input, &mut source)
+}
+
+/// Same as [`auto_quant_consume_live_signals_command`] but takes an
+/// arbitrary [`StreamSource`] so tests can drive the full path
+/// (parse → JSONL → cursor → ledger) without a real Redis.
+pub fn auto_quant_consume_live_signals_with_source<S: StreamSource>(
+    input: AutoQuantConsumeLiveSignalsInput<'_>,
+    source: &mut S,
+) -> Result<()> {
+    let consumer_input = ConsumeLiveSignalsInput {
+        symbol: input.symbol.to_string(),
+        state_dir: std::path::PathBuf::from(input.state_dir),
+        redis_url: input.redis_url.to_string(),
+        max_iterations: input.max_iterations,
+        block_ms: input.block_ms,
+        initial_id: input.initial_id.to_string(),
+    };
+    let outcome = consume_live_signals(&consumer_input, source)
+        .with_context(|| format!("consuming live signals for symbol '{}'", input.symbol))?;
+
+    let persisted_artifact = persist_live_signals_session(input.state_dir, input.symbol, &outcome)
+        .with_context(|| {
+            format!(
+                "persisting live-signals ledger entry for symbol '{}'",
+                input.symbol
+            )
+        })?;
+
+    let summary = json!({
+        "command": "auto-quant-consume-live-signals",
+        "symbol": input.symbol,
+        "stream_key": outcome.stream_key,
+        "redis_url_sanitised": sanitise_redis_url(input.redis_url),
+        "envelopes_applied": outcome.envelopes_applied,
+        "envelopes_dropped": outcome.envelopes_dropped,
+        "iterations": outcome.iterations,
+        "started_at": outcome.started_at,
+        "ended_at": outcome.ended_at,
+        "cursor_start_id": outcome.cursor_start_id,
+        "cursor_end_id": outcome.cursor_end_id,
+        "ledger_artifact_id": persisted_artifact.artifact_id,
+        "ledger_status": persisted_artifact.status,
+    });
+    println!("{}", serde_json::to_string_pretty(&summary)?);
+    Ok(())
+}
+
+/// What the live-signals ledger writer returns to the caller.
+#[derive(Debug, Clone)]
+struct PersistedLiveSignalsArtifact {
+    artifact_id: String,
+    status: &'static str,
+}
+
+fn persist_live_signals_session(
+    state_dir: &str,
+    symbol: &str,
+    outcome: &ConsumeLiveSignalsOutcome,
+) -> Result<PersistedLiveSignalsArtifact> {
+    let timestamp = Utc::now();
+    let artifact_id = format!(
+        "auto_quant_live_signals_{}_{}",
+        symbol,
+        timestamp.format("%Y%m%dT%H%M%S%.9fZ")
+    );
+
+    let status = if outcome.envelopes_applied > 0 {
+        "applied"
+    } else {
+        "no_op"
+    };
+
+    let jsonl_path =
+        super::live::persistence::jsonl_path(std::path::Path::new(state_dir), symbol)
+            .to_string_lossy()
+            .into_owned();
+
+    let review_reason = format!(
+        "consumed {} envelope(s), dropped {}, iter {}, cursor {} -> {} on stream {}",
+        outcome.envelopes_applied,
+        outcome.envelopes_dropped,
+        outcome.iterations,
+        outcome.cursor_start_id,
+        outcome.cursor_end_id,
+        outcome.stream_key,
+    );
+
+    crate::state::append_artifact_ledger_entry(
+        state_dir,
+        symbol,
+        crate::state::ArtifactLedgerEntry {
+            entry_id: format!("ledger:{}", artifact_id),
+            artifact_kind: ARTIFACT_KIND_LIVE_SIGNALS.to_string(),
+            artifact_id: artifact_id.clone(),
+            version: 1,
+            generated_at: timestamp,
+            symbol: symbol.to_string(),
+            source_phase: "auto_quant_live_signals".to_string(),
+            source_run_id: None,
+            path: jsonl_path,
+            status: status.to_string(),
+            promote_candidate: false,
+            actionable: false,
+            decision_hint: format!("ingested {} envelope(s)", outcome.envelopes_applied),
+            review_reason,
+            review_rule_version: LIVE_SIGNALS_RULE_VERSION.to_string(),
+            quality_score: outcome.envelopes_applied.min(i32::MAX as u32) as i32,
+            ..Default::default()
+        },
+    )?;
+
+    Ok(PersistedLiveSignalsArtifact {
+        artifact_id,
+        status,
+    })
+}
+
+/// Strip the password (if any) and trailing query-string from a Redis
+/// URL so we never persist credentials in the ledger or stdout
+/// summary. Returns `<scheme>://<host>[:<port>]`.
+fn sanitise_redis_url(raw: &str) -> String {
+    // redis://[:password@]host:port[/db]
+    let scheme_end = raw.find("://").map(|i| i + 3).unwrap_or(0);
+    let scheme = &raw[..scheme_end];
+    let rest = &raw[scheme_end..];
+
+    let after_creds = match rest.rfind('@') {
+        Some(idx) => &rest[idx + 1..],
+        None => rest,
+    };
+    // Drop anything after the first '/' or '?'.
+    let host_port = after_creds
+        .split(['/', '?'])
+        .next()
+        .unwrap_or(after_creds);
+    format!("{scheme}{host_port}")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -764,5 +945,195 @@ mod tests {
         .unwrap();
         // Library was still imported despite the cross-check drift.
         assert!(state_exists(state_dir, "NQ", STRATEGY_LIBRARY_FILE));
+    }
+
+    // -------------------------------------------------------------------
+    // auto-quant-consume-live-signals tests (Phase 2)
+
+    use super::super::live::{StreamEntry, StreamSource};
+    use super::super::live::wire::{LiveFactorContribution, LiveFactorSignalEnvelope, SCHEMA_VERSION};
+    use std::collections::VecDeque;
+
+    /// Test stream source that returns queued batches then empty.
+    #[derive(Default)]
+    struct FakeSource {
+        batches: VecDeque<Vec<StreamEntry>>,
+    }
+
+    impl StreamSource for FakeSource {
+        fn xread_block(
+            &mut self,
+            _stream_key: &str,
+            _last_id: &str,
+            _block_ms: u64,
+        ) -> Result<Vec<StreamEntry>> {
+            Ok(self.batches.pop_front().unwrap_or_default())
+        }
+    }
+
+    fn make_live_envelope_json(run_id: &str) -> String {
+        let env = LiveFactorSignalEnvelope {
+            schema_version: SCHEMA_VERSION.into(),
+            symbol: "NQ".into(),
+            timestamp_ms: 1_745_678_901_234,
+            auto_quant_run_id: run_id.into(),
+            strategy_name: "Strat".into(),
+            strategy_mutation_id: "mut".into(),
+            bar_close_ts_ms: 1_745_678_900_000,
+            contributions: vec![LiveFactorContribution {
+                factor_name: "f1".into(),
+                category: "c".into(),
+                direction: "Bull".into(),
+                value: 0.1,
+                confidence: 0.5,
+                weighted_score: 0.05,
+                uncertainty_contribution: 0.02,
+                explanation: "".into(),
+            }],
+        };
+        env.to_json().unwrap()
+    }
+
+    #[test]
+    fn sanitise_redis_url_strips_password() {
+        let raw = "redis://:secret@localhost:6379/0";
+        assert_eq!(super::sanitise_redis_url(raw), "redis://localhost:6379");
+    }
+
+    #[test]
+    fn sanitise_redis_url_strips_query_string() {
+        let raw = "redis://localhost:6379?ssl=true";
+        assert_eq!(super::sanitise_redis_url(raw), "redis://localhost:6379");
+    }
+
+    #[test]
+    fn sanitise_redis_url_handles_url_without_creds() {
+        let raw = "redis://example.com:6379";
+        assert_eq!(super::sanitise_redis_url(raw), "redis://example.com:6379");
+    }
+
+    #[test]
+    fn sanitise_redis_url_handles_userinfo_with_user() {
+        let raw = "redis://default:hidden@host:6380/2";
+        assert_eq!(super::sanitise_redis_url(raw), "redis://host:6380");
+    }
+
+    #[test]
+    fn live_signals_no_op_ledger_when_no_envelopes() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().to_str().unwrap();
+        let mut src = FakeSource::default();
+        src.batches.push_back(vec![]); // BLOCK timeout, zero entries.
+
+        auto_quant_consume_live_signals_with_source(
+            AutoQuantConsumeLiveSignalsInput {
+                symbol: "NQ",
+                state_dir,
+                redis_url: "redis://localhost:6379",
+                max_iterations: Some(1),
+                block_ms: 0,
+                initial_id: "$",
+            },
+            &mut src,
+        )
+        .unwrap();
+
+        let ledger: Vec<crate::state::ArtifactLedgerEntry> = crate::state::load_state_or_default(
+            state_dir,
+            "NQ",
+            crate::state::ARTIFACT_LEDGER_FILE,
+        )
+        .unwrap();
+        let entry = ledger
+            .iter()
+            .find(|e| e.artifact_kind == ARTIFACT_KIND_LIVE_SIGNALS)
+            .expect("live-signals ledger entry");
+        assert_eq!(entry.status, "no_op");
+        assert_eq!(entry.review_rule_version, LIVE_SIGNALS_RULE_VERSION);
+        assert_eq!(entry.quality_score, 0);
+    }
+
+    #[test]
+    fn live_signals_applied_ledger_when_envelope_consumed() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().to_str().unwrap();
+        let mut src = FakeSource::default();
+        src.batches.push_back(vec![StreamEntry {
+            id: "1745678901234-0".into(),
+            payload: make_live_envelope_json("run-1"),
+        }]);
+
+        auto_quant_consume_live_signals_with_source(
+            AutoQuantConsumeLiveSignalsInput {
+                symbol: "NQ",
+                state_dir,
+                redis_url: "redis://localhost:6379",
+                max_iterations: Some(1),
+                block_ms: 0,
+                initial_id: "$",
+            },
+            &mut src,
+        )
+        .unwrap();
+
+        let ledger: Vec<crate::state::ArtifactLedgerEntry> = crate::state::load_state_or_default(
+            state_dir,
+            "NQ",
+            crate::state::ARTIFACT_LEDGER_FILE,
+        )
+        .unwrap();
+        let entry = ledger
+            .iter()
+            .find(|e| e.artifact_kind == ARTIFACT_KIND_LIVE_SIGNALS)
+            .expect("live-signals ledger entry");
+        assert_eq!(entry.status, "applied");
+        assert_eq!(entry.quality_score, 1);
+        assert!(entry.path.ends_with("auto_quant_live_factor_contributions.jsonl"));
+        assert!(entry
+            .review_reason
+            .contains("auto_quant:factor_signals:nq"));
+        // JSONL + cursor were written by the underlying consumer.
+        assert!(super::super::live::persistence::jsonl_path(temp.path(), "NQ").exists());
+        assert!(super::super::live::persistence::cursor_path(temp.path(), "NQ").exists());
+    }
+
+    #[test]
+    fn live_signals_invalid_envelope_drops_and_records_no_op() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().to_str().unwrap();
+        let mut src = FakeSource::default();
+        src.batches.push_back(vec![StreamEntry {
+            id: "1-0".into(),
+            payload: r#"{"schema_version":"9.9","symbol":"NQ","timestamp_ms":0,"auto_quant_run_id":"x","strategy_name":"y","bar_close_ts_ms":0,"contributions":[{"factor_name":"f","category":"c","direction":"Bull","value":0.0,"confidence":0.0,"weighted_score":0.0,"uncertainty_contribution":0.0}]}"#.into(),
+        }]);
+
+        auto_quant_consume_live_signals_with_source(
+            AutoQuantConsumeLiveSignalsInput {
+                symbol: "NQ",
+                state_dir,
+                redis_url: "redis://localhost:6379",
+                max_iterations: Some(1),
+                block_ms: 0,
+                initial_id: "$",
+            },
+            &mut src,
+        )
+        .unwrap();
+
+        let ledger: Vec<crate::state::ArtifactLedgerEntry> = crate::state::load_state_or_default(
+            state_dir,
+            "NQ",
+            crate::state::ARTIFACT_LEDGER_FILE,
+        )
+        .unwrap();
+        let entry = ledger
+            .iter()
+            .find(|e| e.artifact_kind == ARTIFACT_KIND_LIVE_SIGNALS)
+            .expect("live-signals ledger entry");
+        assert_eq!(entry.status, "no_op");
+        assert!(entry.review_reason.contains("dropped 1"));
+        // No JSONL, no cursor (envelope was rejected before either write).
+        assert!(!super::super::live::persistence::jsonl_path(temp.path(), "NQ").exists());
+        assert!(!super::super::live::persistence::cursor_path(temp.path(), "NQ").exists());
     }
 }
