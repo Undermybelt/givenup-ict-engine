@@ -23,6 +23,7 @@ pub mod kalman;
 pub mod math;
 pub mod mcmc;
 pub mod pda_sequence;
+pub mod pda_timeline;
 pub mod planner;
 pub mod python_bridge;
 pub mod reporting;
