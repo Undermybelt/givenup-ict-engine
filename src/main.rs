@@ -60,9 +60,11 @@ use ict_engine::application::{
         auto_quant_adoption_decision_command, auto_quant_adoption_review_command,
         auto_quant_bootstrap_command, auto_quant_consume_live_signals_command,
         auto_quant_factor_autoresearch_command, auto_quant_factor_research_command,
-        auto_quant_prior_init_command, auto_quant_results_import_command,
-        auto_quant_seed_evidence_command, auto_quant_status_command, auto_quant_update_command,
-        AutoQuantConsumeLiveSignalsInput, AutoQuantPriorInitCommandInput,
+        auto_quant_ingest_real_trades_command, auto_quant_prior_init_command,
+        auto_quant_results_import_command, auto_quant_seed_evidence_command,
+        auto_quant_status_command, auto_quant_update_command,
+        AutoQuantConsumeLiveSignalsInput, AutoQuantIngestRealTradesInput,
+        AutoQuantPriorInitCommandInput,
     },
     auto_quant::{AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput},
     backtest::{
@@ -1367,6 +1369,39 @@ enum Commands {
         )]
         start_from: String,
     },
+    /// Ingest a JSONL artifact of realised trade outcomes produced by Auto-Quant and apply them to the trade_outcome CPT.
+    AutoQuantIngestRealTrades {
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        symbol: String,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding Auto-Quant artifacts"
+        )]
+        state_dir: String,
+        #[arg(
+            long,
+            help = "Path to the JSONL realized-trades artifact emitted by auto_quant_export_real_trades.py"
+        )]
+        trades: String,
+        #[arg(
+            long,
+            default_value = "auto_quant_real_trades",
+            help = "Source label recorded on every FeedbackRecord. Surfaces in learning_state audits."
+        )]
+        source: String,
+        #[arg(
+            long,
+            help = "Parse + summarise but do not mutate the trading network or learning state"
+        )]
+        dry_run: bool,
+        #[arg(
+            long,
+            help = "Override the same-content-hash guard. Use only after rolling back the BBN snapshot."
+        )]
+        force: bool,
+    },
     /// Apply tempered Beta-Binomial pseudo-counts from an imported Auto-Quant strategy library to the trade_outcome CPT prior.
     AutoQuantPriorInit {
         #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
@@ -1978,6 +2013,24 @@ fn main() -> Result<()> {
                 max_iterations: max_iter,
                 block_ms,
                 initial_id: &start_from,
+            })?
+        }
+        Commands::AutoQuantIngestRealTrades {
+            symbol,
+            state_dir,
+            trades,
+            source,
+            dry_run,
+            force,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            auto_quant_ingest_real_trades_command(AutoQuantIngestRealTradesInput {
+                symbol: &symbol,
+                state_dir: &state_dir,
+                trades_path: &trades,
+                source: &source,
+                dry_run,
+                force,
             })?
         }
         Commands::CleanFutures {

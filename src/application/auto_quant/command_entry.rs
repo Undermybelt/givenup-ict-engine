@@ -11,6 +11,7 @@ use super::{
         StreamSource,
     },
     persistence::persist_handoff_payload,
+    real_trades::{ingest_real_trades, IngestRealTradesInput, IngestRealTradesOutcome},
     results::{
         apply_strategy_library_prior_init, cross_check_manifest_against_log,
         find_any_active_prior_init_apply, find_existing_apply_for_library,
@@ -635,6 +636,69 @@ fn persist_live_signals_session(
         artifact_id,
         status,
     })
+}
+
+/// Operator-facing input for `auto-quant-ingest-real-trades`.
+#[derive(Debug, Clone)]
+pub struct AutoQuantIngestRealTradesInput<'a> {
+    pub symbol: &'a str,
+    pub state_dir: &'a str,
+    pub trades_path: &'a str,
+    pub source: &'a str,
+    pub dry_run: bool,
+    pub force: bool,
+}
+
+/// Ingest a JSONL artifact of realised trade outcomes produced by
+/// `auto_quant_export_real_trades.py`. Each row turns into a
+/// `FeedbackRecord` consumed by
+/// `apply_feedback_to_trade_outcome_network`. The same JSONL cannot
+/// be applied twice without `--force`; the guard keys on a
+/// content-hash recorded in the ledger.
+pub fn auto_quant_ingest_real_trades_command(
+    input: AutoQuantIngestRealTradesInput<'_>,
+) -> Result<()> {
+    let outcome = ingest_real_trades(IngestRealTradesInput {
+        symbol: input.symbol,
+        state_dir: input.state_dir,
+        trades_path: input.trades_path,
+        source: input.source,
+        dry_run: input.dry_run,
+        force: input.force,
+    })
+    .with_context(|| {
+        format!(
+            "ingesting real trades for symbol '{}' from '{}'",
+            input.symbol, input.trades_path
+        )
+    })?;
+
+    print_real_trades_summary(&input, &outcome)?;
+    Ok(())
+}
+
+fn print_real_trades_summary(
+    input: &AutoQuantIngestRealTradesInput<'_>,
+    outcome: &IngestRealTradesOutcome,
+) -> Result<()> {
+    let summary = json!({
+        "command": "auto-quant-ingest-real-trades",
+        "symbol": input.symbol,
+        "trades_path": input.trades_path,
+        "source": input.source,
+        "dry_run": input.dry_run,
+        "force": input.force,
+        "ledger_artifact_id": outcome.artifact_id,
+        "ledger_status": outcome.status,
+        "trades_total": outcome.trades_total,
+        "trades_applied": outcome.trades_applied,
+        "trades_invalid": outcome.trades_invalid,
+        "feedback_records_inserted": outcome.feedback_records_inserted,
+        "content_hash": outcome.content_hash,
+        "previous_artifact_id": outcome.previous_artifact_id,
+    });
+    println!("{}", serde_json::to_string_pretty(&summary)?);
+    Ok(())
 }
 
 /// Strip the password (if any) and trailing query-string from a Redis

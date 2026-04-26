@@ -5,6 +5,7 @@ pub mod handoff;
 mod health;
 pub mod live;
 mod persistence;
+pub mod real_trades;
 pub mod readiness;
 mod repo_manager;
 pub mod results;
