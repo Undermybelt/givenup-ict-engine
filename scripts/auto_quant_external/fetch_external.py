@@ -1,32 +1,52 @@
 """
 fetch_external.py — multi-asset data fetcher that emits canonical OHLCV CSV
-consumable by `prepare_external.py`, plus an option-chain dumper for use cases
-that don't fit FreqTrade's IStrategy model.
+consumable by `prepare_external.py`, plus option-chain and prediction-market
+dumpers for use cases that don't fit FreqTrade's IStrategy model.
 
 Providers (sub-commands):
-  yahoo       OHLCV for stocks/ETFs/futures/forex/index/crypto via Yahoo Finance
-              chart API (no API key, no extra deps beyond requests/pandas).
-              Symbol cheat-sheet:
-                stock/ETF       AAPL, SPY, QQQ, VTI
-                index           ^GSPC, ^NDX, ^DJI, ^VIX
-                US futures      ES=F (S&P), NQ=F (NDX), GC=F (gold), CL=F (oil)
-                forex/CFD       EURUSD=X, GBPUSD=X, USDJPY=X
-                crypto          BTC-USD, ETH-USD, SOL-USD
+  yahoo              OHLCV for stocks/ETFs/futures/forex/index/crypto via
+                     Yahoo Finance chart API (no key).
+                     Symbols: AAPL / SPY / ^GSPC / ES=F / EURUSD=X / BTC-USD.
 
-  nse-options Option-chain snapshot from NSE India (indices/equity).
-              Distilled from VarunS2002/Python-NSE-Option-Chain-Analyzer's
-              network layer; needs Indian-routable IP (Akamai geofence).
-              Output is wide CSV: strike x [call_oi, call_iv, call_ltp,
-              call_chng_oi, put_oi, put_iv, put_ltp, put_chng_oi] for one
-              expiry snapshot. NOT directly backtestable by FreqTrade.
+  nse-options        Option-chain snapshot from NSE India (indices/equity);
+                     needs Indian-routable IP (Akamai geofence).
 
-  polygon     Stocks/ETFs/options/crypto/forex via Polygon.io REST API.
-              Requires POLYGON_API_KEY env var. Skeleton, not exercised
-              by default demo because of the paid key requirement.
+  polygon            Stocks/ETFs/options/crypto/forex via Polygon.io REST
+                     (requires POLYGON_API_KEY).
 
-Architectural note: this script's job is FETCH + WRITE-CANONICAL-CSV.
-Data cleaning, resampling, and feather conversion live in prepare_external.py.
-Two stages, two tools, no entanglement.
+  bybit-kline        OHLCV via Bybit V5 public REST. Categories: spot, linear
+                     (USDT perps), inverse (coin-margined perps), option.
+                     No API key; pagination-aware. Useful for crypto perps
+                     and option-contract history.
+
+  bybit-options      Bybit USDC option chain snapshot for BTC/ETH/SOL with
+                     mark-IV and Greeks (delta/gamma/theta/vega).
+
+  kraken-kline       OHLCV via Kraken public REST. Spot path covers crypto,
+                     **xStocks tokenised U.S. equities (24/7)**, and fiat
+                     forex with real volume; futures path covers crypto perps
+                     and **PF_* equity-index perps** (PF_SPXUSD etc.) usable
+                     as crypto-collateralised CFD substitutes.
+
+  binance-kline      OHLCV via Binance Spot REST (`/api/v3/klines`),
+                     pagination-aware. No API key.
+
+  binance-options    Binance European option chain snapshot for BTC/ETH from
+                     `/eapi`, including mark-IV and Greeks per contract.
+
+  polymarket-markets List Polymarket prediction markets via Gamma API.
+
+  polymarket-history Mid-price time series for a Polymarket CLOB token,
+                     usable as alternative-data implied-probability series.
+
+Architectural note: this script's job is FETCH + WRITE-CANONICAL-CSV (or wide
+CSV for option chain / market list). Data cleaning, resampling, and feather
+conversion live in prepare_external.py. Two stages, two tools, no entanglement.
+
+Auth model: all sub-commands above use public read endpoints. Authenticated
+features (account / order / portfolio) are intentionally out of scope here and
+will be wired through env-var driven keys (e.g. BYBIT_API_KEY/SECRET,
+KRAKEN_API_KEY/SECRET, BINANCE_API_KEY/SECRET) when the operator applies.
 """
 from __future__ import annotations
 
@@ -377,6 +397,631 @@ def cmd_polygon(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------
+# Bybit V5 (public read; key-pluggable later via BYBIT_API_KEY/SECRET)
+
+
+def _to_float_or_none(v: Any) -> float | None:
+    if v is None or v == "":
+        return None
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+class BybitFetcher:
+    """Fetch OHLCV and option chain from Bybit V5 public REST.
+
+    Endpoints:
+      GET /v5/market/kline?category=&symbol=&interval=&start=&end=&limit=1000
+      GET /v5/market/instruments-info?category=option&baseCoin=
+      GET /v5/market/tickers?category=option&baseCoin=
+    """
+
+    BASE = "https://api.bybit.com"
+    INTERVAL_MAP = {
+        "1m": "1", "3m": "3", "5m": "5", "15m": "15", "30m": "30",
+        "1h": "60", "2h": "120", "4h": "240", "6h": "360", "12h": "720",
+        "1d": "D", "1w": "W", "1M": "M",
+    }
+    PAGE_LIMIT = 1000
+
+    def __init__(self, timeout: float = 30.0) -> None:
+        self.session = requests.Session()
+        self.session.headers.update({"User-Agent": YAHOO_DEFAULT_UA, "Accept": "application/json"})
+        self.timeout = timeout
+
+    def _get(self, path: str, params: dict, max_retries: int = 5) -> dict:
+        url = f"{self.BASE}{path}"
+        for attempt in range(1, max_retries + 1):
+            try:
+                resp = self.session.get(url, params=params, timeout=self.timeout)
+            except (requests.exceptions.SSLError,
+                    requests.exceptions.ConnectionError,
+                    requests.exceptions.Timeout) as exc:
+                wait = min(60, 5 * (2 ** (attempt - 1)))
+                print(f"  bybit {path}: {type(exc).__name__}, retry in {wait}s "
+                      f"({attempt}/{max_retries})", file=sys.stderr)
+                time.sleep(wait)
+                continue
+            if resp.status_code == 200:
+                payload = resp.json()
+                if payload.get("retCode") == 0:
+                    return payload
+                msg = payload.get("retMsg") or "unknown"
+                raise RuntimeError(f"bybit {path}: retCode {payload.get('retCode')} {msg!r}")
+            if resp.status_code in (429, 500, 502, 503, 504):
+                wait = min(60, 5 * (2 ** (attempt - 1)))
+                print(f"  bybit {path}: HTTP {resp.status_code}, retry in {wait}s "
+                      f"({attempt}/{max_retries})", file=sys.stderr)
+                time.sleep(wait)
+                continue
+            raise RuntimeError(f"bybit {path}: HTTP {resp.status_code} {resp.text[:200]!r}")
+        raise RuntimeError(f"bybit {path}: retries exhausted")
+
+    def kline(self, category: str, symbol: str, interval: str,
+              start: datetime, end: datetime) -> pd.DataFrame:
+        if interval not in self.INTERVAL_MAP:
+            raise ValueError(f"unsupported bybit interval {interval!r}")
+        bybit_interval = self.INTERVAL_MAP[interval]
+        cursor = int(start.replace(tzinfo=timezone.utc).timestamp() * 1000)
+        end_ms = int(end.replace(tzinfo=timezone.utc).timestamp() * 1000)
+        rows: list[dict] = []
+        while cursor < end_ms:
+            params = {
+                "category": category,
+                "symbol": symbol,
+                "interval": bybit_interval,
+                "start": cursor,
+                "end": end_ms,
+                "limit": self.PAGE_LIMIT,
+            }
+            payload = self._get("/v5/market/kline", params)
+            kl = payload.get("result", {}).get("list") or []
+            if not kl:
+                break
+            kl = list(reversed(kl))  # bybit returns DESC
+            for row in kl:
+                rows.append({
+                    "date": pd.to_datetime(int(row[0]), unit="ms", utc=True),
+                    "open": float(row[1]),
+                    "high": float(row[2]),
+                    "low": float(row[3]),
+                    "close": float(row[4]),
+                    "volume": float(row[5]),
+                })
+            last_ms = int(kl[-1][0])
+            if last_ms <= cursor:
+                break
+            cursor = last_ms + 1
+            if len(kl) < self.PAGE_LIMIT:
+                break
+            time.sleep(0.2)
+        if not rows:
+            return pd.DataFrame(columns=["date", "open", "high", "low", "close", "volume"])
+        return (pd.DataFrame(rows)
+                .drop_duplicates(subset=["date"])
+                .sort_values("date")
+                .reset_index(drop=True))
+
+    def option_chain(self, base: str) -> pd.DataFrame:
+        inst = self._get("/v5/market/instruments-info",
+                         {"category": "option", "baseCoin": base})
+        instruments = inst.get("result", {}).get("list") or []
+        ticks = self._get("/v5/market/tickers",
+                          {"category": "option", "baseCoin": base})
+        tickers = {t["symbol"]: t for t in ticks.get("result", {}).get("list") or []}
+        snapshot = datetime.now(timezone.utc)
+        rows = []
+        for it in instruments:
+            sym = it.get("symbol", "")
+            parts = sym.split("-")
+            # Bybit V5 symbol forms:
+            #   BASE-EXPIRY-STRIKE-{C|P}              (legacy USDC-settled)
+            #   BASE-EXPIRY-STRIKE-{C|P}-{USDT|USDC}  (current; settle suffix)
+            if len(parts) == 4:
+                _, expiry_str, strike_str, side = parts
+                settle = it.get("settleCoin") or it.get("quoteCoin") or "USDC"
+            elif len(parts) == 5:
+                _, expiry_str, strike_str, side, settle = parts
+            else:
+                continue
+            t = tickers.get(sym, {})
+            rows.append({
+                "snapshot_utc": snapshot.isoformat(),
+                "underlying": base,
+                "symbol": sym,
+                "expiry": expiry_str,
+                "strike": _to_float_or_none(strike_str),
+                "side": side,
+                "settle": settle,
+                "mark_price": _to_float_or_none(t.get("markPrice")),
+                "mark_iv": _to_float_or_none(t.get("markIv")),
+                "delta": _to_float_or_none(t.get("delta")),
+                "gamma": _to_float_or_none(t.get("gamma")),
+                "theta": _to_float_or_none(t.get("theta")),
+                "vega": _to_float_or_none(t.get("vega")),
+                "open_interest": _to_float_or_none(t.get("openInterest")),
+                "volume_24h": _to_float_or_none(t.get("volume24h")),
+                "bid_price": _to_float_or_none(t.get("bid1Price")),
+                "ask_price": _to_float_or_none(t.get("ask1Price")),
+                "underlying_price": _to_float_or_none(t.get("underlyingPrice")),
+            })
+        return pd.DataFrame(rows)
+
+
+def cmd_bybit_kline(args: argparse.Namespace) -> int:
+    start = datetime.fromisoformat(args.start)
+    end = datetime.fromisoformat(args.end)
+    fetcher = BybitFetcher()
+    df = fetcher.kline(args.category, args.symbol, args.interval, start, end)
+    if df.empty:
+        print(f"ERROR: bybit returned no rows for {args.category}/{args.symbol}", file=sys.stderr)
+        return 3
+    out = Path(args.output).resolve()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(out, index=False)
+    print(f"bybit {args.category} {args.symbol} {args.interval}: {len(df):,} rows "
+          f"({df['date'].min()} -> {df['date'].max()}) -> {out}")
+    return 0
+
+
+def cmd_bybit_options(args: argparse.Namespace) -> int:
+    fetcher = BybitFetcher()
+    df = fetcher.option_chain(args.base)
+    if args.expiry:
+        df = df[df["expiry"] == args.expiry]
+    if df.empty:
+        print(f"WARN: bybit option chain empty for {args.base}"
+              + (f" expiry {args.expiry}" if args.expiry else ""), file=sys.stderr)
+        return 3
+    out = Path(args.output).resolve()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(out, index=False)
+    n_expiries = df["expiry"].nunique()
+    print(f"bybit options {args.base}: {len(df):,} contracts across "
+          f"{n_expiries} expiries -> {out}")
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# Kraken (public read; spot via api.kraken.com, futures via futures.kraken.com)
+
+
+class KrakenFetcher:
+    """Fetch OHLC from Kraken public REST.
+
+    Spot endpoints (api.kraken.com):
+      GET /0/public/AssetPairs                    catalogue (resolves wsname)
+      GET /0/public/OHLC?pair=&interval=          last ~720 OHLC bars
+        interval is in MINUTES: 1, 5, 15, 30, 60, 240, 1440, 10080, 21600.
+        Spot covers crypto + tokenised U.S. equities (xStocks, e.g. AAPLx)
+        + fiat forex.
+
+    Futures public charts (futures.kraken.com):
+      GET /api/charts/v1/{tickType}/{symbol}/{resolution}?from=&to=
+        tickType in {trade, mark, spot, index}
+        resolution in {1m, 5m, 15m, 30m, 1h, 4h, 12h, 1d, 1w}
+        Symbol examples: PF_XBTUSD (BTC perp), PF_SPXUSD (S&P 500 perp),
+                         PF_AAPLXUSD (AAPL equity perp), FI_XBTUSD_260327.
+    """
+
+    SPOT_BASE = "https://api.kraken.com"
+    FUTURES_CHARTS = "https://futures.kraken.com/api/charts/v1"
+    SPOT_INTERVAL_MAP = {
+        "1m": 1, "5m": 5, "15m": 15, "30m": 30,
+        "1h": 60, "4h": 240, "1d": 1440, "1w": 10080, "15d": 21600,
+    }
+    FUTURES_INTERVAL_MAP = {
+        "1m": "1m", "5m": "5m", "15m": "15m", "30m": "30m",
+        "1h": "1h", "4h": "4h", "12h": "12h", "1d": "1d", "1w": "1w",
+    }
+
+    def __init__(self, timeout: float = 30.0) -> None:
+        self.session = requests.Session()
+        self.session.headers.update({"User-Agent": YAHOO_DEFAULT_UA, "Accept": "application/json"})
+        self.timeout = timeout
+
+    def _get(self, url: str, params: dict, max_retries: int = 5) -> dict:
+        for attempt in range(1, max_retries + 1):
+            try:
+                resp = self.session.get(url, params=params, timeout=self.timeout)
+            except (requests.exceptions.SSLError,
+                    requests.exceptions.ConnectionError,
+                    requests.exceptions.Timeout) as exc:
+                wait = min(60, 5 * (2 ** (attempt - 1)))
+                print(f"  kraken {url}: {type(exc).__name__}, retry in {wait}s "
+                      f"({attempt}/{max_retries})", file=sys.stderr)
+                time.sleep(wait)
+                continue
+            if resp.status_code == 200:
+                return resp.json()
+            if resp.status_code in (429, 500, 502, 503, 504):
+                wait = min(60, 5 * (2 ** (attempt - 1)))
+                print(f"  kraken {url}: HTTP {resp.status_code}, retry in {wait}s "
+                      f"({attempt}/{max_retries})", file=sys.stderr)
+                time.sleep(wait)
+                continue
+            raise RuntimeError(f"kraken {url}: HTTP {resp.status_code} {resp.text[:200]!r}")
+        raise RuntimeError(f"kraken {url}: retries exhausted")
+
+    def spot_ohlc(self, pair: str, interval: str,
+                  asset_class: str | None = None) -> pd.DataFrame:
+        if interval not in self.SPOT_INTERVAL_MAP:
+            raise ValueError(f"unsupported kraken-spot interval {interval!r}")
+        params: dict[str, Any] = {"pair": pair, "interval": self.SPOT_INTERVAL_MAP[interval]}
+        if asset_class:
+            # Required for non-crypto pairs (tokenized_asset for xStocks; forex for fiat).
+            params["asset_class"] = asset_class
+        data = self._get(f"{self.SPOT_BASE}/0/public/OHLC", params)
+        if data.get("error"):
+            raise RuntimeError(f"kraken-spot {pair}: error {data['error']}")
+        result = data.get("result") or {}
+        pair_key = next((k for k in result if k != "last"), None)
+        if not pair_key:
+            return pd.DataFrame(columns=["date", "open", "high", "low", "close", "volume"])
+        rows = result[pair_key]
+        df = pd.DataFrame(rows, columns=["ts", "open", "high", "low", "close", "vwap", "volume", "count"])
+        df["date"] = pd.to_datetime(df["ts"].astype(int), unit="s", utc=True)
+        for c in ["open", "high", "low", "close", "volume"]:
+            df[c] = df[c].astype(float)
+        return df[["date", "open", "high", "low", "close", "volume"]]
+
+    def futures_ohlc(self, symbol: str, interval: str,
+                     start: datetime | None = None, end: datetime | None = None) -> pd.DataFrame:
+        if interval not in self.FUTURES_INTERVAL_MAP:
+            raise ValueError(f"unsupported kraken-futures interval {interval!r}")
+        url = f"{self.FUTURES_CHARTS}/trade/{symbol}/{self.FUTURES_INTERVAL_MAP[interval]}"
+        params: dict[str, Any] = {}
+        if start is not None:
+            params["from"] = int(start.replace(tzinfo=timezone.utc).timestamp())
+        if end is not None:
+            params["to"] = int(end.replace(tzinfo=timezone.utc).timestamp())
+        data = self._get(url, params)
+        candles = data.get("candles") or []
+        if not candles:
+            return pd.DataFrame(columns=["date", "open", "high", "low", "close", "volume"])
+        df = pd.DataFrame(candles)
+        df["date"] = pd.to_datetime(df["time"].astype("int64"), unit="ms", utc=True)
+        for c in ["open", "high", "low", "close", "volume"]:
+            df[c] = df[c].astype(float)
+        return df[["date", "open", "high", "low", "close", "volume"]]
+
+
+def cmd_kraken_kline(args: argparse.Namespace) -> int:
+    fetcher = KrakenFetcher()
+    if args.market == "spot":
+        df = fetcher.spot_ohlc(args.pair, args.interval, asset_class=args.asset_class)
+    elif args.market == "futures":
+        start = datetime.fromisoformat(args.start) if args.start else None
+        end = datetime.fromisoformat(args.end) if args.end else None
+        df = fetcher.futures_ohlc(args.pair, args.interval, start, end)
+    else:
+        print(f"ERROR: unknown kraken market {args.market!r}", file=sys.stderr)
+        return 2
+    if df.empty:
+        print(f"ERROR: kraken-{args.market} {args.pair}: empty result", file=sys.stderr)
+        return 3
+    out = Path(args.output).resolve()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(out, index=False)
+    print(f"kraken {args.market} {args.pair} {args.interval}: {len(df):,} rows "
+          f"({df['date'].min()} -> {df['date'].max()}) -> {out}")
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# Binance (Spot REST + European Options REST; both public read)
+
+
+class BinanceFetcher:
+    """Fetch OHLCV / option chain from Binance public REST.
+
+    Spot:
+      GET /api/v3/klines?symbol=&interval=&startTime=&endTime=&limit=1000
+
+    European Options (`/eapi`):
+      GET /eapi/v1/exchangeInfo               option universe per underlying
+      GET /eapi/v1/klines?symbol=&interval=   per-contract OHLC
+      GET /eapi/v1/mark[?symbol=]             mark IV + Greeks (no symbol = all)
+    """
+
+    SPOT_BASE = "https://api.binance.com"
+    OPTIONS_BASE = "https://eapi.binance.com"
+    INTERVAL_MAP = {
+        "1m": "1m", "3m": "3m", "5m": "5m", "15m": "15m", "30m": "30m",
+        "1h": "1h", "2h": "2h", "4h": "4h", "6h": "6h", "8h": "8h",
+        "12h": "12h", "1d": "1d", "3d": "3d", "1w": "1w", "1M": "1M",
+    }
+    PAGE_LIMIT = 1000
+
+    def __init__(self, timeout: float = 30.0) -> None:
+        self.session = requests.Session()
+        self.session.headers.update({"User-Agent": YAHOO_DEFAULT_UA, "Accept": "application/json"})
+        self.timeout = timeout
+
+    def _get(self, base: str, path: str, params: dict, max_retries: int = 5) -> Any:
+        url = f"{base}{path}"
+        for attempt in range(1, max_retries + 1):
+            try:
+                resp = self.session.get(url, params=params, timeout=self.timeout)
+            except (requests.exceptions.SSLError,
+                    requests.exceptions.ConnectionError,
+                    requests.exceptions.Timeout) as exc:
+                wait = min(60, 5 * (2 ** (attempt - 1)))
+                print(f"  binance {path}: {type(exc).__name__}, retry in {wait}s "
+                      f"({attempt}/{max_retries})", file=sys.stderr)
+                time.sleep(wait)
+                continue
+            if resp.status_code == 200:
+                return resp.json()
+            if resp.status_code in (418, 429, 500, 502, 503, 504):
+                wait = min(60, 5 * (2 ** (attempt - 1)))
+                print(f"  binance {path}: HTTP {resp.status_code}, retry in {wait}s "
+                      f"({attempt}/{max_retries})", file=sys.stderr)
+                time.sleep(wait)
+                continue
+            raise RuntimeError(f"binance {path}: HTTP {resp.status_code} {resp.text[:200]!r}")
+        raise RuntimeError(f"binance {path}: retries exhausted")
+
+    def spot_klines(self, symbol: str, interval: str,
+                    start: datetime, end: datetime) -> pd.DataFrame:
+        if interval not in self.INTERVAL_MAP:
+            raise ValueError(f"unsupported binance interval {interval!r}")
+        cursor = int(start.replace(tzinfo=timezone.utc).timestamp() * 1000)
+        end_ms = int(end.replace(tzinfo=timezone.utc).timestamp() * 1000)
+        rows: list[dict] = []
+        while cursor < end_ms:
+            params = {
+                "symbol": symbol,
+                "interval": self.INTERVAL_MAP[interval],
+                "startTime": cursor,
+                "endTime": end_ms,
+                "limit": self.PAGE_LIMIT,
+            }
+            kl = self._get(self.SPOT_BASE, "/api/v3/klines", params)
+            if not kl:
+                break
+            for row in kl:
+                rows.append({
+                    "date": pd.to_datetime(int(row[0]), unit="ms", utc=True),
+                    "open": float(row[1]),
+                    "high": float(row[2]),
+                    "low": float(row[3]),
+                    "close": float(row[4]),
+                    "volume": float(row[5]),
+                })
+            last_ms = int(kl[-1][0])
+            if last_ms <= cursor:
+                break
+            cursor = last_ms + 1
+            if len(kl) < self.PAGE_LIMIT:
+                break
+            time.sleep(0.1)
+        if not rows:
+            return pd.DataFrame(columns=["date", "open", "high", "low", "close", "volume"])
+        return (pd.DataFrame(rows)
+                .drop_duplicates(subset=["date"])
+                .sort_values("date")
+                .reset_index(drop=True))
+
+    def options_chain(self, underlying: str) -> pd.DataFrame:
+        info = self._get(self.OPTIONS_BASE, "/eapi/v1/exchangeInfo", {})
+        contracts = [
+            c for c in info.get("optionSymbols", [])
+            if c.get("underlying", "").upper().startswith(underlying.upper())
+        ]
+        marks_list = self._get(self.OPTIONS_BASE, "/eapi/v1/mark", {})
+        marks = {m.get("symbol"): m for m in marks_list}
+        snapshot = datetime.now(timezone.utc)
+        rows = []
+        for c in contracts:
+            sym = c.get("symbol", "")
+            m = marks.get(sym, {})
+            expiry_ms = c.get("expiryDate")
+            expiry_iso = (
+                datetime.fromtimestamp(int(expiry_ms) / 1000, tz=timezone.utc).date().isoformat()
+                if expiry_ms is not None else None
+            )
+            rows.append({
+                "snapshot_utc": snapshot.isoformat(),
+                "underlying": c.get("underlying", ""),
+                "symbol": sym,
+                "expiry": expiry_iso,
+                "strike": _to_float_or_none(c.get("strikePrice")),
+                "side": c.get("side"),  # CALL / PUT
+                "mark_price": _to_float_or_none(m.get("markPrice")),
+                "mark_iv": _to_float_or_none(m.get("markIV")),
+                "delta": _to_float_or_none(m.get("delta")),
+                "gamma": _to_float_or_none(m.get("gamma")),
+                "theta": _to_float_or_none(m.get("theta")),
+                "vega": _to_float_or_none(m.get("vega")),
+                "high_price_limit": _to_float_or_none(m.get("highPriceLimit")),
+                "low_price_limit": _to_float_or_none(m.get("lowPriceLimit")),
+            })
+        return pd.DataFrame(rows)
+
+
+def cmd_binance_kline(args: argparse.Namespace) -> int:
+    start = datetime.fromisoformat(args.start)
+    end = datetime.fromisoformat(args.end)
+    fetcher = BinanceFetcher()
+    df = fetcher.spot_klines(args.symbol, args.interval, start, end)
+    if df.empty:
+        print(f"ERROR: binance returned no rows for {args.symbol}", file=sys.stderr)
+        return 3
+    out = Path(args.output).resolve()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(out, index=False)
+    print(f"binance spot {args.symbol} {args.interval}: {len(df):,} rows "
+          f"({df['date'].min()} -> {df['date'].max()}) -> {out}")
+    return 0
+
+
+def cmd_binance_options(args: argparse.Namespace) -> int:
+    fetcher = BinanceFetcher()
+    df = fetcher.options_chain(args.underlying)
+    if args.expiry:
+        df = df[df["expiry"] == args.expiry]
+    if df.empty:
+        print(f"WARN: binance options chain empty for {args.underlying}"
+              + (f" expiry {args.expiry}" if args.expiry else ""), file=sys.stderr)
+        return 3
+    out = Path(args.output).resolve()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(out, index=False)
+    n_expiries = df["expiry"].nunique()
+    print(f"binance options {args.underlying}: {len(df):,} contracts across "
+          f"{n_expiries} expiries -> {out}")
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# Polymarket (Gamma API for discovery; CLOB API for time-series mid prices)
+
+
+class PolymarketFetcher:
+    """Browse Polymarket prediction markets and fetch CLOB price history.
+
+    Endpoints:
+      GET https://gamma-api.polymarket.com/markets       ?limit=&offset=&active=&closed=&order=&tag_id=
+      GET https://gamma-api.polymarket.com/events        ?limit=&offset=&active=&closed=&order=&tag_id=
+      GET https://clob.polymarket.com/prices-history     ?market=<tokenId>&startTs=&endTs=&interval=&fidelity=
+
+    Note on token IDs: a Polymarket "market" is an outcome pair; each side has
+    a numeric `clobTokenId`. The price-history endpoint is keyed by this ID,
+    not by the market slug. Use `polymarket-markets` first to discover token
+    IDs, then `polymarket-history` for the time series.
+    """
+
+    GAMMA_BASE = "https://gamma-api.polymarket.com"
+    CLOB_BASE = "https://clob.polymarket.com"
+    INTERVAL_OPTIONS = {"1m", "1h", "6h", "1d", "1w", "max"}
+
+    def __init__(self, timeout: float = 30.0) -> None:
+        self.session = requests.Session()
+        self.session.headers.update({"User-Agent": YAHOO_DEFAULT_UA, "Accept": "application/json"})
+        self.timeout = timeout
+
+    def _get(self, url: str, params: dict, max_retries: int = 5) -> Any:
+        for attempt in range(1, max_retries + 1):
+            try:
+                resp = self.session.get(url, params=params, timeout=self.timeout)
+            except (requests.exceptions.SSLError,
+                    requests.exceptions.ConnectionError,
+                    requests.exceptions.Timeout) as exc:
+                wait = min(60, 5 * (2 ** (attempt - 1)))
+                print(f"  polymarket {url}: {type(exc).__name__}, retry in {wait}s "
+                      f"({attempt}/{max_retries})", file=sys.stderr)
+                time.sleep(wait)
+                continue
+            if resp.status_code == 200:
+                return resp.json()
+            if resp.status_code in (429, 500, 502, 503, 504):
+                wait = min(60, 5 * (2 ** (attempt - 1)))
+                print(f"  polymarket {url}: HTTP {resp.status_code}, retry in {wait}s "
+                      f"({attempt}/{max_retries})", file=sys.stderr)
+                time.sleep(wait)
+                continue
+            raise RuntimeError(f"polymarket {url}: HTTP {resp.status_code} {resp.text[:200]!r}")
+        raise RuntimeError(f"polymarket {url}: retries exhausted")
+
+    def markets(self, limit: int = 20, active: bool | None = None,
+                closed: bool | None = None, tag: str | None = None,
+                order: str | None = None, offset: int = 0) -> list[dict]:
+        params: dict[str, Any] = {"limit": limit, "offset": offset}
+        if active is not None:
+            params["active"] = "true" if active else "false"
+        if closed is not None:
+            params["closed"] = "true" if closed else "false"
+        if tag:
+            params["tag_id"] = tag
+        if order:
+            params["order"] = order
+        data = self._get(f"{self.GAMMA_BASE}/markets", params)
+        if isinstance(data, list):
+            return data
+        return data.get("markets", []) if isinstance(data, dict) else []
+
+    def price_history(self, token_id: str, interval: str,
+                      days: int = 30, fidelity: int | None = None) -> pd.DataFrame:
+        if interval not in self.INTERVAL_OPTIONS:
+            raise ValueError(f"polymarket interval must be one of {sorted(self.INTERVAL_OPTIONS)}")
+        end_ts = int(datetime.now(timezone.utc).timestamp())
+        start_ts = end_ts - days * 86400
+        params: dict[str, Any] = {
+            "market": token_id,
+            "startTs": start_ts,
+            "endTs": end_ts,
+            "interval": interval,
+        }
+        if fidelity is not None:
+            params["fidelity"] = fidelity
+        data = self._get(f"{self.CLOB_BASE}/prices-history", params)
+        history = data.get("history") or []
+        if not history:
+            return pd.DataFrame(columns=["date", "price"])
+        df = pd.DataFrame(history)
+        df["date"] = pd.to_datetime(df["t"].astype(int), unit="s", utc=True)
+        df["price"] = df["p"].astype(float)
+        return df[["date", "price"]]
+
+
+def cmd_polymarket_markets(args: argparse.Namespace) -> int:
+    fetcher = PolymarketFetcher()
+    active = None
+    if args.active is not None:
+        active = args.active.lower() == "true"
+    closed = None
+    if args.closed is not None:
+        closed = args.closed.lower() == "true"
+    rows = fetcher.markets(
+        limit=args.limit, active=active, closed=closed,
+        tag=args.tag, order=args.order, offset=args.offset,
+    )
+    if not rows:
+        print("WARN: polymarket markets returned no rows", file=sys.stderr)
+        return 3
+    flat = []
+    for m in rows:
+        flat.append({
+            "id": m.get("id"),
+            "slug": m.get("slug"),
+            "question": m.get("question"),
+            "active": m.get("active"),
+            "closed": m.get("closed"),
+            "volume_num": m.get("volumeNum"),
+            "liquidity_num": m.get("liquidityNum"),
+            "outcome_prices": m.get("outcomePrices"),
+            "clob_token_ids": m.get("clobTokenIds"),
+            "end_date": m.get("endDate"),
+            "tags": m.get("tags"),
+        })
+    out = Path(args.output).resolve()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    if args.format == "json":
+        out.write_text(json.dumps(flat, indent=2, default=str))
+    else:
+        pd.DataFrame(flat).to_csv(out, index=False)
+    print(f"polymarket markets: {len(flat)} rows -> {out}")
+    return 0
+
+
+def cmd_polymarket_history(args: argparse.Namespace) -> int:
+    fetcher = PolymarketFetcher()
+    df = fetcher.price_history(args.token, args.interval, args.days, args.fidelity)
+    if df.empty:
+        print(f"WARN: polymarket price-history empty for token {args.token}", file=sys.stderr)
+        return 3
+    out = Path(args.output).resolve()
+    out.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(out, index=False)
+    print(f"polymarket history token {args.token} {args.interval} ({args.days}d): "
+          f"{len(df):,} rows -> {out}")
+    return 0
+
+
+# ---------------------------------------------------------------------------
 # CLI
 
 
@@ -407,6 +1052,65 @@ def build_parser() -> argparse.ArgumentParser:
     pol.add_argument("--end", required=True, help="YYYY-MM-DD")
     pol.add_argument("--output", required=True)
 
+    bk = sub.add_parser("bybit-kline", help="OHLCV via Bybit V5 public REST")
+    bk.add_argument("--category", required=True,
+                    choices=["spot", "linear", "inverse", "option"])
+    bk.add_argument("--symbol", required=True,
+                    help="e.g. BTCUSDT (spot/linear), BTCUSD (inverse), BTC-26APR26-50000-C (option)")
+    bk.add_argument("--interval", default="1h",
+                    help="1m/3m/5m/15m/30m/1h/2h/4h/6h/12h/1d/1w/1M (default 1h)")
+    bk.add_argument("--start", required=True, help="ISO start, e.g. 2024-01-01")
+    bk.add_argument("--end", required=True, help="ISO end, e.g. 2025-12-31")
+    bk.add_argument("--output", required=True)
+
+    bo = sub.add_parser("bybit-options", help="Bybit USDC option chain snapshot (BTC/ETH/SOL)")
+    bo.add_argument("--base", required=True, choices=["BTC", "ETH", "SOL"])
+    bo.add_argument("--expiry", help="filter by expiry, e.g. 26APR26")
+    bo.add_argument("--output", required=True)
+
+    kk = sub.add_parser("kraken-kline", help="OHLCV via Kraken public REST (spot or futures)")
+    kk.add_argument("--market", default="spot", choices=["spot", "futures"])
+    kk.add_argument("--pair", required=True,
+                    help="spot e.g. XBTUSD / AAPLxUSD / ZEURZUSD; futures e.g. PF_XBTUSD / PF_SPXUSD")
+    kk.add_argument("--asset-class", choices=["tokenized_asset", "forex"], default=None,
+                    help="REQUIRED for spot xStocks (tokenized_asset) and fiat forex (forex)")
+    kk.add_argument("--interval", default="1h",
+                    help="spot: 1m/5m/15m/30m/1h/4h/1d/1w/15d; futures: 1m/5m/15m/30m/1h/4h/12h/1d/1w")
+    kk.add_argument("--start", help="ISO start (futures only)")
+    kk.add_argument("--end", help="ISO end (futures only)")
+    kk.add_argument("--output", required=True)
+
+    bnk = sub.add_parser("binance-kline", help="OHLCV via Binance Spot REST")
+    bnk.add_argument("--symbol", required=True, help="e.g. BTCUSDT, ETHUSDT, SOLUSDT")
+    bnk.add_argument("--interval", default="1h",
+                    help="1m/3m/5m/15m/30m/1h/2h/4h/6h/8h/12h/1d/3d/1w/1M (default 1h)")
+    bnk.add_argument("--start", required=True, help="ISO start")
+    bnk.add_argument("--end", required=True, help="ISO end")
+    bnk.add_argument("--output", required=True)
+
+    bno = sub.add_parser("binance-options", help="Binance European option chain snapshot (BTC/ETH)")
+    bno.add_argument("--underlying", required=True,
+                     help="prefix match against contract underlying, e.g. BTC, ETH")
+    bno.add_argument("--expiry", help="filter by expiry ISO date, e.g. 2026-04-26")
+    bno.add_argument("--output", required=True)
+
+    pmm = sub.add_parser("polymarket-markets", help="List Polymarket prediction markets (Gamma API)")
+    pmm.add_argument("--limit", type=int, default=20)
+    pmm.add_argument("--offset", type=int, default=0)
+    pmm.add_argument("--active", choices=["true", "false"], default=None)
+    pmm.add_argument("--closed", choices=["true", "false"], default=None)
+    pmm.add_argument("--tag", help="tag_id filter (e.g. 'politics' if API expects slug)")
+    pmm.add_argument("--order", help="e.g. volume_num, liquidity_num")
+    pmm.add_argument("--format", choices=["csv", "json"], default="csv")
+    pmm.add_argument("--output", required=True)
+
+    pmh = sub.add_parser("polymarket-history", help="Polymarket CLOB price history for one token")
+    pmh.add_argument("--token", required=True, help="clobTokenId for one outcome side")
+    pmh.add_argument("--interval", default="1d", choices=["1m", "1h", "6h", "1d", "1w", "max"])
+    pmh.add_argument("--days", type=int, default=30, help="lookback in days from now")
+    pmh.add_argument("--fidelity", type=int, help="optional sampling fidelity in resolution units")
+    pmh.add_argument("--output", required=True)
+
     return p
 
 
@@ -419,6 +1123,20 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_nse_options(args)
     if args.provider == "polygon":
         return cmd_polygon(args)
+    if args.provider == "bybit-kline":
+        return cmd_bybit_kline(args)
+    if args.provider == "bybit-options":
+        return cmd_bybit_options(args)
+    if args.provider == "kraken-kline":
+        return cmd_kraken_kline(args)
+    if args.provider == "binance-kline":
+        return cmd_binance_kline(args)
+    if args.provider == "binance-options":
+        return cmd_binance_options(args)
+    if args.provider == "polymarket-markets":
+        return cmd_polymarket_markets(args)
+    if args.provider == "polymarket-history":
+        return cmd_polymarket_history(args)
     parser.print_help()
     return 2
 

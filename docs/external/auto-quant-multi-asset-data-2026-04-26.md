@@ -78,6 +78,39 @@ End-to-end backtest proof (previous session, databento NQ 1h+4h+1d feathers):
 3 trades, win-rate 66.7%, sharpe 0.005, max-drawdown -1.10%, **0 FreqTrade
 source modifications**.
 
+## New providers (2026-04-26 iteration)
+
+Four additional REST surfaces, all key-free for read:
+
+| Sub-command | Asset class hit | Verified output |
+| ----------- | --------------- | --------------- |
+| `bybit-kline` | crypto spot, USDT/inverse perps, option contracts | 365 daily rows on `linear/BTCUSDT` |
+| `bybit-options` | **BTC/ETH/SOL USDC options with delta/gamma/theta/vega** | 500 contracts × 9 expiries on BTC, 100% Greeks |
+| `kraken-kline` (spot) | crypto, **xStocks tokenised U.S. equity (AAPLx/SPYx)**, fiat forex with **real volume** | 256–721 daily rows depending on instrument |
+| `kraken-kline` (futures) | crypto perps + **PF_* equity-index perps (PF_SPXUSD…)** | 214 daily rows on `PF_SPXUSD` |
+| `binance-kline` | crypto spot | 365 daily rows on `BTCUSDT` |
+| `binance-options` | **BTC/ETH European options (`/eapi`) with Greeks** | 538 contracts × 12 expiries on BTC, 100% Greeks |
+| `polymarket-markets` | prediction-market discovery | works from clean-routed exit; **GFW blocks** `gamma-api.polymarket.com` |
+| `polymarket-history` | CLOB token mid-price history (alt-data implied probability) | same network constraint |
+
+Key gotchas pinned during smoke tests:
+
+- Bybit V5 option symbols are now `BASE-EXPIRY-STRIKE-SIDE-SETTLE` (5 segments).
+  Older 4-segment form is also accepted.
+- Kraken `/0/public/OHLC` requires `--asset-class tokenized_asset` for xStocks
+  and `--asset-class forex` for fiat pairs; without it the endpoint replies
+  `EGeneral:Invalid arguments`.
+- xStocks pair names use a lowercase `x`: `AAPLxUSD`, `SPYxUSD`.
+- All four new fetchers retry on `SSLError` / `ConnectionError` / `Timeout`
+  with exponential backoff so the GFW's intermittent TLS resets are
+  self-healing for kraken/bybit/binance. Polymarket from CN IP is not
+  recoverable in code — use a clean-routed exit.
+
+Auth-key acquisition surface (operator does this when ready to trade; data
+endpoints above all work without it): see
+`docs/2026-04-26-multi-exchange-data-source-integration-plan.md` for the
+sign-up URL / scope checklist per provider.
+
 ## Option-chain coverage (NSE)
 
 `fetch_external.py nse-options` implements the distilled NSE flow:
