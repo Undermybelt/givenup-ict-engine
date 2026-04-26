@@ -6,6 +6,7 @@ mod health;
 mod persistence;
 pub mod readiness;
 mod repo_manager;
+pub mod results;
 mod seed_evidence;
 mod status;
 mod strategy_materials;

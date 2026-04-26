@@ -29,6 +29,7 @@ pub const ENSEMBLE_VOTE_FILE: &str = "ensemble_vote.json";
 pub const ENSEMBLE_VOTE_HISTORY_FILE: &str = "ensemble_vote_history.json";
 pub const ENSEMBLE_EXECUTOR_SCORECARDS_FILE: &str = "ensemble_executor_scorecards.json";
 pub const ARTIFACT_LEDGER_FILE: &str = "artifact_ledger.json";
+pub const BBN_STATE_FILE: &str = "bbn_network.json";
 
 /// State persistence types
 #[derive(Debug, Clone, Serialize, Deserialize)]

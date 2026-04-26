@@ -59,8 +59,10 @@ use ict_engine::application::{
     auto_quant::command_entry::{
         auto_quant_adoption_decision_command, auto_quant_adoption_review_command,
         auto_quant_bootstrap_command, auto_quant_factor_autoresearch_command,
-        auto_quant_factor_research_command, auto_quant_seed_evidence_command,
+        auto_quant_factor_research_command, auto_quant_prior_init_command,
+        auto_quant_results_import_command, auto_quant_seed_evidence_command,
         auto_quant_status_command, auto_quant_update_command,
+        AutoQuantPriorInitCommandInput,
     },
     auto_quant::{AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput},
     backtest::{
@@ -1309,6 +1311,67 @@ enum Commands {
         )]
         limit: usize,
     },
+    /// Import an Auto-Quant strategy_library.json manifest as a validated handoff artifact.
+    AutoQuantResultsImport {
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        symbol: String,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding Auto-Quant artifacts"
+        )]
+        state_dir: String,
+        #[arg(
+            long,
+            help = "Path to the strategy_library.json produced by Auto-Quant's export_strategy_library.py"
+        )]
+        library: String,
+    },
+    /// Apply tempered Beta-Binomial pseudo-counts from an imported Auto-Quant strategy library to the trade_outcome CPT prior.
+    AutoQuantPriorInit {
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        symbol: String,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding Auto-Quant artifacts"
+        )]
+        state_dir: String,
+        #[arg(
+            long,
+            help = "Path to a strategy_library.json. If omitted, defaults to the canonical state copy persisted by auto-quant-results-import"
+        )]
+        library: Option<String>,
+        #[arg(
+            long,
+            value_delimiter = ',',
+            help = "Comma-separated strategy names; if omitted, every status=ok strategy in the manifest is applied"
+        )]
+        strategies: Option<Vec<String>>,
+        #[arg(
+            long,
+            help = "Temper factor in [0, 1]. Backtest counts are multiplied by this before being added to the Dirichlet prior. Defaults to 0.5"
+        )]
+        temper: Option<f64>,
+        #[arg(
+            long,
+            help = "Dirichlet concentration applied to the existing CPT row. Defaults to 4.0"
+        )]
+        prior_strength: Option<f64>,
+        #[arg(
+            long,
+            value_delimiter = ',',
+            help = "Three usize indices [entry_quality, factor_alignment, factor_uncertainty]. Defaults to 0,0,0"
+        )]
+        parent_config: Option<Vec<usize>>,
+        #[arg(
+            long,
+            help = "Compute the diff and emit the ledger entry but do not persist the mutated trading network"
+        )]
+        dry_run: bool,
+    },
 }
 
 fn main() -> Result<()> {
@@ -1816,6 +1879,36 @@ fn main() -> Result<()> {
         } => {
             ensure_state_dir_ready(&state_dir)?;
             auto_quant_seed_evidence_command(&symbol, &state_dir, &strategy_material_root, limit)?
+        }
+        Commands::AutoQuantResultsImport {
+            symbol,
+            state_dir,
+            library,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            auto_quant_results_import_command(&symbol, &state_dir, &library)?
+        }
+        Commands::AutoQuantPriorInit {
+            symbol,
+            state_dir,
+            library,
+            strategies,
+            temper,
+            prior_strength,
+            parent_config,
+            dry_run,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            auto_quant_prior_init_command(AutoQuantPriorInitCommandInput {
+                symbol: &symbol,
+                state_dir: &state_dir,
+                library_path: library.as_deref(),
+                strategy_filter: strategies.as_deref(),
+                temper,
+                prior_strength,
+                parent_config,
+                dry_run,
+            })?
         }
         Commands::CleanFutures {
             root,
