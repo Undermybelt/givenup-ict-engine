@@ -226,9 +226,180 @@ fn parse_per_pair_line(raw: &str) -> Option<(String, StrategyLibraryValidationMe
     }
 }
 
+/// Single drift point between the manifest produced by
+/// `export_strategy_library.py` and the canonical `run_ibkr.log`.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ManifestLogMismatch {
+    pub strategy: String,
+    pub field: String,
+    pub manifest_value: serde_json::Value,
+    pub log_value: serde_json::Value,
+}
+
+/// Aggregate cross-check report. Informational; never causes import to fail.
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct ManifestLogCrossCheck {
+    pub n_blocks_in_log: usize,
+    pub n_strategies_in_manifest: usize,
+    pub matched: usize,
+    pub mismatches: Vec<ManifestLogMismatch>,
+    /// Names present in the manifest but absent from the log (likely
+    /// the manifest was rebuilt from an older log or includes legacy
+    /// strategies that were not re-run).
+    pub manifest_only: Vec<String>,
+    /// Names present in the log but absent from the manifest (likely
+    /// the export step skipped a block — e.g. the source `.py` file
+    /// is missing or its docstring is malformed).
+    pub log_only: Vec<String>,
+}
+
+impl ManifestLogCrossCheck {
+    /// `true` iff every manifest strategy lined up with a log block
+    /// on status, trade_count, and win_rate_pct.
+    pub fn is_clean(&self) -> bool {
+        self.mismatches.is_empty()
+            && self.manifest_only.is_empty()
+            && self.log_only.is_empty()
+    }
+}
+
+const METRIC_F64_TOLERANCE: f64 = 1.0e-6;
+
+/// Cross-check a `StrategyLibraryManifest` against a list of log blocks
+/// parsed from `run_ibkr.log`. Compares strategy presence, status, and
+/// the headline numeric metrics that drive prior init
+/// (`trade_count`, `win_rate_pct`). Other metrics (sharpe, sortino,
+/// calmar, profit_factor, drawdown) are checked too but only when both
+/// sides report a non-default value, since the producer may emit
+/// zeros/defaults for an errored strategy.
+pub fn cross_check_manifest_against_log(
+    manifest: &super::manifest::StrategyLibraryManifest,
+    blocks: &[RunIbkrLogBlock],
+) -> ManifestLogCrossCheck {
+    use serde_json::json;
+
+    let mut report = ManifestLogCrossCheck {
+        n_blocks_in_log: blocks.len(),
+        n_strategies_in_manifest: manifest.strategies.len(),
+        ..ManifestLogCrossCheck::default()
+    };
+
+    let mut log_index: BTreeMap<&str, &RunIbkrLogBlock> = BTreeMap::new();
+    for block in blocks {
+        log_index.insert(block.strategy.as_str(), block);
+    }
+    let mut manifest_names: BTreeMap<&str, ()> = BTreeMap::new();
+
+    for entry in &manifest.strategies {
+        manifest_names.insert(entry.name.as_str(), ());
+        let Some(block) = log_index.get(entry.name.as_str()) else {
+            report.manifest_only.push(entry.name.clone());
+            continue;
+        };
+        let mut local_mismatches = 0usize;
+
+        if entry.status != block.status {
+            report.mismatches.push(ManifestLogMismatch {
+                strategy: entry.name.clone(),
+                field: "status".to_string(),
+                manifest_value: json!(entry.status),
+                log_value: json!(block.status),
+            });
+            local_mismatches += 1;
+        }
+
+        if let Some(metrics) = &entry.validation_metrics {
+            if metrics.trade_count != block.aggregate.trade_count {
+                report.mismatches.push(ManifestLogMismatch {
+                    strategy: entry.name.clone(),
+                    field: "trade_count".to_string(),
+                    manifest_value: json!(metrics.trade_count),
+                    log_value: json!(block.aggregate.trade_count),
+                });
+                local_mismatches += 1;
+            }
+            if (metrics.win_rate_pct - block.aggregate.win_rate_pct).abs()
+                > METRIC_F64_TOLERANCE
+            {
+                report.mismatches.push(ManifestLogMismatch {
+                    strategy: entry.name.clone(),
+                    field: "win_rate_pct".to_string(),
+                    manifest_value: json!(metrics.win_rate_pct),
+                    log_value: json!(block.aggregate.win_rate_pct),
+                });
+                local_mismatches += 1;
+            }
+            // Soft-fail metrics: only flag when both sides reported a
+            // non-zero number, otherwise the comparison is meaningless
+            // (default zeros from the export side, or errored block).
+            for (label, m_val, l_val) in [
+                (
+                    "sharpe",
+                    metrics.sharpe,
+                    block.aggregate.sharpe,
+                ),
+                (
+                    "sortino",
+                    metrics.sortino,
+                    block.aggregate.sortino,
+                ),
+                (
+                    "calmar",
+                    metrics.calmar,
+                    block.aggregate.calmar,
+                ),
+                (
+                    "profit_factor",
+                    metrics.profit_factor,
+                    block.aggregate.profit_factor,
+                ),
+                (
+                    "max_drawdown_pct",
+                    metrics.max_drawdown_pct,
+                    block.aggregate.max_drawdown_pct,
+                ),
+                (
+                    "total_profit_pct",
+                    metrics.total_profit_pct,
+                    block.aggregate.total_profit_pct,
+                ),
+            ] {
+                if m_val != 0.0
+                    && l_val != 0.0
+                    && (m_val - l_val).abs() > METRIC_F64_TOLERANCE
+                {
+                    report.mismatches.push(ManifestLogMismatch {
+                        strategy: entry.name.clone(),
+                        field: label.to_string(),
+                        manifest_value: json!(m_val),
+                        log_value: json!(l_val),
+                    });
+                    local_mismatches += 1;
+                }
+            }
+        }
+
+        if local_mismatches == 0 {
+            report.matched += 1;
+        }
+    }
+
+    for block in blocks {
+        if !manifest_names.contains_key(block.strategy.as_str()) {
+            report.log_only.push(block.strategy.clone());
+        }
+    }
+
+    report
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::application::auto_quant::results::manifest::{
+        StrategyLibraryEntry, StrategyLibraryManifest, StrategyLibraryMetadata,
+        StrategyLibraryValidationMetrics,
+    };
 
     const SAMPLE_LOG: &str = "preamble line\n\
 ---\n\
@@ -306,5 +477,105 @@ traceback:\n\
             meta.get("mutation_id").and_then(|v| v.as_str()),
             Some("mb-001")
         );
+    }
+
+    fn manifest_entry_mirroring_good_block() -> StrategyLibraryEntry {
+        StrategyLibraryEntry {
+            name: "GoodStrat".to_string(),
+            file_path: "user_data/strategies_ibkr/GoodStrat.py".to_string(),
+            metadata: StrategyLibraryMetadata {
+                strategy: "GoodStrat".to_string(),
+                mutation_id: "mb-001".to_string(),
+                ..Default::default()
+            },
+            status: "ok".to_string(),
+            validation_metrics: Some(StrategyLibraryValidationMetrics {
+                sharpe: 1.42,
+                sortino: 2.13,
+                calmar: 4.5,
+                total_profit_pct: 12.3,
+                max_drawdown_pct: -3.2,
+                trade_count: 87,
+                win_rate_pct: 54.5,
+                profit_factor: 1.85,
+            }),
+            ..Default::default()
+        }
+    }
+
+    #[test]
+    fn cross_check_is_clean_when_manifest_mirrors_log() {
+        let blocks = parse_run_ibkr_log_text(SAMPLE_LOG);
+        let manifest = StrategyLibraryManifest {
+            manifest_version: "1.0".to_string(),
+            strategies: vec![
+                manifest_entry_mirroring_good_block(),
+                StrategyLibraryEntry {
+                    name: "BrokenStrat".to_string(),
+                    status: "error".to_string(),
+                    metadata: StrategyLibraryMetadata {
+                        strategy: "BrokenStrat".to_string(),
+                        mutation_id: "mb-002".to_string(),
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+            ],
+            ..Default::default()
+        };
+        let report = cross_check_manifest_against_log(&manifest, &blocks);
+        assert!(report.is_clean(), "{:?}", report);
+        assert_eq!(report.matched, 2);
+    }
+
+    #[test]
+    fn cross_check_flags_numeric_drift() {
+        let blocks = parse_run_ibkr_log_text(SAMPLE_LOG);
+        let mut entry = manifest_entry_mirroring_good_block();
+        if let Some(m) = entry.validation_metrics.as_mut() {
+            m.win_rate_pct = 99.0; // log says 54.5
+            m.trade_count = 12; // log says 87
+        }
+        let manifest = StrategyLibraryManifest {
+            manifest_version: "1.0".to_string(),
+            strategies: vec![entry],
+            ..Default::default()
+        };
+        let report = cross_check_manifest_against_log(&manifest, &blocks);
+        assert!(!report.is_clean());
+        let fields: Vec<&str> = report
+            .mismatches
+            .iter()
+            .map(|m| m.field.as_str())
+            .collect();
+        assert!(fields.contains(&"trade_count"));
+        assert!(fields.contains(&"win_rate_pct"));
+        // BrokenStrat is in the log but absent from the manifest: log_only.
+        assert_eq!(report.log_only, vec!["BrokenStrat".to_string()]);
+        assert_eq!(report.matched, 0);
+    }
+
+    #[test]
+    fn cross_check_reports_asymmetric_coverage() {
+        let blocks = parse_run_ibkr_log_text(SAMPLE_LOG);
+        let manifest = StrategyLibraryManifest {
+            manifest_version: "1.0".to_string(),
+            strategies: vec![StrategyLibraryEntry {
+                name: "GhostStrat".to_string(),
+                status: "ok".to_string(),
+                metadata: StrategyLibraryMetadata {
+                    strategy: "GhostStrat".to_string(),
+                    mutation_id: "g-001".to_string(),
+                    ..Default::default()
+                },
+                ..Default::default()
+            }],
+            ..Default::default()
+        };
+        let report = cross_check_manifest_against_log(&manifest, &blocks);
+        assert!(!report.is_clean());
+        assert_eq!(report.manifest_only, vec!["GhostStrat".to_string()]);
+        assert!(report.log_only.contains(&"GoodStrat".to_string()));
+        assert!(report.log_only.contains(&"BrokenStrat".to_string()));
     }
 }

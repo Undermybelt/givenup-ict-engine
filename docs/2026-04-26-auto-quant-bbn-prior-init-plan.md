@@ -1,7 +1,7 @@
 # Auto-Quant → ict-engine BBN Prior Init (Phase 1)
 
 Date: 2026-04-26
-Status: implementation plan
+Status: shipped (commits a7347f6, 8d03a01, plus follow-up cross-check + supersession + apply-guard)
 Phase: 1 of 3 (offline path)
 
 ## Context
@@ -177,9 +177,43 @@ New artifact_kinds:
   records (strategy_name, parent_config, before_cpt, after_cpt, k,
   prior_strength) for full provenance + reversibility
 
-State of an imported library transitions:
-`pending_review → adopted_for_prior_init → prior_init_applied →
-superseded_by(<library_id>)`
+Library state machine (as shipped):
+
+```
+ready_for_prior_init        ── new manifest with n_ok > 0
+no_validated_strategies     ── new manifest with n_ok == 0
+superseded                  ── flipped to this when a *newer*
+                              ready_for_prior_init manifest is imported
+```
+
+Re-import always creates a new ledger entry; the new entry's
+`supersedes_artifact_id` records the most recent prior. The operator
+never sees two `ready_for_prior_init` libraries simultaneously, so a
+prior-init resolved-by-recency cannot accidentally pick a stale one.
+
+Prior-init state machine (as shipped):
+
+```
+applied             ── non-dry-run with strategies_applied > 0
+no_op               ── non-dry-run with strategies_applied == 0
+dry_run_preview     ── any --dry-run invocation
+```
+
+### F'. Apply guard (replaces the loose "idempotent" property)
+
+A second non-dry-run apply against a library_artifact_id that already
+has an `applied` ledger entry is **refused** with an explicit error:
+
+> library 'auto_quant_strategy_library_NQ_…' has already been applied
+> via 'auto_quant_prior_init_NQ_…'. Re-applying would silently double
+> the tempered pseudo-counts. Roll back the BBN snapshot and pass
+> `--force` to override, or re-run `--dry-run` to inspect the diff.
+
+This is the practical safety property: the math is **not** idempotent
+under repeated apply (each call adds tempered counts), so the system
+forbids the unsafe operation and offers two safe ways forward
+(`--dry-run` for read-only review, `--force` for an explicit
+post-rollback re-apply).
 
 ### G. ict-engine — CLI commands
 
@@ -188,27 +222,54 @@ ict-engine auto-quant-results-import \
     --symbol NQ \
     --state-dir state \
     --library state/NQ/auto_quant_strategy_library.json \
-    [--log run_ibkr.log]    # optional cross-check
+    [--log run_ibkr.log]              # optional cross-check
 
 ict-engine auto-quant-prior-init \
     --symbol NQ \
     --state-dir state \
-    --library-artifact-id <id> \
-    [--strategies <name>,<name>]   # default: all active
+    [--library <path>]                # default: state/NQ/auto_quant_strategy_library.json
+    [--strategies <name>,<name>]      # comma-delimited; default: every status=ok strategy
     [--temper 0.5]
     [--prior-strength 4.0]
+    [--parent-config 0,0,0]
     [--dry-run]
+    [--force]                         # override the single-apply guard
 ```
 
-`--dry-run` writes the proposed CPT diff to stdout without touching state.
+`--dry-run` writes the proposed CPT diff to stdout (and a
+`dry_run_preview` ledger entry) without touching `bbn_network.json`.
+The library entry is resolved via the most recent
+`auto_quant_strategy_library_validated` ledger entry; lineage is
+captured by `source_run_id` on the prior-init entry.
 
 ### H. Tests
 
-- Unit: parser handles malformed metadata gracefully
-- Unit: prior init math — Beta-Binomial conjugate, normalization
-- Integration: full workflow on synthetic library + smoke trade_outcome
-  CPT before/after diff
-- Property: prior init is idempotent under repeated apply with same library
+Shipped:
+
+- Unit: manifest schema rejects missing/unsupported version, malformed JSON.
+- Unit: prior-init math — Beta-Binomial conjugate posterior on a
+  balanced row, empirical-dominance under high prior strength,
+  zero-temper no-op, parent-config arity validation, strategy-filter
+  scoping.
+- Unit: log parser — `---` block split, aggregate metrics,
+  per-pair metrics, error-status capture, `auto_quant_meta:` JSON
+  capture.
+- Unit: cross-check — clean mirror, numeric drift detection,
+  asymmetric coverage (manifest_only / log_only).
+- Unit: persistence — library + ledger round-trip, re-import flips
+  prior to `superseded`, dry-run leaves library untouched, apply guard
+  recognises only `applied` (not `dry_run_preview`).
+- Unit (command_entry): import + dry-run leaves BBN untouched, apply
+  writes BBN, missing library yields a directed error, second apply
+  is refused with an `already been applied` error, `--force`
+  overrides the guard, `--log` runs the cross-check informationally.
+
+Out of scope here (deferred to Phase 2):
+
+- A `cargo test --test ...` integration crate that drives the full
+  binary end-to-end (the in-process unit tests + the manual smoke
+  `./target/debug/ict-engine auto-quant-...` cover the same paths
+  today).
 
 ## Out of scope (Phase 2 / 3)
 

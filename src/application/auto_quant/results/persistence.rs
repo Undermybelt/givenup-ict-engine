@@ -104,6 +104,9 @@ pub fn persist_imported_library(
         timestamp.format("%Y%m%dT%H%M%S%.3fZ")
     );
 
+    let superseded_ids = mark_prior_libraries_superseded(state_dir, symbol, &artifact_id)?;
+    let supersedes_artifact_id = superseded_ids.last().cloned();
+
     let review_reason = format!(
         "imported {} ok / {} error / {} not_run from {}",
         n_ok, n_error, n_not_run, source_path
@@ -139,7 +142,7 @@ pub fn persist_imported_library(
             top_factor_name: None,
             top_factor_action: None,
             family_scores: BTreeMap::new(),
-            supersedes_artifact_id: None,
+            supersedes_artifact_id,
             quality_score: n_ok.min(100) as i32,
             consumed_by_update_run_id: None,
             consumed_at: None,
@@ -158,6 +161,72 @@ pub fn persist_imported_library(
         n_error,
         n_not_run,
     })
+}
+
+/// Flip every prior `auto_quant_strategy_library_validated` ledger
+/// entry whose status is `ready_for_prior_init` to `superseded` and
+/// link them to `new_artifact_id`. Called from
+/// `persist_imported_library` *before* the new entry is appended,
+/// so the operator can never run prior-init against an obsolete
+/// manifest. Returns the list of superseded artifact ids so the new
+/// entry can record the most recent one in `supersedes_artifact_id`.
+pub fn mark_prior_libraries_superseded(
+    state_dir: &str,
+    symbol: &str,
+    new_artifact_id: &str,
+) -> Result<Vec<String>> {
+    let mut ledger: Vec<ArtifactLedgerEntry> =
+        crate::state::load_state_or_default(state_dir, symbol, crate::state::ARTIFACT_LEDGER_FILE)?;
+    let mut superseded: Vec<String> = Vec::new();
+    let now = Utc::now();
+    for entry in ledger.iter_mut() {
+        if entry.artifact_kind == ARTIFACT_KIND_LIBRARY
+            && entry.status == "ready_for_prior_init"
+        {
+            entry.status = "superseded".to_string();
+            entry.actionable = false;
+            entry.promote_candidate = false;
+            entry.decision_hint = "superseded_by_newer_library".to_string();
+            entry.regraded_at = Some(now);
+            entry.consumption_regrade_status = Some("superseded".to_string());
+            entry.consumption_regrade_reason = Some(format!(
+                "superseded by newer library import {}",
+                new_artifact_id
+            ));
+            superseded.push(entry.artifact_id.clone());
+        }
+    }
+    if !superseded.is_empty() {
+        save_state(
+            state_dir,
+            symbol,
+            crate::state::ARTIFACT_LEDGER_FILE,
+            &ledger,
+        )?;
+    }
+    Ok(superseded)
+}
+
+/// Look up an existing `auto_quant_prior_init_applied` ledger entry
+/// whose `source_run_id` matches `library_artifact_id` AND whose
+/// `status == "applied"` (i.e. the BBN snapshot has actually been
+/// mutated against this library). Used by the prior-init command to
+/// refuse a second non-dry-run apply against the same library.
+pub fn find_existing_apply_for_library(
+    state_dir: &str,
+    symbol: &str,
+    library_artifact_id: &str,
+) -> Result<Option<String>> {
+    let ledger: Vec<ArtifactLedgerEntry> =
+        crate::state::load_state_or_default(state_dir, symbol, crate::state::ARTIFACT_LEDGER_FILE)?;
+    Ok(ledger
+        .into_iter()
+        .find(|entry| {
+            entry.artifact_kind == ARTIFACT_KIND_PRIOR_INIT
+                && entry.status == "applied"
+                && entry.source_run_id.as_deref() == Some(library_artifact_id)
+        })
+        .map(|entry| entry.artifact_id))
 }
 
 pub fn persist_prior_init_outcome(
@@ -421,5 +490,113 @@ mod tests {
         // Library entry is untouched by the dry run (no consumed_* fields set).
         assert!(library_entry.consumed_by_update_run_id.is_none());
         assert!(library_entry.consumed_at.is_none());
+    }
+
+    #[test]
+    fn second_import_supersedes_prior_ready_library() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().to_str().unwrap();
+        let manifest = manifest_with_two_ok_one_error();
+
+        let first =
+            persist_imported_library(state_dir, "NQ", &manifest, "/tmp/first.json").unwrap();
+        // Same manifest, simulated as a re-export.
+        let second =
+            persist_imported_library(state_dir, "NQ", &manifest, "/tmp/second.json").unwrap();
+
+        let ledger: Vec<ArtifactLedgerEntry> =
+            crate::state::load_state(temp.path(), "NQ", ARTIFACT_LEDGER_FILE).unwrap();
+
+        let first_entry = ledger
+            .iter()
+            .find(|e| e.artifact_id == first.artifact_id)
+            .expect("first library entry");
+        assert_eq!(first_entry.status, "superseded");
+        assert!(!first_entry.actionable);
+        assert_eq!(first_entry.decision_hint, "superseded_by_newer_library");
+
+        let second_entry = ledger
+            .iter()
+            .find(|e| e.artifact_id == second.artifact_id)
+            .expect("second library entry");
+        assert_eq!(second_entry.status, "ready_for_prior_init");
+        assert_eq!(
+            second_entry.supersedes_artifact_id.as_deref(),
+            Some(first.artifact_id.as_str())
+        );
+    }
+
+    #[test]
+    fn no_op_supersession_when_no_prior_library_exists() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().to_str().unwrap();
+        let superseded =
+            mark_prior_libraries_superseded(state_dir, "NQ", "fresh-id").unwrap();
+        assert!(superseded.is_empty());
+    }
+
+    #[test]
+    fn find_existing_apply_returns_only_applied_entries() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().to_str().unwrap();
+        let manifest = manifest_with_two_ok_one_error();
+        let lib = persist_imported_library(state_dir, "NQ", &manifest, "/tmp/lib.json")
+            .unwrap();
+
+        // No prior init yet → None.
+        assert!(
+            find_existing_apply_for_library(state_dir, "NQ", &lib.artifact_id)
+                .unwrap()
+                .is_none()
+        );
+
+        // Dry-run does NOT count as applied.
+        let dry_outcome = AutoQuantPriorInitOutcome {
+            parent_config: vec![0, 0, 0],
+            initial_probs: vec![1.0 / 3.0; 3],
+            final_probs: vec![0.5, 0.0, 0.5],
+            strategies_applied: vec![Default::default()],
+            strategies_skipped: vec![],
+            temper: 0.5,
+            prior_strength: 4.0,
+        };
+        persist_prior_init_outcome(
+            state_dir,
+            "NQ",
+            &dry_outcome,
+            &lib.artifact_id,
+            &lib.state_path,
+            true, // dry_run
+        )
+        .unwrap();
+        assert!(
+            find_existing_apply_for_library(state_dir, "NQ", &lib.artifact_id)
+                .unwrap()
+                .is_none(),
+            "dry_run_preview must not register as applied"
+        );
+
+        // Real apply DOES register.
+        let apply_outcome = AutoQuantPriorInitOutcome {
+            parent_config: vec![0, 0, 0],
+            initial_probs: vec![1.0 / 3.0; 3],
+            final_probs: vec![0.5, 0.0, 0.5],
+            strategies_applied: vec![Default::default()],
+            strategies_skipped: vec![],
+            temper: 0.5,
+            prior_strength: 4.0,
+        };
+        let applied = persist_prior_init_outcome(
+            state_dir,
+            "NQ",
+            &apply_outcome,
+            &lib.artifact_id,
+            &lib.state_path,
+            false, // real apply
+        )
+        .unwrap();
+        let found =
+            find_existing_apply_for_library(state_dir, "NQ", &lib.artifact_id).unwrap();
+        assert_eq!(found.as_deref(), Some(applied.artifact_id.as_str()));
     }
 }

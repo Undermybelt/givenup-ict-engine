@@ -22,13 +22,17 @@ mod manifest;
 mod persistence;
 mod prior_init;
 
-pub use log_parser::{parse_run_ibkr_log, RunIbkrLogBlock};
+pub use log_parser::{
+    cross_check_manifest_against_log, parse_run_ibkr_log, ManifestLogCrossCheck,
+    ManifestLogMismatch, RunIbkrLogBlock,
+};
 pub use manifest::{
     load_strategy_library_manifest, StrategyLibraryEntry, StrategyLibraryEntryStatus,
     StrategyLibraryManifest, StrategyLibraryMetadata, StrategyLibraryValidationError,
     StrategyLibraryValidationMetrics, MANIFEST_SUPPORTED_VERSIONS,
 };
 pub use persistence::{
+    find_existing_apply_for_library, mark_prior_libraries_superseded,
     persist_imported_library, persist_prior_init_outcome, PersistedLibrary,
     PersistedPriorInit, PriorInitHistoryEntry, ARTIFACT_KIND_LIBRARY,
     ARTIFACT_KIND_PRIOR_INIT, LIBRARY_RULE_VERSION, PRIOR_INIT_HISTORY_FILE,

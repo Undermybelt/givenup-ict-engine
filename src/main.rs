@@ -1326,6 +1326,11 @@ enum Commands {
             help = "Path to the strategy_library.json produced by Auto-Quant's export_strategy_library.py"
         )]
         library: String,
+        #[arg(
+            long,
+            help = "Optional path to run_ibkr.log for redundant cross-check against the manifest. Drift is reported in the summary but does not fail the import."
+        )]
+        log: Option<String>,
     },
     /// Apply tempered Beta-Binomial pseudo-counts from an imported Auto-Quant strategy library to the trade_outcome CPT prior.
     AutoQuantPriorInit {
@@ -1370,6 +1375,11 @@ enum Commands {
             help = "Compute the diff and emit the ledger entry but do not persist the mutated trading network"
         )]
         dry_run: bool,
+        #[arg(
+            long,
+            help = "Override the ledger-enforced single-apply guard. Use only after consciously rolling back the BBN snapshot."
+        )]
+        force: bool,
     },
 }
 
@@ -1883,9 +1893,15 @@ fn main() -> Result<()> {
             symbol,
             state_dir,
             library,
+            log,
         } => {
             ensure_state_dir_ready(&state_dir)?;
-            auto_quant_results_import_command(&symbol, &state_dir, &library)?
+            auto_quant_results_import_command(
+                &symbol,
+                &state_dir,
+                &library,
+                log.as_deref(),
+            )?
         }
         Commands::AutoQuantPriorInit {
             symbol,
@@ -1896,6 +1912,7 @@ fn main() -> Result<()> {
             prior_strength,
             parent_config,
             dry_run,
+            force,
         } => {
             ensure_state_dir_ready(&state_dir)?;
             auto_quant_prior_init_command(AutoQuantPriorInitCommandInput {
@@ -1907,6 +1924,7 @@ fn main() -> Result<()> {
                 prior_strength,
                 parent_config,
                 dry_run,
+                force,
             })?
         }
         Commands::CleanFutures {

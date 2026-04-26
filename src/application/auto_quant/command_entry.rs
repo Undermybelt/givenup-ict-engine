@@ -8,10 +8,11 @@ use super::{
     },
     persistence::persist_handoff_payload,
     results::{
-        apply_strategy_library_prior_init, load_strategy_library_manifest,
-        persist_imported_library, persist_prior_init_outcome, AutoQuantPriorInitInput,
-        DEFAULT_DEFAULT_PARENT_CONFIG, DEFAULT_PRIOR_STRENGTH, DEFAULT_TEMPER,
-        STRATEGY_LIBRARY_FILE,
+        apply_strategy_library_prior_init, cross_check_manifest_against_log,
+        find_existing_apply_for_library, load_strategy_library_manifest,
+        parse_run_ibkr_log, persist_imported_library, persist_prior_init_outcome,
+        AutoQuantPriorInitInput, DEFAULT_DEFAULT_PARENT_CONFIG, DEFAULT_PRIOR_STRENGTH,
+        DEFAULT_TEMPER, STRATEGY_LIBRARY_FILE,
     },
     seed_evidence::{
         persist_auto_quant_seed_material_evidence, AUTO_QUANT_SEED_MATERIAL_EVIDENCE_DEFAULT_LIMIT,
@@ -262,20 +263,45 @@ pub struct AutoQuantPriorInitCommandInput<'a> {
     /// If `true`, compute and emit the diff but do not persist the
     /// mutated trading network.
     pub dry_run: bool,
+    /// Override the ledger-enforced single-apply guard. By default the
+    /// command refuses a non-dry-run apply when an
+    /// `auto_quant_prior_init_applied` entry with `status="applied"`
+    /// already exists for the same `library_artifact_id`, because a
+    /// second tempered pseudo-count layer would silently double the
+    /// effective evidence weight on the trade_outcome row. Set to
+    /// `true` only after consciously rolling back the BBN snapshot
+    /// (e.g. by deleting `bbn_network.json`).
+    pub force: bool,
 }
 
 /// Validate a `strategy_library.json` produced by Auto-Quant's
 /// `export_strategy_library.py`, persist a canonical copy in the
 /// symbol's state directory, and emit an
 /// `auto_quant_strategy_library_validated` ledger entry.
+///
+/// When `log_path` is `Some`, additionally cross-check the manifest
+/// against the canonical `run_ibkr.log` blocks: drift between the
+/// two is surfaced in the summary but does **not** fail the import
+/// (export + log are produced from independent code paths in
+/// Auto-Quant; a divergence is a finding to raise, not a blocker).
 pub fn auto_quant_results_import_command(
     symbol: &str,
     state_dir: &str,
     library_path: &str,
+    log_path: Option<&str>,
 ) -> Result<()> {
     let manifest = load_strategy_library_manifest(library_path)
         .with_context(|| format!("loading strategy library from '{}'", library_path))?;
     let persisted = persist_imported_library(state_dir, symbol, &manifest, library_path)?;
+
+    let cross_check = match log_path {
+        Some(path) => {
+            let blocks = parse_run_ibkr_log(path)
+                .with_context(|| format!("parsing run_ibkr log '{}'", path))?;
+            Some(cross_check_manifest_against_log(&manifest, &blocks))
+        }
+        None => None,
+    };
 
     let summary = json!({
         "command": "auto-quant-results-import",
@@ -290,6 +316,7 @@ pub fn auto_quant_results_import_command(
         "n_error": persisted.n_error,
         "n_not_run": persisted.n_not_run,
         "n_meta_invalid": manifest.validation_errors.len(),
+        "log_cross_check": cross_check,
     });
     println!("{}", serde_json::to_string_pretty(&summary)?);
     Ok(())
@@ -308,6 +335,7 @@ pub fn auto_quant_prior_init_command(input: AutoQuantPriorInitCommandInput<'_>) 
         prior_strength,
         parent_config,
         dry_run,
+        force,
     } = input;
 
     let library_state_path =
@@ -327,6 +355,29 @@ pub fn auto_quant_prior_init_command(input: AutoQuantPriorInitCommandInput<'_>) 
     };
     let manifest = load_strategy_library_manifest(&resolved_path)
         .with_context(|| format!("loading strategy library from '{}'", resolved_path))?;
+
+    // Resolve lineage early so the apply-guard can inspect the ledger
+    // before any expensive math runs.
+    let library_artifact_id = resolve_library_artifact_id(state_dir, symbol)
+        .unwrap_or_else(|| resolved_path.clone());
+
+    let existing_apply = find_existing_apply_for_library(
+        state_dir,
+        symbol,
+        &library_artifact_id,
+    )?;
+    if !dry_run && !force {
+        if let Some(prior_apply) = existing_apply.as_ref() {
+            bail!(
+                "library '{lib}' has already been applied via '{prior}'. \
+                 Re-applying would silently double the tempered pseudo-counts. \
+                 Roll back the BBN snapshot and pass --force to override, \
+                 or re-run --dry-run to inspect the diff.",
+                lib = library_artifact_id,
+                prior = prior_apply,
+            );
+        }
+    }
 
     let temper = temper.unwrap_or(DEFAULT_TEMPER);
     let prior_strength = prior_strength.unwrap_or(DEFAULT_PRIOR_STRENGTH);
@@ -350,9 +401,6 @@ pub fn auto_quant_prior_init_command(input: AutoQuantPriorInitCommandInput<'_>) 
             .context("persisting updated trading network after prior init")?;
     }
 
-    let library_artifact_id = resolve_library_artifact_id(state_dir, symbol)
-        .unwrap_or_else(|| resolved_path.clone());
-
     let persisted = persist_prior_init_outcome(
         state_dir,
         symbol,
@@ -367,6 +415,8 @@ pub fn auto_quant_prior_init_command(input: AutoQuantPriorInitCommandInput<'_>) 
         "symbol": symbol,
         "library_path": resolved_path,
         "library_artifact_id": library_artifact_id,
+        "existing_apply_artifact_id": existing_apply,
+        "force": force,
         "prior_init_artifact_id": persisted.artifact_id,
         "prior_init_state_path": persisted.state_path,
         "prior_init_history_path": persisted.history_path,
@@ -440,7 +490,7 @@ mod tests {
         };
         let path = write_manifest_to(temp.path(), &manifest);
 
-        auto_quant_results_import_command("NQ", state_dir, &path).unwrap();
+        auto_quant_results_import_command("NQ", state_dir, &path, None).unwrap();
         assert!(state_exists(state_dir, "NQ", STRATEGY_LIBRARY_FILE));
         assert!(!state_exists(state_dir, "NQ", BBN_STATE_FILE));
 
@@ -453,6 +503,7 @@ mod tests {
             prior_strength: Some(4.0),
             parent_config: None,
             dry_run: true,
+            force: false,
         })
         .unwrap();
         assert!(!state_exists(state_dir, "NQ", BBN_STATE_FILE));
@@ -469,7 +520,7 @@ mod tests {
         };
         let path = write_manifest_to(temp.path(), &manifest);
 
-        auto_quant_results_import_command("NQ", state_dir, &path).unwrap();
+        auto_quant_results_import_command("NQ", state_dir, &path, None).unwrap();
         auto_quant_prior_init_command(AutoQuantPriorInitCommandInput {
             symbol: "NQ",
             state_dir,
@@ -479,6 +530,7 @@ mod tests {
             prior_strength: Some(4.0),
             parent_config: None,
             dry_run: false,
+            force: false,
         })
         .unwrap();
         assert!(state_exists(state_dir, "NQ", BBN_STATE_FILE));
@@ -497,8 +549,112 @@ mod tests {
             prior_strength: None,
             parent_config: None,
             dry_run: true,
+            force: false,
         })
         .unwrap_err();
         assert!(err.to_string().contains("auto-quant-results-import"));
+    }
+
+    #[test]
+    fn second_apply_against_same_library_is_blocked_without_force() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().to_str().unwrap();
+        let manifest = StrategyLibraryManifest {
+            manifest_version: "1.0".to_string(),
+            strategies: vec![ok_strategy("S1", 100, 75.0)],
+            ..Default::default()
+        };
+        let path = write_manifest_to(temp.path(), &manifest);
+        auto_quant_results_import_command("NQ", state_dir, &path, None).unwrap();
+
+        // First apply succeeds and writes the BBN.
+        auto_quant_prior_init_command(AutoQuantPriorInitCommandInput {
+            symbol: "NQ",
+            state_dir,
+            library_path: None,
+            strategy_filter: None,
+            temper: Some(0.5),
+            prior_strength: Some(4.0),
+            parent_config: None,
+            dry_run: false,
+            force: false,
+        })
+        .unwrap();
+        assert!(state_exists(state_dir, "NQ", BBN_STATE_FILE));
+
+        // Second apply against the same library is refused.
+        let err = auto_quant_prior_init_command(AutoQuantPriorInitCommandInput {
+            symbol: "NQ",
+            state_dir,
+            library_path: None,
+            strategy_filter: None,
+            temper: Some(0.5),
+            prior_strength: Some(4.0),
+            parent_config: None,
+            dry_run: false,
+            force: false,
+        })
+        .unwrap_err();
+        assert!(
+            err.to_string().contains("already been applied"),
+            "unexpected error: {}",
+            err
+        );
+
+        // Dry-run is always allowed even after an apply.
+        auto_quant_prior_init_command(AutoQuantPriorInitCommandInput {
+            symbol: "NQ",
+            state_dir,
+            library_path: None,
+            strategy_filter: None,
+            temper: Some(0.5),
+            prior_strength: Some(4.0),
+            parent_config: None,
+            dry_run: true,
+            force: false,
+        })
+        .unwrap();
+
+        // --force overrides the guard.
+        auto_quant_prior_init_command(AutoQuantPriorInitCommandInput {
+            symbol: "NQ",
+            state_dir,
+            library_path: None,
+            strategy_filter: None,
+            temper: Some(0.5),
+            prior_strength: Some(4.0),
+            parent_config: None,
+            dry_run: false,
+            force: true,
+        })
+        .unwrap();
+    }
+
+    #[test]
+    fn import_with_log_runs_cross_check() {
+        let temp = tempfile::tempdir().unwrap();
+        let state_dir = temp.path().to_str().unwrap();
+        let manifest = StrategyLibraryManifest {
+            manifest_version: "1.0".to_string(),
+            strategies: vec![ok_strategy("GhostStrat", 100, 70.0)],
+            ..Default::default()
+        };
+        let manifest_path = write_manifest_to(temp.path(), &manifest);
+        // Empty log → manifest_only contains the GhostStrat entry. We
+        // assert by re-loading the persisted summary's downstream
+        // ledger state: no need to capture stdout here. The cross-check
+        // is run in-process via the public command, which must not
+        // bail despite the drift.
+        let log_path = temp.path().join("empty_run.log");
+        std::fs::write(&log_path, "preamble line only, no --- blocks\n").unwrap();
+        auto_quant_results_import_command(
+            "NQ",
+            state_dir,
+            &manifest_path,
+            Some(log_path.to_str().unwrap()),
+        )
+        .unwrap();
+        // Library was still imported despite the cross-check drift.
+        assert!(state_exists(state_dir, "NQ", STRATEGY_LIBRARY_FILE));
     }
 }
