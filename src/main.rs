@@ -141,7 +141,6 @@ use ict_engine::backtest::BacktestEngine;
 use ict_engine::bayesian::{cascade_bear, cascade_bull, CascadeConfig};
 use ict_engine::bbn::learning::cpt_updater::{CPTUpdater, TradeOutcome};
 use ict_engine::bbn::trading::{
-    topology::{build_trading_network, upgrade_trading_network},
     update::{
         entry_quality_bias_from_signal, infer_entry_quality, infer_entry_quality_with_bias,
         infer_trade_outcome, infer_trade_outcome_with_entry_quality_bias,
@@ -226,9 +225,10 @@ use ict_engine::state::{
     RankingDiffItem, ResearchRunRecord, RollbackRecommendation, RunProvenance, TrainRunRecord,
     UpdateRunRecord, WorkflowBlockingTruth, WorkflowConflictSource, WorkflowDisagreement,
     WorkflowFieldDiff, WorkflowPhaseSnapshot, WorkflowSnapshot, WorkflowState, ANALYZE_RUNS_FILE,
-    BACKTEST_RUNS_FILE, ENSEMBLE_VOTE_FILE, EXECUTION_CANDIDATE_FILE, PENDING_UPDATE_ARTIFACT_FILE,
-    RESEARCH_RUNS_FILE, TRAIN_RUNS_FILE, UPDATE_RUNS_FILE,
+    BACKTEST_RUNS_FILE, BBN_STATE_FILE, ENSEMBLE_VOTE_FILE, EXECUTION_CANDIDATE_FILE,
+    PENDING_UPDATE_ARTIFACT_FILE, RESEARCH_RUNS_FILE, TRAIN_RUNS_FILE, UPDATE_RUNS_FILE,
 };
+use ict_engine::bbn::trading::persistence::load_or_init_trading_network;
 #[cfg(test)]
 use ict_engine::types::Symbol;
 use ict_engine::types::{
@@ -264,7 +264,6 @@ use std::collections::{BTreeMap, HashMap};
 use std::env;
 
 const HMM_STATE_FILE: &str = "hmm_params.json";
-const BBN_STATE_FILE: &str = "bbn_network.json";
 type AnalyzeReport = ict_engine::analyze_report_shell::AnalyzeReport;
 type AnalyzeMeta = ict_engine::analyze_report_shell::AnalyzeMeta;
 type AnalyzeSupporting = ict_engine::analyze_report_shell::AnalyzeSupporting;
@@ -6259,29 +6258,6 @@ fn load_or_init_hmm_params(symbol: &str, state_dir: &str) -> HMMParams {
                 symbol, state_dir, err
             );
             init_hmm_params(OBS_DIM)
-        }
-    }
-}
-
-fn load_or_init_trading_network(
-    symbol: &str,
-    state_dir: &str,
-) -> Result<ict_engine::bbn::BayesianNetwork> {
-    if !state_exists(state_dir, symbol, BBN_STATE_FILE) {
-        return build_trading_network();
-    }
-
-    match load_state::<ict_engine::bbn::BayesianNetwork, _>(state_dir, symbol, BBN_STATE_FILE) {
-        Ok(mut network) => {
-            upgrade_trading_network(&mut network)?;
-            Ok(network)
-        }
-        Err(err) => {
-            eprintln!(
-                "warning: failed to load BBN state for '{}' from '{}': {}",
-                symbol, state_dir, err
-            );
-            build_trading_network()
         }
     }
 }

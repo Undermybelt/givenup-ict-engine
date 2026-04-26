@@ -21,9 +21,8 @@ use super::{
 use anyhow::{anyhow, bail, Context, Result};
 use serde_json::json;
 
-use crate::bbn::trading::topology::build_trading_network;
-use crate::bbn::BayesianNetwork;
-use crate::state::{load_state, save_state, state_exists, BBN_STATE_FILE};
+use crate::bbn::trading::persistence::load_or_init_trading_network;
+use crate::state::{save_state, state_exists, BBN_STATE_FILE};
 
 fn ensure_dependency_ready(
     state_dir: &str,
@@ -334,7 +333,7 @@ pub fn auto_quant_prior_init_command(input: AutoQuantPriorInitCommandInput<'_>) 
     let parent_config =
         parent_config.unwrap_or_else(|| DEFAULT_DEFAULT_PARENT_CONFIG.to_vec());
 
-    let mut network = load_or_init_trading_network_for_results(symbol, state_dir)?;
+    let mut network = load_or_init_trading_network(symbol, state_dir)?;
     let outcome = apply_strategy_library_prior_init(
         &mut network,
         AutoQuantPriorInitInput {
@@ -382,29 +381,6 @@ pub fn auto_quant_prior_init_command(input: AutoQuantPriorInitCommandInput<'_>) 
     });
     println!("{}", serde_json::to_string_pretty(&summary)?);
     Ok(())
-}
-
-/// Library-crate analogue of `main::load_or_init_trading_network`. Kept
-/// duplicated for now (small, isolated) rather than promoting the
-/// binary-crate helper.
-fn load_or_init_trading_network_for_results(
-    symbol: &str,
-    state_dir: &str,
-) -> Result<BayesianNetwork> {
-    if !state_exists(state_dir, symbol, BBN_STATE_FILE) {
-        return build_trading_network();
-    }
-    match load_state::<BayesianNetwork, _>(state_dir, symbol, BBN_STATE_FILE) {
-        Ok(network) => Ok(network),
-        Err(err) => {
-            eprintln!(
-                "warning: failed to load BBN state for '{}' from '{}': {:#}; \
-                 falling back to a freshly-built network",
-                symbol, state_dir, err
-            );
-            build_trading_network()
-        }
-    }
 }
 
 /// Look up the most recently appended `auto_quant_strategy_library_validated`
