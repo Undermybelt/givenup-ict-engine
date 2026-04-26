@@ -18,6 +18,7 @@
 pub mod builder;
 pub mod event;
 pub mod matrices;
+pub mod setups;
 
 pub use builder::{
     assert_timeline_bars_valid, build_pda_timeline, TIMELINE_DEFAULT_CISD_MIN_STRENGTH,
@@ -28,4 +29,8 @@ pub use builder::{
 pub use event::{PdaEvent, PdaEventKind, ALL_EVENT_KINDS};
 pub use matrices::{
     compute_cooccurrence_matrix, compute_precedence_matrix, EventMatrix, MatrixKind,
+};
+pub use setups::{
+    match_all_setups, match_all_setups_default, CanonicalSetupKind, SetupMatch,
+    ALL_CANONICAL_SETUPS, DEFAULT_KEY_LEVEL_TOLERANCE_BPS, DEFAULT_SETUP_HORIZON_BARS,
 };
