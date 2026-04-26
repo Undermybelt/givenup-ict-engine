@@ -42,16 +42,18 @@ import yaml
 from ib_async import (
     IB,
     Contract,
+    Crypto,
     Forex,
     Future,
-    Stock,
     Index,
     Option,
     RealTimeBar,
+    Stock,
 )
 
 from .account_prober import probe_account
 from .consent import require_ibkr_enabled
+from .ibkr_errors import format_for_log, is_info
 from .rate_limiter import (
     CAPABILITIES_PATH,
     IbkrCapabilities,
@@ -84,6 +86,14 @@ class SubscriptionSpec:
     right: str | None = None                # OPT 'C'/'P'
     multiplier: str | None = None           # FUT, OPT
     primary_exchange: str | None = None     # STK with disambiguation
+    # bars_kup feed (reqHistoricalData keepUpToDate=True). Works at any
+    # bar size and does NOT require a live MD subscription — it uses the
+    # historical-data plumbing which IBKR makes more permissive than
+    # live tick streams. Ideal for 5-min intraday factor research.
+    bar_size: str = "5 mins"                # IBKR-formatted, see docs
+    what_to_show: str = "TRADES"            # TRADES | MIDPOINT | BID | ASK
+    duration: str = "1 D"                   # initial backfill window
+    use_rth: bool = False                   # filter to Regular Trading Hours
 
 
 @dataclass
@@ -91,6 +101,14 @@ class GatewayConfig:
     host: str = DEFAULT_GATEWAY_HOST
     port: int = DEFAULT_GATEWAY_PORT
     client_id: int = DEFAULT_BRIDGE_CLIENT_ID
+    # IBKR market-data type:
+    #   1 = live   (requires active MD subscription on the live account)
+    #   2 = frozen (last known live values when market closed)
+    #   3 = delayed   (~15 min delay; free for most accounts; great fallback)
+    #   4 = delayed-frozen
+    # Use 3 for paper-account smoke tests where the live MD subscription is
+    # absent or in conflict with another logged-in session.
+    market_data_type: int = 1
 
 
 @dataclass
@@ -143,6 +161,10 @@ def _build_contract(spec: SubscriptionSpec) -> Contract:
                        multiplier=spec.multiplier or "")
     if sec == "IND":
         return Index(spec.symbol, spec.exchange, spec.currency)
+    if sec == "CRYPTO":
+        # IBKR-PAXOS crypto: BTC, ETH, LTC, BCH on exchange='PAXOS' currency='USD'
+        return Crypto(spec.symbol, spec.exchange or "PAXOS",
+                       spec.currency or "USD")
     if sec == "OPT":
         if spec.last_trade_date is None or spec.strike is None or spec.right is None:
             raise ValueError(
@@ -153,6 +175,30 @@ def _build_contract(spec: SubscriptionSpec) -> Contract:
                        spec.right, spec.exchange, currency=spec.currency,
                        multiplier=spec.multiplier or "100")
     raise ValueError(f"unsupported sec_type {spec.sec_type!r} for {spec.symbol!r}")
+
+
+_BAR_SIZE_SUFFIX = {
+    "1 secs": "1sec", "5 secs": "5sec", "10 secs": "10sec",
+    "15 secs": "15sec", "30 secs": "30sec",
+    "1 min": "1min", "2 mins": "2min", "3 mins": "3min",
+    "5 mins": "5min", "10 mins": "10min", "15 mins": "15min",
+    "20 mins": "20min", "30 mins": "30min",
+    "1 hour": "1h", "2 hours": "2h", "3 hours": "3h",
+    "4 hours": "4h", "8 hours": "8h",
+    "1 day": "1d", "1W": "1w", "1M": "1mo",
+}
+
+
+def _bar_size_to_key_suffix(bar_size: str) -> str:
+    """Translate an IBKR bar-size string to a Redis-friendly key suffix.
+
+    Falls back to a sanitised version of the original string for any size
+    that is not in the canonical IBKR table.
+    """
+    suffix = _BAR_SIZE_SUFFIX.get(bar_size)
+    if suffix:
+        return suffix
+    return bar_size.lower().replace(" ", "")
 
 
 # ---------------------------------------------------------------------------
@@ -190,23 +236,40 @@ class IbkrBridge:
         self._publish_status("starting")
         attempt = 0
         while not self._stop_event.is_set():
+            disconnect_was_clean = False
             try:
                 await self._connect_and_subscribe()
                 attempt = 0
                 self._publish_status("running")
                 await self._run_until_disconnect()
+                # _run_until_disconnect() returns cleanly when IBKR dropped
+                # the socket — treat as a transient failure and reconnect.
+                disconnect_was_clean = True
             except asyncio.CancelledError:
                 break
-            except (ConnectionError, RuntimeError, OSError) as exc:
-                wait = RECONNECT_BACKOFF_S[min(attempt, len(RECONNECT_BACKOFF_S) - 1)]
-                attempt += 1
-                self._publish_status(f"reconnecting in {wait}s")
-                self._log(f"connect/subscribe error: {exc}; retry in {wait}s "
-                          f"(attempt {attempt})")
-                try:
-                    await asyncio.wait_for(self._stop_event.wait(), timeout=wait)
-                except asyncio.TimeoutError:
-                    pass
+            except Exception as exc:  # noqa: BLE001
+                # ib_async raises a wide variety of types (ApiException,
+                # HandshakeError, asyncio.IncompleteReadError, etc.). Catch
+                # them all so the supervisor never dies — the user can SIGINT.
+                self._log(f"connect/subscribe error: {type(exc).__name__}: {exc}")
+
+            # Reset per-connection state so the next connect/subscribe
+            # cycle starts from a clean slate (don't keep stale ib handles).
+            self._active_subscriptions.clear()
+            try:
+                self._limiter.reset_streaming_lines()
+            except Exception:  # noqa: BLE001
+                pass
+
+            wait = RECONNECT_BACKOFF_S[min(attempt, len(RECONNECT_BACKOFF_S) - 1)]
+            attempt += 1
+            reason = "IBKR dropped socket" if disconnect_was_clean else "exception"
+            self._publish_status(f"reconnecting in {wait}s ({reason})")
+            self._log(f"reconnect in {wait}s ({reason}; attempt {attempt})")
+            try:
+                await asyncio.wait_for(self._stop_event.wait(), timeout=wait)
+            except asyncio.TimeoutError:
+                pass
 
     async def stop(self) -> None:
         """Graceful shutdown — release lines, disconnect, save caps."""
@@ -228,12 +291,21 @@ class IbkrBridge:
     async def _connect_and_subscribe(self) -> None:
         cfg = self.config
         self._log(f"connecting to {cfg.gateway.host}:{cfg.gateway.port} "
-                  f"as clientId={cfg.gateway.client_id}")
+                  f"as clientId={cfg.gateway.client_id} "
+                  f"market_data_type={cfg.gateway.market_data_type}")
         await self._limiter.wait_for_outbound_msg()
         await self.ib.connectAsync(host=cfg.gateway.host,
                                     port=cfg.gateway.port,
                                     clientId=cfg.gateway.client_id,
                                     readonly=True)
+
+        # Set the market-data type early so every subsequent reqMktData /
+        # reqRealTimeBars on this connection inherits the choice. IBKR will
+        # transparently substitute frozen / delayed quotes when the requested
+        # contract is not on a live subscription.
+        if cfg.gateway.market_data_type != 1:
+            await self._limiter.wait_for_outbound_msg()
+            self.ib.reqMarketDataType(cfg.gateway.market_data_type)
 
         # First-connect probe if capabilities are unknown
         if self._limiter.caps.account_type == "unknown":
@@ -291,8 +363,78 @@ class IbkrBridge:
             ticker.updateEvent += self._make_tick_handler(spec.symbol)
             active["feeds"]["market_data"] = ticker
 
+        if "bars_kup" in feeds:
+            await self._subscribe_bars_kup(spec, contract, active)
+
         self._active_subscriptions[spec.symbol] = active
         self._log(f"subscribed {spec.symbol} feeds={list(active['feeds'])}")
+
+    async def _subscribe_bars_kup(self, spec: SubscriptionSpec,
+                                    contract: Contract,
+                                    active: dict[str, Any]) -> None:
+        """Request keepUpToDate historical bars and stream updates to Redis.
+
+        keepUpToDate=True is IBKR's most permissive way to obtain N-minute
+        bars: it back-fills the requested duration AND keeps the most-recent
+        bar updated as new ticks arrive. Unlike reqRealTimeBars (which is
+        locked to 5 s and demands a live MD subscription), this works at any
+        bar size and uses the historical-data farm.
+        """
+        bar_size = spec.bar_size or "5 mins"
+        what = (spec.what_to_show or "TRADES").upper()
+        duration = spec.duration or "1 D"
+        if what not in ("TRADES", "MIDPOINT", "BID", "ASK"):
+            raise ValueError(
+                f"bars_kup whatToShow must be one of TRADES/MIDPOINT/BID/ASK; "
+                f"got {what!r} for {spec.symbol!r}"
+            )
+        suffix = _bar_size_to_key_suffix(bar_size)
+
+        # Historical-side rate-limit gating (initial backfill counts toward
+        # the 60-req/10-min budget; the streaming half does not).
+        await self._limiter.wait_for_historical(contract.conId, bar_size, what)
+        await self._limiter.acquire_historical_slot()
+        try:
+            await self._limiter.wait_for_outbound_msg()
+            bars = await self.ib.reqHistoricalDataAsync(
+                contract,
+                endDateTime="",
+                durationStr=duration,
+                barSizeSetting=bar_size,
+                whatToShow=what,
+                useRTH=bool(spec.use_rth),
+                formatDate=2,
+                keepUpToDate=True,
+            )
+        finally:
+            self._limiter.release_historical_slot()
+
+        # Backlog publish — emit every bar that came back in the initial
+        # response so consumers replaying from start_id='0' get the full
+        # backtest dataset shape on first connection. We pass batch=True
+        # to skip per-bar snapshot updates during the bulk write.
+        for bar in bars or []:
+            self._publish_kup_bar(spec.symbol, suffix, bar, batch=True)
+
+        # Final snapshot from the latest backlog bar so consumers see a
+        # populated `ibkr:snapshot:<SYM>` immediately after subscribe.
+        if bars:
+            last_bar = bars[-1]
+            ts_val = _bar_ts(last_bar.date)
+            self._update_snapshot(spec.symbol, {
+                "last_bar_close": str(last_bar.close),
+                "last_bar_ts": f"{ts_val:.3f}",
+                "bar_size": bar_size,
+                "market_data_type": str(self.config.gateway.market_data_type),
+            })
+
+        # Live stream side — every subsequent bar update lands here.
+        bars.updateEvent += self._make_kup_bar_handler(spec.symbol, suffix)
+        active["feeds"]["bars_kup"] = {"bars": bars, "suffix": suffix,
+                                          "bar_size": bar_size,
+                                          "what_to_show": what}
+        self._log(f"  bars_kup {spec.symbol} {bar_size} {what} "
+                  f"backfill={len(bars or [])} bars -> ibkr:bars:{spec.symbol}:{suffix}")
 
     def _cancel_subscription(self, symbol: str, sub: dict[str, Any]) -> None:
         feeds = sub.get("feeds", {})
@@ -304,6 +446,10 @@ class IbkrBridge:
         if ticker is not None and "contract" in sub:
             with contextlib.suppress(Exception):
                 self.ib.cancelMktData(sub["contract"])
+        kup = feeds.get("bars_kup")
+        if kup is not None:
+            with contextlib.suppress(Exception):
+                self.ib.cancelHistoricalData(kup["bars"])
         self._limiter.release_streaming_line(symbol)
         self._active_subscriptions.pop(symbol, None)
 
@@ -351,6 +497,45 @@ class IbkrBridge:
                                             "last_bar_ts": fields["ts"]})
         except redis.exceptions.RedisError as exc:
             self._log(f"redis xadd bars/{symbol} failed: {exc}")
+
+    def _make_kup_bar_handler(self, symbol: str, suffix: str):
+        publish = self._publish_kup_bar
+        def _handler(bars, hasNewBar) -> None:  # noqa: ANN001
+            # ib_async fires updateEvent for *every* tick rebuild of the
+            # currently-forming bar. We always publish the LAST bar so the
+            # consumer sees the most recent OHLCV state. hasNewBar=True
+            # signals the bar boundary rolled (previous bar finalised);
+            # both transitions are interesting for downstream consumers.
+            if not bars:
+                return
+            publish(symbol, suffix, bars[-1], batch=False)
+        return _handler
+
+    def _publish_kup_bar(self, symbol: str, suffix: str,
+                          bar, batch: bool = False) -> None:  # noqa: ANN001
+        ts_val = _bar_ts(getattr(bar, "date", None))
+        fields = {
+            "ts": f"{ts_val:.3f}",
+            "open": str(getattr(bar, "open", "")),
+            "high": str(getattr(bar, "high", "")),
+            "low": str(getattr(bar, "low", "")),
+            "close": str(getattr(bar, "close", "")),
+            "volume": str(getattr(bar, "volume", "")),
+            "wap": str(getattr(bar, "average", "")),
+            "count": str(getattr(bar, "barCount", "")),
+        }
+        key = f"ibkr:bars:{symbol}:{suffix}"
+        try:
+            self._redis.xadd(key, fields,
+                             maxlen=self.config.publishing.stream_maxlen,
+                             approximate=True)
+            if not batch:
+                self._update_snapshot(symbol, {
+                    "last_bar_close": fields["close"],
+                    "last_bar_ts": fields["ts"],
+                })
+        except redis.exceptions.RedisError as exc:
+            self._log(f"redis xadd bars/{symbol}/{suffix} failed: {exc}")
 
     def _make_tick_handler(self, symbol: str):
         publish = self._publish_tick
@@ -402,14 +587,18 @@ class IbkrBridge:
     # ----- IBKR error / disconnect handling ------------------------------
 
     def _on_ib_error(self, reqId, errorCode, errorString, contract) -> None:  # noqa: ANN001
-        # Non-fatal informational codes
-        if errorCode in (2104, 2106, 2158, 2107, 2103):
+        # Suppress purely informational codes (per ibkr_errors catalog).
+        if is_info(errorCode):
             return
         contract_label = None
         if contract is not None and getattr(contract, "symbol", None):
             contract_label = f"{contract.symbol}/{contract.secType}"
-        self._log(f"IBKR error code={errorCode} reqId={reqId} "
-                  f"contract={contract_label} msg={errorString!r}")
+        # Render the multi-line bilingual form for catalogued codes;
+        # uncatalogued codes still come through with a clear marker so
+        # users can file an issue for us to add a translation.
+        formatted = format_for_log(errorCode, errorString or "", contract_label)
+        for line in formatted.splitlines():
+            self._log(line)
         self._limiter.observe_error(errorCode, errorString or "", contract_label)
 
     def _on_disconnected(self) -> None:
@@ -452,6 +641,26 @@ def _safe(v: Any) -> float | None:
 
 def _fmt(v: float | None) -> str:
     return "" if v is None else f"{v:.6f}"
+
+
+def _bar_ts(ts: Any) -> float:
+    """Normalise an ib_async BarData.date value to a UTC epoch float.
+
+    IBKR returns:
+      * `datetime.datetime` for intraday bars (with formatDate=2; usually UTC,
+        but tzinfo is sometimes missing — assume UTC then)
+      * `datetime.date`     for daily / weekly / monthly bars
+      * an epoch int/string when something exotic happens
+    """
+    if isinstance(ts, datetime):
+        return (ts if ts.tzinfo else ts.replace(tzinfo=timezone.utc)).timestamp()
+    if hasattr(ts, "isoformat"):  # datetime.date — promote to UTC midnight
+        return datetime(ts.year, ts.month, ts.day,
+                          tzinfo=timezone.utc).timestamp()
+    try:
+        return float(ts)
+    except (TypeError, ValueError):
+        return datetime.now(timezone.utc).timestamp()
 
 
 # ---------------------------------------------------------------------------

@@ -226,21 +226,31 @@ async def cmd_status(args: argparse.Namespace) -> int:
 
 
 def _build_parser() -> argparse.ArgumentParser:
+    # Shared connection args — added both to the top-level parser and to
+    # every subparser via parents=, so users can write either:
+    #     setup --gateway-port 4002 enable
+    #     setup enable --gateway-port 4002
+    common = argparse.ArgumentParser(add_help=False)
+    common.add_argument("--redis-url", default=DEFAULT_REDIS_URL)
+    common.add_argument("--gateway-host", default=DEFAULT_GATEWAY_HOST)
+    common.add_argument(
+        "--gateway-port", type=int, default=DEFAULT_GATEWAY_PORT,
+        help=("TWS: 7497 paper (default) / 7496 live; "
+              "Standalone IB Gateway: 4002 paper / 4001 live"),
+    )
+
     p = argparse.ArgumentParser(
         prog="ibkr_bridge.setup",
+        parents=[common],
         description=("First-run setup for IBKR live data bridge. "
                      "Bilingual disclaimer + opt-in + environment checks."),
     )
-    p.add_argument("--redis-url", default=DEFAULT_REDIS_URL)
-    p.add_argument("--gateway-host", default=DEFAULT_GATEWAY_HOST)
-    p.add_argument("--gateway-port", type=int, default=DEFAULT_GATEWAY_PORT,
-                    help="7497 paper (default), 7496 live")
 
     sub = p.add_subparsers(dest="action")
-    # default action when no subcommand: --enable
+    # default action when no subcommand: enable
     p.set_defaults(action="enable")
 
-    e = sub.add_parser("enable",
+    e = sub.add_parser("enable", parents=[common],
                         help="Run the full setup flow (consent, Redis, Gateway, probe)")
     e.add_argument("--client-id", type=int, default=PROBE_CLIENT_ID,
                     help="Throwaway clientId for the account probe")
@@ -250,13 +260,15 @@ def _build_parser() -> argparse.ArgumentParser:
     e.add_argument("--require-gateway", action="store_true",
                     help="Fail setup if Gateway/TWS is not reachable")
 
-    r = sub.add_parser("revoke", help="Delete consent + capabilities; optionally clean Redis")
+    r = sub.add_parser("revoke", parents=[common],
+                       help="Delete consent + capabilities; optionally clean Redis")
     r.add_argument("--clean-redis", action="store_true",
                     help="Also wipe all ibkr:* keys from Redis")
     r.add_argument("--keep-capabilities", action="store_true",
                     help="Preserve ~/.ict-engine/ibkr_capabilities.json")
 
-    sub.add_parser("status", help="Print current consent / capabilities / Redis / Gateway")
+    sub.add_parser("status", parents=[common],
+                    help="Print current consent / capabilities / Redis / Gateway")
 
     return p
 

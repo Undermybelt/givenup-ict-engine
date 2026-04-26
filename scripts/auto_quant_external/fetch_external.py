@@ -1153,10 +1153,15 @@ async def _ibkr_historical_async(args: argparse.Namespace) -> int:
     rows = []
     for b in bars:
         ts = getattr(b, "date", None)
-        # ib_async returns datetime for daily+ bars and epoch seconds for
-        # intraday when formatDate=2; normalise both to UTC ISO strings.
-        if hasattr(ts, "isoformat"):
-            ts_iso = ts.isoformat() if ts.tzinfo else ts.isoformat() + "+00:00"
+        # ib_async timestamp shapes:
+        #   * daily / weekly / monthly  -> datetime.date (no tz)
+        #   * intraday w/ formatDate=2  -> datetime.datetime (UTC, may lack tzinfo)
+        #   * occasional epoch seconds  -> int
+        # Normalise everything to a tz-aware UTC ISO-8601 string.
+        if isinstance(ts, datetime):
+            ts_iso = ts.isoformat() if ts.tzinfo else ts.replace(tzinfo=timezone.utc).isoformat()
+        elif hasattr(ts, "isoformat"):  # datetime.date — no time, no tz
+            ts_iso = datetime(ts.year, ts.month, ts.day, tzinfo=timezone.utc).isoformat()
         else:
             try:
                 ts_iso = datetime.fromtimestamp(float(ts), tz=timezone.utc).isoformat()
@@ -1192,6 +1197,291 @@ async def _ibkr_historical_async(args: argparse.Namespace) -> int:
 def cmd_ibkr_historical(args: argparse.Namespace) -> int:
     import asyncio
     return asyncio.run(_ibkr_historical_async(args))
+
+
+# ---------------------------------------------------------------------------
+# ibkr-bulk : back-fill many (symbol, bar_size, what_to_show) into CSVs.
+#
+# Designed for backtest-dataset construction:
+#   * one Gateway connection used for the whole batch (efficient)
+#   * one CSV per output triple, idempotent (skip if file exists)
+#   * full pacing-aware via the cross-process IbkrRateLimiter
+#   * resilient: a single failed request does not abort the batch
+# ---------------------------------------------------------------------------
+
+
+_BAR_SIZE_FILE_SUFFIX = {
+    "1 secs": "1sec", "5 secs": "5sec", "10 secs": "10sec",
+    "15 secs": "15sec", "30 secs": "30sec",
+    "1 min": "1min", "2 mins": "2min", "3 mins": "3min",
+    "5 mins": "5min", "10 mins": "10min", "15 mins": "15min",
+    "20 mins": "20min", "30 mins": "30min",
+    "1 hour": "1h", "2 hours": "2h", "3 hours": "3h",
+    "4 hours": "4h", "8 hours": "8h",
+    "1 day": "1d", "1W": "1w", "1M": "1mo",
+}
+
+
+def _bulk_bar_suffix(bar_size: str) -> str:
+    return _BAR_SIZE_FILE_SUFFIX.get(
+        bar_size, bar_size.lower().replace(" ", "")
+    )
+
+
+def _bulk_render_path(template: str, output_dir: Path, symbol: str,
+                        bar_size: str, what_to_show: str) -> Path:
+    name = template.format(
+        symbol=symbol,
+        bar_suffix=_bulk_bar_suffix(bar_size),
+        bar_size=bar_size.replace(" ", "_"),
+        what=what_to_show.lower(),
+    )
+    return (output_dir / name).resolve()
+
+
+def _bulk_write_csv(rows: list[dict], path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fieldnames = ["ts", "open", "high", "low", "close", "volume", "wap", "count"]
+    with path.open("w", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def _bulk_bars_to_rows(bars: list) -> list[dict]:
+    out = []
+    for b in bars:
+        ts = getattr(b, "date", None)
+        if isinstance(ts, datetime):
+            ts_iso = (ts.isoformat() if ts.tzinfo
+                       else ts.replace(tzinfo=timezone.utc).isoformat())
+        elif hasattr(ts, "isoformat"):
+            ts_iso = datetime(ts.year, ts.month, ts.day,
+                                tzinfo=timezone.utc).isoformat()
+        else:
+            try:
+                ts_iso = datetime.fromtimestamp(float(ts),
+                                                   tz=timezone.utc).isoformat()
+            except (TypeError, ValueError):
+                ts_iso = str(ts)
+        out.append({
+            "ts": ts_iso,
+            "open": getattr(b, "open", None),
+            "high": getattr(b, "high", None),
+            "low": getattr(b, "low", None),
+            "close": getattr(b, "close", None),
+            "volume": getattr(b, "volume", None),
+            "wap": getattr(b, "average", None),
+            "count": getattr(b, "barCount", None),
+        })
+    return out
+
+
+def _bulk_expand_symbol_entry(entry: dict, defaults: dict) -> list[dict]:
+    """Expand a single symbol YAML entry into one task per bar_size.
+
+    A symbol may declare a single `bar_size` or a list `bar_sizes`. Other
+    fields fall back to the global defaults block.
+    """
+    base = {
+        "sec_type":          entry.get("sec_type", defaults.get("sec_type", "STK")),
+        "exchange":          entry.get("exchange", defaults.get("exchange", "SMART")),
+        "currency":          entry.get("currency", defaults.get("currency", "USD")),
+        "primary_exchange":  entry.get("primary_exchange",
+                                          defaults.get("primary_exchange")),
+        "what_to_show":      entry.get("what_to_show",
+                                          defaults.get("what_to_show", "TRADES")),
+        "duration":          entry.get("duration",
+                                          defaults.get("duration", "60 D")),
+        "rth":               entry.get("rth", defaults.get("rth", True)),
+        "last_trade_date":   entry.get("last_trade_date"),
+        "strike":            entry.get("strike"),
+        "right":             entry.get("right"),
+        "multiplier":        entry.get("multiplier"),
+    }
+    if not entry.get("symbol"):
+        raise ValueError(f"bulk symbol entry missing 'symbol': {entry!r}")
+
+    bar_sizes = entry.get("bar_sizes") or [
+        entry.get("bar_size", defaults.get("bar_size", "1 day"))
+    ]
+    return [{"symbol": entry["symbol"], "bar_size": bs, **base}
+             for bs in bar_sizes]
+
+
+def _bulk_build_contract(task: dict, ib_async_mod):
+    sec = task["sec_type"].upper()
+    if sec == "STK":
+        c = ib_async_mod.Stock(task["symbol"], task["exchange"], task["currency"])
+        if task.get("primary_exchange"):
+            c.primaryExchange = task["primary_exchange"]
+        return c
+    if sec == "CASH":
+        return ib_async_mod.Forex(task["symbol"])
+    if sec == "FUT":
+        return ib_async_mod.Future(task["symbol"], task.get("last_trade_date") or "",
+                                     task["exchange"], currency=task["currency"],
+                                     multiplier=task.get("multiplier") or "")
+    if sec == "IND":
+        return ib_async_mod.Index(task["symbol"], task["exchange"], task["currency"])
+    if sec == "CRYPTO":
+        return ib_async_mod.Crypto(task["symbol"], task["exchange"] or "PAXOS",
+                                     task["currency"] or "USD")
+    if sec == "OPT":
+        if not (task.get("last_trade_date") and task.get("strike")
+                and task.get("right")):
+            raise ValueError(
+                f"OPT bulk entry for {task['symbol']!r} requires "
+                "last_trade_date + strike + right"
+            )
+        return ib_async_mod.Option(task["symbol"], task["last_trade_date"],
+                                     task["strike"], task["right"],
+                                     task["exchange"], currency=task["currency"],
+                                     multiplier=task.get("multiplier") or "100")
+    raise ValueError(f"unsupported sec_type {sec!r} for bulk task {task!r}")
+
+
+async def _ibkr_bulk_async(args: argparse.Namespace) -> int:
+    require_ibkr_enabled, IbkrRateLimiter, ib_async = _import_ibkr_bridge()
+    require_ibkr_enabled()
+
+    try:
+        import yaml  # noqa: WPS433
+    except ImportError as exc:
+        raise SystemExit(
+            "ibkr-bulk requires PyYAML. Install via: uv add pyyaml. "
+            f"Underlying error: {exc}"
+        )
+
+    config_path = Path(args.config).resolve()
+    if not config_path.exists():
+        raise SystemExit(f"bulk config not found: {config_path}")
+    raw = yaml.safe_load(config_path.read_text()) or {}
+    gw = raw.get("gateway") or {}
+    out = raw.get("output") or {}
+    defaults = raw.get("defaults") or {}
+    symbols = raw.get("symbols") or []
+    if not symbols:
+        raise SystemExit(f"bulk config has no `symbols`: {config_path}")
+
+    output_dir = Path(out.get("directory") or args.output_dir or
+                       "user_data/data/ibkr_bulk").resolve()
+    template = out.get("filename_template") or "{symbol}_{bar_suffix}.csv"
+    force = bool(out.get("force") if "force" in out else args.force)
+
+    tasks: list[dict] = []
+    for entry in symbols:
+        tasks.extend(_bulk_expand_symbol_entry(entry, defaults))
+
+    print(f"ibkr-bulk: {len(tasks)} task(s) -> {output_dir}",
+          file=sys.stderr)
+
+    limiter = IbkrRateLimiter(redis_url=args.redis_url)
+
+    await limiter.wait_for_outbound_msg()
+    ib = ib_async.IB()
+    try:
+        await ib.connectAsync(host=gw.get("host", "127.0.0.1"),
+                                port=int(gw.get("port", args.port)),
+                                clientId=int(gw.get("client_id",
+                                                      args.client_id)),
+                                readonly=True)
+    except (ConnectionError, OSError) as exc:
+        raise SystemExit(
+            f"Cannot reach IBKR Gateway at "
+            f"{gw.get('host', '127.0.0.1')}:{gw.get('port', args.port)} "
+            f"(clientId={gw.get('client_id', args.client_id)}). "
+            f"Is IB Gateway / TWS running and API enabled? "
+            f"Underlying error: {exc}"
+        )
+
+    n_ok = n_skip = n_empty = n_fail = 0
+    try:
+        for i, task in enumerate(tasks, 1):
+            out_path = _bulk_render_path(template, output_dir, task["symbol"],
+                                            task["bar_size"], task["what_to_show"])
+            if out_path.exists() and not force:
+                print(f"  [{i}/{len(tasks)}] skip (exists): {out_path.name}",
+                      file=sys.stderr)
+                n_skip += 1
+                continue
+
+            try:
+                contract = _bulk_build_contract(task, ib_async)
+            except ValueError as exc:
+                print(f"  [{i}/{len(tasks)}] FAIL build_contract "
+                      f"{task['symbol']}: {exc}", file=sys.stderr)
+                n_fail += 1
+                continue
+
+            rl_id = f"{task['symbol']}:{task['sec_type']}"
+            try:
+                await limiter.wait_for_historical(rl_id, task["bar_size"],
+                                                    task["what_to_show"])
+                await limiter.acquire_historical_slot()
+            except TimeoutError as exc:
+                print(f"  [{i}/{len(tasks)}] FAIL pacing-gate "
+                      f"{task['symbol']} {task['bar_size']}: {exc}",
+                      file=sys.stderr)
+                n_fail += 1
+                continue
+
+            try:
+                await limiter.wait_for_outbound_msg()
+                qualified = await ib.qualifyContractsAsync(contract)
+                if not qualified:
+                    print(f"  [{i}/{len(tasks)}] FAIL qualify "
+                          f"{task['symbol']}: contract not resolved",
+                          file=sys.stderr)
+                    n_fail += 1
+                    continue
+                contract = qualified[0]
+
+                await limiter.wait_for_outbound_msg()
+                bars = await ib.reqHistoricalDataAsync(
+                    contract,
+                    endDateTime="",
+                    durationStr=task["duration"],
+                    barSizeSetting=task["bar_size"],
+                    whatToShow=task["what_to_show"],
+                    useRTH=bool(task["rth"]),
+                    formatDate=2,
+                    keepUpToDate=False,
+                )
+            except Exception as exc:  # noqa: BLE001
+                print(f"  [{i}/{len(tasks)}] FAIL fetch "
+                      f"{task['symbol']} {task['bar_size']}: "
+                      f"{type(exc).__name__}: {exc}", file=sys.stderr)
+                n_fail += 1
+                continue
+            finally:
+                limiter.release_historical_slot()
+
+            if not bars:
+                print(f"  [{i}/{len(tasks)}] empty {task['symbol']} "
+                      f"{task['bar_size']} {task['what_to_show']}",
+                      file=sys.stderr)
+                n_empty += 1
+                continue
+
+            rows = _bulk_bars_to_rows(bars)
+            _bulk_write_csv(rows, out_path)
+            print(f"  [{i}/{len(tasks)}] OK   {task['symbol']:8s} "
+                  f"{task['bar_size']:8s} {task['what_to_show']:10s} "
+                  f"{len(rows):6,} rows -> {out_path.name}",
+                  file=sys.stderr)
+            n_ok += 1
+    finally:
+        ib.disconnect()
+
+    print(f"\nibkr-bulk done: ok={n_ok} skip={n_skip} empty={n_empty} "
+          f"fail={n_fail}  ({len(tasks)} total)", file=sys.stderr)
+    return 0 if n_fail == 0 else 4
+
+
+def cmd_ibkr_bulk(args: argparse.Namespace) -> int:
+    import asyncio
+    return asyncio.run(_ibkr_bulk_async(args))
 
 
 # ---------------------------------------------------------------------------
@@ -1320,6 +1610,23 @@ def build_parser() -> argparse.ArgumentParser:
                       help="Cross-process IbkrRateLimiter coordinator")
     ibh.add_argument("--output", required=True)
 
+    ibb = sub.add_parser("ibkr-bulk",
+                          help="Batch back-fill many (symbol, bar_size, what_to_show) "
+                               "into one CSV per task — for backtest dataset construction.")
+    ibb.add_argument("--config", required=True,
+                      help="YAML with gateway/output/defaults/symbols sections; "
+                           "see scripts/ibkr_bridge/examples/bulk_dataset.yaml")
+    ibb.add_argument("--output-dir", default=None,
+                      help="Override `output.directory` from YAML.")
+    ibb.add_argument("--force", action="store_true",
+                      help="Re-fetch even if the target CSV already exists.")
+    ibb.add_argument("--host", default="127.0.0.1")
+    ibb.add_argument("--port", type=int, default=7497,
+                      help="Used only if YAML doesn't specify gateway.port")
+    ibb.add_argument("--client-id", type=int, default=22,
+                      help="Bridge=20, fetch_external single=21; bulk defaults to 22")
+    ibb.add_argument("--redis-url", default="redis://localhost:6379")
+
     return p
 
 
@@ -1348,6 +1655,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_polymarket_history(args)
     if args.provider == "ibkr-historical":
         return cmd_ibkr_historical(args)
+    if args.provider == "ibkr-bulk":
+        return cmd_ibkr_bulk(args)
     parser.print_help()
     return 2
 

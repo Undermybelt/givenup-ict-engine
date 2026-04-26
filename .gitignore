@@ -7,3 +7,7 @@ __pycache__/
 *.pyc
 tmp_cycle_seed_spec.json
 *.log
+
+# IBKR bridge user-local configs
+scripts/ibkr_bridge/my_config*
+scripts/ibkr_bridge/__pycache__/

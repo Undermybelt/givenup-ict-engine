@@ -1,241 +1,169 @@
-# IBKR live data bridge
+# IBKR Bridge — out-of-the-box guide
 
-> **⚠️ IBKR is optional and disabled by default.**
->
-> ict-engine works completely without IBKR. All free providers (Yahoo
-> Finance, Kraken, Bybit, Binance) plus paid optional ones (Polygon, NSE)
-> function on a fresh clone with zero IBKR setup.
->
-> Enable IBKR only if you:
-> 1. Have an IBKR account
-> 2. Are running IB Gateway or TWS locally
-> 3. Want real-time or historical data from IBKR feeds
->
-> When enabled, all IBKR I/O is **localhost-only**. No data, credentials,
-> or telemetry leaves your machine. See bilingual disclaimer below.
+A small set of opt-in tools that turn a locally-running IB Gateway / TWS into
+a Redis-published market-data source for backtest dataset construction and
+live factor research. Designed to work even on free / paper-only IBKR
+accounts, with the bridge gracefully falling back to delayed data when a
+live MD subscription is missing.
 
-## What this is
+## Components
 
-Auto-Quant strategies and ict-engine research scripts both need IBKR market
-data, but TWS / IB Gateway is single-login-per-account. The bridge solves
-this by being the **only** persistent IBKR client in the system. It
-publishes everything it sees to local Redis Streams, and any number of
-downstream consumers read from Redis instead of opening their own IBKR
-connections.
+| File | Purpose |
+|---|---|
+| `setup.py` | One-shot interactive opt-in (consent + capabilities probe). Run first. |
+| `bridge.py` | Long-running publisher. Connects to Gateway, subscribes to instruments, publishes ticks/bars/snapshots to Redis. |
+| `consumer.py` | Read-side reference: consumes Redis streams as pandas DataFrames. |
+| `rate_limiter.py` | Cross-process pacing manager (60 historical / 10 min, etc.). |
+| `ibkr_errors.py` | Bilingual error-code translator with suggested fixes. |
+| `account_prober.py` | Detects paper vs live, sub-account count, line cap. |
+| `consent.py` | Stores opt-in state at `~/.ict-engine/ibkr_consent.json`. |
 
-```
-TWS / IB Gateway (single login session)
-        ↑ socket, clientId=20
-        │
-   ibkr-bridge.py  (this directory)
-        ↓ XADD ticks/bars
-   Redis (localhost:6379)
-        │
-        ↓ XREAD / HGETALL
-  Auto-Quant strategy        ict-engine research script
-  consumer.IbkrConsumer      consumer.IbkrConsumer
-```
-
-Same Redis also coordinates account-level rate limiting across processes,
-so `bridge.py` and `fetch_external.py ibkr-historical` cannot accidentally
-exceed IBKR's 6 s/contract or 60-distinct/10-min budgets when run together.
-
-## Layout
-
-| File | Role |
-| --- | --- |
-| `setup.py` | First-run consent + Redis ping + Gateway ping. Run **once**. |
-| `consent.py` | `require_ibkr_enabled()` gate used by every IBKR-touching entry point. |
-| `rate_limiter.py` | Redis-backed adaptive token bucket / sliding window. |
-| `account_prober.py` | One-shot static account identification (`reqManagedAccts`). |
-| `bridge.py` | Persistent producer. Connects, subscribes, publishes. |
-| `consumer.py` | Read-only helper imported by Auto-Quant + ict-engine. |
-| `example_config.yaml` | Empty default, with commented subscription examples. |
-
-User-local files (gitignored, **never enter the repo**):
-
-| Path | Contents |
-| --- | --- |
-| `~/.ict-engine/ibkr_consent.json` | Your opt-in record. Delete to revoke. |
-| `~/.ict-engine/ibkr_capabilities.json` | Adaptive limits learned from real account behaviour. |
-
-## Quick start
-
-### Prerequisites
+## Quick start (5 min)
 
 ```bash
-# 1. Local Redis daemon (used for fan-out + cross-process rate-limit coord)
-brew install redis
-brew services start redis
+# 1. Make sure IB Gateway / TWS is running on port 4002 (paper) or 7497 (TWS paper)
+#    with API enabled and "Read-Only API" ticked.
 
-# 2. IB Gateway or TWS, logged in to a paper account.
-#    https://www.interactivebrokers.com/en/trading/ib-gateway-stable.php
-#    Settings → API → Settings:
-#       [✓] Enable ActiveX and Socket Clients
-#       [✓] Allow connections from localhost only
-#       [✓] Read-only API   ← strongly recommended
-#       Socket port = 7497  (paper) or 7496 (live)
+# 2. One-time consent + capabilities probe (~5 sec, briefly connects to Gateway)
+.venv/bin/python -m scripts.ibkr_bridge.setup enable --gateway-port 4002
 
-# 3. Python deps (already installed if you use Auto-Quant's venv via uv):
-#    ib_async>=2.0
-#    redis>=5.0
-#    pyyaml
+# 3. Pick a starter config that matches your account state — see "Which
+#    config to start from?" below — and run the bridge:
+.venv/bin/python -m scripts.ibkr_bridge.bridge \
+    --config scripts/ibkr_bridge/examples/safe_paper.yaml
+
+# 4. From any other process / strategy file, consume the data:
+.venv/bin/python -m scripts.ibkr_bridge.consumer SPY
 ```
 
-### One-time setup
+Everything stays on `localhost`. The bridge only talks to **your** Gateway
+and **your** Redis. No telemetry, no third-party servers.
+
+## Which example config to start from?
+
+| If your situation is… | Start with |
+|---|---|
+| Brand-new bridge user, want it to "just work" | `examples/safe_paper.yaml` |
+| Building 5-min factor research, market closed or open | `examples/intraday_5min.yaml` |
+| Weekend / overnight / want non-zero data right now | `examples/crypto_24x7.yaml` |
+| Forex mid-price kline research | `examples/forex_idealpro.yaml` |
+| Constructing a backtest dataset (CSV files) | `examples/bulk_dataset.yaml` (used by `fetch_external.py ibkr-bulk`) |
+
+## Feed types
+
+A subscription declares one or more `feed:` entries:
+
+| `feed` | Backed by | Best for | MD-subscription needed? |
+|---|---|---|---|
+| `bars_kup` | `reqHistoricalData(keepUpToDate=True)` | **Default for factor research** — any bar size, back-fills + streams updates | No (uses historical farm) |
+| `market_data` | `reqMktData` | Full bid/ask/last/sizes tick stream | Yes for live; `market_data_type: 3` for delayed |
+| `real_time_bars` | `reqRealTimeBars` | 5-second OHLCV bars only | Yes (live MD required) |
+
+The smart default is **`bars_kup`** — it works at any bar size, doesn't
+require a live MD subscription, and back-fills on first connect so consumers
+replaying from `start_id='0'` see a full backtest window immediately.
+
+## Redis schema
+
+| Key | Type | Producer | Notes |
+|---|---|---|---|
+| `ibkr:bridge:status` | hash | bridge | `state`, `ts`, `client_id`, `subscriptions_active` |
+| `ibkr:snapshot:<SYM>` | hash | bridge | Latest bid/ask/last/sizes + `last_bar_close` |
+| `ibkr:ticks:<SYM>` | stream | bridge (`market_data`) | Tick events with bid/ask/last/sizes |
+| `ibkr:bars:<SYM>:5sec` | stream | bridge (`real_time_bars`) | 5-second OHLCV bars |
+| `ibkr:bars:<SYM>:5min` | stream | bridge (`bars_kup`) | 5-min OHLCV (suffix matches `_BAR_SIZE_SUFFIX` table) |
+| `ibkr:bars:<SYM>:1h` etc. | stream | bridge (`bars_kup`) | One stream per bar size |
+| `ibkr:rl:*` | various | rate_limiter | Pacing budget; do not write |
+
+Streams are bounded by `publishing.stream_maxlen` (XADD with MAXLEN ~).
+
+## Common errors and fixes
+
+The bridge logs every IBKR error in **bilingual + remediation** form. A
+quick reference for the codes you're most likely to see:
+
+| Code | Severity | One-line fix |
+|---|---|---|
+| **10089** | error | Set `market_data_type: 3` to use delayed quotes |
+| **10197** | error | Log out other live IBKR sessions (mobile app, web Portal); ensure live MD package subscribed |
+| **420** | error | Switch to `market_data_type: 3` OR subscribe to the specific exchange MD package (NASDAQ TotalView, AMEX TOP, …) |
+| **10299** | error | For crypto bars_kup use `what_to_show: MIDPOINT` (`TRADES` errors, `AGGTRADES` is incompatible with `keepUpToDate`) |
+| **162** | error | Empty result; widen `duration` and/or use `--rth false` |
+| **2104/2106/2158** | info | Farm-OK status; suppressed automatically |
+
+Full catalog with English + 中文 explanations: `ibkr_errors.py`.
+
+If you hit a code not in the catalog, the log line will say
+`(uncatalogued — please file an issue)`; please paste the IBKR raw
+message + the surrounding context into a GitHub issue and we'll add it.
+
+## Free MD subscriptions to enable on your live account
+
+If your account has zero MD subscriptions, subscribe these (all $0.00/mo
+for IBKR-PRO clients) via Client Portal → User Settings → Market Data:
+
+* **IBKR-PRO 非整合实时报价** / "IBKR-PRO Non-Consolidated Real-Time Quotes"
+  — covers most US equities at non-NBBO routes
+* **IDEALPRO 外汇** / "IDEALPRO Forex" — real-time spot FX
+* **PAXOS IBLLC-美国（非美国）** — crypto MD (BTC/ETH/LTC/BCH)
+* **CME 事件合约** / "CME Event Contracts"
+* **美国共同基金（一级）** / "US Mutual Funds Level 1"
+
+After subscribing, **restart Gateway** (File → Exit, wait 30s, relaunch)
+so the new entitlements load. Then restart the bridge.
+
+## Troubleshooting recipes
+
+### "Bridge starts but ticks never arrive"
+
+Check the snapshot:
 
 ```bash
-cd ~/Auto-Quant
-.venv/bin/python -m scripts.ibkr_bridge.setup --enable
+redis-cli hgetall ibkr:snapshot:SPY
 ```
 
-You will see the bilingual disclaimer below, be asked to opt in, and the
-script will check Redis + Gateway reachability and (if Gateway is up) run
-the one-shot account probe to populate `ibkr_capabilities.json`.
+If `bid=-1, ask=-1`: market is closed for that asset class (FX weekend,
+US equity overnight). Wait for the session, or switch to `crypto_24x7.yaml`.
 
-To re-print current state at any time:
+If empty hash: bridge couldn't subscribe — check the bridge log for an
+`IBKR error` block; the bilingual message includes the fix.
+
+### "I don't want to wait for IBKR; I want a CSV right now"
+
+Use `ibkr-bulk` for batch back-fill (no streaming):
 
 ```bash
-.venv/bin/python -m scripts.ibkr_bridge.setup status
+.venv/bin/python fetch_external.py ibkr-bulk \
+    --config scripts/ibkr_bridge/examples/bulk_dataset.yaml
 ```
 
-To revoke and clean local state:
+Writes one CSV per `(symbol, bar_size)` to `user_data/data/ibkr_bulk/`.
+Re-runs are idempotent (skip existing files unless `--force`).
+
+### "Gateway disconnects the bridge after a few seconds"
+
+Some IBKR account states (paper account on free tier, multiple sessions
+elsewhere) cause IBKR to drop the API socket after the first request.
+The bridge auto-reconnects with exponential backoff. If you want zero
+drops:
+
+1. Make sure all other IBKR sessions are logged out (mobile, web)
+2. Enable at least one MD subscription on the live account
+3. Wait 60–90s after subscribe for IBKR to propagate entitlements
+
+### "Where do I revoke consent?"
 
 ```bash
-.venv/bin/python -m scripts.ibkr_bridge.setup revoke --clean-redis
+.venv/bin/python -m scripts.ibkr_bridge.setup revoke
+# or delete: ~/.ict-engine/ibkr_consent.json
 ```
 
-### Run the bridge
+## Architecture notes
 
-```bash
-cp scripts/ibkr_bridge/example_config.yaml scripts/ibkr_bridge/my_config.yaml
-# Edit my_config.yaml — uncomment a few subscriptions
-.venv/bin/python -m scripts.ibkr_bridge.bridge --config scripts/ibkr_bridge/my_config.yaml
-```
-
-### Consume from a strategy / notebook
-
-```python
-from ibkr_bridge.consumer import IbkrConsumer
-
-c = IbkrConsumer()  # defaults to redis://localhost:6379
-
-# Snapshot (last known values)
-print(c.snapshot("AAPL"))
-# {'ts': 1745683123.456, 'bid': 187.42, 'ask': 187.45, 'last': 187.43, ...}
-
-# Recent bars as DataFrame
-bars = c.bars("AAPL", bar_size="5sec", lookback=300)
-print(bars.tail())
-
-# Live tail (async)
-async for entry in c.stream_bars(["AAPL", "SPY"]):
-    print(entry["symbol"], entry["close"])
-```
-
-The consumer **does not** require IBKR consent — it only reads Redis.
-
-## Rate-limit policy (canonical IBKR)
-
-| Rule | Default | Adaptation |
-| --- | --- | --- |
-| Same `(contract, bar_size, what_to_show)` | ≥ 6.5 s | bumps to 8 / 10 / … on each `162` |
-| Distinct historical contracts in 10 min | 55 (cap 60 with 5 buffer) | -5 after 3× `162` in 24 h |
-| Simultaneous historical reqs | 40 (cap 50) | semaphore |
-| Streaming market-data lines | 80 (probed up to ceiling) | hard ceiling lowered on `354/322/1100` |
-| Snapshot per contract | ≥ 11 s | per-contract token bucket |
-| Outbound msg/sec to TWS | 45 (limit 50) | drops to 30 on connection-reset |
-
-Capabilities live in `~/.ict-engine/ibkr_capabilities.json`. Inspect via:
-
-```bash
-.venv/bin/python -m scripts.ibkr_bridge.rate_limiter
-```
-
-## Privacy & connectivity disclaimer (verbatim)
-
-```
-IBKR live data — privacy & connectivity notice
-──────────────────────────────────────────────
-This feature reads real-time data from your *locally running* IB Gateway
-or TWS application. Everything stays on this machine.
-
-What this code DOES:
-  • Connect to localhost:7497 (paper) or :7496 (live) — your local IB Gateway
-  • Subscribe to instruments listed in ibkr_bridge/<your>_config.yaml
-  • Write market data to your local Redis (localhost:6379)
-  • Honor IBKR's pacing rules (6 s/contract historical, 100 streaming lines)
-  • Learn your account capabilities passively from observed errors;
-    no proactive probing of your data quota at startup
-
-What this code DOES NOT:
-  • Send your IBKR credentials anywhere — they stay in IB Gateway / TWS
-  • Contact ict-engine.com, OpenAlice, or any third-party server
-  • Place orders, close positions, or modify your IBKR account state
-  • Collect telemetry, analytics, or crash reports
-
-Auditable source:  scripts/ibkr_bridge/{bridge,consumer,rate_limiter}.py
-Capabilities file: ~/.ict-engine/ibkr_capabilities.json (gitignored, local)
-Revoke any time:   python scripts/ibkr_bridge/setup.py --revoke
-
-═════════════════════════════════════════════════════════════════════
-中文版
-═════════════════════════════════════════════════════════════════════
-
-IBKR 实时数据 — 隐私与连接说明
-──────────────────────────────────
-本功能从你**本机运行**的 IB Gateway 或 TWS 读取实时数据。所有内容均不离开本机。
-
-本代码会做：
-  • 连接 localhost:7497 (paper) 或 :7496 (live) — 你本地的 IB Gateway
-  • 订阅 ibkr_bridge/<你的>_config.yaml 列出的合约
-  • 写入你本地的 Redis (localhost:6379)
-  • 遵守 IBKR 流控规则 (6 秒/合约 历史限制，100 条流式数据线)
-  • 通过观察实际错误被动学习账户能力；启动时不做主动配额探测
-
-本代码绝不会：
-  • 把你的 IBKR 凭据传到任何地方 — 凭据一直在 IB Gateway / TWS 里
-  • 联系 ict-engine.com、OpenAlice 或任何第三方服务
-  • 下单、平仓或修改你的 IBKR 账户状态
-  • 收集遥测、分析或崩溃报告
-
-源代码可审：    scripts/ibkr_bridge/{bridge,consumer,rate_limiter}.py
-能力文件：      ~/.ict-engine/ibkr_capabilities.json (gitignored, 本地)
-随时撤回同意：  python scripts/ibkr_bridge/setup.py --revoke
-```
-
-## Troubleshooting
-
-**`Cannot reach IBKR Gateway at 127.0.0.1:7497`**
-Open Gateway, verify "Connected" status, check Settings → API → Settings →
-Socket port matches. Make sure no firewall blocks loopback.
-
-**`error 162` (pacing violation)**
-Already self-correcting. After 3 within 24 h the limiter will tighten the
-historical window cap. Check `rate_limiter.py` diagnostic to see current
-state.
-
-**`error 354` (no live subscription)**
-Your account doesn't have the right market-data subscription for that
-instrument. The bridge keeps writing the delayed feed (`market_data_type=3`)
-and notes the symbol in `feeds_observed_delayed`.
-
-**Bridge crash, consumers see stale data**
-The bridge periodically writes its state to `ibkr:bridge:status`. Consumers
-should check `IbkrConsumer().bridge_status()["state"]` and fall back to a
-non-IBKR provider when state is `absent`, `disconnected`, or older than 60s.
-
-**Want to re-probe the account**
-`rm ~/.ict-engine/ibkr_capabilities.json` and either restart the bridge or
-re-run `python -m scripts.ibkr_bridge.setup enable`.
-
-## Limitations (v0)
-
-- macOS-tested only; Linux should work but unverified.
-- Single Gateway / single account per bridge instance. Multi-account
-  scenarios are gracefully detected (see `n_subaccounts` in capabilities)
-  but only the first account is observed for now.
-- No SQLite spool: if Redis crashes mid-tick the unsent burst is dropped.
-  v1 may add durable spool.
-- `tick-by-tick` feed is intentionally disabled (IBKR caps it at 5
-  simultaneous globally — too tight to share with other clientIds).
+* **State location**: capabilities at `~/.ict-engine/ibkr_capabilities.json`,
+  consent at `~/.ict-engine/ibkr_consent.json`. Both gitignored.
+* **Client IDs**: bridge=20, single-fetch=21, bulk-fetch=22 (avoid clash).
+* **Read-only**: the bridge connects with `readonly=True` so it cannot
+  place / cancel / modify orders even if your code somehow tried.
+* **Cross-process pacing**: `rate_limiter.py` holds budget state in Redis
+  so multiple bridges + ad-hoc fetches share the same 60-req/10-min window.
