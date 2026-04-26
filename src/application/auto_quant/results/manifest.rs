@@ -282,8 +282,10 @@ mod tests {
 
     #[test]
     fn entry_status_kind_handles_unknown_string() {
-        let mut e = StrategyLibraryEntry::default();
-        e.status = "weird".into();
+        let e = StrategyLibraryEntry {
+            status: "weird".into(),
+            ..StrategyLibraryEntry::default()
+        };
         assert_eq!(
             e.status_kind(),
             StrategyLibraryEntryStatus::Other("weird".into())

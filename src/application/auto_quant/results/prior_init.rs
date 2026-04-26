@@ -477,7 +477,7 @@ mod tests {
     #[test]
     fn temper_zero_is_a_noop_on_the_row() {
         let mut net = build_trading_network().unwrap();
-        let before = read_cpt_row(&net, &DEFAULT_DEFAULT_PARENT_CONFIG.to_vec()).unwrap();
+        let before = read_cpt_row(&net, &DEFAULT_DEFAULT_PARENT_CONFIG).unwrap();
         let m = manifest_with(vec![entry("S", 50, 60.0, "ok")]);
         let outcome = apply_strategy_library_prior_init(
             &mut net,
