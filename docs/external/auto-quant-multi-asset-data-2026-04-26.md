@@ -105,6 +105,60 @@ for an underlying-asset strategy), not as a backtestable instrument. A
 direct option-chain backtester would require a separate engine; this is out
 of scope for the Auto-Quant integration.
 
+## Auto-Quant remotes (post-fork)
+
+The Auto-Quant checkout is wired with two remotes:
+
+```
+origin    git@github.com:Undermybelt/Auto-Quant.git    (your fork — read+write)
+upstream  git@github.com:TraderAlice/Auto-Quant.git    (original — read only)
+```
+
+This separates "what the original ships" from "what we run". Your work branches
+push to `origin`; you decide when to pull `upstream` changes.
+
+## Upgrade workflow
+
+When upstream releases changes:
+
+```bash
+cd ~/Auto-Quant
+git fetch upstream                                     # see what changed
+git log master..upstream/master --oneline              # review diffs
+git checkout master && git merge upstream/master       # merge into your fork's master
+git push origin master                                 # publish to your fork
+git checkout autoresearch/apr26                        # back to working branch
+git merge master                                       # bring upstream changes in
+```
+
+Then **always re-deploy + smoke-test**:
+
+```bash
+cd ~/projects-ict-engine/ict-engine                    # source-of-truth
+cp scripts/auto_quant_external/*.py            ~/Auto-Quant/
+cp scripts/auto_quant_external/config.tomac.json ~/Auto-Quant/
+cp scripts/auto_quant_external/strategies/*.py ~/Auto-Quant/user_data/strategies_external/
+cd ~/Auto-Quant
+uv run run_tomac.py                                    # smoke-test the pipeline
+```
+
+If FreqTrade internals shifted (`Backtesting(exchange=...)` ctor, `_markets`
+mutation point, or `IPairList._whitelist_for_active_markets`), the smoke-test
+will fail loudly. Patch `run_tomac.py` in this repo, re-deploy.
+
+## File-collision protection
+
+The 5 deployed files live under unique paths and are listed in
+`~/Auto-Quant/.git/info/exclude` (a local-only ignore that never travels to any
+remote and never conflicts with upstream's tracked `.gitignore`). Effects:
+
+- `git status` in Auto-Quant is clean — the deploy files are invisible.
+- If upstream ever creates a tracked file at one of those exact paths,
+  `git pull` aborts with "untracked working tree files would be overwritten by
+  merge". You move the deploy file aside, pull, then re-deploy from ict-engine.
+- `user_data/data/` is already covered by upstream's tracked `.gitignore`, so
+  generated feathers are upstream-safe by design.
+
 ## Why this lives in `ict-engine`, not in Auto-Quant
 
 `docs/auto-quant-ictengine-integration-guide.md` mandates: ict-engine is the
