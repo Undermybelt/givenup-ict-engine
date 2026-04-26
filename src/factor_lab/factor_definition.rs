@@ -13,6 +13,7 @@ use crate::indicators::{
     atr_percent, compute_adx, compute_atr, compute_bollinger, compute_ema, compute_rsi,
     BollingerBands,
 };
+use crate::pda_timeline::{build_pda_timeline, match_all_setups, SetupMatch};
 use crate::smt::{Correlation, Divergence};
 use crate::types::{Candle, Direction, Regime};
 
@@ -399,6 +400,9 @@ impl FactorDefinition {
                 ("unconfirmed_sweep_weight".to_string(), 0.04),
                 ("opposing_sweep_penalty".to_string(), 0.10),
                 ("post_sweep_displacement_weight".to_string(), 0.12),
+                ("setup_weight".to_string(), 0.06),
+                ("setup_recency_bars".to_string(), 4.0),
+                ("setup_horizon_bars".to_string(), 30.0),
             ]),
         }
     }
@@ -904,7 +908,16 @@ impl FactorDefinition {
         let unconfirmed_sweep_weight = self.parameter("unconfirmed_sweep_weight", 0.04);
         let opposing_sweep_penalty = self.parameter("opposing_sweep_penalty", 0.10);
         let post_sweep_displacement_weight = self.parameter("post_sweep_displacement_weight", 0.12);
+        let setup_weight = self.parameter("setup_weight", 0.06);
+        let setup_recency_bars = self.parameter("setup_recency_bars", 4.0) as usize;
+        let setup_horizon_bars = self.parameter("setup_horizon_bars", 30.0) as usize;
         let atr = pad_indicator(compute_atr(candles, lookback.max(14)), candles.len(), 0.0);
+
+        // Canonical-setup matches over the unified PDA timeline.
+        // Built once for the whole series; per-bar lookups filter by
+        // `confirm_bar <= index` (forward-only) and recency window.
+        let timeline = build_pda_timeline(candles, &atr);
+        let setup_matches = match_all_setups(&timeline, setup_horizon_bars);
 
         candles
             .iter()
@@ -1035,6 +1048,28 @@ impl FactorDefinition {
                 bull_score += (bull_fvg.min(3.0) + bull_ob.min(3.0)) * 0.05;
                 bear_score += (bear_fvg.min(3.0) + bear_ob.min(3.0)) * 0.05;
 
+                // Canonical-setup contributions: count matches whose
+                // confirm_bar falls within [index - recency, index].
+                let recency_lo = index.saturating_sub(setup_recency_bars);
+                let active_setups = setup_matches
+                    .iter()
+                    .filter(|m| m.confirm_bar >= recency_lo && m.confirm_bar <= index);
+                let mut bull_setup_hits = 0usize;
+                let mut bear_setup_hits = 0usize;
+                for m in active_setups {
+                    match m.direction {
+                        Direction::Bull => {
+                            bull_score += setup_weight;
+                            bull_setup_hits += 1;
+                        }
+                        Direction::Bear => {
+                            bear_score += setup_weight;
+                            bear_setup_hits += 1;
+                        }
+                        Direction::Neutral => {}
+                    }
+                }
+
                 let value = (bull_score - bear_score).clamp(-1.0, 1.0);
                 let confidence = bull_score.max(bear_score).clamp(0.0, 1.0);
 
@@ -1045,7 +1080,7 @@ impl FactorDefinition {
                     value,
                     confidence,
                     format!(
-                        "bull_expansion={};bear_expansion={};bull_sweep={};bear_sweep={};bull_manipulation_confirmed={};bear_manipulation_confirmed={};bull_sweep_displacement={:.4};bear_sweep_displacement={:.4};bull_score={:.2};bear_score={:.2}",
+                        "bull_expansion={};bear_expansion={};bull_sweep={};bear_sweep={};bull_manipulation_confirmed={};bear_manipulation_confirmed={};bull_sweep_displacement={:.4};bear_sweep_displacement={:.4};bull_setup_hits={};bear_setup_hits={};bull_score={:.2};bear_score={:.2}",
                         bull_expansion,
                         bear_expansion,
                         recent_bull_sweep.is_some(),
@@ -1054,12 +1089,27 @@ impl FactorDefinition {
                         bear_manipulation_confirmed,
                         bull_sweep_displacement,
                         bear_sweep_displacement,
+                        bull_setup_hits,
+                        bear_setup_hits,
                         bull_score,
                         bear_score
                     ),
                 )
             })
             .collect()
+    }
+
+    /// Returns the canonical-setup matches that this `structure_ict`
+    /// factor would consume for the given candle slice. Exposed for
+    /// the analyze report shell and factor_research diagnostics so
+    /// they can render setup tallies without re-running the
+    /// detection pipeline.
+    pub fn structure_ict_setup_matches(&self, candles: &[Candle]) -> Vec<SetupMatch> {
+        let lookback = self.parameter("lookback", 20.0) as usize;
+        let setup_horizon_bars = self.parameter("setup_horizon_bars", 30.0) as usize;
+        let atr = pad_indicator(compute_atr(candles, lookback.max(14)), candles.len(), 0.0);
+        let timeline = build_pda_timeline(candles, &atr);
+        match_all_setups(&timeline, setup_horizon_bars)
     }
 
     fn evaluate_cross_market_smt<'a>(
@@ -1562,5 +1612,45 @@ mod tests {
             .contains("status=invalid_due_to_pair_quality"));
         assert!(target.explanation.contains("quality_tier=poor"));
         assert!(target.explanation.contains("aligned_length=21"));
+    }
+
+    #[test]
+    fn test_structure_ict_explanation_includes_setup_hits_fields() {
+        // P1b-2: every structure_ict signal must surface the new
+        // canonical-setup tally so analyze / factor_research can
+        // render it without re-running detection.
+        let factor = FactorDefinition::structure_ict();
+        let candles = candles(80);
+        let series = factor
+            .evaluate(&candles, &FactorContext::default())
+            .unwrap();
+        assert_eq!(series.signals.len(), candles.len());
+        for signal in &series.signals {
+            assert!(
+                signal.explanation.contains("bull_setup_hits="),
+                "structure_ict explanation missing bull_setup_hits: {}",
+                signal.explanation
+            );
+            assert!(
+                signal.explanation.contains("bear_setup_hits="),
+                "structure_ict explanation missing bear_setup_hits: {}",
+                signal.explanation
+            );
+        }
+    }
+
+    #[test]
+    fn test_structure_ict_setup_matches_helper_is_deterministic() {
+        // The convenience helper must agree across calls and never
+        // return a match whose confirm_bar exceeds the candle count.
+        let factor = FactorDefinition::structure_ict();
+        let candles = candles(80);
+        let a = factor.structure_ict_setup_matches(&candles);
+        let b = factor.structure_ict_setup_matches(&candles);
+        assert_eq!(a, b);
+        for m in &a {
+            assert!(m.confirm_bar < candles.len());
+            assert!(m.anchor_bar <= m.confirm_bar);
+        }
     }
 }
