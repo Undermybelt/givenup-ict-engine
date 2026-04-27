@@ -8,7 +8,7 @@ Implementation status snapshot:
 - P1 canonical setup matching is present in `src/pda_timeline/*` and consumed by `FactorDefinition::evaluate_structure_ict`
 - P2 PB(12) control-matrix runner is implemented in `src/application/backtest/control_matrix.rs` and `factor_research_command`
 - P3 discovery-pool summary is implemented as a PB12 artifact surface, and `auto-quant-promote-canonical-setup` now persists repo-versioned promoted setup specs
-- P4 provider readiness/install prompt surfaces are implemented for IBKR / yfinance / TradingView MCP; full market-data fetch + runtime factor consumption remains pending
+- P4 provider readiness/install prompt surfaces are implemented for IBKR / yfinance / TradingView MCP, and PB12 runtime now consumes yfinance-backed ETF / VIX / options overlays; direct IBKR / TradingView MCP fetchers remain pending
 
 ## 1. Context
 
