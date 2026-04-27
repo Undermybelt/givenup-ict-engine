@@ -539,6 +539,7 @@ mod tests {
                     feedback_records_applied: 12,
                     dataset_comparable: true,
                     recommended_next_command: "ict-engine factor-research".to_string(),
+                    runtime_notes: vec!["runtime_etf_reference_symbol=QQQ".to_string()],
                 },
                 ControlMatrixResearchRunSummary {
                     run_number: 12,
@@ -552,6 +553,7 @@ mod tests {
                     feedback_records_applied: 6,
                     dataset_comparable: true,
                     recommended_next_command: "ict-engine factor-research".to_string(),
+                    runtime_notes: Vec::new(),
                 },
             ],
         });

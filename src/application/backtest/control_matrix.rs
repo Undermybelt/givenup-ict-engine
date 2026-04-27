@@ -197,6 +197,8 @@ pub struct ControlMatrixResearchRunSummary {
     pub feedback_records_applied: usize,
     pub dataset_comparable: bool,
     pub recommended_next_command: String,
+    #[serde(default)]
+    pub runtime_notes: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -808,6 +810,7 @@ mod tests {
                 feedback_records_applied: 8,
                 dataset_comparable: true,
                 recommended_next_command: "ict-engine factor-research".to_string(),
+                runtime_notes: Vec::new(),
             }],
         });
 

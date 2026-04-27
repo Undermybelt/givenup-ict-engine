@@ -8,11 +8,13 @@ use crate::application::backtest::{
     build_control_matrix_provider_summary_for_plan, build_control_matrix_research_artifact,
     build_duration_sizing_delta_surface, build_oos_quality_delta_surface,
     build_shrink_on_off_comparison_summary, BacktestResultArtifactInput, ControlMatrixPlan,
-    ControlMatrixResearchArtifact, ControlMatrixResearchArtifactInput,
-    ControlMatrixResearchRunSummary,
+    ControlMatrixResearchArtifact, ControlMatrixResearchArtifactInput, ControlMatrixResearchRunSummary,
 };
 use crate::application::decision_utils::{
     parse_research_objective, research_objective_label, ResearchObjectiveMode,
+};
+use crate::application::data_sources::{
+    build_control_matrix_runtime_overrides, ControlMatrixRuntimeOverrides,
 };
 use crate::application::factor_lifecycle::{
     build_factor_lifecycle_view, factor_specific_hint_preferences,
@@ -92,6 +94,7 @@ fn clone_symbol_state(source_root: &Path, symbol: &str, target_root: &Path) -> R
 fn build_control_matrix_run_summary(
     run_spec: &crate::application::backtest::Pb12RunSpec,
     report: &crate::factor_lab::research::ResearchReport,
+    runtime_notes: &[String],
 ) -> ControlMatrixResearchRunSummary {
     ControlMatrixResearchRunSummary {
         run_number: run_spec.run_number,
@@ -113,6 +116,7 @@ fn build_control_matrix_run_summary(
         feedback_records_applied: report.feedback_records_applied,
         dataset_comparable: report.dataset_comparability.comparable,
         recommended_next_command: report.recommended_next_command.clone(),
+        runtime_notes: runtime_notes.to_vec(),
     }
 }
 
@@ -129,6 +133,8 @@ where
         ResearchObjectiveMode,
         Option<FactorMutationSpec>,
         Option<ControlMatrixPlan>,
+        Option<crate::application::backtest::Pb12RunSpec>,
+        ControlMatrixRuntimeOverrides,
         &str,
     ) -> Result<crate::factor_lab::research::ResearchReport>,
 {
@@ -152,14 +158,25 @@ where
         }
         std::fs::create_dir_all(&isolated_state_dir)?;
         clone_symbol_state(Path::new(state_dir), symbol, &isolated_state_dir)?;
+        let runtime_overrides = build_control_matrix_runtime_overrides(data_path, symbol, run_spec)
+            .unwrap_or_else(|err| ControlMatrixRuntimeOverrides {
+                runtime_notes: vec![format!("runtime_provider_error={err}")],
+                ..ControlMatrixRuntimeOverrides::default()
+            });
         let report = run_research(
             objective,
             mutation_spec.cloned(),
             Some(control_matrix_plan.clone()),
+            Some(run_spec.clone()),
+            runtime_overrides.clone(),
             isolated_state_dir.to_str().unwrap_or(state_dir),
         )?;
         let _ = std::fs::remove_dir_all(&isolated_state_dir);
-        runs.push(build_control_matrix_run_summary(run_spec, &report));
+        runs.push(build_control_matrix_run_summary(
+            run_spec,
+            &report,
+            &runtime_overrides.runtime_notes,
+        ));
     }
     let discovery_summary =
         build_control_matrix_discovery_summary_for_symbol(state_dir, symbol, data_path)?;
@@ -403,6 +420,8 @@ where
         ResearchObjectiveMode,
         Option<FactorMutationSpec>,
         Option<ControlMatrixPlan>,
+        Option<crate::application::backtest::Pb12RunSpec>,
+        ControlMatrixRuntimeOverrides,
         &str,
     ) -> Result<crate::factor_lab::research::ResearchReport>,
 {
@@ -446,6 +465,8 @@ where
         objective,
         mutation_spec.clone(),
         control_matrix_plan.clone(),
+        None,
+        ControlMatrixRuntimeOverrides::default(),
         state_dir,
     )?;
     if emit_mutation_evaluation {
@@ -746,7 +767,12 @@ mod tests {
             let observed_state_dirs = Arc::clone(&observed_state_dirs);
             let observed_sentinel_contents = Arc::clone(&observed_sentinel_contents);
             let run_counter = Arc::clone(&run_counter);
-            move |_objective, _mutation_spec, _control_matrix_plan, run_state_dir: &str| {
+            move |_objective,
+                  _mutation_spec,
+                  _control_matrix_plan,
+                  _control_matrix_run,
+                  runtime_overrides: ControlMatrixRuntimeOverrides,
+                  run_state_dir: &str| {
                 observed_state_dirs
                     .lock()
                     .unwrap()
@@ -777,6 +803,7 @@ mod tests {
                 report.feedback_records_applied = 1;
                 report.dataset_comparability.comparable = true;
                 report.recommended_next_command = format!("pb12-next-{}", count);
+                report.multi_timeframe_summary = runtime_overrides.runtime_notes;
                 Ok(report)
             }
         };

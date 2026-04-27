@@ -7,7 +7,6 @@ use crate::application::backtest::{ControlMatrixPlan, PB12_TOGGLES, Pb12Toggle};
 pub const TVREMIX_MCP_DEFAULT_URL: &str = "https://tvremix.xyz/api/mcp";
 pub const TVREMIX_MCP_URL_ENV: &str = "ICT_ENGINE_TVREMIX_MCP_URL";
 pub const TVREMIX_MCP_API_KEY_ENV: &str = "ICT_ENGINE_TVREMIX_MCP_API_KEY";
-pub const YFINANCE_ENABLED_ENV: &str = "ICT_ENGINE_YFINANCE_ENABLED";
 pub const IBKR_CONSENT_RELATIVE_PATH: &str = ".ict-engine/ibkr_consent.json";
 pub const IBKR_CAPABILITIES_RELATIVE_PATH: &str = ".ict-engine/ibkr_capabilities.json";
 
@@ -190,7 +189,7 @@ fn ibkr_provider_status(
 
 fn yfinance_provider_status<F>(
     required: &BTreeSet<ControlMatrixDataRequirement>,
-    env_lookup: &F,
+    _env_lookup: &F,
 ) -> ControlMatrixProviderStatus
 where
     F: Fn(&str) -> Option<String>,
@@ -202,39 +201,18 @@ where
         ControlMatrixDataRequirement::OptionsOpenInterest,
         ControlMatrixDataRequirement::OptionsImpliedVolatility,
     ];
-    let enabled = env_lookup(YFINANCE_ENABLED_ENV)
-        .map(|value| matches!(value.trim().to_ascii_lowercase().as_str(), "1" | "true" | "yes"))
-        .unwrap_or(false);
     ControlMatrixProviderStatus {
         provider: ControlMatrixProviderKind::YahooFinance.as_str().to_string(),
-        status: if enabled {
-            "ready".to_string()
-        } else {
-            "install_hint_only".to_string()
-        },
-        healthy: enabled,
-        reason: if enabled {
-            "yfinance_enabled_via_env".to_string()
-        } else {
-            "set_ICT_ENGINE_YFINANCE_ENABLED_after_install".to_string()
-        },
+        status: "ready".to_string(),
+        healthy: true,
+        reason: "public_yahoo_http_endpoints".to_string(),
         supported_requirements: supported
             .into_iter()
             .filter(|item| required.contains(item))
             .map(|item| item.as_str().to_string())
             .collect(),
-        install_prompts: if enabled {
-            Vec::new()
-        } else {
-            vec![
-                "yfinance optional setup: uv run --with yfinance python -c \"import yfinance\"".to_string(),
-                format!(
-                    "yfinance enable hint: export {}=1",
-                    YFINANCE_ENABLED_ENV
-                ),
-            ]
-        },
-        redacted_config: vec![format!("{}={}", YFINANCE_ENABLED_ENV, enabled)],
+        install_prompts: Vec::new(),
+        redacted_config: vec!["provider_mode=public_http".to_string()],
     }
 }
 

@@ -180,6 +180,7 @@ mod tests {
                 feedback_records_applied: 1,
                 dataset_comparable: true,
                 recommended_next_command: "ict-engine factor-research".to_string(),
+                runtime_notes: Vec::new(),
             }],
         });
         append_control_matrix_research_artifact(temp.path(), "NQ", artifact).unwrap();

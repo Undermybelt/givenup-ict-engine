@@ -14,12 +14,18 @@ pub(crate) fn run_factor_research(
         data_4h,
         data_1d,
         paired_data,
+        paired_candles_override,
+        auxiliary_override,
+        runtime_notes,
         mutation_spec,
         control_matrix_plan,
         state_dir,
     } = input;
     let candles = load_candles(data)?;
-    let paired_candles = paired_data.map(load_candles).transpose()?;
+    let paired_candles = match paired_candles_override {
+        Some(candles) => Some(candles),
+        None => paired_data.map(load_candles).transpose()?,
+    };
     let resolved_multi_timeframe_inputs =
         resolve_multi_timeframe_inputs(data, data_1m, data_5m, data_15m, data_1h, data_4h, data_1d);
     let multi_timeframe_summary =
@@ -69,7 +75,7 @@ pub(crate) fn run_factor_research(
         &candles,
         &FactorContext {
             paired_candles: paired_candles.as_deref(),
-            auxiliary: None,
+            auxiliary: auxiliary_override.as_ref(),
             regime: None,
         },
         Some(&mut learning_state),
@@ -264,6 +270,7 @@ pub(crate) fn run_factor_research(
         .chain(multi_timeframe_signal.summary.iter())
         .cloned()
         .collect();
+    report.multi_timeframe_summary.extend(runtime_notes);
     report.agent_prompts.prompts.push(research_diff_prompt(
         symbol,
         &score_deltas,

@@ -1,6 +1,7 @@
 pub mod clean_futures;
 pub mod command_entry;
 pub mod control_matrix_providers;
+pub mod control_matrix_runtime;
 pub mod live_defaults;
 pub mod sop_reports;
 pub mod source_freshness;
@@ -19,7 +20,10 @@ pub use control_matrix_providers::{
     build_control_matrix_provider_summary, ControlMatrixDataRequirement, ControlMatrixProviderKind,
     ControlMatrixProviderStatus, ControlMatrixProviderSummary, IBKR_CAPABILITIES_RELATIVE_PATH,
     IBKR_CONSENT_RELATIVE_PATH, TVREMIX_MCP_API_KEY_ENV, TVREMIX_MCP_DEFAULT_URL,
-    TVREMIX_MCP_URL_ENV, YFINANCE_ENABLED_ENV,
+    TVREMIX_MCP_URL_ENV,
+};
+pub use control_matrix_runtime::{
+    build_control_matrix_runtime_overrides, ControlMatrixRuntimeOverrides,
 };
 pub use live_defaults::{
     analyze_live_inferred_symbols, parse_live_backend, resolve_live_backend_base_url,
