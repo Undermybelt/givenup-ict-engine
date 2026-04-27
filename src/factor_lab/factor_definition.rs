@@ -14,7 +14,7 @@ use crate::indicators::{
     BollingerBands,
 };
 use crate::pda_timeline::{
-    build_pda_timeline, match_all_setups_extended, SetupContext, SetupMatch,
+    build_pda_timeline, match_all_setups_extended, PdaEvent, SetupContext, SetupMatch,
 };
 use crate::smt::{Correlation, Divergence};
 use crate::types::{Candle, Direction, Regime};
@@ -109,6 +109,9 @@ impl FactorUsagePhase {
 #[derive(Debug, Clone, Default)]
 pub struct FactorContext<'a> {
     pub paired_candles: Option<&'a [Candle]>,
+    pub h4_events: Option<&'a [PdaEvent]>,
+    pub d1_events: Option<&'a [PdaEvent]>,
+    pub w1_events: Option<&'a [PdaEvent]>,
     pub auxiliary: Option<&'a AuxiliaryMarketEvidence>,
     pub regime: Option<Regime>,
 }
@@ -799,7 +802,7 @@ impl FactorDefinition {
             FactorCategory::VolatilityMeanReversion => {
                 self.evaluate_volatility_mean_reversion(candles)
             }
-            FactorCategory::StructureIct => self.evaluate_structure_ict(candles),
+            FactorCategory::StructureIct => self.evaluate_structure_ict(candles, context),
             FactorCategory::CrossMarketSmt => self.evaluate_cross_market_smt(candles, context),
             FactorCategory::OptionsHedging => self.evaluate_options_hedging(candles, context),
         };
@@ -900,7 +903,11 @@ impl FactorDefinition {
             .collect()
     }
 
-    fn evaluate_structure_ict(&self, candles: &[Candle]) -> Vec<FactorSignal> {
+    fn evaluate_structure_ict<'a>(
+        &self,
+        candles: &[Candle],
+        context: &FactorContext<'a>,
+    ) -> Vec<FactorSignal> {
         let lookback = self.parameter("lookback", 20.0) as usize;
         let expansion_threshold = self.parameter("expansion_threshold", 1.5);
         let sweep_atr_multiplier = self.parameter("sweep_atr_multiplier", 0.45);
@@ -912,7 +919,6 @@ impl FactorDefinition {
         let post_sweep_displacement_weight = self.parameter("post_sweep_displacement_weight", 0.12);
         let setup_weight = self.parameter("setup_weight", 0.06);
         let setup_recency_bars = self.parameter("setup_recency_bars", 4.0) as usize;
-        let setup_horizon_bars = self.parameter("setup_horizon_bars", 30.0) as usize;
         let atr = pad_indicator(compute_atr(candles, lookback.max(14)), candles.len(), 0.0);
 
         // Canonical-setup matches over the unified PDA timeline.
@@ -925,13 +931,8 @@ impl FactorDefinition {
         // this entry point because `htf_events` / `paired_candles`
         // are not part of this factor's input contract; external
         // callers can supply them via `match_all_setups_extended`.
-        let timeline = build_pda_timeline(candles, &atr);
-        let setup_ctx = SetupContext {
-            primary_candles: Some(candles),
-            ..SetupContext::default()
-        };
         let setup_matches =
-            match_all_setups_extended(&timeline, &setup_ctx, setup_horizon_bars);
+            self.structure_ict_setup_matches_with_context(candles, context);
 
         candles
             .iter()
@@ -1119,15 +1120,27 @@ impl FactorDefinition {
     /// they can render setup tallies without re-running the
     /// detection pipeline.
     pub fn structure_ict_setup_matches(&self, candles: &[Candle]) -> Vec<SetupMatch> {
+        self.structure_ict_setup_matches_with_context(candles, &FactorContext::default())
+    }
+
+    pub fn structure_ict_setup_matches_with_context<'a>(
+        &self,
+        candles: &[Candle],
+        context: &FactorContext<'a>,
+    ) -> Vec<SetupMatch> {
         let lookback = self.parameter("lookback", 20.0) as usize;
         let setup_horizon_bars = self.parameter("setup_horizon_bars", 30.0) as usize;
         let atr = pad_indicator(compute_atr(candles, lookback.max(14)), candles.len(), 0.0);
         let timeline = build_pda_timeline(candles, &atr);
-        let setup_ctx = SetupContext {
-            primary_candles: Some(candles),
-            ..SetupContext::default()
-        };
-        match_all_setups_extended(&timeline, &setup_ctx, setup_horizon_bars)
+        collect_structure_ict_setup_matches(
+            &timeline,
+            candles,
+            context.paired_candles,
+            context.h4_events,
+            context.d1_events,
+            context.w1_events,
+            setup_horizon_bars,
+        )
     }
 
     fn evaluate_cross_market_smt<'a>(
@@ -1382,6 +1395,85 @@ fn pad_indicator(values: Vec<f64>, target_len: usize, fill: f64) -> Vec<f64> {
     padded
 }
 
+fn collect_structure_ict_setup_matches(
+    timeline: &[PdaEvent],
+    primary_candles: &[Candle],
+    paired_candles: Option<&[Candle]>,
+    h4_events: Option<&[PdaEvent]>,
+    d1_events: Option<&[PdaEvent]>,
+    w1_events: Option<&[PdaEvent]>,
+    setup_horizon_bars: usize,
+) -> Vec<SetupMatch> {
+    let mut all_matches = Vec::new();
+
+    let base_context = SetupContext {
+        primary_candles: Some(primary_candles),
+        paired_candles,
+        ..SetupContext::default()
+    };
+    all_matches.extend(match_all_setups_extended(
+        timeline,
+        &base_context,
+        setup_horizon_bars,
+    ));
+
+    if let Some(h4) = h4_events {
+        let context = SetupContext {
+            primary_candles: Some(primary_candles),
+            paired_candles,
+            htf_events: Some(h4),
+            ..SetupContext::default()
+        };
+        all_matches.extend(match_all_setups_extended(
+            timeline,
+            &context,
+            setup_horizon_bars,
+        ));
+    }
+    if let Some(d1) = d1_events {
+        let context = SetupContext {
+            primary_candles: Some(primary_candles),
+            paired_candles,
+            htf_events: Some(d1),
+            ..SetupContext::default()
+        };
+        all_matches.extend(match_all_setups_extended(
+            timeline,
+            &context,
+            setup_horizon_bars,
+        ));
+    }
+    if let (Some(w1), Some(d1)) = (w1_events, d1_events) {
+        let context = SetupContext {
+            primary_candles: Some(primary_candles),
+            paired_candles,
+            htf_events: Some(w1),
+            mtf_events: Some(d1),
+        };
+        all_matches.extend(match_all_setups_extended(
+            timeline,
+            &context,
+            setup_horizon_bars,
+        ));
+    }
+
+    let mut seen = std::collections::BTreeSet::new();
+    let mut deduped = Vec::new();
+    for item in all_matches {
+        let key = format!(
+            "{}::{:?}::{:?}",
+            item.label(),
+            item.direction,
+            item.event_bars
+        );
+        if seen.insert(key) {
+            deduped.push(item);
+        }
+    }
+    deduped.sort_by_key(|item| (item.confirm_bar, item.label().to_string()));
+    deduped
+}
+
 fn pad_bollinger(bands: BollingerBands, target_len: usize) -> BollingerBands {
     BollingerBands {
         upper: pad_indicator(bands.upper, target_len, 0.0),
@@ -1478,6 +1570,7 @@ fn normalize_signed(value: f64, cap: f64) -> f64 {
 mod tests {
     use super::*;
     use chrono::{Duration, TimeZone};
+    use crate::pda_timeline::{CanonicalSetupKind, PdaEventKind};
 
     fn candles(count: usize) -> Vec<Candle> {
         let start = Utc.with_ymd_and_hms(2024, 1, 1, 0, 0, 0).unwrap();
@@ -1547,8 +1640,7 @@ mod tests {
             .collect::<Vec<_>>();
         let context = FactorContext {
             paired_candles: Some(&paired),
-            auxiliary: None,
-            regime: None,
+            ..FactorContext::default()
         };
 
         let series = definition.evaluate(&candles, &context).unwrap();
@@ -1564,8 +1656,7 @@ mod tests {
         let paired = candles(30);
         let context = FactorContext {
             paired_candles: Some(&paired),
-            auxiliary: None,
-            regime: None,
+            ..FactorContext::default()
         };
 
         let series = definition.evaluate(&primary, &context).unwrap();
@@ -1616,8 +1707,7 @@ mod tests {
         let paired = flat_candles(80, 200.0);
         let context = FactorContext {
             paired_candles: Some(&paired),
-            auxiliary: None,
-            regime: None,
+            ..FactorContext::default()
         };
 
         let series = definition.evaluate(&candles, &context).unwrap();
@@ -1670,5 +1760,48 @@ mod tests {
             assert!(m.confirm_bar < candles.len());
             assert!(m.anchor_bar <= m.confirm_bar);
         }
+    }
+
+    #[test]
+    fn test_structure_ict_setup_matches_with_context_activates_cross_tf_and_smt_paths() {
+        let series_candles = candles(80);
+        let paired = candles(80);
+        let base_ts = series_candles[10].timestamp;
+        let h4_events = vec![PdaEvent::new(PdaEventKind::MarketStructureShift, 3, Direction::Bull)
+            .with_timestamp(base_ts)];
+        let d1_events = vec![
+            PdaEvent::new(PdaEventKind::LiquiditySweep, 2, Direction::Bull)
+                .with_timestamp(base_ts - Duration::hours(1)),
+            PdaEvent::new(PdaEventKind::MarketStructureShift, 3, Direction::Bear)
+                .with_timestamp(base_ts + Duration::minutes(30)),
+        ];
+        let w1_events = vec![PdaEvent::new(PdaEventKind::LiquiditySweep, 1, Direction::Bull)
+            .with_timestamp(base_ts - Duration::hours(2))];
+        let ltf_context_events = vec![
+            PdaEvent::new(PdaEventKind::FairValueGap, 12, Direction::Bull).with_timestamp(base_ts),
+            PdaEvent::new(PdaEventKind::MarketStructureShift, 15, Direction::Bear)
+                .with_timestamp(base_ts + Duration::hours(1)),
+            PdaEvent::new(PdaEventKind::FairValueGap, 16, Direction::Bear)
+                .with_timestamp(base_ts + Duration::hours(2)),
+        ];
+        let matches = collect_structure_ict_setup_matches(
+            &ltf_context_events,
+            &series_candles,
+            Some(&paired),
+            Some(&h4_events),
+            Some(&d1_events),
+            Some(&w1_events),
+            30,
+        );
+
+        assert!(matches
+            .iter()
+            .any(|item| item.kind == CanonicalSetupKind::HtfMssLtfFvg));
+        assert!(matches
+            .iter()
+            .any(|item| item.kind == CanonicalSetupKind::DailyHighSweepLtfMssFvg));
+        assert!(matches
+            .iter()
+            .any(|item| item.kind == CanonicalSetupKind::WeeklyOpenSweepDailyMss));
     }
 }

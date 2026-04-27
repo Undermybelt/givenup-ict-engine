@@ -1,14 +1,14 @@
 # PDA Factor Universe & Combinatorial Reduction Plan
 
 Date: 2026-04-27
-Status: partially implemented
+Status: implemented
 Scope: ICT-style PDA factors + control-variable matrix for `auto-quant-factor-research`
 
 Implementation status snapshot:
-- P1 canonical setup matching is present in `src/pda_timeline/*` and consumed by `FactorDefinition::evaluate_structure_ict`
+- P1 canonical setup matching is present in `src/pda_timeline/*` and consumed by `FactorDefinition::evaluate_structure_ict`, including cross-TF / paired-symbol context
 - P2 PB(12) control-matrix runner is implemented in `src/application/backtest/control_matrix.rs` and `factor_research_command`
 - P3 discovery-pool summary is implemented as a PB12 artifact surface, and `auto-quant-promote-canonical-setup` now persists repo-versioned promoted setup specs
-- P4 provider readiness/install prompt surfaces are implemented for IBKR / yfinance / TradingView MCP, and PB12 runtime now consumes yfinance-backed ETF / VIX / options overlays; direct IBKR / TradingView MCP fetchers remain pending
+- P4 provider readiness/install prompt surfaces plus direct IBKR / yfinance / TradingView MCP fetch/runtime consumption are implemented behind the market-data harness
 
 ## 1. Context
 

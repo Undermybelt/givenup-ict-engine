@@ -32,6 +32,7 @@ pub(crate) fn run_factor_research(
         build_multi_timeframe_summary(data, &resolved_multi_timeframe_inputs)?;
     let multi_timeframe_signal =
         build_multi_timeframe_research_signal(&resolved_multi_timeframe_inputs)?;
+    let structure_ict_context = build_structure_ict_context_events(&resolved_multi_timeframe_inputs)?;
     let previous_runs: Vec<ResearchRunRecord> =
         load_state_or_default(state_dir, symbol, RESEARCH_RUNS_FILE)?;
     let mut learning_state = load_learning_state(state_dir, symbol)?;
@@ -61,6 +62,9 @@ pub(crate) fn run_factor_research(
             baseline_learning_state: &baseline_learning_state,
             candles: &candles,
             paired_candles: paired_candles.as_deref(),
+            h4_events: structure_ict_context.h4_events.as_deref(),
+            d1_events: structure_ict_context.d1_events.as_deref(),
+            w1_events: structure_ict_context.w1_events.as_deref(),
             multi_timeframe_summary: &baseline_multi_timeframe_summary,
             evaluate_expansion_preview: spec.evaluate_expansion_preview,
         })
@@ -75,6 +79,9 @@ pub(crate) fn run_factor_research(
         &candles,
         &FactorContext {
             paired_candles: paired_candles.as_deref(),
+            h4_events: structure_ict_context.h4_events.as_deref(),
+            d1_events: structure_ict_context.d1_events.as_deref(),
+            w1_events: structure_ict_context.w1_events.as_deref(),
             auxiliary: auxiliary_override.as_ref(),
             regime: None,
         },

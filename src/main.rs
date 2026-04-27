@@ -182,6 +182,7 @@ use ict_engine::planner::{
     generate_probabilistic_trade_plan, probabilistic_decision_snapshot,
     ProbabilisticDecisionSnapshot, ProbabilisticPlanConfig, ProbabilisticTradePlanInput,
 };
+use ict_engine::pda_timeline::{build_pda_timeline, PdaEvent};
 use probabilistic_backtest_runtime::{finalize_backtest_report, run_probabilistic_backtest};
 use serde_json::Value;
 use update_command::update_command;
@@ -339,6 +340,9 @@ struct BaselineFactorMutationMetricsInput<'a> {
     baseline_learning_state: &'a LearningState,
     candles: &'a [Candle],
     paired_candles: Option<&'a [Candle]>,
+    h4_events: Option<&'a [PdaEvent]>,
+    d1_events: Option<&'a [PdaEvent]>,
+    w1_events: Option<&'a [PdaEvent]>,
     multi_timeframe_summary: &'a [String],
     evaluate_expansion_preview: bool,
 }
@@ -1071,8 +1075,10 @@ enum Commands {
         )]
         emit_mutation_evaluation: bool,
     },
-    /// Resolve provider-capable market-data plan for a main market plus related symbols
-    MarketDataHarnessPlan {
+    /// Agent-operable market-data harness: resolve a provider plan or execute fetch tasks
+    MarketDataHarness {
+        #[arg(long, default_value = "plan", help = "Harness action: plan or fetch")]
+        action: String,
         #[arg(long, help = "Primary market key, e.g. NQ, ES, AAPL, BTCUSDT")]
         market: String,
         #[arg(long, help = "Optional primary candle JSON path to infer interval/range")]
@@ -1080,21 +1086,6 @@ enum Commands {
         #[arg(long, help = "Optional explicit interval override, e.g. 15m, 1h, 1d")]
         interval: Option<String>,
         #[arg(long, help = "Related role to resolve; repeatable")]
-        role: Vec<String>,
-        #[arg(long, help = "Per-role provider preference, role=provider; repeatable")]
-        provider: Vec<String>,
-        #[arg(long, help = "Advanced request JSON path; overrides market/role/provider flags")]
-        request_json: Option<String>,
-    },
-    /// Execute market-data harness fetch tasks and print normalized envelopes
-    MarketDataHarnessFetch {
-        #[arg(long, help = "Primary market key, e.g. NQ, ES, AAPL, BTCUSDT")]
-        market: String,
-        #[arg(long, help = "Optional primary candle JSON path to infer interval/range")]
-        primary_data: Option<String>,
-        #[arg(long, help = "Optional explicit interval override, e.g. 15m, 1h, 1d")]
-        interval: Option<String>,
-        #[arg(long, help = "Related role to fetch; repeatable")]
         role: Vec<String>,
         #[arg(long, help = "Per-role provider preference, role=provider; repeatable")]
         provider: Vec<String>,
@@ -2244,36 +2235,29 @@ fn main() -> Result<()> {
                 }
             },
         )?,
-        Commands::MarketDataHarnessPlan {
+        Commands::MarketDataHarness {
+            action,
             market,
             primary_data,
             interval,
             role,
             provider,
             request_json,
-        } => market_data_harness_plan_command(MarketDataHarnessCommandInput {
-            market: &market,
-            primary_data: primary_data.as_deref(),
-            interval: interval.as_deref(),
-            related_roles: &role,
-            provider_preferences: &provider,
-            request_json: request_json.as_deref(),
-        })?,
-        Commands::MarketDataHarnessFetch {
-            market,
-            primary_data,
-            interval,
-            role,
-            provider,
-            request_json,
-        } => market_data_harness_fetch_command(MarketDataHarnessCommandInput {
-            market: &market,
-            primary_data: primary_data.as_deref(),
-            interval: interval.as_deref(),
-            related_roles: &role,
-            provider_preferences: &provider,
-            request_json: request_json.as_deref(),
-        })?,
+        } => {
+            let input = MarketDataHarnessCommandInput {
+                market: &market,
+                primary_data: primary_data.as_deref(),
+                interval: interval.as_deref(),
+                related_roles: &role,
+                provider_preferences: &provider,
+                request_json: request_json.as_deref(),
+            };
+            match action.trim().to_ascii_lowercase().as_str() {
+                "plan" => market_data_harness_plan_command(input)?,
+                "fetch" => market_data_harness_fetch_command(input)?,
+                other => anyhow::bail!("unsupported market-data-harness action '{}'", other),
+            }
+        }
         Commands::FactorPipelineDebug {
             symbol,
             data,
@@ -4805,6 +4789,65 @@ struct RunFactorResearchInput<'a> {
     state_dir: &'a str,
 }
 
+#[derive(Default)]
+struct StructureIctContextEvents {
+    h4_events: Option<Vec<PdaEvent>>,
+    d1_events: Option<Vec<PdaEvent>>,
+    w1_events: Option<Vec<PdaEvent>>,
+}
+
+fn build_structure_ict_context_events(
+    resolved: &ict_engine::application::multi_timeframe_inputs::ResolvedMultiTimeframeInputs,
+) -> Result<StructureIctContextEvents> {
+    let h4_events = resolved
+        .get("4h")
+        .map(load_candles)
+        .transpose()?
+        .map(|candles| build_pda_timeline(&candles, &compute_atr(&candles, 14)));
+    let d1_candles = resolved.get("1d").map(load_candles).transpose()?;
+    let d1_events = d1_candles
+        .as_ref()
+        .map(|candles| build_pda_timeline(candles, &compute_atr(candles, 14)));
+    let w1_events = d1_candles.as_ref().map(|candles| {
+        let weekly = aggregate_daily_candles_to_weekly(candles);
+        build_pda_timeline(&weekly, &compute_atr(&weekly, 14))
+    });
+    Ok(StructureIctContextEvents {
+        h4_events,
+        d1_events,
+        w1_events,
+    })
+}
+
+fn aggregate_daily_candles_to_weekly(candles: &[Candle]) -> Vec<Candle> {
+    use chrono::Datelike;
+
+    let mut out = Vec::new();
+    let mut iter = candles.iter().cloned();
+    let Some(mut current) = iter.next() else {
+        return out;
+    };
+    let mut current_year = current.timestamp.iso_week().year();
+    let mut current_week = current.timestamp.iso_week().week();
+    for candle in iter {
+        let iso = candle.timestamp.iso_week();
+        if iso.year() != current_year || iso.week() != current_week {
+            out.push(current.clone());
+            current = candle;
+            current_year = iso.year();
+            current_week = iso.week();
+            continue;
+        }
+        current.high = current.high.max(candle.high);
+        current.low = current.low.min(candle.low);
+        current.close = candle.close;
+        current.volume += candle.volume;
+        current.timestamp = candle.timestamp;
+    }
+    out.push(current);
+    out
+}
+
 fn load_factor_mutation_spec(path: &str) -> Result<FactorMutationSpec> {
     let path_ref = std::path::Path::new(path);
     if path_ref
@@ -4904,6 +4947,9 @@ fn baseline_factor_mutation_metrics(
         baseline_learning_state,
         candles,
         paired_candles,
+        h4_events,
+        d1_events,
+        w1_events,
         multi_timeframe_summary,
         evaluate_expansion_preview,
     } = input;
@@ -4914,8 +4960,11 @@ fn baseline_factor_mutation_metrics(
         candles,
         &FactorContext {
             paired_candles,
-            auxiliary: None,
+            h4_events,
+            d1_events,
+            w1_events,
             regime: None,
+            ..FactorContext::default()
         },
         Some(&mut learning_state),
         &FactorBacktestConfig::default(),
@@ -5430,6 +5479,7 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
             paired_candles: build_context.paired_candles,
             auxiliary: build_context.auxiliary,
             regime: Some(regime_probs.dominant()),
+            ..FactorContext::default()
         },
         Some(build_context.learning_state),
     )?;
@@ -14811,7 +14861,7 @@ mod tests {
 
     #[test]
     fn test_cli_backtest_accepts_human_output_alias() {
-        let cli = Cli::try_parse_from([
+        let cli = parse_cli_from([
             "ict-engine",
             "backtest",
             "--symbol",
@@ -14829,7 +14879,7 @@ mod tests {
 
     #[test]
     fn test_cli_factor_research_accepts_output_format() {
-        let cli = Cli::try_parse_from([
+        let cli = parse_cli_from([
             "ict-engine",
             "factor-research",
             "--symbol",
@@ -14850,7 +14900,7 @@ mod tests {
 
     #[test]
     fn test_cli_env_command_parses() {
-        let cli = Cli::try_parse_from(["ict-engine", "env"]).unwrap();
+        let cli = parse_cli_from(["ict-engine", "env"]).unwrap();
         match cli.command {
             Commands::Env => {}
             other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
@@ -14922,7 +14972,7 @@ mod tests {
 
     #[test]
     fn test_cli_analyze_accepts_json_alias_mix_at_parse_level() {
-        let cli = Cli::try_parse_from([
+        let cli = parse_cli_from([
             "ict-engine",
             "analyze",
             "--symbol",
@@ -14940,8 +14990,7 @@ mod tests {
 
     #[test]
     fn test_cli_analyze_default_output_format_is_empty_sentinel() {
-        let cli =
-            Cli::try_parse_from(["ict-engine", "analyze", "--symbol", "DEMO", "--demo"]).unwrap();
+        let cli = parse_cli_from(["ict-engine", "analyze", "--symbol", "DEMO", "--demo"]).unwrap();
         match cli.command {
             Commands::Analyze { output_format, .. } => {
                 assert_eq!(output_format, "");
@@ -14952,7 +15001,7 @@ mod tests {
 
     #[test]
     fn test_cli_workflow_status_accepts_stable_flag() {
-        let cli = Cli::try_parse_from([
+        let cli = parse_cli_from([
             "ict-engine",
             "workflow-status",
             "--symbol",
@@ -14967,5 +15016,17 @@ mod tests {
             }
             other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
         }
+    }
+
+    fn parse_cli_from<const N: usize>(
+        args: [&str; N],
+    ) -> Result<Cli, clap::Error> {
+        let owned = args.into_iter().map(str::to_string).collect::<Vec<_>>();
+        std::thread::Builder::new()
+            .stack_size(16 * 1024 * 1024)
+            .spawn(move || Cli::try_parse_from(owned))
+            .expect("spawn parse thread")
+            .join()
+            .expect("join parse thread")
     }
 }
