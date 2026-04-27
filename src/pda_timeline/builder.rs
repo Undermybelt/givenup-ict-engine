@@ -230,6 +230,15 @@ pub fn build_pda_timeline(candles: &[Candle], atr: &[f64]) -> Vec<PdaEvent> {
             .cmp(&b.bar_index)
             .then_with(|| event_kind_order(a.kind).cmp(&event_kind_order(b.kind)))
     });
+
+    // Populate wall-clock timestamps from the candle slice so cross-
+    // timeframe and session-aware setup matchers can compare event
+    // times across timelines that don't share a bar_index basis.
+    for ev in events.iter_mut() {
+        if let Some(candle) = candles.get(ev.bar_index) {
+            ev.timestamp = Some(candle.timestamp);
+        }
+    }
     events
 }
 

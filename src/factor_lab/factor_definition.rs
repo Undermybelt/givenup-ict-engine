@@ -13,7 +13,9 @@ use crate::indicators::{
     atr_percent, compute_adx, compute_atr, compute_bollinger, compute_ema, compute_rsi,
     BollingerBands,
 };
-use crate::pda_timeline::{build_pda_timeline, match_all_setups, SetupMatch};
+use crate::pda_timeline::{
+    build_pda_timeline, match_all_setups_extended, SetupContext, SetupMatch,
+};
 use crate::smt::{Correlation, Divergence};
 use crate::types::{Candle, Direction, Regime};
 
@@ -916,8 +918,20 @@ impl FactorDefinition {
         // Canonical-setup matches over the unified PDA timeline.
         // Built once for the whole series; per-bar lookups filter by
         // `confirm_bar <= index` (forward-only) and recency window.
+        // Using the *extended* dispatcher activates the 5 session-
+        // aware setups (FVG inside silver-bullet windows, etc.) and
+        // the 3 OTE confluence setups, since `primary_candles` is
+        // available here. Cross-TF and SMT setups stay dormant from
+        // this entry point because `htf_events` / `paired_candles`
+        // are not part of this factor's input contract; external
+        // callers can supply them via `match_all_setups_extended`.
         let timeline = build_pda_timeline(candles, &atr);
-        let setup_matches = match_all_setups(&timeline, setup_horizon_bars);
+        let setup_ctx = SetupContext {
+            primary_candles: Some(candles),
+            ..SetupContext::default()
+        };
+        let setup_matches =
+            match_all_setups_extended(&timeline, &setup_ctx, setup_horizon_bars);
 
         candles
             .iter()
@@ -1109,7 +1123,11 @@ impl FactorDefinition {
         let setup_horizon_bars = self.parameter("setup_horizon_bars", 30.0) as usize;
         let atr = pad_indicator(compute_atr(candles, lookback.max(14)), candles.len(), 0.0);
         let timeline = build_pda_timeline(candles, &atr);
-        match_all_setups(&timeline, setup_horizon_bars)
+        let setup_ctx = SetupContext {
+            primary_candles: Some(candles),
+            ..SetupContext::default()
+        };
+        match_all_setups_extended(&timeline, &setup_ctx, setup_horizon_bars)
     }
 
     fn evaluate_cross_market_smt<'a>(

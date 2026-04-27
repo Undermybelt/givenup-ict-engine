@@ -14,8 +14,10 @@
 //! only consumers can filter on `event.bar_index <= current_bar`
 //! without touching detector internals.
 
-use crate::types::Direction;
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+
+use crate::types::Direction;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum PdaEventKind {
@@ -84,6 +86,13 @@ pub struct PdaEvent {
     /// price anchor (currently never — every emitted event provides
     /// a level).
     pub level: Option<f64>,
+    /// Wall-clock timestamp of the emission bar. `None` for events
+    /// constructed by hand in unit tests; the production builder
+    /// (`super::builder::build_pda_timeline`) always populates this
+    /// from `candles[bar_index].timestamp`. Cross-timeframe and
+    /// session-aware setup matchers require this field.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub timestamp: Option<DateTime<Utc>>,
 }
 
 impl PdaEvent {
@@ -93,11 +102,17 @@ impl PdaEvent {
             bar_index,
             direction,
             level: None,
+            timestamp: None,
         }
     }
 
     pub fn with_level(mut self, level: f64) -> Self {
         self.level = Some(level);
+        self
+    }
+
+    pub fn with_timestamp(mut self, timestamp: DateTime<Utc>) -> Self {
+        self.timestamp = Some(timestamp);
         self
     }
 }

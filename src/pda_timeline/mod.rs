@@ -18,6 +18,8 @@
 pub mod builder;
 pub mod event;
 pub mod matrices;
+pub mod ote;
+pub mod sessions;
 pub mod setups;
 
 pub use builder::{
@@ -30,7 +32,12 @@ pub use event::{PdaEvent, PdaEventKind, ALL_EVENT_KINDS};
 pub use matrices::{
     compute_cooccurrence_matrix, compute_precedence_matrix, EventMatrix, MatrixKind,
 };
+pub use ote::{most_recent_ote_zone, OteZone, OTE_HIGH, OTE_LOW};
+pub use sessions::{classify_session_zones, is_in_zone, SessionKillZone};
 pub use setups::{
-    match_all_setups, match_all_setups_default, CanonicalSetupKind, SetupMatch,
-    ALL_CANONICAL_SETUPS, DEFAULT_KEY_LEVEL_TOLERANCE_BPS, DEFAULT_SETUP_HORIZON_BARS,
+    match_all_setups, match_all_setups_default, match_all_setups_extended, CanonicalSetupKind,
+    SetupContext, SetupMatch, ALL_CANONICAL_SETUPS, DEFAULT_CROSS_TF_MAX_LAG_HOURS,
+    DEFAULT_KEY_LEVEL_TOLERANCE_BPS, DEFAULT_OTE_SWING_STRENGTH, DEFAULT_SESSION_MAX_LAG_HOURS,
+    DEFAULT_SETUP_HORIZON_BARS, DEFAULT_SMT_CONFIRM_WINDOW_BARS, DEFAULT_SMT_LOOKBACK_BARS,
+    DEFAULT_WEEKLY_MAX_LAG_HOURS,
 };
