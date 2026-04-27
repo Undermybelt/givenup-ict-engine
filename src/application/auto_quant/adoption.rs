@@ -204,7 +204,9 @@ pub fn persist_auto_quant_adoption_decision(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::application::auto_quant::handoff::build_factor_research_handoff_payload;
+    use crate::application::auto_quant::handoff::{
+        build_factor_research_handoff_payload, BuildFactorResearchHandoffPayloadInput,
+    };
     use crate::application::auto_quant::persistence::persist_handoff_payload;
     use crate::application::auto_quant::types::{
         AutoQuantAdoptionDecisionArtifact, AutoQuantDependencyStatus,
@@ -214,16 +216,16 @@ mod tests {
     #[test]
     fn review_marks_prepare_required_when_data_is_missing() {
         let temp = tempfile::tempdir().unwrap();
-        let payload = build_factor_research_handoff_payload(
-            "NQ",
-            "demo.json",
-            "expansion_manipulation",
-            None,
-            None,
-            None,
-            temp.path().to_str().unwrap(),
-            healthy_dependency_status(),
-        );
+        let payload = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+            symbol: "NQ",
+            data: "demo.json",
+            objective: "expansion_manipulation",
+            paired_data: None,
+            mutation_spec_path: None,
+            strategy_material_root: None,
+            state_dir: temp.path().to_str().unwrap(),
+            dependency_status: healthy_dependency_status(),
+        });
         persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
         let review =
             build_auto_quant_adoption_review("NQ", temp.path().to_str().unwrap(), None).unwrap();
@@ -235,16 +237,16 @@ mod tests {
     fn review_uses_current_data_readiness_after_handoff_is_prepared() {
         let temp = tempfile::tempdir().unwrap();
         let managed = temp.path().join("auto-quant");
-        let payload = build_factor_research_handoff_payload(
-            "NQ",
-            "demo.json",
-            "expansion_manipulation",
-            None,
-            None,
-            None,
-            temp.path().to_str().unwrap(),
-            healthy_dependency_status_for(managed.to_str().unwrap()),
-        );
+        let payload = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+            symbol: "NQ",
+            data: "demo.json",
+            objective: "expansion_manipulation",
+            paired_data: None,
+            mutation_spec_path: None,
+            strategy_material_root: None,
+            state_dir: temp.path().to_str().unwrap(),
+            dependency_status: healthy_dependency_status_for(managed.to_str().unwrap()),
+        });
         assert!(!payload.data_ready);
         persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
 
@@ -279,16 +281,16 @@ mod tests {
     #[test]
     fn review_accepts_legacy_handoff_without_readiness_field() {
         let temp = tempfile::tempdir().unwrap();
-        let payload = build_factor_research_handoff_payload(
-            "NQ",
-            "demo.json",
-            "expansion_manipulation",
-            None,
-            None,
-            None,
-            temp.path().to_str().unwrap(),
-            healthy_dependency_status(),
-        );
+        let payload = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+            symbol: "NQ",
+            data: "demo.json",
+            objective: "expansion_manipulation",
+            paired_data: None,
+            mutation_spec_path: None,
+            strategy_material_root: None,
+            state_dir: temp.path().to_str().unwrap(),
+            dependency_status: healthy_dependency_status(),
+        });
         let mut value = serde_json::to_value(&payload).unwrap();
         value.as_object_mut().unwrap().remove("readiness");
         let path = persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
@@ -302,16 +304,16 @@ mod tests {
     #[test]
     fn persist_adoption_decision_writes_decision_artifact_and_ledger_entry() {
         let temp = tempfile::tempdir().unwrap();
-        let payload = build_factor_research_handoff_payload(
-            "NQ",
-            "demo.json",
-            "expansion_manipulation",
-            None,
-            None,
-            None,
-            temp.path().to_str().unwrap(),
-            healthy_dependency_status(),
-        );
+        let payload = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+            symbol: "NQ",
+            data: "demo.json",
+            objective: "expansion_manipulation",
+            paired_data: None,
+            mutation_spec_path: None,
+            strategy_material_root: None,
+            state_dir: temp.path().to_str().unwrap(),
+            dependency_status: healthy_dependency_status(),
+        });
         persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
         let artifact: AutoQuantAdoptionDecisionArtifact = persist_auto_quant_adoption_decision(
             "NQ",

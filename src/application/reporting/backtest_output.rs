@@ -2,7 +2,7 @@ use anyhow::Result;
 use serde::Serialize;
 use serde_json::Value;
 
-use crate::application::backtest::BacktestCompareReport;
+use crate::application::backtest::{BacktestCompareReport, ControlMatrixResearchArtifact};
 use crate::application::output_foundation::{
     print_redacted_json, redact_local_paths_in_human_text,
 };
@@ -180,10 +180,7 @@ pub fn render_factor_research_human_output(
         .get("recommended_next_command")
         .and_then(Value::as_str)
         .unwrap_or_default();
-    lines.push(format!(
-        "- Next: {}",
-        humanize_next_step_line(next_command)
-    ));
+    lines.push(format!("- Next: {}", humanize_next_step_line(next_command)));
 
     if let Some(compare_summary) = human_research_compare_summary(compare) {
         lines.push(String::new());
@@ -274,6 +271,7 @@ pub fn build_factor_research_output_payload(
     reflection_bundle: Value,
     ensemble_surface: Option<Value>,
     factor_lifecycle: Value,
+    control_matrix_plan: Option<Value>,
 ) -> Value {
     let compact_compare_report = build_compact_compare_report(compare.as_ref());
     let human_research_compare_summary = human_research_compare_summary(compare.as_ref());
@@ -286,7 +284,107 @@ pub fn build_factor_research_output_payload(
         "reflection_bundle": reflection_bundle,
         "ensemble": ensemble_surface,
         "factor_lifecycle": factor_lifecycle,
+        "control_matrix_plan": control_matrix_plan,
         "human_output": human_output,
+    })
+}
+
+fn format_control_matrix_run_summary(
+    run: &crate::application::backtest::ControlMatrixResearchRunSummary,
+) -> String {
+    let best_factor = run.best_factor.as_deref().unwrap_or("n/a");
+    let toggles = if run.enabled_toggles.is_empty() {
+        "none".to_string()
+    } else {
+        run.enabled_toggles.join(",")
+    };
+    format!(
+        "{} return={:+.2}% best_factor={} toggles={}",
+        run.run_label,
+        run.aggregate_return * 100.0,
+        best_factor,
+        toggles
+    )
+}
+
+pub fn render_control_matrix_research_human_output(
+    artifact: &ControlMatrixResearchArtifact,
+) -> String {
+    let mut lines = vec![
+        "PB12 control-matrix research summary".to_string(),
+        format!("- Objective: {}", artifact.research_objective),
+        format!(
+            "- Sweep: {} runs={} kind={}",
+            artifact.sweep_id,
+            artifact.run_count,
+            artifact.control_matrix_plan.kind.as_str()
+        ),
+    ];
+    if let Some(baseline) = artifact.baseline_run.as_ref() {
+        lines.push(format!(
+            "- Baseline: {}",
+            format_control_matrix_run_summary(baseline)
+        ));
+    }
+    if !artifact.top_runs.is_empty() {
+        lines.push(format!(
+            "- Top runs: {}",
+            artifact
+                .top_runs
+                .iter()
+                .map(format_control_matrix_run_summary)
+                .collect::<Vec<_>>()
+                .join("; ")
+        ));
+    }
+    if let Some(discovery_baseline) = artifact.discovery_summary.baseline.as_ref() {
+        lines.push(format!(
+            "- Discovery baseline: source={} win_rate={:.2}% strategies={} trades={}",
+            discovery_baseline.source,
+            discovery_baseline.weighted_win_rate * 100.0,
+            discovery_baseline.strategy_count,
+            discovery_baseline.total_trade_count
+        ));
+    } else {
+        lines.push(format!(
+            "- Discovery baseline: unavailable status={}",
+            artifact.discovery_summary.status
+        ));
+    }
+    if !artifact.discovery_summary.top_candidates.is_empty() {
+        lines.push(format!(
+            "- Discovery top candidates: {}",
+            artifact
+                .discovery_summary
+                .top_candidates
+                .iter()
+                .map(|candidate| {
+                    format!(
+                        "{} samples={} win_rate={:.2}% p>{:.0}%={:.3}",
+                        candidate.sequence_label,
+                        candidate.sample_count,
+                        candidate.posterior_mean_win_rate * 100.0,
+                        artifact.discovery_summary.threshold_probability * 100.0,
+                        candidate.posterior_prob_beats_baseline.unwrap_or_default()
+                    )
+                })
+                .collect::<Vec<_>>()
+                .join("; ")
+        ));
+    }
+    redact_local_paths_in_human_text(&lines.join("\n"))
+}
+
+pub fn build_control_matrix_research_output_payload(
+    artifact: &ControlMatrixResearchArtifact,
+) -> Value {
+    serde_json::json!({
+        "control_matrix_research_run": artifact,
+        "control_matrix_plan": artifact.control_matrix_plan,
+        "baseline_run": artifact.baseline_run,
+        "top_runs": artifact.top_runs,
+        "discovery_summary": artifact.discovery_summary,
+        "human_output": render_control_matrix_research_human_output(artifact),
     })
 }
 
@@ -310,8 +408,14 @@ pub fn emit_structured_output_payload(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::application::backtest::{
+        build_control_matrix_research_artifact, ControlMatrixDiscoveryBaseline,
+        ControlMatrixDiscoveryCandidate, ControlMatrixDiscoverySummary, ControlMatrixPlan,
+        ControlMatrixResearchArtifactInput, ControlMatrixResearchRunSummary,
+    };
     use crate::factor_lab::research::ResearchReport;
     use crate::state::PersistedFactorRanking;
+    use chrono::Utc;
 
     #[test]
     fn factor_research_human_output_is_short_text_not_json_dump() {
@@ -362,5 +466,94 @@ mod tests {
         ));
         assert!(rendered.contains("/tmp/demo.json"));
         assert!(!rendered.contains("<local-path>"));
+    }
+
+    #[test]
+    fn test_factor_research_output_payload_includes_pb12_sweep_summary() {
+        let artifact = build_control_matrix_research_artifact(ControlMatrixResearchArtifactInput {
+            symbol: "NQ",
+            sweep_id: "pb12:NQ:test",
+            research_objective: "generic",
+            generated_at: Utc::now(),
+            control_matrix_plan: ControlMatrixPlan::pb12(),
+            discovery_summary: ControlMatrixDiscoverySummary {
+                status: "candidates_above_threshold".to_string(),
+                threshold_probability: 0.95,
+                hold_bars: 6,
+                candidate_horizon_bars: 30,
+                evaluated_candidate_count: 4,
+                promoted_candidate_count: 1,
+                baseline: Some(ControlMatrixDiscoveryBaseline {
+                    source: "strategy_library_weighted_win_rate".to_string(),
+                    weighted_win_rate: 0.52,
+                    strategy_count: 2,
+                    total_trade_count: 100,
+                }),
+                top_candidates: vec![ControlMatrixDiscoveryCandidate {
+                    sequence_label: "liquidity_sweep -> market_structure_shift".to_string(),
+                    direction: crate::types::Direction::Bull,
+                    sample_count: 5,
+                    win_count: 5,
+                    empirical_win_rate: 1.0,
+                    posterior_mean_win_rate: 0.8571,
+                    posterior_prob_beats_baseline: Some(0.980),
+                    average_signed_return: 0.009,
+                    first_confirm_bar: 10,
+                    latest_confirm_bar: 34,
+                }],
+            },
+            runs: vec![
+                ControlMatrixResearchRunSummary {
+                    run_number: 1,
+                    run_label: "pb12_run_01".to_string(),
+                    baseline: false,
+                    enabled_toggles: vec!["use_greeks".to_string(), "use_oi".to_string()],
+                    disabled_toggles: vec!["use_iv".to_string()],
+                    best_factor: Some("trend".to_string()),
+                    aggregate_return: 0.0175,
+                    feedback_records_generated: 12,
+                    feedback_records_applied: 12,
+                    dataset_comparable: true,
+                    recommended_next_command: "ict-engine factor-research".to_string(),
+                },
+                ControlMatrixResearchRunSummary {
+                    run_number: 12,
+                    run_label: "pb12_run_12_baseline".to_string(),
+                    baseline: true,
+                    enabled_toggles: Vec::new(),
+                    disabled_toggles: vec!["use_greeks".to_string()],
+                    best_factor: Some("baseline".to_string()),
+                    aggregate_return: 0.0045,
+                    feedback_records_generated: 6,
+                    feedback_records_applied: 6,
+                    dataset_comparable: true,
+                    recommended_next_command: "ict-engine factor-research".to_string(),
+                },
+            ],
+        });
+
+        let payload = build_control_matrix_research_output_payload(&artifact);
+
+        assert_eq!(
+            payload["control_matrix_plan"]["kind"],
+            serde_json::json!("pb12")
+        );
+        assert_eq!(
+            payload["control_matrix_research_run"]["run_count"],
+            serde_json::json!(2)
+        );
+        assert_eq!(
+            payload["baseline_run"]["run_label"],
+            serde_json::json!("pb12_run_12_baseline")
+        );
+        assert_eq!(
+            payload["discovery_summary"]["status"],
+            serde_json::json!("candidates_above_threshold")
+        );
+        let human_output = payload["human_output"].as_str().unwrap_or_default();
+        assert!(human_output.contains("PB12 control-matrix research summary"));
+        assert!(human_output.contains("pb12_run_01"));
+        assert!(human_output.contains("pb12_run_12_baseline"));
+        assert!(human_output.contains("Discovery top candidates"));
     }
 }

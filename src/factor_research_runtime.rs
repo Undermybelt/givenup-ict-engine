@@ -15,6 +15,7 @@ pub(crate) fn run_factor_research(
         data_1d,
         paired_data,
         mutation_spec,
+        control_matrix_plan,
         state_dir,
     } = input;
     let candles = load_candles(data)?;
@@ -610,6 +611,7 @@ pub(crate) fn run_factor_research(
             .agent_context_bundle_minimal
             .pda_cluster_label
             .clone(),
+        control_matrix_plan,
     };
     let research_runs = append_research_run(state_dir, symbol, research_run_record.clone())?;
     let market_family = market_category_for_symbol(symbol);

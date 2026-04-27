@@ -70,6 +70,30 @@ pub struct AutoQuantFactorAutoresearchCommandInput<'a> {
     pub state_dir: &'a str,
 }
 
+pub struct BuildFactorResearchHandoffPayloadInput<'a> {
+    pub symbol: &'a str,
+    pub data: &'a str,
+    pub objective: &'a str,
+    pub paired_data: Option<&'a str>,
+    pub mutation_spec_path: Option<&'a str>,
+    pub strategy_material_root: Option<&'a str>,
+    pub state_dir: &'a str,
+    pub dependency_status: AutoQuantDependencyStatus,
+}
+
+pub struct BuildFactorAutoresearchHandoffPayloadInput<'a> {
+    pub symbol: &'a str,
+    pub data: &'a str,
+    pub objective: &'a str,
+    pub paired_data: Option<&'a str>,
+    pub mutation_spec_path: Option<&'a str>,
+    pub strategy_material_root: Option<&'a str>,
+    pub iterations: usize,
+    pub session_id: Option<&'a str>,
+    pub state_dir: &'a str,
+    pub dependency_status: AutoQuantDependencyStatus,
+}
+
 pub fn auto_quant_workspace_config(managed_dir: &str) -> AutoQuantWorkspaceConfig {
     let repo_root = PathBuf::from(managed_dir);
     AutoQuantWorkspaceConfig {
@@ -298,15 +322,18 @@ fn build_auto_quant_agent_prompt(
 }
 
 pub fn build_factor_research_handoff_payload(
-    symbol: &str,
-    data: &str,
-    objective: &str,
-    paired_data: Option<&str>,
-    mutation_spec_path: Option<&str>,
-    strategy_material_root: Option<&str>,
-    state_dir: &str,
-    dependency_status: AutoQuantDependencyStatus,
+    input: BuildFactorResearchHandoffPayloadInput<'_>,
 ) -> AutoQuantResearchHandoffPayload {
+    let BuildFactorResearchHandoffPayloadInput {
+        symbol,
+        data,
+        objective,
+        paired_data,
+        mutation_spec_path,
+        strategy_material_root,
+        state_dir,
+        dependency_status,
+    } = input;
     let workspace = auto_quant_workspace_config(&dependency_status.managed_dir);
     let data_ready = auto_quant_data_ready(&workspace);
     let active_strategy_count = auto_quant_active_strategy_count(&workspace);
@@ -401,19 +428,21 @@ pub fn build_factor_research_handoff_payload(
     payload
 }
 
-#[allow(clippy::too_many_arguments)]
 pub fn build_factor_autoresearch_handoff_payload(
-    symbol: &str,
-    data: &str,
-    objective: &str,
-    paired_data: Option<&str>,
-    mutation_spec_path: Option<&str>,
-    strategy_material_root: Option<&str>,
-    iterations: usize,
-    session_id: Option<&str>,
-    state_dir: &str,
-    dependency_status: AutoQuantDependencyStatus,
+    input: BuildFactorAutoresearchHandoffPayloadInput<'_>,
 ) -> AutoQuantResearchHandoffPayload {
+    let BuildFactorAutoresearchHandoffPayloadInput {
+        symbol,
+        data,
+        objective,
+        paired_data,
+        mutation_spec_path,
+        strategy_material_root,
+        iterations,
+        session_id,
+        state_dir,
+        dependency_status,
+    } = input;
     let workspace = auto_quant_workspace_config(&dependency_status.managed_dir);
     let data_ready = auto_quant_data_ready(&workspace);
     let active_strategy_count = auto_quant_active_strategy_count(&workspace);
@@ -566,16 +595,16 @@ mod tests {
         )
         .unwrap();
 
-        let payload = build_factor_research_handoff_payload(
-            "NQ",
-            "demo.json",
-            "expansion_manipulation",
-            None,
-            None,
-            Some(material_root.to_str().unwrap()),
-            temp.path().to_str().unwrap(),
-            healthy_dependency_status_for(managed_dir.to_str().unwrap()),
-        );
+        let payload = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+            symbol: "NQ",
+            data: "demo.json",
+            objective: "expansion_manipulation",
+            paired_data: None,
+            mutation_spec_path: None,
+            strategy_material_root: Some(material_root.to_str().unwrap()),
+            state_dir: temp.path().to_str().unwrap(),
+            dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+        });
 
         assert_eq!(payload.external_strategy_materials.len(), 1);
         assert_eq!(
@@ -596,5 +625,48 @@ mod tests {
                 && command.contains("'")
                 && command.contains("Tomac Material Library/trend_runner.py")
         }));
+    }
+
+    #[test]
+    fn autoresearch_handoff_preserves_iterations_and_session_id() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed_dir = temp.path().join("managed-auto-quant");
+        let strategies_dir = managed_dir.join("user_data/strategies");
+        let data_dir = managed_dir.join("user_data/data");
+        std::fs::create_dir_all(&strategies_dir).unwrap();
+        std::fs::create_dir_all(&data_dir).unwrap();
+        std::fs::write(managed_dir.join("program.md"), "program").unwrap();
+        std::fs::write(managed_dir.join("prepare.py"), "print('prepare')").unwrap();
+        std::fs::write(managed_dir.join("run.py"), "print('run')").unwrap();
+        std::fs::write(
+            strategies_dir.join("_template.py.example"),
+            "class Template: pass",
+        )
+        .unwrap();
+        for index in 0..15 {
+            std::fs::write(data_dir.join(format!("prepared-{index}.feather")), "ready").unwrap();
+        }
+
+        let payload =
+            build_factor_autoresearch_handoff_payload(BuildFactorAutoresearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: "demo.json",
+                objective: "expansion_manipulation",
+                paired_data: None,
+                mutation_spec_path: Some("mutation.json"),
+                strategy_material_root: None,
+                iterations: 3,
+                session_id: Some("session-123"),
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+            });
+
+        assert_eq!(payload.handoff_kind, "factor_autoresearch");
+        assert_eq!(payload.iterations, Some(3));
+        assert_eq!(payload.session_id.as_deref(), Some("session-123"));
+        assert_eq!(payload.mutation_spec_path.as_deref(), Some("mutation.json"));
+        assert!(payload
+            .agent_prompt
+            .contains("Keep, discard, fork, or kill only from measured results"));
     }
 }

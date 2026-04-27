@@ -62,9 +62,8 @@ use ict_engine::application::{
         auto_quant_factor_autoresearch_command, auto_quant_factor_research_command,
         auto_quant_ingest_real_trades_command, auto_quant_prior_init_command,
         auto_quant_results_import_command, auto_quant_seed_evidence_command,
-        auto_quant_status_command, auto_quant_update_command,
-        AutoQuantConsumeLiveSignalsInput, AutoQuantIngestRealTradesInput,
-        AutoQuantPriorInitCommandInput,
+        auto_quant_status_command, auto_quant_update_command, AutoQuantConsumeLiveSignalsInput,
+        AutoQuantIngestRealTradesInput, AutoQuantPriorInitCommandInput,
     },
     auto_quant::{AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput},
     backtest::{
@@ -142,12 +141,10 @@ use ict_engine::backtest::engine::{AmbiguousBarPolicy, ExecutionRealismConfig};
 use ict_engine::backtest::BacktestEngine;
 use ict_engine::bayesian::{cascade_bear, cascade_bull, CascadeConfig};
 use ict_engine::bbn::learning::cpt_updater::{CPTUpdater, TradeOutcome};
-use ict_engine::bbn::trading::{
-    update::{
-        entry_quality_bias_from_signal, infer_entry_quality, infer_entry_quality_with_bias,
-        infer_trade_outcome, infer_trade_outcome_with_entry_quality_bias,
-        trade_evidence_from_labels, trade_evidence_from_pre_bayes_filter,
-    },
+use ict_engine::bbn::trading::update::{
+    entry_quality_bias_from_signal, infer_entry_quality, infer_entry_quality_with_bias,
+    infer_trade_outcome, infer_trade_outcome_with_entry_quality_bias, trade_evidence_from_labels,
+    trade_evidence_from_pre_bayes_filter,
 };
 use ict_engine::config::{
     build_frame_features, build_pre_bayes_evidence_filter, compute_hash, env_f64,
@@ -198,6 +195,7 @@ use ict_engine::application::backtest::recommended_command;
 use ict_engine::application::factor_lifecycle::forced_cluster_jump_template;
 #[cfg(test)]
 use ict_engine::application::output_foundation::{redact_local_paths, redact_local_paths_in_value};
+use ict_engine::bbn::trading::persistence::load_or_init_trading_network;
 #[cfg(test)]
 use ict_engine::state::FeedbackFactorUsage;
 #[cfg(test)]
@@ -230,7 +228,6 @@ use ict_engine::state::{
     BACKTEST_RUNS_FILE, BBN_STATE_FILE, ENSEMBLE_VOTE_FILE, EXECUTION_CANDIDATE_FILE,
     PENDING_UPDATE_ARTIFACT_FILE, RESEARCH_RUNS_FILE, TRAIN_RUNS_FILE, UPDATE_RUNS_FILE,
 };
-use ict_engine::bbn::trading::persistence::load_or_init_trading_network;
 #[cfg(test)]
 use ict_engine::types::Symbol;
 use ict_engine::types::{
@@ -650,6 +647,12 @@ enum Commands {
         paired_data: Option<String>,
         #[arg(long, help = "Optional mutation spec JSON path")]
         mutation_spec: Option<String>,
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Attach the canonical PB(12) control-matrix plan to native output without changing the executed research run"
+        )]
+        control_matrix_pb12: bool,
         #[arg(
             long,
             help = "Optional read-only external strategy material root (for example a Tomac py/csv workspace) used only to enrich auto-quant handoff seed guidance"
@@ -1592,6 +1595,7 @@ fn main() -> Result<()> {
                         data_1d: None,
                         paired_data: paired_data.as_deref(),
                         mutation_spec: None,
+                        control_matrix_plan: None,
                         state_dir: &state_dir,
                     })
                     .map(|_| ())
@@ -1697,6 +1701,7 @@ fn main() -> Result<()> {
             data_1d,
             paired_data,
             mutation_spec,
+            control_matrix_pb12,
             strategy_material_root,
             emit_mutation_evaluation,
             ensemble,
@@ -1725,6 +1730,7 @@ fn main() -> Result<()> {
                         data: &data,
                         objective: &objective,
                         mutation_spec_path: mutation_spec.as_deref(),
+                        control_matrix_pb12,
                         emit_mutation_evaluation,
                         ensemble,
                         state_dir: &state_dir,
@@ -1741,7 +1747,7 @@ fn main() -> Result<()> {
                         },
                     },
                     load_factor_mutation_spec,
-                    |objective_mode, mutation_spec| {
+                    |objective_mode, mutation_spec, control_matrix_plan, run_state_dir| {
                         run_factor_research(RunFactorResearchInput {
                             symbol: &symbol,
                             data: &data,
@@ -1753,8 +1759,9 @@ fn main() -> Result<()> {
                             data_4h: data_4h.as_deref(),
                             data_1d: data_1d.as_deref(),
                             paired_data: paired_data.as_deref(),
-                            mutation_spec,
-                            state_dir: &state_dir,
+                            mutation_spec: mutation_spec.as_ref(),
+                            control_matrix_plan,
+                            state_dir: run_state_dir,
                         })
                     },
                 )?;
@@ -1845,6 +1852,7 @@ fn main() -> Result<()> {
                             data_1d: data_1d.as_deref(),
                             paired_data: paired_data.as_deref(),
                             mutation_spec: Some(mutation_spec),
+                            control_matrix_plan: None,
                             state_dir: &state_dir,
                         })
                     },
@@ -1966,12 +1974,7 @@ fn main() -> Result<()> {
             log,
         } => {
             ensure_state_dir_ready(&state_dir)?;
-            auto_quant_results_import_command(
-                &symbol,
-                &state_dir,
-                &library,
-                log.as_deref(),
-            )?
+            auto_quant_results_import_command(&symbol, &state_dir, &library, log.as_deref())?
         }
         Commands::AutoQuantPriorInit {
             symbol,
@@ -2513,6 +2516,7 @@ fn run_futures_sop(root: &str, output_dir: &str, interval: &str) -> Result<Futur
                 data_1d: input.multi_timeframe_inputs.get("1d"),
                 paired_data: None,
                 mutation_spec: None,
+                control_matrix_plan: None,
                 state_dir: &input.state_dir,
             })?;
             let candles = load_candles(&input.output_path)?;
@@ -4670,6 +4674,7 @@ struct RunFactorResearchInput<'a> {
     data_1d: Option<&'a str>,
     paired_data: Option<&'a str>,
     mutation_spec: Option<&'a FactorMutationSpec>,
+    control_matrix_plan: Option<ict_engine::application::backtest::ControlMatrixPlan>,
     state_dir: &'a str,
 }
 
@@ -7829,6 +7834,7 @@ mod tests {
             data_1d: None,
             paired_data: None,
             mutation_spec: None,
+            control_matrix_plan: None,
             state_dir: temp.path().to_str().unwrap(),
         })
         .unwrap();
@@ -8458,20 +8464,46 @@ mod tests {
             data_1d: None,
             paired_data: None,
             mutation_spec: None,
+            control_matrix_plan: None,
             state_dir: temp.path().to_str().unwrap(),
         })
         .unwrap();
         let learning_state = load_learning_state(temp.path(), "NQ").unwrap();
         let runs: Vec<ResearchRunRecord> =
             load_state(temp.path(), "NQ", ict_engine::state::RESEARCH_RUNS_FILE).unwrap();
+        let report_with_control_matrix = run_factor_research(RunFactorResearchInput {
+            symbol: "NQ",
+            data: data.to_str().unwrap(),
+            objective: ResearchObjectiveMode::Generic,
+            data_1m: None,
+            data_5m: None,
+            data_15m: None,
+            data_1h: None,
+            data_4h: None,
+            data_1d: None,
+            paired_data: None,
+            mutation_spec: None,
+            control_matrix_plan: Some(ict_engine::application::backtest::ControlMatrixPlan::pb12()),
+            state_dir: temp.path().to_str().unwrap(),
+        })
+        .unwrap();
+        let runs_with_control_matrix: Vec<ResearchRunRecord> =
+            load_state(temp.path(), "NQ", ict_engine::state::RESEARCH_RUNS_FILE).unwrap();
         let snapshot: WorkflowSnapshot =
             load_state(temp.path(), "NQ", ict_engine::state::WORKFLOW_SNAPSHOT_FILE).unwrap();
 
         assert!(!report.backtest.scorecards.is_empty());
+        assert!(!report_with_control_matrix.backtest.scorecards.is_empty());
         assert!(!learning_state.factor_rankings.is_empty());
         assert_eq!(report.research_objective, "generic");
         assert_eq!(runs.len(), 1);
         assert_eq!(runs[0].research_objective, "generic");
+        assert_eq!(runs[0].control_matrix_plan, None);
+        assert_eq!(runs_with_control_matrix.len(), 2);
+        assert_eq!(
+            runs_with_control_matrix[1].control_matrix_plan,
+            Some(ict_engine::application::backtest::ControlMatrixPlan::pb12())
+        );
         let ensemble: EnsembleVoteRecord =
             load_state(temp.path(), "NQ", ict_engine::state::ENSEMBLE_VOTE_FILE).unwrap();
         assert_eq!(ensemble.symbol, "NQ");
@@ -8485,6 +8517,96 @@ mod tests {
             .unwrap()
             .phase_summary
             .contains("objective=generic"));
+    }
+
+    #[test]
+    fn test_factor_research_command_pb12_executes_real_runner_without_polluting_primary_history() {
+        let temp = tempfile::tempdir().unwrap();
+        let data = temp.path().join("candles.json");
+        std::fs::write(
+            &data,
+            serde_json::to_string(&serde_json::json!({
+                "candles": sample_candles(140)
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        ict_engine::application::backtest::factor_research_command(
+            ict_engine::application::backtest::FactorResearchCommandInput {
+                symbol: "NQ",
+                data: data.to_str().unwrap(),
+                objective: "generic",
+                mutation_spec_path: None,
+                control_matrix_pb12: true,
+                emit_mutation_evaluation: false,
+                ensemble: false,
+                state_dir: temp.path().to_str().unwrap(),
+                output_format: "human",
+            },
+            load_factor_mutation_spec,
+            |objective_mode, mutation_spec, control_matrix_plan, run_state_dir| {
+                run_factor_research(RunFactorResearchInput {
+                    symbol: "NQ",
+                    data: data.to_str().unwrap(),
+                    objective: objective_mode,
+                    data_1m: None,
+                    data_5m: None,
+                    data_15m: None,
+                    data_1h: None,
+                    data_4h: None,
+                    data_1d: None,
+                    paired_data: None,
+                    mutation_spec: mutation_spec.as_ref(),
+                    control_matrix_plan,
+                    state_dir: run_state_dir,
+                })
+            },
+        )
+        .unwrap();
+
+        let artifacts = ict_engine::application::backtest::load_control_matrix_research_artifacts(
+            temp.path(),
+            "NQ",
+        )
+        .unwrap();
+        assert_eq!(artifacts.len(), 1);
+        assert_eq!(artifacts[0].control_matrix_plan.kind.as_str(), "pb12");
+        assert_eq!(artifacts[0].run_count, 12);
+        assert_eq!(artifacts[0].runs.len(), 12);
+        assert_eq!(
+            artifacts[0]
+                .baseline_run
+                .as_ref()
+                .map(|run| run.run_label.as_str()),
+            Some("pb12_run_12_baseline")
+        );
+        assert_eq!(
+            artifacts[0].discovery_summary.status,
+            "baseline_unavailable"
+        );
+
+        let ledger: Vec<ict_engine::state::ArtifactLedgerEntry> =
+            load_state(temp.path(), "NQ", ict_engine::state::ARTIFACT_LEDGER_FILE).unwrap();
+        assert!(ledger
+            .iter()
+            .any(|entry| entry.artifact_kind == "auto_quant_pb12_research_run"));
+
+        let research_runs: Vec<ResearchRunRecord> =
+            load_state_or_default(temp.path(), "NQ", ict_engine::state::RESEARCH_RUNS_FILE)
+                .unwrap();
+        assert!(
+            research_runs.is_empty(),
+            "PB12 sweep must not append to primary research history"
+        );
+        assert!(
+            !state_exists(temp.path(), "NQ", ict_engine::state::LEARNING_STATE_FILE),
+            "PB12 sweep must not persist primary learning_state"
+        );
+        assert!(
+            !state_exists(temp.path(), "NQ", ict_engine::state::BBN_STATE_FILE),
+            "PB12 sweep must not persist primary BBN state"
+        );
     }
 
     #[test]
@@ -9000,6 +9122,7 @@ mod tests {
             data_1d: None,
             paired_data: None,
             mutation_spec: None,
+            control_matrix_plan: None,
             state_dir: temp.path().to_str().unwrap(),
         })
         .unwrap();
@@ -9015,6 +9138,7 @@ mod tests {
             data_1d: None,
             paired_data: None,
             mutation_spec: None,
+            control_matrix_plan: None,
             state_dir: temp.path().to_str().unwrap(),
         })
         .unwrap();
@@ -9185,6 +9309,7 @@ mod tests {
             data_1d: None,
             paired_data: None,
             mutation_spec: None,
+            control_matrix_plan: None,
             state_dir: temp.path().to_str().unwrap(),
         })
         .unwrap();
@@ -12759,6 +12884,7 @@ mod tests {
             }),
             None,
             serde_json::json!({"lifecycle": true}),
+            Some(serde_json::json!({"kind": "pb12"})),
         );
 
         assert_eq!(
@@ -12772,6 +12898,10 @@ mod tests {
         assert!(payload["reflection_bundle"]
             .to_string()
             .contains("Research compare:"));
+        assert_eq!(
+            payload["control_matrix_plan"]["kind"],
+            serde_json::json!("pb12")
+        );
     }
 
     #[test]
@@ -12785,6 +12915,7 @@ mod tests {
             }),
             None,
             serde_json::json!({"lifecycle": true}),
+            Some(serde_json::json!({"kind": "pb12"})),
         );
 
         assert_eq!(
@@ -12795,6 +12926,10 @@ mod tests {
         );
         assert!(payload.get("compact_compare_report").is_some());
         assert!(payload.get("research_compare_report").is_some());
+        assert_eq!(
+            payload["control_matrix_plan"]["kind"],
+            serde_json::json!("pb12")
+        );
     }
 
     #[test]

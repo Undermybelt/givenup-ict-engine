@@ -5,8 +5,8 @@ pub mod handoff;
 mod health;
 pub mod live;
 mod persistence;
-pub mod real_trades;
 pub mod readiness;
+pub mod real_trades;
 mod repo_manager;
 pub mod results;
 mod seed_evidence;
@@ -15,7 +15,10 @@ mod strategy_materials;
 mod types;
 mod update;
 
-pub use handoff::{AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput};
+pub use handoff::{
+    AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput,
+    BuildFactorAutoresearchHandoffPayloadInput, BuildFactorResearchHandoffPayloadInput,
+};
 pub use handoff::{AutoQuantResearchHandoffPayload, AutoQuantWorkspaceConfig};
 pub use readiness::{auto_quant_readiness, AutoQuantReadinessSurface};
 pub use seed_evidence::AutoQuantSeedMaterialEvidenceArtifact;
@@ -205,14 +208,16 @@ mod tests {
         .unwrap();
         seed_data(Path::new(&status.managed_dir));
         let payload = super::handoff::build_factor_research_handoff_payload(
-            "NQ",
-            "/tmp/nq.json",
-            "generic",
-            None,
-            None,
-            None,
-            state.path().to_str().unwrap(),
-            status,
+            super::handoff::BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: "/tmp/nq.json",
+                objective: "generic",
+                paired_data: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: state.path().to_str().unwrap(),
+                dependency_status: status,
+            },
         );
 
         assert!(payload

@@ -1277,6 +1277,8 @@ pub struct ResearchRunRecord {
     pub execution_gate_status: Option<String>,
     #[serde(default)]
     pub pda_cluster_label: Option<String>,
+    #[serde(default)]
+    pub control_matrix_plan: Option<crate::application::backtest::ControlMatrixPlan>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]

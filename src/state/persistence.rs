@@ -738,6 +738,7 @@ mod tests {
             execution_readiness: None,
             execution_gate_status: None,
             pda_cluster_label: None,
+            control_matrix_plan: None,
             artifact_action_summary: Vec::new(),
             duration_sizing_scale: None,
             hybrid_duration_model: None,

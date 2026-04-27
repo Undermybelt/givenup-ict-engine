@@ -4,7 +4,8 @@ use super::{
     handoff::{
         auto_quant_workspace_config, build_factor_autoresearch_handoff_payload,
         build_factor_research_handoff_payload, AutoQuantFactorAutoresearchCommandInput,
-        AutoQuantFactorResearchCommandInput,
+        AutoQuantFactorResearchCommandInput, BuildFactorAutoresearchHandoffPayloadInput,
+        BuildFactorResearchHandoffPayloadInput,
     },
     live::{
         consume_live_signals, ConsumeLiveSignalsInput, ConsumeLiveSignalsOutcome, RealRedisSource,
@@ -16,9 +17,8 @@ use super::{
         apply_strategy_library_prior_init, cross_check_manifest_against_log,
         find_any_active_prior_init_apply, find_existing_apply_for_library,
         load_strategy_library_manifest, parse_run_ibkr_log, persist_imported_library,
-        persist_prior_init_outcome, AutoQuantPriorInitInput,
-        DEFAULT_DEFAULT_PARENT_CONFIG, DEFAULT_PRIOR_STRENGTH, DEFAULT_TEMPER,
-        STRATEGY_LIBRARY_FILE,
+        persist_prior_init_outcome, AutoQuantPriorInitInput, DEFAULT_DEFAULT_PARENT_CONFIG,
+        DEFAULT_PRIOR_STRENGTH, DEFAULT_TEMPER, STRATEGY_LIBRARY_FILE,
     },
     seed_evidence::{
         persist_auto_quant_seed_material_evidence, AUTO_QUANT_SEED_MATERIAL_EVIDENCE_DEFAULT_LIMIT,
@@ -180,7 +180,7 @@ pub fn auto_quant_factor_research_command(
     })
     .ok()
     .flatten();
-    let mut payload = build_factor_research_handoff_payload(
+    let mut payload = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
         symbol,
         data,
         objective,
@@ -189,7 +189,7 @@ pub fn auto_quant_factor_research_command(
         strategy_material_root,
         state_dir,
         dependency_status,
-    );
+    });
     if let Some(artifact_id) = seed_evidence_artifact_id {
         payload.notes.push(format!(
             "auto_quant_seed_material_evidence_artifact_id={}",
@@ -232,18 +232,19 @@ pub fn auto_quant_factor_autoresearch_command(
     })
     .ok()
     .flatten();
-    let mut payload = build_factor_autoresearch_handoff_payload(
-        symbol,
-        data,
-        objective,
-        paired_data,
-        mutation_spec_path,
-        strategy_material_root,
-        iterations,
-        session_id,
-        state_dir,
-        dependency_status,
-    );
+    let mut payload =
+        build_factor_autoresearch_handoff_payload(BuildFactorAutoresearchHandoffPayloadInput {
+            symbol,
+            data,
+            objective,
+            paired_data,
+            mutation_spec_path,
+            strategy_material_root,
+            iterations,
+            session_id,
+            state_dir,
+            dependency_status,
+        });
     if let Some(artifact_id) = seed_evidence_artifact_id {
         payload.notes.push(format!(
             "auto_quant_seed_material_evidence_artifact_id={artifact_id}"
@@ -373,14 +374,10 @@ pub fn auto_quant_prior_init_command(input: AutoQuantPriorInitCommandInput<'_>) 
 
     // Resolve lineage early so the apply-guard can inspect the ledger
     // before any expensive math runs.
-    let library_artifact_id = resolve_library_artifact_id(state_dir, symbol)
-        .unwrap_or_else(|| resolved_path.clone());
+    let library_artifact_id =
+        resolve_library_artifact_id(state_dir, symbol).unwrap_or_else(|| resolved_path.clone());
 
-    let existing_apply = find_existing_apply_for_library(
-        state_dir,
-        symbol,
-        &library_artifact_id,
-    )?;
+    let existing_apply = find_existing_apply_for_library(state_dir, symbol, &library_artifact_id)?;
     let cross_library_apply = find_any_active_prior_init_apply(state_dir, symbol)?;
     if !dry_run && !force {
         if let Some(prior_apply) = existing_apply.as_ref() {
@@ -399,9 +396,7 @@ pub fn auto_quant_prior_init_command(input: AutoQuantPriorInitCommandInput<'_>) 
             // (typically v1, where v2 was just imported and auto-superseded v1).
             // Without this guard the v2 mutation would stack on top of v1's still-live
             // CPT effect and silently double the evidence weight.
-            let prior_lib_str = prior_lib
-                .as_deref()
-                .unwrap_or("(unknown library)");
+            let prior_lib_str = prior_lib.as_deref().unwrap_or("(unknown library)");
             bail!(
                 "BBN already carries an Auto-Quant prior init from library '{prior_lib}' \
                  (apply '{prior_apply}'); current request targets library '{lib}'. \
@@ -418,8 +413,7 @@ pub fn auto_quant_prior_init_command(input: AutoQuantPriorInitCommandInput<'_>) 
 
     let temper = temper.unwrap_or(DEFAULT_TEMPER);
     let prior_strength = prior_strength.unwrap_or(DEFAULT_PRIOR_STRENGTH);
-    let parent_config =
-        parent_config.unwrap_or_else(|| DEFAULT_DEFAULT_PARENT_CONFIG.to_vec());
+    let parent_config = parent_config.unwrap_or_else(|| DEFAULT_DEFAULT_PARENT_CONFIG.to_vec());
 
     let mut network = load_or_init_trading_network(symbol, state_dir)?;
     let outcome = apply_strategy_library_prior_init(
@@ -593,10 +587,9 @@ fn persist_live_signals_session(
         "no_op"
     };
 
-    let jsonl_path =
-        super::live::persistence::jsonl_path(std::path::Path::new(state_dir), symbol)
-            .to_string_lossy()
-            .into_owned();
+    let jsonl_path = super::live::persistence::jsonl_path(std::path::Path::new(state_dir), symbol)
+        .to_string_lossy()
+        .into_owned();
 
     let review_reason = format!(
         "consumed {} envelope(s), dropped {}, iter {}, cursor {} -> {} on stream {}",
@@ -715,10 +708,7 @@ fn sanitise_redis_url(raw: &str) -> String {
         None => rest,
     };
     // Drop anything after the first '/' or '?'.
-    let host_port = after_creds
-        .split(['/', '?'])
-        .next()
-        .unwrap_or(after_creds);
+    let host_port = after_creds.split(['/', '?']).next().unwrap_or(after_creds);
     format!("{scheme}{host_port}")
 }
 
@@ -1014,8 +1004,10 @@ mod tests {
     // -------------------------------------------------------------------
     // auto-quant-consume-live-signals tests (Phase 2)
 
+    use super::super::live::wire::{
+        LiveFactorContribution, LiveFactorSignalEnvelope, SCHEMA_VERSION,
+    };
     use super::super::live::{StreamEntry, StreamSource};
-    use super::super::live::wire::{LiveFactorContribution, LiveFactorSignalEnvelope, SCHEMA_VERSION};
     use std::collections::VecDeque;
 
     /// Test stream source that returns queued batches then empty.
@@ -1152,10 +1144,10 @@ mod tests {
             .expect("live-signals ledger entry");
         assert_eq!(entry.status, "applied");
         assert_eq!(entry.quality_score, 1);
-        assert!(entry.path.ends_with("auto_quant_live_factor_contributions.jsonl"));
         assert!(entry
-            .review_reason
-            .contains("auto_quant:factor_signals:nq"));
+            .path
+            .ends_with("auto_quant_live_factor_contributions.jsonl"));
+        assert!(entry.review_reason.contains("auto_quant:factor_signals:nq"));
         // JSONL + cursor were written by the underlying consumer.
         assert!(super::super::live::persistence::jsonl_path(temp.path(), "NQ").exists());
         assert!(super::super::live::persistence::cursor_path(temp.path(), "NQ").exists());
