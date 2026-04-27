@@ -17,8 +17,10 @@
 
 pub mod builder;
 pub mod event;
+pub mod generated_promoted_setups;
 pub mod matrices;
 pub mod ote;
+pub mod promoted;
 pub mod sessions;
 pub mod setups;
 
@@ -33,6 +35,13 @@ pub use matrices::{
     compute_cooccurrence_matrix, compute_precedence_matrix, EventMatrix, MatrixKind,
 };
 pub use ote::{most_recent_ote_zone, OteZone, OTE_HIGH, OTE_LOW};
+pub use promoted::{
+    append_promoted_canonical_setup, build_promoted_canonical_setup_spec,
+    embedded_promoted_canonical_setups, load_promoted_canonical_setup_manifest,
+    match_promoted_canonical_setups, parse_promoted_sequence_label,
+    repo_root_from_manifest_dir, PromotedCanonicalSetupManifest, PromotedCanonicalSetupSpec,
+    PROMOTED_CANONICAL_SETUPS_CONFIG_FILE, PROMOTED_CANONICAL_SETUPS_GENERATED_FILE,
+};
 pub use sessions::{classify_session_zones, is_in_zone, SessionKillZone};
 pub use setups::{
     match_all_setups, match_all_setups_default, match_all_setups_extended, CanonicalSetupKind,

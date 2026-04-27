@@ -696,6 +696,28 @@ enum Commands {
         )]
         backend: String,
     },
+    /// Promote a PB12 discovery candidate into the repo-versioned canonical setup manifest
+    AutoQuantPromoteCanonicalSetup {
+        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        symbol: String,
+        #[arg(long, help = "Versioned setup name to write into the promoted canonical manifest")]
+        setup_name: String,
+        #[arg(long, help = "Discovery sequence label, e.g. 'liquidity_sweep -> market_structure_shift'")]
+        sequence_label: String,
+        #[arg(long, help = "Optional direction filter: bull, bear, or neutral")]
+        direction: Option<String>,
+        #[arg(long, help = "Optional explicit PB12 sweep id; defaults to the latest artifact for the symbol")]
+        sweep_id: Option<String>,
+        #[arg(long, default_value_t = 30, help = "Maximum event span in bars for the promoted sequence matcher")]
+        horizon_bars: usize,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory containing PB12 discovery artifacts"
+        )]
+        state_dir: String,
+    },
     /// Show factor mutation history and clustered failure tags
     FactorMutationStatus {
         #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
@@ -1766,6 +1788,29 @@ fn main() -> Result<()> {
                     },
                 )?;
             }
+        }
+        Commands::AutoQuantPromoteCanonicalSetup {
+            symbol,
+            setup_name,
+            sequence_label,
+            direction,
+            sweep_id,
+            horizon_bars,
+            state_dir,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            let report = ict_engine::application::backtest::auto_quant_promote_canonical_setup_command(
+                ict_engine::application::backtest::PromoteCanonicalSetupCommandInput {
+                    symbol: &symbol,
+                    state_dir: &state_dir,
+                    setup_name: &setup_name,
+                    sequence_label: &sequence_label,
+                    direction: direction.as_deref(),
+                    sweep_id: sweep_id.as_deref(),
+                    horizon_bars,
+                },
+            )?;
+            println!("{}", serde_json::to_string_pretty(&report)?);
         }
         Commands::FactorMutationStatus {
             symbol,

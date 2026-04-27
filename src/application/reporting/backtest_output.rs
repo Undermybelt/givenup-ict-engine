@@ -372,6 +372,27 @@ pub fn render_control_matrix_research_human_output(
                 .join("; ")
         ));
     }
+    if !artifact.provider_summary.provider_statuses.is_empty() {
+        lines.push(format!(
+            "- Provider status: {}",
+            artifact
+                .provider_summary
+                .provider_statuses
+                .iter()
+                .map(|provider| format!("{}={}", provider.provider, provider.status))
+                .collect::<Vec<_>>()
+                .join("; ")
+        ));
+    }
+    if !artifact.provider_summary.actionable_install_prompts.is_empty() {
+        lines.push(format!(
+            "- Provider install prompts: {}",
+            artifact
+                .provider_summary
+                .actionable_install_prompts
+                .join(" | ")
+        ));
+    }
     redact_local_paths_in_human_text(&lines.join("\n"))
 }
 
@@ -384,6 +405,7 @@ pub fn build_control_matrix_research_output_payload(
         "baseline_run": artifact.baseline_run,
         "top_runs": artifact.top_runs,
         "discovery_summary": artifact.discovery_summary,
+        "provider_summary": artifact.provider_summary,
         "human_output": render_control_matrix_research_human_output(artifact),
     })
 }
@@ -413,6 +435,7 @@ mod tests {
         ControlMatrixDiscoveryCandidate, ControlMatrixDiscoverySummary, ControlMatrixPlan,
         ControlMatrixResearchArtifactInput, ControlMatrixResearchRunSummary,
     };
+    use crate::application::data_sources::build_control_matrix_provider_summary;
     use crate::factor_lab::research::ResearchReport;
     use crate::state::PersistedFactorRanking;
     use chrono::Utc;
@@ -502,6 +525,7 @@ mod tests {
                     latest_confirm_bar: 34,
                 }],
             },
+            provider_summary: build_control_matrix_provider_summary(&ControlMatrixPlan::pb12()),
             runs: vec![
                 ControlMatrixResearchRunSummary {
                     run_number: 1,
@@ -550,10 +574,12 @@ mod tests {
             payload["discovery_summary"]["status"],
             serde_json::json!("candidates_above_threshold")
         );
+        assert!(payload["provider_summary"]["provider_statuses"].is_array());
         let human_output = payload["human_output"].as_str().unwrap_or_default();
         assert!(human_output.contains("PB12 control-matrix research summary"));
         assert!(human_output.contains("pb12_run_01"));
         assert!(human_output.contains("pb12_run_12_baseline"));
         assert!(human_output.contains("Discovery top candidates"));
+        assert!(human_output.contains("Provider status"));
     }
 }

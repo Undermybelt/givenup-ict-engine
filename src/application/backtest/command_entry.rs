@@ -5,10 +5,11 @@ use std::path::Path;
 use crate::application::backtest::{
     append_control_matrix_research_artifact, build_backtest_compare_report,
     build_backtest_result_artifact, build_control_matrix_discovery_summary_for_symbol,
-    build_control_matrix_research_artifact, build_duration_sizing_delta_surface,
-    build_oos_quality_delta_surface, build_shrink_on_off_comparison_summary,
-    BacktestResultArtifactInput, ControlMatrixPlan, ControlMatrixResearchArtifact,
-    ControlMatrixResearchArtifactInput, ControlMatrixResearchRunSummary,
+    build_control_matrix_provider_summary_for_plan, build_control_matrix_research_artifact,
+    build_duration_sizing_delta_surface, build_oos_quality_delta_surface,
+    build_shrink_on_off_comparison_summary, BacktestResultArtifactInput, ControlMatrixPlan,
+    ControlMatrixResearchArtifact, ControlMatrixResearchArtifactInput,
+    ControlMatrixResearchRunSummary,
 };
 use crate::application::decision_utils::{
     parse_research_objective, research_objective_label, ResearchObjectiveMode,
@@ -162,6 +163,7 @@ where
     }
     let discovery_summary =
         build_control_matrix_discovery_summary_for_symbol(state_dir, symbol, data_path)?;
+    let provider_summary = build_control_matrix_provider_summary_for_plan(&control_matrix_plan);
     let artifact = build_control_matrix_research_artifact(ControlMatrixResearchArtifactInput {
         symbol,
         sweep_id: &sweep_id,
@@ -170,6 +172,7 @@ where
         control_matrix_plan,
         runs,
         discovery_summary,
+        provider_summary,
     });
     append_control_matrix_research_artifact(state_dir, symbol, artifact.clone())?;
     Ok(artifact)

@@ -8,6 +8,9 @@ use std::path::Path;
 use crate::application::auto_quant::results::{
     load_strategy_library_manifest, StrategyLibraryEntryStatus, STRATEGY_LIBRARY_FILE,
 };
+use crate::application::data_sources::{
+    build_control_matrix_provider_summary, ControlMatrixProviderSummary,
+};
 use crate::data::load_candles;
 use crate::indicators::compute_atr;
 use crate::pda_timeline::{build_pda_timeline, match_all_setups_extended, SetupContext};
@@ -210,6 +213,8 @@ pub struct ControlMatrixResearchArtifact {
     pub top_runs: Vec<ControlMatrixResearchRunSummary>,
     #[serde(default)]
     pub discovery_summary: ControlMatrixDiscoverySummary,
+    #[serde(default)]
+    pub provider_summary: ControlMatrixProviderSummary,
 }
 
 pub struct ControlMatrixResearchArtifactInput<'a> {
@@ -220,6 +225,7 @@ pub struct ControlMatrixResearchArtifactInput<'a> {
     pub control_matrix_plan: ControlMatrixPlan,
     pub runs: Vec<ControlMatrixResearchRunSummary>,
     pub discovery_summary: ControlMatrixDiscoverySummary,
+    pub provider_summary: ControlMatrixProviderSummary,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -313,6 +319,7 @@ pub fn build_control_matrix_research_artifact(
         control_matrix_plan,
         runs,
         discovery_summary,
+        provider_summary,
     } = input;
     let baseline_run = runs.iter().find(|run| run.baseline).cloned();
     let mut top_runs = runs.clone();
@@ -339,6 +346,7 @@ pub fn build_control_matrix_research_artifact(
         baseline_run,
         top_runs,
         discovery_summary,
+        provider_summary,
     }
 }
 
@@ -399,6 +407,12 @@ pub fn build_control_matrix_discovery_summary_for_symbol<P: AsRef<Path>>(
     Ok(build_control_matrix_discovery_summary(&candles, baseline))
 }
 
+pub fn build_control_matrix_provider_summary_for_plan(
+    plan: &ControlMatrixPlan,
+) -> ControlMatrixProviderSummary {
+    build_control_matrix_provider_summary(plan)
+}
+
 pub fn append_control_matrix_research_artifact<P: AsRef<Path>>(
     dir: P,
     symbol: &str,
@@ -427,7 +441,7 @@ pub fn append_control_matrix_research_artifact<P: AsRef<Path>>(
             actionable: false,
             decision_hint: "review_pb12_summary".to_string(),
             review_reason: format!(
-                "control_matrix={} runs={} top_run={} baseline_run={} discovery_status={} discovery_candidates={}",
+                "control_matrix={} runs={} top_run={} baseline_run={} discovery_status={} discovery_candidates={} provider_prompts={}",
                 artifact.control_matrix_plan.kind.as_str(),
                 artifact.run_count,
                 artifact
@@ -441,7 +455,8 @@ pub fn append_control_matrix_research_artifact<P: AsRef<Path>>(
                     .map(|run| run.run_label.as_str())
                     .unwrap_or("n/a"),
                 artifact.discovery_summary.status,
-                artifact.discovery_summary.promoted_candidate_count
+                artifact.discovery_summary.promoted_candidate_count,
+                artifact.provider_summary.actionable_install_prompts.len()
             ),
             review_rule_version: CONTROL_MATRIX_RESEARCH_REVIEW_RULE_VERSION.to_string(),
             top_factor_name: artifact
@@ -777,6 +792,7 @@ mod tests {
             generated_at: Utc::now(),
             control_matrix_plan: ControlMatrixPlan::pb12(),
             discovery_summary: ControlMatrixDiscoverySummary::default(),
+            provider_summary: build_control_matrix_provider_summary(&ControlMatrixPlan::pb12()),
             runs: vec![ControlMatrixResearchRunSummary {
                 run_number: 12,
                 run_label: "pb12_run_12_baseline".to_string(),

@@ -7,8 +7,8 @@ Scope: ICT-style PDA factors + control-variable matrix for `auto-quant-factor-re
 Implementation status snapshot:
 - P1 canonical setup matching is present in `src/pda_timeline/*` and consumed by `FactorDefinition::evaluate_structure_ict`
 - P2 PB(12) control-matrix runner is implemented in `src/application/backtest/control_matrix.rs` and `factor_research_command`
-- P3 minimal discovery-pool summary is implemented as a read-only PB12 artifact surface; operator-driven promotion CLI remains pending
-- P4 data-source ingestion for ETF / CFD / VIX / Greeks / OI / IV remains pending
+- P3 discovery-pool summary is implemented as a PB12 artifact surface, and `auto-quant-promote-canonical-setup` now persists repo-versioned promoted setup specs
+- P4 provider readiness/install prompt surfaces are implemented for IBKR / yfinance / TradingView MCP; full market-data fetch + runtime factor consumption remains pending
 
 ## 1. Context
 

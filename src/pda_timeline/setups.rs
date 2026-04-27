@@ -76,6 +76,7 @@ use serde::{Deserialize, Serialize};
 
 use super::event::{PdaEvent, PdaEventKind};
 use super::ote::most_recent_ote_zone;
+use super::promoted::match_promoted_canonical_setups;
 use super::sessions::{is_in_zone, SessionKillZone};
 use crate::smt::Divergence;
 use crate::types::{Candle, Direction};
@@ -114,6 +115,8 @@ pub enum CanonicalSetupKind {
     OteWithFvgConfluence,
     OteWithObConfluence,
     OptimalTradeEntryWithCisd,
+    // Operator-promoted custom sequence (P3)
+    PromotedCanonicalSequence,
 }
 
 impl CanonicalSetupKind {
@@ -146,6 +149,7 @@ impl CanonicalSetupKind {
             Self::OteWithFvgConfluence => "ote_with_fvg_confluence",
             Self::OteWithObConfluence => "ote_with_ob_confluence",
             Self::OptimalTradeEntryWithCisd => "optimal_trade_entry_with_cisd",
+            Self::PromotedCanonicalSequence => "promoted_canonical_sequence",
         }
     }
 }
@@ -183,10 +187,18 @@ pub const ALL_CANONICAL_SETUPS: [CanonicalSetupKind; 27] = [
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct SetupMatch {
     pub kind: CanonicalSetupKind,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub name_override: Option<String>,
     pub direction: Direction,
     pub anchor_bar: usize,
     pub confirm_bar: usize,
     pub event_bars: Vec<usize>,
+}
+
+impl SetupMatch {
+    pub fn label(&self) -> &str {
+        self.name_override.as_deref().unwrap_or(self.kind.as_str())
+    }
 }
 
 pub const DEFAULT_SETUP_HORIZON_BARS: usize = 30;
@@ -213,7 +225,8 @@ pub fn match_all_setups(events: &[PdaEvent], horizon_bars: usize) -> Vec<SetupMa
     out.extend(match_unicorn_model(events, horizon_bars));
     out.extend(match_power_of_three(events, horizon_bars));
     out.extend(match_turtle_soup_liquidity_grab(events, horizon_bars));
-    out.sort_by_key(|m| (m.confirm_bar, m.kind.as_str()));
+    out.extend(match_promoted_canonical_setups(events, horizon_bars));
+    out.sort_by_key(|m| (m.confirm_bar, m.label().to_string()));
     out
 }
 
@@ -322,7 +335,7 @@ pub fn match_all_setups_extended(
         out.extend(match_optimal_trade_entry_with_cisd(events, primary));
     }
 
-    out.sort_by_key(|m| (m.confirm_bar, m.kind.as_str()));
+    out.sort_by_key(|m| (m.confirm_bar, m.label().to_string()));
     out
 }
 
@@ -381,6 +394,7 @@ fn match_ob_retest_propulsion(events: &[PdaEvent], horizon: usize) -> Vec<SetupM
         }) {
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::ObRetestPropulsionConfirm,
+                name_override: None,
                 direction: ev.direction,
                 anchor_bar: ob.bar_index,
                 confirm_bar: ev.bar_index,
@@ -406,6 +420,7 @@ fn match_ifvg_continuation(events: &[PdaEvent], horizon: usize) -> Vec<SetupMatc
         }) {
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::IFvgContinuation,
+                name_override: None,
                 direction: ev.direction,
                 anchor_bar: mss.bar_index,
                 confirm_bar: ev.bar_index,
@@ -427,6 +442,7 @@ fn match_breaker_block_retest(events: &[PdaEvent]) -> Vec<SetupMatch> {
         .filter(|e| e.kind == PdaEventKind::BreakerBlock)
         .map(|e| SetupMatch {
             kind: CanonicalSetupKind::BreakerBlockRetest,
+            name_override: None,
             direction: e.direction,
             anchor_bar: e.bar_index,
             confirm_bar: e.bar_index,
@@ -445,6 +461,7 @@ fn match_mitigation_block_retest(events: &[PdaEvent]) -> Vec<SetupMatch> {
         .filter(|e| e.kind == PdaEventKind::MitigationBlock)
         .map(|e| SetupMatch {
             kind: CanonicalSetupKind::MitigationBlockRetest,
+            name_override: None,
             direction: e.direction,
             anchor_bar: e.bar_index,
             confirm_bar: e.bar_index,
@@ -480,6 +497,7 @@ fn match_rejection_block_at_key_level(
         }) {
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::RejectionBlockAtKeyLevel,
+                name_override: None,
                 direction: ev.direction,
                 anchor_bar: level_event.bar_index,
                 confirm_bar: ev.bar_index,
@@ -511,6 +529,7 @@ fn match_volume_imbalance_filler(events: &[PdaEvent], horizon: usize) -> Vec<Set
         }) {
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::VolumeImbalanceFiller,
+                name_override: None,
                 direction: ev.direction,
                 anchor_bar: ev.bar_index,
                 confirm_bar: follow.bar_index,
@@ -538,6 +557,7 @@ fn match_liquidity_void_continuation(events: &[PdaEvent], horizon: usize) -> Vec
         }) {
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::LiquidityVoidContinuation,
+                name_override: None,
                 direction: ev.direction,
                 anchor_bar: ev.bar_index,
                 confirm_bar: follow.bar_index,
@@ -563,6 +583,7 @@ fn match_propulsion_post_mss(events: &[PdaEvent], horizon: usize) -> Vec<SetupMa
         }) {
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::PropulsionPostMss,
+                name_override: None,
                 direction: ev.direction,
                 anchor_bar: ev.bar_index,
                 confirm_bar: prop.bar_index,
@@ -595,6 +616,7 @@ fn match_cisd_after_phase(
         }) {
             out.push(SetupMatch {
                 kind,
+                name_override: None,
                 direction: ev.direction,
                 anchor_bar: prior.bar_index,
                 confirm_bar: ev.bar_index,
@@ -658,6 +680,7 @@ fn match_unicorn_model(events: &[PdaEvent], horizon: usize) -> Vec<SetupMatch> {
             }
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::UnicornModel,
+                name_override: None,
                 direction: ev.direction,
                 anchor_bar: other.bar_index.min(ev.bar_index),
                 confirm_bar: other.bar_index.max(ev.bar_index),
@@ -693,6 +716,7 @@ fn match_power_of_three(events: &[PdaEvent], horizon: usize) -> Vec<SetupMatch> 
         }) {
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::PowerOfThree,
+                name_override: None,
                 direction: target,
                 anchor_bar: ev.bar_index,
                 confirm_bar: follow.bar_index,
@@ -723,6 +747,7 @@ fn match_turtle_soup_liquidity_grab(events: &[PdaEvent], horizon: usize) -> Vec<
         }) {
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::TurtleSoupLiquidityGrab,
+                name_override: None,
                 direction: target,
                 anchor_bar: ev.bar_index,
                 confirm_bar: follow.bar_index,
@@ -774,6 +799,7 @@ fn match_htf_mss_ltf_fvg(
             }
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::HtfMssLtfFvg,
+                name_override: None,
                 direction: htf.direction,
                 anchor_bar: htf.bar_index,
                 confirm_bar: ltf.bar_index,
@@ -799,6 +825,7 @@ fn match_htf_cisd_ltf_ob_retest(
             }
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::HtfCisdLtfObRetest,
+                name_override: None,
                 direction: htf.direction,
                 anchor_bar: htf.bar_index,
                 confirm_bar: ltf.bar_index,
@@ -872,6 +899,7 @@ fn daily_sweep_reversal(
             if let Some(fvg) = fvg {
                 out.push(SetupMatch {
                     kind,
+                    name_override: None,
                     direction: reversal_direction,
                     anchor_bar: sweep.bar_index,
                     confirm_bar: fvg.bar_index,
@@ -907,6 +935,7 @@ fn match_weekly_open_sweep_daily_mss(
             }
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::WeeklyOpenSweepDailyMss,
+                name_override: None,
                 direction: target,
                 anchor_bar: sweep.bar_index,
                 confirm_bar: mss.bar_index,
@@ -951,6 +980,7 @@ fn match_asia_range_raid_london_mss(
             }
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::AsiaRangeRaidLondonMss,
+                name_override: None,
                 direction: target,
                 anchor_bar: sweep.bar_index,
                 confirm_bar: mss.bar_index,
@@ -993,6 +1023,7 @@ fn match_london_raid_ny_mss_fvg(
             if let Some(fvg) = fvg {
                 out.push(SetupMatch {
                     kind: CanonicalSetupKind::LondonRaidNyMssFvg,
+                    name_override: None,
                     direction: target,
                     anchor_bar: sweep.bar_index,
                     confirm_bar: fvg.bar_index,
@@ -1013,6 +1044,7 @@ fn match_silver_bullet_window(events: &[PdaEvent]) -> Vec<SetupMatch> {
         })
         .map(|e| SetupMatch {
             kind: CanonicalSetupKind::SilverBulletWindow,
+            name_override: None,
             direction: e.direction,
             anchor_bar: e.bar_index,
             confirm_bar: e.bar_index,
@@ -1030,6 +1062,7 @@ fn match_silver_bullet_am(events: &[PdaEvent]) -> Vec<SetupMatch> {
         })
         .map(|e| SetupMatch {
             kind: CanonicalSetupKind::SilverBulletAm,
+            name_override: None,
             direction: e.direction,
             anchor_bar: e.bar_index,
             confirm_bar: e.bar_index,
@@ -1061,6 +1094,7 @@ fn match_judas_swing_reversal(
             }
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::JudasSwingReversal,
+                name_override: None,
                 direction: target,
                 anchor_bar: sweep.bar_index,
                 confirm_bar: mss.bar_index,
@@ -1115,6 +1149,7 @@ fn match_smt_divergence_confirm(
         }) {
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::SmtDivergenceConfirm,
+                name_override: None,
                 direction: mss.direction,
                 anchor_bar: primary_bar,
                 confirm_bar: mss.bar_index,
@@ -1158,6 +1193,7 @@ fn match_ote_confluence_kind(
         }
         out.push(SetupMatch {
             kind: setup_kind,
+            name_override: None,
             direction: ev.direction,
             anchor_bar: zone.leg_end_bar,
             confirm_bar: ev.bar_index,
