@@ -2,13 +2,35 @@ use anyhow::{anyhow, bail, Context, Result};
 use chrono::{DateTime, TimeDelta, Utc};
 use reqwest::blocking::Client;
 use serde::Deserialize;
+use serde_json::Value;
+use std::process::Command;
 
 use crate::application::backtest::Pb12RunSpec;
 use crate::data::load_candles;
 use crate::data::realtime::openalice::{
     AuxiliaryMarketEvidence, OpenAliceProvider, OptionsChainSummary, SpotInstrumentKind,
 };
+use crate::application::data_sources::{
+    TVREMIX_MCP_API_KEY_ENV, TVREMIX_MCP_DEFAULT_URL, TVREMIX_MCP_URL_ENV,
+};
 use crate::types::Candle;
+
+const CONTROL_MATRIX_REFERENCE_PROVIDER_ENV: &str = "ICT_ENGINE_CONTROL_MATRIX_REFERENCE_PROVIDER";
+const CONTROL_MATRIX_OPTIONS_PROVIDER_ENV: &str = "ICT_ENGINE_CONTROL_MATRIX_OPTIONS_PROVIDER";
+const CONTROL_MATRIX_IBKR_FETCH_SCRIPT_ENV: &str = "ICT_ENGINE_IBKR_FETCH_SCRIPT";
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ControlMatrixReferenceProvider {
+    YahooFinance,
+    IbkrHistorical,
+    TradingViewMcp,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ControlMatrixOptionsProvider {
+    YahooFinance,
+    TradingViewMcp,
+}
 
 #[derive(Debug, Clone, Default)]
 pub struct ControlMatrixRuntimeOverrides {
@@ -45,11 +67,21 @@ pub fn build_control_matrix_runtime_overrides(
     let start = primary_candles.first().map(|item| item.timestamp).unwrap();
     let end = primary_candles.last().map(|item| item.timestamp).unwrap();
     let client = yahoo_client()?;
+    let reference_provider = resolve_reference_provider();
+    let options_provider = resolve_options_provider();
     let mut runtime_notes = Vec::new();
 
     let mut etf_candles = None;
     if run_spec.use_etf || run_spec.use_greeks || run_spec.use_oi || run_spec.use_iv {
-        match fetch_yahoo_candles(&client, etf_symbol, &interval, start, end) {
+        match fetch_reference_candles(
+            &client,
+            reference_provider,
+            etf_symbol,
+            &interval,
+            start,
+            end,
+            &mut runtime_notes,
+        ) {
             Ok(candles) if !candles.is_empty() => {
                 runtime_notes.push(format!("runtime_etf_reference_symbol={etf_symbol}"));
                 etf_candles = Some(candles);
@@ -64,7 +96,15 @@ pub fn build_control_matrix_runtime_overrides(
 
     let mut vix_candles = None;
     if run_spec.use_vix {
-        match fetch_yahoo_candles(&client, "^VIX", "1d", start - TimeDelta::days(7), end) {
+        match fetch_reference_candles(
+            &client,
+            reference_provider,
+            "^VIX",
+            "1d",
+            start - TimeDelta::days(7),
+            end,
+            &mut runtime_notes,
+        ) {
             Ok(candles) if !candles.is_empty() => {
                 runtime_notes.push("runtime_vix_overlay_symbol=^VIX".to_string());
                 vix_candles = Some(candles);
@@ -78,7 +118,26 @@ pub fn build_control_matrix_runtime_overrides(
     }
 
     if run_spec.use_cfd {
-        runtime_notes.push("runtime_cfd_reference_unavailable_provider=yfinance".to_string());
+        let cfd_symbol = cfd_symbol_for_futures(symbol);
+        match fetch_reference_candles(
+            &client,
+            reference_provider,
+            cfd_symbol,
+            &interval,
+            start,
+            end,
+            &mut runtime_notes,
+        ) {
+            Ok(candles) if etf_candles.is_none() && !candles.is_empty() => {
+                runtime_notes.push(format!("runtime_cfd_reference_symbol={cfd_symbol}"));
+                etf_candles = Some(candles);
+            }
+            Ok(_) => runtime_notes.push(format!("runtime_cfd_reference_empty_symbol={cfd_symbol}")),
+            Err(err) => runtime_notes.push(format!(
+                "runtime_cfd_reference_fetch_failed symbol={} reason={}",
+                cfd_symbol, err
+            )),
+        }
     }
 
     let paired_candles = if run_spec.use_etf {
@@ -96,7 +155,12 @@ pub fn build_control_matrix_runtime_overrides(
         let spot_candles = etf_candles.clone().or_else(|| vix_candles.clone());
         if let Some(spot_candles) = spot_candles {
             let mut options_summary = if run_spec.use_greeks || run_spec.use_oi || run_spec.use_iv {
-                match fetch_yahoo_options_summary(&client, etf_symbol) {
+                match fetch_options_summary(
+                    &client,
+                    options_provider,
+                    etf_symbol,
+                    &mut runtime_notes,
+                ) {
                     Ok(summary) => summary,
                     Err(err) => {
                         runtime_notes.push(format!(
@@ -176,6 +240,87 @@ fn yahoo_client() -> Result<Client> {
         .timeout(std::time::Duration::from_secs(20))
         .build()
         .context("failed to build yahoo runtime client")
+}
+
+fn resolve_reference_provider() -> ControlMatrixReferenceProvider {
+    match std::env::var(CONTROL_MATRIX_REFERENCE_PROVIDER_ENV)
+        .unwrap_or_else(|_| "yfinance".to_string())
+        .trim()
+        .to_ascii_lowercase()
+        .as_str()
+    {
+        "ibkr" => ControlMatrixReferenceProvider::IbkrHistorical,
+        "tradingview_mcp" | "tradingview" | "tvremix" => {
+            ControlMatrixReferenceProvider::TradingViewMcp
+        }
+        _ => ControlMatrixReferenceProvider::YahooFinance,
+    }
+}
+
+fn resolve_options_provider() -> ControlMatrixOptionsProvider {
+    match std::env::var(CONTROL_MATRIX_OPTIONS_PROVIDER_ENV)
+        .unwrap_or_else(|_| {
+            if std::env::var(TVREMIX_MCP_API_KEY_ENV)
+                .map(|value| !value.trim().is_empty())
+                .unwrap_or(false)
+            {
+                "tradingview_mcp".to_string()
+            } else {
+                "yfinance".to_string()
+            }
+        })
+        .trim()
+        .to_ascii_lowercase()
+        .as_str()
+    {
+        "tradingview_mcp" | "tradingview" | "tvremix" => {
+            ControlMatrixOptionsProvider::TradingViewMcp
+        }
+        _ => ControlMatrixOptionsProvider::YahooFinance,
+    }
+}
+
+fn fetch_reference_candles(
+    client: &Client,
+    provider: ControlMatrixReferenceProvider,
+    symbol: &str,
+    interval: &str,
+    start: DateTime<Utc>,
+    end: DateTime<Utc>,
+    runtime_notes: &mut Vec<String>,
+) -> Result<Vec<Candle>> {
+    match provider {
+        ControlMatrixReferenceProvider::YahooFinance => {
+            runtime_notes.push("runtime_reference_provider=yfinance".to_string());
+            fetch_yahoo_candles(client, symbol, interval, start, end)
+        }
+        ControlMatrixReferenceProvider::IbkrHistorical => {
+            runtime_notes.push("runtime_reference_provider=ibkr".to_string());
+            fetch_ibkr_historical_candles(symbol, interval, start, end)
+        }
+        ControlMatrixReferenceProvider::TradingViewMcp => {
+            runtime_notes.push("runtime_reference_provider=tradingview_mcp".to_string());
+            fetch_tradingview_ohlcv(symbol, interval, start, end)
+        }
+    }
+}
+
+fn fetch_options_summary(
+    client: &Client,
+    provider: ControlMatrixOptionsProvider,
+    symbol: &str,
+    runtime_notes: &mut Vec<String>,
+) -> Result<OptionsChainSummary> {
+    match provider {
+        ControlMatrixOptionsProvider::YahooFinance => {
+            runtime_notes.push("runtime_options_provider=yfinance".to_string());
+            fetch_yahoo_options_summary(client, symbol)
+        }
+        ControlMatrixOptionsProvider::TradingViewMcp => {
+            runtime_notes.push("runtime_options_provider=tradingview_mcp".to_string());
+            fetch_tradingview_options_summary(symbol)
+        }
+    }
 }
 
 fn fetch_yahoo_candles(
@@ -331,6 +476,283 @@ fn fetch_yahoo_options_summary(client: &Client, symbol: &str) -> Result<OptionsC
     })
 }
 
+fn fetch_ibkr_historical_candles(
+    symbol: &str,
+    interval: &str,
+    start: DateTime<Utc>,
+    end: DateTime<Utc>,
+) -> Result<Vec<Candle>> {
+    let script = std::env::var(CONTROL_MATRIX_IBKR_FETCH_SCRIPT_ENV).unwrap_or_else(|_| {
+        format!(
+            "{}/scripts/auto_quant_external/fetch_external.py",
+            env!("CARGO_MANIFEST_DIR")
+        )
+    });
+    let temp = std::env::temp_dir().join(format!(
+        "ict-engine-ibkr-{}-{}.csv",
+        symbol.to_ascii_lowercase(),
+        Utc::now().timestamp_nanos_opt().unwrap_or_default()
+    ));
+    let duration = ibkr_duration_from_range(start, end);
+    let bar_size = ibkr_bar_size(interval);
+    let status = Command::new("python3")
+        .args([
+            &script,
+            "ibkr-historical",
+            "--symbol",
+            symbol,
+            "--sec-type",
+            ibkr_security_type(symbol),
+            "--exchange",
+            ibkr_exchange(symbol),
+            "--currency",
+            "USD",
+            "--bar-size",
+            &bar_size,
+            "--duration",
+            &duration,
+            "--output",
+            temp.to_str().unwrap_or("ibkr.csv"),
+        ])
+        .status()
+        .with_context(|| format!("failed to spawn ibkr historical fetch for '{}'", symbol))?;
+    if !status.success() {
+        bail!("ibkr historical fetch failed for '{}'", symbol);
+    }
+    let result = load_csv_candles(&temp);
+    let _ = std::fs::remove_file(&temp);
+    result
+}
+
+fn fetch_tradingview_ohlcv(
+    symbol: &str,
+    interval: &str,
+    start: DateTime<Utc>,
+    end: DateTime<Utc>,
+) -> Result<Vec<Candle>> {
+    let tv_symbol = tradingview_symbol(symbol);
+    let count = estimate_bar_count(interval, start, end);
+    let payload = call_tradingview_tool(
+        "get_ohlcv",
+        serde_json::json!({
+            "symbol": tv_symbol,
+            "interval": tradingview_interval(interval),
+            "count": count,
+            "summary": false
+        }),
+    )?;
+    let bars = payload
+        .get("bars")
+        .and_then(Value::as_array)
+        .ok_or_else(|| anyhow!("tradingview get_ohlcv returned no bars"))?;
+    let mut candles = Vec::new();
+    for bar in bars {
+        let ts = bar.get("t").and_then(Value::as_f64).unwrap_or_default() as i64;
+        let timestamp = DateTime::<Utc>::from_timestamp(ts, 0)
+            .ok_or_else(|| anyhow!("invalid tradingview timestamp"))?;
+        if timestamp < start || timestamp > end + TimeDelta::days(3) {
+            continue;
+        }
+        let open = bar.get("o").and_then(Value::as_f64).unwrap_or_default();
+        let high = bar.get("h").and_then(Value::as_f64).unwrap_or_default();
+        let low = bar.get("l").and_then(Value::as_f64).unwrap_or_default();
+        let close = bar.get("c").and_then(Value::as_f64).unwrap_or_default();
+        candles.push(Candle {
+            timestamp,
+            open,
+            high,
+            low,
+            close,
+            volume: bar.get("v").and_then(Value::as_f64).unwrap_or_default(),
+        });
+    }
+    if candles.is_empty() {
+        bail!("tradingview returned no usable bars for '{}'", symbol);
+    }
+    Ok(candles)
+}
+
+fn fetch_tradingview_options_summary(symbol: &str) -> Result<OptionsChainSummary> {
+    let tv_symbol = tradingview_symbol(symbol);
+    let expirations = call_tradingview_tool(
+        "get_option_expirations",
+        serde_json::json!({ "symbol": tv_symbol }),
+    )?;
+    let first_expiration = expirations
+        .pointer("/data/expirations")
+        .and_then(Value::as_array)
+        .and_then(|items| items.first())
+        .and_then(|item| item.get("expiration"))
+        .and_then(Value::as_str)
+        .ok_or_else(|| anyhow!("tradingview returned no option expirations for '{}'", symbol))?;
+    let chain = call_tradingview_tool(
+        "get_option_chain",
+        serde_json::json!({
+            "symbol": tv_symbol,
+            "expiration": first_expiration,
+        }),
+    )?;
+    let data = chain
+        .get("data")
+        .ok_or_else(|| anyhow!("tradingview option chain missing data payload"))?;
+    let calls = data
+        .get("calls")
+        .and_then(Value::as_array)
+        .cloned()
+        .unwrap_or_default();
+    let puts = data
+        .get("puts")
+        .and_then(Value::as_array)
+        .cloned()
+        .unwrap_or_default();
+    let call_open_interest = 0.0;
+    let put_open_interest = 0.0;
+    let call_volume = 0.0;
+    let put_volume = 0.0;
+    let underlying_price = data.get("underlying_price").and_then(Value::as_f64);
+    let near_atm = underlying_price.and_then(|price| {
+        let mut selected = calls
+            .iter()
+            .chain(puts.iter())
+            .filter_map(|item| {
+                let strike = item.get("strike").and_then(Value::as_f64)?;
+                let iv = item.get("iv").and_then(Value::as_f64)?;
+                let delta = item.get("delta").and_then(Value::as_f64);
+                let gamma = item.get("gamma").and_then(Value::as_f64);
+                let vega = item.get("vega").and_then(Value::as_f64);
+                let distance = (strike - price).abs() / price.max(f64::EPSILON);
+                (distance <= 0.10).then_some((distance, iv, delta, gamma, vega))
+            })
+            .collect::<Vec<_>>();
+        selected.sort_by(|a, b| a.0.total_cmp(&b.0));
+        selected.into_iter().next()
+    });
+    let call_gamma_oi = calls
+        .iter()
+        .filter_map(|item| item.get("gamma").and_then(Value::as_f64))
+        .sum::<f64>()
+        .into();
+    let put_gamma_oi = puts
+        .iter()
+        .filter_map(|item| item.get("gamma").and_then(Value::as_f64))
+        .sum::<f64>()
+        .into();
+    let gamma_skew = match (call_gamma_oi, put_gamma_oi) {
+        (Some(call), Some(put)) => Some(call - put),
+        _ => None,
+    };
+
+    Ok(OptionsChainSummary {
+        symbol: symbol.to_string(),
+        source: Some("tradingview_mcp:get_option_chain".to_string()),
+        underlying_price,
+        call_open_interest,
+        put_open_interest,
+        put_call_oi_ratio: None,
+        call_volume,
+        put_volume,
+        put_call_volume_ratio: None,
+        near_atm_implied_volatility: near_atm.map(|item| item.1 / 100.0),
+        near_atm_delta: near_atm.and_then(|item| item.2),
+        near_atm_gamma: near_atm.and_then(|item| item.3),
+        near_atm_vega: near_atm.and_then(|item| item.4),
+        call_gamma_oi,
+        put_gamma_oi,
+        gamma_skew,
+        nearest_expiration_dte: None,
+    })
+}
+
+fn call_tradingview_tool(name: &str, arguments: Value) -> Result<Value> {
+    let key = std::env::var(TVREMIX_MCP_API_KEY_ENV)
+        .with_context(|| format!("{} must be set for tradingview_mcp", TVREMIX_MCP_API_KEY_ENV))?;
+    let url = std::env::var(TVREMIX_MCP_URL_ENV).unwrap_or_else(|_| TVREMIX_MCP_DEFAULT_URL.to_string());
+    let client = Client::builder()
+        .timeout(std::time::Duration::from_secs(20))
+        .build()
+        .context("failed to build tradingview MCP client")?;
+    let response: Value = client
+        .post(url)
+        .bearer_auth(key)
+        .json(&serde_json::json!({
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "tools/call",
+            "params": {
+                "name": name,
+                "arguments": arguments,
+            }
+        }))
+        .send()
+        .with_context(|| format!("tradingview MCP call '{}' failed", name))?
+        .error_for_status()
+        .with_context(|| format!("tradingview MCP call '{}' returned error", name))?
+        .json()
+        .with_context(|| format!("failed to decode tradingview MCP response for '{}'", name))?;
+    if response
+        .pointer("/result/isError")
+        .and_then(Value::as_bool)
+        .unwrap_or(false)
+    {
+        bail!(
+            "tradingview MCP tool '{}' error: {}",
+            name,
+            response
+                .pointer("/result/content/0/text")
+                .and_then(Value::as_str)
+                .unwrap_or("unknown error")
+        );
+    }
+    response
+        .pointer("/result/structuredContent")
+        .cloned()
+        .ok_or_else(|| anyhow!("tradingview MCP tool '{}' missing structuredContent", name))
+}
+
+fn load_csv_candles(path: &std::path::Path) -> Result<Vec<Candle>> {
+    let mut reader = csv::Reader::from_path(path)
+        .with_context(|| format!("failed to open generated candle csv '{}'", path.display()))?;
+    let headers = reader.headers()?.clone();
+    let ts_index = headers
+        .iter()
+        .position(|item| item.eq_ignore_ascii_case("date") || item.eq_ignore_ascii_case("ts"))
+        .ok_or_else(|| anyhow!("csv missing date/ts column"))?;
+    let open_index = headers.iter().position(|item| item == "open").ok_or_else(|| anyhow!("csv missing open"))?;
+    let high_index = headers.iter().position(|item| item == "high").ok_or_else(|| anyhow!("csv missing high"))?;
+    let low_index = headers.iter().position(|item| item == "low").ok_or_else(|| anyhow!("csv missing low"))?;
+    let close_index = headers.iter().position(|item| item == "close").ok_or_else(|| anyhow!("csv missing close"))?;
+    let volume_index = headers.iter().position(|item| item == "volume");
+    let mut candles = Vec::new();
+    for record in reader.records() {
+        let record = record?;
+        let timestamp = chrono::DateTime::parse_from_rfc3339(&record[ts_index])
+            .or_else(|_| chrono::DateTime::parse_from_str(&record[ts_index], "%Y-%m-%d %H:%M:%S%#z"))
+            .map(|value| value.with_timezone(&Utc))
+            .or_else(|_| {
+                chrono::NaiveDateTime::parse_from_str(&record[ts_index], "%Y-%m-%d %H:%M:%S")
+                    .map(|value| value.and_utc())
+            })
+            .or_else(|_| {
+                chrono::NaiveDate::parse_from_str(&record[ts_index], "%Y-%m-%d")
+                    .map(|value| value.and_hms_opt(0, 0, 0).unwrap().and_utc())
+            })
+            .with_context(|| format!("failed to parse candle timestamp '{}'", &record[ts_index]))?;
+        candles.push(Candle {
+            timestamp,
+            open: record[open_index].parse()?,
+            high: record[high_index].parse()?,
+            low: record[low_index].parse()?,
+            close: record[close_index].parse()?,
+            volume: volume_index
+                .and_then(|index| record.get(index))
+                .unwrap_or("0")
+                .parse()
+                .unwrap_or_default(),
+        });
+    }
+    Ok(candles)
+}
+
 fn apply_vix_overlay(
     auxiliary: &mut AuxiliaryMarketEvidence,
     vix_candles: &[Candle],
@@ -384,6 +806,18 @@ fn ratio(numerator: f64, denominator: f64) -> Option<f64> {
     (denominator.abs() > f64::EPSILON).then_some(numerator / denominator)
 }
 
+fn cfd_symbol_for_futures(symbol: &str) -> &str {
+    match symbol.trim().to_ascii_uppercase().as_str() {
+        "NQ" => "NASDAQ:NDX",
+        "ES" => "SP:SPX",
+        "YM" => "DJ:DJI",
+        "GC" => "OANDA:XAUUSD",
+        "6E" => "FX:EURUSD",
+        "CL" => "TVC:USOIL",
+        _ => "SP:SPX",
+    }
+}
+
 fn etf_symbol_for_futures(symbol: &str) -> &str {
     match symbol.trim().to_ascii_uppercase().as_str() {
         "NQ" => "QQQ",
@@ -394,6 +828,107 @@ fn etf_symbol_for_futures(symbol: &str) -> &str {
         "CL" => "USO",
         _ => "SPY",
     }
+}
+
+fn tradingview_symbol(symbol: &str) -> &str {
+    match symbol.trim().to_ascii_uppercase().as_str() {
+        "QQQ" => "NASDAQ:QQQ",
+        "SPY" => "AMEX:SPY",
+        "DIA" => "AMEX:DIA",
+        "GLD" => "AMEX:GLD",
+        "FXE" => "AMEX:FXE",
+        "USO" => "AMEX:USO",
+        "^VIX" => "CBOE:VIX",
+        "NASDAQ:NDX" => "NASDAQ:NDX",
+        "SP:SPX" => "SP:SPX",
+        "DJ:DJI" => "DJ:DJI",
+        "OANDA:XAUUSD" => "OANDA:XAUUSD",
+        "FX:EURUSD" => "FX:EURUSD",
+        "TVC:USOIL" => "TVC:USOIL",
+        _ => "NASDAQ:QQQ",
+    }
+}
+
+fn tradingview_interval(interval: &str) -> &str {
+    match interval {
+        "1m" => "1",
+        "2m" => "2",
+        "5m" => "5",
+        "15m" => "15",
+        "30m" => "30",
+        "60m" | "1h" => "60",
+        "90m" => "90",
+        "1d" => "1D",
+        _ => "1D",
+    }
+}
+
+fn ibkr_security_type(symbol: &str) -> &str {
+    match symbol.trim().to_ascii_uppercase().as_str() {
+        "QQQ" | "SPY" | "DIA" | "GLD" | "FXE" | "USO" => "STK",
+        "^VIX" | "SPX" | "NDX" | "DJI" => "IND",
+        "EURUSD" | "OANDA:XAUUSD" => "CASH",
+        _ => "STK",
+    }
+}
+
+fn ibkr_exchange(symbol: &str) -> &str {
+    match symbol.trim().to_ascii_uppercase().as_str() {
+        "QQQ" => "SMART",
+        "SPY" => "SMART",
+        "DIA" => "SMART",
+        "GLD" => "SMART",
+        "FXE" => "SMART",
+        "USO" => "SMART",
+        "^VIX" | "VIX" => "CBOE",
+        "SPX" => "CBOE",
+        "NDX" => "NASDAQ",
+        "DJI" => "NYSE",
+        "EURUSD" => "IDEALPRO",
+        _ => "SMART",
+    }
+}
+
+fn ibkr_duration_from_range(start: DateTime<Utc>, end: DateTime<Utc>) -> String {
+    let days = (end - start).num_days().max(1);
+    if days <= 30 {
+        format!("{days} D")
+    } else if days <= 365 {
+        format!("{} M", (days / 30).max(1))
+    } else {
+        format!("{} Y", (days / 365).max(1))
+    }
+}
+
+fn ibkr_bar_size(interval: &str) -> String {
+    match interval {
+        "1m" => "1 min",
+        "2m" => "2 mins",
+        "5m" => "5 mins",
+        "15m" => "15 mins",
+        "30m" => "30 mins",
+        "60m" | "1h" => "1 hour",
+        "90m" => "1 hour",
+        "1d" => "1 day",
+        _ => "1 day",
+    }
+    .to_string()
+}
+
+fn estimate_bar_count(interval: &str, start: DateTime<Utc>, end: DateTime<Utc>) -> usize {
+    let minutes = (end - start).num_minutes().max(1) as usize;
+    let divisor = match interval {
+        "1m" => 1,
+        "2m" => 2,
+        "5m" => 5,
+        "15m" => 15,
+        "30m" => 30,
+        "60m" | "1h" => 60,
+        "90m" => 90,
+        "1d" => 1440,
+        _ => 1440,
+    };
+    (minutes / divisor).clamp(10, 5_000)
 }
 
 fn yahoo_interval_from_candles(candles: &[Candle]) -> String {

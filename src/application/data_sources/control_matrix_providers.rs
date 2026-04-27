@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 
 use crate::application::backtest::{ControlMatrixPlan, PB12_TOGGLES, Pb12Toggle};
 
-pub const TVREMIX_MCP_DEFAULT_URL: &str = "https://tvremix.xyz/api/mcp";
+pub const TVREMIX_MCP_DEFAULT_URL: &str = "https://tvremix.xyz/api/mcp/v1";
 pub const TVREMIX_MCP_URL_ENV: &str = "ICT_ENGINE_TVREMIX_MCP_URL";
 pub const TVREMIX_MCP_API_KEY_ENV: &str = "ICT_ENGINE_TVREMIX_MCP_API_KEY";
 pub const IBKR_CONSENT_RELATIVE_PATH: &str = ".ict-engine/ibkr_consent.json";
@@ -137,9 +137,6 @@ fn ibkr_provider_status(
         ControlMatrixDataRequirement::EtfReference,
         ControlMatrixDataRequirement::CfdReference,
         ControlMatrixDataRequirement::VixOverlay,
-        ControlMatrixDataRequirement::OptionsGreeks,
-        ControlMatrixDataRequirement::OptionsOpenInterest,
-        ControlMatrixDataRequirement::OptionsImpliedVolatility,
     ];
     let consent_path = home_dir.map(|home| home.join(IBKR_CONSENT_RELATIVE_PATH));
     let capabilities_path = home_dir.map(|home| home.join(IBKR_CAPABILITIES_RELATIVE_PATH));
@@ -197,7 +194,6 @@ where
     let supported = [
         ControlMatrixDataRequirement::EtfReference,
         ControlMatrixDataRequirement::VixOverlay,
-        ControlMatrixDataRequirement::OptionsGreeks,
         ControlMatrixDataRequirement::OptionsOpenInterest,
         ControlMatrixDataRequirement::OptionsImpliedVolatility,
     ];
@@ -228,7 +224,6 @@ where
         ControlMatrixDataRequirement::CfdReference,
         ControlMatrixDataRequirement::VixOverlay,
         ControlMatrixDataRequirement::OptionsGreeks,
-        ControlMatrixDataRequirement::OptionsOpenInterest,
         ControlMatrixDataRequirement::OptionsImpliedVolatility,
     ];
     let configured_url = env_lookup(TVREMIX_MCP_URL_ENV)
