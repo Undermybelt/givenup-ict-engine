@@ -169,25 +169,23 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         aux_base_url,
         state_dir,
     } = input;
-    let inferred = match symbol.to_ascii_uppercase().as_str() {
-        "NQ" => Some(("NQ=F", "QQQ", "QQQ", "equity")),
-        "ES" => Some(("ES=F", "SPY", "SPY", "equity")),
-        "YM" => Some(("YM=F", "DIA", "DIA", "equity")),
-        "GC" => Some(("GC=F", "GLD", "GLD", "etf")),
-        "CL" => Some(("CL=F", "USO", "USO", "etf")),
-        _ => None,
-    };
+    let catalog = ict_engine::market_catalog::load_market_catalog(
+        ict_engine::application::data_sources::repo_root_from_harness(),
+    )?;
+    let inferred = ict_engine::application::data_sources::analyze_live_inferred_symbols(
+        &catalog, symbol,
+    );
     let futures_symbol = futures_symbol
-        .or_else(|| inferred.map(|item| item.0))
+        .or_else(|| inferred.as_ref().map(|item| item.futures_symbol.as_str()))
         .ok_or_else(|| anyhow!("missing live futures_symbol for symbol '{}'", symbol))?;
     let spot_symbol = spot_symbol
-        .or_else(|| inferred.map(|item| item.1))
+        .or_else(|| inferred.as_ref().map(|item| item.spot_symbol.as_str()))
         .ok_or_else(|| anyhow!("missing live spot_symbol for symbol '{}'", symbol))?;
     let options_symbol = options_symbol
-        .or_else(|| inferred.map(|item| item.2))
+        .or_else(|| inferred.as_ref().map(|item| item.options_symbol.as_str()))
         .unwrap_or(spot_symbol);
     let spot_kind_raw = spot_kind
-        .or_else(|| inferred.map(|item| item.3))
+        .or_else(|| inferred.as_ref().map(|item| item.spot_kind.as_str()))
         .unwrap_or("equity");
     let spot_kind_label = spot_kind_raw.to_string();
     let spot_kind = SpotInstrumentKind::parse(spot_kind_raw)?;
@@ -275,8 +273,12 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
     let spot_live_price = aux_provider
         .fetch_spot_last_price(spot_kind, spot_symbol)
         .ok();
-    let options_summary = aux_provider
-        .fetch_options_chain_summary(options_symbol)
+    let options_summary = ict_engine::application::data_sources::fetch_options_summary_with_fallback(
+        aux_provider.as_ref(),
+        &catalog,
+        symbol,
+        options_symbol,
+    )
         .unwrap_or_else(|_| neutral_options_summary(options_symbol));
 
     let auxiliary = aux_provider.build_auxiliary_evidence(
@@ -416,8 +418,13 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         spot_live_price,
         report.supporting.auxiliary.as_ref(),
     );
-    report.analysis.smt_correlation =
-        build_smt_correlation_section(futures_symbol, spot_symbol, &ltf, &spot_candles, auxiliary);
+    report.analysis.smt_correlation = build_smt_correlation_section(
+        futures_symbol,
+        spot_symbol,
+        &ltf,
+        &spot_candles,
+        auxiliary,
+    )?;
     report.analysis.regime_bayesian = build_regime_bayesian_section(
         &report.supporting.model_state.hmm_state,
         &report.supporting.model_state.regime_probs,

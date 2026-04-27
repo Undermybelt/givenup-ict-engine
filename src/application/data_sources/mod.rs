@@ -4,6 +4,8 @@ pub mod control_matrix_providers;
 pub mod control_matrix_runtime;
 pub mod harness;
 pub mod live_defaults;
+pub mod options_summary;
+pub mod provider_fetch;
 pub mod sop_reports;
 pub mod source_freshness;
 pub mod source_health;
@@ -34,11 +36,15 @@ pub use harness::{
     MarketDataHarnessEnvelope, MarketDataHarnessIbkrSpec, MarketDataHarnessOperation,
     MarketDataHarnessPlan, MarketDataHarnessPreset, MarketDataHarnessPresetConfig,
     MarketDataHarnessRequest, MarketDataHarnessSymbolSpec, MarketDataHarnessTask,
+    MarketLiveDefaultsSpec, ProviderExecutionRequest,
     MARKET_DATA_HARNESS_PRESETS_FILE,
 };
 pub use live_defaults::{
-    analyze_live_inferred_symbols, parse_live_backend, resolve_live_backend_base_url,
-    AnalyzeLiveSymbolDefaults,
+    analyze_live_inferred_symbols, build_inferable_live_defaults_map, parse_live_backend,
+    resolve_live_backend_base_url, AnalyzeLiveSymbolDefaults,
+};
+pub use options_summary::{
+    fetch_options_summary_with_fallback, resolve_options_volatility_proxy_symbol,
 };
 pub use sop_reports::{
     build_expansion_sop_market_report, build_expansion_sop_report, build_futures_sop_market_report,

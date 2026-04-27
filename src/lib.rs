@@ -22,6 +22,7 @@ pub mod indicators;
 pub mod kalman;
 pub mod math;
 pub mod mcmc;
+pub mod market_catalog;
 pub mod pda_sequence;
 pub mod pda_timeline;
 pub mod planner;

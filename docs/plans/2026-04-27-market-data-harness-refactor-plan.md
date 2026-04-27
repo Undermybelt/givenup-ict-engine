@@ -27,8 +27,8 @@
 - Modify: `src/main.rs`
 - Modify: `src/application/data_sources/command_entry.rs`
 
-- [ ] Add `market-data-harness-plan` command that prints the resolved provider plan.
-- [ ] Add `market-data-harness-fetch` command that executes the plan and prints normalized envelopes.
+- [ ] Add `market-data-harness --action plan` command behavior that prints the resolved provider plan.
+- [ ] Add `market-data-harness --action fetch` command behavior that executes the plan and prints normalized envelopes.
 - [ ] Keep both commands read-only and side-effect-free except optional snapshot output.
 
 ## Task 3: Route PB12 through the harness

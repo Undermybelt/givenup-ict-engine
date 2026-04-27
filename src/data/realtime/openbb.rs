@@ -161,11 +161,11 @@ impl OpenBBProvider {
                     nearest_expiration_dte,
                 }
             }
-            Err(_) => {
+            Err(primary_error) => {
                 if let Ok(summary) = browser_bridge::yahoo_finance_options_summary(&symbol) {
                     summary
                 } else {
-                    self.fetch_options_proxy_summary(&symbol)?
+                    return Err(primary_error);
                 }
             }
         };
@@ -548,9 +548,11 @@ impl OpenBBProvider {
             .context("failed to parse yahoo options with crumb response")
     }
 
-    fn fetch_options_proxy_summary(&self, symbol: &str) -> Result<OptionsChainSummary> {
-        let proxy_symbol = options_volatility_proxy(symbol)
-            .ok_or_else(|| anyhow!("no options proxy mapping for '{}'", symbol))?;
+    pub fn fetch_options_volatility_proxy_summary(
+        &self,
+        proxy_symbol: &str,
+        underlying_symbol: &str,
+    ) -> Result<OptionsChainSummary> {
         let candles = self.fetch_chart_candles(
             proxy_symbol,
             "1d",
@@ -562,7 +564,7 @@ impl OpenBBProvider {
             .ok_or_else(|| anyhow!("no volatility proxy candles for '{}'", proxy_symbol))?;
 
         Ok(OptionsChainSummary {
-            symbol: symbol.to_string(),
+            symbol: underlying_symbol.to_string(),
             source: Some(format!("openbb:volatility_proxy:{proxy_symbol}")),
             underlying_price: None,
             call_open_interest: 0.0,
@@ -1080,17 +1082,6 @@ fn resolve_options_symbol(symbol: &str) -> String {
         "ndx" => "^NDX".to_string(),
         other if other.starts_with('^') => other.to_uppercase(),
         _ => symbol.trim().to_uppercase(),
-    }
-}
-
-fn options_volatility_proxy(symbol: &str) -> Option<&'static str> {
-    match symbol.trim().to_ascii_uppercase().as_str() {
-        "QQQ" | "NDX" | "^NDX" | "NQ" => Some("^VXN"),
-        "SPY" | "SPX" | "^SPX" | "ES" => Some("^VIX"),
-        "IWM" | "RUT" | "^RUT" | "RTY" => Some("^RVX"),
-        "GC" | "GC=F" | "GLD" => Some("^GVZ"),
-        "CL" | "CL=F" | "USO" => Some("^OVX"),
-        _ => None,
     }
 }
 

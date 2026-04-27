@@ -63,6 +63,12 @@ pub trait IntegratedLiveDataSource: Send + Sync {
 
     fn fetch_options_chain_summary(&self, symbol: &str) -> Result<OptionsChainSummary>;
 
+    fn fetch_options_volatility_proxy_summary(
+        &self,
+        proxy_symbol: &str,
+        underlying_symbol: &str,
+    ) -> Result<OptionsChainSummary>;
+
     fn build_auxiliary_evidence(
         &self,
         spot_kind: SpotInstrumentKind,
@@ -113,6 +119,14 @@ impl IntegratedLiveDataSource for OpenAliceProvider {
 
     fn fetch_options_chain_summary(&self, symbol: &str) -> Result<OptionsChainSummary> {
         OpenAliceProvider::fetch_options_chain_summary(self, symbol)
+    }
+
+    fn fetch_options_volatility_proxy_summary(
+        &self,
+        _proxy_symbol: &str,
+        _underlying_symbol: &str,
+    ) -> Result<OptionsChainSummary> {
+        bail!("openalice backend does not support options volatility proxy fallback")
     }
 
     fn build_auxiliary_evidence(
@@ -184,6 +198,14 @@ impl IntegratedLiveDataSource for OpenBBProvider {
         OpenBBProvider::fetch_options_chain_summary(self, symbol)
     }
 
+    fn fetch_options_volatility_proxy_summary(
+        &self,
+        proxy_symbol: &str,
+        underlying_symbol: &str,
+    ) -> Result<OptionsChainSummary> {
+        OpenBBProvider::fetch_options_volatility_proxy_summary(self, proxy_symbol, underlying_symbol)
+    }
+
     fn build_auxiliary_evidence(
         &self,
         spot_kind: SpotInstrumentKind,
@@ -251,6 +273,14 @@ impl IntegratedLiveDataSource for NofxProvider {
 
     fn fetch_options_chain_summary(&self, symbol: &str) -> Result<OptionsChainSummary> {
         NofxProvider::fetch_options_chain_summary(self, symbol)
+    }
+
+    fn fetch_options_volatility_proxy_summary(
+        &self,
+        _proxy_symbol: &str,
+        _underlying_symbol: &str,
+    ) -> Result<OptionsChainSummary> {
+        bail!("nofx backend does not support options volatility proxy fallback")
     }
 
     fn build_auxiliary_evidence(

@@ -73,6 +73,7 @@ pub fn build_control_matrix_provider_summary(plan: &ControlMatrixPlan) -> Contro
         required_requirements_for_plan(plan),
         &|name| std::env::var(name).ok(),
         home_dir(),
+        &ibkr_runtime_ready,
     )
 }
 
@@ -83,6 +84,7 @@ pub fn build_provider_summary_for_requirements(
         required,
         &|name| std::env::var(name).ok(),
         home_dir(),
+        &ibkr_runtime_ready,
     )
 }
 
@@ -90,12 +92,13 @@ fn build_provider_summary_for_requirements_with_env<F>(
     required: BTreeSet<ControlMatrixDataRequirement>,
     env_lookup: &F,
     home_dir: Option<PathBuf>,
+    ibkr_runtime_probe: &dyn Fn() -> bool,
 ) -> ControlMatrixProviderSummary
 where
     F: Fn(&str) -> Option<String>,
 {
     let provider_statuses = vec![
-        ibkr_provider_status(&required, home_dir.as_deref()),
+        ibkr_provider_status(&required, home_dir.as_deref(), ibkr_runtime_probe()),
         yfinance_provider_status(&required, env_lookup),
         tradingview_mcp_provider_status(&required, env_lookup),
     ];
@@ -141,6 +144,7 @@ fn requirement_for_toggle(toggle: Pb12Toggle) -> Option<ControlMatrixDataRequire
 fn ibkr_provider_status(
     required: &BTreeSet<ControlMatrixDataRequirement>,
     home_dir: Option<&Path>,
+    runtime_ready: bool,
 ) -> ControlMatrixProviderStatus {
     let supported = [
         ControlMatrixDataRequirement::EtfReference,
@@ -154,25 +158,28 @@ fn ibkr_provider_status(
         .as_ref()
         .map(|path| path.exists())
         .unwrap_or(false);
+    let healthy = consent_present && runtime_ready;
     ControlMatrixProviderStatus {
         provider: ControlMatrixProviderKind::Ibkr.as_str().to_string(),
-        status: if consent_present {
+        status: if healthy {
             "ready".to_string()
         } else {
             "install_required".to_string()
         },
-        healthy: consent_present,
-        reason: if consent_present {
-            "local_ibkr_consent_present".to_string()
-        } else {
+        healthy,
+        reason: if !consent_present {
             "missing_local_ibkr_consent".to_string()
+        } else if !runtime_ready {
+            "ibkr_runtime_probe_failed".to_string()
+        } else {
+            "local_ibkr_runtime_ready".to_string()
         },
         supported_requirements: supported
             .into_iter()
             .filter(|item| required.contains(item))
             .map(|item| item.as_str().to_string())
             .collect(),
-        install_prompts: if consent_present {
+        install_prompts: if healthy {
             Vec::new()
         } else {
             vec![
@@ -193,6 +200,20 @@ fn ibkr_provider_status(
     }
 }
 
+fn ibkr_runtime_ready() -> bool {
+    let scripts_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("scripts");
+    let probe = format!(
+        "import sys; sys.path.insert(0, {:?}); import redis; import ibkr_bridge",
+        scripts_dir.display().to_string()
+    );
+    std::process::Command::new("python3")
+        .arg("-c")
+        .arg(probe)
+        .output()
+        .map(|output| output.status.success())
+        .unwrap_or(false)
+}
+
 fn yfinance_provider_status<F>(
     required: &BTreeSet<ControlMatrixDataRequirement>,
     _env_lookup: &F,
@@ -202,6 +223,7 @@ where
 {
     let supported = [
         ControlMatrixDataRequirement::EtfReference,
+        ControlMatrixDataRequirement::CfdReference,
         ControlMatrixDataRequirement::VixOverlay,
         ControlMatrixDataRequirement::OptionsOpenInterest,
         ControlMatrixDataRequirement::OptionsImpliedVolatility,
@@ -312,6 +334,7 @@ mod tests {
             required_requirements_for_plan(&plan),
             &|_| None,
             Some(PathBuf::from("/tmp/does-not-exist")),
+            &|| false,
         );
         assert!(summary
             .required_requirements
@@ -342,6 +365,7 @@ mod tests {
                 _ => None,
             },
             None,
+            &|| false,
         );
         let provider = summary
             .provider_statuses
@@ -356,5 +380,24 @@ mod tests {
                 .all(|item| !item.contains("secret-token-value"))
         );
         assert!(provider.redacted_config.iter().any(|item| item.contains("<set>")));
+    }
+
+    #[test]
+    fn ibkr_requires_runtime_probe_even_with_consent_files() {
+        let required = BTreeSet::from([ControlMatrixDataRequirement::CfdReference]);
+        let summary = build_provider_summary_for_requirements_with_env(
+            required,
+            &|_| None,
+            Some(PathBuf::from(std::env::var("HOME").unwrap())),
+            &|| false,
+        );
+        let provider = summary
+            .provider_statuses
+            .iter()
+            .find(|status| status.provider == "ibkr")
+            .unwrap();
+        assert_eq!(provider.status, "install_required");
+        assert!(!provider.healthy);
+        assert_eq!(provider.reason, "ibkr_runtime_probe_failed");
     }
 }

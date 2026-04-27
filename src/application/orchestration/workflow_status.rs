@@ -6,12 +6,14 @@ use serde_json::{json, Value};
 use crate::application::belief::{
     jump_calibration_gate_workflow_summary, jump_model_workflow_summary,
 };
+use crate::application::data_sources::{build_inferable_live_defaults_map, repo_root_from_harness};
 use crate::application::output_foundation::{
     print_redacted_json, redact_local_paths_in_human_text, redact_local_paths_in_value,
     short_workflow_phase_summary,
 };
 use crate::application::release_closure::workflow_next_step_view;
 use crate::config::shell_quote;
+use crate::market_catalog::load_market_catalog;
 use crate::state::{
     ArtifactConsumedImpactSummary, ArtifactDecisionSummary, ArtifactFactorTrendSummary,
     ArtifactFamilyTrendSummary, ArtifactHistorySummary, ArtifactLineageSummary,
@@ -1080,53 +1082,9 @@ pub fn build_agent_bootstrap_view(
         "ict-engine clean-futures --root <tomac-root> --output-dir <output-dir> --multi-timeframe"
             .to_string()
     };
-    let inferable_live_defaults = std::collections::BTreeMap::from([
-        (
-            "NQ".to_string(),
-            std::collections::BTreeMap::from([
-                ("futures_symbol".to_string(), "NQ=F".to_string()),
-                ("spot_symbol".to_string(), "QQQ".to_string()),
-                ("options_symbol".to_string(), "QQQ".to_string()),
-                ("spot_kind".to_string(), "equity".to_string()),
-            ]),
-        ),
-        (
-            "ES".to_string(),
-            std::collections::BTreeMap::from([
-                ("futures_symbol".to_string(), "ES=F".to_string()),
-                ("spot_symbol".to_string(), "SPY".to_string()),
-                ("options_symbol".to_string(), "SPY".to_string()),
-                ("spot_kind".to_string(), "equity".to_string()),
-            ]),
-        ),
-        (
-            "YM".to_string(),
-            std::collections::BTreeMap::from([
-                ("futures_symbol".to_string(), "YM=F".to_string()),
-                ("spot_symbol".to_string(), "DIA".to_string()),
-                ("options_symbol".to_string(), "DIA".to_string()),
-                ("spot_kind".to_string(), "equity".to_string()),
-            ]),
-        ),
-        (
-            "GC".to_string(),
-            std::collections::BTreeMap::from([
-                ("futures_symbol".to_string(), "GC=F".to_string()),
-                ("spot_symbol".to_string(), "GLD".to_string()),
-                ("options_symbol".to_string(), "GLD".to_string()),
-                ("spot_kind".to_string(), "etf".to_string()),
-            ]),
-        ),
-        (
-            "CL".to_string(),
-            std::collections::BTreeMap::from([
-                ("futures_symbol".to_string(), "CL=F".to_string()),
-                ("spot_symbol".to_string(), "USO".to_string()),
-                ("options_symbol".to_string(), "USO".to_string()),
-                ("spot_kind".to_string(), "etf".to_string()),
-            ]),
-        ),
-    ]);
+    let inferable_live_defaults = load_market_catalog(repo_root_from_harness())
+        .map(|catalog| build_inferable_live_defaults_map(&catalog))
+        .unwrap_or_default();
     AgentBootstrapView {
         symbol: symbol.to_string(),
         project_role: "closed_loop_multi_timeframe_pre_bayes_bbn_engine".to_string(),

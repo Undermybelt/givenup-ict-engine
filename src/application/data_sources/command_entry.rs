@@ -4,8 +4,9 @@ use serde::Serialize;
 use crate::application::multi_timeframe_inputs::resolve_tomac_root;
 use crate::application::data_sources::{
     build_market_data_harness_plan, execute_market_data_harness_plan,
-    load_market_data_harness_preset_config, repo_root_from_harness, MarketDataHarnessRequest,
+    repo_root_from_harness, MarketDataHarnessRequest,
 };
+use crate::market_catalog::load_market_catalog;
 
 pub struct ExpansionSopCommandInput<'a> {
     pub root: Option<&'a str>,
@@ -132,8 +133,8 @@ pub fn market_data_harness_plan_command(
     input: MarketDataHarnessCommandInput<'_>,
 ) -> Result<()> {
     let request = load_or_build_market_data_harness_request(input)?;
-    let config = load_market_data_harness_preset_config(repo_root_from_harness())?;
-    let plan = build_market_data_harness_plan(request, &config)?;
+    let catalog = load_market_catalog(repo_root_from_harness())?;
+    let plan = build_market_data_harness_plan(request, &catalog)?;
     println!("{}", serde_json::to_string_pretty(&plan)?);
     Ok(())
 }
@@ -142,11 +143,57 @@ pub fn market_data_harness_fetch_command(
     input: MarketDataHarnessCommandInput<'_>,
 ) -> Result<()> {
     let request = load_or_build_market_data_harness_request(input)?;
-    let config = load_market_data_harness_preset_config(repo_root_from_harness())?;
-    let plan = build_market_data_harness_plan(request, &config)?;
+    let catalog = load_market_catalog(repo_root_from_harness())?;
+    let plan = build_market_data_harness_plan(request, &catalog)?;
     let bundle = execute_market_data_harness_plan(&plan)?;
     println!("{}", serde_json::to_string_pretty(&bundle)?);
+    let failures = collect_harness_failures(&bundle);
+    if !failures.is_empty() {
+        anyhow::bail!("market-data-harness fetch encountered failures: {}", failures.join(" | "));
+    }
     Ok(())
+}
+
+fn collect_harness_failures(
+    bundle: &crate::application::data_sources::MarketDataHarnessBundle,
+) -> Vec<String> {
+    let mut failures = bundle
+        .plan
+        .missing_roles
+        .iter()
+        .map(|role| format!("missing_role={role}"))
+        .collect::<Vec<_>>();
+    failures.extend(
+        bundle
+            .results
+            .iter()
+            .filter(|result| !result.ok)
+            .map(|result| {
+                let message = result
+                    .error
+                    .as_ref()
+                    .map(|error| format!("{}:{}", error.category, error.message))
+                    .unwrap_or_else(|| "unknown_error".to_string());
+                format!(
+                    "role={} provider={} symbol={} {}",
+                    result.role,
+                    result.provider,
+                    result.symbol.as_deref().unwrap_or("<none>"),
+                    message
+                )
+            }),
+    );
+    if !failures.is_empty() {
+        failures.extend(
+            bundle
+                .plan
+                .provider_summary
+                .actionable_install_prompts
+                .iter()
+                .map(|item| format!("install_prompt={item}")),
+        );
+    }
+    failures
 }
 
 fn load_or_build_market_data_harness_request(
@@ -178,7 +225,13 @@ fn load_or_build_market_data_harness_request(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::application::data_sources::{
+        MarketDataHarnessBundle, MarketDataHarnessEnvelope,
+        MarketDataHarnessOperation, MarketDataHarnessPlan, MarketDataHarnessRequest,
+    };
+    use crate::application::data_sources::harness::MarketDataHarnessError;
     use serde_json::json;
+    use std::collections::BTreeMap;
     use std::sync::{
         atomic::{AtomicBool, Ordering},
         Arc,
@@ -254,5 +307,83 @@ mod tests {
 
         let report_path = temp.path().join("expansion_sop_report.15m.json");
         assert!(report_path.exists());
+    }
+
+    #[test]
+    fn harness_fetch_failures_are_reported_to_cli() {
+        let bundle = MarketDataHarnessBundle {
+            plan: MarketDataHarnessPlan {
+                request: MarketDataHarnessRequest {
+                    market_key: "ES".to_string(),
+                    primary_data_path: None,
+                    interval: Some("1d".to_string()),
+                    start: None,
+                    end: None,
+                    count: Some(30),
+                    related_roles: vec!["etf_reference".to_string()],
+                    provider_preferences: BTreeMap::new(),
+                    symbol_overrides: BTreeMap::new(),
+                },
+                provider_summary: Default::default(),
+                tasks: Vec::new(),
+                missing_roles: vec!["volatility_reference".to_string()],
+                warnings: vec!["missing_provider_for_role=volatility_reference".to_string()],
+            },
+            results: vec![MarketDataHarnessEnvelope {
+                ok: false,
+                provider: "yfinance".to_string(),
+                operation: MarketDataHarnessOperation::Ohlcv.as_str().to_string(),
+                role: "etf_reference".to_string(),
+                symbol: Some("SPY".to_string()),
+                data: None,
+                error: Some(MarketDataHarnessError {
+                    category: "fetch_failed".to_string(),
+                    message: "rate limited".to_string(),
+                    retryable: true,
+                }),
+            }],
+        };
+
+        let failures = collect_harness_failures(&bundle);
+        assert!(failures.iter().any(|item| item.contains("missing_role=volatility_reference")));
+        assert!(failures.iter().any(|item| item.contains("role=etf_reference")));
+    }
+
+    #[test]
+    fn harness_fetch_success_does_not_report_install_prompts_as_failures() {
+        let bundle = MarketDataHarnessBundle {
+            plan: MarketDataHarnessPlan {
+                request: MarketDataHarnessRequest {
+                    market_key: "ES".to_string(),
+                    primary_data_path: None,
+                    interval: Some("1d".to_string()),
+                    start: None,
+                    end: None,
+                    count: Some(30),
+                    related_roles: vec!["etf_reference".to_string()],
+                    provider_preferences: BTreeMap::new(),
+                    symbol_overrides: BTreeMap::new(),
+                },
+                provider_summary: crate::application::data_sources::ControlMatrixProviderSummary {
+                    actionable_install_prompts: vec!["install me".to_string()],
+                    ..Default::default()
+                },
+                tasks: Vec::new(),
+                missing_roles: Vec::new(),
+                warnings: Vec::new(),
+            },
+            results: vec![MarketDataHarnessEnvelope {
+                ok: true,
+                provider: "yfinance".to_string(),
+                operation: MarketDataHarnessOperation::Ohlcv.as_str().to_string(),
+                role: "etf_reference".to_string(),
+                symbol: Some("SPY".to_string()),
+                data: Some(json!([])),
+                error: None,
+            }],
+        };
+
+        let failures = collect_harness_failures(&bundle);
+        assert!(failures.is_empty());
     }
 }

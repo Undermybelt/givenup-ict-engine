@@ -6,14 +6,13 @@ use std::collections::BTreeMap;
 use std::path::Path;
 
 use super::control_matrix_providers::{
-    build_provider_summary_for_requirements, ControlMatrixDataRequirement,
-    ControlMatrixProviderSummary,
+    build_provider_summary_for_requirements, ControlMatrixDataRequirement, ControlMatrixProviderSummary,
 };
+use super::provider_fetch::{
+    fetch_options_summary_for_task, fetch_reference_candles_for_task,
+};
+use crate::market_catalog::MarketCatalog;
 use crate::types::Candle;
-
-use super::control_matrix_runtime::{
-    fetch_options_summary_for_provider_symbol, fetch_reference_candles_for_provider_symbol,
-};
 
 pub const MARKET_DATA_HARNESS_PRESETS_FILE: &str = "config/market_data_harness_presets.json";
 
@@ -25,15 +24,25 @@ pub struct MarketDataHarnessPresetConfig {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct MarketLiveDefaultsSpec {
+    pub futures_symbol: String,
+    pub spot_role: String,
+    pub options_role: String,
+    pub spot_kind: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct MarketDataHarnessPreset {
     pub market_key: String,
     #[serde(default)]
     pub aliases: Vec<String>,
     #[serde(default)]
+    pub live_defaults: Option<MarketLiveDefaultsSpec>,
+    #[serde(default)]
     pub related: BTreeMap<String, MarketDataHarnessSymbolSpec>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, Eq)]
 pub struct MarketDataHarnessIbkrSpec {
     pub symbol: String,
     pub sec_type: String,
@@ -94,12 +103,48 @@ impl MarketDataHarnessOperation {
     }
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub enum ProviderExecutionRequest {
+    YahooFinance { symbol: String },
+    TradingViewMcp { symbol: String },
+    Ibkr { contract: MarketDataHarnessIbkrSpec },
+}
+
+impl ProviderExecutionRequest {
+    pub fn symbol(&self) -> &str {
+        match self {
+            Self::YahooFinance { symbol } | Self::TradingViewMcp { symbol } => symbol,
+            Self::Ibkr { contract } => &contract.symbol,
+        }
+    }
+
+    pub fn ibkr_contract(&self) -> Option<&MarketDataHarnessIbkrSpec> {
+        match self {
+            Self::Ibkr { contract } => Some(contract),
+            _ => None,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MarketDataHarnessTask {
     pub role: String,
     pub provider: String,
     pub operation: MarketDataHarnessOperation,
     pub symbol: String,
+    pub request: ProviderExecutionRequest,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fallback_options_proxy_symbol: Option<String>,
+}
+
+impl MarketDataHarnessTask {
+    pub fn request_symbol(&self) -> &str {
+        self.request.symbol()
+    }
+
+    pub fn ibkr_contract(&self) -> Option<&MarketDataHarnessIbkrSpec> {
+        self.request.ibkr_contract()
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -162,9 +207,9 @@ pub fn repo_root_from_harness() -> std::path::PathBuf {
 
 pub fn build_market_data_harness_plan(
     request: MarketDataHarnessRequest,
-    config: &MarketDataHarnessPresetConfig,
+    catalog: &MarketCatalog,
 ) -> Result<MarketDataHarnessPlan> {
-    let preset = find_matching_preset(config, &request.market_key);
+    let preset = find_matching_preset(&catalog.presets, &request.market_key);
     let required_requirements = request
         .related_roles
         .iter()
@@ -191,8 +236,41 @@ pub fn build_market_data_harness_plan(
             warnings.push(format!("missing_symbol_spec_for_role={role}"));
             continue;
         };
-        let provider = resolve_provider_for_role(role, &request, &provider_summary)?;
-        let symbol = render_symbol_for_provider(&symbol_spec, &provider)?;
+        let provider = match resolve_provider_for_role(role, &request, &provider_summary) {
+            Ok(provider) => provider,
+            Err(err) => {
+                missing_roles.push(role.clone());
+                warnings.push(format!("missing_provider_for_role={role}"));
+                warnings.push(err.to_string());
+                continue;
+            }
+        };
+        let symbol = match display_symbol_for_spec(&symbol_spec) {
+            Ok(symbol) => symbol,
+            Err(err) => {
+                missing_roles.push(role.clone());
+                warnings.push(format!("missing_display_symbol_for_role={role}"));
+                warnings.push(err.to_string());
+                continue;
+            }
+        };
+        let provider_request = match build_provider_request(&symbol_spec, &provider) {
+            Ok(provider_request) => provider_request,
+            Err(err) => {
+                missing_roles.push(role.clone());
+                warnings.push(format!("missing_provider_symbol_for_role={role}"));
+                warnings.push(err.to_string());
+                continue;
+            }
+        };
+        let fallback_options_proxy_symbol =
+            if matches!(operation, MarketDataHarnessOperation::OptionsSummary) {
+                catalog
+                    .relationships(&request.market_key)
+                    .and_then(|item| item.options_volatility_proxy.clone())
+            } else {
+                None
+            };
         match operation {
             MarketDataHarnessOperation::Ohlcv | MarketDataHarnessOperation::Quote => tasks.push(
                 MarketDataHarnessTask {
@@ -200,6 +278,8 @@ pub fn build_market_data_harness_plan(
                     provider,
                     operation,
                     symbol,
+                    request: provider_request,
+                    fallback_options_proxy_symbol,
                 },
             ),
             MarketDataHarnessOperation::OptionsSummary => {
@@ -208,6 +288,8 @@ pub fn build_market_data_harness_plan(
                     provider,
                     operation,
                     symbol,
+                    request: provider_request,
+                    fallback_options_proxy_symbol,
                 });
             }
         }
@@ -233,20 +315,13 @@ pub fn execute_market_data_harness_plan(plan: &MarketDataHarnessPlan) -> Result<
     for task in &plan.tasks {
         let result = match task.operation {
             MarketDataHarnessOperation::Ohlcv => {
-                match fetch_reference_candles_for_provider_symbol(
-                    &task.provider,
-                    &task.symbol,
-                    &interval,
-                    start,
-                    end,
-                    count,
-                ) {
+                match fetch_reference_candles_for_task(task, &interval, start, end, count) {
                     Ok(candles) => MarketDataHarnessEnvelope {
                         ok: true,
                         provider: task.provider.clone(),
                         operation: task.operation.as_str().to_string(),
                         role: task.role.clone(),
-                        symbol: Some(task.symbol.clone()),
+                        symbol: Some(task.request_symbol().to_string()),
                         data: Some(serde_json::to_value(&candles)?),
                         error: None,
                     },
@@ -254,13 +329,13 @@ pub fn execute_market_data_harness_plan(plan: &MarketDataHarnessPlan) -> Result<
                 }
             }
             MarketDataHarnessOperation::OptionsSummary => {
-                match fetch_options_summary_for_provider_symbol(&task.provider, &task.symbol) {
+                match fetch_options_summary_for_task(task) {
                     Ok(summary) => MarketDataHarnessEnvelope {
                         ok: true,
                         provider: task.provider.clone(),
                         operation: task.operation.as_str().to_string(),
                         role: task.role.clone(),
-                        symbol: Some(task.symbol.clone()),
+                        symbol: Some(task.request_symbol().to_string()),
                         data: Some(serde_json::to_value(&summary)?),
                         error: None,
                     },
@@ -293,7 +368,7 @@ fn harness_error_envelope(
         provider: task.provider.clone(),
         operation: task.operation.as_str().to_string(),
         role: task.role.clone(),
-        symbol: Some(task.symbol.clone()),
+        symbol: Some(task.request_symbol().to_string()),
         data: None,
         error: Some(MarketDataHarnessError {
             category: category.to_string(),
@@ -322,13 +397,8 @@ fn resolve_provider_for_role(
     if let Some(preferred) = request.provider_preferences.get(role) {
         return Ok(preferred.clone());
     }
-    let available = provider_summary
-        .provider_statuses
-        .iter()
-        .filter(|provider| provider.healthy)
-        .map(|provider| provider.provider.as_str())
-        .collect::<Vec<_>>();
     let requirement = requirement_for_role(role);
+    let available = healthy_supported_provider_names(provider_summary, requirement);
     let provider = match requirement {
         Some(ControlMatrixDataRequirement::OptionsGreeks) => {
             choose_provider(&available, &["tradingview_mcp", "yfinance", "ibkr"])
@@ -349,28 +419,57 @@ fn resolve_provider_for_role(
         .ok_or_else(|| anyhow!("no provider available for role '{}'", role))
 }
 
+fn healthy_supported_provider_names(
+    provider_summary: &ControlMatrixProviderSummary,
+    requirement: Option<ControlMatrixDataRequirement>,
+) -> Vec<&str> {
+    provider_summary
+        .provider_statuses
+        .iter()
+        .filter(|provider| provider.healthy)
+        .filter(|provider| {
+            requirement.is_none_or(|requirement| {
+                provider
+                    .supported_requirements
+                    .iter()
+                    .any(|item| item == requirement.as_str())
+            })
+        })
+        .map(|provider| provider.provider.as_str())
+        .collect()
+}
+
 fn choose_provider<'a>(available: &[&'a str], preferred: &[&'a str]) -> Option<&'a str> {
     preferred.iter().copied().find(|item| available.contains(item))
 }
 
-fn render_symbol_for_provider(spec: &MarketDataHarnessSymbolSpec, provider: &str) -> Result<String> {
+fn display_symbol_for_spec(spec: &MarketDataHarnessSymbolSpec) -> Result<String> {
+    spec.display_symbol
+        .clone()
+        .or_else(|| spec.yfinance.clone())
+        .or_else(|| spec.tradingview_mcp.clone())
+        .or_else(|| spec.ibkr.as_ref().map(|item| item.symbol.clone()))
+        .ok_or_else(|| anyhow!("missing display symbol"))
+}
+
+fn build_provider_request(spec: &MarketDataHarnessSymbolSpec, provider: &str) -> Result<ProviderExecutionRequest> {
     match provider {
         "yfinance" => spec
             .yfinance
             .clone()
-            .or_else(|| spec.display_symbol.clone())
+            .map(|symbol| ProviderExecutionRequest::YahooFinance { symbol })
             .ok_or_else(|| anyhow!("missing yfinance symbol")),
         "tradingview_mcp" => spec
             .tradingview_mcp
             .clone()
-            .or_else(|| spec.display_symbol.clone())
+            .map(|symbol| ProviderExecutionRequest::TradingViewMcp { symbol })
             .ok_or_else(|| anyhow!("missing tradingview symbol")),
         "ibkr" => spec
             .ibkr
             .as_ref()
-            .map(|item| item.symbol.clone())
-            .or_else(|| spec.display_symbol.clone())
-            .ok_or_else(|| anyhow!("missing ibkr symbol")),
+            .cloned()
+            .map(|contract| ProviderExecutionRequest::Ibkr { contract })
+            .ok_or_else(|| anyhow!("missing ibkr contract")),
         other => bail!("unsupported provider '{}'", other),
     }
 }
@@ -472,14 +571,17 @@ fn requirement_for_role(role: &str) -> Option<ControlMatrixDataRequirement> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::market_catalog::{MarketCatalog, MarketRelationshipConfig};
 
     #[test]
     fn plan_uses_preset_and_provider_preferences() {
-        let config = MarketDataHarnessPresetConfig {
-            version: 1,
-            markets: vec![MarketDataHarnessPreset {
+        let catalog = MarketCatalog {
+            presets: MarketDataHarnessPresetConfig {
+                version: 1,
+                markets: vec![MarketDataHarnessPreset {
                 market_key: "NQ".to_string(),
                 aliases: vec!["NASDAQ_FUTURES".to_string()],
+                live_defaults: None,
                 related: BTreeMap::from([
                     (
                         "etf_reference".to_string(),
@@ -498,7 +600,9 @@ mod tests {
                         },
                     ),
                 ]),
-            }],
+                }],
+            },
+            relationships: MarketRelationshipConfig::default(),
         };
         let plan = build_market_data_harness_plan(
             MarketDataHarnessRequest {
@@ -515,7 +619,7 @@ mod tests {
                 )]),
                 symbol_overrides: BTreeMap::new(),
             },
-            &config,
+            &catalog,
         )
         .unwrap();
         assert_eq!(plan.tasks.len(), 2);
@@ -527,5 +631,58 @@ mod tests {
             .tasks
             .iter()
             .any(|task| task.role == "options_underlying" && task.provider == "tradingview_mcp"));
+        let etf = plan
+            .tasks
+            .iter()
+            .find(|task| task.role == "etf_reference")
+            .unwrap();
+        assert_eq!(etf.request_symbol(), "QQQ");
+        let options = plan
+            .tasks
+            .iter()
+            .find(|task| task.role == "options_underlying")
+            .unwrap();
+        assert_eq!(options.fallback_options_proxy_symbol, None);
+    }
+
+    #[test]
+    fn provider_selection_only_uses_healthy_supported_providers() {
+        let summary = ControlMatrixProviderSummary {
+            required_requirements: vec!["cfd_reference".to_string()],
+            provider_statuses: vec![
+                crate::application::data_sources::ControlMatrixProviderStatus {
+                    provider: "yfinance".to_string(),
+                    status: "ready".to_string(),
+                    healthy: true,
+                    reason: "public".to_string(),
+                    supported_requirements: vec!["etf_reference".to_string()],
+                    install_prompts: Vec::new(),
+                    redacted_config: Vec::new(),
+                },
+                crate::application::data_sources::ControlMatrixProviderStatus {
+                    provider: "ibkr".to_string(),
+                    status: "install_required".to_string(),
+                    healthy: false,
+                    reason: "probe_failed".to_string(),
+                    supported_requirements: vec!["cfd_reference".to_string()],
+                    install_prompts: Vec::new(),
+                    redacted_config: Vec::new(),
+                },
+            ],
+            actionable_install_prompts: Vec::new(),
+        };
+        let request = MarketDataHarnessRequest {
+            market_key: "ES".to_string(),
+            primary_data_path: None,
+            interval: Some("1d".to_string()),
+            start: None,
+            end: None,
+            count: Some(10),
+            related_roles: vec!["cfd_reference".to_string()],
+            provider_preferences: BTreeMap::new(),
+            symbol_overrides: BTreeMap::new(),
+        };
+        let result = resolve_provider_for_role("cfd_reference", &request, &summary);
+        assert!(result.is_err());
     }
 }

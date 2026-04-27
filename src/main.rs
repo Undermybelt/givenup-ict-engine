@@ -1555,13 +1555,17 @@ fn main() -> Result<()> {
             state_dir,
         } => {
             ensure_state_dir_ready(&state_dir)?;
-            let futures_base_url = resolve_live_backend_base_url(
+            let futures_base_url = ict_engine::application::data_sources::resolve_live_backend_base_url(
                 &futures_backend,
                 &openalice_base_url,
                 &nofx_base_url,
             );
             let aux_base_url =
-                resolve_live_backend_base_url(&aux_backend, &openalice_base_url, &nofx_base_url);
+                ict_engine::application::data_sources::resolve_live_backend_base_url(
+                    &aux_backend,
+                    &openalice_base_url,
+                    &nofx_base_url,
+                );
             analyze_live_command(AnalyzeLiveCommandInput {
                 symbol: &symbol,
                 futures_symbol: futures_symbol.as_deref(),
@@ -5630,7 +5634,7 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
             native_ltf,
             paired,
             auxiliary,
-        )
+        )?
     } else {
         empty_smt_correlation_section()
     };
@@ -6464,19 +6468,6 @@ fn pre_bayes_policy_diff(
             format!("changed_fields={:?}", changed_fields)
         },
         changed_fields,
-    }
-}
-
-fn resolve_live_backend_base_url(
-    backend: &str,
-    openalice_base_url: &str,
-    nofx_base_url: &str,
-) -> String {
-    match backend.trim().to_ascii_lowercase().as_str() {
-        "openbb" => "native://openbb".to_string(),
-        "openalice" => openalice_base_url.to_string(),
-        "nofx" => nofx_base_url.to_string(),
-        _ => "native://openbb".to_string(),
     }
 }
 
@@ -8487,50 +8478,6 @@ mod tests {
         assert!(rendered.contains("pda_family=displacement"));
         assert!(rendered.contains("pda_hybrid_alignment=false"));
         assert!(bundle.pda_sequence_summary.is_none());
-    }
-
-    #[test]
-    fn test_live_inferable_defaults_cover_gc_and_cl() {
-        let defaults = BTreeMap::from([
-            (
-                "GC".to_string(),
-                BTreeMap::from([
-                    ("futures_symbol".to_string(), "GC=F".to_string()),
-                    ("spot_symbol".to_string(), "GLD".to_string()),
-                    ("options_symbol".to_string(), "GLD".to_string()),
-                    ("spot_kind".to_string(), "etf".to_string()),
-                ]),
-            ),
-            (
-                "CL".to_string(),
-                BTreeMap::from([
-                    ("futures_symbol".to_string(), "CL=F".to_string()),
-                    ("spot_symbol".to_string(), "USO".to_string()),
-                    ("options_symbol".to_string(), "USO".to_string()),
-                    ("spot_kind".to_string(), "etf".to_string()),
-                ]),
-            ),
-        ]);
-        assert_eq!(defaults["GC"]["futures_symbol"], "GC=F");
-        assert_eq!(defaults["CL"]["spot_symbol"], "USO");
-    }
-
-    #[test]
-    fn test_analyze_live_symbol_can_infer_gc_and_cl_defaults() {
-        let gc = match "GC" {
-            "GC" => Some(("GC=F", "GLD", "GLD", "etf")),
-            _ => None,
-        }
-        .unwrap();
-        let cl = match "CL" {
-            "CL" => Some(("CL=F", "USO", "USO", "etf")),
-            _ => None,
-        }
-        .unwrap();
-        assert_eq!(gc.0, "GC=F");
-        assert_eq!(gc.1, "GLD");
-        assert_eq!(cl.0, "CL=F");
-        assert_eq!(cl.1, "USO");
     }
 
     #[test]
