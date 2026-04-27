@@ -98,8 +98,10 @@ use ict_engine::application::{
     },
     data_sources::{
         build_expansion_sop_market_report, run_clean_futures, run_clean_futures_multi_timeframe,
-        run_expansion_sop_with, run_futures_sop_with, ExpansionSopMarketInput, ExpansionSopReport,
-        FuturesSopMarketInput, FuturesSopReport, RunExpansionSopInput,
+        market_data_harness_fetch_command, market_data_harness_plan_command,
+        run_expansion_sop_with, run_futures_sop_with, ExpansionSopMarketInput,
+        ExpansionSopReport, FuturesSopMarketInput, FuturesSopReport,
+        MarketDataHarnessCommandInput, RunExpansionSopInput,
     },
     decision_utils::{
         append_pda_sequence_hint, build_analyze_decision_hint, derive_family_outcomes,
@@ -1068,6 +1070,36 @@ enum Commands {
             help = "Emit mutation evaluation details in output"
         )]
         emit_mutation_evaluation: bool,
+    },
+    /// Resolve provider-capable market-data plan for a main market plus related symbols
+    MarketDataHarnessPlan {
+        #[arg(long, help = "Primary market key, e.g. NQ, ES, AAPL, BTCUSDT")]
+        market: String,
+        #[arg(long, help = "Optional primary candle JSON path to infer interval/range")]
+        primary_data: Option<String>,
+        #[arg(long, help = "Optional explicit interval override, e.g. 15m, 1h, 1d")]
+        interval: Option<String>,
+        #[arg(long, help = "Related role to resolve; repeatable")]
+        role: Vec<String>,
+        #[arg(long, help = "Per-role provider preference, role=provider; repeatable")]
+        provider: Vec<String>,
+        #[arg(long, help = "Advanced request JSON path; overrides market/role/provider flags")]
+        request_json: Option<String>,
+    },
+    /// Execute market-data harness fetch tasks and print normalized envelopes
+    MarketDataHarnessFetch {
+        #[arg(long, help = "Primary market key, e.g. NQ, ES, AAPL, BTCUSDT")]
+        market: String,
+        #[arg(long, help = "Optional primary candle JSON path to infer interval/range")]
+        primary_data: Option<String>,
+        #[arg(long, help = "Optional explicit interval override, e.g. 15m, 1h, 1d")]
+        interval: Option<String>,
+        #[arg(long, help = "Related role to fetch; repeatable")]
+        role: Vec<String>,
+        #[arg(long, help = "Per-role provider preference, role=provider; repeatable")]
+        provider: Vec<String>,
+        #[arg(long, help = "Advanced request JSON path; overrides market/role/provider flags")]
+        request_json: Option<String>,
     },
     /// Structured latest-sample trace from factor signal through Pre-Bayes, bridge, and resonance
     FactorPipelineDebug {
@@ -2212,6 +2244,36 @@ fn main() -> Result<()> {
                 }
             },
         )?,
+        Commands::MarketDataHarnessPlan {
+            market,
+            primary_data,
+            interval,
+            role,
+            provider,
+            request_json,
+        } => market_data_harness_plan_command(MarketDataHarnessCommandInput {
+            market: &market,
+            primary_data: primary_data.as_deref(),
+            interval: interval.as_deref(),
+            related_roles: &role,
+            provider_preferences: &provider,
+            request_json: request_json.as_deref(),
+        })?,
+        Commands::MarketDataHarnessFetch {
+            market,
+            primary_data,
+            interval,
+            role,
+            provider,
+            request_json,
+        } => market_data_harness_fetch_command(MarketDataHarnessCommandInput {
+            market: &market,
+            primary_data: primary_data.as_deref(),
+            interval: interval.as_deref(),
+            related_roles: &role,
+            provider_preferences: &provider,
+            request_json: request_json.as_deref(),
+        })?,
         Commands::FactorPipelineDebug {
             symbol,
             data,

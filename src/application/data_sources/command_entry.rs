@@ -2,6 +2,10 @@ use anyhow::Result;
 use serde::Serialize;
 
 use crate::application::multi_timeframe_inputs::resolve_tomac_root;
+use crate::application::data_sources::{
+    build_market_data_harness_plan, execute_market_data_harness_plan,
+    load_market_data_harness_preset_config, repo_root_from_harness, MarketDataHarnessRequest,
+};
 
 pub struct ExpansionSopCommandInput<'a> {
     pub root: Option<&'a str>,
@@ -12,6 +16,15 @@ pub struct ExpansionSopCommandInput<'a> {
     pub objective: &'a str,
     pub mutation_spec_path: Option<&'a str>,
     pub emit_mutation_evaluation: bool,
+}
+
+pub struct MarketDataHarnessCommandInput<'a> {
+    pub market: &'a str,
+    pub primary_data: Option<&'a str>,
+    pub interval: Option<&'a str>,
+    pub related_roles: &'a [String],
+    pub provider_preferences: &'a [String],
+    pub request_json: Option<&'a str>,
 }
 
 pub fn clean_futures_command<FMulti, FSingle, TMulti, TSingle>(
@@ -113,6 +126,53 @@ where
     let payload = build_payload(&report, mutation_spec.as_ref(), emit_mutation_evaluation)?;
     println!("{}", serde_json::to_string_pretty(&payload)?);
     Ok(())
+}
+
+pub fn market_data_harness_plan_command(
+    input: MarketDataHarnessCommandInput<'_>,
+) -> Result<()> {
+    let request = load_or_build_market_data_harness_request(input)?;
+    let config = load_market_data_harness_preset_config(repo_root_from_harness())?;
+    let plan = build_market_data_harness_plan(request, &config)?;
+    println!("{}", serde_json::to_string_pretty(&plan)?);
+    Ok(())
+}
+
+pub fn market_data_harness_fetch_command(
+    input: MarketDataHarnessCommandInput<'_>,
+) -> Result<()> {
+    let request = load_or_build_market_data_harness_request(input)?;
+    let config = load_market_data_harness_preset_config(repo_root_from_harness())?;
+    let plan = build_market_data_harness_plan(request, &config)?;
+    let bundle = execute_market_data_harness_plan(&plan)?;
+    println!("{}", serde_json::to_string_pretty(&bundle)?);
+    Ok(())
+}
+
+fn load_or_build_market_data_harness_request(
+    input: MarketDataHarnessCommandInput<'_>,
+) -> Result<MarketDataHarnessRequest> {
+    if let Some(path) = input.request_json {
+        let raw = std::fs::read_to_string(path)?;
+        return Ok(serde_json::from_str(&raw)?);
+    }
+    let provider_preferences = input
+        .provider_preferences
+        .iter()
+        .filter_map(|item| item.split_once('='))
+        .map(|(role, provider)| (role.trim().to_string(), provider.trim().to_string()))
+        .collect();
+    Ok(MarketDataHarnessRequest {
+        market_key: input.market.to_string(),
+        primary_data_path: input.primary_data.map(str::to_string),
+        interval: input.interval.map(str::to_string),
+        start: None,
+        end: None,
+        count: None,
+        related_roles: input.related_roles.to_vec(),
+        provider_preferences,
+        symbol_overrides: Default::default(),
+    })
 }
 
 #[cfg(test)]

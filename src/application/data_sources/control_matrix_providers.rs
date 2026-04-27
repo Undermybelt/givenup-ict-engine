@@ -69,22 +69,31 @@ pub struct ControlMatrixProviderSummary {
 }
 
 pub fn build_control_matrix_provider_summary(plan: &ControlMatrixPlan) -> ControlMatrixProviderSummary {
-    build_control_matrix_provider_summary_with_env(
-        plan,
+    build_provider_summary_for_requirements_with_env(
+        required_requirements_for_plan(plan),
         &|name| std::env::var(name).ok(),
         home_dir(),
     )
 }
 
-fn build_control_matrix_provider_summary_with_env<F>(
-    plan: &ControlMatrixPlan,
+pub fn build_provider_summary_for_requirements(
+    required: BTreeSet<ControlMatrixDataRequirement>,
+) -> ControlMatrixProviderSummary {
+    build_provider_summary_for_requirements_with_env(
+        required,
+        &|name| std::env::var(name).ok(),
+        home_dir(),
+    )
+}
+
+fn build_provider_summary_for_requirements_with_env<F>(
+    required: BTreeSet<ControlMatrixDataRequirement>,
     env_lookup: &F,
     home_dir: Option<PathBuf>,
 ) -> ControlMatrixProviderSummary
 where
     F: Fn(&str) -> Option<String>,
 {
-    let required = required_requirements_for_plan(plan);
     let provider_statuses = vec![
         ibkr_provider_status(&required, home_dir.as_deref()),
         yfinance_provider_status(&required, env_lookup),
@@ -299,8 +308,8 @@ mod tests {
     #[test]
     fn provider_summary_requires_install_prompts_without_local_config() {
         let plan = ControlMatrixPlan::pb12();
-        let summary = build_control_matrix_provider_summary_with_env(
-            &plan,
+        let summary = build_provider_summary_for_requirements_with_env(
+            required_requirements_for_plan(&plan),
             &|_| None,
             Some(PathBuf::from("/tmp/does-not-exist")),
         );
@@ -326,8 +335,8 @@ mod tests {
     #[test]
     fn tradingview_provider_redacts_secret_value() {
         let plan = ControlMatrixPlan::pb12();
-        let summary = build_control_matrix_provider_summary_with_env(
-            &plan,
+        let summary = build_provider_summary_for_requirements_with_env(
+            required_requirements_for_plan(&plan),
             &|name| match name {
                 TVREMIX_MCP_API_KEY_ENV => Some("secret-token-value".to_string()),
                 _ => None,

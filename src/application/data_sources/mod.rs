@@ -2,6 +2,7 @@ pub mod clean_futures;
 pub mod command_entry;
 pub mod control_matrix_providers;
 pub mod control_matrix_runtime;
+pub mod harness;
 pub mod live_defaults;
 pub mod sop_reports;
 pub mod source_freshness;
@@ -14,7 +15,9 @@ pub use clean_futures::{
     CleanedCandleOutput, MultiTimeframeCleanFuturesReport,
 };
 pub use command_entry::{
-    clean_futures_command, expansion_sop_command, futures_sop_command, ExpansionSopCommandInput,
+    clean_futures_command, expansion_sop_command, futures_sop_command,
+    market_data_harness_fetch_command, market_data_harness_plan_command,
+    ExpansionSopCommandInput, MarketDataHarnessCommandInput,
 };
 pub use control_matrix_providers::{
     build_control_matrix_provider_summary, ControlMatrixDataRequirement, ControlMatrixProviderKind,
@@ -24,6 +27,14 @@ pub use control_matrix_providers::{
 };
 pub use control_matrix_runtime::{
     build_control_matrix_runtime_overrides, ControlMatrixRuntimeOverrides,
+};
+pub use harness::{
+    build_market_data_harness_plan, execute_market_data_harness_plan,
+    load_market_data_harness_preset_config, repo_root_from_harness, MarketDataHarnessBundle,
+    MarketDataHarnessEnvelope, MarketDataHarnessIbkrSpec, MarketDataHarnessOperation,
+    MarketDataHarnessPlan, MarketDataHarnessPreset, MarketDataHarnessPresetConfig,
+    MarketDataHarnessRequest, MarketDataHarnessSymbolSpec, MarketDataHarnessTask,
+    MARKET_DATA_HARNESS_PRESETS_FILE,
 };
 pub use live_defaults::{
     analyze_live_inferred_symbols, parse_live_backend, resolve_live_backend_base_url,

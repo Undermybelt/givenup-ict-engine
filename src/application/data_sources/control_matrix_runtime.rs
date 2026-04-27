@@ -11,6 +11,8 @@ use crate::data::realtime::openalice::{
     AuxiliaryMarketEvidence, OpenAliceProvider, OptionsChainSummary, SpotInstrumentKind,
 };
 use crate::application::data_sources::{
+    build_market_data_harness_plan, execute_market_data_harness_plan,
+    load_market_data_harness_preset_config, repo_root_from_harness, MarketDataHarnessRequest,
     TVREMIX_MCP_API_KEY_ENV, TVREMIX_MCP_DEFAULT_URL, TVREMIX_MCP_URL_ENV,
 };
 use crate::types::Candle;
@@ -18,19 +20,6 @@ use crate::types::Candle;
 const CONTROL_MATRIX_REFERENCE_PROVIDER_ENV: &str = "ICT_ENGINE_CONTROL_MATRIX_REFERENCE_PROVIDER";
 const CONTROL_MATRIX_OPTIONS_PROVIDER_ENV: &str = "ICT_ENGINE_CONTROL_MATRIX_OPTIONS_PROVIDER";
 const CONTROL_MATRIX_IBKR_FETCH_SCRIPT_ENV: &str = "ICT_ENGINE_IBKR_FETCH_SCRIPT";
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum ControlMatrixReferenceProvider {
-    YahooFinance,
-    IbkrHistorical,
-    TradingViewMcp,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum ControlMatrixOptionsProvider {
-    YahooFinance,
-    TradingViewMcp,
-}
 
 #[derive(Debug, Clone, Default)]
 pub struct ControlMatrixRuntimeOverrides {
@@ -61,177 +50,171 @@ pub fn build_control_matrix_runtime_overrides(
             ..ControlMatrixRuntimeOverrides::default()
         });
     }
+    let request = build_harness_request(data_path, symbol, run_spec, &primary_candles)?;
+    let config = load_market_data_harness_preset_config(repo_root_from_harness())?;
+    let plan = build_market_data_harness_plan(request, &config)?;
+    let bundle = execute_market_data_harness_plan(&plan)?;
+    let mut runtime_notes = plan
+        .warnings
+        .iter()
+        .cloned()
+        .chain(plan.missing_roles.iter().map(|role| format!("missing_role={role}")))
+        .chain(
+            plan.provider_summary
+                .actionable_install_prompts
+                .iter()
+                .map(|item| format!("provider_prompt={item}")),
+        )
+        .collect::<Vec<_>>();
 
-    let etf_symbol = etf_symbol_for_futures(symbol);
-    let interval = yahoo_interval_from_candles(&primary_candles);
-    let start = primary_candles.first().map(|item| item.timestamp).unwrap();
-    let end = primary_candles.last().map(|item| item.timestamp).unwrap();
-    let client = yahoo_client()?;
-    let reference_provider = resolve_reference_provider();
-    let options_provider = resolve_options_provider();
-    let mut runtime_notes = Vec::new();
-
-    let mut etf_candles = None;
-    if run_spec.use_etf || run_spec.use_greeks || run_spec.use_oi || run_spec.use_iv {
-        match fetch_reference_candles(
-            &client,
-            reference_provider,
-            etf_symbol,
-            &interval,
-            start,
-            end,
-            &mut runtime_notes,
-        ) {
-            Ok(candles) if !candles.is_empty() => {
-                runtime_notes.push(format!("runtime_etf_reference_symbol={etf_symbol}"));
-                etf_candles = Some(candles);
-            }
-            Ok(_) => runtime_notes.push(format!("runtime_etf_reference_empty_symbol={etf_symbol}")),
-            Err(err) => runtime_notes.push(format!(
-                "runtime_etf_reference_fetch_failed symbol={} reason={}",
-                etf_symbol, err
-            )),
+    let mut role_candles = std::collections::BTreeMap::<String, Vec<Candle>>::new();
+    let mut role_options = std::collections::BTreeMap::<String, OptionsChainSummary>::new();
+    for result in &bundle.results {
+        if result.ok {
+            runtime_notes.push(format!(
+                "harness_result_ok role={} provider={} operation={}",
+                result.role, result.provider, result.operation
+            ));
+        } else if let Some(error) = result.error.as_ref() {
+            runtime_notes.push(format!(
+                "harness_result_error role={} provider={} category={} retryable={} message={}",
+                result.role, result.provider, error.category, error.retryable, error.message
+            ));
         }
-    }
-
-    let mut vix_candles = None;
-    if run_spec.use_vix {
-        match fetch_reference_candles(
-            &client,
-            reference_provider,
-            "^VIX",
-            "1d",
-            start - TimeDelta::days(7),
-            end,
-            &mut runtime_notes,
-        ) {
-            Ok(candles) if !candles.is_empty() => {
-                runtime_notes.push("runtime_vix_overlay_symbol=^VIX".to_string());
-                vix_candles = Some(candles);
-            }
-            Ok(_) => runtime_notes.push("runtime_vix_overlay_empty_symbol=^VIX".to_string()),
-            Err(err) => runtime_notes.push(format!(
-                "runtime_vix_overlay_fetch_failed symbol=^VIX reason={}",
-                err
-            )),
-        }
-    }
-
-    if run_spec.use_cfd {
-        let cfd_symbol = cfd_symbol_for_futures(symbol);
-        match fetch_reference_candles(
-            &client,
-            reference_provider,
-            cfd_symbol,
-            &interval,
-            start,
-            end,
-            &mut runtime_notes,
-        ) {
-            Ok(candles) if etf_candles.is_none() && !candles.is_empty() => {
-                runtime_notes.push(format!("runtime_cfd_reference_symbol={cfd_symbol}"));
-                etf_candles = Some(candles);
-            }
-            Ok(_) => runtime_notes.push(format!("runtime_cfd_reference_empty_symbol={cfd_symbol}")),
-            Err(err) => runtime_notes.push(format!(
-                "runtime_cfd_reference_fetch_failed symbol={} reason={}",
-                cfd_symbol, err
-            )),
-        }
-    }
-
-    let paired_candles = if run_spec.use_etf {
-        etf_candles.clone()
-    } else {
-        None
-    };
-
-    let auxiliary = if run_spec.use_vix
-        || run_spec.use_greeks
-        || run_spec.use_oi
-        || run_spec.use_iv
-        || run_spec.use_etf
-    {
-        let spot_candles = etf_candles.clone().or_else(|| vix_candles.clone());
-        if let Some(spot_candles) = spot_candles {
-            let mut options_summary = if run_spec.use_greeks || run_spec.use_oi || run_spec.use_iv {
-                match fetch_options_summary(
-                    &client,
-                    options_provider,
-                    etf_symbol,
-                    &mut runtime_notes,
-                ) {
-                    Ok(summary) => summary,
-                    Err(err) => {
-                        runtime_notes.push(format!(
-                            "runtime_options_summary_fetch_failed symbol={} reason={}",
-                            etf_symbol, err
-                        ));
-                        default_options_summary(etf_symbol)
+        if let Some(data) = result.data.as_ref() {
+            match result.operation.as_str() {
+                "ohlcv.fetch" => {
+                    if let Ok(candles) = serde_json::from_value::<Vec<Candle>>(data.clone()) {
+                        role_candles.insert(result.role.clone(), candles);
                     }
                 }
-            } else {
-                default_options_summary(etf_symbol)
-            };
-
-            if !run_spec.use_oi {
-                options_summary.put_call_oi_ratio = None;
-                options_summary.call_open_interest = 0.0;
-                options_summary.put_open_interest = 0.0;
-                options_summary.call_volume = 0.0;
-                options_summary.put_volume = 0.0;
-                options_summary.put_call_volume_ratio = None;
+                "options.summary" => {
+                    if let Ok(summary) =
+                        serde_json::from_value::<OptionsChainSummary>(data.clone())
+                    {
+                        role_options.insert(result.role.clone(), summary);
+                    }
+                }
+                _ => {}
             }
-            if !run_spec.use_iv {
-                options_summary.near_atm_implied_volatility = None;
-            }
-            if !run_spec.use_greeks {
-                options_summary.near_atm_delta = None;
-                options_summary.near_atm_gamma = None;
-                options_summary.near_atm_vega = None;
-                options_summary.call_gamma_oi = None;
-                options_summary.put_gamma_oi = None;
-                options_summary.gamma_skew = None;
-            } else if options_summary.near_atm_gamma.is_none() {
-                runtime_notes.push(format!(
-                    "runtime_greeks_unavailable_from_provider symbol={}",
-                    etf_symbol
-                ));
-            }
-
-            let spot_kind = if run_spec.use_vix && !run_spec.use_etf {
-                SpotInstrumentKind::Index
-            } else {
-                SpotInstrumentKind::Equity
-            };
-            let builder = OpenAliceProvider::new("internal://control-matrix-yfinance", None);
-            let mut auxiliary = builder.build_auxiliary_evidence(
-                spot_kind,
-                if run_spec.use_vix && !run_spec.use_etf {
-                    "^VIX"
-                } else {
-                    etf_symbol
-                },
-                etf_symbol,
-                &primary_candles,
-                &spot_candles,
-                &options_summary,
-            );
-            if let Some(vix) = vix_candles.as_ref() {
-                apply_vix_overlay(&mut auxiliary, vix, &mut runtime_notes);
-            }
-            Some(auxiliary)
-        } else {
-            None
         }
+    }
+
+    let paired_candles = role_candles
+        .get("etf_reference")
+        .cloned()
+        .or_else(|| role_candles.get("cfd_reference").cloned());
+    let vix_candles = role_candles.get("volatility_reference").cloned();
+    let spot_candles = role_candles
+        .get("etf_reference")
+        .cloned()
+        .or_else(|| role_candles.get("cfd_reference").cloned())
+        .or_else(|| vix_candles.clone());
+
+    let auxiliary = if let Some(spot_candles) = spot_candles {
+        let options_symbol = role_options
+            .get("options_underlying")
+            .map(|summary| summary.symbol.as_str())
+            .unwrap_or(symbol);
+        let mut options_summary = role_options
+            .get("options_underlying")
+            .cloned()
+            .unwrap_or_else(|| default_options_summary(options_symbol));
+        if !run_spec.use_oi {
+            options_summary.put_call_oi_ratio = None;
+            options_summary.call_open_interest = 0.0;
+            options_summary.put_open_interest = 0.0;
+            options_summary.call_volume = 0.0;
+            options_summary.put_volume = 0.0;
+            options_summary.put_call_volume_ratio = None;
+        }
+        if !run_spec.use_iv {
+            options_summary.near_atm_implied_volatility = None;
+        }
+        if !run_spec.use_greeks {
+            options_summary.near_atm_delta = None;
+            options_summary.near_atm_gamma = None;
+            options_summary.near_atm_vega = None;
+            options_summary.call_gamma_oi = None;
+            options_summary.put_gamma_oi = None;
+            options_summary.gamma_skew = None;
+        }
+
+        let spot_role = if run_spec.use_vix && !run_spec.use_etf && !run_spec.use_cfd {
+            "volatility_reference"
+        } else if role_candles.contains_key("etf_reference") {
+            "etf_reference"
+        } else {
+            "cfd_reference"
+        };
+        let spot_symbol = plan
+            .tasks
+            .iter()
+            .find(|task| task.role == spot_role)
+            .map(|task| task.symbol.as_str())
+            .unwrap_or(symbol);
+        let spot_kind = if spot_role == "volatility_reference" {
+            SpotInstrumentKind::Index
+        } else {
+            SpotInstrumentKind::Equity
+        };
+        let builder = OpenAliceProvider::new("internal://market-data-harness", None);
+        let mut auxiliary = builder.build_auxiliary_evidence(
+            spot_kind,
+            spot_symbol,
+            options_symbol,
+            &primary_candles,
+            &spot_candles,
+            &options_summary,
+        );
+        if let Some(vix) = vix_candles.as_ref() {
+            apply_vix_overlay(&mut auxiliary, vix, &mut runtime_notes);
+        }
+        Some(auxiliary)
     } else {
         None
     };
 
-    Ok(ControlMatrixRuntimeOverrides {
-        paired_candles,
-        auxiliary,
-        runtime_notes,
+    Ok(ControlMatrixRuntimeOverrides { paired_candles, auxiliary, runtime_notes })
+}
+
+fn build_harness_request(
+    data_path: &str,
+    symbol: &str,
+    run_spec: &Pb12RunSpec,
+    primary_candles: &[Candle],
+) -> Result<MarketDataHarnessRequest> {
+    let mut related_roles = Vec::new();
+    let mut provider_preferences = std::collections::BTreeMap::new();
+    let reference_provider = resolve_reference_provider_name();
+    let options_provider = resolve_options_provider_name();
+
+    if run_spec.use_etf {
+        related_roles.push("etf_reference".to_string());
+        provider_preferences.insert("etf_reference".to_string(), reference_provider.clone());
+    }
+    if run_spec.use_cfd {
+        related_roles.push("cfd_reference".to_string());
+        provider_preferences.insert("cfd_reference".to_string(), reference_provider.clone());
+    }
+    if run_spec.use_vix {
+        related_roles.push("volatility_reference".to_string());
+        provider_preferences.insert("volatility_reference".to_string(), reference_provider);
+    }
+    if run_spec.use_greeks || run_spec.use_oi || run_spec.use_iv {
+        related_roles.push("options_underlying".to_string());
+        provider_preferences.insert("options_underlying".to_string(), options_provider);
+    }
+    Ok(MarketDataHarnessRequest {
+        market_key: symbol.to_string(),
+        primary_data_path: Some(data_path.to_string()),
+        interval: Some(yahoo_interval_from_candles(primary_candles)),
+        start: None,
+        end: None,
+        count: None,
+        related_roles,
+        provider_preferences,
+        symbol_overrides: Default::default(),
     })
 }
 
@@ -242,22 +225,20 @@ fn yahoo_client() -> Result<Client> {
         .context("failed to build yahoo runtime client")
 }
 
-fn resolve_reference_provider() -> ControlMatrixReferenceProvider {
+fn resolve_reference_provider_name() -> String {
     match std::env::var(CONTROL_MATRIX_REFERENCE_PROVIDER_ENV)
         .unwrap_or_else(|_| "yfinance".to_string())
         .trim()
         .to_ascii_lowercase()
         .as_str()
     {
-        "ibkr" => ControlMatrixReferenceProvider::IbkrHistorical,
-        "tradingview_mcp" | "tradingview" | "tvremix" => {
-            ControlMatrixReferenceProvider::TradingViewMcp
-        }
-        _ => ControlMatrixReferenceProvider::YahooFinance,
+        "ibkr" => "ibkr".to_string(),
+        "tradingview_mcp" | "tradingview" | "tvremix" => "tradingview_mcp".to_string(),
+        _ => "yfinance".to_string(),
     }
 }
 
-fn resolve_options_provider() -> ControlMatrixOptionsProvider {
+fn resolve_options_provider_name() -> String {
     match std::env::var(CONTROL_MATRIX_OPTIONS_PROVIDER_ENV)
         .unwrap_or_else(|_| {
             if std::env::var(TVREMIX_MCP_API_KEY_ENV)
@@ -273,53 +254,38 @@ fn resolve_options_provider() -> ControlMatrixOptionsProvider {
         .to_ascii_lowercase()
         .as_str()
     {
-        "tradingview_mcp" | "tradingview" | "tvremix" => {
-            ControlMatrixOptionsProvider::TradingViewMcp
-        }
-        _ => ControlMatrixOptionsProvider::YahooFinance,
+        "tradingview_mcp" | "tradingview" | "tvremix" => "tradingview_mcp".to_string(),
+        _ => "yfinance".to_string(),
     }
 }
 
-fn fetch_reference_candles(
-    client: &Client,
-    provider: ControlMatrixReferenceProvider,
+pub(crate) fn fetch_reference_candles_for_provider_symbol(
+    provider: &str,
     symbol: &str,
     interval: &str,
     start: DateTime<Utc>,
     end: DateTime<Utc>,
-    runtime_notes: &mut Vec<String>,
+    count: usize,
 ) -> Result<Vec<Candle>> {
+    let client = yahoo_client()?;
     match provider {
-        ControlMatrixReferenceProvider::YahooFinance => {
-            runtime_notes.push("runtime_reference_provider=yfinance".to_string());
-            fetch_yahoo_candles(client, symbol, interval, start, end)
-        }
-        ControlMatrixReferenceProvider::IbkrHistorical => {
-            runtime_notes.push("runtime_reference_provider=ibkr".to_string());
-            fetch_ibkr_historical_candles(symbol, interval, start, end)
-        }
-        ControlMatrixReferenceProvider::TradingViewMcp => {
-            runtime_notes.push("runtime_reference_provider=tradingview_mcp".to_string());
-            fetch_tradingview_ohlcv(symbol, interval, start, end)
-        }
+        "yfinance" => fetch_yahoo_candles(&client, symbol, interval, start, end),
+        "ibkr" => fetch_ibkr_historical_candles(symbol, interval, start, end),
+        "tradingview_mcp" => fetch_tradingview_ohlcv(symbol, interval, start, end, count),
+        other => bail!("unsupported reference provider '{}'", other),
     }
 }
 
-fn fetch_options_summary(
-    client: &Client,
-    provider: ControlMatrixOptionsProvider,
+
+pub(crate) fn fetch_options_summary_for_provider_symbol(
+    provider: &str,
     symbol: &str,
-    runtime_notes: &mut Vec<String>,
 ) -> Result<OptionsChainSummary> {
+    let client = yahoo_client()?;
     match provider {
-        ControlMatrixOptionsProvider::YahooFinance => {
-            runtime_notes.push("runtime_options_provider=yfinance".to_string());
-            fetch_yahoo_options_summary(client, symbol)
-        }
-        ControlMatrixOptionsProvider::TradingViewMcp => {
-            runtime_notes.push("runtime_options_provider=tradingview_mcp".to_string());
-            fetch_tradingview_options_summary(symbol)
-        }
+        "yfinance" => fetch_yahoo_options_summary(&client, symbol),
+        "tradingview_mcp" => fetch_tradingview_options_summary(symbol),
+        other => bail!("unsupported options provider '{}'", other),
     }
 }
 
@@ -529,9 +495,9 @@ fn fetch_tradingview_ohlcv(
     interval: &str,
     start: DateTime<Utc>,
     end: DateTime<Utc>,
+    count: usize,
 ) -> Result<Vec<Candle>> {
     let tv_symbol = tradingview_symbol(symbol);
-    let count = estimate_bar_count(interval, start, end);
     let payload = call_tradingview_tool(
         "get_ohlcv",
         serde_json::json!({
@@ -806,30 +772,6 @@ fn ratio(numerator: f64, denominator: f64) -> Option<f64> {
     (denominator.abs() > f64::EPSILON).then_some(numerator / denominator)
 }
 
-fn cfd_symbol_for_futures(symbol: &str) -> &str {
-    match symbol.trim().to_ascii_uppercase().as_str() {
-        "NQ" => "NASDAQ:NDX",
-        "ES" => "SP:SPX",
-        "YM" => "DJ:DJI",
-        "GC" => "OANDA:XAUUSD",
-        "6E" => "FX:EURUSD",
-        "CL" => "TVC:USOIL",
-        _ => "SP:SPX",
-    }
-}
-
-fn etf_symbol_for_futures(symbol: &str) -> &str {
-    match symbol.trim().to_ascii_uppercase().as_str() {
-        "NQ" => "QQQ",
-        "ES" => "SPY",
-        "YM" => "DIA",
-        "GC" => "GLD",
-        "6E" => "FXE",
-        "CL" => "USO",
-        _ => "SPY",
-    }
-}
-
 fn tradingview_symbol(symbol: &str) -> &str {
     match symbol.trim().to_ascii_uppercase().as_str() {
         "QQQ" => "NASDAQ:QQQ",
@@ -913,22 +855,6 @@ fn ibkr_bar_size(interval: &str) -> String {
         _ => "1 day",
     }
     .to_string()
-}
-
-fn estimate_bar_count(interval: &str, start: DateTime<Utc>, end: DateTime<Utc>) -> usize {
-    let minutes = (end - start).num_minutes().max(1) as usize;
-    let divisor = match interval {
-        "1m" => 1,
-        "2m" => 2,
-        "5m" => 5,
-        "15m" => 15,
-        "30m" => 30,
-        "60m" | "1h" => 60,
-        "90m" => 90,
-        "1d" => 1440,
-        _ => 1440,
-    };
-    (minutes / divisor).clamp(10, 5_000)
 }
 
 fn yahoo_interval_from_candles(candles: &[Candle]) -> String {

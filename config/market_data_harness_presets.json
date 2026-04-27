@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "markets": [
+    {
+      "market_key": "NQ",
+      "aliases": ["CME:NQ1!", "NASDAQ_FUTURES"],
+      "related": {
+        "etf_reference": {
+          "display_symbol": "QQQ",
+          "yfinance": "QQQ",
+          "tradingview_mcp": "NASDAQ:QQQ",
+          "ibkr": {
+            "symbol": "QQQ",
+            "sec_type": "STK",
+            "exchange": "SMART",
+            "currency": "USD"
+          }
+        },
+        "cfd_reference": {
+          "display_symbol": "NDX",
+          "tradingview_mcp": "NASDAQ:NDX",
+          "ibkr": {
+            "symbol": "NDX",
+            "sec_type": "IND",
+            "exchange": "NASDAQ",
+            "currency": "USD"
+          }
+        },
+        "volatility_reference": {
+          "display_symbol": "VIX",
+          "yfinance": "^VIX",
+          "tradingview_mcp": "CBOE:VIX",
+          "ibkr": {
+            "symbol": "VIX",
+            "sec_type": "IND",
+            "exchange": "CBOE",
+            "currency": "USD"
+          }
+        },
+        "options_underlying": {
+          "display_symbol": "QQQ",
+          "yfinance": "QQQ",
+          "tradingview_mcp": "NASDAQ:QQQ"
+        }
+      }
+    },
+    {
+      "market_key": "ES",
+      "aliases": ["CME:ES1!", "SP500_FUTURES"],
+      "related": {
+        "etf_reference": {
+          "display_symbol": "SPY",
+          "yfinance": "SPY",
+          "tradingview_mcp": "AMEX:SPY",
+          "ibkr": {
+            "symbol": "SPY",
+            "sec_type": "STK",
+            "exchange": "SMART",
+            "currency": "USD"
+          }
+        },
+        "cfd_reference": {
+          "display_symbol": "SPX",
+          "tradingview_mcp": "SP:SPX",
+          "ibkr": {
+            "symbol": "SPX",
+            "sec_type": "IND",
+            "exchange": "CBOE",
+            "currency": "USD"
+          }
+        },
+        "volatility_reference": {
+          "display_symbol": "VIX",
+          "yfinance": "^VIX",
+          "tradingview_mcp": "CBOE:VIX",
+          "ibkr": {
+            "symbol": "VIX",
+            "sec_type": "IND",
+            "exchange": "CBOE",
+            "currency": "USD"
+          }
+        },
+        "options_underlying": {
+          "display_symbol": "SPY",
+          "yfinance": "SPY",
+          "tradingview_mcp": "AMEX:SPY"
+        }
+      }
+    },
+    {
+      "market_key": "GC",
+      "aliases": ["COMEX:GC1!", "GOLD_FUTURES"],
+      "related": {
+        "etf_reference": {
+          "display_symbol": "GLD",
+          "yfinance": "GLD",
+          "tradingview_mcp": "AMEX:GLD",
+          "ibkr": {
+            "symbol": "GLD",
+            "sec_type": "STK",
+            "exchange": "SMART",
+            "currency": "USD"
+          }
+        },
+        "cfd_reference": {
+          "display_symbol": "XAUUSD",
+          "tradingview_mcp": "OANDA:XAUUSD",
+          "ibkr": {
+            "symbol": "XAUUSD",
+            "sec_type": "CASH",
+            "exchange": "IDEALPRO",
+            "currency": "USD"
+          }
+        },
+        "volatility_reference": {
+          "display_symbol": "VIX",
+          "yfinance": "^VIX",
+          "tradingview_mcp": "CBOE:VIX",
+          "ibkr": {
+            "symbol": "VIX",
+            "sec_type": "IND",
+            "exchange": "CBOE",
+            "currency": "USD"
+          }
+        },
+        "options_underlying": {
+          "display_symbol": "GLD",
+          "yfinance": "GLD",
+          "tradingview_mcp": "AMEX:GLD"
+        }
+      }
+    }
+  ]
+}
