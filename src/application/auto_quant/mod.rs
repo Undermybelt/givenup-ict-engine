@@ -5,6 +5,7 @@ pub mod handoff;
 mod health;
 pub mod live;
 pub mod pda_unit_batch;
+pub mod pda_unit_dispatch;
 mod persistence;
 pub mod readiness;
 pub mod real_trades;
@@ -25,6 +26,11 @@ pub use pda_unit_batch::{
     AutoQuantPdaPrimitiveKind, AutoQuantPdaUnitBatchArtifact, AutoQuantPdaUnitBrief,
     AutoQuantPdaUnitDispatchGroup, AutoQuantPdaUnitJob, AutoQuantPdaUnitScope,
     AutoQuantUnitDirection, AUTO_QUANT_PDA_UNIT_BATCH_RULE_VERSION,
+};
+pub use pda_unit_dispatch::{
+    AutoQuantPdaDispatchGroupResult, AutoQuantPdaDispatchTotals,
+    AutoQuantPdaUnitAggregateMetrics, AutoQuantPdaUnitDispatchArtifact,
+    AutoQuantPdaUnitResult, AUTO_QUANT_PDA_UNIT_DISPATCH_RULE_VERSION,
 };
 pub use readiness::{auto_quant_readiness, AutoQuantReadinessSurface};
 pub use seed_evidence::AutoQuantSeedMaterialEvidenceArtifact;

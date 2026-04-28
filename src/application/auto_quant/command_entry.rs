@@ -15,6 +15,10 @@ use super::{
         persist_auto_quant_pda_unit_batch, AutoQuantPdaUnitBatchArtifact,
         AutoQuantPdaUnitBatchBuildInput,
     },
+    pda_unit_dispatch::{
+        dispatch_pda_unit_batch, AutoQuantPdaUnitDispatchArtifact,
+        AutoQuantPdaUnitDispatchInput,
+    },
     persistence::persist_handoff_payload,
     real_trades::{ingest_real_trades, IngestRealTradesInput, IngestRealTradesOutcome},
     results::{
@@ -156,6 +160,13 @@ pub struct AutoQuantPdaUnitBatchCommandInput<'a> {
     pub tracked_branch: Option<&'a str>,
 }
 
+pub struct AutoQuantPdaUnitDispatchCommandInput<'a> {
+    pub symbol: &'a str,
+    pub state_dir: &'a str,
+    pub batch_artifact_id: Option<&'a str>,
+    pub group_indices: Option<&'a str>,
+}
+
 pub fn auto_quant_pda_unit_batch_command(
     input: AutoQuantPdaUnitBatchCommandInput<'_>,
 ) -> Result<()> {
@@ -181,6 +192,24 @@ pub fn auto_quant_pda_unit_batch_command(
 }
 
 fn print_pda_unit_batch_summary(artifact: &AutoQuantPdaUnitBatchArtifact) -> Result<()> {
+    println!("{}", serde_json::to_string_pretty(artifact)?);
+    Ok(())
+}
+
+pub fn auto_quant_pda_unit_dispatch_command(
+    input: AutoQuantPdaUnitDispatchCommandInput<'_>,
+) -> Result<()> {
+    let artifact = dispatch_pda_unit_batch(AutoQuantPdaUnitDispatchInput {
+        symbol: input.symbol,
+        state_dir: input.state_dir,
+        batch_artifact_id: input.batch_artifact_id,
+        group_indices: input.group_indices,
+    })?;
+    print_pda_unit_dispatch_summary(&artifact)?;
+    Ok(())
+}
+
+fn print_pda_unit_dispatch_summary(artifact: &AutoQuantPdaUnitDispatchArtifact) -> Result<()> {
     println!("{}", serde_json::to_string_pretty(artifact)?);
     Ok(())
 }

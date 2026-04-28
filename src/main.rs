@@ -60,11 +60,12 @@ use ict_engine::application::{
         auto_quant_adoption_decision_command, auto_quant_adoption_review_command,
         auto_quant_bootstrap_command, auto_quant_consume_live_signals_command,
         auto_quant_factor_autoresearch_command, auto_quant_factor_research_command,
-        auto_quant_pda_unit_batch_command,
+        auto_quant_pda_unit_batch_command, auto_quant_pda_unit_dispatch_command,
         auto_quant_ingest_real_trades_command, auto_quant_prior_init_command,
         auto_quant_results_import_command, auto_quant_seed_evidence_command,
         auto_quant_status_command, auto_quant_update_command, AutoQuantConsumeLiveSignalsInput,
         AutoQuantIngestRealTradesInput, AutoQuantPdaUnitBatchCommandInput,
+        AutoQuantPdaUnitDispatchCommandInput,
         AutoQuantPriorInitCommandInput,
     },
     auto_quant::{AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput},
@@ -1451,6 +1452,28 @@ enum Commands {
         )]
         tracked_branch: Option<String>,
     },
+    /// Dispatch a previously generated Auto-Quant PDA unit batch into external execution and collect per-unit results.
+    AutoQuantPdaUnitDispatch {
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
+        symbol: String,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding the PDA unit batch manifest and isolated unit state"
+        )]
+        state_dir: String,
+        #[arg(
+            long,
+            help = "Optional explicit auto-quant-pda-unit-batch artifact id; defaults to the latest batch for the symbol"
+        )]
+        batch_artifact_id: Option<String>,
+        #[arg(
+            long,
+            help = "Optional comma-separated dispatch group indices, e.g. 0,1,3; defaults to every group in the batch"
+        )]
+        group_indices: Option<String>,
+    },
     /// Import an Auto-Quant strategy_library.json manifest as a validated handoff artifact.
     AutoQuantResultsImport {
         #[arg(long, help = "Instrument identifier supplied by the caller")]
@@ -2178,6 +2201,20 @@ fn main() -> Result<()> {
                 state_dir: &state_dir,
                 repo_url: repo_url.as_deref(),
                 tracked_branch: tracked_branch.as_deref(),
+            })?
+        }
+        Commands::AutoQuantPdaUnitDispatch {
+            symbol,
+            state_dir,
+            batch_artifact_id,
+            group_indices,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            auto_quant_pda_unit_dispatch_command(AutoQuantPdaUnitDispatchCommandInput {
+                symbol: &symbol,
+                state_dir: &state_dir,
+                batch_artifact_id: batch_artifact_id.as_deref(),
+                group_indices: group_indices.as_deref(),
             })?
         }
         Commands::AutoQuantResultsImport {
