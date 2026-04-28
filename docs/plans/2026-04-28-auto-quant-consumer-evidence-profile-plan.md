@@ -4,6 +4,10 @@ Date: 2026-04-28
 Status: implementation-active
 Scope: extend `auto-quant-pda-unit-batch` so consumer agents can declare required evidence explicitly
 
+Boundary note:
+- The evidence-profile concept is still valid.
+- The final consumer-facing carrier for it should be `agent-material-*`, not the ontology-driven PDA unit surface.
+
 ## Goal
 
 Make `auto-quant-pda-unit-batch` consumer-ready by letting the caller attach an explicit evidence profile per unit batch, instead of assuming that repo PDA primitives are the full strategy truth.

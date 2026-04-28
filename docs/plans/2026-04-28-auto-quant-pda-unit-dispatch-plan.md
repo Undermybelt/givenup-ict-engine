@@ -4,6 +4,10 @@ Date: 2026-04-28
 Status: implementation-active
 Scope: direct CLI dispatch of `auto-quant-pda-unit-batch` groups into external Auto-Quant execution plus result collection
 
+Boundary note:
+- This dispatch path is internal/experimental tooling.
+- Consumer-facing flow should move to generic `agent-material-dispatch`.
+
 ## Goal
 
 Add a CLI command that:

@@ -4,6 +4,10 @@ Date: 2026-04-28
 Status: approved-for-implementation
 Scope: Auto-Quant-centered unit batching for single-setup, single-symbol, single-timeframe iteration
 
+Boundary note:
+- This surface is now internal/experimental only.
+- Consumer-facing orchestration should use `agent-material-*` generic protocol instead of ontology-driven PDA unit commands.
+
 ## Goal
 
 Turn the user's PDA universe into Auto-Quant iteration units whose smallest runnable grain is:

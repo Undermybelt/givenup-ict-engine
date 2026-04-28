@@ -4,6 +4,10 @@
 
 **Goal:** Add an Auto-Quant-centered batch command that turns explicit PDA primitive sequences into isolated `setup × symbol × timeframe × direction` units and persists parallel-ready AQ handoff artifacts.
 
+Boundary note:
+- This plan remains valid for internal research tooling.
+- It is no longer the target consumer-facing architecture; `agent-material-*` is the public protocol direction.
+
 **Architecture:** Keep the existing shared managed Auto-Quant checkout, but generate isolated per-unit state dirs and a batch manifest above the existing handoff system. The CLI will produce natural-language unit briefs and ordered primitive sequences rather than treating repo `structure_ict` aggregation as the iteration truth.
 
 **Tech Stack:** Rust CLI, existing Auto-Quant handoff persistence, `serde`, `clap`, isolated `/tmp`-style state dirs

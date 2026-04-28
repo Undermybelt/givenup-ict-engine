@@ -1377,6 +1377,7 @@ enum Commands {
         )]
         limit: usize,
     },
+    #[command(hide = true)]
     /// [Experimental/Internal] Build ontology-driven Auto-Quant unit jobs for maintainer/research use.
     AutoQuantPdaUnitBatch {
         #[arg(long, help = "Instrument identifier supplied by the caller")]
@@ -1455,6 +1456,7 @@ enum Commands {
         )]
         tracked_branch: Option<String>,
     },
+    #[command(hide = true)]
     /// [Experimental/Internal] Dispatch an ontology-driven Auto-Quant unit batch into external execution and collect per-unit results.
     AutoQuantPdaUnitDispatch {
         #[arg(long, help = "Instrument identifier supplied by the caller")]
