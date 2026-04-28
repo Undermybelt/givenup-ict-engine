@@ -109,6 +109,9 @@ pub struct AutoQuantPdaUnitBatchCommandInput<'a> {
     pub directions: &'a str,
     pub timeframes: &'a str,
     pub timeframe_data: &'a [String],
+    pub evidence_surfaces: &'a str,
+    pub indicator_list: &'a str,
+    pub evidence_notes: &'a [String],
     pub max_parallel: usize,
     pub state_dir: &'a str,
     pub repo_url: Option<&'a str>,
@@ -284,6 +287,7 @@ mod tests {
     #[test]
     fn auto_quant_pda_unit_batch_command_input_carries_explicit_batch_fields() {
         let mappings = vec!["15m=/tmp/nq-15m.json".to_string()];
+        let evidence_notes = vec!["need volatility regime confirmation".to_string()];
         let input = AutoQuantPdaUnitBatchCommandInput {
             symbol: "NQ",
             objective: "expansion_manipulation",
@@ -292,6 +296,9 @@ mod tests {
             directions: "long,short",
             timeframes: "15m",
             timeframe_data: &mappings,
+            evidence_surfaces: "indicators,volatility,greeks",
+            indicator_list: "rsi14,ema20,atr14",
+            evidence_notes: &evidence_notes,
             max_parallel: 4,
             state_dir: "/tmp/state",
             repo_url: Some("/tmp/Auto-Quant"),
@@ -302,6 +309,7 @@ mod tests {
         assert_eq!(input.factors, "order_block,fair_value_gap");
         assert_eq!(input.max_parallel, 4);
         assert_eq!(input.timeframe_data, &mappings);
+        assert_eq!(input.evidence_surfaces, "indicators,volatility,greeks");
         assert_eq!(input.repo_url, Some("/tmp/Auto-Quant"));
     }
 }

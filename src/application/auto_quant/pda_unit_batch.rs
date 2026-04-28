@@ -142,11 +142,25 @@ pub struct AutoQuantPdaUnitScope {
     pub primitive_sequence: Vec<String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
+pub struct AutoQuantConsumerEvidenceProfile {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub required_surfaces: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub required_indicators: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub notes: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub provider_guidance: Vec<String>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct AutoQuantPdaUnitBrief {
     pub thesis: String,
     pub execution_rules: Vec<String>,
     pub evaluation_priority: Vec<String>,
+    #[serde(default)]
+    pub consumer_evidence_profile: AutoQuantConsumerEvidenceProfile,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -178,6 +192,8 @@ pub struct AutoQuantPdaUnitBatchArtifact {
     pub shared_workspace_root: String,
     pub selected_timeframes: Vec<String>,
     pub selected_primitives: Vec<String>,
+    #[serde(default)]
+    pub consumer_evidence_profile: AutoQuantConsumerEvidenceProfile,
     pub unit_jobs: Vec<AutoQuantPdaUnitJob>,
     pub dispatch_groups: Vec<AutoQuantPdaUnitDispatchGroup>,
     pub notes: Vec<String>,
@@ -191,6 +207,9 @@ pub struct AutoQuantPdaUnitBatchBuildInput<'a> {
     pub directions: &'a str,
     pub timeframes: &'a str,
     pub timeframe_data_entries: &'a [String],
+    pub evidence_surfaces: &'a str,
+    pub indicator_list: &'a str,
+    pub evidence_notes: &'a [String],
     pub max_parallel: usize,
     pub state_dir: &'a str,
     pub dependency_status: AutoQuantDependencyStatus,
@@ -204,6 +223,7 @@ pub struct AutoQuantPdaUnitBatchArtifactInput {
     pub shared_workspace_root: String,
     pub selected_primitives: Vec<AutoQuantPdaPrimitiveKind>,
     pub selected_timeframes: Vec<String>,
+    pub consumer_evidence_profile: AutoQuantConsumerEvidenceProfile,
     pub unit_jobs: Vec<AutoQuantPdaUnitJob>,
 }
 
@@ -256,6 +276,88 @@ pub fn parse_timeframe_data_mappings(entries: &[String]) -> Result<BTreeMap<Stri
         bail!("at least one --timeframe-data entry is required");
     }
     Ok(out)
+}
+
+pub fn parse_consumer_evidence_profile(
+    evidence_surfaces_csv: &str,
+    indicator_list_csv: &str,
+    notes: &[String],
+) -> AutoQuantConsumerEvidenceProfile {
+    let required_surfaces = parse_normalized_csv(evidence_surfaces_csv);
+    let required_indicators = parse_normalized_csv(indicator_list_csv);
+    let notes = notes
+        .iter()
+        .map(|item| item.trim())
+        .filter(|item| !item.is_empty())
+        .map(str::to_string)
+        .collect::<Vec<_>>();
+    let provider_guidance = build_provider_guidance(&required_surfaces, &required_indicators);
+    AutoQuantConsumerEvidenceProfile {
+        required_surfaces,
+        required_indicators,
+        notes,
+        provider_guidance,
+    }
+}
+
+fn parse_normalized_csv(value: &str) -> Vec<String> {
+    let mut out = Vec::<String>::new();
+    for item in value.split(',') {
+        let normalized = item.trim().to_ascii_lowercase().replace('-', "_");
+        if normalized.is_empty() {
+            continue;
+        }
+        if !out.iter().any(|existing| existing == &normalized) {
+            out.push(normalized);
+        }
+    }
+    out
+}
+
+fn build_provider_guidance(
+    required_surfaces: &[String],
+    required_indicators: &[String],
+) -> Vec<String> {
+    let mut guidance = Vec::new();
+    if required_surfaces
+        .iter()
+        .any(|surface| surface == "indicators" || surface == "volatility")
+    {
+        guidance.push(
+            "Indicators and volatility evidence should be computed directly from the declared candle series, not approximated through a separate local model."
+                .to_string(),
+        );
+    }
+    if required_surfaces.iter().any(|surface| {
+        matches!(
+            surface.as_str(),
+            "greeks" | "open_interest" | "implied_volatility" | "options_chain"
+        )
+    }) {
+        guidance.push(
+            "This unit requires an options-capable provider/runtime for Greeks, OI, IV, or chain context. If the provider cannot supply those fields, ask the user for a better provider/runtime instead of fabricating them locally."
+                .to_string(),
+        );
+    }
+    if required_surfaces.iter().any(|surface| surface == "cross_market") {
+        guidance.push(
+            "This unit requires explicit paired/cross-market reference data. Ask the user or provider layer for the paired symbol/data source instead of inferring it silently."
+                .to_string(),
+        );
+    }
+    if required_surfaces.iter().any(|surface| surface == "session_context") {
+        guidance.push(
+            "This unit requires explicit session segmentation (for example Asia/London/NY windows) as part of the strategy truth."
+                .to_string(),
+        );
+    }
+    if !required_indicators.is_empty() {
+        guidance.push(format!(
+            "Required indicators to preserve exactly in the strategy implementation: {}.",
+            required_indicators.join(", ")
+        ));
+    }
+    guidance
 }
 
 pub fn select_timeframe_data(
@@ -334,6 +436,7 @@ pub fn build_unit_jobs(
     sequences: &[Vec<AutoQuantPdaPrimitiveKind>],
     directions: &[AutoQuantUnitDirection],
     timeframe_data: &BTreeMap<String, String>,
+    consumer_evidence_profile: &AutoQuantConsumerEvidenceProfile,
     state_dir: &str,
 ) -> Vec<AutoQuantPdaUnitJob> {
     let mut jobs = Vec::new();
@@ -374,7 +477,13 @@ pub fn build_unit_jobs(
                             .map(|item| item.as_str().to_string())
                             .collect(),
                     },
-                    brief: build_unit_brief(symbol, timeframe, *direction, sequence),
+                    brief: build_unit_brief(
+                        symbol,
+                        timeframe,
+                        *direction,
+                        sequence,
+                        consumer_evidence_profile,
+                    ),
                     handoff_artifact_path: None,
                 });
             }
@@ -388,6 +497,7 @@ fn build_unit_brief(
     timeframe: &str,
     direction: AutoQuantUnitDirection,
     sequence: &[AutoQuantPdaPrimitiveKind],
+    consumer_evidence_profile: &AutoQuantConsumerEvidenceProfile,
 ) -> AutoQuantPdaUnitBrief {
     let sequence_label = sequence
         .iter()
@@ -403,7 +513,8 @@ fn build_unit_brief(
             "Iterate one Auto-Quant strategy unit around the ordered PDA sequence [{}] on {} {} bars for {}. Treat repo PDA code only as reference; the strategy implementation may differ internally, but it must preserve this ordered event narrative and optimize win rate first, Sharpe second, return third.",
             sequence_label, symbol, timeframe, direction.as_str()
         ),
-        execution_rules: vec![
+        execution_rules: {
+            let mut rules = vec![
             direction.user_narrative().to_string(),
             format!(
                 "One unit only: setup sequence [{}], symbol {}, timeframe {}.",
@@ -414,12 +525,29 @@ fn build_unit_brief(
                 primitive_details.join(" | ")
             ),
             "Do not widen the strategy into unrelated setups just because repo structure_ict aggregates more than this unit.".to_string(),
-        ],
+            ];
+            if !consumer_evidence_profile.required_surfaces.is_empty() {
+                rules.push(format!(
+                    "Consumer-required evidence surfaces: {}.",
+                    consumer_evidence_profile.required_surfaces.join(", ")
+                ));
+            }
+            if !consumer_evidence_profile.required_indicators.is_empty() {
+                rules.push(format!(
+                    "Consumer-required indicators: {}.",
+                    consumer_evidence_profile.required_indicators.join(", ")
+                ));
+            }
+            rules.extend(consumer_evidence_profile.provider_guidance.iter().cloned());
+            rules.extend(consumer_evidence_profile.notes.iter().cloned());
+            rules
+        },
         evaluation_priority: vec![
             "win_rate".to_string(),
             "sharpe".to_string(),
             "return".to_string(),
         ],
+        consumer_evidence_profile: consumer_evidence_profile.clone(),
     }
 }
 
@@ -464,6 +592,7 @@ pub fn build_batch_artifact(
             .iter()
             .map(|item| item.as_str().to_string())
             .collect(),
+        consumer_evidence_profile: input.consumer_evidence_profile,
         unit_jobs: input.unit_jobs,
         dispatch_groups,
         notes: vec![
@@ -481,12 +610,18 @@ pub fn persist_auto_quant_pda_unit_batch(
     let parsed_directions = parse_unit_direction_csv(input.directions)?;
     let timeframe_data = parse_timeframe_data_mappings(input.timeframe_data_entries)?;
     let selected_timeframe_data = select_timeframe_data(input.timeframes, &timeframe_data)?;
+    let consumer_evidence_profile = parse_consumer_evidence_profile(
+        input.evidence_surfaces,
+        input.indicator_list,
+        input.evidence_notes,
+    );
     let sequences = build_unit_sequences(&parsed_primitives, input.combination_size)?;
     let mut jobs = build_unit_jobs(
         input.symbol,
         &sequences,
         &parsed_directions,
         &selected_timeframe_data,
+        &consumer_evidence_profile,
         input.state_dir,
     );
 
@@ -508,6 +643,7 @@ pub fn persist_auto_quant_pda_unit_batch(
             direction: job.scope.direction.clone(),
             strategy_brief: job.brief.thesis.clone(),
             evaluation_priority: job.brief.evaluation_priority.clone(),
+            consumer_evidence_profile: Some(job.brief.consumer_evidence_profile.clone()),
         });
         payload
             .notes
@@ -542,6 +678,7 @@ pub fn persist_auto_quant_pda_unit_batch(
         shared_workspace_root: workspace_root,
         selected_primitives: parsed_primitives,
         selected_timeframes,
+        consumer_evidence_profile,
         unit_jobs: jobs,
     });
     persist_batch_artifact(input.state_dir, &artifact)?;
@@ -655,8 +792,20 @@ mod tests {
             ("15m".to_string(), "/tmp/nq-15m.json".to_string()),
             ("1h".to_string(), "/tmp/nq-1h.json".to_string()),
         ]);
+        let profile = parse_consumer_evidence_profile(
+            "indicators,volatility,greeks",
+            "rsi14,ema20,atr14",
+            &["consumer wants session-aware volatility".to_string()],
+        );
 
-        let jobs = build_unit_jobs("NQ", &sequences, &directions, &timeframe_data, "/tmp/state");
+        let jobs = build_unit_jobs(
+            "NQ",
+            &sequences,
+            &directions,
+            &timeframe_data,
+            &profile,
+            "/tmp/state",
+        );
         assert_eq!(jobs.len(), 4);
         assert!(jobs.iter().any(|job| {
             job.scope.timeframe == "15m"
@@ -674,6 +823,13 @@ mod tests {
                         "return".to_string()
                     ]
         }));
+        assert!(jobs.iter().all(|job| {
+            job.brief
+                .consumer_evidence_profile
+                .required_surfaces
+                .iter()
+                .any(|surface| surface == "greeks")
+        }));
     }
 
     #[test]
@@ -685,11 +841,41 @@ mod tests {
             ("15m".to_string(), "/tmp/nq-15m.json".to_string()),
             ("1h".to_string(), "/tmp/nq-1h.json".to_string()),
         ]);
-        let jobs = build_unit_jobs("NQ", &sequences, &directions, &timeframe_data, "/tmp/state");
+        let jobs = build_unit_jobs(
+            "NQ",
+            &sequences,
+            &directions,
+            &timeframe_data,
+            &AutoQuantConsumerEvidenceProfile::default(),
+            "/tmp/state",
+        );
         let groups = build_dispatch_groups(&jobs, 3);
         assert_eq!(groups.len(), 2);
         assert_eq!(groups[0].unit_ids.len(), 3);
         assert_eq!(groups[1].unit_ids.len(), 1);
+    }
+
+    #[test]
+    fn parse_consumer_evidence_profile_builds_provider_guidance() {
+        let profile = parse_consumer_evidence_profile(
+            "indicators,volatility,greeks,open_interest,cross_market",
+            "rsi14,ema20,atr14",
+            &["consumer wants NY session context".to_string()],
+        );
+        assert!(profile.required_surfaces.iter().any(|item| item == "greeks"));
+        assert!(
+            profile
+                .provider_guidance
+                .iter()
+                .any(|line| line.contains("options-capable provider"))
+        );
+        assert!(
+            profile
+                .provider_guidance
+                .iter()
+                .any(|line| line.contains("Required indicators"))
+        );
+        assert_eq!(profile.notes, vec!["consumer wants NY session context".to_string()]);
     }
 
     #[test]
@@ -715,6 +901,9 @@ mod tests {
             directions: "long,short",
             timeframes: "15m",
             timeframe_data_entries: &["15m=/tmp/nq-15m.json".to_string()],
+            evidence_surfaces: "indicators,greeks,implied_volatility",
+            indicator_list: "rsi14,ema20,atr14",
+            evidence_notes: &["consumer needs explicit volatility context".to_string()],
             max_parallel: 2,
             state_dir: temp.path().to_str().unwrap(),
             dependency_status: AutoQuantDependencyStatus {
@@ -740,8 +929,20 @@ mod tests {
         assert_eq!(artifact.unit_jobs.len(), 4);
         assert_eq!(artifact.dispatch_groups.len(), 2);
         assert!(artifact
+            .consumer_evidence_profile
+            .required_surfaces
+            .iter()
+            .any(|item| item == "greeks"));
+        assert!(artifact
             .unit_jobs
             .iter()
             .all(|job| job.handoff_artifact_path.is_some()));
+        assert!(artifact.unit_jobs.iter().all(|job| {
+            job.brief
+                .consumer_evidence_profile
+                .provider_guidance
+                .iter()
+                .any(|line| line.contains("options-capable provider"))
+        }));
     }
 }

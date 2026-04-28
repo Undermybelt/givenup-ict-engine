@@ -1412,6 +1412,23 @@ enum Commands {
         timeframe_data: Vec<String>,
         #[arg(
             long,
+            default_value = "",
+            help = "Comma-separated consumer evidence surfaces, e.g. indicators,volatility,greeks,open_interest,implied_volatility,cross_market"
+        )]
+        evidence_surfaces: String,
+        #[arg(
+            long,
+            default_value = "",
+            help = "Comma-separated indicator names the consumer explicitly requires, e.g. rsi14,ema20,atr14"
+        )]
+        indicator_list: String,
+        #[arg(
+            long = "evidence-note",
+            help = "Repeatable freeform consumer evidence requirement note"
+        )]
+        evidence_notes: Vec<String>,
+        #[arg(
+            long,
             default_value_t = 4,
             help = "Maximum number of independent unit jobs to dispatch in parallel"
         )]
@@ -2137,6 +2154,9 @@ fn main() -> Result<()> {
             directions,
             timeframes,
             timeframe_data,
+            evidence_surfaces,
+            indicator_list,
+            evidence_notes,
             max_parallel,
             state_dir,
             repo_url,
@@ -2151,6 +2171,9 @@ fn main() -> Result<()> {
                 directions: &directions,
                 timeframes: &timeframes,
                 timeframe_data: &timeframe_data,
+                evidence_surfaces: &evidence_surfaces,
+                indicator_list: &indicator_list,
+                evidence_notes: &evidence_notes,
                 max_parallel,
                 state_dir: &state_dir,
                 repo_url: repo_url.as_deref(),

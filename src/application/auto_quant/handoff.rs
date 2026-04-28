@@ -27,6 +27,10 @@ pub struct AutoQuantIterationUnitContext {
     pub direction: String,
     pub strategy_brief: String,
     pub evaluation_priority: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub consumer_evidence_profile: Option<
+        crate::application::auto_quant::pda_unit_batch::AutoQuantConsumerEvidenceProfile,
+    >,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -787,6 +791,7 @@ mod tests {
                 "sharpe".to_string(),
                 "return".to_string(),
             ],
+            consumer_evidence_profile: None,
         });
 
         let unit = payload.iteration_unit.as_ref().unwrap();
