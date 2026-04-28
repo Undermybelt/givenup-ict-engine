@@ -218,3 +218,50 @@ Change scope: native first-run autoresearch closure + Auto-Quant command-surface
 - Reason not patched in this change:
   - this remediation prioritized unblocking the native `NQ` factor-iteration loop first
   - wiring the additive `NQ/USD` Auto-Quant runner into the public CLI remains follow-up work
+
+### New finding 6. Mid-run `factor-autoresearch-status` hides attempts until the session file exists
+
+- Date observed: 2026-04-28
+- Repro path:
+
+```text
+./target/debug/ict-engine factor-autoresearch \
+  --symbol NQ \
+  --data /tmp/ict-engine-nq-2023-trimmed-20260428/nq.continuous-15m.2023plus.json \
+  --data-15m /tmp/ict-engine-nq-2023-trimmed-20260428/nq.continuous-15m.2023plus.json \
+  --data-1h /tmp/ict-engine-nq-2023-trimmed-20260428/nq.continuous-1h.2023plus.json \
+  --data-1d /tmp/ict-engine-nq-2023-trimmed-20260428/nq.continuous-1d.2023plus.json \
+  --objective expansion_manipulation \
+  --state-dir /tmp/ict-engine-nq-iter-round2-trimmed-20260428-native \
+  --backend native \
+  --iterations 3
+```
+
+Then while the run is still active:
+
+```text
+./target/debug/ict-engine factor-autoresearch-status \
+  --symbol NQ \
+  --state-dir /tmp/ict-engine-nq-iter-round2-trimmed-20260428-native \
+  --latest-only
+```
+
+- Observed contradiction:
+  - `factor_autoresearch_attempts.json` already contains `attempt-001`
+  - `factor_autoresearch_live.json` shows:
+    - `current_iteration = 2`
+    - `current_candidate_spec.mutation_id = ...:next`
+  - but status output still shows:
+    - `attempts = []`
+    - `attempts_total = 0`
+    - `latest_attempt_id = null`
+- Likely cause:
+  - status surface appears to filter attempts through `selected_session_ids`
+  - session records are not persisted early enough during an active run
+  - so mid-run attempts exist on disk but are hidden from the status view
+- Consumer impact:
+  - agent sees a healthier heartbeat than before, but still cannot trust the mid-run attempt counts
+  - iteration progress is understated until final session persistence lands
+- Immediate action:
+  - do not hot-fix during this iteration round
+  - use the attempts artifact directly as the temporary truth source if mid-run inspection is required
