@@ -118,6 +118,29 @@ pub struct AutoQuantPdaUnitBatchCommandInput<'a> {
     pub tracked_branch: Option<&'a str>,
 }
 
+#[derive(Debug, Clone)]
+pub struct AutoQuantAgentMaterialBatchCommandInput<'a> {
+    pub symbol: &'a str,
+    pub material_paths: &'a [String],
+    pub max_parallel: usize,
+    pub state_dir: &'a str,
+    pub repo_url: Option<&'a str>,
+    pub tracked_branch: Option<&'a str>,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct AutoQuantAgentMaterialDispatchCommandInput<'a> {
+    pub symbol: &'a str,
+    pub state_dir: &'a str,
+    pub group_indices: Option<&'a str>,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct AutoQuantAgentMaterialRankCommandInput<'a> {
+    pub symbol: &'a str,
+    pub state_dir: &'a str,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -311,5 +334,23 @@ mod tests {
         assert_eq!(input.timeframe_data, &mappings);
         assert_eq!(input.evidence_surfaces, "indicators,volatility,greeks");
         assert_eq!(input.repo_url, Some("/tmp/Auto-Quant"));
+    }
+
+    #[test]
+    fn auto_quant_agent_material_batch_command_input_carries_material_paths() {
+        let materials = vec![
+            "/tmp/material-1.json".to_string(),
+            "/tmp/material-2.json".to_string(),
+        ];
+        let input = AutoQuantAgentMaterialBatchCommandInput {
+            symbol: "NQ",
+            material_paths: &materials,
+            max_parallel: 3,
+            state_dir: "/tmp/state",
+            repo_url: Some("/tmp/Auto-Quant"),
+            tracked_branch: Some("master"),
+        };
+        assert_eq!(input.material_paths, &materials);
+        assert_eq!(input.max_parallel, 3);
     }
 }

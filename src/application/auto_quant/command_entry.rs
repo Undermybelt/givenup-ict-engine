@@ -1,5 +1,9 @@
 use super::{
     adoption::{build_auto_quant_adoption_review, persist_auto_quant_adoption_decision},
+    agent_material::{
+        dispatch_agent_material_batch, persist_agent_material_batch, rank_agent_material_dispatch,
+        AgentMaterialBatchArtifact, AgentMaterialDispatchArtifact, AgentMaterialRankArtifact,
+    },
     auto_quant_bootstrap, auto_quant_readiness, auto_quant_status, auto_quant_update,
     handoff::{
         auto_quant_workspace_config, build_factor_autoresearch_handoff_payload,
@@ -167,6 +171,26 @@ pub struct AutoQuantPdaUnitDispatchCommandInput<'a> {
     pub group_indices: Option<&'a str>,
 }
 
+pub struct AutoQuantAgentMaterialBatchCommandInput<'a> {
+    pub symbol: &'a str,
+    pub material_paths: &'a [String],
+    pub max_parallel: usize,
+    pub state_dir: &'a str,
+    pub repo_url: Option<&'a str>,
+    pub tracked_branch: Option<&'a str>,
+}
+
+pub struct AutoQuantAgentMaterialDispatchCommandInput<'a> {
+    pub symbol: &'a str,
+    pub state_dir: &'a str,
+    pub group_indices: Option<&'a str>,
+}
+
+pub struct AutoQuantAgentMaterialRankCommandInput<'a> {
+    pub symbol: &'a str,
+    pub state_dir: &'a str,
+}
+
 pub fn auto_quant_pda_unit_batch_command(
     input: AutoQuantPdaUnitBatchCommandInput<'_>,
 ) -> Result<()> {
@@ -210,6 +234,55 @@ pub fn auto_quant_pda_unit_dispatch_command(
 }
 
 fn print_pda_unit_dispatch_summary(artifact: &AutoQuantPdaUnitDispatchArtifact) -> Result<()> {
+    println!("{}", serde_json::to_string_pretty(artifact)?);
+    Ok(())
+}
+
+pub fn auto_quant_agent_material_batch_command(
+    input: AutoQuantAgentMaterialBatchCommandInput<'_>,
+) -> Result<()> {
+    let dependency_status =
+        ensure_dependency_ready(input.state_dir, input.repo_url, input.tracked_branch)?;
+    let artifact = persist_agent_material_batch(
+        input.symbol,
+        input.state_dir,
+        &dependency_status.managed_dir,
+        Some(&dependency_status.repo_url),
+        input.max_parallel,
+        input.material_paths,
+    )?;
+    print_agent_material_batch_summary(&artifact)
+}
+
+fn print_agent_material_batch_summary(artifact: &AgentMaterialBatchArtifact) -> Result<()> {
+    println!("{}", serde_json::to_string_pretty(artifact)?);
+    Ok(())
+}
+
+pub fn auto_quant_agent_material_dispatch_command(
+    input: AutoQuantAgentMaterialDispatchCommandInput<'_>,
+) -> Result<()> {
+    let artifact = dispatch_agent_material_batch(
+        input.state_dir,
+        input.symbol,
+        input.group_indices,
+    )?;
+    print_agent_material_dispatch_summary(&artifact)
+}
+
+fn print_agent_material_dispatch_summary(artifact: &AgentMaterialDispatchArtifact) -> Result<()> {
+    println!("{}", serde_json::to_string_pretty(artifact)?);
+    Ok(())
+}
+
+pub fn auto_quant_agent_material_rank_command(
+    input: AutoQuantAgentMaterialRankCommandInput<'_>,
+) -> Result<()> {
+    let artifact = rank_agent_material_dispatch(input.state_dir, input.symbol)?;
+    print_agent_material_rank_summary(&artifact)
+}
+
+fn print_agent_material_rank_summary(artifact: &AgentMaterialRankArtifact) -> Result<()> {
     println!("{}", serde_json::to_string_pretty(artifact)?);
     Ok(())
 }

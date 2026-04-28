@@ -1,4 +1,5 @@
 mod adoption;
+pub mod agent_material;
 pub mod command_entry;
 mod config;
 pub mod handoff;
@@ -22,6 +23,15 @@ pub use handoff::{
     BuildFactorAutoresearchHandoffPayloadInput, BuildFactorResearchHandoffPayloadInput,
 };
 pub use handoff::{AutoQuantResearchHandoffPayload, AutoQuantWorkspaceConfig};
+pub use agent_material::{
+    AgentMaterialAggregateMetrics, AgentMaterialBatchArtifact, AgentMaterialBatchJob,
+    AgentMaterialDispatchArtifact, AgentMaterialDispatchGroup, AgentMaterialDispatchGroupResult,
+    AgentMaterialDispatchJobResult, AgentMaterialDispatchTotals, AgentMaterialPackage,
+    AgentMaterialRankArtifact, AgentMaterialRankRow,
+    AUTO_QUANT_AGENT_MATERIAL_BATCH_RULE_VERSION,
+    AUTO_QUANT_AGENT_MATERIAL_DISPATCH_RULE_VERSION,
+    AUTO_QUANT_AGENT_MATERIAL_RANK_RULE_VERSION,
+};
 pub use pda_unit_batch::{
     AutoQuantPdaPrimitiveKind, AutoQuantPdaUnitBatchArtifact, AutoQuantPdaUnitBrief,
     AutoQuantPdaUnitDispatchGroup, AutoQuantPdaUnitJob, AutoQuantPdaUnitScope,

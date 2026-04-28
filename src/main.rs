@@ -58,14 +58,17 @@ use ict_engine::application::{
     },
     auto_quant::command_entry::{
         auto_quant_adoption_decision_command, auto_quant_adoption_review_command,
+        auto_quant_agent_material_batch_command, auto_quant_agent_material_dispatch_command,
+        auto_quant_agent_material_rank_command,
         auto_quant_bootstrap_command, auto_quant_consume_live_signals_command,
         auto_quant_factor_autoresearch_command, auto_quant_factor_research_command,
         auto_quant_pda_unit_batch_command, auto_quant_pda_unit_dispatch_command,
         auto_quant_ingest_real_trades_command, auto_quant_prior_init_command,
         auto_quant_results_import_command, auto_quant_seed_evidence_command,
         auto_quant_status_command, auto_quant_update_command, AutoQuantConsumeLiveSignalsInput,
-        AutoQuantIngestRealTradesInput, AutoQuantPdaUnitBatchCommandInput,
-        AutoQuantPdaUnitDispatchCommandInput,
+        AutoQuantAgentMaterialBatchCommandInput, AutoQuantAgentMaterialDispatchCommandInput,
+        AutoQuantAgentMaterialRankCommandInput, AutoQuantIngestRealTradesInput,
+        AutoQuantPdaUnitBatchCommandInput, AutoQuantPdaUnitDispatchCommandInput,
         AutoQuantPriorInitCommandInput,
     },
     auto_quant::{AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput},
@@ -1474,6 +1477,68 @@ enum Commands {
         )]
         group_indices: Option<String>,
     },
+    /// Build a generic agent-material batch from agent-produced strategy packages.
+    AutoQuantAgentMaterialBatch {
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
+        symbol: String,
+        #[arg(
+            long = "material",
+            help = "Repeatable path to an agent-produced strategy material package (.json)"
+        )]
+        materials: Vec<String>,
+        #[arg(
+            long,
+            default_value_t = 4,
+            help = "Maximum number of independent jobs to dispatch in parallel"
+        )]
+        max_parallel: usize,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding the generic agent-material batch artifact"
+        )]
+        state_dir: String,
+        #[arg(
+            long,
+            help = "Optional Auto-Quant repo URL or local path override used when bootstrapping the shared workspace"
+        )]
+        repo_url: Option<String>,
+        #[arg(
+            long,
+            help = "Optional Auto-Quant branch override used when bootstrapping the shared workspace"
+        )]
+        tracked_branch: Option<String>,
+    },
+    /// Dispatch the latest generic agent-material batch through external Auto-Quant execution.
+    AutoQuantAgentMaterialDispatch {
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
+        symbol: String,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding generic agent-material artifacts"
+        )]
+        state_dir: String,
+        #[arg(
+            long,
+            help = "Optional comma-separated dispatch group indices, e.g. 0,1,3; defaults to every group"
+        )]
+        group_indices: Option<String>,
+    },
+    /// Rank the latest generic agent-material dispatch results by win rate, Sharpe, then return.
+    AutoQuantAgentMaterialRank {
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
+        symbol: String,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding generic agent-material artifacts"
+        )]
+        state_dir: String,
+    },
     /// Import an Auto-Quant strategy_library.json manifest as a validated handoff artifact.
     AutoQuantResultsImport {
         #[arg(long, help = "Instrument identifier supplied by the caller")]
@@ -2215,6 +2280,43 @@ fn main() -> Result<()> {
                 state_dir: &state_dir,
                 batch_artifact_id: batch_artifact_id.as_deref(),
                 group_indices: group_indices.as_deref(),
+            })?
+        }
+        Commands::AutoQuantAgentMaterialBatch {
+            symbol,
+            materials,
+            max_parallel,
+            state_dir,
+            repo_url,
+            tracked_branch,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            auto_quant_agent_material_batch_command(AutoQuantAgentMaterialBatchCommandInput {
+                symbol: &symbol,
+                material_paths: &materials,
+                max_parallel,
+                state_dir: &state_dir,
+                repo_url: repo_url.as_deref(),
+                tracked_branch: tracked_branch.as_deref(),
+            })?
+        }
+        Commands::AutoQuantAgentMaterialDispatch {
+            symbol,
+            state_dir,
+            group_indices,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            auto_quant_agent_material_dispatch_command(AutoQuantAgentMaterialDispatchCommandInput {
+                symbol: &symbol,
+                state_dir: &state_dir,
+                group_indices: group_indices.as_deref(),
+            })?
+        }
+        Commands::AutoQuantAgentMaterialRank { symbol, state_dir } => {
+            ensure_state_dir_ready(&state_dir)?;
+            auto_quant_agent_material_rank_command(AutoQuantAgentMaterialRankCommandInput {
+                symbol: &symbol,
+                state_dir: &state_dir,
             })?
         }
         Commands::AutoQuantResultsImport {
