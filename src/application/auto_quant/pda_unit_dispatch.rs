@@ -215,7 +215,8 @@ fn run_dispatch_unit(
     shared_workspace_root: &str,
 ) -> Result<AutoQuantPdaUnitResult> {
     let workspace_root = PathBuf::from(&job.isolated_state_dir).join("aq_workspace");
-    let runtime_python = resolve_runtime_python(shared_workspace_root, job.handoff_artifact_path.as_deref());
+    let runtime_python =
+        resolve_runtime_python(shared_workspace_root, job.handoff_artifact_path.as_deref())?;
     materialize_unit_workspace(
         &workspace_root,
         runtime_python.as_deref(),
@@ -335,22 +336,42 @@ fn materialize_unit_workspace(
 fn resolve_runtime_python(
     shared_workspace_root: &str,
     handoff_artifact_path: Option<&str>,
-) -> Option<PathBuf> {
+) -> Result<Option<PathBuf>> {
     let shared_python = PathBuf::from(shared_workspace_root).join(".venv/bin/python");
     if shared_python.exists() {
-        return Some(shared_python);
+        return Ok(Some(shared_python));
     }
-    let handoff_path = handoff_artifact_path?;
-    let content = fs::read_to_string(handoff_path).ok()?;
-    let payload = serde_json::from_str::<AutoQuantResearchHandoffPayload>(&content).ok()?;
-    let repo_url = payload.dependency_status.repo_url;
-    if repo_url.starts_with('/') {
-        let candidate = PathBuf::from(repo_url).join(".venv/bin/python");
-        if candidate.exists() {
-            return Some(candidate);
+    if let Some(handoff_path) = handoff_artifact_path {
+        if let Ok(content) = fs::read_to_string(handoff_path) {
+            if let Ok(payload) = serde_json::from_str::<AutoQuantResearchHandoffPayload>(&content) {
+                let repo_url = payload.dependency_status.repo_url;
+                if repo_url.starts_with('/') {
+                    let candidate = PathBuf::from(repo_url).join(".venv/bin/python");
+                    if candidate.exists() {
+                        return Ok(Some(candidate));
+                    }
+                }
+            }
         }
     }
-    None
+    let output = Command::new("uv")
+        .arg("sync")
+        .arg("--frozen")
+        .current_dir(shared_workspace_root)
+        .output()
+        .with_context(|| format!("running uv sync --frozen in '{}'", shared_workspace_root))?;
+    if !output.status.success() {
+        bail!(
+            "failed to provision shared Auto-Quant runtime in '{}': {}",
+            shared_workspace_root,
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
+    if shared_python.exists() {
+        Ok(Some(shared_python))
+    } else {
+        Ok(None)
+    }
 }
 
 fn run_workspace_python_script(
