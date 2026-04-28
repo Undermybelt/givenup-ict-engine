@@ -33,7 +33,7 @@ DATA_DIR = USER_DATA / "data"
 CONFIG = PROJECT_DIR / "config.tomac.json"
 
 
-def _synthetic_market(pair: str) -> dict[str, Any]:
+def _synthetic_market(pair: str, trading_mode: str) -> dict[str, Any]:
     """Build a minimal ccxt-shaped market entry for a non-crypto pseudo-pair.
 
     FreqTrade's IPairList._whitelist_for_active_markets requires every
@@ -42,23 +42,24 @@ def _synthetic_market(pair: str) -> dict[str, Any]:
     These keys cover those checks without modifying freqtrade source.
     """
     base, quote = pair.split("/", 1)
+    is_futures = trading_mode == "futures"
     return {
         "id": pair.replace("/", ""),
         "symbol": pair,
         "base": base,
         "quote": quote,
         "active": True,
-        "type": "spot",
-        "spot": True,
-        "margin": False,
-        "swap": False,
+        "type": "swap" if is_futures else "spot",
+        "spot": not is_futures,
+        "margin": is_futures,
+        "swap": is_futures,
         "future": False,
         "option": False,
-        "contract": False,
-        "linear": None,
-        "inverse": None,
-        "settle": None,
-        "settleId": None,
+        "contract": is_futures,
+        "linear": True if is_futures else None,
+        "inverse": False if is_futures else None,
+        "settle": quote if is_futures else None,
+        "settleId": quote if is_futures else None,
         "expiry": None,
         "expiryDatetime": None,
         "strike": None,
@@ -73,7 +74,7 @@ def _synthetic_market(pair: str) -> dict[str, Any]:
             "amount": {"min": 0, "max": None},
             "price": {"min": 0, "max": None},
             "cost": {"min": 0, "max": None},
-            "leverage": {"min": 1, "max": 1},
+            "leverage": {"min": 1, "max": 20 if is_futures else 1},
         },
         "info": {},
     }
@@ -82,9 +83,10 @@ def _synthetic_market(pair: str) -> dict[str, Any]:
 def _build_exchange_with_synthetic_pairs(config: dict[str, Any]):
     exchange = ExchangeResolver.load_exchange(config, load_leverage_tiers=False)
     synthetic = config["exchange"].get("pair_whitelist", [])
+    trading_mode = config.get("trading_mode", "spot")
     for pair in synthetic:
         if pair not in exchange._markets:
-            exchange._markets[pair] = _synthetic_market(pair)
+            exchange._markets[pair] = _synthetic_market(pair, trading_mode)
     return exchange
 
 

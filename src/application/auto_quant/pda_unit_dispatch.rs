@@ -330,6 +330,31 @@ fn materialize_unit_workspace(
             String::from_utf8_lossy(&prepare.stderr)
         );
     }
+    if job.scope.direction == "short" {
+        materialize_futures_ohlcv_alias(workspace_root, &job.scope.symbol, &job.scope.timeframe)?;
+    }
+    Ok(())
+}
+
+fn materialize_futures_ohlcv_alias(
+    workspace_root: &Path,
+    symbol: &str,
+    timeframe: &str,
+) -> Result<()> {
+    let pair_filename = format!("{}_USD", symbol);
+    let source = workspace_root
+        .join("user_data/data")
+        .join(format!("{pair_filename}-{timeframe}.feather"));
+    let target_dir = workspace_root.join("user_data/data/futures");
+    fs::create_dir_all(&target_dir)?;
+    let target = target_dir.join(format!("{pair_filename}-{timeframe}-futures.feather"));
+    fs::copy(&source, &target).with_context(|| {
+        format!(
+            "copying futures candle alias from '{}' to '{}'",
+            source.display(),
+            target.display()
+        )
+    })?;
     Ok(())
 }
 
@@ -402,6 +427,23 @@ fn write_unit_config(path: &Path, job: &AutoQuantPdaUnitJob) -> Result<()> {
     config["timeframe"] = serde_json::Value::String(job.scope.timeframe.clone());
     config["exchange"]["pair_whitelist"] =
         serde_json::json!([format!("{}/USD", job.scope.symbol)]);
+    if job.scope.direction == "short" {
+        config["trading_mode"] = serde_json::Value::String("futures".to_string());
+        config["margin_mode"] = serde_json::Value::String("isolated".to_string());
+        config["entry_pricing"]["use_order_book"] = serde_json::Value::Bool(true);
+        config["exit_pricing"]["use_order_book"] = serde_json::Value::Bool(true);
+        config["exchange"]["_ft_has_params"]["uses_leverage_tiers"] =
+            serde_json::Value::Bool(false);
+    } else {
+        config["trading_mode"] = serde_json::Value::String("spot".to_string());
+        config.as_object_mut()
+            .map(|root| root.remove("margin_mode"));
+        config["entry_pricing"]["use_order_book"] = serde_json::Value::Bool(false);
+        config["exit_pricing"]["use_order_book"] = serde_json::Value::Bool(false);
+        if let Some(exchange) = config["exchange"].as_object_mut() {
+            exchange.remove("_ft_has_params");
+        }
+    }
     fs::write(path, serde_json::to_string_pretty(&config)?)?;
     Ok(())
 }

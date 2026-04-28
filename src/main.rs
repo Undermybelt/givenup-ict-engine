@@ -710,7 +710,7 @@ enum Commands {
         )]
         backend: String,
     },
-    /// Promote a PB12 discovery candidate into the repo-versioned canonical setup manifest
+    /// [Experimental/Internal] Promote a PB12 discovery candidate into the repo-versioned canonical setup manifest
     AutoQuantPromoteCanonicalSetup {
         #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
@@ -1374,7 +1374,7 @@ enum Commands {
         )]
         limit: usize,
     },
-    /// Build single-setup single-symbol single-timeframe Auto-Quant unit jobs and batch them for parallel dispatch.
+    /// [Experimental/Internal] Build ontology-driven Auto-Quant unit jobs for maintainer/research use.
     AutoQuantPdaUnitBatch {
         #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
@@ -1452,7 +1452,7 @@ enum Commands {
         )]
         tracked_branch: Option<String>,
     },
-    /// Dispatch a previously generated Auto-Quant PDA unit batch into external execution and collect per-unit results.
+    /// [Experimental/Internal] Dispatch an ontology-driven Auto-Quant unit batch into external execution and collect per-unit results.
     AutoQuantPdaUnitDispatch {
         #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
