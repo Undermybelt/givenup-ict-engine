@@ -2,9 +2,7 @@ use anyhow::Result;
 use serde::Serialize;
 
 use super::series::{aligned_close_series, close_to_returns};
-use crate::application::data_sources::repo_root_from_harness;
 use crate::data::realtime::openalice::AuxiliaryMarketEvidence;
-use crate::market_catalog::{load_market_catalog, MarketCatalog};
 use crate::smt::{Cointegration, Correlation, Divergence};
 use crate::types::Candle;
 
@@ -18,31 +16,15 @@ struct CorrelationAssetMap {
 }
 
 fn correlation_asset_map(
-    catalog: &MarketCatalog,
-    symbol: &str,
     spot_symbol: &str,
     options_symbol: &str,
 ) -> CorrelationAssetMap {
-    if let Some(relationships) = catalog.relationships(symbol) {
-        CorrelationAssetMap {
-            related_futures_symbols: relationships.related_futures_symbols.clone(),
-            related_etf_symbols: std::iter::once(spot_symbol.to_string())
-                .chain(relationships.related_etf_companions.iter().cloned())
-                .collect(),
-            related_options_symbols: std::iter::once(options_symbol.to_string())
-                .chain(relationships.related_options_companions.iter().cloned())
-                .collect(),
-            related_cfd_symbols: relationships.related_cfd_symbols.clone(),
-            related_crypto_symbols: relationships.related_crypto_symbols.clone(),
-        }
-    } else {
-        CorrelationAssetMap {
-            related_futures_symbols: Vec::new(),
-            related_etf_symbols: vec![spot_symbol.to_string()],
-            related_options_symbols: vec![options_symbol.to_string()],
-            related_cfd_symbols: Vec::new(),
-            related_crypto_symbols: Vec::new(),
-        }
+    CorrelationAssetMap {
+        related_futures_symbols: Vec::new(),
+        related_etf_symbols: vec![spot_symbol.to_string()],
+        related_options_symbols: vec![options_symbol.to_string()],
+        related_cfd_symbols: Vec::new(),
+        related_crypto_symbols: Vec::new(),
     }
 }
 
@@ -100,9 +82,7 @@ pub fn build_smt_correlation_section(
     spot_candles: &[Candle],
     auxiliary: &AuxiliaryMarketEvidence,
 ) -> Result<SmtCorrelationSection> {
-    let catalog = load_market_catalog(repo_root_from_harness())?;
-    let asset_map =
-        correlation_asset_map(&catalog, futures_symbol, spot_symbol, &auxiliary.options_symbol);
+    let asset_map = correlation_asset_map(spot_symbol, &auxiliary.options_symbol);
     let (futures_series, spot_series) = aligned_close_series(futures_candles, spot_candles);
     let futures_returns = close_to_returns(&futures_series);
     let spot_returns = close_to_returns(&spot_series);

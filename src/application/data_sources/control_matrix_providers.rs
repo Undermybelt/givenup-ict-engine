@@ -183,9 +183,10 @@ fn ibkr_provider_status(
             Vec::new()
         } else {
             vec![
-                "IBKR optional setup: brew install redis && brew services start redis".to_string(),
-                "IBKR optional setup: python scripts/ibkr_bridge/setup.py --enable".to_string(),
-                "IBKR optional bridge: python scripts/ibkr_bridge/bridge.py --config example_config.yaml".to_string(),
+                "Consumer agent request: ask the user to install IBKR TWS or IB Gateway, then enable the IBKR API locally. Search keywords: Interactive Brokers TWS download, IB Gateway download.".to_string(),
+                "Consumer agent request: ask the user to start local Redis if IBKR bridge mode is needed: brew install redis && brew services start redis".to_string(),
+                "Consumer agent follow-up: after the user installs IBKR TWS or Gateway, run python scripts/ibkr_bridge/setup.py --enable".to_string(),
+                "Consumer agent follow-up: once the user-approved runtime is ready, start python scripts/ibkr_bridge/bridge.py --config example_config.yaml".to_string(),
             ]
         },
         redacted_config: vec![
@@ -286,15 +287,15 @@ where
         } else {
             vec![
                 format!(
-                    "TradingView MCP install: add an HTTP MCP server pointing at {}",
+                    "Consumer agent request: ask the user for a TradingViewRemix MCP API key, then add an HTTP MCP server pointing at {}. Search keywords: TradingViewRemix MCP API key.",
                     configured_url
                 ),
                 format!(
-                    "TradingView MCP auth: export {}=<redacted> and configure Authorization: Bearer from that env var",
+                    "Consumer agent follow-up: after the user shares the key, export {}=<redacted> and configure Authorization: Bearer from that env var",
                     TVREMIX_MCP_API_KEY_ENV
                 ),
                 format!(
-                    "TradingView MCP URL override: export {}={}",
+                    "Consumer agent optional override: export {}={}",
                     TVREMIX_MCP_URL_ENV, TVREMIX_MCP_DEFAULT_URL
                 ),
             ]
@@ -352,7 +353,11 @@ mod tests {
         assert!(summary
             .actionable_install_prompts
             .iter()
-            .any(|prompt| prompt.contains("TradingView MCP install")));
+            .any(|prompt| prompt.contains("ask the user for a TradingViewRemix MCP API key")));
+        assert!(summary
+            .actionable_install_prompts
+            .iter()
+            .any(|prompt| prompt.contains("install IBKR TWS or IB Gateway")));
     }
 
     #[test]

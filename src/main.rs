@@ -418,7 +418,7 @@ const AUTO_QUANT_DIR_ENV_VAR: &str = "ICT_ENGINE_AUTO_QUANT_DIR";
 enum Commands {
     /// Analyze market data
     Analyze {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(long, help = "Higher-timeframe cleaned candle JSON path")]
         data_htf: Option<String>,
@@ -470,14 +470,19 @@ enum Commands {
     },
     /// Analyze live futures with integrated backends and spot/options auxiliary evidence
     AnalyzeLive {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
-        #[arg(long, help = "Explicit futures symbol override for live data provider")]
+        #[arg(long, help = "Explicit futures symbol for the live data provider")]
         futures_symbol: Option<String>,
-        #[arg(long, help = "Explicit spot symbol override for auxiliary evidence")]
+        #[arg(long, help = "Explicit spot symbol for auxiliary evidence")]
         spot_symbol: Option<String>,
-        #[arg(long, help = "Explicit options symbol override for auxiliary evidence")]
+        #[arg(long, help = "Explicit options symbol for auxiliary evidence")]
         options_symbol: Option<String>,
+        #[arg(
+            long,
+            help = "Optional explicit volatility proxy symbol used only when options-chain fetch fails"
+        )]
+        options_volatility_proxy_symbol: Option<String>,
         #[arg(long, help = "Spot instrument kind override, e.g. spot, etf, index")]
         spot_kind: Option<String>,
         #[arg(
@@ -514,7 +519,7 @@ enum Commands {
     },
     /// Train HMM model
     Train {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(long, help = "Cleaned candle JSON path used for HMM training")]
         data: String,
@@ -535,7 +540,7 @@ enum Commands {
     },
     /// Run backtest
     Backtest {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(long, help = "Primary cleaned candle JSON path")]
         data: String,
@@ -589,7 +594,7 @@ enum Commands {
     },
     /// Update BBN from realized trade outcome
     Update {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(long, help = "Realized trade outcome label")]
         outcome: String,
@@ -626,7 +631,7 @@ enum Commands {
         #[arg(
             long,
             default_value = "RESEARCH",
-            help = "Market symbol, e.g. NQ, ES, GC"
+            help = "Instrument identifier supplied by the caller"
         )]
         symbol: String,
         #[arg(long, help = "Primary cleaned candle JSON path")]
@@ -704,7 +709,7 @@ enum Commands {
     },
     /// Promote a PB12 discovery candidate into the repo-versioned canonical setup manifest
     AutoQuantPromoteCanonicalSetup {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(long, help = "Versioned setup name to write into the promoted canonical manifest")]
         setup_name: String,
@@ -726,7 +731,7 @@ enum Commands {
     },
     /// Show factor mutation history and clustered failure tags
     FactorMutationStatus {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -759,7 +764,7 @@ enum Commands {
     },
     /// Run checkpointed keep/discard factor mutation autoresearch loop
     FactorAutoresearch {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(long, help = "Primary cleaned candle JSON path")]
         data: String,
@@ -890,7 +895,7 @@ enum Commands {
     },
     /// Review the latest Auto-Quant handoff candidate as an adoption surface
     AutoQuantAdoptionReview {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -904,7 +909,7 @@ enum Commands {
     },
     /// Record an explicit adoption decision for an Auto-Quant handoff candidate
     AutoQuantAdoptionDecision {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -928,7 +933,7 @@ enum Commands {
     },
     /// Show factor-autoresearch sessions and attempts
     FactorAutoresearchStatus {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -949,7 +954,7 @@ enum Commands {
     },
     /// Summarize research closure truth into one compact verdict
     ResearchVerdict {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -960,7 +965,7 @@ enum Commands {
     },
     /// Explain the latest Pre-Bayes evidence quality score composition
     EvidenceQualityBreakdown {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -977,7 +982,7 @@ enum Commands {
     },
     /// Run factor walk-forward backtest and learning updates
     FactorBacktest {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(long, help = "Primary cleaned candle JSON path")]
         data: String,
@@ -1075,26 +1080,32 @@ enum Commands {
         )]
         emit_mutation_evaluation: bool,
     },
-    /// Agent-operable market-data harness: resolve a provider plan or execute fetch tasks
+    /// Agent-operable market-data harness driven by explicit external request/provider config
     MarketDataHarness {
         #[arg(long, default_value = "plan", help = "Harness action: plan or fetch")]
         action: String,
-        #[arg(long, help = "Primary market key, e.g. NQ, ES, AAPL, BTCUSDT")]
-        market: String,
+        #[arg(long, help = "Optional opaque request label when not using --request-json or --request-stdin")]
+        market: Option<String>,
         #[arg(long, help = "Optional primary candle JSON path to infer interval/range")]
         primary_data: Option<String>,
         #[arg(long, help = "Optional explicit interval override, e.g. 15m, 1h, 1d")]
         interval: Option<String>,
-        #[arg(long, help = "Related role to resolve; repeatable")]
+        #[arg(long, help = "Related role to resolve from explicit caller configuration; repeatable")]
         role: Vec<String>,
-        #[arg(long, help = "Per-role provider preference, role=provider; repeatable")]
+        #[arg(long, help = "Explicit per-role provider mapping, role=provider; repeatable")]
         provider: Vec<String>,
-        #[arg(long, help = "Advanced request JSON path; overrides market/role/provider flags")]
+        #[arg(long, help = "Explicit role=symbol shorthand for simple providers; repeatable")]
+        symbol_spec: Vec<String>,
+        #[arg(long, default_value_t = false, help = "Read the full harness request JSON from stdin")]
+        request_stdin: bool,
+        #[arg(long, help = "Optional explicit volatility proxy symbol for options.summary fallback")]
+        options_volatility_proxy_symbol: Option<String>,
+        #[arg(long, help = "Full request JSON path; preferred over individual flags")]
         request_json: Option<String>,
     },
     /// Structured latest-sample trace from factor signal through Pre-Bayes, bridge, and resonance
     FactorPipelineDebug {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(long, help = "Primary cleaned candle JSON path")]
         data: String,
@@ -1121,7 +1132,7 @@ enum Commands {
     },
     /// Show the latest cross-phase workflow snapshot
     WorkflowStatus {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -1191,7 +1202,7 @@ enum Commands {
     },
     /// Show the latest Pre-Bayes status directly
     PreBayesStatus {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -1213,7 +1224,7 @@ enum Commands {
     },
     /// Show the latest Pre-Bayes diff package directly
     PreBayesDiff {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -1230,7 +1241,7 @@ enum Commands {
     },
     /// Show artifact lineage edges and related nodes
     ArtifactLineage {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -1267,7 +1278,7 @@ enum Commands {
     },
     /// Show artifact ledger status
     ArtifactStatus {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -1324,7 +1335,7 @@ enum Commands {
     },
     /// Diff two artifacts by id
     ArtifactDiff {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -1339,7 +1350,7 @@ enum Commands {
     },
     /// Persist external strategy materials as seed evidence nodes for Auto-Quant iteration
     AutoQuantSeedEvidence {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -1362,7 +1373,7 @@ enum Commands {
     },
     /// Import an Auto-Quant strategy_library.json manifest as a validated handoff artifact.
     AutoQuantResultsImport {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -1384,7 +1395,7 @@ enum Commands {
     },
     /// Consume Auto-Quant live factor-signal envelopes from a Redis stream and append them to the local JSONL log + ledger.
     AutoQuantConsumeLiveSignals {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -1419,7 +1430,7 @@ enum Commands {
     },
     /// Ingest a JSONL artifact of realised trade outcomes produced by Auto-Quant and apply them to the trade_outcome CPT.
     AutoQuantIngestRealTrades {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -1452,7 +1463,7 @@ enum Commands {
     },
     /// Apply tempered Beta-Binomial pseudo-counts from an imported Auto-Quant strategy library to the trade_outcome CPT prior.
     AutoQuantPriorInit {
-        #[arg(long, help = "Market symbol, e.g. NQ, ES, GC")]
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
         #[arg(
             long,
@@ -1547,6 +1558,7 @@ fn main() -> Result<()> {
             futures_symbol,
             spot_symbol,
             options_symbol,
+            options_volatility_proxy_symbol,
             spot_kind,
             futures_backend,
             aux_backend,
@@ -1571,6 +1583,7 @@ fn main() -> Result<()> {
                 futures_symbol: futures_symbol.as_deref(),
                 spot_symbol: spot_symbol.as_deref(),
                 options_symbol: options_symbol.as_deref(),
+                options_volatility_proxy_symbol: options_volatility_proxy_symbol.as_deref(),
                 spot_kind: spot_kind.as_deref(),
                 futures_backend: &futures_backend,
                 aux_backend: &aux_backend,
@@ -2246,14 +2259,20 @@ fn main() -> Result<()> {
             interval,
             role,
             provider,
+            symbol_spec,
+            request_stdin,
+            options_volatility_proxy_symbol,
             request_json,
         } => {
             let input = MarketDataHarnessCommandInput {
-                market: &market,
+                market: market.as_deref(),
                 primary_data: primary_data.as_deref(),
                 interval: interval.as_deref(),
                 related_roles: &role,
                 provider_preferences: &provider,
+                request_stdin,
+                symbol_specs: &symbol_spec,
+                options_volatility_proxy_symbol: options_volatility_proxy_symbol.as_deref(),
                 request_json: request_json.as_deref(),
             };
             match action.trim().to_ascii_lowercase().as_str() {
@@ -6261,8 +6280,9 @@ fn apply_duration_sizing_adjustment(
 }
 
 fn duration_sizing_scale(market: &str, family: &str, remaining_expected_bars: f64) -> f64 {
-    match (market.to_ascii_uppercase().as_str(), family) {
-        ("NQ", "trend") | ("CL", "trend") => {
+    let _ = market;
+    match family {
+        "trend" => {
             if remaining_expected_bars <= 1.5 {
                 0.0
             } else if remaining_expected_bars <= 2.5 {
@@ -6273,7 +6293,7 @@ fn duration_sizing_scale(market: &str, family: &str, remaining_expected_bars: f6
                 1.0
             }
         }
-        ("GC", "range") => {
+        "range" => {
             if remaining_expected_bars <= 1.0 {
                 0.0
             } else if remaining_expected_bars <= 2.0 {
@@ -12743,8 +12763,14 @@ mod tests {
 
     #[test]
     fn test_duration_sizing_scale_is_market_family_aware() {
-        assert_eq!(duration_sizing_scale("NQ", "trend", 2.0), 0.25);
-        assert_eq!(duration_sizing_scale("GC", "range", 2.0), 0.35);
+        assert_eq!(
+            duration_sizing_scale("NQ", "trend", 2.0),
+            duration_sizing_scale("ES", "trend", 2.0)
+        );
+        assert_eq!(
+            duration_sizing_scale("GC", "range", 2.0),
+            duration_sizing_scale("CL", "range", 2.0)
+        );
         assert_eq!(duration_sizing_scale("ES", "transition", 2.0), 0.40);
     }
 

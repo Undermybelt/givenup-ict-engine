@@ -6,14 +6,14 @@ use crate::data::realtime::openalice::{
     AuxiliaryMarketEvidence, OpenAliceProvider, OptionsChainSummary, SpotInstrumentKind,
 };
 use crate::application::data_sources::{
-    build_market_data_harness_plan, execute_market_data_harness_plan,
-    repo_root_from_harness, MarketDataHarnessRequest, TVREMIX_MCP_API_KEY_ENV,
+    build_market_data_harness_plan, execute_market_data_harness_plan, MarketDataHarnessRequest,
+    TVREMIX_MCP_API_KEY_ENV,
 };
-use crate::market_catalog::load_market_catalog;
 use crate::types::Candle;
 
 const CONTROL_MATRIX_REFERENCE_PROVIDER_ENV: &str = "ICT_ENGINE_CONTROL_MATRIX_REFERENCE_PROVIDER";
 const CONTROL_MATRIX_OPTIONS_PROVIDER_ENV: &str = "ICT_ENGINE_CONTROL_MATRIX_OPTIONS_PROVIDER";
+const CONTROL_MATRIX_REQUEST_JSON_ENV: &str = "ICT_ENGINE_CONTROL_MATRIX_REQUEST_JSON";
 
 #[derive(Debug, Clone, Default)]
 pub struct ControlMatrixRuntimeOverrides {
@@ -45,8 +45,7 @@ pub fn build_control_matrix_runtime_overrides(
         });
     }
     let request = build_harness_request(data_path, symbol, run_spec, &primary_candles)?;
-    let catalog = load_market_catalog(repo_root_from_harness())?;
-    let plan = build_market_data_harness_plan(request, &catalog)?;
+    let plan = build_market_data_harness_plan(request)?;
     let bundle = execute_market_data_harness_plan(&plan)?;
     let mut runtime_notes = plan
         .warnings
@@ -178,71 +177,92 @@ fn build_harness_request(
     run_spec: &Pb12RunSpec,
     primary_candles: &[Candle],
 ) -> Result<MarketDataHarnessRequest> {
+    let mut request = load_control_matrix_request_template()?;
     let mut related_roles = Vec::new();
-    let mut provider_preferences = std::collections::BTreeMap::new();
-    let reference_provider = resolve_reference_provider_name();
-    let options_provider = resolve_options_provider_name();
 
     if run_spec.use_etf {
         related_roles.push("etf_reference".to_string());
-        provider_preferences.insert("etf_reference".to_string(), reference_provider.clone());
     }
     if run_spec.use_cfd {
         related_roles.push("cfd_reference".to_string());
-        provider_preferences.insert("cfd_reference".to_string(), reference_provider.clone());
     }
     if run_spec.use_vix {
         related_roles.push("volatility_reference".to_string());
-        provider_preferences.insert("volatility_reference".to_string(), reference_provider);
     }
     if run_spec.use_greeks || run_spec.use_oi || run_spec.use_iv {
         related_roles.push("options_underlying".to_string());
-        provider_preferences.insert("options_underlying".to_string(), options_provider);
     }
-    Ok(MarketDataHarnessRequest {
-        market_key: symbol.to_string(),
-        primary_data_path: Some(data_path.to_string()),
-        interval: Some(yahoo_interval_from_candles(primary_candles)),
-        start: None,
-        end: None,
-        count: None,
-        related_roles,
-        provider_preferences,
-        symbol_overrides: Default::default(),
-    })
+    request.market_key = symbol.to_string();
+    request.primary_data_path = Some(data_path.to_string());
+    request.interval = Some(yahoo_interval_from_candles(primary_candles));
+    request.start = None;
+    request.end = None;
+    request.count = None;
+    request.related_roles = related_roles;
+    Ok(request)
 }
 
-fn resolve_reference_provider_name() -> String {
-    match std::env::var(CONTROL_MATRIX_REFERENCE_PROVIDER_ENV)
-        .unwrap_or_else(|_| "yfinance".to_string())
-        .trim()
-        .to_ascii_lowercase()
-        .as_str()
-    {
-        "ibkr" => "ibkr".to_string(),
-        "tradingview_mcp" | "tradingview" | "tvremix" => "tradingview_mcp".to_string(),
-        _ => "yfinance".to_string(),
+fn load_control_matrix_request_template() -> Result<MarketDataHarnessRequest> {
+    let Some(path) = std::env::var(CONTROL_MATRIX_REQUEST_JSON_ENV)
+        .ok()
+        .filter(|value| !value.trim().is_empty())
+    else {
+        return Ok(MarketDataHarnessRequest {
+            market_key: String::new(),
+            primary_data_path: None,
+            interval: None,
+            start: None,
+            end: None,
+            count: None,
+            related_roles: Vec::new(),
+            provider_preferences: infer_provider_preferences_from_legacy_env(),
+            symbol_overrides: std::collections::BTreeMap::new(),
+            options_volatility_proxy_symbol: None,
+        });
+    };
+    let raw = std::fs::read_to_string(&path)?;
+    let mut request: MarketDataHarnessRequest = serde_json::from_str(&raw)?;
+    if request.provider_preferences.is_empty() {
+        request.provider_preferences = infer_provider_preferences_from_legacy_env();
     }
+    Ok(request)
 }
 
-fn resolve_options_provider_name() -> String {
-    match std::env::var(CONTROL_MATRIX_OPTIONS_PROVIDER_ENV)
-        .unwrap_or_else(|_| {
-            if std::env::var(TVREMIX_MCP_API_KEY_ENV)
-                .map(|value| !value.trim().is_empty())
-                .unwrap_or(false)
-            {
-                "tradingview_mcp".to_string()
-            } else {
-                "yfinance".to_string()
-            }
-        })
-        .trim()
-        .to_ascii_lowercase()
-        .as_str()
-    {
-        "tradingview_mcp" | "tradingview" | "tvremix" => "tradingview_mcp".to_string(),
-        _ => "yfinance".to_string(),
+fn infer_provider_preferences_from_legacy_env() -> std::collections::BTreeMap<String, String> {
+    let mut preferences = std::collections::BTreeMap::new();
+    if let Some(reference_provider) = normalize_optional_provider(
+        std::env::var(CONTROL_MATRIX_REFERENCE_PROVIDER_ENV).ok().as_deref(),
+    ) {
+        preferences.insert("etf_reference".to_string(), reference_provider.clone());
+        preferences.insert("cfd_reference".to_string(), reference_provider.clone());
+        preferences.insert("volatility_reference".to_string(), reference_provider);
+    }
+    if let Some(options_provider) = normalize_optional_provider(
+        std::env::var(CONTROL_MATRIX_OPTIONS_PROVIDER_ENV)
+            .ok()
+            .as_deref()
+            .or_else(|| {
+                if std::env::var(TVREMIX_MCP_API_KEY_ENV)
+                    .map(|value| !value.trim().is_empty())
+                    .unwrap_or(false)
+                {
+                    Some("tradingview_mcp")
+                } else {
+                    None
+                }
+            }),
+    ) {
+        preferences.insert("options_underlying".to_string(), options_provider);
+    }
+    preferences
+}
+
+fn normalize_optional_provider(value: Option<&str>) -> Option<String> {
+    match value?.trim().to_ascii_lowercase().as_str() {
+        "ibkr" => Some("ibkr".to_string()),
+        "tradingview_mcp" | "tradingview" | "tvremix" => Some("tradingview_mcp".to_string()),
+        "yfinance" => Some("yfinance".to_string()),
+        _ => None,
     }
 }
 

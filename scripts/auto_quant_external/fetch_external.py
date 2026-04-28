@@ -1050,6 +1050,7 @@ def _import_ibkr_bridge() -> tuple:
                 sys.path.insert(0, str(cand))
             break
     try:
+        from ibkr_bridge.client_id import connect_with_client_id_fallback  # noqa: WPS433
         from ibkr_bridge.consent import require_ibkr_enabled  # noqa: WPS433
         from ibkr_bridge.rate_limiter import IbkrRateLimiter  # noqa: WPS433
     except ImportError as exc:
@@ -1067,7 +1068,7 @@ def _import_ibkr_bridge() -> tuple:
             "    cd ~/Auto-Quant && uv add 'ib_async>=2.0,<3.0'\n"
             f"Underlying error: {exc}"
         )
-    return require_ibkr_enabled, IbkrRateLimiter, ib_async
+    return require_ibkr_enabled, IbkrRateLimiter, connect_with_client_id_fallback, ib_async
 
 
 def _build_ibkr_contract(args: argparse.Namespace, ib_async_mod):
@@ -1096,7 +1097,7 @@ def _build_ibkr_contract(args: argparse.Namespace, ib_async_mod):
 
 
 async def _ibkr_historical_async(args: argparse.Namespace) -> int:
-    require_ibkr_enabled, IbkrRateLimiter, ib_async = _import_ibkr_bridge()
+    require_ibkr_enabled, IbkrRateLimiter, connect_with_client_id_fallback, ib_async = _import_ibkr_bridge()
     require_ibkr_enabled()
 
     limiter = IbkrRateLimiter(redis_url=args.redis_url)
@@ -1112,9 +1113,20 @@ async def _ibkr_historical_async(args: argparse.Namespace) -> int:
         await limiter.wait_for_outbound_msg()
         ib = ib_async.IB()
         try:
-            await ib.connectAsync(host=args.host, port=args.port,
-                                   clientId=args.client_id, readonly=True)
-        except (ConnectionError, OSError) as exc:
+            selected_client_id, attempted_conflicts = await connect_with_client_id_fallback(
+                ib,
+                host=args.host,
+                port=args.port,
+                preferred_client_id=args.client_id,
+                readonly=True,
+            )
+            if attempted_conflicts:
+                print(
+                    f"  ibkr-historical: clientId fallback selected {selected_client_id} "
+                    f"after conflicts {[client_id for client_id, _ in attempted_conflicts]}",
+                    file=sys.stderr,
+                )
+        except (ConnectionError, OSError, RuntimeError) as exc:
             raise SystemExit(
                 f"Cannot reach IBKR Gateway at {args.host}:{args.port} "
                 f"(clientId={args.client_id}). Is IB Gateway / TWS running "
@@ -1342,7 +1354,7 @@ def _bulk_build_contract(task: dict, ib_async_mod):
 
 
 async def _ibkr_bulk_async(args: argparse.Namespace) -> int:
-    require_ibkr_enabled, IbkrRateLimiter, ib_async = _import_ibkr_bridge()
+    require_ibkr_enabled, IbkrRateLimiter, connect_with_client_id_fallback, ib_async = _import_ibkr_bridge()
     require_ibkr_enabled()
 
     try:
@@ -1381,12 +1393,20 @@ async def _ibkr_bulk_async(args: argparse.Namespace) -> int:
     await limiter.wait_for_outbound_msg()
     ib = ib_async.IB()
     try:
-        await ib.connectAsync(host=gw.get("host", "127.0.0.1"),
-                                port=int(gw.get("port", args.port)),
-                                clientId=int(gw.get("client_id",
-                                                      args.client_id)),
-                                readonly=True)
-    except (ConnectionError, OSError) as exc:
+        selected_client_id, attempted_conflicts = await connect_with_client_id_fallback(
+            ib,
+            host=gw.get("host", "127.0.0.1"),
+            port=int(gw.get("port", args.port)),
+            preferred_client_id=int(gw.get("client_id", args.client_id)),
+            readonly=True,
+        )
+        if attempted_conflicts:
+            print(
+                f"  ibkr-bulk: clientId fallback selected {selected_client_id} "
+                f"after conflicts {[client_id for client_id, _ in attempted_conflicts]}",
+                file=sys.stderr,
+            )
+    except (ConnectionError, OSError, RuntimeError) as exc:
         raise SystemExit(
             f"Cannot reach IBKR Gateway at "
             f"{gw.get('host', '127.0.0.1')}:{gw.get('port', args.port)} "

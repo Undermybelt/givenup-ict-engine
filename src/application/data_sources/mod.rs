@@ -43,9 +43,7 @@ pub use live_defaults::{
     analyze_live_inferred_symbols, build_inferable_live_defaults_map, parse_live_backend,
     resolve_live_backend_base_url, AnalyzeLiveSymbolDefaults,
 };
-pub use options_summary::{
-    fetch_options_summary_with_fallback, resolve_options_volatility_proxy_symbol,
-};
+pub use options_summary::fetch_options_summary_with_fallback;
 pub use sop_reports::{
     build_expansion_sop_market_report, build_expansion_sop_report, build_futures_sop_market_report,
     build_futures_sop_report, run_expansion_sop_with, run_futures_sop_with,

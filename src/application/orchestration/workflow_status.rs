@@ -2,18 +2,18 @@ use anyhow::Result;
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
+use std::net::{SocketAddr, TcpStream};
+use std::time::Duration;
 
 use crate::application::belief::{
     jump_calibration_gate_workflow_summary, jump_model_workflow_summary,
 };
-use crate::application::data_sources::{build_inferable_live_defaults_map, repo_root_from_harness};
 use crate::application::output_foundation::{
     print_redacted_json, redact_local_paths_in_human_text, redact_local_paths_in_value,
     short_workflow_phase_summary,
 };
 use crate::application::release_closure::workflow_next_step_view;
 use crate::config::shell_quote;
-use crate::market_catalog::load_market_catalog;
 use crate::state::{
     ArtifactConsumedImpactSummary, ArtifactDecisionSummary, ArtifactFactorTrendSummary,
     ArtifactFamilyTrendSummary, ArtifactHistorySummary, ArtifactLineageSummary,
@@ -224,6 +224,27 @@ pub struct AgentBootstrapLiveInput {
     pub inferable_defaults:
         std::collections::BTreeMap<String, std::collections::BTreeMap<String, String>>,
     pub additional_user_inputs_if_not_inferable: Vec<String>,
+    pub provider_access_requests: Vec<String>,
+    pub ibkr_gateway_summary: AgentBootstrapIbkrGatewaySummary,
+    pub ibkr_gateway_candidates: Vec<AgentBootstrapIbkrGatewayCandidate>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct AgentBootstrapIbkrGatewayCandidate {
+    pub label: String,
+    pub host: String,
+    pub port: u16,
+    pub reachable: bool,
+    pub recommended: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct AgentBootstrapIbkrGatewaySummary {
+    pub preferred_label: Option<String>,
+    pub preferred_port: Option<u16>,
+    pub reachable_candidate_count: usize,
+    pub occupied_judgement: String,
+    pub recommended_action: String,
 }
 
 pub fn build_phase_snapshot_surfaces(snapshot: &WorkflowSnapshot) -> WorkflowPhaseSnapshotSurfaces {
@@ -1040,11 +1061,14 @@ pub fn build_agent_bootstrap_view(
     multi_timeframe_clean_root: Option<String>,
     tomac_root_placeholder: &str,
 ) -> AgentBootstrapView {
+    let ibkr_gateway_candidates = build_ibkr_gateway_candidates();
+    let ibkr_gateway_summary = build_ibkr_gateway_summary(&ibkr_gateway_candidates);
     let agent_brief = vec![
         "mission: formalize factor-pipeline debug from latest signal through pre-bayes / bridge / resonance".to_string(),
         "priority: promote expansion_manipulation to SOP-tier objective, not research-only".to_string(),
         "guardrail: do not blind-tune structure_ict before evidence pinpoints the blocking surface".to_string(),
         "success: either find a real structure_ict mutation win or prove near-local-optimum then shift to label refinement / market fork".to_string(),
+        "live-provider prerequisite: if IBKR or TradingViewRemix MCP is needed, ask the user for local runtime/API access before attempting provider calls".to_string(),
     ];
     let analyze_command = if let Some(clean_root) = &multi_timeframe_clean_root {
         format!(
@@ -1082,9 +1106,7 @@ pub fn build_agent_bootstrap_view(
         "ict-engine clean-futures --root <tomac-root> --output-dir <output-dir> --multi-timeframe"
             .to_string()
     };
-    let inferable_live_defaults = load_market_catalog(repo_root_from_harness())
-        .map(|catalog| build_inferable_live_defaults_map(&catalog))
-        .unwrap_or_default();
+    let inferable_live_defaults = std::collections::BTreeMap::new();
     AgentBootstrapView {
         symbol: symbol.to_string(),
         project_role: "closed_loop_multi_timeframe_pre_bayes_bbn_engine".to_string(),
@@ -1135,6 +1157,13 @@ pub fn build_agent_bootstrap_view(
                     "aux_backend".to_string(),
                     "backend_base_urls_if_non_default".to_string(),
                 ],
+                provider_access_requests: vec![
+                    "Ask the user for a TradingViewRemix MCP API key before attempting TradingViewRemix-backed live or options workflows. Search keywords: TradingViewRemix MCP API key.".to_string(),
+                    "Ask the user to install IBKR TWS or IB Gateway and enable the local API before attempting IBKR-backed live workflows. Search keywords: Interactive Brokers TWS download, IB Gateway download.".to_string(),
+                    "If no local IBKR endpoint is reachable, ask the user to download the official IBKR TWS or IB Gateway client before continuing.".to_string(),
+                ],
+                ibkr_gateway_summary,
+                ibkr_gateway_candidates,
             },
         },
         commands: AgentBootstrapCommands {
@@ -1177,6 +1206,75 @@ pub fn build_agent_bootstrap_view(
                 .as_ref()
                 .map(|phase| phase.pre_bayes_gate_status.clone()),
         },
+    }
+}
+
+fn build_ibkr_gateway_candidates() -> Vec<AgentBootstrapIbkrGatewayCandidate> {
+    build_ibkr_gateway_candidates_with_probe("127.0.0.1", &|host, port| {
+        let Ok(addr) = format!("{host}:{port}").parse::<SocketAddr>() else {
+            return false;
+        };
+        TcpStream::connect_timeout(&addr, Duration::from_millis(150)).is_ok()
+    })
+}
+
+fn build_ibkr_gateway_candidates_with_probe<F>(
+    host: &str,
+    probe: &F,
+) -> Vec<AgentBootstrapIbkrGatewayCandidate>
+where
+    F: Fn(&str, u16) -> bool,
+{
+    let specs = [
+        ("TWS paper", 7497u16),
+        ("TWS live", 7496u16),
+        ("IB Gateway paper", 4002u16),
+        ("IB Gateway live", 4001u16),
+    ];
+    let recommended_port = specs
+        .iter()
+        .map(|(_, port)| *port)
+        .find(|port| probe(host, *port));
+    specs
+        .into_iter()
+        .map(|(label, port)| AgentBootstrapIbkrGatewayCandidate {
+            label: label.to_string(),
+            host: host.to_string(),
+            port,
+            reachable: probe(host, port),
+            recommended: recommended_port == Some(port),
+        })
+        .collect()
+}
+
+fn build_ibkr_gateway_summary(
+    candidates: &[AgentBootstrapIbkrGatewayCandidate],
+) -> AgentBootstrapIbkrGatewaySummary {
+    let reachable_candidate_count = candidates.iter().filter(|candidate| candidate.reachable).count();
+    let preferred = candidates.iter().find(|candidate| candidate.recommended);
+    let occupied_judgement = match reachable_candidate_count {
+        0 => "no_reachable_candidate",
+        1 => "single_reachable_candidate",
+        _ => "multiple_reachable_candidates_choose_explicit_port",
+    }
+    .to_string();
+    let recommended_action = match reachable_candidate_count {
+        0 => "Ask the user to launch TWS or IB Gateway, then rerun setup/status or pass --gateway-port once the local API port is known.".to_string(),
+        1 => format!(
+            "Use the single reachable local IBKR runtime on port {} unless the user says otherwise.",
+            preferred.map(|candidate| candidate.port).unwrap_or_default()
+        ),
+        _ => format!(
+            "Multiple reachable local IBKR runtimes detected; ask the user which one to use and pass --gateway-port {} or the chosen alternative explicitly.",
+            preferred.map(|candidate| candidate.port).unwrap_or_default()
+        ),
+    };
+    AgentBootstrapIbkrGatewaySummary {
+        preferred_label: preferred.map(|candidate| candidate.label.clone()),
+        preferred_port: preferred.map(|candidate| candidate.port),
+        reachable_candidate_count,
+        occupied_judgement,
+        recommended_action,
     }
 }
 
@@ -1832,6 +1930,85 @@ mod tests {
             value["commands"]["workflow_status"],
             "ict-engine workflow-status --symbol NQ --state-dir state"
         );
+        assert!(value["input_acquisition"]["live"]["provider_access_requests"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item
+                .as_str()
+                .unwrap()
+                .contains("TradingViewRemix MCP API key")));
+        assert!(value["input_acquisition"]["live"]["provider_access_requests"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item
+                .as_str()
+                .unwrap()
+                .contains("IBKR TWS or IB Gateway")));
+        assert_eq!(
+            value["input_acquisition"]["live"]["ibkr_gateway_summary"]["occupied_judgement"],
+            "single_reachable_candidate"
+        );
+        assert_eq!(
+            value["input_acquisition"]["live"]["ibkr_gateway_candidates"]
+                .as_array()
+                .unwrap()
+                .len(),
+            4
+        );
+    }
+
+    #[test]
+    fn build_ibkr_gateway_candidates_marks_first_reachable_as_recommended() {
+        let candidates = build_ibkr_gateway_candidates_with_probe("127.0.0.1", &|_, port| {
+            matches!(port, 4002 | 4001)
+        });
+
+        assert_eq!(candidates.len(), 4);
+        assert!(candidates
+            .iter()
+            .find(|candidate| candidate.port == 4002)
+            .unwrap()
+            .recommended);
+        assert!(candidates
+            .iter()
+            .find(|candidate| candidate.port == 4001)
+            .unwrap()
+            .reachable);
+        assert!(!candidates
+            .iter()
+            .find(|candidate| candidate.port == 4001)
+            .unwrap()
+            .recommended);
+    }
+
+    #[test]
+    fn build_ibkr_gateway_summary_flags_multiple_reachable_candidates() {
+        let candidates = vec![
+            AgentBootstrapIbkrGatewayCandidate {
+                label: "TWS paper".to_string(),
+                host: "127.0.0.1".to_string(),
+                port: 7497,
+                reachable: true,
+                recommended: true,
+            },
+            AgentBootstrapIbkrGatewayCandidate {
+                label: "IB Gateway paper".to_string(),
+                host: "127.0.0.1".to_string(),
+                port: 4002,
+                reachable: true,
+                recommended: false,
+            },
+        ];
+
+        let summary = build_ibkr_gateway_summary(&candidates);
+        assert_eq!(
+            summary.occupied_judgement,
+            "multiple_reachable_candidates_choose_explicit_port"
+        );
+        assert_eq!(summary.preferred_port, Some(7497));
+        assert!(summary.recommended_action.contains("--gateway-port 7497"));
     }
 
     #[test]

@@ -26,27 +26,29 @@ import asyncio
 import json
 import socket
 import sys
-from dataclasses import asdict
+from dataclasses import dataclass
 from pathlib import Path
 
-import redis
-
-from .account_prober import (
-    DEFAULT_PROBE_TIMEOUT_SEC,
-    PROBE_CLIENT_ID,
-    probe_account,
-)
+from .client_id import candidate_client_ids, is_client_id_conflict_error
 from .consent import (
     CONSENT_PATH,
     is_opted_in,
     revoke as revoke_consent,
     show_disclaimer_and_prompt,
 )
-from .rate_limiter import CAPABILITIES_PATH, IbkrCapabilities
 
 DEFAULT_REDIS_URL = "redis://localhost:6379"
 DEFAULT_GATEWAY_HOST = "127.0.0.1"
-DEFAULT_GATEWAY_PORT = 7497  # paper
+DEFAULT_GATEWAY_PORT = None
+PROBE_CLIENT_ID = 99
+DEFAULT_PROBE_TIMEOUT_SEC = 8.0
+CAPABILITIES_PATH = Path.home() / ".ict-engine" / "ibkr_capabilities.json"
+COMMON_GATEWAY_PORTS = (
+    ("TWS paper", 7497),
+    ("TWS live", 7496),
+    ("IB Gateway paper", 4002),
+    ("IB Gateway live", 4001),
+)
 
 # ANSI colours; degraded gracefully on non-tty sinks
 _GREEN = "\033[32m" if sys.stdout.isatty() else ""
@@ -60,11 +62,23 @@ FAIL = f"{_RED}✗{_RESET}"
 WARN = f"{_YELLOW}!{_RESET}"
 
 
+@dataclass(frozen=True)
+class GatewayCandidate:
+    label: str
+    port: int
+    reachable: bool
+    message: str
+
+
 # ---------------------------------------------------------------------------
 # Probes
 
 
 def _ping_redis(url: str) -> tuple[bool, str]:
+    try:
+        redis = _load_redis_module()
+    except ModuleNotFoundError as exc:
+        return False, f"Redis client unavailable: {exc}. Install the python `redis` package first."
     try:
         r = redis.Redis.from_url(url, decode_responses=True,
                                   socket_connect_timeout=2.0)
@@ -94,6 +108,114 @@ def _ping_gateway_socket(host: str, port: int, timeout: float = 2.0
         return False, f"TCP {host}:{port} unreachable: {exc}"
 
 
+def _gateway_label_for_port(port: int) -> str:
+    for label, known_port in COMMON_GATEWAY_PORTS:
+        if known_port == port:
+            return label
+    return f"Custom gateway port {port}"
+
+
+def _scan_gateway_candidates(
+    host: str,
+    explicit_port: int | None,
+    ping_socket=_ping_gateway_socket,
+) -> list[GatewayCandidate]:
+    specs = (
+        [(_gateway_label_for_port(explicit_port), explicit_port)]
+        if explicit_port is not None
+        else list(COMMON_GATEWAY_PORTS)
+    )
+    candidates = []
+    for label, port in specs:
+        ok, msg = ping_socket(host, port)
+        candidates.append(
+            GatewayCandidate(
+                label=label,
+                port=port,
+                reachable=ok,
+                message=msg,
+            )
+        )
+    return candidates
+
+
+def _select_gateway_candidate(
+    candidates: list[GatewayCandidate],
+) -> GatewayCandidate | None:
+    return next((candidate for candidate in candidates if candidate.reachable), None)
+
+
+def _print_gateway_candidates(host: str, candidates: list[GatewayCandidate]) -> None:
+    for candidate in candidates:
+        marker = OK if candidate.reachable else WARN
+        print(f"{marker} {candidate.label} ({host}:{candidate.port}) — {candidate.message}")
+
+
+def _load_probe_account():
+    try:
+        from .account_prober import probe_account  # noqa: WPS433
+    except ModuleNotFoundError as exc:
+        if exc.name == "ib_async":
+            raise RuntimeError(
+                "IBKR account probe requires `ib_async`. Install it before probing, "
+                "or rerun setup with --skip-probe."
+            ) from exc
+        raise
+    return probe_account
+
+
+def _load_redis_module():
+    try:
+        import redis  # noqa: WPS433
+    except ModuleNotFoundError as exc:
+        if exc.name == "redis":
+            raise ModuleNotFoundError(
+                "redis python package is required for IBKR setup/status"
+            ) from exc
+        raise
+    return redis
+
+
+def _load_ibkr_capabilities_class():
+    from .rate_limiter import IbkrCapabilities  # noqa: WPS433
+
+    return IbkrCapabilities
+
+
+async def _probe_account_with_fallback(
+    host: str,
+    candidates: list[GatewayCandidate],
+    client_id: int,
+    timeout: float,
+    probe_account_fn=None,
+):
+    probe_account = probe_account_fn or _load_probe_account()
+    attempted_errors: list[str] = []
+    for candidate in candidates:
+        if not candidate.reachable:
+            continue
+        for candidate_client_id in candidate_client_ids(client_id):
+            try:
+                caps = await probe_account(
+                    host=host,
+                    port=candidate.port,
+                    client_id=candidate_client_id,
+                    timeout=timeout,
+                )
+                return candidate, candidate_client_id, caps, attempted_errors
+            except (ConnectionError, RuntimeError) as exc:
+                if is_client_id_conflict_error(exc):
+                    attempted_errors.append(
+                        f"{candidate.label} ({candidate.port}) clientId={candidate_client_id}: {exc}"
+                    )
+                    continue
+                attempted_errors.append(
+                    f"{candidate.label} ({candidate.port}) clientId={candidate_client_id}: {exc}"
+                )
+                break
+    return None, None, None, attempted_errors
+
+
 # ---------------------------------------------------------------------------
 # Subcommands
 
@@ -121,29 +243,38 @@ async def cmd_enable(args: argparse.Namespace) -> int:
 
     # 3. Gateway TCP probe (optional but recommended)
     print(f"{_DIM}\n── IB Gateway / TWS ──{_RESET}")
-    ok, msg = _ping_gateway_socket(args.gateway_host, args.gateway_port)
-    if ok:
-        print(f"{OK} {msg}")
+    candidates = _scan_gateway_candidates(args.gateway_host, args.gateway_port)
+    _print_gateway_candidates(args.gateway_host, candidates)
+    selected = _select_gateway_candidate(candidates)
+    if selected is not None:
+        print(f"{OK} selected candidate: {selected.label} on {args.gateway_host}:{selected.port}")
+        if args.gateway_port is None and sum(1 for item in candidates if item.reachable) > 1:
+            print(f"{WARN} multiple local IBKR runtimes are reachable; using the first reachable candidate unless you pass --gateway-port explicitly.")
     else:
-        print(f"{WARN} {msg}")
-        print("    IBKR features will fail until Gateway/TWS is running on this port.")
-        print("    Setup will continue (you can launch Gateway later).")
+        print("    No reachable local TWS / Gateway endpoint detected.")
+        print("    Setup will continue (you can launch TWS or Gateway later, or rerun with --gateway-port <port>).")
         if args.require_gateway:
             return 3
 
     # 4. Account probe (writes capabilities.json) — only if Gateway reachable
-    if ok and not args.skip_probe:
+    if selected is not None and not args.skip_probe:
         print(f"{_DIM}\n── Account identification probe ──{_RESET}")
-        try:
-            caps = await probe_account(host=args.gateway_host,
-                                        port=args.gateway_port,
-                                        client_id=args.client_id,
-                                        timeout=args.probe_timeout)
+        candidate, selected_client_id, caps, attempted_errors = await _probe_account_with_fallback(
+            args.gateway_host,
+            candidates,
+            args.client_id,
+            args.probe_timeout,
+        )
+        if caps is not None and candidate is not None and selected_client_id is not None:
             print(f"{OK} account_type={caps.account_type}  "
                   f"n_subaccounts={caps.n_subaccounts}")
+            print(f"  probe target: {candidate.label} ({args.gateway_host}:{candidate.port})")
+            print(f"  probe clientId: {selected_client_id}")
             print(f"  capabilities written to {CAPABILITIES_PATH}")
-        except (ConnectionError, RuntimeError) as exc:
-            print(f"{WARN} probe skipped: {exc}")
+        else:
+            print(f"{WARN} probe skipped: no reachable candidate completed the IBKR probe")
+            for line in attempted_errors:
+                print(f"    {line}")
     elif args.skip_probe:
         print(f"{_DIM}── account probe skipped (--skip-probe) ──{_RESET}")
 
@@ -171,6 +302,7 @@ def cmd_revoke(args: argparse.Namespace) -> int:
 
     if args.clean_redis:
         try:
+            redis = _load_redis_module()
             r = redis.Redis.from_url(args.redis_url, decode_responses=True)
             keys = list(r.scan_iter(match="ibkr:*"))
             if keys:
@@ -178,6 +310,8 @@ def cmd_revoke(args: argparse.Namespace) -> int:
                 print(f"{OK} cleared {len(keys)} ibkr:* keys from Redis")
             else:
                 print(f"{OK} no ibkr:* keys in Redis to clean")
+        except ModuleNotFoundError as exc:
+            print(f"{WARN} Redis clean skipped: {exc}")
         except redis.exceptions.RedisError as exc:
             print(f"{WARN} Redis clean skipped: {exc}")
 
@@ -194,29 +328,45 @@ async def cmd_status(args: argparse.Namespace) -> int:
         print(f"{FAIL} Consent: not opted-in (run `setup.py --enable`)")
 
     if CAPABILITIES_PATH.exists():
-        caps = IbkrCapabilities.load_or_default()
-        print(f"{OK} Capabilities at {CAPABILITIES_PATH}:")
-        print(f"      account_type={caps.account_type}  "
-              f"n_subaccounts={caps.n_subaccounts}")
-        print(f"      hist_min_interval={caps.hist_min_interval_sec:.2f}s  "
-              f"hist_window_cap={caps.hist_window_capacity_for_account()}  "
-              f"max_lines={caps.effective_max_lines()}")
+        try:
+            caps = _load_ibkr_capabilities_class().load_or_default()
+        except ModuleNotFoundError as exc:
+            print(f"{WARN} Capabilities present but python deps are incomplete: {exc}")
+        else:
+            print(f"{OK} Capabilities at {CAPABILITIES_PATH}:")
+            print(f"      account_type={caps.account_type}  "
+                  f"n_subaccounts={caps.n_subaccounts}")
+            print(f"      hist_min_interval={caps.hist_min_interval_sec:.2f}s  "
+                  f"hist_window_cap={caps.hist_window_capacity_for_account()}  "
+                  f"max_lines={caps.effective_max_lines()}")
     else:
         print(f"{WARN} Capabilities: not yet probed; defaults will apply")
 
     redis_ok, redis_msg = _ping_redis(args.redis_url)
     print(f"{OK if redis_ok else FAIL} Redis: {redis_msg}")
 
-    gw_ok, gw_msg = _ping_gateway_socket(args.gateway_host, args.gateway_port)
-    print(f"{OK if gw_ok else WARN} Gateway: {gw_msg}")
+    candidates = _scan_gateway_candidates(args.gateway_host, args.gateway_port)
+    _print_gateway_candidates(args.gateway_host, candidates)
+    selected = _select_gateway_candidate(candidates)
+    status_client_id = getattr(args, "client_id", PROBE_CLIENT_ID)
+    if selected is not None:
+        print(f"{OK} Selected candidate: {selected.label} ({args.gateway_host}:{selected.port})")
+        print(f"      probe clientId policy: {candidate_client_ids(status_client_id)}")
+    else:
+        print(f"{WARN} No reachable IBKR TWS / Gateway candidate detected.")
 
     if redis_ok:
         try:
-            r = redis.Redis.from_url(args.redis_url, decode_responses=True)
-            ibkr_keys = sum(1 for _ in r.scan_iter(match="ibkr:*", count=200))
-            print(f"      ibkr:* keys in Redis: {ibkr_keys}")
-        except redis.exceptions.RedisError:
+            redis = _load_redis_module()
+        except ModuleNotFoundError:
             pass
+        else:
+            try:
+                r = redis.Redis.from_url(args.redis_url, decode_responses=True)
+                ibkr_keys = sum(1 for _ in r.scan_iter(match="ibkr:*", count=200))
+                print(f"      ibkr:* keys in Redis: {ibkr_keys}")
+            except redis.exceptions.RedisError:
+                pass
 
     return 0 if (is_opted_in() and redis_ok) else 1
 
@@ -235,8 +385,9 @@ def _build_parser() -> argparse.ArgumentParser:
     common.add_argument("--gateway-host", default=DEFAULT_GATEWAY_HOST)
     common.add_argument(
         "--gateway-port", type=int, default=DEFAULT_GATEWAY_PORT,
-        help=("TWS: 7497 paper (default) / 7496 live; "
-              "Standalone IB Gateway: 4002 paper / 4001 live"),
+        help=("If omitted, setup/status scan common local ports: "
+              "TWS 7497 paper / 7496 live; "
+              "Standalone IB Gateway 4002 paper / 4001 live"),
     )
 
     p = argparse.ArgumentParser(

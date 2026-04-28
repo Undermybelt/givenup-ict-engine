@@ -52,6 +52,7 @@ from ib_async import (
 )
 
 from .account_prober import probe_account
+from .client_id import connect_with_client_id_fallback
 from .consent import require_ibkr_enabled
 from .ibkr_errors import format_for_log, is_info
 from .rate_limiter import (
@@ -224,6 +225,8 @@ class IbkrBridge:
                                           capabilities_path=capabilities_path)
         self._active_subscriptions: dict[str, dict[str, Any]] = {}
         self._stop_event = asyncio.Event()
+        self._selected_client_id: int | None = None
+        self._attempted_client_id_conflicts: list[int] = []
 
         # Wire IBKR error -> rate-limiter feedback
         self.ib.errorEvent += self._on_ib_error
@@ -294,10 +297,27 @@ class IbkrBridge:
                   f"as clientId={cfg.gateway.client_id} "
                   f"market_data_type={cfg.gateway.market_data_type}")
         await self._limiter.wait_for_outbound_msg()
-        await self.ib.connectAsync(host=cfg.gateway.host,
-                                    port=cfg.gateway.port,
-                                    clientId=cfg.gateway.client_id,
-                                    readonly=True)
+        selected_client_id, attempted_conflicts = await connect_with_client_id_fallback(
+            self.ib,
+            host=cfg.gateway.host,
+            port=cfg.gateway.port,
+            preferred_client_id=cfg.gateway.client_id,
+            readonly=True,
+        )
+        self._selected_client_id = selected_client_id
+        self._attempted_client_id_conflicts = [
+            client_id for client_id, _ in attempted_conflicts
+        ]
+        if attempted_conflicts:
+            self._log(
+                "clientId fallback engaged: "
+                + "; ".join(
+                    f"{client_id} conflicted" for client_id, _ in attempted_conflicts
+                )
+                + f"; selected clientId={selected_client_id}"
+            )
+        elif selected_client_id != cfg.gateway.client_id:
+            self._log(f"selected alternate clientId={selected_client_id}")
 
         # Set the market-data type early so every subsequent reqMktData /
         # reqRealTimeBars on this connection inherits the choice. IBKR will
@@ -609,10 +629,21 @@ class IbkrBridge:
 
     def _publish_status(self, state: str) -> None:
         try:
+            active_client_id = self._selected_client_id or self.config.gateway.client_id
             self._redis.hset("ibkr:bridge:status", mapping={
                 "state": state,
                 "ts": f"{time.time():.3f}",
-                "client_id": str(self.config.gateway.client_id),
+                "gateway_host": self.config.gateway.host,
+                "gateway_port": str(self.config.gateway.port),
+                "market_data_type": str(self.config.gateway.market_data_type),
+                "client_id": str(active_client_id),
+                "configured_client_id": str(self.config.gateway.client_id),
+                "client_id_fallback_engaged": str(
+                    active_client_id != self.config.gateway.client_id
+                ).lower(),
+                "client_id_conflicts": ",".join(
+                    str(client_id) for client_id in self._attempted_client_id_conflicts
+                ),
                 "subscriptions_active": str(len(self._active_subscriptions)),
             })
         except redis.exceptions.RedisError:

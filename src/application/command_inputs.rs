@@ -14,6 +14,7 @@ pub struct AnalyzeLiveCommandInput<'a> {
     pub futures_symbol: Option<&'a str>,
     pub spot_symbol: Option<&'a str>,
     pub options_symbol: Option<&'a str>,
+    pub options_volatility_proxy_symbol: Option<&'a str>,
     pub spot_kind: Option<&'a str>,
     pub futures_backend: &'a str,
     pub aux_backend: &'a str,
@@ -126,6 +127,7 @@ mod tests {
             futures_symbol: Some("CL=F"),
             spot_symbol: Some("USO"),
             options_symbol: Some("USO"),
+            options_volatility_proxy_symbol: Some("^OVX"),
             spot_kind: Some("etf"),
             futures_backend: "openalice",
             aux_backend: "openalice",
@@ -136,6 +138,7 @@ mod tests {
 
         assert_eq!(input.symbol, "CL");
         assert_eq!(input.futures_symbol, Some("CL=F"));
+        assert_eq!(input.options_volatility_proxy_symbol, Some("^OVX"));
         assert_eq!(input.spot_kind, Some("etf"));
         assert_eq!(input.futures_base_url, "http://futures.local");
     }

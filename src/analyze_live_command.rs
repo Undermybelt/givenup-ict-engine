@@ -148,6 +148,7 @@ pub(crate) struct AnalyzeLiveCommandInput<'a> {
     pub futures_symbol: Option<&'a str>,
     pub spot_symbol: Option<&'a str>,
     pub options_symbol: Option<&'a str>,
+    pub options_volatility_proxy_symbol: Option<&'a str>,
     pub spot_kind: Option<&'a str>,
     pub futures_backend: &'a str,
     pub aux_backend: &'a str,
@@ -156,12 +157,54 @@ pub(crate) struct AnalyzeLiveCommandInput<'a> {
     pub state_dir: &'a str,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ResolvedLiveSymbolInputs {
+    futures_symbol: String,
+    spot_symbol: String,
+    options_symbol: String,
+    spot_kind: String,
+}
+
+fn resolve_live_symbol_inputs(
+    symbol: &str,
+    futures_symbol: Option<&str>,
+    spot_symbol: Option<&str>,
+    options_symbol: Option<&str>,
+    spot_kind: Option<&str>,
+) -> Result<ResolvedLiveSymbolInputs> {
+    let futures_symbol = futures_symbol.ok_or_else(|| {
+        anyhow!(
+            "external config required for analyze-live '{}': pass --futures-symbol, --spot-symbol, and --options-symbol",
+            symbol
+        )
+    })?;
+    let spot_symbol = spot_symbol.ok_or_else(|| {
+        anyhow!(
+            "external config required for analyze-live '{}': pass --futures-symbol, --spot-symbol, and --options-symbol",
+            symbol
+        )
+    })?;
+    let options_symbol = options_symbol.ok_or_else(|| {
+        anyhow!(
+            "external config required for analyze-live '{}': pass --futures-symbol, --spot-symbol, and --options-symbol",
+            symbol
+        )
+    })?;
+    Ok(ResolvedLiveSymbolInputs {
+        futures_symbol: futures_symbol.to_string(),
+        spot_symbol: spot_symbol.to_string(),
+        options_symbol: options_symbol.to_string(),
+        spot_kind: spot_kind.unwrap_or("equity").to_string(),
+    })
+}
+
 pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result<()> {
     let AnalyzeLiveCommandInput {
         symbol,
         futures_symbol,
         spot_symbol,
         options_symbol,
+        options_volatility_proxy_symbol,
         spot_kind,
         futures_backend,
         aux_backend,
@@ -169,25 +212,18 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         aux_base_url,
         state_dir,
     } = input;
-    let catalog = ict_engine::market_catalog::load_market_catalog(
-        ict_engine::application::data_sources::repo_root_from_harness(),
+    let resolved_symbols = resolve_live_symbol_inputs(
+        symbol,
+        futures_symbol,
+        spot_symbol,
+        options_symbol,
+        spot_kind,
     )?;
-    let inferred = ict_engine::application::data_sources::analyze_live_inferred_symbols(
-        &catalog, symbol,
-    );
-    let futures_symbol = futures_symbol
-        .or_else(|| inferred.as_ref().map(|item| item.futures_symbol.as_str()))
-        .ok_or_else(|| anyhow!("missing live futures_symbol for symbol '{}'", symbol))?;
-    let spot_symbol = spot_symbol
-        .or_else(|| inferred.as_ref().map(|item| item.spot_symbol.as_str()))
-        .ok_or_else(|| anyhow!("missing live spot_symbol for symbol '{}'", symbol))?;
-    let options_symbol = options_symbol
-        .or_else(|| inferred.as_ref().map(|item| item.options_symbol.as_str()))
-        .unwrap_or(spot_symbol);
-    let spot_kind_raw = spot_kind
-        .or_else(|| inferred.as_ref().map(|item| item.spot_kind.as_str()))
-        .unwrap_or("equity");
-    let spot_kind_label = spot_kind_raw.to_string();
+    let futures_symbol = resolved_symbols.futures_symbol.as_str();
+    let spot_symbol = resolved_symbols.spot_symbol.as_str();
+    let options_symbol = resolved_symbols.options_symbol.as_str();
+    let spot_kind_raw = resolved_symbols.spot_kind.as_str();
+    let spot_kind_label = resolved_symbols.spot_kind.clone();
     let spot_kind = SpotInstrumentKind::parse(spot_kind_raw)?;
     let futures_backend = LiveDataBackend::parse(futures_backend)?;
     let aux_backend = LiveDataBackend::parse(aux_backend)?;
@@ -275,9 +311,8 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         .ok();
     let options_summary = ict_engine::application::data_sources::fetch_options_summary_with_fallback(
         aux_provider.as_ref(),
-        &catalog,
-        symbol,
         options_symbol,
+        options_volatility_proxy_symbol,
     )
         .unwrap_or_else(|_| neutral_options_summary(options_symbol));
 
@@ -524,4 +559,35 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
             redact_paths: false,
         },
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn resolve_live_symbol_inputs_requires_explicit_external_configuration() {
+        let err = resolve_live_symbol_inputs("NQ", None, None, None, None).unwrap_err();
+
+        assert!(err
+            .to_string()
+            .contains("external config required for analyze-live"));
+    }
+
+    #[test]
+    fn resolve_live_symbol_inputs_accepts_explicit_symbols() {
+        let resolved = resolve_live_symbol_inputs(
+            "caller-symbol",
+            Some("ES=F"),
+            Some("SPY"),
+            Some("SPY"),
+            Some("equity"),
+        )
+        .unwrap();
+
+        assert_eq!(resolved.futures_symbol, "ES=F");
+        assert_eq!(resolved.spot_symbol, "SPY");
+        assert_eq!(resolved.options_symbol, "SPY");
+        assert_eq!(resolved.spot_kind, "equity");
+    }
 }

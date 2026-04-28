@@ -11,7 +11,6 @@ use super::control_matrix_providers::{
 use super::provider_fetch::{
     fetch_options_summary_for_task, fetch_reference_candles_for_task,
 };
-use crate::market_catalog::MarketCatalog;
 use crate::types::Candle;
 
 pub const MARKET_DATA_HARNESS_PRESETS_FILE: &str = "config/market_data_harness_presets.json";
@@ -84,6 +83,8 @@ pub struct MarketDataHarnessRequest {
     pub provider_preferences: BTreeMap<String, String>,
     #[serde(default)]
     pub symbol_overrides: BTreeMap<String, MarketDataHarnessSymbolSpec>,
+    #[serde(default)]
+    pub options_volatility_proxy_symbol: Option<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -207,9 +208,7 @@ pub fn repo_root_from_harness() -> std::path::PathBuf {
 
 pub fn build_market_data_harness_plan(
     request: MarketDataHarnessRequest,
-    catalog: &MarketCatalog,
 ) -> Result<MarketDataHarnessPlan> {
-    let preset = find_matching_preset(&catalog.presets, &request.market_key);
     let required_requirements = request
         .related_roles
         .iter()
@@ -226,17 +225,13 @@ pub fn build_market_data_harness_plan(
     let mut warnings = Vec::new();
     for role in &request.related_roles {
         let operation = operation_for_role(role);
-        let symbol_spec = request
-            .symbol_overrides
-            .get(role)
-            .cloned()
-            .or_else(|| preset.and_then(|item| item.related.get(role).cloned()));
+        let symbol_spec = request.symbol_overrides.get(role).cloned();
         let Some(symbol_spec) = symbol_spec else {
             missing_roles.push(role.clone());
             warnings.push(format!("missing_symbol_spec_for_role={role}"));
             continue;
         };
-        let provider = match resolve_provider_for_role(role, &request, &provider_summary) {
+        let provider = match resolve_provider_for_role(role, &request) {
             Ok(provider) => provider,
             Err(err) => {
                 missing_roles.push(role.clone());
@@ -265,9 +260,7 @@ pub fn build_market_data_harness_plan(
         };
         let fallback_options_proxy_symbol =
             if matches!(operation, MarketDataHarnessOperation::OptionsSummary) {
-                catalog
-                    .relationships(&request.market_key)
-                    .and_then(|item| item.options_volatility_proxy.clone())
+                request.options_volatility_proxy_symbol.clone()
             } else {
                 None
             };
@@ -294,6 +287,12 @@ pub fn build_market_data_harness_plan(
             }
         }
         let _ = count;
+    }
+    if !missing_roles.is_empty() {
+        bail!(
+            "market-data-harness request validation failed: {}",
+            warnings.join(" | ")
+        );
     }
     Ok(MarketDataHarnessPlan {
         request,
@@ -378,69 +377,15 @@ fn harness_error_envelope(
     }
 }
 
-fn find_matching_preset<'a>(
-    config: &'a MarketDataHarnessPresetConfig,
-    market_key: &str,
-) -> Option<&'a MarketDataHarnessPreset> {
-    let normalized = market_key.trim().to_ascii_lowercase();
-    config.markets.iter().find(|preset| {
-        preset.market_key.eq_ignore_ascii_case(&normalized)
-            || preset.aliases.iter().any(|alias| alias.eq_ignore_ascii_case(&normalized))
-    })
-}
-
 fn resolve_provider_for_role(
     role: &str,
     request: &MarketDataHarnessRequest,
-    provider_summary: &ControlMatrixProviderSummary,
 ) -> Result<String> {
-    if let Some(preferred) = request.provider_preferences.get(role) {
-        return Ok(preferred.clone());
-    }
-    let requirement = requirement_for_role(role);
-    let available = healthy_supported_provider_names(provider_summary, requirement);
-    let provider = match requirement {
-        Some(ControlMatrixDataRequirement::OptionsGreeks) => {
-            choose_provider(&available, &["tradingview_mcp", "yfinance", "ibkr"])
-        }
-        Some(ControlMatrixDataRequirement::OptionsOpenInterest) => {
-            choose_provider(&available, &["yfinance", "tradingview_mcp", "ibkr"])
-        }
-        Some(ControlMatrixDataRequirement::OptionsImpliedVolatility) => {
-            choose_provider(&available, &["tradingview_mcp", "yfinance", "ibkr"])
-        }
-        Some(ControlMatrixDataRequirement::CfdReference) => {
-            choose_provider(&available, &["tradingview_mcp", "ibkr", "yfinance"])
-        }
-        _ => choose_provider(&available, &["yfinance", "tradingview_mcp", "ibkr"]),
-    };
-    provider
-        .map(str::to_string)
-        .ok_or_else(|| anyhow!("no provider available for role '{}'", role))
-}
-
-fn healthy_supported_provider_names(
-    provider_summary: &ControlMatrixProviderSummary,
-    requirement: Option<ControlMatrixDataRequirement>,
-) -> Vec<&str> {
-    provider_summary
-        .provider_statuses
-        .iter()
-        .filter(|provider| provider.healthy)
-        .filter(|provider| {
-            requirement.is_none_or(|requirement| {
-                provider
-                    .supported_requirements
-                    .iter()
-                    .any(|item| item == requirement.as_str())
-            })
-        })
-        .map(|provider| provider.provider.as_str())
-        .collect()
-}
-
-fn choose_provider<'a>(available: &[&'a str], preferred: &[&'a str]) -> Option<&'a str> {
-    preferred.iter().copied().find(|item| available.contains(item))
+    request
+        .provider_preferences
+        .get(role)
+        .cloned()
+        .ok_or_else(|| anyhow!("missing explicit provider preference for role '{}'", role))
 }
 
 fn display_symbol_for_spec(spec: &MarketDataHarnessSymbolSpec) -> Result<String> {
@@ -571,106 +516,83 @@ fn requirement_for_role(role: &str) -> Option<ControlMatrixDataRequirement> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::market_catalog::{MarketCatalog, MarketRelationshipConfig};
 
     #[test]
-    fn plan_uses_preset_and_provider_preferences() {
-        let catalog = MarketCatalog {
-            presets: MarketDataHarnessPresetConfig {
-                version: 1,
-                markets: vec![MarketDataHarnessPreset {
-                market_key: "NQ".to_string(),
-                aliases: vec!["NASDAQ_FUTURES".to_string()],
-                live_defaults: None,
-                related: BTreeMap::from([
-                    (
-                        "etf_reference".to_string(),
-                        MarketDataHarnessSymbolSpec {
-                            yfinance: Some("QQQ".to_string()),
-                            tradingview_mcp: Some("NASDAQ:QQQ".to_string()),
-                            ..MarketDataHarnessSymbolSpec::default()
-                        },
-                    ),
-                    (
-                        "options_underlying".to_string(),
-                        MarketDataHarnessSymbolSpec {
-                            yfinance: Some("QQQ".to_string()),
-                            tradingview_mcp: Some("NASDAQ:QQQ".to_string()),
-                            ..MarketDataHarnessSymbolSpec::default()
-                        },
-                    ),
-                ]),
-                }],
+    fn plan_requires_explicit_symbol_specs_and_provider_preferences() {
+        let result = build_market_data_harness_plan(
+            MarketDataHarnessRequest {
+                market_key: "caller-label".to_string(),
+                primary_data_path: None,
+                interval: Some("1d".to_string()),
+                start: Some(Utc::now() - TimeDelta::days(10)),
+                end: Some(Utc::now()),
+                count: Some(20),
+                related_roles: vec!["etf_reference".to_string()],
+                provider_preferences: BTreeMap::new(),
+                symbol_overrides: BTreeMap::new(),
+                options_volatility_proxy_symbol: None,
             },
-            relationships: MarketRelationshipConfig::default(),
-        };
+        );
+
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn plan_uses_explicit_symbol_overrides_without_repo_presets() {
         let plan = build_market_data_harness_plan(
             MarketDataHarnessRequest {
-                market_key: "NQ".to_string(),
+                market_key: "caller-label".to_string(),
                 primary_data_path: None,
                 interval: Some("1d".to_string()),
                 start: Some(Utc::now() - TimeDelta::days(10)),
                 end: Some(Utc::now()),
                 count: Some(20),
                 related_roles: vec!["etf_reference".to_string(), "options_underlying".to_string()],
-                provider_preferences: BTreeMap::from([(
-                    "options_underlying".to_string(),
-                    "tradingview_mcp".to_string(),
-                )]),
-                symbol_overrides: BTreeMap::new(),
+                provider_preferences: BTreeMap::from([
+                    ("etf_reference".to_string(), "yfinance".to_string()),
+                    ("options_underlying".to_string(), "tradingview_mcp".to_string()),
+                ]),
+                symbol_overrides: BTreeMap::from([
+                    (
+                        "etf_reference".to_string(),
+                        MarketDataHarnessSymbolSpec {
+                            display_symbol: Some("QQQ".to_string()),
+                            yfinance: Some("QQQ".to_string()),
+                            ..MarketDataHarnessSymbolSpec::default()
+                        },
+                    ),
+                    (
+                        "options_underlying".to_string(),
+                        MarketDataHarnessSymbolSpec {
+                            display_symbol: Some("NASDAQ:QQQ".to_string()),
+                            tradingview_mcp: Some("NASDAQ:QQQ".to_string()),
+                            ..MarketDataHarnessSymbolSpec::default()
+                        },
+                    ),
+                ]),
+                options_volatility_proxy_symbol: Some("^VIX".to_string()),
             },
-            &catalog,
         )
         .unwrap();
+
         assert_eq!(plan.tasks.len(), 2);
         assert!(plan
             .tasks
             .iter()
-            .any(|task| task.role == "etf_reference" && task.provider == "yfinance"));
-        assert!(plan
-            .tasks
-            .iter()
-            .any(|task| task.role == "options_underlying" && task.provider == "tradingview_mcp"));
-        let etf = plan
-            .tasks
-            .iter()
-            .find(|task| task.role == "etf_reference")
-            .unwrap();
-        assert_eq!(etf.request_symbol(), "QQQ");
+            .any(|task| task.role == "etf_reference" && task.request_symbol() == "QQQ"));
+        assert!(plan.tasks.iter().any(|task| {
+            task.role == "options_underlying" && task.request_symbol() == "NASDAQ:QQQ"
+        }));
         let options = plan
             .tasks
             .iter()
             .find(|task| task.role == "options_underlying")
             .unwrap();
-        assert_eq!(options.fallback_options_proxy_symbol, None);
+        assert_eq!(options.fallback_options_proxy_symbol.as_deref(), Some("^VIX"));
     }
 
     #[test]
-    fn provider_selection_only_uses_healthy_supported_providers() {
-        let summary = ControlMatrixProviderSummary {
-            required_requirements: vec!["cfd_reference".to_string()],
-            provider_statuses: vec![
-                crate::application::data_sources::ControlMatrixProviderStatus {
-                    provider: "yfinance".to_string(),
-                    status: "ready".to_string(),
-                    healthy: true,
-                    reason: "public".to_string(),
-                    supported_requirements: vec!["etf_reference".to_string()],
-                    install_prompts: Vec::new(),
-                    redacted_config: Vec::new(),
-                },
-                crate::application::data_sources::ControlMatrixProviderStatus {
-                    provider: "ibkr".to_string(),
-                    status: "install_required".to_string(),
-                    healthy: false,
-                    reason: "probe_failed".to_string(),
-                    supported_requirements: vec!["cfd_reference".to_string()],
-                    install_prompts: Vec::new(),
-                    redacted_config: Vec::new(),
-                },
-            ],
-            actionable_install_prompts: Vec::new(),
-        };
+    fn provider_selection_requires_explicit_role_mapping() {
         let request = MarketDataHarnessRequest {
             market_key: "ES".to_string(),
             primary_data_path: None,
@@ -681,8 +603,9 @@ mod tests {
             related_roles: vec!["cfd_reference".to_string()],
             provider_preferences: BTreeMap::new(),
             symbol_overrides: BTreeMap::new(),
+            options_volatility_proxy_symbol: None,
         };
-        let result = resolve_provider_for_role("cfd_reference", &request, &summary);
+        let result = resolve_provider_for_role("cfd_reference", &request);
         assert!(result.is_err());
     }
 }

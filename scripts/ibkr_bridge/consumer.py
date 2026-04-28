@@ -35,8 +35,6 @@ import math
 from typing import Any, AsyncIterator
 
 import pandas as pd
-import redis
-import redis.asyncio as redis_async
 
 DEFAULT_REDIS_URL = "redis://localhost:6379"
 
@@ -50,6 +48,7 @@ class IbkrConsumer:
 
     def __init__(self, redis_url: str = DEFAULT_REDIS_URL) -> None:
         self._url = redis_url
+        redis = _load_redis_sync_module()
         self._sync = redis.Redis.from_url(redis_url, decode_responses=True,
                                             socket_connect_timeout=2.0)
         # Verify Redis is reachable; surface a clear error if not.
@@ -60,7 +59,7 @@ class IbkrConsumer:
                 f"IbkrConsumer requires a reachable Redis at {redis_url!r}. "
                 f"Is the bridge running? Underlying error: {exc}"
             ) from exc
-        self._async: redis_async.Redis | None = None
+        self._async: Any | None = None
 
     # ----- Snapshot ------------------------------------------------------
 
@@ -113,6 +112,15 @@ class IbkrConsumer:
             return {"state": "absent"}
         return _coerce_snapshot(raw)
 
+    def bridge_runtime_summary(self) -> dict[str, Any]:
+        raw = self._sync.hgetall("ibkr:bridge:status")
+        if not raw:
+            return {"state": "absent"}
+        return _coerce_bridge_status(raw)
+
+    def recommended_gateway_target(self) -> dict[str, Any]:
+        return _recommended_gateway_target(self.bridge_runtime_summary())
+
     # ----- Streaming ------------------------------------------------------
 
     async def stream_bars(self, symbols: list[str], bar_size: str = "5sec",
@@ -152,6 +160,7 @@ class IbkrConsumer:
                        float_cols: tuple[str, ...], int_cols: tuple[str, ...],
                        kind: str) -> AsyncIterator[dict[str, Any]]:
         if self._async is None:
+            redis_async = _load_redis_async_module()
             self._async = redis_async.from_url(self._url, decode_responses=True)
         cursors = {key: start_id for key in keys}
         while True:
@@ -160,7 +169,7 @@ class IbkrConsumer:
                                                     block=block_ms, count=200)
             except asyncio.CancelledError:
                 raise
-            except redis.exceptions.RedisError as exc:
+            except _redis_error_types() as exc:
                 # Transient — pause briefly and retry
                 await asyncio.sleep(1.0)
                 continue
@@ -237,6 +246,82 @@ def _coerce_snapshot(raw: dict[str, str]) -> dict[str, Any]:
     return out
 
 
+def _coerce_bridge_status(raw: dict[str, str]) -> dict[str, Any]:
+    out = _coerce_snapshot(raw)
+    for key in (
+        "client_id",
+        "configured_client_id",
+        "subscriptions_active",
+        "gateway_port",
+        "market_data_type",
+    ):
+        if key in out and out[key] not in ("", None):
+            try:
+                out[key] = int(out[key])
+            except (TypeError, ValueError):
+                pass
+    if "client_id_fallback_engaged" in out:
+        out["client_id_fallback_engaged"] = str(out["client_id_fallback_engaged"]).lower() == "true"
+    if "client_id_conflicts" in out:
+        conflicts = str(out["client_id_conflicts"]).strip()
+        if not conflicts:
+            out["client_id_conflicts"] = []
+        else:
+            out["client_id_conflicts"] = [
+                int(item) for item in conflicts.split(",") if item.strip()
+            ]
+    return out
+
+
+def _recommended_gateway_target(status: dict[str, Any]) -> dict[str, Any]:
+    state = status.get("state", "absent")
+    if state == "absent":
+        return {
+            "status": "bridge_absent",
+            "message": "IBKR bridge is not publishing status yet; run the bridge or inspect setup/status first.",
+        }
+
+    host = status.get("gateway_host")
+    port = status.get("gateway_port")
+    client_id = status.get("client_id")
+    configured_client_id = status.get("configured_client_id")
+    market_data_type = status.get("market_data_type")
+    fallback = bool(status.get("client_id_fallback_engaged", False))
+    conflicts = status.get("client_id_conflicts", [])
+    if host is None or port is None:
+        return {
+            "status": "incomplete_status",
+            "message": "IBKR bridge status is present but missing gateway host/port details.",
+        }
+
+    state_status = "ready" if str(state) == "running" else "not_running"
+    if fallback:
+        message = (
+            f"IBKR bridge is using {host}:{port} with fallback clientId={client_id} "
+            f"(configured={configured_client_id}, conflicts={conflicts})."
+        )
+    else:
+        message = (
+            f"IBKR bridge is using {host}:{port} with clientId={client_id}."
+        )
+    if market_data_type is not None:
+        message += f" market_data_type={market_data_type}."
+    if state_status != "ready":
+        message += f" current_state={state}."
+    return {
+        "status": state_status,
+        "state": state,
+        "host": host,
+        "port": port,
+        "client_id": client_id,
+        "configured_client_id": configured_client_id,
+        "client_id_fallback_engaged": fallback,
+        "client_id_conflicts": conflicts,
+        "market_data_type": market_data_type,
+        "message": message,
+    }
+
+
 def _coerce_entry(symbol: str, kind: str, stream_id: str, fields: dict[str, str],
                    float_cols: tuple[str, ...], int_cols: tuple[str, ...]
                    ) -> dict[str, Any]:
@@ -271,6 +356,35 @@ def _symbol_from_key(key: str) -> str:
     return key
 
 
+def _load_redis_sync_module():
+    try:
+        import redis  # noqa: WPS433
+    except ModuleNotFoundError as exc:
+        if exc.name == "redis":
+            raise RuntimeError(
+                "IbkrConsumer requires the python `redis` package. Install it before consuming bridge state."
+            ) from exc
+        raise
+    return redis
+
+
+def _load_redis_async_module():
+    try:
+        import redis.asyncio as redis_async  # noqa: WPS433
+    except ModuleNotFoundError as exc:
+        if exc.name == "redis":
+            raise RuntimeError(
+                "IbkrConsumer async streaming requires the python `redis` package."
+            ) from exc
+        raise
+    return redis_async
+
+
+def _redis_error_types():
+    redis = _load_redis_sync_module()
+    return (redis.exceptions.RedisError,)
+
+
 # ---------------------------------------------------------------------------
 # Diagnostic CLI
 
@@ -289,7 +403,8 @@ def _cli() -> int:
         print(exc)
         return 2
 
-    print("bridge status:", json.dumps(c.bridge_status(), indent=2, default=str))
+    print("bridge status:", json.dumps(c.bridge_runtime_summary(), indent=2, default=str))
+    print("recommended target:", json.dumps(c.recommended_gateway_target(), indent=2, default=str))
     if args.symbol:
         print(f"\nsnapshot[{args.symbol}]:",
               json.dumps(c.snapshot(args.symbol), indent=2, default=str))

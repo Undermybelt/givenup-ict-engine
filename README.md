@@ -50,7 +50,7 @@ cargo run -- auto-quant-adoption-decision --symbol DEMO --state-dir /tmp/ict-eng
 
 ```bash
 cargo run -- analyze \
-  --symbol NQ \
+  --symbol <SYM> \
   --data-htf <1d.json> \
   --data-mtf <1h.json> \
   --data-ltf <15m.json> \
@@ -61,9 +61,9 @@ cargo run -- analyze \
 Human output starts with a trading-desk style summary:
 
 ```text
-NQ | Bull bias | Entry: medium | Gate: observe_only | Quality: 0.244
+<SYM> | Bull bias | Entry: medium | Gate: observe_only | Quality: 0.244
 Action: TUNE structure_ict
-Next: ict-engine factor-research --symbol NQ --data <15m.json> --state-dir /tmp/ict-engine-analyze
+Next: ict-engine factor-research --symbol <SYM> --data <15m.json> --state-dir /tmp/ict-engine-analyze
 ```
 
 ### Demo smoke run
@@ -110,7 +110,7 @@ It ships with about 52 candles, so it is intentionally too small for `backtest`,
 
 ```bash
 cargo run -- factor-pipeline-debug \
-  --symbol NQ \
+  --symbol <SYM> \
   --data <cleaned-15m.json> \
   --factor structure_ict \
   --objective expansion_manipulation
@@ -132,7 +132,7 @@ Use this path when you want the no-pollution in-process Rust path and do not wan
 
 ```bash
 cargo run -- factor-research \
-  --symbol NQ \
+  --symbol <SYM> \
   --data <cleaned-15m.json> \
   --objective expansion_manipulation \
   --state-dir /tmp/ict-engine-first-run-native \
@@ -144,12 +144,37 @@ Auto-Quant path:
 
 ```bash
 cargo run -- factor-research \
-  --symbol NQ \
+  --symbol <SYM> \
   --data <cleaned-15m.json> \
   --objective expansion_manipulation \
   --state-dir /tmp/ict-engine-auto-quant \
   --backend auto-quant
 ```
+
+### Market-data harness
+
+The public `market-data-harness` path is provider-neutral by default. It no longer fills gaps from repo-owned market presets.
+
+Preferred usage is an explicit request document:
+
+```bash
+cargo run -- market-data-harness \
+  --action plan \
+  --request-json examples/provider_requests/explicit-yfinance-request.json
+```
+
+Lightweight CLI shorthand is available for simple providers:
+
+```bash
+cargo run -- market-data-harness \
+  --action plan \
+  --market caller-request \
+  --role etf_reference \
+  --provider etf_reference=yfinance \
+  --symbol-spec etf_reference=SPY
+```
+
+For `ibkr` contracts or multi-role requests, use `--request-json` or `--request-stdin`.
 
 Auto-Quant notes:
 - first run may bootstrap a pinned dependency checkout under your chosen `--state-dir`
@@ -172,15 +197,15 @@ Auto-Quant integration note:
 `analyze`, `backtest`, `factor-backtest`, `factor-research`, and `workflow-status` support four output surfaces:
 
 ```bash
-cargo run -- analyze --symbol NQ --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --output-format json
-cargo run -- analyze --symbol NQ --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --compact
-cargo run -- analyze --symbol NQ --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --agent
-cargo run -- analyze --symbol NQ --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --human
+cargo run -- analyze --symbol <SYM> --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --output-format json
+cargo run -- analyze --symbol <SYM> --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --compact
+cargo run -- analyze --symbol <SYM> --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --agent
+cargo run -- analyze --symbol <SYM> --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --human
 
-cargo run -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-output-modes --output-format json
-cargo run -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-output-modes --compact
-cargo run -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-output-modes --agent
-cargo run -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-output-modes --human
+cargo run -- workflow-status --symbol <SYM> --state-dir /tmp/ict-engine-output-modes --output-format json
+cargo run -- workflow-status --symbol <SYM> --state-dir /tmp/ict-engine-output-modes --compact
+cargo run -- workflow-status --symbol <SYM> --state-dir /tmp/ict-engine-output-modes --agent
+cargo run -- workflow-status --symbol <SYM> --state-dir /tmp/ict-engine-output-modes --human
 ```
 
 Use:
@@ -207,7 +232,7 @@ Agent consumers should prefer:
 `workflow-status --human` prints concise terminal lines, for example:
 
 ```text
-NQ | analyze | action_blocked
+<SYM> | analyze | action_blocked
 Block: user_selected_historical_data_missing
 Latest: analyze | direction=Bull entry=medium gate=observe_only quality=0.244
 Next: Ask the user to choose the historical dataset...

@@ -21,11 +21,17 @@ live MD subscription is missing.
 ## Quick start (5 min)
 
 ```bash
-# 1. Make sure IB Gateway / TWS is running on port 4002 (paper) or 7497 (TWS paper)
+# 1. Make sure IB Gateway / TWS is running locally with API enabled.
+#    If you don't know the port, setup.py will auto-scan the common ports:
+#    TWS 7497/7496, IB Gateway 4002/4001.
 #    with API enabled and "Read-Only API" ticked.
 
 # 2. One-time consent + capabilities probe (~5 sec, briefly connects to Gateway)
-.venv/bin/python -m scripts.ibkr_bridge.setup enable --gateway-port 4002
+.venv/bin/python -m scripts.ibkr_bridge.setup enable
+
+#    If multiple local runtimes are reachable, or your user runs a custom port,
+#    pin it explicitly:
+#    .venv/bin/python -m scripts.ibkr_bridge.setup enable --gateway-port 4002
 
 # 3. Pick a starter config that matches your account state — see "Which
 #    config to start from?" below — and run the bridge:
@@ -67,7 +73,7 @@ replaying from `start_id='0'` see a full backtest window immediately.
 
 | Key | Type | Producer | Notes |
 |---|---|---|---|
-| `ibkr:bridge:status` | hash | bridge | `state`, `ts`, `client_id`, `subscriptions_active` |
+| `ibkr:bridge:status` | hash | bridge | `state`, `ts`, `gateway_host`, `gateway_port`, `market_data_type`, `client_id` (actual runtime), `configured_client_id`, `client_id_fallback_engaged`, `client_id_conflicts`, `subscriptions_active` |
 | `ibkr:snapshot:<SYM>` | hash | bridge | Latest bid/ask/last/sizes + `last_bar_close` |
 | `ibkr:ticks:<SYM>` | stream | bridge (`market_data`) | Tick events with bid/ask/last/sizes |
 | `ibkr:bars:<SYM>:5sec` | stream | bridge (`real_time_bars`) | 5-second OHLCV bars |
@@ -76,6 +82,16 @@ replaying from `start_id='0'` see a full backtest window immediately.
 | `ibkr:rl:*` | various | rate_limiter | Pacing budget; do not write |
 
 Streams are bounded by `publishing.stream_maxlen` (XADD with MAXLEN ~).
+
+The consumer helper exposes two read paths:
+
+- `bridge_status()` — raw/coerced hash view
+- `bridge_runtime_summary()` — typed runtime summary with parsed `client_id`,
+  `configured_client_id`, fallback boolean, conflict list, active subscription count,
+  and gateway host/port
+- `recommended_gateway_target()` — a small decision surface for downstream agents:
+  current host/port, actual vs configured `client_id`, fallback/conflict state,
+  and a one-line message
 
 ## Common errors and fixes
 
