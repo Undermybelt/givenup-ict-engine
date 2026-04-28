@@ -7,7 +7,8 @@ use crate::application::release_closure::workflow_next_step_view;
 use crate::state::{recommended_next_command_meta, RecommendedNextCommandMeta};
 
 use super::handoff::{
-    auto_quant_active_strategy_count, auto_quant_data_ready, auto_quant_workspace_config,
+    auto_quant_active_strategy_count, auto_quant_data_ready, auto_quant_prepare_command,
+    auto_quant_run_command, auto_quant_workspace_config,
     AutoQuantWorkspaceConfig,
 };
 use super::status::auto_quant_status;
@@ -64,6 +65,8 @@ pub fn auto_quant_readiness_from_status_and_data(
     data_ready: bool,
 ) -> AutoQuantReadinessSurface {
     let active_strategy_count = auto_quant_active_strategy_count(&workspace);
+    let prepare_command = auto_quant_prepare_command(&workspace);
+    let run_command = auto_quant_run_command(&workspace);
     let (status, command, blocked_reason) = if dependency_status.bootstrap_needed {
         (
             "missing_dependency",
@@ -85,22 +88,22 @@ pub fn auto_quant_readiness_from_status_and_data(
     } else if !data_ready {
         (
             "dependency_ready_data_missing",
-            format!("uv run {}", workspace.prepare_script),
+            prepare_command.clone(),
             Some("auto_quant_prepare_required"),
         )
     } else if active_strategy_count == 0 {
         (
             "dependency_ready_seed_required",
             format!(
-                "blocked: create 2-3 active non-underscore strategy files under {} before uv run {}",
-                workspace.strategies_dir, workspace.run_script
+                "blocked: create 2-3 active non-underscore strategy files under {} before {}",
+                workspace.strategies_dir, run_command
             ),
             Some("auto_quant_seed_strategies_required"),
         )
     } else {
         (
             "dependency_ready_data_ready",
-            format!("uv run {}", workspace.run_script),
+            run_command.clone(),
             None,
         )
     };

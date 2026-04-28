@@ -1432,6 +1432,8 @@ pub struct FactorAutoresearchLiveSnapshot {
     pub kept_attempts: usize,
     pub discarded_attempts: usize,
     #[serde(default)]
+    pub current_stage: String,
+    #[serde(default)]
     pub current_candidate_spec: Option<FactorMutationSpec>,
     #[serde(default)]
     pub latest_attempt_id: Option<String>,

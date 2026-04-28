@@ -113,6 +113,14 @@ pub fn auto_quant_workspace_config(managed_dir: &str) -> AutoQuantWorkspaceConfi
     }
 }
 
+pub fn auto_quant_prepare_command(workspace: &AutoQuantWorkspaceConfig) -> String {
+    format!("uv run --with ta-lib {}", workspace.prepare_script)
+}
+
+pub fn auto_quant_run_command(workspace: &AutoQuantWorkspaceConfig) -> String {
+    format!("uv run --with ta-lib {}", workspace.run_script)
+}
+
 pub fn auto_quant_data_ready(workspace: &AutoQuantWorkspaceConfig) -> bool {
     let data_dir = Path::new(&workspace.data_dir);
     if !data_dir.exists() {
@@ -226,9 +234,9 @@ pub fn base_suggested_commands(
         }
     }
     if !data_ready {
-        commands.push(format!("uv run {}", workspace.prepare_script));
+        commands.push(auto_quant_prepare_command(workspace));
     } else {
-        commands.push(format!("uv run {}", workspace.run_script));
+        commands.push(auto_quant_run_command(workspace));
     }
     commands
 }
@@ -300,13 +308,17 @@ fn build_auto_quant_agent_prompt(
     };
     let seed_instruction = if active_strategy_count == 0 {
         format!(
-            "If {} has no active non-underscore .py strategies, first read {}, create 2-3 seed strategies across different paradigms, prefer archived winners or minimal descendants when available, and only then run uv run {}.{}",
-            workspace.strategies_dir, template_path, workspace.run_script, external_materials_summary
+            "If {} has no active non-underscore .py strategies, first read {}, create 2-3 seed strategies across different paradigms, prefer archived winners or minimal descendants when available, and only then run {}.{}",
+            workspace.strategies_dir,
+            template_path,
+            auto_quant_run_command(workspace),
+            external_materials_summary
         )
     } else {
         format!(
-            "Run uv run {} on the current active strategy set, review measured results, and iterate only from backtest evidence.{}",
-            workspace.run_script, external_materials_summary
+            "Run {} on the current active strategy set, review measured results, and iterate only from backtest evidence.{}",
+            auto_quant_run_command(workspace),
+            external_materials_summary
         )
     };
     match handoff_kind {
@@ -668,5 +680,58 @@ mod tests {
         assert!(payload
             .agent_prompt
             .contains("Keep, discard, fork, or kill only from measured results"));
+    }
+
+    #[test]
+    fn handoff_suggested_commands_use_talib_runtime_commands() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed_dir = temp.path().join("managed-auto-quant");
+        let strategies_dir = managed_dir.join("user_data/strategies");
+        std::fs::create_dir_all(&strategies_dir).unwrap();
+        std::fs::write(managed_dir.join("program.md"), "program").unwrap();
+        std::fs::write(managed_dir.join("prepare.py"), "print('prepare')").unwrap();
+        std::fs::write(managed_dir.join("run.py"), "print('run')").unwrap();
+        std::fs::write(
+            strategies_dir.join("_template.py.example"),
+            "class Template: pass",
+        )
+        .unwrap();
+
+        let missing_data = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+            symbol: "NQ",
+            data: "demo.json",
+            objective: "generic",
+            paired_data: None,
+            mutation_spec_path: None,
+            strategy_material_root: None,
+            state_dir: temp.path().to_str().unwrap(),
+            dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+        });
+        assert!(missing_data
+            .suggested_commands
+            .iter()
+            .any(|command| command.contains("uv run --with ta-lib")));
+
+        let data_dir = managed_dir.join("user_data/data");
+        std::fs::create_dir_all(&data_dir).unwrap();
+        for index in 0..15 {
+            std::fs::write(data_dir.join(format!("prepared-{index}.feather")), "ready").unwrap();
+        }
+        std::fs::write(strategies_dir.join("SeedAlpha.py"), "class SeedAlpha: pass").unwrap();
+
+        let ready = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+            symbol: "NQ",
+            data: "demo.json",
+            objective: "generic",
+            paired_data: None,
+            mutation_spec_path: None,
+            strategy_material_root: None,
+            state_dir: temp.path().to_str().unwrap(),
+            dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+        });
+        assert!(ready
+            .suggested_commands
+            .iter()
+            .any(|command| command.contains("uv run --with ta-lib")));
     }
 }

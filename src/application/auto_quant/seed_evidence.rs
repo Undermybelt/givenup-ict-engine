@@ -4,7 +4,9 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
-use super::handoff::{auto_quant_active_strategy_count, AutoQuantWorkspaceConfig};
+use super::handoff::{
+    auto_quant_active_strategy_count, auto_quant_run_command, AutoQuantWorkspaceConfig,
+};
 use super::strategy_materials::{discover_strategy_materials, AutoQuantStrategyMaterialSummary};
 use crate::state::{
     append_artifact_ledger_entry, artifact_state_path, save_state, ArtifactLedgerEntry,
@@ -209,16 +211,16 @@ fn build_suggested_next_steps(
                 workspace.strategies_dir
             ),
             format!(
-                "run uv run {} only after the seed descendants are written and reviewed",
-                workspace.run_script
+                "run {} only after the seed descendants are written and reviewed",
+                auto_quant_run_command(workspace)
             ),
         ]
     } else {
         vec![
             "use these seed packets as evidence for the next strategy fork or replacement wave rather than as direct runtime dependencies".to_string(),
             format!(
-                "keep or discard descendants only from measured Auto-Quant results, then re-run uv run {}",
-                workspace.run_script
+                "keep or discard descendants only from measured Auto-Quant results, then re-run {}",
+                auto_quant_run_command(workspace)
             ),
         ]
     }

@@ -142,7 +142,7 @@ mod tests {
         assert!(!readiness.data_ready);
         assert_eq!(
             readiness.recommended_next_command,
-            format!("uv run {}/prepare.py", status.managed_dir)
+            format!("uv run --with ta-lib {}/prepare.py", status.managed_dir)
         );
         assert_eq!(
             readiness.next_step["blocked_reason"],
@@ -191,7 +191,7 @@ mod tests {
         assert_eq!(readiness.status, "dependency_ready_data_ready");
         assert_eq!(
             readiness.recommended_next_command,
-            format!("uv run {}/run.py", status.managed_dir)
+            format!("uv run --with ta-lib {}/run.py", status.managed_dir)
         );
     }
 
