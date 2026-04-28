@@ -1076,7 +1076,26 @@ pub fn build_agent_bootstrap_view(
     multi_timeframe_clean_root: Option<String>,
     tomac_root_placeholder: &str,
 ) -> AgentBootstrapView {
-    let ibkr_gateway_candidates = build_ibkr_gateway_candidates();
+    build_agent_bootstrap_view_with_candidates(
+        symbol,
+        state_dir,
+        snapshot,
+        detected_tomac_root,
+        multi_timeframe_clean_root,
+        tomac_root_placeholder,
+        build_ibkr_gateway_candidates(),
+    )
+}
+
+fn build_agent_bootstrap_view_with_candidates(
+    symbol: &str,
+    state_dir: &str,
+    snapshot: &WorkflowSnapshot,
+    detected_tomac_root: Option<String>,
+    multi_timeframe_clean_root: Option<String>,
+    tomac_root_placeholder: &str,
+    ibkr_gateway_candidates: Vec<AgentBootstrapIbkrGatewayCandidate>,
+) -> AgentBootstrapView {
     let ibkr_gateway_summary = build_ibkr_gateway_summary(&ibkr_gateway_candidates);
     let agent_brief = vec![
         "mission: formalize factor-pipeline debug from latest signal through pre-bayes / bridge / resonance".to_string(),
@@ -1221,6 +1240,30 @@ pub fn build_agent_bootstrap_view(
                 .map(|phase| phase.pre_bayes_gate_status.clone()),
         },
     }
+}
+
+#[cfg(test)]
+fn build_agent_bootstrap_view_with_probe<F>(
+    symbol: &str,
+    state_dir: &str,
+    snapshot: &WorkflowSnapshot,
+    detected_tomac_root: Option<String>,
+    multi_timeframe_clean_root: Option<String>,
+    tomac_root_placeholder: &str,
+    probe: &F,
+) -> AgentBootstrapView
+where
+    F: Fn(&str, u16) -> bool,
+{
+    build_agent_bootstrap_view_with_candidates(
+        symbol,
+        state_dir,
+        snapshot,
+        detected_tomac_root,
+        multi_timeframe_clean_root,
+        tomac_root_placeholder,
+        build_ibkr_gateway_candidates_with_probe("127.0.0.1", probe),
+    )
 }
 
 fn build_ibkr_gateway_candidates() -> Vec<AgentBootstrapIbkrGatewayCandidate> {
@@ -1619,6 +1662,30 @@ pub fn build_workflow_status_bootstrap_phase_value(
     ))?)
 }
 
+#[cfg(test)]
+fn build_workflow_status_bootstrap_phase_value_with_probe<F>(
+    symbol: &str,
+    state_dir: &str,
+    snapshot: &WorkflowSnapshot,
+    detected_tomac_root: Option<String>,
+    multi_timeframe_clean_root: Option<String>,
+    tomac_root_placeholder: &str,
+    probe: &F,
+) -> Result<Value>
+where
+    F: Fn(&str, u16) -> bool,
+{
+    Ok(serde_json::to_value(build_agent_bootstrap_view_with_probe(
+        symbol,
+        state_dir,
+        snapshot,
+        detected_tomac_root,
+        multi_timeframe_clean_root,
+        tomac_root_placeholder,
+        probe,
+    ))?)
+}
+
 pub fn build_ensemble_vote_history_view(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
@@ -1974,13 +2041,14 @@ mod tests {
     #[test]
     fn build_workflow_status_bootstrap_phase_value_matches_bootstrap_view() {
         let snapshot = sample_human_workflow_snapshot();
-        let value = build_workflow_status_bootstrap_phase_value(
+        let value = build_workflow_status_bootstrap_phase_value_with_probe(
             "NQ",
             "state",
             &snapshot,
             Some("/tmp/tomac".to_string()),
             Some("/tmp/clean".to_string()),
             "<root>",
+            &|_, port| port == 4002,
         )
         .unwrap();
         assert_eq!(value["symbol"], "NQ");

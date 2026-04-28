@@ -19,6 +19,16 @@ pub struct AutoQuantWorkspaceConfig {
     pub data_dir: String,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct AutoQuantIterationUnitContext {
+    pub unit_label: String,
+    pub primitive_sequence: Vec<String>,
+    pub timeframe: String,
+    pub direction: String,
+    pub strategy_brief: String,
+    pub evaluation_priority: Vec<String>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AutoQuantResearchHandoffPayload {
     pub artifact_id: String,
@@ -42,6 +52,8 @@ pub struct AutoQuantResearchHandoffPayload {
     pub workspace: AutoQuantWorkspaceConfig,
     pub data_ready: bool,
     pub handoff_artifact_path: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub iteration_unit: Option<AutoQuantIterationUnitContext>,
     pub suggested_commands: Vec<String>,
     pub suggested_next_steps: Vec<String>,
     pub agent_prompt: String,
@@ -379,6 +391,7 @@ pub fn build_factor_research_handoff_payload(
         workspace,
         data_ready,
         handoff_artifact_path: String::new(),
+        iteration_unit: None,
         suggested_commands: Vec::new(),
         suggested_next_steps: Vec::new(),
         agent_prompt: String::new(),
@@ -488,6 +501,7 @@ pub fn build_factor_autoresearch_handoff_payload(
         workspace,
         data_ready,
         handoff_artifact_path: String::new(),
+        iteration_unit: None,
         suggested_commands: Vec::new(),
         suggested_next_steps: Vec::new(),
         agent_prompt: String::new(),
@@ -733,5 +747,50 @@ mod tests {
             .suggested_commands
             .iter()
             .any(|command| command.contains("uv run --with ta-lib")));
+    }
+
+    #[test]
+    fn handoff_payload_can_carry_iteration_unit_context() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed_dir = temp.path().join("managed-auto-quant");
+        let strategies_dir = managed_dir.join("user_data/strategies");
+        std::fs::create_dir_all(&strategies_dir).unwrap();
+        std::fs::write(managed_dir.join("program.md"), "program").unwrap();
+        std::fs::write(managed_dir.join("prepare.py"), "print('prepare')").unwrap();
+        std::fs::write(managed_dir.join("run.py"), "print('run')").unwrap();
+        std::fs::write(
+            strategies_dir.join("_template.py.example"),
+            "class Template: pass",
+        )
+        .unwrap();
+
+        let mut payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: "demo.json",
+                objective: "expansion_manipulation",
+                paired_data: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+            });
+        payload.iteration_unit = Some(AutoQuantIterationUnitContext {
+            unit_label: "NQ:15m:long:order_block".to_string(),
+            primitive_sequence: vec!["order_block".to_string()],
+            timeframe: "15m".to_string(),
+            direction: "long".to_string(),
+            strategy_brief:
+                "Iterate one order_block long unit. Optimize win rate first.".to_string(),
+            evaluation_priority: vec![
+                "win_rate".to_string(),
+                "sharpe".to_string(),
+                "return".to_string(),
+            ],
+        });
+
+        let unit = payload.iteration_unit.as_ref().unwrap();
+        assert_eq!(unit.primitive_sequence, vec!["order_block".to_string()]);
+        assert_eq!(unit.evaluation_priority[0], "win_rate");
     }
 }

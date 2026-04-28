@@ -11,6 +11,10 @@ use super::{
         consume_live_signals, ConsumeLiveSignalsInput, ConsumeLiveSignalsOutcome, RealRedisSource,
         StreamSource,
     },
+    pda_unit_batch::{
+        persist_auto_quant_pda_unit_batch, AutoQuantPdaUnitBatchArtifact,
+        AutoQuantPdaUnitBatchBuildInput,
+    },
     persistence::persist_handoff_payload,
     real_trades::{ingest_real_trades, IngestRealTradesInput, IngestRealTradesOutcome},
     results::{
@@ -132,6 +136,46 @@ pub fn auto_quant_seed_evidence_command(
         )
     })?;
     println!("{}", serde_json::to_string_pretty(&artifact)?);
+    Ok(())
+}
+
+pub struct AutoQuantPdaUnitBatchCommandInput<'a> {
+    pub symbol: &'a str,
+    pub objective: &'a str,
+    pub factors: &'a str,
+    pub combination_size: usize,
+    pub directions: &'a str,
+    pub timeframes: &'a str,
+    pub timeframe_data: &'a [String],
+    pub max_parallel: usize,
+    pub state_dir: &'a str,
+    pub repo_url: Option<&'a str>,
+    pub tracked_branch: Option<&'a str>,
+}
+
+pub fn auto_quant_pda_unit_batch_command(
+    input: AutoQuantPdaUnitBatchCommandInput<'_>,
+) -> Result<()> {
+    let dependency_status =
+        ensure_dependency_ready(input.state_dir, input.repo_url, input.tracked_branch)?;
+    let artifact = persist_auto_quant_pda_unit_batch(AutoQuantPdaUnitBatchBuildInput {
+        symbol: input.symbol,
+        objective: input.objective,
+        factors: input.factors,
+        combination_size: input.combination_size,
+        directions: input.directions,
+        timeframes: input.timeframes,
+        timeframe_data_entries: input.timeframe_data,
+        max_parallel: input.max_parallel,
+        state_dir: input.state_dir,
+        dependency_status,
+    })?;
+    print_pda_unit_batch_summary(&artifact)?;
+    Ok(())
+}
+
+fn print_pda_unit_batch_summary(artifact: &AutoQuantPdaUnitBatchArtifact) -> Result<()> {
+    println!("{}", serde_json::to_string_pretty(artifact)?);
     Ok(())
 }
 

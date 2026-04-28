@@ -60,10 +60,12 @@ use ict_engine::application::{
         auto_quant_adoption_decision_command, auto_quant_adoption_review_command,
         auto_quant_bootstrap_command, auto_quant_consume_live_signals_command,
         auto_quant_factor_autoresearch_command, auto_quant_factor_research_command,
+        auto_quant_pda_unit_batch_command,
         auto_quant_ingest_real_trades_command, auto_quant_prior_init_command,
         auto_quant_results_import_command, auto_quant_seed_evidence_command,
         auto_quant_status_command, auto_quant_update_command, AutoQuantConsumeLiveSignalsInput,
-        AutoQuantIngestRealTradesInput, AutoQuantPriorInitCommandInput,
+        AutoQuantIngestRealTradesInput, AutoQuantPdaUnitBatchCommandInput,
+        AutoQuantPriorInitCommandInput,
     },
     auto_quant::{AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput},
     backtest::{
@@ -1371,6 +1373,67 @@ enum Commands {
         )]
         limit: usize,
     },
+    /// Build single-setup single-symbol single-timeframe Auto-Quant unit jobs and batch them for parallel dispatch.
+    AutoQuantPdaUnitBatch {
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
+        symbol: String,
+        #[arg(
+            long,
+            default_value = "expansion_manipulation",
+            help = "Research objective label carried into every unit handoff"
+        )]
+        objective: String,
+        #[arg(
+            long,
+            help = "Comma-separated PDA primitive names, e.g. order_block,fair_value_gap,mss,cisd"
+        )]
+        factors: String,
+        #[arg(
+            long,
+            default_value_t = 1,
+            help = "Ordered primitive-sequence length; 1 for base units, 2+ for later sequence waves"
+        )]
+        combination_size: usize,
+        #[arg(
+            long,
+            default_value = "long,short",
+            help = "Comma-separated unit directions: long, short"
+        )]
+        directions: String,
+        #[arg(
+            long,
+            help = "Comma-separated requested timeframes, e.g. 15m or 15m,1h"
+        )]
+        timeframes: String,
+        #[arg(
+            long = "timeframe-data",
+            help = "Repeatable timeframe mapping in the form <timeframe>=<path>, e.g. 15m=/tmp/nq-15m.json"
+        )]
+        timeframe_data: Vec<String>,
+        #[arg(
+            long,
+            default_value_t = 4,
+            help = "Maximum number of independent unit jobs to dispatch in parallel"
+        )]
+        max_parallel: usize,
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding the batch manifest plus isolated per-unit handoffs"
+        )]
+        state_dir: String,
+        #[arg(
+            long,
+            help = "Optional Auto-Quant repo URL or local path override used when bootstrapping the shared workspace"
+        )]
+        repo_url: Option<String>,
+        #[arg(
+            long,
+            help = "Optional Auto-Quant branch override used when bootstrapping the shared workspace"
+        )]
+        tracked_branch: Option<String>,
+    },
     /// Import an Auto-Quant strategy_library.json manifest as a validated handoff artifact.
     AutoQuantResultsImport {
         #[arg(long, help = "Instrument identifier supplied by the caller")]
@@ -2065,6 +2128,34 @@ fn main() -> Result<()> {
         } => {
             ensure_state_dir_ready(&state_dir)?;
             auto_quant_seed_evidence_command(&symbol, &state_dir, &strategy_material_root, limit)?
+        }
+        Commands::AutoQuantPdaUnitBatch {
+            symbol,
+            objective,
+            factors,
+            combination_size,
+            directions,
+            timeframes,
+            timeframe_data,
+            max_parallel,
+            state_dir,
+            repo_url,
+            tracked_branch,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            auto_quant_pda_unit_batch_command(AutoQuantPdaUnitBatchCommandInput {
+                symbol: &symbol,
+                objective: &objective,
+                factors: &factors,
+                combination_size,
+                directions: &directions,
+                timeframes: &timeframes,
+                timeframe_data: &timeframe_data,
+                max_parallel,
+                state_dir: &state_dir,
+                repo_url: repo_url.as_deref(),
+                tracked_branch: tracked_branch.as_deref(),
+            })?
         }
         Commands::AutoQuantResultsImport {
             symbol,

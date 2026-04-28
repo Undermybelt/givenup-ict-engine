@@ -4,6 +4,7 @@ mod config;
 pub mod handoff;
 mod health;
 pub mod live;
+pub mod pda_unit_batch;
 mod persistence;
 pub mod readiness;
 pub mod real_trades;
@@ -20,6 +21,11 @@ pub use handoff::{
     BuildFactorAutoresearchHandoffPayloadInput, BuildFactorResearchHandoffPayloadInput,
 };
 pub use handoff::{AutoQuantResearchHandoffPayload, AutoQuantWorkspaceConfig};
+pub use pda_unit_batch::{
+    AutoQuantPdaPrimitiveKind, AutoQuantPdaUnitBatchArtifact, AutoQuantPdaUnitBrief,
+    AutoQuantPdaUnitDispatchGroup, AutoQuantPdaUnitJob, AutoQuantPdaUnitScope,
+    AutoQuantUnitDirection, AUTO_QUANT_PDA_UNIT_BATCH_RULE_VERSION,
+};
 pub use readiness::{auto_quant_readiness, AutoQuantReadinessSurface};
 pub use seed_evidence::AutoQuantSeedMaterialEvidenceArtifact;
 pub use status::auto_quant_status;

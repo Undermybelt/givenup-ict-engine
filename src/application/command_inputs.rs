@@ -100,6 +100,21 @@ pub struct AutoQuantUpdateCommandInput<'a> {
     pub target_ref: Option<&'a str>,
 }
 
+#[derive(Debug, Clone)]
+pub struct AutoQuantPdaUnitBatchCommandInput<'a> {
+    pub symbol: &'a str,
+    pub objective: &'a str,
+    pub factors: &'a str,
+    pub combination_size: usize,
+    pub directions: &'a str,
+    pub timeframes: &'a str,
+    pub timeframe_data: &'a [String],
+    pub max_parallel: usize,
+    pub state_dir: &'a str,
+    pub repo_url: Option<&'a str>,
+    pub tracked_branch: Option<&'a str>,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -264,5 +279,29 @@ mod tests {
 
         assert_eq!(input.tracked_branch, Some("master"));
         assert_eq!(input.target_ref, Some("v0.3.0"));
+    }
+
+    #[test]
+    fn auto_quant_pda_unit_batch_command_input_carries_explicit_batch_fields() {
+        let mappings = vec!["15m=/tmp/nq-15m.json".to_string()];
+        let input = AutoQuantPdaUnitBatchCommandInput {
+            symbol: "NQ",
+            objective: "expansion_manipulation",
+            factors: "order_block,fair_value_gap",
+            combination_size: 1,
+            directions: "long,short",
+            timeframes: "15m",
+            timeframe_data: &mappings,
+            max_parallel: 4,
+            state_dir: "/tmp/state",
+            repo_url: Some("/tmp/Auto-Quant"),
+            tracked_branch: Some("master"),
+        };
+
+        assert_eq!(input.symbol, "NQ");
+        assert_eq!(input.factors, "order_block,fair_value_gap");
+        assert_eq!(input.max_parallel, 4);
+        assert_eq!(input.timeframe_data, &mappings);
+        assert_eq!(input.repo_url, Some("/tmp/Auto-Quant"));
     }
 }
