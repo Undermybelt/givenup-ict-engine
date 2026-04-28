@@ -1312,9 +1312,52 @@ fn short_human_phase_summary(phase: &crate::state::WorkflowPhaseSnapshot) -> Str
         ));
     }
     if parts.is_empty() {
-        phase.phase_summary.clone()
+        compact_human_phase_summary(phase).unwrap_or_else(|| phase.phase_summary.clone())
     } else {
         parts.join(" ")
+    }
+}
+
+fn compact_human_phase_summary(
+    phase: &crate::state::WorkflowPhaseSnapshot,
+) -> Option<String> {
+    let wanted_keys: &[&str] = match phase.phase.as_str() {
+        "research" => &[
+            "objective",
+            "best_factor",
+            "aggregate_return",
+            "feedback_applied",
+            "execution_gate",
+        ],
+        "backtest" => &[
+            "total_return",
+            "trade_count",
+            "coverage_1sigma",
+            "execution_gate",
+        ],
+        _ => return None,
+    };
+    let mut selected = Vec::new();
+    for token in phase.phase_summary.split_whitespace() {
+        if let Some((key, value)) = token.split_once('=') {
+            if wanted_keys.contains(&key) {
+                let normalized = if key == "best_factor" {
+                    value
+                        .strip_prefix("Some(\"")
+                        .and_then(|item| item.strip_suffix("\")"))
+                        .unwrap_or(value)
+                        .to_string()
+                } else {
+                    value.to_string()
+                };
+                selected.push(format!("{key}={normalized}"));
+            }
+        }
+    }
+    if selected.is_empty() {
+        None
+    } else {
+        Some(selected.join(" "))
     }
 }
 
@@ -2033,7 +2076,7 @@ mod tests {
         let value = build_workflow_status_phase_value(&snapshot, &[], "human").unwrap();
         assert_eq!(
             value["summary_line"],
-            "NQ | update | action_blocked | pda_cluster=cluster_1 | duration=negative_binomial | remaining_bars=2.50 | spectral_entropy=unavailable | sparsity=unavailable | segments_gate=unavailable"
+            "NQ | update | action_blocked | pda_cluster=cluster_1 | duration=negative_binomial | remaining_bars=2.50"
         );
         assert_eq!(value["current_status"]["focus_phase"], "update");
     }
@@ -2286,16 +2329,21 @@ mod tests {
 
     #[test]
     fn human_workflow_status_hides_unavailable_pre_bayes_gate_sentinel() {
-        let mut snapshot = WorkflowSnapshot::default();
-        snapshot.symbol = "DEMO".to_string();
-        snapshot.current_focus_phase = "research".to_string();
-        snapshot.blocking_truth.status = "pass_neutralized".to_string();
-        snapshot.latest_research = Some(crate::state::WorkflowPhaseSnapshot {
-            phase: "research".to_string(),
-            phase_summary: "research_ready".to_string(),
-            pre_bayes_gate_status: "pre_bayes_gate_unavailable".to_string(),
-            ..crate::state::WorkflowPhaseSnapshot::default()
-        });
+        let snapshot = WorkflowSnapshot {
+            symbol: "DEMO".to_string(),
+            current_focus_phase: "research".to_string(),
+            blocking_truth: crate::state::WorkflowBlockingTruth {
+                status: "pass_neutralized".to_string(),
+                ..crate::state::WorkflowBlockingTruth::default()
+            },
+            latest_research: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "research".to_string(),
+                phase_summary: "research_ready".to_string(),
+                pre_bayes_gate_status: "pre_bayes_gate_unavailable".to_string(),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
 
         let value = build_human_workflow_status_view(&snapshot, &[]);
 
@@ -2304,6 +2352,26 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("pre_bayes_gate_unavailable"));
+    }
+
+    #[test]
+    fn human_workflow_status_compacts_research_phase_summary() {
+        let snapshot = WorkflowSnapshot {
+            symbol: "DEMO".to_string(),
+            current_focus_phase: "research".to_string(),
+            latest_research: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "research".to_string(),
+                phase_summary: "objective=expansion_manipulation best_factor=Some(\"trend_momentum\") aggregate_return=0.0017 feedback_applied=46 credibility=conformal_credibility:unavailable mtf_source=primary_only execution_gate=execution_observe_only".to_string(),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_human_workflow_status_view(&snapshot, &[]);
+        assert_eq!(
+            value["phase_summary_line"],
+            "Latest: research | objective=expansion_manipulation best_factor=trend_momentum aggregate_return=0.0017 feedback_applied=46 execution_gate=execution_observe_only"
+        );
     }
 
     #[test]

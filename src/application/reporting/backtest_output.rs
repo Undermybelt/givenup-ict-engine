@@ -78,12 +78,10 @@ pub fn render_factor_backtest_human_output(
         .map(|result| result.metrics.structural_break_detected)
         .unwrap_or(false);
 
-    let mut lines = vec![
-        "Factor backtest summary".to_string(),
-        format!("- Best factor: {best}"),
-        format!("- Aggregate return: {aggregate_return_pct:+.2}%"),
-        format!("- Trades: {total_trades}"),
-    ];
+    let mut lines = vec![format!(
+        "Factor backtest | best={} | return={:+.2}% | trades={}",
+        best, aggregate_return_pct, total_trades
+    )];
     let mut credibility_parts = vec![
         format!("conformal_coverage_1sigma={top_coverage:.3}"),
         format!("regime_break_penalty={top_regime_penalty:.3}"),
@@ -91,14 +89,13 @@ pub fn render_factor_backtest_human_output(
     if top_structural_break {
         credibility_parts.push("structural_break=detected".to_string());
     }
-    lines.push(format!("- Credibility: {}", credibility_parts.join(" | ")));
+    lines.push(format!("Risk: {}", credibility_parts.join(" | ")));
     lines.push(format!(
-        "- Next: {}",
+        "Next: {}",
         humanize_next_step_line(&report.recommended_next_command)
     ));
 
     if let Some(compare_summary) = human_backtest_compare_summary(compare) {
-        lines.push(String::new());
         lines.push(compare_summary);
     }
     redact_local_paths_in_human_text(&lines.join("\n"))
@@ -109,29 +106,27 @@ pub fn render_factor_research_human_output(
     compare: Option<&BacktestCompareReport>,
 ) -> String {
     let report_value = serde_json::to_value(report).unwrap_or(Value::Null);
-    let mut lines = vec!["Factor research summary".to_string()];
-
-    if let Some(objective) = report_value
+    let objective = report_value
         .get("research_objective")
         .and_then(Value::as_str)
         .filter(|value| !value.trim().is_empty())
-    {
-        lines.push(format!("- Objective: {objective}"));
-    }
+        .unwrap_or("generic");
 
     let best_factor = report_value
         .get("best_factor")
         .and_then(Value::as_str)
         .filter(|value| !value.trim().is_empty())
         .unwrap_or("n/a");
-    lines.push(format!("- Best factor: {best_factor}"));
 
-    if let Some(aggregate_return) = report_value.get("aggregate_return").and_then(Value::as_f64) {
-        lines.push(format!(
-            "- Aggregate return: {:+.2}%",
-            aggregate_return * 100.0
-        ));
-    }
+    let aggregate_return = report_value
+        .get("aggregate_return")
+        .and_then(Value::as_f64)
+        .unwrap_or_default()
+        * 100.0;
+    let mut lines = vec![format!(
+        "Factor research | objective={} | best={} | return={:+.2}%",
+        objective, best_factor, aggregate_return
+    )];
 
     let feedback_generated = report_value
         .get("feedback_records_generated")
@@ -141,10 +136,7 @@ pub fn render_factor_research_human_output(
         .get("feedback_records_applied")
         .and_then(Value::as_u64)
         .unwrap_or_default();
-    lines.push(format!(
-        "- Feedback: generated={} applied={}",
-        feedback_generated, feedback_applied
-    ));
+    lines.push(format!("Evidence: feedback={feedback_generated}/{feedback_applied}"));
 
     if let Some(scorecards) = report_value
         .get("backtest")
@@ -172,7 +164,7 @@ pub fn render_factor_research_human_output(
             })
             .collect::<Vec<_>>();
         if !top_factors.is_empty() {
-            lines.push(format!("- Top factors: {}", top_factors.join("; ")));
+            lines.push(format!("Action: review top factors: {}", top_factors.join("; ")));
         }
     }
 
@@ -180,10 +172,9 @@ pub fn render_factor_research_human_output(
         .get("recommended_next_command")
         .and_then(Value::as_str)
         .unwrap_or_default();
-    lines.push(format!("- Next: {}", humanize_next_step_line(next_command)));
+    lines.push(format!("Next: {}", humanize_next_step_line(next_command)));
 
     if let Some(compare_summary) = human_research_compare_summary(compare) {
-        lines.push(String::new());
         lines.push(compare_summary);
     }
     redact_local_paths_in_human_text(&lines.join("\n"))
@@ -213,28 +204,17 @@ pub fn render_backtest_human_output(
     report: &BacktestReport,
     compare: Option<&BacktestCompareReport>,
 ) -> String {
-    let mut lines = vec![if report.trades == 0 {
-        format!(
-            "Backtest ran with execution_realism=spread:{:.2}bps slippage:{:.2}bps fee:{:.2}bps policy={} trades={} comparable={} and produced no trades under the current constraints.",
-            report.spread_bps,
-            report.slippage_bps,
-            report.fee_bps,
-            report.ambiguous_bar_policy,
-            report.trades,
-            report.dataset_comparability.comparable
-        )
-    } else {
-        format!(
-            "Backtest ran with execution_realism=spread:{:.2}bps slippage:{:.2}bps fee:{:.2}bps policy={} trades={} comparable={} and produced {} trades.",
-            report.spread_bps,
-            report.slippage_bps,
-            report.fee_bps,
-            report.ambiguous_bar_policy,
-            report.trades,
-            report.dataset_comparability.comparable,
-            report.trades
-        )
-    }];
+    let mut lines = vec![format!(
+        "Backtest | trades={} | comparable={}",
+        report.trades, report.dataset_comparability.comparable
+    )];
+    lines.push(format!(
+        "Execution: spread={:.2}bps | slippage={:.2}bps | fee={:.2}bps | policy={}",
+        report.spread_bps,
+        report.slippage_bps,
+        report.fee_bps,
+        report.ambiguous_bar_policy,
+    ));
     if let Some(compare_summary) = human_backtest_compare_summary(compare) {
         lines.push(compare_summary);
     }
@@ -310,25 +290,19 @@ fn format_control_matrix_run_summary(
 pub fn render_control_matrix_research_human_output(
     artifact: &ControlMatrixResearchArtifact,
 ) -> String {
-    let mut lines = vec![
-        "PB12 control-matrix research summary".to_string(),
-        format!("- Objective: {}", artifact.research_objective),
-        format!(
-            "- Sweep: {} runs={} kind={}",
-            artifact.sweep_id,
-            artifact.run_count,
-            artifact.control_matrix_plan.kind.as_str()
-        ),
-    ];
+    let mut lines = vec![format!(
+        "PB12 | objective={} | sweep={} | runs={} | kind={}",
+        artifact.research_objective,
+        artifact.sweep_id,
+        artifact.run_count,
+        artifact.control_matrix_plan.kind.as_str()
+    )];
     if let Some(baseline) = artifact.baseline_run.as_ref() {
-        lines.push(format!(
-            "- Baseline: {}",
-            format_control_matrix_run_summary(baseline)
-        ));
+        lines.push(format!("Baseline: {}", format_control_matrix_run_summary(baseline)));
     }
     if !artifact.top_runs.is_empty() {
         lines.push(format!(
-            "- Top runs: {}",
+            "Action: compare top runs: {}",
             artifact
                 .top_runs
                 .iter()
@@ -339,7 +313,7 @@ pub fn render_control_matrix_research_human_output(
     }
     if let Some(discovery_baseline) = artifact.discovery_summary.baseline.as_ref() {
         lines.push(format!(
-            "- Discovery baseline: source={} win_rate={:.2}% strategies={} trades={}",
+            "Discovery: source={} | win_rate={:.2}% | strategies={} | trades={}",
             discovery_baseline.source,
             discovery_baseline.weighted_win_rate * 100.0,
             discovery_baseline.strategy_count,
@@ -347,13 +321,13 @@ pub fn render_control_matrix_research_human_output(
         ));
     } else {
         lines.push(format!(
-            "- Discovery baseline: unavailable status={}",
+            "Discovery: unavailable status={}",
             artifact.discovery_summary.status
         ));
     }
     if !artifact.discovery_summary.top_candidates.is_empty() {
         lines.push(format!(
-            "- Discovery top candidates: {}",
+            "Evidence: top candidates: {}",
             artifact
                 .discovery_summary
                 .top_candidates
@@ -374,7 +348,7 @@ pub fn render_control_matrix_research_human_output(
     }
     if !artifact.provider_summary.provider_statuses.is_empty() {
         lines.push(format!(
-            "- Provider status: {}",
+            "Provider status: {}",
             artifact
                 .provider_summary
                 .provider_statuses
@@ -386,7 +360,7 @@ pub fn render_control_matrix_research_human_output(
     }
     if !artifact.provider_summary.actionable_install_prompts.is_empty() {
         lines.push(format!(
-            "- Provider install prompts: {}",
+            "Provider setup: {}",
             artifact
                 .provider_summary
                 .actionable_install_prompts
@@ -477,15 +451,15 @@ mod tests {
             !rendered.contains("Factor research summary: {"),
             "human output must not be a serialized JSON dump:\n{rendered}"
         );
-        assert!(rendered.starts_with("Factor research summary\n"));
-        assert!(rendered.contains("- Objective: expansion_manipulation"));
-        assert!(rendered.contains("- Best factor: trend_momentum"));
-        assert!(rendered.contains("- Aggregate return: +1.23%"));
-        assert!(rendered.contains("- Feedback: generated=8 applied=5"));
-        assert!(rendered
-            .contains("- Top factors: trend_momentum=0.820 keep B; structure_ict=0.490 observe D"));
+        assert!(rendered.starts_with(
+            "Factor research | objective=expansion_manipulation | best=trend_momentum | return=+1.23%"
+        ));
+        assert!(rendered.contains("Evidence: feedback=8/5"));
         assert!(rendered.contains(
-            "- Next: ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state"
+            "Action: review top factors: trend_momentum=0.820 keep B; structure_ict=0.490 observe D"
+        ));
+        assert!(rendered.contains(
+            "Next: ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state"
         ));
         assert!(rendered.contains("/tmp/demo.json"));
         assert!(!rendered.contains("<local-path>"));
@@ -578,10 +552,10 @@ mod tests {
         );
         assert!(payload["provider_summary"]["provider_statuses"].is_array());
         let human_output = payload["human_output"].as_str().unwrap_or_default();
-        assert!(human_output.contains("PB12 control-matrix research summary"));
+        assert!(human_output.starts_with("PB12 | objective=generic |"));
         assert!(human_output.contains("pb12_run_01"));
         assert!(human_output.contains("pb12_run_12_baseline"));
-        assert!(human_output.contains("Discovery top candidates"));
-        assert!(human_output.contains("Provider status"));
+        assert!(human_output.contains("Evidence: top candidates"));
+        assert!(human_output.contains("Provider status:"));
     }
 }

@@ -731,7 +731,7 @@ pub fn build_human_analyze_surface(input: AnalyzeHumanInput<'_>) -> HumanAnalyze
 
     build_human_analyze_report(
         Some(format!(
-            "{} | {} | Entry: {} | Gate: {} | Quality: {:.3}",
+            "{} | {} | entry={} | gate={} | quality={:.3}",
             input.symbol,
             human_direction_bias_label(input.selected_direction),
             input.entry_quality,
@@ -1116,7 +1116,7 @@ mod tests {
 
         assert_eq!(output.executor_scorecard_summary.len(), 1);
         assert_eq!(output.executor_scorecard_source, "persisted");
-        assert!(output.human_report.contains("Trade plan"));
+        assert!(output.human_report.contains("Plan:"));
     }
 
     #[test]
@@ -1279,7 +1279,7 @@ mod tests {
 
         assert_eq!(output.source_snapshot.unwrap()["status"], "fresh");
         assert_eq!(output.freshness_gate.unwrap()["status"], "ok");
-        assert!(output.human_report.contains("Trade plan"));
+        assert!(output.human_report.contains("Plan:"));
     }
 
     #[test]

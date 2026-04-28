@@ -12993,7 +12993,7 @@ mod tests {
             },
             &serde_json::json!({"compact": true}),
             Some(sample_compare_report("scaled_down")),
-            "Backtest ran with execution_realism=test and produced 1 trades.".to_string(),
+            "Backtest | trades=1 | comparable=true".to_string(),
         );
 
         assert_eq!(
@@ -13026,7 +13026,7 @@ mod tests {
         assert!(payload.get("compact_compare_report").is_some());
         assert!(payload.get("backtest_compare_report").is_some());
         let human_output = payload["human_output"].as_str().unwrap_or_default();
-        assert!(human_output.contains("Factor backtest"));
+        assert!(human_output.contains("Factor backtest |"));
         assert!(!human_output.contains("\"factor_results\""));
     }
 
@@ -13192,7 +13192,7 @@ mod tests {
             Some(&sample_compare_report("scaled_down")),
         );
 
-        assert!(rendered.contains("Backtest ran with"));
+        assert!(rendered.starts_with("Backtest | trades=1 | comparable=true"));
         assert!(rendered.contains("Backtest compare:"));
         assert!(rendered.contains("risk=duration_sizing_scale_delta=-0.750"));
     }
@@ -13204,7 +13204,7 @@ mod tests {
             Some(&sample_compare_report("scaled_up")),
         );
 
-        assert!(rendered.starts_with("Factor research summary"));
+        assert!(rendered.starts_with("Factor research |"));
         assert!(rendered.contains("Research compare:"));
         assert!(rendered.contains("next=inspect_duration_constraints"));
     }
