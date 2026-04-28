@@ -5,6 +5,7 @@ use ict_engine::market_catalog::load_market_catalog;
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 use std::process::Command;
+use tempfile::TempDir;
 
 #[test]
 fn public_help_avoids_repo_market_examples() {
@@ -99,4 +100,29 @@ fn repo_market_pack_is_loadable_only_when_called_explicitly() {
     let es = catalog.live_defaults("ES").unwrap();
     assert_eq!(es.futures_symbol, "ES=F");
     assert_eq!(es.spot_symbol, "SPY");
+}
+
+#[test]
+fn bootstrap_output_keeps_actionable_local_paths_and_valid_commands() {
+    let binary = env!("CARGO_BIN_EXE_ict-engine");
+    let state = TempDir::new().unwrap();
+
+    let output = Command::new(binary)
+        .args([
+            "workflow-status",
+            "--symbol",
+            "DEMO",
+            "--state-dir",
+            state.path().to_str().unwrap(),
+            "--phase",
+            "agent-bootstrap",
+        ])
+        .output()
+        .unwrap();
+
+    assert!(output.status.success());
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    assert!(!stdout.contains("--market "));
+    assert!(!stdout.contains("<local-path>"));
+    assert!(stdout.contains(state.path().to_str().unwrap()));
 }

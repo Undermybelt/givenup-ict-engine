@@ -549,18 +549,30 @@ pub fn build_human_workflow_status_view(
     } else {
         "none".to_string()
     };
-    let summary_line = format!(
-        "{} | {} | {} | pda_cluster={} | duration={} | remaining_bars={} | spectral_entropy={} | sparsity={} | segments_gate={}",
-        snapshot.symbol,
+    let mut summary_parts = vec![
+        snapshot.symbol.clone(),
         workflow_status_focus_phase(snapshot),
-        action_status_label,
-        latest_pda_cluster,
-        latest_duration_model,
-        latest_remaining_bars,
-        latest_spectral_entropy,
-        latest_sparsity_ratio,
-        latest_segments_gate
-    );
+        action_status_label.clone(),
+    ];
+    if latest_pda_cluster != "unavailable" {
+        summary_parts.push(format!("pda_cluster={latest_pda_cluster}"));
+    }
+    if latest_duration_model != "unavailable" {
+        summary_parts.push(format!("duration={latest_duration_model}"));
+    }
+    if latest_remaining_bars != "unavailable" {
+        summary_parts.push(format!("remaining_bars={latest_remaining_bars}"));
+    }
+    if latest_spectral_entropy != "unavailable" {
+        summary_parts.push(format!("spectral_entropy={latest_spectral_entropy}"));
+    }
+    if latest_sparsity_ratio != "unavailable" {
+        summary_parts.push(format!("sparsity={latest_sparsity_ratio}"));
+    }
+    if latest_segments_gate != "unavailable" {
+        summary_parts.push(format!("segments_gate={latest_segments_gate}"));
+    }
+    let summary_line = summary_parts.join(" | ");
     let blocking_line = format!("Block: {}", gate_reason_label);
     let next_action_display = human_next_action
         .strip_prefix("Next step: ")
@@ -1026,7 +1038,8 @@ pub fn dispatch_workflow_status(
         return Ok(());
     }
     if let Some(phase) = input.phase {
-        let mut value = match phase.trim().to_ascii_lowercase().as_str() {
+        let phase_key = phase.trim().to_ascii_lowercase();
+        let mut value = match phase_key.as_str() {
             "agent-bootstrap" | "bootstrap" => build_workflow_status_bootstrap_phase_value(
                 bootstrap.symbol,
                 bootstrap.state_dir,
@@ -1040,7 +1053,9 @@ pub fn dispatch_workflow_status(
         if input.stable {
             normalize_workflow_status_value_for_stability(&mut value);
         }
-        redact_local_paths_in_value(&mut value);
+        if phase_key != "agent-bootstrap" && phase_key != "bootstrap" {
+            redact_local_paths_in_value(&mut value);
+        }
         println!("{}", serde_json::to_string_pretty(&value)?);
     } else {
         emit_workflow_status_output(
@@ -1072,14 +1087,13 @@ pub fn build_agent_bootstrap_view(
     ];
     let analyze_command = if let Some(clean_root) = &multi_timeframe_clean_root {
         format!(
-            "ict-engine analyze --symbol {} --data-root {} --market {} --state-dir {}",
+            "ict-engine analyze --symbol {} --data-root {} --state-dir {}",
             shell_quote(symbol),
             shell_quote(clean_root),
-            shell_quote(&symbol.to_ascii_lowercase()),
             shell_quote(state_dir)
         )
     } else {
-        "ict-engine analyze --symbol <symbol> --data-root <clean-root> --market <market> --state-dir <state-dir>".to_string()
+        "ict-engine analyze --symbol <symbol> --data-root <clean-root> --state-dir <state-dir>".to_string()
     };
     let train_command = if let Some(clean_root) = &multi_timeframe_clean_root {
         format!(
@@ -1286,7 +1300,9 @@ fn short_human_phase_summary(phase: &crate::state::WorkflowPhaseSnapshot) -> Str
     if let Some(entry) = &phase.selected_entry_quality {
         parts.push(format!("entry={entry}"));
     }
-    if !phase.pre_bayes_gate_status.is_empty() {
+    if !phase.pre_bayes_gate_status.is_empty()
+        && phase.pre_bayes_gate_status != "pre_bayes_gate_unavailable"
+    {
         parts.push(format!("gate={}", phase.pre_bayes_gate_status));
     }
     if phase.pre_bayes_evidence_quality_score > 0.0 {
@@ -2228,7 +2244,7 @@ mod tests {
         let value = build_human_workflow_status_view(&snapshot, &[]);
         assert_eq!(
             value["summary_line"],
-            "NQ | update | action_blocked | pda_cluster=cluster_1 | duration=negative_binomial | remaining_bars=2.50 | spectral_entropy=unavailable | sparsity=unavailable | segments_gate=unavailable"
+            "NQ | update | action_blocked | pda_cluster=cluster_1 | duration=negative_binomial | remaining_bars=2.50"
         );
         assert_eq!(
             value["next_action_line"],
@@ -2266,6 +2282,28 @@ mod tests {
             value["next_action_line"],
             "Next: ict-engine factor-research --symbol DEMO --backend native"
         );
+    }
+
+    #[test]
+    fn human_workflow_status_hides_unavailable_pre_bayes_gate_sentinel() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "DEMO".to_string();
+        snapshot.current_focus_phase = "research".to_string();
+        snapshot.blocking_truth.status = "pass_neutralized".to_string();
+        snapshot.latest_research = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "research".to_string(),
+            phase_summary: "research_ready".to_string(),
+            pre_bayes_gate_status: "pre_bayes_gate_unavailable".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+
+        let value = build_human_workflow_status_view(&snapshot, &[]);
+
+        assert_eq!(value["phase_summary_line"], "Latest: research | research_ready");
+        assert!(!value["phase_summary_line"]
+            .as_str()
+            .unwrap()
+            .contains("pre_bayes_gate_unavailable"));
     }
 
     #[test]
