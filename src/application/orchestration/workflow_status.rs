@@ -12,6 +12,9 @@ use crate::application::output_foundation::{
     print_redacted_json, redact_local_paths_in_human_text, redact_local_paths_in_value,
     short_workflow_phase_summary,
 };
+use crate::application::provider_catalog::{
+    build_workflow_provider_support, provider_status_agent_surface, ProviderCatalogAgentSurface,
+};
 use crate::application::release_closure::workflow_next_step_view;
 use crate::config::shell_quote;
 use crate::state::{
@@ -169,6 +172,7 @@ pub struct AgentBootstrapCommands {
     pub futures_sop: String,
     pub expansion_sop: String,
     pub workflow_status: String,
+    pub provider_status: String,
     pub recommended_next_command: String,
 }
 
@@ -210,6 +214,17 @@ pub struct WorkflowStatusBootstrapInput<'a> {
     pub tomac_root_placeholder: String,
 }
 
+#[derive(Debug, Clone)]
+struct AgentBootstrapBuildInput<'a> {
+    symbol: &'a str,
+    state_dir: &'a str,
+    snapshot: &'a WorkflowSnapshot,
+    provider_status_agent: &'a ProviderCatalogAgentSurface,
+    detected_tomac_root: Option<String>,
+    multi_timeframe_clean_root: Option<String>,
+    tomac_root_placeholder: &'a str,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct AgentBootstrapBacktestInput {
     pub local_discovery_order: Vec<String>,
@@ -225,6 +240,8 @@ pub struct AgentBootstrapLiveInput {
         std::collections::BTreeMap<String, std::collections::BTreeMap<String, String>>,
     pub additional_user_inputs_if_not_inferable: Vec<String>,
     pub provider_access_requests: Vec<String>,
+    pub provider_status_agent: ProviderCatalogAgentSurface,
+    pub provider_status_command: String,
     pub ibkr_gateway_summary: AgentBootstrapIbkrGatewaySummary,
     pub ibkr_gateway_candidates: Vec<AgentBootstrapIbkrGatewayCandidate>,
 }
@@ -416,6 +433,19 @@ pub fn build_human_workflow_status_view(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
 ) -> Value {
+    let provider_status_agent = provider_status_agent_surface(None, None, None).unwrap_or_default();
+    build_human_workflow_status_view_with_provider_agent(
+        snapshot,
+        persisted_scorecards,
+        &provider_status_agent,
+    )
+}
+
+fn build_human_workflow_status_view_with_provider_agent(
+    snapshot: &WorkflowSnapshot,
+    persisted_scorecards: &[EnsembleExecutorScorecard],
+    provider_status_agent: &ProviderCatalogAgentSurface,
+) -> Value {
     let no_workflow_state = workflow_status_empty_state(snapshot);
     let latest_phase = snapshot
         .latest_update
@@ -472,6 +502,7 @@ pub fn build_human_workflow_status_view(
     } else {
         snapshot.recommended_next_command.clone()
     };
+    let provider_status_command = "ict-engine provider-status --agent".to_string();
     let historical_data_gate_active = !selected_data_candidates.is_empty()
         && (top_level_command.contains("factor-research")
             || top_level_command.contains("factor-backtest")
@@ -504,7 +535,7 @@ pub fn build_human_workflow_status_view(
             .reason
             .contains("user_selected_historical_data_missing");
     let deferred_user_selection_command = workflow_human_deferred_command(&top_level_command);
-    let human_next_action = if user_selection_pending {
+    let base_human_next_action = if user_selection_pending {
         if !historical_data_request_template.is_empty() {
             match deferred_user_selection_command.as_deref() {
                 Some(command) => format!(
@@ -548,6 +579,45 @@ pub fn build_human_workflow_status_view(
         snapshot.blocking_truth.reason.clone()
     } else {
         "none".to_string()
+    };
+    let provider_support_reason =
+        if gate_reason_label != "none" && gate_reason_label != NO_WORKFLOW_STATE {
+            Some(gate_reason_label.as_str())
+        } else if !snapshot.current_focus_reason.is_empty() {
+            Some(snapshot.current_focus_reason.as_str())
+        } else {
+            None
+        };
+    let provider_support = build_workflow_provider_support(
+        provider_status_agent,
+        &top_level_command,
+        provider_support_reason,
+    );
+    let human_next_action = if provider_support.active {
+        format!(
+            "Resolve provider prerequisites for {} before continuing. {}",
+            provider_support.pending_providers.join(", "),
+            base_human_next_action
+        )
+    } else {
+        base_human_next_action
+    };
+    let provider_line = if provider_support.active {
+        let prompt_summary = provider_support
+            .install_prompts
+            .iter()
+            .take(2)
+            .cloned()
+            .collect::<Vec<_>>()
+            .join(" ");
+        Some(format!(
+            "Provider: {} pending. {} Check: {}",
+            provider_support.pending_providers.join(", "),
+            prompt_summary,
+            provider_status_command
+        ))
+    } else {
+        None
     };
     let mut summary_parts = vec![
         snapshot.symbol.clone(),
@@ -619,6 +689,7 @@ pub fn build_human_workflow_status_view(
         "summary_line": summary_line,
         "blocking_line": blocking_line,
         "next_action_line": next_action_line,
+        "provider_line": provider_line,
         "phase_summary_line": phase_summary_line,
         "symbol": snapshot.symbol,
         "pda_cluster_label": if latest_pda_cluster == "unavailable" {
@@ -735,6 +806,11 @@ pub fn build_human_workflow_status_view(
                     .find(|line| line.contains("jump_disagreement"))
                     .cloned()
             }),
+        "provider_support": {
+            "command": provider_status_command,
+            "agent_summary": provider_status_agent,
+            "workflow_support": provider_support,
+        },
     })
 }
 
@@ -798,6 +874,19 @@ pub fn build_compact_workflow_status_view(snapshot: &WorkflowSnapshot) -> Value 
 pub fn build_agent_workflow_status_view(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
+) -> Value {
+    let provider_status_agent = provider_status_agent_surface(None, None, None).unwrap_or_default();
+    build_agent_workflow_status_view_with_provider_agent(
+        snapshot,
+        persisted_scorecards,
+        &provider_status_agent,
+    )
+}
+
+fn build_agent_workflow_status_view_with_provider_agent(
+    snapshot: &WorkflowSnapshot,
+    persisted_scorecards: &[EnsembleExecutorScorecard],
+    provider_status_agent: &ProviderCatalogAgentSurface,
 ) -> Value {
     let no_workflow_state = workflow_status_empty_state(snapshot);
     let latest_phase = snapshot
@@ -885,6 +974,19 @@ pub fn build_agent_workflow_status_view(
             }),
         })
     });
+    let provider_support_reason =
+        if blocking_reason != "none" && blocking_reason != NO_WORKFLOW_STATE {
+            Some(blocking_reason.as_str())
+        } else if !snapshot.current_focus_reason.is_empty() {
+            Some(snapshot.current_focus_reason.as_str())
+        } else {
+            None
+        };
+    let provider_support = build_workflow_provider_support(
+        provider_status_agent,
+        &next_command,
+        provider_support_reason,
+    );
     serde_json::json!({
         "status": if no_workflow_state {
             serde_json::Value::String(NO_WORKFLOW_STATE.to_string())
@@ -911,6 +1013,7 @@ pub fn build_agent_workflow_status_view(
         "top_disagreement": top_disagreement,
         "top_actionable": top_actionable,
         "ensemble": ensemble_summary,
+        "provider_support": provider_support,
     })
 }
 
@@ -942,6 +1045,7 @@ fn normalize_workflow_status_value_for_stability(value: &mut Value) {
 pub fn emit_workflow_status_output(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
+    provider_status_agent: &ProviderCatalogAgentSurface,
     output_format: &str,
     stable: bool,
 ) -> Result<()> {
@@ -963,7 +1067,11 @@ pub fn emit_workflow_status_output(
             println!("{}", serde_json::to_string_pretty(&value)?);
         }
         "agent" => {
-            let mut value = build_agent_workflow_status_view(snapshot, persisted_scorecards);
+            let mut value = build_agent_workflow_status_view_with_provider_agent(
+                snapshot,
+                persisted_scorecards,
+                provider_status_agent,
+            );
             if stable {
                 normalize_workflow_status_value_for_stability(&mut value);
             }
@@ -971,7 +1079,11 @@ pub fn emit_workflow_status_output(
             println!("{}", serde_json::to_string_pretty(&value)?);
         }
         "human" => {
-            let value = build_human_workflow_status_view(snapshot, persisted_scorecards);
+            let value = build_human_workflow_status_view_with_provider_agent(
+                snapshot,
+                persisted_scorecards,
+                provider_status_agent,
+            );
             if let Some(summary) = value.get("summary_line").and_then(Value::as_str) {
                 println!("{}", redact_local_paths_in_human_text(summary));
             }
@@ -984,6 +1096,9 @@ pub fn emit_workflow_status_output(
             if let Some(next) = value.get("next_action_line").and_then(Value::as_str) {
                 println!("{}", redact_local_paths_in_human_text(next));
             }
+            if let Some(provider) = value.get("provider_line").and_then(Value::as_str) {
+                println!("{}", redact_local_paths_in_human_text(provider));
+            }
         }
         other => anyhow::bail!("unsupported output format '{}'", other),
     }
@@ -993,6 +1108,7 @@ pub fn emit_workflow_status_output(
 pub fn dispatch_workflow_status(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
+    provider_status_agent: &ProviderCatalogAgentSurface,
     input: WorkflowStatusDispatchInput<'_>,
     bootstrap: WorkflowStatusBootstrapInput<'_>,
 ) -> Result<()> {
@@ -1044,11 +1160,17 @@ pub fn dispatch_workflow_status(
                 bootstrap.symbol,
                 bootstrap.state_dir,
                 snapshot,
+                provider_status_agent,
                 bootstrap.detected_tomac_root,
                 bootstrap.multi_timeframe_clean_root,
                 &bootstrap.tomac_root_placeholder,
             )?,
-            other => build_workflow_status_phase_value(snapshot, persisted_scorecards, other)?,
+            other => build_workflow_status_phase_value(
+                snapshot,
+                persisted_scorecards,
+                provider_status_agent,
+                other,
+            )?,
         };
         if input.stable {
             normalize_workflow_status_value_for_stability(&mut value);
@@ -1061,6 +1183,7 @@ pub fn dispatch_workflow_status(
         emit_workflow_status_output(
             snapshot,
             persisted_scorecards,
+            provider_status_agent,
             input.output_format,
             input.stable,
         )?;
@@ -1068,35 +1191,27 @@ pub fn dispatch_workflow_status(
     Ok(())
 }
 
-pub fn build_agent_bootstrap_view(
-    symbol: &str,
-    state_dir: &str,
-    snapshot: &WorkflowSnapshot,
-    detected_tomac_root: Option<String>,
-    multi_timeframe_clean_root: Option<String>,
-    tomac_root_placeholder: &str,
+fn build_agent_bootstrap_view(
+    input: AgentBootstrapBuildInput<'_>,
 ) -> AgentBootstrapView {
-    build_agent_bootstrap_view_with_candidates(
-        symbol,
-        state_dir,
-        snapshot,
-        detected_tomac_root,
-        multi_timeframe_clean_root,
-        tomac_root_placeholder,
-        build_ibkr_gateway_candidates(),
-    )
+    build_agent_bootstrap_view_with_candidates(input, build_ibkr_gateway_candidates())
 }
 
 fn build_agent_bootstrap_view_with_candidates(
-    symbol: &str,
-    state_dir: &str,
-    snapshot: &WorkflowSnapshot,
-    detected_tomac_root: Option<String>,
-    multi_timeframe_clean_root: Option<String>,
-    tomac_root_placeholder: &str,
+    input: AgentBootstrapBuildInput<'_>,
     ibkr_gateway_candidates: Vec<AgentBootstrapIbkrGatewayCandidate>,
 ) -> AgentBootstrapView {
+    let AgentBootstrapBuildInput {
+        symbol,
+        state_dir,
+        snapshot,
+        provider_status_agent,
+        detected_tomac_root,
+        multi_timeframe_clean_root,
+        tomac_root_placeholder,
+    } = input;
     let ibkr_gateway_summary = build_ibkr_gateway_summary(&ibkr_gateway_candidates);
+    let provider_status_command = "ict-engine provider-status --agent".to_string();
     let agent_brief = vec![
         "mission: formalize factor-pipeline debug from latest signal through pre-bayes / bridge / resonance".to_string(),
         "priority: promote expansion_manipulation to SOP-tier objective, not research-only".to_string(),
@@ -1112,7 +1227,8 @@ fn build_agent_bootstrap_view_with_candidates(
             shell_quote(state_dir)
         )
     } else {
-        "ict-engine analyze --symbol <symbol> --data-root <clean-root> --state-dir <state-dir>".to_string()
+        "ict-engine analyze --symbol <symbol> --data-root <clean-root> --state-dir <state-dir>"
+            .to_string()
     };
     let train_command = if let Some(clean_root) = &multi_timeframe_clean_root {
         format!(
@@ -1190,11 +1306,9 @@ fn build_agent_bootstrap_view_with_candidates(
                     "aux_backend".to_string(),
                     "backend_base_urls_if_non_default".to_string(),
                 ],
-                provider_access_requests: vec![
-                    "Ask the user for a TradingViewRemix MCP API key before attempting TradingViewRemix-backed live or options workflows. Search keywords: TradingViewRemix MCP API key.".to_string(),
-                    "Ask the user to install IBKR TWS or IB Gateway and enable the local API before attempting IBKR-backed live workflows. Search keywords: Interactive Brokers TWS download, IB Gateway download.".to_string(),
-                    "If no local IBKR endpoint is reachable, ask the user to download the official IBKR TWS or IB Gateway client before continuing.".to_string(),
-                ],
+                provider_access_requests: provider_status_agent.install_prompts.clone(),
+                provider_status_agent: provider_status_agent.clone(),
+                provider_status_command,
                 ibkr_gateway_summary,
                 ibkr_gateway_candidates,
             },
@@ -1226,6 +1340,7 @@ fn build_agent_bootstrap_view_with_candidates(
                 shell_quote(symbol),
                 shell_quote(state_dir)
             ),
+            provider_status: "ict-engine provider-status --agent".to_string(),
             recommended_next_command: snapshot.recommended_next_command.clone(),
         },
         latest_snapshot: AgentBootstrapSnapshot {
@@ -1244,24 +1359,14 @@ fn build_agent_bootstrap_view_with_candidates(
 
 #[cfg(test)]
 fn build_agent_bootstrap_view_with_probe<F>(
-    symbol: &str,
-    state_dir: &str,
-    snapshot: &WorkflowSnapshot,
-    detected_tomac_root: Option<String>,
-    multi_timeframe_clean_root: Option<String>,
-    tomac_root_placeholder: &str,
+    input: AgentBootstrapBuildInput<'_>,
     probe: &F,
 ) -> AgentBootstrapView
 where
     F: Fn(&str, u16) -> bool,
 {
     build_agent_bootstrap_view_with_candidates(
-        symbol,
-        state_dir,
-        snapshot,
-        detected_tomac_root,
-        multi_timeframe_clean_root,
-        tomac_root_placeholder,
+        input,
         build_ibkr_gateway_candidates_with_probe("127.0.0.1", probe),
     )
 }
@@ -1307,7 +1412,10 @@ where
 fn build_ibkr_gateway_summary(
     candidates: &[AgentBootstrapIbkrGatewayCandidate],
 ) -> AgentBootstrapIbkrGatewaySummary {
-    let reachable_candidate_count = candidates.iter().filter(|candidate| candidate.reachable).count();
+    let reachable_candidate_count = candidates
+        .iter()
+        .filter(|candidate| candidate.reachable)
+        .count();
     let preferred = candidates.iter().find(|candidate| candidate.recommended);
     let occupied_judgement = match reachable_candidate_count {
         0 => "no_reachable_candidate",
@@ -1361,9 +1469,7 @@ fn short_human_phase_summary(phase: &crate::state::WorkflowPhaseSnapshot) -> Str
     }
 }
 
-fn compact_human_phase_summary(
-    phase: &crate::state::WorkflowPhaseSnapshot,
-) -> Option<String> {
+fn compact_human_phase_summary(phase: &crate::state::WorkflowPhaseSnapshot) -> Option<String> {
     let wanted_keys: &[&str] = match phase.phase.as_str() {
         "research" => &[
             "objective",
@@ -1441,11 +1547,16 @@ pub fn build_ensemble_vote_surface(
 pub fn build_workflow_status_phase_value(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
+    provider_status_agent: &ProviderCatalogAgentSurface,
     phase: &str,
 ) -> Result<Value> {
     Ok(match phase.trim().to_ascii_lowercase().as_str() {
         "human" | "human-next" | "human-next-action" => {
-            build_human_workflow_status_view(snapshot, persisted_scorecards)
+            build_human_workflow_status_view_with_provider_agent(
+                snapshot,
+                persisted_scorecards,
+                provider_status_agent,
+            )
         }
         "train" => serde_json::to_value(&build_phase_snapshot_surfaces(snapshot).train)?,
         "analyze" => serde_json::to_value(&build_phase_snapshot_surfaces(snapshot).analyze)?,
@@ -1648,42 +1759,48 @@ pub fn build_workflow_status_bootstrap_phase_value(
     symbol: &str,
     state_dir: &str,
     snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
     detected_tomac_root: Option<String>,
     multi_timeframe_clean_root: Option<String>,
     tomac_root_placeholder: &str,
 ) -> Result<Value> {
     Ok(serde_json::to_value(build_agent_bootstrap_view(
-        symbol,
-        state_dir,
-        snapshot,
-        detected_tomac_root,
-        multi_timeframe_clean_root,
-        tomac_root_placeholder,
+        AgentBootstrapBuildInput {
+            symbol,
+            state_dir,
+            snapshot,
+            provider_status_agent,
+            detected_tomac_root,
+            multi_timeframe_clean_root,
+            tomac_root_placeholder,
+        },
     ))?)
 }
 
 #[cfg(test)]
 fn build_workflow_status_bootstrap_phase_value_with_probe<F>(
-    symbol: &str,
-    state_dir: &str,
+    bootstrap: WorkflowStatusBootstrapInput<'_>,
     snapshot: &WorkflowSnapshot,
-    detected_tomac_root: Option<String>,
-    multi_timeframe_clean_root: Option<String>,
-    tomac_root_placeholder: &str,
+    provider_status_agent: &ProviderCatalogAgentSurface,
     probe: &F,
 ) -> Result<Value>
 where
     F: Fn(&str, u16) -> bool,
 {
-    Ok(serde_json::to_value(build_agent_bootstrap_view_with_probe(
-        symbol,
-        state_dir,
-        snapshot,
-        detected_tomac_root,
-        multi_timeframe_clean_root,
-        tomac_root_placeholder,
-        probe,
-    ))?)
+    Ok(serde_json::to_value(
+        build_agent_bootstrap_view_with_probe(
+            AgentBootstrapBuildInput {
+                symbol: bootstrap.symbol,
+                state_dir: bootstrap.state_dir,
+                snapshot,
+                provider_status_agent,
+                detected_tomac_root: bootstrap.detected_tomac_root,
+                multi_timeframe_clean_root: bootstrap.multi_timeframe_clean_root,
+                tomac_root_placeholder: &bootstrap.tomac_root_placeholder,
+            },
+            probe,
+        ),
+    )?)
 }
 
 pub fn build_ensemble_vote_history_view(
@@ -1965,6 +2082,55 @@ pub fn sample_human_workflow_snapshot() -> WorkflowSnapshot {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::application::provider_catalog::{
+        ProviderCatalogAgentSurface, ProviderCatalogPendingAgentItem,
+    };
+
+    fn sample_provider_agent_surface() -> ProviderCatalogAgentSurface {
+        ProviderCatalogAgentSurface {
+            summary_line: "live_runtime:1/3 ready".to_string(),
+            ready_by_domain: std::collections::BTreeMap::from([(
+                "live_runtime".to_string(),
+                "1/3".to_string(),
+            )]),
+            ready_providers: vec!["openbb".to_string()],
+            pending_providers: vec![
+                "openalice@live_runtime:operator_runtime_required:base_url_and_service_required"
+                    .to_string(),
+                "nofx@live_runtime:operator_runtime_required:base_url_and_service_required"
+                    .to_string(),
+            ],
+            pending_provider_details: vec![
+                ProviderCatalogPendingAgentItem {
+                    provider_id: "openalice".to_string(),
+                    domain: "live_runtime".to_string(),
+                    status: "operator_runtime_required".to_string(),
+                    reason: "base_url_and_service_required".to_string(),
+                    install_prompts: vec![
+                        "Ask whether the user wants zero-config openbb or openalice.".to_string(),
+                    ],
+                },
+                ProviderCatalogPendingAgentItem {
+                    provider_id: "nofx".to_string(),
+                    domain: "live_runtime".to_string(),
+                    status: "operator_runtime_required".to_string(),
+                    reason: "base_url_and_service_required".to_string(),
+                    install_prompts: vec![
+                        "Ask whether the user wants zero-config openbb or nofx.".to_string()
+                    ],
+                },
+            ],
+            selectable_providers: vec!["openalice".to_string(), "nofx".to_string()],
+            default_enabled_providers: vec!["openbb".to_string()],
+            install_prompts: vec![
+                "Ask whether the user wants zero-config openbb or openalice.".to_string(),
+                "Ask whether the user wants zero-config openbb or nofx.".to_string(),
+                "Ask the user for a TradingViewRemix MCP API key before attempting TradingViewRemix-backed live or options workflows. Search keywords: TradingViewRemix MCP API key.".to_string(),
+                "Ask the user to install IBKR TWS or IB Gateway and enable the local API before attempting IBKR-backed live workflows. Search keywords: Interactive Brokers TWS download, IB Gateway download.".to_string(),
+            ],
+            selected_profile: None,
+        }
+    }
     use crate::application::output_foundation::redact_local_paths_in_value;
     use crate::state::WorkflowPhaseSnapshot;
 
@@ -2042,12 +2208,15 @@ mod tests {
     fn build_workflow_status_bootstrap_phase_value_matches_bootstrap_view() {
         let snapshot = sample_human_workflow_snapshot();
         let value = build_workflow_status_bootstrap_phase_value_with_probe(
-            "NQ",
-            "state",
+            WorkflowStatusBootstrapInput {
+                symbol: "NQ",
+                state_dir: "state",
+                detected_tomac_root: Some("/tmp/tomac".to_string()),
+                multi_timeframe_clean_root: Some("/tmp/clean".to_string()),
+                tomac_root_placeholder: "<root>".to_string(),
+            },
             &snapshot,
-            Some("/tmp/tomac".to_string()),
-            Some("/tmp/clean".to_string()),
-            "<root>",
+            &sample_provider_agent_surface(),
             &|_, port| port == 4002,
         )
         .unwrap();
@@ -2057,22 +2226,23 @@ mod tests {
             value["commands"]["workflow_status"],
             "ict-engine workflow-status --symbol NQ --state-dir state"
         );
-        assert!(value["input_acquisition"]["live"]["provider_access_requests"]
-            .as_array()
-            .unwrap()
-            .iter()
-            .any(|item| item
-                .as_str()
+        assert!(
+            value["input_acquisition"]["live"]["provider_access_requests"]
+                .as_array()
                 .unwrap()
-                .contains("TradingViewRemix MCP API key")));
-        assert!(value["input_acquisition"]["live"]["provider_access_requests"]
-            .as_array()
-            .unwrap()
-            .iter()
-            .any(|item| item
-                .as_str()
+                .iter()
+                .any(|item| item
+                    .as_str()
+                    .unwrap()
+                    .contains("TradingViewRemix MCP API key"))
+        );
+        assert!(
+            value["input_acquisition"]["live"]["provider_access_requests"]
+                .as_array()
                 .unwrap()
-                .contains("IBKR TWS or IB Gateway")));
+                .iter()
+                .any(|item| item.as_str().unwrap().contains("IBKR TWS or IB Gateway"))
+        );
         assert_eq!(
             value["input_acquisition"]["live"]["ibkr_gateway_summary"]["occupied_judgement"],
             "single_reachable_candidate"
@@ -2093,21 +2263,27 @@ mod tests {
         });
 
         assert_eq!(candidates.len(), 4);
-        assert!(candidates
-            .iter()
-            .find(|candidate| candidate.port == 4002)
-            .unwrap()
-            .recommended);
-        assert!(candidates
-            .iter()
-            .find(|candidate| candidate.port == 4001)
-            .unwrap()
-            .reachable);
-        assert!(!candidates
-            .iter()
-            .find(|candidate| candidate.port == 4001)
-            .unwrap()
-            .recommended);
+        assert!(
+            candidates
+                .iter()
+                .find(|candidate| candidate.port == 4002)
+                .unwrap()
+                .recommended
+        );
+        assert!(
+            candidates
+                .iter()
+                .find(|candidate| candidate.port == 4001)
+                .unwrap()
+                .reachable
+        );
+        assert!(
+            !candidates
+                .iter()
+                .find(|candidate| candidate.port == 4001)
+                .unwrap()
+                .recommended
+        );
     }
 
     #[test]
@@ -2141,7 +2317,13 @@ mod tests {
     #[test]
     fn build_workflow_status_phase_value_matches_human_surface() {
         let snapshot = sample_human_workflow_snapshot();
-        let value = build_workflow_status_phase_value(&snapshot, &[], "human").unwrap();
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            "human",
+        )
+        .unwrap();
         assert_eq!(
             value["summary_line"],
             "NQ | update | action_blocked | pda_cluster=cluster_1 | duration=negative_binomial | remaining_bars=2.50"
@@ -2164,6 +2346,7 @@ mod tests {
         let value = build_workflow_status_phase_value(
             &snapshot,
             &[],
+            &sample_provider_agent_surface(),
             "artifact-factor-consumed-leaderboard",
         )
         .unwrap();
@@ -2172,8 +2355,13 @@ mod tests {
 
     #[test]
     fn build_workflow_status_phase_value_rejects_unknown_phase() {
-        let err = build_workflow_status_phase_value(&WorkflowSnapshot::default(), &[], "wat")
-            .unwrap_err();
+        let err = build_workflow_status_phase_value(
+            &WorkflowSnapshot::default(),
+            &[],
+            &sample_provider_agent_surface(),
+            "wat",
+        )
+        .unwrap_err();
         assert!(err
             .to_string()
             .contains("unsupported workflow-status phase 'wat'"));
@@ -2182,7 +2370,13 @@ mod tests {
     #[test]
     fn build_workflow_status_phase_value_preserves_redactable_paths() {
         let snapshot = sample_human_workflow_snapshot();
-        let mut value = build_workflow_status_phase_value(&snapshot, &[], "human").unwrap();
+        let mut value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            "human",
+        )
+        .unwrap();
         redact_local_paths_in_value(&mut value);
         let rendered = serde_json::to_string(&value).unwrap();
         assert!(rendered.contains("<local-path>"));
@@ -2193,6 +2387,7 @@ mod tests {
         let error = dispatch_workflow_status(
             &sample_human_workflow_snapshot(),
             &[],
+            &sample_provider_agent_surface(),
             WorkflowStatusDispatchInput {
                 phase: Some("human"),
                 actionable_only: true,
@@ -2224,6 +2419,7 @@ mod tests {
         let error = dispatch_workflow_status(
             &sample_human_workflow_snapshot(),
             &[],
+            &sample_provider_agent_surface(),
             WorkflowStatusDispatchInput {
                 phase: None,
                 actionable_only: true,
@@ -2415,7 +2611,10 @@ mod tests {
 
         let value = build_human_workflow_status_view(&snapshot, &[]);
 
-        assert_eq!(value["phase_summary_line"], "Latest: research | research_ready");
+        assert_eq!(
+            value["phase_summary_line"],
+            "Latest: research | research_ready"
+        );
         assert!(!value["phase_summary_line"]
             .as_str()
             .unwrap()
@@ -2467,6 +2666,78 @@ mod tests {
         assert_eq!(value["blocking_reason"], "no_workflow_state");
         assert!(value["next_command"].is_null());
         assert_eq!(value["next_step"]["action_type"], "none");
+    }
+
+    #[test]
+    fn agent_workflow_status_view_exposes_relevant_provider_support() {
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            current_focus_phase: "analyze_live".to_string(),
+            current_focus_reason: "provider_runtime_required".to_string(),
+            blocking_truth: crate::state::WorkflowBlockingTruth {
+                status: "blocked".to_string(),
+                reason: "provider_runtime_required".to_string(),
+                next_command: "ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --futures-backend openalice --aux-backend nofx".to_string(),
+                ..crate::state::WorkflowBlockingTruth::default()
+            },
+            latest_analyze: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "analyze_live".to_string(),
+                phase_summary: "live_provider_runtime_pending".to_string(),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_agent_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+        );
+
+        assert_eq!(value["provider_support"]["active"], true);
+        assert_eq!(value["provider_support"]["profile_id"], "workflow_auto");
+        assert_eq!(value["provider_support"]["pending_providers"][0], "nofx");
+        assert!(value["provider_support"]["install_prompts"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item.as_str().unwrap().contains("zero-config openbb")));
+    }
+
+    #[test]
+    fn human_workflow_status_view_adds_provider_line_for_missing_runtime() {
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            current_focus_phase: "analyze_live".to_string(),
+            current_focus_reason: "provider_runtime_required".to_string(),
+            recommended_next_command: "ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --futures-backend openalice --aux-backend nofx".to_string(),
+            latest_analyze: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "analyze_live".to_string(),
+                phase_summary: "live_provider_runtime_pending".to_string(),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_human_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+        );
+
+        assert!(value["provider_line"]
+            .as_str()
+            .unwrap()
+            .contains("openalice"));
+        assert!(value["provider_line"].as_str().unwrap().contains("nofx"));
+        assert!(value["provider_line"]
+            .as_str()
+            .unwrap()
+            .contains("zero-config openbb"));
+        assert_eq!(
+            value["provider_support"]["workflow_support"]["active"],
+            true
+        );
     }
 
     #[test]

@@ -3,6 +3,7 @@ use anyhow::Result;
 use crate::application::multi_timeframe_inputs::{
     detected_multi_timeframe_clean_root, detected_tomac_root, detected_tomac_root_or_placeholder,
 };
+use crate::application::provider_catalog::provider_status_agent_surface;
 use crate::state::{
     load_ensemble_executor_scorecards, load_workflow_snapshot,
     migrate_ensemble_executor_scorecards, recommended_next_command_meta,
@@ -49,6 +50,7 @@ pub struct WorkflowStatusCommandInput<'a> {
     pub symbol: &'a str,
     pub state_dir: &'a str,
     pub refresh: bool,
+    pub provider_profile: Option<&'a str>,
     pub phase: Option<&'a str>,
     pub actionable_only: bool,
     pub conflicts_only: bool,
@@ -71,6 +73,7 @@ where
         symbol,
         state_dir,
         refresh,
+        provider_profile,
         phase,
         actionable_only,
         conflicts_only,
@@ -90,12 +93,15 @@ where
     hydrate_workflow_snapshot_recommended_next_command_meta(&mut snapshot);
     let persisted_scorecards =
         load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
+    let provider_status_agent =
+        provider_status_agent_surface(None, None, provider_profile).unwrap_or_default();
     let detected_tomac_root = detected_tomac_root();
     let multi_timeframe_clean_root =
         detected_multi_timeframe_clean_root(detected_tomac_root.as_deref());
     dispatch_workflow_status(
         &snapshot,
         &persisted_scorecards,
+        &provider_status_agent,
         WorkflowStatusDispatchInput {
             phase,
             actionable_only,

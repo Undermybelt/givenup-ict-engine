@@ -59,17 +59,16 @@ use ict_engine::application::{
     auto_quant::command_entry::{
         auto_quant_adoption_decision_command, auto_quant_adoption_review_command,
         auto_quant_agent_material_batch_command, auto_quant_agent_material_dispatch_command,
-        auto_quant_agent_material_rank_command,
-        auto_quant_bootstrap_command, auto_quant_consume_live_signals_command,
-        auto_quant_factor_autoresearch_command, auto_quant_factor_research_command,
+        auto_quant_agent_material_rank_command, auto_quant_bootstrap_command,
+        auto_quant_consume_live_signals_command, auto_quant_factor_autoresearch_command,
+        auto_quant_factor_research_command, auto_quant_ingest_real_trades_command,
         auto_quant_pda_unit_batch_command, auto_quant_pda_unit_dispatch_command,
-        auto_quant_ingest_real_trades_command, auto_quant_prior_init_command,
-        auto_quant_results_import_command, auto_quant_seed_evidence_command,
-        auto_quant_status_command, auto_quant_update_command, AutoQuantConsumeLiveSignalsInput,
+        auto_quant_prior_init_command, auto_quant_results_import_command,
+        auto_quant_seed_evidence_command, auto_quant_status_command, auto_quant_update_command,
         AutoQuantAgentMaterialBatchCommandInput, AutoQuantAgentMaterialDispatchCommandInput,
-        AutoQuantAgentMaterialRankCommandInput, AutoQuantIngestRealTradesInput,
-        AutoQuantPdaUnitBatchCommandInput, AutoQuantPdaUnitDispatchCommandInput,
-        AutoQuantPriorInitCommandInput,
+        AutoQuantAgentMaterialRankCommandInput, AutoQuantConsumeLiveSignalsInput,
+        AutoQuantIngestRealTradesInput, AutoQuantPdaUnitBatchCommandInput,
+        AutoQuantPdaUnitDispatchCommandInput, AutoQuantPriorInitCommandInput,
     },
     auto_quant::{AutoQuantFactorAutoresearchCommandInput, AutoQuantFactorResearchCommandInput},
     backtest::{
@@ -103,11 +102,11 @@ use ict_engine::application::{
         pre_bayes_policy_lineage_summary, probability_map, PreBayesEntryQualityBridgeInput,
     },
     data_sources::{
-        build_expansion_sop_market_report, run_clean_futures, run_clean_futures_multi_timeframe,
-        market_data_harness_fetch_command, market_data_harness_plan_command,
-        run_expansion_sop_with, run_futures_sop_with, ExpansionSopMarketInput,
-        ExpansionSopReport, FuturesSopMarketInput, FuturesSopReport,
-        MarketDataHarnessCommandInput, RunExpansionSopInput,
+        build_expansion_sop_market_report, market_data_harness_fetch_command,
+        market_data_harness_plan_command, run_clean_futures, run_clean_futures_multi_timeframe,
+        run_expansion_sop_with, run_futures_sop_with, ExpansionSopMarketInput, ExpansionSopReport,
+        FuturesSopMarketInput, FuturesSopReport, MarketDataHarnessCommandInput,
+        RunExpansionSopInput,
     },
     decision_utils::{
         append_pda_sequence_hint, build_analyze_decision_hint, derive_family_outcomes,
@@ -115,6 +114,7 @@ use ict_engine::application::{
         normalize_trade_outcome_label, parse_research_objective, pre_bayes_gate_is_hard_pass,
         pre_bayes_gate_regressed, research_objective_label, ResearchObjectiveMode,
     },
+    entry_models::{build_entry_model_packet_store_for_analyze, policy_training_status_command},
     factor_lifecycle::build_factor_lifecycle_view,
     factor_lifecycle::{
         apply_expansion_manipulation_objective, expansion_factor_scores_for_market,
@@ -138,6 +138,7 @@ use ict_engine::application::{
         PipelineState, StagePlan, StagedArtifactsInput, StructuralExecutionShap,
         EXECUTION_TREE_TRACE_FILE,
     },
+    provider_catalog::provider_status_command,
     reflection::{build_reflection_bundle, ReflectionBundleInput},
     regime::{
         build_mece_recovery_artifact, build_multi_timeframe_training_observations,
@@ -184,11 +185,11 @@ use ict_engine::ict::{
     find_swing_lows, find_unfilled_fvgs, find_untested_obs, has_recent_pinbar,
 };
 use ict_engine::indicators::compute_atr;
+use ict_engine::pda_timeline::{build_pda_timeline, PdaEvent};
 use ict_engine::planner::{
     generate_probabilistic_trade_plan, probabilistic_decision_snapshot,
     ProbabilisticDecisionSnapshot, ProbabilisticPlanConfig, ProbabilisticTradePlanInput,
 };
-use ict_engine::pda_timeline::{build_pda_timeline, PdaEvent};
 use probabilistic_backtest_runtime::{finalize_backtest_report, run_probabilistic_backtest};
 use serde_json::Value;
 use update_command::update_command;
@@ -717,15 +718,28 @@ enum Commands {
     AutoQuantPromoteCanonicalSetup {
         #[arg(long, help = "Instrument identifier supplied by the caller")]
         symbol: String,
-        #[arg(long, help = "Versioned setup name to write into the promoted canonical manifest")]
+        #[arg(
+            long,
+            help = "Versioned setup name to write into the promoted canonical manifest"
+        )]
         setup_name: String,
-        #[arg(long, help = "Discovery sequence label, e.g. 'liquidity_sweep -> market_structure_shift'")]
+        #[arg(
+            long,
+            help = "Discovery sequence label, e.g. 'liquidity_sweep -> market_structure_shift'"
+        )]
         sequence_label: String,
         #[arg(long, help = "Optional direction filter: bull, bear, or neutral")]
         direction: Option<String>,
-        #[arg(long, help = "Optional explicit PB12 sweep id; defaults to the latest artifact for the symbol")]
+        #[arg(
+            long,
+            help = "Optional explicit PB12 sweep id; defaults to the latest artifact for the symbol"
+        )]
         sweep_id: Option<String>,
-        #[arg(long, default_value_t = 30, help = "Maximum event span in bars for the promoted sequence matcher")]
+        #[arg(
+            long,
+            default_value_t = 30,
+            help = "Maximum event span in bars for the promoted sequence matcher"
+        )]
         horizon_bars: usize,
         #[arg(
             long,
@@ -1090,21 +1104,43 @@ enum Commands {
     MarketDataHarness {
         #[arg(long, default_value = "plan", help = "Harness action: plan or fetch")]
         action: String,
-        #[arg(long, help = "Optional opaque request label when not using --request-json or --request-stdin")]
+        #[arg(
+            long,
+            help = "Optional opaque request label when not using --request-json or --request-stdin"
+        )]
         market: Option<String>,
-        #[arg(long, help = "Optional primary candle JSON path to infer interval/range")]
+        #[arg(
+            long,
+            help = "Optional primary candle JSON path to infer interval/range"
+        )]
         primary_data: Option<String>,
         #[arg(long, help = "Optional explicit interval override, e.g. 15m, 1h, 1d")]
         interval: Option<String>,
-        #[arg(long, help = "Related role to resolve from explicit caller configuration; repeatable")]
+        #[arg(
+            long,
+            help = "Related role to resolve from explicit caller configuration; repeatable"
+        )]
         role: Vec<String>,
-        #[arg(long, help = "Explicit per-role provider mapping, role=provider; repeatable")]
+        #[arg(
+            long,
+            help = "Explicit per-role provider mapping, role=provider; repeatable"
+        )]
         provider: Vec<String>,
-        #[arg(long, help = "Explicit role=symbol shorthand for simple providers; repeatable")]
+        #[arg(
+            long,
+            help = "Explicit role=symbol shorthand for simple providers; repeatable"
+        )]
         symbol_spec: Vec<String>,
-        #[arg(long, default_value_t = false, help = "Read the full harness request JSON from stdin")]
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Read the full harness request JSON from stdin"
+        )]
         request_stdin: bool,
-        #[arg(long, help = "Optional explicit volatility proxy symbol for options.summary fallback")]
+        #[arg(
+            long,
+            help = "Optional explicit volatility proxy symbol for options.summary fallback"
+        )]
         options_volatility_proxy_symbol: Option<String>,
         #[arg(long, help = "Full request JSON path; preferred over individual flags")]
         request_json: Option<String>,
@@ -1152,6 +1188,8 @@ enum Commands {
             help = "Refresh snapshot from current artifacts before printing"
         )]
         refresh: bool,
+        #[arg(long, help = "Optional opt-in provider profile id or JSON path")]
+        profile: Option<String>,
         #[arg(
             long,
             help = "Print a named workflow phase surface instead of the full snapshot"
@@ -1227,6 +1265,49 @@ enum Commands {
             help = "Optional Pre-Bayes section to print, e.g. policy or bridge"
         )]
         section: Option<String>,
+    },
+    /// Show a read-only quality summary for internal policy training tables.
+    PolicyTrainingStatus {
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
+        symbol: String,
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory containing analyze/update histories and policy_training artifacts"
+        )]
+        state_dir: String,
+        #[arg(
+            long = "entry-model",
+            alias = "provider",
+            help = "Optional entry-model id filter. Available ids are listed in the command output."
+        )]
+        entry_model: Option<String>,
+    },
+    /// Show a global read-only catalog of providers grouped by domain.
+    ProviderStatus {
+        #[arg(
+            long,
+            help = "Optional domain filter: market_data, live_runtime, local_runtime, entry_model"
+        )]
+        domain: Option<String>,
+        #[arg(long, help = "Optional provider id filter")]
+        provider: Option<String>,
+        #[arg(long, help = "Optional opt-in provider profile id or JSON path")]
+        profile: Option<String>,
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Print a compact human-readable summary"
+        )]
+        compact: bool,
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Print a compact machine-readable agent summary"
+        )]
+        agent: bool,
+        #[arg(long, default_value_t = false, help = "Print one JSON record per line")]
+        jsonl: bool,
     },
     /// Show the latest Pre-Bayes diff package directly
     PreBayesDiff {
@@ -1737,17 +1818,17 @@ fn main() -> Result<()> {
             state_dir,
         } => {
             ensure_state_dir_ready(&state_dir)?;
-            let futures_base_url = ict_engine::application::data_sources::resolve_live_backend_base_url(
-                &futures_backend,
-                &openalice_base_url,
-                &nofx_base_url,
-            );
-            let aux_base_url =
+            let futures_base_url =
                 ict_engine::application::data_sources::resolve_live_backend_base_url(
-                    &aux_backend,
+                    &futures_backend,
                     &openalice_base_url,
                     &nofx_base_url,
                 );
+            let aux_base_url = ict_engine::application::data_sources::resolve_live_backend_base_url(
+                &aux_backend,
+                &openalice_base_url,
+                &nofx_base_url,
+            );
             analyze_live_command(AnalyzeLiveCommandInput {
                 symbol: &symbol,
                 futures_symbol: futures_symbol.as_deref(),
@@ -2020,17 +2101,18 @@ fn main() -> Result<()> {
             state_dir,
         } => {
             ensure_state_dir_ready(&state_dir)?;
-            let report = ict_engine::application::backtest::auto_quant_promote_canonical_setup_command(
-                ict_engine::application::backtest::PromoteCanonicalSetupCommandInput {
-                    symbol: &symbol,
-                    state_dir: &state_dir,
-                    setup_name: &setup_name,
-                    sequence_label: &sequence_label,
-                    direction: direction.as_deref(),
-                    sweep_id: sweep_id.as_deref(),
-                    horizon_bars,
-                },
-            )?;
+            let report =
+                ict_engine::application::backtest::auto_quant_promote_canonical_setup_command(
+                    ict_engine::application::backtest::PromoteCanonicalSetupCommandInput {
+                        symbol: &symbol,
+                        state_dir: &state_dir,
+                        setup_name: &setup_name,
+                        sequence_label: &sequence_label,
+                        direction: direction.as_deref(),
+                        sweep_id: sweep_id.as_deref(),
+                        horizon_bars,
+                    },
+                )?;
             println!("{}", serde_json::to_string_pretty(&report)?);
         }
         Commands::FactorMutationStatus {
@@ -2308,11 +2390,13 @@ fn main() -> Result<()> {
             group_indices,
         } => {
             ensure_state_dir_ready(&state_dir)?;
-            auto_quant_agent_material_dispatch_command(AutoQuantAgentMaterialDispatchCommandInput {
-                symbol: &symbol,
-                state_dir: &state_dir,
-                group_indices: group_indices.as_deref(),
-            })?
+            auto_quant_agent_material_dispatch_command(
+                AutoQuantAgentMaterialDispatchCommandInput {
+                    symbol: &symbol,
+                    state_dir: &state_dir,
+                    group_indices: group_indices.as_deref(),
+                },
+            )?
         }
         Commands::AutoQuantAgentMaterialRank { symbol, state_dir } => {
             ensure_state_dir_ready(&state_dir)?;
@@ -2565,6 +2649,7 @@ fn main() -> Result<()> {
             symbol,
             state_dir,
             refresh,
+            profile,
             phase,
             actionable_only,
             conflicts_only,
@@ -2583,6 +2668,7 @@ fn main() -> Result<()> {
                 symbol: &symbol,
                 state_dir: &state_dir,
                 refresh,
+                provider_profile: profile.as_deref(),
                 phase: phase.as_deref(),
                 actionable_only,
                 conflicts_only,
@@ -2611,6 +2697,29 @@ fn main() -> Result<()> {
             refresh,
             section.as_deref(),
             refresh_workflow_snapshot,
+        )?,
+        Commands::PolicyTrainingStatus {
+            symbol,
+            state_dir,
+            entry_model,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            policy_training_status_command(&state_dir, &symbol, entry_model.as_deref())?
+        }
+        Commands::ProviderStatus {
+            domain,
+            provider,
+            profile,
+            compact,
+            agent,
+            jsonl,
+        } => provider_status_command(
+            domain.as_deref(),
+            provider.as_deref(),
+            compact,
+            agent,
+            jsonl,
+            profile.as_deref(),
         )?,
         Commands::PreBayesDiff {
             symbol,
@@ -6096,12 +6205,43 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         decision_hint: &decision_hint,
         multi_timeframe_summary: build_context.multi_timeframe_summary,
     });
+    let entry_model_timeframe = if build_context
+        .native_frames
+        .m5
+        .map(|frame| std::ptr::eq(frame.as_ptr(), native_ltf.as_ptr()))
+        .unwrap_or(false)
+    {
+        "5m"
+    } else if build_context
+        .native_frames
+        .m15
+        .map(|frame| std::ptr::eq(frame.as_ptr(), native_ltf.as_ptr()))
+        .unwrap_or(false)
+    {
+        "15m"
+    } else if build_context
+        .native_frames
+        .m1
+        .map(|frame| std::ptr::eq(frame.as_ptr(), native_ltf.as_ptr()))
+        .unwrap_or(false)
+    {
+        "1m"
+    } else {
+        "ltf"
+    };
+    let entry_model_packets = build_entry_model_packet_store_for_analyze(
+        symbol,
+        entry_model_timeframe,
+        native_ltf,
+        &pre_bayes_evidence_filter,
+    );
     let canonical_belief_report = build_canonical_belief_snapshot_with_pda(
         symbol,
         Some(infer_market_from_symbol(symbol).as_str()),
         &pre_bayes_evidence_filter,
         pda_sequence_artifact.as_ref(),
         Some(&hybrid_regime_packet),
+        None,
     )?;
     let execution_inputs = derive_execution_inputs(&ExecutionInputSources {
         pre_bayes_evidence_filter: &pre_bayes_evidence_filter,
@@ -6300,6 +6440,7 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
             },
             auxiliary: build_context.auxiliary.cloned(),
             decision,
+            entry_model_packets,
             trade_outcome: AnalyzeTradeOutcomeSummary {
                 base: probability_map(&trade_outcome.states, &posterior),
                 long: probability_map(&trade_outcome.states, &bull_trade_outcome),
@@ -9908,6 +10049,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: None,
                 actionable_only: false,
                 conflicts_only: false,
@@ -9928,6 +10070,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: Some("diffs"),
                 actionable_only: false,
                 conflicts_only: false,
@@ -9945,6 +10088,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: Some("execution-candidate-history"),
                 actionable_only: false,
                 conflicts_only: false,
@@ -9962,6 +10106,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: Some("ensemble-vote"),
                 actionable_only: false,
                 conflicts_only: false,
@@ -9979,6 +10124,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: Some("ensemble-vote-history"),
                 actionable_only: false,
                 conflicts_only: false,
@@ -9996,6 +10142,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: Some("ensemble-scorecards"),
                 actionable_only: false,
                 conflicts_only: false,
@@ -10013,6 +10160,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: None,
                 actionable_only: true,
                 conflicts_only: false,
@@ -10030,6 +10178,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: None,
                 actionable_only: false,
                 conflicts_only: false,
@@ -10047,6 +10196,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: Some("artifact-history-summary"),
                 actionable_only: false,
                 conflicts_only: false,
@@ -10064,6 +10214,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: Some("artifact-review-rules"),
                 actionable_only: false,
                 conflicts_only: false,
@@ -10081,6 +10232,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: None,
                 actionable_only: false,
                 conflicts_only: false,
@@ -10098,6 +10250,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: Some("agent-bootstrap"),
                 actionable_only: false,
                 conflicts_only: false,
@@ -10380,6 +10533,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: Some("artifact-factor-trends"),
                 actionable_only: false,
                 conflicts_only: false,
@@ -10397,6 +10551,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: Some("artifact-lineage-summaries"),
                 actionable_only: false,
                 conflicts_only: false,
@@ -10414,6 +10569,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: Some("artifact-decision-summary"),
                 actionable_only: false,
                 conflicts_only: false,
@@ -10479,6 +10635,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: Some("artifact-impact-leaderboard"),
                 actionable_only: false,
                 conflicts_only: false,
@@ -10496,6 +10653,7 @@ mod tests {
                 symbol: "NQ",
                 state_dir: temp.path().to_str().unwrap(),
                 refresh: false,
+                provider_profile: None,
                 phase: Some("artifact-impact-consumed-trend"),
                 actionable_only: false,
                 conflicts_only: false,
@@ -15246,9 +15404,7 @@ mod tests {
         }
     }
 
-    fn parse_cli_from<const N: usize>(
-        args: [&str; N],
-    ) -> Result<Cli, clap::Error> {
+    fn parse_cli_from<const N: usize>(args: [&str; N]) -> Result<Cli, clap::Error> {
         let owned = args.into_iter().map(str::to_string).collect::<Vec<_>>();
         std::thread::Builder::new()
             .stack_size(16 * 1024 * 1024)

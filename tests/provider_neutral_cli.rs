@@ -2,6 +2,7 @@ use ict_engine::application::data_sources::{
     build_market_data_harness_plan, MarketDataHarnessRequest, MarketDataHarnessSymbolSpec,
 };
 use ict_engine::market_catalog::load_market_catalog;
+use serde_json::Value;
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 use std::process::Command;
@@ -53,10 +54,16 @@ fn harness_plan_uses_only_explicit_request_data() {
         start: None,
         end: None,
         count: Some(30),
-        related_roles: vec!["etf_reference".to_string(), "options_underlying".to_string()],
+        related_roles: vec![
+            "etf_reference".to_string(),
+            "options_underlying".to_string(),
+        ],
         provider_preferences: BTreeMap::from([
             ("etf_reference".to_string(), "yfinance".to_string()),
-            ("options_underlying".to_string(), "tradingview_mcp".to_string()),
+            (
+                "options_underlying".to_string(),
+                "tradingview_mcp".to_string(),
+            ),
         ]),
         symbol_overrides: BTreeMap::from([
             (
@@ -125,4 +132,77 @@ fn bootstrap_output_keeps_actionable_local_paths_and_valid_commands() {
     assert!(!stdout.contains("--market "));
     assert!(!stdout.contains("<local-path>"));
     assert!(stdout.contains(state.path().to_str().unwrap()));
+}
+
+#[test]
+fn provider_status_agent_accepts_opt_in_profile_path() {
+    let binary = env!("CARGO_BIN_EXE_ict-engine");
+    let profile_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("examples/provider_profiles/thrill3r-nq-closed-loop-v1.json");
+
+    let output = Command::new(binary)
+        .args([
+            "provider-status",
+            "--agent",
+            "--profile",
+            profile_path.to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+
+    assert!(output.status.success());
+    let value: Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(
+        value["selected_profile"]["profile_id"],
+        "thrill3r_nq_closed_loop_v1"
+    );
+    assert_eq!(value["selected_profile"]["opt_in_only"], true);
+    assert!(value["selected_profile"]["data_contract_labels"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|item| item
+            .as_str()
+            .unwrap()
+            .contains("Tomac cleaned multi-timeframe futures root")));
+}
+
+#[test]
+fn workflow_status_agent_accepts_opt_in_profile_path() {
+    let binary = env!("CARGO_BIN_EXE_ict-engine");
+    let state = TempDir::new().unwrap();
+    let profile_path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("examples/provider_profiles/thrill3r-nq-closed-loop-v1.json");
+
+    let output = Command::new(binary)
+        .args([
+            "workflow-status",
+            "--symbol",
+            "DEMO",
+            "--state-dir",
+            state.path().to_str().unwrap(),
+            "--agent",
+            "--profile",
+            profile_path.to_str().unwrap(),
+        ])
+        .output()
+        .unwrap();
+
+    assert!(output.status.success());
+    let value: Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(
+        value["provider_support"]["selected_profile"]["profile_id"],
+        "thrill3r_nq_closed_loop_v1"
+    );
+    assert_eq!(
+        value["provider_support"]["profile_id"],
+        "thrill3r_nq_closed_loop_v1"
+    );
+    assert!(
+        value["provider_support"]["selected_profile"]["track_statuses"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item.as_str().unwrap().contains("options_enriched"))
+    );
 }
