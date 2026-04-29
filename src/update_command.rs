@@ -42,11 +42,26 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
                 regime,
                 direction,
             ),
-            Err(_) => {
-                let artifact = serde_json::from_str::<PendingUpdateArtifact>(&content)?;
-                consumed_pending_update_artifact = Some(artifact.clone());
-                feedback_record_from_artifact(artifact, &outcome_label, pnl, regime, direction)
-            }
+            Err(_) => match serde_json::from_str::<
+                ict_engine::application::orchestration::StructuralFeedbackSubmission,
+            >(&content)
+            {
+                Ok(submission) => {
+                    ict_engine::application::orchestration::feedback_record_from_structural_submission(
+                        submission,
+                        Some(symbol),
+                        Some(&outcome_label),
+                        pnl,
+                        regime.map(normalize_regime_label),
+                        direction.map(normalize_direction_label),
+                    )
+                }
+                Err(_) => {
+                    let artifact = serde_json::from_str::<PendingUpdateArtifact>(&content)?;
+                    consumed_pending_update_artifact = Some(artifact.clone());
+                    feedback_record_from_artifact(artifact, &outcome_label, pnl, regime, direction)
+                }
+            },
         }
     } else if state_exists(state_dir, symbol, PENDING_UPDATE_ARTIFACT_FILE) {
         let artifact = load_pending_update_artifact(state_dir, symbol)?;
@@ -79,6 +94,8 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
                 _ => 0.0,
             }),
             regime_at_entry: normalize_regime_label(regime.unwrap_or("manipulation_expansion")),
+            structural_feedback: None,
+            reflection_mismatch_tags: Vec::new(),
         }
     };
     let consumed_execution_candidate_artifact = latest_execution_candidate_for_source_run(
@@ -107,6 +124,7 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
             direction.unwrap_or("neutral"),
         ]),
     );
+    let structural_feedback = feedback.structural_feedback.clone();
     let consumed_feedback_pnl = feedback.pnl;
     let entry_quality = normalize_entry_quality_label(entry_signal);
     let factor_alignment = factor_alignment_label_from_feedback(&feedback);
@@ -249,6 +267,7 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         factor_alignment,
         factor_uncertainty,
         realized_outcome: outcome_label,
+        structural_feedback: structural_feedback.clone(),
         feedback_records_applied,
         duplicate_feedback_skipped: feedback_records_applied == 0,
         consumed_pending_update_artifact_id: consumed_pending_update_artifact
@@ -517,6 +536,7 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
             factor_alignment: report.factor_alignment.clone(),
             factor_uncertainty: report.factor_uncertainty.clone(),
             realized_outcome: report.realized_outcome.clone(),
+            structural_feedback: report.structural_feedback.clone(),
             feedback_records_applied,
             duplicate_feedback_skipped: report.duplicate_feedback_skipped,
             consumed_pending_update_artifact_id: report.consumed_pending_update_artifact_id.clone(),

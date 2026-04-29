@@ -307,6 +307,7 @@ struct UpdateReport {
     factor_alignment: String,
     factor_uncertainty: String,
     realized_outcome: String,
+    structural_feedback: Option<ict_engine::state::StructuralFeedbackRefs>,
     feedback_records_applied: usize,
     duplicate_feedback_skipped: bool,
     consumed_pending_update_artifact_id: Option<String>,
@@ -3574,6 +3575,7 @@ fn workflow_phase_snapshot_from_analyze_run(run: &AnalyzeRunRecord) -> WorkflowP
             .collect(),
         factor_actions: run.agent_context_bundle.top_factor_actions.clone(),
         multi_timeframe_summary: run.multi_timeframe_summary.clone(),
+        structural_feedback: None,
         family_score_map: run
             .factor_family_decisions
             .iter()
@@ -3662,6 +3664,7 @@ fn workflow_phase_snapshot_from_train_run(run: &TrainRunRecord) -> WorkflowPhase
         family_states: Vec::new(),
         factor_actions: Vec::new(),
         multi_timeframe_summary: run.multi_timeframe_summary.clone(),
+        structural_feedback: None,
         family_score_map: BTreeMap::new(),
         factor_score_map: BTreeMap::new(),
         objective_market_credibility_shrink: None,
@@ -3753,6 +3756,7 @@ fn workflow_phase_snapshot_from_research_run(run: &ResearchRunRecord) -> Workflo
             .collect(),
         factor_actions: run.agent_context_bundle.top_factor_actions.clone(),
         multi_timeframe_summary: run.multi_timeframe_summary.clone(),
+        structural_feedback: None,
         family_score_map: run
             .factor_family_decisions
             .iter()
@@ -3866,6 +3870,7 @@ fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> Workflo
             .collect(),
         factor_actions: run.agent_context_bundle.top_factor_actions.clone(),
         multi_timeframe_summary: run.multi_timeframe_summary.clone(),
+        structural_feedback: None,
         family_score_map: run
             .factor_family_decisions
             .iter()
@@ -4040,6 +4045,7 @@ fn workflow_phase_snapshot_from_update_run(run: &UpdateRunRecord) -> WorkflowPha
             .collect(),
         factor_actions: run.agent_context_bundle.top_factor_actions.clone(),
         multi_timeframe_summary: run.consumed_multi_timeframe_summary.clone(),
+        structural_feedback: run.structural_feedback.clone(),
         family_score_map: run
             .factor_family_decisions
             .iter()
@@ -11773,6 +11779,82 @@ mod tests {
     }
 
     #[test]
+    fn test_update_command_accepts_structural_feedback_file() {
+        let temp = tempfile::tempdir().unwrap();
+        let feedback_path = temp.path().join("structural-feedback.json");
+        std::fs::write(
+            &feedback_path,
+            serde_json::to_string(&serde_json::json!({
+                "protocol_version": "structural-feedback-v1",
+                "recommendation_id": "structural-feedback:NQ:node:path",
+                "recommended_at": "2026-04-29T00:00:00Z",
+                "symbol": "NQ",
+                "node_id": "NQ:belief_regime_node:trend",
+                "branch_id": "NQ:belief_regime_node:trend:trend_follow_through",
+                "scenario_id": "scenario:NQ:trend_follow_through",
+                "path_id": "path:scenario:NQ:trend_follow_through:primary",
+                "direction": "bull",
+                "entry_style": "conditional_execution",
+                "selected_entry_quality": "medium",
+                "selected_entry_quality_probability": 0.58,
+                "pre_bayes_gate_status": "pass_neutralized",
+                "path_posterior": 0.72,
+                "bbn_support_score": 0.72,
+                "followed_path": true,
+                "realized_outcome": "win",
+                "realized_pnl": 0.03,
+                "exit_reason": "target_hit",
+                "notes": "user followed the structural path"
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        update_command(UpdateCommandInput {
+            symbol: "NQ",
+            outcome: "win",
+            entry_signal: Some("medium"),
+            feedback_file: Some(feedback_path.to_str().unwrap()),
+            state_dir: temp.path().to_str().unwrap(),
+            pnl: None,
+            regime: None,
+            direction: None,
+            ensemble: false,
+        })
+        .unwrap();
+
+        let learning_state = load_learning_state(temp.path(), "NQ").unwrap();
+        let runs: Vec<UpdateRunRecord> =
+            load_state(temp.path(), "NQ", ict_engine::state::UPDATE_RUNS_FILE).unwrap();
+        let snapshot: WorkflowSnapshot =
+            load_state(temp.path(), "NQ", ict_engine::state::WORKFLOW_SNAPSHOT_FILE).unwrap();
+        assert_eq!(learning_state.feedback_history.len(), 1);
+        let feedback = &learning_state.feedback_history[0];
+        let refs = feedback
+            .structural_feedback
+            .as_ref()
+            .expect("structural refs");
+        assert_eq!(refs.recommendation_id, "structural-feedback:NQ:node:path");
+        assert_eq!(
+            refs.path_id,
+            "path:scenario:NQ:trend_follow_through:primary"
+        );
+        assert!(refs.followed_path);
+        assert_eq!(refs.exit_reason.as_deref(), Some("target_hit"));
+        let run_refs = runs[0]
+            .structural_feedback
+            .as_ref()
+            .expect("update run structural refs");
+        assert_eq!(run_refs.path_id, refs.path_id);
+        let snapshot_refs = snapshot
+            .latest_update
+            .as_ref()
+            .and_then(|phase| phase.structural_feedback.as_ref())
+            .expect("snapshot structural refs");
+        assert_eq!(snapshot_refs.branch_id, refs.branch_id);
+    }
+
+    #[test]
     fn test_build_artifact_consumed_impact_summary_tracks_quality_deltas() {
         let summary = build_artifact_consumed_impact_summary(&[
             ArtifactLedgerEntry {
@@ -12727,6 +12809,8 @@ mod tests {
             realized_outcome: "win".to_string(),
             pnl: 0.02,
             regime_at_entry: Regime::ManipulationExpansion,
+            structural_feedback: None,
+            reflection_mismatch_tags: Vec::new(),
         };
 
         let updates = ict_engine::application::backtest::apply_feedback_to_trade_outcome_network(

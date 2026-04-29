@@ -5,7 +5,7 @@ use crate::application::multi_timeframe_inputs::{
 };
 use crate::application::provider_catalog::provider_status_agent_surface;
 use crate::state::{
-    load_ensemble_executor_scorecards, load_workflow_snapshot,
+    load_ensemble_executor_scorecards, load_learning_state, load_workflow_snapshot,
     migrate_ensemble_executor_scorecards, recommended_next_command_meta,
     RecommendedNextCommandKind, WorkflowSnapshot,
 };
@@ -93,6 +93,7 @@ where
     hydrate_workflow_snapshot_recommended_next_command_meta(&mut snapshot);
     let persisted_scorecards =
         load_ensemble_executor_scorecards(state_dir, symbol).unwrap_or_default();
+    let learning_state = load_learning_state(state_dir, symbol).unwrap_or_default();
     let provider_status_agent =
         provider_status_agent_surface(None, None, provider_profile).unwrap_or_default();
     let detected_tomac_root = detected_tomac_root();
@@ -102,6 +103,7 @@ where
         &snapshot,
         &persisted_scorecards,
         &provider_status_agent,
+        learning_state.feedback_history.as_slice(),
         WorkflowStatusDispatchInput {
             phase,
             actionable_only,

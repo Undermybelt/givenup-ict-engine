@@ -161,6 +161,8 @@ impl RealTradeRecord {
             realized_outcome,
             pnl: self.pnl,
             regime_at_entry,
+            structural_feedback: None,
+            reflection_mismatch_tags: Vec::new(),
         }
     }
 }

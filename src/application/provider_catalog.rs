@@ -768,8 +768,8 @@ fn kraken_cli_config_present() -> bool {
         ".kraken",
     ]
     .into_iter()
-        .map(|rel| home.join(rel))
-        .any(|path| path.exists())
+    .map(|rel| home.join(rel))
+    .any(|path| path.exists())
 }
 
 fn kraken_cli_auth_present_from_cli() -> bool {

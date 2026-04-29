@@ -90,6 +90,8 @@ pub fn build_feedback_record(input: BuildFeedbackRecordInput<'_>) -> FeedbackRec
         realized_outcome,
         pnl,
         regime_at_entry,
+        structural_feedback: None,
+        reflection_mismatch_tags: Vec::new(),
     }
 }
 

@@ -113,6 +113,26 @@ pub struct FeedbackRecord {
     pub realized_outcome: String,
     pub pnl: f64,
     pub regime_at_entry: Regime,
+    #[serde(default)]
+    pub structural_feedback: Option<StructuralFeedbackRefs>,
+    #[serde(default)]
+    pub reflection_mismatch_tags: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralFeedbackRefs {
+    pub protocol_version: String,
+    pub recommendation_id: String,
+    pub recommended_at: String,
+    pub node_id: String,
+    pub branch_id: String,
+    pub scenario_id: String,
+    pub path_id: String,
+    pub followed_path: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub exit_reason: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub notes: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -241,6 +261,8 @@ impl Default for PendingUpdateArtifact {
                 realized_outcome: String::new(),
                 pnl: 0.0,
                 regime_at_entry: Regime::ManipulationExpansion,
+                structural_feedback: None,
+                reflection_mismatch_tags: Vec::new(),
             },
             diff_from_previous: PendingUpdateArtifactDiff::default(),
             review_decision: PendingUpdateArtifactDecision::default(),
@@ -1618,6 +1640,8 @@ pub struct UpdateRunRecord {
     pub consumed_pre_bayes_entry_quality_bridge: Option<PreBayesEntryQualityBridge>,
     #[serde(default)]
     pub consumed_multi_timeframe_summary: Vec<String>,
+    #[serde(default)]
+    pub structural_feedback: Option<StructuralFeedbackRefs>,
     pub trade_outcome_deltas: Vec<ProbabilityDiff>,
     pub factor_score_deltas: Vec<RankingDiffItem>,
     pub factor_family_decisions: Vec<FactorFamilyDecision>,
@@ -2120,6 +2144,8 @@ pub struct WorkflowPhaseSnapshot {
     #[serde(default)]
     pub multi_timeframe_summary: Vec<String>,
     #[serde(default)]
+    pub structural_feedback: Option<StructuralFeedbackRefs>,
+    #[serde(default)]
     pub family_score_map: BTreeMap<String, f64>,
     #[serde(default)]
     pub factor_score_map: BTreeMap<String, f64>,
@@ -2195,6 +2221,7 @@ impl Default for WorkflowPhaseSnapshot {
             family_states: Vec::new(),
             factor_actions: Vec::new(),
             multi_timeframe_summary: Vec::new(),
+            structural_feedback: None,
             family_score_map: BTreeMap::new(),
             factor_score_map: BTreeMap::new(),
             objective_market_credibility_shrink: None,
@@ -3124,6 +3151,8 @@ mod tests {
             realized_outcome: "win".to_string(),
             pnl: 0.02,
             regime_at_entry: Regime::ManipulationExpansion,
+            structural_feedback: None,
+            reflection_mismatch_tags: Vec::new(),
         }
     }
 

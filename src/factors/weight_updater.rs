@@ -274,6 +274,8 @@ mod tests {
             realized_outcome: "win".to_string(),
             pnl: 0.02,
             regime_at_entry: Regime::ManipulationExpansion,
+            structural_feedback: None,
+            reflection_mismatch_tags: Vec::new(),
         };
 
         updater.apply_feedback(&mut learning_state, &[feedback]);

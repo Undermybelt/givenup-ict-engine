@@ -5,6 +5,17 @@ use serde_json::{json, Value};
 use std::net::{SocketAddr, TcpStream};
 use std::time::Duration;
 
+use super::structural_playbook::{
+    build_structural_branch_history_artifact, build_structural_branch_set_artifact,
+    build_structural_experience_prior_surface_artifact,
+    build_structural_feedback_template_artifact, build_structural_history_summary_artifact,
+    build_structural_node_artifact, build_structural_node_history_artifact,
+    build_structural_path_history_artifact, build_structural_path_plan_artifact,
+    build_structural_recommended_path_bundle_artifact,
+    build_structural_playbook_bundle, build_structural_scenario_history_artifact,
+    build_structural_scenario_playbook_artifact, build_structural_top_path_candidates_artifact,
+    StructuralRecommendedPathBundleArtifact,
+};
 use crate::application::belief::{
     jump_calibration_gate_workflow_summary, jump_model_workflow_summary,
 };
@@ -438,6 +449,7 @@ pub fn build_human_workflow_status_view(
         snapshot,
         persisted_scorecards,
         &provider_status_agent,
+        &[],
     )
 }
 
@@ -445,6 +457,7 @@ fn build_human_workflow_status_view_with_provider_agent(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
     provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[crate::state::FeedbackRecord],
 ) -> Value {
     let no_workflow_state = workflow_status_empty_state(snapshot);
     let latest_phase = snapshot
@@ -652,6 +665,153 @@ fn build_human_workflow_status_view_with_provider_agent(
         "Latest: {} | {}",
         latest_phase_label, latest_phase_summary_short
     );
+    let structural_feedback_line = snapshot
+        .latest_update
+        .as_ref()
+        .and_then(|phase| phase.structural_feedback.as_ref())
+        .map(|feedback| {
+            format!(
+                "Feedback: recommendation={} path={} followed={} exit={}",
+                feedback.recommendation_id,
+                feedback.path_id,
+                feedback.followed_path,
+                feedback
+                    .exit_reason
+                    .clone()
+                    .unwrap_or_else(|| "unreported".to_string())
+            )
+        });
+    let structural_path_line = snapshot
+        .latest_update
+        .as_ref()
+        .and_then(|phase| phase.structural_feedback.as_ref())
+        .and_then(|feedback| {
+            build_structural_path_history_artifact(snapshot, feedback_history)
+                .paths
+                .into_iter()
+                .find(|path| path.path_id == feedback.path_id)
+        })
+        .map(|path| {
+            format!(
+                "Path: {} total={} wins={} losses={} invalidated={} avg_pnl={:.4}",
+                path.path_id, path.total_records, path.wins, path.losses, path.invalidated, path.avg_pnl
+            )
+        });
+    let structural_history_summary = build_structural_history_summary_artifact(snapshot, feedback_history);
+    let experience_prior_surface = build_structural_experience_prior_surface_artifact(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+    );
+    let experience_prior_line = experience_prior_surface.path.as_ref().map(|path| {
+        format!(
+            "Experience: path_prior={:.3} path_score={:.3} total={} wins={}",
+            path.experience_prior,
+            path.composite_score,
+            path.historical_total_records,
+            ((path.historical_win_rate.unwrap_or(0.0)
+                * path.historical_followed_count as f64)
+                .round()) as usize
+        )
+    });
+    let top_path_candidates = build_structural_top_path_candidates_artifact(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+    );
+    let recommended_path_bundle = build_structural_recommended_path_bundle_artifact(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+    );
+    let execution_contract_active =
+        !hard_block_active && !historical_data_gate_active && !provider_support.active;
+    let top_path_candidates_line = if top_path_candidates.candidates.is_empty() {
+        None
+    } else {
+        Some(format!(
+            "Candidates: {}",
+            top_path_candidates
+                .candidates
+                .iter()
+                .take(2)
+                .map(|candidate| format!(
+                    "{} score={:.3} prior={:.3} post={:.3}",
+                    candidate.path_label,
+                    candidate.composite_score,
+                    candidate.experience_prior,
+                    candidate.current_posterior
+                ))
+                .collect::<Vec<_>>()
+                .join(" | ")
+        ))
+    };
+    let recommended_path_line = recommended_path_bundle.as_ref().map(|bundle| {
+        format!(
+            "Recommended: {} score={:.3} trigger={} stop={} invalidation={}",
+            bundle.path_label,
+            bundle.composite_score,
+            bundle.trigger_summary,
+            bundle.stop_summary,
+            bundle.invalidation_summary
+        )
+    });
+    let human_next_action = if execution_contract_active {
+        match recommended_path_bundle.as_ref() {
+            Some(bundle) => format!(
+                "{} Execution contract: path={} trigger={} stop={} invalidation={} why={}",
+                human_next_action,
+                bundle.path_label,
+                bundle.trigger_summary,
+                bundle.stop_summary,
+                bundle.invalidation_summary,
+                bundle.why_this_path
+            ),
+            None => human_next_action,
+        }
+    } else {
+        human_next_action
+    };
+    let recommended_path_contract_line = recommended_path_bundle.as_ref().map(|bundle| {
+        format!(
+            "Contract: path={} trigger={} stop={} invalidation={} why={}",
+            bundle.path_label,
+            bundle.trigger_summary,
+            bundle.stop_summary,
+            bundle.invalidation_summary,
+            bundle.why_this_path
+        )
+    });
+    let recommended_path_contract =
+        workflow_status_recommended_path_contract_value(recommended_path_bundle.as_ref());
+    let recommended_next_step = workflow_status_next_step_with_execution_contract(
+        &top_level_command,
+        if hard_block_active || historical_data_gate_active {
+            Some(gate_reason_label.as_str())
+        } else {
+            None
+        },
+        if execution_contract_active {
+            recommended_path_contract.clone()
+        } else {
+            None
+        },
+    );
+    let structural_history_line = if structural_history_summary.total_records > 0 {
+        Some(format!(
+            "History: nodes={} branches={} scenarios={} paths={} latest_path={}",
+            structural_history_summary.distinct_nodes,
+            structural_history_summary.distinct_branches,
+            structural_history_summary.distinct_scenarios,
+            structural_history_summary.distinct_paths,
+            structural_history_summary
+                .latest_path_id
+                .clone()
+                .unwrap_or_else(|| "unknown".to_string())
+        ))
+    } else {
+        None
+    };
     let credibility_risks = snapshot
         .risk_flags
         .iter()
@@ -680,7 +840,7 @@ fn build_human_workflow_status_view_with_provider_agent(
             })
             .collect::<Vec<_>>()
     };
-    serde_json::json!({
+    let mut value = serde_json::json!({
         "status": if no_workflow_state {
             serde_json::Value::String(NO_WORKFLOW_STATE.to_string())
         } else {
@@ -690,6 +850,11 @@ fn build_human_workflow_status_view_with_provider_agent(
         "blocking_line": blocking_line,
         "next_action_line": next_action_line,
         "provider_line": provider_line,
+        "structural_feedback_line": structural_feedback_line,
+        "structural_path_line": structural_path_line,
+        "experience_prior_line": experience_prior_line,
+        "top_path_candidates_line": top_path_candidates_line,
+        "structural_history_line": structural_history_line,
         "phase_summary_line": phase_summary_line,
         "symbol": snapshot.symbol,
         "pda_cluster_label": if latest_pda_cluster == "unavailable" {
@@ -797,6 +962,21 @@ fn build_human_workflow_status_view_with_provider_agent(
         "agent_fill_path_instructions": agent_fill_path_instructions,
         "jump_model": jump_model_workflow_summary(snapshot),
         "jump_calibration_gate": jump_calibration_gate_workflow_summary(snapshot),
+        "latest_structural_feedback": snapshot
+            .latest_update
+            .as_ref()
+            .and_then(|phase| phase.structural_feedback.clone()),
+        "structural_history_summary": structural_history_summary,
+        "structural_path_summary": snapshot
+            .latest_update
+            .as_ref()
+            .and_then(|phase| phase.structural_feedback.as_ref())
+            .and_then(|feedback| {
+                build_structural_path_history_artifact(snapshot, feedback_history)
+                    .paths
+                    .into_iter()
+                    .find(|path| path.path_id == feedback.path_id)
+            }),
         "jump_disagreement": snapshot
             .latest_ensemble_vote
             .as_ref()
@@ -811,7 +991,22 @@ fn build_human_workflow_status_view_with_provider_agent(
             "agent_summary": provider_status_agent,
             "workflow_support": provider_support,
         },
-    })
+    });
+    if let Value::Object(map) = &mut value {
+        map.insert(
+            "recommended_path_line".to_string(),
+            serde_json::to_value(recommended_path_line).unwrap_or_default(),
+        );
+        map.insert(
+            "recommended_path_contract_line".to_string(),
+            serde_json::to_value(recommended_path_contract_line).unwrap_or_default(),
+        );
+        map.insert(
+            "recommended_next_step".to_string(),
+            recommended_next_step,
+        );
+    }
+    value
 }
 
 pub fn build_compact_workflow_status_view(snapshot: &WorkflowSnapshot) -> Value {
@@ -880,6 +1075,7 @@ pub fn build_agent_workflow_status_view(
         snapshot,
         persisted_scorecards,
         &provider_status_agent,
+        &[],
     )
 }
 
@@ -887,6 +1083,7 @@ fn build_agent_workflow_status_view_with_provider_agent(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
     provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[crate::state::FeedbackRecord],
 ) -> Value {
     let no_workflow_state = workflow_status_empty_state(snapshot);
     let latest_phase = snapshot
@@ -987,7 +1184,53 @@ fn build_agent_workflow_status_view_with_provider_agent(
         &next_command,
         provider_support_reason,
     );
-    serde_json::json!({
+    let execution_contract_active = !hard_block_active && !provider_support.active;
+    let latest_structural_feedback = snapshot
+        .latest_update
+        .as_ref()
+        .and_then(|phase| phase.structural_feedback.clone());
+    let structural_path_summary = snapshot
+        .latest_update
+        .as_ref()
+        .and_then(|phase| phase.structural_feedback.as_ref())
+        .and_then(|feedback| {
+            build_structural_path_history_artifact(snapshot, feedback_history)
+                .paths
+                .into_iter()
+                .find(|path| path.path_id == feedback.path_id)
+        });
+    let structural_history_summary = build_structural_history_summary_artifact(snapshot, feedback_history);
+    let experience_prior_surface = build_structural_experience_prior_surface_artifact(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+    );
+    let top_path_candidates = build_structural_top_path_candidates_artifact(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+    );
+    let recommended_path_bundle = build_structural_recommended_path_bundle_artifact(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+    );
+    let recommended_path_contract =
+        workflow_status_recommended_path_contract_value(recommended_path_bundle.as_ref());
+    let next_step = workflow_status_next_step_with_execution_contract(
+        &next_command,
+        if hard_block_active {
+            Some(blocking_reason.as_str())
+        } else {
+            None
+        },
+        if execution_contract_active {
+            recommended_path_contract.clone()
+        } else {
+            None
+        },
+    );
+    let mut value = serde_json::json!({
         "status": if no_workflow_state {
             serde_json::Value::String(NO_WORKFLOW_STATE.to_string())
         } else {
@@ -1007,14 +1250,31 @@ fn build_agent_workflow_status_view_with_provider_agent(
         "pda_cluster_label": latest_phase.and_then(|phase| phase.pda_cluster_label.clone()),
         "hybrid_duration_model": latest_phase.and_then(|phase| phase.hybrid_duration_model.clone()),
         "hybrid_remaining_expected_bars": latest_phase.and_then(|phase| phase.hybrid_remaining_expected_bars),
-        "next_step": workflow_next_step_view(&next_command, if hard_block_active { Some(blocking_reason.as_str()) } else { None }),
+        "next_step": next_step,
         "pending_actions": snapshot.pending_actions.iter().take(3).cloned().collect::<Vec<_>>(),
         "risk_flags": snapshot.risk_flags.iter().take(3).cloned().collect::<Vec<_>>(),
         "top_disagreement": top_disagreement,
         "top_actionable": top_actionable,
         "ensemble": ensemble_summary,
         "provider_support": provider_support,
-    })
+        "latest_structural_feedback": latest_structural_feedback,
+        "experience_prior_surface": experience_prior_surface,
+        "top_path_candidates": top_path_candidates.candidates,
+        "structural_history_summary": structural_history_summary,
+        "structural_path_summary": structural_path_summary,
+    });
+    if let Value::Object(map) = &mut value {
+        map.insert(
+            "recommended_path_bundle".to_string(),
+            serde_json::to_value(recommended_path_bundle).unwrap_or_default(),
+        );
+        map.insert(
+            "recommended_path_contract".to_string(),
+            serde_json::to_value(recommended_path_contract).unwrap_or_default(),
+        );
+        map.insert("recommended_next_step".to_string(), next_step.clone());
+    }
+    value
 }
 
 fn normalize_workflow_status_value_for_stability(value: &mut Value) {
@@ -1046,6 +1306,7 @@ pub fn emit_workflow_status_output(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
     provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[crate::state::FeedbackRecord],
     output_format: &str,
     stable: bool,
 ) -> Result<()> {
@@ -1071,6 +1332,7 @@ pub fn emit_workflow_status_output(
                 snapshot,
                 persisted_scorecards,
                 provider_status_agent,
+                feedback_history,
             );
             if stable {
                 normalize_workflow_status_value_for_stability(&mut value);
@@ -1083,6 +1345,7 @@ pub fn emit_workflow_status_output(
                 snapshot,
                 persisted_scorecards,
                 provider_status_agent,
+                feedback_history,
             );
             if let Some(summary) = value.get("summary_line").and_then(Value::as_str) {
                 println!("{}", redact_local_paths_in_human_text(summary));
@@ -1099,6 +1362,18 @@ pub fn emit_workflow_status_output(
             if let Some(provider) = value.get("provider_line").and_then(Value::as_str) {
                 println!("{}", redact_local_paths_in_human_text(provider));
             }
+            if let Some(feedback) = value
+                .get("structural_feedback_line")
+                .and_then(Value::as_str)
+            {
+                println!("{}", redact_local_paths_in_human_text(feedback));
+            }
+            if let Some(path) = value.get("structural_path_line").and_then(Value::as_str) {
+                println!("{}", redact_local_paths_in_human_text(path));
+            }
+            if let Some(history) = value.get("structural_history_line").and_then(Value::as_str) {
+                println!("{}", redact_local_paths_in_human_text(history));
+            }
         }
         other => anyhow::bail!("unsupported output format '{}'", other),
     }
@@ -1109,6 +1384,7 @@ pub fn dispatch_workflow_status(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
     provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[crate::state::FeedbackRecord],
     input: WorkflowStatusDispatchInput<'_>,
     bootstrap: WorkflowStatusBootstrapInput<'_>,
 ) -> Result<()> {
@@ -1169,6 +1445,7 @@ pub fn dispatch_workflow_status(
                 snapshot,
                 persisted_scorecards,
                 provider_status_agent,
+                feedback_history,
                 other,
             )?,
         };
@@ -1184,6 +1461,7 @@ pub fn dispatch_workflow_status(
             snapshot,
             persisted_scorecards,
             provider_status_agent,
+            feedback_history,
             input.output_format,
             input.stable,
         )?;
@@ -1191,9 +1469,7 @@ pub fn dispatch_workflow_status(
     Ok(())
 }
 
-fn build_agent_bootstrap_view(
-    input: AgentBootstrapBuildInput<'_>,
-) -> AgentBootstrapView {
+fn build_agent_bootstrap_view(input: AgentBootstrapBuildInput<'_>) -> AgentBootstrapView {
     build_agent_bootstrap_view_with_candidates(input, build_ibkr_gateway_candidates())
 }
 
@@ -1544,10 +1820,121 @@ pub fn build_ensemble_vote_surface(
     }
 }
 
+fn workflow_status_recommended_path_contract_value(
+    recommended_path_bundle: Option<&StructuralRecommendedPathBundleArtifact>,
+) -> Option<Value> {
+    recommended_path_bundle.map(|bundle| {
+        serde_json::json!({
+            "path_id": bundle.path_id,
+            "path_label": bundle.path_label,
+            "trigger": bundle.trigger_summary,
+            "confirmation": bundle.confirmation_summary,
+            "stop": bundle.stop_summary,
+            "invalidation": bundle.invalidation_summary,
+            "why": bundle.why_this_path,
+            "recommended_command": bundle.recommended_command,
+        })
+    })
+}
+
+fn workflow_status_next_step_with_execution_contract(
+    command: &str,
+    blocked_reason: Option<&str>,
+    execution_contract: Option<Value>,
+) -> Value {
+    let mut next_step = workflow_next_step_view(command, blocked_reason);
+    if let Value::Object(map) = &mut next_step {
+        map.insert(
+            "execution_contract".to_string(),
+            execution_contract.unwrap_or(Value::Null),
+        );
+    }
+    next_step
+}
+
+fn workflow_status_value_with_recommended_next_step(
+    mut value: Value,
+    recommended_next_step: Value,
+) -> Value {
+    if let Value::Object(map) = &mut value {
+        map.insert("recommended_next_step".to_string(), recommended_next_step);
+    }
+    value
+}
+
+fn workflow_status_structural_recommended_next_step(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[crate::state::FeedbackRecord],
+) -> Value {
+    let hard_block_active = matches!(
+        snapshot.blocking_truth.status.as_str(),
+        "blocked"
+            | "bridge_needs_confirmation"
+            | "validated_regressing"
+            | "credibility_gate_blocked"
+    );
+    let top_level_command = if hard_block_active {
+        snapshot.blocking_truth.next_command.clone()
+    } else {
+        snapshot.recommended_next_command.clone()
+    };
+    let selected_data_candidates = historical_data_candidates(snapshot);
+    let historical_data_gate_active = !selected_data_candidates.is_empty()
+        && (top_level_command.contains("factor-research")
+            || top_level_command.contains("factor-backtest")
+            || snapshot
+                .recommended_next_command
+                .contains("factor-research")
+            || snapshot
+                .recommended_next_command
+                .contains("factor-backtest"));
+    let provider_support_reason = if hard_block_active && !snapshot.blocking_truth.reason.is_empty()
+    {
+        Some(snapshot.blocking_truth.reason.as_str())
+    } else if !snapshot.current_focus_reason.is_empty() {
+        Some(snapshot.current_focus_reason.as_str())
+    } else {
+        None
+    };
+    let provider_support = build_workflow_provider_support(
+        provider_status_agent,
+        &top_level_command,
+        provider_support_reason,
+    );
+    let recommended_path_bundle = build_structural_recommended_path_bundle_artifact(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+    );
+    let recommended_path_contract =
+        workflow_status_recommended_path_contract_value(recommended_path_bundle.as_ref());
+    workflow_status_next_step_with_execution_contract(
+        &top_level_command,
+        if hard_block_active || historical_data_gate_active {
+            if hard_block_active && !snapshot.blocking_truth.reason.is_empty() {
+                Some(snapshot.blocking_truth.reason.as_str())
+            } else if historical_data_gate_active {
+                Some("user_selected_historical_data_missing")
+            } else {
+                None
+            }
+        } else {
+            None
+        },
+        if !hard_block_active && !historical_data_gate_active && !provider_support.active {
+            recommended_path_contract
+        } else {
+            None
+        },
+    )
+}
+
 pub fn build_workflow_status_phase_value(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
     provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[crate::state::FeedbackRecord],
     phase: &str,
 ) -> Result<Value> {
     Ok(match phase.trim().to_ascii_lowercase().as_str() {
@@ -1556,6 +1943,303 @@ pub fn build_workflow_status_phase_value(
                 snapshot,
                 persisted_scorecards,
                 provider_status_agent,
+                feedback_history,
+            )
+        }
+        "structural-playbook" => {
+            let bundle = build_structural_playbook_bundle(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+            );
+            let recommended_next_step = workflow_status_structural_recommended_next_step(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+            );
+            workflow_status_value_with_recommended_next_step(
+                serde_json::to_value(bundle)?,
+                recommended_next_step,
+            )
+        }
+        "structural-node" => workflow_status_value_with_recommended_next_step(
+            serde_json::to_value(build_structural_node_artifact(
+                snapshot,
+                provider_status_agent,
+            ))?,
+            workflow_status_structural_recommended_next_step(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+            ),
+        ),
+        "structural-branch-set" | "structural-branches" => {
+            let node = build_structural_node_artifact(snapshot, provider_status_agent);
+            workflow_status_value_with_recommended_next_step(
+                serde_json::to_value(build_structural_branch_set_artifact(
+                    snapshot,
+                    provider_status_agent,
+                    &node,
+                    &build_structural_branch_history_artifact(snapshot, feedback_history),
+                ))?,
+                workflow_status_structural_recommended_next_step(
+                    snapshot,
+                    provider_status_agent,
+                    feedback_history,
+                ),
+            )
+        }
+        "structural-scenario-playbook" | "structural-scenarios" => {
+            let node = build_structural_node_artifact(snapshot, provider_status_agent);
+            let branch_history = build_structural_branch_history_artifact(snapshot, feedback_history);
+            let branch_set = build_structural_branch_set_artifact(
+                snapshot,
+                provider_status_agent,
+                &node,
+                &branch_history,
+            );
+            workflow_status_value_with_recommended_next_step(
+                serde_json::to_value(build_structural_scenario_playbook_artifact(
+                    snapshot,
+                    provider_status_agent,
+                    &branch_set,
+                    &build_structural_scenario_history_artifact(snapshot, feedback_history),
+                ))?,
+                workflow_status_structural_recommended_next_step(
+                    snapshot,
+                    provider_status_agent,
+                    feedback_history,
+                ),
+            )
+        }
+        "structural-path-plan" | "structural-paths" => {
+            let hard_block_active = matches!(
+                snapshot.blocking_truth.status.as_str(),
+                "blocked"
+                    | "bridge_needs_confirmation"
+                    | "validated_regressing"
+                    | "credibility_gate_blocked"
+            );
+            let node = build_structural_node_artifact(snapshot, provider_status_agent);
+            let branch_history = build_structural_branch_history_artifact(snapshot, feedback_history);
+            let branch_set = build_structural_branch_set_artifact(
+                snapshot,
+                provider_status_agent,
+                &node,
+                &branch_history,
+            );
+            let scenario_history =
+                build_structural_scenario_history_artifact(snapshot, feedback_history);
+            let scenario_playbook = build_structural_scenario_playbook_artifact(
+                snapshot,
+                provider_status_agent,
+                &branch_set,
+                &scenario_history,
+            );
+            let provider_support = build_workflow_provider_support(
+                provider_status_agent,
+                if hard_block_active {
+                    &snapshot.blocking_truth.next_command
+                } else {
+                    &snapshot.recommended_next_command
+                },
+                if snapshot.blocking_truth.reason.trim().is_empty() {
+                    if snapshot.current_focus_reason.trim().is_empty() {
+                        None
+                    } else {
+                        Some(snapshot.current_focus_reason.as_str())
+                    }
+                } else {
+                    Some(snapshot.blocking_truth.reason.as_str())
+                },
+            );
+            workflow_status_value_with_recommended_next_step(
+                serde_json::to_value(build_structural_path_plan_artifact(
+                    snapshot,
+                    provider_status_agent,
+                    &provider_support,
+                    &scenario_playbook,
+                    &build_structural_path_history_artifact(snapshot, feedback_history),
+                ))?,
+                workflow_status_structural_recommended_next_step(
+                    snapshot,
+                    provider_status_agent,
+                    feedback_history,
+                ),
+            )
+        }
+        "structural-path-history" => workflow_status_value_with_recommended_next_step(
+            serde_json::to_value(build_structural_path_history_artifact(
+                snapshot,
+                feedback_history,
+            ))?,
+            workflow_status_structural_recommended_next_step(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+            ),
+        ),
+        "structural-path-outcome-summary" => workflow_status_value_with_recommended_next_step(
+            serde_json::to_value(build_structural_path_history_artifact(snapshot, feedback_history).summary)?,
+            workflow_status_structural_recommended_next_step(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+            ),
+        ),
+        "structural-node-history" => workflow_status_value_with_recommended_next_step(
+            serde_json::to_value(build_structural_node_history_artifact(
+                snapshot,
+                feedback_history,
+            ))?,
+            workflow_status_structural_recommended_next_step(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+            ),
+        ),
+        "structural-branch-history" => workflow_status_value_with_recommended_next_step(
+            serde_json::to_value(build_structural_branch_history_artifact(
+                snapshot,
+                feedback_history,
+            ))?,
+            workflow_status_structural_recommended_next_step(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+            ),
+        ),
+        "structural-scenario-history" => workflow_status_value_with_recommended_next_step(
+            serde_json::to_value(build_structural_scenario_history_artifact(
+                snapshot,
+                feedback_history,
+            ))?,
+            workflow_status_structural_recommended_next_step(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+            ),
+        ),
+        "structural-history-summary" => workflow_status_value_with_recommended_next_step(
+            serde_json::to_value(build_structural_history_summary_artifact(
+                snapshot,
+                feedback_history,
+            ))?,
+            workflow_status_structural_recommended_next_step(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+            ),
+        ),
+        "structural-experience-priors" | "structural-experience-prior-surface" => {
+            let artifact = build_structural_experience_prior_surface_artifact(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+            );
+            let recommended_next_step = workflow_status_structural_recommended_next_step(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+            );
+            workflow_status_value_with_recommended_next_step(
+                serde_json::to_value(artifact)?,
+                recommended_next_step,
+            )
+        }
+        "structural-top-path-candidates" | "structural-top-paths" => {
+            let artifact = build_structural_top_path_candidates_artifact(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+            );
+            let recommended_next_step = workflow_status_structural_recommended_next_step(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+            );
+            workflow_status_value_with_recommended_next_step(
+                serde_json::to_value(artifact)?,
+                recommended_next_step,
+            )
+        }
+        "structural-recommended-path-bundle" | "structural-recommended-path" => {
+            let bundle = build_structural_recommended_path_bundle_artifact(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+            );
+            let recommended_next_step = workflow_status_structural_recommended_next_step(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+            );
+            workflow_status_value_with_recommended_next_step(
+                serde_json::to_value(bundle)?,
+                recommended_next_step,
+            )
+        }
+        "structural-feedback-template" | "structural-feedback" => {
+            let node = build_structural_node_artifact(snapshot, provider_status_agent);
+            let branch_history = build_structural_branch_history_artifact(snapshot, feedback_history);
+            let branch_set = build_structural_branch_set_artifact(
+                snapshot,
+                provider_status_agent,
+                &node,
+                &branch_history,
+            );
+            let scenario_history =
+                build_structural_scenario_history_artifact(snapshot, feedback_history);
+            let scenario_playbook = build_structural_scenario_playbook_artifact(
+                snapshot,
+                provider_status_agent,
+                &branch_set,
+                &scenario_history,
+            );
+            let hard_block_active = matches!(
+                snapshot.blocking_truth.status.as_str(),
+                "blocked"
+                    | "bridge_needs_confirmation"
+                    | "validated_regressing"
+                    | "credibility_gate_blocked"
+            );
+            let provider_support = build_workflow_provider_support(
+                provider_status_agent,
+                if hard_block_active {
+                    &snapshot.blocking_truth.next_command
+                } else {
+                    &snapshot.recommended_next_command
+                },
+                if snapshot.blocking_truth.reason.trim().is_empty() {
+                    if snapshot.current_focus_reason.trim().is_empty() {
+                        None
+                    } else {
+                        Some(snapshot.current_focus_reason.as_str())
+                    }
+                } else {
+                    Some(snapshot.blocking_truth.reason.as_str())
+                },
+            );
+            let path_plan = build_structural_path_plan_artifact(
+                snapshot,
+                provider_status_agent,
+                &provider_support,
+                &scenario_playbook,
+                &build_structural_path_history_artifact(snapshot, feedback_history),
+            );
+            workflow_status_value_with_recommended_next_step(
+                serde_json::to_value(build_structural_feedback_template_artifact(
+                    snapshot,
+                    &node,
+                    &branch_set,
+                    &scenario_playbook,
+                    &path_plan,
+                ))?,
+                workflow_status_structural_recommended_next_step(
+                    snapshot,
+                    provider_status_agent,
+                    feedback_history,
+                ),
             )
         }
         "train" => serde_json::to_value(&build_phase_snapshot_surfaces(snapshot).train)?,
@@ -2082,6 +2766,8 @@ pub fn sample_human_workflow_snapshot() -> WorkflowSnapshot {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use chrono::TimeZone;
+    use crate::application::orchestration::EnsembleHardBlockArtifact;
     use crate::application::provider_catalog::{
         ProviderCatalogAgentSurface, ProviderCatalogPendingAgentItem,
     };
@@ -2130,6 +2816,163 @@ mod tests {
             ],
             selected_profile: None,
         }
+    }
+
+    fn sample_provider_agent_surface_with_profile() -> ProviderCatalogAgentSurface {
+        let mut surface = sample_provider_agent_surface();
+        surface.selected_profile = Some(
+            crate::application::provider_catalog::ProviderProfileSelectionSurface {
+                profile_id: "thrill3r_nq_closed_loop_v1".to_string(),
+                display_name: "Thrill3r NQ Closed Loop v1".to_string(),
+                opt_in_only: true,
+                source: "repo-example".to_string(),
+                summary: "Personal NQ workflow".to_string(),
+                data_contracts: vec![
+                    crate::application::provider_catalog::ProviderProfileDataContract {
+                        contract_id: "tomac_clean_root".to_string(),
+                        category: "historical".to_string(),
+                        required: true,
+                        label: "Tomac cleaned multi-timeframe futures root".to_string(),
+                        symbols: vec!["NQ".to_string()],
+                        timeframes: vec!["1d".to_string(), "1h".to_string(), "15m".to_string()],
+                        path_hint: None,
+                        notes: Vec::new(),
+                    },
+                    crate::application::provider_catalog::ProviderProfileDataContract {
+                        contract_id: "qqq_options_surface".to_string(),
+                        category: "options".to_string(),
+                        required: true,
+                        label: "QQQ options Greeks / IV / OI".to_string(),
+                        symbols: vec!["QQQ".to_string()],
+                        timeframes: vec!["snapshot".to_string()],
+                        path_hint: None,
+                        notes: Vec::new(),
+                    },
+                ],
+                data_contract_labels: vec![
+                    "Tomac cleaned multi-timeframe futures root".to_string(),
+                    "QQQ options Greeks / IV / OI".to_string(),
+                ],
+                track_details: vec![
+                    crate::application::provider_catalog::ProviderProfileTrackSelection {
+                        track_id: "research_zero_config".to_string(),
+                        label: "Zero-config research companion data".to_string(),
+                        required: true,
+                        mode: "any_of".to_string(),
+                        activation_hints: vec!["research".to_string(), "backtest".to_string()],
+                        status: "ready".to_string(),
+                        ready_provider_ids: vec!["openbb".to_string()],
+                        pending_provider_ids: Vec::new(),
+                        install_prompts: Vec::new(),
+                        notes: Vec::new(),
+                    },
+                    crate::application::provider_catalog::ProviderProfileTrackSelection {
+                        track_id: "options_enriched".to_string(),
+                        label: "Options enrichment".to_string(),
+                        required: true,
+                        mode: "any_of".to_string(),
+                        activation_hints: vec!["research".to_string(), "options".to_string()],
+                        status: "pending".to_string(),
+                        ready_provider_ids: Vec::new(),
+                        pending_provider_ids: vec!["tradingview_mcp".to_string()],
+                        install_prompts: vec!["Ask for TradingViewRemix MCP API key.".to_string()],
+                        notes: Vec::new(),
+                    },
+                ],
+                track_statuses: vec![
+                    "research_zero_config:ready:openbb,yfinance".to_string(),
+                    "options_enriched:pending:tradingview_mcp".to_string(),
+                ],
+                ready_provider_ids: vec!["openbb".to_string()],
+                pending_provider_ids: vec!["tradingview_mcp".to_string()],
+                install_prompts: vec!["Ask for TradingViewRemix MCP API key.".to_string()],
+            },
+        );
+        surface
+    }
+
+    fn sample_structural_feedback_history() -> Vec<crate::state::FeedbackRecord> {
+        let timestamp = Utc::with_ymd_and_hms(&Utc, 2026, 4, 29, 0, 0, 0).unwrap();
+        vec![
+            crate::state::FeedbackRecord {
+                timestamp,
+                symbol: "NQ".to_string(),
+                source: "structural_feedback_submission".to_string(),
+                run_id: Some("run-1".to_string()),
+                trade_id: None,
+                prompt_version: Some("structural-feedback-v1".to_string()),
+                factor_version: None,
+                data_fingerprint: None,
+                factors_used: Vec::new(),
+                model_probabilities_before_trade: crate::state::ModelProbabilitySnapshot {
+                    selected_direction: crate::types::Direction::Bull,
+                    selected_probability: 0.72,
+                    long_score: 0.72,
+                    short_score: 0.28,
+                    win_prob_long: 0.72,
+                    win_prob_short: 0.28,
+                    uncertainty: 0.28,
+                },
+                realized_outcome: "win".to_string(),
+                pnl: 0.03,
+                regime_at_entry: crate::types::Regime::ManipulationExpansion,
+                structural_feedback: Some(crate::state::StructuralFeedbackRefs {
+                    protocol_version: "structural-feedback-v1".to_string(),
+                    recommendation_id: "structural-feedback:NQ:node:path".to_string(),
+                    recommended_at: "2026-04-29T00:00:00Z".to_string(),
+                    node_id: "NQ:belief_regime_node:trend".to_string(),
+                    branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                    scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                        .to_string(),
+                    path_id:
+                        "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                            .to_string(),
+                    followed_path: true,
+                    exit_reason: Some("target_hit".to_string()),
+                    notes: None,
+                }),
+                reflection_mismatch_tags: Vec::new(),
+            },
+            crate::state::FeedbackRecord {
+                timestamp: timestamp + chrono::Duration::minutes(5),
+                symbol: "NQ".to_string(),
+                source: "structural_feedback_submission".to_string(),
+                run_id: Some("run-2".to_string()),
+                trade_id: None,
+                prompt_version: Some("structural-feedback-v1".to_string()),
+                factor_version: None,
+                data_fingerprint: None,
+                factors_used: Vec::new(),
+                model_probabilities_before_trade: crate::state::ModelProbabilitySnapshot {
+                    selected_direction: crate::types::Direction::Bull,
+                    selected_probability: 0.70,
+                    long_score: 0.70,
+                    short_score: 0.30,
+                    win_prob_long: 0.70,
+                    win_prob_short: 0.30,
+                    uncertainty: 0.30,
+                },
+                realized_outcome: "invalidated".to_string(),
+                pnl: -0.01,
+                regime_at_entry: crate::types::Regime::ManipulationExpansion,
+                structural_feedback: Some(crate::state::StructuralFeedbackRefs {
+                    protocol_version: "structural-feedback-v1".to_string(),
+                    recommendation_id: "structural-feedback:NQ:node:path-2".to_string(),
+                    recommended_at: "2026-04-29T00:05:00Z".to_string(),
+                    node_id: "NQ:belief_regime_node:trend".to_string(),
+                    branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                    scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                        .to_string(),
+                    path_id:
+                        "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                            .to_string(),
+                    followed_path: true,
+                    exit_reason: Some("invalidated".to_string()),
+                    notes: None,
+                }),
+                reflection_mismatch_tags: Vec::new(),
+            },
+        ]
     }
     use crate::application::output_foundation::redact_local_paths_in_value;
     use crate::state::WorkflowPhaseSnapshot;
@@ -2321,6 +3164,7 @@ mod tests {
             &snapshot,
             &[],
             &sample_provider_agent_surface(),
+            &[],
             "human",
         )
         .unwrap();
@@ -2347,6 +3191,7 @@ mod tests {
             &snapshot,
             &[],
             &sample_provider_agent_surface(),
+            &[],
             "artifact-factor-consumed-leaderboard",
         )
         .unwrap();
@@ -2359,6 +3204,7 @@ mod tests {
             &WorkflowSnapshot::default(),
             &[],
             &sample_provider_agent_surface(),
+            &[],
             "wat",
         )
         .unwrap_err();
@@ -2374,6 +3220,7 @@ mod tests {
             &snapshot,
             &[],
             &sample_provider_agent_surface(),
+            &[],
             "human",
         )
         .unwrap();
@@ -2388,6 +3235,7 @@ mod tests {
             &sample_human_workflow_snapshot(),
             &[],
             &sample_provider_agent_surface(),
+            &[],
             WorkflowStatusDispatchInput {
                 phase: Some("human"),
                 actionable_only: true,
@@ -2420,6 +3268,7 @@ mod tests {
             &sample_human_workflow_snapshot(),
             &[],
             &sample_provider_agent_surface(),
+            &[],
             WorkflowStatusDispatchInput {
                 phase: None,
                 actionable_only: true,
@@ -2692,6 +3541,7 @@ mod tests {
             &snapshot,
             &[],
             &sample_provider_agent_surface(),
+            &[],
         );
 
         assert_eq!(value["provider_support"]["active"], true);
@@ -2723,6 +3573,7 @@ mod tests {
             &snapshot,
             &[],
             &sample_provider_agent_surface(),
+            &[],
         );
 
         assert!(value["provider_line"]
@@ -2738,6 +3589,1406 @@ mod tests {
             value["provider_support"]["workflow_support"]["active"],
             true
         );
+    }
+
+    #[test]
+    fn workflow_status_phase_structural_node_exposes_current_blocker() {
+        let snapshot = sample_human_workflow_snapshot();
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            "structural-node",
+        )
+        .unwrap();
+
+        assert_eq!(value["node_family"], "data_selection_gate");
+        assert_eq!(value["node_label"], "user_selected_historical_data_missing");
+        assert!(value["supporting_evidence"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item.as_str().unwrap().contains("need user choice")));
+        assert!(value["recommended_next_step"]["execution_contract"].is_null());
+    }
+
+    #[test]
+    fn workflow_status_phase_structural_playbook_surfaces_selected_profile_contracts() {
+        let snapshot = WorkflowSnapshot::default();
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface_with_profile(),
+            &[],
+            "structural-playbook",
+        )
+        .unwrap();
+
+        assert_eq!(value["selected_profile_id"], "thrill3r_nq_closed_loop_v1");
+        assert!(value["selected_profile_data_contracts"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item
+                .as_str()
+                .unwrap()
+                .contains("Tomac cleaned multi-timeframe futures root")));
+        assert!(value["path_plan"]["paths"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|path| path.get("path_id").is_some()));
+    }
+
+    #[test]
+    fn workflow_status_phase_structural_playbook_exposes_recommended_path_bundle() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let history = vec![
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[1].clone(),
+        ];
+
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            "structural-playbook",
+        )
+        .unwrap();
+
+        assert_eq!(value["recommended_path_bundle"]["rank"], 1);
+        assert!(value["recommended_path_bundle"]["why_this_path"]
+            .as_str()
+            .unwrap()
+            .contains("posterior"));
+        assert_eq!(
+            value["recommended_next_step"]["execution_contract"]["path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+    }
+
+    #[test]
+    fn workflow_status_phase_structural_branches_use_posterior_probabilities() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            "structural-branches",
+        )
+        .unwrap();
+
+        assert_eq!(value["branches"].as_array().unwrap().len(), 3);
+        assert_eq!(value["branches"][0]["branch_label"], "trend_follow_through");
+        assert_eq!(value["branches"][0]["posterior_probability"], 0.72);
+    }
+
+    #[test]
+    fn workflow_status_phase_structural_feedback_template_exposes_stable_ids() {
+        let snapshot = sample_human_workflow_snapshot();
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface_with_profile(),
+            &[],
+            "structural-feedback-template",
+        )
+        .unwrap();
+
+        assert!(value["recommendation_id"]
+            .as_str()
+            .unwrap()
+            .contains("structural-feedback"));
+        assert!(value["node_id"].as_str().unwrap().contains("NQ"));
+        assert!(value["branch_id"]
+            .as_str()
+            .unwrap()
+            .contains("choose_historical_dataset"));
+        assert!(value["feedback_fields"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|field| field["field_id"] == "realized_outcome"));
+        assert!(value["allowed_outcomes"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item.as_str().unwrap() == "invalidated"));
+    }
+
+    #[test]
+    fn workflow_status_phase_structural_path_history_aggregates_feedback() {
+        let mut snapshot = sample_human_workflow_snapshot();
+        if let Some(update) = snapshot.latest_update.as_mut() {
+            update.structural_feedback = sample_structural_feedback_history()[1]
+                .structural_feedback
+                .clone();
+        }
+        let history = sample_structural_feedback_history();
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            "structural-path-history",
+        )
+        .unwrap();
+
+        assert_eq!(value["summary"]["total_records"], 2);
+        assert_eq!(value["summary"]["distinct_paths"], 1);
+        assert_eq!(
+            value["paths"][0]["path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+        assert_eq!(value["paths"][0]["wins"], 1);
+        assert_eq!(value["paths"][0]["invalidated"], 1);
+    }
+
+    #[test]
+    fn workflow_status_phase_structural_path_outcome_summary_is_token_friendly() {
+        let history = sample_structural_feedback_history();
+        let value = build_workflow_status_phase_value(
+            &WorkflowSnapshot::default(),
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            "structural-path-outcome-summary",
+        )
+        .unwrap();
+
+        assert_eq!(value["total_records"], 2);
+        assert_eq!(value["distinct_paths"], 1);
+    }
+
+    #[test]
+    fn structural_playbook_uses_history_to_raise_path_prior() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let history = vec![
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[1].clone(),
+        ];
+
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            "structural-paths",
+        )
+        .unwrap();
+
+        assert_eq!(
+            value["paths"][0]["historical_total_records"],
+            3
+        );
+        assert!(value["paths"][0]["path_prior"].as_f64().unwrap() > 0.5);
+        assert!(value["paths"][0]["composite_preference_score"]
+            .as_f64()
+            .unwrap()
+            >= value["paths"][0]["path_posterior"].as_f64().unwrap() * 0.7);
+    }
+
+    #[test]
+    fn structural_playbook_uses_history_to_adjust_branch_and_scenario_scores() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let history = vec![
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[1].clone(),
+        ];
+
+        let branches = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            "structural-branches",
+        )
+        .unwrap();
+        let scenarios = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            "structural-scenarios",
+        )
+        .unwrap();
+
+        assert_eq!(branches["branches"][0]["historical_total_records"], 3);
+        assert_eq!(branches["branches"][0]["historical_followed_count"], 3);
+        assert!(
+            branches["branches"][0]["prior_probability"]
+                .as_f64()
+                .unwrap()
+                < branches["branches"][0]["posterior_probability"]
+                    .as_f64()
+                    .unwrap()
+        );
+        assert_eq!(scenarios["scenarios"][0]["historical_total_records"], 3);
+        assert_eq!(scenarios["scenarios"][0]["historical_followed_count"], 3);
+        assert!(
+            scenarios["scenarios"][0]["composite_scenario_score"]
+                .as_f64()
+                .unwrap()
+                < scenarios["scenarios"][0]["posterior_probability"]
+                    .as_f64()
+                    .unwrap()
+        );
+    }
+
+    #[test]
+    fn workflow_status_phase_structural_branch_history_aggregates_feedback() {
+        let history = sample_structural_feedback_history();
+        let value = build_workflow_status_phase_value(
+            &WorkflowSnapshot::default(),
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            "structural-branch-history",
+        )
+        .unwrap();
+
+        assert_eq!(value["summary"]["total_records"], 2);
+        assert_eq!(value["summary"]["distinct_entities"], 1);
+        assert_eq!(
+            value["branches"][0]["branch_id"],
+            "NQ:belief_regime_node:trend:trend_follow_through"
+        );
+        assert_eq!(value["branches"][0]["wins"], 1);
+    }
+
+    #[test]
+    fn workflow_status_phase_structural_experience_priors_tracks_current_lineage() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        if let Some(analyze) = snapshot.latest_analyze.as_mut() {
+            analyze.structural_feedback = sample_structural_feedback_history()[1]
+                .structural_feedback
+                .clone();
+        }
+        let history = vec![
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[1].clone(),
+        ];
+
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            "structural-experience-priors",
+        )
+        .unwrap();
+
+        assert_eq!(value["symbol"], "NQ");
+        assert_eq!(
+            value["path"]["entity_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+        assert_eq!(value["path"]["historical_total_records"], 3);
+        assert!(value["path"]["experience_prior"].as_f64().unwrap() > 0.5);
+        assert_eq!(
+            value["branch"]["entity_id"],
+            "NQ:belief_regime_node:trend:trend_follow_through"
+        );
+        assert!(value["branch"]["composite_score"].as_f64().unwrap() > 0.6);
+        assert_eq!(
+            value["recommended_next_step"]["execution_contract"]["path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+
+        let blocked_value = build_workflow_status_phase_value(
+            &sample_human_workflow_snapshot(),
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            "structural-experience-priors",
+        )
+        .unwrap();
+        assert!(blocked_value["recommended_next_step"]["execution_contract"].is_null());
+    }
+
+    #[test]
+    fn workflow_status_phase_structural_top_path_candidates_ranks_paths() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let history = vec![
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[1].clone(),
+        ];
+
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            "structural-top-path-candidates",
+        )
+        .unwrap();
+
+        assert_eq!(value["symbol"], "NQ");
+        assert_eq!(value["candidate_count"], 3);
+        assert_eq!(
+            value["candidates"][0]["path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+        assert!(value["candidates"][0]["composite_score"].as_f64().unwrap()
+            >= value["candidates"][1]["composite_score"].as_f64().unwrap());
+        assert!(value["candidates"][0]["experience_prior"].as_f64().unwrap() > 0.5);
+    }
+
+    #[test]
+    fn workflow_status_phase_structural_top_path_candidates_exposes_recommended_next_step_contract() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let history = vec![
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[1].clone(),
+        ];
+
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            "structural-top-path-candidates",
+        )
+        .unwrap();
+
+        assert_eq!(
+            value["recommended_next_step"]["execution_contract"]["path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+
+        let blocked_value = build_workflow_status_phase_value(
+            &sample_human_workflow_snapshot(),
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            "structural-top-path-candidates",
+        )
+        .unwrap();
+        assert!(blocked_value["recommended_next_step"]["execution_contract"].is_null());
+    }
+
+    #[test]
+    fn workflow_status_structural_detail_phases_share_recommended_next_step_contract() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let history = vec![
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[1].clone(),
+        ];
+        let phases = [
+            "structural-node",
+            "structural-branches",
+            "structural-scenarios",
+            "structural-paths",
+            "structural-history-summary",
+            "structural-feedback-template",
+        ];
+
+        for phase in phases {
+            let value = build_workflow_status_phase_value(
+                &snapshot,
+                &[],
+                &sample_provider_agent_surface(),
+                &history,
+                phase,
+            )
+            .unwrap();
+            assert_eq!(
+                value["recommended_next_step"]["execution_contract"]["path_id"],
+                "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary",
+                "phase={phase}"
+            );
+        }
+    }
+
+    #[test]
+    fn workflow_status_phase_structural_recommended_path_bundle_is_token_friendly() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let history = vec![
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[1].clone(),
+        ];
+
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            "structural-recommended-path-bundle",
+        )
+        .unwrap();
+
+        assert_eq!(value["symbol"], "NQ");
+        assert_eq!(value["rank"], 1);
+        assert_eq!(
+            value["path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+        assert!(value["trigger_summary"].as_str().unwrap().contains("regime"));
+        assert!(value["stop_summary"].as_str().unwrap().len() > 4);
+        assert!(value["confirmation_summary"].as_str().unwrap().len() > 4);
+        assert!(value["invalidation_summary"].as_str().unwrap().len() > 4);
+        assert_eq!(
+            value["recommended_next_step"]["execution_contract"]["path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+    }
+
+    #[test]
+    fn agent_workflow_status_view_exposes_latest_structural_feedback() {
+        let mut snapshot = sample_human_workflow_snapshot();
+        if let Some(update) = snapshot.latest_update.as_mut() {
+            update.structural_feedback = Some(crate::state::StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "structural-feedback:NQ:node:path".to_string(),
+                recommended_at: "2026-04-29T00:00:00Z".to_string(),
+                node_id: "NQ:belief_regime_node:trend".to_string(),
+                branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                    .to_string(),
+                path_id:
+                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                        .to_string(),
+                followed_path: true,
+                exit_reason: Some("target_hit".to_string()),
+                notes: Some("user followed structural path".to_string()),
+            });
+        }
+
+        let value = build_agent_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+        );
+
+        assert_eq!(
+            value["latest_structural_feedback"]["recommendation_id"],
+            "structural-feedback:NQ:node:path"
+        );
+        assert_eq!(
+            value["latest_structural_feedback"]["path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+    }
+
+    #[test]
+    fn agent_workflow_status_view_exposes_structural_path_summary() {
+        let mut snapshot = sample_human_workflow_snapshot();
+        if let Some(update) = snapshot.latest_update.as_mut() {
+            update.structural_feedback = sample_structural_feedback_history()[1]
+                .structural_feedback
+                .clone();
+        }
+        let history = sample_structural_feedback_history();
+
+        let value = build_agent_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+
+        assert_eq!(
+            value["structural_path_summary"]["path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+        assert_eq!(value["structural_path_summary"]["total_records"], 2);
+        assert_eq!(value["structural_path_summary"]["invalidated"], 1);
+    }
+
+    #[test]
+    fn agent_workflow_status_view_exposes_structural_history_summary() {
+        let mut snapshot = sample_human_workflow_snapshot();
+        if let Some(update) = snapshot.latest_update.as_mut() {
+            update.structural_feedback = sample_structural_feedback_history()[1]
+                .structural_feedback
+                .clone();
+        }
+        let history = sample_structural_feedback_history();
+
+        let value = build_agent_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+
+        assert_eq!(value["structural_history_summary"]["total_records"], 2);
+        assert_eq!(value["structural_history_summary"]["distinct_paths"], 1);
+        assert_eq!(
+            value["structural_history_summary"]["latest_path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+    }
+
+    #[test]
+    fn agent_and_human_workflow_status_views_expose_experience_prior_surface() {
+        let mut snapshot = sample_human_workflow_snapshot();
+        if let Some(update) = snapshot.latest_update.as_mut() {
+            update.structural_feedback = sample_structural_feedback_history()[1]
+                .structural_feedback
+                .clone();
+        }
+        let history = sample_structural_feedback_history();
+
+        let agent_value = build_agent_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+        let human_value = build_human_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+
+        assert_eq!(
+            agent_value["experience_prior_surface"]["path"]["entity_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+        assert_eq!(
+            agent_value["experience_prior_surface"]["path"]["historical_total_records"],
+            2
+        );
+        assert!(human_value["experience_prior_line"]
+            .as_str()
+            .unwrap()
+            .contains("path_prior="));
+    }
+
+    #[test]
+    fn agent_and_human_workflow_status_views_expose_top_path_candidates() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let history = vec![
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[1].clone(),
+        ];
+
+        let agent_value = build_agent_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+        let human_value = build_human_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+
+        assert_eq!(agent_value["top_path_candidates"][0]["rank"], 1);
+        assert_eq!(
+            agent_value["top_path_candidates"][0]["path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+        assert!(human_value["top_path_candidates_line"]
+            .as_str()
+            .unwrap()
+            .contains("trend_follow_through"));
+    }
+
+    #[test]
+    fn agent_and_human_workflow_status_views_expose_recommended_path_bundle() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let history = vec![
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[1].clone(),
+        ];
+
+        let agent_value = build_agent_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+        let human_value = build_human_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+
+        assert_eq!(agent_value["recommended_path_bundle"]["rank"], 1);
+        assert_eq!(
+            agent_value["recommended_path_bundle"]["path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+        assert!(agent_value["recommended_path_bundle"]["why_this_path"]
+            .as_str()
+            .unwrap()
+            .contains("posterior"));
+        assert!(human_value["recommended_path_line"]
+            .as_str()
+            .unwrap()
+            .contains("trend_follow_through"));
+    }
+
+    #[test]
+    fn agent_and_human_workflow_status_views_expose_recommended_path_contract() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let history = vec![
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[1].clone(),
+        ];
+
+        let agent_value = build_agent_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+        let human_value = build_human_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+
+        assert_eq!(
+            agent_value["recommended_path_contract"]["path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+        assert!(agent_value["recommended_path_contract"]["why"]
+            .as_str()
+            .unwrap()
+            .contains("posterior"));
+        assert!(human_value["recommended_path_contract_line"]
+            .as_str()
+            .unwrap()
+            .contains("trigger="));
+        assert!(human_value["recommended_path_contract_line"]
+            .as_str()
+            .unwrap()
+            .contains("stop="));
+    }
+
+    #[test]
+    fn human_and_agent_workflow_status_inline_execution_contract_only_when_not_blocked() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let history = vec![
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[1].clone(),
+        ];
+
+        let agent_value = build_agent_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+        let human_value = build_human_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+
+        assert_eq!(
+            agent_value["next_step"]["execution_contract"]["path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+        assert!(human_value["what_you_should_do_now"]
+            .as_str()
+            .unwrap()
+            .contains("Execution contract:"));
+
+        let blocked_human = build_human_workflow_status_view_with_provider_agent(
+            &sample_human_workflow_snapshot(),
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+        let blocked_agent = build_agent_workflow_status_view_with_provider_agent(
+            &sample_human_workflow_snapshot(),
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+
+        assert!(!blocked_human["what_you_should_do_now"]
+            .as_str()
+            .unwrap()
+            .contains("Execution contract:"));
+        assert!(blocked_agent["next_step"]["execution_contract"].is_null());
+    }
+
+    #[test]
+    fn human_and_agent_workflow_status_expose_recommended_next_step_contract() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let history = vec![
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[0].clone(),
+            sample_structural_feedback_history()[1].clone(),
+        ];
+
+        let agent_value = build_agent_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+        let human_value = build_human_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+
+        assert_eq!(
+            agent_value["recommended_next_step"]["execution_contract"]["path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+        assert_eq!(
+            human_value["recommended_next_step"]["execution_contract"]["path_id"],
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+
+        let blocked_human = build_human_workflow_status_view_with_provider_agent(
+            &sample_human_workflow_snapshot(),
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+        let blocked_agent = build_agent_workflow_status_view_with_provider_agent(
+            &sample_human_workflow_snapshot(),
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+        );
+
+        assert!(blocked_human["recommended_next_step"]["execution_contract"].is_null());
+        assert!(blocked_agent["recommended_next_step"]["execution_contract"].is_null());
+    }
+
+    #[test]
+    fn human_workflow_status_view_exposes_structural_feedback_line() {
+        let mut snapshot = sample_human_workflow_snapshot();
+        if let Some(update) = snapshot.latest_update.as_mut() {
+            update.structural_feedback = Some(crate::state::StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "structural-feedback:NQ:node:path".to_string(),
+                recommended_at: "2026-04-29T00:00:00Z".to_string(),
+                node_id: "NQ:belief_regime_node:trend".to_string(),
+                branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                    .to_string(),
+                path_id:
+                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                        .to_string(),
+                followed_path: true,
+                exit_reason: Some("target_hit".to_string()),
+                notes: Some("user followed structural path".to_string()),
+            });
+        }
+
+        let value = build_human_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+        );
+
+        assert!(value["structural_feedback_line"]
+            .as_str()
+            .unwrap()
+            .contains("recommendation=structural-feedback:NQ:node:path"));
+        assert!(value["structural_feedback_line"]
+            .as_str()
+            .unwrap()
+            .contains("path=path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"));
     }
 
     #[test]
