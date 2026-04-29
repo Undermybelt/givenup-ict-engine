@@ -316,9 +316,7 @@ pub fn match_all_setups_extended(
     out.extend(match_judas_swing_reversal(events, session_lag));
 
     // Cross-symbol SMT (1)
-    if let (Some(primary), Some(paired)) =
-        (context.primary_candles, context.paired_candles)
-    {
+    if let (Some(primary), Some(paired)) = (context.primary_candles, context.paired_candles) {
         out.extend(match_smt_divergence_confirm(
             events,
             primary,
@@ -488,10 +486,8 @@ fn match_rejection_block_at_key_level(
         let Some(rb_level) = ev.level else { continue };
         let tolerance = rb_level.abs() * tolerance_bps;
         if let Some(level_event) = find_recent_before(events, i, horizon, |e| {
-            (e.kind == PdaEventKind::MarketStructureShift
-                || e.kind == PdaEventKind::StructureBreak)
-                && e
-                    .level
+            (e.kind == PdaEventKind::MarketStructureShift || e.kind == PdaEventKind::StructureBreak)
+                && e.level
                     .map(|l| (l - rb_level).abs() <= tolerance)
                     .unwrap_or(false)
         }) {
@@ -551,8 +547,7 @@ fn match_liquidity_void_continuation(events: &[PdaEvent], horizon: usize) -> Vec
             continue;
         }
         if let Some(follow) = find_after(events, i, horizon, |e| {
-            (e.kind == PdaEventKind::MarketStructureShift
-                || e.kind == PdaEventKind::StructureBreak)
+            (e.kind == PdaEventKind::MarketStructureShift || e.kind == PdaEventKind::StructureBreak)
                 && e.direction == ev.direction
         }) {
             out.push(SetupMatch {
@@ -710,8 +705,7 @@ fn match_power_of_three(events: &[PdaEvent], horizon: usize) -> Vec<SetupMatch> 
             continue;
         }
         if let Some(follow) = find_after(events, i, horizon, |e| {
-            (e.kind == PdaEventKind::MarketStructureShift
-                || e.kind == PdaEventKind::StructureBreak)
+            (e.kind == PdaEventKind::MarketStructureShift || e.kind == PdaEventKind::StructureBreak)
                 && e.direction == target
         }) {
             out.push(SetupMatch {
@@ -767,11 +761,7 @@ fn match_turtle_soup_liquidity_grab(events: &[PdaEvent], horizon: usize) -> Vec<
 // unit tests of unrelated modules) are silently skipped — that
 // keeps the matcher safe to call from any dispatcher path.
 
-fn timestamps_within(
-    a: &PdaEvent,
-    b: &PdaEvent,
-    max_lag: Duration,
-) -> bool {
+fn timestamps_within(a: &PdaEvent, b: &PdaEvent, max_lag: Duration) -> bool {
     match (a.timestamp, b.timestamp) {
         (Some(at), Some(bt)) => {
             let delta = if bt >= at { bt - at } else { return false };
@@ -791,9 +781,10 @@ fn match_htf_mss_ltf_fvg(
         .iter()
         .filter(|e| e.kind == PdaEventKind::MarketStructureShift)
     {
-        for ltf in ltf_events.iter().filter(|e| {
-            e.kind == PdaEventKind::FairValueGap && e.direction == htf.direction
-        }) {
+        for ltf in ltf_events
+            .iter()
+            .filter(|e| e.kind == PdaEventKind::FairValueGap && e.direction == htf.direction)
+        {
             if !timestamps_within(htf, ltf, max_lag) {
                 continue;
             }
@@ -817,9 +808,10 @@ fn match_htf_cisd_ltf_ob_retest(
 ) -> Vec<SetupMatch> {
     let mut out = Vec::new();
     for htf in htf_events.iter().filter(|e| e.kind == PdaEventKind::Cisd) {
-        for ltf in ltf_events.iter().filter(|e| {
-            e.kind == PdaEventKind::OrderBlock && e.direction == htf.direction
-        }) {
+        for ltf in ltf_events
+            .iter()
+            .filter(|e| e.kind == PdaEventKind::OrderBlock && e.direction == htf.direction)
+        {
             if !timestamps_within(htf, ltf, max_lag) {
                 continue;
             }
@@ -878,12 +870,12 @@ fn daily_sweep_reversal(
     kind: CanonicalSetupKind,
 ) -> Vec<SetupMatch> {
     let mut out = Vec::new();
-    for sweep in htf_events.iter().filter(|e| {
-        e.kind == PdaEventKind::LiquiditySweep && e.direction == sweep_direction
-    }) {
+    for sweep in htf_events
+        .iter()
+        .filter(|e| e.kind == PdaEventKind::LiquiditySweep && e.direction == sweep_direction)
+    {
         for mss in ltf_events.iter().filter(|e| {
-            e.kind == PdaEventKind::MarketStructureShift
-                && e.direction == reversal_direction
+            e.kind == PdaEventKind::MarketStructureShift && e.direction == reversal_direction
         }) {
             if !timestamps_within(sweep, mss, max_lag) {
                 continue;
@@ -927,9 +919,10 @@ fn match_weekly_open_sweep_daily_mss(
         if target == Direction::Neutral {
             continue;
         }
-        for mss in daily_events.iter().filter(|e| {
-            e.kind == PdaEventKind::MarketStructureShift && e.direction == target
-        }) {
+        for mss in daily_events
+            .iter()
+            .filter(|e| e.kind == PdaEventKind::MarketStructureShift && e.direction == target)
+        {
             if !timestamps_within(sweep, mss, max_lag) {
                 continue;
             }
@@ -957,14 +950,10 @@ fn event_in_zone(event: &PdaEvent, zone: SessionKillZone) -> bool {
         .unwrap_or(false)
 }
 
-fn match_asia_range_raid_london_mss(
-    events: &[PdaEvent],
-    max_lag: Duration,
-) -> Vec<SetupMatch> {
+fn match_asia_range_raid_london_mss(events: &[PdaEvent], max_lag: Duration) -> Vec<SetupMatch> {
     let mut out = Vec::new();
     for sweep in events.iter().filter(|e| {
-        e.kind == PdaEventKind::LiquiditySweep
-            && event_in_zone(e, SessionKillZone::AsiaSession)
+        e.kind == PdaEventKind::LiquiditySweep && event_in_zone(e, SessionKillZone::AsiaSession)
     }) {
         let target = opposite(sweep.direction);
         if target == Direction::Neutral {
@@ -991,14 +980,10 @@ fn match_asia_range_raid_london_mss(
     out
 }
 
-fn match_london_raid_ny_mss_fvg(
-    events: &[PdaEvent],
-    max_lag: Duration,
-) -> Vec<SetupMatch> {
+fn match_london_raid_ny_mss_fvg(events: &[PdaEvent], max_lag: Duration) -> Vec<SetupMatch> {
     let mut out = Vec::new();
     for sweep in events.iter().filter(|e| {
-        e.kind == PdaEventKind::LiquiditySweep
-            && event_in_zone(e, SessionKillZone::LondonSession)
+        e.kind == PdaEventKind::LiquiditySweep && event_in_zone(e, SessionKillZone::LondonSession)
     }) {
         let target = opposite(sweep.direction);
         if target == Direction::Neutral {
@@ -1071,14 +1056,10 @@ fn match_silver_bullet_am(events: &[PdaEvent]) -> Vec<SetupMatch> {
         .collect()
 }
 
-fn match_judas_swing_reversal(
-    events: &[PdaEvent],
-    max_lag: Duration,
-) -> Vec<SetupMatch> {
+fn match_judas_swing_reversal(events: &[PdaEvent], max_lag: Duration) -> Vec<SetupMatch> {
     let mut out = Vec::new();
     for sweep in events.iter().filter(|e| {
-        e.kind == PdaEventKind::LiquiditySweep
-            && event_in_zone(e, SessionKillZone::JudasWindow)
+        e.kind == PdaEventKind::LiquiditySweep && event_in_zone(e, SessionKillZone::JudasWindow)
     }) {
         let target = opposite(sweep.direction);
         if target == Direction::Neutral {
@@ -1181,8 +1162,7 @@ fn match_ote_confluence_kind(
             continue;
         }
         let view = &primary_candles[..=bar];
-        let Some(zone) = most_recent_ote_zone(view, DEFAULT_OTE_SWING_STRENGTH)
-        else {
+        let Some(zone) = most_recent_ote_zone(view, DEFAULT_OTE_SWING_STRENGTH) else {
             continue;
         };
         if zone.direction != ev.direction {
@@ -1247,12 +1227,7 @@ mod tests {
         PdaEvent::new(kind, bar, direction).with_level(100.0)
     }
 
-    fn ev_with_level(
-        kind: PdaEventKind,
-        bar: usize,
-        direction: Direction,
-        level: f64,
-    ) -> PdaEvent {
+    fn ev_with_level(kind: PdaEventKind, bar: usize, direction: Direction, level: f64) -> PdaEvent {
         PdaEvent::new(kind, bar, direction).with_level(level)
     }
 
@@ -1496,7 +1471,13 @@ mod tests {
     use chrono::TimeZone;
     use chrono_tz::America::New_York;
 
-    fn ny_ts(year: i32, month: u32, day: u32, hour: u32, minute: u32) -> chrono::DateTime<chrono::Utc> {
+    fn ny_ts(
+        year: i32,
+        month: u32,
+        day: u32,
+        hour: u32,
+        minute: u32,
+    ) -> chrono::DateTime<chrono::Utc> {
         New_York
             .with_ymd_and_hms(year, month, day, hour, minute, 0)
             .unwrap()
@@ -1534,8 +1515,7 @@ mod tests {
                 (v - 0.5, v + 0.5)
             };
             out.push(Candle {
-                timestamp: ny_ts(2026, 1, 5, 0, 0)
-                    + chrono::Duration::minutes(i as i64),
+                timestamp: ny_ts(2026, 1, 5, 0, 0) + chrono::Duration::minutes(i as i64),
                 open: (lo + hi) / 2.0,
                 high: hi,
                 low: lo,
@@ -1615,12 +1595,7 @@ mod tests {
     #[test]
     fn htf_cisd_ltf_ob_retest_basic_chain() {
         let anchor = ny_ts(2026, 1, 5, 9, 0);
-        let htf_events = vec![ev_with_ts(
-            PdaEventKind::Cisd,
-            3,
-            Direction::Bull,
-            anchor,
-        )];
+        let htf_events = vec![ev_with_ts(PdaEventKind::Cisd, 3, Direction::Bull, anchor)];
         let ltf_events = vec![ev_with_ts(
             PdaEventKind::OrderBlock,
             20,
@@ -1933,12 +1908,7 @@ mod tests {
     #[test]
     fn ote_with_cisd_confluence_uses_cisd_kind() {
         let primary = synthetic_candles_with_swings(30);
-        let events = vec![ev_with_level(
-            PdaEventKind::Cisd,
-            29,
-            Direction::Bull,
-            93.5,
-        )];
+        let events = vec![ev_with_level(PdaEventKind::Cisd, 29, Direction::Bull, 93.5)];
         let ctx = SetupContext {
             primary_candles: Some(&primary),
             ..SetupContext::default()

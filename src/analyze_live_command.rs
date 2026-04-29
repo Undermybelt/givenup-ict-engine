@@ -309,11 +309,12 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
     let spot_live_price = aux_provider
         .fetch_spot_last_price(spot_kind, spot_symbol)
         .ok();
-    let options_summary = ict_engine::application::data_sources::fetch_options_summary_with_fallback(
-        aux_provider.as_ref(),
-        options_symbol,
-        options_volatility_proxy_symbol,
-    )
+    let options_summary =
+        ict_engine::application::data_sources::fetch_options_summary_with_fallback(
+            aux_provider.as_ref(),
+            options_symbol,
+            options_volatility_proxy_symbol,
+        )
         .unwrap_or_else(|_| neutral_options_summary(options_symbol));
 
     let auxiliary = aux_provider.build_auxiliary_evidence(
@@ -453,13 +454,8 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         spot_live_price,
         report.supporting.auxiliary.as_ref(),
     );
-    report.analysis.smt_correlation = build_smt_correlation_section(
-        futures_symbol,
-        spot_symbol,
-        &ltf,
-        &spot_candles,
-        auxiliary,
-    )?;
+    report.analysis.smt_correlation =
+        build_smt_correlation_section(futures_symbol, spot_symbol, &ltf, &spot_candles, auxiliary)?;
     report.analysis.regime_bayesian = build_regime_bayesian_section(
         &report.supporting.model_state.hmm_state,
         &report.supporting.model_state.regime_probs,

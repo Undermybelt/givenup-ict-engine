@@ -38,6 +38,7 @@ pub(crate) fn persist_analyze_run(
         selected_direction: report.supporting.decision.selected_direction,
         selected_entry_quality: report.supporting.entry_quality.selected_state.clone(),
         decision_hint: report.supporting.decision_hint.clone(),
+        regime_probs: Some(report.supporting.model_state.regime_probs),
         hybrid_regime_label: report.analysis.regime_bayesian.hybrid_regime_label.clone(),
         hybrid_regime_age_bars: report
             .supporting
@@ -79,6 +80,7 @@ pub(crate) fn persist_analyze_run(
             .execution_artifact
             .as_ref()
             .map(|artifact| artifact.hard_gate_status.clone()),
+        entry_model_packets: report.supporting.entry_model_packets.clone(),
         pre_bayes_evidence_filter: report.supporting.pre_bayes_evidence_filter.clone(),
         pre_bayes_entry_quality_bridge: report.supporting.pre_bayes_entry_quality_bridge.clone(),
         factor_family_decisions: report.supporting.factor_family_decisions.clone(),

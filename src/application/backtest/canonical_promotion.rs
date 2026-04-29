@@ -33,10 +33,7 @@ pub struct PromoteCanonicalSetupReport {
 pub fn auto_quant_promote_canonical_setup_command(
     input: PromoteCanonicalSetupCommandInput<'_>,
 ) -> Result<PromoteCanonicalSetupReport> {
-    auto_quant_promote_canonical_setup_command_with_repo_root(
-        input,
-        repo_root_from_manifest_dir(),
-    )
+    auto_quant_promote_canonical_setup_command_with_repo_root(input, repo_root_from_manifest_dir())
 }
 
 fn auto_quant_promote_canonical_setup_command_with_repo_root(
@@ -70,7 +67,9 @@ fn auto_quant_promote_canonical_setup_command_with_repo_root(
         .iter()
         .find(|item| {
             item.sequence_label == sequence_label
-                && parsed_direction.map(|value| item.direction == value).unwrap_or(true)
+                && parsed_direction
+                    .map(|value| item.direction == value)
+                    .unwrap_or(true)
         })
         .ok_or_else(|| {
             anyhow::anyhow!(

@@ -106,9 +106,7 @@ mod tests {
     #[test]
     fn flat_volume_yields_no_imbalance() {
         // All identical volumes ⇒ std = 0 ⇒ no detection.
-        let candles: Vec<Candle> = (0..40)
-            .map(|i| candle(i as i64, 100.1, 1_000.0))
-            .collect();
+        let candles: Vec<Candle> = (0..40).map(|i| candle(i as i64, 100.1, 1_000.0)).collect();
         let out = detect_volume_imbalances_default(&candles);
         assert!(out.is_empty());
     }

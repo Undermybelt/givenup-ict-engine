@@ -81,12 +81,24 @@ def _synthetic_market(pair: str, trading_mode: str) -> dict[str, Any]:
 
 
 def _build_exchange_with_synthetic_pairs(config: dict[str, Any]):
-    exchange = ExchangeResolver.load_exchange(config, load_leverage_tiers=False)
+    # Synthetic non-crypto backtests should not block on remote exchange
+    # market metadata. We populate the minimal market map locally instead.
+    exchange = ExchangeResolver.load_exchange(
+        config,
+        validate=False,
+        load_leverage_tiers=False,
+    )
     synthetic = config["exchange"].get("pair_whitelist", [])
     trading_mode = config.get("trading_mode", "spot")
+    if exchange._api.markets is None:
+        exchange._api.markets = {}
+    if exchange._api_async.markets is None:
+        exchange._api_async.markets = {}
     for pair in synthetic:
-        if pair not in exchange._markets:
-            exchange._markets[pair] = _synthetic_market(pair, trading_mode)
+        market = _synthetic_market(pair, trading_mode)
+        exchange._markets[pair] = market
+        exchange._api.markets[pair] = market
+        exchange._api_async.markets[pair] = market
     return exchange
 
 

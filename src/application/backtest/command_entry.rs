@@ -8,13 +8,14 @@ use crate::application::backtest::{
     build_control_matrix_provider_summary_for_plan, build_control_matrix_research_artifact,
     build_duration_sizing_delta_surface, build_oos_quality_delta_surface,
     build_shrink_on_off_comparison_summary, BacktestResultArtifactInput, ControlMatrixPlan,
-    ControlMatrixResearchArtifact, ControlMatrixResearchArtifactInput, ControlMatrixResearchRunSummary,
-};
-use crate::application::decision_utils::{
-    parse_research_objective, research_objective_label, ResearchObjectiveMode,
+    ControlMatrixResearchArtifact, ControlMatrixResearchArtifactInput,
+    ControlMatrixResearchRunSummary,
 };
 use crate::application::data_sources::{
     build_control_matrix_runtime_overrides, ControlMatrixRuntimeOverrides,
+};
+use crate::application::decision_utils::{
+    parse_research_objective, research_objective_label, ResearchObjectiveMode,
 };
 use crate::application::factor_lifecycle::{
     build_factor_lifecycle_view, factor_specific_hint_preferences,

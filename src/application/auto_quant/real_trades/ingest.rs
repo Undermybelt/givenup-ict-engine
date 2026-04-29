@@ -160,8 +160,7 @@ pub fn ingest_real_trades(input: IngestRealTradesInput<'_>) -> Result<IngestReal
     // Apply the CPT update first so the BBN snapshot is consistent
     // with what we report below. Fail-loudly: no partial mutation.
     let mut network = load_or_init_trading_network(input.symbol, input.state_dir)?;
-    let updates_applied =
-        apply_feedback_to_trade_outcome_network(&mut network, &feedback_records)?;
+    let updates_applied = apply_feedback_to_trade_outcome_network(&mut network, &feedback_records)?;
 
     save_state(input.state_dir, input.symbol, BBN_STATE_FILE, &network)?;
 
@@ -180,7 +179,11 @@ pub fn ingest_real_trades(input: IngestRealTradesInput<'_>) -> Result<IngestReal
         feedback_records_inserted = updates_applied.min(u32::MAX as usize) as u32;
     }
 
-    let status = if trades_applied > 0 { "applied" } else { "no_op" };
+    let status = if trades_applied > 0 {
+        "applied"
+    } else {
+        "no_op"
+    };
 
     write_ledger(
         input,
@@ -379,7 +382,10 @@ mod tests {
             .iter()
             .find(|e| e.artifact_kind == ARTIFACT_KIND_REAL_TRADES)
             .expect("real-trades ledger entry");
-        assert_eq!(entry.source_run_id.as_deref(), Some(outcome.content_hash.as_str()));
+        assert_eq!(
+            entry.source_run_id.as_deref(),
+            Some(outcome.content_hash.as_str())
+        );
         assert_eq!(entry.status, "applied");
     }
 
@@ -409,7 +415,10 @@ mod tests {
             force: false,
         })
         .unwrap_err();
-        assert!(err.to_string().contains("refusing to re-ingest"), "got {err}");
+        assert!(
+            err.to_string().contains("refusing to re-ingest"),
+            "got {err}"
+        );
     }
 
     #[test]
@@ -440,7 +449,10 @@ mod tests {
         .unwrap();
 
         assert_eq!(first.content_hash, second.content_hash);
-        assert_eq!(second.previous_artifact_id.as_deref(), Some(first.artifact_id.as_str()));
+        assert_eq!(
+            second.previous_artifact_id.as_deref(),
+            Some(first.artifact_id.as_str())
+        );
     }
 
     #[test]

@@ -2,7 +2,7 @@ use chrono::{DateTime, SecondsFormat, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
-use crate::types::{Direction, FactorIC, Regime};
+use crate::types::{Direction, FactorIC, Regime, RegimeProbs};
 
 pub const LEARNING_STATE_FILE: &str = "learning_state.json";
 pub const TRADE_HISTORY_FILE: &str = "trade_history.json";
@@ -1474,6 +1474,10 @@ pub struct AnalyzeRunRecord {
     pub selected_entry_quality: String,
     pub decision_hint: String,
     #[serde(default)]
+    pub regime_probs: Option<RegimeProbs>,
+    #[serde(default)]
+    pub entry_model_packets: crate::application::entry_models::EntryModelPacketStore,
+    #[serde(default)]
     pub hybrid_regime_label: Option<String>,
     #[serde(default)]
     pub hybrid_regime_age_bars: Option<usize>,
@@ -1544,6 +1548,8 @@ impl Default for AnalyzeRunRecord {
             selected_direction: Direction::Neutral,
             selected_entry_quality: String::new(),
             decision_hint: String::new(),
+            regime_probs: None,
+            entry_model_packets: crate::application::entry_models::EntryModelPacketStore::default(),
             hybrid_regime_label: None,
             hybrid_regime_age_bars: None,
             hybrid_duration_model: None,

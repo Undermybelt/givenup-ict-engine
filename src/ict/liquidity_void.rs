@@ -69,10 +69,7 @@ pub fn detect_liquidity_voids(
     out
 }
 
-pub fn detect_liquidity_voids_default(
-    candles: &[Candle],
-    atr: &[f64],
-) -> Vec<LiquidityVoid> {
+pub fn detect_liquidity_voids_default(candles: &[Candle], atr: &[f64]) -> Vec<LiquidityVoid> {
     detect_liquidity_voids(candles, atr, DEFAULT_LIQUIDITY_VOID_MIN_GAP_ATR)
 }
 
@@ -204,11 +201,9 @@ mod tests {
         let voids = detect_liquidity_voids_default(&candles, &atr);
         assert_eq!(voids.len(), 1, "fixture should produce exactly one LV");
         assert!(voids[0].filled);
-        assert!(find_unfilled_liquidity_voids(
-            &candles,
-            &atr,
-            DEFAULT_LIQUIDITY_VOID_MIN_GAP_ATR
-        )
-        .is_empty());
+        assert!(
+            find_unfilled_liquidity_voids(&candles, &atr, DEFAULT_LIQUIDITY_VOID_MIN_GAP_ATR)
+                .is_empty()
+        );
     }
 }

@@ -114,10 +114,7 @@ pub fn apply_strategy_library_prior_init(
         bail!("temper must lie in [0, 1]; got {}", input.temper);
     }
     if input.prior_strength <= 0.0 {
-        bail!(
-            "prior_strength must be > 0; got {}",
-            input.prior_strength
-        );
+        bail!("prior_strength must be > 0; got {}", input.prior_strength);
     }
 
     let filter_set: Option<BTreeSet<&str>> = input
@@ -141,13 +138,8 @@ pub fn apply_strategy_library_prior_init(
         }
         match classify_entry_for_prior_init(entry) {
             EntryClassification::Apply(metrics) => {
-                let effect = compute_effect(
-                    entry,
-                    metrics,
-                    &current,
-                    input.temper,
-                    input.prior_strength,
-                )?;
+                let effect =
+                    compute_effect(entry, metrics, &current, input.temper, input.prior_strength)?;
                 if effect.after_probs.len() != states_len {
                     bail!(
                         "internal: strategy '{}' produced effect with wrong arity {} (expected {})",
@@ -185,9 +177,7 @@ enum EntryClassification<'a> {
     Skip(String),
 }
 
-fn classify_entry_for_prior_init(
-    entry: &StrategyLibraryEntry,
-) -> EntryClassification<'_> {
+fn classify_entry_for_prior_init(entry: &StrategyLibraryEntry) -> EntryClassification<'_> {
     match entry.status_kind() {
         StrategyLibraryEntryStatus::Ok => {}
         StrategyLibraryEntryStatus::Error => {
@@ -328,8 +318,12 @@ fn write_cpt_row(
         );
     }
     *entry = probs;
-    node.validate()
-        .with_context(|| format!("'{}' validation failed after prior init", TRADE_OUTCOME_NODE_ID))?;
+    node.validate().with_context(|| {
+        format!(
+            "'{}' validation failed after prior init",
+            TRADE_OUTCOME_NODE_ID
+        )
+    })?;
     Ok(())
 }
 
@@ -342,7 +336,12 @@ mod tests {
     };
     use crate::bbn::trading::topology::build_trading_network;
 
-    fn entry(name: &str, trade_count: u32, win_rate_pct: f64, status: &str) -> StrategyLibraryEntry {
+    fn entry(
+        name: &str,
+        trade_count: u32,
+        win_rate_pct: f64,
+        status: &str,
+    ) -> StrategyLibraryEntry {
         StrategyLibraryEntry {
             name: name.to_string(),
             file_path: format!("user_data/strategies_ibkr/{name}.py"),
@@ -374,9 +373,7 @@ mod tests {
     fn net_with_baseline_row(parent_config: &[usize], probs: Vec<f64>) -> BayesianNetwork {
         let mut net = build_trading_network().unwrap();
         let node = net.nodes.get_mut(TRADE_OUTCOME_NODE_ID).unwrap();
-        node.cpt
-            .entries
-            .insert(parent_config.to_vec(), probs);
+        node.cpt.entries.insert(parent_config.to_vec(), probs);
         node.validate().unwrap();
         net
     }
@@ -451,10 +448,7 @@ mod tests {
         // posterior should sit very close to the empirical (0.7, 0, 0.3)
         // mix regardless of where the row started.
         let parent_config = DEFAULT_DEFAULT_PARENT_CONFIG.to_vec();
-        let mut net = net_with_baseline_row(
-            &parent_config,
-            vec![0.999_956, 0.000_022, 0.000_022],
-        );
+        let mut net = net_with_baseline_row(&parent_config, vec![0.999_956, 0.000_022, 0.000_022]);
         let m = manifest_with(vec![entry("S", 1000, 70.0, "ok")]);
 
         let outcome = apply_strategy_library_prior_init(

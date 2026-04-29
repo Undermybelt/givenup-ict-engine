@@ -3,11 +3,11 @@ use serde::Serialize;
 use std::collections::BTreeMap;
 use std::io::Read;
 
-use crate::application::multi_timeframe_inputs::resolve_tomac_root;
 use crate::application::data_sources::{
-    build_market_data_harness_plan, execute_market_data_harness_plan,
-    MarketDataHarnessRequest, MarketDataHarnessSymbolSpec,
+    build_market_data_harness_plan, execute_market_data_harness_plan, MarketDataHarnessRequest,
+    MarketDataHarnessSymbolSpec,
 };
+use crate::application::multi_timeframe_inputs::resolve_tomac_root;
 
 pub struct ExpansionSopCommandInput<'a> {
     pub root: Option<&'a str>,
@@ -133,25 +133,24 @@ where
     Ok(())
 }
 
-pub fn market_data_harness_plan_command(
-    input: MarketDataHarnessCommandInput<'_>,
-) -> Result<()> {
+pub fn market_data_harness_plan_command(input: MarketDataHarnessCommandInput<'_>) -> Result<()> {
     let request = load_or_build_market_data_harness_request(input)?;
     let plan = build_market_data_harness_plan(request)?;
     println!("{}", serde_json::to_string_pretty(&plan)?);
     Ok(())
 }
 
-pub fn market_data_harness_fetch_command(
-    input: MarketDataHarnessCommandInput<'_>,
-) -> Result<()> {
+pub fn market_data_harness_fetch_command(input: MarketDataHarnessCommandInput<'_>) -> Result<()> {
     let request = load_or_build_market_data_harness_request(input)?;
     let plan = build_market_data_harness_plan(request)?;
     let bundle = execute_market_data_harness_plan(&plan)?;
     println!("{}", serde_json::to_string_pretty(&bundle)?);
     let failures = collect_harness_failures(&bundle);
     if !failures.is_empty() {
-        anyhow::bail!("market-data-harness fetch encountered failures: {}", failures.join(" | "));
+        anyhow::bail!(
+            "market-data-harness fetch encountered failures: {}",
+            failures.join(" | ")
+        );
     }
     Ok(())
 }
@@ -227,9 +226,7 @@ fn load_or_build_market_data_harness_request(
         related_roles: input.related_roles.to_vec(),
         provider_preferences,
         symbol_overrides,
-        options_volatility_proxy_symbol: input
-            .options_volatility_proxy_symbol
-            .map(str::to_string),
+        options_volatility_proxy_symbol: input.options_volatility_proxy_symbol.map(str::to_string),
     })
 }
 
@@ -240,10 +237,7 @@ fn parse_symbol_specs(
     let mut symbol_overrides = BTreeMap::new();
     for item in specs {
         let Some((role, symbol)) = item.split_once('=') else {
-            anyhow::bail!(
-                "invalid --symbol-spec '{}'; expected role=symbol",
-                item
-            );
+            anyhow::bail!("invalid --symbol-spec '{}'; expected role=symbol", item);
         };
         let role = role.trim().to_string();
         let symbol = symbol.trim().to_string();
@@ -273,11 +267,11 @@ fn parse_symbol_specs(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::application::data_sources::{
-        MarketDataHarnessBundle, MarketDataHarnessEnvelope,
-        MarketDataHarnessOperation, MarketDataHarnessPlan, MarketDataHarnessRequest,
-    };
     use crate::application::data_sources::harness::MarketDataHarnessError;
+    use crate::application::data_sources::{
+        MarketDataHarnessBundle, MarketDataHarnessEnvelope, MarketDataHarnessOperation,
+        MarketDataHarnessPlan, MarketDataHarnessRequest,
+    };
     use serde_json::json;
     use std::collections::BTreeMap;
     use std::sync::{
@@ -367,12 +361,12 @@ mod tests {
                     interval: Some("1d".to_string()),
                     start: None,
                     end: None,
-                count: Some(30),
-                related_roles: vec!["etf_reference".to_string()],
-                provider_preferences: BTreeMap::new(),
-                symbol_overrides: BTreeMap::new(),
-                options_volatility_proxy_symbol: None,
-            },
+                    count: Some(30),
+                    related_roles: vec!["etf_reference".to_string()],
+                    provider_preferences: BTreeMap::new(),
+                    symbol_overrides: BTreeMap::new(),
+                    options_volatility_proxy_symbol: None,
+                },
                 provider_summary: Default::default(),
                 tasks: Vec::new(),
                 missing_roles: vec!["volatility_reference".to_string()],
@@ -394,8 +388,12 @@ mod tests {
         };
 
         let failures = collect_harness_failures(&bundle);
-        assert!(failures.iter().any(|item| item.contains("missing_role=volatility_reference")));
-        assert!(failures.iter().any(|item| item.contains("role=etf_reference")));
+        assert!(failures
+            .iter()
+            .any(|item| item.contains("missing_role=volatility_reference")));
+        assert!(failures
+            .iter()
+            .any(|item| item.contains("role=etf_reference")));
     }
 
     #[test]
@@ -408,12 +406,12 @@ mod tests {
                     interval: Some("1d".to_string()),
                     start: None,
                     end: None,
-                count: Some(30),
-                related_roles: vec!["etf_reference".to_string()],
-                provider_preferences: BTreeMap::new(),
-                symbol_overrides: BTreeMap::new(),
-                options_volatility_proxy_symbol: None,
-            },
+                    count: Some(30),
+                    related_roles: vec!["etf_reference".to_string()],
+                    provider_preferences: BTreeMap::new(),
+                    symbol_overrides: BTreeMap::new(),
+                    options_volatility_proxy_symbol: None,
+                },
                 provider_summary: crate::application::data_sources::ControlMatrixProviderSummary {
                     actionable_install_prompts: vec!["install me".to_string()],
                     ..Default::default()

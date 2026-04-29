@@ -18,14 +18,14 @@ pub use clean_futures::{
 };
 pub use command_entry::{
     clean_futures_command, expansion_sop_command, futures_sop_command,
-    market_data_harness_fetch_command, market_data_harness_plan_command,
-    ExpansionSopCommandInput, MarketDataHarnessCommandInput,
+    market_data_harness_fetch_command, market_data_harness_plan_command, ExpansionSopCommandInput,
+    MarketDataHarnessCommandInput,
 };
 pub use control_matrix_providers::{
-    build_control_matrix_provider_summary, ControlMatrixDataRequirement, ControlMatrixProviderKind,
-    ControlMatrixProviderStatus, ControlMatrixProviderSummary, IBKR_CAPABILITIES_RELATIVE_PATH,
-    IBKR_CONSENT_RELATIVE_PATH, TVREMIX_MCP_API_KEY_ENV, TVREMIX_MCP_DEFAULT_URL,
-    TVREMIX_MCP_URL_ENV,
+    build_control_matrix_provider_summary, build_provider_summary_for_requirements,
+    ControlMatrixDataRequirement, ControlMatrixProviderKind, ControlMatrixProviderStatus,
+    ControlMatrixProviderSummary, IBKR_CAPABILITIES_RELATIVE_PATH, IBKR_CONSENT_RELATIVE_PATH,
+    TVREMIX_MCP_API_KEY_ENV, TVREMIX_MCP_DEFAULT_URL, TVREMIX_MCP_URL_ENV,
 };
 pub use control_matrix_runtime::{
     build_control_matrix_runtime_overrides, ControlMatrixRuntimeOverrides,
@@ -36,8 +36,7 @@ pub use harness::{
     MarketDataHarnessEnvelope, MarketDataHarnessIbkrSpec, MarketDataHarnessOperation,
     MarketDataHarnessPlan, MarketDataHarnessPreset, MarketDataHarnessPresetConfig,
     MarketDataHarnessRequest, MarketDataHarnessSymbolSpec, MarketDataHarnessTask,
-    MarketLiveDefaultsSpec, ProviderExecutionRequest,
-    MARKET_DATA_HARNESS_PRESETS_FILE,
+    MarketLiveDefaultsSpec, ProviderExecutionRequest, MARKET_DATA_HARNESS_PRESETS_FILE,
 };
 pub use live_defaults::{
     analyze_live_inferred_symbols, build_inferable_live_defaults_map, parse_live_backend,

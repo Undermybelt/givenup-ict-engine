@@ -17,10 +17,7 @@ use super::topology::{build_trading_network, upgrade_trading_network};
 /// network from the canonical topology builder. A malformed snapshot
 /// is logged to `stderr` and falls back to a fresh build, matching
 /// the long-standing CLI behaviour.
-pub fn load_or_init_trading_network(
-    symbol: &str,
-    state_dir: &str,
-) -> Result<BayesianNetwork> {
+pub fn load_or_init_trading_network(symbol: &str, state_dir: &str) -> Result<BayesianNetwork> {
     if !state_exists(state_dir, symbol, BBN_STATE_FILE) {
         return build_trading_network();
     }
@@ -48,22 +45,18 @@ mod tests {
     fn returns_fresh_network_when_no_snapshot_exists() {
         let temp = tempfile::tempdir().unwrap();
         let net = load_or_init_trading_network("NQ", temp.path().to_str().unwrap()).unwrap();
-        assert!(!net.nodes.is_empty(), "fresh trading network must have nodes");
+        assert!(
+            !net.nodes.is_empty(),
+            "fresh trading network must have nodes"
+        );
     }
 
     #[test]
     fn round_trips_persisted_snapshot() {
         let temp = tempfile::tempdir().unwrap();
         let original = build_trading_network().unwrap();
-        save_state(
-            temp.path(),
-            "NQ",
-            BBN_STATE_FILE,
-            &original,
-        )
-        .unwrap();
-        let loaded =
-            load_or_init_trading_network("NQ", temp.path().to_str().unwrap()).unwrap();
+        save_state(temp.path(), "NQ", BBN_STATE_FILE, &original).unwrap();
+        let loaded = load_or_init_trading_network("NQ", temp.path().to_str().unwrap()).unwrap();
         // Same topology, same node count.
         assert_eq!(loaded.nodes.len(), original.nodes.len());
     }

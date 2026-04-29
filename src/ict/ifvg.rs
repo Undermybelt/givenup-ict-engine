@@ -22,10 +22,7 @@ use crate::types::{Candle, Direction, InverseFairValueGap};
 
 pub const DEFAULT_IFVG_CONFIRM_WINDOW: usize = 8;
 
-pub fn detect_inverse_fvgs(
-    candles: &[Candle],
-    confirm_window: usize,
-) -> Vec<InverseFairValueGap> {
+pub fn detect_inverse_fvgs(candles: &[Candle], confirm_window: usize) -> Vec<InverseFairValueGap> {
     if candles.len() < 4 {
         return Vec::new();
     }

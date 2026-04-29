@@ -393,7 +393,7 @@ pub struct FactorIC {
 }
 
 // ========== HMM ==========
-pub const OBS_DIM: usize = 12;
+pub const OBS_DIM: usize = 20;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HMMParams {

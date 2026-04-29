@@ -20,8 +20,7 @@ use super::{
         AutoQuantPdaUnitBatchBuildInput,
     },
     pda_unit_dispatch::{
-        dispatch_pda_unit_batch, AutoQuantPdaUnitDispatchArtifact,
-        AutoQuantPdaUnitDispatchInput,
+        dispatch_pda_unit_batch, AutoQuantPdaUnitDispatchArtifact, AutoQuantPdaUnitDispatchInput,
     },
     persistence::persist_handoff_payload,
     real_trades::{ingest_real_trades, IngestRealTradesInput, IngestRealTradesOutcome},
@@ -262,11 +261,8 @@ fn print_agent_material_batch_summary(artifact: &AgentMaterialBatchArtifact) -> 
 pub fn auto_quant_agent_material_dispatch_command(
     input: AutoQuantAgentMaterialDispatchCommandInput<'_>,
 ) -> Result<()> {
-    let artifact = dispatch_agent_material_batch(
-        input.state_dir,
-        input.symbol,
-        input.group_indices,
-    )?;
+    let artifact =
+        dispatch_agent_material_batch(input.state_dir, input.symbol, input.group_indices)?;
     print_agent_material_dispatch_summary(&artifact)
 }
 
@@ -332,16 +328,17 @@ pub fn auto_quant_factor_research_command(
     })
     .ok()
     .flatten();
-    let mut payload = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
-        symbol,
-        data,
-        objective,
-        paired_data,
-        mutation_spec_path,
-        strategy_material_root,
-        state_dir,
-        dependency_status,
-    });
+    let mut payload =
+        build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+            symbol,
+            data,
+            objective,
+            paired_data,
+            mutation_spec_path,
+            strategy_material_root,
+            state_dir,
+            dependency_status,
+        });
     if let Some(artifact_id) = seed_evidence_artifact_id {
         payload.notes.push(format!(
             "auto_quant_seed_material_evidence_artifact_id={}",

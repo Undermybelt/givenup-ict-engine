@@ -64,11 +64,7 @@ impl HumanAnalyzeReport {
             "Structure",
             &self.basic_price_structure_analysis,
         );
-        push_labeled_line(
-            &mut sections,
-            "Technicals",
-            &self.technical_price_analysis,
-        );
+        push_labeled_line(&mut sections, "Technicals", &self.technical_price_analysis);
         push_labeled_line(&mut sections, "SMT", &self.smt_correlation_analysis);
         push_labeled_line(&mut sections, "Regime", &self.regime_bayes_analysis);
         push_labeled_line(&mut sections, "Plan", &self.trade_plan);
@@ -150,9 +146,7 @@ mod tests {
     #[test]
     fn human_report_renders_summary_lines_first() {
         let report = build_human_analyze_report(
-            Some(
-                "NQ | Bull bias | entry=medium | gate=observe_only | quality=0.244".to_string(),
-            ),
+            Some("NQ | Bull bias | entry=medium | gate=observe_only | quality=0.244".to_string()),
             Some("Decision: Observe only".to_string()),
             Some("Action: TUNE structure_ict".to_string()),
             Some("Next: wait".to_string()),

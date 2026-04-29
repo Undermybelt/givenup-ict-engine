@@ -158,8 +158,12 @@ impl StrategyLibraryEntry {
 /// `MANIFEST_SUPPORTED_VERSIONS`.
 pub fn load_strategy_library_manifest<P: AsRef<Path>>(path: P) -> Result<StrategyLibraryManifest> {
     let path = path.as_ref();
-    let raw = fs::read_to_string(path)
-        .with_context(|| format!("failed to read strategy library manifest '{}'", path.display()))?;
+    let raw = fs::read_to_string(path).with_context(|| {
+        format!(
+            "failed to read strategy library manifest '{}'",
+            path.display()
+        )
+    })?;
     let manifest: StrategyLibraryManifest = serde_json::from_str(&raw).with_context(|| {
         format!(
             "failed to parse strategy library manifest '{}'",

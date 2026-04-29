@@ -126,9 +126,8 @@ impl RealTradeRecord {
                 .as_deref()
                 .unwrap_or("manipulation_expansion"),
         );
-        let _entry_quality = normalize_entry_quality_label(
-            self.entry_signal.as_deref().unwrap_or("medium"),
-        );
+        let _entry_quality =
+            normalize_entry_quality_label(self.entry_signal.as_deref().unwrap_or("medium"));
         let factors_used = self
             .factors_used
             .into_iter()
@@ -254,7 +253,9 @@ impl RealTradeProbabilitySnapshot {
 }
 
 fn ms_to_utc(ms: i64) -> chrono::DateTime<Utc> {
-    Utc.timestamp_millis_opt(ms).single().unwrap_or_else(Utc::now)
+    Utc.timestamp_millis_opt(ms)
+        .single()
+        .unwrap_or_else(Utc::now)
 }
 
 #[cfg(test)]
@@ -324,22 +325,14 @@ mod tests {
     fn rejects_empty_trade_id() {
         let mut r = good_record();
         r.trade_id.clear();
-        assert!(r
-            .validate()
-            .unwrap_err()
-            .to_string()
-            .contains("trade_id"));
+        assert!(r.validate().unwrap_err().to_string().contains("trade_id"));
     }
 
     #[test]
     fn rejects_bad_factor_direction() {
         let mut r = good_record();
         r.factors_used[0].direction = "sideways".into();
-        assert!(r
-            .validate()
-            .unwrap_err()
-            .to_string()
-            .contains("direction"));
+        assert!(r.validate().unwrap_err().to_string().contains("direction"));
     }
 
     #[test]
@@ -377,6 +370,9 @@ mod tests {
         let mut r = good_record();
         r.model_probabilities_before_trade = None;
         let fr = r.into_feedback_record("test");
-        assert_eq!(fr.model_probabilities_before_trade.selected_probability, 0.0);
+        assert_eq!(
+            fr.model_probabilities_before_trade.selected_probability,
+            0.0
+        );
     }
 }

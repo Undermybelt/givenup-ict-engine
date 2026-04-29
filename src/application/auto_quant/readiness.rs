@@ -8,8 +8,7 @@ use crate::state::{recommended_next_command_meta, RecommendedNextCommandMeta};
 
 use super::handoff::{
     auto_quant_active_strategy_count, auto_quant_data_ready, auto_quant_prepare_command,
-    auto_quant_run_command, auto_quant_workspace_config,
-    AutoQuantWorkspaceConfig,
+    auto_quant_run_command, auto_quant_workspace_config, AutoQuantWorkspaceConfig,
 };
 use super::status::auto_quant_status;
 use super::types::AutoQuantDependencyStatus;
@@ -101,11 +100,7 @@ pub fn auto_quant_readiness_from_status_and_data(
             Some("auto_quant_seed_strategies_required"),
         )
     } else {
-        (
-            "dependency_ready_data_ready",
-            run_command.clone(),
-            None,
-        )
+        ("dependency_ready_data_ready", run_command.clone(), None)
     };
     let command = command.to_string();
     let mut notes = dependency_status.notes.clone();

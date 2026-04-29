@@ -68,16 +68,17 @@ mod tests {
     #[test]
     fn persist_handoff_writes_artifact_and_ledger_entry() {
         let temp = tempfile::tempdir().unwrap();
-        let payload = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
-            symbol: "NQ",
-            data: "demo.json",
-            objective: "expansion_manipulation",
-            paired_data: None,
-            mutation_spec_path: None,
-            strategy_material_root: None,
-            state_dir: temp.path().to_str().unwrap(),
-            dependency_status: healthy_dependency_status(),
-        });
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: "demo.json",
+                objective: "expansion_manipulation",
+                paired_data: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status(),
+            });
 
         let path = persist_handoff_payload(temp.path().to_str().unwrap(), &payload).unwrap();
         assert!(Path::new(&path).exists());

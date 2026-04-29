@@ -22,7 +22,9 @@ pub(crate) fn fetch_reference_candles_for_task(
     count: usize,
 ) -> Result<Vec<Candle>> {
     match &task.request {
-        ProviderExecutionRequest::YahooFinance { symbol } => fetch_yahoo_candles(symbol, interval, start, end),
+        ProviderExecutionRequest::YahooFinance { symbol } => {
+            fetch_yahoo_candles(symbol, interval, start, end)
+        }
         ProviderExecutionRequest::TradingViewMcp { symbol } => {
             fetch_tradingview_ohlcv(symbol, interval, start, end, count)
         }
@@ -32,20 +34,26 @@ pub(crate) fn fetch_reference_candles_for_task(
     }
 }
 
-pub(crate) fn fetch_options_summary_for_task(task: &MarketDataHarnessTask) -> Result<OptionsChainSummary> {
+pub(crate) fn fetch_options_summary_for_task(
+    task: &MarketDataHarnessTask,
+) -> Result<OptionsChainSummary> {
     match &task.request {
-        ProviderExecutionRequest::YahooFinance { symbol } => match fetch_yahoo_options_summary(symbol) {
-            Ok(summary) => Ok(summary),
-            Err(primary_error) => {
-                if let Some(proxy_symbol) = task.fallback_options_proxy_symbol.as_deref() {
-                    OpenBBProvider::new("native://openbb")
-                        .fetch_options_volatility_proxy_summary(proxy_symbol, symbol)
-                } else {
-                    Err(primary_error)
+        ProviderExecutionRequest::YahooFinance { symbol } => {
+            match fetch_yahoo_options_summary(symbol) {
+                Ok(summary) => Ok(summary),
+                Err(primary_error) => {
+                    if let Some(proxy_symbol) = task.fallback_options_proxy_symbol.as_deref() {
+                        OpenBBProvider::new("native://openbb")
+                            .fetch_options_volatility_proxy_summary(proxy_symbol, symbol)
+                    } else {
+                        Err(primary_error)
+                    }
                 }
             }
-        },
-        ProviderExecutionRequest::TradingViewMcp { symbol } => fetch_tradingview_options_summary(symbol),
+        }
+        ProviderExecutionRequest::TradingViewMcp { symbol } => {
+            fetch_tradingview_options_summary(symbol)
+        }
         ProviderExecutionRequest::Ibkr { .. } => {
             bail!("unsupported options provider '{}'", task.provider)
         }
@@ -116,7 +124,12 @@ fn fetch_ibkr_historical_candles(
     let status = Command::new("python3")
         .args(args.iter().map(String::as_str))
         .status()
-        .with_context(|| format!("failed to spawn ibkr historical fetch for '{}'", contract.symbol))?;
+        .with_context(|| {
+            format!(
+                "failed to spawn ibkr historical fetch for '{}'",
+                contract.symbol
+            )
+        })?;
     if !status.success() {
         bail!("ibkr historical fetch failed for '{}'", contract.symbol);
     }
@@ -183,7 +196,12 @@ fn fetch_tradingview_options_summary(symbol: &str) -> Result<OptionsChainSummary
         .and_then(|items| items.first())
         .and_then(|item| item.get("expiration"))
         .and_then(Value::as_str)
-        .ok_or_else(|| anyhow!("tradingview returned no option expirations for '{}'", symbol))?;
+        .ok_or_else(|| {
+            anyhow!(
+                "tradingview returned no option expirations for '{}'",
+                symbol
+            )
+        })?;
     let chain = call_tradingview_tool(
         "get_option_chain",
         serde_json::json!({
@@ -263,10 +281,14 @@ fn fetch_tradingview_options_summary(symbol: &str) -> Result<OptionsChainSummary
 }
 
 fn call_tradingview_tool(name: &str, arguments: Value) -> Result<Value> {
-    let key = std::env::var(TVREMIX_MCP_API_KEY_ENV)
-        .with_context(|| format!("{} must be set for tradingview_mcp", TVREMIX_MCP_API_KEY_ENV))?;
-    let url = std::env::var(TVREMIX_MCP_URL_ENV)
-        .unwrap_or_else(|_| TVREMIX_MCP_DEFAULT_URL.to_string());
+    let key = std::env::var(TVREMIX_MCP_API_KEY_ENV).with_context(|| {
+        format!(
+            "{} must be set for tradingview_mcp",
+            TVREMIX_MCP_API_KEY_ENV
+        )
+    })?;
+    let url =
+        std::env::var(TVREMIX_MCP_URL_ENV).unwrap_or_else(|_| TVREMIX_MCP_DEFAULT_URL.to_string());
     let client = Client::builder()
         .timeout(std::time::Duration::from_secs(20))
         .build()

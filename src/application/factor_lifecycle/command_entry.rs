@@ -467,8 +467,9 @@ fn default_first_run_autoresearch_seed_spec(
                     Utc::now().format("%Y%m%dT%H%M%S%.3fZ")
                 ),
                 base_factor: "structure_ict".to_string(),
-                hypothesis: "Seed first-run autoresearch from the canonical structure_ict setup universe."
-                    .to_string(),
+                hypothesis:
+                    "Seed first-run autoresearch from the canonical structure_ict setup universe."
+                        .to_string(),
                 evaluate_expansion_preview: true,
                 ..FactorMutationSpec::default()
             }
@@ -479,8 +480,8 @@ fn default_first_run_autoresearch_seed_spec(
                 Utc::now().format("%Y%m%dT%H%M%S%.3fZ")
             ),
             base_factor: "trend_momentum".to_string(),
-            hypothesis:
-                "Seed first-run autoresearch from a generic trend_momentum baseline.".to_string(),
+            hypothesis: "Seed first-run autoresearch from a generic trend_momentum baseline."
+                .to_string(),
             evaluate_expansion_preview: false,
             ..FactorMutationSpec::default()
         },
@@ -801,7 +802,9 @@ mod tests {
 
         assert_eq!(spec.base_factor, "structure_ict");
         assert!(spec.evaluate_expansion_preview);
-        assert!(spec.hypothesis.contains("canonical structure_ict setup universe"));
+        assert!(spec
+            .hypothesis
+            .contains("canonical structure_ict setup universe"));
     }
 
     #[test]
@@ -878,6 +881,9 @@ mod tests {
 
         let attempts = load_factor_autoresearch_attempts(dir.path(), "NQ").unwrap();
         assert_eq!(attempts.len(), 1);
-        assert_eq!(attempts[0].candidate_mutation_spec.base_factor, "structure_ict");
+        assert_eq!(
+            attempts[0].candidate_mutation_spec.base_factor,
+            "structure_ict"
+        );
     }
 }

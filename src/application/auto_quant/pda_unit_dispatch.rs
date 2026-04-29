@@ -13,10 +13,10 @@ use crate::state::{
     ArtifactLedgerEntry,
 };
 
+use super::handoff::AutoQuantResearchHandoffPayload;
 use super::pda_unit_batch::{
     AutoQuantConsumerEvidenceProfile, AutoQuantPdaUnitBatchArtifact, AutoQuantPdaUnitJob,
 };
-use super::handoff::AutoQuantResearchHandoffPayload;
 
 pub const AUTO_QUANT_PDA_UNIT_DISPATCH_RULE_VERSION: &str = "auto-quant-pda-unit-dispatch-v1";
 
@@ -80,7 +80,8 @@ pub fn dispatch_pda_unit_batch(
     input: AutoQuantPdaUnitDispatchInput<'_>,
 ) -> Result<AutoQuantPdaUnitDispatchArtifact> {
     let batch = load_target_batch(input.state_dir, input.symbol, input.batch_artifact_id)?;
-    let selected_group_indices = parse_group_indices(input.group_indices, batch.dispatch_groups.len())?;
+    let selected_group_indices =
+        parse_group_indices(input.group_indices, batch.dispatch_groups.len())?;
 
     let mut groups = Vec::new();
     for group_index in &selected_group_indices {
@@ -105,7 +106,11 @@ pub fn dispatch_pda_unit_batch(
             .collect::<Vec<_>>();
         let mut unit_results = Vec::new();
         for handle in handles {
-            unit_results.push(handle.join().map_err(|_| anyhow!("unit dispatch thread panicked"))??);
+            unit_results.push(
+                handle
+                    .join()
+                    .map_err(|_| anyhow!("unit dispatch thread panicked"))??,
+            );
         }
         groups.push(AutoQuantPdaDispatchGroupResult {
             group_index: *group_index,
@@ -425,8 +430,7 @@ fn write_unit_config(path: &Path, job: &AutoQuantPdaUnitJob) -> Result<()> {
     let mut config: serde_json::Value =
         serde_json::from_str(&fs::read_to_string(path)?).context("parsing config.tomac.json")?;
     config["timeframe"] = serde_json::Value::String(job.scope.timeframe.clone());
-    config["exchange"]["pair_whitelist"] =
-        serde_json::json!([format!("{}/USD", job.scope.symbol)]);
+    config["exchange"]["pair_whitelist"] = serde_json::json!([format!("{}/USD", job.scope.symbol)]);
     if job.scope.direction == "short" {
         config["trading_mode"] = serde_json::Value::String("futures".to_string());
         config["margin_mode"] = serde_json::Value::String("isolated".to_string());
@@ -436,7 +440,8 @@ fn write_unit_config(path: &Path, job: &AutoQuantPdaUnitJob) -> Result<()> {
             serde_json::Value::Bool(false);
     } else {
         config["trading_mode"] = serde_json::Value::String("spot".to_string());
-        config.as_object_mut()
+        config
+            .as_object_mut()
             .map(|root| root.remove("margin_mode"));
         config["entry_pricing"]["use_order_book"] = serde_json::Value::Bool(false);
         config["exit_pricing"]["use_order_book"] = serde_json::Value::Bool(false);
@@ -468,16 +473,16 @@ fn write_unit_candles_csv(input_path: &str, csv_path: &Path) -> Result<()> {
 
 fn write_unit_strategy_file(path: &Path, job: &AutoQuantPdaUnitJob) -> Result<()> {
     let class_name = unit_strategy_class_name(&job.unit_id);
-    let primitive = job
-        .scope
-        .primitive_sequence
-        .first()
-        .cloned()
-        .ok_or_else(|| anyhow!("unit '{}' has empty primitive sequence", job.unit_id))?;
+    if job.scope.primitive_sequence.is_empty() {
+        return Err(anyhow!(
+            "unit '{}' has empty primitive sequence",
+            job.unit_id
+        ));
+    }
     let long_side = job.scope.direction == "long";
     let source = render_strategy_source(
         &class_name,
-        &primitive,
+        &job.scope.primitive_sequence,
         &job.scope.timeframe,
         long_side,
         &job.brief.thesis,
@@ -502,17 +507,16 @@ fn unit_strategy_class_name(raw: &str) -> String {
     }
 }
 
-fn render_strategy_source(
-    class_name: &str,
-    primitive: &str,
-    timeframe: &str,
-    long_side: bool,
-    thesis: &str,
-) -> String {
-    let direction = if long_side { "long" } else { "short" };
-    let entry_field = if long_side { "enter_long" } else { "enter_short" };
-    let exit_field = if long_side { "exit_long" } else { "exit_short" };
-    let condition = match primitive {
+fn sequence_window_bars(sequence_len: usize) -> usize {
+    (sequence_len.saturating_mul(4)).max(6)
+}
+
+fn primitive_signal_column_name(primitive: &str) -> String {
+    format!("sig_{primitive}")
+}
+
+fn primitive_signal_expression(primitive: &str, long_side: bool) -> &'static str {
+    match primitive {
         "order_block" => {
             if long_side {
                 "(dataframe['prev_bear'] > 0) & (dataframe['displacement_up'] > 0)"
@@ -597,7 +601,63 @@ fn render_strategy_source(
                 "dataframe['close'] < dataframe['ema20']"
             }
         }
+    }
+}
+
+fn render_signal_columns(sequence: &[String], long_side: bool) -> String {
+    sequence
+        .iter()
+        .map(|primitive| {
+            format!(
+                "        dataframe[\"{}\"] = ({}).astype(int)",
+                primitive_signal_column_name(primitive),
+                primitive_signal_expression(primitive, long_side)
+            )
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
+fn render_sequence_progress_columns(sequence: &[String]) -> String {
+    let sequence_window = sequence_window_bars(sequence.len());
+    let mut lines = Vec::new();
+    lines.push(format!(
+        "        dataframe[\"seq_step_0\"] = dataframe[\"{}\"]",
+        primitive_signal_column_name(&sequence[0])
+    ));
+    for (index, primitive) in sequence.iter().enumerate().skip(1) {
+        lines.push(format!(
+            "        dataframe[\"seq_step_{index}\"] = ((dataframe[\"{}\"] > 0) & (dataframe[\"seq_step_{}\"].shift(1).rolling({}).max().fillna(0) > 0)).astype(int)",
+            primitive_signal_column_name(primitive),
+            index - 1,
+            sequence_window
+        ));
+    }
+    lines.join("\n")
+}
+
+fn render_entry_condition(sequence: &[String]) -> String {
+    format!("dataframe[\"seq_step_{}\"] > 0", sequence.len() - 1)
+}
+
+fn render_strategy_source(
+    class_name: &str,
+    sequence: &[String],
+    timeframe: &str,
+    long_side: bool,
+    thesis: &str,
+) -> String {
+    let direction = if long_side { "long" } else { "short" };
+    let entry_field = if long_side {
+        "enter_long"
+    } else {
+        "enter_short"
     };
+    let exit_field = if long_side { "exit_long" } else { "exit_short" };
+    let sequence_label = sequence.join(" -> ");
+    let signal_columns = render_signal_columns(sequence, long_side);
+    let sequence_progress = render_sequence_progress_columns(sequence);
+    let entry_condition = render_entry_condition(sequence);
     let exit_condition = if long_side {
         "dataframe['close'] < dataframe['ema20']"
     } else {
@@ -606,7 +666,7 @@ fn render_strategy_source(
     format!(
         r#""""
 {thesis}
-Primitive: {primitive}
+Primitive sequence: {sequence_label}
 Direction: {direction}
 """
 from __future__ import annotations
@@ -655,10 +715,12 @@ class {class_name}(IStrategy):
         dataframe["mss_down"] = (dataframe["close"] < dataframe["swing_low"]).astype(int)
         dataframe["cisd_up"] = ((dataframe["close"] > dataframe["open"]).rolling(3).sum() == 3).astype(int)
         dataframe["cisd_down"] = ((dataframe["close"] < dataframe["open"]).rolling(3).sum() == 3).astype(int)
+{signal_columns}
+{sequence_progress}
         return dataframe
 
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
-        dataframe.loc[{condition}, "{entry_field}"] = 1
+        dataframe.loc[{entry_condition}, "{entry_field}"] = 1
         return dataframe
 
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
@@ -666,12 +728,14 @@ class {class_name}(IStrategy):
         return dataframe
 "#,
         thesis = thesis.replace("\"\"\"", "'''"),
-        primitive = primitive,
+        sequence_label = sequence_label,
         direction = direction,
         class_name = class_name,
         timeframe = timeframe,
         can_short = if long_side { "False" } else { "True" },
-        condition = condition,
+        signal_columns = signal_columns,
+        sequence_progress = sequence_progress,
+        entry_condition = entry_condition,
         entry_field = entry_field,
         exit_condition = exit_condition,
         exit_field = exit_field,
@@ -705,7 +769,9 @@ fn parse_run_tomac_aggregate_metrics(stdout: &str) -> Option<AutoQuantPdaUnitAgg
     seen_any.then_some(metrics)
 }
 
-fn summarize_dispatch_totals(groups: &[AutoQuantPdaDispatchGroupResult]) -> AutoQuantPdaDispatchTotals {
+fn summarize_dispatch_totals(
+    groups: &[AutoQuantPdaDispatchGroupResult],
+) -> AutoQuantPdaDispatchTotals {
     let mut totals = AutoQuantPdaDispatchTotals::default();
     for group in groups {
         for result in &group.unit_results {
@@ -824,7 +890,13 @@ profit_factor:    1.8700
             dispatch_groups: Vec::new(),
             notes: Vec::new(),
         };
-        save_state(dir.path(), "NQ", "auto_quant_pda_unit_batch.test.json", &artifact).unwrap();
+        save_state(
+            dir.path(),
+            "NQ",
+            "auto_quant_pda_unit_batch.test.json",
+            &artifact,
+        )
+        .unwrap();
         let path = artifact_state_path(dir.path(), "NQ", "auto_quant_pda_unit_batch.test.json");
         append_artifact_ledger_entry(
             dir.path(),
@@ -908,12 +980,33 @@ profit_factor:    1.8700
     fn render_strategy_source_includes_expected_entry_side() {
         let source = render_strategy_source(
             "NQ15mLongOrderBlock",
-            "order_block",
+            &["order_block".to_string()],
             "15m",
             true,
             "Demo thesis",
         );
         assert!(source.contains("enter_long"));
-        assert!(source.contains("Primitive: order_block"));
+        assert!(source.contains("Primitive sequence: order_block"));
+        assert!(source.contains("dataframe[\"seq_step_0\"] = dataframe[\"sig_order_block\"]"));
+    }
+
+    #[test]
+    fn render_strategy_source_preserves_multi_step_sequence_logic() {
+        let source = render_strategy_source(
+            "NQ5mLongMssFvg",
+            &[
+                "market_structure_shift".to_string(),
+                "fair_value_gap".to_string(),
+            ],
+            "5m",
+            true,
+            "Demo thesis",
+        );
+        assert!(source.contains("Primitive sequence: market_structure_shift -> fair_value_gap"));
+        assert!(source.contains("sig_market_structure_shift"));
+        assert!(source.contains("sig_fair_value_gap"));
+        assert!(source.contains("seq_step_1"));
+        assert!(source.contains("rolling(8)"));
+        assert!(source.contains("dataframe.loc[dataframe[\"seq_step_1\"] > 0, \"enter_long\"] = 1"));
     }
 }

@@ -1,4 +1,5 @@
 use super::*;
+use ict_engine::application::entry_models::export_policy_training_tables;
 
 pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
     let UpdateCommandInput {
@@ -561,6 +562,12 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
             prompt_workflow: report.agent_prompts.workflow.clone(),
         },
     )?;
+    if let Err(err) = export_policy_training_tables(state_dir, symbol) {
+        eprintln!(
+            "warning: failed to export policy training tables for '{}' in '{}': {:#}",
+            symbol, state_dir, err
+        );
+    }
     if let Some(artifact_id) = &report.consumed_pending_update_artifact_id {
         mark_artifact_consumed(
             state_dir,

@@ -257,9 +257,7 @@ impl ManifestLogCrossCheck {
     /// `true` iff every manifest strategy lined up with a log block
     /// on status, trade_count, and win_rate_pct.
     pub fn is_clean(&self) -> bool {
-        self.mismatches.is_empty()
-            && self.manifest_only.is_empty()
-            && self.log_only.is_empty()
+        self.mismatches.is_empty() && self.manifest_only.is_empty() && self.log_only.is_empty()
     }
 }
 
@@ -318,9 +316,7 @@ pub fn cross_check_manifest_against_log(
                 });
                 local_mismatches += 1;
             }
-            if (metrics.win_rate_pct - block.aggregate.win_rate_pct).abs()
-                > METRIC_F64_TOLERANCE
-            {
+            if (metrics.win_rate_pct - block.aggregate.win_rate_pct).abs() > METRIC_F64_TOLERANCE {
                 report.mismatches.push(ManifestLogMismatch {
                     strategy: entry.name.clone(),
                     field: "win_rate_pct".to_string(),
@@ -333,21 +329,9 @@ pub fn cross_check_manifest_against_log(
             // non-zero number, otherwise the comparison is meaningless
             // (default zeros from the export side, or errored block).
             for (label, m_val, l_val) in [
-                (
-                    "sharpe",
-                    metrics.sharpe,
-                    block.aggregate.sharpe,
-                ),
-                (
-                    "sortino",
-                    metrics.sortino,
-                    block.aggregate.sortino,
-                ),
-                (
-                    "calmar",
-                    metrics.calmar,
-                    block.aggregate.calmar,
-                ),
+                ("sharpe", metrics.sharpe, block.aggregate.sharpe),
+                ("sortino", metrics.sortino, block.aggregate.sortino),
+                ("calmar", metrics.calmar, block.aggregate.calmar),
                 (
                     "profit_factor",
                     metrics.profit_factor,
@@ -364,10 +348,7 @@ pub fn cross_check_manifest_against_log(
                     block.aggregate.total_profit_pct,
                 ),
             ] {
-                if m_val != 0.0
-                    && l_val != 0.0
-                    && (m_val - l_val).abs() > METRIC_F64_TOLERANCE
-                {
+                if m_val != 0.0 && l_val != 0.0 && (m_val - l_val).abs() > METRIC_F64_TOLERANCE {
                     report.mismatches.push(ManifestLogMismatch {
                         strategy: entry.name.clone(),
                         field: label.to_string(),
@@ -543,11 +524,7 @@ traceback:\n\
         };
         let report = cross_check_manifest_against_log(&manifest, &blocks);
         assert!(!report.is_clean());
-        let fields: Vec<&str> = report
-            .mismatches
-            .iter()
-            .map(|m| m.field.as_str())
-            .collect();
+        let fields: Vec<&str> = report.mismatches.iter().map(|m| m.field.as_str()).collect();
         assert!(fields.contains(&"trade_count"));
         assert!(fields.contains(&"win_rate_pct"));
         // BrokenStrat is in the log but absent from the manifest: log_only.

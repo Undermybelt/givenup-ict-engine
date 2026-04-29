@@ -125,8 +125,7 @@ mod tests {
     fn all_event_kinds_is_complete_and_unique() {
         // Sanity: ALL_EVENT_KINDS must contain each variant exactly
         // once. Using `as_str` as a hashable surrogate.
-        let mut names: Vec<&'static str> =
-            ALL_EVENT_KINDS.iter().map(|k| k.as_str()).collect();
+        let mut names: Vec<&'static str> = ALL_EVENT_KINDS.iter().map(|k| k.as_str()).collect();
         names.sort_unstable();
         let len_before = names.len();
         names.dedup();
@@ -140,8 +139,8 @@ mod tests {
 
     #[test]
     fn event_round_trips_through_serde() {
-        let event = PdaEvent::new(PdaEventKind::FairValueGap, 12, Direction::Bull)
-            .with_level(101.5);
+        let event =
+            PdaEvent::new(PdaEventKind::FairValueGap, 12, Direction::Bull).with_level(101.5);
         let json = serde_json::to_string(&event).unwrap();
         let back: PdaEvent = serde_json::from_str(&json).unwrap();
         assert_eq!(event, back);

@@ -931,8 +931,7 @@ impl FactorDefinition {
         // this entry point because `htf_events` / `paired_candles`
         // are not part of this factor's input contract; external
         // callers can supply them via `match_all_setups_extended`.
-        let setup_matches =
-            self.structure_ict_setup_matches_with_context(candles, context);
+        let setup_matches = self.structure_ict_setup_matches_with_context(candles, context);
 
         candles
             .iter()
@@ -1569,8 +1568,8 @@ fn normalize_signed(value: f64, cap: f64) -> f64 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chrono::{Duration, TimeZone};
     use crate::pda_timeline::{CanonicalSetupKind, PdaEventKind};
+    use chrono::{Duration, TimeZone};
 
     fn candles(count: usize) -> Vec<Candle> {
         let start = Utc.with_ymd_and_hms(2024, 1, 1, 0, 0, 0).unwrap();
@@ -1767,16 +1766,20 @@ mod tests {
         let series_candles = candles(80);
         let paired = candles(80);
         let base_ts = series_candles[10].timestamp;
-        let h4_events = vec![PdaEvent::new(PdaEventKind::MarketStructureShift, 3, Direction::Bull)
-            .with_timestamp(base_ts)];
+        let h4_events = vec![
+            PdaEvent::new(PdaEventKind::MarketStructureShift, 3, Direction::Bull)
+                .with_timestamp(base_ts),
+        ];
         let d1_events = vec![
             PdaEvent::new(PdaEventKind::LiquiditySweep, 2, Direction::Bull)
                 .with_timestamp(base_ts - Duration::hours(1)),
             PdaEvent::new(PdaEventKind::MarketStructureShift, 3, Direction::Bear)
                 .with_timestamp(base_ts + Duration::minutes(30)),
         ];
-        let w1_events = vec![PdaEvent::new(PdaEventKind::LiquiditySweep, 1, Direction::Bull)
-            .with_timestamp(base_ts - Duration::hours(2))];
+        let w1_events = vec![
+            PdaEvent::new(PdaEventKind::LiquiditySweep, 1, Direction::Bull)
+                .with_timestamp(base_ts - Duration::hours(2)),
+        ];
         let ltf_context_events = vec![
             PdaEvent::new(PdaEventKind::FairValueGap, 12, Direction::Bull).with_timestamp(base_ts),
             PdaEvent::new(PdaEventKind::MarketStructureShift, 15, Direction::Bear)

@@ -6,6 +6,7 @@ use std::collections::BTreeMap;
 use crate::analyze::multi_timeframe_parse::{
     multi_timeframe_direction_conflicts_with, ParsedMultiTimeframeEvidence,
 };
+use crate::application::entry_models::{apply_cisd_rb_to_belief_packet, CisdRbEntryModelPacket};
 use crate::bbn::adapters::belief_evidence_packet_from_pre_bayes_filter;
 use crate::bbn::engine::InferenceEngineRegistry;
 use crate::domain::regime::RegimeSegmentationPacket;
@@ -243,6 +244,7 @@ pub fn build_canonical_belief_report(
         raw_multi_timeframe_resonance_trace,
         None,
         None,
+        None,
     )
 }
 
@@ -256,6 +258,7 @@ pub fn build_canonical_belief_report_with_pda(
     raw_multi_timeframe_resonance_trace: Option<&FactorPipelineLabelSource>,
     pda_sequence_artifact: Option<&PdaSequenceAnalysisArtifact>,
     hybrid_regime_packet: Option<&RegimeSegmentationPacket>,
+    cisd_rb_packet: Option<&CisdRbEntryModelPacket>,
 ) -> Result<BeliefReportPacket> {
     let mut packet = belief_evidence_packet_from_pre_bayes_filter(
         symbol,
@@ -271,6 +274,9 @@ pub fn build_canonical_belief_report_with_pda(
     if let Some(hybrid) = hybrid_regime_packet {
         crate::bbn::adapters::apply_hybrid_regime_packet_to_belief_packet(&mut packet, hybrid);
     }
+    if let Some(cisd_rb_packet) = cisd_rb_packet {
+        apply_cisd_rb_to_belief_packet(cisd_rb_packet, &mut packet);
+    }
     InferenceEngineRegistry::default().build_report(packet)
 }
 
@@ -279,7 +285,7 @@ pub fn build_canonical_belief_snapshot(
     market: Option<&str>,
     filter: &PreBayesEvidenceFilter,
 ) -> Result<BeliefReportPacket> {
-    build_canonical_belief_snapshot_with_pda(symbol, market, filter, None, None)
+    build_canonical_belief_snapshot_with_pda(symbol, market, filter, None, None, None)
 }
 
 pub fn build_canonical_belief_snapshot_with_pda(
@@ -288,6 +294,7 @@ pub fn build_canonical_belief_snapshot_with_pda(
     filter: &PreBayesEvidenceFilter,
     pda_sequence_artifact: Option<&PdaSequenceAnalysisArtifact>,
     hybrid_regime_packet: Option<&RegimeSegmentationPacket>,
+    cisd_rb_packet: Option<&CisdRbEntryModelPacket>,
 ) -> Result<BeliefReportPacket> {
     build_canonical_belief_report_with_pda(
         symbol,
@@ -298,6 +305,7 @@ pub fn build_canonical_belief_snapshot_with_pda(
         None,
         pda_sequence_artifact,
         hybrid_regime_packet,
+        cisd_rb_packet,
     )
 }
 

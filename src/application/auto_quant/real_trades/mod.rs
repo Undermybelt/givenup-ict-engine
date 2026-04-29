@@ -11,7 +11,7 @@ pub mod ingest;
 pub mod wire;
 
 pub use ingest::{
-    ingest_real_trades, IngestRealTradesInput, IngestRealTradesOutcome,
-    ARTIFACT_KIND_REAL_TRADES, REAL_TRADES_RULE_VERSION,
+    ingest_real_trades, IngestRealTradesInput, IngestRealTradesOutcome, ARTIFACT_KIND_REAL_TRADES,
+    REAL_TRADES_RULE_VERSION,
 };
 pub use wire::{RealTradeRecord, SCHEMA_VERSION};

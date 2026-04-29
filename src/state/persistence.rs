@@ -889,6 +889,8 @@ mod tests {
             selected_direction: crate::types::Direction::Bull,
             selected_entry_quality: "high".to_string(),
             decision_hint: "observe".to_string(),
+            regime_probs: None,
+            entry_model_packets: crate::application::entry_models::EntryModelPacketStore::default(),
             hybrid_regime_label: None,
             hybrid_regime_age_bars: None,
             hybrid_duration_model: None,

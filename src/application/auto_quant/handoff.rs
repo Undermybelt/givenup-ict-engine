@@ -28,9 +28,8 @@ pub struct AutoQuantIterationUnitContext {
     pub strategy_brief: String,
     pub evaluation_priority: Vec<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub consumer_evidence_profile: Option<
-        crate::application::auto_quant::pda_unit_batch::AutoQuantConsumerEvidenceProfile,
-    >,
+    pub consumer_evidence_profile:
+        Option<crate::application::auto_quant::pda_unit_batch::AutoQuantConsumerEvidenceProfile>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -625,16 +624,17 @@ mod tests {
         )
         .unwrap();
 
-        let payload = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
-            symbol: "NQ",
-            data: "demo.json",
-            objective: "expansion_manipulation",
-            paired_data: None,
-            mutation_spec_path: None,
-            strategy_material_root: Some(material_root.to_str().unwrap()),
-            state_dir: temp.path().to_str().unwrap(),
-            dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
-        });
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: "demo.json",
+                objective: "expansion_manipulation",
+                paired_data: None,
+                mutation_spec_path: None,
+                strategy_material_root: Some(material_root.to_str().unwrap()),
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+            });
 
         assert_eq!(payload.external_strategy_materials.len(), 1);
         assert_eq!(
@@ -715,16 +715,17 @@ mod tests {
         )
         .unwrap();
 
-        let missing_data = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
-            symbol: "NQ",
-            data: "demo.json",
-            objective: "generic",
-            paired_data: None,
-            mutation_spec_path: None,
-            strategy_material_root: None,
-            state_dir: temp.path().to_str().unwrap(),
-            dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
-        });
+        let missing_data =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: "demo.json",
+                objective: "generic",
+                paired_data: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+            });
         assert!(missing_data
             .suggested_commands
             .iter()
@@ -784,8 +785,8 @@ mod tests {
             primitive_sequence: vec!["order_block".to_string()],
             timeframe: "15m".to_string(),
             direction: "long".to_string(),
-            strategy_brief:
-                "Iterate one order_block long unit. Optimize win rate first.".to_string(),
+            strategy_brief: "Iterate one order_block long unit. Optimize win rate first."
+                .to_string(),
             evaluation_priority: vec![
                 "win_rate".to_string(),
                 "sharpe".to_string(),

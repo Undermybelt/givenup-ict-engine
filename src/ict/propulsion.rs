@@ -91,10 +91,7 @@ pub fn detect_propulsion_blocks(
 }
 
 /// Convenience wrapper using module defaults.
-pub fn detect_propulsion_blocks_default(
-    candles: &[Candle],
-    atr: &[f64],
-) -> Vec<PropulsionBlock> {
+pub fn detect_propulsion_blocks_default(candles: &[Candle], atr: &[f64]) -> Vec<PropulsionBlock> {
     detect_propulsion_blocks(
         candles,
         atr,
@@ -234,8 +231,7 @@ mod tests {
         let atr_prefix = vec![0.5; prefix_candles.len()];
         let prefix = detect_propulsion_blocks_default(prefix_candles, &atr_prefix);
 
-        let full_at_35: Vec<&PropulsionBlock> =
-            full.iter().filter(|b| b.bar_index == 35).collect();
+        let full_at_35: Vec<&PropulsionBlock> = full.iter().filter(|b| b.bar_index == 35).collect();
         let prefix_at_35: Vec<&PropulsionBlock> =
             prefix.iter().filter(|b| b.bar_index == 35).collect();
         assert_eq!(

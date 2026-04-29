@@ -136,7 +136,9 @@ pub fn render_factor_research_human_output(
         .get("feedback_records_applied")
         .and_then(Value::as_u64)
         .unwrap_or_default();
-    lines.push(format!("Evidence: feedback={feedback_generated}/{feedback_applied}"));
+    lines.push(format!(
+        "Evidence: feedback={feedback_generated}/{feedback_applied}"
+    ));
 
     if let Some(scorecards) = report_value
         .get("backtest")
@@ -164,7 +166,10 @@ pub fn render_factor_research_human_output(
             })
             .collect::<Vec<_>>();
         if !top_factors.is_empty() {
-            lines.push(format!("Action: review top factors: {}", top_factors.join("; ")));
+            lines.push(format!(
+                "Action: review top factors: {}",
+                top_factors.join("; ")
+            ));
         }
     }
 
@@ -210,10 +215,7 @@ pub fn render_backtest_human_output(
     )];
     lines.push(format!(
         "Execution: spread={:.2}bps | slippage={:.2}bps | fee={:.2}bps | policy={}",
-        report.spread_bps,
-        report.slippage_bps,
-        report.fee_bps,
-        report.ambiguous_bar_policy,
+        report.spread_bps, report.slippage_bps, report.fee_bps, report.ambiguous_bar_policy,
     ));
     if let Some(compare_summary) = human_backtest_compare_summary(compare) {
         lines.push(compare_summary);
@@ -298,7 +300,10 @@ pub fn render_control_matrix_research_human_output(
         artifact.control_matrix_plan.kind.as_str()
     )];
     if let Some(baseline) = artifact.baseline_run.as_ref() {
-        lines.push(format!("Baseline: {}", format_control_matrix_run_summary(baseline)));
+        lines.push(format!(
+            "Baseline: {}",
+            format_control_matrix_run_summary(baseline)
+        ));
     }
     if !artifact.top_runs.is_empty() {
         lines.push(format!(
@@ -358,7 +363,11 @@ pub fn render_control_matrix_research_human_output(
                 .join("; ")
         ));
     }
-    if !artifact.provider_summary.actionable_install_prompts.is_empty() {
+    if !artifact
+        .provider_summary
+        .actionable_install_prompts
+        .is_empty()
+    {
         lines.push(format!(
             "Provider setup: {}",
             artifact

@@ -47,7 +47,9 @@ pub struct MarketCatalog {
     pub relationships: MarketRelationshipConfig,
 }
 
-pub fn load_market_relationship_config<P: AsRef<Path>>(repo_root: P) -> Result<MarketRelationshipConfig> {
+pub fn load_market_relationship_config<P: AsRef<Path>>(
+    repo_root: P,
+) -> Result<MarketRelationshipConfig> {
     let path = repo_root.as_ref().join(MARKET_RELATIONSHIPS_FILE);
     let raw = std::fs::read_to_string(&path).with_context(|| {
         format!(

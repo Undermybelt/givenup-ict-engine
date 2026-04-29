@@ -120,8 +120,7 @@ pub fn consume_live_signals<S: StreamSource>(
                         &LiveSignalsCursor {
                             stream_key: stream_key.clone(),
                             last_id: last_id.clone(),
-                            updated_at: Utc::now()
-                                .to_rfc3339_opts(SecondsFormat::Nanos, true),
+                            updated_at: Utc::now().to_rfc3339_opts(SecondsFormat::Nanos, true),
                         },
                     )?;
                     envelopes_applied += 1;

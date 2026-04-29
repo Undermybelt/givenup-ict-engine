@@ -180,9 +180,7 @@ pub fn mark_prior_libraries_superseded(
     let mut superseded: Vec<String> = Vec::new();
     let now = Utc::now();
     for entry in ledger.iter_mut() {
-        if entry.artifact_kind == ARTIFACT_KIND_LIBRARY
-            && entry.status == "ready_for_prior_init"
-        {
+        if entry.artifact_kind == ARTIFACT_KIND_LIBRARY && entry.status == "ready_for_prior_init" {
             entry.status = "superseded".to_string();
             entry.actionable = false;
             entry.promote_candidate = false;
@@ -248,9 +246,7 @@ pub fn find_any_active_prior_init_apply(
     Ok(ledger
         .into_iter()
         .rev()
-        .find(|entry| {
-            entry.artifact_kind == ARTIFACT_KIND_PRIOR_INIT && entry.status == "applied"
-        })
+        .find(|entry| entry.artifact_kind == ARTIFACT_KIND_PRIOR_INIT && entry.status == "applied")
         .map(|entry| (entry.artifact_id, entry.source_run_id)))
 }
 
@@ -404,10 +400,8 @@ mod tests {
         assert_eq!(result.n_not_run, 0);
         assert!(std::path::Path::new(&result.state_path).exists());
 
-        let ledger = std::fs::read_to_string(
-            temp.path().join("NQ").join(ARTIFACT_LEDGER_FILE),
-        )
-        .unwrap();
+        let ledger =
+            std::fs::read_to_string(temp.path().join("NQ").join(ARTIFACT_LEDGER_FILE)).unwrap();
         assert!(ledger.contains(ARTIFACT_KIND_LIBRARY));
         assert!(ledger.contains(LIBRARY_RULE_VERSION));
         assert!(ledger.contains("ready_for_prior_init"));
@@ -450,10 +444,8 @@ mod tests {
         assert!(std::path::Path::new(&pi.state_path).exists());
         assert!(std::path::Path::new(&pi.history_path).exists());
 
-        let ledger = std::fs::read_to_string(
-            temp.path().join("NQ").join(ARTIFACT_LEDGER_FILE),
-        )
-        .unwrap();
+        let ledger =
+            std::fs::read_to_string(temp.path().join("NQ").join(ARTIFACT_LEDGER_FILE)).unwrap();
         assert!(ledger.contains(ARTIFACT_KIND_PRIOR_INIT));
         assert!(ledger.contains(PRIOR_INIT_RULE_VERSION));
         // Lineage captured via source_run_id pointing back at the library.
@@ -555,8 +547,7 @@ mod tests {
     fn no_op_supersession_when_no_prior_library_exists() {
         let temp = tempfile::tempdir().unwrap();
         let state_dir = temp.path().to_str().unwrap();
-        let superseded =
-            mark_prior_libraries_superseded(state_dir, "NQ", "fresh-id").unwrap();
+        let superseded = mark_prior_libraries_superseded(state_dir, "NQ", "fresh-id").unwrap();
         assert!(superseded.is_empty());
     }
 
@@ -565,8 +556,7 @@ mod tests {
         let temp = tempfile::tempdir().unwrap();
         let state_dir = temp.path().to_str().unwrap();
         let manifest = manifest_with_two_ok_one_error();
-        let lib = persist_imported_library(state_dir, "NQ", &manifest, "/tmp/lib.json")
-            .unwrap();
+        let lib = persist_imported_library(state_dir, "NQ", &manifest, "/tmp/lib.json").unwrap();
 
         // No prior init yet → None.
         assert!(
@@ -620,8 +610,7 @@ mod tests {
             false, // real apply
         )
         .unwrap();
-        let found =
-            find_existing_apply_for_library(state_dir, "NQ", &lib.artifact_id).unwrap();
+        let found = find_existing_apply_for_library(state_dir, "NQ", &lib.artifact_id).unwrap();
         assert_eq!(found.as_deref(), Some(applied.artifact_id.as_str()));
     }
 
@@ -632,8 +621,7 @@ mod tests {
         let manifest = manifest_with_two_ok_one_error();
 
         // Import v1, apply v1.
-        let v1 =
-            persist_imported_library(state_dir, "NQ", &manifest, "/tmp/v1.json").unwrap();
+        let v1 = persist_imported_library(state_dir, "NQ", &manifest, "/tmp/v1.json").unwrap();
         let outcome = AutoQuantPriorInitOutcome {
             parent_config: vec![0, 0, 0],
             initial_probs: vec![1.0 / 3.0; 3],
@@ -654,8 +642,7 @@ mod tests {
         .unwrap();
 
         // Import v2 (auto-supersedes v1).
-        let v2 =
-            persist_imported_library(state_dir, "NQ", &manifest, "/tmp/v2.json").unwrap();
+        let v2 = persist_imported_library(state_dir, "NQ", &manifest, "/tmp/v2.json").unwrap();
 
         // Per-library guard misses v1's apply when asked about v2.
         assert!(

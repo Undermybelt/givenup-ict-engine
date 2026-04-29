@@ -212,14 +212,8 @@ mod tests {
             0,
             "ties must not contribute to precedence"
         );
-        assert_eq!(
-            m.count(PdaEventKind::FairValueGap, PdaEventKind::Cisd),
-            1
-        );
-        assert_eq!(
-            m.count(PdaEventKind::OrderBlock, PdaEventKind::Cisd),
-            1
-        );
+        assert_eq!(m.count(PdaEventKind::FairValueGap, PdaEventKind::Cisd), 1);
+        assert_eq!(m.count(PdaEventKind::OrderBlock, PdaEventKind::Cisd), 1);
     }
 
     #[test]

@@ -16,12 +16,10 @@ use crate::state::{
 
 use super::pda_unit_batch::AutoQuantConsumerEvidenceProfile;
 
-pub const AUTO_QUANT_AGENT_MATERIAL_BATCH_RULE_VERSION: &str =
-    "auto-quant-agent-material-batch-v1";
+pub const AUTO_QUANT_AGENT_MATERIAL_BATCH_RULE_VERSION: &str = "auto-quant-agent-material-batch-v1";
 pub const AUTO_QUANT_AGENT_MATERIAL_DISPATCH_RULE_VERSION: &str =
     "auto-quant-agent-material-dispatch-v1";
-pub const AUTO_QUANT_AGENT_MATERIAL_RANK_RULE_VERSION: &str =
-    "auto-quant-agent-material-rank-v1";
+pub const AUTO_QUANT_AGENT_MATERIAL_RANK_RULE_VERSION: &str = "auto-quant-agent-material-rank-v1";
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct AgentMaterialPackage {
@@ -162,7 +160,10 @@ pub fn persist_agent_material_batch(
     for path in material_paths {
         let package = load_agent_material_package(path)?;
         let label = if package.title.trim().is_empty() {
-            format!("{}:{}:{}", package.symbol, package.timeframe, package.direction)
+            format!(
+                "{}:{}:{}",
+                package.symbol, package.timeframe, package.direction
+            )
         } else {
             package.title.clone()
         };
@@ -272,9 +273,14 @@ pub fn dispatch_agent_material_batch(
     symbol: &str,
     group_indices_csv: Option<&str>,
 ) -> Result<AgentMaterialDispatchArtifact> {
-    let batch = load_latest_agent_material_batch(state_dir, symbol)?
-        .ok_or_else(|| anyhow!("no auto_quant_agent_material_batch artifact found for {}", symbol))?;
-    let selected_group_indices = parse_group_indices(group_indices_csv, batch.dispatch_groups.len())?;
+    let batch = load_latest_agent_material_batch(state_dir, symbol)?.ok_or_else(|| {
+        anyhow!(
+            "no auto_quant_agent_material_batch artifact found for {}",
+            symbol
+        )
+    })?;
+    let selected_group_indices =
+        parse_group_indices(group_indices_csv, batch.dispatch_groups.len())?;
     let mut groups = Vec::new();
     for group_index in &selected_group_indices {
         let group = batch
@@ -295,13 +301,21 @@ pub fn dispatch_agent_material_batch(
                 let shared_workspace_root = shared_workspace_root.clone();
                 let source_repo_url = batch.source_repo_url.clone();
                 thread::spawn(move || {
-                    dispatch_one_material_job(job, &shared_workspace_root, source_repo_url.as_deref())
+                    dispatch_one_material_job(
+                        job,
+                        &shared_workspace_root,
+                        source_repo_url.as_deref(),
+                    )
                 })
             })
             .collect::<Vec<_>>();
         let mut job_results = Vec::new();
         for handle in handles {
-            job_results.push(handle.join().map_err(|_| anyhow!("agent material dispatch thread panicked"))??);
+            job_results.push(
+                handle
+                    .join()
+                    .map_err(|_| anyhow!("agent material dispatch thread panicked"))??,
+            );
         }
         groups.push(AgentMaterialDispatchGroupResult {
             group_index: *group_index,
@@ -335,7 +349,12 @@ pub fn rank_agent_material_dispatch(
         .iter()
         .rev()
         .find(|entry| entry.artifact_kind == "auto_quant_agent_material_dispatch")
-        .ok_or_else(|| anyhow!("no auto_quant_agent_material_dispatch artifact found for {}", symbol))?;
+        .ok_or_else(|| {
+            anyhow!(
+                "no auto_quant_agent_material_dispatch artifact found for {}",
+                symbol
+            )
+        })?;
     let content = fs::read_to_string(&target.path)
         .with_context(|| format!("reading agent material dispatch '{}'", target.path))?;
     let dispatch: AgentMaterialDispatchArtifact = serde_json::from_str(&content)
@@ -606,7 +625,8 @@ fn write_material_config(path: &Path, package: &AgentMaterialPackage) -> Result<
         config["margin_mode"] = serde_json::Value::String("isolated".to_string());
         config["entry_pricing"]["use_order_book"] = serde_json::Value::Bool(true);
         config["exit_pricing"]["use_order_book"] = serde_json::Value::Bool(true);
-        config["exchange"]["_ft_has_params"]["uses_leverage_tiers"] = serde_json::Value::Bool(false);
+        config["exchange"]["_ft_has_params"]["uses_leverage_tiers"] =
+            serde_json::Value::Bool(false);
     } else {
         config["trading_mode"] = serde_json::Value::String("spot".to_string());
         config["entry_pricing"]["use_order_book"] = serde_json::Value::Bool(false);
@@ -680,7 +700,9 @@ fn run_workspace_python_script(
     };
     command.args(args);
     command.current_dir(workspace_root);
-    command.output().with_context(|| format!("running {}", script_name))
+    command
+        .output()
+        .with_context(|| format!("running {}", script_name))
 }
 
 fn materialize_futures_ohlcv_alias(
@@ -726,7 +748,9 @@ fn parse_run_tomac_aggregate_metrics(stdout: &str) -> Option<AgentMaterialAggreg
     seen_any.then_some(metrics)
 }
 
-fn summarize_dispatch_totals(groups: &[AgentMaterialDispatchGroupResult]) -> AgentMaterialDispatchTotals {
+fn summarize_dispatch_totals(
+    groups: &[AgentMaterialDispatchGroupResult],
+) -> AgentMaterialDispatchTotals {
     let mut totals = AgentMaterialDispatchTotals::default();
     for group in groups {
         for result in &group.job_results {
@@ -741,7 +765,10 @@ fn summarize_dispatch_totals(groups: &[AgentMaterialDispatchGroupResult]) -> Age
     totals
 }
 
-fn persist_dispatch_artifact(state_dir: &str, artifact: &AgentMaterialDispatchArtifact) -> Result<()> {
+fn persist_dispatch_artifact(
+    state_dir: &str,
+    artifact: &AgentMaterialDispatchArtifact,
+) -> Result<()> {
     let filename = format!(
         "auto_quant_agent_material_dispatch.{}.json",
         artifact.generated_at.format("%Y%m%dT%H%M%S%.3fZ")

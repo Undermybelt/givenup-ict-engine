@@ -11,17 +11,17 @@
 //! timeline via `events_from_*` helpers.
 
 use crate::ict::{
-    detect_breaker_blocks, detect_cisd, detect_fvg, detect_inverse_fvgs,
-    detect_liquidity_pools, detect_liquidity_sweep, detect_liquidity_voids,
-    detect_market_structure_shifts, detect_mitigation_blocks, detect_order_blocks,
-    detect_propulsion_blocks, detect_rb, detect_structure_breaks, detect_volume_imbalances,
-    find_swing_highs, find_swing_lows, DEFAULT_IFVG_CONFIRM_WINDOW,
-    DEFAULT_LIQUIDITY_VOID_MIN_GAP_ATR, DEFAULT_MITIGATION_CONFIRM_WINDOW,
-    DEFAULT_MITIGATION_RETEST_WINDOW, DEFAULT_MITIGATION_SWING_LOOKBACK,
-    DEFAULT_MITIGATION_TOUCH_EPSILON_BPS, DEFAULT_MSS_SWING_LOOKBACK,
-    DEFAULT_PROPULSION_BODY_RANGE_MIN, DEFAULT_PROPULSION_RANGE_ATR_MIN,
-    DEFAULT_PROPULSION_VOLUME_WINDOW, DEFAULT_PROPULSION_VOLUME_Z_MIN,
-    DEFAULT_VOLUME_IMBALANCE_WINDOW, DEFAULT_VOLUME_IMBALANCE_Z_MIN,
+    detect_breaker_blocks, detect_cisd, detect_fvg, detect_inverse_fvgs, detect_liquidity_pools,
+    detect_liquidity_sweep, detect_liquidity_voids, detect_market_structure_shifts,
+    detect_mitigation_blocks, detect_order_blocks, detect_propulsion_blocks, detect_rb,
+    detect_structure_breaks, detect_volume_imbalances, find_swing_highs, find_swing_lows,
+    DEFAULT_IFVG_CONFIRM_WINDOW, DEFAULT_LIQUIDITY_VOID_MIN_GAP_ATR,
+    DEFAULT_MITIGATION_CONFIRM_WINDOW, DEFAULT_MITIGATION_RETEST_WINDOW,
+    DEFAULT_MITIGATION_SWING_LOOKBACK, DEFAULT_MITIGATION_TOUCH_EPSILON_BPS,
+    DEFAULT_MSS_SWING_LOOKBACK, DEFAULT_PROPULSION_BODY_RANGE_MIN,
+    DEFAULT_PROPULSION_RANGE_ATR_MIN, DEFAULT_PROPULSION_VOLUME_WINDOW,
+    DEFAULT_PROPULSION_VOLUME_Z_MIN, DEFAULT_VOLUME_IMBALANCE_WINDOW,
+    DEFAULT_VOLUME_IMBALANCE_Z_MIN,
 };
 use crate::types::Candle;
 
@@ -48,12 +48,8 @@ pub fn build_pda_timeline(candles: &[Candle], atr: &[f64]) -> Vec<PdaEvent> {
     // 1. Fair Value Gaps
     for fvg in detect_fvg(candles) {
         events.push(
-            PdaEvent::new(
-                PdaEventKind::FairValueGap,
-                fvg.start_bar,
-                fvg.direction,
-            )
-            .with_level((fvg.top + fvg.bottom) / 2.0),
+            PdaEvent::new(PdaEventKind::FairValueGap, fvg.start_bar, fvg.direction)
+                .with_level((fvg.top + fvg.bottom) / 2.0),
         );
     }
 
@@ -99,12 +95,8 @@ pub fn build_pda_timeline(candles: &[Candle], atr: &[f64]) -> Vec<PdaEvent> {
         DEFAULT_MITIGATION_TOUCH_EPSILON_BPS,
     ) {
         events.push(
-            PdaEvent::new(
-                PdaEventKind::MitigationBlock,
-                mb.confirm_bar,
-                mb.direction,
-            )
-            .with_level(mb.level),
+            PdaEvent::new(PdaEventKind::MitigationBlock, mb.confirm_bar, mb.direction)
+                .with_level(mb.level),
         );
     }
 
@@ -202,8 +194,7 @@ pub fn build_pda_timeline(candles: &[Candle], atr: &[f64]) -> Vec<PdaEvent> {
             .map(|c| c.close)
             .unwrap_or_default();
         events.push(
-            PdaEvent::new(PdaEventKind::Cisd, cisd.confirm_bar, cisd.direction)
-                .with_level(level),
+            PdaEvent::new(PdaEventKind::Cisd, cisd.confirm_bar, cisd.direction).with_level(level),
         );
     }
 
@@ -391,9 +382,7 @@ mod tests {
         let atr = compute_atr(&candles, 3);
         let events = build_pda_timeline(&candles, &atr);
         // The FVG should appear at bar 1 and the iFVG at bar 4.
-        let fvg = events
-            .iter()
-            .find(|e| e.kind == PdaEventKind::FairValueGap);
+        let fvg = events.iter().find(|e| e.kind == PdaEventKind::FairValueGap);
         let ifvg = events
             .iter()
             .find(|e| e.kind == PdaEventKind::InverseFairValueGap);

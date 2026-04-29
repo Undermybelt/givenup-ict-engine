@@ -52,13 +52,22 @@ pub fn match_promoted_canonical_setups(
             if !window_matches_promoted_spec(window, spec, effective_horizon) {
                 continue;
             }
-            let direction = window.last().map(|event| event.direction).unwrap_or(Direction::Neutral);
+            let direction = window
+                .last()
+                .map(|event| event.direction)
+                .unwrap_or(Direction::Neutral);
             out.push(SetupMatch {
                 kind: CanonicalSetupKind::PromotedCanonicalSequence,
                 name_override: Some(spec.name.clone()),
                 direction,
-                anchor_bar: window.first().map(|event| event.bar_index).unwrap_or_default(),
-                confirm_bar: window.last().map(|event| event.bar_index).unwrap_or_default(),
+                anchor_bar: window
+                    .first()
+                    .map(|event| event.bar_index)
+                    .unwrap_or_default(),
+                confirm_bar: window
+                    .last()
+                    .map(|event| event.bar_index)
+                    .unwrap_or_default(),
                 event_bars: window.iter().map(|event| event.bar_index).collect(),
             });
         }
@@ -70,7 +79,9 @@ pub fn match_promoted_canonical_setups(
 pub fn load_promoted_canonical_setup_manifest<P: AsRef<Path>>(
     repo_root: P,
 ) -> Result<PromotedCanonicalSetupManifest> {
-    let path = repo_root.as_ref().join(PROMOTED_CANONICAL_SETUPS_CONFIG_FILE);
+    let path = repo_root
+        .as_ref()
+        .join(PROMOTED_CANONICAL_SETUPS_CONFIG_FILE);
     if !path.exists() {
         return Ok(PromotedCanonicalSetupManifest {
             version: 1,
@@ -189,7 +200,10 @@ fn window_matches_promoted_spec(
     {
         return false;
     }
-    if window.windows(2).any(|pair| pair[0].bar_index >= pair[1].bar_index) {
+    if window
+        .windows(2)
+        .any(|pair| pair[0].bar_index >= pair[1].bar_index)
+    {
         return false;
     }
     let span = window
@@ -235,8 +249,7 @@ fn normalize_promoted_setup_name(raw: &str) -> String {
             let mut chars = part.chars();
             match chars.next() {
                 Some(first) => {
-                    first.to_ascii_uppercase().to_string()
-                        + &chars.as_str().to_ascii_lowercase()
+                    first.to_ascii_uppercase().to_string() + &chars.as_str().to_ascii_lowercase()
                 }
                 None => String::new(),
             }
@@ -256,7 +269,10 @@ mod tests {
             parse_promoted_sequence_label("liquidity_sweep -> market_structure_shift").unwrap();
         assert_eq!(
             parsed,
-            vec![PdaEventKind::LiquiditySweep, PdaEventKind::MarketStructureShift]
+            vec![
+                PdaEventKind::LiquiditySweep,
+                PdaEventKind::MarketStructureShift
+            ]
         );
     }
 

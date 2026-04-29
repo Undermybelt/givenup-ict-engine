@@ -43,6 +43,8 @@ pub struct AnalyzeSupporting {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub auxiliary: Option<crate::data::realtime::openalice::AuxiliaryMarketEvidence>,
     pub decision: crate::planner::ProbabilisticDecisionSnapshot,
+    #[serde(skip_serializing, default)]
+    pub entry_model_packets: crate::application::entry_models::EntryModelPacketStore,
     pub trade_outcome: AnalyzeTradeOutcomeSummary,
     pub factor_diagnostics: crate::factor_lab::FactorDiagnostics,
     pub pre_bayes_evidence_filter: crate::state::PreBayesEvidenceFilter,

@@ -38,8 +38,7 @@ pub fn detect_breaker_blocks(candles: &[Candle]) -> Vec<BreakerBlock> {
         if retest_start >= candles.len() {
             continue;
         }
-        let Some(retest_bar) =
-            find_retest_bar(candles, ob.ob_type, ob.high, ob.low, retest_start)
+        let Some(retest_bar) = find_retest_bar(candles, ob.ob_type, ob.high, ob.low, retest_start)
         else {
             continue;
         };
@@ -168,14 +167,14 @@ mod tests {
         // Build: bull-OB at bar 1, violation at bar 5 (close < OB.low),
         // retest at bar 7 (wick up to OB.low, close back below).
         let candles = vec![
-            candle(0, 100.0, 100.5, 99.5, 99.8),  // baseline
-            candle(1, 99.8, 100.0, 99.5, 99.6),   // bearish — bull-OB origin
-            candle(2, 99.6, 102.0, 99.6, 101.8),  // bullish expansion
+            candle(0, 100.0, 100.5, 99.5, 99.8), // baseline
+            candle(1, 99.8, 100.0, 99.5, 99.6),  // bearish — bull-OB origin
+            candle(2, 99.6, 102.0, 99.6, 101.8), // bullish expansion
             candle(3, 101.8, 102.5, 101.5, 102.3),
             candle(4, 102.3, 102.5, 101.0, 101.2), // pull back
-            candle(5, 101.2, 101.3, 99.0, 99.2),  // VIOLATION: close 99.2 < OB.low 99.5
-            candle(6, 99.2, 99.4, 98.5, 98.8),    // continued bearish
-            candle(7, 98.8, 99.6, 98.7, 99.0),    // RETEST: high 99.6 ≥ OB.low 99.5, close 99.0 < 99.5
+            candle(5, 101.2, 101.3, 99.0, 99.2),   // VIOLATION: close 99.2 < OB.low 99.5
+            candle(6, 99.2, 99.4, 98.5, 98.8),     // continued bearish
+            candle(7, 98.8, 99.6, 98.7, 99.0), // RETEST: high 99.6 ≥ OB.low 99.5, close 99.0 < 99.5
         ];
 
         let out = detect_breaker_blocks(&candles);
@@ -199,7 +198,7 @@ mod tests {
             candle(2, 100.5, 100.7, 98.5, 98.8),   // bearish expansion
             candle(3, 98.8, 99.0, 98.0, 98.2),
             candle(4, 98.2, 99.5, 98.0, 99.4),
-            candle(5, 99.4, 101.5, 99.3, 101.2),  // VIOLATION: close 101.2 > OB.high 100.7
+            candle(5, 99.4, 101.5, 99.3, 101.2), // VIOLATION: close 101.2 > OB.high 100.7
             candle(6, 101.2, 101.5, 101.0, 101.3),
             candle(7, 101.3, 101.5, 100.0, 101.0), // RETEST: low 100.0 ≤ OB.high 100.7, close 101.0 > 100.7
         ];
@@ -221,10 +220,10 @@ mod tests {
             candle(2, 99.6, 102.0, 99.6, 101.8),
             candle(3, 101.8, 102.5, 101.5, 102.3),
             candle(4, 102.3, 102.5, 101.0, 101.2),
-            candle(5, 101.2, 101.3, 99.0, 99.2),  // violation
+            candle(5, 101.2, 101.3, 99.0, 99.2), // violation
             candle(6, 99.2, 99.4, 98.5, 98.6),
             candle(7, 98.6, 98.7, 98.0, 98.2),
-            candle(8, 98.2, 98.3, 97.5, 97.7),    // never wicks back to OB.low=99.5
+            candle(8, 98.2, 98.3, 97.5, 97.7), // never wicks back to OB.low=99.5
         ];
         let out: Vec<_> = detect_breaker_blocks(&candles)
             .into_iter()

@@ -15,10 +15,7 @@ struct CorrelationAssetMap {
     related_crypto_symbols: Vec<String>,
 }
 
-fn correlation_asset_map(
-    spot_symbol: &str,
-    options_symbol: &str,
-) -> CorrelationAssetMap {
+fn correlation_asset_map(spot_symbol: &str, options_symbol: &str) -> CorrelationAssetMap {
     CorrelationAssetMap {
         related_futures_symbols: Vec::new(),
         related_etf_symbols: vec![spot_symbol.to_string()],

@@ -261,14 +261,23 @@ pub fn parse_timeframe_data_mappings(entries: &[String]) -> Result<BTreeMap<Stri
     let mut out = BTreeMap::new();
     for entry in entries {
         let Some((timeframe, path)) = entry.split_once('=') else {
-            bail!("timeframe-data entry '{}' must look like <timeframe>=<path>", entry);
+            bail!(
+                "timeframe-data entry '{}' must look like <timeframe>=<path>",
+                entry
+            );
         };
         let timeframe = timeframe.trim();
         let path = path.trim();
         if timeframe.is_empty() || path.is_empty() {
-            bail!("timeframe-data entry '{}' must include both timeframe and path", entry);
+            bail!(
+                "timeframe-data entry '{}' must include both timeframe and path",
+                entry
+            );
         }
-        if out.insert(timeframe.to_string(), path.to_string()).is_some() {
+        if out
+            .insert(timeframe.to_string(), path.to_string())
+            .is_some()
+        {
             bail!("duplicate timeframe-data mapping for '{}'", timeframe);
         }
     }
@@ -339,13 +348,19 @@ fn build_provider_guidance(
                 .to_string(),
         );
     }
-    if required_surfaces.iter().any(|surface| surface == "cross_market") {
+    if required_surfaces
+        .iter()
+        .any(|surface| surface == "cross_market")
+    {
         guidance.push(
             "This unit requires explicit paired/cross-market reference data. Ask the user or provider layer for the paired symbol/data source instead of inferring it silently."
                 .to_string(),
         );
     }
-    if required_surfaces.iter().any(|surface| surface == "session_context") {
+    if required_surfaces
+        .iter()
+        .any(|surface| surface == "session_context")
+    {
         guidance.push(
             "This unit requires explicit session segmentation (for example Asia/London/NY windows) as part of the strategy truth."
                 .to_string(),
@@ -404,7 +419,13 @@ pub fn build_unit_sequences(
     let mut out = Vec::new();
     let mut current = Vec::new();
     let mut used = vec![false; primitives.len()];
-    build_sequences_recursive(primitives, combination_size, &mut used, &mut current, &mut out);
+    build_sequences_recursive(
+        primitives,
+        combination_size,
+        &mut used,
+        &mut current,
+        &mut out,
+    );
     Ok(out)
 }
 
@@ -626,16 +647,17 @@ pub fn persist_auto_quant_pda_unit_batch(
     );
 
     for job in &mut jobs {
-        let mut payload = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
-            symbol: input.symbol,
-            data: &job.scope.data_path,
-            objective: input.objective,
-            paired_data: None,
-            mutation_spec_path: None,
-            strategy_material_root: None,
-            state_dir: &job.isolated_state_dir,
-            dependency_status: input.dependency_status.clone(),
-        });
+        let mut payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: input.symbol,
+                data: &job.scope.data_path,
+                objective: input.objective,
+                paired_data: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: &job.isolated_state_dir,
+                dependency_status: input.dependency_status.clone(),
+            });
         payload.iteration_unit = Some(AutoQuantIterationUnitContext {
             unit_label: job.unit_label.clone(),
             primitive_sequence: job.scope.primitive_sequence.clone(),
@@ -716,10 +738,7 @@ fn persist_batch_artifact(state_dir: &str, artifact: &AutoQuantPdaUnitBatchArtif
                 artifact.combination_size
             ),
             review_rule_version: AUTO_QUANT_PDA_UNIT_BATCH_RULE_VERSION.to_string(),
-            top_factor_name: artifact
-                .selected_primitives
-                .first()
-                .cloned(),
+            top_factor_name: artifact.selected_primitives.first().cloned(),
             top_factor_action: Some("dispatch".to_string()),
             family_scores: BTreeMap::new(),
             supersedes_artifact_id: None,
@@ -767,7 +786,12 @@ mod tests {
 
         let labels = sequences
             .iter()
-            .map(|seq| seq.iter().map(|item| item.as_str()).collect::<Vec<_>>().join("->"))
+            .map(|seq| {
+                seq.iter()
+                    .map(|item| item.as_str())
+                    .collect::<Vec<_>>()
+                    .join("->")
+            })
             .collect::<Vec<_>>();
 
         assert_eq!(
@@ -785,8 +809,7 @@ mod tests {
 
     #[test]
     fn build_unit_jobs_expands_direction_timeframe_cross_product() {
-        let sequences =
-            build_unit_sequences(&[AutoQuantPdaPrimitiveKind::OrderBlock], 1).unwrap();
+        let sequences = build_unit_sequences(&[AutoQuantPdaPrimitiveKind::OrderBlock], 1).unwrap();
         let directions = vec![AutoQuantUnitDirection::Long, AutoQuantUnitDirection::Short];
         let timeframe_data = BTreeMap::from([
             ("15m".to_string(), "/tmp/nq-15m.json".to_string()),
@@ -815,12 +838,11 @@ mod tests {
         assert!(jobs.iter().any(|job| {
             job.scope.timeframe == "1h"
                 && job.scope.direction == "short"
-                && job.brief
-                    .evaluation_priority
+                && job.brief.evaluation_priority
                     == vec![
                         "win_rate".to_string(),
                         "sharpe".to_string(),
-                        "return".to_string()
+                        "return".to_string(),
                     ]
         }));
         assert!(jobs.iter().all(|job| {
@@ -834,8 +856,7 @@ mod tests {
 
     #[test]
     fn dispatch_groups_chunk_by_max_parallel() {
-        let sequences =
-            build_unit_sequences(&[AutoQuantPdaPrimitiveKind::OrderBlock], 1).unwrap();
+        let sequences = build_unit_sequences(&[AutoQuantPdaPrimitiveKind::OrderBlock], 1).unwrap();
         let directions = vec![AutoQuantUnitDirection::Long, AutoQuantUnitDirection::Short];
         let timeframe_data = BTreeMap::from([
             ("15m".to_string(), "/tmp/nq-15m.json".to_string()),
@@ -862,20 +883,22 @@ mod tests {
             "rsi14,ema20,atr14",
             &["consumer wants NY session context".to_string()],
         );
-        assert!(profile.required_surfaces.iter().any(|item| item == "greeks"));
-        assert!(
-            profile
-                .provider_guidance
-                .iter()
-                .any(|line| line.contains("options-capable provider"))
+        assert!(profile
+            .required_surfaces
+            .iter()
+            .any(|item| item == "greeks"));
+        assert!(profile
+            .provider_guidance
+            .iter()
+            .any(|line| line.contains("options-capable provider")));
+        assert!(profile
+            .provider_guidance
+            .iter()
+            .any(|line| line.contains("Required indicators")));
+        assert_eq!(
+            profile.notes,
+            vec!["consumer wants NY session context".to_string()]
         );
-        assert!(
-            profile
-                .provider_guidance
-                .iter()
-                .any(|line| line.contains("Required indicators"))
-        );
-        assert_eq!(profile.notes, vec!["consumer wants NY session context".to_string()]);
     }
 
     #[test]

@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
 
-use crate::application::backtest::{ControlMatrixPlan, PB12_TOGGLES, Pb12Toggle};
+use crate::application::backtest::{ControlMatrixPlan, Pb12Toggle, PB12_TOGGLES};
 
 pub const TVREMIX_MCP_DEFAULT_URL: &str = "https://tvremix.xyz/api/mcp/v1";
 pub const TVREMIX_MCP_URL_ENV: &str = "ICT_ENGINE_TVREMIX_MCP_URL";
@@ -68,7 +68,9 @@ pub struct ControlMatrixProviderSummary {
     pub actionable_install_prompts: Vec<String>,
 }
 
-pub fn build_control_matrix_provider_summary(plan: &ControlMatrixPlan) -> ControlMatrixProviderSummary {
+pub fn build_control_matrix_provider_summary(
+    plan: &ControlMatrixPlan,
+) -> ControlMatrixProviderSummary {
     build_provider_summary_for_requirements_with_env(
         required_requirements_for_plan(plan),
         &|name| std::env::var(name).ok(),
@@ -109,13 +111,18 @@ where
         .into_iter()
         .collect::<Vec<_>>();
     ControlMatrixProviderSummary {
-        required_requirements: required.iter().map(|item| item.as_str().to_string()).collect(),
+        required_requirements: required
+            .iter()
+            .map(|item| item.as_str().to_string())
+            .collect(),
         provider_statuses,
         actionable_install_prompts,
     }
 }
 
-fn required_requirements_for_plan(plan: &ControlMatrixPlan) -> BTreeSet<ControlMatrixDataRequirement> {
+fn required_requirements_for_plan(
+    plan: &ControlMatrixPlan,
+) -> BTreeSet<ControlMatrixDataRequirement> {
     let mut required = BTreeSet::new();
     for run in &plan.runs {
         for toggle in PB12_TOGGLES {
@@ -153,7 +160,10 @@ fn ibkr_provider_status(
     ];
     let consent_path = home_dir.map(|home| home.join(IBKR_CONSENT_RELATIVE_PATH));
     let capabilities_path = home_dir.map(|home| home.join(IBKR_CAPABILITIES_RELATIVE_PATH));
-    let consent_present = consent_path.as_ref().map(|path| path.exists()).unwrap_or(false);
+    let consent_present = consent_path
+        .as_ref()
+        .map(|path| path.exists())
+        .unwrap_or(false);
     let capabilities_present = capabilities_path
         .as_ref()
         .map(|path| path.exists())
@@ -265,7 +275,9 @@ where
         .map(|value| !value.trim().is_empty())
         .unwrap_or(false);
     ControlMatrixProviderStatus {
-        provider: ControlMatrixProviderKind::TradingViewMcp.as_str().to_string(),
+        provider: ControlMatrixProviderKind::TradingViewMcp
+            .as_str()
+            .to_string(),
         status: if has_api_key {
             "ready".to_string()
         } else {
@@ -302,7 +314,11 @@ where
         },
         redacted_config: vec![
             format!("mcp_url={configured_url}"),
-            format!("{}={}", TVREMIX_MCP_API_KEY_ENV, redact_secret_presence(has_api_key)),
+            format!(
+                "{}={}",
+                TVREMIX_MCP_API_KEY_ENV,
+                redact_secret_presence(has_api_key)
+            ),
         ],
     }
 }
@@ -378,13 +394,14 @@ mod tests {
             .find(|status| status.provider == "tradingview_mcp")
             .unwrap();
         assert_eq!(provider.status, "ready");
-        assert!(
-            provider
-                .redacted_config
-                .iter()
-                .all(|item| !item.contains("secret-token-value"))
-        );
-        assert!(provider.redacted_config.iter().any(|item| item.contains("<set>")));
+        assert!(provider
+            .redacted_config
+            .iter()
+            .all(|item| !item.contains("secret-token-value")));
+        assert!(provider
+            .redacted_config
+            .iter()
+            .any(|item| item.contains("<set>")));
     }
 
     #[test]

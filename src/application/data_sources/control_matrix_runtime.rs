@@ -1,13 +1,13 @@
 use anyhow::Result;
 
 use crate::application::backtest::Pb12RunSpec;
-use crate::data::load_candles;
-use crate::data::realtime::openalice::{
-    AuxiliaryMarketEvidence, OpenAliceProvider, OptionsChainSummary, SpotInstrumentKind,
-};
 use crate::application::data_sources::{
     build_market_data_harness_plan, execute_market_data_harness_plan, MarketDataHarnessRequest,
     TVREMIX_MCP_API_KEY_ENV,
+};
+use crate::data::load_candles;
+use crate::data::realtime::openalice::{
+    AuxiliaryMarketEvidence, OpenAliceProvider, OptionsChainSummary, SpotInstrumentKind,
 };
 use crate::types::Candle;
 
@@ -51,7 +51,11 @@ pub fn build_control_matrix_runtime_overrides(
         .warnings
         .iter()
         .cloned()
-        .chain(plan.missing_roles.iter().map(|role| format!("missing_role={role}")))
+        .chain(
+            plan.missing_roles
+                .iter()
+                .map(|role| format!("missing_role={role}")),
+        )
         .chain(
             plan.provider_summary
                 .actionable_install_prompts
@@ -82,8 +86,7 @@ pub fn build_control_matrix_runtime_overrides(
                     }
                 }
                 "options.summary" => {
-                    if let Ok(summary) =
-                        serde_json::from_value::<OptionsChainSummary>(data.clone())
+                    if let Ok(summary) = serde_json::from_value::<OptionsChainSummary>(data.clone())
                     {
                         role_options.insert(result.role.clone(), summary);
                     }
@@ -168,7 +171,11 @@ pub fn build_control_matrix_runtime_overrides(
         None
     };
 
-    Ok(ControlMatrixRuntimeOverrides { paired_candles, auxiliary, runtime_notes })
+    Ok(ControlMatrixRuntimeOverrides {
+        paired_candles,
+        auxiliary,
+        runtime_notes,
+    })
 }
 
 fn build_harness_request(
@@ -231,7 +238,9 @@ fn load_control_matrix_request_template() -> Result<MarketDataHarnessRequest> {
 fn infer_provider_preferences_from_legacy_env() -> std::collections::BTreeMap<String, String> {
     let mut preferences = std::collections::BTreeMap::new();
     if let Some(reference_provider) = normalize_optional_provider(
-        std::env::var(CONTROL_MATRIX_REFERENCE_PROVIDER_ENV).ok().as_deref(),
+        std::env::var(CONTROL_MATRIX_REFERENCE_PROVIDER_ENV)
+            .ok()
+            .as_deref(),
     ) {
         preferences.insert("etf_reference".to_string(), reference_provider.clone());
         preferences.insert("cfd_reference".to_string(), reference_provider.clone());
@@ -274,7 +283,10 @@ fn apply_vix_overlay(
     if vix_candles.len() < 2 {
         return;
     }
-    let last = vix_candles.last().map(|item| item.close).unwrap_or_default();
+    let last = vix_candles
+        .last()
+        .map(|item| item.close)
+        .unwrap_or_default();
     let prior = vix_candles
         .get(vix_candles.len().saturating_sub(6))
         .map(|item| item.close)
@@ -286,7 +298,9 @@ fn apply_vix_overlay(
     runtime_notes.push(format!("runtime_vix_change_5bar={change:.4}"));
     if change > 0.03 {
         auxiliary.uncertainty_penalty = (auxiliary.uncertainty_penalty + 0.05).min(0.25);
-        auxiliary.notes.push("vix_rising_increases_uncertainty".to_string());
+        auxiliary
+            .notes
+            .push("vix_rising_increases_uncertainty".to_string());
     } else if change < -0.03 {
         auxiliary.long_bias = (auxiliary.long_bias + 0.02).min(0.20);
         auxiliary.notes.push("vix_falling_relaxes_risk".to_string());
@@ -357,10 +371,7 @@ mod tests {
 
     #[test]
     fn yahoo_interval_infers_common_bar_sizes() {
-        let candles = vec![
-            candle(1_700_000_000, 100.0),
-            candle(1_700_000_900, 101.0),
-        ];
+        let candles = vec![candle(1_700_000_000, 100.0), candle(1_700_000_900, 101.0)];
         assert_eq!(yahoo_interval_from_candles(&candles), "15m");
     }
 
@@ -407,6 +418,8 @@ mod tests {
             &mut notes,
         );
         assert!(auxiliary.uncertainty_penalty > 0.0);
-        assert!(notes.iter().any(|item| item.starts_with("runtime_vix_change_5bar=")));
+        assert!(notes
+            .iter()
+            .any(|item| item.starts_with("runtime_vix_change_5bar=")));
     }
 }

@@ -6,11 +6,10 @@ use std::collections::BTreeMap;
 use std::path::Path;
 
 use super::control_matrix_providers::{
-    build_provider_summary_for_requirements, ControlMatrixDataRequirement, ControlMatrixProviderSummary,
+    build_provider_summary_for_requirements, ControlMatrixDataRequirement,
+    ControlMatrixProviderSummary,
 };
-use super::provider_fetch::{
-    fetch_options_summary_for_task, fetch_reference_candles_for_task,
-};
+use super::provider_fetch::{fetch_options_summary_for_task, fetch_reference_candles_for_task};
 use crate::types::Candle;
 
 pub const MARKET_DATA_HARNESS_PRESETS_FILE: &str = "config/market_data_harness_presets.json";
@@ -265,16 +264,16 @@ pub fn build_market_data_harness_plan(
                 None
             };
         match operation {
-            MarketDataHarnessOperation::Ohlcv | MarketDataHarnessOperation::Quote => tasks.push(
-                MarketDataHarnessTask {
+            MarketDataHarnessOperation::Ohlcv | MarketDataHarnessOperation::Quote => {
+                tasks.push(MarketDataHarnessTask {
                     role: role.clone(),
                     provider,
                     operation,
                     symbol,
                     request: provider_request,
                     fallback_options_proxy_symbol,
-                },
-            ),
+                })
+            }
             MarketDataHarnessOperation::OptionsSummary => {
                 tasks.push(MarketDataHarnessTask {
                     role: role.clone(),
@@ -303,7 +302,9 @@ pub fn build_market_data_harness_plan(
     })
 }
 
-pub fn execute_market_data_harness_plan(plan: &MarketDataHarnessPlan) -> Result<MarketDataHarnessBundle> {
+pub fn execute_market_data_harness_plan(
+    plan: &MarketDataHarnessPlan,
+) -> Result<MarketDataHarnessBundle> {
     let interval = resolve_interval(&plan.request)?;
     let (start, end) = resolve_range(&plan.request)?;
     let count = plan
@@ -324,7 +325,9 @@ pub fn execute_market_data_harness_plan(plan: &MarketDataHarnessPlan) -> Result<
                         data: Some(serde_json::to_value(&candles)?),
                         error: None,
                     },
-                    Err(err) => harness_error_envelope(task, "fetch_failed", &err.to_string(), true),
+                    Err(err) => {
+                        harness_error_envelope(task, "fetch_failed", &err.to_string(), true)
+                    }
                 }
             }
             MarketDataHarnessOperation::OptionsSummary => {
@@ -338,7 +341,9 @@ pub fn execute_market_data_harness_plan(plan: &MarketDataHarnessPlan) -> Result<
                         data: Some(serde_json::to_value(&summary)?),
                         error: None,
                     },
-                    Err(err) => harness_error_envelope(task, "fetch_failed", &err.to_string(), true),
+                    Err(err) => {
+                        harness_error_envelope(task, "fetch_failed", &err.to_string(), true)
+                    }
                 }
             }
             MarketDataHarnessOperation::Quote => harness_error_envelope(
@@ -377,10 +382,7 @@ fn harness_error_envelope(
     }
 }
 
-fn resolve_provider_for_role(
-    role: &str,
-    request: &MarketDataHarnessRequest,
-) -> Result<String> {
+fn resolve_provider_for_role(role: &str, request: &MarketDataHarnessRequest) -> Result<String> {
     request
         .provider_preferences
         .get(role)
@@ -397,7 +399,10 @@ fn display_symbol_for_spec(spec: &MarketDataHarnessSymbolSpec) -> Result<String>
         .ok_or_else(|| anyhow!("missing display symbol"))
 }
 
-fn build_provider_request(spec: &MarketDataHarnessSymbolSpec, provider: &str) -> Result<ProviderExecutionRequest> {
+fn build_provider_request(
+    spec: &MarketDataHarnessSymbolSpec,
+    provider: &str,
+) -> Result<ProviderExecutionRequest> {
     match provider {
         "yfinance" => spec
             .yfinance
@@ -420,7 +425,11 @@ fn build_provider_request(spec: &MarketDataHarnessSymbolSpec, provider: &str) ->
 }
 
 fn resolve_interval(request: &MarketDataHarnessRequest) -> Result<String> {
-    if let Some(interval) = request.interval.as_ref().filter(|value| !value.trim().is_empty()) {
+    if let Some(interval) = request
+        .interval
+        .as_ref()
+        .filter(|value| !value.trim().is_empty())
+    {
         return Ok(interval.clone());
     }
     if let Some(path) = request.primary_data_path.as_deref() {
@@ -519,60 +528,62 @@ mod tests {
 
     #[test]
     fn plan_requires_explicit_symbol_specs_and_provider_preferences() {
-        let result = build_market_data_harness_plan(
-            MarketDataHarnessRequest {
-                market_key: "caller-label".to_string(),
-                primary_data_path: None,
-                interval: Some("1d".to_string()),
-                start: Some(Utc::now() - TimeDelta::days(10)),
-                end: Some(Utc::now()),
-                count: Some(20),
-                related_roles: vec!["etf_reference".to_string()],
-                provider_preferences: BTreeMap::new(),
-                symbol_overrides: BTreeMap::new(),
-                options_volatility_proxy_symbol: None,
-            },
-        );
+        let result = build_market_data_harness_plan(MarketDataHarnessRequest {
+            market_key: "caller-label".to_string(),
+            primary_data_path: None,
+            interval: Some("1d".to_string()),
+            start: Some(Utc::now() - TimeDelta::days(10)),
+            end: Some(Utc::now()),
+            count: Some(20),
+            related_roles: vec!["etf_reference".to_string()],
+            provider_preferences: BTreeMap::new(),
+            symbol_overrides: BTreeMap::new(),
+            options_volatility_proxy_symbol: None,
+        });
 
         assert!(result.is_err());
     }
 
     #[test]
     fn plan_uses_explicit_symbol_overrides_without_repo_presets() {
-        let plan = build_market_data_harness_plan(
-            MarketDataHarnessRequest {
-                market_key: "caller-label".to_string(),
-                primary_data_path: None,
-                interval: Some("1d".to_string()),
-                start: Some(Utc::now() - TimeDelta::days(10)),
-                end: Some(Utc::now()),
-                count: Some(20),
-                related_roles: vec!["etf_reference".to_string(), "options_underlying".to_string()],
-                provider_preferences: BTreeMap::from([
-                    ("etf_reference".to_string(), "yfinance".to_string()),
-                    ("options_underlying".to_string(), "tradingview_mcp".to_string()),
-                ]),
-                symbol_overrides: BTreeMap::from([
-                    (
-                        "etf_reference".to_string(),
-                        MarketDataHarnessSymbolSpec {
-                            display_symbol: Some("QQQ".to_string()),
-                            yfinance: Some("QQQ".to_string()),
-                            ..MarketDataHarnessSymbolSpec::default()
-                        },
-                    ),
-                    (
-                        "options_underlying".to_string(),
-                        MarketDataHarnessSymbolSpec {
-                            display_symbol: Some("NASDAQ:QQQ".to_string()),
-                            tradingview_mcp: Some("NASDAQ:QQQ".to_string()),
-                            ..MarketDataHarnessSymbolSpec::default()
-                        },
-                    ),
-                ]),
-                options_volatility_proxy_symbol: Some("^VIX".to_string()),
-            },
-        )
+        let plan = build_market_data_harness_plan(MarketDataHarnessRequest {
+            market_key: "caller-label".to_string(),
+            primary_data_path: None,
+            interval: Some("1d".to_string()),
+            start: Some(Utc::now() - TimeDelta::days(10)),
+            end: Some(Utc::now()),
+            count: Some(20),
+            related_roles: vec![
+                "etf_reference".to_string(),
+                "options_underlying".to_string(),
+            ],
+            provider_preferences: BTreeMap::from([
+                ("etf_reference".to_string(), "yfinance".to_string()),
+                (
+                    "options_underlying".to_string(),
+                    "tradingview_mcp".to_string(),
+                ),
+            ]),
+            symbol_overrides: BTreeMap::from([
+                (
+                    "etf_reference".to_string(),
+                    MarketDataHarnessSymbolSpec {
+                        display_symbol: Some("QQQ".to_string()),
+                        yfinance: Some("QQQ".to_string()),
+                        ..MarketDataHarnessSymbolSpec::default()
+                    },
+                ),
+                (
+                    "options_underlying".to_string(),
+                    MarketDataHarnessSymbolSpec {
+                        display_symbol: Some("NASDAQ:QQQ".to_string()),
+                        tradingview_mcp: Some("NASDAQ:QQQ".to_string()),
+                        ..MarketDataHarnessSymbolSpec::default()
+                    },
+                ),
+            ]),
+            options_volatility_proxy_symbol: Some("^VIX".to_string()),
+        })
         .unwrap();
 
         assert_eq!(plan.tasks.len(), 2);
@@ -588,7 +599,10 @@ mod tests {
             .iter()
             .find(|task| task.role == "options_underlying")
             .unwrap();
-        assert_eq!(options.fallback_options_proxy_symbol.as_deref(), Some("^VIX"));
+        assert_eq!(
+            options.fallback_options_proxy_symbol.as_deref(),
+            Some("^VIX")
+        );
     }
 
     #[test]

@@ -203,7 +203,11 @@ impl IntegratedLiveDataSource for OpenBBProvider {
         proxy_symbol: &str,
         underlying_symbol: &str,
     ) -> Result<OptionsChainSummary> {
-        OpenBBProvider::fetch_options_volatility_proxy_summary(self, proxy_symbol, underlying_symbol)
+        OpenBBProvider::fetch_options_volatility_proxy_summary(
+            self,
+            proxy_symbol,
+            underlying_symbol,
+        )
     }
 
     fn build_auxiliary_evidence(

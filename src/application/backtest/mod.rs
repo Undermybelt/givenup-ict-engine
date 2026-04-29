@@ -1,7 +1,7 @@
 pub mod backtest_compare;
-pub mod canonical_promotion;
 pub mod backtest_request;
 pub mod backtest_result;
+pub mod canonical_promotion;
 pub mod command_entry;
 pub mod control_matrix;
 pub mod feedback;
@@ -24,13 +24,13 @@ pub use backtest_compare::{
     build_oos_quality_delta_surface, build_research_compare_report,
     build_shrink_on_off_comparison_summary, compare_backtest_results, BacktestCompareReport,
 };
-pub use canonical_promotion::{
-    auto_quant_promote_canonical_setup_command, PromoteCanonicalSetupCommandInput,
-    PromoteCanonicalSetupReport,
-};
 pub use backtest_request::{build_backtest_request, BacktestRequest, BacktestRequestInput};
 pub use backtest_result::{
     build_backtest_result_artifact, BacktestResultArtifact, BacktestResultArtifactInput,
+};
+pub use canonical_promotion::{
+    auto_quant_promote_canonical_setup_command, PromoteCanonicalSetupCommandInput,
+    PromoteCanonicalSetupReport,
 };
 pub use command_entry::{
     backtest_command, factor_backtest_command, factor_research_command, BacktestCommandInput,
@@ -41,10 +41,9 @@ pub use control_matrix::{
     build_control_matrix_discovery_summary_for_symbol,
     build_control_matrix_provider_summary_for_plan, build_control_matrix_research_artifact,
     load_control_matrix_discovery_baseline, load_control_matrix_research_artifacts,
-    ControlMatrixDiscoveryBaseline, ControlMatrixDiscoveryCandidate,
-    ControlMatrixDiscoverySummary, ControlMatrixKind, ControlMatrixPlan,
-    ControlMatrixResearchArtifact, ControlMatrixResearchArtifactInput,
-    ControlMatrixResearchRunSummary, Pb12RunSpec, Pb12Toggle,
+    ControlMatrixDiscoveryBaseline, ControlMatrixDiscoveryCandidate, ControlMatrixDiscoverySummary,
+    ControlMatrixKind, ControlMatrixPlan, ControlMatrixResearchArtifact,
+    ControlMatrixResearchArtifactInput, ControlMatrixResearchRunSummary, Pb12RunSpec, Pb12Toggle,
     CONTROL_MATRIX_RESEARCH_ARTIFACT_KIND, CONTROL_MATRIX_RESEARCH_RUNS_FILE, PB12_TOGGLES,
 };
 pub use feedback::{

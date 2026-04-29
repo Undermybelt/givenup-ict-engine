@@ -57,9 +57,7 @@ pub fn detect_market_structure_shifts(
     out
 }
 
-pub fn detect_market_structure_shifts_default(
-    candles: &[Candle],
-) -> Vec<MarketStructureShift> {
+pub fn detect_market_structure_shifts_default(candles: &[Candle]) -> Vec<MarketStructureShift> {
     detect_market_structure_shifts(candles, DEFAULT_MSS_SWING_LOOKBACK)
 }
 
@@ -111,7 +109,10 @@ mod tests {
             .iter()
             .filter(|m| m.direction == Direction::Bull)
             .count();
-        assert!(bull <= 1, "monotone uptrend must not emit repeated bull MSS");
+        assert!(
+            bull <= 1,
+            "monotone uptrend must not emit repeated bull MSS"
+        );
     }
 
     #[test]

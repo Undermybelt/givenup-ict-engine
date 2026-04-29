@@ -874,9 +874,7 @@ where
     Ok(output)
 }
 
-pub fn build_analyze_output_value<R, E>(
-    input: AnalyzeOutputValueInput<'_, R, E>,
-) -> Result<Value>
+pub fn build_analyze_output_value<R, E>(input: AnalyzeOutputValueInput<'_, R, E>) -> Result<Value>
 where
     R: Serialize,
     E: Serialize,
@@ -895,8 +893,8 @@ where
         inline_ledger,
         redact_paths,
     } = input;
-    let mut output = serde_json::to_value(build_analyze_output_envelope(
-        AnalyzeOutputEnvelopeInput {
+    let mut output =
+        serde_json::to_value(build_analyze_output_envelope(AnalyzeOutputEnvelopeInput {
             report,
             compact_report,
             agent_report,
@@ -907,8 +905,7 @@ where
             ensemble_vote,
             pda_sequence_summary,
             executor_scorecard_source,
-        },
-    ))?;
+        }))?;
     if !inline_ledger {
         trim_analyze_output_workflow_snapshot_ledgers(&mut output);
     }

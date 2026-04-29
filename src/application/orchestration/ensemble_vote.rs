@@ -368,7 +368,7 @@ fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeature
         "Observe".to_string()
     };
     let pre_bayes = input.pre_bayes_filter.as_ref();
-    PolicyFeatureVector {
+    let features = PolicyFeatureVector {
         factor_alignment: input
             .belief
             .regime_posterior
@@ -592,7 +592,22 @@ fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeature
                 _ => "unknown".to_string(),
             }
         },
-    }
+        setup_model_id: String::new(),
+        setup_progress_state: String::new(),
+        cisd_run_length_observed: 0.0,
+        cisd_impulse_atr: 0.0,
+        cisd_body_ratio_mean: 0.0,
+        rb_wick_body_ratio: 0.0,
+        rb_close_location_ratio: 0.0,
+        bars_between_cisd_and_rb: 0.0,
+        seq_window_hit: false,
+        ema19_distance_bps: 0.0,
+        realized_vol_zscore: 0.0,
+        hmm_accumulation_prob: 0.0,
+        hmm_manipulation_expansion_prob: 0.0,
+        hmm_distribution_prob: 0.0,
+    };
+    features
 }
 
 fn load_named_policy_or_placeholder(filename: &str) -> CatBoostCompatiblePolicyEngine {
