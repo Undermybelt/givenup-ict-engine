@@ -9763,6 +9763,7 @@ mod tests {
             load_state(temp.path(), "NQ", ict_engine::state::ANALYZE_RUNS_FILE).unwrap();
         let snapshot: WorkflowSnapshot =
             load_state(temp.path(), "NQ", ict_engine::state::WORKFLOW_SNAPSHOT_FILE).unwrap();
+        let learning_state = load_learning_state(temp.path(), "NQ").unwrap();
 
         assert_eq!(runs.len(), 1);
         assert_eq!(runs[0].source_command, "analyze");
@@ -9779,6 +9780,7 @@ mod tests {
         assert!(snapshot.latest_analyze.is_some());
         assert!(snapshot.latest_ensemble_vote.is_some());
         assert_eq!(snapshot.current_focus_phase, "analyze");
+        assert!(!learning_state.structural_prior_state.paths.is_empty());
     }
 
     #[test]
@@ -11852,6 +11854,15 @@ mod tests {
             .and_then(|phase| phase.structural_feedback.as_ref())
             .expect("snapshot structural refs");
         assert_eq!(snapshot_refs.branch_id, refs.branch_id);
+        let path_prior = learning_state
+            .structural_prior_state
+            .paths
+            .get(&refs.path_id)
+            .expect("path structural prior");
+        assert_eq!(path_prior.observations, 1);
+        assert_eq!(path_prior.followed_count, 1);
+        assert_eq!(path_prior.wins, 1);
+        assert!(path_prior.smoothed_prior > 0.5);
     }
 
     #[test]

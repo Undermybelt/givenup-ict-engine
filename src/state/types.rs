@@ -53,7 +53,44 @@ pub struct LearningState {
     pub factor_profiles: BTreeMap<String, FactorLearningProfile>,
     pub factor_rankings: Vec<PersistedFactorRanking>,
     pub feedback_history: Vec<FeedbackRecord>,
+    #[serde(default)]
+    pub structural_prior_state: StructuralPriorLearningState,
     pub last_updated: Option<DateTime<Utc>>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralPriorLearningState {
+    pub nodes: BTreeMap<String, StructuralPriorStats>,
+    pub branches: BTreeMap<String, StructuralPriorStats>,
+    pub scenarios: BTreeMap<String, StructuralPriorStats>,
+    pub paths: BTreeMap<String, StructuralPriorStats>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralPriorStats {
+    pub observations: usize,
+    pub followed_count: usize,
+    pub wins: usize,
+    pub losses: usize,
+    pub breakevens: usize,
+    pub invalidated: usize,
+    pub abandoned: usize,
+    pub not_followed: usize,
+    pub avg_pnl: f64,
+    pub smoothed_prior: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralPriorSeed {
+    pub observations: usize,
+    pub followed_count: usize,
+    pub wins: usize,
+    pub losses: usize,
+    pub breakevens: usize,
+    pub invalidated: usize,
+    pub abandoned: usize,
+    pub not_followed: usize,
+    pub avg_pnl: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2567,7 +2604,7 @@ impl LearningState {
             .join("|");
 
         format!(
-            "{}|{}|{}|{:?}|{}|{:.8}|{}|{:?}|{:?}|{:.6}|{:.6}|{}",
+            "{}|{}|{}|{:?}|{}|{:.8}|{}|{:?}|{:?}|{:.6}|{:.6}|{}|{}",
             record.timestamp.to_rfc3339_opts(SecondsFormat::Secs, true),
             record.symbol,
             record.source,
@@ -2582,7 +2619,23 @@ impl LearningState {
                 .to_bits(),
             record.model_probabilities_before_trade.long_score,
             record.model_probabilities_before_trade.short_score,
-            factors
+            factors,
+            record
+                .structural_feedback
+                .as_ref()
+                .map(|refs| {
+                    format!(
+                        "{}|{}|{}|{}|{}|{}|{:?}",
+                        refs.protocol_version,
+                        refs.recommendation_id,
+                        refs.node_id,
+                        refs.branch_id,
+                        refs.scenario_id,
+                        refs.path_id,
+                        refs.followed_path
+                    )
+                })
+                .unwrap_or_else(|| "no_structural_feedback".to_string())
         )
     }
 
@@ -2615,6 +2668,81 @@ impl LearningState {
                 *existing = replacement.clone();
             }
         }
+    }
+
+    pub fn apply_structural_feedback(&mut self, feedback: &[FeedbackRecord]) {
+        for record in feedback {
+            let Some(refs) = record.structural_feedback.as_ref() else {
+                continue;
+            };
+            update_structural_prior_stats(
+                self.structural_prior_state
+                    .nodes
+                    .entry(refs.node_id.clone())
+                    .or_default(),
+                record,
+                refs.followed_path,
+            );
+            update_structural_prior_stats(
+                self.structural_prior_state
+                    .branches
+                    .entry(refs.branch_id.clone())
+                    .or_default(),
+                record,
+                refs.followed_path,
+            );
+            update_structural_prior_stats(
+                self.structural_prior_state
+                    .scenarios
+                    .entry(refs.scenario_id.clone())
+                    .or_default(),
+                record,
+                refs.followed_path,
+            );
+            update_structural_prior_stats(
+                self.structural_prior_state
+                    .paths
+                    .entry(refs.path_id.clone())
+                    .or_default(),
+                record,
+                refs.followed_path,
+            );
+        }
+    }
+
+    pub fn apply_structural_prior_seed(
+        &mut self,
+        refs: &StructuralFeedbackRefs,
+        seed: &StructuralPriorSeed,
+    ) {
+        apply_structural_prior_seed_to_stats(
+            self.structural_prior_state
+                .nodes
+                .entry(refs.node_id.clone())
+                .or_default(),
+            seed,
+        );
+        apply_structural_prior_seed_to_stats(
+            self.structural_prior_state
+                .branches
+                .entry(refs.branch_id.clone())
+                .or_default(),
+            seed,
+        );
+        apply_structural_prior_seed_to_stats(
+            self.structural_prior_state
+                .scenarios
+                .entry(refs.scenario_id.clone())
+                .or_default(),
+            seed,
+        );
+        apply_structural_prior_seed_to_stats(
+            self.structural_prior_state
+                .paths
+                .entry(refs.path_id.clone())
+                .or_default(),
+            seed,
+        );
     }
 
     pub fn summary(&self) -> FeedbackHistorySummary {
@@ -2988,6 +3116,76 @@ fn iteration_priority(action: &str) -> u8 {
     }
 }
 
+fn update_structural_prior_stats(
+    stats: &mut StructuralPriorStats,
+    record: &FeedbackRecord,
+    followed_path: bool,
+) {
+    stats.observations += 1;
+    if stats.observations == 1 {
+        stats.avg_pnl = record.pnl;
+    } else {
+        let previous = stats.observations - 1;
+        stats.avg_pnl =
+            ((stats.avg_pnl * previous as f64) + record.pnl) / stats.observations as f64;
+    }
+    if followed_path {
+        stats.followed_count += 1;
+    }
+    if !followed_path || record.realized_outcome == "not_followed" {
+        stats.not_followed += 1;
+    }
+    match record.realized_outcome.as_str() {
+        "win" => stats.wins += 1,
+        "loss" => stats.losses += 1,
+        "breakeven" => stats.breakevens += 1,
+        "invalidated" => stats.invalidated += 1,
+        "abandoned" => stats.abandoned += 1,
+        _ => {}
+    }
+    stats.smoothed_prior = if stats.followed_count == 0 {
+        0.5
+    } else {
+        let empirical_success =
+            (stats.wins as f64 + stats.breakevens as f64 * 0.5) / stats.followed_count as f64;
+        let sample_weight = (stats.followed_count as f64 / 5.0).min(1.0);
+        (0.5 * (1.0 - sample_weight) + empirical_success * sample_weight).clamp(0.0, 1.0)
+    };
+}
+
+fn apply_structural_prior_seed_to_stats(
+    stats: &mut StructuralPriorStats,
+    seed: &StructuralPriorSeed,
+) {
+    if seed.observations == 0 {
+        return;
+    }
+    let previous_observations = stats.observations;
+    stats.observations += seed.observations;
+    stats.followed_count += seed.followed_count;
+    stats.wins += seed.wins;
+    stats.losses += seed.losses;
+    stats.breakevens += seed.breakevens;
+    stats.invalidated += seed.invalidated;
+    stats.abandoned += seed.abandoned;
+    stats.not_followed += seed.not_followed;
+    let new_total = previous_observations + seed.observations;
+    stats.avg_pnl = if new_total == 0 {
+        0.0
+    } else {
+        ((stats.avg_pnl * previous_observations as f64) + (seed.avg_pnl * seed.observations as f64))
+            / new_total as f64
+    };
+    stats.smoothed_prior = if stats.followed_count == 0 {
+        0.5
+    } else {
+        let empirical_success =
+            (stats.wins as f64 + stats.breakevens as f64 * 0.5) / stats.followed_count as f64;
+        let sample_weight = (stats.followed_count as f64 / 5.0).min(1.0);
+        (0.5 * (1.0 - sample_weight) + empirical_success * sample_weight).clamp(0.0, 1.0)
+    };
+}
+
 fn family_dominant_action(items: &[&PersistedFactorRanking]) -> &'static str {
     if items.iter().any(|item| item.iteration_action == "replace") {
         "replace"
@@ -3167,6 +3365,35 @@ mod tests {
         assert_eq!(first.len(), 1);
         assert!(second.is_empty());
         assert_eq!(state.feedback_history.len(), 1);
+    }
+
+    #[test]
+    fn test_merge_feedback_records_keeps_distinct_structural_refs() {
+        let mut first = sample_feedback();
+        first.structural_feedback = Some(StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-1".to_string(),
+            recommended_at: "2026-04-29T00:00:00Z".to_string(),
+            node_id: "node-1".to_string(),
+            branch_id: "branch-1".to_string(),
+            scenario_id: "scenario-1".to_string(),
+            path_id: "path-1".to_string(),
+            followed_path: true,
+            exit_reason: Some("target_hit".to_string()),
+            notes: None,
+        });
+        let mut second = first.clone();
+        second.structural_feedback = Some(StructuralFeedbackRefs {
+            path_id: "path-2".to_string(),
+            recommendation_id: "rec-2".to_string(),
+            ..first.structural_feedback.clone().unwrap()
+        });
+
+        let mut state = LearningState::default();
+        let inserted = state.merge_feedback_records(&[first, second]);
+
+        assert_eq!(inserted.len(), 2);
+        assert_eq!(state.feedback_history.len(), 2);
     }
 
     #[test]

@@ -6,7 +6,7 @@ use crate::application::provider_catalog::{
 };
 use crate::state::{
     recommended_next_command_meta, FeedbackFactorUsage, FeedbackRecord, ModelProbabilitySnapshot,
-    StructuralFeedbackRefs, WorkflowSnapshot,
+    StructuralFeedbackRefs, StructuralPriorLearningState, StructuralPriorStats, WorkflowSnapshot,
 };
 use crate::types::{Direction, Regime};
 
@@ -489,34 +489,55 @@ pub fn build_structural_playbook_bundle(
     provider_status_agent: &ProviderCatalogAgentSurface,
     feedback_history: &[FeedbackRecord],
 ) -> StructuralPlaybookBundle {
+    build_structural_playbook_bundle_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        &StructuralPriorLearningState::default(),
+    )
+}
+
+pub fn build_structural_playbook_bundle_with_prior_state(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
+) -> StructuralPlaybookBundle {
     let command = top_level_command(snapshot);
     let support_reason = structural_support_reason(snapshot);
     let provider_support =
         build_workflow_provider_support(provider_status_agent, &command, support_reason.as_deref());
     let focus_phase = structural_focus_phase(snapshot);
-    let node = build_structural_node_artifact(snapshot, provider_status_agent);
+    let node = build_structural_node_artifact_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        structural_prior_state,
+    );
     let branch_history = build_structural_branch_history_artifact(snapshot, feedback_history);
     let scenario_history =
         build_structural_scenario_history_artifact(snapshot, feedback_history);
     let path_history = build_structural_path_history_artifact(snapshot, feedback_history);
-    let branch_set = build_structural_branch_set_artifact(
+    let branch_set = build_structural_branch_set_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
         &node,
         &branch_history,
+        structural_prior_state,
     );
-    let scenario_playbook = build_structural_scenario_playbook_artifact(
+    let scenario_playbook = build_structural_scenario_playbook_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
         &branch_set,
         &scenario_history,
+        structural_prior_state,
     );
-    let path_plan = build_structural_path_plan_artifact(
+    let path_plan = build_structural_path_plan_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
         &provider_support,
         &scenario_playbook,
         &path_history,
+        structural_prior_state,
     );
     let feedback_template = build_structural_feedback_template_artifact(
         snapshot,
@@ -525,10 +546,11 @@ pub fn build_structural_playbook_bundle(
         &scenario_playbook,
         &path_plan,
     );
-    let recommended_path_bundle = build_structural_recommended_path_bundle_artifact(
+    let recommended_path_bundle = build_structural_recommended_path_bundle_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
         feedback_history,
+        structural_prior_state,
     );
     let history_summary = build_structural_history_summary_artifact(snapshot, feedback_history);
     let node_history = build_structural_node_history_artifact(snapshot, feedback_history);
@@ -569,7 +591,26 @@ pub fn build_structural_experience_prior_surface_artifact(
     provider_status_agent: &ProviderCatalogAgentSurface,
     feedback_history: &[FeedbackRecord],
 ) -> StructuralExperiencePriorSurfaceArtifact {
-    let playbook = build_structural_playbook_bundle(snapshot, provider_status_agent, feedback_history);
+    build_structural_experience_prior_surface_artifact_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        &StructuralPriorLearningState::default(),
+    )
+}
+
+pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
+) -> StructuralExperiencePriorSurfaceArtifact {
+    let playbook = build_structural_playbook_bundle_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        structural_prior_state,
+    );
     let latest_feedback = structural_latest_feedback_refs(snapshot);
     let node_id = latest_feedback
         .as_ref()
@@ -742,17 +783,29 @@ pub fn build_structural_experience_prior_surface_artifact(
             entity_id: node_id.to_string(),
             historical_total_records: node_summary.map(|summary| summary.total_records).unwrap_or(0),
             historical_followed_count: node_summary.map(|summary| summary.followed_count).unwrap_or(0),
-            historical_win_rate: structural_node_history_win_rate(node_summary),
-            historical_invalidation_rate: structural_node_history_invalidation_rate(node_summary),
-            historical_avg_pnl: node_summary.map(|summary| summary.avg_pnl),
-            experience_prior: structural_history_adjusted_node_prior(
-                playbook.node.belief_prior,
+            historical_win_rate: structural_resolved_node_win_rate(
+                structural_prior_state.nodes.get(node_id),
                 node_summary,
+            ),
+            historical_invalidation_rate: structural_resolved_node_invalidation_rate(
+                structural_prior_state.nodes.get(node_id),
+                node_summary,
+            ),
+            historical_avg_pnl: structural_resolved_avg_pnl(
+                structural_prior_state.nodes.get(node_id),
+                node_summary.map(|summary| summary.avg_pnl),
+            ),
+            experience_prior: structural_resolved_smoothed_prior(
+                structural_prior_state.nodes.get(node_id),
+                structural_history_adjusted_node_prior(playbook.node.belief_prior, node_summary),
             ),
             current_posterior: Some(playbook.node.posterior_confidence),
             composite_score: structural_composite_preference_score(
                 playbook.node.posterior_confidence,
-                structural_history_adjusted_node_prior(playbook.node.belief_prior, node_summary),
+                structural_resolved_smoothed_prior(
+                    structural_prior_state.nodes.get(node_id),
+                    structural_history_adjusted_node_prior(playbook.node.belief_prior, node_summary),
+                ),
             ),
         }),
         branch,
@@ -785,6 +838,43 @@ pub fn build_structural_top_path_candidates_artifact(
             recommended_command: path.recommended_command,
         })
         .collect::<Vec<_>>();
+    StructuralTopPathCandidatesArtifact {
+        symbol: structural_symbol(snapshot),
+        candidate_count: candidates.len(),
+        candidates,
+    }
+}
+
+pub fn build_structural_top_path_candidates_artifact_with_prior_state(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
+) -> StructuralTopPathCandidatesArtifact {
+    let candidates = structural_ranked_paths_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        structural_prior_state,
+    )
+    .into_iter()
+    .take(3)
+    .enumerate()
+    .map(|(index, path)| StructuralTopPathCandidate {
+        rank: index + 1,
+        path_id: path.path_id,
+        scenario_id: path.scenario_id,
+        path_label: path.path_label,
+        direction: path.direction,
+        experience_prior: path.path_prior,
+        current_posterior: path.path_posterior,
+        composite_score: path.composite_preference_score,
+        historical_total_records: path.historical_total_records,
+        historical_followed_count: path.historical_followed_count,
+        historical_invalidation_rate: path.historical_invalidation_rate,
+        recommended_command: path.recommended_command,
+    })
+    .collect::<Vec<_>>();
     StructuralTopPathCandidatesArtifact {
         symbol: structural_symbol(snapshot),
         candidate_count: candidates.len(),
@@ -831,9 +921,66 @@ pub fn build_structural_recommended_path_bundle_artifact(
     })
 }
 
+pub fn build_structural_recommended_path_bundle_artifact_with_prior_state(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
+) -> Option<StructuralRecommendedPathBundleArtifact> {
+    let path = structural_ranked_paths_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        structural_prior_state,
+    )
+    .into_iter()
+    .next()?;
+    let why_this_path = structural_why_this_path_summary(&path);
+    Some(StructuralRecommendedPathBundleArtifact {
+        symbol: structural_symbol(snapshot),
+        rank: 1,
+        path_id: path.path_id,
+        scenario_id: path.scenario_id,
+        path_label: path.path_label,
+        direction: path.direction,
+        experience_prior: path.path_prior,
+        current_posterior: path.path_posterior,
+        composite_score: path.composite_preference_score,
+        historical_total_records: path.historical_total_records,
+        historical_invalidation_rate: path.historical_invalidation_rate,
+        why_this_path,
+        trigger_summary: structural_short_rule_summary(
+            &path.trigger_conditions,
+            "trigger_not_available",
+        ),
+        confirmation_summary: structural_short_rule_summary(
+            &path.confirmation_conditions,
+            "confirmation_not_available",
+        ),
+        stop_summary: structural_scalar_rule_summary(&path.stop_definition, "stop_not_available"),
+        invalidation_summary: structural_short_rule_summary(
+            &path.invalidation_conditions,
+            "invalidation_not_available",
+        ),
+        recommended_command: path.recommended_command,
+    })
+}
+
 pub fn build_structural_node_artifact(
     snapshot: &WorkflowSnapshot,
     provider_status_agent: &ProviderCatalogAgentSurface,
+) -> StructuralNodeArtifact {
+    build_structural_node_artifact_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        &StructuralPriorLearningState::default(),
+    )
+}
+
+pub fn build_structural_node_artifact_with_prior_state(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    structural_prior_state: &StructuralPriorLearningState,
 ) -> StructuralNodeArtifact {
     let symbol = structural_symbol(snapshot);
     let command = top_level_command(snapshot);
@@ -868,9 +1015,13 @@ pub fn build_structural_node_artifact(
             }
         });
     let posterior_confidence = structural_primary_probability(snapshot);
-    let belief_prior = structural_primary_prior(snapshot);
+    let provisional_node_id = format!("{symbol}:{node_family}:{node_label}");
+    let belief_prior = structural_resolved_smoothed_prior(
+        structural_prior_state.nodes.get(&provisional_node_id),
+        structural_primary_prior(snapshot),
+    );
     StructuralNodeArtifact {
-        node_id: format!("{symbol}:{node_family}:{node_label}"),
+        node_id: provisional_node_id,
         node_family,
         node_label,
         focus_phase: structural_focus_phase(snapshot),
@@ -890,6 +1041,22 @@ pub fn build_structural_branch_set_artifact(
     provider_status_agent: &ProviderCatalogAgentSurface,
     node: &StructuralNodeArtifact,
     branch_history: &StructuralBranchHistoryArtifact,
+) -> StructuralBranchSetArtifact {
+    build_structural_branch_set_artifact_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        node,
+        branch_history,
+        &StructuralPriorLearningState::default(),
+    )
+}
+
+pub fn build_structural_branch_set_artifact_with_prior_state(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    node: &StructuralNodeArtifact,
+    branch_history: &StructuralBranchHistoryArtifact,
+    structural_prior_state: &StructuralPriorLearningState,
 ) -> StructuralBranchSetArtifact {
     let command = top_level_command(snapshot);
     let support_reason = structural_support_reason(snapshot);
@@ -982,26 +1149,39 @@ pub fn build_structural_branch_set_artifact(
                     .find(|branch| branch.branch_id == branch_id);
                 let history_adjusted_prior =
                     structural_history_adjusted_branch_prior(probability, historical_summary);
+                let prior_stats = structural_prior_state.branches.get(&branch_id);
                 branches.push(StructuralBranchArtifact {
                     branch_id,
                     target_node_id: format!("{}:{}:candidate", structural_symbol(snapshot), regime),
                     branch_label: branch_label.to_string(),
-                    prior_probability: history_adjusted_prior,
+                    prior_probability: structural_resolved_smoothed_prior(
+                        prior_stats,
+                        history_adjusted_prior,
+                    ),
                     posterior_probability: probability,
-                    historical_total_records: historical_summary
-                        .map(|summary| summary.total_records)
-                        .unwrap_or(0),
-                    historical_followed_count: historical_summary
-                        .map(|summary| summary.followed_count)
-                        .unwrap_or(0),
-                    historical_win_rate: structural_branch_history_win_rate(historical_summary),
-                    historical_invalidation_rate: structural_branch_history_invalidation_rate(
+                    historical_total_records: structural_resolved_observations(
+                        prior_stats,
+                        historical_summary.map(|summary| summary.total_records).unwrap_or(0),
+                    ),
+                    historical_followed_count: structural_resolved_followed_count(
+                        prior_stats,
+                        historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
+                    ),
+                    historical_win_rate: structural_resolved_branch_win_rate(
+                        prior_stats,
                         historical_summary,
                     ),
-                    historical_avg_pnl: historical_summary.map(|summary| summary.avg_pnl),
+                    historical_invalidation_rate: structural_resolved_branch_invalidation_rate(
+                        prior_stats,
+                        historical_summary,
+                    ),
+                    historical_avg_pnl: structural_resolved_avg_pnl(
+                        prior_stats,
+                        historical_summary.map(|summary| summary.avg_pnl),
+                    ),
                     composite_branch_score: structural_composite_preference_score(
                         probability,
-                        history_adjusted_prior,
+                        structural_resolved_smoothed_prior(prior_stats, history_adjusted_prior),
                     ),
                     activation_conditions: vec![format!("regime_posterior={regime}:{probability:.3}")],
                     failure_conditions: vec![format!(
@@ -1065,6 +1245,22 @@ pub fn build_structural_scenario_playbook_artifact(
     provider_status_agent: &ProviderCatalogAgentSurface,
     branches: &StructuralBranchSetArtifact,
     scenario_history: &StructuralScenarioHistoryArtifact,
+) -> StructuralScenarioPlaybookArtifact {
+    build_structural_scenario_playbook_artifact_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        branches,
+        scenario_history,
+        &StructuralPriorLearningState::default(),
+    )
+}
+
+pub fn build_structural_scenario_playbook_artifact_with_prior_state(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    branches: &StructuralBranchSetArtifact,
+    scenario_history: &StructuralScenarioHistoryArtifact,
+    structural_prior_state: &StructuralPriorLearningState,
 ) -> StructuralScenarioPlaybookArtifact {
     let command = top_level_command(snapshot);
     let support_reason = structural_support_reason(snapshot);
@@ -1140,27 +1336,40 @@ pub fn build_structural_scenario_playbook_artifact(
                     branch.posterior_probability,
                     historical_summary,
                 );
+            let prior_stats = structural_prior_state.scenarios.get(&scenario_id);
             StructuralScenarioArtifact {
                 scenario_id: scenario_id.clone(),
                 branch_id: branch.branch_id.clone(),
                 scenario_label,
                 narrative,
-                prior_probability: history_adjusted_prior,
+                prior_probability: structural_resolved_smoothed_prior(
+                    prior_stats,
+                    history_adjusted_prior,
+                ),
                 posterior_probability: branch.posterior_probability,
-                historical_total_records: historical_summary
-                    .map(|summary| summary.total_records)
-                    .unwrap_or(0),
-                historical_followed_count: historical_summary
-                    .map(|summary| summary.followed_count)
-                    .unwrap_or(0),
-                historical_win_rate: structural_scenario_history_win_rate(historical_summary),
-                historical_invalidation_rate: structural_scenario_history_invalidation_rate(
+                historical_total_records: structural_resolved_observations(
+                    prior_stats,
+                    historical_summary.map(|summary| summary.total_records).unwrap_or(0),
+                ),
+                historical_followed_count: structural_resolved_followed_count(
+                    prior_stats,
+                    historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
+                ),
+                historical_win_rate: structural_resolved_scenario_win_rate(
+                    prior_stats,
                     historical_summary,
                 ),
-                historical_avg_pnl: historical_summary.map(|summary| summary.avg_pnl),
+                historical_invalidation_rate: structural_resolved_scenario_invalidation_rate(
+                    prior_stats,
+                    historical_summary,
+                ),
+                historical_avg_pnl: structural_resolved_avg_pnl(
+                    prior_stats,
+                    historical_summary.map(|summary| summary.avg_pnl),
+                ),
                 composite_scenario_score: structural_composite_preference_score(
                     branch.posterior_probability,
-                    history_adjusted_prior,
+                    structural_resolved_smoothed_prior(prior_stats, history_adjusted_prior),
                 ),
                 required_confirmations: branch.activation_conditions.clone(),
                 hard_invalidations: branch.failure_conditions.clone(),
@@ -1178,6 +1387,24 @@ pub fn build_structural_path_plan_artifact(
     provider_support: &crate::application::provider_catalog::WorkflowProviderSupportSurface,
     scenarios: &StructuralScenarioPlaybookArtifact,
     path_history: &StructuralPathHistoryArtifact,
+) -> StructuralPathPlanArtifact {
+    build_structural_path_plan_artifact_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        provider_support,
+        scenarios,
+        path_history,
+        &StructuralPriorLearningState::default(),
+    )
+}
+
+pub fn build_structural_path_plan_artifact_with_prior_state(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    provider_support: &crate::application::provider_catalog::WorkflowProviderSupportSurface,
+    scenarios: &StructuralScenarioPlaybookArtifact,
+    path_history: &StructuralPathHistoryArtifact,
+    structural_prior_state: &StructuralPriorLearningState,
 ) -> StructuralPathPlanArtifact {
     let command = top_level_command(snapshot);
     let next_meta = recommended_next_command_meta(&command);
@@ -1208,9 +1435,12 @@ pub fn build_structural_path_plan_artifact(
             let base_prior = structural_primary_prior(snapshot);
             let history_adjusted_prior =
                 structural_history_adjusted_path_prior(base_prior, historical_summary);
+            let prior_stats = structural_prior_state.paths.get(&path_id);
+            let resolved_prior =
+                structural_resolved_smoothed_prior(prior_stats, history_adjusted_prior);
             let composite_preference_score = structural_composite_preference_score(
                 structural_posterior_confidence(snapshot),
-                history_adjusted_prior,
+                resolved_prior,
             );
             StructuralPathArtifact {
                 path_id,
@@ -1236,15 +1466,26 @@ pub fn build_structural_path_plan_artifact(
                     .latest_analyze
                     .as_ref()
                     .and_then(|phase| phase.execution_edge_share),
-                historical_total_records: historical_summary
-                    .map(|summary| summary.total_records)
-                    .unwrap_or(0),
-                historical_followed_count: historical_summary
-                    .map(|summary| summary.followed_count)
-                    .unwrap_or(0),
-                historical_win_rate: structural_history_win_rate(historical_summary),
-                historical_invalidation_rate: structural_history_invalidation_rate(historical_summary),
-                historical_avg_pnl: historical_summary.map(|summary| summary.avg_pnl),
+                historical_total_records: structural_resolved_observations(
+                    prior_stats,
+                    historical_summary.map(|summary| summary.total_records).unwrap_or(0),
+                ),
+                historical_followed_count: structural_resolved_followed_count(
+                    prior_stats,
+                    historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
+                ),
+                historical_win_rate: structural_resolved_path_win_rate(
+                    prior_stats,
+                    historical_summary,
+                ),
+                historical_invalidation_rate: structural_resolved_path_invalidation_rate(
+                    prior_stats,
+                    historical_summary,
+                ),
+                historical_avg_pnl: structural_resolved_avg_pnl(
+                    prior_stats,
+                    historical_summary.map(|summary| summary.avg_pnl),
+                ),
                 trigger_conditions: structural_trigger_conditions(snapshot, scenario),
                 confirmation_conditions: structural_confirmation_conditions(
                     snapshot,
@@ -1256,7 +1497,7 @@ pub fn build_structural_path_plan_artifact(
                 invalidation_conditions: structural_invalidation_conditions(snapshot, scenario),
                 expected_failure_mode: structural_failure_mode(provider_support, scenario),
                 max_time_in_trade: "re-evaluate on next structural node update".to_string(),
-                path_prior: history_adjusted_prior,
+                path_prior: resolved_prior,
                 path_posterior: structural_posterior_confidence(snapshot),
                 bbn_support_score: structural_posterior_confidence(snapshot),
                 catboost_score: None,
@@ -1289,33 +1530,54 @@ fn structural_ranked_paths(
     provider_status_agent: &ProviderCatalogAgentSurface,
     feedback_history: &[FeedbackRecord],
 ) -> Vec<StructuralPathArtifact> {
+    structural_ranked_paths_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        &StructuralPriorLearningState::default(),
+    )
+}
+
+fn structural_ranked_paths_with_prior_state(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
+) -> Vec<StructuralPathArtifact> {
     let command = top_level_command(snapshot);
     let support_reason = structural_support_reason(snapshot);
     let provider_support =
         build_workflow_provider_support(provider_status_agent, &command, support_reason.as_deref());
-    let node = build_structural_node_artifact(snapshot, provider_status_agent);
+    let node = build_structural_node_artifact_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        structural_prior_state,
+    );
     let branch_history = build_structural_branch_history_artifact(snapshot, feedback_history);
     let scenario_history =
         build_structural_scenario_history_artifact(snapshot, feedback_history);
     let path_history = build_structural_path_history_artifact(snapshot, feedback_history);
-    let branch_set = build_structural_branch_set_artifact(
+    let branch_set = build_structural_branch_set_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
         &node,
         &branch_history,
+        structural_prior_state,
     );
-    let scenario_playbook = build_structural_scenario_playbook_artifact(
+    let scenario_playbook = build_structural_scenario_playbook_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
         &branch_set,
         &scenario_history,
+        structural_prior_state,
     );
-    let mut paths = build_structural_path_plan_artifact(
+    let mut paths = build_structural_path_plan_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
         &provider_support,
         &scenario_playbook,
         &path_history,
+        structural_prior_state,
     )
     .paths;
     paths.sort_by(|left, right| {
@@ -1326,6 +1588,122 @@ fn structural_ranked_paths(
             .then_with(|| right.path_prior.total_cmp(&left.path_prior))
     });
     paths
+}
+
+fn structural_resolved_smoothed_prior(
+    prior_stats: Option<&StructuralPriorStats>,
+    fallback: f64,
+) -> f64 {
+    prior_stats
+        .map(|stats| stats.smoothed_prior)
+        .unwrap_or(fallback)
+}
+
+fn structural_resolved_observations(
+    prior_stats: Option<&StructuralPriorStats>,
+    fallback: usize,
+) -> usize {
+    prior_stats.map(|stats| stats.observations).unwrap_or(fallback)
+}
+
+fn structural_resolved_followed_count(
+    prior_stats: Option<&StructuralPriorStats>,
+    fallback: usize,
+) -> usize {
+    prior_stats
+        .map(|stats| stats.followed_count)
+        .unwrap_or(fallback)
+}
+
+fn structural_prior_stats_win_rate(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
+    let stats = prior_stats?;
+    if stats.followed_count == 0 {
+        None
+    } else {
+        Some(stats.wins as f64 / stats.followed_count as f64)
+    }
+}
+
+fn structural_prior_stats_invalidation_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    let stats = prior_stats?;
+    if stats.followed_count == 0 {
+        None
+    } else {
+        Some(stats.invalidated as f64 / stats.followed_count as f64)
+    }
+}
+
+fn structural_resolved_avg_pnl(
+    prior_stats: Option<&StructuralPriorStats>,
+    fallback: Option<f64>,
+) -> Option<f64> {
+    prior_stats.map(|stats| stats.avg_pnl).or(fallback)
+}
+
+fn structural_resolved_node_win_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralNodeOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_win_rate(prior_stats)
+        .or_else(|| structural_node_history_win_rate(historical_summary))
+}
+
+fn structural_resolved_node_invalidation_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralNodeOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_invalidation_rate(prior_stats)
+        .or_else(|| structural_node_history_invalidation_rate(historical_summary))
+}
+
+fn structural_resolved_branch_win_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralBranchOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_win_rate(prior_stats)
+        .or_else(|| structural_branch_history_win_rate(historical_summary))
+}
+
+fn structural_resolved_branch_invalidation_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralBranchOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_invalidation_rate(prior_stats)
+        .or_else(|| structural_branch_history_invalidation_rate(historical_summary))
+}
+
+fn structural_resolved_scenario_win_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralScenarioOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_win_rate(prior_stats)
+        .or_else(|| structural_scenario_history_win_rate(historical_summary))
+}
+
+fn structural_resolved_scenario_invalidation_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralScenarioOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_invalidation_rate(prior_stats)
+        .or_else(|| structural_scenario_history_invalidation_rate(historical_summary))
+}
+
+fn structural_resolved_path_win_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralPathOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_win_rate(prior_stats)
+        .or_else(|| structural_history_win_rate(historical_summary))
+}
+
+fn structural_resolved_path_invalidation_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralPathOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_invalidation_rate(prior_stats)
+        .or_else(|| structural_history_invalidation_rate(historical_summary))
 }
 
 fn structural_short_rule_summary(items: &[String], fallback: &str) -> String {

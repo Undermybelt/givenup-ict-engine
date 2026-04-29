@@ -104,6 +104,7 @@ where
         &persisted_scorecards,
         &provider_status_agent,
         learning_state.feedback_history.as_slice(),
+        &learning_state.structural_prior_state,
         WorkflowStatusDispatchInput {
             phase,
             actionable_only,

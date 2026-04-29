@@ -6,14 +6,17 @@ use std::net::{SocketAddr, TcpStream};
 use std::time::Duration;
 
 use super::structural_playbook::{
-    build_structural_branch_history_artifact, build_structural_branch_set_artifact,
-    build_structural_experience_prior_surface_artifact,
+    build_structural_branch_history_artifact,
+    build_structural_branch_set_artifact_with_prior_state,
+    build_structural_experience_prior_surface_artifact_with_prior_state,
     build_structural_feedback_template_artifact, build_structural_history_summary_artifact,
-    build_structural_node_artifact, build_structural_node_history_artifact,
-    build_structural_path_history_artifact, build_structural_path_plan_artifact,
-    build_structural_recommended_path_bundle_artifact,
-    build_structural_playbook_bundle, build_structural_scenario_history_artifact,
-    build_structural_scenario_playbook_artifact, build_structural_top_path_candidates_artifact,
+    build_structural_node_artifact_with_prior_state,
+    build_structural_node_history_artifact, build_structural_path_history_artifact,
+    build_structural_path_plan_artifact_with_prior_state,
+    build_structural_recommended_path_bundle_artifact_with_prior_state,
+    build_structural_playbook_bundle_with_prior_state, build_structural_scenario_history_artifact,
+    build_structural_scenario_playbook_artifact_with_prior_state,
+    build_structural_top_path_candidates_artifact_with_prior_state,
     StructuralRecommendedPathBundleArtifact,
 };
 use crate::application::belief::{
@@ -36,7 +39,7 @@ use crate::state::{
     ExecutionCandidateArtifactSummary, PendingUpdateArtifactSummary, PreBayesEntryQualityBridge,
     PreBayesEntryQualityBridgeDiff, PreBayesEvidencePolicy, PreBayesPolicyDiff,
     PreBayesPolicyLineageSummary, PreBayesPolicyRecord, PreBayesSoftEvidenceNodeDiff,
-    RunProvenance, WorkflowSnapshot,
+    RunProvenance, StructuralPriorLearningState, WorkflowSnapshot,
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -445,11 +448,12 @@ pub fn build_human_workflow_status_view(
     persisted_scorecards: &[EnsembleExecutorScorecard],
 ) -> Value {
     let provider_status_agent = provider_status_agent_surface(None, None, None).unwrap_or_default();
-    build_human_workflow_status_view_with_provider_agent(
+    build_human_workflow_status_view_with_provider_agent_and_structural_prior_state(
         snapshot,
         persisted_scorecards,
         &provider_status_agent,
         &[],
+        &StructuralPriorLearningState::default(),
     )
 }
 
@@ -458,6 +462,22 @@ fn build_human_workflow_status_view_with_provider_agent(
     persisted_scorecards: &[EnsembleExecutorScorecard],
     provider_status_agent: &ProviderCatalogAgentSurface,
     feedback_history: &[crate::state::FeedbackRecord],
+) -> Value {
+    build_human_workflow_status_view_with_provider_agent_and_structural_prior_state(
+        snapshot,
+        persisted_scorecards,
+        provider_status_agent,
+        feedback_history,
+        &StructuralPriorLearningState::default(),
+    )
+}
+
+fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_state(
+    snapshot: &WorkflowSnapshot,
+    persisted_scorecards: &[EnsembleExecutorScorecard],
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[crate::state::FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
 ) -> Value {
     let no_workflow_state = workflow_status_empty_state(snapshot);
     let latest_phase = snapshot
@@ -698,10 +718,11 @@ fn build_human_workflow_status_view_with_provider_agent(
             )
         });
     let structural_history_summary = build_structural_history_summary_artifact(snapshot, feedback_history);
-    let experience_prior_surface = build_structural_experience_prior_surface_artifact(
+    let experience_prior_surface = build_structural_experience_prior_surface_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
         feedback_history,
+        structural_prior_state,
     );
     let experience_prior_line = experience_prior_surface.path.as_ref().map(|path| {
         format!(
@@ -714,15 +735,17 @@ fn build_human_workflow_status_view_with_provider_agent(
                 .round()) as usize
         )
     });
-    let top_path_candidates = build_structural_top_path_candidates_artifact(
+    let top_path_candidates = build_structural_top_path_candidates_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
         feedback_history,
+        structural_prior_state,
     );
-    let recommended_path_bundle = build_structural_recommended_path_bundle_artifact(
+    let recommended_path_bundle = build_structural_recommended_path_bundle_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
         feedback_history,
+        structural_prior_state,
     );
     let execution_contract_active =
         !hard_block_active && !historical_data_gate_active && !provider_support.active;
@@ -1071,19 +1094,37 @@ pub fn build_agent_workflow_status_view(
     persisted_scorecards: &[EnsembleExecutorScorecard],
 ) -> Value {
     let provider_status_agent = provider_status_agent_surface(None, None, None).unwrap_or_default();
-    build_agent_workflow_status_view_with_provider_agent(
+    build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state(
         snapshot,
         persisted_scorecards,
         &provider_status_agent,
         &[],
+        &StructuralPriorLearningState::default(),
     )
 }
 
+#[cfg(test)]
 fn build_agent_workflow_status_view_with_provider_agent(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
     provider_status_agent: &ProviderCatalogAgentSurface,
     feedback_history: &[crate::state::FeedbackRecord],
+) -> Value {
+    build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state(
+        snapshot,
+        persisted_scorecards,
+        provider_status_agent,
+        feedback_history,
+        &StructuralPriorLearningState::default(),
+    )
+}
+
+fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state(
+    snapshot: &WorkflowSnapshot,
+    persisted_scorecards: &[EnsembleExecutorScorecard],
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[crate::state::FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
 ) -> Value {
     let no_workflow_state = workflow_status_empty_state(snapshot);
     let latest_phase = snapshot
@@ -1200,20 +1241,23 @@ fn build_agent_workflow_status_view_with_provider_agent(
                 .find(|path| path.path_id == feedback.path_id)
         });
     let structural_history_summary = build_structural_history_summary_artifact(snapshot, feedback_history);
-    let experience_prior_surface = build_structural_experience_prior_surface_artifact(
+    let experience_prior_surface = build_structural_experience_prior_surface_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
         feedback_history,
+        structural_prior_state,
     );
-    let top_path_candidates = build_structural_top_path_candidates_artifact(
+    let top_path_candidates = build_structural_top_path_candidates_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
         feedback_history,
+        structural_prior_state,
     );
-    let recommended_path_bundle = build_structural_recommended_path_bundle_artifact(
+    let recommended_path_bundle = build_structural_recommended_path_bundle_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
         feedback_history,
+        structural_prior_state,
     );
     let recommended_path_contract =
         workflow_status_recommended_path_contract_value(recommended_path_bundle.as_ref());
@@ -1307,6 +1351,7 @@ pub fn emit_workflow_status_output(
     persisted_scorecards: &[EnsembleExecutorScorecard],
     provider_status_agent: &ProviderCatalogAgentSurface,
     feedback_history: &[crate::state::FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
     output_format: &str,
     stable: bool,
 ) -> Result<()> {
@@ -1328,11 +1373,13 @@ pub fn emit_workflow_status_output(
             println!("{}", serde_json::to_string_pretty(&value)?);
         }
         "agent" => {
-            let mut value = build_agent_workflow_status_view_with_provider_agent(
+            let mut value =
+                build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state(
                 snapshot,
                 persisted_scorecards,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             );
             if stable {
                 normalize_workflow_status_value_for_stability(&mut value);
@@ -1341,11 +1388,13 @@ pub fn emit_workflow_status_output(
             println!("{}", serde_json::to_string_pretty(&value)?);
         }
         "human" => {
-            let value = build_human_workflow_status_view_with_provider_agent(
+            let value =
+                build_human_workflow_status_view_with_provider_agent_and_structural_prior_state(
                 snapshot,
                 persisted_scorecards,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             );
             if let Some(summary) = value.get("summary_line").and_then(Value::as_str) {
                 println!("{}", redact_local_paths_in_human_text(summary));
@@ -1385,6 +1434,7 @@ pub fn dispatch_workflow_status(
     persisted_scorecards: &[EnsembleExecutorScorecard],
     provider_status_agent: &ProviderCatalogAgentSurface,
     feedback_history: &[crate::state::FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
     input: WorkflowStatusDispatchInput<'_>,
     bootstrap: WorkflowStatusBootstrapInput<'_>,
 ) -> Result<()> {
@@ -1441,11 +1491,12 @@ pub fn dispatch_workflow_status(
                 bootstrap.multi_timeframe_clean_root,
                 &bootstrap.tomac_root_placeholder,
             )?,
-            other => build_workflow_status_phase_value(
+            other => build_workflow_status_phase_value_with_structural_prior_state(
                 snapshot,
                 persisted_scorecards,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
                 other,
             )?,
         };
@@ -1462,6 +1513,7 @@ pub fn dispatch_workflow_status(
             persisted_scorecards,
             provider_status_agent,
             feedback_history,
+            structural_prior_state,
             input.output_format,
             input.stable,
         )?;
@@ -1866,6 +1918,7 @@ fn workflow_status_structural_recommended_next_step(
     snapshot: &WorkflowSnapshot,
     provider_status_agent: &ProviderCatalogAgentSurface,
     feedback_history: &[crate::state::FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
 ) -> Value {
     let hard_block_active = matches!(
         snapshot.blocking_truth.status.as_str(),
@@ -1902,10 +1955,11 @@ fn workflow_status_structural_recommended_next_step(
         &top_level_command,
         provider_support_reason,
     );
-    let recommended_path_bundle = build_structural_recommended_path_bundle_artifact(
+    let recommended_path_bundle = build_structural_recommended_path_bundle_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
         feedback_history,
+        structural_prior_state,
     );
     let recommended_path_contract =
         workflow_status_recommended_path_contract_value(recommended_path_bundle.as_ref());
@@ -1937,6 +1991,24 @@ pub fn build_workflow_status_phase_value(
     feedback_history: &[crate::state::FeedbackRecord],
     phase: &str,
 ) -> Result<Value> {
+    build_workflow_status_phase_value_with_structural_prior_state(
+        snapshot,
+        persisted_scorecards,
+        provider_status_agent,
+        feedback_history,
+        &StructuralPriorLearningState::default(),
+        phase,
+    )
+}
+
+pub fn build_workflow_status_phase_value_with_structural_prior_state(
+    snapshot: &WorkflowSnapshot,
+    persisted_scorecards: &[EnsembleExecutorScorecard],
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[crate::state::FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
+    phase: &str,
+) -> Result<Value> {
     Ok(match phase.trim().to_ascii_lowercase().as_str() {
         "human" | "human-next" | "human-next-action" => {
             build_human_workflow_status_view_with_provider_agent(
@@ -1947,15 +2019,17 @@ pub fn build_workflow_status_phase_value(
             )
         }
         "structural-playbook" => {
-            let bundle = build_structural_playbook_bundle(
+            let bundle = build_structural_playbook_bundle_with_prior_state(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             );
             let recommended_next_step = workflow_status_structural_recommended_next_step(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             );
             workflow_status_value_with_recommended_next_step(
                 serde_json::to_value(bundle)?,
@@ -1963,52 +2037,67 @@ pub fn build_workflow_status_phase_value(
             )
         }
         "structural-node" => workflow_status_value_with_recommended_next_step(
-            serde_json::to_value(build_structural_node_artifact(
+            serde_json::to_value(build_structural_node_artifact_with_prior_state(
                 snapshot,
                 provider_status_agent,
+                structural_prior_state,
             ))?,
             workflow_status_structural_recommended_next_step(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             ),
         ),
         "structural-branch-set" | "structural-branches" => {
-            let node = build_structural_node_artifact(snapshot, provider_status_agent);
+            let node = build_structural_node_artifact_with_prior_state(
+                snapshot,
+                provider_status_agent,
+                structural_prior_state,
+            );
             workflow_status_value_with_recommended_next_step(
-                serde_json::to_value(build_structural_branch_set_artifact(
+                serde_json::to_value(build_structural_branch_set_artifact_with_prior_state(
                     snapshot,
                     provider_status_agent,
                     &node,
                     &build_structural_branch_history_artifact(snapshot, feedback_history),
+                    structural_prior_state,
                 ))?,
                 workflow_status_structural_recommended_next_step(
                     snapshot,
                     provider_status_agent,
                     feedback_history,
+                    structural_prior_state,
                 ),
             )
         }
         "structural-scenario-playbook" | "structural-scenarios" => {
-            let node = build_structural_node_artifact(snapshot, provider_status_agent);
+            let node = build_structural_node_artifact_with_prior_state(
+                snapshot,
+                provider_status_agent,
+                structural_prior_state,
+            );
             let branch_history = build_structural_branch_history_artifact(snapshot, feedback_history);
-            let branch_set = build_structural_branch_set_artifact(
+            let branch_set = build_structural_branch_set_artifact_with_prior_state(
                 snapshot,
                 provider_status_agent,
                 &node,
                 &branch_history,
+                structural_prior_state,
             );
             workflow_status_value_with_recommended_next_step(
-                serde_json::to_value(build_structural_scenario_playbook_artifact(
+                serde_json::to_value(build_structural_scenario_playbook_artifact_with_prior_state(
                     snapshot,
                     provider_status_agent,
                     &branch_set,
                     &build_structural_scenario_history_artifact(snapshot, feedback_history),
+                    structural_prior_state,
                 ))?,
                 workflow_status_structural_recommended_next_step(
                     snapshot,
                     provider_status_agent,
                     feedback_history,
+                    structural_prior_state,
                 ),
             )
         }
@@ -2020,21 +2109,27 @@ pub fn build_workflow_status_phase_value(
                     | "validated_regressing"
                     | "credibility_gate_blocked"
             );
-            let node = build_structural_node_artifact(snapshot, provider_status_agent);
+            let node = build_structural_node_artifact_with_prior_state(
+                snapshot,
+                provider_status_agent,
+                structural_prior_state,
+            );
             let branch_history = build_structural_branch_history_artifact(snapshot, feedback_history);
-            let branch_set = build_structural_branch_set_artifact(
+            let branch_set = build_structural_branch_set_artifact_with_prior_state(
                 snapshot,
                 provider_status_agent,
                 &node,
                 &branch_history,
+                structural_prior_state,
             );
             let scenario_history =
                 build_structural_scenario_history_artifact(snapshot, feedback_history);
-            let scenario_playbook = build_structural_scenario_playbook_artifact(
+            let scenario_playbook = build_structural_scenario_playbook_artifact_with_prior_state(
                 snapshot,
                 provider_status_agent,
                 &branch_set,
                 &scenario_history,
+                structural_prior_state,
             );
             let provider_support = build_workflow_provider_support(
                 provider_status_agent,
@@ -2054,17 +2149,19 @@ pub fn build_workflow_status_phase_value(
                 },
             );
             workflow_status_value_with_recommended_next_step(
-                serde_json::to_value(build_structural_path_plan_artifact(
+                serde_json::to_value(build_structural_path_plan_artifact_with_prior_state(
                     snapshot,
                     provider_status_agent,
                     &provider_support,
                     &scenario_playbook,
                     &build_structural_path_history_artifact(snapshot, feedback_history),
+                    structural_prior_state,
                 ))?,
                 workflow_status_structural_recommended_next_step(
                     snapshot,
                     provider_status_agent,
                     feedback_history,
+                    structural_prior_state,
                 ),
             )
         }
@@ -2077,6 +2174,7 @@ pub fn build_workflow_status_phase_value(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             ),
         ),
         "structural-path-outcome-summary" => workflow_status_value_with_recommended_next_step(
@@ -2085,6 +2183,7 @@ pub fn build_workflow_status_phase_value(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             ),
         ),
         "structural-node-history" => workflow_status_value_with_recommended_next_step(
@@ -2096,6 +2195,7 @@ pub fn build_workflow_status_phase_value(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             ),
         ),
         "structural-branch-history" => workflow_status_value_with_recommended_next_step(
@@ -2107,6 +2207,7 @@ pub fn build_workflow_status_phase_value(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             ),
         ),
         "structural-scenario-history" => workflow_status_value_with_recommended_next_step(
@@ -2118,6 +2219,7 @@ pub fn build_workflow_status_phase_value(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             ),
         ),
         "structural-history-summary" => workflow_status_value_with_recommended_next_step(
@@ -2129,18 +2231,21 @@ pub fn build_workflow_status_phase_value(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             ),
         ),
         "structural-experience-priors" | "structural-experience-prior-surface" => {
-            let artifact = build_structural_experience_prior_surface_artifact(
+            let artifact = build_structural_experience_prior_surface_artifact_with_prior_state(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             );
             let recommended_next_step = workflow_status_structural_recommended_next_step(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             );
             workflow_status_value_with_recommended_next_step(
                 serde_json::to_value(artifact)?,
@@ -2148,15 +2253,17 @@ pub fn build_workflow_status_phase_value(
             )
         }
         "structural-top-path-candidates" | "structural-top-paths" => {
-            let artifact = build_structural_top_path_candidates_artifact(
+            let artifact = build_structural_top_path_candidates_artifact_with_prior_state(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             );
             let recommended_next_step = workflow_status_structural_recommended_next_step(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             );
             workflow_status_value_with_recommended_next_step(
                 serde_json::to_value(artifact)?,
@@ -2164,15 +2271,17 @@ pub fn build_workflow_status_phase_value(
             )
         }
         "structural-recommended-path-bundle" | "structural-recommended-path" => {
-            let bundle = build_structural_recommended_path_bundle_artifact(
+            let bundle = build_structural_recommended_path_bundle_artifact_with_prior_state(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             );
             let recommended_next_step = workflow_status_structural_recommended_next_step(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
+                structural_prior_state,
             );
             workflow_status_value_with_recommended_next_step(
                 serde_json::to_value(bundle)?,
@@ -2180,21 +2289,27 @@ pub fn build_workflow_status_phase_value(
             )
         }
         "structural-feedback-template" | "structural-feedback" => {
-            let node = build_structural_node_artifact(snapshot, provider_status_agent);
+            let node = build_structural_node_artifact_with_prior_state(
+                snapshot,
+                provider_status_agent,
+                structural_prior_state,
+            );
             let branch_history = build_structural_branch_history_artifact(snapshot, feedback_history);
-            let branch_set = build_structural_branch_set_artifact(
+            let branch_set = build_structural_branch_set_artifact_with_prior_state(
                 snapshot,
                 provider_status_agent,
                 &node,
                 &branch_history,
+                structural_prior_state,
             );
             let scenario_history =
                 build_structural_scenario_history_artifact(snapshot, feedback_history);
-            let scenario_playbook = build_structural_scenario_playbook_artifact(
+            let scenario_playbook = build_structural_scenario_playbook_artifact_with_prior_state(
                 snapshot,
                 provider_status_agent,
                 &branch_set,
                 &scenario_history,
+                structural_prior_state,
             );
             let hard_block_active = matches!(
                 snapshot.blocking_truth.status.as_str(),
@@ -2220,12 +2335,13 @@ pub fn build_workflow_status_phase_value(
                     Some(snapshot.blocking_truth.reason.as_str())
                 },
             );
-            let path_plan = build_structural_path_plan_artifact(
+            let path_plan = build_structural_path_plan_artifact_with_prior_state(
                 snapshot,
                 provider_status_agent,
                 &provider_support,
                 &scenario_playbook,
                 &build_structural_path_history_artifact(snapshot, feedback_history),
+                structural_prior_state,
             );
             workflow_status_value_with_recommended_next_step(
                 serde_json::to_value(build_structural_feedback_template_artifact(
@@ -2239,6 +2355,7 @@ pub fn build_workflow_status_phase_value(
                     snapshot,
                     provider_status_agent,
                     feedback_history,
+                    structural_prior_state,
                 ),
             )
         }
@@ -3236,6 +3353,7 @@ mod tests {
             &[],
             &sample_provider_agent_surface(),
             &[],
+            &StructuralPriorLearningState::default(),
             WorkflowStatusDispatchInput {
                 phase: Some("human"),
                 actionable_only: true,
@@ -3269,6 +3387,7 @@ mod tests {
             &[],
             &sample_provider_agent_surface(),
             &[],
+            &StructuralPriorLearningState::default(),
             WorkflowStatusDispatchInput {
                 phase: None,
                 actionable_only: true,
@@ -3915,6 +4034,82 @@ mod tests {
             .as_f64()
             .unwrap()
             >= value["paths"][0]["path_posterior"].as_f64().unwrap() * 0.7);
+    }
+
+    #[test]
+    fn structural_playbook_uses_persisted_structural_prior_state_for_path_prior() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let mut structural_prior_state = crate::state::StructuralPriorLearningState::default();
+        structural_prior_state.paths.insert(
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary".to_string(),
+            crate::state::StructuralPriorStats {
+                observations: 4,
+                followed_count: 4,
+                wins: 3,
+                losses: 0,
+                breakevens: 1,
+                invalidated: 0,
+                abandoned: 0,
+                not_followed: 0,
+                avg_pnl: 0.028,
+                smoothed_prior: 0.82,
+            },
+        );
+
+        let value = build_workflow_status_phase_value_with_structural_prior_state(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &structural_prior_state,
+            "structural-paths",
+        )
+        .unwrap();
+
+        assert_eq!(value["paths"][0]["historical_total_records"], 4);
+        assert_eq!(value["paths"][0]["historical_followed_count"], 4);
+        assert_eq!(value["paths"][0]["path_prior"], 0.82);
     }
 
     #[test]

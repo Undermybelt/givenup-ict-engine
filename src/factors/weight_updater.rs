@@ -84,6 +84,7 @@ impl WeightUpdater {
     }
 
     pub fn apply_feedback(&self, learning_state: &mut LearningState, feedback: &[FeedbackRecord]) {
+        learning_state.apply_structural_feedback(feedback);
         for record in feedback {
             for factor in &record.factors_used {
                 let ranking_exists = learning_state
@@ -284,5 +285,66 @@ mod tests {
         assert!(profile.base_weight > 0.2);
         assert!(profile.regime_stats.contains_key("manipulation_expansion"));
         assert!(learning_state.factor_rankings[0].weight > 0.2);
+    }
+
+    #[test]
+    fn test_apply_feedback_updates_structural_prior_state() {
+        let updater = WeightUpdater::default();
+        let mut learning_state = LearningState::default();
+        let feedback = FeedbackRecord {
+            timestamp: Utc::now(),
+            symbol: "NQ".to_string(),
+            source: "structural_feedback".to_string(),
+            run_id: None,
+            trade_id: None,
+            prompt_version: None,
+            factor_version: None,
+            data_fingerprint: None,
+            factors_used: vec![],
+            model_probabilities_before_trade: ModelProbabilitySnapshot {
+                selected_direction: Direction::Bull,
+                selected_probability: 0.6,
+                long_score: 0.6,
+                short_score: 0.3,
+                win_prob_long: 0.58,
+                win_prob_short: 0.41,
+                uncertainty: 0.2,
+            },
+            realized_outcome: "win".to_string(),
+            pnl: 0.02,
+            regime_at_entry: Regime::ManipulationExpansion,
+            structural_feedback: Some(crate::state::StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "rec-1".to_string(),
+                recommended_at: "2026-04-29T00:00:00Z".to_string(),
+                node_id: "NQ:belief_regime_node:trend".to_string(),
+                branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                    .to_string(),
+                path_id:
+                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                        .to_string(),
+                followed_path: true,
+                exit_reason: Some("target_hit".to_string()),
+                notes: None,
+            }),
+            reflection_mismatch_tags: Vec::new(),
+        };
+
+        updater.apply_feedback(&mut learning_state, &[feedback]);
+
+        let path = learning_state
+            .structural_prior_state
+            .paths
+            .get("path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary")
+            .expect("path prior state");
+        assert_eq!(path.observations, 1);
+        assert_eq!(path.followed_count, 1);
+        assert_eq!(path.wins, 1);
+        assert!(path.smoothed_prior > 0.5);
+        assert!(learning_state
+            .structural_prior_state
+            .nodes
+            .contains_key("NQ:belief_regime_node:trend"));
     }
 }

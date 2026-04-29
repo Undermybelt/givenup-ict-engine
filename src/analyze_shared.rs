@@ -1,4 +1,34 @@
 use super::*;
+use ict_engine::application::provider_catalog::provider_status_agent_surface;
+
+fn structural_prior_seed_from_analyze_run(
+    run: &AnalyzeRunRecord,
+    bundle: &ict_engine::application::orchestration::StructuralRecommendedPathBundleArtifact,
+) -> ict_engine::state::StructuralPriorSeed {
+    let execution_readiness = run.execution_readiness.unwrap_or(bundle.current_posterior);
+    let support = ((bundle.current_posterior + bundle.composite_score + execution_readiness) / 3.0)
+        .clamp(0.0, 1.0);
+    let (observations, wins, breakevens, losses) = if support >= 0.75 {
+        (3, 2, 1, 0)
+    } else if support >= 0.60 {
+        (2, 1, 1, 0)
+    } else if support >= 0.50 {
+        (1, 0, 1, 0)
+    } else {
+        (1, 0, 0, 1)
+    };
+    ict_engine::state::StructuralPriorSeed {
+        observations,
+        followed_count: observations,
+        wins,
+        losses,
+        breakevens,
+        invalidated: 0,
+        abandoned: 0,
+        not_followed: 0,
+        avg_pnl: (support - 0.5) * 0.04,
+    }
+}
 
 pub(crate) fn persist_analyze_run(
     state_dir: &str,
@@ -106,6 +136,7 @@ pub(crate) fn persist_analyze_run(
         prompt_workflow: report.supporting.agent_prompts.workflow.clone(),
     };
     append_analyze_run(state_dir, &report.symbol, analyze_run_record.clone())?;
+    let mut learning_state = load_learning_state(state_dir, &report.symbol).unwrap_or_default();
     let blocking_truth = report.supporting.workflow_snapshot.blocking_truth.clone();
     let hard_blocked = matches!(
         blocking_truth.status.as_str(),
@@ -146,6 +177,54 @@ pub(crate) fn persist_analyze_run(
         &analyze_ensemble_vote,
         &canonical_scorecards,
     );
+    let structural_snapshot = WorkflowSnapshot {
+        symbol: report.symbol.clone(),
+        current_focus_phase: "analyze".to_string(),
+        current_focus_reason: report.supporting.workflow_state.reason.clone(),
+        recommended_next_command: report.supporting.recommended_next_command.clone(),
+        recommended_next_command_meta: recommended_next_command_meta(
+            &report.supporting.recommended_next_command,
+        ),
+        blocking_truth: report.supporting.workflow_snapshot.blocking_truth.clone(),
+        latest_analyze: Some(workflow_phase_snapshot_from_analyze_run(&analyze_run_record)),
+        latest_ensemble_vote: Some(analyze_ensemble_record.clone()),
+        ..WorkflowSnapshot::default()
+    };
+    let provider_status_agent =
+        provider_status_agent_surface(None, None, None).unwrap_or_default();
+    if let Some(bundle) =
+        ict_engine::application::orchestration::build_structural_recommended_path_bundle_artifact_with_prior_state(
+            &structural_snapshot,
+            &provider_status_agent,
+            learning_state.feedback_history.as_slice(),
+            &learning_state.structural_prior_state,
+        )
+    {
+        let branch_id = bundle
+            .scenario_id
+            .strip_prefix("scenario:")
+            .unwrap_or(bundle.scenario_id.as_str())
+            .to_string();
+        let node_id = branch_id
+            .rsplit_once(':')
+            .map(|(prefix, _)| prefix.to_string())
+            .unwrap_or_else(|| branch_id.clone());
+        let refs = ict_engine::state::StructuralFeedbackRefs {
+            protocol_version: "structural-prior-seed-v1".to_string(),
+            recommendation_id: format!("structural-prior-seed:{}", analyze_run_record.run_id),
+            recommended_at: analyze_run_record.timestamp.to_rfc3339(),
+            node_id,
+            branch_id,
+            scenario_id: bundle.scenario_id.clone(),
+            path_id: bundle.path_id.clone(),
+            followed_path: true,
+            exit_reason: Some("offline_prior_seed".to_string()),
+            notes: Some("analyze_run_structural_prior_seed".to_string()),
+        };
+        let seed = structural_prior_seed_from_analyze_run(&analyze_run_record, &bundle);
+        learning_state.apply_structural_prior_seed(&refs, &seed);
+        save_learning_state(state_dir, &report.symbol, &learning_state)?;
+    }
     persist_ensemble_vote_record(state_dir, &analyze_ensemble_record, &canonical_scorecards)?;
     append_pre_bayes_policy_history(
         state_dir,
