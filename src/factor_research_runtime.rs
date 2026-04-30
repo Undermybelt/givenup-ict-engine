@@ -684,7 +684,14 @@ pub(crate) fn run_factor_research(
     report.workflow_snapshot = refresh_workflow_snapshot(state_dir, symbol)?;
     let research_support_hint = crate::analyze_shared::offline_structural_support_hint(
         crate::analyze_shared::OfflineStructuralSupportHintInput {
-            baseline_support: 0.50,
+            baseline_support: crate::analyze_shared::structural_baseline_support(
+                report
+                    .backtest
+                    .scorecards
+                    .first()
+                    .map(|score| score.composite_score),
+                0.50,
+            ),
             aggregate_return: Some(report.aggregate_return),
             execution_readiness: research_execution_fields.execution_readiness,
             comparable_to_previous: report.dataset_comparability.comparable,
@@ -727,7 +734,10 @@ pub(crate) fn run_factor_research(
     if let Some(evaluation) = mutation_evaluation.as_ref() {
         let mutation_support_hint = crate::analyze_shared::offline_structural_support_hint(
             crate::analyze_shared::OfflineStructuralSupportHintInput {
-                baseline_support: 0.50,
+                baseline_support: crate::analyze_shared::structural_baseline_support(
+                    Some(evaluation.metrics_after.best_factor_composite_score),
+                    0.50,
+                ),
                 aggregate_return: Some(report.aggregate_return),
                 execution_readiness: research_execution_fields.execution_readiness,
                 comparable_to_previous: report.dataset_comparability.comparable,

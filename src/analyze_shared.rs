@@ -74,6 +74,13 @@ pub(crate) fn offline_structural_support_hint(input: OfflineStructuralSupportHin
     support
 }
 
+pub(crate) fn structural_baseline_support(
+    score: Option<f64>,
+    fallback: f64,
+) -> f64 {
+    score.unwrap_or(fallback).clamp(0.0, 1.0)
+}
+
 pub(crate) fn structural_prior_seed_from_support_hint(
     source_label: &str,
     support: f64,
@@ -876,6 +883,14 @@ mod tests {
         });
 
         assert!(accepted > rejected);
+    }
+
+    #[test]
+    fn test_structural_baseline_support_prefers_best_factor_score() {
+        assert_eq!(structural_baseline_support(Some(0.78), 0.50), 0.78);
+        assert_eq!(structural_baseline_support(None, 0.50), 0.50);
+        assert_eq!(structural_baseline_support(Some(1.40), 0.50), 1.0);
+        assert_eq!(structural_baseline_support(Some(-0.20), 0.50), 0.0);
     }
 
     #[test]

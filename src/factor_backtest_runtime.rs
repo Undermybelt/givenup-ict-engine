@@ -465,7 +465,13 @@ pub(crate) fn run_factor_backtest(
     report.workflow_snapshot = refresh_workflow_snapshot(state_dir, symbol)?;
     let backtest_support_hint = crate::analyze_shared::offline_structural_support_hint(
         crate::analyze_shared::OfflineStructuralSupportHintInput {
-            baseline_support: 0.50,
+            baseline_support: crate::analyze_shared::structural_baseline_support(
+                report
+                    .scorecards
+                    .first()
+                    .map(|score| score.composite_score),
+                0.50,
+            ),
             aggregate_return: Some(report.aggregate_return),
             execution_readiness: backtest_execution_fields.execution_readiness,
             comparable_to_previous: report.dataset_comparability.comparable,
