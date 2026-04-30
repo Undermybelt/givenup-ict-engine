@@ -490,10 +490,16 @@ fn apply_structural_prior_state_to_belief_report(
         report.regime_posterior.market_behavior_profile.clone();
     report.strategy_recommendation.selected_market_subgraph =
         Some(report.gate_decision.selected_subgraph.clone());
+    report.selected_market_subgraph = Some(report.gate_decision.selected_subgraph.clone());
     report
         .strategy_recommendation
         .rationale
         .push("regime_posterior_adjusted_by_structural_priors".to_string());
+    if let Some(summary) = report.temporal_summary.as_mut() {
+        if let Some(active_regime) = active_regime.as_ref() {
+            summary.dominant_regime = active_regime.clone();
+        }
+    }
     synchronize_market_regime_belief_snapshot(
         report,
         active_regime.as_deref(),

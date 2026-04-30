@@ -371,6 +371,17 @@ fn canonical_belief_snapshot_with_structural_prior_state_reconciles_gate_and_str
         report.strategy_recommendation.selected_market_subgraph.as_deref(),
         Some("futures_index_trend_subgraph")
     );
+    assert_eq!(
+        report.selected_market_subgraph.as_deref(),
+        Some("futures_index_trend_subgraph")
+    );
+    assert_eq!(
+        report
+            .temporal_summary
+            .as_ref()
+            .map(|summary| summary.dominant_regime.as_str()),
+        Some("trend")
+    );
 }
 
 #[test]
