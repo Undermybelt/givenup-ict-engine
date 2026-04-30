@@ -58,6 +58,7 @@ pub(crate) fn run_factor_backtest(
     let mut report = research.backtest;
     let thresholds = decision_thresholds();
     let score_deltas = ranking_diffs(&previous_rankings, &learning_state.factor_rankings);
+    let first_score_delta = score_deltas.first().map(|item| item.score_delta);
     let factor_family_decisions = learning_state.family_decisions();
 
     report.feedback_records_generated = feedback_records_generated;
@@ -462,16 +463,17 @@ pub(crate) fn run_factor_backtest(
         None,
     )?;
     report.workflow_snapshot = refresh_workflow_snapshot(state_dir, symbol)?;
-    let backtest_support_hint =
-        backtest_execution_fields.execution_readiness.unwrap_or({
-            if report.aggregate_return > 0.0 {
-                0.65
-            } else if report.aggregate_return < 0.0 {
-                0.35
-            } else {
-                0.50
-            }
-        });
+    let backtest_support_hint = crate::analyze_shared::offline_structural_support_hint(
+        crate::analyze_shared::OfflineStructuralSupportHintInput {
+            baseline_support: 0.50,
+            aggregate_return: Some(report.aggregate_return),
+            execution_readiness: backtest_execution_fields.execution_readiness,
+            comparable_to_previous: report.dataset_comparability.comparable,
+            feedback_records_applied: report.feedback_records_applied,
+            quality_delta: first_score_delta,
+            accepted: None,
+        },
+    );
     crate::analyze_shared::apply_offline_structural_prior_seed(
         &mut learning_state,
         &report.workflow_snapshot,

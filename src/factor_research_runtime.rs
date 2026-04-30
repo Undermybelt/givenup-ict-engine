@@ -127,6 +127,7 @@ pub(crate) fn run_factor_research(
         learning_state.factor_rankings = report.backtest.scorecards.clone();
     }
     let score_deltas = ranking_diffs(&previous_rankings, &learning_state.factor_rankings);
+    let first_score_delta = score_deltas.first().map(|item| item.score_delta);
     let thresholds = decision_thresholds();
     let factor_family_decisions = learning_state.family_decisions();
     report.factor_score_deltas = score_deltas.clone();
@@ -681,16 +682,17 @@ pub(crate) fn run_factor_research(
         )?;
     }
     report.workflow_snapshot = refresh_workflow_snapshot(state_dir, symbol)?;
-    let research_support_hint =
-        research_execution_fields.execution_readiness.unwrap_or({
-            if report.aggregate_return > 0.0 {
-                0.65
-            } else if report.aggregate_return < 0.0 {
-                0.35
-            } else {
-                0.50
-            }
-        });
+    let research_support_hint = crate::analyze_shared::offline_structural_support_hint(
+        crate::analyze_shared::OfflineStructuralSupportHintInput {
+            baseline_support: 0.50,
+            aggregate_return: Some(report.aggregate_return),
+            execution_readiness: research_execution_fields.execution_readiness,
+            comparable_to_previous: report.dataset_comparability.comparable,
+            feedback_records_applied: report.feedback_records_applied,
+            quality_delta: first_score_delta,
+            accepted: None,
+        },
+    );
     crate::analyze_shared::apply_offline_structural_prior_seed(
         &mut learning_state,
         &report.workflow_snapshot,
@@ -700,13 +702,17 @@ pub(crate) fn run_factor_research(
         "research_run_structural_prior_seed",
     );
     if let Some(evaluation) = mutation_evaluation.as_ref() {
-        let mutation_support_hint = if evaluation.accepted {
-            0.72
-        } else if evaluation.score_delta >= 0.0 {
-            0.58
-        } else {
-            0.35
-        };
+        let mutation_support_hint = crate::analyze_shared::offline_structural_support_hint(
+            crate::analyze_shared::OfflineStructuralSupportHintInput {
+                baseline_support: 0.50,
+                aggregate_return: Some(report.aggregate_return),
+                execution_readiness: research_execution_fields.execution_readiness,
+                comparable_to_previous: report.dataset_comparability.comparable,
+                feedback_records_applied: report.feedback_records_applied,
+                quality_delta: Some(evaluation.score_delta),
+                accepted: Some(evaluation.accepted),
+            },
+        );
         crate::analyze_shared::apply_offline_structural_prior_seed(
             &mut learning_state,
             &report.workflow_snapshot,

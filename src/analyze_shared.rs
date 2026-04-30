@@ -1,6 +1,48 @@
 use super::*;
 use ict_engine::application::provider_catalog::provider_status_agent_surface;
 
+#[derive(Debug, Clone, Copy, Default)]
+pub(crate) struct OfflineStructuralSupportHintInput {
+    pub baseline_support: f64,
+    pub aggregate_return: Option<f64>,
+    pub execution_readiness: Option<f64>,
+    pub comparable_to_previous: bool,
+    pub feedback_records_applied: usize,
+    pub quality_delta: Option<f64>,
+    pub accepted: Option<bool>,
+}
+
+pub(crate) fn offline_structural_support_hint(input: OfflineStructuralSupportHintInput) -> f64 {
+    let mut support = input.baseline_support.clamp(0.0, 1.0);
+    if let Some(readiness) = input.execution_readiness {
+        support = (support * 0.55 + readiness.clamp(0.0, 1.0) * 0.45).clamp(0.0, 1.0);
+    }
+    if let Some(aggregate_return) = input.aggregate_return {
+        let return_bias = (aggregate_return * 4.0).clamp(-0.20, 0.20);
+        support = (support + return_bias).clamp(0.0, 1.0);
+    }
+    if input.comparable_to_previous {
+        support = (support + 0.05).clamp(0.0, 1.0);
+    } else {
+        support = (support - 0.03).clamp(0.0, 1.0);
+    }
+    if input.feedback_records_applied > 0 {
+        let feedback_bias = (input.feedback_records_applied as f64 / 20.0).min(1.0) * 0.05;
+        support = (support + feedback_bias).clamp(0.0, 1.0);
+    }
+    if let Some(score_delta) = input.quality_delta {
+        support = (support + score_delta.clamp(-0.10, 0.10)).clamp(0.0, 1.0);
+    }
+    if let Some(accepted) = input.accepted {
+        support = if accepted {
+            (support + 0.08).clamp(0.0, 1.0)
+        } else {
+            (support - 0.08).clamp(0.0, 1.0)
+        };
+    }
+    support
+}
+
 pub(crate) fn structural_prior_seed_from_support_hint(
     source_label: &str,
     support: f64,
@@ -238,9 +280,17 @@ pub(crate) fn persist_analyze_run(
         &structural_snapshot,
         &format!("structural-prior-seed:{}", analyze_run_record.run_id),
         analyze_run_record.timestamp,
-        analyze_run_record
-            .execution_readiness
-            .unwrap_or(analyze_ensemble_record.posterior_confidence.unwrap_or(analyze_ensemble_record.confidence)),
+        offline_structural_support_hint(OfflineStructuralSupportHintInput {
+            baseline_support: analyze_ensemble_record
+                .posterior_confidence
+                .unwrap_or(analyze_ensemble_record.confidence),
+            aggregate_return: None,
+            execution_readiness: analyze_run_record.execution_readiness,
+            comparable_to_previous: analyze_run_record.dataset_comparability.comparable,
+            feedback_records_applied: analyze_run_record.feedback_history_summary.total_records,
+            quality_delta: None,
+            accepted: None,
+        }),
         "analyze_run_structural_prior_seed",
     );
     save_learning_state(state_dir, &report.symbol, &learning_state)?;
@@ -707,4 +757,58 @@ pub(crate) fn apply_command_context_to_analyze_report(
         .multi_timeframe_summary = report.supporting.multi_timeframe_summary.clone();
     report.supporting.agent_context_bundle_minimal =
         build_agent_context_bundle_minimal(&report.supporting.agent_context_bundle);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_offline_structural_support_hint_prefers_positive_comparable_high_readiness_runs() {
+        let weak = offline_structural_support_hint(OfflineStructuralSupportHintInput {
+            baseline_support: 0.50,
+            aggregate_return: Some(-0.01),
+            execution_readiness: Some(0.42),
+            comparable_to_previous: false,
+            feedback_records_applied: 0,
+            quality_delta: Some(-0.04),
+            accepted: None,
+        });
+        let strong = offline_structural_support_hint(OfflineStructuralSupportHintInput {
+            baseline_support: 0.50,
+            aggregate_return: Some(0.04),
+            execution_readiness: Some(0.83),
+            comparable_to_previous: true,
+            feedback_records_applied: 8,
+            quality_delta: Some(0.06),
+            accepted: None,
+        });
+
+        assert!(strong > weak);
+        assert!(strong > 0.60);
+    }
+
+    #[test]
+    fn test_offline_structural_support_hint_rewards_accepted_mutation() {
+        let rejected = offline_structural_support_hint(OfflineStructuralSupportHintInput {
+            baseline_support: 0.55,
+            aggregate_return: None,
+            execution_readiness: Some(0.60),
+            comparable_to_previous: true,
+            feedback_records_applied: 0,
+            quality_delta: Some(-0.02),
+            accepted: Some(false),
+        });
+        let accepted = offline_structural_support_hint(OfflineStructuralSupportHintInput {
+            baseline_support: 0.55,
+            aggregate_return: None,
+            execution_readiness: Some(0.60),
+            comparable_to_previous: true,
+            feedback_records_applied: 0,
+            quality_delta: Some(0.02),
+            accepted: Some(true),
+        });
+
+        assert!(accepted > rejected);
+    }
 }
