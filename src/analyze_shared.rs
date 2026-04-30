@@ -2,6 +2,7 @@ use super::*;
 use ict_engine::application::provider_catalog::provider_status_agent_surface;
 
 pub(crate) fn structural_prior_seed_from_support_hint(
+    source_label: &str,
     support: f64,
 ) -> ict_engine::state::StructuralPriorSeed {
     let (observations, wins, breakevens, losses) = if support >= 0.75 {
@@ -14,6 +15,7 @@ pub(crate) fn structural_prior_seed_from_support_hint(
         (1, 0, 0, 1)
     };
     ict_engine::state::StructuralPriorSeed {
+        source_label: source_label.to_string(),
         observations,
         followed_count: observations,
         wins,
@@ -66,7 +68,7 @@ pub(crate) fn apply_offline_structural_prior_seed(
         };
         let support = ((bundle.current_posterior + bundle.composite_score + support_hint) / 3.0)
             .clamp(0.0, 1.0);
-        let seed = structural_prior_seed_from_support_hint(support);
+        let seed = structural_prior_seed_from_support_hint(note, support);
         learning_state.apply_structural_prior_seed(&refs, &seed);
     }
 }
