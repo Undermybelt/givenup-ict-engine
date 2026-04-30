@@ -6,6 +6,7 @@ use std::collections::BTreeMap;
 use crate::analyze::multi_timeframe_parse::{
     multi_timeframe_direction_conflicts_with, ParsedMultiTimeframeEvidence,
 };
+use crate::application::belief::blend_node_posterior_with_duration_prior;
 use crate::application::entry_models::{apply_cisd_rb_to_belief_packet, CisdRbEntryModelPacket};
 use crate::bbn::adapters::belief_evidence_packet_from_pre_bayes_filter;
 use crate::bbn::engine::InferenceEngineRegistry;
@@ -17,6 +18,7 @@ use crate::reporting::belief::BeliefReportPacket;
 use crate::state::{
     FactorPipelineLabelSource, PreBayesEntryQualityBridge, PreBayesEntryQualityBridgeDiff,
     PreBayesEvidenceFilter, PreBayesEvidencePolicy, PreBayesSoftEvidenceNodeDiff,
+    StructuralPriorLearningState,
 };
 use crate::types::Direction;
 
@@ -260,6 +262,33 @@ pub fn build_canonical_belief_report_with_pda(
     hybrid_regime_packet: Option<&RegimeSegmentationPacket>,
     cisd_rb_packet: Option<&CisdRbEntryModelPacket>,
 ) -> Result<BeliefReportPacket> {
+    build_canonical_belief_report_with_pda_and_structural_prior_state(
+        symbol,
+        market,
+        filter,
+        raw_market_regime_trace,
+        raw_liquidity_context_trace,
+        raw_multi_timeframe_resonance_trace,
+        pda_sequence_artifact,
+        hybrid_regime_packet,
+        cisd_rb_packet,
+        None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub fn build_canonical_belief_report_with_pda_and_structural_prior_state(
+    symbol: &str,
+    market: Option<&str>,
+    filter: &PreBayesEvidenceFilter,
+    raw_market_regime_trace: Option<&FactorPipelineLabelSource>,
+    raw_liquidity_context_trace: Option<&FactorPipelineLabelSource>,
+    raw_multi_timeframe_resonance_trace: Option<&FactorPipelineLabelSource>,
+    pda_sequence_artifact: Option<&PdaSequenceAnalysisArtifact>,
+    hybrid_regime_packet: Option<&RegimeSegmentationPacket>,
+    cisd_rb_packet: Option<&CisdRbEntryModelPacket>,
+    structural_prior_state: Option<&StructuralPriorLearningState>,
+) -> Result<BeliefReportPacket> {
     let mut packet = belief_evidence_packet_from_pre_bayes_filter(
         symbol,
         market,
@@ -277,7 +306,11 @@ pub fn build_canonical_belief_report_with_pda(
     if let Some(cisd_rb_packet) = cisd_rb_packet {
         apply_cisd_rb_to_belief_packet(cisd_rb_packet, &mut packet);
     }
-    InferenceEngineRegistry::default().build_report(packet)
+    let mut report = InferenceEngineRegistry::default().build_report(packet)?;
+    if let Some(structural_prior_state) = structural_prior_state {
+        apply_structural_prior_state_to_belief_report(symbol, structural_prior_state, &mut report);
+    }
+    Ok(report)
 }
 
 pub fn build_canonical_belief_snapshot(
@@ -296,7 +329,27 @@ pub fn build_canonical_belief_snapshot_with_pda(
     hybrid_regime_packet: Option<&RegimeSegmentationPacket>,
     cisd_rb_packet: Option<&CisdRbEntryModelPacket>,
 ) -> Result<BeliefReportPacket> {
-    build_canonical_belief_report_with_pda(
+    build_canonical_belief_snapshot_with_pda_and_structural_prior_state(
+        symbol,
+        market,
+        filter,
+        pda_sequence_artifact,
+        hybrid_regime_packet,
+        cisd_rb_packet,
+        None,
+    )
+}
+
+pub fn build_canonical_belief_snapshot_with_pda_and_structural_prior_state(
+    symbol: &str,
+    market: Option<&str>,
+    filter: &PreBayesEvidenceFilter,
+    pda_sequence_artifact: Option<&PdaSequenceAnalysisArtifact>,
+    hybrid_regime_packet: Option<&RegimeSegmentationPacket>,
+    cisd_rb_packet: Option<&CisdRbEntryModelPacket>,
+    structural_prior_state: Option<&StructuralPriorLearningState>,
+) -> Result<BeliefReportPacket> {
+    build_canonical_belief_report_with_pda_and_structural_prior_state(
         symbol,
         market,
         filter,
@@ -306,7 +359,77 @@ pub fn build_canonical_belief_snapshot_with_pda(
         pda_sequence_artifact,
         hybrid_regime_packet,
         cisd_rb_packet,
+        structural_prior_state,
     )
+}
+
+fn apply_structural_prior_state_to_belief_report(
+    symbol: &str,
+    structural_prior_state: &StructuralPriorLearningState,
+    report: &mut BeliefReportPacket,
+) {
+    let mut canonical_probabilities = BTreeMap::new();
+    for (regime, probability) in &report.regime_posterior.probabilities {
+        if let Some(canonical) = canonical_structural_regime_label(regime) {
+            *canonical_probabilities.entry(canonical).or_insert(0.0) += *probability;
+        }
+    }
+    if canonical_probabilities.is_empty() {
+        return;
+    }
+
+    let mut active_regime = canonical_probabilities
+        .iter()
+        .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(Ordering::Equal))
+        .map(|(regime, _)| regime.clone());
+    if let Some(active) = active_regime.as_ref() {
+        let node_id = format!("{symbol}:belief_regime_node:{active}");
+        if let Some(duration_prior) = structural_prior_state.node_duration_priors.get(&node_id) {
+            let active_probability = canonical_probabilities.get(active).copied().unwrap_or(0.5);
+            let base_confidence = report
+                .regime_posterior
+                .confidence
+                .unwrap_or_default()
+                .max(active_probability);
+            let adjusted_confidence =
+                blend_node_posterior_with_duration_prior(base_confidence, Some(duration_prior));
+            report.regime_posterior.confidence = Some(adjusted_confidence);
+            if let Some(probability) = canonical_probabilities.get_mut(active) {
+                *probability = blend_node_posterior_with_duration_prior(*probability, Some(duration_prior));
+            }
+            report.regime_posterior.evidence.push(format!(
+                "duration_persistence_prior={:.3} observations={} streaks={}",
+                duration_prior.persistence_prior,
+                duration_prior.observations,
+                duration_prior.streak_count
+            ));
+        }
+    }
+
+    let total: f64 = canonical_probabilities.values().copied().sum();
+    if total > f64::EPSILON {
+        for probability in canonical_probabilities.values_mut() {
+            *probability = (*probability / total).clamp(0.0, 1.0);
+        }
+    }
+    active_regime = canonical_probabilities
+        .iter()
+        .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(Ordering::Equal))
+        .map(|(regime, _)| regime.clone());
+    report.regime_posterior.active_regime = active_regime;
+    report.regime_posterior.probabilities = canonical_probabilities;
+}
+
+fn canonical_structural_regime_label(label: &str) -> Option<String> {
+    let normalized = label.trim().to_ascii_lowercase();
+    let canonical = match normalized.as_str() {
+        "trend" | "bull" | "bear" | "trend_impulse" | "trend_decay" => "trend",
+        "range" | "range_calm" | "range_choppy" => "range",
+        "stress" => "stress",
+        "transition" => "transition",
+        _ => return None,
+    };
+    Some(canonical.to_string())
 }
 
 pub fn market_category_from_symbol(symbol: &str) -> &'static str {

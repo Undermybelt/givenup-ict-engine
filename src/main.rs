@@ -90,7 +90,7 @@ use ict_engine::application::{
         CommandContext,
     },
     belief::{
-        apply_factor_outcome_overlay, build_canonical_belief_snapshot_with_pda,
+        apply_factor_outcome_overlay, build_canonical_belief_snapshot_with_pda_and_structural_prior_state,
         build_expansion_factor_pipeline_report as build_expansion_factor_pipeline_report_v2,
         build_expansion_factor_pipeline_report_with_registry as build_expansion_factor_pipeline_report_with_registry_v2,
         build_pre_bayes_entry_quality_bridge, combine_bias_vectors, combine_liquidity_labels,
@@ -6241,13 +6241,14 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         native_ltf,
         &pre_bayes_evidence_filter,
     );
-    let canonical_belief_report = build_canonical_belief_snapshot_with_pda(
+    let canonical_belief_report = build_canonical_belief_snapshot_with_pda_and_structural_prior_state(
         symbol,
         Some(infer_market_from_symbol(symbol).as_str()),
         &pre_bayes_evidence_filter,
         pda_sequence_artifact.as_ref(),
         Some(&hybrid_regime_packet),
         None,
+        Some(&build_context.learning_state.structural_prior_state),
     )?;
     let execution_inputs = derive_execution_inputs(&ExecutionInputSources {
         pre_bayes_evidence_filter: &pre_bayes_evidence_filter,

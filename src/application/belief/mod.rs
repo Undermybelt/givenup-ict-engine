@@ -28,8 +28,11 @@ pub use market_profiles::{market_behavior_profile_for_family, market_category_fo
 pub use ou_overlay::{apply_ou_overlay, OuOverlayState};
 pub use pipeline_builder::{
     adapt_factor_pipeline_debug_report, build_canonical_belief_report,
-    build_canonical_belief_report_with_pda, build_canonical_belief_snapshot,
-    build_canonical_belief_snapshot_with_pda, build_expansion_factor_pipeline_report,
+    build_canonical_belief_report_with_pda,
+    build_canonical_belief_report_with_pda_and_structural_prior_state,
+    build_canonical_belief_snapshot, build_canonical_belief_snapshot_with_pda,
+    build_canonical_belief_snapshot_with_pda_and_structural_prior_state,
+    build_expansion_factor_pipeline_report,
     build_expansion_factor_pipeline_report_with_registry, build_factor_pipeline_debug_report,
     infer_market_from_symbol, pre_bayes_evidence_policy, FactorPipelineDebugReport,
 };

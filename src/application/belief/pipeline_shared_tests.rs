@@ -1,7 +1,7 @@
 use super::*;
 use crate::state::{
     FactorPipelineLabelSource, PreBayesEntryQualityBridge, PreBayesEntryQualityBridgeDiff,
-    PreBayesEvidenceFilter,
+    PreBayesEvidenceFilter, StructuralNodeDurationPrior, StructuralPriorLearningState,
 };
 use std::collections::BTreeMap;
 
@@ -165,6 +165,54 @@ fn adapt_factor_pipeline_debug_report_prefers_explicit_paired_market_quality_rep
     })
     .unwrap();
     assert_eq!(report.paired_market_quality_report, Some(explicit));
+}
+
+#[test]
+fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for_regime_confidence()
+{
+    let filter = PreBayesEvidenceFilter {
+        filtered_market_regime_label: "bull".to_string(),
+        soft_market_regime_distribution: BTreeMap::from([
+            ("bull".to_string(), 0.72),
+            ("range".to_string(), 0.18),
+            ("transition".to_string(), 0.10),
+        ]),
+        uses_soft_evidence: true,
+        ..PreBayesEvidenceFilter::default()
+    };
+    let mut structural_prior_state = StructuralPriorLearningState::default();
+    structural_prior_state.node_duration_priors.insert(
+        "NQ:belief_regime_node:trend".to_string(),
+        StructuralNodeDurationPrior {
+            observations: 6,
+            streak_count: 3,
+            total_streak_length: 6,
+            avg_streak_length: 2.0,
+            max_streak_length: 3,
+            last_streak_length: 3,
+            persistence_prior: 0.90,
+            last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+        },
+    );
+
+    let report = build_canonical_belief_snapshot_with_pda_and_structural_prior_state(
+        "NQ",
+        Some("NQ"),
+        &filter,
+        None,
+        None,
+        None,
+        Some(&structural_prior_state),
+    )
+    .unwrap();
+
+    assert_eq!(report.regime_posterior.active_regime.as_deref(), Some("trend"));
+    assert!(report.regime_posterior.confidence.unwrap_or_default() > 0.72);
+    assert!(report
+        .regime_posterior
+        .evidence
+        .iter()
+        .any(|line| line.contains("duration_persistence_prior")));
 }
 
 #[test]
