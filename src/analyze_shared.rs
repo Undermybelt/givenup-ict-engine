@@ -931,4 +931,42 @@ mod tests {
         assert!(good > poor);
         assert!(good > 0.65);
     }
+
+    #[test]
+    fn test_offline_structural_support_hint_rewards_baseline_available_and_score_improvement() {
+        let weak = offline_structural_support_hint(OfflineStructuralSupportHintInput {
+            baseline_support: 0.58,
+            aggregate_return: Some(0.01),
+            execution_readiness: Some(0.60),
+            comparable_to_previous: true,
+            feedback_records_applied: 1,
+            conformal_coverage_1sigma: Some(0.66),
+            regime_break_penalty: Some(0.08),
+            structural_break_detected: Some(false),
+            best_factor_composite_score: Some(0.62),
+            quality_delta: Some(0.00),
+            score_before: Some(0.62),
+            score_after: Some(0.62),
+            baseline_available: Some(false),
+            accepted: None,
+        });
+        let strong = offline_structural_support_hint(OfflineStructuralSupportHintInput {
+            baseline_support: 0.58,
+            aggregate_return: Some(0.01),
+            execution_readiness: Some(0.60),
+            comparable_to_previous: true,
+            feedback_records_applied: 1,
+            conformal_coverage_1sigma: Some(0.66),
+            regime_break_penalty: Some(0.08),
+            structural_break_detected: Some(false),
+            best_factor_composite_score: Some(0.62),
+            quality_delta: Some(0.06),
+            score_before: Some(0.62),
+            score_after: Some(0.71),
+            baseline_available: Some(true),
+            accepted: None,
+        });
+
+        assert!(strong > weak);
+    }
 }
