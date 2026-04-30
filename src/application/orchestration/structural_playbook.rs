@@ -1108,8 +1108,18 @@ pub fn build_structural_node_artifact_with_prior_state(
     } else {
         "actionable".to_string()
     };
-    let posterior_confidence = structural_primary_probability(snapshot);
     let provisional_node_id = format!("{symbol}:{node_family}:{node_label}");
+    let node_duration_prior = structural_prior_state
+        .node_duration_priors
+        .get(&provisional_node_id);
+    let posterior_confidence = if node_family == "belief_regime_node" {
+        structural_blended_node_posterior(
+            structural_primary_probability(snapshot),
+            node_duration_prior,
+        )
+    } else {
+        structural_primary_probability(snapshot)
+    };
     let belief_prior = structural_resolved_smoothed_prior(
         structural_prior_state.nodes.get(&provisional_node_id),
         structural_primary_prior(snapshot),
@@ -2426,6 +2436,21 @@ fn structural_duration_persistence_prior(
     duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
 ) -> Option<f64> {
     duration_prior.map(|prior| prior.persistence_prior)
+}
+
+fn structural_blended_node_posterior(
+    base_posterior: f64,
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> f64 {
+    let Some(duration_prior) = duration_prior else {
+        return base_posterior;
+    };
+    let observation_weight = (duration_prior.observations as f64 / 4.0).min(1.0);
+    let streak_weight = (duration_prior.streak_count as f64 / 3.0).min(1.0);
+    let blend_weight = (observation_weight * streak_weight * 0.5).clamp(0.0, 0.5);
+    ((1.0 - blend_weight) * base_posterior
+        + blend_weight * duration_prior.persistence_prior)
+        .clamp(0.0, 1.0)
 }
 
 fn structural_dominant_source_panel(

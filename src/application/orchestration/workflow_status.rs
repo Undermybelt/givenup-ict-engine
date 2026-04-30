@@ -3926,6 +3926,83 @@ mod tests {
     }
 
     #[test]
+    fn structural_node_uses_duration_prior_to_adjust_posterior_confidence() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let mut structural_prior_state = crate::state::StructuralPriorLearningState::default();
+        structural_prior_state.node_duration_priors.insert(
+            "NQ:belief_regime_node:trend".to_string(),
+            crate::state::StructuralNodeDurationPrior {
+                observations: 6,
+                streak_count: 3,
+                total_streak_length: 6,
+                avg_streak_length: 2.0,
+                max_streak_length: 3,
+                last_streak_length: 3,
+                persistence_prior: 0.9,
+                last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+            },
+        );
+
+        let value = build_workflow_status_phase_value_with_structural_prior_state(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &structural_prior_state,
+            "structural-node",
+        )
+        .unwrap();
+
+        assert_eq!(value["node_id"], "NQ:belief_regime_node:trend");
+        assert!(value["posterior_confidence"].as_f64().unwrap() > 0.72);
+        assert_eq!(
+            value["belief_posterior"].as_f64().unwrap(),
+            value["posterior_confidence"].as_f64().unwrap()
+        );
+    }
+
+    #[test]
     fn structural_playbook_falls_back_to_latest_analyze_anchor_when_latest_ensemble_vote_is_non_structural(
     ) {
         let mut snapshot = WorkflowSnapshot::default();
