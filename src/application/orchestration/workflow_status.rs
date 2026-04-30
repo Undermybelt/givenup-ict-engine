@@ -4258,6 +4258,7 @@ mod tests {
             .expect("transition branch");
         assert_eq!(branch["transition_prior"], 0.8);
         assert!(branch["prior_probability"].as_f64().unwrap() > 0.6);
+        assert!(branch["posterior_probability"].as_f64().unwrap() > 0.10);
     }
 
     #[test]
