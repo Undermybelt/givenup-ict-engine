@@ -64,6 +64,12 @@ pub struct StructuralPriorLearningState {
     pub branches: BTreeMap<String, StructuralPriorStats>,
     pub scenarios: BTreeMap<String, StructuralPriorStats>,
     pub paths: BTreeMap<String, StructuralPriorStats>,
+    #[serde(default)]
+    pub event_ledger: Vec<StructuralPriorEvent>,
+    #[serde(default)]
+    pub node_duration_priors: BTreeMap<String, StructuralNodeDurationPrior>,
+    #[serde(default)]
+    pub branch_transition_priors: BTreeMap<String, StructuralBranchTransitionPrior>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -133,6 +139,52 @@ pub struct StructuralPriorSourceSummary {
     pub last_recommended_at: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_note: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralPriorEvent {
+    #[serde(default)]
+    pub source_label: String,
+    #[serde(default)]
+    pub symbol: String,
+    pub recommendation_id: String,
+    pub recommended_at: String,
+    pub node_id: String,
+    pub branch_id: String,
+    pub scenario_id: String,
+    pub path_id: String,
+    pub followed_path: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub realized_outcome: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralNodeDurationPrior {
+    pub observations: usize,
+    pub streak_count: usize,
+    pub total_streak_length: usize,
+    pub avg_streak_length: f64,
+    pub max_streak_length: usize,
+    pub last_streak_length: usize,
+    pub persistence_prior: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_recommended_at: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralBranchTransitionPrior {
+    pub from_node_id: String,
+    pub to_node_id: String,
+    pub from_branch_id: String,
+    pub to_branch_id: String,
+    pub observations: usize,
+    pub weighted_observation_mass: f64,
+    pub wins: usize,
+    pub losses: usize,
+    pub invalidated: usize,
+    pub transition_prior: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_recommended_at: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2713,6 +2765,7 @@ impl LearningState {
     }
 
     pub fn apply_structural_feedback(&mut self, feedback: &[FeedbackRecord]) {
+        let mut appended = false;
         for record in feedback {
             let Some(refs) = record.structural_feedback.as_ref() else {
                 continue;
@@ -2749,6 +2802,24 @@ impl LearningState {
                 record,
                 refs.followed_path,
             );
+            appended |= append_structural_prior_event(
+                &mut self.structural_prior_state,
+                StructuralPriorEvent {
+                    source_label: record.source.clone(),
+                    symbol: record.symbol.clone(),
+                    recommendation_id: refs.recommendation_id.clone(),
+                    recommended_at: refs.recommended_at.clone(),
+                    node_id: refs.node_id.clone(),
+                    branch_id: refs.branch_id.clone(),
+                    scenario_id: refs.scenario_id.clone(),
+                    path_id: refs.path_id.clone(),
+                    followed_path: refs.followed_path,
+                    realized_outcome: Some(record.realized_outcome.clone()),
+                },
+            );
+        }
+        if appended {
+            rebuild_structural_sequence_priors(&mut self.structural_prior_state);
         }
     }
 
@@ -2789,6 +2860,23 @@ impl LearningState {
             refs,
             seed,
         );
+        if append_structural_prior_event(
+            &mut self.structural_prior_state,
+            StructuralPriorEvent {
+                source_label: seed.source_label.clone(),
+                symbol: structural_prior_symbol_from_node_id(&refs.node_id),
+                recommendation_id: refs.recommendation_id.clone(),
+                recommended_at: refs.recommended_at.clone(),
+                node_id: refs.node_id.clone(),
+                branch_id: refs.branch_id.clone(),
+                scenario_id: refs.scenario_id.clone(),
+                path_id: refs.path_id.clone(),
+                followed_path: refs.followed_path,
+                realized_outcome: None,
+            },
+        ) {
+            rebuild_structural_sequence_priors(&mut self.structural_prior_state);
+        }
     }
 
     pub fn summary(&self) -> FeedbackHistorySummary {
@@ -3404,6 +3492,159 @@ fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSu
     };
 }
 
+fn structural_prior_symbol_from_node_id(node_id: &str) -> String {
+    node_id.split(':').next().unwrap_or_default().to_string()
+}
+
+fn structural_prior_event_key(event: &StructuralPriorEvent) -> String {
+    format!(
+        "{}|{}|{}|{}|{}|{}|{}",
+        event.source_label,
+        event.symbol,
+        event.recommendation_id,
+        event.recommended_at,
+        event.node_id,
+        event.branch_id,
+        event.path_id
+    )
+}
+
+fn append_structural_prior_event(
+    state: &mut StructuralPriorLearningState,
+    event: StructuralPriorEvent,
+) -> bool {
+    let key = structural_prior_event_key(&event);
+    if state
+        .event_ledger
+        .iter()
+        .any(|existing| structural_prior_event_key(existing) == key)
+    {
+        return false;
+    }
+    state.event_ledger.push(event);
+    true
+}
+
+fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) {
+    state.node_duration_priors.clear();
+    state.branch_transition_priors.clear();
+    let mut events = state.event_ledger.clone();
+    events.sort_by(|left, right| {
+        left.symbol
+            .cmp(&right.symbol)
+            .then_with(|| left.recommended_at.cmp(&right.recommended_at))
+            .then_with(|| left.recommendation_id.cmp(&right.recommendation_id))
+            .then_with(|| left.branch_id.cmp(&right.branch_id))
+    });
+
+    let mut current_symbol: Option<String> = None;
+    let mut current_node_id: Option<String> = None;
+    let mut current_streak_length: usize = 0;
+    let mut current_recommended_at: Option<String> = None;
+    let mut previous_event: Option<StructuralPriorEvent> = None;
+
+    for event in &events {
+        if current_symbol.as_deref() != Some(event.symbol.as_str()) {
+            finalize_node_duration_streak(
+                &mut state.node_duration_priors,
+                current_node_id.take(),
+                current_streak_length,
+                current_recommended_at.take(),
+            );
+            current_symbol = Some(event.symbol.clone());
+            current_node_id = Some(event.node_id.clone());
+            current_streak_length = 1;
+        } else if current_node_id.as_deref() == Some(event.node_id.as_str()) {
+            current_streak_length += 1;
+        } else {
+            finalize_node_duration_streak(
+                &mut state.node_duration_priors,
+                current_node_id.replace(event.node_id.clone()),
+                current_streak_length,
+                current_recommended_at.take(),
+            );
+            current_streak_length = 1;
+        }
+        current_recommended_at = Some(event.recommended_at.clone());
+
+        if let Some(previous) = previous_event.as_ref() {
+            if previous.symbol == event.symbol {
+                let transition_key = format!("{}=>{}", previous.branch_id, event.branch_id);
+                let entry = state
+                    .branch_transition_priors
+                    .entry(transition_key)
+                    .or_insert_with(|| StructuralBranchTransitionPrior {
+                        from_node_id: previous.node_id.clone(),
+                        to_node_id: event.node_id.clone(),
+                        from_branch_id: previous.branch_id.clone(),
+                        to_branch_id: event.branch_id.clone(),
+                        ..StructuralBranchTransitionPrior::default()
+                    });
+                entry.observations += 1;
+                entry.weighted_observation_mass +=
+                    structural_prior_source_weight(&event.source_label);
+                match event.realized_outcome.as_deref() {
+                    Some("win") => entry.wins += 1,
+                    Some("loss") => entry.losses += 1,
+                    Some("invalidated") => entry.invalidated += 1,
+                    _ => {}
+                }
+                entry.last_recommended_at = Some(event.recommended_at.clone());
+            }
+        }
+        previous_event = Some(event.clone());
+    }
+
+    finalize_node_duration_streak(
+        &mut state.node_duration_priors,
+        current_node_id.take(),
+        current_streak_length,
+        current_recommended_at.take(),
+    );
+
+    let mut outgoing_mass = BTreeMap::<String, f64>::new();
+    for transition in state.branch_transition_priors.values() {
+        *outgoing_mass
+            .entry(transition.from_branch_id.clone())
+            .or_insert(0.0) += transition.weighted_observation_mass;
+    }
+    for transition in state.branch_transition_priors.values_mut() {
+        let total = outgoing_mass
+            .get(&transition.from_branch_id)
+            .copied()
+            .unwrap_or_default();
+        transition.transition_prior = if total <= f64::EPSILON {
+            0.0
+        } else {
+            (transition.weighted_observation_mass / total).clamp(0.0, 1.0)
+        };
+    }
+}
+
+fn finalize_node_duration_streak(
+    node_duration_priors: &mut BTreeMap<String, StructuralNodeDurationPrior>,
+    node_id: Option<String>,
+    streak_length: usize,
+    last_recommended_at: Option<String>,
+) {
+    if streak_length == 0 {
+        return;
+    }
+    let Some(node_id) = node_id else {
+        return;
+    };
+    let entry = node_duration_priors.entry(node_id).or_default();
+    entry.observations += streak_length;
+    entry.streak_count += 1;
+    entry.total_streak_length += streak_length;
+    entry.max_streak_length = entry.max_streak_length.max(streak_length);
+    entry.last_streak_length = streak_length;
+    entry.avg_streak_length = entry.total_streak_length as f64 / entry.streak_count as f64;
+    entry.persistence_prior =
+        (entry.avg_streak_length / (entry.avg_streak_length + 1.0)).clamp(0.0, 1.0);
+    entry.last_recommended_at = last_recommended_at;
+}
+
 fn family_dominant_action(items: &[&PersistedFactorRanking]) -> &'static str {
     if items.iter().any(|item| item.iteration_action == "replace") {
         "replace"
@@ -3907,6 +4148,165 @@ mod tests {
             path.source_panel_summaries["structural_feedback_submission"].wins,
             1
         );
+    }
+
+    #[test]
+    fn test_structural_prior_seed_rebuilds_node_duration_priors() {
+        let mut state = LearningState::default();
+        let seed = StructuralPriorSeed {
+            source_label: "analyze".to_string(),
+            observations: 1,
+            followed_count: 1,
+            wins: 1,
+            losses: 0,
+            breakevens: 0,
+            invalidated: 0,
+            abandoned: 0,
+            not_followed: 0,
+            avg_pnl: 0.01,
+        };
+
+        for (recommendation_id, recommended_at, node_id, branch_id) in [
+            (
+                "rec-1",
+                "2026-04-30T00:00:00Z",
+                "NQ:belief_regime_node:trend",
+                "NQ:belief_regime_node:trend:trend_follow_through",
+            ),
+            (
+                "rec-2",
+                "2026-04-30T01:00:00Z",
+                "NQ:belief_regime_node:trend",
+                "NQ:belief_regime_node:trend:trend_follow_through",
+            ),
+            (
+                "rec-3",
+                "2026-04-30T02:00:00Z",
+                "NQ:belief_regime_node:range",
+                "NQ:belief_regime_node:range:range_mean_reversion",
+            ),
+            (
+                "rec-4",
+                "2026-04-30T03:00:00Z",
+                "NQ:belief_regime_node:trend",
+                "NQ:belief_regime_node:trend:trend_follow_through",
+            ),
+        ] {
+            state.apply_structural_prior_seed(
+                &StructuralFeedbackRefs {
+                    protocol_version: "structural-prior-seed-v1".to_string(),
+                    recommendation_id: recommendation_id.to_string(),
+                    recommended_at: recommended_at.to_string(),
+                    node_id: node_id.to_string(),
+                    branch_id: branch_id.to_string(),
+                    scenario_id: format!("scenario:{branch_id}"),
+                    path_id: format!("path:scenario:{branch_id}:primary"),
+                    followed_path: true,
+                    exit_reason: None,
+                    notes: None,
+                },
+                &seed,
+            );
+        }
+
+        let trend = state
+            .structural_prior_state
+            .node_duration_priors
+            .get("NQ:belief_regime_node:trend")
+            .expect("trend duration prior");
+        let range = state
+            .structural_prior_state
+            .node_duration_priors
+            .get("NQ:belief_regime_node:range")
+            .expect("range duration prior");
+
+        assert_eq!(trend.observations, 3);
+        assert_eq!(trend.streak_count, 2);
+        assert_eq!(trend.max_streak_length, 2);
+        assert!((trend.avg_streak_length - 1.5).abs() < 1e-9);
+        assert!(trend.persistence_prior > range.persistence_prior);
+        assert_eq!(range.observations, 1);
+        assert_eq!(range.streak_count, 1);
+    }
+
+    #[test]
+    fn test_structural_prior_seed_rebuilds_branch_transition_priors() {
+        let mut state = LearningState::default();
+        let seed = StructuralPriorSeed {
+            source_label: "backtest".to_string(),
+            observations: 1,
+            followed_count: 1,
+            wins: 1,
+            losses: 0,
+            breakevens: 0,
+            invalidated: 0,
+            abandoned: 0,
+            not_followed: 0,
+            avg_pnl: 0.02,
+        };
+
+        for (recommendation_id, recommended_at, node_id, branch_id) in [
+            (
+                "rec-a",
+                "2026-04-30T00:00:00Z",
+                "NQ:belief_regime_node:trend",
+                "NQ:belief_regime_node:trend:trend_follow_through",
+            ),
+            (
+                "rec-b",
+                "2026-04-30T01:00:00Z",
+                "NQ:belief_regime_node:range",
+                "NQ:belief_regime_node:range:range_mean_reversion",
+            ),
+            (
+                "rec-c",
+                "2026-04-30T02:00:00Z",
+                "NQ:belief_regime_node:trend",
+                "NQ:belief_regime_node:trend:trend_follow_through",
+            ),
+            (
+                "rec-d",
+                "2026-04-30T03:00:00Z",
+                "NQ:belief_regime_node:transition",
+                "NQ:belief_regime_node:transition:transition_confirmation",
+            ),
+        ] {
+            state.apply_structural_prior_seed(
+                &StructuralFeedbackRefs {
+                    protocol_version: "structural-prior-seed-v1".to_string(),
+                    recommendation_id: recommendation_id.to_string(),
+                    recommended_at: recommended_at.to_string(),
+                    node_id: node_id.to_string(),
+                    branch_id: branch_id.to_string(),
+                    scenario_id: format!("scenario:{branch_id}"),
+                    path_id: format!("path:scenario:{branch_id}:primary"),
+                    followed_path: true,
+                    exit_reason: None,
+                    notes: None,
+                },
+                &seed,
+            );
+        }
+
+        let transition_ab = state
+            .structural_prior_state
+            .branch_transition_priors
+            .get(
+                "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:range:range_mean_reversion",
+            )
+            .expect("trend to range transition");
+        let transition_ac = state
+            .structural_prior_state
+            .branch_transition_priors
+            .get(
+                "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:transition:transition_confirmation",
+            )
+            .expect("trend to transition transition");
+
+        assert_eq!(transition_ab.observations, 1);
+        assert_eq!(transition_ac.observations, 1);
+        assert!((transition_ab.transition_prior - 0.5).abs() < 1e-9);
+        assert!((transition_ac.transition_prior - 0.5).abs() < 1e-9);
     }
 
     #[test]
