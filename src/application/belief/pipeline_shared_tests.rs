@@ -179,6 +179,7 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
             ("transition".to_string(), 0.10),
         ]),
         uses_soft_evidence: true,
+        evidence_quality_score: 1.0,
         ..PreBayesEvidenceFilter::default()
     };
     let mut structural_prior_state = StructuralPriorLearningState::default();
@@ -207,7 +208,12 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
     )
     .unwrap();
 
-    assert_eq!(report.regime_posterior.active_regime.as_deref(), Some("trend"));
+    assert_eq!(
+        report.regime_posterior.active_regime.as_deref(),
+        Some("trend"),
+        "probs={:?} report={report:?}",
+        report.regime_posterior.probabilities,
+    );
     assert!(report.regime_posterior.confidence.unwrap_or_default() > 0.72);
     assert!(report
         .regime_posterior
@@ -308,6 +314,63 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_branch_transition_
         .evidence
         .iter()
         .any(|line| line.contains("branch_transition_prior")));
+}
+
+#[test]
+fn canonical_belief_snapshot_with_structural_prior_state_reconciles_gate_and_strategy_with_adjusted_regime(
+) {
+    let filter = PreBayesEvidenceFilter {
+        filtered_market_regime_label: "range".to_string(),
+        soft_market_regime_distribution: BTreeMap::from([
+            ("bull".to_string(), 0.40),
+            ("range".to_string(), 0.45),
+            ("transition".to_string(), 0.15),
+        ]),
+        uses_soft_evidence: true,
+        evidence_quality_score: 1.0,
+        ..PreBayesEvidenceFilter::default()
+    };
+    let mut structural_prior_state = StructuralPriorLearningState::default();
+    structural_prior_state.node_duration_priors.insert(
+        "NQ:belief_regime_node:trend".to_string(),
+        StructuralNodeDurationPrior {
+            observations: 8,
+            streak_count: 4,
+            total_streak_length: 10,
+            avg_streak_length: 2.5,
+            max_streak_length: 4,
+            last_streak_length: 4,
+            persistence_prior: 0.95,
+            last_recommended_at: Some("2026-04-30T04:00:00Z".to_string()),
+        },
+    );
+
+    let report = build_canonical_belief_snapshot_with_pda_and_structural_prior_state(
+        "NQ",
+        Some("NQ"),
+        &filter,
+        None,
+        None,
+        None,
+        Some(&structural_prior_state),
+    )
+    .unwrap();
+
+    assert_eq!(
+        report.regime_posterior.active_regime.as_deref(),
+        Some("trend"),
+        "regime_probs={:?} report={report:?}",
+        report.regime_posterior.probabilities
+    );
+    assert_eq!(report.gate_decision.selected_regime, "trend");
+    assert_eq!(
+        report.strategy_recommendation.direction,
+        "bull"
+    );
+    assert_eq!(
+        report.strategy_recommendation.selected_market_subgraph.as_deref(),
+        Some("futures_index_trend_subgraph")
+    );
 }
 
 #[test]

@@ -9,7 +9,9 @@ use crate::analyze::multi_timeframe_parse::{
 use crate::application::belief::blend_node_posterior_with_duration_prior;
 use crate::application::belief::transition_adjusted_branch_posteriors;
 use crate::application::entry_models::{apply_cisd_rb_to_belief_packet, CisdRbEntryModelPacket};
-use crate::bbn::adapters::belief_evidence_packet_from_pre_bayes_filter;
+use crate::bbn::adapters::{
+    belief_evidence_packet_from_pre_bayes_filter, gate_decision_from_regime_posterior,
+};
 use crate::bbn::engine::InferenceEngineRegistry;
 use crate::domain::regime::RegimeSegmentationPacket;
 use crate::factor_lab::{FactorDiagnostics, PairedMarketQualityReport};
@@ -309,7 +311,12 @@ pub fn build_canonical_belief_report_with_pda_and_structural_prior_state(
     }
     let mut report = InferenceEngineRegistry::default().build_report(packet)?;
     if let Some(structural_prior_state) = structural_prior_state {
-        apply_structural_prior_state_to_belief_report(symbol, structural_prior_state, &mut report);
+        apply_structural_prior_state_to_belief_report(
+            symbol,
+            filter,
+            structural_prior_state,
+            &mut report,
+        );
     }
     Ok(report)
 }
@@ -366,6 +373,7 @@ pub fn build_canonical_belief_snapshot_with_pda_and_structural_prior_state(
 
 fn apply_structural_prior_state_to_belief_report(
     symbol: &str,
+    filter: &PreBayesEvidenceFilter,
     structural_prior_state: &StructuralPriorLearningState,
     report: &mut BeliefReportPacket,
 ) {
@@ -375,37 +383,37 @@ fn apply_structural_prior_state_to_belief_report(
             *canonical_probabilities.entry(canonical).or_insert(0.0) += *probability;
         }
     }
+    if filter.uses_soft_evidence && !filter.soft_market_regime_distribution.is_empty() {
+        let trend = filter.soft_market_regime_distribution.get("bull").copied().unwrap_or(0.0)
+            + filter
+                .soft_market_regime_distribution
+                .get("bear")
+                .copied()
+                .unwrap_or(0.0);
+        let range = filter
+            .soft_market_regime_distribution
+            .get("range")
+            .copied()
+            .unwrap_or(0.0);
+        canonical_probabilities.insert("trend".to_string(), trend.clamp(0.0, 1.0));
+        canonical_probabilities.insert("range".to_string(), range.clamp(0.0, 1.0));
+    }
     if canonical_probabilities.is_empty() {
         return;
+    }
+
+    for (regime, probability) in canonical_probabilities.iter_mut() {
+        let node_id = format!("{symbol}:belief_regime_node:{regime}");
+        if let Some(duration_prior) = structural_prior_state.node_duration_priors.get(&node_id) {
+            *probability =
+                blend_node_posterior_with_duration_prior(*probability, Some(duration_prior));
+        }
     }
 
     let mut active_regime = canonical_probabilities
         .iter()
         .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(Ordering::Equal))
         .map(|(regime, _)| regime.clone());
-    if let Some(active) = active_regime.as_ref() {
-        let node_id = format!("{symbol}:belief_regime_node:{active}");
-        if let Some(duration_prior) = structural_prior_state.node_duration_priors.get(&node_id) {
-            let active_probability = canonical_probabilities.get(active).copied().unwrap_or(0.5);
-            let base_confidence = report
-                .regime_posterior
-                .confidence
-                .unwrap_or_default()
-                .max(active_probability);
-            let adjusted_confidence =
-                blend_node_posterior_with_duration_prior(base_confidence, Some(duration_prior));
-            report.regime_posterior.confidence = Some(adjusted_confidence);
-            if let Some(probability) = canonical_probabilities.get_mut(active) {
-                *probability = blend_node_posterior_with_duration_prior(*probability, Some(duration_prior));
-            }
-            report.regime_posterior.evidence.push(format!(
-                "duration_persistence_prior={:.3} observations={} streaks={}",
-                duration_prior.persistence_prior,
-                duration_prior.observations,
-                duration_prior.streak_count
-            ));
-        }
-    }
 
     if let Some(active) = active_regime.as_ref() {
         let node_id = format!("{symbol}:belief_regime_node:{active}");
@@ -448,8 +456,44 @@ fn apply_structural_prior_state_to_belief_report(
         .iter()
         .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(Ordering::Equal))
         .map(|(regime, _)| regime.clone());
+    if let Some(active) = active_regime.as_ref() {
+        let node_id = format!("{symbol}:belief_regime_node:{active}");
+        if let Some(duration_prior) = structural_prior_state.node_duration_priors.get(&node_id) {
+            let active_probability = canonical_probabilities.get(active).copied().unwrap_or(0.5);
+            let base_confidence = report
+                .regime_posterior
+                .confidence
+                .unwrap_or_default()
+                .max(active_probability);
+            report.regime_posterior.confidence = Some(blend_node_posterior_with_duration_prior(
+                base_confidence,
+                Some(duration_prior),
+            ));
+            report.regime_posterior.evidence.push(format!(
+                "duration_persistence_prior={:.3} observations={} streaks={}",
+                duration_prior.persistence_prior,
+                duration_prior.observations,
+                duration_prior.streak_count
+            ));
+        }
+    }
     report.regime_posterior.active_regime = active_regime.clone();
     report.regime_posterior.probabilities = canonical_probabilities.clone();
+    report.gate_decision = gate_decision_from_regime_posterior(&report.regime_posterior);
+    report.strategy_recommendation.direction = if active_regime.as_deref() == Some("trend") {
+        "bull".to_string()
+    } else {
+        "neutral".to_string()
+    };
+    report.strategy_recommendation.market_family = report.regime_posterior.market_family.clone();
+    report.strategy_recommendation.market_behavior_profile =
+        report.regime_posterior.market_behavior_profile.clone();
+    report.strategy_recommendation.selected_market_subgraph =
+        Some(report.gate_decision.selected_subgraph.clone());
+    report
+        .strategy_recommendation
+        .rationale
+        .push("regime_posterior_adjusted_by_structural_priors".to_string());
     synchronize_market_regime_belief_snapshot(
         report,
         active_regime.as_deref(),
