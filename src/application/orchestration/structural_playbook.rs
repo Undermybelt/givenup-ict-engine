@@ -1965,9 +1965,13 @@ fn structural_support_reason(snapshot: &WorkflowSnapshot) -> Option<String> {
         .contains("user_selected_historical_data_missing")
     {
         Some("user_selected_historical_data_missing".to_string())
-    } else if !snapshot.blocking_truth.reason.trim().is_empty() {
+    } else if structural_hard_block_active(snapshot)
+        && !snapshot.blocking_truth.reason.trim().is_empty()
+    {
         Some(snapshot.blocking_truth.reason.clone())
-    } else if !snapshot.current_focus_reason.trim().is_empty() {
+    } else if snapshot.current_focus_reason.contains("provider")
+        || snapshot.current_focus_reason.contains("historical_data")
+    {
         Some(snapshot.current_focus_reason.clone())
     } else {
         None
@@ -2016,37 +2020,111 @@ fn structural_primary_prior(snapshot: &WorkflowSnapshot) -> f64 {
     0.5
 }
 
-fn structural_active_regime(snapshot: &WorkflowSnapshot) -> Option<&str> {
-    snapshot
-        .latest_ensemble_vote
-        .as_ref()
-        .map(|vote| vote.posterior_active_regime.trim())
-        .filter(|value| !value.is_empty() && *value != "research")
+fn canonical_structural_regime_label(label: &str) -> Option<String> {
+    let normalized = label.trim().to_ascii_lowercase();
+    let canonical = match normalized.as_str() {
+        "trend" | "bull" | "bear" | "trend_impulse" | "trend_decay" => "trend",
+        "range" | "range_calm" | "range_choppy" => "range",
+        "stress" => "stress",
+        "transition" => "transition",
+        _ => return None,
+    };
+    Some(canonical.to_string())
 }
 
-fn structural_regime_probabilities(snapshot: &WorkflowSnapshot) -> Vec<(String, f64)> {
-    let mut probabilities = snapshot
-        .latest_ensemble_vote
-        .as_ref()
-        .map(|vote| {
-            vote.posterior_probabilities
-                .iter()
-                .filter_map(|(regime, probability)| {
-                    if probability.is_finite() && *probability > 0.0 {
-                        Some((regime.clone(), *probability))
-                    } else {
-                        None
-                    }
-                })
-                .collect::<Vec<_>>()
-        })
-        .unwrap_or_default();
-    probabilities.sort_by(|a, b| {
+fn structural_sorted_regime_probabilities(
+    probabilities: std::collections::BTreeMap<String, f64>,
+) -> Vec<(String, f64)> {
+    let mut out = probabilities
+        .into_iter()
+        .filter(|(_, probability)| probability.is_finite() && *probability > 0.0)
+        .collect::<Vec<_>>();
+    out.sort_by(|a, b| {
         b.1.partial_cmp(&a.1)
             .unwrap_or(std::cmp::Ordering::Equal)
             .then_with(|| a.0.cmp(&b.0))
     });
-    probabilities
+    out
+}
+
+fn structural_ensemble_regime_probabilities(snapshot: &WorkflowSnapshot) -> Vec<(String, f64)> {
+    let mut aggregated = std::collections::BTreeMap::new();
+    if let Some(vote) = snapshot.latest_ensemble_vote.as_ref() {
+        for (regime, probability) in &vote.posterior_probabilities {
+            if let Some(canonical) = canonical_structural_regime_label(regime) {
+                *aggregated.entry(canonical).or_insert(0.0) += *probability;
+            }
+        }
+    }
+    structural_sorted_regime_probabilities(aggregated)
+}
+
+fn structural_analyze_anchor_regime_probabilities(
+    snapshot: &WorkflowSnapshot,
+) -> Vec<(String, f64)> {
+    let Some(analyze) = snapshot.latest_analyze.as_ref() else {
+        return Vec::new();
+    };
+    let mut aggregated = std::collections::BTreeMap::new();
+    if let Some(distribution) = analyze.pre_bayes_soft_evidence.get("market_regime") {
+        for (regime, probability) in distribution {
+            if let Some(canonical) = canonical_structural_regime_label(regime) {
+                *aggregated.entry(canonical).or_insert(0.0) += *probability;
+            }
+        }
+    }
+    if aggregated.is_empty() {
+        if let Some(regime) = analyze
+            .pre_bayes_filtered_assignments
+            .get("market_regime")
+            .and_then(|value| canonical_structural_regime_label(value))
+        {
+            aggregated.insert(regime, 1.0);
+        }
+    }
+    structural_sorted_regime_probabilities(aggregated)
+}
+
+fn structural_active_regime(snapshot: &WorkflowSnapshot) -> Option<String> {
+    structural_regime_probabilities(snapshot)
+        .first()
+        .map(|(regime, _)| regime.clone())
+        .or_else(|| {
+            snapshot
+                .latest_ensemble_vote
+                .as_ref()
+                .and_then(|vote| canonical_structural_regime_label(&vote.posterior_active_regime))
+        })
+        .or_else(|| {
+            snapshot
+                .latest_analyze
+                .as_ref()
+                .and_then(|analyze| {
+                    analyze
+                        .pre_bayes_filtered_assignments
+                        .get("market_regime")
+                        .and_then(|value| canonical_structural_regime_label(value))
+                })
+        })
+}
+
+fn structural_regime_probabilities(snapshot: &WorkflowSnapshot) -> Vec<(String, f64)> {
+    let ensemble = structural_ensemble_regime_probabilities(snapshot);
+    if !ensemble.is_empty() {
+        return ensemble;
+    }
+
+    let analyze = structural_analyze_anchor_regime_probabilities(snapshot);
+    if !analyze.is_empty() {
+        return analyze;
+    }
+
+    snapshot
+        .latest_ensemble_vote
+        .as_ref()
+        .and_then(|vote| canonical_structural_regime_label(&vote.posterior_active_regime))
+        .map(|regime| vec![(regime, structural_posterior_confidence(snapshot))])
+        .unwrap_or_default()
 }
 
 fn structural_branch_label_for_regime(regime: &str) -> &'static str {
