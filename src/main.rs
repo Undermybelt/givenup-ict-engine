@@ -385,6 +385,7 @@ struct RunProbabilisticBacktestInput<'a> {
 struct BuildWorkflowSnapshotInput<'a> {
     state_dir: &'a str,
     symbol: &'a str,
+    analyze_runs: &'a [AnalyzeRunRecord],
     latest_train: Option<&'a TrainRunRecord>,
     latest_analyze: Option<&'a AnalyzeRunRecord>,
     latest_research: Option<&'a ResearchRunRecord>,
@@ -3166,6 +3167,7 @@ fn refresh_workflow_snapshot(state_dir: &str, symbol: &str) -> Result<WorkflowSn
     let snapshot = build_workflow_snapshot(BuildWorkflowSnapshotInput {
         state_dir,
         symbol,
+        analyze_runs: &analyze_runs,
         latest_train: train_runs.last(),
         latest_analyze: analyze_runs.last(),
         latest_research: research_runs.last(),
@@ -3184,6 +3186,7 @@ fn build_workflow_snapshot(input: BuildWorkflowSnapshotInput<'_>) -> WorkflowSna
     let BuildWorkflowSnapshotInput {
         state_dir,
         symbol,
+        analyze_runs,
         latest_train,
         latest_analyze,
         latest_research,
@@ -3230,7 +3233,11 @@ fn build_workflow_snapshot(input: BuildWorkflowSnapshotInput<'_>) -> WorkflowSna
         .rev()
         .collect::<Vec<_>>();
     recent_ensemble_votes =
-        overlay_or_synthesize_analyze_ensemble_votes(recent_ensemble_votes, latest_analyze);
+        overlay_or_synthesize_analyze_ensemble_votes(
+            recent_ensemble_votes,
+            analyze_runs,
+            latest_analyze,
+        );
     let recent_artifacts = artifact_ledger
         .iter()
         .rev()
@@ -3419,27 +3426,41 @@ fn build_workflow_snapshot(input: BuildWorkflowSnapshotInput<'_>) -> WorkflowSna
 
 fn overlay_or_synthesize_analyze_ensemble_votes(
     mut recent_ensemble_votes: Vec<EnsembleVoteRecord>,
+    analyze_runs: &[AnalyzeRunRecord],
     latest_analyze: Option<&AnalyzeRunRecord>,
 ) -> Vec<EnsembleVoteRecord> {
-    let Some(analyze) = latest_analyze else {
+    if analyze_runs.is_empty() && latest_analyze.is_none() {
         return recent_ensemble_votes;
-    };
-    let Some(canonical) = analyze.canonical_structural_regime_posterior.as_ref() else {
-        return recent_ensemble_votes;
-    };
+    }
+
+    let analyze_by_run_id = analyze_runs
+        .iter()
+        .filter_map(|run| {
+            run.canonical_structural_regime_posterior
+                .as_ref()
+                .map(|canonical| (run.run_id.as_str(), canonical))
+        })
+        .collect::<std::collections::BTreeMap<_, _>>();
 
     if recent_ensemble_votes.is_empty() {
-        if let Some(synthetic) = synthetic_analyze_ensemble_vote(analyze, canonical) {
-            recent_ensemble_votes.push(synthetic);
+        if let Some(analyze) = latest_analyze {
+            if let Some(canonical) = analyze.canonical_structural_regime_posterior.as_ref() {
+                if let Some(synthetic) = synthetic_analyze_ensemble_vote(analyze, canonical) {
+                    recent_ensemble_votes.push(synthetic);
+                }
+            }
         }
         return recent_ensemble_votes;
     }
 
     for vote in &mut recent_ensemble_votes {
-        if vote.source_phase == "analyze"
-            && vote.source_run_id.as_deref() == Some(analyze.run_id.as_str())
-        {
-            overlay_analyze_canonical_regime_on_ensemble_vote(vote, canonical);
+        if vote.source_phase != "analyze" {
+            continue;
+        }
+        if let Some(run_id) = vote.source_run_id.as_deref() {
+            if let Some(canonical) = analyze_by_run_id.get(run_id) {
+                overlay_analyze_canonical_regime_on_ensemble_vote(vote, canonical);
+            }
         }
     }
     recent_ensemble_votes
@@ -10427,6 +10448,7 @@ mod tests {
         let snapshot = build_workflow_snapshot(BuildWorkflowSnapshotInput {
             state_dir: "state",
             symbol: "NQ",
+            analyze_runs: &[],
             latest_train: None,
             latest_analyze: None,
             latest_research: None,
@@ -11148,6 +11170,7 @@ mod tests {
         let snapshot = build_workflow_snapshot(BuildWorkflowSnapshotInput {
             state_dir: "state",
             symbol: "NQ",
+            analyze_runs: std::slice::from_ref(&analyze),
             latest_train: None,
             latest_analyze: Some(&analyze),
             latest_research: None,
@@ -12774,6 +12797,7 @@ mod tests {
         let snapshot = build_workflow_snapshot(BuildWorkflowSnapshotInput {
             state_dir: "state",
             symbol: "NQ",
+            analyze_runs: &[],
             latest_train: None,
             latest_analyze: None,
             latest_research: None,
@@ -12827,6 +12851,7 @@ mod tests {
         let snapshot = build_workflow_snapshot(BuildWorkflowSnapshotInput {
             state_dir: "state",
             symbol: "NQ",
+            analyze_runs: std::slice::from_ref(&analyze),
             latest_train: None,
             latest_analyze: Some(&analyze),
             latest_research: None,
@@ -12848,6 +12873,190 @@ mod tests {
             .posterior_evidence
             .iter()
             .any(|line| line.contains("duration_persistence_prior")));
+    }
+
+    #[test]
+    fn test_workflow_snapshot_overlays_recent_analyze_ensemble_history_with_canonical_structural_posterior()
+     {
+        let temp = tempfile::tempdir().unwrap();
+        let analyze = AnalyzeRunRecord {
+            run_id: "analyze:1".to_string(),
+            symbol: "NQ".to_string(),
+            canonical_structural_regime_posterior: Some(
+                ict_engine::state::CanonicalStructuralRegimePosterior {
+                    active_regime: Some("trend".to_string()),
+                    confidence: Some(0.78),
+                    probabilities: BTreeMap::from([
+                        ("trend".to_string(), 0.78),
+                        ("range".to_string(), 0.14),
+                        ("transition".to_string(), 0.08),
+                    ]),
+                    evidence: vec!["duration_persistence_prior=0.900".to_string()],
+                },
+            ),
+            ..AnalyzeRunRecord::default()
+        };
+        append_ensemble_vote_history(
+            temp.path(),
+            "NQ",
+            EnsembleVoteRecord {
+                artifact_id: "ensemble-vote:analyze:test".to_string(),
+                generated_at: Utc::now(),
+                symbol: "NQ".to_string(),
+                source_phase: "analyze".to_string(),
+                source_run_id: Some("analyze:1".to_string()),
+                provenance: RunProvenance::default(),
+                dataset_comparability: DatasetComparability::default(),
+                ensemble_version: "ensemble-audit-v2".to_string(),
+                final_action: "execute_follow_through".to_string(),
+                recommended_command:
+                    "ict-engine workflow-status --symbol NQ --phase human-next".to_string(),
+                human_next_triage:
+                    "hard_blocked=false ensemble_action=execute_follow_through".to_string(),
+                hard_block: ict_engine::application::orchestration::EnsembleHardBlockArtifact::default(),
+                confidence: 0.55,
+                consensus_strength: 0.55,
+                disagreement_flags: Vec::new(),
+                executor_summaries: Vec::new(),
+                split_explanations: Vec::new(),
+                executor_scorecards: Vec::new(),
+                executor_scorecards_source: None,
+                posterior_fingerprint: "fp-raw".to_string(),
+                posterior_normalization_status: "normalized".to_string(),
+                posterior_active_regime: "bull".to_string(),
+                posterior_confidence: Some(0.55),
+                posterior_probabilities: BTreeMap::from([
+                    ("bull".to_string(), 0.55),
+                    ("range".to_string(), 0.30),
+                    ("transition".to_string(), 0.15),
+                ]),
+                posterior_evidence: vec!["raw".to_string()],
+            },
+        )
+        .unwrap();
+
+        let snapshot = build_workflow_snapshot(BuildWorkflowSnapshotInput {
+            state_dir: temp.path().to_str().unwrap(),
+            symbol: "NQ",
+            analyze_runs: std::slice::from_ref(&analyze),
+            latest_train: None,
+            latest_analyze: Some(&analyze),
+            latest_research: None,
+            latest_backtest: None,
+            latest_update: None,
+            pre_bayes_policy_history: &[],
+            pending_update_history: &[],
+            execution_candidate_history: &[],
+            artifact_ledger: &[],
+        });
+
+        let vote = snapshot
+            .recent_ensemble_votes
+            .last()
+            .expect("recent analyze ensemble vote");
+        assert_eq!(vote.posterior_active_regime, "trend");
+        assert_eq!(vote.posterior_confidence, Some(0.78));
+        assert_eq!(vote.posterior_probabilities["trend"], 0.78);
+    }
+
+    #[test]
+    fn test_workflow_snapshot_overlays_older_recent_analyze_ensemble_history_with_matching_run() {
+        let temp = tempfile::tempdir().unwrap();
+        let analyze_old = AnalyzeRunRecord {
+            run_id: "analyze:old".to_string(),
+            symbol: "NQ".to_string(),
+            canonical_structural_regime_posterior: Some(
+                ict_engine::state::CanonicalStructuralRegimePosterior {
+                    active_regime: Some("range".to_string()),
+                    confidence: Some(0.61),
+                    probabilities: BTreeMap::from([
+                        ("trend".to_string(), 0.21),
+                        ("range".to_string(), 0.61),
+                        ("transition".to_string(), 0.18),
+                    ]),
+                    evidence: vec!["legacy_range_bias".to_string()],
+                },
+            ),
+            ..AnalyzeRunRecord::default()
+        };
+        let analyze_latest = AnalyzeRunRecord {
+            run_id: "analyze:new".to_string(),
+            symbol: "NQ".to_string(),
+            canonical_structural_regime_posterior: Some(
+                ict_engine::state::CanonicalStructuralRegimePosterior {
+                    active_regime: Some("trend".to_string()),
+                    confidence: Some(0.78),
+                    probabilities: BTreeMap::from([
+                        ("trend".to_string(), 0.78),
+                        ("range".to_string(), 0.14),
+                        ("transition".to_string(), 0.08),
+                    ]),
+                    evidence: vec!["duration_persistence_prior=0.900".to_string()],
+                },
+            ),
+            ..AnalyzeRunRecord::default()
+        };
+        append_ensemble_vote_history(
+            temp.path(),
+            "NQ",
+            EnsembleVoteRecord {
+                artifact_id: "ensemble-vote:analyze:old".to_string(),
+                generated_at: Utc::now(),
+                symbol: "NQ".to_string(),
+                source_phase: "analyze".to_string(),
+                source_run_id: Some("analyze:old".to_string()),
+                provenance: RunProvenance::default(),
+                dataset_comparability: DatasetComparability::default(),
+                ensemble_version: "ensemble-audit-v2".to_string(),
+                final_action: "observe".to_string(),
+                recommended_command:
+                    "ict-engine workflow-status --symbol NQ --phase human-next".to_string(),
+                human_next_triage: "history-old".to_string(),
+                hard_block: ict_engine::application::orchestration::EnsembleHardBlockArtifact::default(),
+                confidence: 0.20,
+                consensus_strength: 0.20,
+                disagreement_flags: Vec::new(),
+                executor_summaries: Vec::new(),
+                split_explanations: Vec::new(),
+                executor_scorecards: Vec::new(),
+                executor_scorecards_source: None,
+                posterior_fingerprint: "fp-old-raw".to_string(),
+                posterior_normalization_status: "normalized".to_string(),
+                posterior_active_regime: "bull".to_string(),
+                posterior_confidence: Some(0.20),
+                posterior_probabilities: BTreeMap::from([
+                    ("bull".to_string(), 0.20),
+                    ("range".to_string(), 0.60),
+                    ("transition".to_string(), 0.20),
+                ]),
+                posterior_evidence: vec!["raw-old".to_string()],
+            },
+        )
+        .unwrap();
+
+        let snapshot = build_workflow_snapshot(BuildWorkflowSnapshotInput {
+            state_dir: temp.path().to_str().unwrap(),
+            symbol: "NQ",
+            analyze_runs: &[analyze_old.clone(), analyze_latest.clone()],
+            latest_train: None,
+            latest_analyze: Some(&analyze_latest),
+            latest_research: None,
+            latest_backtest: None,
+            latest_update: None,
+            pre_bayes_policy_history: &[],
+            pending_update_history: &[],
+            execution_candidate_history: &[],
+            artifact_ledger: &[],
+        });
+
+        let vote = snapshot
+            .recent_ensemble_votes
+            .last()
+            .expect("older recent analyze vote");
+        assert_eq!(vote.source_run_id.as_deref(), Some("analyze:old"));
+        assert_eq!(vote.posterior_active_regime, "range");
+        assert_eq!(vote.posterior_confidence, Some(0.61));
+        assert_eq!(vote.posterior_probabilities["range"], 0.61);
     }
 
     #[test]
