@@ -4368,6 +4368,8 @@ mod tests {
                 weighted_failure_mass: 0.5,
                 weighted_invalidation_mass: 0.0,
                 smoothed_prior: 0.75,
+                source_panel_summaries: std::collections::BTreeMap::new(),
+                last_offline_seed_source: None,
             },
         );
 

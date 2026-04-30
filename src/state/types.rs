@@ -86,6 +86,10 @@ pub struct StructuralPriorStats {
     #[serde(default)]
     pub weighted_invalidation_mass: f64,
     pub smoothed_prior: f64,
+    #[serde(default)]
+    pub source_panel_summaries: BTreeMap<String, StructuralPriorSourceSummary>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_offline_seed_source: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -101,6 +105,34 @@ pub struct StructuralPriorSeed {
     pub abandoned: usize,
     pub not_followed: usize,
     pub avg_pnl: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralPriorSourceSummary {
+    pub observations: usize,
+    pub followed_count: usize,
+    pub wins: usize,
+    pub losses: usize,
+    pub breakevens: usize,
+    pub invalidated: usize,
+    pub abandoned: usize,
+    pub not_followed: usize,
+    pub avg_pnl: f64,
+    #[serde(default)]
+    pub weighted_followed_mass: f64,
+    #[serde(default)]
+    pub weighted_success_mass: f64,
+    #[serde(default)]
+    pub weighted_failure_mass: f64,
+    #[serde(default)]
+    pub weighted_invalidation_mass: f64,
+    pub smoothed_prior: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_recommendation_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_recommended_at: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_note: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -2730,6 +2762,7 @@ impl LearningState {
                 .nodes
                 .entry(refs.node_id.clone())
                 .or_default(),
+            refs,
             seed,
         );
         apply_structural_prior_seed_to_stats(
@@ -2737,6 +2770,7 @@ impl LearningState {
                 .branches
                 .entry(refs.branch_id.clone())
                 .or_default(),
+            refs,
             seed,
         );
         apply_structural_prior_seed_to_stats(
@@ -2744,6 +2778,7 @@ impl LearningState {
                 .scenarios
                 .entry(refs.scenario_id.clone())
                 .or_default(),
+            refs,
             seed,
         );
         apply_structural_prior_seed_to_stats(
@@ -2751,6 +2786,7 @@ impl LearningState {
                 .paths
                 .entry(refs.path_id.clone())
                 .or_default(),
+            refs,
             seed,
         );
     }
@@ -3182,11 +3218,17 @@ fn update_structural_prior_stats(
         }
         _ => {}
     }
+    let source_summary = stats
+        .source_panel_summaries
+        .entry(record.source.clone())
+        .or_default();
+    update_structural_prior_source_summary_from_feedback(source_summary, record, followed_path);
     refresh_structural_smoothed_prior(stats);
 }
 
 fn apply_structural_prior_seed_to_stats(
     stats: &mut StructuralPriorStats,
+    refs: &StructuralFeedbackRefs,
     seed: &StructuralPriorSeed,
 ) {
     if seed.observations == 0 {
@@ -3217,6 +3259,12 @@ fn apply_structural_prior_seed_to_stats(
         ((stats.avg_pnl * previous_observations as f64) + (seed.avg_pnl * seed.observations as f64))
             / new_total as f64
     };
+    stats.last_offline_seed_source = Some(seed.source_label.clone());
+    let source_summary = stats
+        .source_panel_summaries
+        .entry(seed.source_label.clone())
+        .or_default();
+    apply_structural_prior_seed_to_source_summary(source_summary, refs, seed);
     refresh_structural_smoothed_prior(stats);
 }
 
@@ -3238,6 +3286,120 @@ fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
     } else {
         let alpha = 1.0 + stats.weighted_success_mass.max(0.0);
         let beta = 1.0 + stats.weighted_failure_mass.max(0.0);
+        (alpha / (alpha + beta)).clamp(0.0, 1.0)
+    };
+}
+
+fn update_structural_prior_source_summary_from_feedback(
+    summary: &mut StructuralPriorSourceSummary,
+    record: &FeedbackRecord,
+    followed_path: bool,
+) {
+    let source_weight = structural_prior_source_weight(&record.source);
+    summary.observations += 1;
+    if summary.observations == 1 {
+        summary.avg_pnl = record.pnl;
+    } else {
+        let previous = summary.observations - 1;
+        summary.avg_pnl =
+            ((summary.avg_pnl * previous as f64) + record.pnl) / summary.observations as f64;
+    }
+    if followed_path {
+        summary.followed_count += 1;
+        summary.weighted_followed_mass += source_weight;
+    }
+    if !followed_path || record.realized_outcome == "not_followed" {
+        summary.not_followed += 1;
+    }
+    match record.realized_outcome.as_str() {
+        "win" => {
+            summary.wins += 1;
+            if followed_path {
+                summary.weighted_success_mass += source_weight;
+            }
+        }
+        "loss" => {
+            summary.losses += 1;
+            if followed_path {
+                summary.weighted_failure_mass += source_weight;
+            }
+        }
+        "breakeven" => {
+            summary.breakevens += 1;
+            if followed_path {
+                summary.weighted_success_mass += source_weight * 0.5;
+                summary.weighted_failure_mass += source_weight * 0.5;
+            }
+        }
+        "invalidated" => {
+            summary.invalidated += 1;
+            if followed_path {
+                summary.weighted_invalidation_mass += source_weight;
+                summary.weighted_failure_mass += source_weight * 1.25;
+            }
+        }
+        "abandoned" => {
+            summary.abandoned += 1;
+            if followed_path {
+                summary.weighted_failure_mass += source_weight * 0.75;
+            }
+        }
+        _ => {}
+    }
+    if let Some(refs) = record.structural_feedback.as_ref() {
+        summary.last_recommendation_id = Some(refs.recommendation_id.clone());
+        summary.last_recommended_at = Some(refs.recommended_at.clone());
+        summary.last_note = refs.notes.clone();
+    }
+    refresh_structural_prior_source_summary(summary);
+}
+
+fn apply_structural_prior_seed_to_source_summary(
+    summary: &mut StructuralPriorSourceSummary,
+    refs: &StructuralFeedbackRefs,
+    seed: &StructuralPriorSeed,
+) {
+    if seed.observations == 0 {
+        return;
+    }
+    let source_weight = structural_prior_source_weight(&seed.source_label);
+    let previous_observations = summary.observations;
+    summary.observations += seed.observations;
+    summary.followed_count += seed.followed_count;
+    summary.wins += seed.wins;
+    summary.losses += seed.losses;
+    summary.breakevens += seed.breakevens;
+    summary.invalidated += seed.invalidated;
+    summary.abandoned += seed.abandoned;
+    summary.not_followed += seed.not_followed;
+    summary.weighted_followed_mass += source_weight * seed.followed_count as f64;
+    summary.weighted_success_mass +=
+        source_weight * (seed.wins as f64 + seed.breakevens as f64 * 0.5);
+    summary.weighted_failure_mass += source_weight
+        * (seed.losses as f64 + seed.breakevens as f64 * 0.5)
+        + source_weight * seed.invalidated as f64 * 1.25
+        + source_weight * seed.abandoned as f64 * 0.75;
+    summary.weighted_invalidation_mass += source_weight * seed.invalidated as f64;
+    let new_total = previous_observations + seed.observations;
+    summary.avg_pnl = if new_total == 0 {
+        0.0
+    } else {
+        ((summary.avg_pnl * previous_observations as f64)
+            + (seed.avg_pnl * seed.observations as f64))
+            / new_total as f64
+    };
+    summary.last_recommendation_id = Some(refs.recommendation_id.clone());
+    summary.last_recommended_at = Some(refs.recommended_at.clone());
+    summary.last_note = refs.notes.clone();
+    refresh_structural_prior_source_summary(summary);
+}
+
+fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSummary) {
+    summary.smoothed_prior = if summary.weighted_followed_mass <= f64::EPSILON {
+        0.5
+    } else {
+        let alpha = 1.0 + summary.weighted_success_mass.max(0.0);
+        let beta = 1.0 + summary.weighted_failure_mass.max(0.0);
         (alpha / (alpha + beta)).clamp(0.0, 1.0)
     };
 }
@@ -3632,6 +3794,119 @@ mod tests {
             .expect("loss path prior state");
         assert!(invalidated_path.weighted_failure_mass > loss_path.weighted_failure_mass);
         assert!(invalidated_path.smoothed_prior < loss_path.smoothed_prior);
+    }
+
+    #[test]
+    fn test_structural_prior_seed_records_source_panel_summary() {
+        let refs = StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-panel".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "node-panel".to_string(),
+            branch_id: "branch-panel".to_string(),
+            scenario_id: "scenario-panel".to_string(),
+            path_id: "path-panel".to_string(),
+            followed_path: true,
+            exit_reason: None,
+            notes: None,
+        };
+        let analyze_seed = StructuralPriorSeed {
+            source_label: "analyze".to_string(),
+            observations: 1,
+            followed_count: 1,
+            wins: 1,
+            losses: 0,
+            breakevens: 0,
+            invalidated: 0,
+            abandoned: 0,
+            not_followed: 0,
+            avg_pnl: 0.01,
+        };
+        let backtest_seed = StructuralPriorSeed {
+            source_label: "backtest".to_string(),
+            observations: 2,
+            followed_count: 2,
+            wins: 1,
+            losses: 1,
+            breakevens: 0,
+            invalidated: 0,
+            abandoned: 0,
+            not_followed: 0,
+            avg_pnl: 0.015,
+        };
+
+        let mut state = LearningState::default();
+        state.apply_structural_prior_seed(&refs, &analyze_seed);
+        state.apply_structural_prior_seed(&refs, &backtest_seed);
+
+        let path = state
+            .structural_prior_state
+            .paths
+            .get("path-panel")
+            .expect("path prior state");
+        let analyze_panel = path
+            .source_panel_summaries
+            .get("analyze")
+            .expect("analyze source panel");
+        let backtest_panel = path
+            .source_panel_summaries
+            .get("backtest")
+            .expect("backtest source panel");
+
+        assert_eq!(analyze_panel.observations, 1);
+        assert_eq!(analyze_panel.wins, 1);
+        assert_eq!(backtest_panel.observations, 2);
+        assert_eq!(backtest_panel.losses, 1);
+        assert_eq!(path.last_offline_seed_source.as_deref(), Some("backtest"));
+    }
+
+    #[test]
+    fn test_live_feedback_records_separate_source_panel_summary() {
+        let refs = StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-live".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "node-live".to_string(),
+            branch_id: "branch-live".to_string(),
+            scenario_id: "scenario-live".to_string(),
+            path_id: "path-live".to_string(),
+            followed_path: true,
+            exit_reason: Some("target_hit".to_string()),
+            notes: None,
+        };
+        let analyze_seed = StructuralPriorSeed {
+            source_label: "analyze".to_string(),
+            observations: 1,
+            followed_count: 1,
+            wins: 1,
+            losses: 0,
+            breakevens: 0,
+            invalidated: 0,
+            abandoned: 0,
+            not_followed: 0,
+            avg_pnl: 0.01,
+        };
+        let mut feedback = sample_feedback();
+        feedback.source = "structural_feedback_submission".to_string();
+        feedback.structural_feedback = Some(refs.clone());
+
+        let mut state = LearningState::default();
+        state.apply_structural_prior_seed(&refs, &analyze_seed);
+        state.apply_structural_feedback(&[feedback]);
+
+        let path = state
+            .structural_prior_state
+            .paths
+            .get("path-live")
+            .expect("path prior state");
+        assert!(path.source_panel_summaries.contains_key("analyze"));
+        assert!(path
+            .source_panel_summaries
+            .contains_key("structural_feedback_submission"));
+        assert_eq!(
+            path.source_panel_summaries["structural_feedback_submission"].wins,
+            1
+        );
     }
 
     #[test]
