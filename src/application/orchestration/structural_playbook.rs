@@ -418,6 +418,32 @@ pub fn resolved_ensemble_vote_for_snapshot(
 pub fn canonical_analyze_regime_surface(
     analyze: &crate::state::WorkflowPhaseSnapshot,
 ) -> Option<(String, std::collections::BTreeMap<String, f64>, f64)> {
+    if !analyze.canonical_structural_probabilities.is_empty() {
+        let active_regime = analyze
+            .canonical_structural_active_regime
+            .clone()
+            .or_else(|| {
+                analyze
+                    .canonical_structural_probabilities
+                    .iter()
+                    .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
+                    .map(|(label, _)| label.clone())
+            })?;
+        let confidence = analyze
+            .canonical_structural_confidence
+            .unwrap_or_else(|| {
+                analyze
+                    .canonical_structural_probabilities
+                    .get(&active_regime)
+                    .copied()
+                    .unwrap_or(0.0)
+            });
+        return Some((
+            active_regime,
+            analyze.canonical_structural_probabilities.clone(),
+            confidence,
+        ));
+    }
     let distribution = analyze.pre_bayes_soft_evidence.get("market_regime")?;
     let mut probabilities = std::collections::BTreeMap::new();
     for (label, probability) in distribution {

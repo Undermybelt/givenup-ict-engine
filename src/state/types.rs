@@ -2264,6 +2264,12 @@ pub struct WorkflowPhaseSnapshot {
     #[serde(default)]
     pub pre_bayes_soft_evidence: BTreeMap<String, BTreeMap<String, f64>>,
     #[serde(default)]
+    pub canonical_structural_active_regime: Option<String>,
+    #[serde(default)]
+    pub canonical_structural_confidence: Option<f64>,
+    #[serde(default)]
+    pub canonical_structural_probabilities: BTreeMap<String, f64>,
+    #[serde(default)]
     pub pre_bayes_long_signal_probability: Option<f64>,
     #[serde(default)]
     pub pre_bayes_short_signal_probability: Option<f64>,
@@ -2354,6 +2360,9 @@ impl Default for WorkflowPhaseSnapshot {
             pre_bayes_conflict_flags: Vec::new(),
             pre_bayes_filtered_assignments: BTreeMap::new(),
             pre_bayes_soft_evidence: BTreeMap::new(),
+            canonical_structural_active_regime: None,
+            canonical_structural_confidence: None,
+            canonical_structural_probabilities: BTreeMap::new(),
             pre_bayes_long_signal_probability: None,
             pre_bayes_short_signal_probability: None,
             pre_bayes_selected_entry_quality_probability: None,

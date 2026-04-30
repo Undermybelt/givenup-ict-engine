@@ -3667,6 +3667,19 @@ fn workflow_phase_snapshot_from_analyze_run(run: &AnalyzeRunRecord) -> WorkflowP
         pre_bayes_conflict_flags: run.pre_bayes_evidence_filter.conflict_flags.clone(),
         pre_bayes_filtered_assignments: filtered_assignments,
         pre_bayes_soft_evidence,
+        canonical_structural_active_regime: run
+            .canonical_structural_regime_posterior
+            .as_ref()
+            .and_then(|posterior| posterior.active_regime.clone()),
+        canonical_structural_confidence: run
+            .canonical_structural_regime_posterior
+            .as_ref()
+            .and_then(|posterior| posterior.confidence),
+        canonical_structural_probabilities: run
+            .canonical_structural_regime_posterior
+            .as_ref()
+            .map(|posterior| posterior.probabilities.clone())
+            .unwrap_or_default(),
         pre_bayes_long_signal_probability: Some(
             run.pre_bayes_entry_quality_bridge.long_signal_probability,
         ),
@@ -3783,6 +3796,9 @@ fn workflow_phase_snapshot_from_train_run(run: &TrainRunRecord) -> WorkflowPhase
         pre_bayes_conflict_flags: Vec::new(),
         pre_bayes_filtered_assignments: BTreeMap::new(),
         pre_bayes_soft_evidence: BTreeMap::new(),
+        canonical_structural_active_regime: None,
+        canonical_structural_confidence: None,
+        canonical_structural_probabilities: BTreeMap::new(),
         pre_bayes_long_signal_probability: None,
         pre_bayes_short_signal_probability: None,
         pre_bayes_selected_entry_quality_probability: None,
@@ -3867,6 +3883,9 @@ fn workflow_phase_snapshot_from_research_run(run: &ResearchRunRecord) -> Workflo
         pre_bayes_conflict_flags: Vec::new(),
         pre_bayes_filtered_assignments: BTreeMap::new(),
         pre_bayes_soft_evidence: BTreeMap::new(),
+        canonical_structural_active_regime: None,
+        canonical_structural_confidence: None,
+        canonical_structural_probabilities: BTreeMap::new(),
         pre_bayes_long_signal_probability: None,
         pre_bayes_short_signal_probability: None,
         pre_bayes_selected_entry_quality_probability: None,
@@ -3981,6 +4000,9 @@ fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> Workflo
         pre_bayes_conflict_flags: Vec::new(),
         pre_bayes_filtered_assignments: BTreeMap::new(),
         pre_bayes_soft_evidence: BTreeMap::new(),
+        canonical_structural_active_regime: None,
+        canonical_structural_confidence: None,
+        canonical_structural_probabilities: BTreeMap::new(),
         pre_bayes_long_signal_probability: None,
         pre_bayes_short_signal_probability: None,
         pre_bayes_selected_entry_quality_probability: None,
@@ -4138,6 +4160,9 @@ fn workflow_phase_snapshot_from_update_run(run: &UpdateRunRecord) -> WorkflowPha
                 ])
             })
             .unwrap_or_default(),
+        canonical_structural_active_regime: None,
+        canonical_structural_confidence: None,
+        canonical_structural_probabilities: BTreeMap::new(),
         pre_bayes_long_signal_probability: None,
         pre_bayes_short_signal_probability: None,
         pre_bayes_selected_entry_quality_probability: None,
@@ -14713,6 +14738,20 @@ mod tests {
             "trend"
         );
         assert_eq!(snapshot.pre_bayes_soft_evidence["market_regime"]["trend"], 0.78);
+        assert_eq!(
+            snapshot
+                .canonical_structural_active_regime
+                .as_deref(),
+            Some("trend")
+        );
+        assert_eq!(snapshot.canonical_structural_confidence, Some(0.78));
+        assert_eq!(
+            snapshot
+                .canonical_structural_probabilities
+                .get("trend")
+                .copied(),
+            Some(0.78)
+        );
         assert!(snapshot
             .pre_bayes_soft_evidence
             .get("market_regime")
