@@ -1002,18 +1002,21 @@ pub fn build_structural_node_artifact_with_prior_state(
     } else {
         structural_focus_phase(snapshot)
     };
-    let node_label = support_reason
-        .clone()
-        .filter(|value| !value.is_empty() && value != "none")
-        .unwrap_or_else(|| {
-            if structural_no_workflow_state(snapshot) {
-                "no_workflow_state".to_string()
-            } else if let Some(active_regime) = structural_active_regime(snapshot) {
-                active_regime.to_string()
-            } else {
-                "actionable".to_string()
-            }
-        });
+    let node_label = if structural_no_workflow_state(snapshot) {
+        "no_workflow_state".to_string()
+    } else if provider_support.active
+        || support_reason.as_deref() == Some("user_selected_historical_data_missing")
+        || structural_hard_block_active(snapshot)
+    {
+        support_reason
+            .clone()
+            .filter(|value| !value.is_empty() && value != "none")
+            .unwrap_or_else(|| "actionable".to_string())
+    } else if let Some(active_regime) = structural_active_regime(snapshot) {
+        active_regime.to_string()
+    } else {
+        "actionable".to_string()
+    };
     let posterior_confidence = structural_primary_probability(snapshot);
     let provisional_node_id = format!("{symbol}:{node_family}:{node_label}");
     let belief_prior = structural_resolved_smoothed_prior(
