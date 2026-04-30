@@ -489,6 +489,17 @@ pub(crate) fn run_factor_backtest(
                 quality_delta: first_score_delta,
             },
         );
+    let backtest_support_hint = crate::analyze_shared::offline_structural_support_hint(
+        crate::analyze_shared::OfflineStructuralSupportHintInput {
+            artifact_validation_bias: Some(
+                crate::analyze_shared::artifact_validation_support_bias(
+                    &report.workflow_snapshot.artifact_decision_summary,
+                ),
+            ),
+            baseline_support: backtest_support_hint,
+            ..crate::analyze_shared::OfflineStructuralSupportHintInput::default()
+        },
+    );
     crate::analyze_shared::apply_offline_structural_prior_seed(
         &mut learning_state,
         &report.workflow_snapshot,

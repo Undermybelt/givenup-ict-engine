@@ -717,6 +717,17 @@ pub(crate) fn run_factor_research(
                     .max_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal)),
             },
         );
+    let research_support_hint = crate::analyze_shared::offline_structural_support_hint(
+        crate::analyze_shared::OfflineStructuralSupportHintInput {
+            artifact_validation_bias: Some(
+                crate::analyze_shared::artifact_validation_support_bias(
+                    &report.workflow_snapshot.artifact_decision_summary,
+                ),
+            ),
+            baseline_support: research_support_hint,
+            ..crate::analyze_shared::OfflineStructuralSupportHintInput::default()
+        },
+    );
     crate::analyze_shared::apply_offline_structural_prior_seed(
         &mut learning_state,
         &report.workflow_snapshot,
@@ -756,6 +767,17 @@ pub(crate) fn run_factor_research(
                     evaluation,
                 },
             );
+        let mutation_support_hint = crate::analyze_shared::offline_structural_support_hint(
+            crate::analyze_shared::OfflineStructuralSupportHintInput {
+                artifact_validation_bias: Some(
+                    crate::analyze_shared::artifact_validation_support_bias(
+                        &report.workflow_snapshot.artifact_decision_summary,
+                    ),
+                ),
+                baseline_support: mutation_support_hint,
+                ..crate::analyze_shared::OfflineStructuralSupportHintInput::default()
+            },
+        );
         crate::analyze_shared::apply_offline_structural_prior_seed(
             &mut learning_state,
             &report.workflow_snapshot,

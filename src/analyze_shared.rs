@@ -1,5 +1,6 @@
 use super::*;
 use ict_engine::application::provider_catalog::provider_status_agent_surface;
+use ict_engine::state::ArtifactDecisionSummary;
 
 #[derive(Debug, Clone, Copy, Default)]
 pub(crate) struct OfflineStructuralSupportHintInput {
@@ -17,6 +18,7 @@ pub(crate) struct OfflineStructuralSupportHintInput {
     pub score_after: Option<f64>,
     pub baseline_available: Option<bool>,
     pub accepted: Option<bool>,
+    pub artifact_validation_bias: Option<f64>,
 }
 
 #[derive(Debug, Clone, Copy, Default)]
@@ -94,6 +96,9 @@ pub(crate) fn offline_structural_support_hint(input: OfflineStructuralSupportHin
     if let Some(score_delta) = input.quality_delta {
         support = (support + score_delta.clamp(-0.10, 0.10)).clamp(0.0, 1.0);
     }
+    if let Some(artifact_validation_bias) = input.artifact_validation_bias {
+        support = (support + artifact_validation_bias.clamp(-0.12, 0.12)).clamp(0.0, 1.0);
+    }
     if let (Some(before), Some(after)) = (input.score_before, input.score_after) {
         support = (support + (after - before).clamp(-0.10, 0.10)).clamp(0.0, 1.0);
     }
@@ -121,6 +126,28 @@ pub(crate) fn structural_baseline_support(
     score.unwrap_or(fallback).clamp(0.0, 1.0)
 }
 
+pub(crate) fn artifact_validation_support_bias(
+    summary: &ArtifactDecisionSummary,
+) -> f64 {
+    let mut bias: f64 = match summary.consumed_trend_status.as_str() {
+        "validated_positive" | "validated_improving" => 0.08,
+        "validated_negative" | "validated_regressing" => -0.10,
+        "validated_neutral" => -0.02,
+        _ => 0.0,
+    };
+    bias += match summary.promotion_strength.as_str() {
+        "high" => 0.03,
+        "medium" => 0.01,
+        _ => 0.0,
+    };
+    bias += match summary.rollback_strength.as_str() {
+        "high" => -0.03,
+        "medium" => -0.01,
+        _ => 0.0,
+    };
+    bias.clamp(-0.12, 0.12)
+}
+
 pub(crate) fn structural_support_hint_for_analyze(
     posterior_confidence: f64,
     execution_readiness: Option<f64>,
@@ -142,6 +169,7 @@ pub(crate) fn structural_support_hint_for_analyze(
         score_after: None,
         baseline_available: None,
         accepted: None,
+        artifact_validation_bias: None,
     })
 }
 
@@ -161,6 +189,7 @@ pub(crate) fn structural_support_hint_for_research(input: ResearchStructuralSupp
         score_after: None,
         baseline_available: None,
         accepted: None,
+        artifact_validation_bias: None,
     })
 }
 
@@ -186,6 +215,7 @@ pub(crate) fn structural_support_hint_for_mutation(
         score_after: Some(input.evaluation.score_after),
         baseline_available: Some(input.evaluation.baseline_available),
         accepted: Some(input.evaluation.accepted),
+        artifact_validation_bias: None,
     })
 }
 
@@ -207,6 +237,7 @@ pub(crate) fn structural_support_hint_for_backtest(
         score_after: None,
         baseline_available: None,
         accepted: None,
+        artifact_validation_bias: None,
     })
 }
 
@@ -944,6 +975,7 @@ mod tests {
             score_after: None,
             baseline_available: None,
             accepted: None,
+            artifact_validation_bias: None,
         });
         let strong = offline_structural_support_hint(OfflineStructuralSupportHintInput {
             baseline_support: 0.50,
@@ -960,6 +992,7 @@ mod tests {
             score_after: None,
             baseline_available: None,
             accepted: None,
+            artifact_validation_bias: None,
         });
 
         assert!(strong > weak);
@@ -983,6 +1016,7 @@ mod tests {
             score_after: Some(0.50),
             baseline_available: Some(true),
             accepted: Some(false),
+            artifact_validation_bias: None,
         });
         let accepted = offline_structural_support_hint(OfflineStructuralSupportHintInput {
             baseline_support: 0.55,
@@ -999,6 +1033,7 @@ mod tests {
             score_after: Some(0.58),
             baseline_available: Some(true),
             accepted: Some(true),
+            artifact_validation_bias: None,
         });
 
         assert!(accepted > rejected);
@@ -1010,6 +1045,25 @@ mod tests {
         assert_eq!(structural_baseline_support(None, 0.50), 0.50);
         assert_eq!(structural_baseline_support(Some(1.40), 0.50), 1.0);
         assert_eq!(structural_baseline_support(Some(-0.20), 0.50), 0.0);
+    }
+
+    #[test]
+    fn test_artifact_validation_support_bias_penalizes_regression() {
+        let positive = artifact_validation_support_bias(&ArtifactDecisionSummary {
+            consumed_trend_status: "validated_positive".to_string(),
+            promotion_strength: "high".to_string(),
+            rollback_strength: "low".to_string(),
+            ..ArtifactDecisionSummary::default()
+        });
+        let regressing = artifact_validation_support_bias(&ArtifactDecisionSummary {
+            consumed_trend_status: "validated_regressing".to_string(),
+            promotion_strength: "low".to_string(),
+            rollback_strength: "high".to_string(),
+            ..ArtifactDecisionSummary::default()
+        });
+
+        assert!(positive > regressing);
+        assert!(regressing < 0.0);
     }
 
     #[test]
@@ -1090,6 +1144,7 @@ mod tests {
             score_after: None,
             baseline_available: None,
             accepted: None,
+            artifact_validation_bias: None,
         });
         let good = offline_structural_support_hint(OfflineStructuralSupportHintInput {
             baseline_support: 0.55,
@@ -1106,6 +1161,7 @@ mod tests {
             score_after: None,
             baseline_available: None,
             accepted: None,
+            artifact_validation_bias: None,
         });
 
         assert!(good > poor);
@@ -1129,6 +1185,7 @@ mod tests {
             score_after: Some(0.62),
             baseline_available: Some(false),
             accepted: None,
+            artifact_validation_bias: None,
         });
         let strong = offline_structural_support_hint(OfflineStructuralSupportHintInput {
             baseline_support: 0.58,
@@ -1145,6 +1202,7 @@ mod tests {
             score_after: Some(0.71),
             baseline_available: Some(true),
             accepted: None,
+            artifact_validation_bias: None,
         });
 
         assert!(strong > weak);
