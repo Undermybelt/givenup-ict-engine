@@ -470,7 +470,26 @@ pub(crate) fn run_factor_backtest(
             execution_readiness: backtest_execution_fields.execution_readiness,
             comparable_to_previous: report.dataset_comparability.comparable,
             feedback_records_applied: report.feedback_records_applied,
+            conformal_coverage_1sigma: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.conformal_coverage_1sigma),
+            regime_break_penalty: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.regime_break_penalty),
+            structural_break_detected: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.structural_break_detected),
+            best_factor_composite_score: report
+                .scorecards
+                .first()
+                .map(|score| score.composite_score),
             quality_delta: first_score_delta,
+            score_before: None,
+            score_after: None,
+            baseline_available: None,
             accepted: None,
         },
     );
