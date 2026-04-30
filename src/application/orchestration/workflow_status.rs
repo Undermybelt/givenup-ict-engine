@@ -4619,6 +4619,19 @@ mod tests {
                 last_offline_seed_source: Some("backtest".to_string()),
             },
         );
+        structural_prior_state.node_duration_priors.insert(
+            "NQ:belief_regime_node:trend".to_string(),
+            crate::state::StructuralNodeDurationPrior {
+                observations: 3,
+                streak_count: 2,
+                total_streak_length: 3,
+                avg_streak_length: 1.5,
+                max_streak_length: 2,
+                last_streak_length: 1,
+                persistence_prior: 0.6,
+                last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+            },
+        );
 
         let value = build_workflow_status_phase_value_with_structural_prior_state(
             &snapshot,
@@ -4645,6 +4658,9 @@ mod tests {
             .unwrap()
             > 0.80);
         assert_eq!(value["path"]["dominant_source_prior"], 0.5);
+        assert_eq!(value["node"]["duration_streak_count"], 2);
+        assert_eq!(value["node"]["duration_avg_streak_length"], 1.5);
+        assert_eq!(value["node"]["duration_persistence_prior"], 0.6);
         assert_eq!(
             value["branch"]["entity_id"],
             "NQ:belief_regime_node:trend:trend_follow_through"

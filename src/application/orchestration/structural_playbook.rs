@@ -249,6 +249,12 @@ pub struct StructuralExperiencePriorEntry {
     pub dominant_source_share: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub dominant_source_prior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_streak_count: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_avg_streak_length: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_persistence_prior: Option<f64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -695,6 +701,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 dominant_source_panel: dominant_source_panel.clone(),
                 dominant_source_share,
                 dominant_source_prior,
+                duration_streak_count: None,
+                duration_avg_streak_length: None,
+                duration_persistence_prior: None,
             })
             .or_else(|| {
                 branch_summary.map(|summary| {
@@ -718,6 +727,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         dominant_source_panel: dominant_source_panel.clone(),
                         dominant_source_share,
                         dominant_source_prior,
+                        duration_streak_count: None,
+                        duration_avg_streak_length: None,
+                        duration_persistence_prior: None,
                     }
                 })
             })
@@ -747,6 +759,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 dominant_source_panel: dominant_source_panel.clone(),
                 dominant_source_share,
                 dominant_source_prior,
+                duration_streak_count: None,
+                duration_avg_streak_length: None,
+                duration_persistence_prior: None,
             })
             .or_else(|| {
                 scenario_summary.map(|summary| {
@@ -769,6 +784,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         dominant_source_panel: dominant_source_panel.clone(),
                         dominant_source_share,
                         dominant_source_prior,
+                        duration_streak_count: None,
+                        duration_avg_streak_length: None,
+                        duration_persistence_prior: None,
                     }
                 })
             })
@@ -798,6 +816,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 dominant_source_panel: dominant_source_panel.clone(),
                 dominant_source_share,
                 dominant_source_prior,
+                duration_streak_count: None,
+                duration_avg_streak_length: None,
+                duration_persistence_prior: None,
             })
             .or_else(|| {
                 path_summary.map(|summary| {
@@ -821,6 +842,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         dominant_source_panel: dominant_source_panel.clone(),
                         dominant_source_share,
                         dominant_source_prior,
+                        duration_streak_count: None,
+                        duration_avg_streak_length: None,
+                        duration_persistence_prior: None,
                     }
                 })
             })
@@ -828,6 +852,7 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
     let node_prior_stats = structural_prior_state.nodes.get(node_id);
     let (dominant_source_panel, dominant_source_share, dominant_source_prior) =
         structural_dominant_source_panel(node_prior_stats);
+    let node_duration_prior = structural_prior_state.node_duration_priors.get(node_id);
     StructuralExperiencePriorSurfaceArtifact {
         symbol: structural_symbol(snapshot),
         node: Some(StructuralExperiencePriorEntry {
@@ -868,6 +893,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
             dominant_source_panel,
             dominant_source_share,
             dominant_source_prior,
+            duration_streak_count: structural_duration_streak_count(node_duration_prior),
+            duration_avg_streak_length: structural_duration_avg_streak_length(node_duration_prior),
+            duration_persistence_prior: structural_duration_persistence_prior(node_duration_prior),
         }),
         branch,
         scenario,
@@ -2276,6 +2304,24 @@ fn structural_last_offline_seed_source(
     prior_stats: Option<&StructuralPriorStats>,
 ) -> Option<String> {
     prior_stats.and_then(|stats| stats.last_offline_seed_source.clone())
+}
+
+fn structural_duration_streak_count(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<usize> {
+    duration_prior.map(|prior| prior.streak_count)
+}
+
+fn structural_duration_avg_streak_length(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    duration_prior.map(|prior| prior.avg_streak_length)
+}
+
+fn structural_duration_persistence_prior(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    duration_prior.map(|prior| prior.persistence_prior)
 }
 
 fn structural_dominant_source_panel(
