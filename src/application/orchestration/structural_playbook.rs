@@ -2314,24 +2314,9 @@ fn structural_analyze_anchor_regime_probabilities(
     let Some(analyze) = snapshot.latest_analyze.as_ref() else {
         return Vec::new();
     };
-    let mut aggregated = std::collections::BTreeMap::new();
-    if let Some(distribution) = analyze.pre_bayes_soft_evidence.get("market_regime") {
-        for (regime, probability) in distribution {
-            if let Some(canonical) = canonical_structural_regime_label(regime) {
-                *aggregated.entry(canonical).or_insert(0.0) += *probability;
-            }
-        }
-    }
-    if aggregated.is_empty() {
-        if let Some(regime) = analyze
-            .pre_bayes_filtered_assignments
-            .get("market_regime")
-            .and_then(|value| canonical_structural_regime_label(value))
-        {
-            aggregated.insert(regime, 1.0);
-        }
-    }
-    structural_sorted_regime_probabilities(aggregated)
+    canonical_analyze_regime_surface(analyze)
+        .map(|(_, probabilities, _)| structural_sorted_regime_probabilities(probabilities))
+        .unwrap_or_default()
 }
 
 fn structural_active_regime(snapshot: &WorkflowSnapshot) -> Option<String> {

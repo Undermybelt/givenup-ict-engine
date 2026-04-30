@@ -145,6 +145,9 @@ pub struct WorkflowPreBayesSurfaces {
     pub pre_bayes_policy_lineage: Option<PreBayesPolicyLineageSummary>,
     pub pre_bayes_entry_quality_bridge: Option<PreBayesEntryQualityBridge>,
     pub pre_bayes_entry_quality_bridge_diff: Option<PreBayesEntryQualityBridgeDiff>,
+    pub canonical_structural_active_regime: Option<String>,
+    pub canonical_structural_confidence: Option<f64>,
+    pub canonical_structural_probabilities: std::collections::BTreeMap<String, f64>,
     pub pre_bayes_soft_evidence:
         Option<std::collections::BTreeMap<String, std::collections::BTreeMap<String, f64>>>,
     pub pre_bayes_soft_evidence_diff: Vec<PreBayesSoftEvidenceNodeDiff>,
@@ -2492,6 +2495,9 @@ pub fn build_pre_bayes_status_value(
                 "latest_gate_status": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_gate_status.clone()),
                 "latest_policy_version": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_policy_version.clone()),
                 "latest_uses_soft_evidence": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_uses_soft_evidence),
+                "latest_canonical_structural_active_regime": pre.canonical_structural_active_regime,
+                "latest_canonical_structural_confidence": pre.canonical_structural_confidence,
+                "latest_canonical_structural_probabilities": pre.canonical_structural_probabilities,
                 "latest_soft_evidence_diff": pre.pre_bayes_soft_evidence_diff,
                 "latest_soft_evidence": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_soft_evidence.clone()),
             }))?,
@@ -2513,6 +2519,9 @@ pub fn build_pre_bayes_status_value(
                 "status": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_gate_status.clone()),
                 "policy_version": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_policy_version.clone()),
                 "uses_soft_evidence": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_uses_soft_evidence),
+                "canonical_structural_active_regime": pre.canonical_structural_active_regime,
+                "canonical_structural_confidence": pre.canonical_structural_confidence,
+                "canonical_structural_probabilities": pre.canonical_structural_probabilities,
             }))?,
             Some(section) if section == "soft" || section == "soft-evidence" => {
                 serde_json::to_value(
@@ -2545,6 +2554,9 @@ pub fn build_pre_bayes_diff_value(snapshot: &WorkflowSnapshot) -> Value {
         "latest_gate_status": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_gate_status.clone()),
         "latest_policy_version": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_policy_version.clone()),
         "latest_uses_soft_evidence": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_uses_soft_evidence),
+        "latest_canonical_structural_active_regime": snapshot.latest_analyze.as_ref().and_then(|phase| phase.canonical_structural_active_regime.clone()),
+        "latest_canonical_structural_confidence": snapshot.latest_analyze.as_ref().and_then(|phase| phase.canonical_structural_confidence),
+        "latest_canonical_structural_probabilities": snapshot.latest_analyze.as_ref().map(|phase| phase.canonical_structural_probabilities.clone()),
         "latest_soft_evidence_diff": snapshot.latest_pre_bayes_soft_evidence_diff,
         "latest_bridge": snapshot.latest_pre_bayes_entry_quality_bridge,
         "latest_bridge_diff": snapshot.latest_pre_bayes_entry_quality_bridge_diff,
@@ -2730,6 +2742,19 @@ pub fn build_pre_bayes_surfaces(snapshot: &WorkflowSnapshot) -> WorkflowPreBayes
         pre_bayes_entry_quality_bridge_diff: snapshot
             .latest_pre_bayes_entry_quality_bridge_diff
             .clone(),
+        canonical_structural_active_regime: snapshot
+            .latest_analyze
+            .as_ref()
+            .and_then(|phase| phase.canonical_structural_active_regime.clone()),
+        canonical_structural_confidence: snapshot
+            .latest_analyze
+            .as_ref()
+            .and_then(|phase| phase.canonical_structural_confidence),
+        canonical_structural_probabilities: snapshot
+            .latest_analyze
+            .as_ref()
+            .map(|phase| phase.canonical_structural_probabilities.clone())
+            .unwrap_or_default(),
         pre_bayes_soft_evidence: snapshot
             .latest_analyze
             .as_ref()
@@ -3115,6 +3140,13 @@ mod tests {
             pre_bayes_gate_status: "pass_neutralized".to_string(),
             pre_bayes_policy_version: "v2".to_string(),
             pre_bayes_uses_soft_evidence: true,
+            canonical_structural_active_regime: Some("trend".to_string()),
+            canonical_structural_confidence: Some(0.78),
+            canonical_structural_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.78),
+                ("range".to_string(), 0.14),
+                ("transition".to_string(), 0.08),
+            ]),
             pre_bayes_soft_evidence: std::collections::BTreeMap::from([(
                 "node".to_string(),
                 std::collections::BTreeMap::from([("state".to_string(), 0.25)]),
@@ -3131,6 +3163,9 @@ mod tests {
         assert_eq!(value["latest_policy_version"], "v2");
         assert_eq!(value["latest_uses_soft_evidence"], true);
         assert_eq!(value["latest_soft_evidence"]["node"]["state"], 0.25);
+        assert_eq!(value["latest_canonical_structural_active_regime"], "trend");
+        assert_eq!(value["latest_canonical_structural_confidence"], 0.78);
+        assert_eq!(value["latest_canonical_structural_probabilities"]["trend"], 0.78);
         assert_eq!(
             value["latest_soft_evidence_diff"].as_array().unwrap().len(),
             1
@@ -3143,6 +3178,13 @@ mod tests {
             pre_bayes_gate_status: "blocked".to_string(),
             pre_bayes_policy_version: "v3".to_string(),
             pre_bayes_uses_soft_evidence: false,
+            canonical_structural_active_regime: Some("range".to_string()),
+            canonical_structural_confidence: Some(0.61),
+            canonical_structural_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.21),
+                ("range".to_string(), 0.61),
+                ("transition".to_string(), 0.18),
+            ]),
             ..WorkflowPhaseSnapshot::default()
         };
         let snapshot = WorkflowSnapshot {
@@ -3160,6 +3202,9 @@ mod tests {
         assert_eq!(value["latest_gate_status"], "blocked");
         assert_eq!(value["latest_policy_version"], "v3");
         assert_eq!(value["latest_uses_soft_evidence"], false);
+        assert_eq!(value["latest_canonical_structural_active_regime"], "range");
+        assert_eq!(value["latest_canonical_structural_confidence"], 0.61);
+        assert_eq!(value["latest_canonical_structural_probabilities"]["range"], 0.61);
         assert_eq!(
             value["latest_soft_evidence_diff"].as_array().unwrap().len(),
             1
