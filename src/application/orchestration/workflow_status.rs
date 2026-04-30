@@ -846,7 +846,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
         })
         .cloned()
         .collect::<Vec<_>>();
-    let ensemble_summary = snapshot.latest_ensemble_vote.as_ref().map(|vote| {
+    let ensemble_summary = resolved_latest_ensemble_vote(snapshot).as_ref().map(|vote| {
         let surface = build_ensemble_vote_surface(vote, persisted_scorecards);
         serde_json::to_value(surface).unwrap_or_default()
     });
@@ -1193,7 +1193,7 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
             "decision_hint": artifact.decision_hint,
         })
     });
-    let ensemble_summary = snapshot.latest_ensemble_vote.as_ref().map(|vote| {
+    let ensemble_summary = resolved_latest_ensemble_vote(snapshot).as_ref().map(|vote| {
         let (scorecards, scorecard_source) = resolved_vote_scorecards(persisted_scorecards, vote);
         serde_json::json!({
             "final_action": vote.final_action,
@@ -1872,6 +1872,68 @@ pub fn build_ensemble_vote_surface(
     }
 }
 
+fn resolved_latest_ensemble_vote(snapshot: &WorkflowSnapshot) -> Option<EnsembleVoteRecord> {
+    let mut vote = snapshot.latest_ensemble_vote.clone()?;
+    let analyze = snapshot.latest_analyze.as_ref()?;
+    if vote.source_phase != "analyze" {
+        return Some(vote);
+    }
+    if vote.source_run_id.as_deref() != Some(analyze.run_id.as_str()) {
+        return Some(vote);
+    }
+    let Some((active_regime, probabilities, confidence)) =
+        canonical_analyze_regime_surface(analyze)
+    else {
+        return Some(vote);
+    };
+    vote.posterior_active_regime = active_regime;
+    vote.posterior_probabilities = probabilities;
+    vote.posterior_confidence = Some(confidence);
+    vote.confidence = confidence;
+    vote.consensus_strength = confidence;
+    vote.posterior_normalization_status = "canonical_structural_regime_posterior".to_string();
+    Some(vote)
+}
+
+fn canonical_analyze_regime_surface(
+    analyze: &crate::state::WorkflowPhaseSnapshot,
+) -> Option<(String, std::collections::BTreeMap<String, f64>, f64)> {
+    let distribution = analyze.pre_bayes_soft_evidence.get("market_regime")?;
+    let mut probabilities = std::collections::BTreeMap::new();
+    for (label, probability) in distribution {
+        if let Some(canonical) = canonical_structural_regime_label(label) {
+            *probabilities.entry(canonical).or_insert(0.0) += *probability;
+        }
+    }
+    if probabilities.is_empty() {
+        return None;
+    }
+    let active_regime = analyze
+        .pre_bayes_filtered_assignments
+        .get("market_regime")
+        .and_then(|value| canonical_structural_regime_label(value))
+        .or_else(|| {
+            probabilities
+                .iter()
+                .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
+                .map(|(label, _)| label.clone())
+        })?;
+    let confidence = probabilities.get(&active_regime).copied().unwrap_or(0.0);
+    Some((active_regime, probabilities, confidence))
+}
+
+fn canonical_structural_regime_label(label: &str) -> Option<String> {
+    let normalized = label.trim().to_ascii_lowercase();
+    let canonical = match normalized.as_str() {
+        "trend" | "bull" | "bear" | "trend_impulse" | "trend_decay" => "trend",
+        "range" | "range_calm" | "range_choppy" => "range",
+        "stress" => "stress",
+        "transition" => "transition",
+        _ => return None,
+    };
+    Some(canonical.to_string())
+}
+
 fn workflow_status_recommended_path_contract_value(
     recommended_path_bundle: Option<&StructuralRecommendedPathBundleArtifact>,
 ) -> Option<Value> {
@@ -2401,8 +2463,7 @@ pub fn build_workflow_status_phase_value_with_structural_prior_state(
             &build_auxiliary_artifact_surfaces(snapshot).execution_candidate_history,
         )?,
         "ensemble-vote" => serde_json::to_value(
-            snapshot
-                .latest_ensemble_vote
+            resolved_latest_ensemble_vote(snapshot)
                 .as_ref()
                 .map(|vote| build_ensemble_vote_surface(vote, persisted_scorecards)),
         )?,
@@ -4339,6 +4400,77 @@ mod tests {
     }
 
     #[test]
+    fn workflow_status_phase_ensemble_vote_prefers_canonical_analyze_regime_surface() {
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            latest_analyze: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "analyze".to_string(),
+                run_id: "analyze:1".to_string(),
+                pre_bayes_filtered_assignments: std::collections::BTreeMap::from([(
+                    "market_regime".to_string(),
+                    "trend".to_string(),
+                )]),
+                pre_bayes_soft_evidence: std::collections::BTreeMap::from([(
+                    "market_regime".to_string(),
+                    std::collections::BTreeMap::from([
+                        ("trend".to_string(), 0.78),
+                        ("range".to_string(), 0.14),
+                        ("transition".to_string(), 0.08),
+                    ]),
+                )]),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            latest_ensemble_vote: Some(EnsembleVoteRecord {
+                artifact_id: "ensemble-vote:analyze:test".to_string(),
+                generated_at: Utc::now(),
+                symbol: "NQ".to_string(),
+                source_phase: "analyze".to_string(),
+                source_run_id: Some("analyze:1".to_string()),
+                provenance: RunProvenance::default(),
+                dataset_comparability: DatasetComparability::default(),
+                ensemble_version: "ensemble-audit-v2".to_string(),
+                final_action: "execute_follow_through".to_string(),
+                recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next"
+                    .to_string(),
+                human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                    .to_string(),
+                hard_block: EnsembleHardBlockArtifact::default(),
+                confidence: 0.55,
+                consensus_strength: 0.55,
+                disagreement_flags: Vec::new(),
+                executor_summaries: Vec::new(),
+                split_explanations: Vec::new(),
+                executor_scorecards: Vec::new(),
+                executor_scorecards_source: None,
+                posterior_fingerprint: "fp-raw".to_string(),
+                posterior_normalization_status: "normalized".to_string(),
+                posterior_active_regime: "bull".to_string(),
+                posterior_confidence: Some(0.55),
+                posterior_probabilities: std::collections::BTreeMap::from([
+                    ("bull".to_string(), 0.55),
+                    ("range".to_string(), 0.30),
+                    ("transition".to_string(), 0.15),
+                ]),
+                posterior_evidence: vec!["raw".to_string()],
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            "ensemble-vote",
+        )
+        .unwrap();
+
+        assert_eq!(value["posterior_active_regime"], "trend");
+        assert_eq!(value["posterior_confidence"], 0.78);
+        assert_eq!(value["posterior_probabilities"]["trend"], 0.78);
+    }
+
+    #[test]
     fn workflow_status_phase_structural_feedback_template_exposes_stable_ids() {
         let snapshot = sample_human_workflow_snapshot();
         let value = build_workflow_status_phase_value(
@@ -5640,6 +5772,84 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("stop="));
+    }
+
+    #[test]
+    fn agent_and_human_workflow_status_views_prefer_canonical_analyze_ensemble_surface() {
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            latest_analyze: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "analyze".to_string(),
+                run_id: "analyze:1".to_string(),
+                pre_bayes_filtered_assignments: std::collections::BTreeMap::from([(
+                    "market_regime".to_string(),
+                    "trend".to_string(),
+                )]),
+                pre_bayes_soft_evidence: std::collections::BTreeMap::from([(
+                    "market_regime".to_string(),
+                    std::collections::BTreeMap::from([
+                        ("trend".to_string(), 0.78),
+                        ("range".to_string(), 0.14),
+                        ("transition".to_string(), 0.08),
+                    ]),
+                )]),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            latest_ensemble_vote: Some(EnsembleVoteRecord {
+                artifact_id: "ensemble-vote:analyze:test".to_string(),
+                generated_at: Utc::now(),
+                symbol: "NQ".to_string(),
+                source_phase: "analyze".to_string(),
+                source_run_id: Some("analyze:1".to_string()),
+                provenance: RunProvenance::default(),
+                dataset_comparability: DatasetComparability::default(),
+                ensemble_version: "ensemble-audit-v2".to_string(),
+                final_action: "execute_follow_through".to_string(),
+                recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next"
+                    .to_string(),
+                human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                    .to_string(),
+                hard_block: EnsembleHardBlockArtifact::default(),
+                confidence: 0.55,
+                consensus_strength: 0.55,
+                disagreement_flags: Vec::new(),
+                executor_summaries: Vec::new(),
+                split_explanations: Vec::new(),
+                executor_scorecards: Vec::new(),
+                executor_scorecards_source: None,
+                posterior_fingerprint: "fp-raw".to_string(),
+                posterior_normalization_status: "normalized".to_string(),
+                posterior_active_regime: "bull".to_string(),
+                posterior_confidence: Some(0.55),
+                posterior_probabilities: std::collections::BTreeMap::from([
+                    ("bull".to_string(), 0.55),
+                    ("range".to_string(), 0.30),
+                    ("transition".to_string(), 0.15),
+                ]),
+                posterior_evidence: vec!["raw".to_string()],
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let human_value = build_human_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+        );
+        let agent_value = build_agent_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+        );
+
+        assert_eq!(
+            human_value["ensemble_consensus"]["posterior_active_regime"],
+            "trend"
+        );
+        assert_eq!(human_value["ensemble_consensus"]["posterior_confidence"], 0.78);
+        assert_eq!(agent_value["ensemble"]["confidence"], 0.78);
     }
 
     #[test]
