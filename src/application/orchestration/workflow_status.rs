@@ -2484,6 +2484,7 @@ pub fn build_pre_bayes_status_value(
     section: Option<&str>,
 ) -> Result<Value> {
     let pre = build_pre_bayes_surfaces(snapshot);
+    let latest_phase = latest_pre_bayes_phase(snapshot);
     Ok(
         match section.map(|value| value.trim().to_ascii_lowercase()) {
             None => serde_json::to_value(json!({
@@ -2492,14 +2493,14 @@ pub fn build_pre_bayes_status_value(
                 "latest_bridge_diff": pre.pre_bayes_entry_quality_bridge_diff,
                 "latest_policy_diff": pre.pre_bayes_policy_diff,
                 "latest_policy_lineage": pre.pre_bayes_policy_lineage,
-                "latest_gate_status": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_gate_status.clone()),
-                "latest_policy_version": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_policy_version.clone()),
-                "latest_uses_soft_evidence": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_uses_soft_evidence),
+                "latest_gate_status": latest_phase.map(|phase| phase.pre_bayes_gate_status.clone()),
+                "latest_policy_version": latest_phase.map(|phase| phase.pre_bayes_policy_version.clone()),
+                "latest_uses_soft_evidence": latest_phase.map(|phase| phase.pre_bayes_uses_soft_evidence),
                 "latest_canonical_structural_active_regime": pre.canonical_structural_active_regime,
                 "latest_canonical_structural_confidence": pre.canonical_structural_confidence,
                 "latest_canonical_structural_probabilities": pre.canonical_structural_probabilities,
                 "latest_soft_evidence_diff": pre.pre_bayes_soft_evidence_diff,
-                "latest_soft_evidence": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_soft_evidence.clone()),
+                "latest_soft_evidence": latest_phase.map(|phase| phase.pre_bayes_soft_evidence.clone()),
             }))?,
             Some(section) if section == "policy" => serde_json::to_value(&pre.pre_bayes_policy)?,
             Some(section) if section == "bridge" => {
@@ -2516,19 +2517,16 @@ pub fn build_pre_bayes_status_value(
                 serde_json::to_value(&pre.pre_bayes_policy_lineage)?
             }
             Some(section) if section == "gate" => serde_json::to_value(json!({
-                "status": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_gate_status.clone()),
-                "policy_version": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_policy_version.clone()),
-                "uses_soft_evidence": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_uses_soft_evidence),
+                "status": latest_phase.map(|phase| phase.pre_bayes_gate_status.clone()),
+                "policy_version": latest_phase.map(|phase| phase.pre_bayes_policy_version.clone()),
+                "uses_soft_evidence": latest_phase.map(|phase| phase.pre_bayes_uses_soft_evidence),
                 "canonical_structural_active_regime": pre.canonical_structural_active_regime,
                 "canonical_structural_confidence": pre.canonical_structural_confidence,
                 "canonical_structural_probabilities": pre.canonical_structural_probabilities,
             }))?,
             Some(section) if section == "soft" || section == "soft-evidence" => {
                 serde_json::to_value(
-                    snapshot
-                        .latest_analyze
-                        .as_ref()
-                        .map(|phase| phase.pre_bayes_soft_evidence.clone()),
+                    latest_phase.map(|phase| phase.pre_bayes_soft_evidence.clone()),
                 )?
             }
             Some(section) if section == "soft-diff" => {
@@ -2548,15 +2546,16 @@ pub fn emit_pre_bayes_status_output(
 }
 
 pub fn build_pre_bayes_diff_value(snapshot: &WorkflowSnapshot) -> Value {
+    let latest_phase = latest_pre_bayes_phase(snapshot);
     json!({
         "latest_policy_diff": snapshot.latest_pre_bayes_policy_diff,
         "latest_policy_lineage": snapshot.latest_pre_bayes_policy_lineage,
-        "latest_gate_status": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_gate_status.clone()),
-        "latest_policy_version": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_policy_version.clone()),
-        "latest_uses_soft_evidence": snapshot.latest_analyze.as_ref().map(|phase| phase.pre_bayes_uses_soft_evidence),
-        "latest_canonical_structural_active_regime": snapshot.latest_analyze.as_ref().and_then(|phase| phase.canonical_structural_active_regime.clone()),
-        "latest_canonical_structural_confidence": snapshot.latest_analyze.as_ref().and_then(|phase| phase.canonical_structural_confidence),
-        "latest_canonical_structural_probabilities": snapshot.latest_analyze.as_ref().map(|phase| phase.canonical_structural_probabilities.clone()),
+        "latest_gate_status": latest_phase.map(|phase| phase.pre_bayes_gate_status.clone()),
+        "latest_policy_version": latest_phase.map(|phase| phase.pre_bayes_policy_version.clone()),
+        "latest_uses_soft_evidence": latest_phase.map(|phase| phase.pre_bayes_uses_soft_evidence),
+        "latest_canonical_structural_active_regime": latest_phase.and_then(|phase| phase.canonical_structural_active_regime.clone()),
+        "latest_canonical_structural_confidence": latest_phase.and_then(|phase| phase.canonical_structural_confidence),
+        "latest_canonical_structural_probabilities": latest_phase.map(|phase| phase.canonical_structural_probabilities.clone()),
         "latest_soft_evidence_diff": snapshot.latest_pre_bayes_soft_evidence_diff,
         "latest_bridge": snapshot.latest_pre_bayes_entry_quality_bridge,
         "latest_bridge_diff": snapshot.latest_pre_bayes_entry_quality_bridge_diff,
@@ -2733,6 +2732,7 @@ pub fn sorted_artifact_family_consumed_validation(
 }
 
 pub fn build_pre_bayes_surfaces(snapshot: &WorkflowSnapshot) -> WorkflowPreBayesSurfaces {
+    let latest_phase = latest_pre_bayes_phase(snapshot);
     WorkflowPreBayesSurfaces {
         pre_bayes_policy: snapshot.latest_pre_bayes_policy.clone(),
         pre_bayes_policy_history: snapshot.recent_pre_bayes_policies.clone(),
@@ -2742,25 +2742,27 @@ pub fn build_pre_bayes_surfaces(snapshot: &WorkflowSnapshot) -> WorkflowPreBayes
         pre_bayes_entry_quality_bridge_diff: snapshot
             .latest_pre_bayes_entry_quality_bridge_diff
             .clone(),
-        canonical_structural_active_regime: snapshot
-            .latest_analyze
-            .as_ref()
+        canonical_structural_active_regime: latest_phase
             .and_then(|phase| phase.canonical_structural_active_regime.clone()),
-        canonical_structural_confidence: snapshot
-            .latest_analyze
-            .as_ref()
+        canonical_structural_confidence: latest_phase
             .and_then(|phase| phase.canonical_structural_confidence),
-        canonical_structural_probabilities: snapshot
-            .latest_analyze
-            .as_ref()
+        canonical_structural_probabilities: latest_phase
             .map(|phase| phase.canonical_structural_probabilities.clone())
             .unwrap_or_default(),
-        pre_bayes_soft_evidence: snapshot
-            .latest_analyze
-            .as_ref()
-            .map(|phase| phase.pre_bayes_soft_evidence.clone()),
+        pre_bayes_soft_evidence: latest_phase.map(|phase| phase.pre_bayes_soft_evidence.clone()),
         pre_bayes_soft_evidence_diff: snapshot.latest_pre_bayes_soft_evidence_diff.clone(),
     }
+}
+
+fn latest_pre_bayes_phase(
+    snapshot: &WorkflowSnapshot,
+) -> Option<&crate::state::WorkflowPhaseSnapshot> {
+    snapshot
+        .latest_update
+        .as_ref()
+        .or(snapshot.latest_research.as_ref())
+        .or(snapshot.latest_analyze.as_ref())
+        .or(snapshot.latest_backtest.as_ref())
 }
 
 pub fn build_artifact_report_surfaces(
@@ -3209,6 +3211,44 @@ mod tests {
             value["latest_soft_evidence_diff"].as_array().unwrap().len(),
             1
         );
+    }
+
+    #[test]
+    fn build_pre_bayes_status_value_prefers_latest_update_phase_when_analyze_missing() {
+        let update = WorkflowPhaseSnapshot {
+            pre_bayes_gate_status: "pass_hard".to_string(),
+            pre_bayes_policy_version: "v-update".to_string(),
+            pre_bayes_uses_soft_evidence: true,
+            canonical_structural_active_regime: Some("range".to_string()),
+            canonical_structural_confidence: Some(0.61),
+            canonical_structural_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.21),
+                ("range".to_string(), 0.61),
+                ("transition".to_string(), 0.18),
+            ]),
+            pre_bayes_soft_evidence: std::collections::BTreeMap::from([(
+                "market_regime".to_string(),
+                std::collections::BTreeMap::from([
+                    ("range".to_string(), 0.61),
+                    ("trend".to_string(), 0.21),
+                    ("transition".to_string(), 0.18),
+                ]),
+            )]),
+            ..WorkflowPhaseSnapshot::default()
+        };
+        let snapshot = WorkflowSnapshot {
+            latest_update: Some(update),
+            latest_pre_bayes_soft_evidence_diff: vec![PreBayesSoftEvidenceNodeDiff::default()],
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_pre_bayes_status_value(&snapshot, None).unwrap();
+
+        assert_eq!(value["latest_gate_status"], "pass_hard");
+        assert_eq!(value["latest_policy_version"], "v-update");
+        assert_eq!(value["latest_canonical_structural_active_regime"], "range");
+        assert_eq!(value["latest_canonical_structural_confidence"], 0.61);
+        assert_eq!(value["latest_soft_evidence"]["market_regime"]["range"], 0.61);
     }
 
     #[test]
