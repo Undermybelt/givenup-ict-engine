@@ -69,6 +69,8 @@ pub struct StructuralBranchArtifact {
     pub target_node_id: String,
     pub branch_label: String,
     pub prior_probability: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transition_prior: Option<f64>,
     pub posterior_probability: f64,
     #[serde(default)]
     pub historical_total_records: usize,
@@ -1161,6 +1163,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
             target_node_id: format!("{}:bootstrap_ready", structural_symbol(snapshot)),
             branch_label: "collect_initial_inputs".to_string(),
             prior_probability: 1.0,
+            transition_prior: None,
             posterior_probability: 1.0,
             historical_total_records: 0,
             historical_followed_count: 0,
@@ -1180,6 +1183,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
             target_node_id: format!("{}:provider_ready", structural_symbol(snapshot)),
             branch_label: "resolve_provider_prerequisites".to_string(),
             prior_probability: 0.7,
+            transition_prior: None,
             posterior_probability: 0.7,
             historical_total_records: 0,
             historical_followed_count: 0,
@@ -1201,6 +1205,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
             target_node_id: format!("{}:observe_only", structural_symbol(snapshot)),
             branch_label: "defer_and_observe".to_string(),
             prior_probability: 0.3,
+            transition_prior: None,
             posterior_probability: 0.3,
             historical_total_records: 0,
             historical_followed_count: 0,
@@ -1218,6 +1223,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
             target_node_id: format!("{}:research_ready", structural_symbol(snapshot)),
             branch_label: "choose_historical_dataset".to_string(),
             prior_probability: 0.75,
+            transition_prior: None,
             posterior_probability: 0.75,
             historical_total_records: 0,
             historical_followed_count: 0,
@@ -1231,6 +1237,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
         });
     } else {
         let regime_probabilities = structural_regime_probabilities(snapshot);
+        let latest_feedback = structural_latest_feedback_refs(snapshot);
         if !regime_probabilities.is_empty() {
             for (regime, probability) in regime_probabilities {
                 let branch_label = structural_branch_label_for_regime(regime.as_str());
@@ -1242,14 +1249,23 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
                 let history_adjusted_prior =
                     structural_history_adjusted_branch_prior(probability, historical_summary);
                 let prior_stats = structural_prior_state.branches.get(&branch_id);
+                let transition_prior = latest_feedback.as_ref().and_then(|refs| {
+                    structural_branch_transition_prior(
+                        structural_prior_state,
+                        &refs.branch_id,
+                        &branch_id,
+                    )
+                });
+                let resolved_prior =
+                    structural_resolved_smoothed_prior(prior_stats, history_adjusted_prior);
+                let blended_prior =
+                    structural_blended_transition_branch_prior(resolved_prior, transition_prior);
                 branches.push(StructuralBranchArtifact {
                     branch_id,
                     target_node_id: format!("{}:{}:candidate", structural_symbol(snapshot), regime),
                     branch_label: branch_label.to_string(),
-                    prior_probability: structural_resolved_smoothed_prior(
-                        prior_stats,
-                        history_adjusted_prior,
-                    ),
+                    prior_probability: blended_prior,
+                    transition_prior: transition_prior.map(|item| item.transition_prior),
                     posterior_probability: probability,
                     historical_total_records: structural_resolved_observations(
                         prior_stats,
@@ -1273,7 +1289,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
                     ),
                     composite_branch_score: structural_composite_preference_score(
                         probability,
-                        structural_resolved_smoothed_prior(prior_stats, history_adjusted_prior),
+                        blended_prior,
                     ),
                     activation_conditions: vec![format!("regime_posterior={regime}:{probability:.3}")],
                     failure_conditions: vec![format!(
@@ -1293,6 +1309,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
                 target_node_id: format!("{}:next_phase", structural_symbol(snapshot)),
                 branch_label: "execute_recommended_path".to_string(),
                 prior_probability: 0.6,
+                transition_prior: None,
                 posterior_probability: structural_primary_probability(snapshot),
                 historical_total_records: 0,
                 historical_followed_count: 0,
@@ -1309,6 +1326,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
                 target_node_id: format!("{}:observe_only", structural_symbol(snapshot)),
                 branch_label: "observe_only".to_string(),
                 prior_probability: 0.4,
+                transition_prior: None,
                 posterior_probability: (1.0 - structural_primary_probability(snapshot))
                     .clamp(0.0, 1.0),
                 historical_total_records: 0,
@@ -1861,6 +1879,28 @@ fn structural_history_adjusted_branch_prior(
             .map(|summary| summary.breakevens)
             .unwrap_or(0),
     )
+}
+
+fn structural_branch_transition_prior<'a>(
+    structural_prior_state: &'a StructuralPriorLearningState,
+    from_branch_id: &str,
+    to_branch_id: &str,
+) -> Option<&'a crate::state::StructuralBranchTransitionPrior> {
+    let key = format!("{from_branch_id}=>{to_branch_id}");
+    structural_prior_state.branch_transition_priors.get(&key)
+}
+
+fn structural_blended_transition_branch_prior(
+    base_prior: f64,
+    transition_prior: Option<&crate::state::StructuralBranchTransitionPrior>,
+) -> f64 {
+    let Some(transition_prior) = transition_prior else {
+        return base_prior;
+    };
+    let transition_weight = (transition_prior.observations as f64 / 3.0).min(1.0);
+    ((1.0 - transition_weight) * base_prior
+        + transition_weight * transition_prior.transition_prior)
+        .clamp(0.0, 1.0)
 }
 
 fn structural_history_adjusted_node_prior(
