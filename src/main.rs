@@ -3220,7 +3220,7 @@ fn build_workflow_snapshot(input: BuildWorkflowSnapshotInput<'_>) -> WorkflowSna
         .into_iter()
         .rev()
         .collect::<Vec<_>>();
-    let recent_ensemble_votes = load_ensemble_vote_history(state_dir, symbol)
+    let mut recent_ensemble_votes = load_ensemble_vote_history(state_dir, symbol)
         .unwrap_or_default()
         .into_iter()
         .rev()
@@ -3229,6 +3229,8 @@ fn build_workflow_snapshot(input: BuildWorkflowSnapshotInput<'_>) -> WorkflowSna
         .into_iter()
         .rev()
         .collect::<Vec<_>>();
+    recent_ensemble_votes =
+        overlay_or_synthesize_analyze_ensemble_votes(recent_ensemble_votes, latest_analyze);
     let recent_artifacts = artifact_ledger
         .iter()
         .rev()
@@ -3413,6 +3415,104 @@ fn build_workflow_snapshot(input: BuildWorkflowSnapshotInput<'_>) -> WorkflowSna
         field_diffs,
         disagreements,
     }
+}
+
+fn overlay_or_synthesize_analyze_ensemble_votes(
+    mut recent_ensemble_votes: Vec<EnsembleVoteRecord>,
+    latest_analyze: Option<&AnalyzeRunRecord>,
+) -> Vec<EnsembleVoteRecord> {
+    let Some(analyze) = latest_analyze else {
+        return recent_ensemble_votes;
+    };
+    let Some(canonical) = analyze.canonical_structural_regime_posterior.as_ref() else {
+        return recent_ensemble_votes;
+    };
+
+    if recent_ensemble_votes.is_empty() {
+        if let Some(synthetic) = synthetic_analyze_ensemble_vote(analyze, canonical) {
+            recent_ensemble_votes.push(synthetic);
+        }
+        return recent_ensemble_votes;
+    }
+
+    for vote in &mut recent_ensemble_votes {
+        if vote.source_phase == "analyze"
+            && vote.source_run_id.as_deref() == Some(analyze.run_id.as_str())
+        {
+            overlay_analyze_canonical_regime_on_ensemble_vote(vote, canonical);
+        }
+    }
+    recent_ensemble_votes
+}
+
+fn synthetic_analyze_ensemble_vote(
+    analyze: &AnalyzeRunRecord,
+    canonical: &ict_engine::state::CanonicalStructuralRegimePosterior,
+) -> Option<EnsembleVoteRecord> {
+    let active_regime = canonical.active_regime.clone().or_else(|| {
+        canonical
+            .probabilities
+            .iter()
+            .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
+            .map(|(label, _)| label.clone())
+    })?;
+    let confidence = canonical
+        .confidence
+        .unwrap_or_else(|| canonical.probabilities.get(&active_regime).copied().unwrap_or(0.5));
+
+    Some(EnsembleVoteRecord {
+        artifact_id: format!("ensemble-vote:synthetic:{}", analyze.run_id),
+        generated_at: analyze.timestamp,
+        symbol: analyze.symbol.clone(),
+        source_phase: "analyze".to_string(),
+        source_run_id: Some(analyze.run_id.clone()),
+        provenance: analyze.provenance.clone(),
+        dataset_comparability: analyze.dataset_comparability.clone(),
+        ensemble_version: "ensemble-audit-v2-synthetic-analyze".to_string(),
+        final_action: "observe".to_string(),
+        recommended_command: analyze.recommended_next_command.clone(),
+        human_next_triage: "synthetic_from_analyze_canonical_structural_posterior".to_string(),
+        hard_block: ict_engine::application::orchestration::EnsembleHardBlockArtifact::default(),
+        confidence,
+        consensus_strength: confidence,
+        disagreement_flags: Vec::new(),
+        executor_summaries: vec![
+            "synthetic_from_analyze_canonical_structural_posterior".to_string(),
+        ],
+        split_explanations: vec![format!("active_regime={active_regime}")],
+        executor_scorecards: Vec::new(),
+        executor_scorecards_source: None,
+        posterior_fingerprint: format!("synthetic:{}", analyze.run_id),
+        posterior_normalization_status: "canonical_structural_regime_posterior".to_string(),
+        posterior_active_regime: active_regime,
+        posterior_confidence: Some(confidence),
+        posterior_probabilities: canonical.probabilities.clone(),
+        posterior_evidence: canonical.evidence.clone(),
+    })
+}
+
+fn overlay_analyze_canonical_regime_on_ensemble_vote(
+    vote: &mut EnsembleVoteRecord,
+    canonical: &ict_engine::state::CanonicalStructuralRegimePosterior,
+) {
+    let active_regime = canonical.active_regime.clone().or_else(|| {
+        canonical
+            .probabilities
+            .iter()
+            .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
+            .map(|(label, _)| label.clone())
+    });
+    if let Some(active_regime) = active_regime {
+        vote.posterior_active_regime = active_regime;
+    }
+    vote.posterior_probabilities = canonical.probabilities.clone();
+    vote.posterior_confidence = canonical.confidence;
+    vote.confidence = canonical
+        .confidence
+        .unwrap_or_else(|| vote.posterior_confidence.unwrap_or(vote.confidence));
+    vote.consensus_strength = vote.confidence;
+    vote.posterior_normalization_status = "canonical_structural_regime_posterior".to_string();
+    vote.posterior_evidence = canonical.evidence.clone();
 }
 
 fn gate_aware_recommended_next_command(stored: &str, commands: &CommandRecommendations) -> String {
@@ -12702,6 +12802,52 @@ mod tests {
             snapshot.artifact_decision_summary.consumed_trend_status,
             "no_consumed_validation"
         );
+    }
+
+    #[test]
+    fn test_workflow_snapshot_overlays_analyze_ensemble_vote_with_canonical_structural_posterior() {
+        let analyze = AnalyzeRunRecord {
+            run_id: "analyze:1".to_string(),
+            symbol: "NQ".to_string(),
+            canonical_structural_regime_posterior: Some(
+                ict_engine::state::CanonicalStructuralRegimePosterior {
+                    active_regime: Some("trend".to_string()),
+                    confidence: Some(0.78),
+                    probabilities: BTreeMap::from([
+                        ("trend".to_string(), 0.78),
+                        ("range".to_string(), 0.14),
+                        ("transition".to_string(), 0.08),
+                    ]),
+                    evidence: vec!["duration_persistence_prior=0.900".to_string()],
+                },
+            ),
+            ..AnalyzeRunRecord::default()
+        };
+
+        let snapshot = build_workflow_snapshot(BuildWorkflowSnapshotInput {
+            state_dir: "state",
+            symbol: "NQ",
+            latest_train: None,
+            latest_analyze: Some(&analyze),
+            latest_research: None,
+            latest_backtest: None,
+            latest_update: None,
+            pre_bayes_policy_history: &[],
+            pending_update_history: &[],
+            execution_candidate_history: &[],
+            artifact_ledger: &[],
+        });
+
+        let vote = snapshot.latest_ensemble_vote.expect("latest ensemble vote");
+        assert_eq!(vote.source_phase, "analyze");
+        assert_eq!(vote.source_run_id.as_deref(), Some("analyze:1"));
+        assert_eq!(vote.posterior_active_regime, "trend");
+        assert_eq!(vote.posterior_confidence, Some(0.78));
+        assert_eq!(vote.posterior_probabilities["trend"], 0.78);
+        assert!(vote
+            .posterior_evidence
+            .iter()
+            .any(|line| line.contains("duration_persistence_prior")));
     }
 
     #[test]
