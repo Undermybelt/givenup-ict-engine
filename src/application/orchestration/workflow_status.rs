@@ -4639,6 +4639,12 @@ mod tests {
         assert!(value["path"]["experience_prior"].as_f64().unwrap() > 0.5);
         assert_eq!(value["path"]["source_panel_count"], 2);
         assert_eq!(value["path"]["last_offline_seed_source"], "backtest");
+        assert_eq!(value["path"]["dominant_source_panel"], "backtest");
+        assert!(value["path"]["dominant_source_share"]
+            .as_f64()
+            .unwrap()
+            > 0.80);
+        assert_eq!(value["path"]["dominant_source_prior"], 0.5);
         assert_eq!(
             value["branch"]["entity_id"],
             "NQ:belief_regime_node:trend:trend_follow_through"

@@ -243,6 +243,12 @@ pub struct StructuralExperiencePriorEntry {
     pub source_panel_count: usize,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_offline_seed_source: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub dominant_source_panel: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub dominant_source_share: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub dominant_source_prior: Option<f64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -666,6 +672,8 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
     });
     let branch = branch_id.and_then(|id| {
         let prior_stats = structural_prior_state.branches.get(id);
+        let (dominant_source_panel, dominant_source_share, dominant_source_prior) =
+            structural_dominant_source_panel(prior_stats);
         playbook
             .branch_set
             .branches
@@ -684,6 +692,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 composite_score: branch.composite_branch_score,
                 source_panel_count: structural_source_panel_count(prior_stats),
                 last_offline_seed_source: structural_last_offline_seed_source(prior_stats),
+                dominant_source_panel: dominant_source_panel.clone(),
+                dominant_source_share,
+                dominant_source_prior,
             })
             .or_else(|| {
                 branch_summary.map(|summary| {
@@ -704,12 +715,17 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         composite_score: experience_prior,
                         source_panel_count: structural_source_panel_count(prior_stats),
                         last_offline_seed_source: structural_last_offline_seed_source(prior_stats),
+                        dominant_source_panel: dominant_source_panel.clone(),
+                        dominant_source_share,
+                        dominant_source_prior,
                     }
                 })
             })
     });
     let scenario = scenario_id.and_then(|id| {
         let prior_stats = structural_prior_state.scenarios.get(id);
+        let (dominant_source_panel, dominant_source_share, dominant_source_prior) =
+            structural_dominant_source_panel(prior_stats);
         playbook
             .scenario_playbook
             .scenarios
@@ -728,6 +744,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 composite_score: scenario.composite_scenario_score,
                 source_panel_count: structural_source_panel_count(prior_stats),
                 last_offline_seed_source: structural_last_offline_seed_source(prior_stats),
+                dominant_source_panel: dominant_source_panel.clone(),
+                dominant_source_share,
+                dominant_source_prior,
             })
             .or_else(|| {
                 scenario_summary.map(|summary| {
@@ -747,12 +766,17 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         composite_score: experience_prior,
                         source_panel_count: structural_source_panel_count(prior_stats),
                         last_offline_seed_source: structural_last_offline_seed_source(prior_stats),
+                        dominant_source_panel: dominant_source_panel.clone(),
+                        dominant_source_share,
+                        dominant_source_prior,
                     }
                 })
             })
     });
     let path = path_id.and_then(|id| {
         let prior_stats = structural_prior_state.paths.get(id);
+        let (dominant_source_panel, dominant_source_share, dominant_source_prior) =
+            structural_dominant_source_panel(prior_stats);
         playbook
             .path_plan
             .paths
@@ -771,6 +795,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 composite_score: path.composite_preference_score,
                 source_panel_count: structural_source_panel_count(prior_stats),
                 last_offline_seed_source: structural_last_offline_seed_source(prior_stats),
+                dominant_source_panel: dominant_source_panel.clone(),
+                dominant_source_share,
+                dominant_source_prior,
             })
             .or_else(|| {
                 path_summary.map(|summary| {
@@ -791,10 +818,16 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         composite_score: experience_prior,
                         source_panel_count: structural_source_panel_count(prior_stats),
                         last_offline_seed_source: structural_last_offline_seed_source(prior_stats),
+                        dominant_source_panel: dominant_source_panel.clone(),
+                        dominant_source_share,
+                        dominant_source_prior,
                     }
                 })
             })
     });
+    let node_prior_stats = structural_prior_state.nodes.get(node_id);
+    let (dominant_source_panel, dominant_source_share, dominant_source_prior) =
+        structural_dominant_source_panel(node_prior_stats);
     StructuralExperiencePriorSurfaceArtifact {
         symbol: structural_symbol(snapshot),
         node: Some(StructuralExperiencePriorEntry {
@@ -827,11 +860,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 ),
             ),
             source_panel_count: structural_source_panel_count(
-                structural_prior_state.nodes.get(node_id),
+                node_prior_stats,
             ),
             last_offline_seed_source: structural_last_offline_seed_source(
-                structural_prior_state.nodes.get(node_id),
+                node_prior_stats,
             ),
+            dominant_source_panel,
+            dominant_source_share,
+            dominant_source_prior,
         }),
         branch,
         scenario,
@@ -2219,6 +2255,37 @@ fn structural_last_offline_seed_source(
     prior_stats: Option<&StructuralPriorStats>,
 ) -> Option<String> {
     prior_stats.and_then(|stats| stats.last_offline_seed_source.clone())
+}
+
+fn structural_dominant_source_panel(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> (Option<String>, Option<f64>, Option<f64>) {
+    let Some(stats) = prior_stats else {
+        return (None, None, None);
+    };
+    let total_mass: f64 = stats
+        .source_panel_summaries
+        .values()
+        .map(|summary| summary.weighted_followed_mass.max(0.0))
+        .sum();
+    let dominant = stats
+        .source_panel_summaries
+        .iter()
+        .max_by(|a, b| {
+            a.1.weighted_followed_mass
+                .partial_cmp(&b.1.weighted_followed_mass)
+                .unwrap_or(std::cmp::Ordering::Equal)
+                .then_with(|| a.0.cmp(b.0))
+        })
+        .map(|(label, summary)| {
+            let share = if total_mass <= f64::EPSILON {
+                None
+            } else {
+                Some((summary.weighted_followed_mass / total_mass).clamp(0.0, 1.0))
+            };
+            (Some(label.clone()), share, Some(summary.smoothed_prior))
+        });
+    dominant.unwrap_or((None, None, None))
 }
 
 fn structural_selected_entry_quality_probability(snapshot: &WorkflowSnapshot) -> Option<f64> {
