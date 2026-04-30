@@ -1785,6 +1785,9 @@ pub struct UpdateRunRecord {
     #[serde(default)]
     pub consumed_pre_bayes_entry_quality_bridge: Option<PreBayesEntryQualityBridge>,
     #[serde(default)]
+    pub consumed_canonical_structural_regime_posterior:
+        Option<CanonicalStructuralRegimePosterior>,
+    #[serde(default)]
     pub consumed_multi_timeframe_summary: Vec<String>,
     #[serde(default)]
     pub structural_feedback: Option<StructuralFeedbackRefs>,

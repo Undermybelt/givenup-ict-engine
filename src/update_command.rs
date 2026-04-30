@@ -314,6 +314,9 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         consumed_pre_bayes_entry_quality_bridge: consumed_analyze_context
             .pre_bayes_entry_quality_bridge
             .clone(),
+        consumed_canonical_structural_regime_posterior: consumed_analyze_context
+            .canonical_structural_regime_posterior
+            .clone(),
         consumed_multi_timeframe_summary: consumed_analyze_context.multi_timeframe_summary.clone(),
         updated_trade_outcome: trade_outcome_map.clone(),
         factor_ranking,
@@ -572,6 +575,9 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
             consumed_pre_bayes_evidence_filter: report.consumed_pre_bayes_evidence_filter.clone(),
             consumed_pre_bayes_entry_quality_bridge: report
                 .consumed_pre_bayes_entry_quality_bridge
+                .clone(),
+            consumed_canonical_structural_regime_posterior: report
+                .consumed_canonical_structural_regime_posterior
                 .clone(),
             consumed_multi_timeframe_summary: report.consumed_multi_timeframe_summary.clone(),
             trade_outcome_deltas,

@@ -316,6 +316,8 @@ struct UpdateReport {
     consumed_analyze_run_id: Option<String>,
     consumed_pre_bayes_evidence_filter: Option<PreBayesEvidenceFilter>,
     consumed_pre_bayes_entry_quality_bridge: Option<ict_engine::state::PreBayesEntryQualityBridge>,
+    consumed_canonical_structural_regime_posterior:
+        Option<ict_engine::state::CanonicalStructuralRegimePosterior>,
     consumed_multi_timeframe_summary: Vec<String>,
     updated_trade_outcome: BTreeMap<String, f64>,
     factor_ranking: Vec<PersistedFactorRanking>,
@@ -4062,6 +4064,55 @@ fn workflow_phase_snapshot_from_update_run(run: &UpdateRunRecord) -> WorkflowPha
         .consumed_pre_bayes_entry_quality_bridge
         .as_ref()
         .map(pre_bayes_entry_quality_bridge_diff);
+    let mut pre_bayes_filtered_assignments = run
+        .consumed_pre_bayes_evidence_filter
+        .as_ref()
+        .map(|filter| filter.evidence_assignments.clone())
+        .unwrap_or_default();
+    let mut pre_bayes_soft_evidence = run
+        .consumed_pre_bayes_evidence_filter
+        .as_ref()
+        .map(|filter| {
+            BTreeMap::from([
+                (
+                    "market_regime".to_string(),
+                    filter.soft_market_regime_distribution.clone(),
+                ),
+                (
+                    "liquidity_context".to_string(),
+                    filter.soft_liquidity_context_distribution.clone(),
+                ),
+                (
+                    "factor_alignment".to_string(),
+                    filter.soft_factor_alignment_distribution.clone(),
+                ),
+                (
+                    "factor_uncertainty".to_string(),
+                    filter.soft_factor_uncertainty_distribution.clone(),
+                ),
+                (
+                    "multi_timeframe_resonance".to_string(),
+                    filter.soft_multi_timeframe_resonance_distribution.clone(),
+                ),
+            ])
+        })
+        .unwrap_or_default();
+    if let Some(canonical) = run.consumed_canonical_structural_regime_posterior.as_ref() {
+        let regime_label = canonical.active_regime.clone().or_else(|| {
+            canonical
+                .probabilities
+                .iter()
+                .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
+                .map(|(label, _)| label.clone())
+        });
+        if let Some(regime_label) = regime_label {
+            pre_bayes_filtered_assignments.insert("market_regime".to_string(), regime_label);
+        }
+        if !canonical.probabilities.is_empty() {
+            pre_bayes_soft_evidence
+                .insert("market_regime".to_string(), canonical.probabilities.clone());
+        }
+    }
     let mut phase = WorkflowPhaseSnapshot {
         phase: "update".to_string(),
         source_command: run.source_command.clone(),
@@ -4127,42 +4178,21 @@ fn workflow_phase_snapshot_from_update_run(run: &UpdateRunRecord) -> WorkflowPha
             .as_ref()
             .map(|filter| filter.conflict_flags.clone())
             .unwrap_or_default(),
-        pre_bayes_filtered_assignments: run
-            .consumed_pre_bayes_evidence_filter
+        pre_bayes_filtered_assignments,
+        pre_bayes_soft_evidence,
+        canonical_structural_active_regime: run
+            .consumed_canonical_structural_regime_posterior
             .as_ref()
-            .map(|filter| filter.evidence_assignments.clone())
-            .unwrap_or_default(),
-        pre_bayes_soft_evidence: run
-            .consumed_pre_bayes_evidence_filter
+            .and_then(|posterior| posterior.active_regime.clone()),
+        canonical_structural_confidence: run
+            .consumed_canonical_structural_regime_posterior
             .as_ref()
-            .map(|filter| {
-                BTreeMap::from([
-                    (
-                        "market_regime".to_string(),
-                        filter.soft_market_regime_distribution.clone(),
-                    ),
-                    (
-                        "liquidity_context".to_string(),
-                        filter.soft_liquidity_context_distribution.clone(),
-                    ),
-                    (
-                        "factor_alignment".to_string(),
-                        filter.soft_factor_alignment_distribution.clone(),
-                    ),
-                    (
-                        "factor_uncertainty".to_string(),
-                        filter.soft_factor_uncertainty_distribution.clone(),
-                    ),
-                    (
-                        "multi_timeframe_resonance".to_string(),
-                        filter.soft_multi_timeframe_resonance_distribution.clone(),
-                    ),
-                ])
-            })
+            .and_then(|posterior| posterior.confidence),
+        canonical_structural_probabilities: run
+            .consumed_canonical_structural_regime_posterior
+            .as_ref()
+            .map(|posterior| posterior.probabilities.clone())
             .unwrap_or_default(),
-        canonical_structural_active_regime: None,
-        canonical_structural_confidence: None,
-        canonical_structural_probabilities: BTreeMap::new(),
         pre_bayes_long_signal_probability: None,
         pre_bayes_short_signal_probability: None,
         pre_bayes_selected_entry_quality_probability: None,
@@ -14757,6 +14787,59 @@ mod tests {
             .get("market_regime")
             .unwrap()
             .contains_key("transition"));
+    }
+
+    #[test]
+    fn test_workflow_phase_snapshot_from_update_run_prefers_consumed_canonical_structural_regime_posterior(
+    ) {
+        let snapshot = workflow_phase_snapshot_from_update_run(&UpdateRunRecord {
+            run_id: "update:structural".to_string(),
+            source_command: "update".to_string(),
+            consumed_pre_bayes_evidence_filter: Some(PreBayesEvidenceFilter {
+                evidence_assignments: BTreeMap::from([(
+                    "market_regime".to_string(),
+                    "bull".to_string(),
+                )]),
+                soft_market_regime_distribution: BTreeMap::from([
+                    ("bull".to_string(), 1.0),
+                    ("bear".to_string(), 0.0),
+                ]),
+                ..PreBayesEvidenceFilter::default()
+            }),
+            consumed_canonical_structural_regime_posterior: Some(
+                ict_engine::state::CanonicalStructuralRegimePosterior {
+                    active_regime: Some("trend".to_string()),
+                    confidence: Some(0.78),
+                    probabilities: BTreeMap::from([
+                        ("trend".to_string(), 0.78),
+                        ("range".to_string(), 0.14),
+                        ("transition".to_string(), 0.08),
+                    ]),
+                    evidence: vec!["duration_persistence_prior=0.900".to_string()],
+                },
+            ),
+            ..UpdateRunRecord::default()
+        });
+
+        assert_eq!(
+            snapshot.pre_bayes_filtered_assignments["market_regime"],
+            "trend"
+        );
+        assert_eq!(snapshot.pre_bayes_soft_evidence["market_regime"]["trend"], 0.78);
+        assert_eq!(
+            snapshot
+                .canonical_structural_active_regime
+                .as_deref(),
+            Some("trend")
+        );
+        assert_eq!(snapshot.canonical_structural_confidence, Some(0.78));
+        assert_eq!(
+            snapshot
+                .canonical_structural_probabilities
+                .get("trend")
+                .copied(),
+            Some(0.78)
+        );
     }
 
     #[test]
