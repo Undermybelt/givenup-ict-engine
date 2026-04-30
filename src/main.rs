@@ -409,6 +409,20 @@ struct EnsembleVoteOverlayInput<'a> {
     backtest_runs: &'a [BacktestRunRecord],
     update_runs: &'a [UpdateRunRecord],
     latest_analyze: Option<&'a AnalyzeRunRecord>,
+    latest_research: Option<&'a ResearchRunRecord>,
+    latest_backtest: Option<&'a BacktestRunRecord>,
+    latest_update: Option<&'a UpdateRunRecord>,
+}
+
+struct SyntheticPhaseEnsembleVoteInput<'a> {
+    symbol: &'a str,
+    timestamp: chrono::DateTime<Utc>,
+    source_phase: &'a str,
+    run_id: &'a str,
+    provenance: &'a RunProvenance,
+    dataset_comparability: &'a DatasetComparability,
+    recommended_next_command: &'a str,
+    canonical: &'a ict_engine::state::CanonicalStructuralRegimePosterior,
 }
 
 struct UpdateCommandInput<'a> {
@@ -3259,6 +3273,9 @@ fn build_workflow_snapshot(input: BuildWorkflowSnapshotInput<'_>) -> WorkflowSna
         backtest_runs,
         update_runs,
         latest_analyze,
+        latest_research,
+        latest_backtest,
+        latest_update,
     });
     let recent_artifacts = artifact_ledger
         .iter()
@@ -3456,6 +3473,9 @@ fn overlay_or_synthesize_phase_ensemble_votes(
         backtest_runs,
         update_runs,
         latest_analyze,
+        latest_research,
+        latest_backtest,
+        latest_update,
     } = input;
     if analyze_runs.is_empty()
         && research_runs.is_empty()
@@ -3502,7 +3522,72 @@ fn overlay_or_synthesize_phase_ensemble_votes(
     if recent_ensemble_votes.is_empty() {
         if let Some(analyze) = latest_analyze {
             if let Some(canonical) = analyze.canonical_structural_regime_posterior.as_ref() {
-                if let Some(synthetic) = synthetic_analyze_ensemble_vote(analyze, canonical) {
+                if let Some(synthetic) =
+                    synthetic_phase_ensemble_vote(SyntheticPhaseEnsembleVoteInput {
+                        symbol: &analyze.symbol,
+                        timestamp: analyze.timestamp,
+                        source_phase: "analyze",
+                        run_id: &analyze.run_id,
+                        provenance: &analyze.provenance,
+                        dataset_comparability: &analyze.dataset_comparability,
+                        recommended_next_command: &analyze.recommended_next_command,
+                        canonical,
+                    })
+                {
+                    recent_ensemble_votes.push(synthetic);
+                }
+            }
+        } else if let Some(research) = latest_research {
+            if let Some(canonical) = research.canonical_structural_regime_posterior.as_ref() {
+                if let Some(synthetic) =
+                    synthetic_phase_ensemble_vote(SyntheticPhaseEnsembleVoteInput {
+                        symbol: &research.symbol,
+                        timestamp: research.timestamp,
+                        source_phase: "research",
+                        run_id: &research.run_id,
+                        provenance: &research.provenance,
+                        dataset_comparability: &research.dataset_comparability,
+                        recommended_next_command: &research.recommended_next_command,
+                        canonical,
+                    })
+                {
+                    recent_ensemble_votes.push(synthetic);
+                }
+            }
+        } else if let Some(backtest) = latest_backtest {
+            if let Some(canonical) = backtest.canonical_structural_regime_posterior.as_ref() {
+                if let Some(synthetic) =
+                    synthetic_phase_ensemble_vote(SyntheticPhaseEnsembleVoteInput {
+                        symbol: &backtest.symbol,
+                        timestamp: backtest.timestamp,
+                        source_phase: "backtest",
+                        run_id: &backtest.run_id,
+                        provenance: &backtest.provenance,
+                        dataset_comparability: &backtest.dataset_comparability,
+                        recommended_next_command: &backtest.recommended_next_command,
+                        canonical,
+                    })
+                {
+                    recent_ensemble_votes.push(synthetic);
+                }
+            }
+        } else if let Some(update) = latest_update {
+            if let Some(canonical) = update
+                .consumed_canonical_structural_regime_posterior
+                .as_ref()
+            {
+                if let Some(synthetic) =
+                    synthetic_phase_ensemble_vote(SyntheticPhaseEnsembleVoteInput {
+                        symbol: &update.symbol,
+                        timestamp: update.timestamp,
+                        source_phase: "update",
+                        run_id: &update.run_id,
+                        provenance: &update.provenance,
+                        dataset_comparability: &update.dataset_comparability,
+                        recommended_next_command: &update.recommended_next_command,
+                        canonical,
+                    })
+                {
                     recent_ensemble_votes.push(synthetic);
                 }
             }
@@ -3527,10 +3612,19 @@ fn overlay_or_synthesize_phase_ensemble_votes(
     recent_ensemble_votes
 }
 
-fn synthetic_analyze_ensemble_vote(
-    analyze: &AnalyzeRunRecord,
-    canonical: &ict_engine::state::CanonicalStructuralRegimePosterior,
+fn synthetic_phase_ensemble_vote(
+    input: SyntheticPhaseEnsembleVoteInput<'_>,
 ) -> Option<EnsembleVoteRecord> {
+    let SyntheticPhaseEnsembleVoteInput {
+        symbol,
+        timestamp,
+        source_phase,
+        run_id,
+        provenance,
+        dataset_comparability,
+        recommended_next_command,
+        canonical,
+    } = input;
     let active_regime = canonical.active_regime.clone().or_else(|| {
         canonical
             .probabilities
@@ -3543,28 +3637,28 @@ fn synthetic_analyze_ensemble_vote(
         .unwrap_or_else(|| canonical.probabilities.get(&active_regime).copied().unwrap_or(0.5));
 
     Some(EnsembleVoteRecord {
-        artifact_id: format!("ensemble-vote:synthetic:{}", analyze.run_id),
-        generated_at: analyze.timestamp,
-        symbol: analyze.symbol.clone(),
-        source_phase: "analyze".to_string(),
-        source_run_id: Some(analyze.run_id.clone()),
-        provenance: analyze.provenance.clone(),
-        dataset_comparability: analyze.dataset_comparability.clone(),
-        ensemble_version: "ensemble-audit-v2-synthetic-analyze".to_string(),
+        artifact_id: format!("ensemble-vote:synthetic:{}", run_id),
+        generated_at: timestamp,
+        symbol: symbol.to_string(),
+        source_phase: source_phase.to_string(),
+        source_run_id: Some(run_id.to_string()),
+        provenance: provenance.clone(),
+        dataset_comparability: dataset_comparability.clone(),
+        ensemble_version: "ensemble-audit-v2-synthetic-phase".to_string(),
         final_action: "observe".to_string(),
-        recommended_command: analyze.recommended_next_command.clone(),
-        human_next_triage: "synthetic_from_analyze_canonical_structural_posterior".to_string(),
+        recommended_command: recommended_next_command.to_string(),
+        human_next_triage: "synthetic_from_phase_canonical_structural_posterior".to_string(),
         hard_block: ict_engine::application::orchestration::EnsembleHardBlockArtifact::default(),
         confidence,
         consensus_strength: confidence,
         disagreement_flags: Vec::new(),
         executor_summaries: vec![
-            "synthetic_from_analyze_canonical_structural_posterior".to_string(),
+            "synthetic_from_phase_canonical_structural_posterior".to_string(),
         ],
         split_explanations: vec![format!("active_regime={active_regime}")],
         executor_scorecards: Vec::new(),
         executor_scorecards_source: None,
-        posterior_fingerprint: format!("synthetic:{}", analyze.run_id),
+        posterior_fingerprint: format!("synthetic:{}", run_id),
         posterior_normalization_status: "canonical_structural_regime_posterior".to_string(),
         posterior_active_regime: active_regime,
         posterior_confidence: Some(confidence),
@@ -13341,6 +13435,54 @@ mod tests {
             .recent_ensemble_votes
             .last()
             .expect("recent research ensemble vote");
+        assert_eq!(vote.posterior_active_regime, "range");
+        assert_eq!(vote.posterior_confidence, Some(0.61));
+        assert_eq!(vote.posterior_probabilities["range"], 0.61);
+    }
+
+    #[test]
+    fn test_workflow_snapshot_synthesizes_research_ensemble_vote_from_canonical_structural_posterior_when_history_missing(
+    ) {
+        let research = ResearchRunRecord {
+            run_id: "research:synthetic".to_string(),
+            symbol: "NQ".to_string(),
+            source_command: "factor-research".to_string(),
+            canonical_structural_regime_posterior: Some(
+                ict_engine::state::CanonicalStructuralRegimePosterior {
+                    active_regime: Some("range".to_string()),
+                    confidence: Some(0.61),
+                    probabilities: BTreeMap::from([
+                        ("trend".to_string(), 0.21),
+                        ("range".to_string(), 0.61),
+                        ("transition".to_string(), 0.18),
+                    ]),
+                    evidence: vec!["legacy_range_bias".to_string()],
+                },
+            ),
+            ..ResearchRunRecord::default()
+        };
+
+        let snapshot = build_workflow_snapshot(BuildWorkflowSnapshotInput {
+            state_dir: "state",
+            symbol: "NQ",
+            analyze_runs: &[],
+            research_runs: std::slice::from_ref(&research),
+            backtest_runs: &[],
+            update_runs: &[],
+            latest_train: None,
+            latest_analyze: None,
+            latest_research: Some(&research),
+            latest_backtest: None,
+            latest_update: None,
+            pre_bayes_policy_history: &[],
+            pending_update_history: &[],
+            execution_candidate_history: &[],
+            artifact_ledger: &[],
+        });
+
+        let vote = snapshot.latest_ensemble_vote.expect("synthetic research vote");
+        assert_eq!(vote.source_phase, "research");
+        assert_eq!(vote.source_run_id.as_deref(), Some("research:synthetic"));
         assert_eq!(vote.posterior_active_regime, "range");
         assert_eq!(vote.posterior_confidence, Some(0.61));
         assert_eq!(vote.posterior_probabilities["range"], 0.61);
