@@ -612,6 +612,22 @@ pub(crate) fn run_factor_research(
             .iter()
             .map(|result| result.trades.len())
             .sum(),
+        canonical_structural_regime_posterior: report
+            .workflow_snapshot
+            .latest_analyze
+            .as_ref()
+            .and_then(|phase| {
+                if phase.canonical_structural_probabilities.is_empty() {
+                    None
+                } else {
+                    Some(ict_engine::state::CanonicalStructuralRegimePosterior {
+                        active_regime: phase.canonical_structural_active_regime.clone(),
+                        confidence: phase.canonical_structural_confidence,
+                        probabilities: phase.canonical_structural_probabilities.clone(),
+                        evidence: Vec::new(),
+                    })
+                }
+            }),
         artifact_decision_summary: report.artifact_decision_summary.clone(),
         artifact_decision_section: report.artifact_decision_section.clone(),
         agent_prompts: report.agent_prompts.clone(),

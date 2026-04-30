@@ -1408,6 +1408,8 @@ pub struct ResearchRunRecord {
     #[serde(default)]
     pub backtest_trade_count: usize,
     #[serde(default)]
+    pub canonical_structural_regime_posterior: Option<CanonicalStructuralRegimePosterior>,
+    #[serde(default)]
     pub artifact_decision_summary: ArtifactDecisionSummary,
     #[serde(default)]
     pub artifact_decision_section: ArtifactDecisionSection,
@@ -1955,6 +1957,8 @@ pub struct BacktestRunRecord {
     #[serde(default)]
     pub objective_market_credibility_shrink:
         Option<crate::domain::belief::ObjectiveMarketCredibilityShrink>,
+    #[serde(default)]
+    pub canonical_structural_regime_posterior: Option<CanonicalStructuralRegimePosterior>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]

@@ -3669,19 +3669,9 @@ fn workflow_phase_snapshot_from_analyze_run(run: &AnalyzeRunRecord) -> WorkflowP
         pre_bayes_conflict_flags: run.pre_bayes_evidence_filter.conflict_flags.clone(),
         pre_bayes_filtered_assignments: filtered_assignments,
         pre_bayes_soft_evidence,
-        canonical_structural_active_regime: run
-            .canonical_structural_regime_posterior
-            .as_ref()
-            .and_then(|posterior| posterior.active_regime.clone()),
-        canonical_structural_confidence: run
-            .canonical_structural_regime_posterior
-            .as_ref()
-            .and_then(|posterior| posterior.confidence),
-        canonical_structural_probabilities: run
-            .canonical_structural_regime_posterior
-            .as_ref()
-            .map(|posterior| posterior.probabilities.clone())
-            .unwrap_or_default(),
+        canonical_structural_active_regime: None,
+        canonical_structural_confidence: None,
+        canonical_structural_probabilities: BTreeMap::new(),
         pre_bayes_long_signal_probability: Some(
             run.pre_bayes_entry_quality_bridge.long_signal_probability,
         ),
@@ -3885,9 +3875,19 @@ fn workflow_phase_snapshot_from_research_run(run: &ResearchRunRecord) -> Workflo
         pre_bayes_conflict_flags: Vec::new(),
         pre_bayes_filtered_assignments: BTreeMap::new(),
         pre_bayes_soft_evidence: BTreeMap::new(),
-        canonical_structural_active_regime: None,
-        canonical_structural_confidence: None,
-        canonical_structural_probabilities: BTreeMap::new(),
+        canonical_structural_active_regime: run
+            .canonical_structural_regime_posterior
+            .as_ref()
+            .and_then(|posterior| posterior.active_regime.clone()),
+        canonical_structural_confidence: run
+            .canonical_structural_regime_posterior
+            .as_ref()
+            .and_then(|posterior| posterior.confidence),
+        canonical_structural_probabilities: run
+            .canonical_structural_regime_posterior
+            .as_ref()
+            .map(|posterior| posterior.probabilities.clone())
+            .unwrap_or_default(),
         pre_bayes_long_signal_probability: None,
         pre_bayes_short_signal_probability: None,
         pre_bayes_selected_entry_quality_probability: None,
@@ -4002,9 +4002,19 @@ fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> Workflo
         pre_bayes_conflict_flags: Vec::new(),
         pre_bayes_filtered_assignments: BTreeMap::new(),
         pre_bayes_soft_evidence: BTreeMap::new(),
-        canonical_structural_active_regime: None,
-        canonical_structural_confidence: None,
-        canonical_structural_probabilities: BTreeMap::new(),
+        canonical_structural_active_regime: run
+            .canonical_structural_regime_posterior
+            .as_ref()
+            .and_then(|posterior| posterior.active_regime.clone()),
+        canonical_structural_confidence: run
+            .canonical_structural_regime_posterior
+            .as_ref()
+            .and_then(|posterior| posterior.confidence),
+        canonical_structural_probabilities: run
+            .canonical_structural_regime_posterior
+            .as_ref()
+            .map(|posterior| posterior.probabilities.clone())
+            .unwrap_or_default(),
         pre_bayes_long_signal_probability: None,
         pre_bayes_short_signal_probability: None,
         pre_bayes_selected_entry_quality_probability: None,
@@ -8730,6 +8740,18 @@ mod tests {
             structural_break_index: Some(21),
             recommended_next_command: "ict-engine update".to_string(),
             objective_market_credibility_shrink: Some(shrink.clone()),
+            canonical_structural_regime_posterior: Some(
+                ict_engine::state::CanonicalStructuralRegimePosterior {
+                    active_regime: Some("trend".to_string()),
+                    confidence: Some(0.78),
+                    probabilities: BTreeMap::from([
+                        ("trend".to_string(), 0.78),
+                        ("range".to_string(), 0.14),
+                        ("transition".to_string(), 0.08),
+                    ]),
+                    evidence: vec!["duration_persistence_prior=0.900".to_string()],
+                },
+            ),
             ..BacktestRunRecord::default()
         };
 
@@ -8746,6 +8768,54 @@ mod tests {
         assert!(snapshot
             .phase_summary
             .contains("objective_market_credibility="));
+        assert_eq!(
+            snapshot
+                .canonical_structural_active_regime
+                .as_deref(),
+            Some("trend")
+        );
+        assert_eq!(snapshot.canonical_structural_confidence, Some(0.78));
+    }
+
+    #[test]
+    fn test_workflow_phase_snapshot_from_research_run_surfaces_canonical_structural_regime() {
+        let run = ResearchRunRecord {
+            source_command: "factor-research".to_string(),
+            research_objective: "generic".to_string(),
+            aggregate_return: 0.04,
+            feedback_records_applied: 1,
+            recommended_next_command: "ict-engine factor-backtest".to_string(),
+            canonical_structural_regime_posterior: Some(
+                ict_engine::state::CanonicalStructuralRegimePosterior {
+                    active_regime: Some("range".to_string()),
+                    confidence: Some(0.61),
+                    probabilities: BTreeMap::from([
+                        ("trend".to_string(), 0.21),
+                        ("range".to_string(), 0.61),
+                        ("transition".to_string(), 0.18),
+                    ]),
+                    evidence: vec!["legacy_range_bias".to_string()],
+                },
+            ),
+            ..ResearchRunRecord::default()
+        };
+
+        let snapshot = workflow_phase_snapshot_from_research_run(&run);
+
+        assert_eq!(
+            snapshot
+                .canonical_structural_active_regime
+                .as_deref(),
+            Some("range")
+        );
+        assert_eq!(snapshot.canonical_structural_confidence, Some(0.61));
+        assert_eq!(
+            snapshot
+                .canonical_structural_probabilities
+                .get("range")
+                .copied(),
+            Some(0.61)
+        );
     }
 
     #[test]
