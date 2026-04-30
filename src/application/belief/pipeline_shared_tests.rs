@@ -1,7 +1,8 @@
 use super::*;
 use crate::state::{
     FactorPipelineLabelSource, PreBayesEntryQualityBridge, PreBayesEntryQualityBridgeDiff,
-    PreBayesEvidenceFilter, StructuralNodeDurationPrior, StructuralPriorLearningState,
+    PreBayesEvidenceFilter, StructuralBranchTransitionPrior, StructuralNodeDurationPrior,
+    StructuralPriorEvent, StructuralPriorLearningState,
 };
 use std::collections::BTreeMap;
 
@@ -213,6 +214,90 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
         .evidence
         .iter()
         .any(|line| line.contains("duration_persistence_prior")));
+}
+
+#[test]
+fn canonical_belief_snapshot_with_structural_prior_state_uses_branch_transition_priors() {
+    let filter = PreBayesEvidenceFilter {
+        filtered_market_regime_label: "bull".to_string(),
+        soft_market_regime_distribution: BTreeMap::from([
+            ("bull".to_string(), 0.55),
+            ("range".to_string(), 0.30),
+            ("transition".to_string(), 0.15),
+        ]),
+        uses_soft_evidence: true,
+        ..PreBayesEvidenceFilter::default()
+    };
+    let mut structural_prior_state = StructuralPriorLearningState::default();
+    structural_prior_state.event_ledger.push(StructuralPriorEvent {
+        source_label: "backtest".to_string(),
+        symbol: "NQ".to_string(),
+        recommendation_id: "rec-prev".to_string(),
+        recommended_at: "2026-04-30T01:00:00Z".to_string(),
+        node_id: "NQ:belief_regime_node:trend".to_string(),
+        branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+        scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+        path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+            .to_string(),
+        followed_path: true,
+        realized_outcome: Some("win".to_string()),
+    });
+    structural_prior_state.branch_transition_priors.insert(
+        "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:trend:transition_confirmation".to_string(),
+        StructuralBranchTransitionPrior {
+            from_node_id: "NQ:belief_regime_node:trend".to_string(),
+            to_node_id: "NQ:belief_regime_node:trend".to_string(),
+            from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+            to_branch_id: "NQ:belief_regime_node:trend:transition_confirmation".to_string(),
+            observations: 3,
+            weighted_observation_mass: 2.4,
+            wins: 2,
+            losses: 1,
+            invalidated: 0,
+            transition_prior: 0.8,
+            last_recommended_at: Some("2026-04-30T02:00:00Z".to_string()),
+        },
+    );
+
+    let baseline_report = build_canonical_belief_snapshot_with_pda_and_structural_prior_state(
+        "NQ",
+        Some("NQ"),
+        &filter,
+        None,
+        None,
+        None,
+        None,
+    )
+    .unwrap();
+    let report = build_canonical_belief_snapshot_with_pda_and_structural_prior_state(
+        "NQ",
+        Some("NQ"),
+        &filter,
+        None,
+        None,
+        None,
+        Some(&structural_prior_state),
+    )
+    .unwrap();
+
+    let baseline_total: f64 = baseline_report
+        .regime_posterior
+        .probabilities
+        .values()
+        .copied()
+        .sum();
+    let baseline_transition =
+        baseline_report.regime_posterior.probabilities["transition"] / baseline_total;
+    let adjusted_transition = report.regime_posterior.probabilities["transition"];
+    assert!(
+        adjusted_transition > baseline_transition,
+        "baseline={baseline_transition:?} adjusted={adjusted_transition:?} baseline_report={baseline_report:?} report={report:?}"
+    );
+    assert!(report
+        .regime_posterior
+        .evidence
+        .iter()
+        .any(|line| line.contains("branch_transition_prior")));
 }
 
 #[test]

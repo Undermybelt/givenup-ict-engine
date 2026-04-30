@@ -7,6 +7,7 @@ use crate::analyze::multi_timeframe_parse::{
     multi_timeframe_direction_conflicts_with, ParsedMultiTimeframeEvidence,
 };
 use crate::application::belief::blend_node_posterior_with_duration_prior;
+use crate::application::belief::transition_adjusted_branch_posteriors;
 use crate::application::entry_models::{apply_cisd_rb_to_belief_packet, CisdRbEntryModelPacket};
 use crate::bbn::adapters::belief_evidence_packet_from_pre_bayes_filter;
 use crate::bbn::engine::InferenceEngineRegistry;
@@ -18,7 +19,7 @@ use crate::reporting::belief::BeliefReportPacket;
 use crate::state::{
     FactorPipelineLabelSource, PreBayesEntryQualityBridge, PreBayesEntryQualityBridgeDiff,
     PreBayesEvidenceFilter, PreBayesEvidencePolicy, PreBayesSoftEvidenceNodeDiff,
-    StructuralPriorLearningState,
+    StructuralPriorEvent, StructuralPriorLearningState,
 };
 use crate::types::Direction;
 
@@ -406,6 +407,37 @@ fn apply_structural_prior_state_to_belief_report(
         }
     }
 
+    if let Some(active) = active_regime.as_ref() {
+        let node_id = format!("{symbol}:belief_regime_node:{active}");
+        let regime_probabilities = canonical_probabilities
+            .iter()
+            .map(|(regime, probability)| (regime.clone(), *probability))
+            .collect::<Vec<_>>();
+        if let Some(latest_branch_id) = latest_structural_branch_id_for_symbol(
+            &structural_prior_state.event_ledger,
+            symbol,
+        ) {
+            let adjusted = transition_adjusted_branch_posteriors(
+                &node_id,
+                &regime_probabilities,
+                Some(latest_branch_id.as_str()),
+                &structural_prior_state.branch_transition_priors,
+                structural_branch_label_for_regime,
+            );
+            for (regime, _) in &regime_probabilities {
+                let branch_id =
+                    format!("{node_id}:{}", structural_branch_label_for_regime(regime.as_str()));
+                if let Some(probability) = adjusted.get(&branch_id) {
+                    canonical_probabilities.insert(regime.clone(), *probability);
+                }
+            }
+            report
+                .regime_posterior
+                .evidence
+                .push(format!("branch_transition_prior_from={latest_branch_id}"));
+        }
+    }
+
     let total: f64 = canonical_probabilities.values().copied().sum();
     if total > f64::EPSILON {
         for probability in canonical_probabilities.values_mut() {
@@ -430,6 +462,31 @@ fn canonical_structural_regime_label(label: &str) -> Option<String> {
         _ => return None,
     };
     Some(canonical.to_string())
+}
+
+fn structural_branch_label_for_regime(regime: &str) -> &'static str {
+    match regime {
+        "trend" => "trend_follow_through",
+        "transition" => "transition_confirmation",
+        "range" => "range_mean_reversion",
+        "stress" => "stress_de_risk",
+        _ => "execute_recommended_path",
+    }
+}
+
+fn latest_structural_branch_id_for_symbol(
+    events: &[StructuralPriorEvent],
+    symbol: &str,
+) -> Option<String> {
+    events
+        .iter()
+        .filter(|event| event.symbol == symbol)
+        .max_by(|left, right| {
+            left.recommended_at
+                .cmp(&right.recommended_at)
+                .then_with(|| left.recommendation_id.cmp(&right.recommendation_id))
+        })
+        .map(|event| event.branch_id.clone())
 }
 
 pub fn market_category_from_symbol(symbol: &str) -> &'static str {
