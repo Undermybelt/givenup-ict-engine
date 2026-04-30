@@ -383,7 +383,17 @@ pub struct StructuralPathOutcomeSummary {
 pub fn resolved_latest_ensemble_vote(
     snapshot: &WorkflowSnapshot,
 ) -> Option<crate::state::EnsembleVoteRecord> {
-    let mut vote = snapshot.latest_ensemble_vote.clone()?;
+    snapshot
+        .latest_ensemble_vote
+        .as_ref()
+        .and_then(|vote| resolved_ensemble_vote_for_snapshot(snapshot, vote))
+}
+
+pub fn resolved_ensemble_vote_for_snapshot(
+    snapshot: &WorkflowSnapshot,
+    vote: &crate::state::EnsembleVoteRecord,
+) -> Option<crate::state::EnsembleVoteRecord> {
+    let mut vote = vote.clone();
     let analyze = snapshot.latest_analyze.as_ref()?;
     if vote.source_phase != "analyze" {
         return Some(vote);

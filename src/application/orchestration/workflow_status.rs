@@ -17,7 +17,7 @@ use super::structural_playbook::{
     build_structural_playbook_bundle_with_prior_state, build_structural_scenario_history_artifact,
     build_structural_scenario_playbook_artifact_with_prior_state,
     build_structural_top_path_candidates_artifact_with_prior_state,
-    resolved_latest_ensemble_vote,
+    resolved_ensemble_vote_for_snapshot, resolved_latest_ensemble_vote,
     StructuralRecommendedPathBundleArtifact,
 };
 use crate::application::belief::{
@@ -2612,7 +2612,9 @@ pub fn build_ensemble_vote_history_view(
         .recent_ensemble_votes
         .iter()
         .map(|vote| {
-            let surface = build_ensemble_vote_surface(vote, persisted_scorecards);
+            let vote = resolved_ensemble_vote_for_snapshot(snapshot, vote)
+                .unwrap_or_else(|| vote.clone());
+            let surface = build_ensemble_vote_surface(&vote, persisted_scorecards);
             WorkflowEnsembleVoteHistoryRow {
                 artifact_id: surface.artifact_id,
                 generated_at: surface.generated_at,
