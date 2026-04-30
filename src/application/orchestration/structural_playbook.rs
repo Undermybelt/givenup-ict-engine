@@ -1,6 +1,10 @@
 use chrono::SecondsFormat;
 use serde::{Deserialize, Serialize};
 
+use crate::application::belief::{
+    blend_branch_prior_with_transition_prior, blend_node_posterior_with_duration_prior,
+    transition_adjusted_branch_posteriors,
+};
 use crate::application::provider_catalog::{
     build_workflow_provider_support, ProviderCatalogAgentSurface,
 };
@@ -1113,7 +1117,7 @@ pub fn build_structural_node_artifact_with_prior_state(
         .node_duration_priors
         .get(&provisional_node_id);
     let posterior_confidence = if node_family == "belief_regime_node" {
-        structural_blended_node_posterior(
+        blend_node_posterior_with_duration_prior(
             structural_primary_probability(snapshot),
             node_duration_prior,
         )
@@ -1248,11 +1252,12 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
     } else {
         let regime_probabilities = structural_regime_probabilities(snapshot);
         let latest_feedback = structural_latest_feedback_refs(snapshot);
-        let adjusted_posteriors = structural_transition_adjusted_branch_posteriors(
+        let adjusted_posteriors = transition_adjusted_branch_posteriors(
             &node.node_id,
             &regime_probabilities,
-            latest_feedback.as_ref(),
-            structural_prior_state,
+            latest_feedback.as_ref().map(|refs| refs.branch_id.as_str()),
+            &structural_prior_state.branch_transition_priors,
+            structural_branch_label_for_regime,
         );
         if !regime_probabilities.is_empty() {
             for (regime, probability) in regime_probabilities {
@@ -1279,7 +1284,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
                 let resolved_prior =
                     structural_resolved_smoothed_prior(prior_stats, history_adjusted_prior);
                 let blended_prior =
-                    structural_blended_transition_branch_prior(resolved_prior, transition_prior);
+                    blend_branch_prior_with_transition_prior(resolved_prior, transition_prior);
                 branches.push(StructuralBranchArtifact {
                     branch_id,
                     target_node_id: format!("{}:{}:candidate", structural_symbol(snapshot), regime),
@@ -1910,73 +1915,6 @@ fn structural_branch_transition_prior<'a>(
     structural_prior_state.branch_transition_priors.get(&key)
 }
 
-fn structural_transition_adjusted_branch_posteriors(
-    node_id: &str,
-    regime_probabilities: &[(String, f64)],
-    latest_feedback: Option<&StructuralFeedbackRefs>,
-    structural_prior_state: &StructuralPriorLearningState,
-) -> std::collections::BTreeMap<String, f64> {
-    let Some(latest_feedback) = latest_feedback else {
-        return regime_probabilities
-            .iter()
-            .map(|(regime, probability)| {
-                (
-                    format!("{node_id}:{}", structural_branch_label_for_regime(regime)),
-                    *probability,
-                )
-            })
-            .collect();
-    };
-
-    let mut weighted = Vec::new();
-    for (regime, probability) in regime_probabilities {
-        let branch_id = format!("{node_id}:{}", structural_branch_label_for_regime(regime));
-        let transition_prior = structural_branch_transition_prior(
-            structural_prior_state,
-            &latest_feedback.branch_id,
-            &branch_id,
-        );
-        let transition_weight = transition_prior
-            .map(|prior| {
-                let sample_weight = (prior.observations as f64 / 3.0).min(1.0);
-                (1.0 + (prior.transition_prior - 0.5) * 2.0 * sample_weight).clamp(0.05, 2.0)
-            })
-            .unwrap_or(1.0);
-        weighted.push((branch_id, (*probability * transition_weight).clamp(0.0, 1.0)));
-    }
-
-    let total: f64 = weighted.iter().map(|(_, weight)| *weight).sum();
-    if total <= f64::EPSILON {
-        return regime_probabilities
-            .iter()
-            .map(|(regime, probability)| {
-                (
-                    format!("{node_id}:{}", structural_branch_label_for_regime(regime)),
-                    *probability,
-                )
-            })
-            .collect();
-    }
-
-    weighted
-        .into_iter()
-        .map(|(branch_id, weight)| (branch_id, (weight / total).clamp(0.0, 1.0)))
-        .collect()
-}
-
-fn structural_blended_transition_branch_prior(
-    base_prior: f64,
-    transition_prior: Option<&crate::state::StructuralBranchTransitionPrior>,
-) -> f64 {
-    let Some(transition_prior) = transition_prior else {
-        return base_prior;
-    };
-    let transition_weight = (transition_prior.observations as f64 / 3.0).min(1.0);
-    ((1.0 - transition_weight) * base_prior
-        + transition_weight * transition_prior.transition_prior)
-        .clamp(0.0, 1.0)
-}
-
 fn structural_history_adjusted_node_prior(
     base_prior: f64,
     historical_summary: Option<&StructuralNodeOutcomeSummary>,
@@ -2436,21 +2374,6 @@ fn structural_duration_persistence_prior(
     duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
 ) -> Option<f64> {
     duration_prior.map(|prior| prior.persistence_prior)
-}
-
-fn structural_blended_node_posterior(
-    base_posterior: f64,
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> f64 {
-    let Some(duration_prior) = duration_prior else {
-        return base_posterior;
-    };
-    let observation_weight = (duration_prior.observations as f64 / 4.0).min(1.0);
-    let streak_weight = (duration_prior.streak_count as f64 / 3.0).min(1.0);
-    let blend_weight = (observation_weight * streak_weight * 0.5).clamp(0.0, 0.5);
-    ((1.0 - blend_weight) * base_posterior
-        + blend_weight * duration_prior.persistence_prior)
-        .clamp(0.0, 1.0)
 }
 
 fn structural_dominant_source_panel(

@@ -12,6 +12,7 @@ pub mod pre_bayes_summary;
 pub mod shadow_policy_surface;
 pub mod shared;
 pub mod spectral_overlay;
+pub mod structural_temporal_adjustment;
 
 pub use ising_overlay::{apply_ising_overlay, IsingOverlayState};
 pub use jump_model_sidecar::{
@@ -47,3 +48,7 @@ pub use pre_bayes_summary::{
 };
 pub use shadow_policy_surface::{build_belief_shadow_policy_surface, BeliefShadowPolicySurface};
 pub use spectral_overlay::{apply_spectral_overlay, SpectralOverlayState};
+pub use structural_temporal_adjustment::{
+    blend_branch_prior_with_transition_prior, blend_node_posterior_with_duration_prior,
+    transition_adjusted_branch_posteriors,
+};
