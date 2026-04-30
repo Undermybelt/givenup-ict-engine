@@ -352,6 +352,31 @@ pub(crate) fn persist_analyze_run(
         selected_entry_quality: report.supporting.entry_quality.selected_state.clone(),
         decision_hint: report.supporting.decision_hint.clone(),
         regime_probs: Some(report.supporting.model_state.regime_probs),
+        canonical_structural_regime_posterior: Some(ict_engine::state::CanonicalStructuralRegimePosterior {
+            active_regime: report
+                .supporting
+                .canonical_belief_report
+                .regime_posterior
+                .active_regime
+                .clone(),
+            confidence: report
+                .supporting
+                .canonical_belief_report
+                .regime_posterior
+                .confidence,
+            probabilities: report
+                .supporting
+                .canonical_belief_report
+                .regime_posterior
+                .probabilities
+                .clone(),
+            evidence: report
+                .supporting
+                .canonical_belief_report
+                .regime_posterior
+                .evidence
+                .clone(),
+        }),
         hybrid_regime_label: report.analysis.regime_bayesian.hybrid_regime_label.clone(),
         hybrid_regime_age_bars: report
             .supporting

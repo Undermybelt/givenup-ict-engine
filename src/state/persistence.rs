@@ -898,6 +898,7 @@ mod tests {
             hybrid_duration_model: None,
             hybrid_remaining_expected_bars: None,
             pre_bayes_evidence_filter: crate::state::PreBayesEvidenceFilter::default(),
+            canonical_structural_regime_posterior: None,
             pre_bayes_entry_quality_bridge: crate::state::PreBayesEntryQualityBridge::default(),
             factor_family_decisions: Vec::new(),
             factor_family_outcomes: Vec::new(),

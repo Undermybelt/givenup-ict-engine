@@ -3426,6 +3426,61 @@ fn gate_aware_recommended_next_command(stored: &str, commands: &CommandRecommend
 
 fn workflow_phase_snapshot_from_analyze_run(run: &AnalyzeRunRecord) -> WorkflowPhaseSnapshot {
     let bridge_diff = pre_bayes_entry_quality_bridge_diff(&run.pre_bayes_entry_quality_bridge);
+    let mut filtered_assignments = run.pre_bayes_evidence_filter.evidence_assignments.clone();
+    filtered_assignments.insert(
+        "__policy_version".to_string(),
+        run.pre_bayes_evidence_filter.policy.version.clone(),
+    );
+    if let Some(canonical) = run.canonical_structural_regime_posterior.as_ref() {
+        let regime_label = canonical.active_regime.clone().or_else(|| {
+            canonical
+                .probabilities
+                .iter()
+                .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
+                .map(|(label, _)| label.clone())
+        });
+        if let Some(regime_label) = regime_label {
+            filtered_assignments.insert("market_regime".to_string(), regime_label);
+        }
+    }
+    let mut pre_bayes_soft_evidence = BTreeMap::from([
+        (
+            "market_regime".to_string(),
+            run.pre_bayes_evidence_filter
+                .soft_market_regime_distribution
+                .clone(),
+        ),
+        (
+            "liquidity_context".to_string(),
+            run.pre_bayes_evidence_filter
+                .soft_liquidity_context_distribution
+                .clone(),
+        ),
+        (
+            "factor_alignment".to_string(),
+            run.pre_bayes_evidence_filter
+                .soft_factor_alignment_distribution
+                .clone(),
+        ),
+        (
+            "factor_uncertainty".to_string(),
+            run.pre_bayes_evidence_filter
+                .soft_factor_uncertainty_distribution
+                .clone(),
+        ),
+        (
+            "multi_timeframe_resonance".to_string(),
+            run.pre_bayes_evidence_filter
+                .soft_multi_timeframe_resonance_distribution
+                .clone(),
+        ),
+    ]);
+    if let Some(canonical) = run.canonical_structural_regime_posterior.as_ref() {
+        if !canonical.probabilities.is_empty() {
+            pre_bayes_soft_evidence
+                .insert("market_regime".to_string(), canonical.probabilities.clone());
+        }
+    }
     let duration_fragment = if let (Some(model), Some(remaining)) = (
         run.hybrid_duration_model.as_deref(),
         run.hybrid_remaining_expected_bars,
@@ -3489,46 +3544,8 @@ fn workflow_phase_snapshot_from_analyze_run(run: &AnalyzeRunRecord) -> WorkflowP
         pre_bayes_policy_version: run.pre_bayes_evidence_filter.policy.version.clone(),
         pre_bayes_evidence_quality_score: run.pre_bayes_evidence_filter.evidence_quality_score,
         pre_bayes_conflict_flags: run.pre_bayes_evidence_filter.conflict_flags.clone(),
-        pre_bayes_filtered_assignments: {
-            let mut assignments = run.pre_bayes_evidence_filter.evidence_assignments.clone();
-            assignments.insert(
-                "__policy_version".to_string(),
-                run.pre_bayes_evidence_filter.policy.version.clone(),
-            );
-            assignments
-        },
-        pre_bayes_soft_evidence: BTreeMap::from([
-            (
-                "market_regime".to_string(),
-                run.pre_bayes_evidence_filter
-                    .soft_market_regime_distribution
-                    .clone(),
-            ),
-            (
-                "liquidity_context".to_string(),
-                run.pre_bayes_evidence_filter
-                    .soft_liquidity_context_distribution
-                    .clone(),
-            ),
-            (
-                "factor_alignment".to_string(),
-                run.pre_bayes_evidence_filter
-                    .soft_factor_alignment_distribution
-                    .clone(),
-            ),
-            (
-                "factor_uncertainty".to_string(),
-                run.pre_bayes_evidence_filter
-                    .soft_factor_uncertainty_distribution
-                    .clone(),
-            ),
-            (
-                "multi_timeframe_resonance".to_string(),
-                run.pre_bayes_evidence_filter
-                    .soft_multi_timeframe_resonance_distribution
-                    .clone(),
-            ),
-        ]),
+        pre_bayes_filtered_assignments: filtered_assignments,
+        pre_bayes_soft_evidence,
         pre_bayes_long_signal_probability: Some(
             run.pre_bayes_entry_quality_bridge.long_signal_probability,
         ),
@@ -14302,6 +14319,50 @@ mod tests {
             .phase_summary
             .contains("hybrid_remaining_expected_bars=2.500"));
         assert_eq!(snapshot.multi_timeframe_summary.len(), 2);
+    }
+
+    #[test]
+    fn test_workflow_phase_snapshot_prefers_canonical_structural_regime_posterior_when_present() {
+        let snapshot = workflow_phase_snapshot_from_analyze_run(&AnalyzeRunRecord {
+            run_id: "analyze:structural".to_string(),
+            source_command: "analyze".to_string(),
+            pre_bayes_evidence_filter: PreBayesEvidenceFilter {
+                gating_status: "pass_hard".to_string(),
+                evidence_assignments: BTreeMap::from([(
+                    "market_regime".to_string(),
+                    "bull".to_string(),
+                )]),
+                soft_market_regime_distribution: BTreeMap::from([
+                    ("bull".to_string(), 1.0),
+                    ("bear".to_string(), 0.0),
+                ]),
+                ..PreBayesEvidenceFilter::default()
+            },
+            canonical_structural_regime_posterior: Some(
+                ict_engine::state::CanonicalStructuralRegimePosterior {
+                    active_regime: Some("trend".to_string()),
+                    confidence: Some(0.78),
+                    probabilities: BTreeMap::from([
+                        ("trend".to_string(), 0.78),
+                        ("range".to_string(), 0.14),
+                        ("transition".to_string(), 0.08),
+                    ]),
+                    evidence: vec!["duration_persistence_prior=0.900".to_string()],
+                },
+            ),
+            ..AnalyzeRunRecord::default()
+        });
+
+        assert_eq!(
+            snapshot.pre_bayes_filtered_assignments["market_regime"],
+            "trend"
+        );
+        assert_eq!(snapshot.pre_bayes_soft_evidence["market_regime"]["trend"], 0.78);
+        assert!(snapshot
+            .pre_bayes_soft_evidence
+            .get("market_regime")
+            .unwrap()
+            .contains_key("transition"));
     }
 
     #[test]

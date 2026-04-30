@@ -1604,6 +1604,18 @@ pub struct FactorAutoresearchSummary {
     pub live_snapshot: Option<FactorAutoresearchLiveSnapshot>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct CanonicalStructuralRegimePosterior {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub active_regime: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub confidence: Option<f64>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub probabilities: BTreeMap<String, f64>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub evidence: Vec<String>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AnalyzeRunRecord {
     pub run_id: String,
@@ -1642,6 +1654,8 @@ pub struct AnalyzeRunRecord {
     pub pre_bayes_evidence_filter: PreBayesEvidenceFilter,
     #[serde(default)]
     pub pre_bayes_entry_quality_bridge: PreBayesEntryQualityBridge,
+    #[serde(default)]
+    pub canonical_structural_regime_posterior: Option<CanonicalStructuralRegimePosterior>,
     pub factor_family_decisions: Vec<FactorFamilyDecision>,
     pub factor_family_outcomes: Vec<FactorFamilyOutcome>,
     pub factor_family_diffs: Vec<FactorFamilyDiff>,
@@ -1709,6 +1723,7 @@ impl Default for AnalyzeRunRecord {
             hybrid_remaining_expected_bars: None,
             pre_bayes_evidence_filter: PreBayesEvidenceFilter::default(),
             pre_bayes_entry_quality_bridge: PreBayesEntryQualityBridge::default(),
+            canonical_structural_regime_posterior: None,
             factor_family_decisions: Vec::new(),
             factor_family_outcomes: Vec::new(),
             factor_family_diffs: Vec::new(),
