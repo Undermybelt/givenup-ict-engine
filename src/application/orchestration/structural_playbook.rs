@@ -239,6 +239,10 @@ pub struct StructuralExperiencePriorEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub current_posterior: Option<f64>,
     pub composite_score: f64,
+    #[serde(default)]
+    pub source_panel_count: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_offline_seed_source: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -661,6 +665,7 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
             .find(|path| path.path_id == id)
     });
     let branch = branch_id.and_then(|id| {
+        let prior_stats = structural_prior_state.branches.get(id);
         playbook
             .branch_set
             .branches
@@ -677,6 +682,8 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 experience_prior: branch.prior_probability,
                 current_posterior: Some(branch.posterior_probability),
                 composite_score: branch.composite_branch_score,
+                source_panel_count: structural_source_panel_count(prior_stats),
+                last_offline_seed_source: structural_last_offline_seed_source(prior_stats),
             })
             .or_else(|| {
                 branch_summary.map(|summary| {
@@ -695,11 +702,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         experience_prior,
                         current_posterior: None,
                         composite_score: experience_prior,
+                        source_panel_count: structural_source_panel_count(prior_stats),
+                        last_offline_seed_source: structural_last_offline_seed_source(prior_stats),
                     }
                 })
             })
     });
     let scenario = scenario_id.and_then(|id| {
+        let prior_stats = structural_prior_state.scenarios.get(id);
         playbook
             .scenario_playbook
             .scenarios
@@ -716,6 +726,8 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 experience_prior: scenario.prior_probability,
                 current_posterior: Some(scenario.posterior_probability),
                 composite_score: scenario.composite_scenario_score,
+                source_panel_count: structural_source_panel_count(prior_stats),
+                last_offline_seed_source: structural_last_offline_seed_source(prior_stats),
             })
             .or_else(|| {
                 scenario_summary.map(|summary| {
@@ -733,11 +745,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         experience_prior,
                         current_posterior: None,
                         composite_score: experience_prior,
+                        source_panel_count: structural_source_panel_count(prior_stats),
+                        last_offline_seed_source: structural_last_offline_seed_source(prior_stats),
                     }
                 })
             })
     });
     let path = path_id.and_then(|id| {
+        let prior_stats = structural_prior_state.paths.get(id);
         playbook
             .path_plan
             .paths
@@ -754,6 +769,8 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 experience_prior: path.path_prior,
                 current_posterior: Some(path.path_posterior),
                 composite_score: path.composite_preference_score,
+                source_panel_count: structural_source_panel_count(prior_stats),
+                last_offline_seed_source: structural_last_offline_seed_source(prior_stats),
             })
             .or_else(|| {
                 path_summary.map(|summary| {
@@ -772,6 +789,8 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         experience_prior,
                         current_posterior: None,
                         composite_score: experience_prior,
+                        source_panel_count: structural_source_panel_count(prior_stats),
+                        last_offline_seed_source: structural_last_offline_seed_source(prior_stats),
                     }
                 })
             })
@@ -806,6 +825,12 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_state.nodes.get(node_id),
                     structural_history_adjusted_node_prior(playbook.node.belief_prior, node_summary),
                 ),
+            ),
+            source_panel_count: structural_source_panel_count(
+                structural_prior_state.nodes.get(node_id),
+            ),
+            last_offline_seed_source: structural_last_offline_seed_source(
+                structural_prior_state.nodes.get(node_id),
             ),
         }),
         branch,
@@ -2182,6 +2207,18 @@ fn structural_selected_entry_quality(snapshot: &WorkflowSnapshot) -> Option<Stri
                 .map(|candidate| candidate.pre_bayes_bridge_selected_entry_quality.clone())
                 .filter(|value| !value.trim().is_empty())
         })
+}
+
+fn structural_source_panel_count(prior_stats: Option<&StructuralPriorStats>) -> usize {
+    prior_stats
+        .map(|stats| stats.source_panel_summaries.len())
+        .unwrap_or(0)
+}
+
+fn structural_last_offline_seed_source(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<String> {
+    prior_stats.and_then(|stats| stats.last_offline_seed_source.clone())
 }
 
 fn structural_selected_entry_quality_probability(snapshot: &WorkflowSnapshot) -> Option<f64> {

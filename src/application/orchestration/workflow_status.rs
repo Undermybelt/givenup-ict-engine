@@ -4552,12 +4552,80 @@ mod tests {
             sample_structural_feedback_history()[0].clone(),
             sample_structural_feedback_history()[1].clone(),
         ];
+        let mut structural_prior_state = crate::state::StructuralPriorLearningState::default();
+        structural_prior_state.paths.insert(
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary".to_string(),
+            crate::state::StructuralPriorStats {
+                observations: 3,
+                followed_count: 3,
+                wins: 2,
+                losses: 1,
+                breakevens: 0,
+                invalidated: 0,
+                abandoned: 0,
+                not_followed: 0,
+                avg_pnl: 0.01,
+                weighted_followed_mass: 2.05,
+                weighted_success_mass: 1.30,
+                weighted_failure_mass: 0.75,
+                weighted_invalidation_mass: 0.0,
+                smoothed_prior: 0.5483870968,
+                source_panel_summaries: std::collections::BTreeMap::from([
+                    (
+                        "analyze".to_string(),
+                        crate::state::StructuralPriorSourceSummary {
+                            observations: 1,
+                            followed_count: 1,
+                            wins: 1,
+                            losses: 0,
+                            breakevens: 0,
+                            invalidated: 0,
+                            abandoned: 0,
+                            not_followed: 0,
+                            avg_pnl: 0.01,
+                            weighted_followed_mass: 0.30,
+                            weighted_success_mass: 0.30,
+                            weighted_failure_mass: 0.0,
+                            weighted_invalidation_mass: 0.0,
+                            smoothed_prior: 0.5652173913,
+                            last_recommendation_id: Some("rec-analyze".to_string()),
+                            last_recommended_at: Some("2026-04-30T00:00:00Z".to_string()),
+                            last_note: Some("analyze_run_structural_prior_seed".to_string()),
+                        },
+                    ),
+                    (
+                        "backtest".to_string(),
+                        crate::state::StructuralPriorSourceSummary {
+                            observations: 2,
+                            followed_count: 2,
+                            wins: 1,
+                            losses: 1,
+                            breakevens: 0,
+                            invalidated: 0,
+                            abandoned: 0,
+                            not_followed: 0,
+                            avg_pnl: 0.01,
+                            weighted_followed_mass: 1.50,
+                            weighted_success_mass: 0.75,
+                            weighted_failure_mass: 0.75,
+                            weighted_invalidation_mass: 0.0,
+                            smoothed_prior: 0.5,
+                            last_recommendation_id: Some("rec-backtest".to_string()),
+                            last_recommended_at: Some("2026-04-30T01:00:00Z".to_string()),
+                            last_note: Some("backtest_run_structural_prior_seed".to_string()),
+                        },
+                    ),
+                ]),
+                last_offline_seed_source: Some("backtest".to_string()),
+            },
+        );
 
-        let value = build_workflow_status_phase_value(
+        let value = build_workflow_status_phase_value_with_structural_prior_state(
             &snapshot,
             &[],
             &sample_provider_agent_surface(),
             &history,
+            &structural_prior_state,
             "structural-experience-priors",
         )
         .unwrap();
@@ -4569,6 +4637,8 @@ mod tests {
         );
         assert_eq!(value["path"]["historical_total_records"], 3);
         assert!(value["path"]["experience_prior"].as_f64().unwrap() > 0.5);
+        assert_eq!(value["path"]["source_panel_count"], 2);
+        assert_eq!(value["path"]["last_offline_seed_source"], "backtest");
         assert_eq!(
             value["branch"]["entity_id"],
             "NQ:belief_regime_node:trend:trend_follow_through"
@@ -4579,11 +4649,12 @@ mod tests {
             "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
         );
 
-        let blocked_value = build_workflow_status_phase_value(
+        let blocked_value = build_workflow_status_phase_value_with_structural_prior_state(
             &sample_human_workflow_snapshot(),
             &[],
             &sample_provider_agent_surface(),
             &history,
+            &structural_prior_state,
             "structural-experience-priors",
         )
         .unwrap();
