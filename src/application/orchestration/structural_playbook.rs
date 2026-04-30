@@ -1659,8 +1659,29 @@ fn structural_resolved_smoothed_prior(
     fallback: f64,
 ) -> f64 {
     prior_stats
-        .map(|stats| stats.smoothed_prior)
+        .map(|stats| {
+            structural_panel_derived_smoothed_prior(stats).unwrap_or(stats.smoothed_prior)
+        })
         .unwrap_or(fallback)
+}
+
+fn structural_panel_derived_smoothed_prior(stats: &StructuralPriorStats) -> Option<f64> {
+    let success_mass: f64 = stats
+        .source_panel_summaries
+        .values()
+        .map(|summary| summary.weighted_success_mass.max(0.0))
+        .sum();
+    let failure_mass: f64 = stats
+        .source_panel_summaries
+        .values()
+        .map(|summary| summary.weighted_failure_mass.max(0.0))
+        .sum();
+    if success_mass <= f64::EPSILON && failure_mass <= f64::EPSILON {
+        return None;
+    }
+    let alpha = 1.0 + success_mass;
+    let beta = 1.0 + failure_mass;
+    Some((alpha / (alpha + beta)).clamp(0.0, 1.0))
 }
 
 fn structural_resolved_observations(

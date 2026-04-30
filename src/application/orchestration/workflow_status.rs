@@ -4668,6 +4668,133 @@ mod tests {
     }
 
     #[test]
+    fn structural_experience_prior_surface_prefers_panel_derived_prior_over_stale_aggregate_prior() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let mut structural_prior_state = crate::state::StructuralPriorLearningState::default();
+        structural_prior_state.paths.insert(
+            "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary".to_string(),
+            crate::state::StructuralPriorStats {
+                observations: 3,
+                followed_count: 3,
+                wins: 2,
+                losses: 1,
+                breakevens: 0,
+                invalidated: 0,
+                abandoned: 0,
+                not_followed: 0,
+                avg_pnl: 0.01,
+                weighted_followed_mass: 1.8,
+                weighted_success_mass: 0.9,
+                weighted_failure_mass: 0.9,
+                weighted_invalidation_mass: 0.0,
+                smoothed_prior: 0.95,
+                source_panel_summaries: std::collections::BTreeMap::from([
+                    (
+                        "analyze".to_string(),
+                        crate::state::StructuralPriorSourceSummary {
+                            observations: 1,
+                            followed_count: 1,
+                            wins: 1,
+                            losses: 0,
+                            breakevens: 0,
+                            invalidated: 0,
+                            abandoned: 0,
+                            not_followed: 0,
+                            avg_pnl: 0.01,
+                            weighted_followed_mass: 0.3,
+                            weighted_success_mass: 0.3,
+                            weighted_failure_mass: 0.0,
+                            weighted_invalidation_mass: 0.0,
+                            smoothed_prior: 0.5652173913,
+                            last_recommendation_id: None,
+                            last_recommended_at: None,
+                            last_note: None,
+                        },
+                    ),
+                    (
+                        "backtest".to_string(),
+                        crate::state::StructuralPriorSourceSummary {
+                            observations: 2,
+                            followed_count: 2,
+                            wins: 1,
+                            losses: 1,
+                            breakevens: 0,
+                            invalidated: 0,
+                            abandoned: 0,
+                            not_followed: 0,
+                            avg_pnl: 0.01,
+                            weighted_followed_mass: 1.5,
+                            weighted_success_mass: 0.6,
+                            weighted_failure_mass: 0.9,
+                            weighted_invalidation_mass: 0.0,
+                            smoothed_prior: 0.4444444444,
+                            last_recommendation_id: None,
+                            last_recommended_at: None,
+                            last_note: None,
+                        },
+                    ),
+                ]),
+                last_offline_seed_source: Some("backtest".to_string()),
+            },
+        );
+
+        let value = build_workflow_status_phase_value_with_structural_prior_state(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &structural_prior_state,
+            "structural-experience-priors",
+        )
+        .unwrap();
+
+        let prior = value["path"]["experience_prior"].as_f64().unwrap();
+        assert!(prior < 0.60);
+        assert!(prior > 0.45);
+    }
+
+    #[test]
     fn workflow_status_phase_structural_top_path_candidates_ranks_paths() {
         let mut snapshot = WorkflowSnapshot::default();
         snapshot.symbol = "NQ".to_string();
