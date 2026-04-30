@@ -4365,8 +4365,9 @@ mod tests {
                 avg_pnl: 0.028,
                 weighted_followed_mass: 4.0,
                 weighted_success_mass: 3.5,
+                weighted_failure_mass: 0.5,
                 weighted_invalidation_mass: 0.0,
-                smoothed_prior: 0.82,
+                smoothed_prior: 0.75,
             },
         );
 

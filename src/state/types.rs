@@ -82,6 +82,8 @@ pub struct StructuralPriorStats {
     #[serde(default)]
     pub weighted_success_mass: f64,
     #[serde(default)]
+    pub weighted_failure_mass: f64,
+    #[serde(default)]
     pub weighted_invalidation_mass: f64,
     pub smoothed_prior: f64,
 }
@@ -3152,20 +3154,32 @@ fn update_structural_prior_stats(
                 stats.weighted_success_mass += source_weight;
             }
         }
-        "loss" => stats.losses += 1,
+        "loss" => {
+            stats.losses += 1;
+            if followed_path {
+                stats.weighted_failure_mass += source_weight;
+            }
+        }
         "breakeven" => {
             stats.breakevens += 1;
             if followed_path {
                 stats.weighted_success_mass += source_weight * 0.5;
+                stats.weighted_failure_mass += source_weight * 0.5;
             }
         }
         "invalidated" => {
             stats.invalidated += 1;
             if followed_path {
                 stats.weighted_invalidation_mass += source_weight;
+                stats.weighted_failure_mass += source_weight * 1.25;
             }
         }
-        "abandoned" => stats.abandoned += 1,
+        "abandoned" => {
+            stats.abandoned += 1;
+            if followed_path {
+                stats.weighted_failure_mass += source_weight * 0.75;
+            }
+        }
         _ => {}
     }
     refresh_structural_smoothed_prior(stats);
@@ -3191,6 +3205,10 @@ fn apply_structural_prior_seed_to_stats(
     stats.weighted_followed_mass += source_weight * seed.followed_count as f64;
     stats.weighted_success_mass +=
         source_weight * (seed.wins as f64 + seed.breakevens as f64 * 0.5);
+    stats.weighted_failure_mass += source_weight
+        * (seed.losses as f64 + seed.breakevens as f64 * 0.5)
+        + source_weight * seed.invalidated as f64 * 1.25
+        + source_weight * seed.abandoned as f64 * 0.75;
     stats.weighted_invalidation_mass += source_weight * seed.invalidated as f64;
     let new_total = previous_observations + seed.observations;
     stats.avg_pnl = if new_total == 0 {
@@ -3218,9 +3236,9 @@ fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
     stats.smoothed_prior = if stats.weighted_followed_mass <= f64::EPSILON {
         0.5
     } else {
-        let empirical_success = stats.weighted_success_mass / stats.weighted_followed_mass;
-        let sample_weight = (stats.weighted_followed_mass / 5.0).min(1.0);
-        (0.5 * (1.0 - sample_weight) + empirical_success * sample_weight).clamp(0.0, 1.0)
+        let alpha = 1.0 + stats.weighted_success_mass.max(0.0);
+        let beta = 1.0 + stats.weighted_failure_mass.max(0.0);
+        (alpha / (alpha + beta)).clamp(0.0, 1.0)
     };
 }
 
@@ -3535,6 +3553,85 @@ mod tests {
                     .unwrap()
                     .smoothed_prior
         );
+    }
+
+    #[test]
+    fn test_live_structural_feedback_loss_adds_failure_mass_and_pushes_prior_below_neutral() {
+        let refs = StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-loss".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "node-loss".to_string(),
+            branch_id: "branch-loss".to_string(),
+            scenario_id: "scenario-loss".to_string(),
+            path_id: "path-loss".to_string(),
+            followed_path: true,
+            exit_reason: Some("stop_hit".to_string()),
+            notes: None,
+        };
+        let mut feedback = sample_feedback();
+        feedback.source = "structural_feedback_submission".to_string();
+        feedback.realized_outcome = "loss".to_string();
+        feedback.pnl = -0.02;
+        feedback.structural_feedback = Some(refs);
+
+        let mut state = LearningState::default();
+        state.apply_structural_feedback(&[feedback]);
+
+        let path = state
+            .structural_prior_state
+            .paths
+            .get("path-loss")
+            .expect("path prior state");
+        assert!(path.weighted_failure_mass > 0.0);
+        assert!(path.smoothed_prior < 0.5);
+    }
+
+    #[test]
+    fn test_invalidated_feedback_counts_more_failure_mass_than_plain_loss() {
+        let mut invalidated_feedback = sample_feedback();
+        invalidated_feedback.source = "structural_feedback_submission".to_string();
+        invalidated_feedback.realized_outcome = "invalidated".to_string();
+        invalidated_feedback.pnl = -0.01;
+        invalidated_feedback.structural_feedback = Some(StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-invalidated".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "node-invalidated".to_string(),
+            branch_id: "branch-invalidated".to_string(),
+            scenario_id: "scenario-invalidated".to_string(),
+            path_id: "path-invalidated".to_string(),
+            followed_path: true,
+            exit_reason: Some("invalidation".to_string()),
+            notes: None,
+        });
+        let mut loss_feedback = invalidated_feedback.clone();
+        if let Some(refs) = loss_feedback.structural_feedback.as_mut() {
+            refs.recommendation_id = "rec-loss".to_string();
+            refs.node_id = "node-loss".to_string();
+            refs.branch_id = "branch-loss".to_string();
+            refs.scenario_id = "scenario-loss".to_string();
+            refs.path_id = "path-loss".to_string();
+        }
+        loss_feedback.realized_outcome = "loss".to_string();
+
+        let mut invalidated_state = LearningState::default();
+        invalidated_state.apply_structural_feedback(&[invalidated_feedback]);
+        let mut loss_state = LearningState::default();
+        loss_state.apply_structural_feedback(&[loss_feedback]);
+
+        let invalidated_path = invalidated_state
+            .structural_prior_state
+            .paths
+            .get("path-invalidated")
+            .expect("invalidated path prior state");
+        let loss_path = loss_state
+            .structural_prior_state
+            .paths
+            .get("path-loss")
+            .expect("loss path prior state");
+        assert!(invalidated_path.weighted_failure_mass > loss_path.weighted_failure_mass);
+        assert!(invalidated_path.smoothed_prior < loss_path.smoothed_prior);
     }
 
     #[test]
