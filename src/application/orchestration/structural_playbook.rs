@@ -2201,8 +2201,7 @@ fn top_level_command(snapshot: &WorkflowSnapshot) -> String {
 }
 
 fn structural_posterior_confidence(snapshot: &WorkflowSnapshot) -> f64 {
-    snapshot
-        .latest_ensemble_vote
+    resolved_latest_ensemble_vote(snapshot)
         .as_ref()
         .and_then(|vote| vote.posterior_confidence.or(Some(vote.confidence)))
         .unwrap_or_else(|| {
@@ -2226,7 +2225,7 @@ fn structural_primary_probability(snapshot: &WorkflowSnapshot) -> f64 {
 }
 
 fn structural_primary_prior(snapshot: &WorkflowSnapshot) -> f64 {
-    if let Some(vote) = snapshot.latest_ensemble_vote.as_ref() {
+    if let Some(vote) = resolved_latest_ensemble_vote(snapshot).as_ref() {
         if !vote.posterior_probabilities.is_empty() {
             return (1.0 / vote.posterior_probabilities.len() as f64).clamp(0.0, 1.0);
         }
@@ -2304,8 +2303,7 @@ fn structural_active_regime(snapshot: &WorkflowSnapshot) -> Option<String> {
         .first()
         .map(|(regime, _)| regime.clone())
         .or_else(|| {
-            snapshot
-                .latest_ensemble_vote
+            resolved_latest_ensemble_vote(snapshot)
                 .as_ref()
                 .and_then(|vote| canonical_structural_regime_label(&vote.posterior_active_regime))
         })

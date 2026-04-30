@@ -4149,6 +4149,7 @@ mod tests {
         .unwrap();
 
         assert_eq!(value["node"]["node_id"], "NQ:belief_regime_node:trend");
+        assert_eq!(value["node"]["posterior_confidence"], 0.78);
         assert_eq!(
             value["branch_set"]["branches"][0]["posterior_probability"],
             0.78
