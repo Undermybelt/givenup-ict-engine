@@ -394,15 +394,9 @@ pub fn resolved_ensemble_vote_for_snapshot(
     vote: &crate::state::EnsembleVoteRecord,
 ) -> Option<crate::state::EnsembleVoteRecord> {
     let mut vote = vote.clone();
-    let analyze = snapshot.latest_analyze.as_ref()?;
-    if vote.source_phase != "analyze" {
-        return Some(vote);
-    }
-    if vote.source_run_id.as_deref() != Some(analyze.run_id.as_str()) {
-        return Some(vote);
-    }
+    let phase = matching_phase_snapshot_for_ensemble_vote(snapshot, &vote)?;
     let Some((active_regime, probabilities, confidence)) =
-        canonical_analyze_regime_surface(analyze)
+        canonical_phase_regime_surface(phase)
     else {
         return Some(vote);
     };
@@ -415,36 +409,60 @@ pub fn resolved_ensemble_vote_for_snapshot(
     Some(vote)
 }
 
-pub fn canonical_analyze_regime_surface(
-    analyze: &crate::state::WorkflowPhaseSnapshot,
+fn matching_phase_snapshot_for_ensemble_vote<'a>(
+    snapshot: &'a WorkflowSnapshot,
+    vote: &crate::state::EnsembleVoteRecord,
+) -> Option<&'a crate::state::WorkflowPhaseSnapshot> {
+    [
+        snapshot.latest_update.as_ref(),
+        snapshot.latest_research.as_ref(),
+        snapshot.latest_analyze.as_ref(),
+        snapshot.latest_backtest.as_ref(),
+        snapshot.latest_train.as_ref(),
+    ]
+    .into_iter()
+    .flatten()
+    .find(|phase| {
+        let phase_matches = vote.source_phase == phase.phase
+            || (phase.phase == "research" && vote.source_phase == "factor-research")
+            || (phase.phase == "backtest" && vote.source_phase == "factor-backtest");
+        phase_matches
+            && vote
+                .source_run_id
+                .as_deref()
+                .map(|run_id| run_id == phase.run_id)
+                .unwrap_or(false)
+    })
+}
+
+pub fn canonical_phase_regime_surface(
+    phase: &crate::state::WorkflowPhaseSnapshot,
 ) -> Option<(String, std::collections::BTreeMap<String, f64>, f64)> {
-    if !analyze.canonical_structural_probabilities.is_empty() {
-        let active_regime = analyze
+    if !phase.canonical_structural_probabilities.is_empty() {
+        let active_regime = phase
             .canonical_structural_active_regime
             .clone()
             .or_else(|| {
-                analyze
+                phase
                     .canonical_structural_probabilities
                     .iter()
                     .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
                     .map(|(label, _)| label.clone())
             })?;
-        let confidence = analyze
-            .canonical_structural_confidence
-            .unwrap_or_else(|| {
-                analyze
-                    .canonical_structural_probabilities
-                    .get(&active_regime)
-                    .copied()
-                    .unwrap_or(0.0)
-            });
+        let confidence = phase.canonical_structural_confidence.unwrap_or_else(|| {
+            phase
+                .canonical_structural_probabilities
+                .get(&active_regime)
+                .copied()
+                .unwrap_or(0.0)
+        });
         return Some((
             active_regime,
-            analyze.canonical_structural_probabilities.clone(),
+            phase.canonical_structural_probabilities.clone(),
             confidence,
         ));
     }
-    let distribution = analyze.pre_bayes_soft_evidence.get("market_regime")?;
+    let distribution = phase.pre_bayes_soft_evidence.get("market_regime")?;
     let mut probabilities = std::collections::BTreeMap::new();
     for (label, probability) in distribution {
         if let Some(canonical) = canonical_structural_regime_label(label) {
@@ -454,7 +472,7 @@ pub fn canonical_analyze_regime_surface(
     if probabilities.is_empty() {
         return None;
     }
-    let active_regime = analyze
+    let active_regime = phase
         .pre_bayes_filtered_assignments
         .get("market_regime")
         .and_then(|value| canonical_structural_regime_label(value))
@@ -466,6 +484,12 @@ pub fn canonical_analyze_regime_surface(
         })?;
     let confidence = probabilities.get(&active_regime).copied().unwrap_or(0.0);
     Some((active_regime, probabilities, confidence))
+}
+
+pub fn canonical_analyze_regime_surface(
+    analyze: &crate::state::WorkflowPhaseSnapshot,
+) -> Option<(String, std::collections::BTreeMap<String, f64>, f64)> {
+    canonical_phase_regime_surface(analyze)
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]

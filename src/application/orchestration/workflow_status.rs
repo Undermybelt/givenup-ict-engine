@@ -4539,6 +4539,71 @@ mod tests {
     }
 
     #[test]
+    fn workflow_status_phase_ensemble_vote_prefers_canonical_research_regime_surface() {
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            latest_research: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "research".to_string(),
+                run_id: "research:1".to_string(),
+                canonical_structural_active_regime: Some("range".to_string()),
+                canonical_structural_confidence: Some(0.61),
+                canonical_structural_probabilities: std::collections::BTreeMap::from([
+                    ("trend".to_string(), 0.21),
+                    ("range".to_string(), 0.61),
+                    ("transition".to_string(), 0.18),
+                ]),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            latest_ensemble_vote: Some(EnsembleVoteRecord {
+                artifact_id: "ensemble-vote:research:test".to_string(),
+                generated_at: Utc::now(),
+                symbol: "NQ".to_string(),
+                source_phase: "research".to_string(),
+                source_run_id: Some("research:1".to_string()),
+                provenance: RunProvenance::default(),
+                dataset_comparability: DatasetComparability::default(),
+                ensemble_version: "ensemble-audit-v2".to_string(),
+                final_action: "observe".to_string(),
+                recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next"
+                    .to_string(),
+                human_next_triage: "hard_blocked=false ensemble_action=observe".to_string(),
+                hard_block: EnsembleHardBlockArtifact::default(),
+                confidence: 0.20,
+                consensus_strength: 0.20,
+                disagreement_flags: Vec::new(),
+                executor_summaries: Vec::new(),
+                split_explanations: Vec::new(),
+                executor_scorecards: Vec::new(),
+                executor_scorecards_source: None,
+                posterior_fingerprint: "fp-raw".to_string(),
+                posterior_normalization_status: "normalized".to_string(),
+                posterior_active_regime: "bull".to_string(),
+                posterior_confidence: Some(0.20),
+                posterior_probabilities: std::collections::BTreeMap::from([
+                    ("bull".to_string(), 0.20),
+                    ("range".to_string(), 0.60),
+                    ("transition".to_string(), 0.20),
+                ]),
+                posterior_evidence: vec!["raw".to_string()],
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            "ensemble-vote",
+        )
+        .unwrap();
+
+        assert_eq!(value["posterior_active_regime"], "range");
+        assert_eq!(value["posterior_confidence"], 0.61);
+        assert_eq!(value["posterior_probabilities"]["range"], 0.61);
+    }
+
+    #[test]
     fn workflow_status_phase_structural_feedback_template_exposes_stable_ids() {
         let snapshot = sample_human_workflow_snapshot();
         let value = build_workflow_status_phase_value(
