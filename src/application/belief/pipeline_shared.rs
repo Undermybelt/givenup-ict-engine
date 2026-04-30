@@ -448,8 +448,13 @@ fn apply_structural_prior_state_to_belief_report(
         .iter()
         .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(Ordering::Equal))
         .map(|(regime, _)| regime.clone());
-    report.regime_posterior.active_regime = active_regime;
-    report.regime_posterior.probabilities = canonical_probabilities;
+    report.regime_posterior.active_regime = active_regime.clone();
+    report.regime_posterior.probabilities = canonical_probabilities.clone();
+    synchronize_market_regime_belief_snapshot(
+        report,
+        active_regime.as_deref(),
+        &canonical_probabilities,
+    );
 }
 
 fn canonical_structural_regime_label(label: &str) -> Option<String> {
@@ -487,6 +492,42 @@ fn latest_structural_branch_id_for_symbol(
                 .then_with(|| left.recommendation_id.cmp(&right.recommendation_id))
         })
         .map(|event| event.branch_id.clone())
+}
+
+fn synchronize_market_regime_belief_snapshot(
+    report: &mut BeliefReportPacket,
+    active_regime: Option<&str>,
+    canonical_probabilities: &BTreeMap<String, f64>,
+) {
+    let Some(snapshot) = report
+        .belief_posteriors
+        .iter_mut()
+        .find(|item| item.node_id == "market_regime")
+    else {
+        return;
+    };
+    let top_state = active_regime
+        .map(str::to_string)
+        .or_else(|| {
+            canonical_probabilities
+                .iter()
+                .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(Ordering::Equal))
+                .map(|(regime, _)| regime.clone())
+        })
+        .unwrap_or_else(|| "state_unavailable".to_string());
+    let top_probability = canonical_probabilities
+        .get(&top_state)
+        .copied()
+        .unwrap_or_default();
+    let entropy = canonical_probabilities
+        .values()
+        .filter(|value| **value > 0.0)
+        .map(|value| -value * value.ln())
+        .sum();
+    snapshot.top_state = top_state;
+    snapshot.top_probability = top_probability;
+    snapshot.entropy = entropy;
+    snapshot.probabilities = canonical_probabilities.clone();
 }
 
 pub fn market_category_from_symbol(symbol: &str) -> &'static str {

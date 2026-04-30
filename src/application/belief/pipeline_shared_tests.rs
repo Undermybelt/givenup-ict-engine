@@ -214,6 +214,16 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
         .evidence
         .iter()
         .any(|line| line.contains("duration_persistence_prior")));
+    let market_regime = report
+        .belief_posteriors
+        .iter()
+        .find(|item| item.node_id == "market_regime")
+        .expect("market_regime posterior");
+    assert_eq!(market_regime.top_state, "trend");
+    assert_eq!(
+        market_regime.top_probability,
+        report.regime_posterior.probabilities["trend"]
+    );
 }
 
 #[test]
