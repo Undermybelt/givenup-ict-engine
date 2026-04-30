@@ -682,63 +682,15 @@ pub(crate) fn run_factor_research(
         )?;
     }
     report.workflow_snapshot = refresh_workflow_snapshot(state_dir, symbol)?;
-    let research_support_hint = crate::analyze_shared::offline_structural_support_hint(
-        crate::analyze_shared::OfflineStructuralSupportHintInput {
-            baseline_support: crate::analyze_shared::structural_baseline_support(
-                report
+    let research_support_hint =
+        crate::analyze_shared::structural_support_hint_for_research(
+            crate::analyze_shared::ResearchStructuralSupportInput {
+                baseline_composite_score: report
                     .backtest
                     .scorecards
                     .first()
                     .map(|score| score.composite_score),
-                0.50,
-            ),
-            aggregate_return: Some(report.aggregate_return),
-            execution_readiness: research_execution_fields.execution_readiness,
-            comparable_to_previous: report.dataset_comparability.comparable,
-            feedback_records_applied: report.feedback_records_applied,
-            conformal_coverage_1sigma: report
-                .backtest
-                .factor_results
-                .first()
-                .map(|result| result.metrics.conformal_coverage_1sigma),
-            regime_break_penalty: report
-                .backtest
-                .factor_results
-                .first()
-                .map(|result| result.metrics.regime_break_penalty),
-            structural_break_detected: report
-                .backtest
-                .factor_results
-                .first()
-                .map(|result| result.metrics.structural_break_detected),
-            best_factor_composite_score: report
-                .backtest
-                .scorecards
-                .first()
-                .map(|score| score.composite_score),
-            quality_delta: first_score_delta,
-            score_before: None,
-            score_after: None,
-            baseline_available: None,
-            accepted: None,
-        },
-    );
-    crate::analyze_shared::apply_offline_structural_prior_seed(
-        &mut learning_state,
-        &report.workflow_snapshot,
-        &format!("structural-prior-seed:{}", research_run_record.run_id),
-        run_timestamp,
-        research_support_hint,
-        "research_run_structural_prior_seed",
-    );
-    if let Some(evaluation) = mutation_evaluation.as_ref() {
-        let mutation_support_hint = crate::analyze_shared::offline_structural_support_hint(
-            crate::analyze_shared::OfflineStructuralSupportHintInput {
-                baseline_support: crate::analyze_shared::structural_baseline_support(
-                    Some(evaluation.metrics_after.best_factor_composite_score),
-                    0.50,
-                ),
-                aggregate_return: Some(report.aggregate_return),
+                aggregate_return: report.aggregate_return,
                 execution_readiness: research_execution_fields.execution_readiness,
                 comparable_to_previous: report.dataset_comparability.comparable,
                 feedback_records_applied: report.feedback_records_applied,
@@ -757,14 +709,53 @@ pub(crate) fn run_factor_research(
                     .factor_results
                     .first()
                     .map(|result| result.metrics.structural_break_detected),
-                best_factor_composite_score: Some(evaluation.metrics_after.best_factor_composite_score),
-                quality_delta: Some(evaluation.score_delta),
-                score_before: Some(evaluation.score_before),
-                score_after: Some(evaluation.score_after),
-                baseline_available: Some(evaluation.baseline_available),
-                accepted: Some(evaluation.accepted),
+                quality_delta: first_score_delta,
+                family_avg_score: report
+                    .factor_family_decisions
+                    .iter()
+                    .map(|family| family.avg_score)
+                    .max_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal)),
             },
         );
+    crate::analyze_shared::apply_offline_structural_prior_seed(
+        &mut learning_state,
+        &report.workflow_snapshot,
+        &format!("structural-prior-seed:{}", research_run_record.run_id),
+        run_timestamp,
+        research_support_hint,
+        "research_run_structural_prior_seed",
+    );
+    if let Some(evaluation) = mutation_evaluation.as_ref() {
+        let mutation_support_hint =
+            crate::analyze_shared::structural_support_hint_for_mutation(
+                crate::analyze_shared::MutationStructuralSupportInput {
+                    baseline_composite_score: report
+                        .backtest
+                        .scorecards
+                        .first()
+                        .map(|score| score.composite_score),
+                    aggregate_return: report.aggregate_return,
+                    execution_readiness: research_execution_fields.execution_readiness,
+                    comparable_to_previous: report.dataset_comparability.comparable,
+                    feedback_records_applied: report.feedback_records_applied,
+                    conformal_coverage_1sigma: report
+                        .backtest
+                        .factor_results
+                        .first()
+                        .map(|result| result.metrics.conformal_coverage_1sigma),
+                    regime_break_penalty: report
+                        .backtest
+                        .factor_results
+                        .first()
+                        .map(|result| result.metrics.regime_break_penalty),
+                    structural_break_detected: report
+                        .backtest
+                        .factor_results
+                        .first()
+                        .map(|result| result.metrics.structural_break_detected),
+                    evaluation,
+                },
+            );
         crate::analyze_shared::apply_offline_structural_prior_seed(
             &mut learning_state,
             &report.workflow_snapshot,

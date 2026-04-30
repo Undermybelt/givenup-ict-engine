@@ -19,6 +19,46 @@ pub(crate) struct OfflineStructuralSupportHintInput {
     pub accepted: Option<bool>,
 }
 
+#[derive(Debug, Clone, Copy, Default)]
+pub(crate) struct ResearchStructuralSupportInput {
+    pub baseline_composite_score: Option<f64>,
+    pub aggregate_return: f64,
+    pub execution_readiness: Option<f64>,
+    pub comparable_to_previous: bool,
+    pub feedback_records_applied: usize,
+    pub conformal_coverage_1sigma: Option<f64>,
+    pub regime_break_penalty: Option<f64>,
+    pub structural_break_detected: Option<bool>,
+    pub quality_delta: Option<f64>,
+    pub family_avg_score: Option<f64>,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub(crate) struct MutationStructuralSupportInput<'a> {
+    pub baseline_composite_score: Option<f64>,
+    pub aggregate_return: f64,
+    pub execution_readiness: Option<f64>,
+    pub comparable_to_previous: bool,
+    pub feedback_records_applied: usize,
+    pub conformal_coverage_1sigma: Option<f64>,
+    pub regime_break_penalty: Option<f64>,
+    pub structural_break_detected: Option<bool>,
+    pub evaluation: &'a FactorMutationEvaluation,
+}
+
+#[derive(Debug, Clone, Copy, Default)]
+pub(crate) struct BacktestStructuralSupportInput {
+    pub baseline_composite_score: Option<f64>,
+    pub aggregate_return: f64,
+    pub execution_readiness: Option<f64>,
+    pub comparable_to_previous: bool,
+    pub feedback_records_applied: usize,
+    pub conformal_coverage_1sigma: Option<f64>,
+    pub regime_break_penalty: Option<f64>,
+    pub structural_break_detected: Option<bool>,
+    pub quality_delta: Option<f64>,
+}
+
 pub(crate) fn offline_structural_support_hint(input: OfflineStructuralSupportHintInput) -> f64 {
     let mut support = input.baseline_support.clamp(0.0, 1.0);
     if let Some(readiness) = input.execution_readiness {
@@ -79,6 +119,95 @@ pub(crate) fn structural_baseline_support(
     fallback: f64,
 ) -> f64 {
     score.unwrap_or(fallback).clamp(0.0, 1.0)
+}
+
+pub(crate) fn structural_support_hint_for_analyze(
+    posterior_confidence: f64,
+    execution_readiness: Option<f64>,
+    comparable_to_previous: bool,
+    feedback_records_applied: usize,
+) -> f64 {
+    offline_structural_support_hint(OfflineStructuralSupportHintInput {
+        baseline_support: structural_baseline_support(Some(posterior_confidence), 0.50),
+        aggregate_return: None,
+        execution_readiness,
+        comparable_to_previous,
+        feedback_records_applied,
+        conformal_coverage_1sigma: None,
+        regime_break_penalty: None,
+        structural_break_detected: None,
+        best_factor_composite_score: None,
+        quality_delta: None,
+        score_before: None,
+        score_after: None,
+        baseline_available: None,
+        accepted: None,
+    })
+}
+
+pub(crate) fn structural_support_hint_for_research(input: ResearchStructuralSupportInput) -> f64 {
+    offline_structural_support_hint(OfflineStructuralSupportHintInput {
+        baseline_support: structural_baseline_support(input.baseline_composite_score, 0.50),
+        aggregate_return: Some(input.aggregate_return),
+        execution_readiness: input.execution_readiness,
+        comparable_to_previous: input.comparable_to_previous,
+        feedback_records_applied: input.feedback_records_applied,
+        conformal_coverage_1sigma: input.conformal_coverage_1sigma,
+        regime_break_penalty: input.regime_break_penalty,
+        structural_break_detected: input.structural_break_detected,
+        best_factor_composite_score: input.family_avg_score.or(input.baseline_composite_score),
+        quality_delta: input.quality_delta,
+        score_before: None,
+        score_after: None,
+        baseline_available: None,
+        accepted: None,
+    })
+}
+
+pub(crate) fn structural_support_hint_for_mutation(
+    input: MutationStructuralSupportInput<'_>,
+) -> f64 {
+    offline_structural_support_hint(OfflineStructuralSupportHintInput {
+        baseline_support: structural_baseline_support(
+            Some(input.evaluation.metrics_after.best_factor_composite_score)
+                .or(input.baseline_composite_score),
+            0.50,
+        ),
+        aggregate_return: Some(input.aggregate_return),
+        execution_readiness: input.execution_readiness,
+        comparable_to_previous: input.comparable_to_previous,
+        feedback_records_applied: input.feedback_records_applied,
+        conformal_coverage_1sigma: input.conformal_coverage_1sigma,
+        regime_break_penalty: input.regime_break_penalty,
+        structural_break_detected: input.structural_break_detected,
+        best_factor_composite_score: Some(input.evaluation.metrics_after.best_factor_composite_score),
+        quality_delta: Some(input.evaluation.score_delta),
+        score_before: Some(input.evaluation.score_before),
+        score_after: Some(input.evaluation.score_after),
+        baseline_available: Some(input.evaluation.baseline_available),
+        accepted: Some(input.evaluation.accepted),
+    })
+}
+
+pub(crate) fn structural_support_hint_for_backtest(
+    input: BacktestStructuralSupportInput,
+) -> f64 {
+    offline_structural_support_hint(OfflineStructuralSupportHintInput {
+        baseline_support: structural_baseline_support(input.baseline_composite_score, 0.50),
+        aggregate_return: Some(input.aggregate_return),
+        execution_readiness: input.execution_readiness,
+        comparable_to_previous: input.comparable_to_previous,
+        feedback_records_applied: input.feedback_records_applied,
+        conformal_coverage_1sigma: input.conformal_coverage_1sigma,
+        regime_break_penalty: input.regime_break_penalty,
+        structural_break_detected: input.structural_break_detected,
+        best_factor_composite_score: input.baseline_composite_score,
+        quality_delta: input.quality_delta,
+        score_before: None,
+        score_after: None,
+        baseline_available: None,
+        accepted: None,
+    })
 }
 
 pub(crate) fn structural_prior_seed_from_support_hint(
@@ -318,24 +447,14 @@ pub(crate) fn persist_analyze_run(
         &structural_snapshot,
         &format!("structural-prior-seed:{}", analyze_run_record.run_id),
         analyze_run_record.timestamp,
-        offline_structural_support_hint(OfflineStructuralSupportHintInput {
-            baseline_support: analyze_ensemble_record
+        structural_support_hint_for_analyze(
+            analyze_ensemble_record
                 .posterior_confidence
                 .unwrap_or(analyze_ensemble_record.confidence),
-            aggregate_return: None,
-            execution_readiness: analyze_run_record.execution_readiness,
-            comparable_to_previous: analyze_run_record.dataset_comparability.comparable,
-            feedback_records_applied: analyze_run_record.feedback_history_summary.total_records,
-            conformal_coverage_1sigma: None,
-            regime_break_penalty: None,
-            structural_break_detected: None,
-            best_factor_composite_score: None,
-            quality_delta: None,
-            score_before: None,
-            score_after: None,
-            baseline_available: None,
-            accepted: None,
-        }),
+            analyze_run_record.execution_readiness,
+            analyze_run_record.dataset_comparability.comparable,
+            analyze_run_record.feedback_history_summary.total_records,
+        ),
         "analyze_run_structural_prior_seed",
     );
     save_learning_state(state_dir, &report.symbol, &learning_state)?;
@@ -891,6 +1010,67 @@ mod tests {
         assert_eq!(structural_baseline_support(None, 0.50), 0.50);
         assert_eq!(structural_baseline_support(Some(1.40), 0.50), 1.0);
         assert_eq!(structural_baseline_support(Some(-0.20), 0.50), 0.0);
+    }
+
+    #[test]
+    fn test_structural_support_hint_for_research_uses_family_quality() {
+        let low = structural_support_hint_for_research(ResearchStructuralSupportInput {
+            baseline_composite_score: Some(0.58),
+            aggregate_return: 0.01,
+            execution_readiness: Some(0.60),
+            comparable_to_previous: true,
+            feedback_records_applied: 1,
+            conformal_coverage_1sigma: Some(0.65),
+            regime_break_penalty: Some(0.08),
+            structural_break_detected: Some(false),
+            quality_delta: Some(0.01),
+            family_avg_score: Some(0.42),
+        });
+        let high = structural_support_hint_for_research(ResearchStructuralSupportInput {
+            family_avg_score: Some(0.76),
+            ..ResearchStructuralSupportInput {
+                baseline_composite_score: Some(0.58),
+                aggregate_return: 0.01,
+                execution_readiness: Some(0.60),
+                comparable_to_previous: true,
+                feedback_records_applied: 1,
+                conformal_coverage_1sigma: Some(0.65),
+                regime_break_penalty: Some(0.08),
+                structural_break_detected: Some(false),
+                quality_delta: Some(0.01),
+                family_avg_score: Some(0.42),
+            }
+        });
+
+        assert!(high > low);
+    }
+
+    #[test]
+    fn test_structural_support_hint_for_backtest_penalizes_breaks() {
+        let low = structural_support_hint_for_backtest(BacktestStructuralSupportInput {
+            baseline_composite_score: Some(0.68),
+            aggregate_return: 0.02,
+            execution_readiness: Some(0.70),
+            comparable_to_previous: true,
+            feedback_records_applied: 1,
+            conformal_coverage_1sigma: Some(0.48),
+            regime_break_penalty: Some(0.22),
+            structural_break_detected: Some(true),
+            quality_delta: Some(-0.02),
+        });
+        let high = structural_support_hint_for_backtest(BacktestStructuralSupportInput {
+            baseline_composite_score: Some(0.68),
+            aggregate_return: 0.02,
+            execution_readiness: Some(0.70),
+            comparable_to_previous: true,
+            feedback_records_applied: 1,
+            conformal_coverage_1sigma: Some(0.82),
+            regime_break_penalty: Some(0.04),
+            structural_break_detected: Some(false),
+            quality_delta: Some(0.02),
+        });
+
+        assert!(high > low);
     }
 
     #[test]
