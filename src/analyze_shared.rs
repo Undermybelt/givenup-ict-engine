@@ -1,13 +1,9 @@
 use super::*;
 use ict_engine::application::provider_catalog::provider_status_agent_surface;
 
-fn structural_prior_seed_from_analyze_run(
-    run: &AnalyzeRunRecord,
-    bundle: &ict_engine::application::orchestration::StructuralRecommendedPathBundleArtifact,
+pub(crate) fn structural_prior_seed_from_support_hint(
+    support: f64,
 ) -> ict_engine::state::StructuralPriorSeed {
-    let execution_readiness = run.execution_readiness.unwrap_or(bundle.current_posterior);
-    let support = ((bundle.current_posterior + bundle.composite_score + execution_readiness) / 3.0)
-        .clamp(0.0, 1.0);
     let (observations, wins, breakevens, losses) = if support >= 0.75 {
         (3, 2, 1, 0)
     } else if support >= 0.60 {
@@ -27,6 +23,51 @@ fn structural_prior_seed_from_analyze_run(
         abandoned: 0,
         not_followed: 0,
         avg_pnl: (support - 0.5) * 0.04,
+    }
+}
+
+pub(crate) fn apply_offline_structural_prior_seed(
+    learning_state: &mut LearningState,
+    snapshot: &WorkflowSnapshot,
+    recommendation_id: &str,
+    recommended_at: chrono::DateTime<chrono::Utc>,
+    support_hint: f64,
+    note: &str,
+) {
+    let provider_status_agent = provider_status_agent_surface(None, None, None).unwrap_or_default();
+    if let Some(bundle) =
+        ict_engine::application::orchestration::build_structural_recommended_path_bundle_artifact_with_prior_state(
+            snapshot,
+            &provider_status_agent,
+            learning_state.feedback_history.as_slice(),
+            &learning_state.structural_prior_state,
+        )
+    {
+        let branch_id = bundle
+            .scenario_id
+            .strip_prefix("scenario:")
+            .unwrap_or(bundle.scenario_id.as_str())
+            .to_string();
+        let node_id = branch_id
+            .rsplit_once(':')
+            .map(|(prefix, _)| prefix.to_string())
+            .unwrap_or_else(|| branch_id.clone());
+        let refs = ict_engine::state::StructuralFeedbackRefs {
+            protocol_version: "structural-prior-seed-v1".to_string(),
+            recommendation_id: recommendation_id.to_string(),
+            recommended_at: recommended_at.to_rfc3339(),
+            node_id,
+            branch_id,
+            scenario_id: bundle.scenario_id.clone(),
+            path_id: bundle.path_id.clone(),
+            followed_path: true,
+            exit_reason: Some("offline_prior_seed".to_string()),
+            notes: Some(note.to_string()),
+        };
+        let support = ((bundle.current_posterior + bundle.composite_score + support_hint) / 3.0)
+            .clamp(0.0, 1.0);
+        let seed = structural_prior_seed_from_support_hint(support);
+        learning_state.apply_structural_prior_seed(&refs, &seed);
     }
 }
 
@@ -190,41 +231,17 @@ pub(crate) fn persist_analyze_run(
         latest_ensemble_vote: Some(analyze_ensemble_record.clone()),
         ..WorkflowSnapshot::default()
     };
-    let provider_status_agent =
-        provider_status_agent_surface(None, None, None).unwrap_or_default();
-    if let Some(bundle) =
-        ict_engine::application::orchestration::build_structural_recommended_path_bundle_artifact_with_prior_state(
-            &structural_snapshot,
-            &provider_status_agent,
-            learning_state.feedback_history.as_slice(),
-            &learning_state.structural_prior_state,
-        )
-    {
-        let branch_id = bundle
-            .scenario_id
-            .strip_prefix("scenario:")
-            .unwrap_or(bundle.scenario_id.as_str())
-            .to_string();
-        let node_id = branch_id
-            .rsplit_once(':')
-            .map(|(prefix, _)| prefix.to_string())
-            .unwrap_or_else(|| branch_id.clone());
-        let refs = ict_engine::state::StructuralFeedbackRefs {
-            protocol_version: "structural-prior-seed-v1".to_string(),
-            recommendation_id: format!("structural-prior-seed:{}", analyze_run_record.run_id),
-            recommended_at: analyze_run_record.timestamp.to_rfc3339(),
-            node_id,
-            branch_id,
-            scenario_id: bundle.scenario_id.clone(),
-            path_id: bundle.path_id.clone(),
-            followed_path: true,
-            exit_reason: Some("offline_prior_seed".to_string()),
-            notes: Some("analyze_run_structural_prior_seed".to_string()),
-        };
-        let seed = structural_prior_seed_from_analyze_run(&analyze_run_record, &bundle);
-        learning_state.apply_structural_prior_seed(&refs, &seed);
-        save_learning_state(state_dir, &report.symbol, &learning_state)?;
-    }
+    apply_offline_structural_prior_seed(
+        &mut learning_state,
+        &structural_snapshot,
+        &format!("structural-prior-seed:{}", analyze_run_record.run_id),
+        analyze_run_record.timestamp,
+        analyze_run_record
+            .execution_readiness
+            .unwrap_or(analyze_ensemble_record.posterior_confidence.unwrap_or(analyze_ensemble_record.confidence)),
+        "analyze_run_structural_prior_seed",
+    );
+    save_learning_state(state_dir, &report.symbol, &learning_state)?;
     persist_ensemble_vote_record(state_dir, &analyze_ensemble_record, &canonical_scorecards)?;
     append_pre_bayes_policy_history(
         state_dir,

@@ -9066,6 +9066,7 @@ mod tests {
         assert!(snapshot.latest_research.is_some());
         assert!(snapshot.latest_ensemble_vote.is_some());
         assert_eq!(snapshot.current_focus_phase, "research");
+        assert!(!learning_state.structural_prior_state.paths.is_empty());
         assert!(snapshot
             .latest_research
             .as_ref()
@@ -9254,6 +9255,7 @@ mod tests {
         assert!(runs[0].hybrid_remaining_expected_bars.is_none());
         assert!(snapshot.latest_backtest.is_some());
         assert_eq!(snapshot.current_focus_phase, "backtest");
+        assert!(!learning_state.structural_prior_state.paths.is_empty());
     }
 
     #[test]

@@ -305,7 +305,7 @@ pub(crate) fn run_factor_backtest(
         state_dir,
         symbol,
         BacktestRunRecord {
-            run_id,
+            run_id: run_id.clone(),
             timestamp: run_timestamp,
             symbol: symbol.to_string(),
             provenance: report.provenance.clone(),
@@ -462,6 +462,25 @@ pub(crate) fn run_factor_backtest(
         None,
     )?;
     report.workflow_snapshot = refresh_workflow_snapshot(state_dir, symbol)?;
+    let backtest_support_hint =
+        backtest_execution_fields.execution_readiness.unwrap_or({
+            if report.aggregate_return > 0.0 {
+                0.65
+            } else if report.aggregate_return < 0.0 {
+                0.35
+            } else {
+                0.50
+            }
+        });
+    crate::analyze_shared::apply_offline_structural_prior_seed(
+        &mut learning_state,
+        &report.workflow_snapshot,
+        &format!("structural-prior-seed:{}", run_id),
+        run_timestamp,
+        backtest_support_hint,
+        "backtest_run_structural_prior_seed",
+    );
+    save_learning_state(state_dir, symbol, &learning_state)?;
     report.artifact_decision_summary = artifact_decision_summary_from_snapshot(
         &report.workflow_snapshot,
         &report.artifact_action_summary,
