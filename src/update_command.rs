@@ -1,6 +1,30 @@
 use super::*;
 use ict_engine::application::entry_models::export_policy_training_tables;
 
+fn structural_prior_seed_from_artifact_validation(
+    summary: &ict_engine::state::ArtifactDecisionSummary,
+) -> Option<ict_engine::state::StructuralPriorSeed> {
+    let (observations, wins, breakevens, losses, avg_pnl) =
+        match summary.consumed_trend_status.as_str() {
+            "validated_positive" | "validated_improving" => (2, 2, 0, 0, 0.03),
+            "validated_negative" | "validated_regressing" => (2, 0, 0, 2, -0.03),
+            "validated_neutral" => (1, 0, 1, 0, 0.0),
+            _ => return None,
+        };
+    Some(ict_engine::state::StructuralPriorSeed {
+        source_label: "artifact_validation".to_string(),
+        observations,
+        followed_count: observations,
+        wins,
+        losses,
+        breakevens,
+        invalidated: 0,
+        abandoned: 0,
+        not_followed: 0,
+        avg_pnl,
+    })
+}
+
 pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
     let UpdateCommandInput {
         symbol,
@@ -625,6 +649,52 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         &mut report.promotion_decision,
         &mut report.rollback_recommendation,
     );
+    if let (Some(refs), Some(seed)) = (
+        report.structural_feedback.as_ref(),
+        structural_prior_seed_from_artifact_validation(&report.artifact_decision_summary),
+    ) {
+        learning_state.apply_structural_prior_seed(refs, &seed);
+        save_learning_state(state_dir, symbol, &learning_state)?;
+    }
 
     emit_update_output(&report, ensemble)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_structural_prior_seed_from_artifact_validation_maps_status() {
+        let positive = structural_prior_seed_from_artifact_validation(
+            &ict_engine::state::ArtifactDecisionSummary {
+                consumed_trend_status: "validated_positive".to_string(),
+                ..ict_engine::state::ArtifactDecisionSummary::default()
+            },
+        )
+        .expect("positive seed");
+        let regressing = structural_prior_seed_from_artifact_validation(
+            &ict_engine::state::ArtifactDecisionSummary {
+                consumed_trend_status: "validated_regressing".to_string(),
+                ..ict_engine::state::ArtifactDecisionSummary::default()
+            },
+        )
+        .expect("regressing seed");
+        let neutral = structural_prior_seed_from_artifact_validation(
+            &ict_engine::state::ArtifactDecisionSummary {
+                consumed_trend_status: "validated_neutral".to_string(),
+                ..ict_engine::state::ArtifactDecisionSummary::default()
+            },
+        )
+        .expect("neutral seed");
+
+        assert_eq!(positive.source_label, "artifact_validation");
+        assert_eq!(positive.wins, 2);
+        assert_eq!(regressing.losses, 2);
+        assert_eq!(neutral.breakevens, 1);
+        assert!(structural_prior_seed_from_artifact_validation(
+            &ict_engine::state::ArtifactDecisionSummary::default()
+        )
+        .is_none());
+    }
 }

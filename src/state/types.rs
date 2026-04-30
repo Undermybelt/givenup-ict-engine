@@ -3205,6 +3205,7 @@ fn apply_structural_prior_seed_to_stats(
 fn structural_prior_source_weight(source: &str) -> f64 {
     match source.trim() {
         "structural_feedback_submission" | "update_structural_feedback" | "live_feedback" => 1.0,
+        "artifact_validation" => 0.90,
         "backtest" | "backtest_run_structural_prior_seed" => 0.75,
         "research" | "research_run_structural_prior_seed" => 0.55,
         "factor_mutation_structural_prior_seed" | "factor_mutation" => 0.40,
