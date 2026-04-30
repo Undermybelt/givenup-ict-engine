@@ -380,6 +380,58 @@ pub struct StructuralPathOutcomeSummary {
     pub last_realized_outcome: Option<String>,
 }
 
+pub fn resolved_latest_ensemble_vote(
+    snapshot: &WorkflowSnapshot,
+) -> Option<crate::state::EnsembleVoteRecord> {
+    let mut vote = snapshot.latest_ensemble_vote.clone()?;
+    let analyze = snapshot.latest_analyze.as_ref()?;
+    if vote.source_phase != "analyze" {
+        return Some(vote);
+    }
+    if vote.source_run_id.as_deref() != Some(analyze.run_id.as_str()) {
+        return Some(vote);
+    }
+    let Some((active_regime, probabilities, confidence)) =
+        canonical_analyze_regime_surface(analyze)
+    else {
+        return Some(vote);
+    };
+    vote.posterior_active_regime = active_regime;
+    vote.posterior_probabilities = probabilities;
+    vote.posterior_confidence = Some(confidence);
+    vote.confidence = confidence;
+    vote.consensus_strength = confidence;
+    vote.posterior_normalization_status = "canonical_structural_regime_posterior".to_string();
+    Some(vote)
+}
+
+pub fn canonical_analyze_regime_surface(
+    analyze: &crate::state::WorkflowPhaseSnapshot,
+) -> Option<(String, std::collections::BTreeMap<String, f64>, f64)> {
+    let distribution = analyze.pre_bayes_soft_evidence.get("market_regime")?;
+    let mut probabilities = std::collections::BTreeMap::new();
+    for (label, probability) in distribution {
+        if let Some(canonical) = canonical_structural_regime_label(label) {
+            *probabilities.entry(canonical).or_insert(0.0) += *probability;
+        }
+    }
+    if probabilities.is_empty() {
+        return None;
+    }
+    let active_regime = analyze
+        .pre_bayes_filtered_assignments
+        .get("market_regime")
+        .and_then(|value| canonical_structural_regime_label(value))
+        .or_else(|| {
+            probabilities
+                .iter()
+                .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
+                .map(|(label, _)| label.clone())
+        })?;
+    let confidence = probabilities.get(&active_regime).copied().unwrap_or(0.0);
+    Some((active_regime, probabilities, confidence))
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct StructuralPathArtifact {
     pub path_id: String,
@@ -2211,7 +2263,7 @@ fn structural_sorted_regime_probabilities(
 
 fn structural_ensemble_regime_probabilities(snapshot: &WorkflowSnapshot) -> Vec<(String, f64)> {
     let mut aggregated = std::collections::BTreeMap::new();
-    if let Some(vote) = snapshot.latest_ensemble_vote.as_ref() {
+    if let Some(vote) = resolved_latest_ensemble_vote(snapshot).as_ref() {
         for (regime, probability) in &vote.posterior_probabilities {
             if let Some(canonical) = canonical_structural_regime_label(regime) {
                 *aggregated.entry(canonical).or_insert(0.0) += *probability;
@@ -2281,8 +2333,7 @@ fn structural_regime_probabilities(snapshot: &WorkflowSnapshot) -> Vec<(String, 
         return analyze;
     }
 
-    snapshot
-        .latest_ensemble_vote
+    resolved_latest_ensemble_vote(snapshot)
         .as_ref()
         .and_then(|vote| canonical_structural_regime_label(&vote.posterior_active_regime))
         .map(|regime| vec![(regime, structural_posterior_confidence(snapshot))])
@@ -2312,7 +2363,7 @@ fn structural_regime_supporting_evidence(
 
 fn structural_market_context(snapshot: &WorkflowSnapshot) -> Vec<String> {
     let mut out = Vec::new();
-    if let Some(vote) = snapshot.latest_ensemble_vote.as_ref() {
+    if let Some(vote) = resolved_latest_ensemble_vote(snapshot).as_ref() {
         if !vote.posterior_active_regime.trim().is_empty() {
             out.push(format!(
                 "posterior_active_regime={}",
