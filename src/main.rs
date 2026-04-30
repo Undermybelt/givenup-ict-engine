@@ -388,6 +388,9 @@ struct BuildWorkflowSnapshotInput<'a> {
     state_dir: &'a str,
     symbol: &'a str,
     analyze_runs: &'a [AnalyzeRunRecord],
+    research_runs: &'a [ResearchRunRecord],
+    backtest_runs: &'a [BacktestRunRecord],
+    update_runs: &'a [UpdateRunRecord],
     latest_train: Option<&'a TrainRunRecord>,
     latest_analyze: Option<&'a AnalyzeRunRecord>,
     latest_research: Option<&'a ResearchRunRecord>,
@@ -397,6 +400,15 @@ struct BuildWorkflowSnapshotInput<'a> {
     pending_update_history: &'a [PendingUpdateArtifact],
     execution_candidate_history: &'a [ExecutionCandidateArtifact],
     artifact_ledger: &'a [ArtifactLedgerEntry],
+}
+
+struct EnsembleVoteOverlayInput<'a> {
+    recent_ensemble_votes: Vec<EnsembleVoteRecord>,
+    analyze_runs: &'a [AnalyzeRunRecord],
+    research_runs: &'a [ResearchRunRecord],
+    backtest_runs: &'a [BacktestRunRecord],
+    update_runs: &'a [UpdateRunRecord],
+    latest_analyze: Option<&'a AnalyzeRunRecord>,
 }
 
 struct UpdateCommandInput<'a> {
@@ -3170,6 +3182,9 @@ fn refresh_workflow_snapshot(state_dir: &str, symbol: &str) -> Result<WorkflowSn
         state_dir,
         symbol,
         analyze_runs: &analyze_runs,
+        research_runs: &research_runs,
+        backtest_runs: &backtest_runs,
+        update_runs: &update_runs,
         latest_train: train_runs.last(),
         latest_analyze: analyze_runs.last(),
         latest_research: research_runs.last(),
@@ -3189,6 +3204,9 @@ fn build_workflow_snapshot(input: BuildWorkflowSnapshotInput<'_>) -> WorkflowSna
         state_dir,
         symbol,
         analyze_runs,
+        research_runs,
+        backtest_runs,
+        update_runs,
         latest_train,
         latest_analyze,
         latest_research,
@@ -3234,12 +3252,14 @@ fn build_workflow_snapshot(input: BuildWorkflowSnapshotInput<'_>) -> WorkflowSna
         .into_iter()
         .rev()
         .collect::<Vec<_>>();
-    recent_ensemble_votes =
-        overlay_or_synthesize_analyze_ensemble_votes(
-            recent_ensemble_votes,
-            analyze_runs,
-            latest_analyze,
-        );
+    recent_ensemble_votes = overlay_or_synthesize_phase_ensemble_votes(EnsembleVoteOverlayInput {
+        recent_ensemble_votes,
+        analyze_runs,
+        research_runs,
+        backtest_runs,
+        update_runs,
+        latest_analyze,
+    });
     let recent_artifacts = artifact_ledger
         .iter()
         .rev()
@@ -3426,12 +3446,23 @@ fn build_workflow_snapshot(input: BuildWorkflowSnapshotInput<'_>) -> WorkflowSna
     }
 }
 
-fn overlay_or_synthesize_analyze_ensemble_votes(
-    mut recent_ensemble_votes: Vec<EnsembleVoteRecord>,
-    analyze_runs: &[AnalyzeRunRecord],
-    latest_analyze: Option<&AnalyzeRunRecord>,
+fn overlay_or_synthesize_phase_ensemble_votes(
+    input: EnsembleVoteOverlayInput<'_>,
 ) -> Vec<EnsembleVoteRecord> {
-    if analyze_runs.is_empty() && latest_analyze.is_none() {
+    let EnsembleVoteOverlayInput {
+        mut recent_ensemble_votes,
+        analyze_runs,
+        research_runs,
+        backtest_runs,
+        update_runs,
+        latest_analyze,
+    } = input;
+    if analyze_runs.is_empty()
+        && research_runs.is_empty()
+        && backtest_runs.is_empty()
+        && update_runs.is_empty()
+        && latest_analyze.is_none()
+    {
         return recent_ensemble_votes;
     }
 
@@ -3439,6 +3470,30 @@ fn overlay_or_synthesize_analyze_ensemble_votes(
         .iter()
         .filter_map(|run| {
             run.canonical_structural_regime_posterior
+                .as_ref()
+                .map(|canonical| (run.run_id.as_str(), canonical))
+        })
+        .collect::<std::collections::BTreeMap<_, _>>();
+    let research_by_run_id = research_runs
+        .iter()
+        .filter_map(|run| {
+            run.canonical_structural_regime_posterior
+                .as_ref()
+                .map(|canonical| (run.run_id.as_str(), canonical))
+        })
+        .collect::<std::collections::BTreeMap<_, _>>();
+    let backtest_by_run_id = backtest_runs
+        .iter()
+        .filter_map(|run| {
+            run.canonical_structural_regime_posterior
+                .as_ref()
+                .map(|canonical| (run.run_id.as_str(), canonical))
+        })
+        .collect::<std::collections::BTreeMap<_, _>>();
+    let update_by_run_id = update_runs
+        .iter()
+        .filter_map(|run| {
+            run.consumed_canonical_structural_regime_posterior
                 .as_ref()
                 .map(|canonical| (run.run_id.as_str(), canonical))
         })
@@ -3456,11 +3511,15 @@ fn overlay_or_synthesize_analyze_ensemble_votes(
     }
 
     for vote in &mut recent_ensemble_votes {
-        if vote.source_phase != "analyze" {
-            continue;
-        }
         if let Some(run_id) = vote.source_run_id.as_deref() {
-            if let Some(canonical) = analyze_by_run_id.get(run_id) {
+            let canonical = match vote.source_phase.as_str() {
+                "analyze" => analyze_by_run_id.get(run_id).copied(),
+                "factor-research" | "research" => research_by_run_id.get(run_id).copied(),
+                "factor-backtest" | "backtest" => backtest_by_run_id.get(run_id).copied(),
+                "update" => update_by_run_id.get(run_id).copied(),
+                _ => None,
+            };
+            if let Some(canonical) = canonical {
                 overlay_analyze_canonical_regime_on_ensemble_vote(vote, canonical);
             }
         }
@@ -10574,6 +10633,9 @@ mod tests {
             state_dir: "state",
             symbol: "NQ",
             analyze_runs: &[],
+            research_runs: &[],
+            backtest_runs: &[],
+            update_runs: &[],
             latest_train: None,
             latest_analyze: None,
             latest_research: None,
@@ -11296,6 +11358,9 @@ mod tests {
             state_dir: "state",
             symbol: "NQ",
             analyze_runs: std::slice::from_ref(&analyze),
+            research_runs: &[],
+            backtest_runs: &[],
+            update_runs: std::slice::from_ref(&update),
             latest_train: None,
             latest_analyze: Some(&analyze),
             latest_research: None,
@@ -12923,6 +12988,9 @@ mod tests {
             state_dir: "state",
             symbol: "NQ",
             analyze_runs: &[],
+            research_runs: &[],
+            backtest_runs: &[],
+            update_runs: &[],
             latest_train: None,
             latest_analyze: None,
             latest_research: None,
@@ -12977,6 +13045,9 @@ mod tests {
             state_dir: "state",
             symbol: "NQ",
             analyze_runs: std::slice::from_ref(&analyze),
+            research_runs: &[],
+            backtest_runs: &[],
+            update_runs: &[],
             latest_train: None,
             latest_analyze: Some(&analyze),
             latest_research: None,
@@ -13064,6 +13135,9 @@ mod tests {
             state_dir: temp.path().to_str().unwrap(),
             symbol: "NQ",
             analyze_runs: std::slice::from_ref(&analyze),
+            research_runs: &[],
+            backtest_runs: &[],
+            update_runs: &[],
             latest_train: None,
             latest_analyze: Some(&analyze),
             latest_research: None,
@@ -13163,6 +13237,9 @@ mod tests {
             state_dir: temp.path().to_str().unwrap(),
             symbol: "NQ",
             analyze_runs: &[analyze_old.clone(), analyze_latest.clone()],
+            research_runs: &[],
+            backtest_runs: &[],
+            update_runs: &[],
             latest_train: None,
             latest_analyze: Some(&analyze_latest),
             latest_research: None,
@@ -13179,6 +13256,91 @@ mod tests {
             .last()
             .expect("older recent analyze vote");
         assert_eq!(vote.source_run_id.as_deref(), Some("analyze:old"));
+        assert_eq!(vote.posterior_active_regime, "range");
+        assert_eq!(vote.posterior_confidence, Some(0.61));
+        assert_eq!(vote.posterior_probabilities["range"], 0.61);
+    }
+
+    #[test]
+    fn test_workflow_snapshot_overlays_recent_research_ensemble_history_with_matching_run() {
+        let temp = tempfile::tempdir().unwrap();
+        let research = ResearchRunRecord {
+            run_id: "research:1".to_string(),
+            symbol: "NQ".to_string(),
+            canonical_structural_regime_posterior: Some(
+                ict_engine::state::CanonicalStructuralRegimePosterior {
+                    active_regime: Some("range".to_string()),
+                    confidence: Some(0.61),
+                    probabilities: BTreeMap::from([
+                        ("trend".to_string(), 0.21),
+                        ("range".to_string(), 0.61),
+                        ("transition".to_string(), 0.18),
+                    ]),
+                    evidence: vec!["legacy_range_bias".to_string()],
+                },
+            ),
+            ..ResearchRunRecord::default()
+        };
+        append_ensemble_vote_history(
+            temp.path(),
+            "NQ",
+            EnsembleVoteRecord {
+                artifact_id: "ensemble-vote:research:test".to_string(),
+                generated_at: Utc::now(),
+                symbol: "NQ".to_string(),
+                source_phase: "factor-research".to_string(),
+                source_run_id: Some("research:1".to_string()),
+                provenance: RunProvenance::default(),
+                dataset_comparability: DatasetComparability::default(),
+                ensemble_version: "ensemble-audit-v2".to_string(),
+                final_action: "observe".to_string(),
+                recommended_command:
+                    "ict-engine workflow-status --symbol NQ --phase human-next".to_string(),
+                human_next_triage: "history-research".to_string(),
+                hard_block: ict_engine::application::orchestration::EnsembleHardBlockArtifact::default(),
+                confidence: 0.20,
+                consensus_strength: 0.20,
+                disagreement_flags: Vec::new(),
+                executor_summaries: Vec::new(),
+                split_explanations: Vec::new(),
+                executor_scorecards: Vec::new(),
+                executor_scorecards_source: None,
+                posterior_fingerprint: "fp-research-raw".to_string(),
+                posterior_normalization_status: "normalized".to_string(),
+                posterior_active_regime: "bull".to_string(),
+                posterior_confidence: Some(0.20),
+                posterior_probabilities: BTreeMap::from([
+                    ("bull".to_string(), 0.20),
+                    ("range".to_string(), 0.60),
+                    ("transition".to_string(), 0.20),
+                ]),
+                posterior_evidence: vec!["raw-research".to_string()],
+            },
+        )
+        .unwrap();
+
+        let snapshot = build_workflow_snapshot(BuildWorkflowSnapshotInput {
+            state_dir: temp.path().to_str().unwrap(),
+            symbol: "NQ",
+            analyze_runs: &[],
+            research_runs: std::slice::from_ref(&research),
+            backtest_runs: &[],
+            update_runs: &[],
+            latest_train: None,
+            latest_analyze: None,
+            latest_research: Some(&research),
+            latest_backtest: None,
+            latest_update: None,
+            pre_bayes_policy_history: &[],
+            pending_update_history: &[],
+            execution_candidate_history: &[],
+            artifact_ledger: &[],
+        });
+
+        let vote = snapshot
+            .recent_ensemble_votes
+            .last()
+            .expect("recent research ensemble vote");
         assert_eq!(vote.posterior_active_regime, "range");
         assert_eq!(vote.posterior_confidence, Some(0.61));
         assert_eq!(vote.posterior_probabilities["range"], 0.61);
