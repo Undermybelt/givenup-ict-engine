@@ -31,6 +31,7 @@ pub const CISD_RB_TRAINING_SUMMARY_FILE: &str = "cisd_rb_training_export_summary
 pub const BREAKER_RB_BBN_TRAINING_FILE: &str = "breaker_rb_bbn_training.csv";
 pub const BREAKER_RB_CATBOOST_TRAINING_FILE: &str = "breaker_rb_catboost_training.csv";
 pub const BREAKER_RB_TRAINING_SUMMARY_FILE: &str = "breaker_rb_training_export_summary.json";
+const STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS: usize = 30;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
 struct CisdRbCollectedTrainingRows {
@@ -262,6 +263,12 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub calibration_expected_error: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub calibration_max_error: Option<f64>,
+    #[serde(default)]
+    pub production_validation_ready: bool,
+    #[serde(default)]
+    pub production_validation_rows: usize,
+    #[serde(default)]
+    pub production_validation_min_rows: usize,
     pub summary_path: String,
     pub csv_path: Option<String>,
     pub jsonl_path: Option<String>,
@@ -675,6 +682,10 @@ pub fn structural_path_ranking_target_training_status(
     let calibration_evaluation =
         structural_path_ranking_target_calibration_evaluation(&summary.jsonl_path)?;
     let calibration_quality_ready = calibration_evaluation.status == "evaluated";
+    let production_validation_rows = calibration_evaluation.propensity_weighted_rows;
+    let production_validation_min_rows = STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS;
+    let production_validation_ready =
+        calibration_quality_ready && production_validation_rows >= production_validation_min_rows;
     let mut warnings = Vec::new();
     if summary.rows == 0 {
         warnings.push("structural_path_ranking_target_rows_empty".to_string());
@@ -690,6 +701,12 @@ pub fn structural_path_ranking_target_training_status(
     }
     if !calibration_quality_ready {
         warnings.extend(calibration_evaluation.warnings.clone());
+    }
+    if !production_validation_ready {
+        warnings.push(format!(
+            "structural_path_ranking_target_production_validation_insufficient_rows:min={} observed={}",
+            production_validation_min_rows, production_validation_rows
+        ));
     }
     Ok(StructuralPathRankingTargetTrainingStatusSurface {
         export_ready: summary.rows > 0,
@@ -710,6 +727,9 @@ pub fn structural_path_ranking_target_training_status(
             .propensity_weighted_brier_score,
         calibration_expected_error: calibration_evaluation.expected_calibration_error,
         calibration_max_error: calibration_evaluation.max_calibration_error,
+        production_validation_ready,
+        production_validation_rows,
+        production_validation_min_rows,
         summary_path: summary.summary_path,
         csv_path: Some(summary.csv_path),
         jsonl_path: Some(summary.jsonl_path),
@@ -1646,6 +1666,12 @@ mod tests {
         assert!(status.export_ready);
         assert!(status.calibration_ready);
         assert!(status.calibration_quality_ready);
+        assert!(!status.production_validation_ready);
+        assert_eq!(status.production_validation_rows, 2);
+        assert_eq!(
+            status.production_validation_min_rows,
+            STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS
+        );
         assert_eq!(status.mature_rows, 2);
         assert_eq!(status.rows_with_execution_gate_status, 2);
         assert_eq!(status.rows_with_training_weight, 2);
@@ -1661,5 +1687,72 @@ mod tests {
                 < 1e-9
         );
         assert!((status.calibration_expected_error.unwrap() - 0.0).abs() < 1e-9);
+        assert!(status.warnings.iter().any(|warning| warning
+            .starts_with("structural_path_ranking_target_production_validation_insufficient_rows")));
+    }
+
+    #[test]
+    fn structural_path_ranking_target_training_status_reports_production_validation_ready() {
+        let temp = tempfile::tempdir().unwrap();
+        let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let row_count = STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS;
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: "NQ".to_string(),
+            rows: row_count,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 3,
+            mature_rows: row_count,
+            rows_with_propensity_estimate: row_count,
+            rows_with_calibrated_path_prob: row_count,
+            rows_with_path_prob_lower_bound: row_count,
+            rows_with_execution_gate_status: row_count,
+            rows_with_training_weight: row_count,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            summary_line: format!("structural_path_ranking_target rows={row_count}"),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        let jsonl = (0..row_count)
+            .map(|index| {
+                let state = if index % 2 == 0 {
+                    "matured_success"
+                } else {
+                    "matured_failure"
+                };
+                let probability = if state == "matured_success" { 0.8 } else { 0.2 };
+                serde_json::to_string(&structural_path_ranking_row(
+                    &format!("path-{index}"),
+                    probability,
+                    state,
+                ))
+                .unwrap()
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
+        std::fs::write(&jsonl_path, format!("{jsonl}\n")).unwrap();
+
+        let status =
+            structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
+                .unwrap();
+
+        assert!(status.calibration_quality_ready);
+        assert!(status.production_validation_ready);
+        assert_eq!(status.production_validation_rows, row_count);
+        assert!(!status.warnings.iter().any(|warning| warning
+            .starts_with("structural_path_ranking_target_production_validation_insufficient_rows")));
     }
 }

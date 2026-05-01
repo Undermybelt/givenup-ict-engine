@@ -240,10 +240,11 @@ Already in repo
 - `policy-training-status` also reports a clipped-IPS propensity-weighted Brier score for calibrated mature rows when `propensity_estimate` is available
 - calibrated target rows include advisory execution-gate status fields from `path_prob_lower_bound` and a fixed repo threshold, without blocking zero-config uncalibrated flows
 - target rows now carry mature reward labels plus clipped IPS/sample weights so a downstream ranker can train without treating censored rows as negatives
+- `policy-training-status` separates calibration-quality readiness from production-validation readiness by requiring enough propensity-weighted calibrated rows before declaring the target production-validatable
 
 Not yet in repo
 - propensity-aware model training loop
-- production calibration validation over enough exported raw-scored rows
+- trained-ranker production calibration validation over real exported raw-scored rows
 
 Suggested target stack
 1. train raw ranking score on realized / corrected outcomes
