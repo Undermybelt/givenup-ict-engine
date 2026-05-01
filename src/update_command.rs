@@ -57,6 +57,31 @@ fn append_learning_semantics_to_family_outcomes(
     }
 }
 
+fn append_learning_semantics_to_update_gate_prompts(
+    prompts: &mut ict_engine::agent::AgentPromptPack,
+    semantics_summary: &str,
+) {
+    if semantics_summary.is_empty() {
+        return;
+    }
+    for prompt in &mut prompts.prompts {
+        if prompt.id == "promotion_gate" || prompt.id == "rollback_review" {
+            if !prompt.user_prompt.contains("learning_semantics=") {
+                prompt.user_prompt =
+                    format!("{} learning_semantics={}", prompt.user_prompt, semantics_summary);
+            }
+            let criterion = "Use learning_semantics to distinguish full-credit, fractional-credit, and no-credit feedback before approving promotion or rollback.";
+            if !prompt
+                .success_criteria
+                .iter()
+                .any(|existing| existing == criterion)
+            {
+                prompt.success_criteria.push(criterion.to_string());
+            }
+        }
+    }
+}
+
 pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
     let UpdateCommandInput {
         symbol,
@@ -602,6 +627,10 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         &report.trade_outcome_deltas,
         &report.decision_thresholds,
     ));
+    append_learning_semantics_to_update_gate_prompts(
+        &mut report.agent_prompts,
+        &learning_semantics_summary,
+    );
     let update_execution_fields = derive_update_execution_fields(
         feedback_records_applied,
         &report.realized_outcome,

@@ -12460,6 +12460,12 @@ mod tests {
             .artifact_action_summary
             .iter()
             .any(|line| line.contains("learning_semantics=")));
+        assert!(runs[0]
+            .agent_prompts
+            .prompts
+            .iter()
+            .filter(|prompt| prompt.id == "promotion_gate" || prompt.id == "rollback_review")
+            .all(|prompt| prompt.user_prompt.contains("learning_semantics=")));
     }
 
     #[test]
