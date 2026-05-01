@@ -247,6 +247,8 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub rows_with_propensity_estimate: usize,
     pub rows_with_calibrated_path_prob: usize,
     #[serde(default)]
+    pub rows_with_execution_gate_status: usize,
+    #[serde(default)]
     pub calibration_evaluation_rows: usize,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub calibration_brier_score: Option<f64>,
@@ -697,6 +699,7 @@ pub fn structural_path_ranking_target_training_status(
         mature_rows: summary.mature_rows,
         rows_with_propensity_estimate: summary.rows_with_propensity_estimate,
         rows_with_calibrated_path_prob: summary.rows_with_calibrated_path_prob,
+        rows_with_execution_gate_status: summary.rows_with_execution_gate_status,
         calibration_evaluation_rows: calibration_evaluation.eligible_rows,
         calibration_brier_score: calibration_evaluation.brier_score,
         calibration_propensity_weighted_rows: calibration_evaluation.propensity_weighted_rows,
@@ -1374,6 +1377,9 @@ mod tests {
             raw_path_score: Some(calibrated_path_prob),
             calibrated_path_prob: Some(calibrated_path_prob),
             path_prob_lower_bound: Some((calibrated_path_prob - 0.1).clamp(0.0, 1.0)),
+            execution_gate_status: None,
+            execution_gate_min_path_prob: None,
+            execution_gate_reason: None,
             pending_reward_state: pending_reward_state.to_string(),
             maturity_mask: matches!(
                 pending_reward_state,
@@ -1580,6 +1586,7 @@ mod tests {
             rows_with_propensity_estimate: 2,
             rows_with_calibrated_path_prob: 2,
             rows_with_path_prob_lower_bound: 2,
+            rows_with_execution_gate_status: 2,
             csv_path: summary_dir
                 .join("structural_path_ranking_target.csv")
                 .to_string_lossy()
@@ -1622,6 +1629,7 @@ mod tests {
         assert!(status.calibration_ready);
         assert!(status.calibration_quality_ready);
         assert_eq!(status.mature_rows, 2);
+        assert_eq!(status.rows_with_execution_gate_status, 2);
         assert_eq!(status.calibration_evaluation_rows, 2);
         assert_eq!(status.calibration_propensity_weighted_rows, 2);
         assert!((status.calibration_brier_score.unwrap() - 0.04).abs() < 1e-9);

@@ -23,6 +23,7 @@ use crate::types::{Direction, Regime};
 const STRUCTURAL_PLAYBOOK_ARTIFACT_VERSION: &str = "structural-playbook-v1";
 const STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR: &str = "policy_training";
 const STRUCTURAL_PATH_RANKING_IPS_WEIGHT_CLIP: f64 = 5.0;
+const STRUCTURAL_PATH_RANKING_EXECUTION_GATE_MIN_PATH_PROB: f64 = 0.5;
 pub const STRUCTURAL_PATH_RANKING_TARGET_CSV_FILE: &str = "structural_path_ranking_target.csv";
 pub const STRUCTURAL_PATH_RANKING_TARGET_JSONL_FILE: &str = "structural_path_ranking_target.jsonl";
 pub const STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE: &str =
@@ -321,6 +322,8 @@ pub struct StructuralPathRankingTargetExportSummary {
     pub rows_with_calibrated_path_prob: usize,
     pub rows_with_path_prob_lower_bound: usize,
     pub rows_with_propensity_estimate: usize,
+    #[serde(default)]
+    pub rows_with_execution_gate_status: usize,
     pub csv_path: String,
     pub jsonl_path: String,
     pub summary_path: String,
@@ -395,6 +398,12 @@ pub struct StructuralPathRankingTargetRow {
     pub calibrated_path_prob: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path_prob_lower_bound: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub execution_gate_status: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub execution_gate_min_path_prob: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub execution_gate_reason: Option<String>,
     pub pending_reward_state: String,
     #[serde(default)]
     pub maturity_mask: bool,
@@ -1703,6 +1712,9 @@ pub fn build_structural_path_ranking_target_artifact_with_prior_state(
                 raw_path_score: path.catboost_score,
                 calibrated_path_prob: None,
                 path_prob_lower_bound: None,
+                execution_gate_status: None,
+                execution_gate_min_path_prob: None,
+                execution_gate_reason: None,
                 pending_reward_state,
                 maturity_mask,
                 maturity_weight: if maturity_mask { 1.0 } else { 0.0 },
@@ -1860,13 +1872,19 @@ fn structural_path_ranking_target_export_summary(
         .iter()
         .filter(|row| row.propensity_estimate.is_some())
         .count();
+    let rows_with_execution_gate_status = artifact
+        .rows
+        .iter()
+        .filter(|row| row.execution_gate_status.is_some())
+        .count();
     let summary_line = format!(
-        "structural_path_ranking_target rows={} candidate_set_size={} mature_rows={} propensity_rows={} calibrated_rows={}",
+        "structural_path_ranking_target rows={} candidate_set_size={} mature_rows={} propensity_rows={} calibrated_rows={} execution_gate_rows={}",
         rows,
         artifact.candidate_set_size,
         mature_rows,
         rows_with_propensity_estimate,
-        rows_with_calibrated_path_prob
+        rows_with_calibrated_path_prob,
+        rows_with_execution_gate_status
     );
     StructuralPathRankingTargetExportSummary {
         symbol: artifact.symbol.clone(),
@@ -1879,6 +1897,7 @@ fn structural_path_ranking_target_export_summary(
         rows_with_calibrated_path_prob,
         rows_with_path_prob_lower_bound,
         rows_with_propensity_estimate,
+        rows_with_execution_gate_status,
         csv_path: Path::new(state_dir)
             .join(symbol)
             .join(csv_name)
@@ -1986,6 +2005,7 @@ pub fn apply_structural_path_probability_calibration(
     if calibrated_rows == 0 {
         warnings.push("structural_path_probability_calibration_not_fitted".to_string());
     }
+    apply_structural_path_ranking_execution_gates(artifact);
     StructuralPathProbabilityCalibrationReport {
         status: status.to_string(),
         observed_rows,
@@ -1995,6 +2015,28 @@ pub fn apply_structural_path_probability_calibration(
         summary_line: format!(
             "structural_path_probability_calibration status={status} observed_rows={observed_rows} calibrated_rows={calibrated_rows}"
         ),
+    }
+}
+
+fn apply_structural_path_ranking_execution_gates(
+    artifact: &mut StructuralPathRankingTargetArtifact,
+) {
+    for row in &mut artifact.rows {
+        let Some(lower_bound) = row.path_prob_lower_bound else {
+            continue;
+        };
+        let lower_bound = lower_bound.clamp(0.0, 1.0);
+        let min_path_prob = STRUCTURAL_PATH_RANKING_EXECUTION_GATE_MIN_PATH_PROB;
+        let status = if lower_bound >= min_path_prob {
+            "pass"
+        } else {
+            "observe"
+        };
+        row.execution_gate_status = Some(status.to_string());
+        row.execution_gate_min_path_prob = Some(min_path_prob);
+        row.execution_gate_reason = Some(format!(
+            "path_prob_lower_bound={lower_bound:.3} min_path_prob={min_path_prob:.3}"
+        ));
     }
 }
 
@@ -2158,7 +2200,7 @@ fn render_structural_path_ranking_target_csv(
     artifact: &StructuralPathRankingTargetArtifact,
 ) -> String {
     let mut out = String::from(
-        "protocol_version,symbol,generated_at,candidate_set_id,candidate_set_size,rank,path_id,scenario_id,path_label,direction,raw_path_score,calibrated_path_prob,path_prob_lower_bound,pending_reward_state,maturity_mask,maturity_weight,propensity_estimate,regime_calibration_bucket,behavior_policy_probability,execution_propensity,experience_prior,current_posterior,structural_baseline_score\n",
+        "protocol_version,symbol,generated_at,candidate_set_id,candidate_set_size,rank,path_id,scenario_id,path_label,direction,raw_path_score,calibrated_path_prob,path_prob_lower_bound,execution_gate_status,execution_gate_min_path_prob,execution_gate_reason,pending_reward_state,maturity_mask,maturity_weight,propensity_estimate,regime_calibration_bucket,behavior_policy_probability,execution_propensity,experience_prior,current_posterior,structural_baseline_score\n",
     );
     for row in &artifact.rows {
         let fields = [
@@ -2175,6 +2217,9 @@ fn render_structural_path_ranking_target_csv(
             csv_optional_f64(row.raw_path_score),
             csv_optional_f64(row.calibrated_path_prob),
             csv_optional_f64(row.path_prob_lower_bound),
+            csv_optional_string(row.execution_gate_status.as_deref()),
+            csv_optional_f64(row.execution_gate_min_path_prob),
+            csv_optional_string(row.execution_gate_reason.as_deref()),
             csv_escape(&row.pending_reward_state),
             row.maturity_mask.to_string(),
             csv_f64(row.maturity_weight),
@@ -2198,6 +2243,10 @@ fn csv_f64(value: f64) -> String {
 
 fn csv_optional_f64(value: Option<f64>) -> String {
     value.map(csv_f64).unwrap_or_default()
+}
+
+fn csv_optional_string(value: Option<&str>) -> String {
+    value.map(csv_escape).unwrap_or_default()
 }
 
 fn csv_escape(value: &str) -> String {
@@ -4884,6 +4933,9 @@ mod tests {
             raw_path_score: Some(raw_path_score),
             calibrated_path_prob: None,
             path_prob_lower_bound: None,
+            execution_gate_status: None,
+            execution_gate_min_path_prob: None,
+            execution_gate_reason: None,
             pending_reward_state: pending_reward_state.to_string(),
             maturity_mask: matches!(
                 pending_reward_state,
@@ -4967,6 +5019,24 @@ mod tests {
             .iter()
             .filter(|row| row.raw_path_score.is_some())
             .all(|row| row.path_prob_lower_bound.is_some()));
+        assert!(artifact
+            .rows
+            .iter()
+            .filter(|row| row.raw_path_score.is_some())
+            .all(|row| row.execution_gate_status.as_deref() == Some("observe")));
+        assert!(artifact
+            .rows
+            .iter()
+            .filter(|row| row.raw_path_score.is_some())
+            .all(|row| row.execution_gate_min_path_prob == Some(0.5)));
+        assert_eq!(
+            artifact
+                .rows
+                .iter()
+                .find(|row| row.path_id == "path-no-score")
+                .and_then(|row| row.execution_gate_status.as_deref()),
+            None
+        );
     }
 
     #[test]

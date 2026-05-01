@@ -6736,6 +6736,7 @@ mod tests {
         .unwrap();
         assert_eq!(summary.rows, 3);
         assert_eq!(summary.mature_rows, 1);
+        assert_eq!(summary.rows_with_execution_gate_status, 0);
         assert_eq!(summary.candidate_set_id, value["candidate_set_id"]);
         assert_eq!(summary.pending_reward_states["matured_invalidated"], 1);
         assert!(std::path::Path::new(&summary.csv_path).exists());
@@ -6745,6 +6746,8 @@ mod tests {
         assert!(csv.contains("pending_reward_state"));
         assert!(csv.contains("maturity_mask"));
         assert!(csv.contains("maturity_weight"));
+        assert!(csv.contains("execution_gate_status"));
+        assert!(csv.contains("execution_gate_min_path_prob"));
         assert!(csv.contains("propensity_estimate"));
         let jsonl = std::fs::read_to_string(&summary.jsonl_path).unwrap();
         assert!(jsonl.contains("\"pending_reward_state\":\"matured_invalidated\""));
