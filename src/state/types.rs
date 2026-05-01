@@ -223,6 +223,8 @@ pub struct StructuralNodeTemporalPosteriorState {
     pub temporal_posterior_support: f64,
     #[serde(default)]
     pub posterior_blend_weight: f64,
+    #[serde(default)]
+    pub summary_line: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommended_at: Option<String>,
 }
@@ -238,6 +240,8 @@ pub struct StructuralBranchTemporalPosteriorState {
     pub temporal_posterior_support: f64,
     #[serde(default)]
     pub posterior_multiplier: f64,
+    #[serde(default)]
+    pub summary_line: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommended_at: Option<String>,
 }
@@ -4057,6 +4061,13 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
                 transition_outcome_support: transition.transition_outcome_support,
                 temporal_posterior_support: transition.temporal_posterior_support,
                 posterior_multiplier,
+                summary_line: format!(
+                    "transition_mass={:.3} transition_support={:.3} transition_temporal={:.3} multiplier={:.3}",
+                    transition.weighted_observation_mass,
+                    transition.transition_outcome_support,
+                    transition.temporal_posterior_support,
+                    posterior_multiplier
+                ),
                 last_recommended_at: transition.last_recommended_at.clone(),
             },
         );
@@ -4157,6 +4168,13 @@ fn rebuild_discounted_node_duration_priors(
             duration_outcome_support: prior.duration_outcome_support,
             temporal_posterior_support: prior.temporal_posterior_support,
             posterior_blend_weight,
+            summary_line: format!(
+                "duration_mass={:.3} duration_support={:.3} duration_temporal={:.3} blend={:.3}",
+                prior.weighted_streak_mass,
+                prior.duration_outcome_support,
+                prior.temporal_posterior_support,
+                posterior_blend_weight
+            ),
             last_recommended_at: prior.last_recommended_at.clone(),
         };
         node_duration_priors.insert(node_id.clone(), prior);

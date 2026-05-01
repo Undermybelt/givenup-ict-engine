@@ -511,6 +511,26 @@ fn apply_structural_prior_state_to_belief_report(
                     max_transition_outcome_support,
                     max_transition_temporal_support
                 ));
+            if let Some(summary_line) = regime_probabilities
+                .iter()
+                .filter_map(|(regime, _)| {
+                    let branch_id = format!(
+                        "{}:{}",
+                        node_id,
+                        structural_branch_label_for_regime(regime.as_str())
+                    );
+                    structural_prior_state
+                        .branch_temporal_posteriors
+                        .get(&format!("{latest_branch_id}=>{branch_id}"))
+                        .map(|state| state.summary_line.clone())
+                })
+                .max()
+            {
+                report
+                    .regime_posterior
+                    .evidence
+                    .push(format!("branch_temporal_summary={summary_line}"));
+            }
         }
     }
 
@@ -554,6 +574,12 @@ fn apply_structural_prior_state_to_belief_report(
                     .map(|state| state.temporal_posterior_support)
                     .unwrap_or(duration_prior.temporal_posterior_support)
             ));
+            if let Some(summary_line) = node_temporal_state.map(|state| state.summary_line.clone()) {
+                report
+                    .regime_posterior
+                    .evidence
+                    .push(format!("node_temporal_summary={summary_line}"));
+            }
         }
     }
     report.regime_posterior.active_regime = active_regime.clone();

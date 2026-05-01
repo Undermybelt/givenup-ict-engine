@@ -201,6 +201,20 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
             last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
         },
     );
+    structural_prior_state.node_temporal_posteriors.insert(
+        "NQ:belief_regime_node:trend".to_string(),
+        crate::state::StructuralNodeTemporalPosteriorState {
+            node_id: "NQ:belief_regime_node:trend".to_string(),
+            observations: 6,
+            streak_count: 3,
+            weighted_streak_mass: 2.4,
+            duration_outcome_support: 0.7727272727,
+            temporal_posterior_support: 0.8618181818,
+            posterior_blend_weight: 0.4,
+            summary_line: "duration_mass=2.400 duration_support=0.773 duration_temporal=0.862 blend=0.400".to_string(),
+            last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+        },
+    );
 
     let report = build_canonical_belief_snapshot_with_pda_and_structural_prior_state(
         "NQ",
@@ -228,6 +242,11 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
             && line.contains("weighted_streak_mass=2.400")
             && line.contains("duration_outcome_support=0.773")
             && line.contains("duration_temporal_posterior_support=0.862")));
+    assert!(report
+        .regime_posterior
+        .evidence
+        .iter()
+        .any(|line| line.contains("node_temporal_summary=duration_mass=2.400")));
     let market_regime = report
         .belief_posteriors
         .iter()
@@ -286,6 +305,21 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_branch_transition_
             last_recommended_at: Some("2026-04-30T02:00:00Z".to_string()),
         },
     );
+    structural_prior_state.branch_temporal_posteriors.insert(
+        "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:trend:transition_confirmation".to_string(),
+        crate::state::StructuralBranchTemporalPosteriorState {
+            transition_key: "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:trend:transition_confirmation".to_string(),
+            from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+            to_branch_id: "NQ:belief_regime_node:trend:transition_confirmation".to_string(),
+            observations: 3,
+            weighted_observation_mass: 2.4,
+            transition_outcome_support: 0.56,
+            temporal_posterior_support: 0.728,
+            posterior_multiplier: 1.3648,
+            summary_line: "transition_mass=2.400 transition_support=0.560 transition_temporal=0.728 multiplier=1.365".to_string(),
+            last_recommended_at: Some("2026-04-30T02:00:00Z".to_string()),
+        },
+    );
 
     let baseline_report = build_canonical_belief_snapshot_with_pda_and_structural_prior_state(
         "NQ",
@@ -329,6 +363,11 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_branch_transition_
             && line.contains("weighted_transition_mass=2.400")
             && line.contains("transition_outcome_support=0.560")
             && line.contains("transition_temporal_posterior_support=0.728")));
+    assert!(report
+        .regime_posterior
+        .evidence
+        .iter()
+        .any(|line| line.contains("branch_temporal_summary=transition_mass=2.400")));
 }
 
 #[test]

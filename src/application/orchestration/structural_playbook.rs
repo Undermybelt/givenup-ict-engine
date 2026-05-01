@@ -1147,36 +1147,39 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
                 structural_branch_transition_prior(structural_prior_state, &refs.branch_id, branch_id)
             })
         });
+    let duration_summary = node_temporal_state
+        .map(|state| state.summary_line.clone())
+        .unwrap_or_else(|| {
+            format!(
+                "duration_mass={:.3} duration_support={:.3} duration_temporal={:.3} blend=0.000",
+                structural_duration_weighted_streak_mass(node_duration_prior).unwrap_or_default(),
+                structural_duration_outcome_support(node_duration_prior).unwrap_or_default(),
+                structural_duration_temporal_posterior_support(node_duration_prior)
+                    .unwrap_or_default()
+            )
+        });
+    let transition_summary = branch_temporal_state
+        .map(|state| state.summary_line.clone())
+        .unwrap_or_else(|| {
+            format!(
+                "transition_mass={:.3} transition_support={:.3} transition_temporal={:.3} multiplier=1.000",
+                transition_prior
+                    .map(|prior| prior.weighted_observation_mass)
+                    .unwrap_or_default(),
+                transition_prior
+                    .map(|prior| prior.transition_outcome_support)
+                    .unwrap_or_default(),
+                transition_prior
+                    .map(|prior| prior.temporal_posterior_support)
+                    .unwrap_or_default()
+            )
+        });
     let summary_line = format!(
-        "node_mass={:.3} duration_prior={:.3} duration_support={:.3} duration_temporal={:.3} transition_mass={:.3} transition_prior={:.3} transition_support={:.3} transition_temporal={:.3}",
-        node_temporal_state
-            .map(|state| state.weighted_streak_mass)
-            .or_else(|| structural_duration_weighted_streak_mass(node_duration_prior))
-            .unwrap_or_default(),
+        "{} duration_prior={:.3} | {} transition_prior={:.3}",
+        duration_summary,
         structural_duration_persistence_prior(node_duration_prior).unwrap_or_default(),
-        node_temporal_state
-            .map(|state| state.duration_outcome_support)
-            .or_else(|| structural_duration_outcome_support(node_duration_prior))
-            .unwrap_or_default(),
-        node_temporal_state
-            .map(|state| state.temporal_posterior_support)
-            .or_else(|| structural_duration_temporal_posterior_support(node_duration_prior))
-            .unwrap_or_default(),
-        branch_temporal_state
-            .map(|state| state.weighted_observation_mass)
-            .or_else(|| transition_prior.map(|prior| prior.weighted_observation_mass))
-            .unwrap_or_default(),
-        transition_prior
-            .map(|prior| prior.transition_prior)
-            .unwrap_or_default(),
-        branch_temporal_state
-            .map(|state| state.transition_outcome_support)
-            .or_else(|| transition_prior.map(|prior| prior.transition_outcome_support))
-            .unwrap_or_default(),
-        branch_temporal_state
-            .map(|state| state.temporal_posterior_support)
-            .or_else(|| transition_prior.map(|prior| prior.temporal_posterior_support))
-            .unwrap_or_default()
+        transition_summary,
+        transition_prior.map(|prior| prior.transition_prior).unwrap_or_default()
     );
 
     StructuralTemporalSummaryArtifact {

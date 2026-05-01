@@ -5901,7 +5901,7 @@ mod tests {
         assert!(human_value["structural_temporal_line"]
             .as_str()
             .unwrap()
-            .contains("node_mass=1.850"));
+            .contains("duration_mass=1.850"));
         assert!(human_value["structural_temporal_line"]
             .as_str()
             .unwrap()

@@ -205,6 +205,7 @@ mod tests {
             duration_outcome_support: 0.20,
             temporal_posterior_support: 0.30,
             posterior_blend_weight: 0.5,
+            summary_line: "duration_mass=2.400 duration_support=0.200 duration_temporal=0.300 blend=0.500".to_string(),
             last_recommended_at: None,
         };
 
@@ -248,6 +249,7 @@ mod tests {
                 transition_outcome_support: 0.20,
                 temporal_posterior_support: 0.30,
                 posterior_multiplier: 0.6,
+                summary_line: "transition_mass=1.500 transition_support=0.200 transition_temporal=0.300 multiplier=0.600".to_string(),
                 last_recommended_at: None,
             },
         );
