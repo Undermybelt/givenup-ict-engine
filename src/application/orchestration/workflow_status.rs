@@ -4255,6 +4255,7 @@ mod tests {
                 last_streak_length: 3,
                 persistence_prior: 0.9,
                 duration_outcome_support: 0.7727272727,
+                temporal_posterior_support: 0.8618181818,
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
             },
         );
@@ -4671,6 +4672,7 @@ mod tests {
                 invalidated: 0,
                 transition_prior: 0.8,
                 transition_outcome_support: 0.56,
+                temporal_posterior_support: 0.728,
                 weighted_success_mass: 1.6,
                 weighted_failure_mass: 1.25,
                 last_recommended_at: Some("2026-04-30T02:00:00Z".to_string()),
@@ -5311,6 +5313,7 @@ mod tests {
                 last_streak_length: 1,
                 persistence_prior: 0.6,
                 duration_outcome_support: 0.7407407407,
+                temporal_posterior_support: 0.6422222222,
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
             },
         );
@@ -5718,6 +5721,7 @@ mod tests {
                 last_streak_length: 1,
                 persistence_prior: 0.6,
                 duration_outcome_support: 0.7407407407,
+                temporal_posterior_support: 0.6422222222,
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
             },
         );
@@ -5735,6 +5739,7 @@ mod tests {
                 invalidated: 0,
                 transition_prior: 0.68,
                 transition_outcome_support: 0.71,
+                temporal_posterior_support: 0.689,
                 weighted_success_mass: 1.4875,
                 weighted_failure_mass: 0.0,
                 last_recommended_at: Some("2026-04-30T05:00:00Z".to_string()),
@@ -5835,6 +5840,7 @@ mod tests {
                 last_streak_length: 1,
                 persistence_prior: 0.6,
                 duration_outcome_support: 0.7407407407,
+                temporal_posterior_support: 0.6422222222,
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
             },
         );
@@ -5852,6 +5858,7 @@ mod tests {
                 invalidated: 0,
                 transition_prior: 0.68,
                 transition_outcome_support: 0.71,
+                temporal_posterior_support: 0.689,
                 weighted_success_mass: 1.4875,
                 weighted_failure_mass: 0.0,
                 last_recommended_at: Some("2026-04-30T05:00:00Z".to_string()),

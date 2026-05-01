@@ -179,6 +179,8 @@ pub struct StructuralNodeDurationPrior {
     pub persistence_prior: f64,
     #[serde(default)]
     pub duration_outcome_support: f64,
+    #[serde(default)]
+    pub temporal_posterior_support: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommended_at: Option<String>,
 }
@@ -197,6 +199,8 @@ pub struct StructuralBranchTransitionPrior {
     pub transition_prior: f64,
     #[serde(default)]
     pub transition_outcome_support: f64,
+    #[serde(default)]
+    pub temporal_posterior_support: f64,
     #[serde(default)]
     pub weighted_success_mass: f64,
     #[serde(default)]
@@ -3995,6 +3999,9 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
         let beta = 1.0 + transition.weighted_failure_mass.max(0.0);
         transition.transition_outcome_support =
             (alpha / (alpha + beta)).clamp(0.0, 1.0);
+        transition.temporal_posterior_support =
+            (transition.transition_prior * 0.7 + transition.transition_outcome_support * 0.3)
+                .clamp(0.0, 1.0);
     }
 }
 
@@ -4076,6 +4083,9 @@ fn rebuild_discounted_node_duration_priors(
         let alpha = 1.0 + weighted_success_mass.max(0.0);
         let beta = 1.0 + weighted_failure_mass.max(0.0);
         prior.duration_outcome_support = (alpha / (alpha + beta)).clamp(0.0, 1.0);
+        prior.temporal_posterior_support =
+            (prior.persistence_prior * 0.7 + prior.duration_outcome_support * 0.3)
+                .clamp(0.0, 1.0);
         node_duration_priors.insert(node_id.clone(), prior);
     }
 }

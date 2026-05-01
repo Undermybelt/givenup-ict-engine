@@ -12,11 +12,8 @@ pub fn blend_node_posterior_with_duration_prior(
     let observation_weight = (duration_prior.weighted_streak_mass / 3.0).min(1.0);
     let streak_weight = (duration_prior.streak_count as f64 / 3.0).min(1.0);
     let blend_weight = (observation_weight * streak_weight * 0.5).clamp(0.0, 0.5);
-    let temporal_support =
-        (duration_prior.persistence_prior * 0.7 + duration_prior.duration_outcome_support * 0.3)
-            .clamp(0.0, 1.0);
     ((1.0 - blend_weight) * base_posterior
-        + blend_weight * temporal_support)
+        + blend_weight * duration_prior.temporal_posterior_support)
         .clamp(0.0, 1.0)
 }
 
@@ -29,7 +26,7 @@ pub fn blend_branch_prior_with_transition_prior(
     };
     let transition_weight = (transition_prior.weighted_observation_mass / 3.0).min(1.0);
     ((1.0 - transition_weight) * base_prior
-        + transition_weight * transition_prior.transition_prior)
+        + transition_weight * transition_prior.temporal_posterior_support)
         .clamp(0.0, 1.0)
 }
 
@@ -60,9 +57,8 @@ pub fn transition_adjusted_branch_posteriors(
         let transition_weight = transition_prior
             .map(|prior| {
                 let sample_weight = (prior.weighted_observation_mass / 3.0).min(1.0);
-                let prior_bias = (prior.transition_prior - 0.5) * 2.0;
-                let outcome_bias = (prior.transition_outcome_support - 0.5) * 2.0;
-                (1.0 + (prior_bias * 0.7 + outcome_bias * 0.3) * sample_weight)
+                let temporal_bias = (prior.temporal_posterior_support - 0.5) * 2.0;
+                (1.0 + temporal_bias * sample_weight)
                     .clamp(0.05, 2.0)
             })
             .unwrap_or(1.0);
@@ -109,6 +105,7 @@ mod tests {
                 invalidated: 0,
                 transition_prior: 0.5,
                 transition_outcome_support: 0.8,
+                temporal_posterior_support: 0.59,
                 weighted_success_mass: 1.5,
                 weighted_failure_mass: 0.0,
                 last_recommended_at: None,
@@ -128,6 +125,7 @@ mod tests {
                 invalidated: 0,
                 transition_prior: 0.5,
                 transition_outcome_support: 0.2,
+                temporal_posterior_support: 0.41,
                 weighted_success_mass: 0.0,
                 weighted_failure_mass: 1.5,
                 last_recommended_at: None,

@@ -197,6 +197,7 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
             last_streak_length: 3,
             persistence_prior: 0.90,
             duration_outcome_support: 0.7727272727,
+            temporal_posterior_support: 0.8618181818,
             last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
         },
     );
@@ -278,6 +279,7 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_branch_transition_
             invalidated: 0,
             transition_prior: 0.8,
             transition_outcome_support: 0.56,
+            temporal_posterior_support: 0.728,
             weighted_success_mass: 1.6,
             weighted_failure_mass: 1.25,
             last_recommended_at: Some("2026-04-30T02:00:00Z".to_string()),
@@ -355,6 +357,7 @@ fn canonical_belief_snapshot_with_structural_prior_state_reconciles_gate_and_str
             last_streak_length: 4,
             persistence_prior: 0.95,
             duration_outcome_support: 0.8039215686,
+            temporal_posterior_support: 0.9061764706,
             last_recommended_at: Some("2026-04-30T04:00:00Z".to_string()),
         },
     );
