@@ -447,6 +447,21 @@ fn historical_data_candidates(snapshot: &WorkflowSnapshot) -> Vec<String> {
     candidates
 }
 
+fn latest_workflow_phase(
+    snapshot: &WorkflowSnapshot,
+) -> Option<&crate::state::WorkflowPhaseSnapshot> {
+    [
+        snapshot.latest_update.as_ref(),
+        snapshot.latest_research.as_ref(),
+        snapshot.latest_analyze.as_ref(),
+        snapshot.latest_backtest.as_ref(),
+        snapshot.latest_train.as_ref(),
+    ]
+    .into_iter()
+    .flatten()
+    .max_by(|left, right| left.timestamp.cmp(&right.timestamp))
+}
+
 pub fn build_human_workflow_status_view(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
@@ -484,13 +499,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     structural_prior_state: &StructuralPriorLearningState,
 ) -> Value {
     let no_workflow_state = workflow_status_empty_state(snapshot);
-    let latest_phase = snapshot
-        .latest_update
-        .as_ref()
-        .or(snapshot.latest_research.as_ref())
-        .or(snapshot.latest_analyze.as_ref())
-        .or(snapshot.latest_backtest.as_ref())
-        .or(snapshot.latest_train.as_ref());
+    let latest_phase = latest_workflow_phase(snapshot);
     let latest_phase_label = latest_phase
         .map(|phase| phase.phase.clone())
         .unwrap_or_else(|| NO_WORKFLOW_STATE.to_string());
@@ -1047,13 +1056,7 @@ pub fn build_compact_workflow_status_view(snapshot: &WorkflowSnapshot) -> Value 
     } else {
         snapshot.blocking_truth.reason.clone()
     };
-    let latest_phase = snapshot
-        .latest_update
-        .as_ref()
-        .or(snapshot.latest_research.as_ref())
-        .or(snapshot.latest_analyze.as_ref())
-        .or(snapshot.latest_backtest.as_ref())
-        .or(snapshot.latest_train.as_ref());
+    let latest_phase = latest_workflow_phase(snapshot);
     let latest_phase_label = latest_phase
         .map(|phase| phase.phase.clone())
         .unwrap_or_else(|| "workflow_phase_unavailable".to_string());
@@ -1131,13 +1134,7 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
     structural_prior_state: &StructuralPriorLearningState,
 ) -> Value {
     let no_workflow_state = workflow_status_empty_state(snapshot);
-    let latest_phase = snapshot
-        .latest_update
-        .as_ref()
-        .or(snapshot.latest_research.as_ref())
-        .or(snapshot.latest_analyze.as_ref())
-        .or(snapshot.latest_backtest.as_ref())
-        .or(snapshot.latest_train.as_ref());
+    let latest_phase = latest_workflow_phase(snapshot);
     let latest_phase_label = latest_phase
         .map(|phase| phase.phase.clone())
         .unwrap_or_else(|| NO_WORKFLOW_STATE.to_string());
@@ -2765,7 +2762,7 @@ fn latest_pre_bayes_phase(
     ]
     .into_iter()
     .flatten()
-    .find(|phase| {
+    .filter(|phase| {
         !phase.pre_bayes_gate_status.is_empty()
             || !phase.pre_bayes_policy_version.is_empty()
             || phase.pre_bayes_uses_soft_evidence
@@ -2774,6 +2771,7 @@ fn latest_pre_bayes_phase(
             || phase.canonical_structural_confidence.is_some()
             || !phase.canonical_structural_probabilities.is_empty()
     })
+    .max_by(|left, right| left.timestamp.cmp(&right.timestamp))
 }
 
 pub fn build_artifact_report_surfaces(
@@ -3314,6 +3312,68 @@ mod tests {
     }
 
     #[test]
+    fn build_pre_bayes_status_value_prefers_newest_populated_phase_over_fixed_update_priority() {
+        let update = WorkflowPhaseSnapshot {
+            phase: "update".to_string(),
+            timestamp: Utc.with_ymd_and_hms(2024, 1, 2, 0, 0, 0).unwrap(),
+            pre_bayes_gate_status: "pass_hard".to_string(),
+            pre_bayes_policy_version: "v-update".to_string(),
+            canonical_structural_active_regime: Some("range".to_string()),
+            canonical_structural_confidence: Some(0.61),
+            canonical_structural_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.21),
+                ("range".to_string(), 0.61),
+                ("transition".to_string(), 0.18),
+            ]),
+            pre_bayes_soft_evidence: std::collections::BTreeMap::from([(
+                "market_regime".to_string(),
+                std::collections::BTreeMap::from([
+                    ("range".to_string(), 0.61),
+                    ("trend".to_string(), 0.21),
+                    ("transition".to_string(), 0.18),
+                ]),
+            )]),
+            ..WorkflowPhaseSnapshot::default()
+        };
+        let research = WorkflowPhaseSnapshot {
+            phase: "research".to_string(),
+            timestamp: Utc.with_ymd_and_hms(2024, 1, 3, 0, 0, 0).unwrap(),
+            pre_bayes_gate_status: "observe".to_string(),
+            pre_bayes_policy_version: "v-research".to_string(),
+            canonical_structural_active_regime: Some("trend".to_string()),
+            canonical_structural_confidence: Some(0.78),
+            canonical_structural_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.78),
+                ("range".to_string(), 0.14),
+                ("transition".to_string(), 0.08),
+            ]),
+            pre_bayes_soft_evidence: std::collections::BTreeMap::from([(
+                "market_regime".to_string(),
+                std::collections::BTreeMap::from([
+                    ("trend".to_string(), 0.78),
+                    ("range".to_string(), 0.14),
+                    ("transition".to_string(), 0.08),
+                ]),
+            )]),
+            ..WorkflowPhaseSnapshot::default()
+        };
+        let snapshot = WorkflowSnapshot {
+            latest_update: Some(update),
+            latest_research: Some(research),
+            latest_pre_bayes_soft_evidence_diff: vec![PreBayesSoftEvidenceNodeDiff::default()],
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_pre_bayes_status_value(&snapshot, None).unwrap();
+
+        assert_eq!(value["latest_gate_status"], "observe");
+        assert_eq!(value["latest_policy_version"], "v-research");
+        assert_eq!(value["latest_canonical_structural_active_regime"], "trend");
+        assert_eq!(value["latest_canonical_structural_confidence"], 0.78);
+        assert_eq!(value["latest_soft_evidence"]["market_regime"]["trend"], 0.78);
+    }
+
+    #[test]
     fn build_workflow_status_bootstrap_phase_value_matches_bootstrap_view() {
         let snapshot = sample_human_workflow_snapshot();
         let value = build_workflow_status_bootstrap_phase_value_with_probe(
@@ -3772,6 +3832,30 @@ mod tests {
             value["latest_stage"]["summary_short"],
             "No workflow phase summary available yet."
         );
+    }
+
+    #[test]
+    fn human_workflow_status_prefers_newest_phase_over_fixed_update_priority() {
+        let snapshot = WorkflowSnapshot {
+            latest_update: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "update".to_string(),
+                timestamp: Utc.with_ymd_and_hms(2024, 1, 2, 0, 0, 0).unwrap(),
+                phase_summary: "older_update_summary".to_string(),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            latest_research: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "research".to_string(),
+                timestamp: Utc.with_ymd_and_hms(2024, 1, 3, 0, 0, 0).unwrap(),
+                phase_summary: "newer_research_summary".to_string(),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_human_workflow_status_view(&snapshot, &[]);
+
+        assert_eq!(value["latest_stage"]["phase"], "research");
+        assert_eq!(value["latest_stage"]["summary"], "newer_research_summary");
     }
 
     #[test]
