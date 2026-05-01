@@ -16,6 +16,12 @@ Already true in repo:
 - structural consumer contract exists for `node / branch / scenario / path`
 - `structural-feedback-v1` can round-trip through `update --feedback-file`
 - `FeedbackRecord`, `UpdateRunRecord`, and `WorkflowSnapshot.latest_update` carry structural lineage
+- canonical structural posterior is preserved across:
+  - `analyze`
+  - `research`
+  - `backtest`
+  - `update`
+  - workflow snapshot / ensemble / structural consumer surfaces
 - `LearningState.structural_prior_state` exists and is fed by:
   - live structural feedback
   - analyze
@@ -23,12 +29,29 @@ Already true in repo:
   - backtest
   - mutation
   - artifact validation
-- offline prior seeding already has source weighting and quality calibration
+- offline prior seeding already has:
+  - source weighting
+  - quality calibration
+  - explicit `tempering_coefficient`
+  - source-panel summaries before merge
+- live feedback learning already has:
+  - raw outcome preservation
+  - unresolved / no-credit handling
+  - fractional factor-credit semantics
+- temporal state already includes:
+  - `node_duration_priors`
+  - `branch_transition_priors`
+  - `node_temporal_posteriors`
+  - `branch_temporal_posteriors`
+  - persisted temporal maintenance weights
+- belief packet evidence and workflow structural surfaces already expose temporal support / maintenance state
 
 Current blocker:
-- canonical market-structure anchor is not stable across downstream runs
-- `research` / `backtest` surfaces can still leak workflow-phase or support-reason labels into structural lineage
-- this blocks trustworthy `node` learning and pollutes the sample pool that should feed `BBN` and later `CatBoost`
+- anchor leak is no longer the main blocker
+- current blocker is deeper:
+  - temporal support and discounted transition logic are still applied mostly as maintained support plus snapshot-time reweighting, not yet a single core `BBN` transition engine rule
+  - offline source tempering is explicit enough to work, but not yet expressed as a fully formal power-prior-style posterior object
+  - `CatBoost` target design has not started
 
 Repo source-of-truth inputs for this plan:
 - [2026-04-29-structural-playbook-belief-architecture-plan.md](/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-04-29-structural-playbook-belief-architecture-plan.md:1)
@@ -76,6 +99,18 @@ Tests likely touched:
 - `src/main.rs` workflow snapshot / integration tests
 - `src/state/types.rs` structural prior learning tests
 - targeted command/integration tests around `analyze`, `factor-research`, `factor-backtest`, `update`
+
+## Progress Snapshot
+
+| Phase | Status | Notes |
+|---|---|---|
+| `P0` Repo truth | `done` | execution plan, literature docs, paper-code readmes, and patched repo-map are committed |
+| `P1` Canonical structural anchor | `mostly done` | canonical anchor and cross-phase propagation are landed; a dedicated downstream smoke path is still worth keeping explicit |
+| `P2` Live feedback posterior update | `partial` | explicit outcome semantics and fractional credit landed; delayed / partial-compliance math is not fully closed |
+| `P3` Offline evidence tempering | `partial` | source weighting, quality calibration, source panels, and tempering coefficient landed; theory objectization is still incomplete |
+| `P4` Structural prior state upgrade | `partial` | duration / transition / source panels / event ledger / temporal posterior state landed; node-mass separation still not fully formalized |
+| `P5` BBN node/branch posterior update | `partial` | discounted temporal maintenance now exists and is reused across belief/workflow surfaces; core engine-state ownership is still incomplete |
+| `P6` CatBoost path ranking target | `not started` | structural candidate surfaces exist, but target math and calibration stack are still unimplemented |
 
 ## Phases
 
@@ -139,17 +174,17 @@ Outcome:
 
 ### P0: Planning and Repo Truth
 
-- [ ] Commit the literature ingestion artifacts listed above so execution references versioned docs instead of chat memory.
-- [ ] Keep this execution plan and the older architecture plan aligned; if the scope changes, update both in the same slice.
-- [ ] Freeze the execution order to `anchor -> evidence math -> structural state math -> BBN upgrade -> CatBoost target`.
+- [x] Commit the literature ingestion artifacts listed above so execution references versioned docs instead of chat memory.
+- [x] Keep this execution plan and the older architecture plan aligned; if the scope changes, update both in the same slice.
+- [x] Freeze the execution order to `anchor -> evidence math -> structural state math -> BBN upgrade -> CatBoost target`.
 
 ### P1: Canonical Structural Anchor
 
-- [ ] Audit `workflow_phase_snapshot_from_research_run(...)` in `src/main.rs` so downstream workflow snapshots carry evidence and execution metadata without redefining structural ontology.
-- [ ] Audit `workflow_phase_snapshot_from_backtest_run(...)` in `src/main.rs` with the same rule.
-- [ ] Refactor `build_structural_node_artifact_with_prior_state(...)` in `src/application/orchestration/structural_playbook.rs` so node family and label are chosen from canonical market-structure anchors first, not generic workflow phase or support strings.
-- [ ] Add a persisted analyze-time structural anchor field if the current snapshot surface cannot preserve canonical structure across later phases.
-- [ ] Add regression tests for real-world dirty inputs such as:
+- [x] Audit `workflow_phase_snapshot_from_research_run(...)` in `src/main.rs` so downstream workflow snapshots carry evidence and execution metadata without redefining structural ontology.
+- [x] Audit `workflow_phase_snapshot_from_backtest_run(...)` in `src/main.rs` with the same rule.
+- [x] Refactor `build_structural_node_artifact_with_prior_state(...)` in `src/application/orchestration/structural_playbook.rs` so node family and label are chosen from canonical market-structure anchors first, not generic workflow phase or support strings.
+- [x] Add a persisted analyze-time structural anchor field if the current snapshot surface cannot preserve canonical structure across later phases.
+- [x] Add regression tests for real-world dirty inputs such as:
   - `posterior_active_regime = research_iteration`
   - `posterior_probabilities = { fallback, research_iteration }`
   - `blocking_truth.reason = market_policy=...`
@@ -158,8 +193,8 @@ Outcome:
 ### P2: Live Feedback Posterior Update
 
 - [ ] Replace score-only path posterior refresh with explicit Beta-Binomial-style fractional pseudo-count updates in `src/state/types.rs` and `src/factors/weight_updater.rs`.
-- [ ] Split executed, not-followed, abandoned, invalidated, and delayed outcomes into explicit update semantics instead of one blended credit signal.
-- [ ] Preserve zero-config CLI behavior: all new math must run behind existing flows, not new required flags.
+- [x] Split executed, not-followed, abandoned, invalidated, and delayed outcomes into explicit update semantics instead of one blended credit signal.
+- [x] Preserve zero-config CLI behavior: all new math must run behind existing flows, not new required flags.
 - [ ] Add tests for:
   - followed profitable path
   - followed invalidated path
@@ -169,24 +204,24 @@ Outcome:
 ### P3: Offline Evidence Tempering
 
 - [ ] Replace remaining heuristic support blending in `src/analyze_shared.rs`, `src/factor_research_runtime.rs`, and `src/factor_backtest_runtime.rs` with explicit tempered source contribution rules from the literature repo-map.
-- [ ] Carry source-panel snapshots into `structural_prior_state` before canonical merge so offline evidence is inspectable instead of irreversibly blended.
-- [ ] Keep the current source ordering, but make the effect formula explicit and testable.
-- [ ] Add tests that prove:
+- [x] Carry source-panel snapshots into `structural_prior_state` before canonical merge so offline evidence is inspectable instead of irreversibly blended.
+- [x] Keep the current source ordering, but make the effect formula explicit and testable.
+- [x] Add tests that prove:
   - stronger source + good quality increases prior mass more than weaker source
   - break penalties and poor coverage reduce effective contribution
   - validation regression can reduce contribution rather than only cap it
 
 ### P4: Structural Prior State Upgrade
 
-- [ ] Extend `LearningState.structural_prior_state` in `src/state/types.rs` with explicit node duration and branch transition fields suggested by the repo map.
+- [x] Extend `LearningState.structural_prior_state` in `src/state/types.rs` with explicit node duration and branch transition fields suggested by the repo map.
 - [ ] Separate node prior mass from branch/path prior mass so one noisy path does not mutate the whole node too aggressively.
 - [ ] Store last offline seed snapshots and per-source summaries for later audit and recalibration.
-- [ ] Add tests that prove duration and transition state survives persistence and is reused by structural orchestration.
+- [x] Add tests that prove duration and transition state survives persistence and is reused by structural orchestration.
 
 ### P5: BBN Node/Branch Posterior Update
 
-- [ ] Identify the existing `BBN` update surfaces under `src/domain/belief/*` and `src/application/belief/*` that should consume discounted transition counts.
-- [ ] Introduce discounted transition-count updates for branch posterior maintenance.
+- [x] Identify the existing `BBN` update surfaces under `src/domain/belief/*` and `src/application/belief/*` that should consume discounted transition counts.
+- [x] Introduce discounted transition-count updates for branch posterior maintenance.
 - [ ] Make sure `workflow-status` reads real node/branch posterior state from `BBN` outputs rather than assembling a parallel view-only belief model.
 - [ ] Add tests that prove repeated evidence can strengthen one branch posterior without collapsing unrelated nodes.
 
@@ -207,13 +242,12 @@ Outcome:
 
 Do these first, in order:
 
-1. Commit the untracked literature and paper-code docs.
-2. Fix the canonical structural anchor leak.
-3. Add regression smoke coverage for analyze -> research -> backtest -> structural-playbook.
-4. Replace live path posterior updates with explicit pseudo-count math.
-5. Replace offline source blending with explicit tempered contribution math.
-6. Extend `structural_prior_state` with duration and transition state.
-7. Only then start CatBoost target design.
+1. Add the dedicated downstream smoke path for `analyze -> research -> backtest -> structural-playbook`.
+2. Finish `P2` by closing delayed / partial-compliance posterior math, not just no-credit and fractional credit semantics.
+3. Finish `P3` by promoting offline tempering into a clearer power-prior-style posterior object instead of only calibrated heuristics.
+4. Finish `P4` by formalizing node-mass vs branch/path-mass separation and persisting a clearer offline seed snapshot object.
+5. Finish `P5` by moving temporal maintenance from mostly snapshot-time reweighting into a more central maintained `BBN` node/branch posterior state.
+6. Only then start `P6` CatBoost path-target design.
 
 ## Out of Scope For The Next Execution Slice
 
