@@ -5023,6 +5023,43 @@ mod tests {
     }
 
     #[test]
+    fn workflow_status_phase_structural_path_history_surfaces_off_policy_exposure() {
+        let mut snapshot = sample_human_workflow_snapshot();
+        if let Some(update) = snapshot.latest_update.as_mut() {
+            update.structural_feedback = sample_structural_feedback_history()[1]
+                .structural_feedback
+                .clone();
+        }
+        let mut history = sample_structural_feedback_history();
+        let mut skipped = history[0].clone();
+        skipped.run_id = Some("run-not-followed".to_string());
+        skipped.realized_outcome = "not_followed".to_string();
+        skipped.pnl = 0.0;
+        if let Some(refs) = skipped.structural_feedback.as_mut() {
+            refs.recommendation_id = "structural-feedback:NQ:node:path-skipped".to_string();
+            refs.recommended_at = "2026-04-29T00:10:00Z".to_string();
+            refs.followed_path = false;
+            refs.exit_reason = Some("skipped".to_string());
+        }
+        history.push(skipped);
+
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            "structural-path-history",
+        )
+        .unwrap();
+
+        assert_eq!(value["paths"][0]["total_records"], 3);
+        assert_eq!(value["paths"][0]["followed_count"], 2);
+        assert_eq!(value["paths"][0]["not_followed"], 1);
+        assert_eq!(value["paths"][0]["execution_propensity"], 0.6);
+        assert_eq!(value["paths"][0]["off_policy_exposure_rate"], 0.4);
+    }
+
+    #[test]
     fn workflow_status_phase_structural_path_outcome_summary_is_token_friendly() {
         let history = sample_structural_feedback_history();
         let value = build_workflow_status_phase_value(
@@ -5169,7 +5206,11 @@ mod tests {
                 weighted_success_mass: 3.5,
                 weighted_failure_mass: 0.5,
                 weighted_invalidation_mass: 0.0,
+                weighted_exposure_mass: 4.0,
+                weighted_not_followed_mass: 0.0,
                 smoothed_prior: 0.75,
+                execution_propensity: 0.8333333333,
+                off_policy_adjusted_prior: 0.625,
                 source_panel_summaries: std::collections::BTreeMap::new(),
                 last_offline_seed_source: None,
             },
@@ -5371,7 +5412,11 @@ mod tests {
                 weighted_success_mass: 1.30,
                 weighted_failure_mass: 0.75,
                 weighted_invalidation_mass: 0.0,
+                weighted_exposure_mass: 3.0,
+                weighted_not_followed_mass: 0.0,
                 smoothed_prior: 0.5483870968,
+                execution_propensity: 0.8,
+                off_policy_adjusted_prior: 0.4387096774,
                 source_panel_summaries: std::collections::BTreeMap::from([
                     (
                         "analyze".to_string(),
@@ -5389,7 +5434,11 @@ mod tests {
                             weighted_success_mass: 0.30,
                             weighted_failure_mass: 0.0,
                             weighted_invalidation_mass: 0.0,
+                            weighted_exposure_mass: 1.0,
+                            weighted_not_followed_mass: 0.0,
                             smoothed_prior: 0.5652173913,
+                            execution_propensity: 0.6666666667,
+                            off_policy_adjusted_prior: 0.3768115942,
                             last_tempering_coefficient: None,
                             last_recommendation_id: Some("rec-analyze".to_string()),
                             last_recommended_at: Some("2026-04-30T00:00:00Z".to_string()),
@@ -5412,7 +5461,11 @@ mod tests {
                             weighted_success_mass: 0.75,
                             weighted_failure_mass: 0.75,
                             weighted_invalidation_mass: 0.0,
+                            weighted_exposure_mass: 2.0,
+                            weighted_not_followed_mass: 0.0,
                             smoothed_prior: 0.5,
+                            execution_propensity: 0.75,
+                            off_policy_adjusted_prior: 0.375,
                             last_tempering_coefficient: None,
                             last_recommendation_id: Some("rec-backtest".to_string()),
                             last_recommended_at: Some("2026-04-30T01:00:00Z".to_string()),
@@ -5556,7 +5609,11 @@ mod tests {
                 weighted_success_mass: 0.9,
                 weighted_failure_mass: 0.9,
                 weighted_invalidation_mass: 0.0,
+                weighted_exposure_mass: 3.0,
+                weighted_not_followed_mass: 0.0,
                 smoothed_prior: 0.95,
+                execution_propensity: 0.8,
+                off_policy_adjusted_prior: 0.76,
                 source_panel_summaries: std::collections::BTreeMap::from([
                     (
                         "analyze".to_string(),
@@ -5574,7 +5631,11 @@ mod tests {
                             weighted_success_mass: 0.3,
                             weighted_failure_mass: 0.0,
                             weighted_invalidation_mass: 0.0,
+                            weighted_exposure_mass: 1.0,
+                            weighted_not_followed_mass: 0.0,
                             smoothed_prior: 0.5652173913,
+                            execution_propensity: 0.6666666667,
+                            off_policy_adjusted_prior: 0.3768115942,
                             last_tempering_coefficient: None,
                             last_recommendation_id: None,
                             last_recommended_at: None,
@@ -5597,7 +5658,11 @@ mod tests {
                             weighted_success_mass: 0.6,
                             weighted_failure_mass: 0.9,
                             weighted_invalidation_mass: 0.0,
+                            weighted_exposure_mass: 2.0,
+                            weighted_not_followed_mass: 0.0,
                             smoothed_prior: 0.4444444444,
+                            execution_propensity: 0.75,
+                            off_policy_adjusted_prior: 0.3333333333,
                             last_tempering_coefficient: None,
                             last_recommendation_id: None,
                             last_recommended_at: None,

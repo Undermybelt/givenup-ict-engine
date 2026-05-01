@@ -359,6 +359,10 @@ pub struct StructuralNodeOutcomeSummary {
     pub not_followed: usize,
     pub avg_pnl: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub execution_propensity: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub off_policy_exposure_rate: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommended_at: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_realized_outcome: Option<String>,
@@ -377,6 +381,10 @@ pub struct StructuralBranchOutcomeSummary {
     pub abandoned: usize,
     pub not_followed: usize,
     pub avg_pnl: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub execution_propensity: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub off_policy_exposure_rate: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommended_at: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -397,6 +405,10 @@ pub struct StructuralScenarioOutcomeSummary {
     pub abandoned: usize,
     pub not_followed: usize,
     pub avg_pnl: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub execution_propensity: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub off_policy_exposure_rate: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommended_at: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -428,6 +440,10 @@ pub struct StructuralPathOutcomeSummary {
     pub abandoned: usize,
     pub not_followed: usize,
     pub avg_pnl: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub execution_propensity: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub off_policy_exposure_rate: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommended_at: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3272,6 +3288,29 @@ fn structural_feedback_history_rows(
     rows
 }
 
+fn structural_history_row_not_followed(row: &StructuralFeedbackHistoryRow) -> bool {
+    !row.followed_path || row.outcome.trim().eq_ignore_ascii_case("not_followed")
+}
+
+fn structural_history_execution_propensity(
+    followed_count: usize,
+    not_followed: usize,
+) -> Option<f64> {
+    let exposure = followed_count + not_followed;
+    (exposure > 0).then(|| {
+        ((1.0 + followed_count as f64) / (2.0 + exposure as f64)).clamp(0.0, 1.0)
+    })
+}
+
+fn structural_history_off_policy_exposure_rate(
+    followed_count: usize,
+    not_followed: usize,
+) -> Option<f64> {
+    let exposure = followed_count + not_followed;
+    (exposure > 0)
+        .then(|| ((1.0 + not_followed as f64) / (2.0 + exposure as f64)).clamp(0.0, 1.0))
+}
+
 pub fn build_structural_history_summary_artifact(
     snapshot: &WorkflowSnapshot,
     feedback_history: &[FeedbackRecord],
@@ -3340,13 +3379,16 @@ pub fn build_structural_node_history_artifact(
         if row.followed_path {
             entry.followed_count += 1;
         }
+        if structural_history_row_not_followed(&row) {
+            entry.not_followed += 1;
+        }
         match row.outcome.as_str() {
             "win" => entry.wins += 1,
             "loss" => entry.losses += 1,
             "breakeven" => entry.breakevens += 1,
             "invalidated" => entry.invalidated += 1,
             "abandoned" => entry.abandoned += 1,
-            "not_followed" => entry.not_followed += 1,
+            "not_followed" => {}
             _ => {}
         }
         entry.last_recommended_at = Some(row.recommended_at);
@@ -3389,13 +3431,16 @@ pub fn build_structural_branch_history_artifact(
         if row.followed_path {
             entry.followed_count += 1;
         }
+        if structural_history_row_not_followed(&row) {
+            entry.not_followed += 1;
+        }
         match row.outcome.as_str() {
             "win" => entry.wins += 1,
             "loss" => entry.losses += 1,
             "breakeven" => entry.breakevens += 1,
             "invalidated" => entry.invalidated += 1,
             "abandoned" => entry.abandoned += 1,
-            "not_followed" => entry.not_followed += 1,
+            "not_followed" => {}
             _ => {}
         }
         entry.last_recommended_at = Some(row.recommended_at);
@@ -3443,13 +3488,16 @@ pub fn build_structural_scenario_history_artifact(
         if row.followed_path {
             entry.followed_count += 1;
         }
+        if structural_history_row_not_followed(&row) {
+            entry.not_followed += 1;
+        }
         match row.outcome.as_str() {
             "win" => entry.wins += 1,
             "loss" => entry.losses += 1,
             "breakeven" => entry.breakevens += 1,
             "invalidated" => entry.invalidated += 1,
             "abandoned" => entry.abandoned += 1,
-            "not_followed" => entry.not_followed += 1,
+            "not_followed" => {}
             _ => {}
         }
         entry.last_recommended_at = Some(row.recommended_at);
@@ -3501,13 +3549,16 @@ pub fn build_structural_path_history_artifact(
         if row.followed_path {
             entry.followed_count += 1;
         }
+        if structural_history_row_not_followed(&row) {
+            entry.not_followed += 1;
+        }
         match row.outcome.as_str() {
             "win" => entry.wins += 1,
             "loss" => entry.losses += 1,
             "breakeven" => entry.breakevens += 1,
             "invalidated" => entry.invalidated += 1,
             "abandoned" => entry.abandoned += 1,
-            "not_followed" => entry.not_followed += 1,
+            "not_followed" => {}
             _ => {}
         }
         entry.last_recommended_at = Some(row.recommended_at);
@@ -3548,6 +3599,10 @@ fn finalize_structural_node_summaries(nodes: &mut [StructuralNodeOutcomeSummary]
         if node.total_records > 0 {
             node.avg_pnl /= node.total_records as f64;
         }
+        node.execution_propensity =
+            structural_history_execution_propensity(node.followed_count, node.not_followed);
+        node.off_policy_exposure_rate =
+            structural_history_off_policy_exposure_rate(node.followed_count, node.not_followed);
     }
     nodes.sort_by(|a, b| {
         b.total_records
@@ -3562,6 +3617,10 @@ fn finalize_structural_branch_summaries(branches: &mut [StructuralBranchOutcomeS
         if branch.total_records > 0 {
             branch.avg_pnl /= branch.total_records as f64;
         }
+        branch.execution_propensity =
+            structural_history_execution_propensity(branch.followed_count, branch.not_followed);
+        branch.off_policy_exposure_rate =
+            structural_history_off_policy_exposure_rate(branch.followed_count, branch.not_followed);
     }
     branches.sort_by(|a, b| {
         b.total_records
@@ -3576,6 +3635,12 @@ fn finalize_structural_scenario_summaries(scenarios: &mut [StructuralScenarioOut
         if scenario.total_records > 0 {
             scenario.avg_pnl /= scenario.total_records as f64;
         }
+        scenario.execution_propensity =
+            structural_history_execution_propensity(scenario.followed_count, scenario.not_followed);
+        scenario.off_policy_exposure_rate = structural_history_off_policy_exposure_rate(
+            scenario.followed_count,
+            scenario.not_followed,
+        );
     }
     scenarios.sort_by(|a, b| {
         b.total_records
@@ -3590,6 +3655,10 @@ fn finalize_structural_path_summaries(paths: &mut [StructuralPathOutcomeSummary]
         if path.total_records > 0 {
             path.avg_pnl /= path.total_records as f64;
         }
+        path.execution_propensity =
+            structural_history_execution_propensity(path.followed_count, path.not_followed);
+        path.off_policy_exposure_rate =
+            structural_history_off_policy_exposure_rate(path.followed_count, path.not_followed);
     }
     paths.sort_by(|a, b| {
         b.total_records

@@ -95,7 +95,15 @@ pub struct StructuralPriorStats {
     pub weighted_failure_mass: f64,
     #[serde(default)]
     pub weighted_invalidation_mass: f64,
+    #[serde(default)]
+    pub weighted_exposure_mass: f64,
+    #[serde(default)]
+    pub weighted_not_followed_mass: f64,
     pub smoothed_prior: f64,
+    #[serde(default)]
+    pub execution_propensity: f64,
+    #[serde(default)]
+    pub off_policy_adjusted_prior: f64,
     #[serde(default)]
     pub source_panel_summaries: BTreeMap<String, StructuralPriorSourceSummary>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -138,7 +146,15 @@ pub struct StructuralPriorSourceSummary {
     pub weighted_failure_mass: f64,
     #[serde(default)]
     pub weighted_invalidation_mass: f64,
+    #[serde(default)]
+    pub weighted_exposure_mass: f64,
+    #[serde(default)]
+    pub weighted_not_followed_mass: f64,
     pub smoothed_prior: f64,
+    #[serde(default)]
+    pub execution_propensity: f64,
+    #[serde(default)]
+    pub off_policy_adjusted_prior: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_tempering_coefficient: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3648,7 +3664,10 @@ fn update_structural_prior_stats(
 ) {
     let source_weight =
         structural_prior_source_weight(&record.source) * structural_prior_entity_mass_scale(kind);
+    let not_followed_path =
+        !followed_path || record.realized_outcome.trim().eq_ignore_ascii_case("not_followed");
     stats.observations += 1;
+    stats.weighted_exposure_mass += source_weight;
     if stats.observations == 1 {
         stats.avg_pnl = record.pnl;
     } else {
@@ -3659,8 +3678,9 @@ fn update_structural_prior_stats(
     if followed_path {
         stats.followed_count += 1;
     }
-    if !followed_path || record.realized_outcome == "not_followed" {
+    if not_followed_path {
         stats.not_followed += 1;
+        stats.weighted_not_followed_mass += source_weight;
     }
     match structural_feedback_counter_outcome(record) {
         Some("win") => {
@@ -3727,6 +3747,8 @@ fn apply_structural_prior_seed_to_stats(
         + source_weight * seed.invalidated as f64 * 1.25
         + source_weight * seed.abandoned as f64 * 0.75;
     stats.weighted_invalidation_mass += source_weight * seed.invalidated as f64;
+    stats.weighted_exposure_mass += source_weight * seed.observations as f64;
+    stats.weighted_not_followed_mass += source_weight * seed.not_followed as f64;
     let new_total = previous_observations + seed.observations;
     stats.avg_pnl = if new_total == 0 {
         0.0
@@ -3765,6 +3787,41 @@ fn structural_prior_seed_effective_weight(seed: &StructuralPriorSeed) -> f64 {
     .clamp(0.0, 1.0)
 }
 
+fn structural_followed_exposure_mass(
+    weighted_exposure_mass: f64,
+    weighted_not_followed_mass: f64,
+    followed_count: usize,
+) -> f64 {
+    if weighted_exposure_mass > f64::EPSILON {
+        (weighted_exposure_mass - weighted_not_followed_mass.max(0.0)).max(0.0)
+    } else {
+        followed_count as f64
+    }
+}
+
+fn structural_not_followed_exposure_mass(
+    weighted_exposure_mass: f64,
+    weighted_not_followed_mass: f64,
+    not_followed: usize,
+) -> f64 {
+    if weighted_exposure_mass > f64::EPSILON {
+        weighted_not_followed_mass.max(0.0)
+    } else {
+        not_followed as f64
+    }
+}
+
+fn structural_propensity_estimate(followed_exposure_mass: f64, not_followed_mass: f64) -> f64 {
+    let followed = followed_exposure_mass.max(0.0);
+    let not_followed = not_followed_mass.max(0.0);
+    let exposure = followed + not_followed;
+    if exposure <= f64::EPSILON {
+        0.5
+    } else {
+        ((1.0 + followed) / (2.0 + exposure)).clamp(0.0, 1.0)
+    }
+}
+
 fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
     stats.smoothed_prior = if stats.weighted_followed_mass <= f64::EPSILON {
         0.5
@@ -3773,6 +3830,20 @@ fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
         let beta = 1.0 + stats.weighted_failure_mass.max(0.0);
         (alpha / (alpha + beta)).clamp(0.0, 1.0)
     };
+    let followed_exposure_mass = structural_followed_exposure_mass(
+        stats.weighted_exposure_mass,
+        stats.weighted_not_followed_mass,
+        stats.followed_count,
+    );
+    let not_followed_mass = structural_not_followed_exposure_mass(
+        stats.weighted_exposure_mass,
+        stats.weighted_not_followed_mass,
+        stats.not_followed,
+    );
+    stats.execution_propensity =
+        structural_propensity_estimate(followed_exposure_mass, not_followed_mass);
+    stats.off_policy_adjusted_prior =
+        (stats.smoothed_prior * stats.execution_propensity).clamp(0.0, 1.0);
 }
 
 fn update_structural_prior_source_summary_from_feedback(
@@ -3783,8 +3854,11 @@ fn update_structural_prior_source_summary_from_feedback(
 ) {
     let source_weight =
         structural_prior_source_weight(&record.source) * structural_prior_entity_mass_scale(kind);
+    let not_followed_path =
+        !followed_path || record.realized_outcome.trim().eq_ignore_ascii_case("not_followed");
     summary.last_tempering_coefficient = Some(1.0);
     summary.observations += 1;
+    summary.weighted_exposure_mass += source_weight;
     if summary.observations == 1 {
         summary.avg_pnl = record.pnl;
     } else {
@@ -3795,8 +3869,9 @@ fn update_structural_prior_source_summary_from_feedback(
     if followed_path {
         summary.followed_count += 1;
     }
-    if !followed_path || record.realized_outcome == "not_followed" {
+    if not_followed_path {
         summary.not_followed += 1;
+        summary.weighted_not_followed_mass += source_weight;
     }
     match structural_feedback_counter_outcome(record) {
         Some("win") => {
@@ -3864,6 +3939,8 @@ fn apply_structural_prior_seed_to_source_summary(
         + source_weight * seed.invalidated as f64 * 1.25
         + source_weight * seed.abandoned as f64 * 0.75;
     summary.weighted_invalidation_mass += source_weight * seed.invalidated as f64;
+    summary.weighted_exposure_mass += source_weight * seed.observations as f64;
+    summary.weighted_not_followed_mass += source_weight * seed.not_followed as f64;
     let new_total = previous_observations + seed.observations;
     summary.avg_pnl = if new_total == 0 {
         0.0
@@ -3886,6 +3963,20 @@ fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSu
         let beta = 1.0 + summary.weighted_failure_mass.max(0.0);
         (alpha / (alpha + beta)).clamp(0.0, 1.0)
     };
+    let followed_exposure_mass = structural_followed_exposure_mass(
+        summary.weighted_exposure_mass,
+        summary.weighted_not_followed_mass,
+        summary.followed_count,
+    );
+    let not_followed_mass = structural_not_followed_exposure_mass(
+        summary.weighted_exposure_mass,
+        summary.weighted_not_followed_mass,
+        summary.not_followed,
+    );
+    summary.execution_propensity =
+        structural_propensity_estimate(followed_exposure_mass, not_followed_mass);
+    summary.off_policy_adjusted_prior =
+        (summary.smoothed_prior * summary.execution_propensity).clamp(0.0, 1.0);
 }
 
 fn structural_prior_symbol_from_node_id(node_id: &str) -> String {
@@ -4892,6 +4983,61 @@ mod tests {
         assert!((path.weighted_failure_mass - 0.5625).abs() < 1e-9);
         assert!(path.smoothed_prior > 0.40);
         assert!(path.smoothed_prior < 0.50);
+    }
+
+    #[test]
+    fn test_not_followed_feedback_updates_propensity_without_reward_credit() {
+        let mut followed = sample_feedback();
+        followed.source = "structural_feedback_submission".to_string();
+        followed.realized_outcome = "win".to_string();
+        followed.pnl = 0.02;
+        followed.structural_feedback = Some(StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-followed".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "node-propensity".to_string(),
+            branch_id: "branch-propensity".to_string(),
+            scenario_id: "scenario-propensity".to_string(),
+            path_id: "path-propensity".to_string(),
+            followed_path: true,
+            exit_reason: Some("target_hit".to_string()),
+            notes: None,
+        });
+
+        let mut not_followed = followed.clone();
+        not_followed.realized_outcome = "not_followed".to_string();
+        not_followed.pnl = 0.0;
+        if let Some(refs) = not_followed.structural_feedback.as_mut() {
+            refs.recommendation_id = "rec-not-followed".to_string();
+            refs.recommended_at = "2026-04-30T00:05:00Z".to_string();
+            refs.followed_path = false;
+            refs.exit_reason = Some("skipped".to_string());
+        }
+
+        let mut state = LearningState::default();
+        state.apply_structural_feedback(&[followed]);
+        let prior_after_followed = state
+            .structural_prior_state
+            .paths
+            .get("path-propensity")
+            .expect("path prior state")
+            .smoothed_prior;
+        state.apply_structural_feedback(&[not_followed]);
+
+        let path = state
+            .structural_prior_state
+            .paths
+            .get("path-propensity")
+            .expect("path prior state");
+        assert_eq!(path.observations, 2);
+        assert_eq!(path.followed_count, 1);
+        assert_eq!(path.not_followed, 1);
+        assert!((path.weighted_followed_mass - 1.0).abs() < 1e-9);
+        assert!((path.weighted_exposure_mass - 2.0).abs() < 1e-9);
+        assert!((path.weighted_not_followed_mass - 1.0).abs() < 1e-9);
+        assert!((path.smoothed_prior - prior_after_followed).abs() < 1e-9);
+        assert!((path.execution_propensity - 0.5).abs() < 1e-9);
+        assert!((path.off_policy_adjusted_prior - prior_after_followed * 0.5).abs() < 1e-9);
     }
 
     #[test]
