@@ -273,6 +273,9 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_branch_transition_
             losses: 1,
             invalidated: 0,
             transition_prior: 0.8,
+            transition_outcome_support: 0.56,
+            weighted_success_mass: 1.6,
+            weighted_failure_mass: 1.25,
             last_recommended_at: Some("2026-04-30T02:00:00Z".to_string()),
         },
     );

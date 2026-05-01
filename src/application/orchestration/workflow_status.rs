@@ -4667,6 +4667,9 @@ mod tests {
                 losses: 1,
                 invalidated: 0,
                 transition_prior: 0.8,
+                transition_outcome_support: 0.56,
+                weighted_success_mass: 1.6,
+                weighted_failure_mass: 1.25,
                 last_recommended_at: Some("2026-04-30T02:00:00Z".to_string()),
             },
         );
@@ -5722,6 +5725,9 @@ mod tests {
                 losses: 0,
                 invalidated: 0,
                 transition_prior: 0.68,
+                transition_outcome_support: 0.71,
+                weighted_success_mass: 1.4875,
+                weighted_failure_mass: 0.0,
                 last_recommended_at: Some("2026-04-30T05:00:00Z".to_string()),
             },
         );
@@ -5833,6 +5839,9 @@ mod tests {
                 losses: 0,
                 invalidated: 0,
                 transition_prior: 0.68,
+                transition_outcome_support: 0.71,
+                weighted_success_mass: 1.4875,
+                weighted_failure_mass: 0.0,
                 last_recommended_at: Some("2026-04-30T05:00:00Z".to_string()),
             },
         );

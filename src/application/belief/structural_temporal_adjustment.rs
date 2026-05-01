@@ -57,7 +57,10 @@ pub fn transition_adjusted_branch_posteriors(
         let transition_weight = transition_prior
             .map(|prior| {
                 let sample_weight = (prior.weighted_observation_mass / 3.0).min(1.0);
-                (1.0 + (prior.transition_prior - 0.5) * 2.0 * sample_weight).clamp(0.05, 2.0)
+                let prior_bias = (prior.transition_prior - 0.5) * 2.0;
+                let outcome_bias = (prior.transition_outcome_support - 0.5) * 2.0;
+                (1.0 + (prior_bias * 0.7 + outcome_bias * 0.3) * sample_weight)
+                    .clamp(0.05, 2.0)
             })
             .unwrap_or(1.0);
         weighted.push((branch_id, (*probability * transition_weight).clamp(0.0, 1.0)));
@@ -80,4 +83,73 @@ pub fn transition_adjusted_branch_posteriors(
         .into_iter()
         .map(|(branch_id, weight)| (branch_id, (weight / total).clamp(0.0, 1.0)))
         .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn transition_adjusted_branch_posteriors_respects_transition_outcome_support() {
+        let mut priors = BTreeMap::new();
+        priors.insert(
+            "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:trend:transition_confirmation".to_string(),
+            StructuralBranchTransitionPrior {
+                from_node_id: "NQ:belief_regime_node:trend".to_string(),
+                to_node_id: "NQ:belief_regime_node:trend".to_string(),
+                from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                to_branch_id: "NQ:belief_regime_node:trend:transition_confirmation".to_string(),
+                observations: 2,
+                weighted_observation_mass: 1.5,
+                wins: 2,
+                losses: 0,
+                invalidated: 0,
+                transition_prior: 0.5,
+                transition_outcome_support: 0.8,
+                weighted_success_mass: 1.5,
+                weighted_failure_mass: 0.0,
+                last_recommended_at: None,
+            },
+        );
+        priors.insert(
+            "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:trend:range_mean_reversion".to_string(),
+            StructuralBranchTransitionPrior {
+                from_node_id: "NQ:belief_regime_node:trend".to_string(),
+                to_node_id: "NQ:belief_regime_node:trend".to_string(),
+                from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                to_branch_id: "NQ:belief_regime_node:trend:range_mean_reversion".to_string(),
+                observations: 2,
+                weighted_observation_mass: 1.5,
+                wins: 0,
+                losses: 2,
+                invalidated: 0,
+                transition_prior: 0.5,
+                transition_outcome_support: 0.2,
+                weighted_success_mass: 0.0,
+                weighted_failure_mass: 1.5,
+                last_recommended_at: None,
+            },
+        );
+
+        let adjusted = transition_adjusted_branch_posteriors(
+            "NQ:belief_regime_node:trend",
+            &[
+                ("transition".to_string(), 0.2),
+                ("range".to_string(), 0.2),
+                ("trend".to_string(), 0.6),
+            ],
+            Some("NQ:belief_regime_node:trend:trend_follow_through"),
+            &priors,
+            |regime| match regime {
+                "transition" => "transition_confirmation",
+                "range" => "range_mean_reversion",
+                _ => "trend_follow_through",
+            },
+        );
+
+        assert!(
+            adjusted["NQ:belief_regime_node:trend:transition_confirmation"]
+                > adjusted["NQ:belief_regime_node:trend:range_mean_reversion"]
+        );
+    }
 }

@@ -189,6 +189,12 @@ pub struct StructuralBranchTransitionPrior {
     pub losses: usize,
     pub invalidated: usize,
     pub transition_prior: f64,
+    #[serde(default)]
+    pub transition_outcome_support: f64,
+    #[serde(default)]
+    pub weighted_success_mass: f64,
+    #[serde(default)]
+    pub weighted_failure_mass: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommended_at: Option<String>,
 }
@@ -3883,13 +3889,30 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
                 });
             let recency_rank = total_transitions.saturating_sub(index + 1) as f64;
             let recency_decay = 0.85_f64.powf(recency_rank);
-            entry.observations += 1;
-            entry.weighted_observation_mass +=
+            let weighted_mass =
                 structural_prior_source_weight(&event.source_label) * recency_decay;
+            entry.observations += 1;
+            entry.weighted_observation_mass += weighted_mass;
             match event.realized_outcome.as_deref() {
-                Some("win") => entry.wins += 1,
-                Some("loss") => entry.losses += 1,
-                Some("invalidated") => entry.invalidated += 1,
+                Some("win") => {
+                    entry.wins += 1;
+                    entry.weighted_success_mass += weighted_mass;
+                }
+                Some("loss") => {
+                    entry.losses += 1;
+                    entry.weighted_failure_mass += weighted_mass;
+                }
+                Some("breakeven") => {
+                    entry.weighted_success_mass += weighted_mass * 0.5;
+                    entry.weighted_failure_mass += weighted_mass * 0.5;
+                }
+                Some("invalidated") => {
+                    entry.invalidated += 1;
+                    entry.weighted_failure_mass += weighted_mass * 1.25;
+                }
+                Some("abandoned") => {
+                    entry.weighted_failure_mass += weighted_mass * 0.75;
+                }
                 _ => {}
             }
             entry.last_recommended_at = Some(event.recommended_at.clone());
@@ -3912,6 +3935,10 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
         } else {
             (transition.weighted_observation_mass / total).clamp(0.0, 1.0)
         };
+        let alpha = 1.0 + transition.weighted_success_mass.max(0.0);
+        let beta = 1.0 + transition.weighted_failure_mass.max(0.0);
+        transition.transition_outcome_support =
+            (alpha / (alpha + beta)).clamp(0.0, 1.0);
     }
 }
 
