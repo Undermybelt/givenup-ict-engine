@@ -129,7 +129,7 @@ Tests likely touched:
 
 ### Next
 
-- [ ] Add a dedicated smoke path proving `analyze -> research -> backtest -> structural-playbook` preserves canonical structural lineage end to end.
+- [x] Add a dedicated smoke path proving `analyze -> research -> backtest -> structural-playbook` preserves canonical structural lineage end to end.
 - [ ] Finish `P2` delayed / partial-compliance posterior math instead of only no-credit and fractional-credit handling.
 - [ ] Finish `P3` by turning offline tempering into a clearer power-prior-style posterior object, not only calibrated heuristics.
 - [ ] Finish `P4` node-mass vs branch/path-mass separation and persist a clearer offline seed snapshot object.
@@ -224,7 +224,7 @@ Outcome:
   - `posterior_active_regime = research_iteration`
   - `posterior_probabilities = { fallback, research_iteration }`
   - `blocking_truth.reason = market_policy=...`
-- [ ] Add a smoke path that proves `workflow-status --phase structural-playbook --agent` returns canonical market-structure lineage after analyze + research + backtest.
+- [x] Add a smoke path that proves `workflow-status --phase structural-playbook --agent` returns canonical market-structure lineage after analyze + research + backtest.
 
 ### P2: Live Feedback Posterior Update
 
@@ -278,12 +278,11 @@ Outcome:
 
 Do these first, in order:
 
-1. Add the dedicated downstream smoke path for `analyze -> research -> backtest -> structural-playbook`.
-2. Finish `P2` by closing delayed / partial-compliance posterior math, not just no-credit and fractional credit semantics.
-3. Finish `P3` by promoting offline tempering into a clearer power-prior-style posterior object instead of only calibrated heuristics.
-4. Finish `P4` by formalizing node-mass vs branch/path-mass separation and persisting a clearer offline seed snapshot object.
-5. Finish `P5` by moving temporal maintenance from mostly snapshot-time reweighting into a more central maintained `BBN` node/branch posterior state.
-6. Only then start `P6` CatBoost path-target design.
+1. Finish `P2` by closing delayed / partial-compliance posterior math, not just no-credit and fractional credit semantics.
+2. Finish `P3` by promoting offline tempering into a clearer power-prior-style posterior object instead of only calibrated heuristics.
+3. Finish `P4` by formalizing node-mass vs branch/path-mass separation and persisting a clearer offline seed snapshot object.
+4. Finish `P5` by moving temporal maintenance from mostly snapshot-time reweighting into a more central maintained `BBN` node/branch posterior state.
+5. Only then start `P6` CatBoost path-target design.
 
 ## Out of Scope For The Next Execution Slice
 

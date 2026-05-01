@@ -9792,6 +9792,139 @@ mod tests {
     }
 
     #[test]
+    fn test_analyze_research_backtest_structural_playbook_preserves_canonical_lineage() {
+        let temp = tempfile::tempdir().unwrap();
+        let htf = temp.path().join("htf.json");
+        let mtf = temp.path().join("mtf.json");
+        let ltf = temp.path().join("ltf.json");
+        let research_data = temp.path().join("candles.json");
+
+        for (path, count) in [
+            (&htf, 220usize),
+            (&mtf, 180usize),
+            (&ltf, 140usize),
+            (&research_data, 140usize),
+        ] {
+            std::fs::write(
+                path,
+                serde_json::to_string(&serde_json::json!({
+                    "candles": sample_candles(count)
+                }))
+                .unwrap(),
+            )
+            .unwrap();
+        }
+
+        analyze_command(
+            "NQ",
+            htf.to_str().unwrap(),
+            mtf.to_str().unwrap(),
+            ltf.to_str().unwrap(),
+            temp.path().to_str().unwrap(),
+            OutputFormat::Json,
+            false,
+            true,
+        )
+        .unwrap();
+
+        let analyze_snapshot: WorkflowSnapshot =
+            load_state(temp.path(), "NQ", ict_engine::state::WORKFLOW_SNAPSHOT_FILE).unwrap();
+        let analyze_learning_state = load_learning_state(temp.path(), "NQ").unwrap();
+        let analyze_scorecards = load_ensemble_executor_scorecards(temp.path(), "NQ").unwrap();
+        let provider_status_agent =
+            ict_engine::application::provider_catalog::provider_status_agent_surface(
+                None, None, None,
+            )
+            .unwrap();
+        let analyze_value =
+            ict_engine::application::orchestration::build_workflow_status_phase_value_with_structural_prior_state(
+                &analyze_snapshot,
+                &analyze_scorecards,
+                &provider_status_agent,
+                &analyze_learning_state.feedback_history,
+                &analyze_learning_state.structural_prior_state,
+                "structural-playbook",
+            )
+            .unwrap();
+        let expected_node_label = analyze_value["node"]["node_label"]
+            .as_str()
+            .expect("analyze structural node label")
+            .to_string();
+        let expected_node_id = analyze_value["node"]["node_id"]
+            .as_str()
+            .expect("analyze structural node id")
+            .to_string();
+        let expected_branch_label = analyze_value["branch_set"]["branches"][0]["branch_label"]
+            .as_str()
+            .expect("analyze structural branch label")
+            .to_string();
+
+        run_factor_research(RunFactorResearchInput {
+            symbol: "NQ",
+            data: research_data.to_str().unwrap(),
+            objective: ResearchObjectiveMode::Generic,
+            data_1m: None,
+            data_5m: None,
+            data_15m: None,
+            data_1h: None,
+            data_4h: None,
+            data_1d: None,
+            paired_data: None,
+            paired_candles_override: None,
+            auxiliary_override: None,
+            runtime_notes: Vec::new(),
+            mutation_spec: None,
+            control_matrix_plan: None,
+            state_dir: temp.path().to_str().unwrap(),
+        })
+        .unwrap();
+        run_factor_backtest(
+            "NQ",
+            research_data.to_str().unwrap(),
+            None,
+            temp.path().to_str().unwrap(),
+        )
+        .unwrap();
+
+        let snapshot: WorkflowSnapshot =
+            load_state(temp.path(), "NQ", ict_engine::state::WORKFLOW_SNAPSHOT_FILE).unwrap();
+        let learning_state = load_learning_state(temp.path(), "NQ").unwrap();
+        let scorecards = load_ensemble_executor_scorecards(temp.path(), "NQ").unwrap();
+
+        let value =
+            ict_engine::application::orchestration::build_workflow_status_phase_value_with_structural_prior_state(
+                &snapshot,
+                &scorecards,
+                &provider_status_agent,
+                &learning_state.feedback_history,
+                &learning_state.structural_prior_state,
+                "structural-playbook",
+            )
+            .unwrap();
+
+        assert!(snapshot.latest_analyze.is_some());
+        assert!(snapshot.latest_research.is_some());
+        assert!(snapshot.latest_backtest.is_some());
+        assert_eq!(snapshot.current_focus_phase, "backtest");
+        assert_eq!(
+            value["node"]["node_id"].as_str(),
+            Some(expected_node_id.as_str())
+        );
+        assert_eq!(
+            value["node"]["node_label"].as_str(),
+            Some(expected_node_label.as_str())
+        );
+        assert_ne!(
+            value["node"]["node_label"].as_str(),
+            Some(snapshot.current_focus_phase.as_str())
+        );
+        assert_eq!(
+            value["branch_set"]["branches"][0]["branch_label"].as_str(),
+            Some(expected_branch_label.as_str())
+        );
+    }
+
+    #[test]
     fn test_run_factor_backtest_builds_compare_report_from_persisted_runs() {
         let temp = tempfile::tempdir().unwrap();
         let data = temp.path().join("candles.json");

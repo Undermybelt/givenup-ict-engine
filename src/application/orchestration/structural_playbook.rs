@@ -1402,22 +1402,24 @@ pub fn build_structural_node_artifact_with_prior_state(
     let provider_support =
         build_workflow_provider_support(provider_status_agent, &command, support_reason.as_deref());
     let supporting_evidence = structural_supporting_evidence(snapshot, &provider_support);
+    let active_regime = structural_active_regime(snapshot);
     let node_family = if structural_no_workflow_state(snapshot) {
         "bootstrap".to_string()
+    } else if active_regime.is_some() {
+        "belief_regime_node".to_string()
     } else if provider_support.active {
         "provider_gate".to_string()
     } else if support_reason.as_deref() == Some("user_selected_historical_data_missing") {
         "data_selection_gate".to_string()
     } else if structural_hard_block_active(snapshot) {
         "workflow_gate".to_string()
-    } else if let Some(active_regime) = structural_active_regime(snapshot) {
-        let _ = active_regime;
-        "belief_regime_node".to_string()
     } else {
         structural_focus_phase(snapshot)
     };
     let node_label = if structural_no_workflow_state(snapshot) {
         "no_workflow_state".to_string()
+    } else if let Some(active_regime) = active_regime.as_ref() {
+        active_regime.to_string()
     } else if provider_support.active
         || support_reason.as_deref() == Some("user_selected_historical_data_missing")
         || structural_hard_block_active(snapshot)
@@ -1426,8 +1428,6 @@ pub fn build_structural_node_artifact_with_prior_state(
             .clone()
             .filter(|value| !value.is_empty() && value != "none")
             .unwrap_or_else(|| "actionable".to_string())
-    } else if let Some(active_regime) = structural_active_regime(snapshot) {
-        active_regime.to_string()
     } else {
         "actionable".to_string()
     };
@@ -1517,7 +1517,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
             ],
             supporting_evidence: vec!["workflow_status has no persisted phase state".to_string()],
         });
-    } else if provider_support.active {
+    } else if provider_support.active && structural_active_regime(snapshot).is_none() {
         branches.push(StructuralBranchArtifact {
             branch_id: format!("{}:resolve_provider_gate", node.node_id),
             target_node_id: format!("{}:provider_ready", structural_symbol(snapshot)),
@@ -1563,7 +1563,9 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
             failure_conditions: vec!["Execution requires unavailable external runtime.".to_string()],
             supporting_evidence: vec!["zero_config_fallback_may_still_exist".to_string()],
         });
-    } else if support_reason.as_deref() == Some("user_selected_historical_data_missing") {
+    } else if support_reason.as_deref() == Some("user_selected_historical_data_missing")
+        && structural_active_regime(snapshot).is_none()
+    {
         branches.push(StructuralBranchArtifact {
             branch_id: format!("{}:choose_historical_dataset", node.node_id),
             target_node_id: format!("{}:research_ready", structural_symbol(snapshot)),
