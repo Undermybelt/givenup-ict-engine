@@ -222,6 +222,7 @@ pub struct StructuralExperiencePriorSurfaceArtifact {
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct StructuralTopPathCandidatesArtifact {
     pub symbol: String,
+    pub candidate_set_id: String,
     pub candidate_count: usize,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub candidates: Vec<StructuralTopPathCandidate>,
@@ -231,6 +232,9 @@ pub struct StructuralTopPathCandidatesArtifact {
 pub struct StructuralRecommendedPathBundleArtifact {
     pub symbol: String,
     pub rank: usize,
+    pub candidate_set_id: String,
+    pub candidate_set_size: usize,
+    pub selected_path_probability: f64,
     pub path_id: String,
     pub scenario_id: String,
     pub path_label: String,
@@ -254,6 +258,8 @@ pub struct StructuralRecommendedPathBundleArtifact {
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct StructuralTopPathCandidate {
     pub rank: usize,
+    pub candidate_set_id: String,
+    pub behavior_policy_probability: f64,
     pub path_id: String,
     pub scenario_id: String,
     pub path_label: String,
@@ -1316,28 +1322,45 @@ pub fn build_structural_top_path_candidates_artifact(
     provider_status_agent: &ProviderCatalogAgentSurface,
     feedback_history: &[FeedbackRecord],
 ) -> StructuralTopPathCandidatesArtifact {
-    let candidates = structural_ranked_paths(snapshot, provider_status_agent, feedback_history)
+    let candidate_paths = structural_ranked_paths(snapshot, provider_status_agent, feedback_history)
         .into_iter()
         .take(3)
+        .collect::<Vec<_>>();
+    let symbol = structural_symbol(snapshot);
+    let candidate_set_id = structural_candidate_set_id(&symbol, &candidate_paths);
+    let denominator = structural_candidate_policy_denominator(&candidate_paths);
+    let candidate_count = candidate_paths.len();
+    let candidates = candidate_paths
+        .into_iter()
         .enumerate()
-        .map(|(index, path)| StructuralTopPathCandidate {
-            rank: index + 1,
-            path_id: path.path_id,
-            scenario_id: path.scenario_id,
-            path_label: path.path_label,
-            direction: path.direction,
-            experience_prior: path.path_prior,
-            current_posterior: path.path_posterior,
-            composite_score: path.composite_preference_score,
-            historical_total_records: path.historical_total_records,
-            historical_followed_count: path.historical_followed_count,
-            historical_invalidation_rate: path.historical_invalidation_rate,
-            recommended_command: path.recommended_command,
+        .map(|(index, path)| {
+            let behavior_policy_probability = structural_candidate_policy_probability(
+                path.composite_preference_score,
+                denominator,
+                candidate_count,
+            );
+            StructuralTopPathCandidate {
+                rank: index + 1,
+                candidate_set_id: candidate_set_id.clone(),
+                behavior_policy_probability,
+                path_id: path.path_id,
+                scenario_id: path.scenario_id,
+                path_label: path.path_label,
+                direction: path.direction,
+                experience_prior: path.path_prior,
+                current_posterior: path.path_posterior,
+                composite_score: path.composite_preference_score,
+                historical_total_records: path.historical_total_records,
+                historical_followed_count: path.historical_followed_count,
+                historical_invalidation_rate: path.historical_invalidation_rate,
+                recommended_command: path.recommended_command,
+            }
         })
         .collect::<Vec<_>>();
     StructuralTopPathCandidatesArtifact {
-        symbol: structural_symbol(snapshot),
-        candidate_count: candidates.len(),
+        symbol,
+        candidate_set_id,
+        candidate_count,
         candidates,
     }
 }
@@ -1348,7 +1371,7 @@ pub fn build_structural_top_path_candidates_artifact_with_prior_state(
     feedback_history: &[FeedbackRecord],
     structural_prior_state: &StructuralPriorLearningState,
 ) -> StructuralTopPathCandidatesArtifact {
-    let candidates = structural_ranked_paths_with_prior_state(
+    let candidate_paths = structural_ranked_paths_with_prior_state(
         snapshot,
         provider_status_agent,
         feedback_history,
@@ -1356,27 +1379,87 @@ pub fn build_structural_top_path_candidates_artifact_with_prior_state(
     )
     .into_iter()
     .take(3)
-    .enumerate()
-    .map(|(index, path)| StructuralTopPathCandidate {
-        rank: index + 1,
-        path_id: path.path_id,
-        scenario_id: path.scenario_id,
-        path_label: path.path_label,
-        direction: path.direction,
-        experience_prior: path.path_prior,
-        current_posterior: path.path_posterior,
-        composite_score: path.composite_preference_score,
-        historical_total_records: path.historical_total_records,
-        historical_followed_count: path.historical_followed_count,
-        historical_invalidation_rate: path.historical_invalidation_rate,
-        recommended_command: path.recommended_command,
-    })
     .collect::<Vec<_>>();
+    let symbol = structural_symbol(snapshot);
+    let candidate_set_id = structural_candidate_set_id(&symbol, &candidate_paths);
+    let denominator = structural_candidate_policy_denominator(&candidate_paths);
+    let candidate_count = candidate_paths.len();
+    let candidates = candidate_paths
+        .into_iter()
+        .enumerate()
+        .map(|(index, path)| {
+            let behavior_policy_probability = structural_candidate_policy_probability(
+                path.composite_preference_score,
+                denominator,
+                candidate_count,
+            );
+            StructuralTopPathCandidate {
+                rank: index + 1,
+                candidate_set_id: candidate_set_id.clone(),
+                behavior_policy_probability,
+                path_id: path.path_id,
+                scenario_id: path.scenario_id,
+                path_label: path.path_label,
+                direction: path.direction,
+                experience_prior: path.path_prior,
+                current_posterior: path.path_posterior,
+                composite_score: path.composite_preference_score,
+                historical_total_records: path.historical_total_records,
+                historical_followed_count: path.historical_followed_count,
+                historical_invalidation_rate: path.historical_invalidation_rate,
+                recommended_command: path.recommended_command,
+            }
+        })
+        .collect::<Vec<_>>();
     StructuralTopPathCandidatesArtifact {
-        symbol: structural_symbol(snapshot),
-        candidate_count: candidates.len(),
+        symbol,
+        candidate_set_id,
+        candidate_count,
         candidates,
     }
+}
+
+fn structural_candidate_policy_denominator(candidate_paths: &[StructuralPathArtifact]) -> f64 {
+    candidate_paths
+        .iter()
+        .map(|path| path.composite_preference_score.max(0.0))
+        .sum()
+}
+
+fn structural_candidate_policy_probability(
+    composite_score: f64,
+    denominator: f64,
+    candidate_count: usize,
+) -> f64 {
+    if denominator > f64::EPSILON {
+        (composite_score.max(0.0) / denominator).clamp(0.0, 1.0)
+    } else if candidate_count > 0 {
+        1.0 / candidate_count as f64
+    } else {
+        0.0
+    }
+}
+
+fn structural_candidate_set_id(symbol: &str, candidate_paths: &[StructuralPathArtifact]) -> String {
+    let mut fingerprint = String::new();
+    fingerprint.push_str(symbol);
+    for path in candidate_paths {
+        fingerprint.push('|');
+        fingerprint.push_str(&path.path_id);
+    }
+    format!(
+        "structural-candidates:{symbol}:{:016x}",
+        structural_stable_hash64(&fingerprint)
+    )
+}
+
+fn structural_stable_hash64(value: &str) -> u64 {
+    let mut hash = 0xcbf29ce484222325_u64;
+    for byte in value.as_bytes() {
+        hash ^= u64::from(*byte);
+        hash = hash.wrapping_mul(0x100000001b3);
+    }
+    hash
 }
 
 pub fn build_structural_recommended_path_bundle_artifact(
@@ -1384,17 +1467,38 @@ pub fn build_structural_recommended_path_bundle_artifact(
     provider_status_agent: &ProviderCatalogAgentSurface,
     feedback_history: &[FeedbackRecord],
 ) -> Option<StructuralRecommendedPathBundleArtifact> {
-    let path = structural_ranked_paths(snapshot, provider_status_agent, feedback_history)
+    let candidate_paths = structural_ranked_paths(snapshot, provider_status_agent, feedback_history)
         .into_iter()
-        .next()?;
+        .take(3)
+        .collect::<Vec<_>>();
+    let symbol = structural_symbol(snapshot);
+    structural_recommended_path_bundle_from_candidates(symbol, candidate_paths)
+}
+
+fn structural_recommended_path_bundle_from_candidates(
+    symbol: String,
+    candidate_paths: Vec<StructuralPathArtifact>,
+) -> Option<StructuralRecommendedPathBundleArtifact> {
+    let candidate_set_id = structural_candidate_set_id(&symbol, &candidate_paths);
+    let denominator = structural_candidate_policy_denominator(&candidate_paths);
+    let candidate_set_size = candidate_paths.len();
+    let path = candidate_paths.first()?;
+    let selected_path_probability = structural_candidate_policy_probability(
+        path.composite_preference_score,
+        denominator,
+        candidate_set_size,
+    );
     let why_this_path = structural_why_this_path_summary(&path);
     Some(StructuralRecommendedPathBundleArtifact {
-        symbol: structural_symbol(snapshot),
+        symbol,
         rank: 1,
-        path_id: path.path_id,
-        scenario_id: path.scenario_id,
-        path_label: path.path_label,
-        direction: path.direction,
+        candidate_set_id,
+        candidate_set_size,
+        selected_path_probability,
+        path_id: path.path_id.clone(),
+        scenario_id: path.scenario_id.clone(),
+        path_label: path.path_label.clone(),
+        direction: path.direction.clone(),
         experience_prior: path.path_prior,
         current_posterior: path.path_posterior,
         composite_score: path.composite_preference_score,
@@ -1414,7 +1518,7 @@ pub fn build_structural_recommended_path_bundle_artifact(
             &path.invalidation_conditions,
             "invalidation_not_available",
         ),
-        recommended_command: path.recommended_command,
+        recommended_command: path.recommended_command.clone(),
     })
 }
 
@@ -1424,43 +1528,16 @@ pub fn build_structural_recommended_path_bundle_artifact_with_prior_state(
     feedback_history: &[FeedbackRecord],
     structural_prior_state: &StructuralPriorLearningState,
 ) -> Option<StructuralRecommendedPathBundleArtifact> {
-    let path = structural_ranked_paths_with_prior_state(
+    let candidate_paths = structural_ranked_paths_with_prior_state(
         snapshot,
         provider_status_agent,
         feedback_history,
         structural_prior_state,
     )
     .into_iter()
-    .next()?;
-    let why_this_path = structural_why_this_path_summary(&path);
-    Some(StructuralRecommendedPathBundleArtifact {
-        symbol: structural_symbol(snapshot),
-        rank: 1,
-        path_id: path.path_id,
-        scenario_id: path.scenario_id,
-        path_label: path.path_label,
-        direction: path.direction,
-        experience_prior: path.path_prior,
-        current_posterior: path.path_posterior,
-        composite_score: path.composite_preference_score,
-        historical_total_records: path.historical_total_records,
-        historical_invalidation_rate: path.historical_invalidation_rate,
-        why_this_path,
-        trigger_summary: structural_short_rule_summary(
-            &path.trigger_conditions,
-            "trigger_not_available",
-        ),
-        confirmation_summary: structural_short_rule_summary(
-            &path.confirmation_conditions,
-            "confirmation_not_available",
-        ),
-        stop_summary: structural_scalar_rule_summary(&path.stop_definition, "stop_not_available"),
-        invalidation_summary: structural_short_rule_summary(
-            &path.invalidation_conditions,
-            "invalidation_not_available",
-        ),
-        recommended_command: path.recommended_command,
-    })
+    .take(3)
+    .collect::<Vec<_>>();
+    structural_recommended_path_bundle_from_candidates(structural_symbol(snapshot), candidate_paths)
 }
 
 pub fn build_structural_node_artifact(

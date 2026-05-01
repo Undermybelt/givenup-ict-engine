@@ -6520,6 +6520,12 @@ mod tests {
             value["path_id"],
             "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
         );
+        assert!(value["candidate_set_id"]
+            .as_str()
+            .unwrap()
+            .starts_with("structural-candidates:NQ:"));
+        assert_eq!(value["candidate_set_size"], 3);
+        assert!(value["selected_path_probability"].as_f64().unwrap() > 0.0);
         assert!(value["trigger_summary"].as_str().unwrap().contains("regime"));
         assert!(value["stop_summary"].as_str().unwrap().len() > 4);
         assert!(value["confirmation_summary"].as_str().unwrap().len() > 4);

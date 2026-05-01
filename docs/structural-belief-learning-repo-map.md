@@ -20,7 +20,7 @@ Aligned source docs:
 |---|---|---|
 | `P0` Repo truth | `已实现` | execution plan, literature docs, and paper-code readmes are committed |
 | `P1` Canonical structural anchor | `已实现` | downstream phases no longer redefine canonical structural lineage |
-| `P2` Live feedback posterior update | `部分实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, and clipped IPS counterfactual reward priors exist; full DR/candidate-set policy logging remains |
+| `P2` Live feedback posterior update | `部分实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, clipped IPS counterfactual reward priors, and candidate-set policy logging exist; full DR/SNIPS correction remains |
 | `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation exist |
 | `P4` Structural prior state upgrade | `部分实现` | duration, transition, source panels, event ledger, separated prior-mass snapshots, and latest offline seed snapshot exist; richer dwell-time theory remains |
 | `P5` BBN node/branch posterior update | `部分实现` | temporal priors adjust belief snapshots and branch surfaces, normalized outgoing branch-transition posterior state persists, and complete candidate-set branch adjustment consumes it directly |
@@ -185,9 +185,10 @@ Already in repo
 - not-followed feedback updates weighted exposure mass, weighted not-followed mass, execution propensity, and an off-policy-adjusted prior without adding reward pseudo-counts
 - structural history surfaces expose execution propensity and off-policy exposure rate for consumer agents
 - persisted structural stats and `structural-experience-priors` expose clipped IPS weight and counterfactual reward prior
+- recommended path bundles log candidate-set id, candidate-set size, and selected path behavior-policy probability for later DR/SNIPS correction
 
 Literature mechanisms still worth importing
-- DR/SNIPS-style off-policy value correction after candidate-set policy logging exists
+- DR/SNIPS-style off-policy value correction using logged candidate-set policy probabilities
 - maturity / censoring logic for delayed reward
 - richer maturity / censoring logic for delayed reward beyond simple delayed -> resolved replacement
 - compliance / propensity correction before updating execution value
@@ -208,7 +209,7 @@ Suggested outcome decomposition
 
 Current repo gap
 - feedback learning is real and no longer heuristic-only; delayed outcomes now resolve into one posterior event and abandoned/invalidated outcomes use explicit pseudo-count weights
-- not-followed recommendations now carry separate propensity/off-policy exposure fields and clipped IPS counterfactual reward priors, but DR/SNIPS correction still needs candidate-set policy logging
+- not-followed recommendations now carry separate propensity/off-policy exposure fields and clipped IPS counterfactual reward priors, and recommended path bundles log behavior-policy probability; DR/SNIPS correction remains the next value-estimation step
 
 ---
 
