@@ -23,7 +23,7 @@ Aligned source docs:
 | `P2` Live feedback posterior update | `部分实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, and clipped IPS counterfactual reward priors exist; full DR/candidate-set policy logging remains |
 | `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation exist |
 | `P4` Structural prior state upgrade | `部分实现` | duration, transition, source panels, event ledger, separated prior-mass snapshots, and latest offline seed snapshot exist; richer dwell-time theory remains |
-| `P5` BBN node/branch posterior update | `部分实现` | temporal priors adjust belief snapshots and branch surfaces, and normalized outgoing branch-transition posterior state now persists; remaining belief adjustment logic still needs consolidation |
+| `P5` BBN node/branch posterior update | `部分实现` | temporal priors adjust belief snapshots and branch surfaces, normalized outgoing branch-transition posterior state persists, and complete candidate-set branch adjustment consumes it directly |
 | `P6` CatBoost path ranking target | `未实现` | structural candidate surfaces exist, but the formal target stack is not landed |
 
 ## Repo Targets
@@ -100,6 +100,7 @@ Already in repo
 - `regime_posterior`, `belief_posteriors["market_regime"]`, `gate_decision`, `strategy_recommendation`, and selected market subgraph are synchronized after adjustment
 - workflow snapshot and ensemble surfaces reuse canonical structural regime posteriors across phases
 - `workflow-status` temporal summary exposes the maintained normalized transition posterior for consumer agents
+- complete candidate-set branch posterior adjustment reads maintained normalized transition posterior state before falling back to multiplier reconstruction
 
 Literature mechanisms still worth importing
 - discounted transition-count updates:
@@ -121,7 +122,7 @@ Suggested implementation hooks
 
 Current repo gap
 - branch transition priors already affect branch prior/posterior surfaces and belief snapshots, and maintained branch temporal posterior state now carries normalized outgoing posterior mass
-- some belief snapshot adjustment logic still reconstructs transition effects at read time; the next cleanup is to collapse those readers further onto maintained BBN posterior state
+- complete candidate sets now consume the maintained transition posterior directly; partial candidate fallback and richer node transition handling still need consolidation
 
 ---
 

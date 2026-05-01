@@ -109,7 +109,7 @@ Tests likely touched:
 | `P2` Live feedback posterior update | `partial` | delayed resolution, fractional pseudo-counts, compliance/off-policy exposure, and clipped IPS counterfactual reward priors landed; full DR/candidate-set policy logging remains |
 | `P3` Offline evidence tempering | `mostly done` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation landed |
 | `P4` Structural prior state upgrade | `partial` | duration / transition / source panels / event ledger / temporal posterior state, separated prior-mass snapshots, and latest offline seed snapshot landed; richer dwell-time theory remains |
-| `P5` BBN node/branch posterior update | `partial` | discounted temporal maintenance and normalized outgoing transition posterior state exist; remaining belief adjustment logic still needs consolidation |
+| `P5` BBN node/branch posterior update | `partial` | discounted temporal maintenance and normalized outgoing transition posterior state exist; complete candidate-set branch adjustment now consumes maintained posterior state |
 | `P6` CatBoost path ranking target | `not started` | structural candidate surfaces exist, but target math and calibration stack are still unimplemented |
 
 ## Current Todo Board
@@ -133,6 +133,7 @@ Tests likely touched:
 - [x] Consume source-reliability posteriors in panel-derived prior aggregation.
 - [x] Persist separated node / branch / scenario / path prior-mass snapshots and the latest offline seed snapshot object.
 - [x] Persist normalized outgoing branch-transition posterior state and test repeated evidence without collapsing unrelated branches.
+- [x] Make branch posterior adjustment consume complete normalized transition posterior state when available.
 
 ### Next
 
@@ -271,7 +272,8 @@ Outcome:
 - [x] Identify the existing `BBN` update surfaces under `src/domain/belief/*` and `src/application/belief/*` that should consume discounted transition counts.
 - [x] Introduce discounted transition-count updates for branch posterior maintenance.
 - [x] Surface maintained node and branch temporal posterior state, including normalized transition posterior, through `workflow-status` temporal summary.
-- [ ] Collapse remaining belief snapshot adjustment logic onto the maintained `BBN` posterior state.
+- [x] Make complete-candidate branch posterior adjustment read the maintained normalized transition posterior instead of reconstructing it from multipliers.
+- [ ] Collapse remaining partial-candidate fallback and richer node transition handling onto the maintained `BBN` posterior state.
 - [x] Add tests that prove repeated evidence can strengthen one branch posterior without collapsing unrelated nodes.
 
 ### P6: CatBoost Path Ranking Target
