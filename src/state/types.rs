@@ -346,6 +346,14 @@ pub struct StructuralNodeDurationPrior {
     pub last_streak_length: usize,
     pub persistence_prior: f64,
     #[serde(default)]
+    pub expected_dwell_steps: f64,
+    #[serde(default)]
+    pub remaining_dwell_steps: f64,
+    #[serde(default)]
+    pub break_hazard: f64,
+    #[serde(default)]
+    pub sticky_self_transition_strength: f64,
+    #[serde(default)]
     pub duration_outcome_support: f64,
     #[serde(default)]
     pub temporal_posterior_support: f64,
@@ -383,6 +391,14 @@ pub struct StructuralNodeTemporalPosteriorState {
     pub observations: usize,
     pub streak_count: usize,
     pub weighted_streak_mass: f64,
+    #[serde(default)]
+    pub expected_dwell_steps: f64,
+    #[serde(default)]
+    pub remaining_dwell_steps: f64,
+    #[serde(default)]
+    pub break_hazard: f64,
+    #[serde(default)]
+    pub sticky_self_transition_strength: f64,
     pub duration_outcome_support: f64,
     pub temporal_posterior_support: f64,
     #[serde(default)]
@@ -4836,6 +4852,14 @@ fn finalize_node_duration_streak(
         });
 }
 
+fn structural_duration_break_hazard(last_streak_length: usize, expected_dwell_steps: f64) -> f64 {
+    if last_streak_length == 0 || expected_dwell_steps <= f64::EPSILON {
+        return 0.0;
+    }
+    let elapsed = last_streak_length as f64;
+    (elapsed / (elapsed + expected_dwell_steps)).clamp(0.0, 1.0)
+}
+
 fn rebuild_discounted_node_duration_priors(
     node_duration_priors: &mut BTreeMap<String, StructuralNodeDurationPrior>,
     node_temporal_posteriors: &mut BTreeMap<String, StructuralNodeTemporalPosteriorState>,
@@ -4885,11 +4909,21 @@ fn rebuild_discounted_node_duration_priors(
         } else {
             weighted_length_sum / weighted_streak_mass
         };
+        prior.expected_dwell_steps = weighted_avg_length;
+        prior.remaining_dwell_steps =
+            (weighted_avg_length - prior.last_streak_length as f64).max(0.0);
+        prior.break_hazard = structural_duration_break_hazard(
+            prior.last_streak_length,
+            prior.expected_dwell_steps,
+        );
         prior.persistence_prior =
             (weighted_avg_length / (weighted_avg_length + 1.0)).clamp(0.0, 1.0);
         let alpha = 1.0 + weighted_success_mass.max(0.0);
         let beta = 1.0 + weighted_failure_mass.max(0.0);
         prior.duration_outcome_support = (alpha / (alpha + beta)).clamp(0.0, 1.0);
+        prior.sticky_self_transition_strength = ((1.0 - prior.break_hazard) * 0.7
+            + prior.duration_outcome_support * 0.3)
+            .clamp(0.0, 1.0);
         prior.temporal_posterior_support =
             (prior.persistence_prior * 0.7 + prior.duration_outcome_support * 0.3)
                 .clamp(0.0, 1.0);
@@ -4902,12 +4936,19 @@ fn rebuild_discounted_node_duration_priors(
             observations: prior.observations,
             streak_count: prior.streak_count,
             weighted_streak_mass: prior.weighted_streak_mass,
+            expected_dwell_steps: prior.expected_dwell_steps,
+            remaining_dwell_steps: prior.remaining_dwell_steps,
+            break_hazard: prior.break_hazard,
+            sticky_self_transition_strength: prior.sticky_self_transition_strength,
             duration_outcome_support: prior.duration_outcome_support,
             temporal_posterior_support: prior.temporal_posterior_support,
             posterior_blend_weight,
             summary_line: format!(
-                "duration_mass={:.3} duration_support={:.3} duration_temporal={:.3} blend={:.3}",
+                "duration_mass={:.3} expected_dwell={:.3} break_hazard={:.3} sticky_self_transition={:.3} duration_support={:.3} duration_temporal={:.3} blend={:.3}",
                 prior.weighted_streak_mass,
+                prior.expected_dwell_steps,
+                prior.break_hazard,
+                prior.sticky_self_transition_strength,
                 prior.duration_outcome_support,
                 prior.temporal_posterior_support,
                 posterior_blend_weight
@@ -6061,6 +6102,10 @@ mod tests {
         assert!(trend.weighted_streak_mass > range.weighted_streak_mass);
         assert_eq!(trend.max_streak_length, 2);
         assert!((trend.avg_streak_length - 1.5).abs() < 1e-9);
+        assert!(trend.expected_dwell_steps > range.expected_dwell_steps);
+        assert!(trend.remaining_dwell_steps >= 0.0);
+        assert!(trend.break_hazard > 0.0);
+        assert!(trend.sticky_self_transition_strength > 0.0);
         assert!(trend.persistence_prior > range.persistence_prior);
         assert_eq!(range.observations, 1);
         assert_eq!(range.streak_count, 1);
@@ -6072,6 +6117,12 @@ mod tests {
         assert_eq!(temporal.node_id, "NQ:belief_regime_node:trend");
         assert_eq!(temporal.streak_count, 2);
         assert_eq!(temporal.weighted_streak_mass, trend.weighted_streak_mass);
+        assert_eq!(temporal.expected_dwell_steps, trend.expected_dwell_steps);
+        assert_eq!(temporal.break_hazard, trend.break_hazard);
+        assert_eq!(
+            temporal.sticky_self_transition_strength,
+            trend.sticky_self_transition_strength
+        );
         assert_eq!(temporal.temporal_posterior_support, trend.temporal_posterior_support);
     }
 

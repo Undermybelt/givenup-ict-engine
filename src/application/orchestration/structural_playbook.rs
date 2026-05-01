@@ -195,6 +195,14 @@ pub struct StructuralTemporalSummaryArtifact {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_persistence_prior: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_expected_dwell_steps: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_remaining_dwell_steps: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_break_hazard: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_sticky_self_transition_strength: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_weighted_streak_mass: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_outcome_support: Option<f64>,
@@ -1437,8 +1445,12 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
         .map(|state| state.summary_line.clone())
         .unwrap_or_else(|| {
             format!(
-                "duration_mass={:.3} duration_support={:.3} duration_temporal={:.3} blend=0.000",
+                "duration_mass={:.3} expected_dwell={:.3} break_hazard={:.3} sticky_self_transition={:.3} duration_support={:.3} duration_temporal={:.3} blend=0.000",
                 structural_duration_weighted_streak_mass(node_duration_prior).unwrap_or_default(),
+                structural_duration_expected_dwell_steps(node_duration_prior).unwrap_or_default(),
+                structural_duration_break_hazard(node_duration_prior).unwrap_or_default(),
+                structural_duration_sticky_self_transition_strength(node_duration_prior)
+                    .unwrap_or_default(),
                 structural_duration_outcome_support(node_duration_prior).unwrap_or_default(),
                 structural_duration_temporal_posterior_support(node_duration_prior)
                     .unwrap_or_default()
@@ -1478,6 +1490,18 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
             .or_else(|| structural_duration_streak_count(node_duration_prior)),
         duration_avg_streak_length: structural_duration_avg_streak_length(node_duration_prior),
         duration_persistence_prior: structural_duration_persistence_prior(node_duration_prior),
+        duration_expected_dwell_steps: node_temporal_state
+            .map(|state| state.expected_dwell_steps)
+            .or_else(|| structural_duration_expected_dwell_steps(node_duration_prior)),
+        duration_remaining_dwell_steps: node_temporal_state
+            .map(|state| state.remaining_dwell_steps)
+            .or_else(|| structural_duration_remaining_dwell_steps(node_duration_prior)),
+        duration_break_hazard: node_temporal_state
+            .map(|state| state.break_hazard)
+            .or_else(|| structural_duration_break_hazard(node_duration_prior)),
+        duration_sticky_self_transition_strength: node_temporal_state
+            .map(|state| state.sticky_self_transition_strength)
+            .or_else(|| structural_duration_sticky_self_transition_strength(node_duration_prior)),
         duration_weighted_streak_mass: node_temporal_state
             .map(|state| state.weighted_streak_mass)
             .or_else(|| structural_duration_weighted_streak_mass(node_duration_prior)),
@@ -3694,6 +3718,30 @@ fn structural_duration_persistence_prior(
     duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
 ) -> Option<f64> {
     duration_prior.map(|prior| prior.persistence_prior)
+}
+
+fn structural_duration_expected_dwell_steps(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    duration_prior.map(|prior| prior.expected_dwell_steps)
+}
+
+fn structural_duration_remaining_dwell_steps(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    duration_prior.map(|prior| prior.remaining_dwell_steps)
+}
+
+fn structural_duration_break_hazard(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    duration_prior.map(|prior| prior.break_hazard)
+}
+
+fn structural_duration_sticky_self_transition_strength(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    duration_prior.map(|prior| prior.sticky_self_transition_strength)
 }
 
 fn structural_duration_weighted_streak_mass(

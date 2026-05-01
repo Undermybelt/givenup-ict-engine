@@ -199,6 +199,7 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
             duration_outcome_support: 0.7727272727,
             temporal_posterior_support: 0.8618181818,
             last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+            ..StructuralNodeDurationPrior::default()
         },
     );
     structural_prior_state.node_temporal_posteriors.insert(
@@ -213,6 +214,7 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
             posterior_blend_weight: 0.4,
             summary_line: "duration_mass=2.400 duration_support=0.773 duration_temporal=0.862 blend=0.400".to_string(),
             last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+            ..crate::state::StructuralNodeTemporalPosteriorState::default()
         },
     );
 
@@ -505,6 +507,7 @@ fn canonical_belief_snapshot_with_structural_prior_state_reconciles_gate_and_str
             duration_outcome_support: 0.8039215686,
             temporal_posterior_support: 0.9061764706,
             last_recommended_at: Some("2026-04-30T04:00:00Z".to_string()),
+            ..StructuralNodeDurationPrior::default()
         },
     );
 

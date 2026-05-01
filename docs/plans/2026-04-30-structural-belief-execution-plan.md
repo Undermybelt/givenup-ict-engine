@@ -108,9 +108,9 @@ Tests likely touched:
 | `P1` Canonical structural anchor | `mostly done` | canonical anchor and cross-phase propagation are landed; a dedicated downstream smoke path is still worth keeping explicit |
 | `P2` Live feedback posterior update | `mostly done` | delayed resolution, fractional pseudo-counts, compliance/off-policy exposure, clipped IPS counterfactual reward priors, candidate-set policy logging, feedback-time selected policy probability consumption, and clipped SNIPS/DR reward priors landed; deeper target-policy calibration remains |
 | `P3` Offline evidence tempering | `mostly done` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation landed |
-| `P4` Structural prior state upgrade | `partial` | duration / transition / source panels / event ledger / temporal posterior state, separated prior-mass snapshots, and latest offline seed snapshot landed; richer dwell-time theory remains |
+| `P4` Structural prior state upgrade | `partial` | duration / transition / dwell-hazard fields / source panels / event ledger / temporal posterior state, separated prior-mass snapshots, and latest offline seed snapshot landed; fitted dwell-time theory remains |
 | `P5` BBN node/branch posterior update | `mostly done` | discounted temporal maintenance and normalized outgoing transition posterior state exist; node/regime and complete/partial candidate-set branch adjustment now consume maintained posterior state |
-| `P6` CatBoost path ranking target | `not started` | structural candidate surfaces exist, but target math and calibration stack are still unimplemented |
+| `P6` CatBoost path ranking target | `partial` | target surface, persisted export, empirical calibration utility, and calibration-quality evaluator exist; model training and production validation still require enough raw-scored rows |
 
 ## Current Todo Board
 
@@ -273,6 +273,7 @@ Outcome:
 - [x] Extend `LearningState.structural_prior_state` in `src/state/types.rs` with explicit node duration and branch transition fields suggested by the repo map.
 - [x] Separate node prior mass from branch/path prior mass so one noisy path does not mutate the whole node too aggressively.
 - [x] Store last offline seed snapshots and per-source summaries for later audit and recalibration.
+- [x] Surface duration expected dwell, remaining dwell, break hazard, and sticky self-transition strength through maintained temporal state.
 - [x] Add tests that prove duration and transition state survives persistence and is reused by structural orchestration.
 
 ### P5: BBN Node/Branch Posterior Update

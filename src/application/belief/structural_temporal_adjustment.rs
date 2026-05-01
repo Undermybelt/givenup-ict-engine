@@ -318,6 +318,7 @@ mod tests {
             duration_outcome_support: 0.77,
             temporal_posterior_support: 0.86,
             last_recommended_at: None,
+            ..StructuralNodeDurationPrior::default()
         };
         let temporal_state = StructuralNodeTemporalPosteriorState {
             node_id: "NQ:belief_regime_node:trend".to_string(),
@@ -329,6 +330,7 @@ mod tests {
             posterior_blend_weight: 0.5,
             summary_line: "duration_mass=2.400 duration_support=0.200 duration_temporal=0.300 blend=0.500".to_string(),
             last_recommended_at: None,
+            ..StructuralNodeTemporalPosteriorState::default()
         };
 
         let blended = blend_node_posterior_with_duration_prior(0.60, Some(&duration_prior), Some(&temporal_state));

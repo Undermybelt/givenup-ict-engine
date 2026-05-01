@@ -23,7 +23,7 @@ Aligned source docs:
 | `P1` Canonical structural anchor | `已实现` | downstream phases no longer redefine canonical structural lineage |
 | `P2` Live feedback posterior update | `基本实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, clipped IPS counterfactual reward priors, candidate-set policy logging, feedback-time selected policy probability consumption, and clipped SNIPS/DR reward priors exist; deeper target-policy calibration remains |
 | `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation exist |
-| `P4` Structural prior state upgrade | `部分实现` | duration, transition, source panels, event ledger, separated prior-mass snapshots, and latest offline seed snapshot exist; richer dwell-time theory remains |
+| `P4` Structural prior state upgrade | `部分实现` | duration, transition, dwell/hazard fields, source panels, event ledger, separated prior-mass snapshots, and latest offline seed snapshot exist; fitted dwell-time theory remains |
 | `P5` BBN node/branch posterior update | `基本实现` | temporal priors adjust belief snapshots and branch surfaces, normalized outgoing branch-transition posterior state persists, and node/regime plus complete/partial candidate-set branch adjustment consume it directly |
 | `P6` CatBoost path ranking target | `部分实现` | target surface contract, explicit row fields, workflow surface, persisted target-row export, empirical calibration utility, and calibration-quality evaluator exist; production validation on sufficient raw-scored rows is still not landed |
 
@@ -59,11 +59,11 @@ Already in repo
 - `event_ledger`
 - `node_duration_priors`
 - `branch_transition_priors`
+- duration `expected_dwell_steps`, `remaining_dwell_steps`, `break_hazard`, and `sticky_self_transition_strength`
 - panel-derived prior reconstruction before structural display / ranking surfaces
 
 Literature mechanisms still worth importing
-- explicit HSMM-style duration distribution, not only streak-derived persistence
-- sticky self-transition strength as a first-class parameter, not only blended persistence bias
+- fitted HSMM-style duration distribution beyond the current discounted streak-derived dwell fields
 - source-panel posterior aggregation written as explicit panel likelihood / prior math, not only weighted summary blending
 - clearer node-level prior mass separation from branch/path-level prior mass
 
@@ -75,11 +75,11 @@ Suggested state fields
 - `last_offline_seed_snapshot`
 
 Current repo gap
-- `node_duration_priors` and `branch_transition_priors` are real, and `node_prior_mass` / `branch_prior_mass` / `scenario_prior_mass` / `path_prior_mass` now keep entity-scaled prior mass auditable outside the generic stats maps
+- `node_duration_priors` and `branch_transition_priors` are real; duration state now carries expected dwell, remaining dwell, break hazard, and sticky self-transition strength; `node_prior_mass` / `branch_prior_mass` / `scenario_prior_mass` / `path_prior_mass` keep entity-scaled prior mass auditable outside the generic stats maps
 - `last_offline_seed_snapshot` is formalized as a persistent theory object for the latest offline seed, but deeper snapshot history / recalibration policy remains future work
 
 Upgrade path
-1. upgrade duration prior from streak summary to explicit dwell-time model
+1. upgrade current dwell fields into a fitted duration distribution once enough sequence history exists
 2. treat source panels as pre-merge posterior contributors, not only audit surfaces
 
 ---

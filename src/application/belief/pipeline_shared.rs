@@ -604,7 +604,7 @@ fn apply_structural_prior_state_to_belief_report(
                 node_temporal_state,
             ));
             report.regime_posterior.evidence.push(format!(
-                "duration_persistence_prior={:.3} observations={} streaks={} weighted_streak_mass={:.3} duration_outcome_support={:.3} duration_temporal_posterior_support={:.3}",
+                "duration_persistence_prior={:.3} observations={} streaks={} weighted_streak_mass={:.3} expected_dwell={:.3} break_hazard={:.3} sticky_self_transition={:.3} duration_outcome_support={:.3} duration_temporal_posterior_support={:.3}",
                 duration_prior.persistence_prior,
                 node_temporal_state
                     .map(|state| state.observations)
@@ -615,6 +615,15 @@ fn apply_structural_prior_state_to_belief_report(
                 node_temporal_state
                     .map(|state| state.weighted_streak_mass)
                     .unwrap_or(duration_prior.weighted_streak_mass),
+                node_temporal_state
+                    .map(|state| state.expected_dwell_steps)
+                    .unwrap_or(duration_prior.expected_dwell_steps),
+                node_temporal_state
+                    .map(|state| state.break_hazard)
+                    .unwrap_or(duration_prior.break_hazard),
+                node_temporal_state
+                    .map(|state| state.sticky_self_transition_strength)
+                    .unwrap_or(duration_prior.sticky_self_transition_strength),
                 node_temporal_state
                     .map(|state| state.duration_outcome_support)
                     .unwrap_or(duration_prior.duration_outcome_support),

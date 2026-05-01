@@ -4296,6 +4296,7 @@ mod tests {
                 duration_outcome_support: 0.7727272727,
                 temporal_posterior_support: 0.8618181818,
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+                ..crate::state::StructuralNodeDurationPrior::default()
             },
         );
 
@@ -5575,6 +5576,7 @@ mod tests {
                 duration_outcome_support: 0.7407407407,
                 temporal_posterior_support: 0.6422222222,
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+                ..crate::state::StructuralNodeDurationPrior::default()
             },
         );
 
@@ -6042,6 +6044,7 @@ mod tests {
                 duration_outcome_support: 0.7407407407,
                 temporal_posterior_support: 0.6422222222,
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+                ..crate::state::StructuralNodeDurationPrior::default()
             },
         );
         structural_prior_state.node_temporal_posteriors.insert(
@@ -6051,6 +6054,10 @@ mod tests {
                 observations: 4,
                 streak_count: 3,
                 weighted_streak_mass: 1.9,
+                expected_dwell_steps: 1.7,
+                remaining_dwell_steps: 0.7,
+                break_hazard: 0.37,
+                sticky_self_transition_strength: 0.63,
                 duration_outcome_support: 0.75,
                 temporal_posterior_support: 0.65,
                 posterior_blend_weight: 0.42,
@@ -6108,6 +6115,10 @@ mod tests {
 
         assert_eq!(value["node_id"], "NQ:belief_regime_node:transition");
         assert_eq!(value["duration_weighted_streak_mass"], 1.9);
+        assert_eq!(value["duration_expected_dwell_steps"], 1.7);
+        assert_eq!(value["duration_remaining_dwell_steps"], 0.7);
+        assert_eq!(value["duration_break_hazard"], 0.37);
+        assert_eq!(value["duration_sticky_self_transition_strength"], 0.63);
         assert_eq!(value["duration_outcome_support"], 0.75);
         assert_eq!(value["duration_temporal_posterior_support"], 0.65);
         assert_eq!(value["duration_posterior_blend_weight"], 0.42);
@@ -6181,6 +6192,7 @@ mod tests {
                 duration_outcome_support: 0.7407407407,
                 temporal_posterior_support: 0.6422222222,
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+                ..crate::state::StructuralNodeDurationPrior::default()
             },
         );
         structural_prior_state.node_temporal_posteriors.insert(
@@ -6195,6 +6207,7 @@ mod tests {
                 posterior_blend_weight: 0.2,
                 summary_line: "duration_mass=1.100 duration_support=0.200 duration_temporal=0.300 blend=0.200".to_string(),
                 last_recommended_at: Some("2026-04-30T04:00:00Z".to_string()),
+                ..crate::state::StructuralNodeTemporalPosteriorState::default()
             },
         );
 
@@ -6274,6 +6287,7 @@ mod tests {
                 duration_outcome_support: 0.7407407407,
                 temporal_posterior_support: 0.6422222222,
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+                ..crate::state::StructuralNodeDurationPrior::default()
             },
         );
         structural_prior_state.node_temporal_posteriors.insert(
@@ -6288,6 +6302,7 @@ mod tests {
                 posterior_blend_weight: 0.2,
                 summary_line: "duration_mass=1.100 duration_support=0.200 duration_temporal=0.300 blend=0.200".to_string(),
                 last_recommended_at: Some("2026-04-30T04:00:00Z".to_string()),
+                ..crate::state::StructuralNodeTemporalPosteriorState::default()
             },
         );
 
@@ -6384,6 +6399,7 @@ mod tests {
                 duration_outcome_support: 0.7407407407,
                 temporal_posterior_support: 0.6422222222,
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+                ..crate::state::StructuralNodeDurationPrior::default()
             },
         );
         structural_prior_state.branch_transition_priors.insert(
