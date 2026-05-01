@@ -112,46 +112,31 @@ impl WeightUpdater {
                     Direction::Bear => factor.short_support >= factor.long_support,
                     Direction::Neutral => false,
                 };
-                let learning_outcome =
-                    crate::state::structural_feedback_learning_outcome(record).unwrap_or(
-                        StructuralFeedbackLearningOutcome::Neutral,
-                    );
-                let effective_success = match (supports_selected, learning_outcome) {
-                    (true, StructuralFeedbackLearningOutcome::Positive) => Some(true),
-                    (true, StructuralFeedbackLearningOutcome::Negative) => Some(false),
-                    (true, StructuralFeedbackLearningOutcome::Neutral) => None,
-                    (false, StructuralFeedbackLearningOutcome::Positive) => Some(false),
-                    (false, StructuralFeedbackLearningOutcome::Negative) => Some(true),
-                    (false, StructuralFeedbackLearningOutcome::Neutral) => None,
-                };
+                let credit = factor_feedback_credit(record, supports_selected, factor.weight)
+                    .unwrap_or(FactorFeedbackCredit {
+                        success_credit: 0.5,
+                        observation_weight: 1.0,
+                        reliability_target: 0.5,
+                        signed_delta: 0.0,
+                    });
                 let (base_weight, posterior_reliability) = {
                     let profile = learning_state.ensure_profile(&factor.factor_name);
-                    let reliability_target = match effective_success {
-                        Some(true) => 0.75,
-                        Some(false) => 0.25,
-                        None => 0.50,
-                    };
                     profile.posterior_reliability = blend(
                         profile.posterior_reliability,
-                        reliability_target,
+                        credit.reliability_target,
                         self.learning_rate,
                     );
-                    let signed_delta = match effective_success {
-                        Some(true) => factor.weight.abs() * 0.20,
-                        Some(false) => -factor.weight.abs() * 0.25,
-                        None => 0.0,
-                    };
-                    let target_weight = (profile.base_weight + signed_delta).clamp(0.02, 1.0);
+                    let target_weight =
+                        (profile.base_weight + credit.signed_delta).clamp(0.02, 1.0);
                     profile.base_weight =
                         blend(profile.base_weight, target_weight, self.learning_rate);
-                    if let Some(effective_success) = effective_success {
-                        RegimeConditional::update_profile(
-                            profile,
-                            record.regime_at_entry,
-                            effective_success,
-                            record.pnl,
-                        );
-                    }
+                    RegimeConditional::update_profile_fractional(
+                        profile,
+                        record.regime_at_entry,
+                        credit.success_credit,
+                        credit.observation_weight,
+                        record.pnl,
+                    );
                     (profile.base_weight, profile.posterior_reliability)
                 };
 
@@ -168,6 +153,52 @@ impl WeightUpdater {
         sync_rankings_from_profiles(learning_state);
         learning_state.last_updated = Some(Utc::now());
     }
+}
+
+#[derive(Debug, Clone, Copy)]
+struct FactorFeedbackCredit {
+    success_credit: f64,
+    observation_weight: f64,
+    reliability_target: f64,
+    signed_delta: f64,
+}
+
+fn factor_feedback_credit(
+    record: &FeedbackRecord,
+    supports_selected: bool,
+    factor_weight: f64,
+) -> Option<FactorFeedbackCredit> {
+    let outcome = crate::state::structural_feedback_learning_outcome(record)?;
+    let (base_success_credit, observation_weight) = match record
+        .realized_outcome
+        .trim()
+        .to_ascii_lowercase()
+        .as_str()
+    {
+        "abandoned" => (0.25, 0.75),
+        _ => match outcome {
+            StructuralFeedbackLearningOutcome::Positive => (1.0, 1.0),
+            StructuralFeedbackLearningOutcome::Negative => (0.0, 1.0),
+            StructuralFeedbackLearningOutcome::Neutral => (0.5, 1.0),
+        },
+    };
+    let success_credit = if supports_selected {
+        base_success_credit
+    } else {
+        1.0 - base_success_credit
+    };
+    let reliability_target = (0.25_f64 + 0.5_f64 * success_credit).clamp(0.25, 0.75);
+    let signed_delta = if success_credit >= 0.5 {
+        factor_weight.abs() * ((success_credit - 0.5) / 0.5) * 0.20 * observation_weight
+    } else {
+        -factor_weight.abs() * ((0.5 - success_credit) / 0.5) * 0.25 * observation_weight
+    };
+    Some(FactorFeedbackCredit {
+        success_credit,
+        observation_weight,
+        reliability_target,
+        signed_delta,
+    })
 }
 
 fn blend(previous: f64, target: f64, learning_rate: f64) -> f64 {
@@ -532,7 +563,7 @@ mod tests {
     }
 
     #[test]
-    fn test_apply_feedback_treats_abandoned_as_neutral_trade_learning() {
+    fn test_apply_feedback_treats_abandoned_as_fractional_negative_trade_learning() {
         let updater = WeightUpdater::default();
         let mut learning_state = LearningState {
             factor_rankings: vec![PersistedFactorRanking {
@@ -596,8 +627,16 @@ mod tests {
         updater.apply_feedback(&mut learning_state, &[feedback]);
 
         let profile = learning_state.profile("trend_momentum").unwrap();
-        assert_eq!(learning_state.factor_rankings[0].weight, before_weight);
-        assert_eq!(profile.posterior_reliability, 0.5);
+        assert!(learning_state.factor_rankings[0].weight < before_weight);
+        assert!(learning_state.factor_rankings[0].weight > 0.18);
+        assert!(profile.posterior_reliability < 0.5);
+        assert!(profile.posterior_reliability > 0.35);
+        let regime_stats = profile
+            .regime_stats
+            .get("manipulation_expansion")
+            .expect("regime stats");
+        assert!((regime_stats.weighted_observations - 0.75).abs() < 1e-9);
+        assert!((regime_stats.weighted_successes - 0.1875).abs() < 1e-9);
         let path = learning_state
             .structural_prior_state
             .paths

@@ -224,6 +224,10 @@ impl Default for FactorLearningProfile {
 pub struct RegimeFactorStats {
     pub observations: usize,
     pub wins: usize,
+    #[serde(default)]
+    pub weighted_observations: f64,
+    #[serde(default)]
+    pub weighted_successes: f64,
     pub avg_pnl: f64,
     pub multiplier: f64,
 }
