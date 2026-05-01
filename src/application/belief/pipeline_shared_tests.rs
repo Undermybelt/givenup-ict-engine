@@ -188,6 +188,7 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
         StructuralNodeDurationPrior {
             observations: 6,
             streak_count: 3,
+            weighted_streak_mass: 2.4,
             total_streak_length: 6,
             avg_streak_length: 2.0,
             max_streak_length: 3,
@@ -336,6 +337,7 @@ fn canonical_belief_snapshot_with_structural_prior_state_reconciles_gate_and_str
         StructuralNodeDurationPrior {
             observations: 8,
             streak_count: 4,
+            weighted_streak_mass: 3.1,
             total_streak_length: 10,
             avg_streak_length: 2.5,
             max_streak_length: 4,

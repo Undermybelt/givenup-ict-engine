@@ -166,6 +166,8 @@ pub struct StructuralPriorEvent {
 pub struct StructuralNodeDurationPrior {
     pub observations: usize,
     pub streak_count: usize,
+    #[serde(default)]
+    pub weighted_streak_mass: f64,
     pub total_streak_length: usize,
     pub avg_streak_length: f64,
     pub max_streak_length: usize,
@@ -3785,13 +3787,14 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
     let mut current_streak_length: usize = 0;
     let mut current_recommended_at: Option<String> = None;
     let mut previous_event: Option<StructuralPriorEvent> = None;
+    let mut node_streaks = BTreeMap::<String, Vec<(usize, Option<String>)>>::new();
     let mut symbol_transition_events =
         BTreeMap::<String, Vec<(StructuralPriorEvent, StructuralPriorEvent)>>::new();
 
     for event in &events {
         if current_symbol.as_deref() != Some(event.symbol.as_str()) {
             finalize_node_duration_streak(
-                &mut state.node_duration_priors,
+                &mut node_streaks,
                 current_node_id.take(),
                 current_streak_length,
                 current_recommended_at.take(),
@@ -3803,7 +3806,7 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
             current_streak_length += 1;
         } else {
             finalize_node_duration_streak(
-                &mut state.node_duration_priors,
+                &mut node_streaks,
                 current_node_id.replace(event.node_id.clone()),
                 current_streak_length,
                 current_recommended_at.take(),
@@ -3824,11 +3827,12 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
     }
 
     finalize_node_duration_streak(
-        &mut state.node_duration_priors,
+        &mut node_streaks,
         current_node_id.take(),
         current_streak_length,
         current_recommended_at.take(),
     );
+    rebuild_discounted_node_duration_priors(&mut state.node_duration_priors, &node_streaks);
 
     for transition_events in symbol_transition_events.values() {
         let total_transitions = transition_events.len();
@@ -3879,7 +3883,7 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
 }
 
 fn finalize_node_duration_streak(
-    node_duration_priors: &mut BTreeMap<String, StructuralNodeDurationPrior>,
+    node_streaks: &mut BTreeMap<String, Vec<(usize, Option<String>)>>,
     node_id: Option<String>,
     streak_length: usize,
     last_recommended_at: Option<String>,
@@ -3890,16 +3894,49 @@ fn finalize_node_duration_streak(
     let Some(node_id) = node_id else {
         return;
     };
-    let entry = node_duration_priors.entry(node_id).or_default();
-    entry.observations += streak_length;
-    entry.streak_count += 1;
-    entry.total_streak_length += streak_length;
-    entry.max_streak_length = entry.max_streak_length.max(streak_length);
-    entry.last_streak_length = streak_length;
-    entry.avg_streak_length = entry.total_streak_length as f64 / entry.streak_count as f64;
-    entry.persistence_prior =
-        (entry.avg_streak_length / (entry.avg_streak_length + 1.0)).clamp(0.0, 1.0);
-    entry.last_recommended_at = last_recommended_at;
+    node_streaks
+        .entry(node_id)
+        .or_default()
+        .push((streak_length, last_recommended_at));
+}
+
+fn rebuild_discounted_node_duration_priors(
+    node_duration_priors: &mut BTreeMap<String, StructuralNodeDurationPrior>,
+    node_streaks: &BTreeMap<String, Vec<(usize, Option<String>)>>,
+) {
+    for (node_id, streaks) in node_streaks {
+        let mut prior = StructuralNodeDurationPrior::default();
+        prior.streak_count = streaks.len();
+        prior.observations = streaks.iter().map(|(length, _)| *length).sum();
+        prior.total_streak_length = prior.observations;
+        prior.max_streak_length = streaks.iter().map(|(length, _)| *length).max().unwrap_or(0);
+        prior.last_streak_length = streaks.last().map(|(length, _)| *length).unwrap_or(0);
+        prior.last_recommended_at = streaks.last().and_then(|(_, at)| at.clone());
+        prior.avg_streak_length = if prior.streak_count == 0 {
+            0.0
+        } else {
+            prior.total_streak_length as f64 / prior.streak_count as f64
+        };
+
+        let total_streaks = streaks.len();
+        let mut weighted_streak_mass = 0.0;
+        let mut weighted_length_sum = 0.0;
+        for (index, (length, _)) in streaks.iter().enumerate() {
+            let recency_rank = total_streaks.saturating_sub(index + 1) as f64;
+            let recency_decay = 0.85_f64.powf(recency_rank);
+            weighted_streak_mass += recency_decay;
+            weighted_length_sum += *length as f64 * recency_decay;
+        }
+        prior.weighted_streak_mass = weighted_streak_mass;
+        let weighted_avg_length = if weighted_streak_mass <= f64::EPSILON {
+            prior.avg_streak_length
+        } else {
+            weighted_length_sum / weighted_streak_mass
+        };
+        prior.persistence_prior =
+            (weighted_avg_length / (weighted_avg_length + 1.0)).clamp(0.0, 1.0);
+        node_duration_priors.insert(node_id.clone(), prior);
+    }
 }
 
 fn family_dominant_action(items: &[&PersistedFactorRanking]) -> &'static str {
@@ -4600,11 +4637,90 @@ mod tests {
 
         assert_eq!(trend.observations, 3);
         assert_eq!(trend.streak_count, 2);
+        assert!(trend.weighted_streak_mass > range.weighted_streak_mass);
         assert_eq!(trend.max_streak_length, 2);
         assert!((trend.avg_streak_length - 1.5).abs() < 1e-9);
         assert!(trend.persistence_prior > range.persistence_prior);
         assert_eq!(range.observations, 1);
         assert_eq!(range.streak_count, 1);
+    }
+
+    #[test]
+    fn test_structural_node_duration_priors_discount_older_streaks() {
+        let mut state = LearningState::default();
+        let seed = StructuralPriorSeed {
+            source_label: "analyze".to_string(),
+            tempering_coefficient: None,
+            observations: 1,
+            followed_count: 1,
+            wins: 1,
+            losses: 0,
+            breakevens: 0,
+            invalidated: 0,
+            abandoned: 0,
+            not_followed: 0,
+            avg_pnl: 0.01,
+        };
+
+        for (recommendation_id, recommended_at, node_id, branch_id) in [
+            (
+                "rec-1",
+                "2026-04-30T00:00:00Z",
+                "NQ:belief_regime_node:trend",
+                "NQ:belief_regime_node:trend:trend_follow_through",
+            ),
+            (
+                "rec-2",
+                "2026-04-30T01:00:00Z",
+                "NQ:belief_regime_node:range",
+                "NQ:belief_regime_node:range:range_mean_reversion",
+            ),
+            (
+                "rec-3",
+                "2026-04-30T02:00:00Z",
+                "NQ:belief_regime_node:trend",
+                "NQ:belief_regime_node:trend:trend_follow_through",
+            ),
+            (
+                "rec-4",
+                "2026-04-30T03:00:00Z",
+                "NQ:belief_regime_node:trend",
+                "NQ:belief_regime_node:trend:trend_follow_through",
+            ),
+        ] {
+            state.apply_structural_prior_seed(
+                &StructuralFeedbackRefs {
+                    protocol_version: "structural-prior-seed-v1".to_string(),
+                    recommendation_id: recommendation_id.to_string(),
+                    recommended_at: recommended_at.to_string(),
+                    node_id: node_id.to_string(),
+                    branch_id: branch_id.to_string(),
+                    scenario_id: format!("scenario:{branch_id}"),
+                    path_id: format!("path:scenario:{branch_id}:primary"),
+                    followed_path: true,
+                    exit_reason: None,
+                    notes: None,
+                },
+                &seed,
+            );
+        }
+
+        let trend = state
+            .structural_prior_state
+            .node_duration_priors
+            .get("NQ:belief_regime_node:trend")
+            .expect("trend duration prior");
+        let range = state
+            .structural_prior_state
+            .node_duration_priors
+            .get("NQ:belief_regime_node:range")
+            .expect("range duration prior");
+
+        assert_eq!(trend.streak_count, 2);
+        assert_eq!(range.streak_count, 1);
+        assert!(trend.weighted_streak_mass > 1.0);
+        assert!(trend.weighted_streak_mass > range.weighted_streak_mass);
+        assert!(trend.persistence_prior > range.persistence_prior);
     }
 
     #[test]

@@ -9,7 +9,7 @@ pub fn blend_node_posterior_with_duration_prior(
     let Some(duration_prior) = duration_prior else {
         return base_posterior;
     };
-    let observation_weight = (duration_prior.observations as f64 / 4.0).min(1.0);
+    let observation_weight = (duration_prior.weighted_streak_mass / 3.0).min(1.0);
     let streak_weight = (duration_prior.streak_count as f64 / 3.0).min(1.0);
     let blend_weight = (observation_weight * streak_weight * 0.5).clamp(0.0, 0.5);
     ((1.0 - blend_weight) * base_posterior

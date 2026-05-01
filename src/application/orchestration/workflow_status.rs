@@ -4208,6 +4208,7 @@ mod tests {
             crate::state::StructuralNodeDurationPrior {
                 observations: 6,
                 streak_count: 3,
+                weighted_streak_mass: 2.4,
                 total_streak_length: 6,
                 avg_streak_length: 2.0,
                 max_streak_length: 3,
@@ -5256,6 +5257,7 @@ mod tests {
             crate::state::StructuralNodeDurationPrior {
                 observations: 3,
                 streak_count: 2,
+                weighted_streak_mass: 1.85,
                 total_streak_length: 3,
                 avg_streak_length: 1.5,
                 max_streak_length: 2,
