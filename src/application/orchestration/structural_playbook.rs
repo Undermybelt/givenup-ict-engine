@@ -314,6 +314,14 @@ pub struct StructuralExperiencePriorEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub off_policy_adjusted_prior: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub behavior_policy_probability: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub snips_weight_mass: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub snips_reward_prior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub doubly_robust_reward_prior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_streak_count: Option<usize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_avg_streak_length: Option<f64>,
@@ -924,6 +932,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
                     prior_stats,
                 ),
+                behavior_policy_probability: structural_prior_behavior_policy_probability(
+                    prior_stats,
+                ),
+                snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
+                snips_reward_prior: structural_prior_snips_reward_prior(prior_stats),
+                doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
+                    prior_stats,
+                ),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -961,6 +977,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         counterfactual_reward_prior:
                             structural_prior_counterfactual_reward_prior(prior_stats),
                         off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
+                            prior_stats,
+                        ),
+                        behavior_policy_probability: structural_prior_behavior_policy_probability(
+                            prior_stats,
+                        ),
+                        snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
+                        snips_reward_prior: structural_prior_snips_reward_prior(prior_stats),
+                        doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                             prior_stats,
                         ),
                         duration_streak_count: None,
@@ -1009,6 +1033,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
                     prior_stats,
                 ),
+                behavior_policy_probability: structural_prior_behavior_policy_probability(
+                    prior_stats,
+                ),
+                snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
+                snips_reward_prior: structural_prior_snips_reward_prior(prior_stats),
+                doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
+                    prior_stats,
+                ),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1045,6 +1077,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         counterfactual_reward_prior:
                             structural_prior_counterfactual_reward_prior(prior_stats),
                         off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
+                            prior_stats,
+                        ),
+                        behavior_policy_probability: structural_prior_behavior_policy_probability(
+                            prior_stats,
+                        ),
+                        snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
+                        snips_reward_prior: structural_prior_snips_reward_prior(prior_stats),
+                        doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                             prior_stats,
                         ),
                         duration_streak_count: None,
@@ -1093,6 +1133,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
                     prior_stats,
                 ),
+                behavior_policy_probability: structural_prior_behavior_policy_probability(
+                    prior_stats,
+                ),
+                snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
+                snips_reward_prior: structural_prior_snips_reward_prior(prior_stats),
+                doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
+                    prior_stats,
+                ),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1130,6 +1178,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         counterfactual_reward_prior:
                             structural_prior_counterfactual_reward_prior(prior_stats),
                         off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
+                            prior_stats,
+                        ),
+                        behavior_policy_probability: structural_prior_behavior_policy_probability(
+                            prior_stats,
+                        ),
+                        snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
+                        snips_reward_prior: structural_prior_snips_reward_prior(prior_stats),
+                        doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                             prior_stats,
                         ),
                         duration_streak_count: None,
@@ -1198,6 +1254,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 node_prior_stats,
             ),
             off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
+                node_prior_stats,
+            ),
+            behavior_policy_probability: structural_prior_behavior_policy_probability(
+                node_prior_stats,
+            ),
+            snips_weight_mass: structural_prior_snips_weight_mass(node_prior_stats),
+            snips_reward_prior: structural_prior_snips_reward_prior(node_prior_stats),
+            doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                 node_prior_stats,
             ),
             duration_streak_count: node_temporal_state
@@ -1497,7 +1561,7 @@ fn structural_recommended_path_bundle_from_candidates(
         denominator,
         candidate_set_size,
     );
-    let why_this_path = structural_why_this_path_summary(&path);
+    let why_this_path = structural_why_this_path_summary(path);
     Some(StructuralRecommendedPathBundleArtifact {
         symbol,
         rank: 1,
@@ -2948,6 +3012,28 @@ fn structural_prior_off_policy_adjusted_prior(
     prior_stats: Option<&StructuralPriorStats>,
 ) -> Option<f64> {
     structural_prior_positive_value(prior_stats, |stats| stats.off_policy_adjusted_prior)
+}
+
+fn structural_prior_behavior_policy_probability(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.behavior_policy_probability)
+}
+
+fn structural_prior_snips_weight_mass(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.snips_weight_mass)
+}
+
+fn structural_prior_snips_reward_prior(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.snips_reward_prior)
+}
+
+fn structural_prior_doubly_robust_reward_prior(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.doubly_robust_reward_prior)
 }
 
 fn structural_duration_streak_count(

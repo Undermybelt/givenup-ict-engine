@@ -5236,6 +5236,7 @@ mod tests {
                 off_policy_adjusted_prior: 0.6372549020,
                 source_panel_summaries: std::collections::BTreeMap::new(),
                 last_offline_seed_source: None,
+                ..Default::default()
             },
         );
 
@@ -5444,6 +5445,13 @@ mod tests {
                 counterfactual_failure_mass: 0.9375,
                 counterfactual_reward_prior: 0.5753424658,
                 off_policy_adjusted_prior: 0.4602739726,
+                policy_weighted_observation_mass: 2.05,
+                behavior_policy_probability: 0.42,
+                snips_weight_mass: 4.5,
+                snips_reward_mass: 2.7,
+                snips_reward_prior: 0.6,
+                doubly_robust_reward_mass: 1.23,
+                doubly_robust_reward_prior: 0.6,
                 source_panel_summaries: std::collections::BTreeMap::from([
                     (
                         "analyze".to_string(),
@@ -5475,6 +5483,7 @@ mod tests {
                             last_recommendation_id: Some("rec-analyze".to_string()),
                             last_recommended_at: Some("2026-04-30T00:00:00Z".to_string()),
                             last_note: Some("analyze_run_structural_prior_seed".to_string()),
+                            ..Default::default()
                         },
                     ),
                     (
@@ -5507,6 +5516,7 @@ mod tests {
                             last_recommendation_id: Some("rec-backtest".to_string()),
                             last_recommended_at: Some("2026-04-30T01:00:00Z".to_string()),
                             last_note: Some("backtest_run_structural_prior_seed".to_string()),
+                            ..Default::default()
                         },
                     ),
                 ]),
@@ -5561,6 +5571,10 @@ mod tests {
         assert_eq!(value["path"]["ips_weight"], 1.25);
         assert_eq!(value["path"]["counterfactual_reward_prior"], 0.5753424658);
         assert_eq!(value["path"]["off_policy_adjusted_prior"], 0.4602739726);
+        assert_eq!(value["path"]["behavior_policy_probability"], 0.42);
+        assert_eq!(value["path"]["snips_weight_mass"], 4.5);
+        assert_eq!(value["path"]["snips_reward_prior"], 0.6);
+        assert_eq!(value["path"]["doubly_robust_reward_prior"], 0.6);
         assert_eq!(value["node"]["duration_streak_count"], 2);
         assert_eq!(value["node"]["duration_avg_streak_length"], 1.5);
         assert_eq!(value["node"]["duration_persistence_prior"], 0.6);
@@ -5690,6 +5704,7 @@ mod tests {
                             last_recommendation_id: None,
                             last_recommended_at: None,
                             last_note: None,
+                            ..Default::default()
                         },
                     ),
                     (
@@ -5722,10 +5737,12 @@ mod tests {
                             last_recommendation_id: None,
                             last_recommended_at: None,
                             last_note: None,
+                            ..Default::default()
                         },
                     ),
                 ]),
                 last_offline_seed_source: Some("backtest".to_string()),
+                ..Default::default()
             },
         );
         structural_prior_state.source_reliability_posteriors.insert(

@@ -127,6 +127,20 @@ pub struct StructuralPriorStats {
     #[serde(default)]
     pub off_policy_adjusted_prior: f64,
     #[serde(default)]
+    pub policy_weighted_observation_mass: f64,
+    #[serde(default)]
+    pub behavior_policy_probability: f64,
+    #[serde(default)]
+    pub snips_weight_mass: f64,
+    #[serde(default)]
+    pub snips_reward_mass: f64,
+    #[serde(default)]
+    pub snips_reward_prior: f64,
+    #[serde(default)]
+    pub doubly_robust_reward_mass: f64,
+    #[serde(default)]
+    pub doubly_robust_reward_prior: f64,
+    #[serde(default)]
     pub source_panel_summaries: BTreeMap<String, StructuralPriorSourceSummary>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_offline_seed_source: Option<String>,
@@ -147,6 +161,12 @@ pub struct StructuralPriorMassSnapshot {
     pub smoothed_prior: f64,
     pub execution_propensity: f64,
     pub off_policy_adjusted_prior: f64,
+    #[serde(default)]
+    pub behavior_policy_probability: f64,
+    #[serde(default)]
+    pub snips_reward_prior: f64,
+    #[serde(default)]
+    pub doubly_robust_reward_prior: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_offline_seed_source: Option<String>,
 }
@@ -204,6 +224,20 @@ pub struct StructuralPriorSourceSummary {
     pub counterfactual_reward_prior: f64,
     #[serde(default)]
     pub off_policy_adjusted_prior: f64,
+    #[serde(default)]
+    pub policy_weighted_observation_mass: f64,
+    #[serde(default)]
+    pub behavior_policy_probability: f64,
+    #[serde(default)]
+    pub snips_weight_mass: f64,
+    #[serde(default)]
+    pub snips_reward_mass: f64,
+    #[serde(default)]
+    pub snips_reward_prior: f64,
+    #[serde(default)]
+    pub doubly_robust_reward_mass: f64,
+    #[serde(default)]
+    pub doubly_robust_reward_prior: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_tempering_coefficient: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3815,6 +3849,9 @@ fn structural_prior_mass_snapshot(
         smoothed_prior: stats.smoothed_prior,
         execution_propensity: stats.execution_propensity,
         off_policy_adjusted_prior: stats.off_policy_adjusted_prior,
+        behavior_policy_probability: stats.behavior_policy_probability,
+        snips_reward_prior: stats.snips_reward_prior,
+        doubly_robust_reward_prior: stats.doubly_robust_reward_prior,
         last_offline_seed_source: stats.last_offline_seed_source.clone(),
     }
 }
@@ -3914,6 +3951,18 @@ fn update_structural_prior_stats(
             weighted_observation * (1.0 - pseudo_counts.success_credit);
         if matches!(structural_feedback_counter_outcome(record), Some("invalidated")) {
             stats.weighted_invalidation_mass += weighted_observation;
+        }
+        if let Some(contribution) =
+            structural_policy_correction_contribution(record, pseudo_counts, weighted_observation)
+        {
+            update_structural_policy_correction_stats(
+                &mut stats.policy_weighted_observation_mass,
+                &mut stats.behavior_policy_probability,
+                &mut stats.snips_weight_mass,
+                &mut stats.snips_reward_mass,
+                &mut stats.doubly_robust_reward_mass,
+                contribution,
+            );
         }
     }
     let source_summary = stats
@@ -4110,6 +4159,80 @@ fn structural_ips_weight(execution_propensity: f64) -> f64 {
     }
 }
 
+#[derive(Debug, Clone, Copy)]
+struct StructuralPolicyCorrectionContribution {
+    weighted_observation: f64,
+    behavior_policy_probability: f64,
+    snips_weight: f64,
+    snips_reward_mass: f64,
+    doubly_robust_reward: f64,
+}
+
+fn structural_feedback_behavior_policy_probability(record: &FeedbackRecord) -> Option<f64> {
+    let probability = record
+        .model_probabilities_before_trade
+        .selected_probability
+        .clamp(0.0, 1.0);
+    (probability > f64::EPSILON).then_some(probability)
+}
+
+fn structural_feedback_reward_baseline(record: &FeedbackRecord) -> f64 {
+    let probabilities = &record.model_probabilities_before_trade;
+    match probabilities.selected_direction {
+        Direction::Bull => probabilities.win_prob_long,
+        Direction::Bear => probabilities.win_prob_short,
+        Direction::Neutral => probabilities.selected_probability,
+    }
+    .clamp(0.0, 1.0)
+}
+
+fn structural_policy_correction_contribution(
+    record: &FeedbackRecord,
+    pseudo_counts: StructuralFeedbackPseudoCounts,
+    weighted_observation: f64,
+) -> Option<StructuralPolicyCorrectionContribution> {
+    if weighted_observation <= f64::EPSILON {
+        return None;
+    }
+    let behavior_policy_probability = structural_feedback_behavior_policy_probability(record)?;
+    let snips_weight = structural_ips_weight(behavior_policy_probability);
+    if snips_weight <= f64::EPSILON {
+        return None;
+    }
+    let reward = pseudo_counts.success_credit.clamp(0.0, 1.0);
+    let baseline = structural_feedback_reward_baseline(record);
+    let doubly_robust_reward = (baseline + snips_weight * (reward - baseline)).clamp(0.0, 1.0);
+    Some(StructuralPolicyCorrectionContribution {
+        weighted_observation,
+        behavior_policy_probability,
+        snips_weight,
+        snips_reward_mass: weighted_observation * snips_weight * reward,
+        doubly_robust_reward,
+    })
+}
+
+fn update_structural_policy_correction_stats(
+    policy_weighted_observation_mass: &mut f64,
+    behavior_policy_probability: &mut f64,
+    snips_weight_mass: &mut f64,
+    snips_reward_mass: &mut f64,
+    doubly_robust_reward_mass: &mut f64,
+    contribution: StructuralPolicyCorrectionContribution,
+) {
+    let previous_mass = (*policy_weighted_observation_mass).max(0.0);
+    let next_mass = previous_mass + contribution.weighted_observation;
+    if next_mass > f64::EPSILON {
+        *behavior_policy_probability = ((*behavior_policy_probability * previous_mass)
+            + contribution.behavior_policy_probability * contribution.weighted_observation)
+            / next_mass;
+    }
+    *policy_weighted_observation_mass = next_mass;
+    *snips_weight_mass += contribution.weighted_observation * contribution.snips_weight;
+    *snips_reward_mass += contribution.snips_reward_mass;
+    *doubly_robust_reward_mass +=
+        contribution.weighted_observation * contribution.doubly_robust_reward;
+}
+
 fn structural_beta_mean(success_mass: f64, failure_mass: f64) -> f64 {
     let alpha = 1.0 + success_mass.max(0.0);
     let beta = 1.0 + failure_mass.max(0.0);
@@ -4143,6 +4266,19 @@ fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
     );
     stats.off_policy_adjusted_prior =
         (stats.counterfactual_reward_prior * stats.execution_propensity).clamp(0.0, 1.0);
+    stats.behavior_policy_probability = stats.behavior_policy_probability.clamp(0.0, 1.0);
+    stats.snips_reward_prior = if stats.snips_weight_mass > f64::EPSILON {
+        (stats.snips_reward_mass / stats.snips_weight_mass).clamp(0.0, 1.0)
+    } else {
+        0.0
+    };
+    stats.doubly_robust_reward_prior =
+        if stats.policy_weighted_observation_mass > f64::EPSILON {
+            (stats.doubly_robust_reward_mass / stats.policy_weighted_observation_mass)
+                .clamp(0.0, 1.0)
+        } else {
+            0.0
+        };
 }
 
 fn update_structural_prior_source_summary_from_feedback(
@@ -4199,6 +4335,18 @@ fn update_structural_prior_source_summary_from_feedback(
             weighted_observation * (1.0 - pseudo_counts.success_credit);
         if matches!(structural_feedback_counter_outcome(record), Some("invalidated")) {
             summary.weighted_invalidation_mass += weighted_observation;
+        }
+        if let Some(contribution) =
+            structural_policy_correction_contribution(record, pseudo_counts, weighted_observation)
+        {
+            update_structural_policy_correction_stats(
+                &mut summary.policy_weighted_observation_mass,
+                &mut summary.behavior_policy_probability,
+                &mut summary.snips_weight_mass,
+                &mut summary.snips_reward_mass,
+                &mut summary.doubly_robust_reward_mass,
+                contribution,
+            );
         }
     }
     if let Some(refs) = record.structural_feedback.as_ref() {
@@ -4282,6 +4430,19 @@ fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSu
     );
     summary.off_policy_adjusted_prior =
         (summary.counterfactual_reward_prior * summary.execution_propensity).clamp(0.0, 1.0);
+    summary.behavior_policy_probability = summary.behavior_policy_probability.clamp(0.0, 1.0);
+    summary.snips_reward_prior = if summary.snips_weight_mass > f64::EPSILON {
+        (summary.snips_reward_mass / summary.snips_weight_mass).clamp(0.0, 1.0)
+    } else {
+        0.0
+    };
+    summary.doubly_robust_reward_prior =
+        if summary.policy_weighted_observation_mass > f64::EPSILON {
+            (summary.doubly_robust_reward_mass / summary.policy_weighted_observation_mass)
+                .clamp(0.0, 1.0)
+        } else {
+            0.0
+        };
 }
 
 fn update_structural_source_reliability_from_feedback(
@@ -5468,6 +5629,60 @@ mod tests {
         assert!((posterior.weighted_not_followed_mass - 1.0).abs() < 1e-9);
         assert!((posterior.weighted_success_mass - 1.0).abs() < 1e-9);
         assert!((posterior.posterior_reliability - (2.0 / 3.0)).abs() < 1e-9);
+    }
+
+    #[test]
+    fn test_structural_feedback_records_snips_and_dr_policy_priors() {
+        let mut win = sample_feedback();
+        win.source = "structural_feedback_submission".to_string();
+        win.realized_outcome = "win".to_string();
+        win.model_probabilities_before_trade.selected_probability = 0.50;
+        win.model_probabilities_before_trade.win_prob_long = 0.60;
+        win.structural_feedback = Some(StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-policy-win".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "node-policy".to_string(),
+            branch_id: "branch-policy".to_string(),
+            scenario_id: "scenario-policy".to_string(),
+            path_id: "path-policy".to_string(),
+            followed_path: true,
+            exit_reason: Some("target_hit".to_string()),
+            notes: None,
+        });
+
+        let mut loss = win.clone();
+        loss.realized_outcome = "loss".to_string();
+        loss.pnl = -0.01;
+        loss.model_probabilities_before_trade.selected_probability = 0.25;
+        if let Some(refs) = loss.structural_feedback.as_mut() {
+            refs.recommendation_id = "rec-policy-loss".to_string();
+            refs.recommended_at = "2026-04-30T00:05:00Z".to_string();
+            refs.exit_reason = Some("stop_loss".to_string());
+        }
+
+        let mut state = LearningState::default();
+        state.apply_structural_feedback(&[win, loss]);
+
+        let path = state
+            .structural_prior_state
+            .paths
+            .get("path-policy")
+            .expect("path policy correction stats");
+        assert!((path.policy_weighted_observation_mass - 2.0).abs() < 1e-9);
+        assert!((path.behavior_policy_probability - 0.375).abs() < 1e-9);
+        assert!((path.snips_weight_mass - 6.0).abs() < 1e-9);
+        assert!((path.snips_reward_mass - 2.0).abs() < 1e-9);
+        assert!((path.snips_reward_prior - (1.0 / 3.0)).abs() < 1e-9);
+        assert!((path.doubly_robust_reward_mass - 1.0).abs() < 1e-9);
+        assert!((path.doubly_robust_reward_prior - 0.5).abs() < 1e-9);
+        let source_summary = path
+            .source_panel_summaries
+            .get("structural_feedback_submission")
+            .expect("path source policy correction stats");
+        assert!((source_summary.behavior_policy_probability - 0.375).abs() < 1e-9);
+        assert!((source_summary.snips_reward_prior - (1.0 / 3.0)).abs() < 1e-9);
+        assert!((source_summary.doubly_robust_reward_prior - 0.5).abs() < 1e-9);
     }
 
     #[test]
