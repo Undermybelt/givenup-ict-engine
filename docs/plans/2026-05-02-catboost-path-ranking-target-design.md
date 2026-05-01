@@ -16,6 +16,7 @@ Implemented:
 - serializable target artifact and rows
 - `structural-path-ranking-target` workflow surface
 - candidate-set scoped CSV / JSONL / summary export under `policy_training/`
+- `policy-training-status` readiness reporting for export and calibration state
 
 Still not implemented:
 - fitted calibration layer

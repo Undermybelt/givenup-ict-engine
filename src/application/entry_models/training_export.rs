@@ -5,6 +5,9 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::path::Path;
 
+use crate::application::orchestration::{
+    StructuralPathRankingTargetExportSummary, STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE,
+};
 use crate::state::{
     load_state_or_default, save_text_state, AnalyzeRunRecord, UpdateRunRecord, ANALYZE_RUNS_FILE,
     UPDATE_RUNS_FILE,
@@ -224,6 +227,23 @@ pub struct PolicyTrainingStatusSurface {
     pub update_runs: usize,
     #[serde(rename = "entry_models")]
     pub providers: Vec<PolicyTrainingProviderStatusSurface>,
+    pub structural_path_ranking_target: StructuralPathRankingTargetTrainingStatusSurface,
+    pub summary_line: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankingTargetTrainingStatusSurface {
+    pub export_ready: bool,
+    pub calibration_ready: bool,
+    pub rows: usize,
+    pub candidate_set_id: Option<String>,
+    pub candidate_set_size: usize,
+    pub rows_with_propensity_estimate: usize,
+    pub rows_with_calibrated_path_prob: usize,
+    pub summary_path: String,
+    pub csv_path: Option<String>,
+    pub jsonl_path: Option<String>,
+    pub warnings: Vec<String>,
     pub summary_line: String,
 }
 
@@ -563,6 +583,8 @@ pub fn policy_training_status(
         }
     }
     let cisd_rb = cisd_rb_training_status(state_dir, symbol)?;
+    let structural_path_ranking_target =
+        structural_path_ranking_target_training_status(state_dir, symbol)?;
     let providers = entry_model_providers()
         .into_iter()
         .filter(|provider| {
@@ -603,7 +625,54 @@ pub fn policy_training_status(
         analyze_runs: cisd_rb.analyze_runs,
         update_runs: cisd_rb.update_runs,
         providers,
+        structural_path_ranking_target,
         summary_line,
+    })
+}
+
+pub fn structural_path_ranking_target_training_status(
+    state_dir: &str,
+    symbol: &str,
+) -> Result<StructuralPathRankingTargetTrainingStatusSurface> {
+    let summary_path = Path::new(state_dir)
+        .join(symbol)
+        .join(POLICY_TRAINING_DIR)
+        .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE);
+    if !summary_path.exists() {
+        return Ok(StructuralPathRankingTargetTrainingStatusSurface {
+            summary_path: summary_path.to_string_lossy().to_string(),
+            warnings: vec!["structural_path_ranking_target_export_missing".to_string()],
+            summary_line: "structural path ranking target export missing".to_string(),
+            ..StructuralPathRankingTargetTrainingStatusSurface::default()
+        });
+    }
+    let raw = fs::read_to_string(&summary_path)?;
+    let summary: StructuralPathRankingTargetExportSummary = serde_json::from_str(&raw)?;
+    let calibration_ready = summary.rows_with_calibrated_path_prob > 0
+        && summary.rows_with_path_prob_lower_bound > 0;
+    let mut warnings = Vec::new();
+    if summary.rows == 0 {
+        warnings.push("structural_path_ranking_target_rows_empty".to_string());
+    }
+    if summary.rows_with_propensity_estimate == 0 {
+        warnings.push("structural_path_ranking_target_propensity_missing".to_string());
+    }
+    if !calibration_ready {
+        warnings.push("structural_path_ranking_target_calibration_not_fitted".to_string());
+    }
+    Ok(StructuralPathRankingTargetTrainingStatusSurface {
+        export_ready: summary.rows > 0,
+        calibration_ready,
+        rows: summary.rows,
+        candidate_set_id: Some(summary.candidate_set_id),
+        candidate_set_size: summary.candidate_set_size,
+        rows_with_propensity_estimate: summary.rows_with_propensity_estimate,
+        rows_with_calibrated_path_prob: summary.rows_with_calibrated_path_prob,
+        summary_path: summary.summary_path,
+        csv_path: Some(summary.csv_path),
+        jsonl_path: Some(summary.jsonl_path),
+        warnings,
+        summary_line: summary.summary_line,
     })
 }
 
@@ -1339,5 +1408,61 @@ mod tests {
             .collect::<Vec<_>>();
         assert!(provider_ids.contains(&CISD_RB_SETUP_MODEL_ID));
         assert!(provider_ids.contains(&BREAKER_RB_SETUP_MODEL_ID));
+        assert!(!status.structural_path_ranking_target.export_ready);
+        assert!(status
+            .structural_path_ranking_target
+            .warnings
+            .contains(&"structural_path_ranking_target_export_missing".to_string()));
+    }
+
+    #[test]
+    fn structural_path_ranking_target_training_status_reads_summary() {
+        let temp = tempfile::tempdir().unwrap();
+        let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: "NQ".to_string(),
+            rows: 3,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 3,
+            rows_with_propensity_estimate: 2,
+            rows_with_calibrated_path_prob: 0,
+            rows_with_path_prob_lower_bound: 0,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: summary_dir
+                .join("structural_path_ranking_target.jsonl")
+                .to_string_lossy()
+                .to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            summary_line: "structural_path_ranking_target rows=3".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+
+        let status =
+            structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
+                .unwrap();
+
+        assert!(status.export_ready);
+        assert!(!status.calibration_ready);
+        assert_eq!(status.rows, 3);
+        assert_eq!(
+            status.candidate_set_id.as_deref(),
+            Some("structural-candidates:NQ:test")
+        );
+        assert_eq!(status.rows_with_propensity_estimate, 2);
+        assert!(status
+            .warnings
+            .contains(&"structural_path_ranking_target_calibration_not_fitted".to_string()));
     }
 }

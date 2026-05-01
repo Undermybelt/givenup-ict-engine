@@ -233,6 +233,7 @@ Already in repo
 - `structural-path-ranking-target` workflow surface exists and reuses the declared structural candidate set
 - target rows expose `raw_path_score`, `calibrated_path_prob`, `path_prob_lower_bound`, `pending_reward_state`, `propensity_estimate`, and `regime_calibration_bucket`
 - target rows export to `policy_training/structural_path_ranking_target.csv` and `.jsonl` with a summary file during the normal update flow
+- `policy-training-status` reports structural path-ranking export readiness and calibration readiness without requiring a new CLI flag
 
 Not yet in repo
 - explicit probability calibration layer for path acceptance
