@@ -1417,10 +1417,14 @@ pub fn build_structural_node_artifact_with_prior_state(
     let node_duration_prior = structural_prior_state
         .node_duration_priors
         .get(&provisional_node_id);
+    let node_temporal_state = structural_prior_state
+        .node_temporal_posteriors
+        .get(&provisional_node_id);
     let posterior_confidence = if node_family == "belief_regime_node" {
         blend_node_posterior_with_duration_prior(
             structural_primary_probability(snapshot),
             node_duration_prior,
+            node_temporal_state,
         )
     } else {
         structural_primary_probability(snapshot)
@@ -1570,6 +1574,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
             &regime_probabilities,
             latest_feedback.as_ref().map(|refs| refs.branch_id.as_str()),
             &structural_prior_state.branch_transition_priors,
+            &structural_prior_state.branch_temporal_posteriors,
             structural_branch_label_for_regime,
         );
         if !regime_probabilities.is_empty() {
@@ -1597,7 +1602,15 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
                 let resolved_prior =
                     structural_resolved_smoothed_prior(prior_stats, history_adjusted_prior);
                 let blended_prior =
-                    blend_branch_prior_with_transition_prior(resolved_prior, transition_prior);
+                    blend_branch_prior_with_transition_prior(
+                        resolved_prior,
+                        transition_prior,
+                        latest_feedback.as_ref().and_then(|refs| {
+                            structural_prior_state.branch_temporal_posteriors.get(
+                                &format!("{}=>{}", refs.branch_id, branch_id),
+                            )
+                        }),
+                    );
                 branches.push(StructuralBranchArtifact {
                     branch_id,
                     target_node_id: format!("{}:{}:candidate", structural_symbol(snapshot), regime),

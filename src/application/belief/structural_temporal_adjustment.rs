@@ -1,32 +1,55 @@
 use std::collections::BTreeMap;
 
-use crate::state::{StructuralBranchTransitionPrior, StructuralNodeDurationPrior};
+use crate::state::{
+    StructuralBranchTemporalPosteriorState, StructuralBranchTransitionPrior,
+    StructuralNodeDurationPrior, StructuralNodeTemporalPosteriorState,
+};
 
 pub fn blend_node_posterior_with_duration_prior(
     base_posterior: f64,
     duration_prior: Option<&StructuralNodeDurationPrior>,
+    temporal_state: Option<&StructuralNodeTemporalPosteriorState>,
 ) -> f64 {
-    let Some(duration_prior) = duration_prior else {
+    let observation_weight = temporal_state
+        .map(|state| state.weighted_streak_mass)
+        .or_else(|| duration_prior.map(|prior| prior.weighted_streak_mass));
+    let streak_count = temporal_state
+        .map(|state| state.streak_count)
+        .or_else(|| duration_prior.map(|prior| prior.streak_count));
+    let temporal_support = temporal_state
+        .map(|state| state.temporal_posterior_support)
+        .or_else(|| duration_prior.map(|prior| prior.temporal_posterior_support));
+    let (Some(observation_weight), Some(streak_count), Some(temporal_support)) =
+        (observation_weight, streak_count, temporal_support)
+    else {
         return base_posterior;
     };
-    let observation_weight = (duration_prior.weighted_streak_mass / 3.0).min(1.0);
-    let streak_weight = (duration_prior.streak_count as f64 / 3.0).min(1.0);
+    let observation_weight = (observation_weight / 3.0).min(1.0);
+    let streak_weight = (streak_count as f64 / 3.0).min(1.0);
     let blend_weight = (observation_weight * streak_weight * 0.5).clamp(0.0, 0.5);
     ((1.0 - blend_weight) * base_posterior
-        + blend_weight * duration_prior.temporal_posterior_support)
+        + blend_weight * temporal_support)
         .clamp(0.0, 1.0)
 }
 
 pub fn blend_branch_prior_with_transition_prior(
     base_prior: f64,
     transition_prior: Option<&StructuralBranchTransitionPrior>,
+    temporal_state: Option<&StructuralBranchTemporalPosteriorState>,
 ) -> f64 {
-    let Some(transition_prior) = transition_prior else {
+    let transition_weight = temporal_state
+        .map(|state| state.weighted_observation_mass)
+        .or_else(|| transition_prior.map(|prior| prior.weighted_observation_mass));
+    let temporal_support = temporal_state
+        .map(|state| state.temporal_posterior_support)
+        .or_else(|| transition_prior.map(|prior| prior.temporal_posterior_support));
+    let (Some(transition_weight), Some(temporal_support)) = (transition_weight, temporal_support)
+    else {
         return base_prior;
     };
-    let transition_weight = (transition_prior.weighted_observation_mass / 3.0).min(1.0);
+    let transition_weight = (transition_weight / 3.0).min(1.0);
     ((1.0 - transition_weight) * base_prior
-        + transition_weight * transition_prior.temporal_posterior_support)
+        + transition_weight * temporal_support)
         .clamp(0.0, 1.0)
 }
 
@@ -35,6 +58,7 @@ pub fn transition_adjusted_branch_posteriors(
     regime_probabilities: &[(String, f64)],
     latest_branch_id: Option<&str>,
     transition_priors: &BTreeMap<String, StructuralBranchTransitionPrior>,
+    branch_temporal_posteriors: &BTreeMap<String, StructuralBranchTemporalPosteriorState>,
     branch_label_for_regime: impl Fn(&str) -> &'static str,
 ) -> BTreeMap<String, f64> {
     let Some(latest_branch_id) = latest_branch_id else {
@@ -54,12 +78,19 @@ pub fn transition_adjusted_branch_posteriors(
         let branch_id = format!("{node_id}:{}", branch_label_for_regime(regime));
         let transition_key = format!("{latest_branch_id}=>{branch_id}");
         let transition_prior = transition_priors.get(&transition_key);
-        let transition_weight = transition_prior
-            .map(|prior| {
-                let sample_weight = (prior.weighted_observation_mass / 3.0).min(1.0);
-                let temporal_bias = (prior.temporal_posterior_support - 0.5) * 2.0;
-                (1.0 + temporal_bias * sample_weight)
-                    .clamp(0.05, 2.0)
+        let temporal_state = branch_temporal_posteriors.get(&transition_key);
+        let transition_weight = temporal_state
+            .map(|state| {
+                let sample_weight = (state.weighted_observation_mass / 3.0).min(1.0);
+                let temporal_bias = (state.temporal_posterior_support - 0.5) * 2.0;
+                (1.0 + temporal_bias * sample_weight).clamp(0.05, 2.0)
+            })
+            .or_else(|| {
+                transition_prior.map(|prior| {
+                    let sample_weight = (prior.weighted_observation_mass / 3.0).min(1.0);
+                    let temporal_bias = (prior.temporal_posterior_support - 0.5) * 2.0;
+                    (1.0 + temporal_bias * sample_weight).clamp(0.05, 2.0)
+                })
             })
             .unwrap_or(1.0);
         weighted.push((branch_id, (*probability * transition_weight).clamp(0.0, 1.0)));
@@ -141,6 +172,7 @@ mod tests {
             ],
             Some("NQ:belief_regime_node:trend:trend_follow_through"),
             &priors,
+            &BTreeMap::new(),
             |regime| match regime {
                 "transition" => "transition_confirmation",
                 "range" => "range_mean_reversion",
@@ -151,6 +183,96 @@ mod tests {
         assert!(
             adjusted["NQ:belief_regime_node:trend:transition_confirmation"]
                 > adjusted["NQ:belief_regime_node:trend:range_mean_reversion"]
+        );
+    }
+
+    #[test]
+    fn blend_node_posterior_prefers_persisted_temporal_state_over_duration_prior() {
+        let duration_prior = StructuralNodeDurationPrior {
+            observations: 6,
+            streak_count: 3,
+            weighted_streak_mass: 2.4,
+            weighted_success_mass: 2.4,
+            weighted_failure_mass: 0.0,
+            total_streak_length: 6,
+            avg_streak_length: 2.0,
+            max_streak_length: 3,
+            last_streak_length: 3,
+            persistence_prior: 0.90,
+            duration_outcome_support: 0.77,
+            temporal_posterior_support: 0.86,
+            last_recommended_at: None,
+        };
+        let temporal_state = StructuralNodeTemporalPosteriorState {
+            node_id: "NQ:belief_regime_node:trend".to_string(),
+            observations: 6,
+            streak_count: 3,
+            weighted_streak_mass: 2.4,
+            duration_outcome_support: 0.20,
+            temporal_posterior_support: 0.30,
+            last_recommended_at: None,
+        };
+
+        let blended = blend_node_posterior_with_duration_prior(0.60, Some(&duration_prior), Some(&temporal_state));
+
+        assert!(blended < 0.60);
+    }
+
+    #[test]
+    fn transition_adjusted_branch_posteriors_prefers_persisted_temporal_state_over_transition_prior() {
+        let mut priors = BTreeMap::new();
+        priors.insert(
+            "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:trend:transition_confirmation".to_string(),
+            StructuralBranchTransitionPrior {
+                from_node_id: "NQ:belief_regime_node:trend".to_string(),
+                to_node_id: "NQ:belief_regime_node:trend".to_string(),
+                from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                to_branch_id: "NQ:belief_regime_node:trend:transition_confirmation".to_string(),
+                observations: 2,
+                weighted_observation_mass: 1.5,
+                wins: 2,
+                losses: 0,
+                invalidated: 0,
+                transition_prior: 0.8,
+                transition_outcome_support: 0.8,
+                temporal_posterior_support: 0.86,
+                weighted_success_mass: 1.5,
+                weighted_failure_mass: 0.0,
+                last_recommended_at: None,
+            },
+        );
+        let mut temporal_states = BTreeMap::new();
+        temporal_states.insert(
+            "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:trend:transition_confirmation".to_string(),
+            StructuralBranchTemporalPosteriorState {
+                transition_key: "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:trend:transition_confirmation".to_string(),
+                from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                to_branch_id: "NQ:belief_regime_node:trend:transition_confirmation".to_string(),
+                observations: 2,
+                weighted_observation_mass: 1.5,
+                transition_outcome_support: 0.20,
+                temporal_posterior_support: 0.30,
+                last_recommended_at: None,
+            },
+        );
+
+        let adjusted = transition_adjusted_branch_posteriors(
+            "NQ:belief_regime_node:trend",
+            &[
+                ("transition".to_string(), 0.4),
+                ("trend".to_string(), 0.6),
+            ],
+            Some("NQ:belief_regime_node:trend:trend_follow_through"),
+            &priors,
+            &temporal_states,
+            |regime| match regime {
+                "transition" => "transition_confirmation",
+                _ => "trend_follow_through",
+            },
+        );
+
+        assert!(
+            adjusted["NQ:belief_regime_node:trend:transition_confirmation"] < 0.4
         );
     }
 }

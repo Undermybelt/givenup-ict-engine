@@ -404,9 +404,14 @@ fn apply_structural_prior_state_to_belief_report(
 
     for (regime, probability) in canonical_probabilities.iter_mut() {
         let node_id = format!("{symbol}:belief_regime_node:{regime}");
+        let node_temporal_state = structural_prior_state.node_temporal_posteriors.get(&node_id);
         if let Some(duration_prior) = structural_prior_state.node_duration_priors.get(&node_id) {
             *probability =
-                blend_node_posterior_with_duration_prior(*probability, Some(duration_prior));
+                blend_node_posterior_with_duration_prior(
+                    *probability,
+                    Some(duration_prior),
+                    node_temporal_state,
+                );
         }
     }
 
@@ -430,6 +435,7 @@ fn apply_structural_prior_state_to_belief_report(
                 &regime_probabilities,
                 Some(latest_branch_id.as_str()),
                 &structural_prior_state.branch_transition_priors,
+                &structural_prior_state.branch_temporal_posteriors,
                 structural_branch_label_for_regime,
             );
             for (regime, _) in &regime_probabilities {
@@ -531,6 +537,7 @@ fn apply_structural_prior_state_to_belief_report(
             report.regime_posterior.confidence = Some(blend_node_posterior_with_duration_prior(
                 base_confidence,
                 Some(duration_prior),
+                node_temporal_state,
             ));
             report.regime_posterior.evidence.push(format!(
                 "duration_persistence_prior={:.3} observations={} streaks={} weighted_streak_mass={:.3} duration_outcome_support={:.3} duration_temporal_posterior_support={:.3}",
