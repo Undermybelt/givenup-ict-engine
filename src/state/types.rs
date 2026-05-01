@@ -5,6 +5,7 @@ use std::collections::BTreeMap;
 use crate::types::{Direction, FactorIC, Regime, RegimeProbs};
 
 const STRUCTURAL_IPS_WEIGHT_CLIP: f64 = 5.0;
+const STRUCTURAL_SOURCE_CONFUSION_LAPLACE_ALPHA: f64 = 1.0;
 
 pub const LEARNING_STATE_FILE: &str = "learning_state.json";
 pub const TRADE_HISTORY_FILE: &str = "trade_history.json";
@@ -326,6 +327,12 @@ pub struct StructuralSourceOutcomeConfusionCell {
     pub weighted_success_mass: f64,
     #[serde(default)]
     pub weighted_failure_mass: f64,
+    #[serde(default)]
+    pub credit_class_weighted_observation_mass: f64,
+    #[serde(default)]
+    pub credit_class_observed_outcome_count: usize,
+    #[serde(default)]
+    pub observed_given_credit_likelihood: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -4607,15 +4614,13 @@ fn update_structural_source_outcome_confusion_with_count(
     let observed_outcome = structural_source_observed_outcome_label(observed_outcome);
     let credit_class = credit_class.trim().to_string();
     let key = format!("{observed_outcome}->{credit_class}");
-    let entry =
-        posterior
-            .outcome_confusion
-            .entry(key)
-            .or_insert_with(|| StructuralSourceOutcomeConfusionCell {
-                observed_outcome,
-                credit_class,
-                ..StructuralSourceOutcomeConfusionCell::default()
-            });
+    let entry = posterior.outcome_confusion.entry(key).or_insert_with(|| {
+        StructuralSourceOutcomeConfusionCell {
+            observed_outcome,
+            credit_class,
+            ..StructuralSourceOutcomeConfusionCell::default()
+        }
+    });
     entry.observations += observations;
     let weighted_observation = weighted_observation.max(0.0);
     entry.weighted_observation_mass += weighted_observation;
@@ -4629,6 +4634,42 @@ fn structural_source_observed_outcome_label(observed_outcome: &str) -> String {
         "unknown".to_string()
     } else {
         normalized
+    }
+}
+
+pub fn structural_source_observed_outcome_likelihood(
+    posterior: &StructuralSourceReliabilityPosterior,
+    credit_class: &str,
+    observed_outcome: &str,
+) -> f64 {
+    let observed_outcome = structural_source_observed_outcome_label(observed_outcome);
+    let credit_class = credit_class.trim();
+    let key = format!("{observed_outcome}->{credit_class}");
+    let (row_mass, row_count) = structural_source_confusion_row_stats(posterior, credit_class);
+    if let Some(cell) = posterior.outcome_confusion.get(&key) {
+        if row_mass <= f64::EPSILON {
+            return cell
+                .observed_given_credit_likelihood
+                .clamp(0.0, 1.0)
+                .max(0.5);
+        }
+        let denominator =
+            row_mass + STRUCTURAL_SOURCE_CONFUSION_LAPLACE_ALPHA * row_count.max(1) as f64;
+        return ((cell.weighted_observation_mass.max(0.0)
+            + STRUCTURAL_SOURCE_CONFUSION_LAPLACE_ALPHA)
+            / denominator)
+            .clamp(0.0, 1.0);
+    }
+
+    if row_mass <= f64::EPSILON {
+        return 0.5;
+    }
+    let denominator =
+        row_mass + STRUCTURAL_SOURCE_CONFUSION_LAPLACE_ALPHA * (row_count.saturating_add(1) as f64);
+    if denominator <= f64::EPSILON {
+        0.5
+    } else {
+        (STRUCTURAL_SOURCE_CONFUSION_LAPLACE_ALPHA / denominator).clamp(0.0, 1.0)
     }
 }
 
@@ -4657,6 +4698,55 @@ fn refresh_structural_source_reliability_posterior(
             posterior.weighted_failure_mass,
         )
     };
+    refresh_structural_source_outcome_likelihoods(posterior);
+}
+
+fn refresh_structural_source_outcome_likelihoods(
+    posterior: &mut StructuralSourceReliabilityPosterior,
+) {
+    let mut row_stats = BTreeMap::<String, (f64, usize)>::new();
+    for cell in posterior.outcome_confusion.values() {
+        let entry = row_stats.entry(cell.credit_class.clone()).or_default();
+        entry.0 += cell.weighted_observation_mass.max(0.0);
+        if cell.weighted_observation_mass > f64::EPSILON || cell.observations > 0 {
+            entry.1 += 1;
+        }
+    }
+
+    for cell in posterior.outcome_confusion.values_mut() {
+        let (row_mass, row_count) = row_stats
+            .get(&cell.credit_class)
+            .copied()
+            .unwrap_or((0.0, 0));
+        let row_count = row_count.max(1);
+        cell.credit_class_weighted_observation_mass = row_mass;
+        cell.credit_class_observed_outcome_count = row_count;
+        let denominator = row_mass + STRUCTURAL_SOURCE_CONFUSION_LAPLACE_ALPHA * row_count as f64;
+        cell.observed_given_credit_likelihood = if denominator <= f64::EPSILON {
+            1.0 / row_count as f64
+        } else {
+            ((cell.weighted_observation_mass.max(0.0) + STRUCTURAL_SOURCE_CONFUSION_LAPLACE_ALPHA)
+                / denominator)
+                .clamp(0.0, 1.0)
+        };
+    }
+}
+
+fn structural_source_confusion_row_stats(
+    posterior: &StructuralSourceReliabilityPosterior,
+    credit_class: &str,
+) -> (f64, usize) {
+    let mut row_mass = 0.0;
+    let mut row_count = 0;
+    for cell in posterior.outcome_confusion.values() {
+        if cell.credit_class == credit_class {
+            row_mass += cell.weighted_observation_mass.max(0.0);
+            if cell.weighted_observation_mass > f64::EPSILON || cell.observations > 0 {
+                row_count += 1;
+            }
+        }
+    }
+    (row_mass, row_count)
 }
 
 fn structural_prior_symbol_from_node_id(node_id: &str) -> String {
@@ -5978,6 +6068,61 @@ mod tests {
         assert_eq!(loss_cell.observations, 1);
         assert!((loss_cell.weighted_failure_mass - 0.75).abs() < 1e-9);
         assert!(posterior.last_power_prior_contribution.is_some());
+    }
+
+    #[test]
+    fn test_source_outcome_confusion_derives_smoothed_likelihoods() {
+        let mut posterior = StructuralSourceReliabilityPosterior {
+            source_label: "backtest".to_string(),
+            ..StructuralSourceReliabilityPosterior::default()
+        };
+
+        update_structural_source_outcome_confusion_with_count(
+            &mut posterior,
+            "tp",
+            "positive_executed",
+            2,
+            2.0,
+            1.0,
+        );
+        update_structural_source_outcome_confusion_with_count(
+            &mut posterior,
+            "take_profit",
+            "positive_executed",
+            1,
+            1.0,
+            1.0,
+        );
+        refresh_structural_source_reliability_posterior(&mut posterior);
+
+        let tp_cell = posterior
+            .outcome_confusion
+            .get("tp->positive_executed")
+            .expect("tp confusion cell");
+        let take_profit_cell = posterior
+            .outcome_confusion
+            .get("take_profit->positive_executed")
+            .expect("take-profit confusion cell");
+
+        assert!((tp_cell.credit_class_weighted_observation_mass - 3.0).abs() < 1e-9);
+        assert_eq!(tp_cell.credit_class_observed_outcome_count, 2);
+        assert!((tp_cell.observed_given_credit_likelihood - 0.6).abs() < 1e-9);
+        assert!((take_profit_cell.observed_given_credit_likelihood - 0.4).abs() < 1e-9);
+        assert!(
+            (structural_source_observed_outcome_likelihood(&posterior, "positive_executed", "tp")
+                - 0.6)
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (structural_source_observed_outcome_likelihood(
+                &posterior,
+                "negative_executed",
+                "loss"
+            ) - 0.5)
+                .abs()
+                < 1e-9
+        );
     }
 
     #[test]

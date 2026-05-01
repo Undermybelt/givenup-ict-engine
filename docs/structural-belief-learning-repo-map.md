@@ -144,6 +144,7 @@ Already in repo
 - source panels store the latest `StructuralPowerPriorContribution` with source rank, tempering coefficient, entity scale, effective tau, and weighted contribution masses
 - `structural_prior_state.source_reliability_posteriors` stores reusable source-level reliability posteriors from offline seeds and live feedback
 - source reliability posteriors preserve compact `observed_outcome -> credit_class` outcome-confusion cells with weighted success/failure mass
+- outcome-confusion cells derive smoothed `P(observed_outcome | credit_class, source)` likelihoods for downstream source-reliability consumers
 - panel-derived aggregate priors consume source-reliability posteriors so low-reliability high-mass panels shrink toward neutral instead of dominating by raw mass
 
 Literature mechanisms still worth importing
@@ -165,7 +166,7 @@ Suggested `tau_s` ingredients
 - break penalty
 
 Current repo gap
-- source reliability now has compact outcome-confusion cells, but reliability learning is still not a full Dawid-Skene EM confusion-matrix model
+- source reliability now has compact outcome-confusion likelihood cells, but reliability learning is still not a full Dawid-Skene EM confusion-matrix model over latent true classes and multiple sources
 
 ---
 
