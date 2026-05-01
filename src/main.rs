@@ -7773,6 +7773,9 @@ struct BuildUpdateAgentPromptsInput<'a> {
     factor_alignment: &'a str,
     factor_uncertainty: &'a str,
     realized_outcome: &'a str,
+    structural_learning_credit_class: Option<&'a str>,
+    structural_learning_success_credit: Option<f64>,
+    structural_learning_observation_weight: Option<f64>,
     feedback_records_applied: usize,
     consumed_pre_bayes_evidence_filter: Option<&'a PreBayesEvidenceFilter>,
     consumed_pre_bayes_entry_quality_bridge:
@@ -7793,6 +7796,9 @@ fn build_update_agent_prompts(input: BuildUpdateAgentPromptsInput<'_>) -> AgentP
         factor_alignment,
         factor_uncertainty,
         realized_outcome,
+        structural_learning_credit_class,
+        structural_learning_success_credit,
+        structural_learning_observation_weight,
         feedback_records_applied,
         consumed_pre_bayes_evidence_filter,
         consumed_pre_bayes_entry_quality_bridge,
@@ -7802,6 +7808,12 @@ fn build_update_agent_prompts(input: BuildUpdateAgentPromptsInput<'_>) -> AgentP
     let consumed_canonical_structural_regime_summary =
         compact_canonical_structural_regime_summary(
             consumed_canonical_structural_regime_posterior,
+        );
+    let structural_learning_semantics_summary =
+        ict_engine::state::structural_learning_semantics_summary(
+            structural_learning_credit_class,
+            structural_learning_success_credit,
+            structural_learning_observation_weight,
         );
     let mut pack = factor_iteration_prompt_pack(
         symbol,
@@ -7822,12 +7834,13 @@ fn build_update_agent_prompts(input: BuildUpdateAgentPromptsInput<'_>) -> AgentP
             objective: "Review the newly realized outcome and decide what the next agent iteration should target.".to_string(),
             system_prompt: "You are the realized-feedback agent. Use the updated trade_outcome distribution plus factor scorecards to decide whether the latest result strengthens confidence, exposes a factor weakness, or suggests a problem in evidence mapping.".to_string(),
             user_prompt: format!(
-                "Symbol={} entry_quality={} factor_alignment={} factor_uncertainty={} realized_outcome={} feedback_records_applied={} updated_trade_outcome={:?} iteration_queue={:?}",
+                "Symbol={} entry_quality={} factor_alignment={} factor_uncertainty={} realized_outcome={} structural_learning_semantics={} feedback_records_applied={} updated_trade_outcome={:?} iteration_queue={:?}",
                 symbol,
                 normalized_entry_quality,
                 factor_alignment,
                 factor_uncertainty,
                 realized_outcome,
+                structural_learning_semantics_summary,
                 feedback_records_applied,
                 updated_trade_outcome,
                 factor_iteration_queue
@@ -14009,6 +14022,9 @@ mod tests {
             factor_alignment: "bullish",
             factor_uncertainty: "low",
             realized_outcome: "win",
+            structural_learning_credit_class: Some("positive_executed"),
+            structural_learning_success_credit: Some(1.0),
+            structural_learning_observation_weight: Some(1.0),
             feedback_records_applied: 1,
             consumed_pre_bayes_evidence_filter: None,
             consumed_pre_bayes_entry_quality_bridge: None,
@@ -14019,6 +14035,9 @@ mod tests {
         assert!(!prompts.prompts.is_empty());
         assert_eq!(prompts.prompts[0].id, "update_feedback_review");
         assert_eq!(prompts.prompts[0].stage, "feedback_update");
+        assert!(prompts.prompts[0]
+            .user_prompt
+            .contains("structural_learning_semantics=class=positive_executed success_credit=1.000 observation_weight=1.000"));
     }
 
     #[test]
@@ -14037,6 +14056,9 @@ mod tests {
             factor_alignment: "bullish",
             factor_uncertainty: "low",
             realized_outcome: "win",
+            structural_learning_credit_class: Some("positive_executed"),
+            structural_learning_success_credit: Some(1.0),
+            structural_learning_observation_weight: Some(1.0),
             feedback_records_applied: 1,
             consumed_pre_bayes_evidence_filter: Some(&PreBayesEvidenceFilter {
                 gating_status: "pass_soft".to_string(),

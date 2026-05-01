@@ -228,6 +228,9 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         factor_alignment: &factor_alignment,
         factor_uncertainty: &factor_uncertainty,
         realized_outcome: realized_outcome_for_prompts,
+        structural_learning_credit_class: Some(learning_semantics.credit_class.as_str()),
+        structural_learning_success_credit: Some(learning_semantics.success_credit),
+        structural_learning_observation_weight: Some(learning_semantics.observation_weight),
         feedback_records_applied,
         consumed_pre_bayes_evidence_filter: consumed_analyze_context
             .pre_bayes_evidence_filter

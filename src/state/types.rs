@@ -383,6 +383,19 @@ pub fn structural_feedback_learning_semantics(
     }
 }
 
+pub fn structural_learning_semantics_summary(
+    credit_class: Option<&str>,
+    success_credit: Option<f64>,
+    observation_weight: Option<f64>,
+) -> String {
+    format!(
+        "class={} success_credit={:.3} observation_weight={:.3}",
+        credit_class.unwrap_or("unavailable"),
+        success_credit.unwrap_or_default(),
+        observation_weight.unwrap_or_default()
+    )
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PendingUpdateArtifactDiff {
     pub previous_artifact_id: Option<String>,

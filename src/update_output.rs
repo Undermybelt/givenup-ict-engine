@@ -1,5 +1,20 @@
 use super::*;
 
+fn structural_learning_evidence_line(
+    credit_class: Option<&str>,
+    success_credit: Option<f64>,
+    observation_weight: Option<f64>,
+) -> String {
+    format!(
+        "learning_semantics:{}",
+        ict_engine::state::structural_learning_semantics_summary(
+            credit_class,
+            success_credit,
+            observation_weight,
+        )
+    )
+}
+
 pub(crate) fn feedback_record_from_artifact(
     artifact: PendingUpdateArtifact,
     outcome_label: &str,
@@ -216,6 +231,11 @@ pub(crate) fn emit_update_output(report: &UpdateReport, ensemble: bool) -> Resul
         .prompts
         .iter()
         .map(|prompt| format!("{}:{}:{}", prompt.stage, prompt.id, prompt.objective))
+        .chain(std::iter::once(structural_learning_evidence_line(
+            report.structural_learning_credit_class.as_deref(),
+            report.structural_learning_success_credit,
+            report.structural_learning_observation_weight,
+        )))
         .collect::<Vec<_>>();
     let reflection_next_candidates = report
         .recommended_next_command
@@ -316,5 +336,19 @@ mod tests {
         apply_update_outcome_to_executor_scorecards(&mut scorecards, "invalidated", 0);
         assert_eq!(scorecards[0].losses, 1);
         assert_eq!(scorecards[0].validated_negative, 1);
+    }
+
+    #[test]
+    fn structural_learning_evidence_line_includes_fractional_semantics() {
+        let line = structural_learning_evidence_line(
+            Some("fractional_abandoned"),
+            Some(0.25),
+            Some(0.75),
+        );
+
+        assert_eq!(
+            line,
+            "learning_semantics:class=fractional_abandoned success_credit=0.250 observation_weight=0.750"
+        );
     }
 }
