@@ -1903,6 +1903,9 @@ fn workflow_status_recommended_path_contract_value(
 ) -> Option<Value> {
     recommended_path_bundle.map(|bundle| {
         serde_json::json!({
+            "candidate_set_id": bundle.candidate_set_id,
+            "candidate_set_size": bundle.candidate_set_size,
+            "selected_path_probability": bundle.selected_path_probability,
             "path_id": bundle.path_id,
             "path_label": bundle.path_label,
             "trigger": bundle.trigger_summary,
@@ -4532,6 +4535,14 @@ mod tests {
         assert_eq!(
             value["recommended_next_step"]["execution_contract"]["path_id"],
             "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+        assert_eq!(
+            value["recommended_next_step"]["execution_contract"]["candidate_set_id"],
+            value["recommended_path_bundle"]["candidate_set_id"]
+        );
+        assert_eq!(
+            value["recommended_next_step"]["execution_contract"]["selected_path_probability"],
+            value["recommended_path_bundle"]["selected_path_probability"]
         );
     }
 
