@@ -5893,6 +5893,191 @@ mod tests {
     }
 
     #[test]
+    fn structural_experience_priors_node_prefer_persisted_temporal_state_values_over_raw_duration_prior_fields(
+    ) {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let mut structural_prior_state = crate::state::StructuralPriorLearningState::default();
+        structural_prior_state.node_duration_priors.insert(
+            "NQ:belief_regime_node:trend".to_string(),
+            crate::state::StructuralNodeDurationPrior {
+                observations: 3,
+                streak_count: 2,
+                weighted_streak_mass: 1.85,
+                weighted_success_mass: 1.85,
+                weighted_failure_mass: 0.0,
+                total_streak_length: 3,
+                avg_streak_length: 1.5,
+                max_streak_length: 2,
+                last_streak_length: 1,
+                persistence_prior: 0.6,
+                duration_outcome_support: 0.7407407407,
+                temporal_posterior_support: 0.6422222222,
+                last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+            },
+        );
+        structural_prior_state.node_temporal_posteriors.insert(
+            "NQ:belief_regime_node:trend".to_string(),
+            crate::state::StructuralNodeTemporalPosteriorState {
+                node_id: "NQ:belief_regime_node:trend".to_string(),
+                observations: 3,
+                streak_count: 2,
+                weighted_streak_mass: 1.1,
+                duration_outcome_support: 0.2,
+                temporal_posterior_support: 0.3,
+                posterior_blend_weight: 0.2,
+                summary_line: "duration_mass=1.100 duration_support=0.200 duration_temporal=0.300 blend=0.200".to_string(),
+                last_recommended_at: Some("2026-04-30T04:00:00Z".to_string()),
+            },
+        );
+
+        let value = build_workflow_status_phase_value_with_structural_prior_state(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &structural_prior_state,
+            "structural-experience-priors",
+        )
+        .unwrap();
+
+        assert_eq!(value["node"]["duration_weighted_streak_mass"], 1.1);
+        assert_eq!(value["node"]["duration_outcome_support"], 0.2);
+        assert_eq!(value["node"]["duration_temporal_posterior_support"], 0.3);
+    }
+
+    #[test]
+    fn structural_temporal_summary_node_prefers_persisted_temporal_state_streak_count() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let mut structural_prior_state = crate::state::StructuralPriorLearningState::default();
+        structural_prior_state.node_duration_priors.insert(
+            "NQ:belief_regime_node:trend".to_string(),
+            crate::state::StructuralNodeDurationPrior {
+                observations: 3,
+                streak_count: 2,
+                weighted_streak_mass: 1.85,
+                weighted_success_mass: 1.85,
+                weighted_failure_mass: 0.0,
+                total_streak_length: 3,
+                avg_streak_length: 1.5,
+                max_streak_length: 2,
+                last_streak_length: 1,
+                persistence_prior: 0.6,
+                duration_outcome_support: 0.7407407407,
+                temporal_posterior_support: 0.6422222222,
+                last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+            },
+        );
+        structural_prior_state.node_temporal_posteriors.insert(
+            "NQ:belief_regime_node:trend".to_string(),
+            crate::state::StructuralNodeTemporalPosteriorState {
+                node_id: "NQ:belief_regime_node:trend".to_string(),
+                observations: 3,
+                streak_count: 5,
+                weighted_streak_mass: 1.1,
+                duration_outcome_support: 0.2,
+                temporal_posterior_support: 0.3,
+                posterior_blend_weight: 0.2,
+                summary_line: "duration_mass=1.100 duration_support=0.200 duration_temporal=0.300 blend=0.200".to_string(),
+                last_recommended_at: Some("2026-04-30T04:00:00Z".to_string()),
+            },
+        );
+
+        let value = build_workflow_status_phase_value_with_structural_prior_state(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &structural_prior_state,
+            "structural-temporal-summary",
+        )
+        .unwrap();
+
+        assert_eq!(value["duration_streak_count"], 5);
+    }
+
+    #[test]
     fn agent_and_human_workflow_status_views_expose_structural_temporal_summary() {
         let mut snapshot = WorkflowSnapshot::default();
         snapshot.symbol = "NQ".to_string();

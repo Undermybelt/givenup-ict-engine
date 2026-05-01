@@ -562,8 +562,12 @@ fn apply_structural_prior_state_to_belief_report(
             report.regime_posterior.evidence.push(format!(
                 "duration_persistence_prior={:.3} observations={} streaks={} weighted_streak_mass={:.3} duration_outcome_support={:.3} duration_temporal_posterior_support={:.3}",
                 duration_prior.persistence_prior,
-                duration_prior.observations,
-                duration_prior.streak_count,
+                node_temporal_state
+                    .map(|state| state.observations)
+                    .unwrap_or(duration_prior.observations),
+                node_temporal_state
+                    .map(|state| state.streak_count)
+                    .unwrap_or(duration_prior.streak_count),
                 node_temporal_state
                     .map(|state| state.weighted_streak_mass)
                     .unwrap_or(duration_prior.weighted_streak_mass),

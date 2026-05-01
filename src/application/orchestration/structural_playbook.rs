@@ -1059,6 +1059,7 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
     let (dominant_source_panel, dominant_source_share, dominant_source_prior) =
         structural_dominant_source_panel(node_prior_stats);
     let node_duration_prior = structural_prior_state.node_duration_priors.get(node_id);
+    let node_temporal_state = structural_prior_state.node_temporal_posteriors.get(node_id);
     StructuralExperiencePriorSurfaceArtifact {
         symbol: structural_symbol(snapshot),
         node: Some(StructuralExperiencePriorEntry {
@@ -1099,17 +1100,21 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
             dominant_source_panel,
             dominant_source_share,
             dominant_source_prior,
-            duration_streak_count: structural_duration_streak_count(node_duration_prior),
+            duration_streak_count: node_temporal_state
+                .map(|state| state.streak_count)
+                .or_else(|| structural_duration_streak_count(node_duration_prior)),
             duration_avg_streak_length: structural_duration_avg_streak_length(node_duration_prior),
             duration_persistence_prior: structural_duration_persistence_prior(node_duration_prior),
-            duration_weighted_streak_mass: structural_duration_weighted_streak_mass(
-                node_duration_prior,
-            ),
+            duration_weighted_streak_mass: node_temporal_state
+                .map(|state| state.weighted_streak_mass)
+                .or_else(|| structural_duration_weighted_streak_mass(node_duration_prior)),
             transition_weighted_observation_mass: None,
-            duration_outcome_support: structural_duration_outcome_support(node_duration_prior),
-            duration_temporal_posterior_support: structural_duration_temporal_posterior_support(
-                node_duration_prior,
-            ),
+            duration_outcome_support: node_temporal_state
+                .map(|state| state.duration_outcome_support)
+                .or_else(|| structural_duration_outcome_support(node_duration_prior)),
+            duration_temporal_posterior_support: node_temporal_state
+                .map(|state| state.temporal_posterior_support)
+                .or_else(|| structural_duration_temporal_posterior_support(node_duration_prior)),
             transition_outcome_support: None,
             transition_temporal_posterior_support: None,
         }),
@@ -1187,7 +1192,9 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
         node_id: Some(node.node_id),
         from_branch_id: latest_feedback.as_ref().map(|refs| refs.branch_id.clone()),
         to_branch_id,
-        duration_streak_count: structural_duration_streak_count(node_duration_prior),
+        duration_streak_count: node_temporal_state
+            .map(|state| state.streak_count)
+            .or_else(|| structural_duration_streak_count(node_duration_prior)),
         duration_avg_streak_length: structural_duration_avg_streak_length(node_duration_prior),
         duration_persistence_prior: structural_duration_persistence_prior(node_duration_prior),
         duration_weighted_streak_mass: node_temporal_state

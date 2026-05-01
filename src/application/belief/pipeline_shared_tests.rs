@@ -205,8 +205,8 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
         "NQ:belief_regime_node:trend".to_string(),
         crate::state::StructuralNodeTemporalPosteriorState {
             node_id: "NQ:belief_regime_node:trend".to_string(),
-            observations: 6,
-            streak_count: 3,
+            observations: 9,
+            streak_count: 4,
             weighted_streak_mass: 2.4,
             duration_outcome_support: 0.7727272727,
             temporal_posterior_support: 0.8618181818,
@@ -239,6 +239,8 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
         .evidence
         .iter()
         .any(|line| line.contains("duration_persistence_prior")
+            && line.contains("observations=9")
+            && line.contains("streaks=4")
             && line.contains("weighted_streak_mass=2.400")
             && line.contains("duration_outcome_support=0.773")
             && line.contains("duration_temporal_posterior_support=0.862")));
