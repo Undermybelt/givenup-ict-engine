@@ -4697,6 +4697,8 @@ mod tests {
             .expect("transition branch");
         assert_eq!(branch["transition_prior"], 0.8);
         assert_eq!(branch["transition_weighted_observation_mass"], 2.4);
+        assert_eq!(branch["transition_outcome_support"], 0.56);
+        assert_eq!(branch["transition_temporal_posterior_support"], 0.728);
         assert!(branch["prior_probability"].as_f64().unwrap() > 0.6);
         assert!(branch["posterior_probability"].as_f64().unwrap() > 0.10);
     }
@@ -5347,6 +5349,8 @@ mod tests {
         assert_eq!(value["node"]["duration_avg_streak_length"], 1.5);
         assert_eq!(value["node"]["duration_persistence_prior"], 0.6);
         assert_eq!(value["node"]["duration_weighted_streak_mass"], 1.85);
+        assert_eq!(value["node"]["duration_outcome_support"], 0.7407407407);
+        assert_eq!(value["node"]["duration_temporal_posterior_support"], 0.6422222222);
         assert_eq!(
             value["branch"]["entity_id"],
             "NQ:belief_regime_node:trend:trend_follow_through"
@@ -5758,8 +5762,12 @@ mod tests {
 
         assert_eq!(value["node_id"], "NQ:belief_regime_node:transition");
         assert_eq!(value["duration_weighted_streak_mass"], 1.85);
+        assert_eq!(value["duration_outcome_support"], 0.7407407407);
+        assert_eq!(value["duration_temporal_posterior_support"], 0.6422222222);
         assert_eq!(value["transition_weighted_observation_mass"], 1.4875);
         assert_eq!(value["transition_prior"], 0.68);
+        assert_eq!(value["transition_outcome_support"], 0.71);
+        assert_eq!(value["transition_temporal_posterior_support"], 0.689);
     }
 
     #[test]
@@ -5897,7 +5905,15 @@ mod tests {
         assert!(human_value["structural_temporal_line"]
             .as_str()
             .unwrap()
+            .contains("duration_temporal=0.642"));
+        assert!(human_value["structural_temporal_line"]
+            .as_str()
+            .unwrap()
             .contains("transition_mass=1.488"));
+        assert!(human_value["structural_temporal_line"]
+            .as_str()
+            .unwrap()
+            .contains("transition_temporal=0.689"));
     }
 
     #[test]
