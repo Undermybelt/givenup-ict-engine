@@ -109,7 +109,7 @@ Tests likely touched:
 | `P2` Live feedback posterior update | `mostly done` | delayed resolution, fractional pseudo-counts, compliance/off-policy exposure, clipped IPS counterfactual reward priors, candidate-set policy logging, feedback-time selected policy probability consumption, and clipped SNIPS/DR reward priors landed; deeper target-policy calibration remains |
 | `P3` Offline evidence tempering | `mostly done` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation landed |
 | `P4` Structural prior state upgrade | `partial` | duration / transition / source panels / event ledger / temporal posterior state, separated prior-mass snapshots, and latest offline seed snapshot landed; richer dwell-time theory remains |
-| `P5` BBN node/branch posterior update | `partial` | discounted temporal maintenance and normalized outgoing transition posterior state exist; complete candidate-set branch adjustment now consumes maintained posterior state |
+| `P5` BBN node/branch posterior update | `partial` | discounted temporal maintenance and normalized outgoing transition posterior state exist; complete and partial candidate-set branch adjustment now consume maintained posterior state |
 | `P6` CatBoost path ranking target | `not started` | structural candidate surfaces exist, but target math and calibration stack are still unimplemented |
 
 ## Current Todo Board
@@ -144,7 +144,7 @@ Tests likely touched:
 - [x] Add a dedicated smoke path proving `analyze -> research -> backtest -> structural-playbook` preserves canonical structural lineage end to end.
 - [x] Finish remaining `P2` by adding DR/SNIPS-style correction after candidate-set policy logging exists.
 - [x] Finish `P4` node-mass vs branch/path-mass separation and persist a clearer offline seed snapshot object.
-- [ ] Finish `P5` by moving node/branch temporal maintenance toward a more central maintained `BBN` posterior state instead of mostly snapshot-time reweighting.
+- [ ] Finish `P5` by moving richer node transition handling toward a more central maintained `BBN` posterior state instead of mostly snapshot-time reweighting.
 
 ### Not Yet
 
@@ -281,7 +281,8 @@ Outcome:
 - [x] Introduce discounted transition-count updates for branch posterior maintenance.
 - [x] Surface maintained node and branch temporal posterior state, including normalized transition posterior, through `workflow-status` temporal summary.
 - [x] Make complete-candidate branch posterior adjustment read the maintained normalized transition posterior instead of reconstructing it from multipliers.
-- [ ] Collapse remaining partial-candidate fallback and richer node transition handling onto the maintained `BBN` posterior state.
+- [x] Collapse partial-candidate branch fallback onto the maintained normalized transition posterior state.
+- [ ] Collapse richer node transition handling onto the maintained `BBN` posterior state.
 - [x] Add tests that prove repeated evidence can strengthen one branch posterior without collapsing unrelated nodes.
 
 ### P6: CatBoost Path Ranking Target
@@ -302,7 +303,7 @@ Outcome:
 Do these first, in order:
 
 1. [x] Finish remaining `P2` by adding DR/SNIPS-style correction after candidate-set policy logging exists.
-2. [ ] Finish `P5` by moving temporal maintenance from mostly snapshot-time reweighting into a more central maintained `BBN` node/branch posterior state.
+2. [ ] Finish `P5` by moving richer node transition handling from mostly snapshot-time reweighting into a more central maintained `BBN` node/branch posterior state.
 3. [ ] Only then start `P6` CatBoost path-target design.
 
 ## Out of Scope For The Next Execution Slice
