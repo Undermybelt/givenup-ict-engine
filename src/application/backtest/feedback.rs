@@ -144,7 +144,8 @@ pub fn apply_feedback_to_trade_outcome_network(
                 ("factor_uncertainty", factor_uncertainty.as_str()),
             ],
         )?;
-        let outcome_label = normalize_trade_outcome_label(&record.realized_outcome);
+        let outcome_label = crate::state::structural_feedback_trade_outcome_proxy(record)
+            .unwrap_or_else(|| normalize_trade_outcome_label(&record.realized_outcome));
         let realized_state_index = network
             .nodes
             .get("trade_outcome")

@@ -13906,6 +13906,71 @@ mod tests {
     }
 
     #[test]
+    fn test_apply_feedback_to_trade_outcome_network_maps_invalidated_to_loss_proxy() {
+        let mut network = build_trading_network().unwrap();
+        let loss_index = network.nodes["trade_outcome"]
+            .state_index("loss")
+            .expect("loss state index");
+        let before_loss = network.nodes["trade_outcome"].cpt.entries[&vec![0, 0, 0]][loss_index];
+        let feedback = FeedbackRecord {
+            timestamp: Utc.with_ymd_and_hms(2024, 2, 1, 12, 0, 0).unwrap(),
+            symbol: "NQ".to_string(),
+            source: "structural_feedback_submission".to_string(),
+            run_id: None,
+            trade_id: None,
+            prompt_version: None,
+            factor_version: None,
+            data_fingerprint: None,
+            factors_used: vec![FeedbackFactorUsage {
+                factor_name: "trend_momentum".to_string(),
+                category: "factor_backtest".to_string(),
+                direction: Direction::Bull,
+                value: 0.8,
+                confidence: 0.8,
+                weight: 0.3,
+                long_support: 0.3,
+                short_support: 0.0,
+                uncertainty_contribution: 0.1,
+            }],
+            model_probabilities_before_trade: ModelProbabilitySnapshot {
+                selected_direction: Direction::Bull,
+                selected_probability: 0.8,
+                long_score: 0.3,
+                short_score: 0.0,
+                win_prob_long: 0.8,
+                win_prob_short: 0.0,
+                uncertainty: 0.1,
+            },
+            realized_outcome: "invalidated".to_string(),
+            pnl: -0.01,
+            regime_at_entry: Regime::ManipulationExpansion,
+            structural_feedback: Some(ict_engine::state::StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "rec-invalidated".to_string(),
+                recommended_at: "2026-04-29T00:00:00Z".to_string(),
+                node_id: "node-1".to_string(),
+                branch_id: "branch-1".to_string(),
+                scenario_id: "scenario-1".to_string(),
+                path_id: "path-1".to_string(),
+                followed_path: true,
+                exit_reason: Some("invalidation".to_string()),
+                notes: None,
+            }),
+            reflection_mismatch_tags: Vec::new(),
+        };
+
+        let updates = ict_engine::application::backtest::apply_feedback_to_trade_outcome_network(
+            &mut network,
+            &[feedback],
+        )
+        .unwrap();
+        let after_loss = network.nodes["trade_outcome"].cpt.entries[&vec![0, 0, 0]][loss_index];
+
+        assert_eq!(updates, 1);
+        assert!(after_loss > before_loss);
+    }
+
+    #[test]
     fn test_build_update_agent_prompts_contains_feedback_review_stage() {
         let prompts = build_update_agent_prompts(BuildUpdateAgentPromptsInput {
             symbol: "NQ",

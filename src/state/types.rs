@@ -291,6 +291,41 @@ pub fn structural_feedback_counts_as_executed_trade(record: &FeedbackRecord) -> 
         .unwrap_or(true)
 }
 
+pub fn structural_feedback_trade_outcome_proxy(record: &FeedbackRecord) -> Option<String> {
+    use StructuralFeedbackLearningOutcome::{Negative, Neutral, Positive};
+
+    structural_feedback_learning_outcome(record).map(|outcome| match outcome {
+        Positive => "win".to_string(),
+        Negative => "loss".to_string(),
+        Neutral => "breakeven".to_string(),
+    })
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum StructuralFeedbackLearningOutcome {
+    Positive,
+    Neutral,
+    Negative,
+}
+
+pub fn structural_feedback_learning_outcome(
+    record: &FeedbackRecord,
+) -> Option<StructuralFeedbackLearningOutcome> {
+    if !structural_feedback_counts_as_executed_trade(record) {
+        return None;
+    }
+    match record.realized_outcome.trim().to_ascii_lowercase().as_str() {
+        "win" | "profit" | "tp" | "take_profit" => Some(StructuralFeedbackLearningOutcome::Positive),
+        "loss" | "lose" | "sl" | "stop" | "stop_loss" | "invalidated" => {
+            Some(StructuralFeedbackLearningOutcome::Negative)
+        }
+        "breakeven" | "abandoned" => Some(StructuralFeedbackLearningOutcome::Neutral),
+        _ if record.pnl > 1e-12 => Some(StructuralFeedbackLearningOutcome::Positive),
+        _ if record.pnl < -1e-12 => Some(StructuralFeedbackLearningOutcome::Negative),
+        _ => Some(StructuralFeedbackLearningOutcome::Neutral),
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PendingUpdateArtifactDiff {
     pub previous_artifact_id: Option<String>,

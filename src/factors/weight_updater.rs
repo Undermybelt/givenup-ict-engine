@@ -2,6 +2,7 @@ use chrono::Utc;
 
 use crate::factors::regime_conditional::RegimeConditional;
 use crate::state::{FeedbackRecord, LearningState, PersistedFactorRanking};
+use crate::state::StructuralFeedbackLearningOutcome;
 use crate::types::{Direction, FactorIC};
 
 /// Factor weight updater for backtest and feedback learning.
@@ -111,33 +112,46 @@ impl WeightUpdater {
                     Direction::Bear => factor.short_support >= factor.long_support,
                     Direction::Neutral => false,
                 };
-                let effective_success = if supports_selected {
-                    record.pnl >= 0.0 || record.realized_outcome == "win"
-                } else {
-                    record.pnl < 0.0 || record.realized_outcome == "loss"
+                let learning_outcome =
+                    crate::state::structural_feedback_learning_outcome(record).unwrap_or(
+                        StructuralFeedbackLearningOutcome::Neutral,
+                    );
+                let effective_success = match (supports_selected, learning_outcome) {
+                    (true, StructuralFeedbackLearningOutcome::Positive) => Some(true),
+                    (true, StructuralFeedbackLearningOutcome::Negative) => Some(false),
+                    (true, StructuralFeedbackLearningOutcome::Neutral) => None,
+                    (false, StructuralFeedbackLearningOutcome::Positive) => Some(false),
+                    (false, StructuralFeedbackLearningOutcome::Negative) => Some(true),
+                    (false, StructuralFeedbackLearningOutcome::Neutral) => None,
                 };
                 let (base_weight, posterior_reliability) = {
                     let profile = learning_state.ensure_profile(&factor.factor_name);
-                    let reliability_target = if effective_success { 0.75 } else { 0.25 };
+                    let reliability_target = match effective_success {
+                        Some(true) => 0.75,
+                        Some(false) => 0.25,
+                        None => 0.50,
+                    };
                     profile.posterior_reliability = blend(
                         profile.posterior_reliability,
                         reliability_target,
                         self.learning_rate,
                     );
-                    let signed_delta = if effective_success {
-                        factor.weight.abs() * 0.20
-                    } else {
-                        -factor.weight.abs() * 0.25
+                    let signed_delta = match effective_success {
+                        Some(true) => factor.weight.abs() * 0.20,
+                        Some(false) => -factor.weight.abs() * 0.25,
+                        None => 0.0,
                     };
                     let target_weight = (profile.base_weight + signed_delta).clamp(0.02, 1.0);
                     profile.base_weight =
                         blend(profile.base_weight, target_weight, self.learning_rate);
-                    RegimeConditional::update_profile(
-                        profile,
-                        record.regime_at_entry,
-                        effective_success,
-                        record.pnl,
-                    );
+                    if let Some(effective_success) = effective_success {
+                        RegimeConditional::update_profile(
+                            profile,
+                            record.regime_at_entry,
+                            effective_success,
+                            record.pnl,
+                        );
+                    }
                     (profile.base_weight, profile.posterior_reliability)
                 };
 
@@ -515,5 +529,80 @@ mod tests {
         }
         updater.apply_feedback(&mut learning_state, &[feedback]);
         assert!(learning_state.factor_rankings[0].weight > before_weight);
+    }
+
+    #[test]
+    fn test_apply_feedback_treats_abandoned_as_neutral_trade_learning() {
+        let updater = WeightUpdater::default();
+        let mut learning_state = LearningState {
+            factor_rankings: vec![PersistedFactorRanking {
+                factor_name: "trend_momentum".to_string(),
+                weight: 0.2,
+                ..PersistedFactorRanking::default()
+            }],
+            ..LearningState::default()
+        };
+        let feedback = FeedbackRecord {
+            timestamp: Utc::now(),
+            symbol: "NQ".to_string(),
+            source: "structural_feedback".to_string(),
+            run_id: None,
+            trade_id: None,
+            prompt_version: None,
+            factor_version: None,
+            data_fingerprint: None,
+            factors_used: vec![FeedbackFactorUsage {
+                factor_name: "trend_momentum".to_string(),
+                category: "trend_momentum".to_string(),
+                direction: Direction::Bull,
+                value: 0.8,
+                confidence: 0.7,
+                weight: 0.3,
+                long_support: 0.4,
+                short_support: 0.0,
+                uncertainty_contribution: 0.1,
+            }],
+            model_probabilities_before_trade: ModelProbabilitySnapshot {
+                selected_direction: Direction::Bull,
+                selected_probability: 0.6,
+                long_score: 0.6,
+                short_score: 0.3,
+                win_prob_long: 0.58,
+                win_prob_short: 0.41,
+                uncertainty: 0.2,
+            },
+            realized_outcome: "abandoned".to_string(),
+            pnl: 0.0,
+            regime_at_entry: Regime::ManipulationExpansion,
+            structural_feedback: Some(crate::state::StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "rec-abandoned".to_string(),
+                recommended_at: "2026-04-29T00:00:00Z".to_string(),
+                node_id: "NQ:belief_regime_node:trend".to_string(),
+                branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                    .to_string(),
+                path_id:
+                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                        .to_string(),
+                followed_path: true,
+                exit_reason: Some("manual_exit".to_string()),
+                notes: None,
+            }),
+            reflection_mismatch_tags: Vec::new(),
+        };
+        let before_weight = learning_state.factor_rankings[0].weight;
+
+        updater.apply_feedback(&mut learning_state, &[feedback]);
+
+        let profile = learning_state.profile("trend_momentum").unwrap();
+        assert_eq!(learning_state.factor_rankings[0].weight, before_weight);
+        assert_eq!(profile.posterior_reliability, 0.5);
+        let path = learning_state
+            .structural_prior_state
+            .paths
+            .get("path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary")
+            .expect("path prior state");
+        assert_eq!(path.abandoned, 1);
     }
 }

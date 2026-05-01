@@ -51,6 +51,7 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         load_state_or_default(state_dir, symbol, UPDATE_RUNS_FILE)?;
     let mut learning_state = load_learning_state(state_dir, symbol)?;
     let previous_rankings = learning_state.factor_rankings.clone();
+    let raw_outcome = outcome.trim().to_ascii_lowercase();
     let outcome_label = normalize_trade_outcome_label(outcome);
     let entry_signal = entry_signal.unwrap_or("medium");
     let mut consumed_pending_update_artifact: Option<PendingUpdateArtifact> = None;
@@ -62,7 +63,7 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
                     template_feedback: feedback,
                     ..PendingUpdateArtifact::default()
                 },
-                &outcome_label,
+                &raw_outcome,
                 pnl,
                 regime,
                 direction,
@@ -75,7 +76,7 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
                     ict_engine::application::orchestration::feedback_record_from_structural_submission(
                         submission,
                         Some(symbol),
-                        Some(&outcome_label),
+                        Some(&raw_outcome),
                         pnl,
                         regime.map(normalize_regime_label),
                         direction.map(normalize_direction_label),
@@ -84,14 +85,14 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
                 Err(_) => {
                     let artifact = serde_json::from_str::<PendingUpdateArtifact>(&content)?;
                     consumed_pending_update_artifact = Some(artifact.clone());
-                    feedback_record_from_artifact(artifact, &outcome_label, pnl, regime, direction)
+                    feedback_record_from_artifact(artifact, &raw_outcome, pnl, regime, direction)
                 }
             },
         }
     } else if state_exists(state_dir, symbol, PENDING_UPDATE_ARTIFACT_FILE) {
         let artifact = load_pending_update_artifact(state_dir, symbol)?;
         consumed_pending_update_artifact = Some(artifact.clone());
-        feedback_record_from_artifact(artifact, &outcome_label, pnl, regime, direction)
+        feedback_record_from_artifact(artifact, &raw_outcome, pnl, regime, direction)
     } else {
         FeedbackRecord {
             timestamp: Utc::now(),
@@ -112,8 +113,8 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
                 win_prob_short: 0.0,
                 uncertainty: 0.0,
             },
-            realized_outcome: outcome_label.clone(),
-            pnl: pnl.unwrap_or_else(|| match outcome_label.as_str() {
+            realized_outcome: raw_outcome.clone(),
+            pnl: pnl.unwrap_or_else(|| match raw_outcome.as_str() {
                 "win" => 0.01,
                 "loss" => -0.01,
                 _ => 0.0,
@@ -168,6 +169,10 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         .and_then(|node| node.probabilities_for_evidence(&evidence).ok());
     let new_feedback = learning_state.merge_feedback_records(&[feedback]);
     let feedback_records_applied = new_feedback.len();
+    let realized_outcome_for_prompts = new_feedback
+        .first()
+        .map(|feedback| feedback.realized_outcome.as_str())
+        .unwrap_or(raw_outcome.as_str());
 
     if let Some(feedback) = new_feedback
         .first()
@@ -175,12 +180,12 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
             ict_engine::state::structural_feedback_counts_as_executed_trade(feedback)
         })
     {
+        let outcome_label = ict_engine::state::structural_feedback_trade_outcome_proxy(feedback)
+            .unwrap_or_else(|| normalize_trade_outcome_label(&feedback.realized_outcome));
         let realized_state_index = network
             .nodes
             .get("trade_outcome")
-            .and_then(|node| {
-                node.state_index(&normalize_trade_outcome_label(&feedback.realized_outcome))
-            })
+            .and_then(|node| node.state_index(&outcome_label))
             .ok_or_else(|| anyhow!("unknown outcome state '{}'", feedback.realized_outcome))?;
 
         CPTUpdater::default().update_from_trade(
@@ -221,7 +226,7 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         normalized_entry_quality: &entry_quality,
         factor_alignment: &factor_alignment,
         factor_uncertainty: &factor_uncertainty,
-        realized_outcome: &outcome_label,
+        realized_outcome: realized_outcome_for_prompts,
         feedback_records_applied,
         consumed_pre_bayes_evidence_filter: consumed_analyze_context
             .pre_bayes_evidence_filter
