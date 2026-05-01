@@ -76,6 +76,8 @@ pub struct StructuralPriorLearningState {
     pub node_temporal_posteriors: BTreeMap<String, StructuralNodeTemporalPosteriorState>,
     #[serde(default)]
     pub branch_temporal_posteriors: BTreeMap<String, StructuralBranchTemporalPosteriorState>,
+    #[serde(default)]
+    pub source_reliability_posteriors: BTreeMap<String, StructuralSourceReliabilityPosterior>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -197,6 +199,30 @@ pub struct StructuralPowerPriorContribution {
     pub failure_mass: f64,
     pub invalidation_mass: f64,
     pub not_followed_mass: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralSourceReliabilityPosterior {
+    pub source_label: String,
+    pub observations: usize,
+    #[serde(default)]
+    pub weighted_observation_mass: f64,
+    #[serde(default)]
+    pub weighted_success_mass: f64,
+    #[serde(default)]
+    pub weighted_failure_mass: f64,
+    #[serde(default)]
+    pub weighted_invalidation_mass: f64,
+    #[serde(default)]
+    pub weighted_exposure_mass: f64,
+    #[serde(default)]
+    pub weighted_not_followed_mass: f64,
+    #[serde(default)]
+    pub posterior_reliability: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_tempering_coefficient: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_power_prior_contribution: Option<StructuralPowerPriorContribution>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -3177,6 +3203,11 @@ impl LearningState {
             let Some(refs) = record.structural_feedback.as_ref() else {
                 continue;
             };
+            update_structural_source_reliability_from_feedback(
+                &mut self.structural_prior_state,
+                record,
+                refs.followed_path,
+            );
             update_structural_prior_stats(
                 self.structural_prior_state
                     .nodes
@@ -3239,6 +3270,10 @@ impl LearningState {
         refs: &StructuralFeedbackRefs,
         seed: &StructuralPriorSeed,
     ) {
+        apply_structural_prior_seed_to_source_reliability(
+            &mut self.structural_prior_state,
+            seed,
+        );
         apply_structural_prior_seed_to_stats(
             self.structural_prior_state
                 .nodes
@@ -3825,9 +3860,18 @@ fn structural_power_prior_contribution(
     seed: &StructuralPriorSeed,
     kind: StructuralPriorEntityKind,
 ) -> StructuralPowerPriorContribution {
+    structural_power_prior_contribution_with_entity_scale(
+        seed,
+        structural_prior_entity_mass_scale(kind),
+    )
+}
+
+fn structural_power_prior_contribution_with_entity_scale(
+    seed: &StructuralPriorSeed,
+    entity_mass_scale: f64,
+) -> StructuralPowerPriorContribution {
     let base_source_weight = structural_prior_source_weight(&seed.source_label);
     let tempering_coefficient = structural_prior_seed_tempering_coefficient(seed);
-    let entity_mass_scale = structural_prior_entity_mass_scale(kind);
     let effective_tau = structural_prior_seed_effective_weight(seed) * entity_mass_scale;
     StructuralPowerPriorContribution {
         source_label: seed.source_label.clone(),
@@ -4061,6 +4105,85 @@ fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSu
     );
     summary.off_policy_adjusted_prior =
         (summary.counterfactual_reward_prior * summary.execution_propensity).clamp(0.0, 1.0);
+}
+
+fn update_structural_source_reliability_from_feedback(
+    state: &mut StructuralPriorLearningState,
+    record: &FeedbackRecord,
+    followed_path: bool,
+) {
+    let source_weight = structural_prior_source_weight(&record.source);
+    let not_followed_path =
+        !followed_path || record.realized_outcome.trim().eq_ignore_ascii_case("not_followed");
+    let posterior = state
+        .source_reliability_posteriors
+        .entry(record.source.clone())
+        .or_insert_with(|| StructuralSourceReliabilityPosterior {
+            source_label: record.source.clone(),
+            ..StructuralSourceReliabilityPosterior::default()
+        });
+    posterior.observations += 1;
+    posterior.weighted_exposure_mass += source_weight;
+    if not_followed_path {
+        posterior.weighted_not_followed_mass += source_weight;
+    }
+    if let Some(pseudo_counts) = structural_feedback_pseudo_counts(record, followed_path) {
+        let weighted_observation = source_weight * pseudo_counts.observation_weight;
+        posterior.weighted_observation_mass += weighted_observation;
+        posterior.weighted_success_mass += weighted_observation * pseudo_counts.success_credit;
+        posterior.weighted_failure_mass +=
+            weighted_observation * (1.0 - pseudo_counts.success_credit);
+        if matches!(structural_feedback_counter_outcome(record), Some("invalidated")) {
+            posterior.weighted_invalidation_mass += weighted_observation;
+        }
+    }
+    refresh_structural_source_reliability_posterior(posterior);
+}
+
+fn apply_structural_prior_seed_to_source_reliability(
+    state: &mut StructuralPriorLearningState,
+    seed: &StructuralPriorSeed,
+) {
+    if seed.observations == 0 {
+        return;
+    }
+    let source_weight = structural_prior_seed_effective_weight(seed);
+    let posterior = state
+        .source_reliability_posteriors
+        .entry(seed.source_label.clone())
+        .or_insert_with(|| StructuralSourceReliabilityPosterior {
+            source_label: seed.source_label.clone(),
+            ..StructuralSourceReliabilityPosterior::default()
+        });
+    posterior.observations += seed.observations;
+    posterior.weighted_observation_mass += source_weight * seed.followed_count as f64;
+    posterior.weighted_success_mass +=
+        source_weight * (seed.wins as f64 + seed.breakevens as f64 * 0.5);
+    posterior.weighted_failure_mass += source_weight
+        * (seed.losses as f64 + seed.breakevens as f64 * 0.5)
+        + source_weight * seed.invalidated as f64 * 1.25
+        + source_weight * seed.abandoned as f64 * 0.75;
+    posterior.weighted_invalidation_mass += source_weight * seed.invalidated as f64;
+    posterior.weighted_exposure_mass += source_weight * seed.observations as f64;
+    posterior.weighted_not_followed_mass += source_weight * seed.not_followed as f64;
+    posterior.last_tempering_coefficient = Some(structural_prior_seed_tempering_coefficient(seed));
+    posterior.last_power_prior_contribution = Some(
+        structural_power_prior_contribution_with_entity_scale(seed, 1.0),
+    );
+    refresh_structural_source_reliability_posterior(posterior);
+}
+
+fn refresh_structural_source_reliability_posterior(
+    posterior: &mut StructuralSourceReliabilityPosterior,
+) {
+    posterior.posterior_reliability = if posterior.weighted_observation_mass <= f64::EPSILON {
+        0.5
+    } else {
+        structural_beta_mean(
+            posterior.weighted_success_mass,
+            posterior.weighted_failure_mass,
+        )
+    };
 }
 
 fn structural_prior_symbol_from_node_id(node_id: &str) -> String {
@@ -5126,6 +5249,16 @@ mod tests {
         assert!(path.counterfactual_failure_mass.abs() < 1e-9);
         assert!((path.counterfactual_reward_prior - 0.75).abs() < 1e-9);
         assert!((path.off_policy_adjusted_prior - 0.375).abs() < 1e-9);
+        let posterior = state
+            .structural_prior_state
+            .source_reliability_posteriors
+            .get("structural_feedback_submission")
+            .expect("live feedback source reliability posterior");
+        assert_eq!(posterior.observations, 2);
+        assert!((posterior.weighted_exposure_mass - 2.0).abs() < 1e-9);
+        assert!((posterior.weighted_not_followed_mass - 1.0).abs() < 1e-9);
+        assert!((posterior.weighted_success_mass - 1.0).abs() < 1e-9);
+        assert!((posterior.posterior_reliability - (2.0 / 3.0)).abs() < 1e-9);
     }
 
     #[test]
@@ -5204,6 +5337,51 @@ mod tests {
         assert!((backtest_power_prior.success_mass - 0.75).abs() < 1e-9);
         assert!((backtest_power_prior.failure_mass - 0.75).abs() < 1e-9);
         assert_eq!(path.last_offline_seed_source.as_deref(), Some("backtest"));
+    }
+
+    #[test]
+    fn test_structural_prior_seed_updates_reusable_source_reliability_posterior() {
+        let refs = StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-source-reliability".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "node-source-reliability".to_string(),
+            branch_id: "branch-source-reliability".to_string(),
+            scenario_id: "scenario-source-reliability".to_string(),
+            path_id: "path-source-reliability".to_string(),
+            followed_path: true,
+            exit_reason: None,
+            notes: None,
+        };
+        let seed = StructuralPriorSeed {
+            source_label: "backtest".to_string(),
+            tempering_coefficient: None,
+            observations: 2,
+            followed_count: 2,
+            wins: 1,
+            losses: 1,
+            breakevens: 0,
+            invalidated: 0,
+            abandoned: 0,
+            not_followed: 0,
+            avg_pnl: 0.015,
+        };
+
+        let mut state = LearningState::default();
+        state.apply_structural_prior_seed(&refs, &seed);
+
+        let posterior = state
+            .structural_prior_state
+            .source_reliability_posteriors
+            .get("backtest")
+            .expect("backtest source reliability posterior");
+        assert_eq!(posterior.source_label, "backtest");
+        assert_eq!(posterior.observations, 2);
+        assert!((posterior.weighted_observation_mass - 1.5).abs() < 1e-9);
+        assert!((posterior.weighted_success_mass - 0.75).abs() < 1e-9);
+        assert!((posterior.weighted_failure_mass - 0.75).abs() < 1e-9);
+        assert!((posterior.posterior_reliability - 0.5).abs() < 1e-9);
+        assert!(posterior.last_power_prior_contribution.is_some());
     }
 
     #[test]
