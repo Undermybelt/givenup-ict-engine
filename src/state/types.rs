@@ -3785,6 +3785,8 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
     let mut current_streak_length: usize = 0;
     let mut current_recommended_at: Option<String> = None;
     let mut previous_event: Option<StructuralPriorEvent> = None;
+    let mut symbol_transition_events =
+        BTreeMap::<String, Vec<(StructuralPriorEvent, StructuralPriorEvent)>>::new();
 
     for event in &events {
         if current_symbol.as_deref() != Some(event.symbol.as_str()) {
@@ -3812,27 +3814,10 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
 
         if let Some(previous) = previous_event.as_ref() {
             if previous.symbol == event.symbol {
-                let transition_key = format!("{}=>{}", previous.branch_id, event.branch_id);
-                let entry = state
-                    .branch_transition_priors
-                    .entry(transition_key)
-                    .or_insert_with(|| StructuralBranchTransitionPrior {
-                        from_node_id: previous.node_id.clone(),
-                        to_node_id: event.node_id.clone(),
-                        from_branch_id: previous.branch_id.clone(),
-                        to_branch_id: event.branch_id.clone(),
-                        ..StructuralBranchTransitionPrior::default()
-                    });
-                entry.observations += 1;
-                entry.weighted_observation_mass +=
-                    structural_prior_source_weight(&event.source_label);
-                match event.realized_outcome.as_deref() {
-                    Some("win") => entry.wins += 1,
-                    Some("loss") => entry.losses += 1,
-                    Some("invalidated") => entry.invalidated += 1,
-                    _ => {}
-                }
-                entry.last_recommended_at = Some(event.recommended_at.clone());
+                symbol_transition_events
+                    .entry(event.symbol.clone())
+                    .or_default()
+                    .push((previous.clone(), event.clone()));
             }
         }
         previous_event = Some(event.clone());
@@ -3844,6 +3829,35 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
         current_streak_length,
         current_recommended_at.take(),
     );
+
+    for transition_events in symbol_transition_events.values() {
+        let total_transitions = transition_events.len();
+        for (index, (previous, event)) in transition_events.iter().enumerate() {
+            let transition_key = format!("{}=>{}", previous.branch_id, event.branch_id);
+            let entry = state
+                .branch_transition_priors
+                .entry(transition_key)
+                .or_insert_with(|| StructuralBranchTransitionPrior {
+                    from_node_id: previous.node_id.clone(),
+                    to_node_id: event.node_id.clone(),
+                    from_branch_id: previous.branch_id.clone(),
+                    to_branch_id: event.branch_id.clone(),
+                    ..StructuralBranchTransitionPrior::default()
+                });
+            let recency_rank = total_transitions.saturating_sub(index + 1) as f64;
+            let recency_decay = 0.85_f64.powf(recency_rank);
+            entry.observations += 1;
+            entry.weighted_observation_mass +=
+                structural_prior_source_weight(&event.source_label) * recency_decay;
+            match event.realized_outcome.as_deref() {
+                Some("win") => entry.wins += 1,
+                Some("loss") => entry.losses += 1,
+                Some("invalidated") => entry.invalidated += 1,
+                _ => {}
+            }
+            entry.last_recommended_at = Some(event.recommended_at.clone());
+        }
+    }
 
     let mut outgoing_mass = BTreeMap::<String, f64>::new();
     for transition in state.branch_transition_priors.values() {
@@ -4670,8 +4684,101 @@ mod tests {
 
         assert_eq!(transition_ab.observations, 1);
         assert_eq!(transition_ac.observations, 1);
-        assert!((transition_ab.transition_prior - 0.5).abs() < 1e-9);
-        assert!((transition_ac.transition_prior - 0.5).abs() < 1e-9);
+        assert!(transition_ac.weighted_observation_mass > transition_ab.weighted_observation_mass);
+        assert!(transition_ac.transition_prior > transition_ab.transition_prior);
+    }
+
+    #[test]
+    fn test_structural_transition_priors_discount_older_transitions() {
+        let mut state = LearningState::default();
+        let seed = StructuralPriorSeed {
+            source_label: "backtest".to_string(),
+            tempering_coefficient: None,
+            observations: 1,
+            followed_count: 1,
+            wins: 1,
+            losses: 0,
+            breakevens: 0,
+            invalidated: 0,
+            abandoned: 0,
+            not_followed: 0,
+            avg_pnl: 0.02,
+        };
+
+        for (recommendation_id, recommended_at, node_id, branch_id) in [
+            (
+                "rec-1",
+                "2026-04-30T00:00:00Z",
+                "NQ:belief_regime_node:trend",
+                "NQ:belief_regime_node:trend:trend_follow_through",
+            ),
+            (
+                "rec-2",
+                "2026-04-30T01:00:00Z",
+                "NQ:belief_regime_node:range",
+                "NQ:belief_regime_node:range:range_mean_reversion",
+            ),
+            (
+                "rec-3",
+                "2026-04-30T02:00:00Z",
+                "NQ:belief_regime_node:trend",
+                "NQ:belief_regime_node:trend:trend_follow_through",
+            ),
+            (
+                "rec-4",
+                "2026-04-30T03:00:00Z",
+                "NQ:belief_regime_node:transition",
+                "NQ:belief_regime_node:transition:transition_confirmation",
+            ),
+            (
+                "rec-5",
+                "2026-04-30T04:00:00Z",
+                "NQ:belief_regime_node:trend",
+                "NQ:belief_regime_node:trend:trend_follow_through",
+            ),
+            (
+                "rec-6",
+                "2026-04-30T05:00:00Z",
+                "NQ:belief_regime_node:transition",
+                "NQ:belief_regime_node:transition:transition_confirmation",
+            ),
+        ] {
+            state.apply_structural_prior_seed(
+                &StructuralFeedbackRefs {
+                    protocol_version: "structural-prior-seed-v1".to_string(),
+                    recommendation_id: recommendation_id.to_string(),
+                    recommended_at: recommended_at.to_string(),
+                    node_id: node_id.to_string(),
+                    branch_id: branch_id.to_string(),
+                    scenario_id: format!("scenario:{branch_id}"),
+                    path_id: format!("path:scenario:{branch_id}:primary"),
+                    followed_path: true,
+                    exit_reason: None,
+                    notes: None,
+                },
+                &seed,
+            );
+        }
+
+        let trend_to_range = state
+            .structural_prior_state
+            .branch_transition_priors
+            .get(
+                "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:range:range_mean_reversion",
+            )
+            .expect("trend to range transition");
+        let trend_to_transition = state
+            .structural_prior_state
+            .branch_transition_priors
+            .get(
+                "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:transition:transition_confirmation",
+            )
+            .expect("trend to transition transition");
+
+        assert_eq!(trend_to_range.observations, 1);
+        assert_eq!(trend_to_transition.observations, 2);
+        assert!(trend_to_transition.weighted_observation_mass > trend_to_range.weighted_observation_mass);
+        assert!(trend_to_transition.transition_prior > trend_to_range.transition_prior);
     }
 
     #[test]

@@ -24,7 +24,7 @@ pub fn blend_branch_prior_with_transition_prior(
     let Some(transition_prior) = transition_prior else {
         return base_prior;
     };
-    let transition_weight = (transition_prior.observations as f64 / 3.0).min(1.0);
+    let transition_weight = (transition_prior.weighted_observation_mass / 3.0).min(1.0);
     ((1.0 - transition_weight) * base_prior
         + transition_weight * transition_prior.transition_prior)
         .clamp(0.0, 1.0)
@@ -56,7 +56,7 @@ pub fn transition_adjusted_branch_posteriors(
         let transition_prior = transition_priors.get(&transition_key);
         let transition_weight = transition_prior
             .map(|prior| {
-                let sample_weight = (prior.observations as f64 / 3.0).min(1.0);
+                let sample_weight = (prior.weighted_observation_mass / 3.0).min(1.0);
                 (1.0 + (prior.transition_prior - 0.5) * 2.0 * sample_weight).clamp(0.05, 2.0)
             })
             .unwrap_or(1.0);

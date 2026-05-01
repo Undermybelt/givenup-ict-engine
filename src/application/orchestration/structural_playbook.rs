@@ -394,7 +394,9 @@ pub fn resolved_ensemble_vote_for_snapshot(
     vote: &crate::state::EnsembleVoteRecord,
 ) -> Option<crate::state::EnsembleVoteRecord> {
     let mut vote = vote.clone();
-    let phase = matching_phase_snapshot_for_ensemble_vote(snapshot, &vote)?;
+    let Some(phase) = matching_phase_snapshot_for_ensemble_vote(snapshot, &vote) else {
+        return Some(vote);
+    };
     let Some((active_regime, probabilities, confidence)) =
         canonical_phase_regime_surface(phase)
     else {
