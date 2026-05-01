@@ -20,7 +20,7 @@ Aligned source docs:
 |---|---|---|
 | `P0` Repo truth | `已实现` | execution plan, literature docs, and paper-code readmes are committed |
 | `P1` Canonical structural anchor | `已实现` | downstream phases no longer redefine canonical structural lineage |
-| `P2` Live feedback posterior update | `部分实现` | delayed resolution, fractional pseudo-count updates, and compliance/off-policy exposure fields exist; full OPE value correction remains |
+| `P2` Live feedback posterior update | `部分实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, and clipped IPS counterfactual reward priors exist; full DR/candidate-set policy logging remains |
 | `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, and power-prior contribution objects exist; reusable source-reliability posterior is still missing |
 | `P4` Structural prior state upgrade | `部分实现` | duration, transition, source panels, and event ledger exist; node/branch mass separation is not fully formalized |
 | `P5` BBN node/branch posterior update | `部分实现` | temporal priors already adjust belief snapshots and branch surfaces, but discounted transition-count maintenance is not yet the core engine rule |
@@ -176,9 +176,10 @@ Already in repo
 - invalidated / abandoned / breakeven outcomes no longer look like pure wins
 - not-followed feedback updates weighted exposure mass, weighted not-followed mass, execution propensity, and an off-policy-adjusted prior without adding reward pseudo-counts
 - structural history surfaces expose execution propensity and off-policy exposure rate for consumer agents
+- persisted structural stats and `structural-experience-priors` expose clipped IPS weight and counterfactual reward prior
 
 Literature mechanisms still worth importing
-- full propensity-aware not-followed / off-policy value correction path
+- DR/SNIPS-style off-policy value correction after candidate-set policy logging exists
 - maturity / censoring logic for delayed reward
 - richer maturity / censoring logic for delayed reward beyond simple delayed -> resolved replacement
 - compliance / propensity correction before updating execution value
@@ -199,7 +200,7 @@ Suggested outcome decomposition
 
 Current repo gap
 - feedback learning is real and no longer heuristic-only; delayed outcomes now resolve into one posterior event and abandoned/invalidated outcomes use explicit pseudo-count weights
-- not-followed recommendations now carry separate propensity/off-policy exposure fields, but full counterfactual value correction is not yet implemented
+- not-followed recommendations now carry separate propensity/off-policy exposure fields and clipped IPS counterfactual reward priors, but DR/SNIPS correction still needs candidate-set policy logging
 
 ---
 

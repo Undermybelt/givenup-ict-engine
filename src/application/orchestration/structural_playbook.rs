@@ -298,6 +298,14 @@ pub struct StructuralExperiencePriorEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub dominant_source_prior: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub execution_propensity: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ips_weight: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub counterfactual_reward_prior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub off_policy_adjusted_prior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_streak_count: Option<usize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_avg_streak_length: Option<f64>,
@@ -891,6 +899,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 dominant_source_panel: dominant_source_panel.clone(),
                 dominant_source_share,
                 dominant_source_prior,
+                execution_propensity: structural_prior_execution_propensity(prior_stats),
+                ips_weight: structural_prior_ips_weight(prior_stats),
+                counterfactual_reward_prior: structural_prior_counterfactual_reward_prior(
+                    prior_stats,
+                ),
+                off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
+                    prior_stats,
+                ),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -923,6 +939,13 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         dominant_source_panel: dominant_source_panel.clone(),
                         dominant_source_share,
                         dominant_source_prior,
+                        execution_propensity: structural_prior_execution_propensity(prior_stats),
+                        ips_weight: structural_prior_ips_weight(prior_stats),
+                        counterfactual_reward_prior:
+                            structural_prior_counterfactual_reward_prior(prior_stats),
+                        off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
+                            prior_stats,
+                        ),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -961,6 +984,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 dominant_source_panel: dominant_source_panel.clone(),
                 dominant_source_share,
                 dominant_source_prior,
+                execution_propensity: structural_prior_execution_propensity(prior_stats),
+                ips_weight: structural_prior_ips_weight(prior_stats),
+                counterfactual_reward_prior: structural_prior_counterfactual_reward_prior(
+                    prior_stats,
+                ),
+                off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
+                    prior_stats,
+                ),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -992,6 +1023,13 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         dominant_source_panel: dominant_source_panel.clone(),
                         dominant_source_share,
                         dominant_source_prior,
+                        execution_propensity: structural_prior_execution_propensity(prior_stats),
+                        ips_weight: structural_prior_ips_weight(prior_stats),
+                        counterfactual_reward_prior:
+                            structural_prior_counterfactual_reward_prior(prior_stats),
+                        off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
+                            prior_stats,
+                        ),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1030,6 +1068,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 dominant_source_panel: dominant_source_panel.clone(),
                 dominant_source_share,
                 dominant_source_prior,
+                execution_propensity: structural_prior_execution_propensity(prior_stats),
+                ips_weight: structural_prior_ips_weight(prior_stats),
+                counterfactual_reward_prior: structural_prior_counterfactual_reward_prior(
+                    prior_stats,
+                ),
+                off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
+                    prior_stats,
+                ),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1062,6 +1108,13 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         dominant_source_panel: dominant_source_panel.clone(),
                         dominant_source_share,
                         dominant_source_prior,
+                        execution_propensity: structural_prior_execution_propensity(prior_stats),
+                        ips_weight: structural_prior_ips_weight(prior_stats),
+                        counterfactual_reward_prior:
+                            structural_prior_counterfactual_reward_prior(prior_stats),
+                        off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
+                            prior_stats,
+                        ),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1120,6 +1173,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
             dominant_source_panel,
             dominant_source_share,
             dominant_source_prior,
+            execution_propensity: structural_prior_execution_propensity(node_prior_stats),
+            ips_weight: structural_prior_ips_weight(node_prior_stats),
+            counterfactual_reward_prior: structural_prior_counterfactual_reward_prior(
+                node_prior_stats,
+            ),
+            off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
+                node_prior_stats,
+            ),
             duration_streak_count: node_temporal_state
                 .map(|state| state.streak_count)
                 .or_else(|| structural_duration_streak_count(node_duration_prior)),
@@ -2720,6 +2781,37 @@ fn structural_last_offline_seed_source(
     prior_stats: Option<&StructuralPriorStats>,
 ) -> Option<String> {
     prior_stats.and_then(|stats| stats.last_offline_seed_source.clone())
+}
+
+fn structural_prior_positive_value(
+    prior_stats: Option<&StructuralPriorStats>,
+    value: impl Fn(&StructuralPriorStats) -> f64,
+) -> Option<f64> {
+    prior_stats
+        .map(value)
+        .filter(|candidate| *candidate > f64::EPSILON)
+}
+
+fn structural_prior_execution_propensity(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.execution_propensity)
+}
+
+fn structural_prior_ips_weight(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.ips_weight)
+}
+
+fn structural_prior_counterfactual_reward_prior(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.counterfactual_reward_prior)
+}
+
+fn structural_prior_off_policy_adjusted_prior(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.off_policy_adjusted_prior)
 }
 
 fn structural_duration_streak_count(

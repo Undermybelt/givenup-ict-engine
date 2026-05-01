@@ -5210,7 +5210,11 @@ mod tests {
                 weighted_not_followed_mass: 0.0,
                 smoothed_prior: 0.75,
                 execution_propensity: 0.8333333333,
-                off_policy_adjusted_prior: 0.625,
+                ips_weight: 1.2,
+                counterfactual_success_mass: 4.2,
+                counterfactual_failure_mass: 0.6,
+                counterfactual_reward_prior: 0.7647058824,
+                off_policy_adjusted_prior: 0.6372549020,
                 source_panel_summaries: std::collections::BTreeMap::new(),
                 last_offline_seed_source: None,
             },
@@ -5416,7 +5420,11 @@ mod tests {
                 weighted_not_followed_mass: 0.0,
                 smoothed_prior: 0.5483870968,
                 execution_propensity: 0.8,
-                off_policy_adjusted_prior: 0.4387096774,
+                ips_weight: 1.25,
+                counterfactual_success_mass: 1.625,
+                counterfactual_failure_mass: 0.9375,
+                counterfactual_reward_prior: 0.5753424658,
+                off_policy_adjusted_prior: 0.4602739726,
                 source_panel_summaries: std::collections::BTreeMap::from([
                     (
                         "analyze".to_string(),
@@ -5438,7 +5446,11 @@ mod tests {
                             weighted_not_followed_mass: 0.0,
                             smoothed_prior: 0.5652173913,
                             execution_propensity: 0.6666666667,
-                            off_policy_adjusted_prior: 0.3768115942,
+                            ips_weight: 1.5,
+                            counterfactual_success_mass: 0.45,
+                            counterfactual_failure_mass: 0.0,
+                            counterfactual_reward_prior: 0.5918367347,
+                            off_policy_adjusted_prior: 0.3945578231,
                             last_tempering_coefficient: None,
                             last_power_prior_contribution: None,
                             last_recommendation_id: Some("rec-analyze".to_string()),
@@ -5466,6 +5478,10 @@ mod tests {
                             weighted_not_followed_mass: 0.0,
                             smoothed_prior: 0.5,
                             execution_propensity: 0.75,
+                            ips_weight: 1.3333333333,
+                            counterfactual_success_mass: 1.0,
+                            counterfactual_failure_mass: 1.0,
+                            counterfactual_reward_prior: 0.5,
                             off_policy_adjusted_prior: 0.375,
                             last_tempering_coefficient: None,
                             last_power_prior_contribution: None,
@@ -5522,6 +5538,10 @@ mod tests {
             .unwrap()
             > 0.80);
         assert_eq!(value["path"]["dominant_source_prior"], 0.5);
+        assert_eq!(value["path"]["execution_propensity"], 0.8);
+        assert_eq!(value["path"]["ips_weight"], 1.25);
+        assert_eq!(value["path"]["counterfactual_reward_prior"], 0.5753424658);
+        assert_eq!(value["path"]["off_policy_adjusted_prior"], 0.4602739726);
         assert_eq!(value["node"]["duration_streak_count"], 2);
         assert_eq!(value["node"]["duration_avg_streak_length"], 1.5);
         assert_eq!(value["node"]["duration_persistence_prior"], 0.6);
@@ -5615,7 +5635,11 @@ mod tests {
                 weighted_not_followed_mass: 0.0,
                 smoothed_prior: 0.95,
                 execution_propensity: 0.8,
-                off_policy_adjusted_prior: 0.76,
+                ips_weight: 1.25,
+                counterfactual_success_mass: 1.125,
+                counterfactual_failure_mass: 1.125,
+                counterfactual_reward_prior: 0.5,
+                off_policy_adjusted_prior: 0.4,
                 source_panel_summaries: std::collections::BTreeMap::from([
                     (
                         "analyze".to_string(),
@@ -5637,7 +5661,11 @@ mod tests {
                             weighted_not_followed_mass: 0.0,
                             smoothed_prior: 0.5652173913,
                             execution_propensity: 0.6666666667,
-                            off_policy_adjusted_prior: 0.3768115942,
+                            ips_weight: 1.5,
+                            counterfactual_success_mass: 0.45,
+                            counterfactual_failure_mass: 0.0,
+                            counterfactual_reward_prior: 0.5918367347,
+                            off_policy_adjusted_prior: 0.3945578231,
                             last_tempering_coefficient: None,
                             last_power_prior_contribution: None,
                             last_recommendation_id: None,
@@ -5665,7 +5693,11 @@ mod tests {
                             weighted_not_followed_mass: 0.0,
                             smoothed_prior: 0.4444444444,
                             execution_propensity: 0.75,
-                            off_policy_adjusted_prior: 0.3333333333,
+                            ips_weight: 1.3333333333,
+                            counterfactual_success_mass: 0.8,
+                            counterfactual_failure_mass: 1.2,
+                            counterfactual_reward_prior: 0.45,
+                            off_policy_adjusted_prior: 0.3375,
                             last_tempering_coefficient: None,
                             last_power_prior_contribution: None,
                             last_recommendation_id: None,

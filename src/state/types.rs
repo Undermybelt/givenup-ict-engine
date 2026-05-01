@@ -4,6 +4,8 @@ use std::collections::BTreeMap;
 
 use crate::types::{Direction, FactorIC, Regime, RegimeProbs};
 
+const STRUCTURAL_IPS_WEIGHT_CLIP: f64 = 5.0;
+
 pub const LEARNING_STATE_FILE: &str = "learning_state.json";
 pub const TRADE_HISTORY_FILE: &str = "trade_history.json";
 pub const TRAIN_RUNS_FILE: &str = "train_runs.json";
@@ -103,6 +105,14 @@ pub struct StructuralPriorStats {
     #[serde(default)]
     pub execution_propensity: f64,
     #[serde(default)]
+    pub ips_weight: f64,
+    #[serde(default)]
+    pub counterfactual_success_mass: f64,
+    #[serde(default)]
+    pub counterfactual_failure_mass: f64,
+    #[serde(default)]
+    pub counterfactual_reward_prior: f64,
+    #[serde(default)]
     pub off_policy_adjusted_prior: f64,
     #[serde(default)]
     pub source_panel_summaries: BTreeMap<String, StructuralPriorSourceSummary>,
@@ -153,6 +163,14 @@ pub struct StructuralPriorSourceSummary {
     pub smoothed_prior: f64,
     #[serde(default)]
     pub execution_propensity: f64,
+    #[serde(default)]
+    pub ips_weight: f64,
+    #[serde(default)]
+    pub counterfactual_success_mass: f64,
+    #[serde(default)]
+    pub counterfactual_failure_mass: f64,
+    #[serde(default)]
+    pub counterfactual_reward_prior: f64,
     #[serde(default)]
     pub off_policy_adjusted_prior: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3863,13 +3881,25 @@ fn structural_propensity_estimate(followed_exposure_mass: f64, not_followed_mass
     }
 }
 
+fn structural_ips_weight(execution_propensity: f64) -> f64 {
+    if execution_propensity <= f64::EPSILON {
+        0.0
+    } else {
+        (1.0 / execution_propensity).min(STRUCTURAL_IPS_WEIGHT_CLIP)
+    }
+}
+
+fn structural_beta_mean(success_mass: f64, failure_mass: f64) -> f64 {
+    let alpha = 1.0 + success_mass.max(0.0);
+    let beta = 1.0 + failure_mass.max(0.0);
+    (alpha / (alpha + beta)).clamp(0.0, 1.0)
+}
+
 fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
     stats.smoothed_prior = if stats.weighted_followed_mass <= f64::EPSILON {
         0.5
     } else {
-        let alpha = 1.0 + stats.weighted_success_mass.max(0.0);
-        let beta = 1.0 + stats.weighted_failure_mass.max(0.0);
-        (alpha / (alpha + beta)).clamp(0.0, 1.0)
+        structural_beta_mean(stats.weighted_success_mass, stats.weighted_failure_mass)
     };
     let followed_exposure_mass = structural_followed_exposure_mass(
         stats.weighted_exposure_mass,
@@ -3883,8 +3913,15 @@ fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
     );
     stats.execution_propensity =
         structural_propensity_estimate(followed_exposure_mass, not_followed_mass);
+    stats.ips_weight = structural_ips_weight(stats.execution_propensity);
+    stats.counterfactual_success_mass = stats.weighted_success_mass * stats.ips_weight;
+    stats.counterfactual_failure_mass = stats.weighted_failure_mass * stats.ips_weight;
+    stats.counterfactual_reward_prior = structural_beta_mean(
+        stats.counterfactual_success_mass,
+        stats.counterfactual_failure_mass,
+    );
     stats.off_policy_adjusted_prior =
-        (stats.smoothed_prior * stats.execution_propensity).clamp(0.0, 1.0);
+        (stats.counterfactual_reward_prior * stats.execution_propensity).clamp(0.0, 1.0);
 }
 
 fn update_structural_prior_source_summary_from_feedback(
@@ -4001,9 +4038,7 @@ fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSu
     summary.smoothed_prior = if summary.weighted_followed_mass <= f64::EPSILON {
         0.5
     } else {
-        let alpha = 1.0 + summary.weighted_success_mass.max(0.0);
-        let beta = 1.0 + summary.weighted_failure_mass.max(0.0);
-        (alpha / (alpha + beta)).clamp(0.0, 1.0)
+        structural_beta_mean(summary.weighted_success_mass, summary.weighted_failure_mass)
     };
     let followed_exposure_mass = structural_followed_exposure_mass(
         summary.weighted_exposure_mass,
@@ -4017,8 +4052,15 @@ fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSu
     );
     summary.execution_propensity =
         structural_propensity_estimate(followed_exposure_mass, not_followed_mass);
+    summary.ips_weight = structural_ips_weight(summary.execution_propensity);
+    summary.counterfactual_success_mass = summary.weighted_success_mass * summary.ips_weight;
+    summary.counterfactual_failure_mass = summary.weighted_failure_mass * summary.ips_weight;
+    summary.counterfactual_reward_prior = structural_beta_mean(
+        summary.counterfactual_success_mass,
+        summary.counterfactual_failure_mass,
+    );
     summary.off_policy_adjusted_prior =
-        (summary.smoothed_prior * summary.execution_propensity).clamp(0.0, 1.0);
+        (summary.counterfactual_reward_prior * summary.execution_propensity).clamp(0.0, 1.0);
 }
 
 fn structural_prior_symbol_from_node_id(node_id: &str) -> String {
@@ -5079,7 +5121,11 @@ mod tests {
         assert!((path.weighted_not_followed_mass - 1.0).abs() < 1e-9);
         assert!((path.smoothed_prior - prior_after_followed).abs() < 1e-9);
         assert!((path.execution_propensity - 0.5).abs() < 1e-9);
-        assert!((path.off_policy_adjusted_prior - prior_after_followed * 0.5).abs() < 1e-9);
+        assert!((path.ips_weight - 2.0).abs() < 1e-9);
+        assert!((path.counterfactual_success_mass - 2.0).abs() < 1e-9);
+        assert!(path.counterfactual_failure_mass.abs() < 1e-9);
+        assert!((path.counterfactual_reward_prior - 0.75).abs() < 1e-9);
+        assert!((path.off_policy_adjusted_prior - 0.375).abs() < 1e-9);
     }
 
     #[test]

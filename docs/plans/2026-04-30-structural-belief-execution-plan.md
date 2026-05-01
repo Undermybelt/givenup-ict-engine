@@ -106,7 +106,7 @@ Tests likely touched:
 |---|---|---|
 | `P0` Repo truth | `done` | execution plan, literature docs, paper-code readmes, and patched repo-map are committed |
 | `P1` Canonical structural anchor | `mostly done` | canonical anchor and cross-phase propagation are landed; a dedicated downstream smoke path is still worth keeping explicit |
-| `P2` Live feedback posterior update | `partial` | delayed resolution, fractional pseudo-counts, and compliance/off-policy exposure fields landed; full OPE value correction remains |
+| `P2` Live feedback posterior update | `partial` | delayed resolution, fractional pseudo-counts, compliance/off-policy exposure, and clipped IPS counterfactual reward priors landed; full DR/candidate-set policy logging remains |
 | `P3` Offline evidence tempering | `partial` | source weighting, quality calibration, source panels, tempering coefficient, and source-panel power-prior contribution objects landed; full source-reliability posterior remains |
 | `P4` Structural prior state upgrade | `partial` | duration / transition / source panels / event ledger / temporal posterior state landed; node-mass separation still not fully formalized |
 | `P5` BBN node/branch posterior update | `partial` | discounted temporal maintenance now exists and is reused across belief/workflow surfaces; core engine-state ownership is still incomplete |
@@ -127,12 +127,13 @@ Tests likely touched:
 - [x] Reuse persisted temporal posterior state across belief packet, workflow-status, and structural consumer surfaces.
 - [x] Expose temporal support and maintenance weights as machine-readable consumer fields.
 - [x] Surface not-followed feedback as execution-propensity / off-policy exposure evidence without changing reward posterior credit.
+- [x] Add clipped IPS counterfactual reward prior and expose it on structural experience-prior surfaces.
 - [x] Store offline seed power-prior contribution objects in source panels.
 
 ### Next
 
 - [x] Add a dedicated smoke path proving `analyze -> research -> backtest -> structural-playbook` preserves canonical structural lineage end to end.
-- [ ] Finish remaining `P2` full OPE / counterfactual value correction on top of the surfaced propensity fields.
+- [ ] Finish remaining `P2` by adding DR/SNIPS-style correction after candidate-set policy logging exists.
 - [ ] Finish remaining `P3` by learning/storing reusable source reliability posterior objects beyond the latest source-panel contribution.
 - [ ] Finish `P4` node-mass vs branch/path-mass separation and persist a clearer offline seed snapshot object.
 - [ ] Finish `P5` by moving node/branch temporal maintenance toward a more central maintained `BBN` posterior state instead of mostly snapshot-time reweighting.
@@ -234,6 +235,7 @@ Outcome:
 - [x] Split executed, not-followed, abandoned, invalidated, and delayed outcomes into explicit update semantics instead of one blended credit signal.
 - [x] Track weighted exposure mass, weighted not-followed mass, execution propensity, and off-policy-adjusted prior separately from reward pseudo-counts.
 - [x] Expose not-followed/off-policy history rates on structural history surfaces.
+- [x] Add clipped IPS counterfactual reward prior on persisted stats and `structural-experience-priors`.
 - [x] Preserve zero-config CLI behavior: all new math must run behind existing flows, not new required flags.
 - [x] Add tests for:
   - followed profitable path
@@ -283,7 +285,7 @@ Outcome:
 
 Do these first, in order:
 
-1. Finish remaining `P2` full OPE / counterfactual value correction using the surfaced propensity fields.
+1. Finish remaining `P2` by adding DR/SNIPS-style correction after candidate-set policy logging exists.
 2. Finish remaining `P3` by learning/storing reusable source reliability posterior objects beyond the latest source-panel contribution.
 3. Finish `P4` by formalizing node-mass vs branch/path-mass separation and persisting a clearer offline seed snapshot object.
 4. Finish `P5` by moving temporal maintenance from mostly snapshot-time reweighting into a more central maintained `BBN` node/branch posterior state.
