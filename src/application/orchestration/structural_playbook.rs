@@ -324,6 +324,8 @@ pub struct StructuralPathRankingTargetExportSummary {
     pub rows_with_propensity_estimate: usize,
     #[serde(default)]
     pub rows_with_execution_gate_status: usize,
+    #[serde(default)]
+    pub rows_with_training_weight: usize,
     pub csv_path: String,
     pub jsonl_path: String,
     pub summary_path: String,
@@ -410,7 +412,13 @@ pub struct StructuralPathRankingTargetRow {
     #[serde(default)]
     pub maturity_weight: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub calibrated_label: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub propensity_estimate: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ips_weight: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub training_weight: Option<f64>,
     pub regime_calibration_bucket: String,
     pub behavior_policy_probability: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1699,8 +1707,19 @@ pub fn build_structural_path_ranking_target_artifact_with_prior_state(
                 &path.path_id,
                 feedback_history,
             );
-            let maturity_mask =
-                structural_path_ranking_reward_label(&pending_reward_state).is_some();
+            let calibrated_label = structural_path_ranking_reward_label(&pending_reward_state);
+            let maturity_mask = calibrated_label.is_some();
+            let maturity_weight = if maturity_mask { 1.0 } else { 0.0 };
+            let propensity_estimate = structural_path_ranking_propensity_estimate(
+                path.execution_propensity,
+                behavior_policy_probability,
+            );
+            let ips_weight = structural_path_ranking_ips_weight(propensity_estimate);
+            let training_weight = structural_path_ranking_training_weight(
+                calibrated_label,
+                maturity_weight,
+                ips_weight,
+            );
             StructuralPathRankingTargetRow {
                 rank: index + 1,
                 candidate_set_id: candidate_set_id.clone(),
@@ -1717,11 +1736,11 @@ pub fn build_structural_path_ranking_target_artifact_with_prior_state(
                 execution_gate_reason: None,
                 pending_reward_state,
                 maturity_mask,
-                maturity_weight: if maturity_mask { 1.0 } else { 0.0 },
-                propensity_estimate: structural_path_ranking_propensity_estimate(
-                    path.execution_propensity,
-                    behavior_policy_probability,
-                ),
+                maturity_weight,
+                calibrated_label,
+                propensity_estimate,
+                ips_weight,
+                training_weight,
                 regime_calibration_bucket: regime_calibration_bucket.clone(),
                 behavior_policy_probability,
                 execution_propensity: path.execution_propensity,
@@ -1877,14 +1896,20 @@ fn structural_path_ranking_target_export_summary(
         .iter()
         .filter(|row| row.execution_gate_status.is_some())
         .count();
+    let rows_with_training_weight = artifact
+        .rows
+        .iter()
+        .filter(|row| row.training_weight.is_some())
+        .count();
     let summary_line = format!(
-        "structural_path_ranking_target rows={} candidate_set_size={} mature_rows={} propensity_rows={} calibrated_rows={} execution_gate_rows={}",
+        "structural_path_ranking_target rows={} candidate_set_size={} mature_rows={} propensity_rows={} calibrated_rows={} execution_gate_rows={} training_weight_rows={}",
         rows,
         artifact.candidate_set_size,
         mature_rows,
         rows_with_propensity_estimate,
         rows_with_calibrated_path_prob,
-        rows_with_execution_gate_status
+        rows_with_execution_gate_status,
+        rows_with_training_weight
     );
     StructuralPathRankingTargetExportSummary {
         symbol: artifact.symbol.clone(),
@@ -1898,6 +1923,7 @@ fn structural_path_ranking_target_export_summary(
         rows_with_path_prob_lower_bound,
         rows_with_propensity_estimate,
         rows_with_execution_gate_status,
+        rows_with_training_weight,
         csv_path: Path::new(state_dir)
             .join(symbol)
             .join(csv_name)
@@ -2145,10 +2171,9 @@ pub fn evaluate_structural_path_probability_calibration_rows(
 fn structural_path_ranking_propensity_evaluation_weight(
     row: &StructuralPathRankingTargetRow,
 ) -> Option<f64> {
-    let propensity = row.propensity_estimate?.clamp(0.0, 1.0);
-    if propensity <= f64::EPSILON {
-        return None;
-    }
+    let ips_weight = row
+        .ips_weight
+        .or_else(|| structural_path_ranking_ips_weight(row.propensity_estimate))?;
     let maturity_weight = if row.maturity_weight > f64::EPSILON {
         row.maturity_weight.clamp(0.0, 1.0)
     } else if row.maturity_mask
@@ -2161,7 +2186,7 @@ fn structural_path_ranking_propensity_evaluation_weight(
     if maturity_weight <= f64::EPSILON {
         return None;
     }
-    Some((1.0 / propensity).min(STRUCTURAL_PATH_RANKING_IPS_WEIGHT_CLIP) * maturity_weight)
+    Some(ips_weight.clamp(0.0, STRUCTURAL_PATH_RANKING_IPS_WEIGHT_CLIP) * maturity_weight)
 }
 
 fn structural_path_ranking_reward_label(pending_reward_state: &str) -> Option<f64> {
@@ -2200,7 +2225,7 @@ fn render_structural_path_ranking_target_csv(
     artifact: &StructuralPathRankingTargetArtifact,
 ) -> String {
     let mut out = String::from(
-        "protocol_version,symbol,generated_at,candidate_set_id,candidate_set_size,rank,path_id,scenario_id,path_label,direction,raw_path_score,calibrated_path_prob,path_prob_lower_bound,execution_gate_status,execution_gate_min_path_prob,execution_gate_reason,pending_reward_state,maturity_mask,maturity_weight,propensity_estimate,regime_calibration_bucket,behavior_policy_probability,execution_propensity,experience_prior,current_posterior,structural_baseline_score\n",
+        "protocol_version,symbol,generated_at,candidate_set_id,candidate_set_size,rank,path_id,scenario_id,path_label,direction,raw_path_score,calibrated_path_prob,path_prob_lower_bound,execution_gate_status,execution_gate_min_path_prob,execution_gate_reason,pending_reward_state,maturity_mask,maturity_weight,calibrated_label,propensity_estimate,ips_weight,training_weight,regime_calibration_bucket,behavior_policy_probability,execution_propensity,experience_prior,current_posterior,structural_baseline_score\n",
     );
     for row in &artifact.rows {
         let fields = [
@@ -2223,7 +2248,10 @@ fn render_structural_path_ranking_target_csv(
             csv_escape(&row.pending_reward_state),
             row.maturity_mask.to_string(),
             csv_f64(row.maturity_weight),
+            csv_optional_f64(row.calibrated_label),
             csv_optional_f64(row.propensity_estimate),
+            csv_optional_f64(row.ips_weight),
+            csv_optional_f64(row.training_weight),
             csv_escape(&row.regime_calibration_bucket),
             csv_f64(row.behavior_policy_probability),
             csv_optional_f64(row.execution_propensity),
@@ -2271,6 +2299,28 @@ fn structural_path_ranking_propensity_estimate(
         (propensity.clamp(0.0, 1.0) * behavior_policy_probability.clamp(0.0, 1.0))
             .clamp(0.0, 1.0)
     })
+}
+
+fn structural_path_ranking_ips_weight(propensity_estimate: Option<f64>) -> Option<f64> {
+    let propensity = propensity_estimate?.clamp(0.0, 1.0);
+    if propensity <= f64::EPSILON {
+        None
+    } else {
+        Some((1.0 / propensity).min(STRUCTURAL_PATH_RANKING_IPS_WEIGHT_CLIP))
+    }
+}
+
+fn structural_path_ranking_training_weight(
+    calibrated_label: Option<f64>,
+    maturity_weight: f64,
+    ips_weight: Option<f64>,
+) -> Option<f64> {
+    calibrated_label?;
+    let maturity_weight = maturity_weight.clamp(0.0, 1.0);
+    if maturity_weight <= f64::EPSILON {
+        return None;
+    }
+    Some(maturity_weight * ips_weight?)
 }
 
 fn structural_path_ranking_pending_reward_state(
@@ -4949,7 +4999,15 @@ mod tests {
             } else {
                 0.0
             },
+            calibrated_label: structural_path_ranking_reward_label(pending_reward_state),
             propensity_estimate: Some(0.5),
+            ips_weight: Some(2.0),
+            training_weight: if structural_path_ranking_reward_label(pending_reward_state).is_some()
+            {
+                Some(2.0)
+            } else {
+                None
+            },
             regime_calibration_bucket: "NQ:trend".to_string(),
             behavior_policy_probability: 0.33,
             execution_propensity: Some(0.6),
@@ -5037,6 +5095,22 @@ mod tests {
                 .and_then(|row| row.execution_gate_status.as_deref()),
             None
         );
+        let matured_success = artifact
+            .rows
+            .iter()
+            .find(|row| row.path_id == "path-success")
+            .unwrap();
+        assert_eq!(matured_success.calibrated_label, Some(1.0));
+        assert_eq!(matured_success.ips_weight, Some(2.0));
+        assert_eq!(matured_success.training_weight, Some(2.0));
+        assert_eq!(
+            artifact
+                .rows
+                .iter()
+                .find(|row| row.path_id == "path-live")
+                .and_then(|row| row.training_weight),
+            None
+        );
     }
 
     #[test]
@@ -5079,6 +5153,8 @@ mod tests {
             "NQ:trend",
         );
         low_propensity_loss.propensity_estimate = Some(0.25);
+        low_propensity_loss.ips_weight = Some(4.0);
+        low_propensity_loss.training_weight = Some(4.0);
         let mut high_propensity_win = calibrated_evaluation_row(
             "high-propensity-win",
             0.5,
@@ -5087,6 +5163,8 @@ mod tests {
             "NQ:trend",
         );
         high_propensity_win.propensity_estimate = Some(1.0);
+        high_propensity_win.ips_weight = Some(1.0);
+        high_propensity_win.training_weight = Some(1.0);
 
         let report = evaluate_structural_path_probability_calibration_rows(&[
             low_propensity_loss,

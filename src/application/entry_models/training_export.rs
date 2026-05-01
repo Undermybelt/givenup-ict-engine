@@ -249,6 +249,8 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     #[serde(default)]
     pub rows_with_execution_gate_status: usize,
     #[serde(default)]
+    pub rows_with_training_weight: usize,
+    #[serde(default)]
     pub calibration_evaluation_rows: usize,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub calibration_brier_score: Option<f64>,
@@ -700,6 +702,7 @@ pub fn structural_path_ranking_target_training_status(
         rows_with_propensity_estimate: summary.rows_with_propensity_estimate,
         rows_with_calibrated_path_prob: summary.rows_with_calibrated_path_prob,
         rows_with_execution_gate_status: summary.rows_with_execution_gate_status,
+        rows_with_training_weight: summary.rows_with_training_weight,
         calibration_evaluation_rows: calibration_evaluation.eligible_rows,
         calibration_brier_score: calibration_evaluation.brier_score,
         calibration_propensity_weighted_rows: calibration_evaluation.propensity_weighted_rows,
@@ -1393,7 +1396,21 @@ mod tests {
             } else {
                 0.0
             },
+            calibrated_label: match pending_reward_state {
+                "matured_success" => Some(1.0),
+                "matured_failure" | "matured_invalidated" => Some(0.0),
+                _ => None,
+            },
             propensity_estimate: Some(0.5),
+            ips_weight: Some(2.0),
+            training_weight: if matches!(
+                pending_reward_state,
+                "matured_success" | "matured_failure" | "matured_invalidated"
+            ) {
+                Some(2.0)
+            } else {
+                None
+            },
             regime_calibration_bucket: "NQ:trend".to_string(),
             behavior_policy_probability: 0.5,
             execution_propensity: Some(0.5),
@@ -1587,6 +1604,7 @@ mod tests {
             rows_with_calibrated_path_prob: 2,
             rows_with_path_prob_lower_bound: 2,
             rows_with_execution_gate_status: 2,
+            rows_with_training_weight: 2,
             csv_path: summary_dir
                 .join("structural_path_ranking_target.csv")
                 .to_string_lossy()
@@ -1630,6 +1648,7 @@ mod tests {
         assert!(status.calibration_quality_ready);
         assert_eq!(status.mature_rows, 2);
         assert_eq!(status.rows_with_execution_gate_status, 2);
+        assert_eq!(status.rows_with_training_weight, 2);
         assert_eq!(status.calibration_evaluation_rows, 2);
         assert_eq!(status.calibration_propensity_weighted_rows, 2);
         assert!((status.calibration_brier_score.unwrap() - 0.04).abs() < 1e-9);

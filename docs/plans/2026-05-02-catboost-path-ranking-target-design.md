@@ -34,7 +34,9 @@ Required row fields:
 - `calibrated_path_prob`: optional calibrated acceptance probability derived from a calibration layer.
 - `path_prob_lower_bound`: optional conformal or other lower-bound probability used by execution gates.
 - `pending_reward_state`: explicit delayed-feedback state.
+- `calibrated_label`: optional mature reward label; absent for censored/unobserved rows.
 - `propensity_estimate`: optional observation/execution propensity estimate for off-policy evaluation.
+- `ips_weight` / `training_weight`: optional clipped inverse-propensity and mature-row sample weights for downstream rankers.
 - `regime_calibration_bucket`: compact bucket key for calibration, initially `symbol:active_regime` or `symbol:unknown`.
 
 Supporting fields should keep the row auditable without expanding public ontology:

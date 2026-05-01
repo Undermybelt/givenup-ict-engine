@@ -6698,6 +6698,7 @@ mod tests {
         assert_eq!(first["pending_reward_state"], "matured_invalidated");
         assert_eq!(first["maturity_mask"], true);
         assert_eq!(first["maturity_weight"].as_f64().unwrap(), 1.0);
+        assert_eq!(first["calibrated_label"].as_f64().unwrap(), 0.0);
         assert_eq!(first["regime_calibration_bucket"], "NQ:trend");
         assert!(!row_object.contains_key("raw_path_score"));
         assert!(!row_object.contains_key("calibrated_path_prob"));
@@ -6710,6 +6711,8 @@ mod tests {
                 .abs()
                 < 1e-9
         );
+        assert!(first["ips_weight"].as_f64().unwrap() > 0.0);
+        assert!(first["training_weight"].as_f64().unwrap() > 0.0);
 
         let agent_value =
             build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state(
@@ -6737,6 +6740,7 @@ mod tests {
         assert_eq!(summary.rows, 3);
         assert_eq!(summary.mature_rows, 1);
         assert_eq!(summary.rows_with_execution_gate_status, 0);
+        assert_eq!(summary.rows_with_training_weight, 1);
         assert_eq!(summary.candidate_set_id, value["candidate_set_id"]);
         assert_eq!(summary.pending_reward_states["matured_invalidated"], 1);
         assert!(std::path::Path::new(&summary.csv_path).exists());
@@ -6748,11 +6752,15 @@ mod tests {
         assert!(csv.contains("maturity_weight"));
         assert!(csv.contains("execution_gate_status"));
         assert!(csv.contains("execution_gate_min_path_prob"));
+        assert!(csv.contains("calibrated_label"));
+        assert!(csv.contains("ips_weight"));
+        assert!(csv.contains("training_weight"));
         assert!(csv.contains("propensity_estimate"));
         let jsonl = std::fs::read_to_string(&summary.jsonl_path).unwrap();
         assert!(jsonl.contains("\"pending_reward_state\":\"matured_invalidated\""));
         assert!(jsonl.contains("\"maturity_mask\":true"));
         assert!(jsonl.contains("\"maturity_weight\":1.0"));
+        assert!(jsonl.contains("\"calibrated_label\":0.0"));
     }
 
     #[test]
