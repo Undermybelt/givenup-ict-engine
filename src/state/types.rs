@@ -221,6 +221,8 @@ pub struct StructuralNodeTemporalPosteriorState {
     pub weighted_streak_mass: f64,
     pub duration_outcome_support: f64,
     pub temporal_posterior_support: f64,
+    #[serde(default)]
+    pub posterior_blend_weight: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommended_at: Option<String>,
 }
@@ -234,6 +236,8 @@ pub struct StructuralBranchTemporalPosteriorState {
     pub weighted_observation_mass: f64,
     pub transition_outcome_support: f64,
     pub temporal_posterior_support: f64,
+    #[serde(default)]
+    pub posterior_multiplier: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommended_at: Option<String>,
 }
@@ -4039,6 +4043,9 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
                 .clamp(0.0, 1.0);
     }
     for (transition_key, transition) in &state.branch_transition_priors {
+        let sample_weight = (transition.weighted_observation_mass / 3.0).min(1.0);
+        let temporal_bias = (transition.temporal_posterior_support - 0.5) * 2.0;
+        let posterior_multiplier = (1.0 + temporal_bias * sample_weight).clamp(0.05, 2.0);
         state.branch_temporal_posteriors.insert(
             transition_key.clone(),
             StructuralBranchTemporalPosteriorState {
@@ -4049,6 +4056,7 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
                 weighted_observation_mass: transition.weighted_observation_mass,
                 transition_outcome_support: transition.transition_outcome_support,
                 temporal_posterior_support: transition.temporal_posterior_support,
+                posterior_multiplier,
                 last_recommended_at: transition.last_recommended_at.clone(),
             },
         );
@@ -4137,6 +4145,10 @@ fn rebuild_discounted_node_duration_priors(
         prior.temporal_posterior_support =
             (prior.persistence_prior * 0.7 + prior.duration_outcome_support * 0.3)
                 .clamp(0.0, 1.0);
+        let observation_weight = (prior.weighted_streak_mass / 3.0).min(1.0);
+        let streak_weight = (prior.streak_count as f64 / 3.0).min(1.0);
+        let posterior_blend_weight =
+            (observation_weight * streak_weight * 0.5).clamp(0.0, 0.5);
         let temporal_state = StructuralNodeTemporalPosteriorState {
             node_id: node_id.clone(),
             observations: prior.observations,
@@ -4144,6 +4156,7 @@ fn rebuild_discounted_node_duration_priors(
             weighted_streak_mass: prior.weighted_streak_mass,
             duration_outcome_support: prior.duration_outcome_support,
             temporal_posterior_support: prior.temporal_posterior_support,
+            posterior_blend_weight,
             last_recommended_at: prior.last_recommended_at.clone(),
         };
         node_duration_priors.insert(node_id.clone(), prior);

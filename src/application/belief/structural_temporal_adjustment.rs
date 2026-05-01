@@ -10,23 +10,23 @@ pub fn blend_node_posterior_with_duration_prior(
     duration_prior: Option<&StructuralNodeDurationPrior>,
     temporal_state: Option<&StructuralNodeTemporalPosteriorState>,
 ) -> f64 {
-    let observation_weight = temporal_state
-        .map(|state| state.weighted_streak_mass)
-        .or_else(|| duration_prior.map(|prior| prior.weighted_streak_mass));
-    let streak_count = temporal_state
-        .map(|state| state.streak_count)
-        .or_else(|| duration_prior.map(|prior| prior.streak_count));
     let temporal_support = temporal_state
         .map(|state| state.temporal_posterior_support)
         .or_else(|| duration_prior.map(|prior| prior.temporal_posterior_support));
-    let (Some(observation_weight), Some(streak_count), Some(temporal_support)) =
-        (observation_weight, streak_count, temporal_support)
+    let blend_weight = temporal_state
+        .map(|state| state.posterior_blend_weight)
+        .or_else(|| {
+            duration_prior.map(|prior| {
+                let observation_weight = (prior.weighted_streak_mass / 3.0).min(1.0);
+                let streak_weight = (prior.streak_count as f64 / 3.0).min(1.0);
+                (observation_weight * streak_weight * 0.5).clamp(0.0, 0.5)
+            })
+        });
+    let (Some(blend_weight), Some(temporal_support)) =
+        (blend_weight, temporal_support)
     else {
         return base_posterior;
     };
-    let observation_weight = (observation_weight / 3.0).min(1.0);
-    let streak_weight = (streak_count as f64 / 3.0).min(1.0);
-    let blend_weight = (observation_weight * streak_weight * 0.5).clamp(0.0, 0.5);
     ((1.0 - blend_weight) * base_posterior
         + blend_weight * temporal_support)
         .clamp(0.0, 1.0)
@@ -37,19 +37,17 @@ pub fn blend_branch_prior_with_transition_prior(
     transition_prior: Option<&StructuralBranchTransitionPrior>,
     temporal_state: Option<&StructuralBranchTemporalPosteriorState>,
 ) -> f64 {
-    let transition_weight = temporal_state
-        .map(|state| state.weighted_observation_mass)
-        .or_else(|| transition_prior.map(|prior| prior.weighted_observation_mass));
-    let temporal_support = temporal_state
-        .map(|state| state.temporal_posterior_support)
-        .or_else(|| transition_prior.map(|prior| prior.temporal_posterior_support));
-    let (Some(transition_weight), Some(temporal_support)) = (transition_weight, temporal_support)
-    else {
+    if let Some(state) = temporal_state {
+        return ((1.0 - (state.weighted_observation_mass / 3.0).min(1.0)) * base_prior
+            + (state.weighted_observation_mass / 3.0).min(1.0) * state.temporal_posterior_support)
+            .clamp(0.0, 1.0);
+    }
+    let Some(transition_prior) = transition_prior else {
         return base_prior;
     };
-    let transition_weight = (transition_weight / 3.0).min(1.0);
+    let transition_weight = (transition_prior.weighted_observation_mass / 3.0).min(1.0);
     ((1.0 - transition_weight) * base_prior
-        + transition_weight * temporal_support)
+        + transition_weight * transition_prior.temporal_posterior_support)
         .clamp(0.0, 1.0)
 }
 
@@ -80,11 +78,7 @@ pub fn transition_adjusted_branch_posteriors(
         let transition_prior = transition_priors.get(&transition_key);
         let temporal_state = branch_temporal_posteriors.get(&transition_key);
         let transition_weight = temporal_state
-            .map(|state| {
-                let sample_weight = (state.weighted_observation_mass / 3.0).min(1.0);
-                let temporal_bias = (state.temporal_posterior_support - 0.5) * 2.0;
-                (1.0 + temporal_bias * sample_weight).clamp(0.05, 2.0)
-            })
+            .map(|state| state.posterior_multiplier)
             .or_else(|| {
                 transition_prior.map(|prior| {
                     let sample_weight = (prior.weighted_observation_mass / 3.0).min(1.0);
@@ -210,12 +204,13 @@ mod tests {
             weighted_streak_mass: 2.4,
             duration_outcome_support: 0.20,
             temporal_posterior_support: 0.30,
+            posterior_blend_weight: 0.5,
             last_recommended_at: None,
         };
 
         let blended = blend_node_posterior_with_duration_prior(0.60, Some(&duration_prior), Some(&temporal_state));
 
-        assert!(blended < 0.60);
+        assert!((blended - 0.45).abs() < 1e-9);
     }
 
     #[test]
@@ -252,6 +247,7 @@ mod tests {
                 weighted_observation_mass: 1.5,
                 transition_outcome_support: 0.20,
                 temporal_posterior_support: 0.30,
+                posterior_multiplier: 0.6,
                 last_recommended_at: None,
             },
         );
@@ -271,8 +267,6 @@ mod tests {
             },
         );
 
-        assert!(
-            adjusted["NQ:belief_regime_node:trend:transition_confirmation"] < 0.4
-        );
+        assert!((adjusted["NQ:belief_regime_node:trend:transition_confirmation"] - 0.2857142857).abs() < 1e-6);
     }
 }
