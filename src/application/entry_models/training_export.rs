@@ -242,6 +242,8 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub rows: usize,
     pub candidate_set_id: Option<String>,
     pub candidate_set_size: usize,
+    #[serde(default)]
+    pub mature_rows: usize,
     pub rows_with_propensity_estimate: usize,
     pub rows_with_calibrated_path_prob: usize,
     #[serde(default)]
@@ -669,6 +671,9 @@ pub fn structural_path_ranking_target_training_status(
     if summary.rows == 0 {
         warnings.push("structural_path_ranking_target_rows_empty".to_string());
     }
+    if summary.mature_rows == 0 {
+        warnings.push("structural_path_ranking_target_mature_rows_missing".to_string());
+    }
     if summary.rows_with_propensity_estimate == 0 {
         warnings.push("structural_path_ranking_target_propensity_missing".to_string());
     }
@@ -685,6 +690,7 @@ pub fn structural_path_ranking_target_training_status(
         rows: summary.rows,
         candidate_set_id: Some(summary.candidate_set_id),
         candidate_set_size: summary.candidate_set_size,
+        mature_rows: summary.mature_rows,
         rows_with_propensity_estimate: summary.rows_with_propensity_estimate,
         rows_with_calibrated_path_prob: summary.rows_with_calibrated_path_prob,
         calibration_evaluation_rows: calibration_evaluation.eligible_rows,
@@ -1362,6 +1368,18 @@ mod tests {
             calibrated_path_prob: Some(calibrated_path_prob),
             path_prob_lower_bound: Some((calibrated_path_prob - 0.1).clamp(0.0, 1.0)),
             pending_reward_state: pending_reward_state.to_string(),
+            maturity_mask: matches!(
+                pending_reward_state,
+                "matured_success" | "matured_failure" | "matured_invalidated"
+            ),
+            maturity_weight: if matches!(
+                pending_reward_state,
+                "matured_success" | "matured_failure" | "matured_invalidated"
+            ) {
+                1.0
+            } else {
+                0.0
+            },
             propensity_estimate: Some(0.5),
             regime_calibration_bucket: "NQ:trend".to_string(),
             behavior_policy_probability: 0.5,
@@ -1497,6 +1515,7 @@ mod tests {
             rows: 3,
             candidate_set_id: "structural-candidates:NQ:test".to_string(),
             candidate_set_size: 3,
+            mature_rows: 0,
             rows_with_propensity_estimate: 2,
             rows_with_calibrated_path_prob: 0,
             rows_with_path_prob_lower_bound: 0,
@@ -1528,6 +1547,7 @@ mod tests {
         assert!(status.export_ready);
         assert!(!status.calibration_ready);
         assert_eq!(status.rows, 3);
+        assert_eq!(status.mature_rows, 0);
         assert_eq!(
             status.candidate_set_id.as_deref(),
             Some("structural-candidates:NQ:test")
@@ -1549,6 +1569,7 @@ mod tests {
             rows: 2,
             candidate_set_id: "structural-candidates:NQ:test".to_string(),
             candidate_set_size: 2,
+            mature_rows: 2,
             rows_with_propensity_estimate: 2,
             rows_with_calibrated_path_prob: 2,
             rows_with_path_prob_lower_bound: 2,
@@ -1593,6 +1614,7 @@ mod tests {
         assert!(status.export_ready);
         assert!(status.calibration_ready);
         assert!(status.calibration_quality_ready);
+        assert_eq!(status.mature_rows, 2);
         assert_eq!(status.calibration_evaluation_rows, 2);
         assert!((status.calibration_brier_score.unwrap() - 0.04).abs() < 1e-9);
         assert!((status.calibration_expected_error.unwrap() - 0.0).abs() < 1e-9);

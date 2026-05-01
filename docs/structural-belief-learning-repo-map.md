@@ -232,9 +232,9 @@ Already in repo
 - path / branch / scenario / node history surfaces exist
 - recommended path bundle and top-path candidate surfaces already exist for consumption
 - `structural-path-ranking-target` workflow surface exists and reuses the declared structural candidate set
-- target rows expose `raw_path_score`, `calibrated_path_prob`, `path_prob_lower_bound`, `pending_reward_state`, `propensity_estimate`, and `regime_calibration_bucket`
+- target rows expose `raw_path_score`, `calibrated_path_prob`, `path_prob_lower_bound`, `pending_reward_state`, `maturity_mask`, `maturity_weight`, `propensity_estimate`, and `regime_calibration_bucket`
 - target rows export to `policy_training/structural_path_ranking_target.csv` and `.jsonl` with a summary file during the normal update flow
-- `policy-training-status` reports structural path-ranking export readiness and calibration readiness without requiring a new CLI flag
+- `policy-training-status` reports structural path-ranking export readiness, mature-row availability, and calibration readiness without requiring a new CLI flag
 - empirical Beta-smoothed calibration writes `calibrated_path_prob` and `path_prob_lower_bound` only when a regime bucket has raw-scored mature outcome observations
 - `policy-training-status` evaluates exported mature calibrated rows with compact Brier / calibration-error fields when enough rows exist
 

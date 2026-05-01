@@ -314,6 +314,8 @@ pub struct StructuralPathRankingTargetExportSummary {
     pub candidate_set_id: String,
     pub candidate_set_size: usize,
     pub pending_reward_states: BTreeMap<String, usize>,
+    #[serde(default)]
+    pub mature_rows: usize,
     pub rows_with_raw_path_score: usize,
     pub rows_with_calibrated_path_prob: usize,
     pub rows_with_path_prob_lower_bound: usize,
@@ -389,6 +391,10 @@ pub struct StructuralPathRankingTargetRow {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path_prob_lower_bound: Option<f64>,
     pub pending_reward_state: String,
+    #[serde(default)]
+    pub maturity_mask: bool,
+    #[serde(default)]
+    pub maturity_weight: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub propensity_estimate: Option<f64>,
     pub regime_calibration_bucket: String,
@@ -1675,6 +1681,12 @@ pub fn build_structural_path_ranking_target_artifact_with_prior_state(
                 denominator,
                 candidate_set_size,
             );
+            let pending_reward_state = structural_path_ranking_pending_reward_state(
+                &path.path_id,
+                feedback_history,
+            );
+            let maturity_mask =
+                structural_path_ranking_reward_label(&pending_reward_state).is_some();
             StructuralPathRankingTargetRow {
                 rank: index + 1,
                 candidate_set_id: candidate_set_id.clone(),
@@ -1686,10 +1698,9 @@ pub fn build_structural_path_ranking_target_artifact_with_prior_state(
                 raw_path_score: path.catboost_score,
                 calibrated_path_prob: None,
                 path_prob_lower_bound: None,
-                pending_reward_state: structural_path_ranking_pending_reward_state(
-                    &path.path_id,
-                    feedback_history,
-                ),
+                pending_reward_state,
+                maturity_mask,
+                maturity_weight: if maturity_mask { 1.0 } else { 0.0 },
                 propensity_estimate: structural_path_ranking_propensity_estimate(
                     path.execution_propensity,
                     behavior_policy_probability,
@@ -1819,6 +1830,11 @@ fn structural_path_ranking_target_export_summary(
             .or_insert(0) += 1;
     }
     let rows = artifact.rows.len();
+    let mature_rows = artifact
+        .rows
+        .iter()
+        .filter(|row| row.maturity_mask)
+        .count();
     let rows_with_raw_path_score = artifact
         .rows
         .iter()
@@ -1840,9 +1856,10 @@ fn structural_path_ranking_target_export_summary(
         .filter(|row| row.propensity_estimate.is_some())
         .count();
     let summary_line = format!(
-        "structural_path_ranking_target rows={} candidate_set_size={} propensity_rows={} calibrated_rows={}",
+        "structural_path_ranking_target rows={} candidate_set_size={} mature_rows={} propensity_rows={} calibrated_rows={}",
         rows,
         artifact.candidate_set_size,
+        mature_rows,
         rows_with_propensity_estimate,
         rows_with_calibrated_path_prob
     );
@@ -1852,6 +1869,7 @@ fn structural_path_ranking_target_export_summary(
         candidate_set_id: artifact.candidate_set_id.clone(),
         candidate_set_size: artifact.candidate_set_size,
         pending_reward_states,
+        mature_rows,
         rows_with_raw_path_score,
         rows_with_calibrated_path_prob,
         rows_with_path_prob_lower_bound,
@@ -2091,7 +2109,7 @@ fn render_structural_path_ranking_target_csv(
     artifact: &StructuralPathRankingTargetArtifact,
 ) -> String {
     let mut out = String::from(
-        "protocol_version,symbol,generated_at,candidate_set_id,candidate_set_size,rank,path_id,scenario_id,path_label,direction,raw_path_score,calibrated_path_prob,path_prob_lower_bound,pending_reward_state,propensity_estimate,regime_calibration_bucket,behavior_policy_probability,execution_propensity,experience_prior,current_posterior,structural_baseline_score\n",
+        "protocol_version,symbol,generated_at,candidate_set_id,candidate_set_size,rank,path_id,scenario_id,path_label,direction,raw_path_score,calibrated_path_prob,path_prob_lower_bound,pending_reward_state,maturity_mask,maturity_weight,propensity_estimate,regime_calibration_bucket,behavior_policy_probability,execution_propensity,experience_prior,current_posterior,structural_baseline_score\n",
     );
     for row in &artifact.rows {
         let fields = [
@@ -2109,6 +2127,8 @@ fn render_structural_path_ranking_target_csv(
             csv_optional_f64(row.calibrated_path_prob),
             csv_optional_f64(row.path_prob_lower_bound),
             csv_escape(&row.pending_reward_state),
+            row.maturity_mask.to_string(),
+            csv_f64(row.maturity_weight),
             csv_optional_f64(row.propensity_estimate),
             csv_escape(&row.regime_calibration_bucket),
             csv_f64(row.behavior_policy_probability),
@@ -4816,6 +4836,18 @@ mod tests {
             calibrated_path_prob: None,
             path_prob_lower_bound: None,
             pending_reward_state: pending_reward_state.to_string(),
+            maturity_mask: matches!(
+                pending_reward_state,
+                "matured_success" | "matured_failure" | "matured_invalidated"
+            ),
+            maturity_weight: if matches!(
+                pending_reward_state,
+                "matured_success" | "matured_failure" | "matured_invalidated"
+            ) {
+                1.0
+            } else {
+                0.0
+            },
             propensity_estimate: Some(0.5),
             regime_calibration_bucket: "NQ:trend".to_string(),
             behavior_policy_probability: 0.33,
