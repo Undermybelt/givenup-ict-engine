@@ -241,6 +241,7 @@ Already in repo
 - calibrated target rows include advisory execution-gate status fields from `path_prob_lower_bound` and a fixed repo threshold, without blocking zero-config uncalibrated flows
 - target rows now carry mature reward labels plus clipped IPS/sample weights so a downstream ranker can train without treating censored rows as negatives
 - `policy-training-status` separates calibration-quality readiness from production-validation readiness by requiring enough propensity-weighted calibrated rows before declaring the target production-validatable
+- the target summary carries an external trainer manifest describing group, label, weight, feature, calibration, and guardrail columns without adding a CatBoost runtime dependency
 
 Not yet in repo
 - propensity-aware model training loop

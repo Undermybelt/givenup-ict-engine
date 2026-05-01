@@ -329,7 +329,28 @@ pub struct StructuralPathRankingTargetExportSummary {
     pub csv_path: String,
     pub jsonl_path: String,
     pub summary_path: String,
+    #[serde(default)]
+    pub trainer_manifest: StructuralPathRankingTrainerManifest,
     pub summary_line: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankingTrainerManifest {
+    pub protocol_version: String,
+    pub dataset_role: String,
+    pub group_id_column: String,
+    pub label_column: String,
+    pub weight_column: String,
+    pub maturity_column: String,
+    pub raw_score_column: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub feature_columns: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub calibration_columns: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub guardrail_columns: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub notes: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
@@ -1939,7 +1960,48 @@ fn structural_path_ranking_target_export_summary(
             .join(summary_name)
             .to_string_lossy()
             .to_string(),
+        trainer_manifest: structural_path_ranking_trainer_manifest(),
         summary_line,
+    }
+}
+
+fn structural_path_ranking_trainer_manifest() -> StructuralPathRankingTrainerManifest {
+    StructuralPathRankingTrainerManifest {
+        protocol_version: "structural-path-ranking-trainer-manifest-v1".to_string(),
+        dataset_role: "external_path_ranker_training_dataset".to_string(),
+        group_id_column: "candidate_set_id".to_string(),
+        label_column: "calibrated_label".to_string(),
+        weight_column: "training_weight".to_string(),
+        maturity_column: "maturity_mask".to_string(),
+        raw_score_column: "raw_path_score".to_string(),
+        feature_columns: vec![
+            "rank".to_string(),
+            "direction".to_string(),
+            "regime_calibration_bucket".to_string(),
+            "behavior_policy_probability".to_string(),
+            "execution_propensity".to_string(),
+            "experience_prior".to_string(),
+            "current_posterior".to_string(),
+            "structural_baseline_score".to_string(),
+        ],
+        calibration_columns: vec![
+            "calibrated_path_prob".to_string(),
+            "path_prob_lower_bound".to_string(),
+            "execution_gate_status".to_string(),
+        ],
+        guardrail_columns: vec![
+            "candidate_set_size".to_string(),
+            "path_id".to_string(),
+            "scenario_id".to_string(),
+            "pending_reward_state".to_string(),
+            "maturity_weight".to_string(),
+            "propensity_estimate".to_string(),
+            "ips_weight".to_string(),
+        ],
+        notes: vec![
+            "Trainer runs outside the Rust belief engine; this manifest only describes exported columns.".to_string(),
+            "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss.".to_string(),
+        ],
     }
 }
 

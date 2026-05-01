@@ -6741,6 +6741,13 @@ mod tests {
         assert_eq!(summary.mature_rows, 1);
         assert_eq!(summary.rows_with_execution_gate_status, 0);
         assert_eq!(summary.rows_with_training_weight, 1);
+        assert_eq!(
+            summary.trainer_manifest.dataset_role,
+            "external_path_ranker_training_dataset"
+        );
+        assert_eq!(summary.trainer_manifest.group_id_column, "candidate_set_id");
+        assert_eq!(summary.trainer_manifest.label_column, "calibrated_label");
+        assert_eq!(summary.trainer_manifest.weight_column, "training_weight");
         assert_eq!(summary.candidate_set_id, value["candidate_set_id"]);
         assert_eq!(summary.pending_reward_states["matured_invalidated"], 1);
         assert!(std::path::Path::new(&summary.csv_path).exists());
