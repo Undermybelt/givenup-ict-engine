@@ -158,11 +158,27 @@ pub struct StructuralPriorSourceSummary {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_tempering_coefficient: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_power_prior_contribution: Option<StructuralPowerPriorContribution>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommendation_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommended_at: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_note: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralPowerPriorContribution {
+    pub source_label: String,
+    pub base_source_weight: f64,
+    pub tempering_coefficient: f64,
+    pub entity_mass_scale: f64,
+    pub effective_tau: f64,
+    pub observation_mass: f64,
+    pub success_mass: f64,
+    pub failure_mass: f64,
+    pub invalidation_mass: f64,
+    pub not_followed_mass: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -3787,6 +3803,31 @@ fn structural_prior_seed_effective_weight(seed: &StructuralPriorSeed) -> f64 {
     .clamp(0.0, 1.0)
 }
 
+fn structural_power_prior_contribution(
+    seed: &StructuralPriorSeed,
+    kind: StructuralPriorEntityKind,
+) -> StructuralPowerPriorContribution {
+    let base_source_weight = structural_prior_source_weight(&seed.source_label);
+    let tempering_coefficient = structural_prior_seed_tempering_coefficient(seed);
+    let entity_mass_scale = structural_prior_entity_mass_scale(kind);
+    let effective_tau = structural_prior_seed_effective_weight(seed) * entity_mass_scale;
+    StructuralPowerPriorContribution {
+        source_label: seed.source_label.clone(),
+        base_source_weight,
+        tempering_coefficient,
+        entity_mass_scale,
+        effective_tau,
+        observation_mass: effective_tau * seed.observations as f64,
+        success_mass: effective_tau * (seed.wins as f64 + seed.breakevens as f64 * 0.5),
+        failure_mass: effective_tau
+            * (seed.losses as f64 + seed.breakevens as f64 * 0.5)
+            + effective_tau * seed.invalidated as f64 * 1.25
+            + effective_tau * seed.abandoned as f64 * 0.75,
+        invalidation_mass: effective_tau * seed.invalidated as f64,
+        not_followed_mass: effective_tau * seed.not_followed as f64,
+    }
+}
+
 fn structural_followed_exposure_mass(
     weighted_exposure_mass: f64,
     weighted_not_followed_mass: f64,
@@ -3922,6 +3963,7 @@ fn apply_structural_prior_seed_to_source_summary(
     let source_weight =
         structural_prior_seed_effective_weight(seed) * structural_prior_entity_mass_scale(kind);
     summary.last_tempering_coefficient = Some(structural_prior_seed_tempering_coefficient(seed));
+    summary.last_power_prior_contribution = Some(structural_power_prior_contribution(seed, kind));
     let previous_observations = summary.observations;
     summary.observations += seed.observations;
     summary.followed_count += seed.followed_count;
@@ -5103,6 +5145,18 @@ mod tests {
         assert_eq!(analyze_panel.wins, 1);
         assert_eq!(backtest_panel.observations, 2);
         assert_eq!(backtest_panel.losses, 1);
+        let backtest_power_prior = backtest_panel
+            .last_power_prior_contribution
+            .as_ref()
+            .expect("backtest power-prior contribution");
+        assert_eq!(backtest_power_prior.source_label, "backtest");
+        assert!((backtest_power_prior.base_source_weight - 0.75).abs() < 1e-9);
+        assert!((backtest_power_prior.tempering_coefficient - 1.0).abs() < 1e-9);
+        assert!((backtest_power_prior.entity_mass_scale - 1.0).abs() < 1e-9);
+        assert!((backtest_power_prior.effective_tau - 0.75).abs() < 1e-9);
+        assert!((backtest_power_prior.observation_mass - 1.5).abs() < 1e-9);
+        assert!((backtest_power_prior.success_mass - 0.75).abs() < 1e-9);
+        assert!((backtest_power_prior.failure_mass - 0.75).abs() < 1e-9);
         assert_eq!(path.last_offline_seed_source.as_deref(), Some("backtest"));
     }
 

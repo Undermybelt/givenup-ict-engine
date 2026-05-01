@@ -21,7 +21,7 @@ Aligned source docs:
 | `P0` Repo truth | `已实现` | execution plan, literature docs, and paper-code readmes are committed |
 | `P1` Canonical structural anchor | `已实现` | downstream phases no longer redefine canonical structural lineage |
 | `P2` Live feedback posterior update | `部分实现` | delayed resolution, fractional pseudo-count updates, and compliance/off-policy exposure fields exist; full OPE value correction remains |
-| `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, and source panels exist, but power-prior style contribution math is not explicit yet |
+| `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, and power-prior contribution objects exist; reusable source-reliability posterior is still missing |
 | `P4` Structural prior state upgrade | `部分实现` | duration, transition, source panels, and event ledger exist; node/branch mass separation is not fully formalized |
 | `P5` BBN node/branch posterior update | `部分实现` | temporal priors already adjust belief snapshots and branch surfaces, but discounted transition-count maintenance is not yet the core engine rule |
 | `P6` CatBoost path ranking target | `未实现` | structural candidate surfaces exist, but the formal target stack is not landed |
@@ -133,11 +133,12 @@ Already in repo
 - quality calibration exists
 - validation regression can reduce effective contribution
 - source panels preserve inspectable pre-merge evidence instead of only final aggregate prior
+- source panels store the latest `StructuralPowerPriorContribution` with source rank, tempering coefficient, entity scale, effective tau, and weighted contribution masses
 
 Literature mechanisms still worth importing
-- explicit power-prior / tempered likelihood notation:
+- aggregate power-prior / tempered likelihood composition across source-panel contributions:
   - `posterior(theta) propto prior(theta) * product_s L_s(theta)^(tau_s)`
-- source-specific `tau_s` as first-class stored coefficients
+- learned source-specific reliability posterior beyond the latest stored `tau_s` contribution
 - clearer split between source rank, evidence quality, recency, and drift penalty
 
 Suggested formula
@@ -153,7 +154,7 @@ Suggested `tau_s` ingredients
 - break penalty
 
 Current repo gap
-- the effect is real, but the theory object `tau_s` is still implicit inside calibrator logic
+- the latest source-panel `tau_s` contribution is explicit, but not yet promoted into a reusable learned reliability posterior
 - source-specific reliability is not yet learned or stored as a reusable posterior object
 
 ---

@@ -107,7 +107,7 @@ Tests likely touched:
 | `P0` Repo truth | `done` | execution plan, literature docs, paper-code readmes, and patched repo-map are committed |
 | `P1` Canonical structural anchor | `mostly done` | canonical anchor and cross-phase propagation are landed; a dedicated downstream smoke path is still worth keeping explicit |
 | `P2` Live feedback posterior update | `partial` | delayed resolution, fractional pseudo-counts, and compliance/off-policy exposure fields landed; full OPE value correction remains |
-| `P3` Offline evidence tempering | `partial` | source weighting, quality calibration, source panels, and tempering coefficient landed; theory objectization is still incomplete |
+| `P3` Offline evidence tempering | `partial` | source weighting, quality calibration, source panels, tempering coefficient, and source-panel power-prior contribution objects landed; full source-reliability posterior remains |
 | `P4` Structural prior state upgrade | `partial` | duration / transition / source panels / event ledger / temporal posterior state landed; node-mass separation still not fully formalized |
 | `P5` BBN node/branch posterior update | `partial` | discounted temporal maintenance now exists and is reused across belief/workflow surfaces; core engine-state ownership is still incomplete |
 | `P6` CatBoost path ranking target | `not started` | structural candidate surfaces exist, but target math and calibration stack are still unimplemented |
@@ -127,12 +127,13 @@ Tests likely touched:
 - [x] Reuse persisted temporal posterior state across belief packet, workflow-status, and structural consumer surfaces.
 - [x] Expose temporal support and maintenance weights as machine-readable consumer fields.
 - [x] Surface not-followed feedback as execution-propensity / off-policy exposure evidence without changing reward posterior credit.
+- [x] Store offline seed power-prior contribution objects in source panels.
 
 ### Next
 
 - [x] Add a dedicated smoke path proving `analyze -> research -> backtest -> structural-playbook` preserves canonical structural lineage end to end.
 - [ ] Finish remaining `P2` full OPE / counterfactual value correction on top of the surfaced propensity fields.
-- [ ] Finish `P3` by turning offline tempering into a clearer power-prior-style posterior object, not only calibrated heuristics.
+- [ ] Finish remaining `P3` by learning/storing reusable source reliability posterior objects beyond the latest source-panel contribution.
 - [ ] Finish `P4` node-mass vs branch/path-mass separation and persist a clearer offline seed snapshot object.
 - [ ] Finish `P5` by moving node/branch temporal maintenance toward a more central maintained `BBN` posterior state instead of mostly snapshot-time reweighting.
 
@@ -244,6 +245,7 @@ Outcome:
 
 - [ ] Replace remaining heuristic support blending in `src/analyze_shared.rs`, `src/factor_research_runtime.rs`, and `src/factor_backtest_runtime.rs` with explicit tempered source contribution rules from the literature repo-map.
 - [x] Carry source-panel snapshots into `structural_prior_state` before canonical merge so offline evidence is inspectable instead of irreversibly blended.
+- [x] Store source-panel `StructuralPowerPriorContribution` objects with base source weight, tempering coefficient, entity mass scale, effective tau, and contribution masses.
 - [x] Keep the current source ordering, but make the effect formula explicit and testable.
 - [x] Add tests that prove:
   - stronger source + good quality increases prior mass more than weaker source
@@ -282,7 +284,7 @@ Outcome:
 Do these first, in order:
 
 1. Finish remaining `P2` full OPE / counterfactual value correction using the surfaced propensity fields.
-2. Finish `P3` by promoting offline tempering into a clearer power-prior-style posterior object instead of only calibrated heuristics.
+2. Finish remaining `P3` by learning/storing reusable source reliability posterior objects beyond the latest source-panel contribution.
 3. Finish `P4` by formalizing node-mass vs branch/path-mass separation and persisting a clearer offline seed snapshot object.
 4. Finish `P5` by moving temporal maintenance from mostly snapshot-time reweighting into a more central maintained `BBN` node/branch posterior state.
 5. Only then start `P6` CatBoost path-target design.
