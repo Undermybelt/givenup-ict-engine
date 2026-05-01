@@ -6,7 +6,9 @@ use std::fs;
 use std::path::Path;
 
 use crate::application::orchestration::{
-    StructuralPathRankingTargetExportSummary, STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE,
+    evaluate_structural_path_probability_calibration_rows,
+    StructuralPathProbabilityCalibrationEvaluationReport, StructuralPathRankingTargetExportSummary,
+    StructuralPathRankingTargetRow, STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE,
 };
 use crate::state::{
     load_state_or_default, save_text_state, AnalyzeRunRecord, UpdateRunRecord, ANALYZE_RUNS_FILE,
@@ -235,11 +237,21 @@ pub struct PolicyTrainingStatusSurface {
 pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub export_ready: bool,
     pub calibration_ready: bool,
+    #[serde(default)]
+    pub calibration_quality_ready: bool,
     pub rows: usize,
     pub candidate_set_id: Option<String>,
     pub candidate_set_size: usize,
     pub rows_with_propensity_estimate: usize,
     pub rows_with_calibrated_path_prob: usize,
+    #[serde(default)]
+    pub calibration_evaluation_rows: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub calibration_brier_score: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub calibration_expected_error: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub calibration_max_error: Option<f64>,
     pub summary_path: String,
     pub csv_path: Option<String>,
     pub jsonl_path: Option<String>,
@@ -650,6 +662,9 @@ pub fn structural_path_ranking_target_training_status(
     let summary: StructuralPathRankingTargetExportSummary = serde_json::from_str(&raw)?;
     let calibration_ready = summary.rows_with_calibrated_path_prob > 0
         && summary.rows_with_path_prob_lower_bound > 0;
+    let calibration_evaluation =
+        structural_path_ranking_target_calibration_evaluation(&summary.jsonl_path)?;
+    let calibration_quality_ready = calibration_evaluation.status == "evaluated";
     let mut warnings = Vec::new();
     if summary.rows == 0 {
         warnings.push("structural_path_ranking_target_rows_empty".to_string());
@@ -660,20 +675,50 @@ pub fn structural_path_ranking_target_training_status(
     if !calibration_ready {
         warnings.push("structural_path_ranking_target_calibration_not_fitted".to_string());
     }
+    if !calibration_quality_ready {
+        warnings.extend(calibration_evaluation.warnings.clone());
+    }
     Ok(StructuralPathRankingTargetTrainingStatusSurface {
         export_ready: summary.rows > 0,
         calibration_ready,
+        calibration_quality_ready,
         rows: summary.rows,
         candidate_set_id: Some(summary.candidate_set_id),
         candidate_set_size: summary.candidate_set_size,
         rows_with_propensity_estimate: summary.rows_with_propensity_estimate,
         rows_with_calibrated_path_prob: summary.rows_with_calibrated_path_prob,
+        calibration_evaluation_rows: calibration_evaluation.eligible_rows,
+        calibration_brier_score: calibration_evaluation.brier_score,
+        calibration_expected_error: calibration_evaluation.expected_calibration_error,
+        calibration_max_error: calibration_evaluation.max_calibration_error,
         summary_path: summary.summary_path,
         csv_path: Some(summary.csv_path),
         jsonl_path: Some(summary.jsonl_path),
         warnings,
         summary_line: summary.summary_line,
     })
+}
+
+fn structural_path_ranking_target_calibration_evaluation(
+    jsonl_path: &str,
+) -> Result<StructuralPathProbabilityCalibrationEvaluationReport> {
+    if !Path::new(jsonl_path).exists() {
+        return Ok(StructuralPathProbabilityCalibrationEvaluationReport {
+            status: "calibration_evaluation_export_missing".to_string(),
+            warnings: vec!["structural_path_ranking_target_jsonl_missing".to_string()],
+            summary_line:
+                "structural_path_probability_calibration_evaluation status=export_missing"
+                    .to_string(),
+            ..StructuralPathProbabilityCalibrationEvaluationReport::default()
+        });
+    }
+    let raw = fs::read_to_string(jsonl_path)?;
+    let rows = raw
+        .lines()
+        .filter(|line| !line.trim().is_empty())
+        .map(serde_json::from_str::<StructuralPathRankingTargetRow>)
+        .collect::<std::result::Result<Vec<_>, _>>()?;
+    Ok(evaluate_structural_path_probability_calibration_rows(&rows))
 }
 
 pub fn policy_training_status_command(
@@ -1300,6 +1345,33 @@ mod tests {
         }
     }
 
+    fn structural_path_ranking_row(
+        path_id: &str,
+        calibrated_path_prob: f64,
+        pending_reward_state: &str,
+    ) -> StructuralPathRankingTargetRow {
+        StructuralPathRankingTargetRow {
+            rank: 1,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 2,
+            path_id: path_id.to_string(),
+            scenario_id: format!("scenario:{path_id}"),
+            path_label: path_id.to_string(),
+            direction: "bull".to_string(),
+            raw_path_score: Some(calibrated_path_prob),
+            calibrated_path_prob: Some(calibrated_path_prob),
+            path_prob_lower_bound: Some((calibrated_path_prob - 0.1).clamp(0.0, 1.0)),
+            pending_reward_state: pending_reward_state.to_string(),
+            propensity_estimate: Some(0.5),
+            regime_calibration_bucket: "NQ:trend".to_string(),
+            behavior_policy_probability: 0.5,
+            execution_propensity: Some(0.5),
+            experience_prior: 0.5,
+            current_posterior: 0.5,
+            structural_baseline_score: 0.5,
+        }
+    }
+
     #[test]
     fn exports_training_tables_from_matched_histories() {
         let temp = tempfile::tempdir().unwrap();
@@ -1464,5 +1536,65 @@ mod tests {
         assert!(status
             .warnings
             .contains(&"structural_path_ranking_target_calibration_not_fitted".to_string()));
+    }
+
+    #[test]
+    fn structural_path_ranking_target_training_status_reports_calibration_quality() {
+        let temp = tempfile::tempdir().unwrap();
+        let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: "NQ".to_string(),
+            rows: 2,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 2,
+            rows_with_propensity_estimate: 2,
+            rows_with_calibrated_path_prob: 2,
+            rows_with_path_prob_lower_bound: 2,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            summary_line: "structural_path_ranking_target rows=2".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        let jsonl = [
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-win",
+                0.8,
+                "matured_success",
+            ))
+            .unwrap(),
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-loss",
+                0.2,
+                "matured_failure",
+            ))
+            .unwrap(),
+        ]
+        .join("\n");
+        std::fs::write(&jsonl_path, format!("{jsonl}\n")).unwrap();
+
+        let status =
+            structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
+                .unwrap();
+
+        assert!(status.export_ready);
+        assert!(status.calibration_ready);
+        assert!(status.calibration_quality_ready);
+        assert_eq!(status.calibration_evaluation_rows, 2);
+        assert!((status.calibration_brier_score.unwrap() - 0.04).abs() < 1e-9);
+        assert!((status.calibration_expected_error.unwrap() - 0.0).abs() < 1e-9);
     }
 }

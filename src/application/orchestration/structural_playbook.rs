@@ -339,6 +339,32 @@ pub struct StructuralPathProbabilityCalibrationBin {
     pub path_prob_lower_bound: f64,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathProbabilityCalibrationEvaluationReport {
+    pub status: String,
+    pub eligible_rows: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub brier_score: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub expected_calibration_error: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub max_calibration_error: Option<f64>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub bins: Vec<StructuralPathProbabilityCalibrationEvaluationBin>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub warnings: Vec<String>,
+    pub summary_line: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathProbabilityCalibrationEvaluationBin {
+    pub regime_calibration_bucket: String,
+    pub observations: usize,
+    pub mean_calibrated_path_prob: f64,
+    pub empirical_success_rate: f64,
+    pub absolute_error: f64,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct StructuralPathRankingTargetRow {
     pub rank: usize,
@@ -1921,6 +1947,86 @@ pub fn apply_structural_path_probability_calibration(
         warnings,
         summary_line: format!(
             "structural_path_probability_calibration status={status} observed_rows={observed_rows} calibrated_rows={calibrated_rows}"
+        ),
+    }
+}
+
+pub fn evaluate_structural_path_probability_calibration_rows(
+    rows: &[StructuralPathRankingTargetRow],
+) -> StructuralPathProbabilityCalibrationEvaluationReport {
+    let mut by_bucket = BTreeMap::<String, Vec<(f64, f64)>>::new();
+    let mut squared_error_sum = 0.0;
+    for row in rows {
+        if row.raw_path_score.is_none() {
+            continue;
+        }
+        let Some(calibrated_prob) = row.calibrated_path_prob else {
+            continue;
+        };
+        let Some(reward) = structural_path_ranking_reward_label(&row.pending_reward_state) else {
+            continue;
+        };
+        let calibrated_prob = calibrated_prob.clamp(0.0, 1.0);
+        squared_error_sum += (calibrated_prob - reward).powi(2);
+        by_bucket
+            .entry(row.regime_calibration_bucket.clone())
+            .or_default()
+            .push((calibrated_prob, reward));
+    }
+
+    let eligible_rows = by_bucket.values().map(Vec::len).sum::<usize>();
+    let mut warnings = Vec::new();
+    if eligible_rows < 2 {
+        warnings.push(
+            "structural_path_probability_calibration_evaluation_insufficient_rows".to_string(),
+        );
+        return StructuralPathProbabilityCalibrationEvaluationReport {
+            status: "insufficient_calibration_evaluation_rows".to_string(),
+            eligible_rows,
+            warnings,
+            summary_line: format!(
+                "structural_path_probability_calibration_evaluation status=insufficient_calibration_evaluation_rows eligible_rows={eligible_rows}"
+            ),
+            ..StructuralPathProbabilityCalibrationEvaluationReport::default()
+        };
+    }
+
+    let mut expected_calibration_error = 0.0;
+    let mut max_calibration_error: f64 = 0.0;
+    let mut bins = Vec::new();
+    for (bucket, observations) in by_bucket {
+        let observation_count = observations.len();
+        let mean_calibrated_path_prob = observations
+            .iter()
+            .map(|(probability, _)| *probability)
+            .sum::<f64>()
+            / observation_count as f64;
+        let empirical_success_rate =
+            observations.iter().map(|(_, reward)| *reward).sum::<f64>() / observation_count as f64;
+        let absolute_error = (mean_calibrated_path_prob - empirical_success_rate).abs();
+        expected_calibration_error +=
+            (observation_count as f64 / eligible_rows as f64) * absolute_error;
+        max_calibration_error = max_calibration_error.max(absolute_error);
+        bins.push(StructuralPathProbabilityCalibrationEvaluationBin {
+            regime_calibration_bucket: bucket,
+            observations: observation_count,
+            mean_calibrated_path_prob,
+            empirical_success_rate,
+            absolute_error,
+        });
+    }
+
+    let brier_score = squared_error_sum / eligible_rows as f64;
+    StructuralPathProbabilityCalibrationEvaluationReport {
+        status: "evaluated".to_string(),
+        eligible_rows,
+        brier_score: Some(brier_score),
+        expected_calibration_error: Some(expected_calibration_error),
+        max_calibration_error: Some(max_calibration_error),
+        bins,
+        warnings,
+        summary_line: format!(
+            "structural_path_probability_calibration_evaluation status=evaluated eligible_rows={eligible_rows} brier_score={brier_score:.6} expected_calibration_error={expected_calibration_error:.6}"
         ),
     }
 }
@@ -4672,6 +4778,21 @@ mod tests {
         }
     }
 
+    fn calibrated_evaluation_row(
+        path_id: &str,
+        raw_path_score: f64,
+        calibrated_path_prob: f64,
+        pending_reward_state: &str,
+        bucket: &str,
+    ) -> StructuralPathRankingTargetRow {
+        StructuralPathRankingTargetRow {
+            calibrated_path_prob: Some(calibrated_path_prob),
+            path_prob_lower_bound: Some((calibrated_path_prob - 0.1).clamp(0.0, 1.0)),
+            regime_calibration_bucket: bucket.to_string(),
+            ..calibration_row(path_id, raw_path_score, pending_reward_state)
+        }
+    }
+
     #[test]
     fn structural_path_probability_calibration_writes_probabilities_for_raw_scored_rows() {
         let mut artifact = StructuralPathRankingTargetArtifact {
@@ -4717,5 +4838,35 @@ mod tests {
             .iter()
             .filter(|row| row.raw_path_score.is_some())
             .all(|row| row.path_prob_lower_bound.is_some()));
+    }
+
+    #[test]
+    fn structural_path_probability_calibration_evaluation_scores_mature_calibrated_rows() {
+        let rows = vec![
+            calibrated_evaluation_row("trend-win", 0.8, 0.8, "matured_success", "NQ:trend"),
+            calibrated_evaluation_row("trend-loss", 0.6, 0.6, "matured_failure", "NQ:trend"),
+            calibrated_evaluation_row("range-loss", 0.2, 0.2, "matured_invalidated", "NQ:range"),
+            calibrated_evaluation_row("range-win", 0.4, 0.4, "matured_success", "NQ:range"),
+            calibrated_evaluation_row("pending", 0.5, 0.5, "unobserved", "NQ:trend"),
+            StructuralPathRankingTargetRow {
+                raw_path_score: None,
+                ..calibrated_evaluation_row(
+                    "no-score",
+                    0.5,
+                    0.5,
+                    "matured_success",
+                    "NQ:trend",
+                )
+            },
+        ];
+
+        let report = evaluate_structural_path_probability_calibration_rows(&rows);
+
+        assert_eq!(report.status, "evaluated");
+        assert_eq!(report.eligible_rows, 4);
+        assert!((report.brier_score.unwrap() - 0.20).abs() < 1e-9);
+        assert!((report.expected_calibration_error.unwrap() - 0.20).abs() < 1e-9);
+        assert!((report.max_calibration_error.unwrap() - 0.20).abs() < 1e-9);
+        assert_eq!(report.bins.len(), 2);
     }
 }

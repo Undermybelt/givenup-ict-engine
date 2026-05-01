@@ -299,6 +299,7 @@ Outcome:
 - [x] Add a design-only doc slice before implementation if the target math exceeds one coding session: `docs/plans/2026-05-02-catboost-path-ranking-target-design.md`.
 - [x] Add an empirical calibration utility that writes `calibrated_path_prob` and `path_prob_lower_bound` when raw-scored mature observations exist.
 - [x] Add a training/export path for the target artifact once row semantics are stable.
+- [x] Add a calibration-quality evaluator for exported raw-scored calibrated rows.
 - [ ] Validate production calibration quality after enough exported raw-scored rows exist.
 
 ## Immediate Execution Backlog
@@ -311,7 +312,8 @@ Do these first, in order:
 4. [x] Implement the P6 target artifact and workflow surface from `docs/plans/2026-05-02-catboost-path-ranking-target-design.md`.
 5. [x] Implement persisted target-row export after the target rows have survived workflow verification.
 6. [x] Implement empirical calibration from raw-scored mature observations.
-7. [ ] Add production calibration evaluation once exported raw-scored rows exist.
+7. [x] Add production calibration-quality evaluation plumbing for exported raw-scored rows.
+8. [ ] Run production calibration validation once enough exported raw-scored rows exist.
 
 ## Out of Scope For The Next Execution Slice
 
