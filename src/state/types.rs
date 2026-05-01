@@ -2994,6 +2994,7 @@ impl LearningState {
                     .or_default(),
                 record,
                 refs.followed_path,
+                StructuralPriorEntityKind::Node,
             );
             update_structural_prior_stats(
                 self.structural_prior_state
@@ -3002,6 +3003,7 @@ impl LearningState {
                     .or_default(),
                 record,
                 refs.followed_path,
+                StructuralPriorEntityKind::Branch,
             );
             update_structural_prior_stats(
                 self.structural_prior_state
@@ -3010,6 +3012,7 @@ impl LearningState {
                     .or_default(),
                 record,
                 refs.followed_path,
+                StructuralPriorEntityKind::Scenario,
             );
             update_structural_prior_stats(
                 self.structural_prior_state
@@ -3018,6 +3021,7 @@ impl LearningState {
                     .or_default(),
                 record,
                 refs.followed_path,
+                StructuralPriorEntityKind::Path,
             );
             appended |= append_structural_prior_event(
                 &mut self.structural_prior_state,
@@ -3052,6 +3056,7 @@ impl LearningState {
                 .or_default(),
             refs,
             seed,
+            StructuralPriorEntityKind::Node,
         );
         apply_structural_prior_seed_to_stats(
             self.structural_prior_state
@@ -3060,6 +3065,7 @@ impl LearningState {
                 .or_default(),
             refs,
             seed,
+            StructuralPriorEntityKind::Branch,
         );
         apply_structural_prior_seed_to_stats(
             self.structural_prior_state
@@ -3068,6 +3074,7 @@ impl LearningState {
                 .or_default(),
             refs,
             seed,
+            StructuralPriorEntityKind::Scenario,
         );
         apply_structural_prior_seed_to_stats(
             self.structural_prior_state
@@ -3076,6 +3083,7 @@ impl LearningState {
                 .or_default(),
             refs,
             seed,
+            StructuralPriorEntityKind::Path,
         );
         if append_structural_prior_event(
             &mut self.structural_prior_state,
@@ -3467,12 +3475,31 @@ fn iteration_priority(action: &str) -> u8 {
     }
 }
 
+#[derive(Debug, Clone, Copy)]
+enum StructuralPriorEntityKind {
+    Node,
+    Branch,
+    Scenario,
+    Path,
+}
+
+fn structural_prior_entity_mass_scale(kind: StructuralPriorEntityKind) -> f64 {
+    match kind {
+        StructuralPriorEntityKind::Node => 0.50,
+        StructuralPriorEntityKind::Branch => 0.75,
+        StructuralPriorEntityKind::Scenario => 0.90,
+        StructuralPriorEntityKind::Path => 1.0,
+    }
+}
+
 fn update_structural_prior_stats(
     stats: &mut StructuralPriorStats,
     record: &FeedbackRecord,
     followed_path: bool,
+    kind: StructuralPriorEntityKind,
 ) {
-    let source_weight = structural_prior_source_weight(&record.source);
+    let source_weight =
+        structural_prior_source_weight(&record.source) * structural_prior_entity_mass_scale(kind);
     stats.observations += 1;
     if stats.observations == 1 {
         stats.avg_pnl = record.pnl;
@@ -3527,7 +3554,7 @@ fn update_structural_prior_stats(
         .source_panel_summaries
         .entry(record.source.clone())
         .or_default();
-    update_structural_prior_source_summary_from_feedback(source_summary, record, followed_path);
+    update_structural_prior_source_summary_from_feedback(source_summary, record, followed_path, kind);
     refresh_structural_smoothed_prior(stats);
 }
 
@@ -3535,11 +3562,13 @@ fn apply_structural_prior_seed_to_stats(
     stats: &mut StructuralPriorStats,
     refs: &StructuralFeedbackRefs,
     seed: &StructuralPriorSeed,
+    kind: StructuralPriorEntityKind,
 ) {
     if seed.observations == 0 {
         return;
     }
-    let source_weight = structural_prior_seed_effective_weight(seed);
+    let source_weight =
+        structural_prior_seed_effective_weight(seed) * structural_prior_entity_mass_scale(kind);
     let previous_observations = stats.observations;
     stats.observations += seed.observations;
     stats.followed_count += seed.followed_count;
@@ -3569,7 +3598,7 @@ fn apply_structural_prior_seed_to_stats(
         .source_panel_summaries
         .entry(seed.source_label.clone())
         .or_default();
-    apply_structural_prior_seed_to_source_summary(source_summary, refs, seed);
+    apply_structural_prior_seed_to_source_summary(source_summary, refs, seed, kind);
     refresh_structural_smoothed_prior(stats);
 }
 
@@ -3609,8 +3638,10 @@ fn update_structural_prior_source_summary_from_feedback(
     summary: &mut StructuralPriorSourceSummary,
     record: &FeedbackRecord,
     followed_path: bool,
+    kind: StructuralPriorEntityKind,
 ) {
-    let source_weight = structural_prior_source_weight(&record.source);
+    let source_weight =
+        structural_prior_source_weight(&record.source) * structural_prior_entity_mass_scale(kind);
     summary.last_tempering_coefficient = Some(1.0);
     summary.observations += 1;
     if summary.observations == 1 {
@@ -3674,11 +3705,13 @@ fn apply_structural_prior_seed_to_source_summary(
     summary: &mut StructuralPriorSourceSummary,
     refs: &StructuralFeedbackRefs,
     seed: &StructuralPriorSeed,
+    kind: StructuralPriorEntityKind,
 ) {
     if seed.observations == 0 {
         return;
     }
-    let source_weight = structural_prior_seed_effective_weight(seed);
+    let source_weight =
+        structural_prior_seed_effective_weight(seed) * structural_prior_entity_mass_scale(kind);
     summary.last_tempering_coefficient = Some(structural_prior_seed_tempering_coefficient(seed));
     let previous_observations = summary.observations;
     summary.observations += seed.observations;
@@ -4402,6 +4435,53 @@ mod tests {
     }
 
     #[test]
+    fn test_structural_feedback_node_mass_updates_less_than_path_mass() {
+        let refs = StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-scale".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "node-scale".to_string(),
+            branch_id: "branch-scale".to_string(),
+            scenario_id: "scenario-scale".to_string(),
+            path_id: "path-scale".to_string(),
+            followed_path: true,
+            exit_reason: Some("target_hit".to_string()),
+            notes: None,
+        };
+        let mut feedback = sample_feedback();
+        feedback.source = "structural_feedback_submission".to_string();
+        feedback.structural_feedback = Some(refs);
+
+        let mut state = LearningState::default();
+        state.apply_structural_feedback(&[feedback]);
+
+        let node = state
+            .structural_prior_state
+            .nodes
+            .get("node-scale")
+            .expect("node prior state");
+        let branch = state
+            .structural_prior_state
+            .branches
+            .get("branch-scale")
+            .expect("branch prior state");
+        let scenario = state
+            .structural_prior_state
+            .scenarios
+            .get("scenario-scale")
+            .expect("scenario prior state");
+        let path = state
+            .structural_prior_state
+            .paths
+            .get("path-scale")
+            .expect("path prior state");
+
+        assert!(node.weighted_success_mass < branch.weighted_success_mass);
+        assert!(branch.weighted_success_mass < scenario.weighted_success_mass);
+        assert!(scenario.weighted_success_mass < path.weighted_success_mass);
+    }
+
+    #[test]
     fn test_invalidated_feedback_counts_more_failure_mass_than_plain_loss() {
         let mut invalidated_feedback = sample_feedback();
         invalidated_feedback.source = "structural_feedback_submission".to_string();
@@ -4512,6 +4592,63 @@ mod tests {
         assert_eq!(backtest_panel.observations, 2);
         assert_eq!(backtest_panel.losses, 1);
         assert_eq!(path.last_offline_seed_source.as_deref(), Some("backtest"));
+    }
+
+    #[test]
+    fn test_structural_prior_seed_node_mass_updates_less_than_path_mass() {
+        let refs = StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-seed-scale".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "node-seed-scale".to_string(),
+            branch_id: "branch-seed-scale".to_string(),
+            scenario_id: "scenario-seed-scale".to_string(),
+            path_id: "path-seed-scale".to_string(),
+            followed_path: true,
+            exit_reason: None,
+            notes: None,
+        };
+        let seed = StructuralPriorSeed {
+            source_label: "backtest".to_string(),
+            tempering_coefficient: None,
+            observations: 1,
+            followed_count: 1,
+            wins: 1,
+            losses: 0,
+            breakevens: 0,
+            invalidated: 0,
+            abandoned: 0,
+            not_followed: 0,
+            avg_pnl: 0.02,
+        };
+
+        let mut state = LearningState::default();
+        state.apply_structural_prior_seed(&refs, &seed);
+
+        let node = state
+            .structural_prior_state
+            .nodes
+            .get("node-seed-scale")
+            .expect("node prior state");
+        let branch = state
+            .structural_prior_state
+            .branches
+            .get("branch-seed-scale")
+            .expect("branch prior state");
+        let scenario = state
+            .structural_prior_state
+            .scenarios
+            .get("scenario-seed-scale")
+            .expect("scenario prior state");
+        let path = state
+            .structural_prior_state
+            .paths
+            .get("path-seed-scale")
+            .expect("path prior state");
+
+        assert!(node.weighted_success_mass < branch.weighted_success_mass);
+        assert!(branch.weighted_success_mass < scenario.weighted_success_mass);
+        assert!(scenario.weighted_success_mass < path.weighted_success_mass);
     }
 
     #[test]
