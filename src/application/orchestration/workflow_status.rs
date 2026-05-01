@@ -6705,6 +6705,28 @@ mod tests {
             agent_value["path_ranking_target"]["candidate_set_id"],
             agent_value["recommended_path_bundle"]["candidate_set_id"]
         );
+
+        let temp = tempfile::tempdir().unwrap();
+        let summary = crate::application::orchestration::export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &sample_provider_agent_surface(),
+            &history,
+            &structural_prior_state,
+        )
+        .unwrap();
+        assert_eq!(summary.rows, 3);
+        assert_eq!(summary.candidate_set_id, value["candidate_set_id"]);
+        assert_eq!(summary.pending_reward_states["matured_invalidated"], 1);
+        assert!(std::path::Path::new(&summary.csv_path).exists());
+        assert!(std::path::Path::new(&summary.jsonl_path).exists());
+        assert!(std::path::Path::new(&summary.summary_path).exists());
+        let csv = std::fs::read_to_string(&summary.csv_path).unwrap();
+        assert!(csv.contains("pending_reward_state"));
+        assert!(csv.contains("propensity_estimate"));
+        let jsonl = std::fs::read_to_string(&summary.jsonl_path).unwrap();
+        assert!(jsonl.contains("\"pending_reward_state\":\"matured_invalidated\""));
     }
 
     #[test]

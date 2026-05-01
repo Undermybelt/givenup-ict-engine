@@ -10,6 +10,17 @@
 
 ---
 
+## Current Status
+
+Implemented:
+- serializable target artifact and rows
+- `structural-path-ranking-target` workflow surface
+- candidate-set scoped CSV / JSONL / summary export under `policy_training/`
+
+Still not implemented:
+- fitted calibration layer
+- model training or propensity-aware evaluation loop
+
 ## Contract
 
 The target surface is candidate-set scoped. Every row must be traceable to an existing structural path candidate and must carry the same `candidate_set_id` used by recommended path bundles and feedback templates.

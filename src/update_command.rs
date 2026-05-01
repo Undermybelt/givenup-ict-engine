@@ -1,5 +1,7 @@
 use super::*;
 use ict_engine::application::entry_models::export_policy_training_tables;
+use ict_engine::application::orchestration::export_structural_path_ranking_target;
+use ict_engine::application::provider_catalog::provider_status_agent_surface;
 
 fn structural_prior_seed_from_artifact_validation(
     summary: &ict_engine::state::ArtifactDecisionSummary,
@@ -758,6 +760,21 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
     ) {
         learning_state.apply_structural_prior_seed(refs, &seed);
         save_learning_state(state_dir, symbol, &learning_state)?;
+    }
+    let provider_status_agent =
+        provider_status_agent_surface(None, None, None).unwrap_or_default();
+    if let Err(err) = export_structural_path_ranking_target(
+        state_dir,
+        symbol,
+        &report.workflow_snapshot,
+        &provider_status_agent,
+        &learning_state.feedback_history,
+        &learning_state.structural_prior_state,
+    ) {
+        eprintln!(
+            "warning: failed to export structural path ranking target for '{}' in '{}': {:#}",
+            symbol, state_dir, err
+        );
     }
 
     emit_update_output(&report, ensemble)

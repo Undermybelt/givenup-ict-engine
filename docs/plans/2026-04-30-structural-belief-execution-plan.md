@@ -298,7 +298,7 @@ Outcome:
 - [x] Keep CatBoost inside the declared structural candidate set; it must not invent hidden nodes or branches.
 - [x] Add a design-only doc slice before implementation if the target math exceeds one coding session: `docs/plans/2026-05-02-catboost-path-ranking-target-design.md`.
 - [ ] Fit a real calibration layer that writes `calibrated_path_prob` and `path_prob_lower_bound`.
-- [ ] Add a training/export path for the target artifact once row semantics are stable.
+- [x] Add a training/export path for the target artifact once row semantics are stable.
 
 ## Immediate Execution Backlog
 
@@ -308,7 +308,8 @@ Do these first, in order:
 2. [x] Finish `P5` by moving richer node transition handling from mostly snapshot-time reweighting into a more central maintained `BBN` node/branch posterior state.
 3. [x] Start `P6` CatBoost path-target design.
 4. [x] Implement the P6 target artifact and workflow surface from `docs/plans/2026-05-02-catboost-path-ranking-target-design.md`.
-5. [ ] Implement real calibration/training export after the target rows have survived workflow verification.
+5. [x] Implement persisted target-row export after the target rows have survived workflow verification.
+6. [ ] Implement real calibration after enough exported rows exist to fit and validate the calibration layer.
 
 ## Out of Scope For The Next Execution Slice
 

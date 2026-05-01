@@ -1,5 +1,9 @@
+use anyhow::Result;
 use chrono::SecondsFormat;
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
+use std::fs;
+use std::path::Path;
 
 use crate::application::belief::{
     blend_branch_prior_with_transition_prior, blend_node_posterior_with_duration_prior,
@@ -10,13 +14,18 @@ use crate::application::provider_catalog::{
 };
 use crate::state::{
     recommended_next_command_meta, structural_feedback_learning_outcome,
-    structural_feedback_outcome_is_unresolved, FeedbackFactorUsage, FeedbackRecord,
+    structural_feedback_outcome_is_unresolved, save_text_state, FeedbackFactorUsage, FeedbackRecord,
     ModelProbabilitySnapshot, StructuralFeedbackLearningOutcome, StructuralFeedbackRefs,
     StructuralPriorLearningState, StructuralPriorStats, WorkflowSnapshot,
 };
 use crate::types::{Direction, Regime};
 
 const STRUCTURAL_PLAYBOOK_ARTIFACT_VERSION: &str = "structural-playbook-v1";
+const STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR: &str = "policy_training";
+pub const STRUCTURAL_PATH_RANKING_TARGET_CSV_FILE: &str = "structural_path_ranking_target.csv";
+pub const STRUCTURAL_PATH_RANKING_TARGET_JSONL_FILE: &str = "structural_path_ranking_target.jsonl";
+pub const STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE: &str =
+    "structural_path_ranking_target_summary.json";
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct StructuralPlaybookBundle {
@@ -288,6 +297,23 @@ pub struct StructuralPathRankingTargetArtifact {
     pub generated_at: String,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub rows: Vec<StructuralPathRankingTargetRow>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankingTargetExportSummary {
+    pub symbol: String,
+    pub rows: usize,
+    pub candidate_set_id: String,
+    pub candidate_set_size: usize,
+    pub pending_reward_states: BTreeMap<String, usize>,
+    pub rows_with_raw_path_score: usize,
+    pub rows_with_calibrated_path_prob: usize,
+    pub rows_with_path_prob_lower_bound: usize,
+    pub rows_with_propensity_estimate: usize,
+    pub csv_path: String,
+    pub jsonl_path: String,
+    pub summary_path: String,
+    pub summary_line: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -1616,6 +1642,50 @@ pub fn build_structural_path_ranking_target_artifact_with_prior_state(
     }
 }
 
+pub fn export_structural_path_ranking_target(
+    state_dir: &str,
+    symbol: &str,
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
+) -> Result<StructuralPathRankingTargetExportSummary> {
+    let artifact = build_structural_path_ranking_target_artifact_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        structural_prior_state,
+    );
+    let csv = render_structural_path_ranking_target_csv(&artifact);
+    let jsonl = render_structural_path_ranking_target_jsonl(&artifact)?;
+    let symbol_dir = Path::new(state_dir)
+        .join(symbol)
+        .join(STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR);
+    fs::create_dir_all(&symbol_dir)?;
+    let csv_name = format!(
+        "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_CSV_FILE}"
+    );
+    let jsonl_name = format!(
+        "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_JSONL_FILE}"
+    );
+    let summary_name = format!(
+        "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE}"
+    );
+    let summary = structural_path_ranking_target_export_summary(
+        state_dir,
+        symbol,
+        &artifact,
+        &csv_name,
+        &jsonl_name,
+        &summary_name,
+    );
+    let summary_json = serde_json::to_string_pretty(&summary)?;
+    save_text_state(state_dir, symbol, &csv_name, &csv)?;
+    save_text_state(state_dir, symbol, &jsonl_name, &jsonl)?;
+    save_text_state(state_dir, symbol, &summary_name, &summary_json)?;
+    Ok(summary)
+}
+
 fn structural_candidate_policy_denominator(candidate_paths: &[StructuralPathArtifact]) -> f64 {
     candidate_paths
         .iter()
@@ -1657,6 +1727,140 @@ fn structural_stable_hash64(value: &str) -> u64 {
         hash = hash.wrapping_mul(0x100000001b3);
     }
     hash
+}
+
+fn structural_path_ranking_target_export_summary(
+    state_dir: &str,
+    symbol: &str,
+    artifact: &StructuralPathRankingTargetArtifact,
+    csv_name: &str,
+    jsonl_name: &str,
+    summary_name: &str,
+) -> StructuralPathRankingTargetExportSummary {
+    let mut pending_reward_states = BTreeMap::new();
+    for row in &artifact.rows {
+        *pending_reward_states
+            .entry(row.pending_reward_state.clone())
+            .or_insert(0) += 1;
+    }
+    let rows = artifact.rows.len();
+    let rows_with_raw_path_score = artifact
+        .rows
+        .iter()
+        .filter(|row| row.raw_path_score.is_some())
+        .count();
+    let rows_with_calibrated_path_prob = artifact
+        .rows
+        .iter()
+        .filter(|row| row.calibrated_path_prob.is_some())
+        .count();
+    let rows_with_path_prob_lower_bound = artifact
+        .rows
+        .iter()
+        .filter(|row| row.path_prob_lower_bound.is_some())
+        .count();
+    let rows_with_propensity_estimate = artifact
+        .rows
+        .iter()
+        .filter(|row| row.propensity_estimate.is_some())
+        .count();
+    let summary_line = format!(
+        "structural_path_ranking_target rows={} candidate_set_size={} propensity_rows={} calibrated_rows={}",
+        rows,
+        artifact.candidate_set_size,
+        rows_with_propensity_estimate,
+        rows_with_calibrated_path_prob
+    );
+    StructuralPathRankingTargetExportSummary {
+        symbol: artifact.symbol.clone(),
+        rows,
+        candidate_set_id: artifact.candidate_set_id.clone(),
+        candidate_set_size: artifact.candidate_set_size,
+        pending_reward_states,
+        rows_with_raw_path_score,
+        rows_with_calibrated_path_prob,
+        rows_with_path_prob_lower_bound,
+        rows_with_propensity_estimate,
+        csv_path: Path::new(state_dir)
+            .join(symbol)
+            .join(csv_name)
+            .to_string_lossy()
+            .to_string(),
+        jsonl_path: Path::new(state_dir)
+            .join(symbol)
+            .join(jsonl_name)
+            .to_string_lossy()
+            .to_string(),
+        summary_path: Path::new(state_dir)
+            .join(symbol)
+            .join(summary_name)
+            .to_string_lossy()
+            .to_string(),
+        summary_line,
+    }
+}
+
+fn render_structural_path_ranking_target_jsonl(
+    artifact: &StructuralPathRankingTargetArtifact,
+) -> Result<String> {
+    let mut out = String::new();
+    for row in &artifact.rows {
+        out.push_str(&serde_json::to_string(row)?);
+        out.push('\n');
+    }
+    Ok(out)
+}
+
+fn render_structural_path_ranking_target_csv(
+    artifact: &StructuralPathRankingTargetArtifact,
+) -> String {
+    let mut out = String::from(
+        "protocol_version,symbol,generated_at,candidate_set_id,candidate_set_size,rank,path_id,scenario_id,path_label,direction,raw_path_score,calibrated_path_prob,path_prob_lower_bound,pending_reward_state,propensity_estimate,regime_calibration_bucket,behavior_policy_probability,execution_propensity,experience_prior,current_posterior,structural_baseline_score\n",
+    );
+    for row in &artifact.rows {
+        let fields = [
+            csv_escape(&artifact.protocol_version),
+            csv_escape(&artifact.symbol),
+            csv_escape(&artifact.generated_at),
+            csv_escape(&row.candidate_set_id),
+            row.candidate_set_size.to_string(),
+            row.rank.to_string(),
+            csv_escape(&row.path_id),
+            csv_escape(&row.scenario_id),
+            csv_escape(&row.path_label),
+            csv_escape(&row.direction),
+            csv_optional_f64(row.raw_path_score),
+            csv_optional_f64(row.calibrated_path_prob),
+            csv_optional_f64(row.path_prob_lower_bound),
+            csv_escape(&row.pending_reward_state),
+            csv_optional_f64(row.propensity_estimate),
+            csv_escape(&row.regime_calibration_bucket),
+            csv_f64(row.behavior_policy_probability),
+            csv_optional_f64(row.execution_propensity),
+            csv_f64(row.experience_prior),
+            csv_f64(row.current_posterior),
+            csv_f64(row.structural_baseline_score),
+        ];
+        out.push_str(&fields.join(","));
+        out.push('\n');
+    }
+    out
+}
+
+fn csv_f64(value: f64) -> String {
+    format!("{value:.6}")
+}
+
+fn csv_optional_f64(value: Option<f64>) -> String {
+    value.map(csv_f64).unwrap_or_default()
+}
+
+fn csv_escape(value: &str) -> String {
+    if value.contains(',') || value.contains('"') || value.contains('\n') || value.contains('\r') {
+        format!("\"{}\"", value.replace('"', "\"\""))
+    } else {
+        value.to_string()
+    }
 }
 
 fn structural_path_ranking_regime_bucket(snapshot: &WorkflowSnapshot) -> String {
