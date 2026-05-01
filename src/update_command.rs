@@ -26,6 +26,37 @@ fn structural_prior_seed_from_artifact_validation(
     })
 }
 
+fn append_learning_semantics_to_family_outcomes(
+    outcomes: &mut [FactorFamilyOutcome],
+    semantics_summary: &str,
+) {
+    if semantics_summary.is_empty() {
+        return;
+    }
+    for outcome in outcomes {
+        if !outcome
+            .promotion_decision
+            .reason
+            .contains("learning_semantics=")
+        {
+            outcome.promotion_decision.reason = format!(
+                "{}|learning_semantics={}",
+                outcome.promotion_decision.reason, semantics_summary
+            );
+        }
+        if !outcome
+            .rollback_recommendation
+            .reason
+            .contains("learning_semantics=")
+        {
+            outcome.rollback_recommendation.reason = format!(
+                "{}|learning_semantics={}",
+                outcome.rollback_recommendation.reason, semantics_summary
+            );
+        }
+    }
+}
+
 pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
     let UpdateCommandInput {
         symbol,
@@ -151,6 +182,11 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         ]),
     );
     let learning_semantics = ict_engine::state::structural_feedback_learning_semantics(&feedback);
+    let learning_semantics_summary = ict_engine::state::structural_learning_semantics_summary(
+        Some(learning_semantics.credit_class.as_str()),
+        Some(learning_semantics.success_credit),
+        Some(learning_semantics.observation_weight),
+    );
     let structural_feedback = feedback.structural_feedback.clone();
     let consumed_feedback_pnl = feedback.pnl;
     let entry_quality = normalize_entry_quality_label(entry_signal);
@@ -417,6 +453,10 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         &report.dataset_comparability,
         Some(&artifact_family_trends),
     );
+    append_learning_semantics_to_family_outcomes(
+        &mut report.factor_family_outcomes,
+        &learning_semantics_summary,
+    );
     report.factor_family_diffs = family_diffs(
         previous_runs
             .last()
@@ -471,6 +511,9 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         &artifact_family_trends,
         &artifact_consumed_impact_summary,
     );
+    report
+        .artifact_action_summary
+        .push(format!("learning_semantics={learning_semantics_summary}"));
     report.artifact_decision_summary =
         ict_engine::application::artifacts::artifact_decision_summary_from_ledger(
             &artifact_preview_ledger,

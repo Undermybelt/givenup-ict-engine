@@ -12449,6 +12449,17 @@ mod tests {
         assert_eq!(path_prior.followed_count, 1);
         assert_eq!(path_prior.wins, 1);
         assert!(path_prior.smoothed_prior > 0.5);
+        assert!(runs[0]
+            .factor_family_outcomes
+            .iter()
+            .all(|outcome| outcome
+                .promotion_decision
+                .reason
+                .contains("learning_semantics=")));
+        assert!(runs[0]
+            .artifact_action_summary
+            .iter()
+            .any(|line| line.contains("learning_semantics=")));
     }
 
     #[test]
