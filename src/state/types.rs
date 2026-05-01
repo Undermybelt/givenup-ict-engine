@@ -373,6 +373,14 @@ pub struct StructuralNodeDurationPrior {
     pub remaining_dwell_steps: f64,
     #[serde(default)]
     pub break_hazard: f64,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub duration_distribution: Vec<StructuralNodeDurationBucket>,
+    #[serde(default)]
+    pub duration_distribution_entropy: f64,
+    #[serde(default)]
+    pub empirical_duration_survival: f64,
+    #[serde(default)]
+    pub empirical_duration_completion_hazard: f64,
     #[serde(default)]
     pub sticky_self_transition_strength: f64,
     #[serde(default)]
@@ -381,6 +389,20 @@ pub struct StructuralNodeDurationPrior {
     pub temporal_posterior_support: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommended_at: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralNodeDurationBucket {
+    pub dwell_steps: usize,
+    pub streak_count: usize,
+    #[serde(default)]
+    pub weighted_streak_mass: f64,
+    #[serde(default)]
+    pub probability: f64,
+    #[serde(default)]
+    pub survival_probability: f64,
+    #[serde(default)]
+    pub completion_hazard: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -5069,6 +5091,79 @@ fn structural_duration_break_hazard(last_streak_length: usize, expected_dwell_st
     (elapsed / (elapsed + expected_dwell_steps)).clamp(0.0, 1.0)
 }
 
+#[derive(Debug, Clone, Default)]
+struct StructuralNodeDurationDistributionFit {
+    distribution: Vec<StructuralNodeDurationBucket>,
+    entropy: f64,
+    survival_probability: f64,
+    completion_hazard: f64,
+}
+
+fn structural_node_duration_distribution_fit(
+    duration_length_stats: &BTreeMap<usize, (usize, f64)>,
+    total_weighted_streak_mass: f64,
+    elapsed_dwell_steps: usize,
+) -> StructuralNodeDurationDistributionFit {
+    if duration_length_stats.is_empty() || total_weighted_streak_mass <= f64::EPSILON {
+        return StructuralNodeDurationDistributionFit::default();
+    }
+
+    let mut entropy = 0.0;
+    let mut distribution = Vec::with_capacity(duration_length_stats.len());
+    for (dwell_steps, (streak_count, weighted_streak_mass)) in duration_length_stats {
+        let probability = (*weighted_streak_mass / total_weighted_streak_mass).clamp(0.0, 1.0);
+        if probability > f64::EPSILON {
+            entropy -= probability * probability.ln();
+        }
+        let survival_mass: f64 = duration_length_stats
+            .iter()
+            .filter(|(candidate_steps, _)| *candidate_steps >= dwell_steps)
+            .map(|(_, (_, weighted_mass))| *weighted_mass)
+            .sum();
+        let survival_probability =
+            (survival_mass / total_weighted_streak_mass).clamp(0.0, 1.0);
+        let completion_hazard = if survival_mass <= f64::EPSILON {
+            0.0
+        } else {
+            (*weighted_streak_mass / survival_mass).clamp(0.0, 1.0)
+        };
+        distribution.push(StructuralNodeDurationBucket {
+            dwell_steps: *dwell_steps,
+            streak_count: *streak_count,
+            weighted_streak_mass: *weighted_streak_mass,
+            probability,
+            survival_probability,
+            completion_hazard,
+        });
+    }
+
+    let elapsed_survival_mass: f64 = duration_length_stats
+        .iter()
+        .filter(|(candidate_steps, _)| **candidate_steps >= elapsed_dwell_steps)
+        .map(|(_, (_, weighted_mass))| *weighted_mass)
+        .sum();
+    let elapsed_completion_mass = duration_length_stats
+        .get(&elapsed_dwell_steps)
+        .map(|(_, weighted_mass)| *weighted_mass)
+        .unwrap_or_default();
+    let survival_probability =
+        (elapsed_survival_mass / total_weighted_streak_mass).clamp(0.0, 1.0);
+    let completion_hazard = if elapsed_dwell_steps == 0 {
+        0.0
+    } else if elapsed_survival_mass <= f64::EPSILON {
+        1.0
+    } else {
+        (elapsed_completion_mass / elapsed_survival_mass).clamp(0.0, 1.0)
+    };
+
+    StructuralNodeDurationDistributionFit {
+        distribution,
+        entropy,
+        survival_probability,
+        completion_hazard,
+    }
+}
+
 fn rebuild_discounted_node_duration_priors(
     node_duration_priors: &mut BTreeMap<String, StructuralNodeDurationPrior>,
     node_temporal_posteriors: &mut BTreeMap<String, StructuralNodeTemporalPosteriorState>,
@@ -5102,6 +5197,7 @@ fn rebuild_discounted_node_duration_priors(
         let mut weighted_length_sum = 0.0;
         let mut weighted_success_mass = 0.0;
         let mut weighted_failure_mass = 0.0;
+        let mut duration_length_stats = BTreeMap::<usize, (usize, f64)>::new();
         for (index, streak) in streaks.iter().enumerate() {
             let recency_rank = total_streaks.saturating_sub(index + 1) as f64;
             let recency_decay = 0.85_f64.powf(recency_rank);
@@ -5109,6 +5205,11 @@ fn rebuild_discounted_node_duration_priors(
             weighted_length_sum += streak.streak_length as f64 * recency_decay;
             weighted_success_mass += streak.weighted_success_mass * recency_decay;
             weighted_failure_mass += streak.weighted_failure_mass * recency_decay;
+            let duration_entry = duration_length_stats
+                .entry(streak.streak_length)
+                .or_insert((0, 0.0));
+            duration_entry.0 += 1;
+            duration_entry.1 += recency_decay;
         }
         prior.weighted_streak_mass = weighted_streak_mass;
         prior.weighted_success_mass = weighted_success_mass;
@@ -5121,10 +5222,23 @@ fn rebuild_discounted_node_duration_priors(
         prior.expected_dwell_steps = weighted_avg_length;
         prior.remaining_dwell_steps =
             (weighted_avg_length - prior.last_streak_length as f64).max(0.0);
-        prior.break_hazard = structural_duration_break_hazard(
+        let parametric_break_hazard = structural_duration_break_hazard(
             prior.last_streak_length,
             prior.expected_dwell_steps,
         );
+        let duration_fit = structural_node_duration_distribution_fit(
+            &duration_length_stats,
+            weighted_streak_mass,
+            prior.last_streak_length,
+        );
+        prior.duration_distribution = duration_fit.distribution;
+        prior.duration_distribution_entropy = duration_fit.entropy;
+        prior.empirical_duration_survival = duration_fit.survival_probability;
+        prior.empirical_duration_completion_hazard = duration_fit.completion_hazard;
+        let fit_weight = (weighted_streak_mass / 3.0).min(1.0);
+        prior.break_hazard = ((1.0 - fit_weight) * parametric_break_hazard
+            + fit_weight * prior.empirical_duration_completion_hazard)
+            .clamp(0.0, 1.0);
         prior.persistence_prior =
             (weighted_avg_length / (weighted_avg_length + 1.0)).clamp(0.0, 1.0);
         let alpha = 1.0 + weighted_success_mass.max(0.0);
@@ -6392,6 +6506,15 @@ mod tests {
         assert!(trend.expected_dwell_steps > range.expected_dwell_steps);
         assert!(trend.remaining_dwell_steps >= 0.0);
         assert!(trend.break_hazard > 0.0);
+        assert_eq!(trend.duration_distribution.len(), 2);
+        assert_eq!(trend.duration_distribution[0].dwell_steps, 1);
+        assert_eq!(trend.duration_distribution[0].streak_count, 1);
+        assert!((trend.duration_distribution[0].probability - (1.0 / 1.85)).abs() < 1e-9);
+        assert_eq!(trend.duration_distribution[1].dwell_steps, 2);
+        assert!((trend.duration_distribution[1].probability - (0.85 / 1.85)).abs() < 1e-9);
+        assert!(trend.duration_distribution_entropy > 0.0);
+        assert!((trend.empirical_duration_survival - 1.0).abs() < 1e-9);
+        assert!((trend.empirical_duration_completion_hazard - (1.0 / 1.85)).abs() < 1e-9);
         assert!(trend.sticky_self_transition_strength > 0.0);
         assert!(trend.persistence_prior > range.persistence_prior);
         assert_eq!(range.observations, 1);
