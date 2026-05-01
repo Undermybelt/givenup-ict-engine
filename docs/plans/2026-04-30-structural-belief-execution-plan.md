@@ -107,7 +107,7 @@ Tests likely touched:
 | `P0` Repo truth | `done` | execution plan, literature docs, paper-code readmes, and patched repo-map are committed |
 | `P1` Canonical structural anchor | `mostly done` | canonical anchor and cross-phase propagation are landed; a dedicated downstream smoke path is still worth keeping explicit |
 | `P2` Live feedback posterior update | `mostly done` | delayed resolution, fractional pseudo-counts, compliance/off-policy exposure, clipped IPS counterfactual reward priors, candidate-set policy logging, feedback-time selected policy probability consumption, and clipped SNIPS/DR reward priors landed; deeper target-policy calibration remains |
-| `P3` Offline evidence tempering | `mostly done` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation landed |
+| `P3` Offline evidence tempering | `mostly done` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, compact outcome-confusion cells, and reliability-weighted panel aggregation landed |
 | `P4` Structural prior state upgrade | `partial` | duration / transition / dwell-hazard fields / source panels / event ledger / temporal posterior state, separated prior-mass snapshots, and latest offline seed snapshot landed; fitted dwell-time theory remains |
 | `P5` BBN node/branch posterior update | `mostly done` | discounted temporal maintenance and normalized outgoing transition posterior state exist; node/regime and complete/partial candidate-set branch adjustment now consume maintained posterior state |
 | `P6` CatBoost path ranking target | `partial` | target surface, persisted export, empirical calibration utility, and calibration-quality evaluator exist; model training and production validation still require enough raw-scored rows |
@@ -261,6 +261,7 @@ Outcome:
 - [x] Carry source-panel snapshots into `structural_prior_state` before canonical merge so offline evidence is inspectable instead of irreversibly blended.
 - [x] Store source-panel `StructuralPowerPriorContribution` objects with base source weight, tempering coefficient, entity mass scale, effective tau, and contribution masses.
 - [x] Store reusable `StructuralSourceReliabilityPosterior` objects beyond the latest source-panel contribution.
+- [x] Preserve compact source outcome-confusion cells from live feedback and offline seeds for later Dawid-Skene-style reliability learning.
 - [x] Use source-reliability posteriors when deriving aggregate source-panel priors.
 - [x] Keep the current source ordering, but make the effect formula explicit and testable.
 - [x] Add tests that prove:

@@ -311,6 +311,21 @@ pub struct StructuralSourceReliabilityPosterior {
     pub last_tempering_coefficient: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_power_prior_contribution: Option<StructuralPowerPriorContribution>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub outcome_confusion: BTreeMap<String, StructuralSourceOutcomeConfusionCell>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralSourceOutcomeConfusionCell {
+    pub observed_outcome: String,
+    pub credit_class: String,
+    pub observations: usize,
+    #[serde(default)]
+    pub weighted_observation_mass: f64,
+    #[serde(default)]
+    pub weighted_success_mass: f64,
+    #[serde(default)]
+    pub weighted_failure_mass: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -4491,6 +4506,14 @@ fn update_structural_source_reliability_from_feedback(
             posterior.weighted_invalidation_mass += weighted_observation;
         }
     }
+    let semantics = structural_feedback_learning_semantics(record);
+    update_structural_source_outcome_confusion(
+        posterior,
+        &record.realized_outcome,
+        &semantics.credit_class,
+        source_weight * semantics.observation_weight.max(0.0),
+        semantics.success_credit,
+    );
     refresh_structural_source_reliability_posterior(posterior);
 }
 
@@ -4524,7 +4547,103 @@ fn apply_structural_prior_seed_to_source_reliability(
     posterior.last_power_prior_contribution = Some(
         structural_power_prior_contribution_with_entity_scale(seed, 1.0),
     );
+    update_structural_source_outcome_confusion_from_seed(posterior, seed, source_weight);
     refresh_structural_source_reliability_posterior(posterior);
+}
+
+fn update_structural_source_outcome_confusion_from_seed(
+    posterior: &mut StructuralSourceReliabilityPosterior,
+    seed: &StructuralPriorSeed,
+    source_weight: f64,
+) {
+    for (observed_outcome, count, success_credit, observation_weight) in [
+        ("win", seed.wins, 1.0, 1.0),
+        ("loss", seed.losses, 0.0, 1.0),
+        ("breakeven", seed.breakevens, 0.5, 1.0),
+        ("invalidated", seed.invalidated, 0.0, 1.25),
+        ("abandoned", seed.abandoned, 0.25, 0.75),
+        ("not_followed", seed.not_followed, 0.0, 0.0),
+    ] {
+        if count == 0 {
+            continue;
+        }
+        let credit_class = structural_source_credit_class(observed_outcome, success_credit);
+        update_structural_source_outcome_confusion_with_count(
+            posterior,
+            observed_outcome,
+            &credit_class,
+            count,
+            source_weight * observation_weight * count as f64,
+            success_credit,
+        );
+    }
+}
+
+fn update_structural_source_outcome_confusion(
+    posterior: &mut StructuralSourceReliabilityPosterior,
+    observed_outcome: &str,
+    credit_class: &str,
+    weighted_observation: f64,
+    success_credit: f64,
+) {
+    update_structural_source_outcome_confusion_with_count(
+        posterior,
+        observed_outcome,
+        credit_class,
+        1,
+        weighted_observation,
+        success_credit,
+    );
+}
+
+fn update_structural_source_outcome_confusion_with_count(
+    posterior: &mut StructuralSourceReliabilityPosterior,
+    observed_outcome: &str,
+    credit_class: &str,
+    observations: usize,
+    weighted_observation: f64,
+    success_credit: f64,
+) {
+    let observed_outcome = structural_source_observed_outcome_label(observed_outcome);
+    let credit_class = credit_class.trim().to_string();
+    let key = format!("{observed_outcome}->{credit_class}");
+    let entry =
+        posterior
+            .outcome_confusion
+            .entry(key)
+            .or_insert_with(|| StructuralSourceOutcomeConfusionCell {
+                observed_outcome,
+                credit_class,
+                ..StructuralSourceOutcomeConfusionCell::default()
+            });
+    entry.observations += observations;
+    let weighted_observation = weighted_observation.max(0.0);
+    entry.weighted_observation_mass += weighted_observation;
+    entry.weighted_success_mass += weighted_observation * success_credit.clamp(0.0, 1.0);
+    entry.weighted_failure_mass += weighted_observation * (1.0 - success_credit.clamp(0.0, 1.0));
+}
+
+fn structural_source_observed_outcome_label(observed_outcome: &str) -> String {
+    let normalized = observed_outcome.trim().to_ascii_lowercase();
+    if normalized.is_empty() {
+        "unknown".to_string()
+    } else {
+        normalized
+    }
+}
+
+fn structural_source_credit_class(observed_outcome: &str, success_credit: f64) -> String {
+    match observed_outcome {
+        "win" => "positive_executed".to_string(),
+        "loss" => "negative_executed".to_string(),
+        "breakeven" => "fractional_breakeven".to_string(),
+        "invalidated" => "negative_invalidated".to_string(),
+        "abandoned" => "fractional_abandoned".to_string(),
+        "not_followed" => "no_credit_not_followed".to_string(),
+        _ if success_credit >= 0.999 => "positive_proxy".to_string(),
+        _ if success_credit <= 0.001 => "negative_proxy".to_string(),
+        _ => "fractional_proxy".to_string(),
+    }
 }
 
 fn refresh_structural_source_reliability_posterior(
@@ -5846,6 +5965,18 @@ mod tests {
         assert!((posterior.weighted_success_mass - 0.75).abs() < 1e-9);
         assert!((posterior.weighted_failure_mass - 0.75).abs() < 1e-9);
         assert!((posterior.posterior_reliability - 0.5).abs() < 1e-9);
+        let win_cell = posterior
+            .outcome_confusion
+            .get("win->positive_executed")
+            .expect("win confusion cell");
+        let loss_cell = posterior
+            .outcome_confusion
+            .get("loss->negative_executed")
+            .expect("loss confusion cell");
+        assert_eq!(win_cell.observations, 1);
+        assert!((win_cell.weighted_success_mass - 0.75).abs() < 1e-9);
+        assert_eq!(loss_cell.observations, 1);
+        assert!((loss_cell.weighted_failure_mass - 0.75).abs() < 1e-9);
         assert!(posterior.last_power_prior_contribution.is_some());
     }
 
@@ -6024,6 +6155,17 @@ mod tests {
             path.source_panel_summaries["structural_feedback_submission"].wins,
             1
         );
+        let posterior = state
+            .structural_prior_state
+            .source_reliability_posteriors
+            .get("structural_feedback_submission")
+            .expect("live source reliability posterior");
+        let cell = posterior
+            .outcome_confusion
+            .get("win->positive_executed")
+            .expect("live win confusion cell");
+        assert_eq!(cell.observations, 1);
+        assert!((cell.weighted_success_mass - 1.0).abs() < 1e-9);
     }
 
     #[test]

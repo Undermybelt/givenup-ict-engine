@@ -22,7 +22,7 @@ Aligned source docs:
 | `P0` Repo truth | `已实现` | execution plan, literature docs, and paper-code readmes are committed |
 | `P1` Canonical structural anchor | `已实现` | downstream phases no longer redefine canonical structural lineage |
 | `P2` Live feedback posterior update | `基本实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, clipped IPS counterfactual reward priors, candidate-set policy logging, feedback-time selected policy probability consumption, and clipped SNIPS/DR reward priors exist; deeper target-policy calibration remains |
-| `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation exist |
+| `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, compact outcome-confusion profiles, and reliability-weighted panel aggregation exist |
 | `P4` Structural prior state upgrade | `部分实现` | duration, transition, dwell/hazard fields, source panels, event ledger, separated prior-mass snapshots, and latest offline seed snapshot exist; fitted dwell-time theory remains |
 | `P5` BBN node/branch posterior update | `基本实现` | temporal priors adjust belief snapshots and branch surfaces, normalized outgoing branch-transition posterior state persists, and node/regime plus complete/partial candidate-set branch adjustment consume it directly |
 | `P6` CatBoost path ranking target | `部分实现` | target surface contract, explicit row fields, workflow surface, persisted target-row export, empirical calibration utility, and calibration-quality evaluator exist; production validation on sufficient raw-scored rows is still not landed |
@@ -143,6 +143,7 @@ Already in repo
 - source panels preserve inspectable pre-merge evidence instead of only final aggregate prior
 - source panels store the latest `StructuralPowerPriorContribution` with source rank, tempering coefficient, entity scale, effective tau, and weighted contribution masses
 - `structural_prior_state.source_reliability_posteriors` stores reusable source-level reliability posteriors from offline seeds and live feedback
+- source reliability posteriors preserve compact `observed_outcome -> credit_class` outcome-confusion cells with weighted success/failure mass
 - panel-derived aggregate priors consume source-reliability posteriors so low-reliability high-mass panels shrink toward neutral instead of dominating by raw mass
 
 Literature mechanisms still worth importing
@@ -164,7 +165,7 @@ Suggested `tau_s` ingredients
 - break penalty
 
 Current repo gap
-- source reliability is persisted and consumed by panel aggregation, but reliability learning is still simple Beta-style mass accounting rather than a richer confusion-matrix model
+- source reliability now has compact outcome-confusion cells, but reliability learning is still not a full Dawid-Skene EM confusion-matrix model
 
 ---
 
