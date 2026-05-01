@@ -21,7 +21,7 @@ Aligned source docs:
 | `P0` Repo truth | `已实现` | execution plan, literature docs, and paper-code readmes are committed |
 | `P1` Canonical structural anchor | `已实现` | downstream phases no longer redefine canonical structural lineage |
 | `P2` Live feedback posterior update | `部分实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, and clipped IPS counterfactual reward priors exist; full DR/candidate-set policy logging remains |
-| `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, and reusable source-reliability posteriors exist; cross-source aggregation math still needs to consume them |
+| `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation exist |
 | `P4` Structural prior state upgrade | `部分实现` | duration, transition, source panels, and event ledger exist; node/branch mass separation is not fully formalized |
 | `P5` BBN node/branch posterior update | `部分实现` | temporal priors already adjust belief snapshots and branch surfaces, but discounted transition-count maintenance is not yet the core engine rule |
 | `P6` CatBoost path ranking target | `未实现` | structural candidate surfaces exist, but the formal target stack is not landed |
@@ -135,9 +135,10 @@ Already in repo
 - source panels preserve inspectable pre-merge evidence instead of only final aggregate prior
 - source panels store the latest `StructuralPowerPriorContribution` with source rank, tempering coefficient, entity scale, effective tau, and weighted contribution masses
 - `structural_prior_state.source_reliability_posteriors` stores reusable source-level reliability posteriors from offline seeds and live feedback
+- panel-derived aggregate priors consume source-reliability posteriors so low-reliability high-mass panels shrink toward neutral instead of dominating by raw mass
 
 Literature mechanisms still worth importing
-- aggregate power-prior / tempered likelihood composition across source-panel contributions:
+- richer aggregate power-prior / tempered likelihood composition across source-panel contributions:
   - `posterior(theta) propto prior(theta) * product_s L_s(theta)^(tau_s)`
 - consuming learned source-specific reliability posteriors during cross-source aggregation
 - clearer split between source rank, evidence quality, recency, and drift penalty
@@ -155,7 +156,7 @@ Suggested `tau_s` ingredients
 - break penalty
 
 Current repo gap
-- the source-specific reliability posterior is persisted, but the cross-source aggregate still does not consume it as a learned reliability multiplier
+- source reliability is persisted and consumed by panel aggregation, but reliability learning is still simple Beta-style mass accounting rather than a richer confusion-matrix model
 
 ---
 

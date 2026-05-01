@@ -5709,6 +5709,26 @@ mod tests {
                 last_offline_seed_source: Some("backtest".to_string()),
             },
         );
+        structural_prior_state.source_reliability_posteriors.insert(
+            "analyze".to_string(),
+            crate::state::StructuralSourceReliabilityPosterior {
+                source_label: "analyze".to_string(),
+                observations: 1,
+                weighted_observation_mass: 1.0,
+                posterior_reliability: 1.0,
+                ..crate::state::StructuralSourceReliabilityPosterior::default()
+            },
+        );
+        structural_prior_state.source_reliability_posteriors.insert(
+            "backtest".to_string(),
+            crate::state::StructuralSourceReliabilityPosterior {
+                source_label: "backtest".to_string(),
+                observations: 1,
+                weighted_observation_mass: 1.0,
+                posterior_reliability: 0.1,
+                ..crate::state::StructuralSourceReliabilityPosterior::default()
+            },
+        );
 
         let value = build_workflow_status_phase_value_with_structural_prior_state(
             &snapshot,
@@ -5721,8 +5741,8 @@ mod tests {
         .unwrap();
 
         let prior = value["path"]["experience_prior"].as_f64().unwrap();
-        assert!(prior < 0.60);
-        assert!(prior > 0.45);
+        assert!(prior < 0.57);
+        assert!(prior > 0.54);
     }
 
     #[test]

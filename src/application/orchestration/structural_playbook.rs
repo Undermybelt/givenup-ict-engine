@@ -1154,6 +1154,7 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
             ),
             experience_prior: structural_resolved_smoothed_prior(
                 structural_prior_state.nodes.get(node_id),
+                structural_prior_state,
                 structural_history_adjusted_node_prior(playbook.node.belief_prior, node_summary),
             ),
             current_posterior: Some(playbook.node.posterior_confidence),
@@ -1161,6 +1162,7 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 playbook.node.posterior_confidence,
                 structural_resolved_smoothed_prior(
                     structural_prior_state.nodes.get(node_id),
+                    structural_prior_state,
                     structural_history_adjusted_node_prior(playbook.node.belief_prior, node_summary),
                 ),
             ),
@@ -1526,6 +1528,7 @@ pub fn build_structural_node_artifact_with_prior_state(
     };
     let belief_prior = structural_resolved_smoothed_prior(
         structural_prior_state.nodes.get(&provisional_node_id),
+        structural_prior_state,
         structural_primary_prior(snapshot),
     );
     StructuralNodeArtifact {
@@ -1697,7 +1700,11 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
                     .copied()
                     .unwrap_or(probability);
                 let resolved_prior =
-                    structural_resolved_smoothed_prior(prior_stats, history_adjusted_prior);
+                    structural_resolved_smoothed_prior(
+                        prior_stats,
+                        structural_prior_state,
+                        history_adjusted_prior,
+                    );
                 let blended_prior =
                     blend_branch_prior_with_transition_prior(
                         resolved_prior,
@@ -1922,6 +1929,7 @@ pub fn build_structural_scenario_playbook_artifact_with_prior_state(
                 narrative,
                 prior_probability: structural_resolved_smoothed_prior(
                     prior_stats,
+                    structural_prior_state,
                     history_adjusted_prior,
                 ),
                 posterior_probability: branch.posterior_probability,
@@ -1947,7 +1955,11 @@ pub fn build_structural_scenario_playbook_artifact_with_prior_state(
                 ),
                 composite_scenario_score: structural_composite_preference_score(
                     branch.posterior_probability,
-                    structural_resolved_smoothed_prior(prior_stats, history_adjusted_prior),
+                    structural_resolved_smoothed_prior(
+                        prior_stats,
+                        structural_prior_state,
+                        history_adjusted_prior,
+                    ),
                 ),
                 required_confirmations: branch.activation_conditions.clone(),
                 hard_invalidations: branch.failure_conditions.clone(),
@@ -2015,7 +2027,11 @@ pub fn build_structural_path_plan_artifact_with_prior_state(
                 structural_history_adjusted_path_prior(base_prior, historical_summary);
             let prior_stats = structural_prior_state.paths.get(&path_id);
             let resolved_prior =
-                structural_resolved_smoothed_prior(prior_stats, history_adjusted_prior);
+                structural_resolved_smoothed_prior(
+                    prior_stats,
+                    structural_prior_state,
+                    history_adjusted_prior,
+                );
             let composite_preference_score = structural_composite_preference_score(
                 structural_posterior_confidence(snapshot),
                 resolved_prior,
@@ -2170,25 +2186,36 @@ fn structural_ranked_paths_with_prior_state(
 
 fn structural_resolved_smoothed_prior(
     prior_stats: Option<&StructuralPriorStats>,
+    structural_prior_state: &StructuralPriorLearningState,
     fallback: f64,
 ) -> f64 {
     prior_stats
         .map(|stats| {
-            structural_panel_derived_smoothed_prior(stats).unwrap_or(stats.smoothed_prior)
+            structural_panel_derived_smoothed_prior(stats, structural_prior_state)
+                .unwrap_or(stats.smoothed_prior)
         })
         .unwrap_or(fallback)
 }
 
-fn structural_panel_derived_smoothed_prior(stats: &StructuralPriorStats) -> Option<f64> {
+fn structural_panel_derived_smoothed_prior(
+    stats: &StructuralPriorStats,
+    structural_prior_state: &StructuralPriorLearningState,
+) -> Option<f64> {
     let success_mass: f64 = stats
         .source_panel_summaries
-        .values()
-        .map(|summary| summary.weighted_success_mass.max(0.0))
+        .iter()
+        .map(|(source_label, summary)| {
+            summary.weighted_success_mass.max(0.0)
+                * structural_source_reliability_multiplier(structural_prior_state, source_label)
+        })
         .sum();
     let failure_mass: f64 = stats
         .source_panel_summaries
-        .values()
-        .map(|summary| summary.weighted_failure_mass.max(0.0))
+        .iter()
+        .map(|(source_label, summary)| {
+            summary.weighted_failure_mass.max(0.0)
+                * structural_source_reliability_multiplier(structural_prior_state, source_label)
+        })
         .sum();
     if success_mass <= f64::EPSILON && failure_mass <= f64::EPSILON {
         return None;
@@ -2196,6 +2223,25 @@ fn structural_panel_derived_smoothed_prior(stats: &StructuralPriorStats) -> Opti
     let alpha = 1.0 + success_mass;
     let beta = 1.0 + failure_mass;
     Some((alpha / (alpha + beta)).clamp(0.0, 1.0))
+}
+
+fn structural_source_reliability_multiplier(
+    structural_prior_state: &StructuralPriorLearningState,
+    source_label: &str,
+) -> f64 {
+    structural_prior_state
+        .source_reliability_posteriors
+        .get(source_label)
+        .map(|posterior| {
+            if posterior.observations == 0
+                && posterior.weighted_observation_mass <= f64::EPSILON
+            {
+                1.0
+            } else {
+                posterior.posterior_reliability.clamp(0.0, 1.0)
+            }
+        })
+        .unwrap_or(1.0)
 }
 
 fn structural_resolved_observations(
