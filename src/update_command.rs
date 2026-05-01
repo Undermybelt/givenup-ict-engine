@@ -150,6 +150,7 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
             direction.unwrap_or("neutral"),
         ]),
     );
+    let learning_semantics = ict_engine::state::structural_feedback_learning_semantics(&feedback);
     let structural_feedback = feedback.structural_feedback.clone();
     let consumed_feedback_pnl = feedback.pnl;
     let entry_quality = normalize_entry_quality_label(entry_signal);
@@ -167,7 +168,7 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         .nodes
         .get("trade_outcome")
         .and_then(|node| node.probabilities_for_evidence(&evidence).ok());
-    let new_feedback = learning_state.merge_feedback_records(&[feedback]);
+    let new_feedback = learning_state.merge_feedback_records(std::slice::from_ref(&feedback));
     let feedback_records_applied = new_feedback.len();
     let realized_outcome_for_prompts = new_feedback
         .first()
@@ -304,7 +305,10 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         normalized_entry_quality: entry_quality,
         factor_alignment,
         factor_uncertainty,
-        realized_outcome: outcome_label,
+        realized_outcome: feedback.realized_outcome.clone(),
+        structural_learning_credit_class: Some(learning_semantics.credit_class.clone()),
+        structural_learning_success_credit: Some(learning_semantics.success_credit),
+        structural_learning_observation_weight: Some(learning_semantics.observation_weight),
         structural_feedback: structural_feedback.clone(),
         feedback_records_applied,
         duplicate_feedback_skipped: feedback_records_applied == 0,
@@ -577,6 +581,10 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
             factor_alignment: report.factor_alignment.clone(),
             factor_uncertainty: report.factor_uncertainty.clone(),
             realized_outcome: report.realized_outcome.clone(),
+            structural_learning_credit_class: report.structural_learning_credit_class.clone(),
+            structural_learning_success_credit: report.structural_learning_success_credit,
+            structural_learning_observation_weight: report
+                .structural_learning_observation_weight,
             structural_feedback: report.structural_feedback.clone(),
             feedback_records_applied,
             duplicate_feedback_skipped: report.duplicate_feedback_skipped,

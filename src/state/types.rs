@@ -312,6 +312,13 @@ pub enum StructuralFeedbackLearningOutcome {
     Negative,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralFeedbackLearningSemantics {
+    pub credit_class: String,
+    pub success_credit: f64,
+    pub observation_weight: f64,
+}
+
 pub fn structural_feedback_learning_outcome(
     record: &FeedbackRecord,
 ) -> Option<StructuralFeedbackLearningOutcome> {
@@ -327,6 +334,52 @@ pub fn structural_feedback_learning_outcome(
         _ if record.pnl > 1e-12 => Some(StructuralFeedbackLearningOutcome::Positive),
         _ if record.pnl < -1e-12 => Some(StructuralFeedbackLearningOutcome::Negative),
         _ => Some(StructuralFeedbackLearningOutcome::Neutral),
+    }
+}
+
+pub fn structural_feedback_learning_semantics(
+    record: &FeedbackRecord,
+) -> StructuralFeedbackLearningSemantics {
+    if structural_feedback_outcome_is_unresolved(&record.realized_outcome) {
+        return StructuralFeedbackLearningSemantics {
+            credit_class: "no_credit_unresolved".to_string(),
+            success_credit: 0.0,
+            observation_weight: 0.0,
+        };
+    }
+    if !structural_feedback_counts_as_executed_trade(record) {
+        return StructuralFeedbackLearningSemantics {
+            credit_class: "no_credit_not_followed".to_string(),
+            success_credit: 0.0,
+            observation_weight: 0.0,
+        };
+    }
+    match record.realized_outcome.trim().to_ascii_lowercase().as_str() {
+        "win" | "profit" | "tp" | "take_profit" => StructuralFeedbackLearningSemantics {
+            credit_class: "positive_executed".to_string(),
+            success_credit: 1.0,
+            observation_weight: 1.0,
+        },
+        "loss" | "lose" | "sl" | "stop" | "stop_loss" => StructuralFeedbackLearningSemantics {
+            credit_class: "negative_executed".to_string(),
+            success_credit: 0.0,
+            observation_weight: 1.0,
+        },
+        "invalidated" => StructuralFeedbackLearningSemantics {
+            credit_class: "negative_invalidated".to_string(),
+            success_credit: 0.0,
+            observation_weight: 1.0,
+        },
+        "abandoned" => StructuralFeedbackLearningSemantics {
+            credit_class: "fractional_abandoned".to_string(),
+            success_credit: 0.25,
+            observation_weight: 0.75,
+        },
+        _ => StructuralFeedbackLearningSemantics {
+            credit_class: "fractional_breakeven".to_string(),
+            success_credit: 0.5,
+            observation_weight: 1.0,
+        },
     }
 }
 
@@ -1836,6 +1889,12 @@ pub struct UpdateRunRecord {
     pub factor_alignment: String,
     pub factor_uncertainty: String,
     pub realized_outcome: String,
+    #[serde(default)]
+    pub structural_learning_credit_class: Option<String>,
+    #[serde(default)]
+    pub structural_learning_success_credit: Option<f64>,
+    #[serde(default)]
+    pub structural_learning_observation_weight: Option<f64>,
     pub feedback_records_applied: usize,
     pub duplicate_feedback_skipped: bool,
     #[serde(default)]
@@ -2361,6 +2420,12 @@ pub struct WorkflowPhaseSnapshot {
     #[serde(default)]
     pub realized_outcome: Option<String>,
     #[serde(default)]
+    pub structural_learning_credit_class: Option<String>,
+    #[serde(default)]
+    pub structural_learning_success_credit: Option<f64>,
+    #[serde(default)]
+    pub structural_learning_observation_weight: Option<f64>,
+    #[serde(default)]
     pub family_states: Vec<String>,
     #[serde(default)]
     pub factor_actions: Vec<String>,
@@ -2444,6 +2509,9 @@ impl Default for WorkflowPhaseSnapshot {
             pre_bayes_multi_timeframe_alignment_score: None,
             pre_bayes_multi_timeframe_entry_alignment_score: None,
             realized_outcome: None,
+            structural_learning_credit_class: None,
+            structural_learning_success_credit: None,
+            structural_learning_observation_weight: None,
             family_states: Vec::new(),
             factor_actions: Vec::new(),
             multi_timeframe_summary: Vec::new(),

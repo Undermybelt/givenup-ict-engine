@@ -307,6 +307,9 @@ struct UpdateReport {
     factor_alignment: String,
     factor_uncertainty: String,
     realized_outcome: String,
+    structural_learning_credit_class: Option<String>,
+    structural_learning_success_credit: Option<f64>,
+    structural_learning_observation_weight: Option<f64>,
     structural_feedback: Option<ict_engine::state::StructuralFeedbackRefs>,
     feedback_records_applied: usize,
     duplicate_feedback_skipped: bool,
@@ -3882,6 +3885,9 @@ fn workflow_phase_snapshot_from_analyze_run(run: &AnalyzeRunRecord) -> WorkflowP
         sparsity_ratio: None,
         segments_gate: None,
         realized_outcome: None,
+        structural_learning_credit_class: None,
+        structural_learning_success_credit: None,
+        structural_learning_observation_weight: None,
         family_states: run
             .factor_family_outcomes
             .iter()
@@ -3983,6 +3989,9 @@ fn workflow_phase_snapshot_from_train_run(run: &TrainRunRecord) -> WorkflowPhase
         sparsity_ratio: None,
         segments_gate: None,
         realized_outcome: None,
+        structural_learning_credit_class: None,
+        structural_learning_success_credit: None,
+        structural_learning_observation_weight: None,
         family_states: Vec::new(),
         factor_actions: Vec::new(),
         multi_timeframe_summary: run.multi_timeframe_summary.clone(),
@@ -4079,6 +4088,9 @@ fn workflow_phase_snapshot_from_research_run(run: &ResearchRunRecord) -> Workflo
         sparsity_ratio: None,
         segments_gate: None,
         realized_outcome: None,
+        structural_learning_credit_class: None,
+        structural_learning_success_credit: None,
+        structural_learning_observation_weight: None,
         family_states: run
             .factor_family_outcomes
             .iter()
@@ -4206,6 +4218,9 @@ fn workflow_phase_snapshot_from_backtest_run(run: &BacktestRunRecord) -> Workflo
         sparsity_ratio: None,
         segments_gate: None,
         realized_outcome: None,
+        structural_learning_credit_class: None,
+        structural_learning_success_credit: None,
+        structural_learning_observation_weight: None,
         family_states: run
             .factor_family_outcomes
             .iter()
@@ -4321,8 +4336,13 @@ fn workflow_phase_snapshot_from_update_run(run: &UpdateRunRecord) -> WorkflowPha
             ),
         ),
         phase_summary: format!(
-            "realized_outcome={} feedback_applied={} duplicate_feedback_skipped={} consumed_pre_bayes_gate_status={} {}",
+            "realized_outcome={} learning_credit_class={} success_credit={:.3} observation_weight={:.3} feedback_applied={} duplicate_feedback_skipped={} consumed_pre_bayes_gate_status={} {}",
             run.realized_outcome,
+            run.structural_learning_credit_class
+                .as_deref()
+                .unwrap_or("unavailable"),
+            run.structural_learning_success_credit.unwrap_or_default(),
+            run.structural_learning_observation_weight.unwrap_or_default(),
             run.feedback_records_applied,
             run.duplicate_feedback_skipped,
             run.consumed_pre_bayes_evidence_filter
@@ -4412,6 +4432,9 @@ fn workflow_phase_snapshot_from_update_run(run: &UpdateRunRecord) -> WorkflowPha
         sparsity_ratio: None,
         segments_gate: None,
         realized_outcome: Some(run.realized_outcome.clone()),
+        structural_learning_credit_class: run.structural_learning_credit_class.clone(),
+        structural_learning_success_credit: run.structural_learning_success_credit,
+        structural_learning_observation_weight: run.structural_learning_observation_weight,
         family_states: run
             .factor_family_outcomes
             .iter()
@@ -15553,6 +15576,9 @@ mod tests {
         let snapshot = workflow_phase_snapshot_from_update_run(&UpdateRunRecord {
             run_id: "update:structural".to_string(),
             source_command: "update".to_string(),
+            structural_learning_credit_class: Some("fractional_abandoned".to_string()),
+            structural_learning_success_credit: Some(0.25),
+            structural_learning_observation_weight: Some(0.75),
             consumed_pre_bayes_evidence_filter: Some(PreBayesEvidenceFilter {
                 evidence_assignments: BTreeMap::from([(
                     "market_regime".to_string(),
@@ -15598,6 +15624,12 @@ mod tests {
                 .copied(),
             Some(0.78)
         );
+        assert_eq!(
+            snapshot.structural_learning_credit_class.as_deref(),
+            Some("fractional_abandoned")
+        );
+        assert_eq!(snapshot.structural_learning_success_credit, Some(0.25));
+        assert_eq!(snapshot.structural_learning_observation_weight, Some(0.75));
     }
 
     #[test]
