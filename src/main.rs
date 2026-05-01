@@ -4696,8 +4696,8 @@ fn workflow_field_diffs(
                 left,
                 right,
                 "pre_bayes_soft_market_regime",
-                &format!("{:?}", left.pre_bayes_soft_evidence.get("market_regime")),
-                &format!("{:?}", right.pre_bayes_soft_evidence.get("market_regime")),
+                &workflow_market_regime_diff_value(left),
+                &workflow_market_regime_diff_value(right),
             );
             push_workflow_field_diff(
                 &mut diffs,
@@ -4766,6 +4766,14 @@ fn workflow_field_diffs(
         }
     }
     diffs
+}
+
+fn workflow_market_regime_diff_value(snapshot: &WorkflowPhaseSnapshot) -> String {
+    if !snapshot.canonical_structural_probabilities.is_empty() {
+        format!("{:?}", snapshot.canonical_structural_probabilities)
+    } else {
+        format!("{:?}", snapshot.pre_bayes_soft_evidence.get("market_regime"))
+    }
 }
 
 fn push_workflow_field_diff(
@@ -11610,6 +11618,49 @@ mod tests {
             .sources
             .iter()
             .any(|item| item.left_value.contains("policy-v2:medium")));
+    }
+
+    #[test]
+    fn test_workflow_field_diffs_prefer_canonical_structural_probabilities_for_market_regime() {
+        let research = WorkflowPhaseSnapshot {
+            phase: "research".to_string(),
+            canonical_structural_active_regime: Some("range".to_string()),
+            canonical_structural_confidence: Some(0.61),
+            canonical_structural_probabilities: BTreeMap::from([
+                ("trend".to_string(), 0.21),
+                ("range".to_string(), 0.61),
+                ("transition".to_string(), 0.18),
+            ]),
+            pre_bayes_soft_evidence: BTreeMap::from([(
+                "market_regime".to_string(),
+                BTreeMap::from([("bull".to_string(), 1.0)]),
+            )]),
+            ..WorkflowPhaseSnapshot::default()
+        };
+        let update = WorkflowPhaseSnapshot {
+            phase: "update".to_string(),
+            canonical_structural_active_regime: Some("trend".to_string()),
+            canonical_structural_confidence: Some(0.78),
+            canonical_structural_probabilities: BTreeMap::from([
+                ("trend".to_string(), 0.78),
+                ("range".to_string(), 0.14),
+                ("transition".to_string(), 0.08),
+            ]),
+            pre_bayes_soft_evidence: BTreeMap::from([(
+                "market_regime".to_string(),
+                BTreeMap::from([("bear".to_string(), 1.0)]),
+            )]),
+            ..WorkflowPhaseSnapshot::default()
+        };
+
+        let diffs = workflow_field_diffs(&None, &Some(research), &None, &Some(update));
+        let market_diff = diffs
+            .iter()
+            .find(|item| item.field == "pre_bayes_soft_market_regime")
+            .expect("market regime diff");
+
+        assert!(market_diff.left_value.contains("\"range\": 0.61"));
+        assert!(market_diff.right_value.contains("\"trend\": 0.78"));
     }
 
     #[test]
