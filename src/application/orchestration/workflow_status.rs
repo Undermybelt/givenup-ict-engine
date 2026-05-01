@@ -4796,9 +4796,11 @@ mod tests {
                 to_branch_id: "NQ:belief_regime_node:trend:transition_confirmation".to_string(),
                 observations: 3,
                 weighted_observation_mass: 1.1,
+                transition_prior: 0.8,
                 transition_outcome_support: 0.22,
                 temporal_posterior_support: 0.33,
                 posterior_multiplier: 0.61,
+                normalized_transition_posterior: 0.8,
                 summary_line: "transition_mass=1.100 transition_support=0.220 transition_temporal=0.330 multiplier=0.610".to_string(),
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
             },
@@ -6014,9 +6016,11 @@ mod tests {
                 to_branch_id: "NQ:belief_regime_node:transition:transition_confirmation".to_string(),
                 observations: 2,
                 weighted_observation_mass: 1.5,
+                transition_prior: 0.68,
                 transition_outcome_support: 0.72,
                 temporal_posterior_support: 0.70,
                 posterior_multiplier: 1.28,
+                normalized_transition_posterior: 0.68,
                 summary_line: "transition_mass=1.500 transition_support=0.720 transition_temporal=0.700 multiplier=1.280".to_string(),
                 last_recommended_at: Some("2026-04-30T05:00:00Z".to_string()),
             },
@@ -6042,6 +6046,7 @@ mod tests {
         assert_eq!(value["transition_outcome_support"], 0.72);
         assert_eq!(value["transition_temporal_posterior_support"], 0.70);
         assert_eq!(value["transition_posterior_multiplier"], 1.28);
+        assert_eq!(value["transition_normalized_posterior"], 0.68);
     }
 
     #[test]

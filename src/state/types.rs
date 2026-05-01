@@ -366,10 +366,14 @@ pub struct StructuralBranchTemporalPosteriorState {
     pub to_branch_id: String,
     pub observations: usize,
     pub weighted_observation_mass: f64,
+    #[serde(default)]
+    pub transition_prior: f64,
     pub transition_outcome_support: f64,
     pub temporal_posterior_support: f64,
     #[serde(default)]
     pub posterior_multiplier: f64,
+    #[serde(default)]
+    pub normalized_transition_posterior: f64,
     #[serde(default)]
     pub summary_line: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4586,10 +4590,38 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
             (transition.transition_prior * 0.7 + transition.transition_outcome_support * 0.3)
                 .clamp(0.0, 1.0);
     }
+    let mut transition_posterior_weights = BTreeMap::<String, f64>::new();
+    let mut transition_posterior_multipliers = BTreeMap::<String, f64>::new();
+    let mut outgoing_posterior_weight = BTreeMap::<String, f64>::new();
     for (transition_key, transition) in &state.branch_transition_priors {
         let sample_weight = (transition.weighted_observation_mass / 3.0).min(1.0);
         let temporal_bias = (transition.temporal_posterior_support - 0.5) * 2.0;
         let posterior_multiplier = (1.0 + temporal_bias * sample_weight).clamp(0.05, 2.0);
+        let posterior_weight = (transition.transition_prior * posterior_multiplier).max(0.0);
+        transition_posterior_weights.insert(transition_key.clone(), posterior_weight);
+        transition_posterior_multipliers.insert(transition_key.clone(), posterior_multiplier);
+        *outgoing_posterior_weight
+            .entry(transition.from_branch_id.clone())
+            .or_insert(0.0) += posterior_weight;
+    }
+    for (transition_key, transition) in &state.branch_transition_priors {
+        let posterior_multiplier = transition_posterior_multipliers
+            .get(transition_key)
+            .copied()
+            .unwrap_or(1.0);
+        let posterior_weight = transition_posterior_weights
+            .get(transition_key)
+            .copied()
+            .unwrap_or_default();
+        let posterior_total = outgoing_posterior_weight
+            .get(&transition.from_branch_id)
+            .copied()
+            .unwrap_or_default();
+        let normalized_transition_posterior = if posterior_total <= f64::EPSILON {
+            transition.transition_prior
+        } else {
+            (posterior_weight / posterior_total).clamp(0.0, 1.0)
+        };
         state.branch_temporal_posteriors.insert(
             transition_key.clone(),
             StructuralBranchTemporalPosteriorState {
@@ -4598,15 +4630,19 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
                 to_branch_id: transition.to_branch_id.clone(),
                 observations: transition.observations,
                 weighted_observation_mass: transition.weighted_observation_mass,
+                transition_prior: transition.transition_prior,
                 transition_outcome_support: transition.transition_outcome_support,
                 temporal_posterior_support: transition.temporal_posterior_support,
                 posterior_multiplier,
+                normalized_transition_posterior,
                 summary_line: format!(
-                    "transition_mass={:.3} transition_support={:.3} transition_temporal={:.3} multiplier={:.3}",
+                    "transition_mass={:.3} transition_prior={:.3} transition_support={:.3} transition_temporal={:.3} multiplier={:.3} normalized_posterior={:.3}",
                     transition.weighted_observation_mass,
+                    transition.transition_prior,
                     transition.transition_outcome_support,
                     transition.temporal_posterior_support,
-                    posterior_multiplier
+                    posterior_multiplier,
+                    normalized_transition_posterior
                 ),
                 last_recommended_at: transition.last_recommended_at.clone(),
             },
@@ -6205,6 +6241,116 @@ mod tests {
         assert_eq!(trend_to_transition.observations, 2);
         assert!(trend_to_transition.weighted_observation_mass > trend_to_range.weighted_observation_mass);
         assert!(trend_to_transition.transition_prior > trend_to_range.transition_prior);
+    }
+
+    #[test]
+    fn test_repeated_branch_evidence_strengthens_without_collapsing_unrelated_nodes() {
+        let mut state = LearningState::default();
+        let seed = StructuralPriorSeed {
+            source_label: "backtest".to_string(),
+            tempering_coefficient: None,
+            observations: 1,
+            followed_count: 1,
+            wins: 1,
+            losses: 0,
+            breakevens: 0,
+            invalidated: 0,
+            abandoned: 0,
+            not_followed: 0,
+            avg_pnl: 0.02,
+        };
+
+        for (recommendation_id, recommended_at, node_id, branch_id) in [
+            (
+                "rec-1",
+                "2026-04-30T00:00:00Z",
+                "NQ:belief_regime_node:trend",
+                "NQ:belief_regime_node:trend:trend_follow_through",
+            ),
+            (
+                "rec-2",
+                "2026-04-30T01:00:00Z",
+                "NQ:belief_regime_node:range",
+                "NQ:belief_regime_node:range:range_mean_reversion",
+            ),
+            (
+                "rec-3",
+                "2026-04-30T02:00:00Z",
+                "NQ:belief_regime_node:trend",
+                "NQ:belief_regime_node:trend:trend_follow_through",
+            ),
+            (
+                "rec-4",
+                "2026-04-30T03:00:00Z",
+                "NQ:belief_regime_node:transition",
+                "NQ:belief_regime_node:transition:transition_confirmation",
+            ),
+            (
+                "rec-5",
+                "2026-04-30T04:00:00Z",
+                "NQ:belief_regime_node:trend",
+                "NQ:belief_regime_node:trend:trend_follow_through",
+            ),
+            (
+                "rec-6",
+                "2026-04-30T05:00:00Z",
+                "NQ:belief_regime_node:transition",
+                "NQ:belief_regime_node:transition:transition_confirmation",
+            ),
+        ] {
+            state.apply_structural_prior_seed(
+                &StructuralFeedbackRefs {
+                    protocol_version: "structural-prior-seed-v1".to_string(),
+                    recommendation_id: recommendation_id.to_string(),
+                    recommended_at: recommended_at.to_string(),
+                    node_id: node_id.to_string(),
+                    branch_id: branch_id.to_string(),
+                    scenario_id: format!("scenario:{branch_id}"),
+                    path_id: format!("path:scenario:{branch_id}:primary"),
+                    followed_path: true,
+                    exit_reason: None,
+                    notes: None,
+                },
+                &seed,
+            );
+        }
+
+        let trend_to_range_key =
+            "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:range:range_mean_reversion";
+        let trend_to_transition_key =
+            "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:transition:transition_confirmation";
+        let range_to_trend_key =
+            "NQ:belief_regime_node:range:range_mean_reversion=>NQ:belief_regime_node:trend:trend_follow_through";
+        let trend_to_range = state
+            .structural_prior_state
+            .branch_temporal_posteriors
+            .get(trend_to_range_key)
+            .expect("trend to range posterior");
+        let trend_to_transition = state
+            .structural_prior_state
+            .branch_temporal_posteriors
+            .get(trend_to_transition_key)
+            .expect("trend to transition posterior");
+        let range_to_trend = state
+            .structural_prior_state
+            .branch_temporal_posteriors
+            .get(range_to_trend_key)
+            .expect("range to trend posterior");
+
+        assert!(trend_to_transition.transition_prior > trend_to_range.transition_prior);
+        assert!(
+            trend_to_transition.normalized_transition_posterior
+                > trend_to_range.normalized_transition_posterior
+        );
+        assert!(
+            (trend_to_transition.normalized_transition_posterior
+                + trend_to_range.normalized_transition_posterior
+                - 1.0)
+                .abs()
+                < 1e-9
+        );
+        assert!((range_to_trend.normalized_transition_posterior - 1.0).abs() < 1e-9);
+        assert!(range_to_trend.weighted_observation_mass > 0.0);
     }
 
     #[test]

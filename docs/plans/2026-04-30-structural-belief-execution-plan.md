@@ -109,7 +109,7 @@ Tests likely touched:
 | `P2` Live feedback posterior update | `partial` | delayed resolution, fractional pseudo-counts, compliance/off-policy exposure, and clipped IPS counterfactual reward priors landed; full DR/candidate-set policy logging remains |
 | `P3` Offline evidence tempering | `mostly done` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation landed |
 | `P4` Structural prior state upgrade | `partial` | duration / transition / source panels / event ledger / temporal posterior state, separated prior-mass snapshots, and latest offline seed snapshot landed; richer dwell-time theory remains |
-| `P5` BBN node/branch posterior update | `partial` | discounted temporal maintenance now exists and is reused across belief/workflow surfaces; core engine-state ownership is still incomplete |
+| `P5` BBN node/branch posterior update | `partial` | discounted temporal maintenance and normalized outgoing transition posterior state exist; remaining belief adjustment logic still needs consolidation |
 | `P6` CatBoost path ranking target | `not started` | structural candidate surfaces exist, but target math and calibration stack are still unimplemented |
 
 ## Current Todo Board
@@ -132,6 +132,7 @@ Tests likely touched:
 - [x] Persist reusable source-reliability posteriors from offline seeds and live feedback.
 - [x] Consume source-reliability posteriors in panel-derived prior aggregation.
 - [x] Persist separated node / branch / scenario / path prior-mass snapshots and the latest offline seed snapshot object.
+- [x] Persist normalized outgoing branch-transition posterior state and test repeated evidence without collapsing unrelated branches.
 
 ### Next
 
@@ -142,7 +143,7 @@ Tests likely touched:
 
 ### Not Yet
 
-- [ ] Add repeated-evidence tests proving one branch can strengthen without collapsing unrelated nodes.
+- [x] Add repeated-evidence tests proving one branch can strengthen without collapsing unrelated nodes.
 - [ ] Define `CatBoost` path-ranking target math after `P1-P5` are stable.
 - [ ] Add explicit target fields:
   - `raw_path_score`
@@ -269,8 +270,9 @@ Outcome:
 
 - [x] Identify the existing `BBN` update surfaces under `src/domain/belief/*` and `src/application/belief/*` that should consume discounted transition counts.
 - [x] Introduce discounted transition-count updates for branch posterior maintenance.
-- [ ] Make sure `workflow-status` reads real node/branch posterior state from `BBN` outputs rather than assembling a parallel view-only belief model.
-- [ ] Add tests that prove repeated evidence can strengthen one branch posterior without collapsing unrelated nodes.
+- [x] Surface maintained node and branch temporal posterior state, including normalized transition posterior, through `workflow-status` temporal summary.
+- [ ] Collapse remaining belief snapshot adjustment logic onto the maintained `BBN` posterior state.
+- [x] Add tests that prove repeated evidence can strengthen one branch posterior without collapsing unrelated nodes.
 
 ### P6: CatBoost Path Ranking Target
 

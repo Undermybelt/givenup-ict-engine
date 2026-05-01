@@ -23,7 +23,7 @@ Aligned source docs:
 | `P2` Live feedback posterior update | `部分实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, and clipped IPS counterfactual reward priors exist; full DR/candidate-set policy logging remains |
 | `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation exist |
 | `P4` Structural prior state upgrade | `部分实现` | duration, transition, source panels, event ledger, separated prior-mass snapshots, and latest offline seed snapshot exist; richer dwell-time theory remains |
-| `P5` BBN node/branch posterior update | `部分实现` | temporal priors already adjust belief snapshots and branch surfaces, but discounted transition-count maintenance is not yet the core engine rule |
+| `P5` BBN node/branch posterior update | `部分实现` | temporal priors adjust belief snapshots and branch surfaces, and normalized outgoing branch-transition posterior state now persists; remaining belief adjustment logic still needs consolidation |
 | `P6` CatBoost path ranking target | `未实现` | structural candidate surfaces exist, but the formal target stack is not landed |
 
 ## Repo Targets
@@ -96,8 +96,10 @@ Already in repo
 - canonical belief snapshot consumes structural priors
 - node duration prior adjusts regime confidence in belief snapshot
 - branch transition prior adjusts canonical regime probabilities
+- branch temporal posterior state stores `transition_prior`, `posterior_multiplier`, and normalized outgoing `normalized_transition_posterior`
 - `regime_posterior`, `belief_posteriors["market_regime"]`, `gate_decision`, `strategy_recommendation`, and selected market subgraph are synchronized after adjustment
 - workflow snapshot and ensemble surfaces reuse canonical structural regime posteriors across phases
+- `workflow-status` temporal summary exposes the maintained normalized transition posterior for consumer agents
 
 Literature mechanisms still worth importing
 - discounted transition-count updates:
@@ -118,8 +120,8 @@ Suggested implementation hooks
 - `src/state/*`
 
 Current repo gap
-- branch transition priors already affect branch prior/posterior surfaces and belief snapshots, but the update is still largely post-hoc adjustment logic
-- there is not yet a single discounted transition-count engine state that `workflow-status` simply reads
+- branch transition priors already affect branch prior/posterior surfaces and belief snapshots, and maintained branch temporal posterior state now carries normalized outgoing posterior mass
+- some belief snapshot adjustment logic still reconstructs transition effects at read time; the next cleanup is to collapse those readers further onto maintained BBN posterior state
 
 ---
 

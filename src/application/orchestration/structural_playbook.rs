@@ -201,6 +201,8 @@ pub struct StructuralTemporalSummaryArtifact {
     pub transition_temporal_posterior_support: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub transition_posterior_multiplier: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transition_normalized_posterior: Option<f64>,
     pub summary_line: String,
 }
 
@@ -1303,6 +1305,8 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
             .or_else(|| transition_prior.map(|prior| prior.temporal_posterior_support)),
         transition_posterior_multiplier: branch_temporal_state
             .map(|state| state.posterior_multiplier),
+        transition_normalized_posterior: branch_temporal_state
+            .map(|state| state.normalized_transition_posterior),
         summary_line,
     }
 }
