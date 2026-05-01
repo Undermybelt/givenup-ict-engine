@@ -189,11 +189,14 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
             observations: 6,
             streak_count: 3,
             weighted_streak_mass: 2.4,
+            weighted_success_mass: 2.4,
+            weighted_failure_mass: 0.0,
             total_streak_length: 6,
             avg_streak_length: 2.0,
             max_streak_length: 3,
             last_streak_length: 3,
             persistence_prior: 0.90,
+            duration_outcome_support: 0.7727272727,
             last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
         },
     );
@@ -221,7 +224,8 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
         .evidence
         .iter()
         .any(|line| line.contains("duration_persistence_prior")
-            && line.contains("weighted_streak_mass=2.400")));
+            && line.contains("weighted_streak_mass=2.400")
+            && line.contains("duration_outcome_support=0.773")));
     let market_regime = report
         .belief_posteriors
         .iter()
@@ -343,11 +347,14 @@ fn canonical_belief_snapshot_with_structural_prior_state_reconciles_gate_and_str
             observations: 8,
             streak_count: 4,
             weighted_streak_mass: 3.1,
+            weighted_success_mass: 3.1,
+            weighted_failure_mass: 0.0,
             total_streak_length: 10,
             avg_streak_length: 2.5,
             max_streak_length: 4,
             last_streak_length: 4,
             persistence_prior: 0.95,
+            duration_outcome_support: 0.8039215686,
             last_recommended_at: Some("2026-04-30T04:00:00Z".to_string()),
         },
     );

@@ -12,8 +12,11 @@ pub fn blend_node_posterior_with_duration_prior(
     let observation_weight = (duration_prior.weighted_streak_mass / 3.0).min(1.0);
     let streak_weight = (duration_prior.streak_count as f64 / 3.0).min(1.0);
     let blend_weight = (observation_weight * streak_weight * 0.5).clamp(0.0, 0.5);
+    let temporal_support =
+        (duration_prior.persistence_prior * 0.7 + duration_prior.duration_outcome_support * 0.3)
+            .clamp(0.0, 1.0);
     ((1.0 - blend_weight) * base_posterior
-        + blend_weight * duration_prior.persistence_prior)
+        + blend_weight * temporal_support)
         .clamp(0.0, 1.0)
 }
 

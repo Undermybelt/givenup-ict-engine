@@ -488,11 +488,12 @@ fn apply_structural_prior_state_to_belief_report(
                 Some(duration_prior),
             ));
             report.regime_posterior.evidence.push(format!(
-                "duration_persistence_prior={:.3} observations={} streaks={} weighted_streak_mass={:.3}",
+                "duration_persistence_prior={:.3} observations={} streaks={} weighted_streak_mass={:.3} duration_outcome_support={:.3}",
                 duration_prior.persistence_prior,
                 duration_prior.observations,
                 duration_prior.streak_count,
-                duration_prior.weighted_streak_mass
+                duration_prior.weighted_streak_mass,
+                duration_prior.duration_outcome_support
             ));
         }
     }

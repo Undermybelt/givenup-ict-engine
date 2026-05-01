@@ -168,11 +168,17 @@ pub struct StructuralNodeDurationPrior {
     pub streak_count: usize,
     #[serde(default)]
     pub weighted_streak_mass: f64,
+    #[serde(default)]
+    pub weighted_success_mass: f64,
+    #[serde(default)]
+    pub weighted_failure_mass: f64,
     pub total_streak_length: usize,
     pub avg_streak_length: f64,
     pub max_streak_length: usize,
     pub last_streak_length: usize,
     pub persistence_prior: f64,
+    #[serde(default)]
+    pub duration_outcome_support: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommended_at: Option<String>,
 }
@@ -3103,7 +3109,7 @@ impl LearningState {
                 scenario_id: refs.scenario_id.clone(),
                 path_id: refs.path_id.clone(),
                 followed_path: refs.followed_path,
-                realized_outcome: None,
+                realized_outcome: structural_prior_seed_representative_outcome(seed),
             },
         ) {
             rebuild_structural_sequence_priors(&mut self.structural_prior_state);
@@ -3498,6 +3504,14 @@ fn structural_prior_entity_mass_scale(kind: StructuralPriorEntityKind) -> f64 {
     }
 }
 
+#[derive(Debug, Clone, Default)]
+struct StructuralNodeStreakRecord {
+    streak_length: usize,
+    weighted_success_mass: f64,
+    weighted_failure_mass: f64,
+    last_recommended_at: Option<String>,
+}
+
 fn update_structural_prior_stats(
     stats: &mut StructuralPriorStats,
     record: &FeedbackRecord,
@@ -3780,6 +3794,24 @@ fn feedback_resolution_key(record: &FeedbackRecord) -> Option<String> {
         .or_else(|| record.run_id.as_ref().map(|run_id| format!("run:{run_id}")))
 }
 
+fn structural_prior_seed_representative_outcome(seed: &StructuralPriorSeed) -> Option<String> {
+    if seed.invalidated > 0 {
+        Some("invalidated".to_string())
+    } else if seed.losses > 0 {
+        Some("loss".to_string())
+    } else if seed.abandoned > 0 {
+        Some("abandoned".to_string())
+    } else if seed.wins > 0 {
+        Some("win".to_string())
+    } else if seed.breakevens > 0 {
+        Some("breakeven".to_string())
+    } else if seed.not_followed > 0 {
+        Some("not_followed".to_string())
+    } else {
+        None
+    }
+}
+
 fn structural_prior_event_key(event: &StructuralPriorEvent) -> String {
     format!(
         "{}|{}|{}|{}|{}|{}|{}",
@@ -3826,7 +3858,9 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
     let mut current_streak_length: usize = 0;
     let mut current_recommended_at: Option<String> = None;
     let mut previous_event: Option<StructuralPriorEvent> = None;
-    let mut node_streaks = BTreeMap::<String, Vec<(usize, Option<String>)>>::new();
+    let mut node_streaks = BTreeMap::<String, Vec<StructuralNodeStreakRecord>>::new();
+    let mut current_streak_success_mass = 0.0;
+    let mut current_streak_failure_mass = 0.0;
     let mut symbol_transition_events =
         BTreeMap::<String, Vec<(StructuralPriorEvent, StructuralPriorEvent)>>::new();
 
@@ -3836,11 +3870,15 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
                 &mut node_streaks,
                 current_node_id.take(),
                 current_streak_length,
+                current_streak_success_mass,
+                current_streak_failure_mass,
                 current_recommended_at.take(),
             );
             current_symbol = Some(event.symbol.clone());
             current_node_id = Some(event.node_id.clone());
             current_streak_length = 1;
+            current_streak_success_mass = 0.0;
+            current_streak_failure_mass = 0.0;
         } else if current_node_id.as_deref() == Some(event.node_id.as_str()) {
             current_streak_length += 1;
         } else {
@@ -3848,11 +3886,27 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
                 &mut node_streaks,
                 current_node_id.replace(event.node_id.clone()),
                 current_streak_length,
+                current_streak_success_mass,
+                current_streak_failure_mass,
                 current_recommended_at.take(),
             );
             current_streak_length = 1;
+            current_streak_success_mass = 0.0;
+            current_streak_failure_mass = 0.0;
         }
         current_recommended_at = Some(event.recommended_at.clone());
+        let event_weight = structural_prior_source_weight(&event.source_label);
+        match event.realized_outcome.as_deref() {
+            Some("win") => current_streak_success_mass += event_weight,
+            Some("loss") => current_streak_failure_mass += event_weight,
+            Some("breakeven") => {
+                current_streak_success_mass += event_weight * 0.5;
+                current_streak_failure_mass += event_weight * 0.5;
+            }
+            Some("invalidated") => current_streak_failure_mass += event_weight * 1.25,
+            Some("abandoned") => current_streak_failure_mass += event_weight * 0.75,
+            _ => {}
+        }
 
         if let Some(previous) = previous_event.as_ref() {
             if previous.symbol == event.symbol {
@@ -3869,6 +3923,8 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
         &mut node_streaks,
         current_node_id.take(),
         current_streak_length,
+        current_streak_success_mass,
+        current_streak_failure_mass,
         current_recommended_at.take(),
     );
     rebuild_discounted_node_duration_priors(&mut state.node_duration_priors, &node_streaks);
@@ -3943,9 +3999,11 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
 }
 
 fn finalize_node_duration_streak(
-    node_streaks: &mut BTreeMap<String, Vec<(usize, Option<String>)>>,
+    node_streaks: &mut BTreeMap<String, Vec<StructuralNodeStreakRecord>>,
     node_id: Option<String>,
     streak_length: usize,
+    weighted_success_mass: f64,
+    weighted_failure_mass: f64,
     last_recommended_at: Option<String>,
 ) {
     if streak_length == 0 {
@@ -3957,21 +4015,35 @@ fn finalize_node_duration_streak(
     node_streaks
         .entry(node_id)
         .or_default()
-        .push((streak_length, last_recommended_at));
+        .push(StructuralNodeStreakRecord {
+            streak_length,
+            weighted_success_mass,
+            weighted_failure_mass,
+            last_recommended_at,
+        });
 }
 
 fn rebuild_discounted_node_duration_priors(
     node_duration_priors: &mut BTreeMap<String, StructuralNodeDurationPrior>,
-    node_streaks: &BTreeMap<String, Vec<(usize, Option<String>)>>,
+    node_streaks: &BTreeMap<String, Vec<StructuralNodeStreakRecord>>,
 ) {
     for (node_id, streaks) in node_streaks {
         let mut prior = StructuralNodeDurationPrior::default();
         prior.streak_count = streaks.len();
-        prior.observations = streaks.iter().map(|(length, _)| *length).sum();
+        prior.observations = streaks.iter().map(|streak| streak.streak_length).sum();
         prior.total_streak_length = prior.observations;
-        prior.max_streak_length = streaks.iter().map(|(length, _)| *length).max().unwrap_or(0);
-        prior.last_streak_length = streaks.last().map(|(length, _)| *length).unwrap_or(0);
-        prior.last_recommended_at = streaks.last().and_then(|(_, at)| at.clone());
+        prior.max_streak_length = streaks
+            .iter()
+            .map(|streak| streak.streak_length)
+            .max()
+            .unwrap_or(0);
+        prior.last_streak_length = streaks
+            .last()
+            .map(|streak| streak.streak_length)
+            .unwrap_or(0);
+        prior.last_recommended_at = streaks
+            .last()
+            .and_then(|streak| streak.last_recommended_at.clone());
         prior.avg_streak_length = if prior.streak_count == 0 {
             0.0
         } else {
@@ -3981,13 +4053,19 @@ fn rebuild_discounted_node_duration_priors(
         let total_streaks = streaks.len();
         let mut weighted_streak_mass = 0.0;
         let mut weighted_length_sum = 0.0;
-        for (index, (length, _)) in streaks.iter().enumerate() {
+        let mut weighted_success_mass = 0.0;
+        let mut weighted_failure_mass = 0.0;
+        for (index, streak) in streaks.iter().enumerate() {
             let recency_rank = total_streaks.saturating_sub(index + 1) as f64;
             let recency_decay = 0.85_f64.powf(recency_rank);
             weighted_streak_mass += recency_decay;
-            weighted_length_sum += *length as f64 * recency_decay;
+            weighted_length_sum += streak.streak_length as f64 * recency_decay;
+            weighted_success_mass += streak.weighted_success_mass * recency_decay;
+            weighted_failure_mass += streak.weighted_failure_mass * recency_decay;
         }
         prior.weighted_streak_mass = weighted_streak_mass;
+        prior.weighted_success_mass = weighted_success_mass;
+        prior.weighted_failure_mass = weighted_failure_mass;
         let weighted_avg_length = if weighted_streak_mass <= f64::EPSILON {
             prior.avg_streak_length
         } else {
@@ -3995,6 +4073,9 @@ fn rebuild_discounted_node_duration_priors(
         };
         prior.persistence_prior =
             (weighted_avg_length / (weighted_avg_length + 1.0)).clamp(0.0, 1.0);
+        let alpha = 1.0 + weighted_success_mass.max(0.0);
+        let beta = 1.0 + weighted_failure_mass.max(0.0);
+        prior.duration_outcome_support = (alpha / (alpha + beta)).clamp(0.0, 1.0);
         node_duration_priors.insert(node_id.clone(), prior);
     }
 }
@@ -4885,6 +4966,121 @@ mod tests {
         assert!(trend.weighted_streak_mass > 1.0);
         assert!(trend.weighted_streak_mass > range.weighted_streak_mass);
         assert!(trend.persistence_prior > range.persistence_prior);
+    }
+
+    #[test]
+    fn test_structural_node_duration_outcome_support_penalizes_recent_negative_streaks() {
+        let mut state = LearningState::default();
+        let mut baseline_state = LearningState::default();
+        let positive_seed = StructuralPriorSeed {
+            source_label: "backtest".to_string(),
+            tempering_coefficient: None,
+            observations: 1,
+            followed_count: 1,
+            wins: 1,
+            losses: 0,
+            breakevens: 0,
+            invalidated: 0,
+            abandoned: 0,
+            not_followed: 0,
+            avg_pnl: 0.02,
+        };
+        let negative_seed = StructuralPriorSeed {
+            wins: 0,
+            losses: 1,
+            avg_pnl: -0.02,
+            ..positive_seed.clone()
+        };
+
+        state.apply_structural_prior_seed(
+            &StructuralFeedbackRefs {
+                protocol_version: "structural-prior-seed-v1".to_string(),
+                recommendation_id: "rec-1".to_string(),
+                recommended_at: "2026-04-30T00:00:00Z".to_string(),
+                node_id: "node-duration-quality".to_string(),
+                branch_id: "branch-duration-quality:trend".to_string(),
+                scenario_id: "scenario:branch-duration-quality:trend".to_string(),
+                path_id: "path:scenario:branch-duration-quality:trend:primary".to_string(),
+                followed_path: true,
+                exit_reason: None,
+                notes: None,
+            },
+            &positive_seed,
+        );
+        baseline_state.apply_structural_prior_seed(
+            &StructuralFeedbackRefs {
+                protocol_version: "structural-prior-seed-v1".to_string(),
+                recommendation_id: "rec-1".to_string(),
+                recommended_at: "2026-04-30T00:00:00Z".to_string(),
+                node_id: "node-duration-quality".to_string(),
+                branch_id: "branch-duration-quality:trend".to_string(),
+                scenario_id: "scenario:branch-duration-quality:trend".to_string(),
+                path_id: "path:scenario:branch-duration-quality:trend:primary".to_string(),
+                followed_path: true,
+                exit_reason: None,
+                notes: None,
+            },
+            &positive_seed,
+        );
+        state.apply_structural_prior_seed(
+            &StructuralFeedbackRefs {
+                protocol_version: "structural-prior-seed-v1".to_string(),
+                recommendation_id: "rec-2".to_string(),
+                recommended_at: "2026-04-30T01:00:00Z".to_string(),
+                node_id: "other-node".to_string(),
+                branch_id: "other-branch".to_string(),
+                scenario_id: "scenario:other-branch".to_string(),
+                path_id: "path:scenario:other-branch:primary".to_string(),
+                followed_path: true,
+                exit_reason: None,
+                notes: None,
+            },
+            &positive_seed,
+        );
+        state.apply_structural_prior_seed(
+            &StructuralFeedbackRefs {
+                protocol_version: "structural-prior-seed-v1".to_string(),
+                recommendation_id: "rec-3".to_string(),
+                recommended_at: "2026-04-30T02:00:00Z".to_string(),
+                node_id: "node-duration-quality".to_string(),
+                branch_id: "branch-duration-quality:trend".to_string(),
+                scenario_id: "scenario:branch-duration-quality:trend".to_string(),
+                path_id: "path:scenario:branch-duration-quality:trend:primary".to_string(),
+                followed_path: true,
+                exit_reason: None,
+                notes: None,
+            },
+            &negative_seed,
+        );
+        baseline_state.apply_structural_prior_seed(
+            &StructuralFeedbackRefs {
+                protocol_version: "structural-prior-seed-v1".to_string(),
+                recommendation_id: "rec-3".to_string(),
+                recommended_at: "2026-04-30T02:00:00Z".to_string(),
+                node_id: "node-duration-quality".to_string(),
+                branch_id: "branch-duration-quality:trend".to_string(),
+                scenario_id: "scenario:branch-duration-quality:trend".to_string(),
+                path_id: "path:scenario:branch-duration-quality:trend:primary".to_string(),
+                followed_path: true,
+                exit_reason: None,
+                notes: None,
+            },
+            &positive_seed,
+        );
+
+        let prior = state
+            .structural_prior_state
+            .node_duration_priors
+            .get("node-duration-quality")
+            .expect("node duration prior");
+        let baseline = baseline_state
+            .structural_prior_state
+            .node_duration_priors
+            .get("node-duration-quality")
+            .expect("baseline node duration prior");
+        assert!(prior.weighted_success_mass > 0.0);
+        assert!(prior.weighted_failure_mass > 0.0);
+        assert!(prior.duration_outcome_support < baseline.duration_outcome_support);
     }
 
     #[test]
