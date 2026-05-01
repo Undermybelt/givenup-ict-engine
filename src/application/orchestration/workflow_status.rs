@@ -4995,6 +4995,12 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("choose_historical_dataset"));
+        assert!(value["candidate_set_id"]
+            .as_str()
+            .unwrap()
+            .starts_with("structural-candidates:NQ:"));
+        assert_eq!(value["candidate_set_size"], 1);
+        assert!(value["selected_path_probability"].as_f64().unwrap() > 0.0);
         assert!(value["feedback_fields"]
             .as_array()
             .unwrap()

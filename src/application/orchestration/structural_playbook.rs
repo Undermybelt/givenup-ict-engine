@@ -645,6 +645,9 @@ pub struct StructuralFeedbackTemplateArtifact {
     pub branch_id: String,
     pub scenario_id: String,
     pub path_id: String,
+    pub candidate_set_id: String,
+    pub candidate_set_size: usize,
+    pub selected_path_probability: f64,
     pub direction: String,
     pub entry_style: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3370,6 +3373,28 @@ pub fn build_structural_feedback_template_artifact(
             .iter()
             .find(|path| path.scenario_id == scenario.scenario_id)
     });
+    let mut candidate_paths = path_plan.paths.clone();
+    candidate_paths.sort_by(|left, right| {
+        right
+            .composite_preference_score
+            .total_cmp(&left.composite_preference_score)
+            .then_with(|| right.path_posterior.total_cmp(&left.path_posterior))
+            .then_with(|| right.path_prior.total_cmp(&left.path_prior))
+    });
+    candidate_paths.truncate(3);
+    let symbol = structural_symbol(snapshot);
+    let candidate_set_id = structural_candidate_set_id(&symbol, &candidate_paths);
+    let candidate_set_size = candidate_paths.len();
+    let denominator = structural_candidate_policy_denominator(&candidate_paths);
+    let selected_path_probability = selected_path
+        .map(|path| {
+            structural_candidate_policy_probability(
+                path.composite_preference_score,
+                denominator,
+                candidate_set_size,
+            )
+        })
+        .unwrap_or_default();
     let recommended_at = snapshot
         .generated_at
         .to_rfc3339_opts(SecondsFormat::Secs, true);
@@ -3385,7 +3410,7 @@ pub fn build_structural_feedback_template_artifact(
         protocol_version: "structural-feedback-v1".to_string(),
         recommendation_id,
         recommended_at,
-        symbol: structural_symbol(snapshot),
+        symbol,
         node_id: node.node_id.clone(),
         branch_id: selected_branch
             .map(|branch| branch.branch_id.clone())
@@ -3396,6 +3421,9 @@ pub fn build_structural_feedback_template_artifact(
         path_id: selected_path
             .map(|path| path.path_id.clone())
             .unwrap_or_else(|| "path_unavailable".to_string()),
+        candidate_set_id,
+        candidate_set_size,
+        selected_path_probability,
         direction: selected_path
             .map(|path| path.direction.clone())
             .unwrap_or_else(|| "observe".to_string()),

@@ -129,6 +129,7 @@ Tests likely touched:
 - [x] Surface not-followed feedback as execution-propensity / off-policy exposure evidence without changing reward posterior credit.
 - [x] Add clipped IPS counterfactual reward prior and expose it on structural experience-prior surfaces.
 - [x] Log candidate-set id, candidate-set size, and selected path behavior-policy probability on recommended path bundles.
+- [x] Carry candidate-set policy context into structural feedback templates and execution contracts.
 - [x] Store offline seed power-prior contribution objects in source panels.
 - [x] Persist reusable source-reliability posteriors from offline seeds and live feedback.
 - [x] Consume source-reliability posteriors in panel-derived prior aggregation.
@@ -242,6 +243,7 @@ Outcome:
 - [x] Expose not-followed/off-policy history rates on structural history surfaces.
 - [x] Add clipped IPS counterfactual reward prior on persisted stats and `structural-experience-priors`.
 - [x] Add candidate-set policy logging on `structural-recommended-path-bundle` for later DR/SNIPS correction.
+- [x] Surface logged candidate-set policy context in the structural feedback template / execution contract.
 - [x] Preserve zero-config CLI behavior: all new math must run behind existing flows, not new required flags.
 - [x] Add tests for:
   - followed profitable path

@@ -186,6 +186,7 @@ Already in repo
 - structural history surfaces expose execution propensity and off-policy exposure rate for consumer agents
 - persisted structural stats and `structural-experience-priors` expose clipped IPS weight and counterfactual reward prior
 - recommended path bundles log candidate-set id, candidate-set size, and selected path behavior-policy probability for later DR/SNIPS correction
+- structural feedback templates and inline execution contracts carry the logged candidate-set policy context without adding required flags
 
 Literature mechanisms still worth importing
 - DR/SNIPS-style off-policy value correction using logged candidate-set policy probabilities
@@ -209,7 +210,7 @@ Suggested outcome decomposition
 
 Current repo gap
 - feedback learning is real and no longer heuristic-only; delayed outcomes now resolve into one posterior event and abandoned/invalidated outcomes use explicit pseudo-count weights
-- not-followed recommendations now carry separate propensity/off-policy exposure fields and clipped IPS counterfactual reward priors, and recommended path bundles log behavior-policy probability; DR/SNIPS correction remains the next value-estimation step
+- not-followed recommendations now carry separate propensity/off-policy exposure fields and clipped IPS counterfactual reward priors; recommended path bundles, feedback templates, and execution contracts log behavior-policy probability; DR/SNIPS correction remains the next value-estimation step
 
 ---
 
