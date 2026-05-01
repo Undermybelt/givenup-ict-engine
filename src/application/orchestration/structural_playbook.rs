@@ -14,9 +14,10 @@ use crate::application::provider_catalog::{
 };
 use crate::state::{
     recommended_next_command_meta, structural_feedback_learning_outcome,
-    structural_feedback_outcome_is_unresolved, save_text_state, FeedbackFactorUsage, FeedbackRecord,
-    ModelProbabilitySnapshot, StructuralFeedbackLearningOutcome, StructuralFeedbackRefs,
-    StructuralPriorLearningState, StructuralPriorStats, WorkflowSnapshot,
+    structural_feedback_outcome_is_unresolved, structural_source_observed_outcome_likelihood,
+    save_text_state, FeedbackFactorUsage, FeedbackRecord, ModelProbabilitySnapshot,
+    StructuralFeedbackLearningOutcome, StructuralFeedbackRefs, StructuralPriorLearningState,
+    StructuralPriorStats, StructuralSourceReliabilityPosterior, WorkflowSnapshot,
 };
 use crate::types::{Direction, Regime};
 
@@ -3289,9 +3290,37 @@ fn structural_source_reliability_multiplier(
                 1.0
             } else {
                 posterior.posterior_reliability.clamp(0.0, 1.0)
+                    * structural_source_confusion_concentration_multiplier(posterior)
+                        .unwrap_or(1.0)
             }
         })
         .unwrap_or(1.0)
+}
+
+fn structural_source_confusion_concentration_multiplier(
+    posterior: &StructuralSourceReliabilityPosterior,
+) -> Option<f64> {
+    let mut weighted_likelihood_mass = 0.0;
+    let mut weighted_observation_mass = 0.0;
+    for cell in posterior.outcome_confusion.values() {
+        let cell_mass = cell.weighted_observation_mass.max(0.0);
+        if cell_mass <= f64::EPSILON {
+            continue;
+        }
+        weighted_likelihood_mass += cell_mass
+            * structural_source_observed_outcome_likelihood(
+                posterior,
+                &cell.credit_class,
+                &cell.observed_outcome,
+            );
+        weighted_observation_mass += cell_mass;
+    }
+
+    if weighted_observation_mass <= f64::EPSILON {
+        None
+    } else {
+        Some((weighted_likelihood_mass / weighted_observation_mass).clamp(0.0, 1.0))
+    }
 }
 
 fn structural_resolved_observations(
@@ -5077,6 +5106,58 @@ mod tests {
             current_posterior: 0.7,
             structural_baseline_score: 0.4,
         }
+    }
+
+    #[test]
+    fn panel_derived_prior_uses_source_confusion_concentration() {
+        let mut stats = StructuralPriorStats::default();
+        stats.source_panel_summaries.insert(
+            "noisy".to_string(),
+            crate::state::StructuralPriorSourceSummary {
+                weighted_success_mass: 2.0,
+                ..crate::state::StructuralPriorSourceSummary::default()
+            },
+        );
+        let mut state = StructuralPriorLearningState::default();
+        state.source_reliability_posteriors.insert(
+            "noisy".to_string(),
+            crate::state::StructuralSourceReliabilityPosterior {
+                source_label: "noisy".to_string(),
+                observations: 2,
+                weighted_observation_mass: 2.0,
+                posterior_reliability: 1.0,
+                outcome_confusion: BTreeMap::from([
+                    (
+                        "tp->positive_executed".to_string(),
+                        crate::state::StructuralSourceOutcomeConfusionCell {
+                            observed_outcome: "tp".to_string(),
+                            credit_class: "positive_executed".to_string(),
+                            observations: 1,
+                            weighted_observation_mass: 1.0,
+                            weighted_success_mass: 1.0,
+                            ..crate::state::StructuralSourceOutcomeConfusionCell::default()
+                        },
+                    ),
+                    (
+                        "take_profit->positive_executed".to_string(),
+                        crate::state::StructuralSourceOutcomeConfusionCell {
+                            observed_outcome: "take_profit".to_string(),
+                            credit_class: "positive_executed".to_string(),
+                            observations: 1,
+                            weighted_observation_mass: 1.0,
+                            weighted_success_mass: 1.0,
+                            ..crate::state::StructuralSourceOutcomeConfusionCell::default()
+                        },
+                    ),
+                ]),
+                ..crate::state::StructuralSourceReliabilityPosterior::default()
+            },
+        );
+
+        let prior = structural_panel_derived_smoothed_prior(&stats, &state)
+            .expect("panel-derived prior");
+
+        assert!((prior - (2.0 / 3.0)).abs() < 1e-9);
     }
 
     fn calibrated_evaluation_row(
