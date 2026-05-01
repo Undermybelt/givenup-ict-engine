@@ -108,7 +108,7 @@ Tests likely touched:
 | `P1` Canonical structural anchor | `mostly done` | canonical anchor and cross-phase propagation are landed; a dedicated downstream smoke path is still worth keeping explicit |
 | `P2` Live feedback posterior update | `partial` | delayed resolution, fractional pseudo-counts, compliance/off-policy exposure, and clipped IPS counterfactual reward priors landed; full DR/candidate-set policy logging remains |
 | `P3` Offline evidence tempering | `mostly done` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation landed |
-| `P4` Structural prior state upgrade | `partial` | duration / transition / source panels / event ledger / temporal posterior state landed; node-mass separation still not fully formalized |
+| `P4` Structural prior state upgrade | `partial` | duration / transition / source panels / event ledger / temporal posterior state, separated prior-mass snapshots, and latest offline seed snapshot landed; richer dwell-time theory remains |
 | `P5` BBN node/branch posterior update | `partial` | discounted temporal maintenance now exists and is reused across belief/workflow surfaces; core engine-state ownership is still incomplete |
 | `P6` CatBoost path ranking target | `not started` | structural candidate surfaces exist, but target math and calibration stack are still unimplemented |
 
@@ -131,12 +131,13 @@ Tests likely touched:
 - [x] Store offline seed power-prior contribution objects in source panels.
 - [x] Persist reusable source-reliability posteriors from offline seeds and live feedback.
 - [x] Consume source-reliability posteriors in panel-derived prior aggregation.
+- [x] Persist separated node / branch / scenario / path prior-mass snapshots and the latest offline seed snapshot object.
 
 ### Next
 
 - [x] Add a dedicated smoke path proving `analyze -> research -> backtest -> structural-playbook` preserves canonical structural lineage end to end.
 - [ ] Finish remaining `P2` by adding DR/SNIPS-style correction after candidate-set policy logging exists.
-- [ ] Finish `P4` node-mass vs branch/path-mass separation and persist a clearer offline seed snapshot object.
+- [x] Finish `P4` node-mass vs branch/path-mass separation and persist a clearer offline seed snapshot object.
 - [ ] Finish `P5` by moving node/branch temporal maintenance toward a more central maintained `BBN` posterior state instead of mostly snapshot-time reweighting.
 
 ### Not Yet
@@ -260,8 +261,8 @@ Outcome:
 ### P4: Structural Prior State Upgrade
 
 - [x] Extend `LearningState.structural_prior_state` in `src/state/types.rs` with explicit node duration and branch transition fields suggested by the repo map.
-- [ ] Separate node prior mass from branch/path prior mass so one noisy path does not mutate the whole node too aggressively.
-- [ ] Store last offline seed snapshots and per-source summaries for later audit and recalibration.
+- [x] Separate node prior mass from branch/path prior mass so one noisy path does not mutate the whole node too aggressively.
+- [x] Store last offline seed snapshots and per-source summaries for later audit and recalibration.
 - [x] Add tests that prove duration and transition state survives persistence and is reused by structural orchestration.
 
 ### P5: BBN Node/Branch Posterior Update
@@ -289,9 +290,8 @@ Outcome:
 Do these first, in order:
 
 1. Finish remaining `P2` by adding DR/SNIPS-style correction after candidate-set policy logging exists.
-2. Finish `P4` by formalizing node-mass vs branch/path-mass separation and persisting a clearer offline seed snapshot object.
-3. Finish `P5` by moving temporal maintenance from mostly snapshot-time reweighting into a more central maintained `BBN` node/branch posterior state.
-4. Only then start `P6` CatBoost path-target design.
+2. Finish `P5` by moving temporal maintenance from mostly snapshot-time reweighting into a more central maintained `BBN` node/branch posterior state.
+3. Only then start `P6` CatBoost path-target design.
 
 ## Out of Scope For The Next Execution Slice
 

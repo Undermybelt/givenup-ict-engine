@@ -66,6 +66,16 @@ pub struct StructuralPriorLearningState {
     pub branches: BTreeMap<String, StructuralPriorStats>,
     pub scenarios: BTreeMap<String, StructuralPriorStats>,
     pub paths: BTreeMap<String, StructuralPriorStats>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub node_prior_mass: BTreeMap<String, StructuralPriorMassSnapshot>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub branch_prior_mass: BTreeMap<String, StructuralPriorMassSnapshot>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub scenario_prior_mass: BTreeMap<String, StructuralPriorMassSnapshot>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub path_prior_mass: BTreeMap<String, StructuralPriorMassSnapshot>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_offline_seed_snapshot: Option<StructuralOfflineSeedSnapshot>,
     #[serde(default)]
     pub event_ledger: Vec<StructuralPriorEvent>,
     #[serde(default)]
@@ -118,6 +128,25 @@ pub struct StructuralPriorStats {
     pub off_policy_adjusted_prior: f64,
     #[serde(default)]
     pub source_panel_summaries: BTreeMap<String, StructuralPriorSourceSummary>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_offline_seed_source: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralPriorMassSnapshot {
+    pub entity_id: String,
+    pub entity_kind: String,
+    pub observations: usize,
+    pub followed_count: usize,
+    pub weighted_followed_mass: f64,
+    pub weighted_success_mass: f64,
+    pub weighted_failure_mass: f64,
+    pub weighted_invalidation_mass: f64,
+    pub weighted_exposure_mass: f64,
+    pub weighted_not_followed_mass: f64,
+    pub smoothed_prior: f64,
+    pub execution_propensity: f64,
+    pub off_policy_adjusted_prior: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_offline_seed_source: Option<String>,
 }
@@ -199,6 +228,31 @@ pub struct StructuralPowerPriorContribution {
     pub failure_mass: f64,
     pub invalidation_mass: f64,
     pub not_followed_mass: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralOfflineSeedSnapshot {
+    pub source_label: String,
+    pub recommendation_id: String,
+    pub recommended_at: String,
+    pub node_id: String,
+    pub branch_id: String,
+    pub scenario_id: String,
+    pub path_id: String,
+    pub followed_path: bool,
+    pub observations: usize,
+    pub followed_count: usize,
+    pub wins: usize,
+    pub losses: usize,
+    pub breakevens: usize,
+    pub invalidated: usize,
+    pub abandoned: usize,
+    pub not_followed: usize,
+    pub avg_pnl: f64,
+    pub node_contribution: StructuralPowerPriorContribution,
+    pub branch_contribution: StructuralPowerPriorContribution,
+    pub scenario_contribution: StructuralPowerPriorContribution,
+    pub path_contribution: StructuralPowerPriorContribution,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -3244,6 +3298,10 @@ impl LearningState {
                 refs.followed_path,
                 StructuralPriorEntityKind::Path,
             );
+            refresh_structural_prior_mass_snapshots_for_refs(
+                &mut self.structural_prior_state,
+                refs,
+            );
             appended |= append_structural_prior_event(
                 &mut self.structural_prior_state,
                 StructuralPriorEvent {
@@ -3310,6 +3368,14 @@ impl LearningState {
             seed,
             StructuralPriorEntityKind::Path,
         );
+        if seed.observations > 0 {
+            self.structural_prior_state.last_offline_seed_snapshot =
+                Some(structural_offline_seed_snapshot(refs, seed));
+            refresh_structural_prior_mass_snapshots_for_refs(
+                &mut self.structural_prior_state,
+                refs,
+            );
+        }
         if append_structural_prior_event(
             &mut self.structural_prior_state,
             StructuralPriorEvent {
@@ -3717,6 +3783,72 @@ fn structural_prior_entity_mass_scale(kind: StructuralPriorEntityKind) -> f64 {
     }
 }
 
+fn structural_prior_entity_kind_label(kind: StructuralPriorEntityKind) -> &'static str {
+    match kind {
+        StructuralPriorEntityKind::Node => "node",
+        StructuralPriorEntityKind::Branch => "branch",
+        StructuralPriorEntityKind::Scenario => "scenario",
+        StructuralPriorEntityKind::Path => "path",
+    }
+}
+
+fn structural_prior_mass_snapshot(
+    entity_id: &str,
+    kind: StructuralPriorEntityKind,
+    stats: &StructuralPriorStats,
+) -> StructuralPriorMassSnapshot {
+    StructuralPriorMassSnapshot {
+        entity_id: entity_id.to_string(),
+        entity_kind: structural_prior_entity_kind_label(kind).to_string(),
+        observations: stats.observations,
+        followed_count: stats.followed_count,
+        weighted_followed_mass: stats.weighted_followed_mass,
+        weighted_success_mass: stats.weighted_success_mass,
+        weighted_failure_mass: stats.weighted_failure_mass,
+        weighted_invalidation_mass: stats.weighted_invalidation_mass,
+        weighted_exposure_mass: stats.weighted_exposure_mass,
+        weighted_not_followed_mass: stats.weighted_not_followed_mass,
+        smoothed_prior: stats.smoothed_prior,
+        execution_propensity: stats.execution_propensity,
+        off_policy_adjusted_prior: stats.off_policy_adjusted_prior,
+        last_offline_seed_source: stats.last_offline_seed_source.clone(),
+    }
+}
+
+fn refresh_structural_prior_mass_snapshots_for_refs(
+    state: &mut StructuralPriorLearningState,
+    refs: &StructuralFeedbackRefs,
+) {
+    if let Some(snapshot) = state.nodes.get(&refs.node_id).map(|stats| {
+        structural_prior_mass_snapshot(&refs.node_id, StructuralPriorEntityKind::Node, stats)
+    }) {
+        state.node_prior_mass.insert(refs.node_id.clone(), snapshot);
+    }
+    if let Some(snapshot) = state.branches.get(&refs.branch_id).map(|stats| {
+        structural_prior_mass_snapshot(&refs.branch_id, StructuralPriorEntityKind::Branch, stats)
+    }) {
+        state
+            .branch_prior_mass
+            .insert(refs.branch_id.clone(), snapshot);
+    }
+    if let Some(snapshot) = state.scenarios.get(&refs.scenario_id).map(|stats| {
+        structural_prior_mass_snapshot(
+            &refs.scenario_id,
+            StructuralPriorEntityKind::Scenario,
+            stats,
+        )
+    }) {
+        state
+            .scenario_prior_mass
+            .insert(refs.scenario_id.clone(), snapshot);
+    }
+    if let Some(snapshot) = state.paths.get(&refs.path_id).map(|stats| {
+        structural_prior_mass_snapshot(&refs.path_id, StructuralPriorEntityKind::Path, stats)
+    }) {
+        state.path_prior_mass.insert(refs.path_id.clone(), snapshot);
+    }
+}
+
 #[derive(Debug, Clone, Default)]
 struct StructuralNodeStreakRecord {
     streak_length: usize,
@@ -3887,6 +4019,47 @@ fn structural_power_prior_contribution_with_entity_scale(
             + effective_tau * seed.abandoned as f64 * 0.75,
         invalidation_mass: effective_tau * seed.invalidated as f64,
         not_followed_mass: effective_tau * seed.not_followed as f64,
+    }
+}
+
+fn structural_offline_seed_snapshot(
+    refs: &StructuralFeedbackRefs,
+    seed: &StructuralPriorSeed,
+) -> StructuralOfflineSeedSnapshot {
+    StructuralOfflineSeedSnapshot {
+        source_label: seed.source_label.clone(),
+        recommendation_id: refs.recommendation_id.clone(),
+        recommended_at: refs.recommended_at.clone(),
+        node_id: refs.node_id.clone(),
+        branch_id: refs.branch_id.clone(),
+        scenario_id: refs.scenario_id.clone(),
+        path_id: refs.path_id.clone(),
+        followed_path: refs.followed_path,
+        observations: seed.observations,
+        followed_count: seed.followed_count,
+        wins: seed.wins,
+        losses: seed.losses,
+        breakevens: seed.breakevens,
+        invalidated: seed.invalidated,
+        abandoned: seed.abandoned,
+        not_followed: seed.not_followed,
+        avg_pnl: seed.avg_pnl,
+        node_contribution: structural_power_prior_contribution(
+            seed,
+            StructuralPriorEntityKind::Node,
+        ),
+        branch_contribution: structural_power_prior_contribution(
+            seed,
+            StructuralPriorEntityKind::Branch,
+        ),
+        scenario_contribution: structural_power_prior_contribution(
+            seed,
+            StructuralPriorEntityKind::Scenario,
+        ),
+        path_contribution: structural_power_prior_contribution(
+            seed,
+            StructuralPriorEntityKind::Path,
+        ),
     }
 }
 
@@ -5439,6 +5612,76 @@ mod tests {
         assert!(node.weighted_success_mass < branch.weighted_success_mass);
         assert!(branch.weighted_success_mass < scenario.weighted_success_mass);
         assert!(scenario.weighted_success_mass < path.weighted_success_mass);
+    }
+
+    #[test]
+    fn test_structural_prior_seed_persists_separated_mass_snapshot() {
+        let refs = StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-seed-snapshot".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "node-seed-snapshot".to_string(),
+            branch_id: "branch-seed-snapshot".to_string(),
+            scenario_id: "scenario-seed-snapshot".to_string(),
+            path_id: "path-seed-snapshot".to_string(),
+            followed_path: true,
+            exit_reason: None,
+            notes: None,
+        };
+        let seed = StructuralPriorSeed {
+            source_label: "backtest".to_string(),
+            tempering_coefficient: None,
+            observations: 2,
+            followed_count: 2,
+            wins: 1,
+            losses: 1,
+            breakevens: 0,
+            invalidated: 0,
+            abandoned: 0,
+            not_followed: 0,
+            avg_pnl: 0.015,
+        };
+
+        let mut state = LearningState::default();
+        state.apply_structural_prior_seed(&refs, &seed);
+
+        let structural_state = &state.structural_prior_state;
+        let node_mass = structural_state
+            .node_prior_mass
+            .get("node-seed-snapshot")
+            .expect("node prior mass");
+        let path_mass = structural_state
+            .path_prior_mass
+            .get("path-seed-snapshot")
+            .expect("path prior mass");
+
+        assert_eq!(node_mass.entity_kind, "node");
+        assert_eq!(path_mass.entity_kind, "path");
+        assert!((node_mass.weighted_success_mass - 0.375).abs() < 1e-9);
+        assert!((path_mass.weighted_success_mass - 0.75).abs() < 1e-9);
+        assert!(node_mass.weighted_success_mass < path_mass.weighted_success_mass);
+
+        let snapshot = structural_state
+            .last_offline_seed_snapshot
+            .as_ref()
+            .expect("last offline seed snapshot");
+        assert_eq!(snapshot.source_label, "backtest");
+        assert_eq!(snapshot.recommendation_id, "rec-seed-snapshot");
+        assert_eq!(snapshot.node_id, "node-seed-snapshot");
+        assert_eq!(snapshot.path_id, "path-seed-snapshot");
+        assert!((snapshot.node_contribution.effective_tau - 0.375).abs() < 1e-9);
+        assert!((snapshot.branch_contribution.effective_tau - 0.5625).abs() < 1e-9);
+        assert!((snapshot.scenario_contribution.effective_tau - 0.675).abs() < 1e-9);
+        assert!((snapshot.path_contribution.effective_tau - 0.75).abs() < 1e-9);
+
+        let serialized = serde_json::to_string(&structural_state).expect("serialize state");
+        assert!(serialized.contains("last_offline_seed_snapshot"));
+        let round_tripped: StructuralPriorLearningState =
+            serde_json::from_str(&serialized).expect("deserialize state");
+        assert!(round_tripped.last_offline_seed_snapshot.is_some());
+        assert!(round_tripped
+            .node_prior_mass
+            .contains_key("node-seed-snapshot"));
     }
 
     #[test]

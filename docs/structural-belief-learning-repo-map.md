@@ -22,7 +22,7 @@ Aligned source docs:
 | `P1` Canonical structural anchor | `已实现` | downstream phases no longer redefine canonical structural lineage |
 | `P2` Live feedback posterior update | `部分实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, and clipped IPS counterfactual reward priors exist; full DR/candidate-set policy logging remains |
 | `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation exist |
-| `P4` Structural prior state upgrade | `部分实现` | duration, transition, source panels, and event ledger exist; node/branch mass separation is not fully formalized |
+| `P4` Structural prior state upgrade | `部分实现` | duration, transition, source panels, event ledger, separated prior-mass snapshots, and latest offline seed snapshot exist; richer dwell-time theory remains |
 | `P5` BBN node/branch posterior update | `部分实现` | temporal priors already adjust belief snapshots and branch surfaces, but discounted transition-count maintenance is not yet the core engine rule |
 | `P6` CatBoost path ranking target | `未实现` | structural candidate surfaces exist, but the formal target stack is not landed |
 
@@ -50,6 +50,11 @@ Already in repo
 - persisted `LearningState.structural_prior_state`
 - `source_panel_summaries`
 - `last_offline_seed_source`
+- `last_offline_seed_snapshot`
+- `node_prior_mass`
+- `branch_prior_mass`
+- `scenario_prior_mass`
+- `path_prior_mass`
 - `event_ledger`
 - `node_duration_priors`
 - `branch_transition_priors`
@@ -69,13 +74,12 @@ Suggested state fields
 - `last_offline_seed_snapshot`
 
 Current repo gap
-- `node_duration_priors` and `branch_transition_priors` are real, but `node_prior_mass` vs `branch/path` mass is not yet cleanly separated
-- `last_offline_seed_source` exists, but `last_offline_seed_snapshot` is not formalized as its own persistent theory object
+- `node_duration_priors` and `branch_transition_priors` are real, and `node_prior_mass` / `branch_prior_mass` / `scenario_prior_mass` / `path_prior_mass` now keep entity-scaled prior mass auditable outside the generic stats maps
+- `last_offline_seed_snapshot` is formalized as a persistent theory object for the latest offline seed, but deeper snapshot history / recalibration policy remains future work
 
 Upgrade path
-1. formalize node-mass vs branch/path-mass separation
-2. upgrade duration prior from streak summary to explicit dwell-time model
-3. treat source panels as pre-merge posterior contributors, not only audit surfaces
+1. upgrade duration prior from streak summary to explicit dwell-time model
+2. treat source panels as pre-merge posterior contributors, not only audit surfaces
 
 ---
 
