@@ -169,7 +169,14 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
     let new_feedback = learning_state.merge_feedback_records(&[feedback]);
     let feedback_records_applied = new_feedback.len();
 
-    if let Some(feedback) = new_feedback.first() {
+    if let Some(feedback) = new_feedback
+        .first()
+        .filter(|feedback| {
+            !ict_engine::state::structural_feedback_outcome_is_unresolved(
+                &feedback.realized_outcome,
+            )
+        })
+    {
         let realized_state_index = network
             .nodes
             .get("trade_outcome")

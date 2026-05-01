@@ -270,6 +270,13 @@ pub struct StructuralFeedbackRefs {
     pub notes: Option<String>,
 }
 
+pub fn structural_feedback_outcome_is_unresolved(outcome: &str) -> bool {
+    matches!(
+        outcome.trim().to_ascii_lowercase().as_str(),
+        "pending" | "delayed" | "unresolved" | "awaiting"
+    )
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PendingUpdateArtifactDiff {
     pub previous_artifact_id: Option<String>,
@@ -2778,7 +2785,43 @@ impl LearningState {
 
         for record in feedback {
             let key = Self::feedback_key(record);
-            if existing.insert(key) {
+            if existing.insert(key.clone()) {
+                let resolution_key = feedback_resolution_key(record);
+                let unresolved_outcome =
+                    structural_feedback_outcome_is_unresolved(&record.realized_outcome);
+                if !unresolved_outcome {
+                    if let Some(resolution_key) = resolution_key.as_deref() {
+                        if let Some((index, old_key)) = self
+                            .feedback_history
+                            .iter()
+                            .enumerate()
+                            .find_map(|(index, existing_record)| {
+                                (structural_feedback_outcome_is_unresolved(
+                                    &existing_record.realized_outcome,
+                                ) && feedback_resolution_key(existing_record).as_deref()
+                                    == Some(resolution_key))
+                                .then(|| (index, Self::feedback_key(existing_record)))
+                            })
+                        {
+                            self.feedback_history[index] = record.clone();
+                            existing.remove(&old_key);
+                            existing.insert(Self::feedback_key(record));
+                            inserted.push(record.clone());
+                            continue;
+                        }
+                    }
+                } else if let Some(resolution_key) = resolution_key.as_deref() {
+                    let resolved_exists = self.feedback_history.iter().any(|existing_record| {
+                        !structural_feedback_outcome_is_unresolved(
+                            &existing_record.realized_outcome,
+                        ) && feedback_resolution_key(existing_record).as_deref()
+                            == Some(resolution_key)
+                    });
+                    if resolved_exists {
+                        existing.remove(&key);
+                        continue;
+                    }
+                }
                 self.feedback_history.push(record.clone());
                 inserted.push(record.clone());
             }
@@ -2802,6 +2845,9 @@ impl LearningState {
     pub fn apply_structural_feedback(&mut self, feedback: &[FeedbackRecord]) {
         let mut appended = false;
         for record in feedback {
+            if structural_feedback_outcome_is_unresolved(&record.realized_outcome) {
+                continue;
+            }
             let Some(refs) = record.structural_feedback.as_ref() else {
                 continue;
             };
@@ -3543,6 +3589,22 @@ fn structural_prior_symbol_from_node_id(node_id: &str) -> String {
     node_id.split(':').next().unwrap_or_default().to_string()
 }
 
+fn feedback_resolution_key(record: &FeedbackRecord) -> Option<String> {
+    record
+        .trade_id
+        .as_ref()
+        .map(|trade_id| format!("trade:{trade_id}"))
+        .or_else(|| {
+            record.structural_feedback.as_ref().map(|refs| {
+                format!(
+                    "structural:{}:{}:{}",
+                    refs.recommendation_id, refs.path_id, refs.followed_path
+                )
+            })
+        })
+        .or_else(|| record.run_id.as_ref().map(|run_id| format!("run:{run_id}")))
+}
+
 fn structural_prior_event_key(event: &StructuralPriorEvent) -> String {
     format!(
         "{}|{}|{}|{}|{}|{}|{}",
@@ -3903,6 +3965,38 @@ mod tests {
     }
 
     #[test]
+    fn test_merge_feedback_records_replaces_pending_structural_feedback_with_resolved_outcome() {
+        let mut pending = sample_feedback();
+        pending.realized_outcome = "pending".to_string();
+        pending.pnl = 0.0;
+        pending.structural_feedback = Some(StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-pending".to_string(),
+            recommended_at: "2026-04-29T00:00:00Z".to_string(),
+            node_id: "node-1".to_string(),
+            branch_id: "branch-1".to_string(),
+            scenario_id: "scenario-1".to_string(),
+            path_id: "path-1".to_string(),
+            followed_path: true,
+            exit_reason: None,
+            notes: None,
+        });
+        let mut resolved = pending.clone();
+        resolved.realized_outcome = "win".to_string();
+        resolved.pnl = 0.02;
+
+        let mut state = LearningState::default();
+        let first = state.merge_feedback_records(&[pending]);
+        let second = state.merge_feedback_records(&[resolved.clone()]);
+
+        assert_eq!(first.len(), 1);
+        assert_eq!(second.len(), 1);
+        assert_eq!(state.feedback_history.len(), 1);
+        assert_eq!(state.feedback_history[0].realized_outcome, "win");
+        assert_eq!(state.feedback_history[0].pnl, 0.02);
+    }
+
+    #[test]
     fn test_structural_prior_seed_source_weight_affects_smoothed_prior() {
         let refs = StructuralFeedbackRefs {
             protocol_version: "structural-feedback-v1".to_string(),
@@ -4009,6 +4103,33 @@ mod tests {
             strong_path.source_panel_summaries["research"].last_tempering_coefficient,
             Some(0.90)
         );
+    }
+
+    #[test]
+    fn test_apply_structural_feedback_skips_unresolved_outcomes() {
+        let mut feedback = sample_feedback();
+        feedback.source = "structural_feedback_submission".to_string();
+        feedback.realized_outcome = "pending".to_string();
+        feedback.pnl = 0.0;
+        feedback.structural_feedback = Some(StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-pending".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "node-pending".to_string(),
+            branch_id: "branch-pending".to_string(),
+            scenario_id: "scenario-pending".to_string(),
+            path_id: "path-pending".to_string(),
+            followed_path: true,
+            exit_reason: None,
+            notes: None,
+        });
+
+        let mut state = LearningState::default();
+        state.apply_structural_feedback(&[feedback]);
+
+        assert!(state.structural_prior_state.paths.is_empty());
+        assert!(state.structural_prior_state.nodes.is_empty());
+        assert!(state.structural_prior_state.event_ledger.is_empty());
     }
 
     #[test]
