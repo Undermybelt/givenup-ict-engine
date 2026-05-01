@@ -250,6 +250,10 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub calibration_evaluation_rows: usize,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub calibration_brier_score: Option<f64>,
+    #[serde(default)]
+    pub calibration_propensity_weighted_rows: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub calibration_propensity_weighted_brier_score: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub calibration_expected_error: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -695,6 +699,9 @@ pub fn structural_path_ranking_target_training_status(
         rows_with_calibrated_path_prob: summary.rows_with_calibrated_path_prob,
         calibration_evaluation_rows: calibration_evaluation.eligible_rows,
         calibration_brier_score: calibration_evaluation.brier_score,
+        calibration_propensity_weighted_rows: calibration_evaluation.propensity_weighted_rows,
+        calibration_propensity_weighted_brier_score: calibration_evaluation
+            .propensity_weighted_brier_score,
         calibration_expected_error: calibration_evaluation.expected_calibration_error,
         calibration_max_error: calibration_evaluation.max_calibration_error,
         summary_path: summary.summary_path,
@@ -1616,7 +1623,16 @@ mod tests {
         assert!(status.calibration_quality_ready);
         assert_eq!(status.mature_rows, 2);
         assert_eq!(status.calibration_evaluation_rows, 2);
+        assert_eq!(status.calibration_propensity_weighted_rows, 2);
         assert!((status.calibration_brier_score.unwrap() - 0.04).abs() < 1e-9);
+        assert!(
+            (status
+                .calibration_propensity_weighted_brier_score
+                .unwrap()
+                - 0.04)
+                .abs()
+                < 1e-9
+        );
         assert!((status.calibration_expected_error.unwrap() - 0.0).abs() < 1e-9);
     }
 }

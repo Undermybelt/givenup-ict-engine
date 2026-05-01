@@ -237,10 +237,11 @@ Already in repo
 - `policy-training-status` reports structural path-ranking export readiness, mature-row availability, and calibration readiness without requiring a new CLI flag
 - empirical Beta-smoothed calibration writes `calibrated_path_prob` and `path_prob_lower_bound` only when a regime bucket has raw-scored mature outcome observations
 - `policy-training-status` evaluates exported mature calibrated rows with compact Brier / calibration-error fields when enough rows exist
+- `policy-training-status` also reports a clipped-IPS propensity-weighted Brier score for calibrated mature rows when `propensity_estimate` is available
 
 Not yet in repo
 - lower-bound gating fields for execution
-- propensity-aware model evaluation loop
+- propensity-aware model training loop
 - production calibration validation over enough exported raw-scored rows
 
 Suggested target stack

@@ -22,6 +22,7 @@ use crate::types::{Direction, Regime};
 
 const STRUCTURAL_PLAYBOOK_ARTIFACT_VERSION: &str = "structural-playbook-v1";
 const STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR: &str = "policy_training";
+const STRUCTURAL_PATH_RANKING_IPS_WEIGHT_CLIP: f64 = 5.0;
 pub const STRUCTURAL_PATH_RANKING_TARGET_CSV_FILE: &str = "structural_path_ranking_target.csv";
 pub const STRUCTURAL_PATH_RANKING_TARGET_JSONL_FILE: &str = "structural_path_ranking_target.jsonl";
 pub const STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE: &str =
@@ -355,6 +356,10 @@ pub struct StructuralPathProbabilityCalibrationEvaluationReport {
     pub eligible_rows: usize,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub brier_score: Option<f64>,
+    #[serde(default)]
+    pub propensity_weighted_rows: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub propensity_weighted_brier_score: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub expected_calibration_error: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1998,6 +2003,9 @@ pub fn evaluate_structural_path_probability_calibration_rows(
 ) -> StructuralPathProbabilityCalibrationEvaluationReport {
     let mut by_bucket = BTreeMap::<String, Vec<(f64, f64)>>::new();
     let mut squared_error_sum = 0.0;
+    let mut propensity_weighted_squared_error_sum = 0.0;
+    let mut propensity_weight_sum = 0.0;
+    let mut propensity_weighted_rows = 0;
     for row in rows {
         if row.raw_path_score.is_none() {
             continue;
@@ -2009,7 +2017,13 @@ pub fn evaluate_structural_path_probability_calibration_rows(
             continue;
         };
         let calibrated_prob = calibrated_prob.clamp(0.0, 1.0);
-        squared_error_sum += (calibrated_prob - reward).powi(2);
+        let squared_error = (calibrated_prob - reward).powi(2);
+        squared_error_sum += squared_error;
+        if let Some(weight) = structural_path_ranking_propensity_evaluation_weight(row) {
+            propensity_weighted_squared_error_sum += weight * squared_error;
+            propensity_weight_sum += weight;
+            propensity_weighted_rows += 1;
+        }
         by_bucket
             .entry(row.regime_calibration_bucket.clone())
             .or_default()
@@ -2059,18 +2073,53 @@ pub fn evaluate_structural_path_probability_calibration_rows(
     }
 
     let brier_score = squared_error_sum / eligible_rows as f64;
+    let propensity_weighted_brier_score = if propensity_weight_sum > f64::EPSILON {
+        Some(propensity_weighted_squared_error_sum / propensity_weight_sum)
+    } else {
+        warnings.push(
+            "structural_path_probability_calibration_evaluation_propensity_missing".to_string(),
+        );
+        None
+    };
+    let propensity_weighted_brier_summary = propensity_weighted_brier_score
+        .map(|score| format!(" propensity_weighted_brier_score={score:.6}"))
+        .unwrap_or_default();
     StructuralPathProbabilityCalibrationEvaluationReport {
         status: "evaluated".to_string(),
         eligible_rows,
         brier_score: Some(brier_score),
+        propensity_weighted_rows,
+        propensity_weighted_brier_score,
         expected_calibration_error: Some(expected_calibration_error),
         max_calibration_error: Some(max_calibration_error),
         bins,
         warnings,
         summary_line: format!(
-            "structural_path_probability_calibration_evaluation status=evaluated eligible_rows={eligible_rows} brier_score={brier_score:.6} expected_calibration_error={expected_calibration_error:.6}"
+            "structural_path_probability_calibration_evaluation status=evaluated eligible_rows={eligible_rows} brier_score={brier_score:.6} expected_calibration_error={expected_calibration_error:.6} propensity_weighted_rows={propensity_weighted_rows}{propensity_weighted_brier_summary}"
         ),
     }
+}
+
+fn structural_path_ranking_propensity_evaluation_weight(
+    row: &StructuralPathRankingTargetRow,
+) -> Option<f64> {
+    let propensity = row.propensity_estimate?.clamp(0.0, 1.0);
+    if propensity <= f64::EPSILON {
+        return None;
+    }
+    let maturity_weight = if row.maturity_weight > f64::EPSILON {
+        row.maturity_weight.clamp(0.0, 1.0)
+    } else if row.maturity_mask
+        || structural_path_ranking_reward_label(&row.pending_reward_state).is_some()
+    {
+        1.0
+    } else {
+        0.0
+    };
+    if maturity_weight <= f64::EPSILON {
+        return None;
+    }
+    Some((1.0 / propensity).min(STRUCTURAL_PATH_RANKING_IPS_WEIGHT_CLIP) * maturity_weight)
 }
 
 fn structural_path_ranking_reward_label(pending_reward_state: &str) -> Option<f64> {
@@ -4948,5 +4997,38 @@ mod tests {
         assert!((report.expected_calibration_error.unwrap() - 0.20).abs() < 1e-9);
         assert!((report.max_calibration_error.unwrap() - 0.20).abs() < 1e-9);
         assert_eq!(report.bins.len(), 2);
+    }
+
+    #[test]
+    fn structural_path_probability_calibration_evaluation_reports_propensity_weighted_brier() {
+        let mut low_propensity_loss = calibrated_evaluation_row(
+            "low-propensity-loss",
+            0.9,
+            0.9,
+            "matured_failure",
+            "NQ:trend",
+        );
+        low_propensity_loss.propensity_estimate = Some(0.25);
+        let mut high_propensity_win = calibrated_evaluation_row(
+            "high-propensity-win",
+            0.5,
+            0.5,
+            "matured_success",
+            "NQ:trend",
+        );
+        high_propensity_win.propensity_estimate = Some(1.0);
+
+        let report = evaluate_structural_path_probability_calibration_rows(&[
+            low_propensity_loss,
+            high_propensity_win,
+        ]);
+
+        assert_eq!(report.status, "evaluated");
+        assert_eq!(report.eligible_rows, 2);
+        assert_eq!(report.propensity_weighted_rows, 2);
+        assert!((report.brier_score.unwrap() - 0.53).abs() < 1e-9);
+        assert!(
+            (report.propensity_weighted_brier_score.unwrap() - 0.698).abs() < 1e-9
+        );
     }
 }
