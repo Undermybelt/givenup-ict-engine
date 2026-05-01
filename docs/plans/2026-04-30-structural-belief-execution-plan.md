@@ -106,7 +106,7 @@ Tests likely touched:
 |---|---|---|
 | `P0` Repo truth | `done` | execution plan, literature docs, paper-code readmes, and patched repo-map are committed |
 | `P1` Canonical structural anchor | `mostly done` | canonical anchor and cross-phase propagation are landed; a dedicated downstream smoke path is still worth keeping explicit |
-| `P2` Live feedback posterior update | `partial` | delayed resolution, fractional pseudo-counts, compliance/off-policy exposure, clipped IPS counterfactual reward priors, and candidate-set policy logging landed; full DR/SNIPS correction remains |
+| `P2` Live feedback posterior update | `partial` | delayed resolution, fractional pseudo-counts, compliance/off-policy exposure, clipped IPS counterfactual reward priors, candidate-set policy logging, and feedback-time selected policy probability consumption landed; full DR/SNIPS correction remains |
 | `P3` Offline evidence tempering | `mostly done` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation landed |
 | `P4` Structural prior state upgrade | `partial` | duration / transition / source panels / event ledger / temporal posterior state, separated prior-mass snapshots, and latest offline seed snapshot landed; richer dwell-time theory remains |
 | `P5` BBN node/branch posterior update | `partial` | discounted temporal maintenance and normalized outgoing transition posterior state exist; complete candidate-set branch adjustment now consumes maintained posterior state |
@@ -130,6 +130,7 @@ Tests likely touched:
 - [x] Add clipped IPS counterfactual reward prior and expose it on structural experience-prior surfaces.
 - [x] Log candidate-set id, candidate-set size, and selected path behavior-policy probability on recommended path bundles.
 - [x] Carry candidate-set policy context into structural feedback templates and execution contracts.
+- [x] Consume submitted `selected_path_probability` as the feedback record's selected behavior-policy probability before legacy posterior fallbacks.
 - [x] Store offline seed power-prior contribution objects in source panels.
 - [x] Persist reusable source-reliability posteriors from offline seeds and live feedback.
 - [x] Consume source-reliability posteriors in panel-derived prior aggregation.
@@ -244,6 +245,7 @@ Outcome:
 - [x] Add clipped IPS counterfactual reward prior on persisted stats and `structural-experience-priors`.
 - [x] Add candidate-set policy logging on `structural-recommended-path-bundle` for later DR/SNIPS correction.
 - [x] Surface logged candidate-set policy context in the structural feedback template / execution contract.
+- [x] Consume `selected_path_probability` from structural feedback submissions so recorded feedback carries the logged behavior-policy probability when present.
 - [x] Preserve zero-config CLI behavior: all new math must run behind existing flows, not new required flags.
 - [x] Add tests for:
   - followed profitable path

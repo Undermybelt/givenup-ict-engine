@@ -687,6 +687,12 @@ pub struct StructuralFeedbackSubmission {
     pub branch_id: String,
     pub scenario_id: String,
     pub path_id: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub candidate_set_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub candidate_set_size: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selected_path_probability: Option<f64>,
     pub direction: String,
     pub entry_style: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3931,13 +3937,11 @@ pub fn feedback_record_from_structural_submission(
         }
     });
     let selected_probability = submission
-        .path_posterior
+        .selected_path_probability
+        .or(submission.path_posterior)
         .or(submission.selected_entry_quality_probability)
-        .or_else(|| {
-            submission
-                .bbn_support_score
-                .map(|score| score.clamp(0.0, 1.0))
-        })
+        .or(submission.bbn_support_score)
+        .map(|probability| probability.clamp(0.0, 1.0))
         .unwrap_or_else(|| {
             match submission
                 .selected_entry_quality

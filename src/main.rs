@@ -12516,6 +12516,9 @@ mod tests {
                 "path_id": "path:scenario:NQ:trend_follow_through:primary",
                 "direction": "bull",
                 "entry_style": "conditional_execution",
+                "candidate_set_id": "structural-candidates:NQ:test",
+                "candidate_set_size": 3,
+                "selected_path_probability": 0.42,
                 "selected_entry_quality": "medium",
                 "selected_entry_quality_probability": 0.58,
                 "pre_bayes_gate_status": "pass_neutralized",
@@ -12562,6 +12565,7 @@ mod tests {
         );
         assert!(refs.followed_path);
         assert_eq!(refs.exit_reason.as_deref(), Some("target_hit"));
+        assert!((feedback.model_probabilities_before_trade.selected_probability - 0.42).abs() < 1e-9);
         let run_refs = runs[0]
             .structural_feedback
             .as_ref()
