@@ -16,6 +16,7 @@ use super::structural_playbook::{
     build_structural_recommended_path_bundle_artifact_with_prior_state,
     build_structural_playbook_bundle_with_prior_state, build_structural_scenario_history_artifact,
     build_structural_scenario_playbook_artifact_with_prior_state,
+    build_structural_temporal_summary_artifact_with_prior_state,
     build_structural_top_path_candidates_artifact_with_prior_state,
     resolved_ensemble_vote_for_snapshot, resolved_latest_ensemble_vote,
     StructuralRecommendedPathBundleArtifact,
@@ -737,6 +738,12 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
         feedback_history,
         structural_prior_state,
     );
+    let structural_temporal_summary =
+        build_structural_temporal_summary_artifact_with_prior_state(
+            snapshot,
+            provider_status_agent,
+            structural_prior_state,
+        );
     let experience_prior_line = experience_prior_surface.path.as_ref().map(|path| {
         format!(
             "Experience: path_prior={:.3} path_score={:.3} total={} wins={}",
@@ -748,6 +755,10 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
                 .round()) as usize
         )
     });
+    let structural_temporal_line = Some(format!(
+        "Temporal: {}",
+        structural_temporal_summary.summary_line
+    ));
     let top_path_candidates = build_structural_top_path_candidates_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
@@ -1030,6 +1041,10 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     });
     if let Value::Object(map) = &mut value {
         map.insert(
+            "structural_temporal_line".to_string(),
+            serde_json::to_value(structural_temporal_line).unwrap_or_default(),
+        );
+        map.insert(
             "recommended_path_line".to_string(),
             serde_json::to_value(recommended_path_line).unwrap_or_default(),
         );
@@ -1248,6 +1263,12 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         feedback_history,
         structural_prior_state,
     );
+    let structural_temporal_summary =
+        build_structural_temporal_summary_artifact_with_prior_state(
+            snapshot,
+            provider_status_agent,
+            structural_prior_state,
+        );
     let top_path_candidates = build_structural_top_path_candidates_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
@@ -1309,6 +1330,10 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "structural_path_summary": structural_path_summary,
     });
     if let Value::Object(map) = &mut value {
+        map.insert(
+            "structural_temporal_summary".to_string(),
+            serde_json::to_value(structural_temporal_summary).unwrap_or_default(),
+        );
         map.insert(
             "recommended_path_bundle".to_string(),
             serde_json::to_value(recommended_path_bundle).unwrap_or_default(),
@@ -2227,6 +2252,19 @@ pub fn build_workflow_status_phase_value_with_structural_prior_state(
             serde_json::to_value(build_structural_history_summary_artifact(
                 snapshot,
                 feedback_history,
+            ))?,
+            workflow_status_structural_recommended_next_step(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+                structural_prior_state,
+            ),
+        ),
+        "structural-temporal-summary" => workflow_status_value_with_recommended_next_step(
+            serde_json::to_value(build_structural_temporal_summary_artifact_with_prior_state(
+                snapshot,
+                provider_status_agent,
+                structural_prior_state,
             ))?,
             workflow_status_structural_recommended_next_step(
                 snapshot,
@@ -5591,6 +5629,247 @@ mod tests {
         )
         .unwrap();
         assert!(blocked_value["recommended_next_step"]["execution_contract"].is_null());
+    }
+
+    #[test]
+    fn workflow_status_phase_structural_temporal_summary_exposes_discounted_masses() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_update = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "update".to_string(),
+            structural_feedback: Some(crate::state::StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "rec-prev".to_string(),
+                recommended_at: "2026-04-30T01:00:00Z".to_string(),
+                node_id: "NQ:belief_regime_node:trend".to_string(),
+                branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                scenario_id:
+                    "scenario:NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                path_id:
+                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                        .to_string(),
+                followed_path: true,
+                exit_reason: Some("target_hit".to_string()),
+                notes: None,
+            }),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "transition".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.18),
+                ("range".to_string(), 0.10),
+                ("transition".to_string(), 0.72),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let mut structural_prior_state = crate::state::StructuralPriorLearningState::default();
+        structural_prior_state.node_duration_priors.insert(
+            "NQ:belief_regime_node:transition".to_string(),
+            crate::state::StructuralNodeDurationPrior {
+                observations: 3,
+                streak_count: 2,
+                weighted_streak_mass: 1.85,
+                total_streak_length: 3,
+                avg_streak_length: 1.5,
+                max_streak_length: 2,
+                last_streak_length: 1,
+                persistence_prior: 0.6,
+                last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+            },
+        );
+        structural_prior_state.branch_transition_priors.insert(
+            "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:transition:transition_confirmation".to_string(),
+            crate::state::StructuralBranchTransitionPrior {
+                from_node_id: "NQ:belief_regime_node:trend".to_string(),
+                to_node_id: "NQ:belief_regime_node:transition".to_string(),
+                from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                to_branch_id: "NQ:belief_regime_node:transition:transition_confirmation".to_string(),
+                observations: 2,
+                weighted_observation_mass: 1.4875,
+                wins: 2,
+                losses: 0,
+                invalidated: 0,
+                transition_prior: 0.68,
+                last_recommended_at: Some("2026-04-30T05:00:00Z".to_string()),
+            },
+        );
+
+        let value = build_workflow_status_phase_value_with_structural_prior_state(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &structural_prior_state,
+            "structural-temporal-summary",
+        )
+        .unwrap();
+
+        assert_eq!(value["node_id"], "NQ:belief_regime_node:transition");
+        assert_eq!(value["duration_weighted_streak_mass"], 1.85);
+        assert_eq!(value["transition_weighted_observation_mass"], 1.4875);
+        assert_eq!(value["transition_prior"], 0.68);
+    }
+
+    #[test]
+    fn agent_and_human_workflow_status_views_expose_structural_temporal_summary() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_update = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "update".to_string(),
+            structural_feedback: Some(crate::state::StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "rec-prev".to_string(),
+                recommended_at: "2026-04-30T01:00:00Z".to_string(),
+                node_id: "NQ:belief_regime_node:trend".to_string(),
+                branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                scenario_id:
+                    "scenario:NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                path_id:
+                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                        .to_string(),
+                followed_path: true,
+                exit_reason: Some("target_hit".to_string()),
+                notes: None,
+            }),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "transition".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.18),
+                ("range".to_string(), 0.10),
+                ("transition".to_string(), 0.72),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let mut structural_prior_state = crate::state::StructuralPriorLearningState::default();
+        structural_prior_state.node_duration_priors.insert(
+            "NQ:belief_regime_node:transition".to_string(),
+            crate::state::StructuralNodeDurationPrior {
+                observations: 3,
+                streak_count: 2,
+                weighted_streak_mass: 1.85,
+                total_streak_length: 3,
+                avg_streak_length: 1.5,
+                max_streak_length: 2,
+                last_streak_length: 1,
+                persistence_prior: 0.6,
+                last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+            },
+        );
+        structural_prior_state.branch_transition_priors.insert(
+            "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:transition:transition_confirmation".to_string(),
+            crate::state::StructuralBranchTransitionPrior {
+                from_node_id: "NQ:belief_regime_node:trend".to_string(),
+                to_node_id: "NQ:belief_regime_node:transition".to_string(),
+                from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                to_branch_id: "NQ:belief_regime_node:transition:transition_confirmation".to_string(),
+                observations: 2,
+                weighted_observation_mass: 1.4875,
+                wins: 2,
+                losses: 0,
+                invalidated: 0,
+                transition_prior: 0.68,
+                last_recommended_at: Some("2026-04-30T05:00:00Z".to_string()),
+            },
+        );
+
+        let agent_value =
+            build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state(
+                &snapshot,
+                &[],
+                &sample_provider_agent_surface(),
+                &[],
+                &structural_prior_state,
+            );
+        let human_value =
+            build_human_workflow_status_view_with_provider_agent_and_structural_prior_state(
+                &snapshot,
+                &[],
+                &sample_provider_agent_surface(),
+                &[],
+                &structural_prior_state,
+            );
+
+        assert_eq!(
+            agent_value["structural_temporal_summary"]["duration_weighted_streak_mass"],
+            1.85
+        );
+        assert_eq!(
+            agent_value["structural_temporal_summary"]["transition_weighted_observation_mass"],
+            1.4875
+        );
+        assert!(human_value["structural_temporal_line"]
+            .as_str()
+            .unwrap()
+            .contains("node_mass=1.850"));
+        assert!(human_value["structural_temporal_line"]
+            .as_str()
+            .unwrap()
+            .contains("transition_mass=1.488"));
     }
 
     #[test]

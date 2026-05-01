@@ -165,6 +165,30 @@ pub struct StructuralHistorySummaryArtifact {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralTemporalSummaryArtifact {
+    pub symbol: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub node_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub from_branch_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub to_branch_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_streak_count: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_avg_streak_length: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_persistence_prior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_weighted_streak_mass: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transition_prior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transition_weighted_observation_mass: Option<f64>,
+    pub summary_line: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct StructuralExperiencePriorSurfaceArtifact {
     pub symbol: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1042,6 +1066,54 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
         branch,
         scenario,
         path,
+    }
+}
+
+pub fn build_structural_temporal_summary_artifact_with_prior_state(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    structural_prior_state: &StructuralPriorLearningState,
+) -> StructuralTemporalSummaryArtifact {
+    let node =
+        build_structural_node_artifact_with_prior_state(snapshot, provider_status_agent, structural_prior_state);
+    let node_duration_prior = structural_prior_state.node_duration_priors.get(&node.node_id);
+    let active_regime = structural_active_regime(snapshot);
+    let to_branch_id = active_regime
+        .as_ref()
+        .map(|regime| format!("{}:{}", node.node_id, structural_branch_label_for_regime(regime)));
+    let latest_feedback = structural_latest_feedback_refs(snapshot);
+    let transition_prior = latest_feedback
+        .as_ref()
+        .and_then(|refs| {
+            to_branch_id.as_ref().and_then(|branch_id| {
+                structural_branch_transition_prior(structural_prior_state, &refs.branch_id, branch_id)
+            })
+        });
+    let summary_line = format!(
+        "node_mass={:.3} duration_prior={:.3} transition_mass={:.3} transition_prior={:.3}",
+        structural_duration_weighted_streak_mass(node_duration_prior).unwrap_or_default(),
+        structural_duration_persistence_prior(node_duration_prior).unwrap_or_default(),
+        transition_prior
+            .map(|prior| prior.weighted_observation_mass)
+            .unwrap_or_default(),
+        transition_prior
+            .map(|prior| prior.transition_prior)
+            .unwrap_or_default()
+    );
+
+    StructuralTemporalSummaryArtifact {
+        symbol: structural_symbol(snapshot),
+        node_id: Some(node.node_id),
+        from_branch_id: latest_feedback.as_ref().map(|refs| refs.branch_id.clone()),
+        to_branch_id,
+        duration_streak_count: structural_duration_streak_count(node_duration_prior),
+        duration_avg_streak_length: structural_duration_avg_streak_length(node_duration_prior),
+        duration_persistence_prior: structural_duration_persistence_prior(node_duration_prior),
+        duration_weighted_streak_mass: structural_duration_weighted_streak_mass(node_duration_prior),
+        transition_prior: transition_prior.map(|prior| prior.transition_prior),
+        transition_weighted_observation_mass: transition_prior
+            .map(|prior| prior.weighted_observation_mass),
+        summary_line,
     }
 }
 
