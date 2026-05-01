@@ -257,13 +257,19 @@ Suggested fields
 - `raw_path_score`
 - `calibrated_path_prob`
 - `path_prob_lower_bound`
+- lower-bound execution-gate fields
 - `pending_reward_state`
+- `maturity_mask`
+- `maturity_weight`
+- `calibrated_label`
 - `propensity_estimate`
+- `ips_weight`
+- `training_weight`
 - `regime_calibration_bucket`
 
 Current repo gap
 - CatBoost training and production calibration validation are still downstream work; current path ranking surfaces are structural-orchestration target rows plus empirical calibration/evaluation utilities, not a learned calibrated ranker runtime
-- the P6 target design is versioned in `docs/plans/2026-05-02-catboost-path-ranking-target-design.md`; next implementation needs enough exported raw-scored rows for validation rather than more candidate-surface expansion
+- the P6 target design is versioned in `docs/plans/2026-05-02-catboost-path-ranking-target-design.md`; next implementation needs a trained external ranker artifact/service and enough real exported raw-scored rows, not more candidate-surface expansion
 
 ---
 
