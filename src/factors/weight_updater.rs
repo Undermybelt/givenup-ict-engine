@@ -2,7 +2,6 @@ use chrono::Utc;
 
 use crate::factors::regime_conditional::RegimeConditional;
 use crate::state::{FeedbackRecord, LearningState, PersistedFactorRanking};
-use crate::state::StructuralFeedbackLearningOutcome;
 use crate::types::{Direction, FactorIC};
 
 /// Factor weight updater for backtest and feedback learning.
@@ -168,20 +167,12 @@ fn factor_feedback_credit(
     supports_selected: bool,
     factor_weight: f64,
 ) -> Option<FactorFeedbackCredit> {
-    let outcome = crate::state::structural_feedback_learning_outcome(record)?;
-    let (base_success_credit, observation_weight) = match record
-        .realized_outcome
-        .trim()
-        .to_ascii_lowercase()
-        .as_str()
-    {
-        "abandoned" => (0.25, 0.75),
-        _ => match outcome {
-            StructuralFeedbackLearningOutcome::Positive => (1.0, 1.0),
-            StructuralFeedbackLearningOutcome::Negative => (0.0, 1.0),
-            StructuralFeedbackLearningOutcome::Neutral => (0.5, 1.0),
-        },
-    };
+    let semantics = crate::state::structural_feedback_learning_semantics(record);
+    if semantics.observation_weight <= f64::EPSILON {
+        return None;
+    }
+    let base_success_credit = semantics.success_credit.clamp(0.0, 1.0);
+    let observation_weight = semantics.observation_weight.max(0.0);
     let success_credit = if supports_selected {
         base_success_credit
     } else {

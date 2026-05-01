@@ -374,6 +374,12 @@ pub struct StructuralFeedbackLearningSemantics {
     pub observation_weight: f64,
 }
 
+#[derive(Debug, Clone, Copy)]
+struct StructuralFeedbackPseudoCounts {
+    success_credit: f64,
+    observation_weight: f64,
+}
+
 pub fn structural_feedback_learning_outcome(
     record: &FeedbackRecord,
 ) -> Option<StructuralFeedbackLearningOutcome> {
@@ -423,18 +429,99 @@ pub fn structural_feedback_learning_semantics(
         "invalidated" => StructuralFeedbackLearningSemantics {
             credit_class: "negative_invalidated".to_string(),
             success_credit: 0.0,
-            observation_weight: 1.0,
+            observation_weight: 1.25,
         },
         "abandoned" => StructuralFeedbackLearningSemantics {
             credit_class: "fractional_abandoned".to_string(),
             success_credit: 0.25,
             observation_weight: 0.75,
         },
-        _ => StructuralFeedbackLearningSemantics {
-            credit_class: "fractional_breakeven".to_string(),
+        other => match structural_feedback_learning_outcome(record) {
+            Some(StructuralFeedbackLearningOutcome::Positive) => StructuralFeedbackLearningSemantics {
+                credit_class: format!("positive_proxy:{other}"),
+                success_credit: 1.0,
+                observation_weight: 1.0,
+            },
+            Some(StructuralFeedbackLearningOutcome::Negative) => StructuralFeedbackLearningSemantics {
+                credit_class: format!("negative_proxy:{other}"),
+                success_credit: 0.0,
+                observation_weight: 1.0,
+            },
+            _ => StructuralFeedbackLearningSemantics {
+                credit_class: "fractional_breakeven".to_string(),
+                success_credit: 0.5,
+                observation_weight: 1.0,
+            },
+        },
+    }
+}
+
+fn structural_feedback_pseudo_counts(
+    record: &FeedbackRecord,
+    followed_path: bool,
+) -> Option<StructuralFeedbackPseudoCounts> {
+    if !followed_path || structural_feedback_outcome_is_unresolved(&record.realized_outcome) {
+        return None;
+    }
+    let semantics = structural_feedback_learning_semantics(record);
+    if semantics.observation_weight <= f64::EPSILON {
+        None
+    } else {
+        Some(StructuralFeedbackPseudoCounts {
+            success_credit: semantics.success_credit.clamp(0.0, 1.0),
+            observation_weight: semantics.observation_weight.max(0.0),
+        })
+    }
+}
+
+fn structural_event_outcome_pseudo_counts(
+    outcome: Option<&str>,
+) -> Option<StructuralFeedbackPseudoCounts> {
+    match outcome.map(|value| value.trim().to_ascii_lowercase()) {
+        Some(value) if matches!(value.as_str(), "win" | "profit" | "tp" | "take_profit") => {
+            Some(StructuralFeedbackPseudoCounts {
+                success_credit: 1.0,
+                observation_weight: 1.0,
+            })
+        }
+        Some(value)
+            if matches!(
+                value.as_str(),
+                "loss" | "lose" | "sl" | "stop" | "stop_loss"
+            ) =>
+        {
+            Some(StructuralFeedbackPseudoCounts {
+                success_credit: 0.0,
+                observation_weight: 1.0,
+            })
+        }
+        Some(value) if value == "invalidated" => Some(StructuralFeedbackPseudoCounts {
+            success_credit: 0.0,
+            observation_weight: 1.25,
+        }),
+        Some(value) if value == "abandoned" => Some(StructuralFeedbackPseudoCounts {
+            success_credit: 0.25,
+            observation_weight: 0.75,
+        }),
+        Some(value) if value == "breakeven" => Some(StructuralFeedbackPseudoCounts {
             success_credit: 0.5,
             observation_weight: 1.0,
-        },
+        }),
+        _ => None,
+    }
+}
+
+fn structural_feedback_counter_outcome(record: &FeedbackRecord) -> Option<&'static str> {
+    match record.realized_outcome.trim().to_ascii_lowercase().as_str() {
+        "win" | "profit" | "tp" | "take_profit" => Some("win"),
+        "loss" | "lose" | "sl" | "stop" | "stop_loss" => Some("loss"),
+        "invalidated" => Some("invalidated"),
+        "abandoned" => Some("abandoned"),
+        "breakeven" => Some("breakeven"),
+        "not_followed" => Some("not_followed"),
+        _ if record.pnl > 1e-12 => Some("win"),
+        _ if record.pnl < -1e-12 => Some("loss"),
+        _ => None,
     }
 }
 
@@ -3571,45 +3658,38 @@ fn update_structural_prior_stats(
     }
     if followed_path {
         stats.followed_count += 1;
-        stats.weighted_followed_mass += source_weight;
     }
     if !followed_path || record.realized_outcome == "not_followed" {
         stats.not_followed += 1;
     }
-    match record.realized_outcome.as_str() {
-        "win" => {
+    match structural_feedback_counter_outcome(record) {
+        Some("win") => {
             stats.wins += 1;
-            if followed_path {
-                stats.weighted_success_mass += source_weight;
-            }
         }
-        "loss" => {
+        Some("loss") => {
             stats.losses += 1;
-            if followed_path {
-                stats.weighted_failure_mass += source_weight;
-            }
         }
-        "breakeven" => {
+        Some("breakeven") => {
             stats.breakevens += 1;
-            if followed_path {
-                stats.weighted_success_mass += source_weight * 0.5;
-                stats.weighted_failure_mass += source_weight * 0.5;
-            }
         }
-        "invalidated" => {
+        Some("invalidated") => {
             stats.invalidated += 1;
-            if followed_path {
-                stats.weighted_invalidation_mass += source_weight;
-                stats.weighted_failure_mass += source_weight * 1.25;
-            }
         }
-        "abandoned" => {
+        Some("abandoned") => {
             stats.abandoned += 1;
-            if followed_path {
-                stats.weighted_failure_mass += source_weight * 0.75;
-            }
         }
+        Some("not_followed") => {}
         _ => {}
+    }
+    if let Some(pseudo_counts) = structural_feedback_pseudo_counts(record, followed_path) {
+        let weighted_observation = source_weight * pseudo_counts.observation_weight;
+        stats.weighted_followed_mass += weighted_observation;
+        stats.weighted_success_mass += weighted_observation * pseudo_counts.success_credit;
+        stats.weighted_failure_mass +=
+            weighted_observation * (1.0 - pseudo_counts.success_credit);
+        if matches!(structural_feedback_counter_outcome(record), Some("invalidated")) {
+            stats.weighted_invalidation_mass += weighted_observation;
+        }
     }
     let source_summary = stats
         .source_panel_summaries
@@ -3714,45 +3794,38 @@ fn update_structural_prior_source_summary_from_feedback(
     }
     if followed_path {
         summary.followed_count += 1;
-        summary.weighted_followed_mass += source_weight;
     }
     if !followed_path || record.realized_outcome == "not_followed" {
         summary.not_followed += 1;
     }
-    match record.realized_outcome.as_str() {
-        "win" => {
+    match structural_feedback_counter_outcome(record) {
+        Some("win") => {
             summary.wins += 1;
-            if followed_path {
-                summary.weighted_success_mass += source_weight;
-            }
         }
-        "loss" => {
+        Some("loss") => {
             summary.losses += 1;
-            if followed_path {
-                summary.weighted_failure_mass += source_weight;
-            }
         }
-        "breakeven" => {
+        Some("breakeven") => {
             summary.breakevens += 1;
-            if followed_path {
-                summary.weighted_success_mass += source_weight * 0.5;
-                summary.weighted_failure_mass += source_weight * 0.5;
-            }
         }
-        "invalidated" => {
+        Some("invalidated") => {
             summary.invalidated += 1;
-            if followed_path {
-                summary.weighted_invalidation_mass += source_weight;
-                summary.weighted_failure_mass += source_weight * 1.25;
-            }
         }
-        "abandoned" => {
+        Some("abandoned") => {
             summary.abandoned += 1;
-            if followed_path {
-                summary.weighted_failure_mass += source_weight * 0.75;
-            }
         }
+        Some("not_followed") => {}
         _ => {}
+    }
+    if let Some(pseudo_counts) = structural_feedback_pseudo_counts(record, followed_path) {
+        let weighted_observation = source_weight * pseudo_counts.observation_weight;
+        summary.weighted_followed_mass += weighted_observation;
+        summary.weighted_success_mass += weighted_observation * pseudo_counts.success_credit;
+        summary.weighted_failure_mass +=
+            weighted_observation * (1.0 - pseudo_counts.success_credit);
+        if matches!(structural_feedback_counter_outcome(record), Some("invalidated")) {
+            summary.weighted_invalidation_mass += weighted_observation;
+        }
     }
     if let Some(refs) = record.structural_feedback.as_ref() {
         summary.last_recommendation_id = Some(refs.recommendation_id.clone());
@@ -3939,16 +4012,13 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
         }
         current_recommended_at = Some(event.recommended_at.clone());
         let event_weight = structural_prior_source_weight(&event.source_label);
-        match event.realized_outcome.as_deref() {
-            Some("win") => current_streak_success_mass += event_weight,
-            Some("loss") => current_streak_failure_mass += event_weight,
-            Some("breakeven") => {
-                current_streak_success_mass += event_weight * 0.5;
-                current_streak_failure_mass += event_weight * 0.5;
-            }
-            Some("invalidated") => current_streak_failure_mass += event_weight * 1.25,
-            Some("abandoned") => current_streak_failure_mass += event_weight * 0.75,
-            _ => {}
+        if let Some(pseudo_counts) =
+            structural_event_outcome_pseudo_counts(event.realized_outcome.as_deref())
+        {
+            let weighted_observation = event_weight * pseudo_counts.observation_weight;
+            current_streak_success_mass += weighted_observation * pseudo_counts.success_credit;
+            current_streak_failure_mass +=
+                weighted_observation * (1.0 - pseudo_counts.success_credit);
         }
 
         if let Some(previous) = previous_event.as_ref() {
@@ -3995,28 +4065,27 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
             let weighted_mass =
                 structural_prior_source_weight(&event.source_label) * recency_decay;
             entry.observations += 1;
-            entry.weighted_observation_mass += weighted_mass;
             match event.realized_outcome.as_deref() {
-                Some("win") => {
+                Some("win") | Some("profit") | Some("tp") | Some("take_profit") => {
                     entry.wins += 1;
-                    entry.weighted_success_mass += weighted_mass;
                 }
-                Some("loss") => {
+                Some("loss") | Some("lose") | Some("sl") | Some("stop") | Some("stop_loss") => {
                     entry.losses += 1;
-                    entry.weighted_failure_mass += weighted_mass;
-                }
-                Some("breakeven") => {
-                    entry.weighted_success_mass += weighted_mass * 0.5;
-                    entry.weighted_failure_mass += weighted_mass * 0.5;
                 }
                 Some("invalidated") => {
                     entry.invalidated += 1;
-                    entry.weighted_failure_mass += weighted_mass * 1.25;
-                }
-                Some("abandoned") => {
-                    entry.weighted_failure_mass += weighted_mass * 0.75;
                 }
                 _ => {}
+            }
+            if let Some(pseudo_counts) =
+                structural_event_outcome_pseudo_counts(event.realized_outcome.as_deref())
+            {
+                let weighted_observation = weighted_mass * pseudo_counts.observation_weight;
+                entry.weighted_observation_mass += weighted_observation;
+                entry.weighted_success_mass +=
+                    weighted_observation * pseudo_counts.success_credit;
+                entry.weighted_failure_mass +=
+                    weighted_observation * (1.0 - pseudo_counts.success_credit);
             }
             entry.last_recommended_at = Some(event.recommended_at.clone());
         }
@@ -4564,6 +4633,54 @@ mod tests {
     }
 
     #[test]
+    fn test_delayed_structural_feedback_resolution_applies_only_resolved_pseudo_count() {
+        let mut pending = sample_feedback();
+        pending.source = "structural_feedback_submission".to_string();
+        pending.realized_outcome = "delayed".to_string();
+        pending.pnl = 0.0;
+        pending.structural_feedback = Some(StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-delayed".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "node-delayed".to_string(),
+            branch_id: "branch-delayed".to_string(),
+            scenario_id: "scenario-delayed".to_string(),
+            path_id: "path-delayed".to_string(),
+            followed_path: true,
+            exit_reason: None,
+            notes: None,
+        });
+        let mut resolved = pending.clone();
+        resolved.realized_outcome = "win".to_string();
+        resolved.pnl = 0.03;
+
+        let mut state = LearningState::default();
+        let first = state.merge_feedback_records(&[pending]);
+        state.apply_structural_feedback(&first);
+        let second = state.merge_feedback_records(&[resolved]);
+        state.apply_structural_feedback(&second);
+
+        assert_eq!(state.feedback_history.len(), 1);
+        assert_eq!(state.feedback_history[0].realized_outcome, "win");
+        let path = state
+            .structural_prior_state
+            .paths
+            .get("path-delayed")
+            .expect("resolved path prior state");
+        assert_eq!(path.observations, 1);
+        assert_eq!(path.wins, 1);
+        assert_eq!(path.weighted_failure_mass, 0.0);
+        assert!(path.weighted_success_mass > 0.0);
+        assert_eq!(state.structural_prior_state.event_ledger.len(), 1);
+        assert_eq!(
+            state.structural_prior_state.event_ledger[0]
+                .realized_outcome
+                .as_deref(),
+            Some("win")
+        );
+    }
+
+    #[test]
     fn test_live_structural_feedback_weights_more_than_analyze_seed() {
         let refs = StructuralFeedbackRefs {
             protocol_version: "structural-feedback-v1".to_string(),
@@ -4739,6 +4856,42 @@ mod tests {
             .expect("loss path prior state");
         assert!(invalidated_path.weighted_failure_mass > loss_path.weighted_failure_mass);
         assert!(invalidated_path.smoothed_prior < loss_path.smoothed_prior);
+    }
+
+    #[test]
+    fn test_abandoned_feedback_uses_fractional_pseudo_counts_in_structural_prior() {
+        let mut feedback = sample_feedback();
+        feedback.source = "structural_feedback_submission".to_string();
+        feedback.realized_outcome = "abandoned".to_string();
+        feedback.pnl = 0.0;
+        feedback.structural_feedback = Some(StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-abandoned".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "node-abandoned".to_string(),
+            branch_id: "branch-abandoned".to_string(),
+            scenario_id: "scenario-abandoned".to_string(),
+            path_id: "path-abandoned".to_string(),
+            followed_path: true,
+            exit_reason: Some("manual_exit".to_string()),
+            notes: None,
+        });
+
+        let mut state = LearningState::default();
+        state.apply_structural_feedback(&[feedback]);
+
+        let path = state
+            .structural_prior_state
+            .paths
+            .get("path-abandoned")
+            .expect("path prior state");
+        assert_eq!(path.abandoned, 1);
+        assert_eq!(path.followed_count, 1);
+        assert!((path.weighted_followed_mass - 0.75).abs() < 1e-9);
+        assert!((path.weighted_success_mass - 0.1875).abs() < 1e-9);
+        assert!((path.weighted_failure_mass - 0.5625).abs() < 1e-9);
+        assert!(path.smoothed_prior > 0.40);
+        assert!(path.smoothed_prior < 0.50);
     }
 
     #[test]

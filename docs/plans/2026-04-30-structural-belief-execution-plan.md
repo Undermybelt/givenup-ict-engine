@@ -106,7 +106,7 @@ Tests likely touched:
 |---|---|---|
 | `P0` Repo truth | `done` | execution plan, literature docs, paper-code readmes, and patched repo-map are committed |
 | `P1` Canonical structural anchor | `mostly done` | canonical anchor and cross-phase propagation are landed; a dedicated downstream smoke path is still worth keeping explicit |
-| `P2` Live feedback posterior update | `partial` | explicit outcome semantics and fractional credit landed; delayed / partial-compliance math is not fully closed |
+| `P2` Live feedback posterior update | `partial` | delayed resolution and fractional pseudo-counts landed; propensity-aware not-followed/off-policy math remains |
 | `P3` Offline evidence tempering | `partial` | source weighting, quality calibration, source panels, and tempering coefficient landed; theory objectization is still incomplete |
 | `P4` Structural prior state upgrade | `partial` | duration / transition / source panels / event ledger / temporal posterior state landed; node-mass separation still not fully formalized |
 | `P5` BBN node/branch posterior update | `partial` | discounted temporal maintenance now exists and is reused across belief/workflow surfaces; core engine-state ownership is still incomplete |
@@ -130,7 +130,7 @@ Tests likely touched:
 ### Next
 
 - [x] Add a dedicated smoke path proving `analyze -> research -> backtest -> structural-playbook` preserves canonical structural lineage end to end.
-- [ ] Finish `P2` delayed / partial-compliance posterior math instead of only no-credit and fractional-credit handling.
+- [ ] Finish remaining `P2` propensity-aware not-followed / off-policy posterior math.
 - [ ] Finish `P3` by turning offline tempering into a clearer power-prior-style posterior object, not only calibrated heuristics.
 - [ ] Finish `P4` node-mass vs branch/path-mass separation and persist a clearer offline seed snapshot object.
 - [ ] Finish `P5` by moving node/branch temporal maintenance toward a more central maintained `BBN` posterior state instead of mostly snapshot-time reweighting.
@@ -228,10 +228,10 @@ Outcome:
 
 ### P2: Live Feedback Posterior Update
 
-- [ ] Replace score-only path posterior refresh with explicit Beta-Binomial-style fractional pseudo-count updates in `src/state/types.rs` and `src/factors/weight_updater.rs`.
+- [x] Replace score-only path posterior refresh with explicit Beta-Binomial-style fractional pseudo-count updates in `src/state/types.rs` and `src/factors/weight_updater.rs`.
 - [x] Split executed, not-followed, abandoned, invalidated, and delayed outcomes into explicit update semantics instead of one blended credit signal.
 - [x] Preserve zero-config CLI behavior: all new math must run behind existing flows, not new required flags.
-- [ ] Add tests for:
+- [x] Add tests for:
   - followed profitable path
   - followed invalidated path
   - not-followed recommendation
@@ -278,7 +278,7 @@ Outcome:
 
 Do these first, in order:
 
-1. Finish `P2` by closing delayed / partial-compliance posterior math, not just no-credit and fractional credit semantics.
+1. Finish remaining `P2` propensity-aware not-followed / off-policy posterior math.
 2. Finish `P3` by promoting offline tempering into a clearer power-prior-style posterior object instead of only calibrated heuristics.
 3. Finish `P4` by formalizing node-mass vs branch/path-mass separation and persisting a clearer offline seed snapshot object.
 4. Finish `P5` by moving temporal maintenance from mostly snapshot-time reweighting into a more central maintained `BBN` node/branch posterior state.
