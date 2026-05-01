@@ -6585,19 +6585,6 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         artifact_decision_summary: None,
     });
     agent_context_bundle.multi_timeframe_summary = build_context.multi_timeframe_summary.to_vec();
-    let agent_prompts = build_analyze_agent_prompts(BuildAnalyzeAgentPromptsInput {
-        symbol,
-        decision: &decision,
-        factor_diagnostics: &factor_output.diagnostics,
-        pre_bayes_evidence_filter: &pre_bayes_evidence_filter,
-        factor_ranking: &factor_ranking,
-        factor_iteration_queue: &factor_iteration_queue,
-        feedback_history_summary: &feedback_history_summary,
-        trade_plan: &trade_plan,
-        dataset_comparability: &dataset_comparability,
-        decision_hint: &decision_hint,
-        multi_timeframe_summary: build_context.multi_timeframe_summary,
-    });
     let entry_model_timeframe = if build_context
         .native_frames
         .m5
@@ -6637,6 +6624,27 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         None,
         Some(&build_context.learning_state.structural_prior_state),
     )?;
+    let canonical_structural_regime_posterior =
+        ict_engine::state::CanonicalStructuralRegimePosterior {
+            active_regime: canonical_belief_report.regime_posterior.active_regime.clone(),
+            confidence: canonical_belief_report.regime_posterior.confidence,
+            probabilities: canonical_belief_report.regime_posterior.probabilities.clone(),
+            evidence: canonical_belief_report.regime_posterior.evidence.clone(),
+        };
+    let agent_prompts = build_analyze_agent_prompts(BuildAnalyzeAgentPromptsInput {
+        symbol,
+        decision: &decision,
+        factor_diagnostics: &factor_output.diagnostics,
+        pre_bayes_evidence_filter: &pre_bayes_evidence_filter,
+        canonical_structural_regime_posterior: Some(&canonical_structural_regime_posterior),
+        factor_ranking: &factor_ranking,
+        factor_iteration_queue: &factor_iteration_queue,
+        feedback_history_summary: &feedback_history_summary,
+        trade_plan: &trade_plan,
+        dataset_comparability: &dataset_comparability,
+        decision_hint: &decision_hint,
+        multi_timeframe_summary: build_context.multi_timeframe_summary,
+    });
     let execution_inputs = derive_execution_inputs(&ExecutionInputSources {
         pre_bayes_evidence_filter: &pre_bayes_evidence_filter,
         pre_bayes_entry_quality_bridge: &pre_bayes_entry_quality_bridge,
@@ -7407,11 +7415,40 @@ fn distribution_from_map(states: &[String], probabilities: &BTreeMap<String, f64
         .collect()
 }
 
+fn compact_canonical_structural_regime_summary(
+    posterior: Option<&ict_engine::state::CanonicalStructuralRegimePosterior>,
+) -> String {
+    let Some(posterior) = posterior else {
+        return "unavailable".to_string();
+    };
+    let active = posterior.active_regime.as_deref().unwrap_or("unavailable");
+    let confidence = posterior.confidence.unwrap_or_default();
+    let probabilities = if posterior.probabilities.is_empty() {
+        "unavailable".to_string()
+    } else {
+        posterior
+            .probabilities
+            .iter()
+            .map(|(label, probability)| format!("{label}={probability:.3}"))
+            .collect::<Vec<_>>()
+            .join(",")
+    };
+    format!(
+        "active={} confidence={:.3} probs={} evidence_count={}",
+        active,
+        confidence,
+        probabilities,
+        posterior.evidence.len()
+    )
+}
+
 struct BuildAnalyzeAgentPromptsInput<'a> {
     symbol: &'a str,
     decision: &'a ProbabilisticDecisionSnapshot,
     factor_diagnostics: &'a FactorDiagnostics,
     pre_bayes_evidence_filter: &'a PreBayesEvidenceFilter,
+    canonical_structural_regime_posterior:
+        Option<&'a ict_engine::state::CanonicalStructuralRegimePosterior>,
     factor_ranking: &'a [PersistedFactorRanking],
     factor_iteration_queue: &'a [FactorIterationPrompt],
     feedback_history_summary: &'a FeedbackHistorySummary,
@@ -7427,6 +7464,7 @@ fn build_analyze_agent_prompts(input: BuildAnalyzeAgentPromptsInput<'_>) -> Agen
         decision,
         factor_diagnostics,
         pre_bayes_evidence_filter,
+        canonical_structural_regime_posterior,
         factor_ranking,
         factor_iteration_queue,
         feedback_history_summary,
@@ -7435,6 +7473,8 @@ fn build_analyze_agent_prompts(input: BuildAnalyzeAgentPromptsInput<'_>) -> Agen
         decision_hint,
         multi_timeframe_summary,
     } = input;
+    let canonical_structural_regime_summary =
+        compact_canonical_structural_regime_summary(canonical_structural_regime_posterior);
     let mut pack = factor_iteration_prompt_pack(
         symbol,
         factor_ranking,
@@ -7546,11 +7586,12 @@ fn build_analyze_agent_prompts(input: BuildAnalyzeAgentPromptsInput<'_>) -> Agen
             objective: "Review the current market conclusion and identify whether factor evidence supports the selected direction.".to_string(),
             system_prompt: "You are the market-review agent. Challenge the current trade direction using price-action evidence, factor diagnostics, and uncertainty. Do not change factor definitions here; decide whether the current conclusion is supported or should be downgraded.".to_string(),
             user_prompt: format!(
-                "Symbol={} decision_hint={} dataset_comparability={{comparable:{}, reason:{}}} multi_timeframe_summary={:?} selected_direction={:?} selected_score={:.3} selected_win_probability={:.3} trade_direction={:?} posterior={:.3} factor_alignment={} factor_uncertainty={} long_support={:.3} short_support={:.3} uncertainty={:.3} bullish_factors={:?} bearish_factors={:?}",
+                "Symbol={} decision_hint={} dataset_comparability={{comparable:{}, reason:{}}} canonical_structural_regime={} multi_timeframe_summary={:?} selected_direction={:?} selected_score={:.3} selected_win_probability={:.3} trade_direction={:?} posterior={:.3} factor_alignment={} factor_uncertainty={} long_support={:.3} short_support={:.3} uncertainty={:.3} bullish_factors={:?} bearish_factors={:?}",
                 symbol,
                 decision_hint,
                 dataset_comparability.comparable,
                 dataset_comparability.reason,
+                canonical_structural_regime_summary,
                 multi_timeframe_summary,
                 decision.selected_direction,
                 decision.selected_score,
@@ -7713,6 +7754,8 @@ struct BuildUpdateAgentPromptsInput<'a> {
     consumed_pre_bayes_evidence_filter: Option<&'a PreBayesEvidenceFilter>,
     consumed_pre_bayes_entry_quality_bridge:
         Option<&'a ict_engine::state::PreBayesEntryQualityBridge>,
+    consumed_canonical_structural_regime_posterior:
+        Option<&'a ict_engine::state::CanonicalStructuralRegimePosterior>,
     consumed_multi_timeframe_summary: &'a [String],
 }
 
@@ -7730,8 +7773,13 @@ fn build_update_agent_prompts(input: BuildUpdateAgentPromptsInput<'_>) -> AgentP
         feedback_records_applied,
         consumed_pre_bayes_evidence_filter,
         consumed_pre_bayes_entry_quality_bridge,
+        consumed_canonical_structural_regime_posterior,
         consumed_multi_timeframe_summary,
     } = input;
+    let consumed_canonical_structural_regime_summary =
+        compact_canonical_structural_regime_summary(
+            consumed_canonical_structural_regime_posterior,
+        );
     let mut pack = factor_iteration_prompt_pack(
         symbol,
         factor_ranking,
@@ -7786,13 +7834,14 @@ fn build_update_agent_prompts(input: BuildUpdateAgentPromptsInput<'_>) -> AgentP
                 objective: "Review the consumed analyze pre-bayes evidence against the realized outcome.".to_string(),
                 system_prompt: "You are the update-pre-bayes reviewer. Compare the realized outcome with the consumed analyze pre-bayes gate, bridge, and multi-timeframe summary before deciding whether to revise factor logic, evidence mapping, or BBN calibration.".to_string(),
                 user_prompt: format!(
-                    "Symbol={} realized_outcome={} consumed_pre_bayes_gate_status={} consumed_pre_bayes_quality={:.3} consumed_pre_bayes_conflicts={:?} consumed_pre_bayes_filtered_assignments={:?} consumed_multi_timeframe_summary={:?} consumed_bridge_selected_entry_quality={:?} consumed_bridge_probability_gap={:.3}",
+                    "Symbol={} realized_outcome={} consumed_pre_bayes_gate_status={} consumed_pre_bayes_quality={:.3} consumed_pre_bayes_conflicts={:?} consumed_pre_bayes_filtered_assignments={:?} consumed_canonical_structural_regime={} consumed_multi_timeframe_summary={:?} consumed_bridge_selected_entry_quality={:?} consumed_bridge_probability_gap={:.3}",
                     symbol,
                     realized_outcome,
                     filter.gating_status,
                     filter.evidence_quality_score,
                     filter.conflict_flags,
                     filter.evidence_assignments,
+                    consumed_canonical_structural_regime_summary,
                     consumed_multi_timeframe_summary,
                     bridge_diff.as_ref().and_then(|diff| diff.selected_entry_quality.clone()),
                     bridge_diff
@@ -13083,6 +13132,18 @@ mod tests {
                 ]),
                 ..PreBayesEvidenceFilter::default()
             },
+            canonical_structural_regime_posterior: Some(
+                &ict_engine::state::CanonicalStructuralRegimePosterior {
+                    active_regime: Some("trend".to_string()),
+                    confidence: Some(0.78),
+                    probabilities: BTreeMap::from([
+                        ("trend".to_string(), 0.78),
+                        ("range".to_string(), 0.14),
+                        ("transition".to_string(), 0.08),
+                    ]),
+                    evidence: vec!["duration_persistence_prior=0.900".to_string()],
+                },
+            ),
             factor_ranking: &[],
             factor_iteration_queue: &[],
             feedback_history_summary: &FeedbackHistorySummary::default(),
@@ -13129,7 +13190,10 @@ mod tests {
             .find(|prompt| prompt.id == "analysis_market_review")
             .map(|prompt| prompt
                 .user_prompt
-                .contains("higher_timeframe_direction_bias=bullish"))
+                .contains("higher_timeframe_direction_bias=bullish")
+                && prompt
+                    .user_prompt
+                    .contains("canonical_structural_regime=active=trend confidence=0.780"))
             .unwrap_or(false));
     }
 
@@ -13798,12 +13862,65 @@ mod tests {
             feedback_records_applied: 1,
             consumed_pre_bayes_evidence_filter: None,
             consumed_pre_bayes_entry_quality_bridge: None,
+            consumed_canonical_structural_regime_posterior: None,
             consumed_multi_timeframe_summary: &[],
         });
 
         assert!(!prompts.prompts.is_empty());
         assert_eq!(prompts.prompts[0].id, "update_feedback_review");
         assert_eq!(prompts.prompts[0].stage, "feedback_update");
+    }
+
+    #[test]
+    fn test_build_update_agent_prompts_includes_consumed_canonical_structural_regime_context() {
+        let prompts = build_update_agent_prompts(BuildUpdateAgentPromptsInput {
+            symbol: "NQ",
+            factor_ranking: &[],
+            factor_iteration_queue: &[],
+            feedback_history_summary: &FeedbackHistorySummary::default(),
+            updated_trade_outcome: &BTreeMap::from([
+                ("win".to_string(), 0.6),
+                ("breakeven".to_string(), 0.2),
+                ("loss".to_string(), 0.2),
+            ]),
+            normalized_entry_quality: "high",
+            factor_alignment: "bullish",
+            factor_uncertainty: "low",
+            realized_outcome: "win",
+            feedback_records_applied: 1,
+            consumed_pre_bayes_evidence_filter: Some(&PreBayesEvidenceFilter {
+                gating_status: "pass_soft".to_string(),
+                evidence_quality_score: 0.66,
+                evidence_assignments: BTreeMap::from([(
+                    "market_regime".to_string(),
+                    "trend".to_string(),
+                )]),
+                ..PreBayesEvidenceFilter::default()
+            }),
+            consumed_pre_bayes_entry_quality_bridge: None,
+            consumed_canonical_structural_regime_posterior: Some(
+                &ict_engine::state::CanonicalStructuralRegimePosterior {
+                    active_regime: Some("trend".to_string()),
+                    confidence: Some(0.78),
+                    probabilities: BTreeMap::from([
+                        ("trend".to_string(), 0.78),
+                        ("range".to_string(), 0.14),
+                        ("transition".to_string(), 0.08),
+                    ]),
+                    evidence: vec!["duration_persistence_prior=0.900".to_string()],
+                },
+            ),
+            consumed_multi_timeframe_summary: &[],
+        });
+
+        assert!(prompts
+            .prompts
+            .iter()
+            .find(|prompt| prompt.id == "update_consumed_pre_bayes_review")
+            .map(|prompt| prompt.user_prompt.contains(
+                "consumed_canonical_structural_regime=active=trend confidence=0.780"
+            ))
+            .unwrap_or(false));
     }
 
     #[test]

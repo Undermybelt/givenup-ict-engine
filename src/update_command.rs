@@ -223,6 +223,9 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         consumed_pre_bayes_entry_quality_bridge: consumed_analyze_context
             .pre_bayes_entry_quality_bridge
             .as_ref(),
+        consumed_canonical_structural_regime_posterior: consumed_analyze_context
+            .canonical_structural_regime_posterior
+            .as_ref(),
         consumed_multi_timeframe_summary: &consumed_analyze_context.multi_timeframe_summary,
     });
     let mut agent_prompts = agent_prompts;
