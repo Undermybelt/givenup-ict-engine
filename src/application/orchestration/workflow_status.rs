@@ -4650,6 +4650,7 @@ mod tests {
             .find(|item| item["branch_label"] == "transition_confirmation")
             .expect("transition branch");
         assert_eq!(branch["transition_prior"], 0.8);
+        assert_eq!(branch["transition_weighted_observation_mass"], 2.4);
         assert!(branch["prior_probability"].as_f64().unwrap() > 0.6);
         assert!(branch["posterior_probability"].as_f64().unwrap() > 0.10);
     }
@@ -5295,6 +5296,7 @@ mod tests {
         assert_eq!(value["node"]["duration_streak_count"], 2);
         assert_eq!(value["node"]["duration_avg_streak_length"], 1.5);
         assert_eq!(value["node"]["duration_persistence_prior"], 0.6);
+        assert_eq!(value["node"]["duration_weighted_streak_mass"], 1.85);
         assert_eq!(
             value["branch"]["entity_id"],
             "NQ:belief_regime_node:trend:trend_follow_through"

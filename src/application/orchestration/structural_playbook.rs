@@ -75,6 +75,8 @@ pub struct StructuralBranchArtifact {
     pub prior_probability: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub transition_prior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transition_weighted_observation_mass: Option<f64>,
     pub posterior_probability: f64,
     #[serde(default)]
     pub historical_total_records: usize,
@@ -261,6 +263,10 @@ pub struct StructuralExperiencePriorEntry {
     pub duration_avg_streak_length: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_persistence_prior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_weighted_streak_mass: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transition_weighted_observation_mass: Option<f64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -824,6 +830,8 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
+                duration_weighted_streak_mass: None,
+                transition_weighted_observation_mass: branch.transition_weighted_observation_mass,
             })
             .or_else(|| {
                 branch_summary.map(|summary| {
@@ -850,6 +858,8 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
+                        duration_weighted_streak_mass: None,
+                        transition_weighted_observation_mass: None,
                     }
                 })
             })
@@ -882,6 +892,8 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
+                duration_weighted_streak_mass: None,
+                transition_weighted_observation_mass: None,
             })
             .or_else(|| {
                 scenario_summary.map(|summary| {
@@ -907,6 +919,8 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
+                        duration_weighted_streak_mass: None,
+                        transition_weighted_observation_mass: None,
                     }
                 })
             })
@@ -939,6 +953,8 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
+                duration_weighted_streak_mass: None,
+                transition_weighted_observation_mass: None,
             })
             .or_else(|| {
                 path_summary.map(|summary| {
@@ -965,6 +981,8 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
+                        duration_weighted_streak_mass: None,
+                        transition_weighted_observation_mass: None,
                     }
                 })
             })
@@ -1016,6 +1034,10 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
             duration_streak_count: structural_duration_streak_count(node_duration_prior),
             duration_avg_streak_length: structural_duration_avg_streak_length(node_duration_prior),
             duration_persistence_prior: structural_duration_persistence_prior(node_duration_prior),
+            duration_weighted_streak_mass: structural_duration_weighted_streak_mass(
+                node_duration_prior,
+            ),
+            transition_weighted_observation_mass: None,
         }),
         branch,
         scenario,
@@ -1292,6 +1314,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
             branch_label: "collect_initial_inputs".to_string(),
             prior_probability: 1.0,
             transition_prior: None,
+            transition_weighted_observation_mass: None,
             posterior_probability: 1.0,
             historical_total_records: 0,
             historical_followed_count: 0,
@@ -1312,6 +1335,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
             branch_label: "resolve_provider_prerequisites".to_string(),
             prior_probability: 0.7,
             transition_prior: None,
+            transition_weighted_observation_mass: None,
             posterior_probability: 0.7,
             historical_total_records: 0,
             historical_followed_count: 0,
@@ -1334,6 +1358,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
             branch_label: "defer_and_observe".to_string(),
             prior_probability: 0.3,
             transition_prior: None,
+            transition_weighted_observation_mass: None,
             posterior_probability: 0.3,
             historical_total_records: 0,
             historical_followed_count: 0,
@@ -1352,6 +1377,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
             branch_label: "choose_historical_dataset".to_string(),
             prior_probability: 0.75,
             transition_prior: None,
+            transition_weighted_observation_mass: None,
             posterior_probability: 0.75,
             historical_total_records: 0,
             historical_followed_count: 0,
@@ -1405,6 +1431,8 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
                     branch_label: branch_label.to_string(),
                     prior_probability: blended_prior,
                     transition_prior: transition_prior.map(|item| item.transition_prior),
+                    transition_weighted_observation_mass: transition_prior
+                        .map(|item| item.weighted_observation_mass),
                     posterior_probability,
                     historical_total_records: structural_resolved_observations(
                         prior_stats,
@@ -1449,6 +1477,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
                 branch_label: "execute_recommended_path".to_string(),
                 prior_probability: 0.6,
                 transition_prior: None,
+                transition_weighted_observation_mass: None,
                 posterior_probability: structural_primary_probability(snapshot),
                 historical_total_records: 0,
                 historical_followed_count: 0,
@@ -1466,6 +1495,7 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
                 branch_label: "observe_only".to_string(),
                 prior_probability: 0.4,
                 transition_prior: None,
+                transition_weighted_observation_mass: None,
                 posterior_probability: (1.0 - structural_primary_probability(snapshot))
                     .clamp(0.0, 1.0),
                 historical_total_records: 0,
@@ -2470,6 +2500,12 @@ fn structural_duration_persistence_prior(
     duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
 ) -> Option<f64> {
     duration_prior.map(|prior| prior.persistence_prior)
+}
+
+fn structural_duration_weighted_streak_mass(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    duration_prior.map(|prior| prior.weighted_streak_mass)
 }
 
 fn structural_dominant_source_panel(
