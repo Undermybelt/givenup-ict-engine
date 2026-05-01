@@ -277,6 +277,20 @@ pub fn structural_feedback_outcome_is_unresolved(outcome: &str) -> bool {
     )
 }
 
+pub fn structural_feedback_counts_as_executed_trade(record: &FeedbackRecord) -> bool {
+    if structural_feedback_outcome_is_unresolved(&record.realized_outcome) {
+        return false;
+    }
+    if record.realized_outcome.trim().eq_ignore_ascii_case("not_followed") {
+        return false;
+    }
+    record
+        .structural_feedback
+        .as_ref()
+        .map(|refs| refs.followed_path)
+        .unwrap_or(true)
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PendingUpdateArtifactDiff {
     pub previous_artifact_id: Option<String>,

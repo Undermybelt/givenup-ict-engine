@@ -172,9 +172,7 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
     if let Some(feedback) = new_feedback
         .first()
         .filter(|feedback| {
-            !ict_engine::state::structural_feedback_outcome_is_unresolved(
-                &feedback.realized_outcome,
-            )
+            ict_engine::state::structural_feedback_counts_as_executed_trade(feedback)
         })
     {
         let realized_state_index = network

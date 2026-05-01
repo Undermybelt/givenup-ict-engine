@@ -128,7 +128,7 @@ pub fn apply_feedback_to_trade_outcome_network(
     let mut updates = Vec::new();
 
     for record in feedback {
-        if crate::state::structural_feedback_outcome_is_unresolved(&record.realized_outcome) {
+        if !crate::state::structural_feedback_counts_as_executed_trade(record) {
             continue;
         }
         let entry_quality = entry_quality_label_from_probability(
