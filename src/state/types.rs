@@ -70,6 +70,10 @@ pub struct StructuralPriorLearningState {
     pub node_duration_priors: BTreeMap<String, StructuralNodeDurationPrior>,
     #[serde(default)]
     pub branch_transition_priors: BTreeMap<String, StructuralBranchTransitionPrior>,
+    #[serde(default)]
+    pub node_temporal_posteriors: BTreeMap<String, StructuralNodeTemporalPosteriorState>,
+    #[serde(default)]
+    pub branch_temporal_posteriors: BTreeMap<String, StructuralBranchTemporalPosteriorState>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -205,6 +209,31 @@ pub struct StructuralBranchTransitionPrior {
     pub weighted_success_mass: f64,
     #[serde(default)]
     pub weighted_failure_mass: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_recommended_at: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralNodeTemporalPosteriorState {
+    pub node_id: String,
+    pub observations: usize,
+    pub streak_count: usize,
+    pub weighted_streak_mass: f64,
+    pub duration_outcome_support: f64,
+    pub temporal_posterior_support: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_recommended_at: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralBranchTemporalPosteriorState {
+    pub transition_key: String,
+    pub from_branch_id: String,
+    pub to_branch_id: String,
+    pub observations: usize,
+    pub weighted_observation_mass: f64,
+    pub transition_outcome_support: f64,
+    pub temporal_posterior_support: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommended_at: Option<String>,
 }
@@ -3848,6 +3877,8 @@ fn append_structural_prior_event(
 fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) {
     state.node_duration_priors.clear();
     state.branch_transition_priors.clear();
+    state.node_temporal_posteriors.clear();
+    state.branch_temporal_posteriors.clear();
     let mut events = state.event_ledger.clone();
     events.sort_by(|left, right| {
         left.symbol
@@ -3931,7 +3962,11 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
         current_streak_failure_mass,
         current_recommended_at.take(),
     );
-    rebuild_discounted_node_duration_priors(&mut state.node_duration_priors, &node_streaks);
+    rebuild_discounted_node_duration_priors(
+        &mut state.node_duration_priors,
+        &mut state.node_temporal_posteriors,
+        &node_streaks,
+    );
 
     for transition_events in symbol_transition_events.values() {
         let total_transitions = transition_events.len();
@@ -4003,6 +4038,21 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
             (transition.transition_prior * 0.7 + transition.transition_outcome_support * 0.3)
                 .clamp(0.0, 1.0);
     }
+    for (transition_key, transition) in &state.branch_transition_priors {
+        state.branch_temporal_posteriors.insert(
+            transition_key.clone(),
+            StructuralBranchTemporalPosteriorState {
+                transition_key: transition_key.clone(),
+                from_branch_id: transition.from_branch_id.clone(),
+                to_branch_id: transition.to_branch_id.clone(),
+                observations: transition.observations,
+                weighted_observation_mass: transition.weighted_observation_mass,
+                transition_outcome_support: transition.transition_outcome_support,
+                temporal_posterior_support: transition.temporal_posterior_support,
+                last_recommended_at: transition.last_recommended_at.clone(),
+            },
+        );
+    }
 }
 
 fn finalize_node_duration_streak(
@@ -4032,6 +4082,7 @@ fn finalize_node_duration_streak(
 
 fn rebuild_discounted_node_duration_priors(
     node_duration_priors: &mut BTreeMap<String, StructuralNodeDurationPrior>,
+    node_temporal_posteriors: &mut BTreeMap<String, StructuralNodeTemporalPosteriorState>,
     node_streaks: &BTreeMap<String, Vec<StructuralNodeStreakRecord>>,
 ) {
     for (node_id, streaks) in node_streaks {
@@ -4086,7 +4137,20 @@ fn rebuild_discounted_node_duration_priors(
         prior.temporal_posterior_support =
             (prior.persistence_prior * 0.7 + prior.duration_outcome_support * 0.3)
                 .clamp(0.0, 1.0);
+        let temporal_state = StructuralNodeTemporalPosteriorState {
+            node_id: node_id.clone(),
+            observations: prior.observations,
+            streak_count: prior.streak_count,
+            weighted_streak_mass: prior.weighted_streak_mass,
+            duration_outcome_support: prior.duration_outcome_support,
+            temporal_posterior_support: prior.temporal_posterior_support,
+            last_recommended_at: prior.last_recommended_at.clone(),
+        };
         node_duration_priors.insert(node_id.clone(), prior);
+        node_temporal_posteriors.insert(
+            node_id.clone(),
+            temporal_state,
+        );
     }
 }
 
@@ -4898,6 +4962,15 @@ mod tests {
         assert!(trend.persistence_prior > range.persistence_prior);
         assert_eq!(range.observations, 1);
         assert_eq!(range.streak_count, 1);
+        let temporal = state
+            .structural_prior_state
+            .node_temporal_posteriors
+            .get("NQ:belief_regime_node:trend")
+            .expect("trend temporal posterior");
+        assert_eq!(temporal.node_id, "NQ:belief_regime_node:trend");
+        assert_eq!(temporal.streak_count, 2);
+        assert_eq!(temporal.weighted_streak_mass, trend.weighted_streak_mass);
+        assert_eq!(temporal.temporal_posterior_support, trend.temporal_posterior_support);
     }
 
     #[test]
@@ -5172,6 +5245,22 @@ mod tests {
         assert_eq!(transition_ac.observations, 1);
         assert!(transition_ac.weighted_observation_mass > transition_ab.weighted_observation_mass);
         assert!(transition_ac.transition_prior > transition_ab.transition_prior);
+        let temporal = state
+            .structural_prior_state
+            .branch_temporal_posteriors
+            .get(
+                "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:transition:transition_confirmation",
+            )
+            .expect("transition temporal posterior");
+        assert_eq!(
+            temporal.transition_key,
+            "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:transition:transition_confirmation"
+        );
+        assert_eq!(temporal.observations, transition_ac.observations);
+        assert_eq!(
+            temporal.temporal_posterior_support,
+            transition_ac.temporal_posterior_support
+        );
     }
 
     #[test]
