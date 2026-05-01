@@ -5851,6 +5851,20 @@ mod tests {
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
             },
         );
+        structural_prior_state.node_temporal_posteriors.insert(
+            "NQ:belief_regime_node:transition".to_string(),
+            crate::state::StructuralNodeTemporalPosteriorState {
+                node_id: "NQ:belief_regime_node:transition".to_string(),
+                observations: 4,
+                streak_count: 3,
+                weighted_streak_mass: 1.9,
+                duration_outcome_support: 0.75,
+                temporal_posterior_support: 0.65,
+                posterior_blend_weight: 0.42,
+                summary_line: "duration_mass=1.900 duration_support=0.750 duration_temporal=0.650 blend=0.420".to_string(),
+                last_recommended_at: Some("2026-04-30T04:00:00Z".to_string()),
+            },
+        );
         structural_prior_state.branch_transition_priors.insert(
             "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:transition:transition_confirmation".to_string(),
             crate::state::StructuralBranchTransitionPrior {
@@ -5871,6 +5885,21 @@ mod tests {
                 last_recommended_at: Some("2026-04-30T05:00:00Z".to_string()),
             },
         );
+        structural_prior_state.branch_temporal_posteriors.insert(
+            "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:transition:transition_confirmation".to_string(),
+            crate::state::StructuralBranchTemporalPosteriorState {
+                transition_key: "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:transition:transition_confirmation".to_string(),
+                from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                to_branch_id: "NQ:belief_regime_node:transition:transition_confirmation".to_string(),
+                observations: 2,
+                weighted_observation_mass: 1.5,
+                transition_outcome_support: 0.72,
+                temporal_posterior_support: 0.70,
+                posterior_multiplier: 1.28,
+                summary_line: "transition_mass=1.500 transition_support=0.720 transition_temporal=0.700 multiplier=1.280".to_string(),
+                last_recommended_at: Some("2026-04-30T05:00:00Z".to_string()),
+            },
+        );
 
         let value = build_workflow_status_phase_value_with_structural_prior_state(
             &snapshot,
@@ -5883,13 +5912,15 @@ mod tests {
         .unwrap();
 
         assert_eq!(value["node_id"], "NQ:belief_regime_node:transition");
-        assert_eq!(value["duration_weighted_streak_mass"], 1.85);
-        assert_eq!(value["duration_outcome_support"], 0.7407407407);
-        assert_eq!(value["duration_temporal_posterior_support"], 0.6422222222);
-        assert_eq!(value["transition_weighted_observation_mass"], 1.4875);
+        assert_eq!(value["duration_weighted_streak_mass"], 1.9);
+        assert_eq!(value["duration_outcome_support"], 0.75);
+        assert_eq!(value["duration_temporal_posterior_support"], 0.65);
+        assert_eq!(value["duration_posterior_blend_weight"], 0.42);
+        assert_eq!(value["transition_weighted_observation_mass"], 1.5);
         assert_eq!(value["transition_prior"], 0.68);
-        assert_eq!(value["transition_outcome_support"], 0.71);
-        assert_eq!(value["transition_temporal_posterior_support"], 0.689);
+        assert_eq!(value["transition_outcome_support"], 0.72);
+        assert_eq!(value["transition_temporal_posterior_support"], 0.70);
+        assert_eq!(value["transition_posterior_multiplier"], 1.28);
     }
 
     #[test]

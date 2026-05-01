@@ -511,6 +511,25 @@ fn apply_structural_prior_state_to_belief_report(
                     max_transition_outcome_support,
                     max_transition_temporal_support
                 ));
+            if let Some(max_transition_multiplier) = regime_probabilities
+                .iter()
+                .filter_map(|(regime, _)| {
+                    let branch_id = format!(
+                        "{}:{}",
+                        node_id,
+                        structural_branch_label_for_regime(regime.as_str())
+                    );
+                    structural_prior_state
+                        .branch_temporal_posteriors
+                        .get(&format!("{latest_branch_id}=>{branch_id}"))
+                        .map(|state| state.posterior_multiplier)
+                })
+                .max_by(|a, b| a.partial_cmp(b).unwrap_or(Ordering::Equal))
+            {
+                report.regime_posterior.evidence.push(format!(
+                    "transition_posterior_multiplier={max_transition_multiplier:.3}"
+                ));
+            }
             if let Some(summary_line) = regime_probabilities
                 .iter()
                 .filter_map(|(regime, _)| {
@@ -578,6 +597,13 @@ fn apply_structural_prior_state_to_belief_report(
                     .map(|state| state.temporal_posterior_support)
                     .unwrap_or(duration_prior.temporal_posterior_support)
             ));
+            if let Some(blend_weight) = node_temporal_state.map(|state| state.posterior_blend_weight)
+            {
+                report
+                    .regime_posterior
+                    .evidence
+                    .push(format!("duration_posterior_blend_weight={blend_weight:.3}"));
+            }
             if let Some(summary_line) = node_temporal_state.map(|state| state.summary_line.clone()) {
                 report
                     .regime_posterior

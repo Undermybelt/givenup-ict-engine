@@ -190,6 +190,8 @@ pub struct StructuralTemporalSummaryArtifact {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_temporal_posterior_support: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_posterior_blend_weight: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub transition_prior: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub transition_weighted_observation_mass: Option<f64>,
@@ -197,6 +199,8 @@ pub struct StructuralTemporalSummaryArtifact {
     pub transition_outcome_support: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub transition_temporal_posterior_support: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transition_posterior_multiplier: Option<f64>,
     pub summary_line: String,
 }
 
@@ -1206,6 +1210,8 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
         duration_temporal_posterior_support: node_temporal_state
             .map(|state| state.temporal_posterior_support)
             .or_else(|| structural_duration_temporal_posterior_support(node_duration_prior)),
+        duration_posterior_blend_weight: node_temporal_state
+            .map(|state| state.posterior_blend_weight),
         transition_prior: transition_prior.map(|prior| prior.transition_prior),
         transition_weighted_observation_mass: branch_temporal_state
             .map(|state| state.weighted_observation_mass)
@@ -1216,6 +1222,8 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
         transition_temporal_posterior_support: branch_temporal_state
             .map(|state| state.temporal_posterior_support)
             .or_else(|| transition_prior.map(|prior| prior.temporal_posterior_support)),
+        transition_posterior_multiplier: branch_temporal_state
+            .map(|state| state.posterior_multiplier),
         summary_line,
     }
 }
