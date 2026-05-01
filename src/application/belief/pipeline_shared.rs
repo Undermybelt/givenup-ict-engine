@@ -457,9 +457,38 @@ fn apply_structural_prior_state_to_belief_report(
                 .regime_posterior
                 .evidence
                 .push(format!(
-                    "branch_transition_prior_from={} weighted_transition_mass={:.3}",
+                    "branch_transition_prior_from={} weighted_transition_mass={:.3} transition_outcome_support={:.3} transition_temporal_posterior_support={:.3}",
                     latest_branch_id,
                     max_weighted_transition_mass
+                    ,
+                    regime_probabilities
+                        .iter()
+                        .filter_map(|(regime, _)| {
+                            let branch_id = format!(
+                                "{}:{}",
+                                node_id,
+                                structural_branch_label_for_regime(regime.as_str())
+                            );
+                            structural_prior_state
+                                .branch_transition_priors
+                                .get(&format!("{latest_branch_id}=>{branch_id}"))
+                                .map(|prior| prior.transition_outcome_support)
+                        })
+                        .fold(0.0, f64::max),
+                    regime_probabilities
+                        .iter()
+                        .filter_map(|(regime, _)| {
+                            let branch_id = format!(
+                                "{}:{}",
+                                node_id,
+                                structural_branch_label_for_regime(regime.as_str())
+                            );
+                            structural_prior_state
+                                .branch_transition_priors
+                                .get(&format!("{latest_branch_id}=>{branch_id}"))
+                                .map(|prior| prior.temporal_posterior_support)
+                        })
+                        .fold(0.0, f64::max)
                 ));
         }
     }
@@ -488,12 +517,13 @@ fn apply_structural_prior_state_to_belief_report(
                 Some(duration_prior),
             ));
             report.regime_posterior.evidence.push(format!(
-                "duration_persistence_prior={:.3} observations={} streaks={} weighted_streak_mass={:.3} duration_outcome_support={:.3}",
+                "duration_persistence_prior={:.3} observations={} streaks={} weighted_streak_mass={:.3} duration_outcome_support={:.3} duration_temporal_posterior_support={:.3}",
                 duration_prior.persistence_prior,
                 duration_prior.observations,
                 duration_prior.streak_count,
                 duration_prior.weighted_streak_mass,
-                duration_prior.duration_outcome_support
+                duration_prior.duration_outcome_support,
+                duration_prior.temporal_posterior_support
             ));
         }
     }

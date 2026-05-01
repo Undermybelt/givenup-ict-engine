@@ -226,7 +226,8 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
         .iter()
         .any(|line| line.contains("duration_persistence_prior")
             && line.contains("weighted_streak_mass=2.400")
-            && line.contains("duration_outcome_support=0.773")));
+            && line.contains("duration_outcome_support=0.773")
+            && line.contains("duration_temporal_posterior_support=0.862")));
     let market_regime = report
         .belief_posteriors
         .iter()
@@ -325,7 +326,9 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_branch_transition_
         .evidence
         .iter()
         .any(|line| line.contains("branch_transition_prior")
-            && line.contains("weighted_transition_mass=2.400")));
+            && line.contains("weighted_transition_mass=2.400")
+            && line.contains("transition_outcome_support=0.560")
+            && line.contains("transition_temporal_posterior_support=0.728")));
 }
 
 #[test]
