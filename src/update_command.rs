@@ -13,6 +13,7 @@ fn structural_prior_seed_from_artifact_validation(
         };
     Some(ict_engine::state::StructuralPriorSeed {
         source_label: "artifact_validation".to_string(),
+        tempering_coefficient: Some(1.0),
         observations,
         followed_count: observations,
         wins,

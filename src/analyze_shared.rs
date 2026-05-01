@@ -256,6 +256,7 @@ pub(crate) fn structural_prior_seed_from_support_hint(
     };
     ict_engine::state::StructuralPriorSeed {
         source_label: source_label.to_string(),
+        tempering_coefficient: Some(support.clamp(0.0, 1.0)),
         observations,
         followed_count: observations,
         wins,

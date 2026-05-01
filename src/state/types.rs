@@ -102,6 +102,8 @@ pub struct StructuralPriorStats {
 pub struct StructuralPriorSeed {
     #[serde(default)]
     pub source_label: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tempering_coefficient: Option<f64>,
     pub observations: usize,
     pub followed_count: usize,
     pub wins: usize,
@@ -133,6 +135,8 @@ pub struct StructuralPriorSourceSummary {
     #[serde(default)]
     pub weighted_invalidation_mass: f64,
     pub smoothed_prior: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_tempering_coefficient: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommendation_id: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3353,7 +3357,7 @@ fn apply_structural_prior_seed_to_stats(
     if seed.observations == 0 {
         return;
     }
-    let source_weight = structural_prior_source_weight(&seed.source_label);
+    let source_weight = structural_prior_seed_effective_weight(seed);
     let previous_observations = stats.observations;
     stats.observations += seed.observations;
     stats.followed_count += seed.followed_count;
@@ -3399,6 +3403,16 @@ fn structural_prior_source_weight(source: &str) -> f64 {
     }
 }
 
+fn structural_prior_seed_tempering_coefficient(seed: &StructuralPriorSeed) -> f64 {
+    seed.tempering_coefficient.unwrap_or(1.0).clamp(0.0, 1.0)
+}
+
+fn structural_prior_seed_effective_weight(seed: &StructuralPriorSeed) -> f64 {
+    (structural_prior_source_weight(&seed.source_label)
+        * structural_prior_seed_tempering_coefficient(seed))
+    .clamp(0.0, 1.0)
+}
+
 fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
     stats.smoothed_prior = if stats.weighted_followed_mass <= f64::EPSILON {
         0.5
@@ -3415,6 +3429,7 @@ fn update_structural_prior_source_summary_from_feedback(
     followed_path: bool,
 ) {
     let source_weight = structural_prior_source_weight(&record.source);
+    summary.last_tempering_coefficient = Some(1.0);
     summary.observations += 1;
     if summary.observations == 1 {
         summary.avg_pnl = record.pnl;
@@ -3481,7 +3496,8 @@ fn apply_structural_prior_seed_to_source_summary(
     if seed.observations == 0 {
         return;
     }
-    let source_weight = structural_prior_source_weight(&seed.source_label);
+    let source_weight = structural_prior_seed_effective_weight(seed);
+    summary.last_tempering_coefficient = Some(structural_prior_seed_tempering_coefficient(seed));
     let previous_observations = summary.observations;
     summary.observations += seed.observations;
     summary.followed_count += seed.followed_count;
@@ -3902,6 +3918,7 @@ mod tests {
         };
         let analyze_seed = StructuralPriorSeed {
             source_label: "analyze".to_string(),
+            tempering_coefficient: None,
             observations: 1,
             followed_count: 1,
             wins: 1,
@@ -3939,6 +3956,62 @@ mod tests {
     }
 
     #[test]
+    fn test_structural_prior_seed_tempering_coefficient_affects_smoothed_prior() {
+        let refs = StructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".to_string(),
+            recommendation_id: "rec-temper".to_string(),
+            recommended_at: "2026-04-30T00:00:00Z".to_string(),
+            node_id: "node-temper".to_string(),
+            branch_id: "branch-temper".to_string(),
+            scenario_id: "scenario-temper".to_string(),
+            path_id: "path-temper".to_string(),
+            followed_path: true,
+            exit_reason: None,
+            notes: None,
+        };
+        let weak_seed = StructuralPriorSeed {
+            source_label: "research".to_string(),
+            tempering_coefficient: Some(0.25),
+            observations: 1,
+            followed_count: 1,
+            wins: 1,
+            losses: 0,
+            breakevens: 0,
+            invalidated: 0,
+            abandoned: 0,
+            not_followed: 0,
+            avg_pnl: 0.01,
+        };
+        let strong_seed = StructuralPriorSeed {
+            tempering_coefficient: Some(0.90),
+            ..weak_seed.clone()
+        };
+
+        let mut weak_state = LearningState::default();
+        weak_state.apply_structural_prior_seed(&refs, &weak_seed);
+        let mut strong_state = LearningState::default();
+        strong_state.apply_structural_prior_seed(&refs, &strong_seed);
+
+        let weak_path = weak_state
+            .structural_prior_state
+            .paths
+            .get("path-temper")
+            .expect("weak path prior state");
+        let strong_path = strong_state
+            .structural_prior_state
+            .paths
+            .get("path-temper")
+            .expect("strong path prior state");
+
+        assert!(strong_path.weighted_success_mass > weak_path.weighted_success_mass);
+        assert!(strong_path.smoothed_prior > weak_path.smoothed_prior);
+        assert_eq!(
+            strong_path.source_panel_summaries["research"].last_tempering_coefficient,
+            Some(0.90)
+        );
+    }
+
+    #[test]
     fn test_live_structural_feedback_weights_more_than_analyze_seed() {
         let refs = StructuralFeedbackRefs {
             protocol_version: "structural-feedback-v1".to_string(),
@@ -3954,6 +4027,7 @@ mod tests {
         };
         let analyze_seed = StructuralPriorSeed {
             source_label: "analyze".to_string(),
+            tempering_coefficient: None,
             observations: 1,
             followed_count: 1,
             wins: 1,
@@ -4084,6 +4158,7 @@ mod tests {
         };
         let analyze_seed = StructuralPriorSeed {
             source_label: "analyze".to_string(),
+            tempering_coefficient: None,
             observations: 1,
             followed_count: 1,
             wins: 1,
@@ -4096,6 +4171,7 @@ mod tests {
         };
         let backtest_seed = StructuralPriorSeed {
             source_label: "backtest".to_string(),
+            tempering_coefficient: None,
             observations: 2,
             followed_count: 2,
             wins: 1,
@@ -4148,6 +4224,7 @@ mod tests {
         };
         let analyze_seed = StructuralPriorSeed {
             source_label: "analyze".to_string(),
+            tempering_coefficient: None,
             observations: 1,
             followed_count: 1,
             wins: 1,
@@ -4186,6 +4263,7 @@ mod tests {
         let mut state = LearningState::default();
         let seed = StructuralPriorSeed {
             source_label: "analyze".to_string(),
+            tempering_coefficient: None,
             observations: 1,
             followed_count: 1,
             wins: 1,
@@ -4265,6 +4343,7 @@ mod tests {
         let mut state = LearningState::default();
         let seed = StructuralPriorSeed {
             source_label: "backtest".to_string(),
+            tempering_coefficient: None,
             observations: 1,
             followed_count: 1,
             wins: 1,
