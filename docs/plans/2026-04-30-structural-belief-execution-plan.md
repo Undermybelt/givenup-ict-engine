@@ -112,6 +112,42 @@ Tests likely touched:
 | `P5` BBN node/branch posterior update | `partial` | discounted temporal maintenance now exists and is reused across belief/workflow surfaces; core engine-state ownership is still incomplete |
 | `P6` CatBoost path ranking target | `not started` | structural candidate surfaces exist, but target math and calibration stack are still unimplemented |
 
+## Current Todo Board
+
+### Done
+
+- [x] Commit literature ingestion docs, paper-code readmes, and patched repo-map as repo truth.
+- [x] Preserve canonical structural anchor across `analyze / research / backtest / update`.
+- [x] Propagate canonical structural posterior through workflow snapshot, ensemble surfaces, workflow-status, structural-playbook, and prompts.
+- [x] Preserve raw structural outcomes instead of flattening everything at update ingress.
+- [x] Split `unresolved / not_followed / abandoned / invalidated / breakeven` into explicit learning semantics.
+- [x] Land fractional factor-credit semantics for structural feedback.
+- [x] Feed offline evidence into `structural_prior_state` with source weighting, quality calibration, source panels, and explicit `tempering_coefficient`.
+- [x] Persist `node_duration_priors`, `branch_transition_priors`, `node_temporal_posteriors`, and `branch_temporal_posteriors`.
+- [x] Reuse persisted temporal posterior state across belief packet, workflow-status, and structural consumer surfaces.
+- [x] Expose temporal support and maintenance weights as machine-readable consumer fields.
+
+### Next
+
+- [ ] Add a dedicated smoke path proving `analyze -> research -> backtest -> structural-playbook` preserves canonical structural lineage end to end.
+- [ ] Finish `P2` delayed / partial-compliance posterior math instead of only no-credit and fractional-credit handling.
+- [ ] Finish `P3` by turning offline tempering into a clearer power-prior-style posterior object, not only calibrated heuristics.
+- [ ] Finish `P4` node-mass vs branch/path-mass separation and persist a clearer offline seed snapshot object.
+- [ ] Finish `P5` by moving node/branch temporal maintenance toward a more central maintained `BBN` posterior state instead of mostly snapshot-time reweighting.
+
+### Not Yet
+
+- [ ] Add repeated-evidence tests proving one branch can strengthen without collapsing unrelated nodes.
+- [ ] Define `CatBoost` path-ranking target math after `P1-P5` are stable.
+- [ ] Add explicit target fields:
+  - `raw_path_score`
+  - `calibrated_path_prob`
+  - `path_prob_lower_bound`
+  - `pending_reward_state`
+  - `propensity_estimate`
+  - `regime_calibration_bucket`
+- [ ] Keep `CatBoost` inside declared structural candidate sets only.
+
 ## Phases
 
 ### Phase 0: Repo Truth First
