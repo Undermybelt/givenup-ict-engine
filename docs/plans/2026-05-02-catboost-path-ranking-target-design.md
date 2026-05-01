@@ -17,9 +17,10 @@ Implemented:
 - `structural-path-ranking-target` workflow surface
 - candidate-set scoped CSV / JSONL / summary export under `policy_training/`
 - `policy-training-status` readiness reporting for export and calibration state
+- empirical Beta-smoothed calibration from raw-scored mature observations
 
 Still not implemented:
-- fitted calibration layer
+- production calibration evaluation over exported raw-scored rows
 - model training or propensity-aware evaluation loop
 
 ## Contract

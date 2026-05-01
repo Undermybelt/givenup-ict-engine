@@ -25,7 +25,7 @@ Aligned source docs:
 | `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation exist |
 | `P4` Structural prior state upgrade | `部分实现` | duration, transition, source panels, event ledger, separated prior-mass snapshots, and latest offline seed snapshot exist; richer dwell-time theory remains |
 | `P5` BBN node/branch posterior update | `基本实现` | temporal priors adjust belief snapshots and branch surfaces, normalized outgoing branch-transition posterior state persists, and node/regime plus complete/partial candidate-set branch adjustment consume it directly |
-| `P6` CatBoost path ranking target | `部分实现` | target surface contract, explicit row fields, workflow surface, and persisted target-row export exist; fitted calibration is still not landed |
+| `P6` CatBoost path ranking target | `部分实现` | target surface contract, explicit row fields, workflow surface, persisted target-row export, and empirical calibration utility exist; production calibration evaluation is still not landed |
 
 ## Repo Targets
 
@@ -234,11 +234,12 @@ Already in repo
 - target rows expose `raw_path_score`, `calibrated_path_prob`, `path_prob_lower_bound`, `pending_reward_state`, `propensity_estimate`, and `regime_calibration_bucket`
 - target rows export to `policy_training/structural_path_ranking_target.csv` and `.jsonl` with a summary file during the normal update flow
 - `policy-training-status` reports structural path-ranking export readiness and calibration readiness without requiring a new CLI flag
+- empirical Beta-smoothed calibration writes `calibrated_path_prob` and `path_prob_lower_bound` only when a regime bucket has raw-scored mature outcome observations
 
 Not yet in repo
-- explicit probability calibration layer for path acceptance
 - lower-bound gating fields for execution
 - propensity-aware model evaluation loop
+- production calibration quality evaluation over exported raw-scored rows
 
 Suggested target stack
 1. train raw ranking score on realized / corrected outcomes
@@ -255,8 +256,8 @@ Suggested fields
 - `regime_calibration_bucket`
 
 Current repo gap
-- CatBoost training and fitted calibration are still downstream work; current path ranking surfaces are structural-orchestration target rows, not a learned calibrated ranker runtime
-- the P6 target design is versioned in `docs/plans/2026-05-02-catboost-path-ranking-target-design.md`; next implementation needs calibration and evaluation rather than more candidate-surface expansion
+- CatBoost training and production calibration evaluation are still downstream work; current path ranking surfaces are structural-orchestration target rows plus an empirical calibrator, not a learned calibrated ranker runtime
+- the P6 target design is versioned in `docs/plans/2026-05-02-catboost-path-ranking-target-design.md`; next implementation needs evaluation over exported raw-scored rows rather than more candidate-surface expansion
 
 ---
 
