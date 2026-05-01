@@ -7,6 +7,7 @@ Scope: map literature mechanisms into concrete `ict-engine` belief surfaces, and
 Aligned source docs:
 - [2026-04-30-structural-belief-execution-plan.md](/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-04-30-structural-belief-execution-plan.md:1)
 - [20260501repo.md](/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/20260501repo.md:1)
+- [2026-05-02-catboost-path-ranking-target-design.md](/Users/thrill3r/projects-ict-engine/ict-engine/docs/plans/2026-05-02-catboost-path-ranking-target-design.md:1)
 
 ## Status Key
 
@@ -24,7 +25,7 @@ Aligned source docs:
 | `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, and reliability-weighted panel aggregation exist |
 | `P4` Structural prior state upgrade | `部分实现` | duration, transition, source panels, event ledger, separated prior-mass snapshots, and latest offline seed snapshot exist; richer dwell-time theory remains |
 | `P5` BBN node/branch posterior update | `基本实现` | temporal priors adjust belief snapshots and branch surfaces, normalized outgoing branch-transition posterior state persists, and node/regime plus complete/partial candidate-set branch adjustment consume it directly |
-| `P6` CatBoost path ranking target | `未实现` | structural candidate surfaces exist, but the formal target stack is not landed |
+| `P6` CatBoost path ranking target | `设计完成，未实现` | target surface contract is versioned; structural candidate surfaces exist, but the runtime artifact/calibration stack is not landed |
 
 ## Repo Targets
 
@@ -218,7 +219,7 @@ Current repo gap
 
 ## 5. CatBoost path ranking target
 
-Status: `未实现`
+Status: `设计完成，未实现`
 
 Primary papers
 - `Adaptive Conformal Inference Under Distribution Shift`
@@ -252,6 +253,7 @@ Suggested fields
 
 Current repo gap
 - CatBoost is still downstream work; current path ranking surfaces are structural-orchestration outputs, not a learned calibrated ranker target
+- the P6 target design is now versioned in `docs/plans/2026-05-02-catboost-path-ranking-target-design.md`; implementation still needs the target artifact, delayed reward state, propensity estimate, and workflow surface
 
 ---
 
@@ -301,10 +303,10 @@ Use this summary when deciding the next coding slice:
 - `source-panel inspectability`: `已实现`
 - `duration / transition persistence`: `已实现`
 - `duration / transition as core BBN transition engine`: `部分实现`
-- `CatBoost calibrated path target`: `未实现`
+- `CatBoost calibrated path target`: `设计完成，未实现`
 
 The repo is no longer blocked on surface drift. The highest-value remaining work is now:
 1. explicit tempered source contribution math
 2. explicit fractional pseudo-count outcome math
 3. discounted transition-count maintenance inside belief updates
-4. only then CatBoost target design
+4. CatBoost target artifact implementation from the versioned P6 design
