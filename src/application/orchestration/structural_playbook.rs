@@ -1614,18 +1614,26 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
                             )
                         }),
                     );
+                let branch_temporal_state = latest_feedback.as_ref().and_then(|refs| {
+                    structural_prior_state
+                        .branch_temporal_posteriors
+                        .get(&format!("{}=>{}", refs.branch_id, branch_id))
+                });
                 branches.push(StructuralBranchArtifact {
                     branch_id,
                     target_node_id: format!("{}:{}:candidate", structural_symbol(snapshot), regime),
                     branch_label: branch_label.to_string(),
                     prior_probability: blended_prior,
                     transition_prior: transition_prior.map(|item| item.transition_prior),
-                    transition_weighted_observation_mass: transition_prior
-                        .map(|item| item.weighted_observation_mass),
-                    transition_outcome_support: transition_prior
-                        .map(|item| item.transition_outcome_support),
-                    transition_temporal_posterior_support: transition_prior
-                        .map(|item| item.temporal_posterior_support),
+                    transition_weighted_observation_mass: branch_temporal_state
+                        .map(|state| state.weighted_observation_mass)
+                        .or_else(|| transition_prior.map(|item| item.weighted_observation_mass)),
+                    transition_outcome_support: branch_temporal_state
+                        .map(|state| state.transition_outcome_support)
+                        .or_else(|| transition_prior.map(|item| item.transition_outcome_support)),
+                    transition_temporal_posterior_support: branch_temporal_state
+                        .map(|state| state.temporal_posterior_support)
+                        .or_else(|| transition_prior.map(|item| item.temporal_posterior_support)),
                     posterior_probability,
                     historical_total_records: structural_resolved_observations(
                         prior_stats,

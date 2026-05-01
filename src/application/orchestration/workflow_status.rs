@@ -4704,6 +4704,128 @@ mod tests {
     }
 
     #[test]
+    fn structural_branches_prefer_persisted_temporal_state_values_over_raw_transition_prior_fields() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_update = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "update".to_string(),
+            structural_feedback: Some(crate::state::StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "rec-prev".to_string(),
+                recommended_at: "2026-04-30T01:00:00Z".to_string(),
+                node_id: "NQ:belief_regime_node:trend".to_string(),
+                branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                scenario_id:
+                    "scenario:NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                path_id:
+                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                        .to_string(),
+                followed_path: true,
+                exit_reason: Some("target_hit".to_string()),
+                notes: None,
+            }),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let mut structural_prior_state = crate::state::StructuralPriorLearningState::default();
+        let key = "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:trend:transition_confirmation".to_string();
+        structural_prior_state.branch_transition_priors.insert(
+            key.clone(),
+            crate::state::StructuralBranchTransitionPrior {
+                from_node_id: "NQ:belief_regime_node:trend".to_string(),
+                to_node_id: "NQ:belief_regime_node:trend".to_string(),
+                from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                to_branch_id: "NQ:belief_regime_node:trend:transition_confirmation".to_string(),
+                observations: 3,
+                weighted_observation_mass: 2.4,
+                wins: 2,
+                losses: 1,
+                invalidated: 0,
+                transition_prior: 0.8,
+                transition_outcome_support: 0.56,
+                temporal_posterior_support: 0.728,
+                weighted_success_mass: 1.6,
+                weighted_failure_mass: 1.25,
+                last_recommended_at: Some("2026-04-30T02:00:00Z".to_string()),
+            },
+        );
+        structural_prior_state.branch_temporal_posteriors.insert(
+            key,
+            crate::state::StructuralBranchTemporalPosteriorState {
+                transition_key: "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:trend:transition_confirmation".to_string(),
+                from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                to_branch_id: "NQ:belief_regime_node:trend:transition_confirmation".to_string(),
+                observations: 3,
+                weighted_observation_mass: 1.1,
+                transition_outcome_support: 0.22,
+                temporal_posterior_support: 0.33,
+                posterior_multiplier: 0.61,
+                summary_line: "transition_mass=1.100 transition_support=0.220 transition_temporal=0.330 multiplier=0.610".to_string(),
+                last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
+            },
+        );
+
+        let value = build_workflow_status_phase_value_with_structural_prior_state(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &structural_prior_state,
+            "structural-branches",
+        )
+        .unwrap();
+
+        let branch = value["branches"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|item| item["branch_label"] == "transition_confirmation")
+            .expect("transition branch");
+        assert_eq!(branch["transition_weighted_observation_mass"], 1.1);
+        assert_eq!(branch["transition_outcome_support"], 0.22);
+        assert_eq!(branch["transition_temporal_posterior_support"], 0.33);
+    }
+
+    #[test]
     fn workflow_status_phase_ensemble_vote_prefers_canonical_analyze_regime_surface() {
         let snapshot = WorkflowSnapshot {
             symbol: "NQ".to_string(),
