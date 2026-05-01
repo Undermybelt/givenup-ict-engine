@@ -304,15 +304,15 @@ Use this summary when deciding the next coding slice:
 
 - `canonical structural anchor`: `已实现`
 - `canonical structural posterior propagation across phases`: `已实现`
-- `offline source weighting + quality calibration`: `部分实现`
-- `live structural feedback learning`: `部分实现`
+- `offline source weighting + quality calibration`: `基本实现`
+- `live structural feedback learning`: `基本实现`
 - `source-panel inspectability`: `已实现`
 - `duration / transition persistence`: `已实现`
 - `duration / transition as core BBN transition engine`: `部分实现`
 - `CatBoost calibrated path target`: `部分实现`
 
 The repo is no longer blocked on surface drift. The highest-value remaining work is now:
-1. explicit tempered source contribution math
-2. explicit fractional pseudo-count outcome math
-3. discounted transition-count maintenance inside belief updates
-4. CatBoost training and validation on top of the exported P6 target rows
+1. full Dawid-Skene / EM-style source reliability learning on top of the compact outcome-confusion cells once enough cross-source labels exist
+2. fitted HSMM / BOCPD duration and break-hazard models on top of the current dwell and transition state
+3. target-policy calibration, maturity/censoring, and variance diagnostics beyond the current clipped IPS / SNIPS / DR surfaces
+4. CatBoost training and production validation on top of exported P6 target rows once raw-scored history exists
