@@ -12,6 +12,7 @@ use super::structural_playbook::{
     build_structural_feedback_template_artifact, build_structural_history_summary_artifact,
     build_structural_node_artifact_with_prior_state,
     build_structural_node_history_artifact, build_structural_path_history_artifact,
+    build_structural_path_ranking_target_artifact_with_prior_state,
     build_structural_path_plan_artifact_with_prior_state,
     build_structural_recommended_path_bundle_artifact_with_prior_state,
     build_structural_playbook_bundle_with_prior_state, build_structural_scenario_history_artifact,
@@ -765,6 +766,12 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
         feedback_history,
         structural_prior_state,
     );
+    let path_ranking_target = build_structural_path_ranking_target_artifact_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        structural_prior_state,
+    );
     let recommended_path_bundle = build_structural_recommended_path_bundle_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
@@ -1053,6 +1060,10 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
             serde_json::to_value(recommended_path_contract_line).unwrap_or_default(),
         );
         map.insert(
+            "path_ranking_target".to_string(),
+            serde_json::to_value(path_ranking_target).unwrap_or_default(),
+        );
+        map.insert(
             "recommended_next_step".to_string(),
             recommended_next_step,
         );
@@ -1275,6 +1286,12 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         feedback_history,
         structural_prior_state,
     );
+    let path_ranking_target = build_structural_path_ranking_target_artifact_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        structural_prior_state,
+    );
     let recommended_path_bundle = build_structural_recommended_path_bundle_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
@@ -1326,6 +1343,7 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "latest_structural_feedback": latest_structural_feedback,
         "experience_prior_surface": experience_prior_surface,
         "top_path_candidates": top_path_candidates.candidates,
+        "path_ranking_target": path_ranking_target,
         "structural_history_summary": structural_history_summary,
         "structural_path_summary": structural_path_summary,
     });
@@ -2296,6 +2314,24 @@ pub fn build_workflow_status_phase_value_with_structural_prior_state(
         }
         "structural-top-path-candidates" | "structural-top-paths" => {
             let artifact = build_structural_top_path_candidates_artifact_with_prior_state(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+                structural_prior_state,
+            );
+            let recommended_next_step = workflow_status_structural_recommended_next_step(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+                structural_prior_state,
+            );
+            workflow_status_value_with_recommended_next_step(
+                serde_json::to_value(artifact)?,
+                recommended_next_step,
+            )
+        }
+        "structural-path-ranking-target" | "structural-path-ranking" => {
+            let artifact = build_structural_path_ranking_target_artifact_with_prior_state(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
@@ -6567,6 +6603,107 @@ mod tests {
         assert_eq!(
             value["recommended_next_step"]["execution_contract"]["path_id"],
             "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+        );
+    }
+
+    #[test]
+    fn workflow_status_phase_structural_path_ranking_target_is_candidate_scoped() {
+        let mut snapshot = WorkflowSnapshot::default();
+        snapshot.symbol = "NQ".to_string();
+        snapshot.current_focus_phase = "analyze".to_string();
+        snapshot.recommended_next_command =
+            "ict-engine workflow-status --symbol NQ --phase human-next".to_string();
+        snapshot.latest_analyze = Some(crate::state::WorkflowPhaseSnapshot {
+            phase: "analyze".to_string(),
+            phase_summary: "belief regime available".to_string(),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            artifact_id: "ensemble-vote:structural".to_string(),
+            generated_at: Utc::now(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze".to_string(),
+            source_run_id: Some("run-structural".to_string()),
+            provenance: RunProvenance::default(),
+            dataset_comparability: DatasetComparability::default(),
+            ensemble_version: "ensemble-audit-v2".to_string(),
+            final_action: "execute_follow_through".to_string(),
+            recommended_command: snapshot.recommended_next_command.clone(),
+            human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                .to_string(),
+            hard_block: EnsembleHardBlockArtifact::default(),
+            confidence: 0.72,
+            consensus_strength: 0.64,
+            disagreement_flags: Vec::new(),
+            executor_summaries: Vec::new(),
+            split_explanations: Vec::new(),
+            executor_scorecards: Vec::new(),
+            executor_scorecards_source: None,
+            posterior_fingerprint: "fp-structural".to_string(),
+            posterior_normalization_status: "normalized".to_string(),
+            posterior_active_regime: "trend".to_string(),
+            posterior_confidence: Some(0.72),
+            posterior_probabilities: std::collections::BTreeMap::from([
+                ("trend".to_string(), 0.72),
+                ("range".to_string(), 0.18),
+                ("transition".to_string(), 0.10),
+            ]),
+            posterior_evidence: vec!["mtf=aligned".to_string()],
+        });
+        let history = sample_structural_feedback_history();
+        let path_id = "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary";
+        let mut structural_prior_state = StructuralPriorLearningState::default();
+        structural_prior_state.paths.insert(
+            path_id.to_string(),
+            crate::state::StructuralPriorStats {
+                smoothed_prior: 0.62,
+                execution_propensity: 0.6,
+                ..crate::state::StructuralPriorStats::default()
+            },
+        );
+
+        let value = build_workflow_status_phase_value_with_structural_prior_state(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            &structural_prior_state,
+            "structural-path-ranking-target",
+        )
+        .unwrap();
+        let rows = value["rows"].as_array().unwrap();
+        let first = &rows[0];
+        let row_object = first.as_object().unwrap();
+
+        assert_eq!(value["candidate_set_size"], 3);
+        assert_eq!(first["candidate_set_id"], value["candidate_set_id"]);
+        assert_eq!(first["candidate_set_size"], value["candidate_set_size"]);
+        assert_eq!(first["path_id"], path_id);
+        assert_eq!(first["pending_reward_state"], "matured_invalidated");
+        assert_eq!(first["regime_calibration_bucket"], "NQ:trend");
+        assert!(!row_object.contains_key("raw_path_score"));
+        assert!(!row_object.contains_key("calibrated_path_prob"));
+        assert!(!row_object.contains_key("path_prob_lower_bound"));
+        let behavior_policy_probability = first["behavior_policy_probability"].as_f64().unwrap();
+        assert!(behavior_policy_probability > 0.0);
+        assert!(
+            (first["propensity_estimate"].as_f64().unwrap()
+                - behavior_policy_probability * 0.6)
+                .abs()
+                < 1e-9
+        );
+
+        let agent_value =
+            build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state(
+                &snapshot,
+                &[],
+                &sample_provider_agent_surface(),
+                &history,
+                &structural_prior_state,
+            );
+        assert_eq!(
+            agent_value["path_ranking_target"]["candidate_set_id"],
+            agent_value["recommended_path_bundle"]["candidate_set_id"]
         );
     }
 

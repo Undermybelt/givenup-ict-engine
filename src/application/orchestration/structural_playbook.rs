@@ -9,8 +9,10 @@ use crate::application::provider_catalog::{
     build_workflow_provider_support, ProviderCatalogAgentSurface,
 };
 use crate::state::{
-    recommended_next_command_meta, FeedbackFactorUsage, FeedbackRecord, ModelProbabilitySnapshot,
-    StructuralFeedbackRefs, StructuralPriorLearningState, StructuralPriorStats, WorkflowSnapshot,
+    recommended_next_command_meta, structural_feedback_learning_outcome,
+    structural_feedback_outcome_is_unresolved, FeedbackFactorUsage, FeedbackRecord,
+    ModelProbabilitySnapshot, StructuralFeedbackLearningOutcome, StructuralFeedbackRefs,
+    StructuralPriorLearningState, StructuralPriorStats, WorkflowSnapshot,
 };
 use crate::types::{Direction, Regime};
 
@@ -275,6 +277,44 @@ pub struct StructuralTopPathCandidate {
     pub historical_invalidation_rate: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub recommended_command: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralPathRankingTargetArtifact {
+    pub protocol_version: String,
+    pub symbol: String,
+    pub candidate_set_id: String,
+    pub candidate_set_size: usize,
+    pub generated_at: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub rows: Vec<StructuralPathRankingTargetRow>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralPathRankingTargetRow {
+    pub rank: usize,
+    pub candidate_set_id: String,
+    pub candidate_set_size: usize,
+    pub path_id: String,
+    pub scenario_id: String,
+    pub path_label: String,
+    pub direction: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub raw_path_score: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub calibrated_path_prob: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub path_prob_lower_bound: Option<f64>,
+    pub pending_reward_state: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub propensity_estimate: Option<f64>,
+    pub regime_calibration_bucket: String,
+    pub behavior_policy_probability: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub execution_propensity: Option<f64>,
+    pub experience_prior: f64,
+    pub current_posterior: f64,
+    pub structural_baseline_score: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -617,6 +657,8 @@ pub struct StructuralPathArtifact {
     pub historical_total_records: usize,
     #[serde(default)]
     pub historical_followed_count: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub execution_propensity: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub historical_win_rate: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1492,6 +1534,88 @@ pub fn build_structural_top_path_candidates_artifact_with_prior_state(
     }
 }
 
+pub fn build_structural_path_ranking_target_artifact(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[FeedbackRecord],
+) -> StructuralPathRankingTargetArtifact {
+    build_structural_path_ranking_target_artifact_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        &StructuralPriorLearningState::default(),
+    )
+}
+
+pub fn build_structural_path_ranking_target_artifact_with_prior_state(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
+) -> StructuralPathRankingTargetArtifact {
+    let candidate_paths = structural_ranked_paths_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        structural_prior_state,
+    )
+    .into_iter()
+    .take(3)
+    .collect::<Vec<_>>();
+    let symbol = structural_symbol(snapshot);
+    let candidate_set_id = structural_candidate_set_id(&symbol, &candidate_paths);
+    let denominator = structural_candidate_policy_denominator(&candidate_paths);
+    let candidate_set_size = candidate_paths.len();
+    let regime_calibration_bucket = structural_path_ranking_regime_bucket(snapshot);
+    let rows = candidate_paths
+        .into_iter()
+        .enumerate()
+        .map(|(index, path)| {
+            let behavior_policy_probability = structural_candidate_policy_probability(
+                path.composite_preference_score,
+                denominator,
+                candidate_set_size,
+            );
+            StructuralPathRankingTargetRow {
+                rank: index + 1,
+                candidate_set_id: candidate_set_id.clone(),
+                candidate_set_size,
+                path_id: path.path_id.clone(),
+                scenario_id: path.scenario_id,
+                path_label: path.path_label,
+                direction: path.direction,
+                raw_path_score: path.catboost_score,
+                calibrated_path_prob: None,
+                path_prob_lower_bound: None,
+                pending_reward_state: structural_path_ranking_pending_reward_state(
+                    &path.path_id,
+                    feedback_history,
+                ),
+                propensity_estimate: structural_path_ranking_propensity_estimate(
+                    path.execution_propensity,
+                    behavior_policy_probability,
+                ),
+                regime_calibration_bucket: regime_calibration_bucket.clone(),
+                behavior_policy_probability,
+                execution_propensity: path.execution_propensity,
+                experience_prior: path.path_prior,
+                current_posterior: path.path_posterior,
+                structural_baseline_score: path.composite_preference_score,
+            }
+        })
+        .collect::<Vec<_>>();
+    StructuralPathRankingTargetArtifact {
+        protocol_version: "structural-path-ranking-target-v1".to_string(),
+        symbol,
+        candidate_set_id,
+        candidate_set_size,
+        generated_at: snapshot
+            .generated_at
+            .to_rfc3339_opts(SecondsFormat::Secs, true),
+        rows,
+    }
+}
+
 fn structural_candidate_policy_denominator(candidate_paths: &[StructuralPathArtifact]) -> f64 {
     candidate_paths
         .iter()
@@ -1533,6 +1657,67 @@ fn structural_stable_hash64(value: &str) -> u64 {
         hash = hash.wrapping_mul(0x100000001b3);
     }
     hash
+}
+
+fn structural_path_ranking_regime_bucket(snapshot: &WorkflowSnapshot) -> String {
+    let symbol = structural_symbol(snapshot);
+    let regime = structural_active_regime(snapshot).unwrap_or_else(|| "unknown".to_string());
+    format!("{symbol}:{regime}")
+}
+
+fn structural_path_ranking_propensity_estimate(
+    execution_propensity: Option<f64>,
+    behavior_policy_probability: f64,
+) -> Option<f64> {
+    execution_propensity.map(|propensity| {
+        (propensity.clamp(0.0, 1.0) * behavior_policy_probability.clamp(0.0, 1.0))
+            .clamp(0.0, 1.0)
+    })
+}
+
+fn structural_path_ranking_pending_reward_state(
+    path_id: &str,
+    feedback_history: &[FeedbackRecord],
+) -> String {
+    let Some(record) = feedback_history
+        .iter()
+        .filter(|record| {
+            record
+                .structural_feedback
+                .as_ref()
+                .map(|refs| refs.path_id == path_id)
+                .unwrap_or(false)
+        })
+        .max_by_key(|record| record.timestamp)
+    else {
+        return "unobserved".to_string();
+    };
+    if structural_feedback_outcome_is_unresolved(&record.realized_outcome) {
+        return "pending".to_string();
+    }
+    let followed = record
+        .structural_feedback
+        .as_ref()
+        .map(|refs| refs.followed_path)
+        .unwrap_or(true);
+    if !followed || record.realized_outcome.trim().eq_ignore_ascii_case("not_followed") {
+        return "not_followed".to_string();
+    }
+    if record
+        .realized_outcome
+        .trim()
+        .eq_ignore_ascii_case("invalidated")
+    {
+        return "matured_invalidated".to_string();
+    }
+    match structural_feedback_learning_outcome(record) {
+        Some(StructuralFeedbackLearningOutcome::Positive) => "matured_success".to_string(),
+        Some(StructuralFeedbackLearningOutcome::Neutral)
+        | Some(StructuralFeedbackLearningOutcome::Negative) => {
+            "matured_failure".to_string()
+        }
+        None => "unobserved".to_string(),
+    }
 }
 
 pub fn build_structural_recommended_path_bundle_artifact(
@@ -2222,6 +2407,7 @@ pub fn build_structural_path_plan_artifact_with_prior_state(
                     prior_stats,
                     historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
                 ),
+                execution_propensity: structural_prior_execution_propensity(prior_stats),
                 historical_win_rate: structural_resolved_path_win_rate(
                     prior_stats,
                     historical_summary,
