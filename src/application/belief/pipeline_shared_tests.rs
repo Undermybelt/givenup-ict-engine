@@ -385,6 +385,96 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_branch_transition_
 }
 
 #[test]
+fn canonical_belief_snapshot_with_structural_prior_state_uses_node_transition_posterior() {
+    let filter = PreBayesEvidenceFilter {
+        filtered_market_regime_label: "bull".to_string(),
+        soft_market_regime_distribution: BTreeMap::from([
+            ("bull".to_string(), 0.60),
+            ("range".to_string(), 0.25),
+            ("transition".to_string(), 0.15),
+        ]),
+        uses_soft_evidence: true,
+        ..PreBayesEvidenceFilter::default()
+    };
+    let mut structural_prior_state = StructuralPriorLearningState::default();
+    structural_prior_state.event_ledger.push(StructuralPriorEvent {
+        source_label: "backtest".to_string(),
+        symbol: "NQ".to_string(),
+        recommendation_id: "rec-prev".to_string(),
+        recommended_at: "2026-04-30T01:00:00Z".to_string(),
+        node_id: "NQ:belief_regime_node:trend".to_string(),
+        branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+        scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+        path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+            .to_string(),
+        followed_path: true,
+        realized_outcome: Some("win".to_string()),
+    });
+    let transition_key = "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:transition:transition_confirmation".to_string();
+    structural_prior_state.branch_transition_priors.insert(
+        transition_key.clone(),
+        StructuralBranchTransitionPrior {
+            from_node_id: "NQ:belief_regime_node:trend".to_string(),
+            to_node_id: "NQ:belief_regime_node:transition".to_string(),
+            from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+            to_branch_id: "NQ:belief_regime_node:transition:transition_confirmation".to_string(),
+            observations: 3,
+            weighted_observation_mass: 2.4,
+            wins: 2,
+            losses: 1,
+            invalidated: 0,
+            transition_prior: 0.7,
+            transition_outcome_support: 0.56,
+            temporal_posterior_support: 0.728,
+            weighted_success_mass: 1.6,
+            weighted_failure_mass: 1.25,
+            last_recommended_at: Some("2026-04-30T02:00:00Z".to_string()),
+        },
+    );
+    structural_prior_state.branch_temporal_posteriors.insert(
+        transition_key.clone(),
+        crate::state::StructuralBranchTemporalPosteriorState {
+            transition_key,
+            from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+            to_branch_id: "NQ:belief_regime_node:transition:transition_confirmation".to_string(),
+            observations: 3,
+            weighted_observation_mass: 2.4,
+            transition_prior: 0.7,
+            transition_outcome_support: 0.56,
+            temporal_posterior_support: 0.728,
+            posterior_multiplier: 0.2,
+            normalized_transition_posterior: 0.7,
+            summary_line: "transition_mass=2.400 transition_support=0.560 transition_temporal=0.728 multiplier=0.200".to_string(),
+            last_recommended_at: Some("2026-04-30T02:00:00Z".to_string()),
+        },
+    );
+
+    let report = build_canonical_belief_snapshot_with_pda_and_structural_prior_state(
+        "NQ",
+        Some("NQ"),
+        &filter,
+        None,
+        None,
+        None,
+        Some(&structural_prior_state),
+    )
+    .unwrap();
+
+    assert_eq!(
+        report.regime_posterior.active_regime.as_deref(),
+        Some("transition"),
+        "regime_probs={:?} report={report:?}",
+        report.regime_posterior.probabilities
+    );
+    assert!((report.regime_posterior.probabilities["transition"] - 0.7).abs() < 1e-9);
+    assert!(report
+        .regime_posterior
+        .evidence
+        .iter()
+        .any(|line| line.contains("node_transition_posterior_from=NQ:belief_regime_node:trend:trend_follow_through")));
+}
+
+#[test]
 fn canonical_belief_snapshot_with_structural_prior_state_reconciles_gate_and_strategy_with_adjusted_regime(
 ) {
     let filter = PreBayesEvidenceFilter {

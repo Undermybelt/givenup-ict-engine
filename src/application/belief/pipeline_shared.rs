@@ -8,6 +8,7 @@ use crate::analyze::multi_timeframe_parse::{
 };
 use crate::application::belief::blend_node_posterior_with_duration_prior;
 use crate::application::belief::transition_adjusted_branch_posteriors;
+use crate::application::belief::transition_adjusted_node_posteriors;
 use crate::application::entry_models::{apply_cisd_rb_to_belief_packet, CisdRbEntryModelPacket};
 use crate::bbn::adapters::{
     belief_evidence_packet_from_pre_bayes_filter, gate_decision_from_regime_posterior,
@@ -415,6 +416,33 @@ fn apply_structural_prior_state_to_belief_report(
         }
     }
 
+    let latest_branch_id =
+        latest_structural_branch_id_for_symbol(&structural_prior_state.event_ledger, symbol);
+    if let Some(latest_branch_id) = latest_branch_id.as_deref() {
+        let regime_probabilities = canonical_probabilities
+            .iter()
+            .map(|(regime, probability)| (regime.clone(), *probability))
+            .collect::<Vec<_>>();
+        let adjusted_node_probabilities = transition_adjusted_node_posteriors(
+            symbol,
+            &regime_probabilities,
+            Some(latest_branch_id),
+            &structural_prior_state.branch_transition_priors,
+            &structural_prior_state.branch_temporal_posteriors,
+        );
+        let node_transition_adjusted = adjusted_node_probabilities.iter().any(|(regime, probability)| {
+            (canonical_probabilities.get(regime).copied().unwrap_or_default() - *probability).abs()
+                > 1e-9
+        });
+        canonical_probabilities = adjusted_node_probabilities;
+        if node_transition_adjusted {
+            report
+                .regime_posterior
+                .evidence
+                .push(format!("node_transition_posterior_from={latest_branch_id}"));
+        }
+    }
+
     let mut active_regime = canonical_probabilities
         .iter()
         .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(Ordering::Equal))
@@ -426,14 +454,11 @@ fn apply_structural_prior_state_to_belief_report(
             .iter()
             .map(|(regime, probability)| (regime.clone(), *probability))
             .collect::<Vec<_>>();
-        if let Some(latest_branch_id) = latest_structural_branch_id_for_symbol(
-            &structural_prior_state.event_ledger,
-            symbol,
-        ) {
+        if let Some(latest_branch_id) = latest_branch_id.as_deref() {
             let adjusted = transition_adjusted_branch_posteriors(
                 &node_id,
                 &regime_probabilities,
-                Some(latest_branch_id.as_str()),
+                Some(latest_branch_id),
                 &structural_prior_state.branch_transition_priors,
                 &structural_prior_state.branch_temporal_posteriors,
                 structural_branch_label_for_regime,

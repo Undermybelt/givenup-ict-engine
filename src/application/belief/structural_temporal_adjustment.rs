@@ -154,6 +154,83 @@ pub fn transition_adjusted_branch_posteriors(
         .collect()
 }
 
+pub fn transition_adjusted_node_posteriors(
+    symbol: &str,
+    regime_probabilities: &[(String, f64)],
+    latest_branch_id: Option<&str>,
+    transition_priors: &BTreeMap<String, StructuralBranchTransitionPrior>,
+    branch_temporal_posteriors: &BTreeMap<String, StructuralBranchTemporalPosteriorState>,
+) -> BTreeMap<String, f64> {
+    let Some(latest_branch_id) = latest_branch_id else {
+        return regime_probabilities
+            .iter()
+            .map(|(regime, probability)| (regime.clone(), *probability))
+            .collect();
+    };
+
+    let mut normalized_posterior = Vec::new();
+    let mut missing_posterior_candidates = Vec::new();
+    for (regime, probability) in regime_probabilities {
+        let node_id = format!("{symbol}:belief_regime_node:{regime}");
+        let node_posterior = branch_temporal_posteriors
+            .iter()
+            .filter_map(|(transition_key, state)| {
+                let transition_prior = transition_priors.get(transition_key)?;
+                if transition_prior.from_branch_id == latest_branch_id
+                    && transition_prior.to_node_id == node_id
+                    && state.normalized_transition_posterior > f64::EPSILON
+                {
+                    Some(state.normalized_transition_posterior.clamp(0.0, 1.0))
+                } else {
+                    None
+                }
+            })
+            .sum::<f64>();
+        if node_posterior > f64::EPSILON {
+            normalized_posterior.push((regime.clone(), node_posterior.clamp(0.0, 1.0)));
+        } else {
+            missing_posterior_candidates.push((regime.clone(), (*probability).max(0.0)));
+        }
+    }
+    if normalized_posterior.is_empty() {
+        return regime_probabilities
+            .iter()
+            .map(|(regime, probability)| (regime.clone(), *probability))
+            .collect();
+    }
+
+    let known_total: f64 = normalized_posterior
+        .iter()
+        .map(|(_, posterior)| *posterior)
+        .sum();
+    let residual = (1.0 - known_total).max(0.0);
+    let missing_total: f64 = missing_posterior_candidates
+        .iter()
+        .map(|(_, probability)| *probability)
+        .sum();
+    let missing_count = missing_posterior_candidates.len().max(1) as f64;
+    for (regime, probability) in missing_posterior_candidates {
+        let residual_weight = if missing_total > f64::EPSILON {
+            residual * probability / missing_total
+        } else {
+            residual / missing_count
+        };
+        normalized_posterior.push((regime, residual_weight.clamp(0.0, 1.0)));
+    }
+
+    let total: f64 = normalized_posterior.iter().map(|(_, weight)| *weight).sum();
+    if total <= f64::EPSILON {
+        return regime_probabilities
+            .iter()
+            .map(|(regime, probability)| (regime.clone(), *probability))
+            .collect();
+    }
+    normalized_posterior
+        .into_iter()
+        .map(|(regime, weight)| (regime, (weight / total).clamp(0.0, 1.0)))
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -435,5 +512,65 @@ mod tests {
             (adjusted["NQ:belief_regime_node:trend:trend_follow_through"] - 0.15).abs()
                 < 1e-9
         );
+    }
+
+    #[test]
+    fn transition_adjusted_node_posteriors_use_maintained_branch_transition_state() {
+        let mut transition_priors = BTreeMap::new();
+        let key = "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:transition:transition_confirmation".to_string();
+        transition_priors.insert(
+            key.clone(),
+            StructuralBranchTransitionPrior {
+                from_node_id: "NQ:belief_regime_node:trend".to_string(),
+                to_node_id: "NQ:belief_regime_node:transition".to_string(),
+                from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                to_branch_id: "NQ:belief_regime_node:transition:transition_confirmation".to_string(),
+                observations: 3,
+                weighted_observation_mass: 2.1,
+                wins: 2,
+                losses: 1,
+                invalidated: 0,
+                transition_prior: 0.7,
+                transition_outcome_support: 0.8,
+                temporal_posterior_support: 0.7,
+                weighted_success_mass: 1.4,
+                weighted_failure_mass: 0.7,
+                last_recommended_at: None,
+            },
+        );
+        let mut temporal_states = BTreeMap::new();
+        temporal_states.insert(
+            key.clone(),
+            StructuralBranchTemporalPosteriorState {
+                transition_key: key,
+                from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                to_branch_id: "NQ:belief_regime_node:transition:transition_confirmation".to_string(),
+                observations: 3,
+                weighted_observation_mass: 2.1,
+                transition_prior: 0.7,
+                transition_outcome_support: 0.8,
+                temporal_posterior_support: 0.7,
+                posterior_multiplier: 0.2,
+                normalized_transition_posterior: 0.7,
+                summary_line: String::new(),
+                last_recommended_at: None,
+            },
+        );
+
+        let adjusted = transition_adjusted_node_posteriors(
+            "NQ",
+            &[
+                ("trend".to_string(), 0.6),
+                ("range".to_string(), 0.2),
+                ("transition".to_string(), 0.2),
+            ],
+            Some("NQ:belief_regime_node:trend:trend_follow_through"),
+            &transition_priors,
+            &temporal_states,
+        );
+
+        assert!((adjusted["transition"] - 0.7).abs() < 1e-9);
+        assert!((adjusted["trend"] - 0.225).abs() < 1e-9);
+        assert!((adjusted["range"] - 0.075).abs() < 1e-9);
     }
 }

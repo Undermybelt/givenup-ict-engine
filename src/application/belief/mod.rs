@@ -53,5 +53,5 @@ pub use shadow_policy_surface::{build_belief_shadow_policy_surface, BeliefShadow
 pub use spectral_overlay::{apply_spectral_overlay, SpectralOverlayState};
 pub use structural_temporal_adjustment::{
     blend_branch_prior_with_transition_prior, blend_node_posterior_with_duration_prior,
-    transition_adjusted_branch_posteriors,
+    transition_adjusted_branch_posteriors, transition_adjusted_node_posteriors,
 };
