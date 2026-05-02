@@ -313,6 +313,10 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     #[serde(default)]
     pub feedback_rows_with_structural_feedback: usize,
     #[serde(default)]
+    pub feedback_rows_total: usize,
+    #[serde(default)]
+    pub feedback_rows_without_structural_feedback: usize,
+    #[serde(default)]
     pub feedback_rows_matured: usize,
     #[serde(default)]
     pub feedback_rows_pending: usize,
@@ -811,11 +815,14 @@ pub fn structural_path_ranking_target_training_status(
         .iter()
         .filter(|run| run.structural_feedback.is_some())
         .count();
+    let feedback_rows_total = learning_state.feedback_history.len();
     let feedback_rows_with_structural_feedback = learning_state
         .feedback_history
         .iter()
         .filter(|record| record.structural_feedback.is_some())
         .count();
+    let feedback_rows_without_structural_feedback =
+        feedback_rows_total.saturating_sub(feedback_rows_with_structural_feedback);
     let feedback_rows_pending = learning_state
         .feedback_history
         .iter()
@@ -923,6 +930,9 @@ pub fn structural_path_ranking_target_training_status(
                 "structural_path_ranking_target_pending_update_templates_present".to_string(),
             );
         }
+    }
+    if feedback_rows_total > 0 && feedback_rows_with_structural_feedback == 0 {
+        warnings.push("structural_path_ranking_target_feedback_rows_missing_structural_refs".to_string());
     }
     if history_rows_with_propensity_estimate == 0 {
         warnings.push("structural_path_ranking_target_propensity_missing".to_string());
@@ -1041,7 +1051,9 @@ pub fn structural_path_ranking_target_training_status(
         history_rows_with_propensity_estimate,
         history_rows_with_training_weight,
         update_runs_with_structural_feedback,
+        feedback_rows_total,
         feedback_rows_with_structural_feedback,
+        feedback_rows_without_structural_feedback,
         feedback_rows_matured,
         feedback_rows_pending,
         pending_update_artifact_present,
@@ -2273,6 +2285,40 @@ mod tests {
             serde_json::to_string_pretty(&vec![pending_artifact]).unwrap(),
         )
         .unwrap();
+        let legacy_feedback = crate::state::FeedbackRecord {
+            timestamp: chrono::Utc::now(),
+            symbol: "NQ".to_string(),
+            source: "legacy_feedback".to_string(),
+            run_id: None,
+            trade_id: None,
+            prompt_version: None,
+            factor_version: None,
+            data_fingerprint: None,
+            factors_used: Vec::new(),
+            model_probabilities_before_trade: crate::state::ModelProbabilitySnapshot {
+                selected_direction: crate::types::Direction::Neutral,
+                selected_probability: 0.0,
+                long_score: 0.0,
+                short_score: 0.0,
+                win_prob_long: 0.0,
+                win_prob_short: 0.0,
+                uncertainty: 0.0,
+            },
+            realized_outcome: "win".to_string(),
+            pnl: 1.0,
+            regime_at_entry: crate::types::Regime::ManipulationExpansion,
+            structural_feedback: None,
+            reflection_mismatch_tags: Vec::new(),
+        };
+        crate::state::save_learning_state(
+            temp.path(),
+            "NQ",
+            &crate::state::LearningState {
+                feedback_history: vec![legacy_feedback],
+                ..crate::state::LearningState::default()
+            },
+        )
+        .unwrap();
 
         let status =
             structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
@@ -2295,6 +2341,8 @@ mod tests {
         assert!(status.pending_update_artifact_present);
         assert_eq!(status.pending_update_history_rows, 1);
         assert_eq!(status.pending_update_templates_with_structural_feedback, 1);
+        assert_eq!(status.feedback_rows_total, 1);
+        assert_eq!(status.feedback_rows_without_structural_feedback, 1);
         assert_eq!(
             status.candidate_set_id.as_deref(),
             Some("structural-candidates:NQ:test")
@@ -2334,6 +2382,9 @@ mod tests {
         assert!(status
             .warnings
             .contains(&"structural_path_ranking_target_pending_update_templates_present".to_string()));
+        assert!(status
+            .warnings
+            .contains(&"structural_path_ranking_target_feedback_rows_missing_structural_refs".to_string()));
     }
 
     #[test]
