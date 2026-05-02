@@ -246,6 +246,7 @@ Already in repo
 - `policy-training-status` separates calibration-quality readiness from production-validation readiness by requiring enough propensity-weighted calibrated rows before declaring the target production-validatable
 - the target summary carries an external trainer manifest describing group, label, weight, feature, calibration, and guardrail columns without adding a CatBoost runtime dependency
 - `policy-training-status` surfaces trainer manifest readiness with protocol/dataset role plus compact feature/calibration/guardrail column counts, and warns on incomplete manifests without loading an external trainer
+- `policy-training-status` also recognizes an optional `policy_training/structural_path_ranking_trainer_artifact.json` handoff file, reporting artifact readiness, protocol/dataset role, model family, score column, trained/calibration row counts, feature-column count, and URI presence without dumping a user-specific artifact URI
 
 Not yet in repo
 - propensity-aware model training loop
@@ -272,8 +273,8 @@ Suggested fields
 - `regime_calibration_bucket`
 
 Current repo gap
-- CatBoost training and production calibration validation are still downstream work; current path ranking surfaces are structural-orchestration target rows plus empirical calibration/evaluation utilities, not a learned calibrated ranker runtime
-- the P6 target design is versioned in `docs/plans/2026-05-02-catboost-path-ranking-target-design.md`; next implementation needs a trained external ranker artifact/service and enough real exported raw-scored rows, not more candidate-surface expansion
+- CatBoost training and production calibration validation are still downstream work; current path ranking surfaces are structural-orchestration target rows, empirical calibration/evaluation utilities, and an optional external artifact status boundary, not a learned calibrated ranker runtime
+- the P6 target design is versioned in `docs/plans/2026-05-02-catboost-path-ranking-target-design.md`; next implementation needs a real trained external ranker artifact/service and enough real exported raw-scored rows, not more candidate-surface expansion
 
 ---
 

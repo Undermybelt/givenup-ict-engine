@@ -19,12 +19,13 @@ Implemented:
 - summary-level trainer manifest for external ranker services; Rust core should not require CatBoost
 - `policy-training-status` readiness reporting for export and calibration state
 - `policy-training-status` trainer manifest readiness/counts for the external ranker handoff contract
+- optional `policy_training/structural_path_ranking_trainer_artifact.json` status boundary for trained external ranker artifacts; the status surface reports compact readiness/count fields and URI presence without dumping the URI
 - empirical Beta-smoothed calibration from raw-scored mature observations
 - compact calibration-quality evaluation fields in `policy-training-status`
 
 Still not implemented:
 - production calibration validation after enough exported raw-scored rows exist
-- model training or propensity-aware evaluation loop
+- model training or propensity-aware evaluation loop; a real external trainer artifact/service is still user-supplied and opt-in
 
 ## Contract
 
