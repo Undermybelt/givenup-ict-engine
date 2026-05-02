@@ -293,6 +293,8 @@ pub struct StructuralTargetPolicyContextSurface {
     pub learned_target_policy_probability: f64,
     pub learned_target_policy_probability_lower_bound: f64,
     pub learned_target_policy_probability_confidence: f64,
+    pub calibrated_target_policy_probability: f64,
+    pub calibrated_target_policy_probability_lower_bound: f64,
     pub target_policy_probability_brier_score: f64,
     pub target_policy_probability_calibration_error: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -5090,6 +5092,9 @@ fn structural_target_policy_context_surface(
             .learned_target_policy_probability_lower_bound,
         learned_target_policy_probability_confidence: posterior
             .learned_target_policy_probability_confidence,
+        calibrated_target_policy_probability: posterior.calibrated_target_policy_probability,
+        calibrated_target_policy_probability_lower_bound: posterior
+            .calibrated_target_policy_probability_lower_bound,
         target_policy_probability_brier_score: posterior.target_policy_probability_brier_score,
         target_policy_probability_calibration_error: posterior
             .target_policy_probability_calibration_error,

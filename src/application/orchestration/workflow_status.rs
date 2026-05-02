@@ -5611,6 +5611,9 @@ mod tests {
                     learned_target_policy_probability: 2.30 / 4.05,
                     learned_target_policy_probability_lower_bound: 0.32,
                     learned_target_policy_probability_confidence: 0.41,
+                    calibrated_target_policy_probability: (2.30 / 4.05) * 0.41 + 0.42 * 0.59,
+                    calibrated_target_policy_probability_lower_bound: 0.32 * 0.41
+                        + (0.42 - (0.018_f64 / 3.05).sqrt()) * 0.59,
                     target_policy_probability_brier_score: 0.15625,
                     target_policy_probability_calibration_error: 0.375,
                     last_recommendation_id: Some("rec-context".to_string()),
@@ -5684,6 +5687,14 @@ mod tests {
         assert_eq!(
             value["target_policy_contexts"][0]["learned_target_policy_probability_lower_bound"],
             0.32
+        );
+        assert_eq!(
+            value["target_policy_contexts"][0]["calibrated_target_policy_probability"],
+            (2.30 / 4.05) * 0.41 + 0.42 * 0.59
+        );
+        assert_eq!(
+            value["target_policy_contexts"][0]["calibrated_target_policy_probability_lower_bound"],
+            0.32 * 0.41 + (0.42 - (0.018_f64 / 3.05).sqrt()) * 0.59
         );
         assert_eq!(
             value["target_policy_contexts"][0]["target_policy_probability_brier_score"],

@@ -124,6 +124,10 @@ pub struct StructuralTargetPolicyContextPosterior {
     #[serde(default)]
     pub learned_target_policy_probability_confidence: f64,
     #[serde(default)]
+    pub calibrated_target_policy_probability: f64,
+    #[serde(default)]
+    pub calibrated_target_policy_probability_lower_bound: f64,
+    #[serde(default)]
     pub target_policy_probability_brier_score_mass: f64,
     #[serde(default)]
     pub target_policy_probability_calibration_error_mass: f64,
@@ -4954,6 +4958,19 @@ fn refresh_structural_target_policy_context_posterior(
             posterior.weighted_observation_mass,
             posterior.target_policy_probability_brier_score,
         );
+    posterior.calibrated_target_policy_probability = structural_calibrated_target_policy_probability(
+        posterior.behavior_policy_probability,
+        posterior.learned_target_policy_probability,
+        posterior.learned_target_policy_probability_confidence,
+    );
+    posterior.calibrated_target_policy_probability_lower_bound =
+        structural_calibrated_target_policy_probability_lower_bound(
+            posterior.behavior_policy_probability,
+            posterior.behavior_policy_probability_variance,
+            posterior.weighted_observation_mass,
+            posterior.learned_target_policy_probability_lower_bound,
+            posterior.learned_target_policy_probability_confidence,
+        );
 }
 
 fn structural_learned_target_policy_probability_lower_bound(probability: f64, mass: f64) -> f64 {
@@ -4974,6 +4991,36 @@ fn structural_learned_target_policy_probability_confidence(mass: f64, brier_scor
     let mass_confidence = (mass / (1.0 + mass)).clamp(0.0, 1.0);
     let calibration_confidence = (1.0 - brier_score.clamp(0.0, 1.0).sqrt()).clamp(0.0, 1.0);
     (mass_confidence * calibration_confidence).clamp(0.0, 1.0)
+}
+
+fn structural_calibrated_target_policy_probability(
+    behavior_policy_probability: f64,
+    learned_target_policy_probability: f64,
+    learned_target_policy_probability_confidence: f64,
+) -> f64 {
+    let confidence = learned_target_policy_probability_confidence.clamp(0.0, 1.0);
+    (learned_target_policy_probability.clamp(0.0, 1.0) * confidence
+        + behavior_policy_probability.clamp(0.0, 1.0) * (1.0 - confidence))
+        .clamp(0.0, 1.0)
+}
+
+fn structural_calibrated_target_policy_probability_lower_bound(
+    behavior_policy_probability: f64,
+    behavior_policy_probability_variance: f64,
+    weighted_observation_mass: f64,
+    learned_target_policy_probability_lower_bound: f64,
+    learned_target_policy_probability_confidence: f64,
+) -> f64 {
+    let behavior_lower_bound = structural_target_policy_probability_lower_bound(
+        behavior_policy_probability,
+        weighted_observation_mass,
+        behavior_policy_probability_variance,
+    );
+    structural_calibrated_target_policy_probability(
+        behavior_lower_bound,
+        learned_target_policy_probability_lower_bound,
+        learned_target_policy_probability_confidence,
+    )
 }
 
 fn structural_snips_effective_sample_size(
@@ -8376,6 +8423,23 @@ mod tests {
         assert!(
             (context.learned_target_policy_probability_confidence
                 - expected_context_confidence)
+                .abs()
+                < 1e-9
+        );
+        let expected_calibrated_context_probability =
+            0.5 * expected_context_confidence + 0.375 * (1.0 - expected_context_confidence);
+        assert!(
+            (context.calibrated_target_policy_probability
+                - expected_calibrated_context_probability)
+                .abs()
+                < 1e-9
+        );
+        let expected_calibrated_context_lower_bound = expected_context_lower_bound
+            * expected_context_confidence
+            + expected_probability_lower_bound * (1.0 - expected_context_confidence);
+        assert!(
+            (context.calibrated_target_policy_probability_lower_bound
+                - expected_calibrated_context_lower_bound)
                 .abs()
                 < 1e-9
         );
