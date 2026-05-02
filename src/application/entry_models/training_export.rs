@@ -17,7 +17,8 @@ use crate::application::orchestration::{
 use crate::application::provider_catalog::provider_status_agent_surface;
 use crate::state::{
     load_learning_state, load_state_or_default, load_workflow_snapshot, save_text_state,
-    AnalyzeRunRecord, UpdateRunRecord, ANALYZE_RUNS_FILE, UPDATE_RUNS_FILE,
+    structural_feedback_outcome_is_unresolved, AnalyzeRunRecord, UpdateRunRecord,
+    ANALYZE_RUNS_FILE, UPDATE_RUNS_FILE,
 };
 use crate::types::RegimeProbs;
 
@@ -306,6 +307,14 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub history_rows_with_propensity_estimate: usize,
     #[serde(default)]
     pub history_rows_with_training_weight: usize,
+    #[serde(default)]
+    pub update_runs_with_structural_feedback: usize,
+    #[serde(default)]
+    pub feedback_rows_with_structural_feedback: usize,
+    #[serde(default)]
+    pub feedback_rows_matured: usize,
+    #[serde(default)]
+    pub feedback_rows_pending: usize,
     #[serde(default)]
     pub calibration_evaluation_rows: usize,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -778,6 +787,34 @@ pub fn structural_path_ranking_target_training_status(
     } else {
         summary.jsonl_path.as_str()
     };
+    let update_runs: Vec<UpdateRunRecord> =
+        load_state_or_default(state_dir, symbol, UPDATE_RUNS_FILE).unwrap_or_default();
+    let learning_state = load_learning_state(state_dir, symbol).unwrap_or_default();
+    let update_runs_with_structural_feedback = update_runs
+        .iter()
+        .filter(|run| run.structural_feedback.is_some())
+        .count();
+    let feedback_rows_with_structural_feedback = learning_state
+        .feedback_history
+        .iter()
+        .filter(|record| record.structural_feedback.is_some())
+        .count();
+    let feedback_rows_pending = learning_state
+        .feedback_history
+        .iter()
+        .filter(|record| {
+            record.structural_feedback.is_some()
+                && structural_feedback_outcome_is_unresolved(&record.realized_outcome)
+        })
+        .count();
+    let feedback_rows_matured = learning_state
+        .feedback_history
+        .iter()
+        .filter(|record| {
+            record.structural_feedback.is_some()
+                && !structural_feedback_outcome_is_unresolved(&record.realized_outcome)
+        })
+        .count();
     let history_rows = load_structural_path_ranking_target_rows_from_jsonl(evaluation_jsonl_path)?;
     let history_row_count = history_rows.len().max(summary.history_rows);
     let history_mature_rows = history_rows
@@ -858,6 +895,12 @@ pub fn structural_path_ranking_target_training_status(
     }
     if summary.mature_rows == 0 {
         warnings.push("structural_path_ranking_target_mature_rows_missing".to_string());
+    }
+    if update_runs.is_empty() {
+        warnings.push("structural_path_ranking_target_update_runs_missing".to_string());
+    }
+    if update_runs_with_structural_feedback == 0 && feedback_rows_with_structural_feedback == 0 {
+        warnings.push("structural_path_ranking_target_structural_feedback_missing".to_string());
     }
     if history_rows_with_propensity_estimate == 0 {
         warnings.push("structural_path_ranking_target_propensity_missing".to_string());
@@ -975,6 +1018,10 @@ pub fn structural_path_ranking_target_training_status(
         history_rows_with_path_prob_lower_bound,
         history_rows_with_propensity_estimate,
         history_rows_with_training_weight,
+        update_runs_with_structural_feedback,
+        feedback_rows_with_structural_feedback,
+        feedback_rows_matured,
+        feedback_rows_pending,
         calibration_evaluation_rows: calibration_evaluation.eligible_rows,
         calibration_brier_score: calibration_evaluation.brier_score,
         calibration_propensity_weighted_rows: calibration_evaluation.propensity_weighted_rows,
@@ -2187,6 +2234,10 @@ mod tests {
         assert_eq!(status.history_rows_with_calibrated_path_prob, 0);
         assert_eq!(status.history_rows_with_path_prob_lower_bound, 0);
         assert_eq!(status.history_rows_with_propensity_estimate, 2);
+        assert_eq!(status.update_runs_with_structural_feedback, 0);
+        assert_eq!(status.feedback_rows_with_structural_feedback, 0);
+        assert_eq!(status.feedback_rows_matured, 0);
+        assert_eq!(status.feedback_rows_pending, 0);
         assert_eq!(
             status.candidate_set_id.as_deref(),
             Some("structural-candidates:NQ:test")
@@ -2217,6 +2268,12 @@ mod tests {
         assert!(status
             .warnings
             .contains(&"structural_path_ranking_target_trainer_artifact_missing".to_string()));
+        assert!(status
+            .warnings
+            .contains(&"structural_path_ranking_target_update_runs_missing".to_string()));
+        assert!(status
+            .warnings
+            .contains(&"structural_path_ranking_target_structural_feedback_missing".to_string()));
     }
 
     #[test]
@@ -2301,6 +2358,8 @@ mod tests {
         assert_eq!(status.history_rows_with_path_prob_lower_bound, 2);
         assert_eq!(status.history_rows_with_propensity_estimate, 2);
         assert_eq!(status.history_rows_with_training_weight, 2);
+        assert_eq!(status.update_runs_with_structural_feedback, 0);
+        assert_eq!(status.feedback_rows_with_structural_feedback, 0);
         assert_eq!(
             status.production_validation_min_rows,
             STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS
@@ -2474,6 +2533,8 @@ mod tests {
         assert_eq!(status.history_rows_with_path_prob_lower_bound, row_count);
         assert_eq!(status.history_rows_with_propensity_estimate, row_count);
         assert_eq!(status.history_rows_with_training_weight, row_count);
+        assert_eq!(status.update_runs_with_structural_feedback, 0);
+        assert_eq!(status.feedback_rows_with_structural_feedback, 0);
         assert_eq!(status.raw_scored_mature_rows, row_count);
         assert_eq!(status.raw_scored_mature_shortfall_rows, 0);
         assert_eq!(status.production_validation_rows, row_count);
