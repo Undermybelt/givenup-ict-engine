@@ -271,6 +271,14 @@ pub struct StructuralSourceReliabilityEmReadiness {
     pub observed_label_count: usize,
     pub max_sources_per_item: usize,
     pub min_multi_source_items: usize,
+    #[serde(default)]
+    pub consensus_item_count: usize,
+    #[serde(default)]
+    pub conflict_item_count: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub avg_consensus_confidence: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub min_consensus_confidence: Option<f64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -3537,6 +3545,7 @@ fn structural_source_confusion_concentration_multiplier(
 struct StructuralSourceReliabilityEmItem {
     sources: BTreeSet<String>,
     observed_labels: usize,
+    observed_credit_classes: BTreeMap<String, usize>,
 }
 
 fn structural_source_reliability_em_item_key(event: &crate::state::StructuralPriorEvent) -> String {
@@ -3567,11 +3576,17 @@ fn structural_source_reliability_em_readiness(
             .or_default();
         item.sources.insert(source_label.to_string());
         distinct_sources.insert(source_label.to_string());
-        if let Some(outcome) = event.realized_outcome.as_deref() {
-            if !structural_feedback_outcome_is_unresolved(outcome) {
-                item.observed_labels += 1;
-                observed_label_count += 1;
-            }
+        if let Some(credit_class) = event
+            .realized_outcome
+            .as_deref()
+            .and_then(structural_source_reliability_em_credit_class)
+        {
+            item.observed_labels += 1;
+            *item
+                .observed_credit_classes
+                .entry(credit_class.to_string())
+                .or_default() += 1;
+            observed_label_count += 1;
         }
     }
     let candidate_item_count = items.len();
@@ -3589,6 +3604,27 @@ fn structural_source_reliability_em_readiness(
         .max()
         .unwrap_or_default();
     let distinct_source_count = distinct_sources.len();
+    let consensus_confidences = items
+        .values()
+        .filter_map(structural_source_reliability_em_consensus_confidence)
+        .collect::<Vec<_>>();
+    let consensus_item_count = consensus_confidences.len();
+    let conflict_item_count = items
+        .values()
+        .filter(|item| item.observed_credit_classes.len() > 1)
+        .count();
+    let avg_consensus_confidence = if consensus_confidences.is_empty() {
+        None
+    } else {
+        Some(
+            (consensus_confidences.iter().sum::<f64>() / consensus_confidences.len() as f64)
+                .clamp(0.0, 1.0),
+        )
+    };
+    let min_consensus_confidence = consensus_confidences
+        .iter()
+        .copied()
+        .min_by(|left, right| left.total_cmp(right));
     let ready = distinct_source_count >= 2
         && multi_source_item_count >= STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS;
     let status = if ready {
@@ -3608,7 +3644,37 @@ fn structural_source_reliability_em_readiness(
         observed_label_count,
         max_sources_per_item,
         min_multi_source_items: STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS,
+        consensus_item_count,
+        conflict_item_count,
+        avg_consensus_confidence,
+        min_consensus_confidence,
     }
+}
+
+fn structural_source_reliability_em_credit_class(outcome: &str) -> Option<&'static str> {
+    let outcome = outcome.trim().to_ascii_lowercase();
+    if outcome.is_empty() || structural_feedback_outcome_is_unresolved(&outcome) {
+        return None;
+    }
+    match outcome.as_str() {
+        "win" | "profit" | "tp" | "take_profit" => Some("positive_executed"),
+        "loss" | "lose" | "sl" | "stop" | "stop_loss" | "invalidated" => {
+            Some("negative_executed")
+        }
+        "breakeven" | "abandoned" => Some("neutral_executed"),
+        "not_followed" => Some("no_credit_not_followed"),
+        _ => Some("other_observed"),
+    }
+}
+
+fn structural_source_reliability_em_consensus_confidence(
+    item: &StructuralSourceReliabilityEmItem,
+) -> Option<f64> {
+    if item.observed_labels < 2 {
+        return None;
+    }
+    let max_class_count = item.observed_credit_classes.values().copied().max()?;
+    Some((max_class_count as f64 / item.observed_labels as f64).clamp(0.0, 1.0))
 }
 
 fn structural_resolved_observations(
@@ -5584,6 +5650,12 @@ mod tests {
             readiness.min_multi_source_items,
             STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS
         );
+        assert_eq!(readiness.consensus_item_count, 3);
+        assert_eq!(readiness.conflict_item_count, 1);
+        assert!(
+            (readiness.avg_consensus_confidence.unwrap() - (2.5 / 3.0)).abs() < 1e-9
+        );
+        assert_eq!(readiness.min_consensus_confidence, Some(0.5));
     }
 
     #[test]
