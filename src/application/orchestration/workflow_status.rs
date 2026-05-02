@@ -5484,6 +5484,10 @@ mod tests {
                 off_policy_adjusted_prior: 0.4602739726,
                 policy_weighted_observation_mass: 2.05,
                 behavior_policy_probability: 0.42,
+                behavior_policy_probability_squared_mass: 0.38,
+                behavior_policy_probability_variance: 0.018,
+                target_policy_probability_confidence: 0.57,
+                target_policy_probability_lower_bound: 0.31,
                 snips_weight_mass: 4.5,
                 snips_weight_squared_mass: 10.125,
                 snips_effective_sample_size: 2.0,
@@ -5622,6 +5626,9 @@ mod tests {
         assert_eq!(value["path"]["counterfactual_reward_prior"], 0.5753424658);
         assert_eq!(value["path"]["off_policy_adjusted_prior"], 0.4602739726);
         assert_eq!(value["path"]["behavior_policy_probability"], 0.42);
+        assert_eq!(value["path"]["behavior_policy_probability_variance"], 0.018);
+        assert_eq!(value["path"]["target_policy_probability_confidence"], 0.57);
+        assert_eq!(value["path"]["target_policy_probability_lower_bound"], 0.31);
         assert_eq!(value["path"]["snips_weight_mass"], 4.5);
         assert_eq!(value["path"]["snips_weight_squared_mass"], 10.125);
         assert_eq!(value["path"]["snips_effective_sample_size"], 2.0);

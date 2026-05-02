@@ -132,6 +132,14 @@ pub struct StructuralPriorStats {
     #[serde(default)]
     pub behavior_policy_probability: f64,
     #[serde(default)]
+    pub behavior_policy_probability_squared_mass: f64,
+    #[serde(default)]
+    pub behavior_policy_probability_variance: f64,
+    #[serde(default)]
+    pub target_policy_probability_confidence: f64,
+    #[serde(default)]
+    pub target_policy_probability_lower_bound: f64,
+    #[serde(default)]
     pub snips_weight_mass: f64,
     #[serde(default)]
     pub snips_weight_squared_mass: f64,
@@ -176,6 +184,14 @@ pub struct StructuralPriorMassSnapshot {
     pub off_policy_adjusted_prior: f64,
     #[serde(default)]
     pub behavior_policy_probability: f64,
+    #[serde(default)]
+    pub behavior_policy_probability_squared_mass: f64,
+    #[serde(default)]
+    pub behavior_policy_probability_variance: f64,
+    #[serde(default)]
+    pub target_policy_probability_confidence: f64,
+    #[serde(default)]
+    pub target_policy_probability_lower_bound: f64,
     #[serde(default)]
     pub snips_reward_prior: f64,
     #[serde(default)]
@@ -249,6 +265,14 @@ pub struct StructuralPriorSourceSummary {
     pub policy_weighted_observation_mass: f64,
     #[serde(default)]
     pub behavior_policy_probability: f64,
+    #[serde(default)]
+    pub behavior_policy_probability_squared_mass: f64,
+    #[serde(default)]
+    pub behavior_policy_probability_variance: f64,
+    #[serde(default)]
+    pub target_policy_probability_confidence: f64,
+    #[serde(default)]
+    pub target_policy_probability_lower_bound: f64,
     #[serde(default)]
     pub snips_weight_mass: f64,
     #[serde(default)]
@@ -3960,6 +3984,10 @@ fn structural_prior_mass_snapshot(
         execution_propensity: stats.execution_propensity,
         off_policy_adjusted_prior: stats.off_policy_adjusted_prior,
         behavior_policy_probability: stats.behavior_policy_probability,
+        behavior_policy_probability_squared_mass: stats.behavior_policy_probability_squared_mass,
+        behavior_policy_probability_variance: stats.behavior_policy_probability_variance,
+        target_policy_probability_confidence: stats.target_policy_probability_confidence,
+        target_policy_probability_lower_bound: stats.target_policy_probability_lower_bound,
         snips_reward_prior: stats.snips_reward_prior,
         doubly_robust_reward_prior: stats.doubly_robust_reward_prior,
         target_policy_calibration_weight: stats.target_policy_calibration_weight,
@@ -4072,6 +4100,7 @@ fn update_structural_prior_stats(
             update_structural_policy_correction_stats(
                 &mut stats.policy_weighted_observation_mass,
                 &mut stats.behavior_policy_probability,
+                &mut stats.behavior_policy_probability_squared_mass,
                 &mut stats.snips_weight_mass,
                 &mut stats.snips_weight_squared_mass,
                 &mut stats.snips_reward_mass,
@@ -4278,6 +4307,7 @@ fn structural_ips_weight(execution_propensity: f64) -> f64 {
 struct StructuralPolicyCorrectionContribution {
     weighted_observation: f64,
     behavior_policy_probability: f64,
+    behavior_policy_probability_squared_mass: f64,
     snips_weighted_mass: f64,
     snips_weighted_squared_mass: f64,
     snips_reward_mass: f64,
@@ -4322,6 +4352,9 @@ fn structural_policy_correction_contribution(
     Some(StructuralPolicyCorrectionContribution {
         weighted_observation,
         behavior_policy_probability,
+        behavior_policy_probability_squared_mass: weighted_observation
+            * behavior_policy_probability
+            * behavior_policy_probability,
         snips_weighted_mass,
         snips_weighted_squared_mass: snips_weighted_mass * snips_weighted_mass,
         snips_reward_mass: snips_weighted_mass * reward,
@@ -4332,6 +4365,7 @@ fn structural_policy_correction_contribution(
 fn update_structural_policy_correction_stats(
     policy_weighted_observation_mass: &mut f64,
     behavior_policy_probability: &mut f64,
+    behavior_policy_probability_squared_mass: &mut f64,
     snips_weight_mass: &mut f64,
     snips_weight_squared_mass: &mut f64,
     snips_reward_mass: &mut f64,
@@ -4346,6 +4380,8 @@ fn update_structural_policy_correction_stats(
             / next_mass;
     }
     *policy_weighted_observation_mass = next_mass;
+    *behavior_policy_probability_squared_mass +=
+        contribution.behavior_policy_probability_squared_mass;
     *snips_weight_mass += contribution.snips_weighted_mass;
     *snips_weight_squared_mass += contribution.snips_weighted_squared_mass;
     *snips_reward_mass += contribution.snips_reward_mass;
@@ -4371,6 +4407,61 @@ fn structural_target_policy_calibration_weight(snips_effective_sample_size: f64)
     } else {
         (effective_sample_size / (1.0 + effective_sample_size)).clamp(0.0, 1.0)
     }
+}
+
+fn structural_behavior_policy_probability_variance(
+    policy_weighted_observation_mass: f64,
+    behavior_policy_probability: f64,
+    behavior_policy_probability_squared_mass: f64,
+) -> f64 {
+    if policy_weighted_observation_mass <= f64::EPSILON {
+        return 0.0;
+    }
+    let mean = behavior_policy_probability.clamp(0.0, 1.0);
+    let mean_square =
+        (behavior_policy_probability_squared_mass.max(0.0) / policy_weighted_observation_mass)
+            .clamp(0.0, 1.0);
+    (mean_square - mean * mean).max(0.0).clamp(0.0, 1.0)
+}
+
+fn structural_target_policy_probability_penalty(
+    policy_weighted_observation_mass: f64,
+    behavior_policy_probability_variance: f64,
+) -> f64 {
+    if policy_weighted_observation_mass <= f64::EPSILON {
+        return 0.0;
+    }
+    (behavior_policy_probability_variance.clamp(0.0, 1.0)
+        / (1.0 + policy_weighted_observation_mass.max(0.0)))
+    .sqrt()
+    .clamp(0.0, 1.0)
+}
+
+fn structural_target_policy_probability_confidence(
+    policy_weighted_observation_mass: f64,
+    behavior_policy_probability_variance: f64,
+) -> f64 {
+    if policy_weighted_observation_mass <= f64::EPSILON {
+        return 0.0;
+    }
+    let mass_confidence =
+        (policy_weighted_observation_mass / (1.0 + policy_weighted_observation_mass))
+            .clamp(0.0, 1.0);
+    let dispersion_confidence =
+        (1.0 - behavior_policy_probability_variance.clamp(0.0, 1.0).sqrt()).clamp(0.0, 1.0);
+    (mass_confidence * dispersion_confidence).clamp(0.0, 1.0)
+}
+
+fn structural_target_policy_probability_lower_bound(
+    behavior_policy_probability: f64,
+    policy_weighted_observation_mass: f64,
+    behavior_policy_probability_variance: f64,
+) -> f64 {
+    let penalty = structural_target_policy_probability_penalty(
+        policy_weighted_observation_mass,
+        behavior_policy_probability_variance,
+    );
+    (behavior_policy_probability.clamp(0.0, 1.0) - penalty).clamp(0.0, 1.0)
 }
 
 fn structural_target_policy_variance_penalty(
@@ -4434,6 +4525,20 @@ fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
     stats.off_policy_adjusted_prior =
         (stats.counterfactual_reward_prior * stats.execution_propensity).clamp(0.0, 1.0);
     stats.behavior_policy_probability = stats.behavior_policy_probability.clamp(0.0, 1.0);
+    stats.behavior_policy_probability_variance = structural_behavior_policy_probability_variance(
+        stats.policy_weighted_observation_mass,
+        stats.behavior_policy_probability,
+        stats.behavior_policy_probability_squared_mass,
+    );
+    stats.target_policy_probability_confidence = structural_target_policy_probability_confidence(
+        stats.policy_weighted_observation_mass,
+        stats.behavior_policy_probability_variance,
+    );
+    stats.target_policy_probability_lower_bound = structural_target_policy_probability_lower_bound(
+        stats.behavior_policy_probability,
+        stats.policy_weighted_observation_mass,
+        stats.behavior_policy_probability_variance,
+    );
     stats.snips_reward_prior = if stats.snips_weight_mass > f64::EPSILON {
         (stats.snips_reward_mass / stats.snips_weight_mass).clamp(0.0, 1.0)
     } else {
@@ -4526,6 +4631,7 @@ fn update_structural_prior_source_summary_from_feedback(
             update_structural_policy_correction_stats(
                 &mut summary.policy_weighted_observation_mass,
                 &mut summary.behavior_policy_probability,
+                &mut summary.behavior_policy_probability_squared_mass,
                 &mut summary.snips_weight_mass,
                 &mut summary.snips_weight_squared_mass,
                 &mut summary.snips_reward_mass,
@@ -4616,6 +4722,23 @@ fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSu
     summary.off_policy_adjusted_prior =
         (summary.counterfactual_reward_prior * summary.execution_propensity).clamp(0.0, 1.0);
     summary.behavior_policy_probability = summary.behavior_policy_probability.clamp(0.0, 1.0);
+    summary.behavior_policy_probability_variance =
+        structural_behavior_policy_probability_variance(
+            summary.policy_weighted_observation_mass,
+            summary.behavior_policy_probability,
+            summary.behavior_policy_probability_squared_mass,
+        );
+    summary.target_policy_probability_confidence =
+        structural_target_policy_probability_confidence(
+            summary.policy_weighted_observation_mass,
+            summary.behavior_policy_probability_variance,
+        );
+    summary.target_policy_probability_lower_bound =
+        structural_target_policy_probability_lower_bound(
+            summary.behavior_policy_probability,
+            summary.policy_weighted_observation_mass,
+            summary.behavior_policy_probability_variance,
+        );
     summary.snips_reward_prior = if summary.snips_weight_mass > f64::EPSILON {
         (summary.snips_reward_mass / summary.snips_weight_mass).clamp(0.0, 1.0)
     } else {
@@ -6236,6 +6359,18 @@ mod tests {
             .expect("path policy correction stats");
         assert!((path.policy_weighted_observation_mass - 2.0).abs() < 1e-9);
         assert!((path.behavior_policy_probability - 0.375).abs() < 1e-9);
+        assert!((path.behavior_policy_probability_squared_mass - 0.3125).abs() < 1e-9);
+        assert!((path.behavior_policy_probability_variance - 0.015625).abs() < 1e-9);
+        let expected_probability_confidence = (2.0 / 3.0) * (1.0 - 0.015625_f64.sqrt());
+        let expected_probability_lower_bound = 0.375 - (0.015625_f64 / 3.0).sqrt();
+        assert!(
+            (path.target_policy_probability_confidence - expected_probability_confidence).abs()
+                < 1e-9
+        );
+        assert!(
+            (path.target_policy_probability_lower_bound - expected_probability_lower_bound).abs()
+                < 1e-9
+        );
         assert!((path.snips_weight_mass - 6.0).abs() < 1e-9);
         assert!((path.snips_weight_squared_mass - 20.0).abs() < 1e-9);
         assert!((path.snips_effective_sample_size - 1.8).abs() < 1e-9);
@@ -6264,6 +6399,24 @@ mod tests {
             .get("structural_feedback_submission")
             .expect("path source policy correction stats");
         assert!((source_summary.behavior_policy_probability - 0.375).abs() < 1e-9);
+        assert!(
+            (source_summary.behavior_policy_probability_squared_mass - 0.3125).abs() < 1e-9
+        );
+        assert!(
+            (source_summary.behavior_policy_probability_variance - 0.015625).abs() < 1e-9
+        );
+        assert!(
+            (source_summary.target_policy_probability_confidence
+                - expected_probability_confidence)
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (source_summary.target_policy_probability_lower_bound
+                - expected_probability_lower_bound)
+                .abs()
+                < 1e-9
+        );
         assert!((source_summary.snips_weight_squared_mass - 20.0).abs() < 1e-9);
         assert!((source_summary.snips_effective_sample_size - 1.8).abs() < 1e-9);
         assert!((source_summary.snips_reward_prior - (1.0 / 3.0)).abs() < 1e-9);

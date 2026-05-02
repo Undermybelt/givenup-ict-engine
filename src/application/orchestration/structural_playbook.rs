@@ -555,6 +555,12 @@ pub struct StructuralExperiencePriorEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub behavior_policy_probability: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub behavior_policy_probability_variance: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub target_policy_probability_confidence: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub target_policy_probability_lower_bound: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub snips_weight_mass: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub snips_weight_squared_mass: Option<f64>,
@@ -1196,6 +1202,12 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 behavior_policy_probability: structural_prior_behavior_policy_probability(
                     prior_stats,
                 ),
+                behavior_policy_probability_variance:
+                    structural_prior_behavior_policy_probability_variance(prior_stats),
+                target_policy_probability_confidence:
+                    structural_prior_target_policy_probability_confidence(prior_stats),
+                target_policy_probability_lower_bound:
+                    structural_prior_target_policy_probability_lower_bound(prior_stats),
                 snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
                 snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(prior_stats),
                 snips_effective_sample_size: structural_prior_snips_effective_sample_size(
@@ -1260,6 +1272,12 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         behavior_policy_probability: structural_prior_behavior_policy_probability(
                             prior_stats,
                         ),
+                        behavior_policy_probability_variance:
+                            structural_prior_behavior_policy_probability_variance(prior_stats),
+                        target_policy_probability_confidence:
+                            structural_prior_target_policy_probability_confidence(prior_stats),
+                        target_policy_probability_lower_bound:
+                            structural_prior_target_policy_probability_lower_bound(prior_stats),
                         snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
                         snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(
                             prior_stats,
@@ -1337,6 +1355,12 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 behavior_policy_probability: structural_prior_behavior_policy_probability(
                     prior_stats,
                 ),
+                behavior_policy_probability_variance:
+                    structural_prior_behavior_policy_probability_variance(prior_stats),
+                target_policy_probability_confidence:
+                    structural_prior_target_policy_probability_confidence(prior_stats),
+                target_policy_probability_lower_bound:
+                    structural_prior_target_policy_probability_lower_bound(prior_stats),
                 snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
                 snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(prior_stats),
                 snips_effective_sample_size: structural_prior_snips_effective_sample_size(
@@ -1400,6 +1424,12 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         behavior_policy_probability: structural_prior_behavior_policy_probability(
                             prior_stats,
                         ),
+                        behavior_policy_probability_variance:
+                            structural_prior_behavior_policy_probability_variance(prior_stats),
+                        target_policy_probability_confidence:
+                            structural_prior_target_policy_probability_confidence(prior_stats),
+                        target_policy_probability_lower_bound:
+                            structural_prior_target_policy_probability_lower_bound(prior_stats),
                         snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
                         snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(
                             prior_stats,
@@ -1477,6 +1507,12 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 behavior_policy_probability: structural_prior_behavior_policy_probability(
                     prior_stats,
                 ),
+                behavior_policy_probability_variance:
+                    structural_prior_behavior_policy_probability_variance(prior_stats),
+                target_policy_probability_confidence:
+                    structural_prior_target_policy_probability_confidence(prior_stats),
+                target_policy_probability_lower_bound:
+                    structural_prior_target_policy_probability_lower_bound(prior_stats),
                 snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
                 snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(prior_stats),
                 snips_effective_sample_size: structural_prior_snips_effective_sample_size(
@@ -1541,6 +1577,12 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         behavior_policy_probability: structural_prior_behavior_policy_probability(
                             prior_stats,
                         ),
+                        behavior_policy_probability_variance:
+                            structural_prior_behavior_policy_probability_variance(prior_stats),
+                        target_policy_probability_confidence:
+                            structural_prior_target_policy_probability_confidence(prior_stats),
+                        target_policy_probability_lower_bound:
+                            structural_prior_target_policy_probability_lower_bound(prior_stats),
                         snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
                         snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(
                             prior_stats,
@@ -1641,6 +1683,12 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
             behavior_policy_probability: structural_prior_behavior_policy_probability(
                 node_prior_stats,
             ),
+            behavior_policy_probability_variance:
+                structural_prior_behavior_policy_probability_variance(node_prior_stats),
+            target_policy_probability_confidence:
+                structural_prior_target_policy_probability_confidence(node_prior_stats),
+            target_policy_probability_lower_bound:
+                structural_prior_target_policy_probability_lower_bound(node_prior_stats),
             snips_weight_mass: structural_prior_snips_weight_mass(node_prior_stats),
             snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(
                 node_prior_stats,
@@ -4662,6 +4710,30 @@ fn structural_prior_behavior_policy_probability(
     prior_stats: Option<&StructuralPriorStats>,
 ) -> Option<f64> {
     structural_prior_positive_value(prior_stats, |stats| stats.behavior_policy_probability)
+}
+
+fn structural_prior_behavior_policy_probability_variance(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.behavior_policy_probability_variance
+    })
+}
+
+fn structural_prior_target_policy_probability_confidence(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.target_policy_probability_confidence
+    })
+}
+
+fn structural_prior_target_policy_probability_lower_bound(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.target_policy_probability_lower_bound
+    })
 }
 
 fn structural_prior_snips_weight_mass(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
