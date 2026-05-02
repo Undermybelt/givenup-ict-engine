@@ -21,7 +21,7 @@ Aligned source docs:
 |---|---|---|
 | `P0` Repo truth | `已实现` | execution plan, literature docs, and paper-code readmes are committed |
 | `P1` Canonical structural anchor | `已实现` | downstream phases no longer redefine canonical structural lineage |
-| `P2` Live feedback posterior update | `基本实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, clipped IPS counterfactual reward priors, candidate-set policy logging, feedback-time selected policy probability consumption, clipped SNIPS/DR reward priors, SNIPS effective-sample diagnostics, compact target-policy calibration/variance diagnostics, and delayed-reward resolution/censoring adjustment diagnostics exist; deeper target-policy and delayed-reward survival calibration remains |
+| `P2` Live feedback posterior update | `基本实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, clipped IPS counterfactual reward priors, candidate-set policy logging, feedback-time selected policy probability consumption, clipped SNIPS/DR reward priors, SNIPS effective-sample diagnostics, compact target-policy variance/Brier/calibration-error diagnostics, and delayed-reward resolution/censoring adjustment diagnostics exist; deeper learned target-policy and delayed-reward survival calibration remains |
 | `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, compact outcome-confusion profiles, persisted EM source-confusion summaries, compact EM calibration diagnostics, and reliability-weighted panel aggregation exist |
 | `P4` Structural prior state upgrade | `部分实现` | duration, transition, dwell/hazard fields, source panels, event ledger, separated prior-mass snapshots, and latest offline seed snapshot exist; fitted dwell-time theory remains |
 | `P5` BBN node/branch posterior update | `基本实现` | temporal priors adjust belief snapshots and branch surfaces, normalized outgoing branch-transition posterior state persists, and node/regime plus complete/partial candidate-set branch adjustment consume it directly |
@@ -201,11 +201,11 @@ Already in repo
 - recommended path bundles log candidate-set id, candidate-set size, and selected path behavior-policy probability for later DR/SNIPS correction
 - structural feedback templates and inline execution contracts carry the logged candidate-set policy context without adding required flags
 - structural feedback submissions consume `selected_path_probability` as the recorded selected behavior-policy probability before legacy posterior fallbacks
-- structural prior stats/source summaries persist behavior-policy probability, probability variance, probability confidence/lower-bound diagnostics, SNIPS reward prior, SNIPS effective sample size, doubly robust reward prior, target-policy calibration weight, variance penalty, calibrated reward prior, conservative reward lower bound, delayed-reward resolution/censoring probabilities, and censoring-adjusted reward prior/lower-bound diagnostics; `structural-experience-priors` exposes the compact correction fields
+- structural prior stats/source summaries persist behavior-policy probability, probability variance, probability confidence/lower-bound diagnostics, compact target-policy probability Brier score and absolute calibration error, SNIPS reward prior, SNIPS effective sample size, doubly robust reward prior, target-policy calibration weight, variance penalty, calibrated reward prior, conservative reward lower bound, delayed-reward resolution/censoring probabilities, and censoring-adjusted reward prior/lower-bound diagnostics; `structural-experience-priors` exposes the compact correction fields
 - `structural-experience-priors` now exposes compact maturity/censoring diagnostics from existing counters: matured feedback count, unresolved feedback count, maturity coverage, censoring rate, delayed-reward resolution/censoring probability, and censoring-adjusted reward prior/lower bound
 
 Literature mechanisms still worth importing
-- full target-policy probability model calibration beyond the current compact logged-probability variance/confidence and ESS-weighted reward prior diagnostics
+- learned/contextual target-policy probability model calibration beyond the current compact logged-probability variance/confidence, Brier/calibration-error, and ESS-weighted reward prior diagnostics
 - full survival / competing-risk delayed-reward model beyond compact resolved/unresolved counters, smoothed resolution/censoring probabilities, and censoring-adjusted reward blending
 - compliance / propensity correction before updating execution value
 
@@ -225,7 +225,7 @@ Suggested outcome decomposition
 
 Current repo gap
 - feedback learning is real and no longer heuristic-only; delayed outcomes now resolve into one posterior event and abandoned/invalidated outcomes use explicit pseudo-count weights
-- not-followed recommendations now carry separate propensity/off-policy exposure fields and clipped IPS counterfactual reward priors; recommended path bundles, feedback templates, and execution contracts log behavior-policy probability; submitted feedback consumes that probability and structural stats expose compact probability variance/confidence/lower-bound diagnostics, clipped SNIPS/DR reward priors, ESS-weighted target-policy reward, variance diagnostics, compact maturity/censoring coverage, smoothed delayed-reward resolution/censoring probabilities, and censoring-adjusted reward prior/lower-bound diagnostics; full target-policy probability and delayed-reward survival/competing-risk models remain
+- not-followed recommendations now carry separate propensity/off-policy exposure fields and clipped IPS counterfactual reward priors; recommended path bundles, feedback templates, and execution contracts log behavior-policy probability; submitted feedback consumes that probability and structural stats expose compact probability variance/confidence/lower-bound/Brier/calibration-error diagnostics, clipped SNIPS/DR reward priors, ESS-weighted target-policy reward, variance diagnostics, compact maturity/censoring coverage, smoothed delayed-reward resolution/censoring probabilities, and censoring-adjusted reward prior/lower-bound diagnostics; learned target-policy probability and delayed-reward survival/competing-risk models remain
 
 ---
 
@@ -337,5 +337,5 @@ Use this summary when deciding the next coding slice:
 The repo is no longer blocked on surface drift. The highest-value remaining work is now:
 1. collect or opt into larger real cross-source panels, then inspect the persisted Dawid-Skene / EM-style calibration diagnostics over out-of-sample windows
 2. richer BOCPD posterior calibration on top of the current HSMM-style empirical dwell distribution and compact evidence-weighted break/continue plus empirical/recursive run-length telemetry
-3. full target-policy probability calibration and delayed-reward survival/competing-risk modeling beyond the current clipped IPS / SNIPS / DR, ESS-weighted reward, variance, and compact censoring-adjusted diagnostics
+3. learned target-policy probability calibration and delayed-reward survival/competing-risk modeling beyond the current clipped IPS / SNIPS / DR, ESS-weighted reward, variance, Brier/calibration-error, and compact censoring-adjusted diagnostics
 4. CatBoost training and production validation on top of exported P6 target rows once raw-scored history exists
