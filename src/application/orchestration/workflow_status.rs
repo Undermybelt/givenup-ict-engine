@@ -5511,6 +5511,10 @@ mod tests {
                 delayed_reward_survival_probability_24h: (-12.0_f64).exp(),
                 delayed_reward_success_hazard_per_hour: 2.0 / 6.0,
                 delayed_reward_failure_hazard_per_hour: 1.0 / 6.0,
+                delayed_reward_success_cumulative_incidence_4h:
+                    (2.0 / 3.0) * (1.0 - (-2.0_f64).exp()),
+                delayed_reward_failure_cumulative_incidence_4h:
+                    (1.0 / 3.0) * (1.0 - (-2.0_f64).exp()),
                 delayed_reward_resolution_horizon_1h_count: 3,
                 delayed_reward_resolution_within_1h_count: 1,
                 delayed_reward_resolution_probability_1h: 2.0 / 5.0,
@@ -5784,6 +5788,24 @@ mod tests {
         assert_eq!(
             value["path"]["delayed_reward_failure_hazard_per_hour"],
             1.0 / 6.0
+        );
+        assert_eq!(
+            value["path"]["delayed_reward_success_cumulative_incidence_4h"],
+            (2.0 / 3.0) * (1.0 - (-2.0_f64).exp())
+        );
+        assert_eq!(
+            value["path"]["delayed_reward_failure_cumulative_incidence_4h"],
+            (1.0 / 3.0) * (1.0 - (-2.0_f64).exp())
+        );
+        assert!(
+            value["path"]
+                .get("delayed_reward_invalidation_cumulative_incidence_4h")
+                .is_none()
+        );
+        assert!(
+            value["path"]
+                .get("delayed_reward_abandonment_cumulative_incidence_4h")
+                .is_none()
         );
         assert!(
             value["path"]

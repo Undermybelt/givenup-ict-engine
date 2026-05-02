@@ -258,6 +258,14 @@ pub struct StructuralPriorStats {
     #[serde(default)]
     pub delayed_reward_abandonment_hazard_per_hour: f64,
     #[serde(default)]
+    pub delayed_reward_success_cumulative_incidence_4h: f64,
+    #[serde(default)]
+    pub delayed_reward_failure_cumulative_incidence_4h: f64,
+    #[serde(default)]
+    pub delayed_reward_invalidation_cumulative_incidence_4h: f64,
+    #[serde(default)]
+    pub delayed_reward_abandonment_cumulative_incidence_4h: f64,
+    #[serde(default)]
     pub delayed_reward_resolution_horizon_1h_count: usize,
     #[serde(default)]
     pub delayed_reward_resolution_within_1h_count: usize,
@@ -364,6 +372,14 @@ pub struct StructuralPriorMassSnapshot {
     pub delayed_reward_invalidation_hazard_per_hour: f64,
     #[serde(default)]
     pub delayed_reward_abandonment_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_success_cumulative_incidence_4h: f64,
+    #[serde(default)]
+    pub delayed_reward_failure_cumulative_incidence_4h: f64,
+    #[serde(default)]
+    pub delayed_reward_invalidation_cumulative_incidence_4h: f64,
+    #[serde(default)]
+    pub delayed_reward_abandonment_cumulative_incidence_4h: f64,
     #[serde(default)]
     pub delayed_reward_resolution_horizon_1h_count: usize,
     #[serde(default)]
@@ -523,6 +539,14 @@ pub struct StructuralPriorSourceSummary {
     pub delayed_reward_invalidation_hazard_per_hour: f64,
     #[serde(default)]
     pub delayed_reward_abandonment_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_success_cumulative_incidence_4h: f64,
+    #[serde(default)]
+    pub delayed_reward_failure_cumulative_incidence_4h: f64,
+    #[serde(default)]
+    pub delayed_reward_invalidation_cumulative_incidence_4h: f64,
+    #[serde(default)]
+    pub delayed_reward_abandonment_cumulative_incidence_4h: f64,
     #[serde(default)]
     pub delayed_reward_resolution_horizon_1h_count: usize,
     #[serde(default)]
@@ -4362,6 +4386,14 @@ fn structural_prior_mass_snapshot(
             .delayed_reward_invalidation_hazard_per_hour,
         delayed_reward_abandonment_hazard_per_hour: stats
             .delayed_reward_abandonment_hazard_per_hour,
+        delayed_reward_success_cumulative_incidence_4h: stats
+            .delayed_reward_success_cumulative_incidence_4h,
+        delayed_reward_failure_cumulative_incidence_4h: stats
+            .delayed_reward_failure_cumulative_incidence_4h,
+        delayed_reward_invalidation_cumulative_incidence_4h: stats
+            .delayed_reward_invalidation_cumulative_incidence_4h,
+        delayed_reward_abandonment_cumulative_incidence_4h: stats
+            .delayed_reward_abandonment_cumulative_incidence_4h,
         delayed_reward_resolution_horizon_1h_count: stats
             .delayed_reward_resolution_horizon_1h_count,
         delayed_reward_resolution_within_1h_count: stats
@@ -5146,6 +5178,29 @@ fn structural_delayed_reward_survival_probability(
         .clamp(0.0, 1.0)
 }
 
+fn structural_delayed_reward_cumulative_incidence(
+    cause_hazard_per_hour: f64,
+    resolution_hazard_per_hour: f64,
+    horizon_hours: f64,
+) -> f64 {
+    if cause_hazard_per_hour <= f64::EPSILON
+        || resolution_hazard_per_hour <= f64::EPSILON
+        || horizon_hours <= f64::EPSILON
+    {
+        return 0.0;
+    }
+    let cause_share =
+        (cause_hazard_per_hour.max(0.0) / resolution_hazard_per_hour.max(f64::EPSILON))
+            .clamp(0.0, 1.0);
+    let event_probability =
+        (1.0 - structural_delayed_reward_survival_probability(
+            resolution_hazard_per_hour,
+            horizon_hours,
+        ))
+        .clamp(0.0, 1.0);
+    (cause_share * event_probability).clamp(0.0, 1.0)
+}
+
 fn structural_delayed_reward_update_resolution_horizon(
     elapsed_hours: f64,
     matured: bool,
@@ -5439,6 +5494,30 @@ fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
     stats.delayed_reward_failure_hazard_per_hour = elapsed_hazards.failure;
     stats.delayed_reward_invalidation_hazard_per_hour = elapsed_hazards.invalidation;
     stats.delayed_reward_abandonment_hazard_per_hour = elapsed_hazards.abandonment;
+    stats.delayed_reward_success_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.success,
+            stats.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    stats.delayed_reward_failure_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.failure,
+            stats.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    stats.delayed_reward_invalidation_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.invalidation,
+            stats.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    stats.delayed_reward_abandonment_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.abandonment,
+            stats.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
     stats.delayed_reward_resolution_probability_1h =
         structural_delayed_reward_resolution_horizon_probability(
             stats.delayed_reward_resolution_within_1h_count,
@@ -5774,6 +5853,30 @@ fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSu
     summary.delayed_reward_failure_hazard_per_hour = elapsed_hazards.failure;
     summary.delayed_reward_invalidation_hazard_per_hour = elapsed_hazards.invalidation;
     summary.delayed_reward_abandonment_hazard_per_hour = elapsed_hazards.abandonment;
+    summary.delayed_reward_success_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.success,
+            summary.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    summary.delayed_reward_failure_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.failure,
+            summary.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    summary.delayed_reward_invalidation_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.invalidation,
+            summary.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    summary.delayed_reward_abandonment_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.abandonment,
+            summary.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
     summary.delayed_reward_resolution_probability_1h =
         structural_delayed_reward_resolution_horizon_probability(
             summary.delayed_reward_resolution_within_1h_count,
@@ -8217,6 +8320,27 @@ mod tests {
         assert!((path.delayed_reward_failure_hazard_per_hour - (1.0 / 1.5)).abs() < 1e-9);
         assert!(path.delayed_reward_invalidation_hazard_per_hour.abs() < 1e-9);
         assert!(path.delayed_reward_abandonment_hazard_per_hour.abs() < 1e-9);
+        let expected_total_incidence_4h = 1.0 - (-expected_resolution_hazard * 4.0).exp();
+        assert!(
+            (path.delayed_reward_success_cumulative_incidence_4h
+                - expected_total_incidence_4h * 0.5)
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (path.delayed_reward_failure_cumulative_incidence_4h
+                - expected_total_incidence_4h * 0.5)
+                .abs()
+                < 1e-9
+        );
+        assert!(path
+            .delayed_reward_invalidation_cumulative_incidence_4h
+            .abs()
+            < 1e-9);
+        assert!(path
+            .delayed_reward_abandonment_cumulative_incidence_4h
+            .abs()
+            < 1e-9);
         assert_eq!(path.delayed_reward_resolution_horizon_1h_count, 2);
         assert_eq!(path.delayed_reward_resolution_within_1h_count, 2);
         assert!((path.delayed_reward_resolution_probability_1h - 0.75).abs() < 1e-9);
@@ -8402,6 +8526,26 @@ mod tests {
             < 1e-9);
         assert!(source_summary
             .delayed_reward_abandonment_hazard_per_hour
+            .abs()
+            < 1e-9);
+        assert!(
+            (source_summary.delayed_reward_success_cumulative_incidence_4h
+                - expected_total_incidence_4h * 0.5)
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (source_summary.delayed_reward_failure_cumulative_incidence_4h
+                - expected_total_incidence_4h * 0.5)
+                .abs()
+                < 1e-9
+        );
+        assert!(source_summary
+            .delayed_reward_invalidation_cumulative_incidence_4h
+            .abs()
+            < 1e-9);
+        assert!(source_summary
+            .delayed_reward_abandonment_cumulative_incidence_4h
             .abs()
             < 1e-9);
         assert_eq!(source_summary.delayed_reward_resolution_horizon_1h_count, 2);

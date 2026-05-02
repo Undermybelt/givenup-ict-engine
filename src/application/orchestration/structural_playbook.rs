@@ -682,6 +682,14 @@ pub struct StructuralExperiencePriorEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delayed_reward_abandonment_hazard_per_hour: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_success_cumulative_incidence_4h: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_failure_cumulative_incidence_4h: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_invalidation_cumulative_incidence_4h: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_abandonment_cumulative_incidence_4h: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delayed_reward_resolution_horizon_1h_count: Option<usize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delayed_reward_resolution_within_1h_count: Option<usize>,
@@ -1389,6 +1397,18 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_delayed_reward_invalidation_hazard_per_hour(prior_stats),
                 delayed_reward_abandonment_hazard_per_hour:
                     structural_prior_delayed_reward_abandonment_hazard_per_hour(prior_stats),
+                delayed_reward_success_cumulative_incidence_4h:
+                    structural_prior_delayed_reward_success_cumulative_incidence_4h(prior_stats),
+                delayed_reward_failure_cumulative_incidence_4h:
+                    structural_prior_delayed_reward_failure_cumulative_incidence_4h(prior_stats),
+                delayed_reward_invalidation_cumulative_incidence_4h:
+                    structural_prior_delayed_reward_invalidation_cumulative_incidence_4h(
+                        prior_stats,
+                    ),
+                delayed_reward_abandonment_cumulative_incidence_4h:
+                    structural_prior_delayed_reward_abandonment_cumulative_incidence_4h(
+                        prior_stats,
+                    ),
                 delayed_reward_resolution_horizon_1h_count:
                     structural_prior_delayed_reward_resolution_horizon_1h_count(prior_stats),
                 delayed_reward_resolution_within_1h_count:
@@ -1541,6 +1561,22 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             structural_prior_delayed_reward_abandonment_hazard_per_hour(
                                 prior_stats,
                             ),
+                        delayed_reward_success_cumulative_incidence_4h:
+                            structural_prior_delayed_reward_success_cumulative_incidence_4h(
+                                prior_stats,
+                            ),
+                        delayed_reward_failure_cumulative_incidence_4h:
+                            structural_prior_delayed_reward_failure_cumulative_incidence_4h(
+                                prior_stats,
+                            ),
+                        delayed_reward_invalidation_cumulative_incidence_4h:
+                            structural_prior_delayed_reward_invalidation_cumulative_incidence_4h(
+                                prior_stats,
+                            ),
+                        delayed_reward_abandonment_cumulative_incidence_4h:
+                            structural_prior_delayed_reward_abandonment_cumulative_incidence_4h(
+                                prior_stats,
+                            ),
                         delayed_reward_resolution_horizon_1h_count:
                             structural_prior_delayed_reward_resolution_horizon_1h_count(
                                 prior_stats,
@@ -1690,6 +1726,18 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_delayed_reward_invalidation_hazard_per_hour(prior_stats),
                 delayed_reward_abandonment_hazard_per_hour:
                     structural_prior_delayed_reward_abandonment_hazard_per_hour(prior_stats),
+                delayed_reward_success_cumulative_incidence_4h:
+                    structural_prior_delayed_reward_success_cumulative_incidence_4h(prior_stats),
+                delayed_reward_failure_cumulative_incidence_4h:
+                    structural_prior_delayed_reward_failure_cumulative_incidence_4h(prior_stats),
+                delayed_reward_invalidation_cumulative_incidence_4h:
+                    structural_prior_delayed_reward_invalidation_cumulative_incidence_4h(
+                        prior_stats,
+                    ),
+                delayed_reward_abandonment_cumulative_incidence_4h:
+                    structural_prior_delayed_reward_abandonment_cumulative_incidence_4h(
+                        prior_stats,
+                    ),
                 delayed_reward_resolution_horizon_1h_count:
                     structural_prior_delayed_reward_resolution_horizon_1h_count(prior_stats),
                 delayed_reward_resolution_within_1h_count:
@@ -1841,6 +1889,22 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             structural_prior_delayed_reward_abandonment_hazard_per_hour(
                                 prior_stats,
                             ),
+                        delayed_reward_success_cumulative_incidence_4h:
+                            structural_prior_delayed_reward_success_cumulative_incidence_4h(
+                                prior_stats,
+                            ),
+                        delayed_reward_failure_cumulative_incidence_4h:
+                            structural_prior_delayed_reward_failure_cumulative_incidence_4h(
+                                prior_stats,
+                            ),
+                        delayed_reward_invalidation_cumulative_incidence_4h:
+                            structural_prior_delayed_reward_invalidation_cumulative_incidence_4h(
+                                prior_stats,
+                            ),
+                        delayed_reward_abandonment_cumulative_incidence_4h:
+                            structural_prior_delayed_reward_abandonment_cumulative_incidence_4h(
+                                prior_stats,
+                            ),
                         delayed_reward_resolution_horizon_1h_count:
                             structural_prior_delayed_reward_resolution_horizon_1h_count(
                                 prior_stats,
@@ -1990,6 +2054,18 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_delayed_reward_invalidation_hazard_per_hour(prior_stats),
                 delayed_reward_abandonment_hazard_per_hour:
                     structural_prior_delayed_reward_abandonment_hazard_per_hour(prior_stats),
+                delayed_reward_success_cumulative_incidence_4h:
+                    structural_prior_delayed_reward_success_cumulative_incidence_4h(prior_stats),
+                delayed_reward_failure_cumulative_incidence_4h:
+                    structural_prior_delayed_reward_failure_cumulative_incidence_4h(prior_stats),
+                delayed_reward_invalidation_cumulative_incidence_4h:
+                    structural_prior_delayed_reward_invalidation_cumulative_incidence_4h(
+                        prior_stats,
+                    ),
+                delayed_reward_abandonment_cumulative_incidence_4h:
+                    structural_prior_delayed_reward_abandonment_cumulative_incidence_4h(
+                        prior_stats,
+                    ),
                 delayed_reward_resolution_horizon_1h_count:
                     structural_prior_delayed_reward_resolution_horizon_1h_count(prior_stats),
                 delayed_reward_resolution_within_1h_count:
@@ -2140,6 +2216,22 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             ),
                         delayed_reward_abandonment_hazard_per_hour:
                             structural_prior_delayed_reward_abandonment_hazard_per_hour(
+                                prior_stats,
+                            ),
+                        delayed_reward_success_cumulative_incidence_4h:
+                            structural_prior_delayed_reward_success_cumulative_incidence_4h(
+                                prior_stats,
+                            ),
+                        delayed_reward_failure_cumulative_incidence_4h:
+                            structural_prior_delayed_reward_failure_cumulative_incidence_4h(
+                                prior_stats,
+                            ),
+                        delayed_reward_invalidation_cumulative_incidence_4h:
+                            structural_prior_delayed_reward_invalidation_cumulative_incidence_4h(
+                                prior_stats,
+                            ),
+                        delayed_reward_abandonment_cumulative_incidence_4h:
+                            structural_prior_delayed_reward_abandonment_cumulative_incidence_4h(
                                 prior_stats,
                             ),
                         delayed_reward_resolution_horizon_1h_count:
@@ -2320,6 +2412,18 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 structural_prior_delayed_reward_invalidation_hazard_per_hour(node_prior_stats),
             delayed_reward_abandonment_hazard_per_hour:
                 structural_prior_delayed_reward_abandonment_hazard_per_hour(node_prior_stats),
+            delayed_reward_success_cumulative_incidence_4h:
+                structural_prior_delayed_reward_success_cumulative_incidence_4h(node_prior_stats),
+            delayed_reward_failure_cumulative_incidence_4h:
+                structural_prior_delayed_reward_failure_cumulative_incidence_4h(node_prior_stats),
+            delayed_reward_invalidation_cumulative_incidence_4h:
+                structural_prior_delayed_reward_invalidation_cumulative_incidence_4h(
+                    node_prior_stats,
+                ),
+            delayed_reward_abandonment_cumulative_incidence_4h:
+                structural_prior_delayed_reward_abandonment_cumulative_incidence_4h(
+                    node_prior_stats,
+                ),
             delayed_reward_resolution_horizon_1h_count:
                 structural_prior_delayed_reward_resolution_horizon_1h_count(node_prior_stats),
             delayed_reward_resolution_within_1h_count:
@@ -5400,6 +5504,38 @@ fn structural_prior_delayed_reward_abandonment_hazard_per_hour(
     })
 }
 
+fn structural_prior_delayed_reward_success_cumulative_incidence_4h(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_success_cumulative_incidence_4h
+    })
+}
+
+fn structural_prior_delayed_reward_failure_cumulative_incidence_4h(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_failure_cumulative_incidence_4h
+    })
+}
+
+fn structural_prior_delayed_reward_invalidation_cumulative_incidence_4h(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_invalidation_cumulative_incidence_4h
+    })
+}
+
+fn structural_prior_delayed_reward_abandonment_cumulative_incidence_4h(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_abandonment_cumulative_incidence_4h
+    })
+}
+
 fn structural_prior_delayed_reward_resolution_horizon_1h_count(
     prior_stats: Option<&StructuralPriorStats>,
 ) -> Option<usize> {
@@ -6978,6 +7114,8 @@ mod tests {
             delayed_reward_survival_probability_24h: (-12.0_f64).exp(),
             delayed_reward_success_hazard_per_hour: 1.5 / 6.0,
             delayed_reward_failure_hazard_per_hour: 1.5 / 6.0,
+            delayed_reward_success_cumulative_incidence_4h: 0.5 * (1.0 - (-2.0_f64).exp()),
+            delayed_reward_failure_cumulative_incidence_4h: 0.5 * (1.0 - (-2.0_f64).exp()),
             delayed_reward_resolution_horizon_1h_count: 3,
             delayed_reward_resolution_within_1h_count: 1,
             delayed_reward_resolution_probability_1h: 2.0 / 5.0,
@@ -7084,6 +7222,22 @@ mod tests {
         assert_eq!(
             structural_prior_delayed_reward_failure_hazard_per_hour(Some(&stats)),
             Some(1.5 / 6.0)
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_success_cumulative_incidence_4h(Some(&stats)),
+            Some(0.5 * (1.0 - (-2.0_f64).exp()))
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_failure_cumulative_incidence_4h(Some(&stats)),
+            Some(0.5 * (1.0 - (-2.0_f64).exp()))
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_invalidation_cumulative_incidence_4h(Some(&stats)),
+            None
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_abandonment_cumulative_incidence_4h(Some(&stats)),
+            None
         );
         assert_eq!(
             structural_prior_delayed_reward_invalidation_hazard_per_hour(Some(&stats)),
