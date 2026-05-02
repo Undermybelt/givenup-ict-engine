@@ -134,6 +134,10 @@ pub struct StructuralPriorStats {
     #[serde(default)]
     pub snips_weight_mass: f64,
     #[serde(default)]
+    pub snips_weight_squared_mass: f64,
+    #[serde(default)]
+    pub snips_effective_sample_size: f64,
+    #[serde(default)]
     pub snips_reward_mass: f64,
     #[serde(default)]
     pub snips_reward_prior: f64,
@@ -231,6 +235,10 @@ pub struct StructuralPriorSourceSummary {
     pub behavior_policy_probability: f64,
     #[serde(default)]
     pub snips_weight_mass: f64,
+    #[serde(default)]
+    pub snips_weight_squared_mass: f64,
+    #[serde(default)]
+    pub snips_effective_sample_size: f64,
     #[serde(default)]
     pub snips_reward_mass: f64,
     #[serde(default)]
@@ -4019,6 +4027,7 @@ fn update_structural_prior_stats(
                 &mut stats.policy_weighted_observation_mass,
                 &mut stats.behavior_policy_probability,
                 &mut stats.snips_weight_mass,
+                &mut stats.snips_weight_squared_mass,
                 &mut stats.snips_reward_mass,
                 &mut stats.doubly_robust_reward_mass,
                 contribution,
@@ -4223,7 +4232,8 @@ fn structural_ips_weight(execution_propensity: f64) -> f64 {
 struct StructuralPolicyCorrectionContribution {
     weighted_observation: f64,
     behavior_policy_probability: f64,
-    snips_weight: f64,
+    snips_weighted_mass: f64,
+    snips_weighted_squared_mass: f64,
     snips_reward_mass: f64,
     doubly_robust_reward: f64,
 }
@@ -4262,11 +4272,13 @@ fn structural_policy_correction_contribution(
     let reward = pseudo_counts.success_credit.clamp(0.0, 1.0);
     let baseline = structural_feedback_reward_baseline(record);
     let doubly_robust_reward = (baseline + snips_weight * (reward - baseline)).clamp(0.0, 1.0);
+    let snips_weighted_mass = weighted_observation * snips_weight;
     Some(StructuralPolicyCorrectionContribution {
         weighted_observation,
         behavior_policy_probability,
-        snips_weight,
-        snips_reward_mass: weighted_observation * snips_weight * reward,
+        snips_weighted_mass,
+        snips_weighted_squared_mass: snips_weighted_mass * snips_weighted_mass,
+        snips_reward_mass: snips_weighted_mass * reward,
         doubly_robust_reward,
     })
 }
@@ -4275,6 +4287,7 @@ fn update_structural_policy_correction_stats(
     policy_weighted_observation_mass: &mut f64,
     behavior_policy_probability: &mut f64,
     snips_weight_mass: &mut f64,
+    snips_weight_squared_mass: &mut f64,
     snips_reward_mass: &mut f64,
     doubly_robust_reward_mass: &mut f64,
     contribution: StructuralPolicyCorrectionContribution,
@@ -4287,10 +4300,22 @@ fn update_structural_policy_correction_stats(
             / next_mass;
     }
     *policy_weighted_observation_mass = next_mass;
-    *snips_weight_mass += contribution.weighted_observation * contribution.snips_weight;
+    *snips_weight_mass += contribution.snips_weighted_mass;
+    *snips_weight_squared_mass += contribution.snips_weighted_squared_mass;
     *snips_reward_mass += contribution.snips_reward_mass;
     *doubly_robust_reward_mass +=
         contribution.weighted_observation * contribution.doubly_robust_reward;
+}
+
+fn structural_snips_effective_sample_size(
+    snips_weight_mass: f64,
+    snips_weight_squared_mass: f64,
+) -> f64 {
+    if snips_weight_mass <= f64::EPSILON || snips_weight_squared_mass <= f64::EPSILON {
+        0.0
+    } else {
+        ((snips_weight_mass * snips_weight_mass) / snips_weight_squared_mass).max(0.0)
+    }
 }
 
 fn structural_beta_mean(success_mass: f64, failure_mass: f64) -> f64 {
@@ -4332,6 +4357,10 @@ fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
     } else {
         0.0
     };
+    stats.snips_effective_sample_size = structural_snips_effective_sample_size(
+        stats.snips_weight_mass,
+        stats.snips_weight_squared_mass,
+    );
     stats.doubly_robust_reward_prior =
         if stats.policy_weighted_observation_mass > f64::EPSILON {
             (stats.doubly_robust_reward_mass / stats.policy_weighted_observation_mass)
@@ -4403,6 +4432,7 @@ fn update_structural_prior_source_summary_from_feedback(
                 &mut summary.policy_weighted_observation_mass,
                 &mut summary.behavior_policy_probability,
                 &mut summary.snips_weight_mass,
+                &mut summary.snips_weight_squared_mass,
                 &mut summary.snips_reward_mass,
                 &mut summary.doubly_robust_reward_mass,
                 contribution,
@@ -4496,6 +4526,10 @@ fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSu
     } else {
         0.0
     };
+    summary.snips_effective_sample_size = structural_snips_effective_sample_size(
+        summary.snips_weight_mass,
+        summary.snips_weight_squared_mass,
+    );
     summary.doubly_robust_reward_prior =
         if summary.policy_weighted_observation_mass > f64::EPSILON {
             (summary.doubly_robust_reward_mass / summary.policy_weighted_observation_mass)
@@ -6036,6 +6070,8 @@ mod tests {
         assert!((path.policy_weighted_observation_mass - 2.0).abs() < 1e-9);
         assert!((path.behavior_policy_probability - 0.375).abs() < 1e-9);
         assert!((path.snips_weight_mass - 6.0).abs() < 1e-9);
+        assert!((path.snips_weight_squared_mass - 20.0).abs() < 1e-9);
+        assert!((path.snips_effective_sample_size - 1.8).abs() < 1e-9);
         assert!((path.snips_reward_mass - 2.0).abs() < 1e-9);
         assert!((path.snips_reward_prior - (1.0 / 3.0)).abs() < 1e-9);
         assert!((path.doubly_robust_reward_mass - 1.0).abs() < 1e-9);
@@ -6045,6 +6081,8 @@ mod tests {
             .get("structural_feedback_submission")
             .expect("path source policy correction stats");
         assert!((source_summary.behavior_policy_probability - 0.375).abs() < 1e-9);
+        assert!((source_summary.snips_weight_squared_mass - 20.0).abs() < 1e-9);
+        assert!((source_summary.snips_effective_sample_size - 1.8).abs() < 1e-9);
         assert!((source_summary.snips_reward_prior - (1.0 / 3.0)).abs() < 1e-9);
         assert!((source_summary.doubly_robust_reward_prior - 0.5).abs() < 1e-9);
     }

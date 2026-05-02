@@ -5485,6 +5485,8 @@ mod tests {
                 policy_weighted_observation_mass: 2.05,
                 behavior_policy_probability: 0.42,
                 snips_weight_mass: 4.5,
+                snips_weight_squared_mass: 10.125,
+                snips_effective_sample_size: 2.0,
                 snips_reward_mass: 2.7,
                 snips_reward_prior: 0.6,
                 doubly_robust_reward_mass: 1.23,
@@ -5611,6 +5613,8 @@ mod tests {
         assert_eq!(value["path"]["off_policy_adjusted_prior"], 0.4602739726);
         assert_eq!(value["path"]["behavior_policy_probability"], 0.42);
         assert_eq!(value["path"]["snips_weight_mass"], 4.5);
+        assert_eq!(value["path"]["snips_weight_squared_mass"], 10.125);
+        assert_eq!(value["path"]["snips_effective_sample_size"], 2.0);
         assert_eq!(value["path"]["snips_reward_prior"], 0.6);
         assert_eq!(value["path"]["doubly_robust_reward_prior"], 0.6);
         assert_eq!(value["node"]["duration_streak_count"], 2);

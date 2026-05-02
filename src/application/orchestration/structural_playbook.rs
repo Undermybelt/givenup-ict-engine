@@ -491,6 +491,10 @@ pub struct StructuralExperiencePriorEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub snips_weight_mass: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub snips_weight_squared_mass: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub snips_effective_sample_size: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub snips_reward_prior: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub doubly_robust_reward_prior: Option<f64>,
@@ -1111,6 +1115,10 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     prior_stats,
                 ),
                 snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
+                snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(prior_stats),
+                snips_effective_sample_size: structural_prior_snips_effective_sample_size(
+                    prior_stats,
+                ),
                 snips_reward_prior: structural_prior_snips_reward_prior(prior_stats),
                 doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                     prior_stats,
@@ -1158,6 +1166,12 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             prior_stats,
                         ),
                         snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
+                        snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(
+                            prior_stats,
+                        ),
+                        snips_effective_sample_size: structural_prior_snips_effective_sample_size(
+                            prior_stats,
+                        ),
                         snips_reward_prior: structural_prior_snips_reward_prior(prior_stats),
                         doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                             prior_stats,
@@ -1212,6 +1226,10 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     prior_stats,
                 ),
                 snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
+                snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(prior_stats),
+                snips_effective_sample_size: structural_prior_snips_effective_sample_size(
+                    prior_stats,
+                ),
                 snips_reward_prior: structural_prior_snips_reward_prior(prior_stats),
                 doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                     prior_stats,
@@ -1258,6 +1276,12 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             prior_stats,
                         ),
                         snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
+                        snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(
+                            prior_stats,
+                        ),
+                        snips_effective_sample_size: structural_prior_snips_effective_sample_size(
+                            prior_stats,
+                        ),
                         snips_reward_prior: structural_prior_snips_reward_prior(prior_stats),
                         doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                             prior_stats,
@@ -1312,6 +1336,10 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     prior_stats,
                 ),
                 snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
+                snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(prior_stats),
+                snips_effective_sample_size: structural_prior_snips_effective_sample_size(
+                    prior_stats,
+                ),
                 snips_reward_prior: structural_prior_snips_reward_prior(prior_stats),
                 doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                     prior_stats,
@@ -1359,6 +1387,12 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             prior_stats,
                         ),
                         snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
+                        snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(
+                            prior_stats,
+                        ),
+                        snips_effective_sample_size: structural_prior_snips_effective_sample_size(
+                            prior_stats,
+                        ),
                         snips_reward_prior: structural_prior_snips_reward_prior(prior_stats),
                         doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                             prior_stats,
@@ -1435,6 +1469,12 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 node_prior_stats,
             ),
             snips_weight_mass: structural_prior_snips_weight_mass(node_prior_stats),
+            snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(
+                node_prior_stats,
+            ),
+            snips_effective_sample_size: structural_prior_snips_effective_sample_size(
+                node_prior_stats,
+            ),
             snips_reward_prior: structural_prior_snips_reward_prior(node_prior_stats),
             doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                 node_prior_stats,
@@ -3947,6 +3987,18 @@ fn structural_prior_behavior_policy_probability(
 
 fn structural_prior_snips_weight_mass(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
     structural_prior_positive_value(prior_stats, |stats| stats.snips_weight_mass)
+}
+
+fn structural_prior_snips_weight_squared_mass(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.snips_weight_squared_mass)
+}
+
+fn structural_prior_snips_effective_sample_size(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.snips_effective_sample_size)
 }
 
 fn structural_prior_snips_reward_prior(

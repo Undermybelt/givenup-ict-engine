@@ -21,7 +21,7 @@ Aligned source docs:
 |---|---|---|
 | `P0` Repo truth | `已实现` | execution plan, literature docs, and paper-code readmes are committed |
 | `P1` Canonical structural anchor | `已实现` | downstream phases no longer redefine canonical structural lineage |
-| `P2` Live feedback posterior update | `基本实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, clipped IPS counterfactual reward priors, candidate-set policy logging, feedback-time selected policy probability consumption, and clipped SNIPS/DR reward priors exist; deeper target-policy calibration remains |
+| `P2` Live feedback posterior update | `基本实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, clipped IPS counterfactual reward priors, candidate-set policy logging, feedback-time selected policy probability consumption, clipped SNIPS/DR reward priors, and SNIPS effective-sample diagnostics exist; deeper target-policy calibration remains |
 | `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, compact outcome-confusion profiles, and reliability-weighted panel aggregation exist |
 | `P4` Structural prior state upgrade | `部分实现` | duration, transition, dwell/hazard fields, source panels, event ledger, separated prior-mass snapshots, and latest offline seed snapshot exist; fitted dwell-time theory remains |
 | `P5` BBN node/branch posterior update | `基本实现` | temporal priors adjust belief snapshots and branch surfaces, normalized outgoing branch-transition posterior state persists, and node/regime plus complete/partial candidate-set branch adjustment consume it directly |
@@ -191,10 +191,10 @@ Already in repo
 - recommended path bundles log candidate-set id, candidate-set size, and selected path behavior-policy probability for later DR/SNIPS correction
 - structural feedback templates and inline execution contracts carry the logged candidate-set policy context without adding required flags
 - structural feedback submissions consume `selected_path_probability` as the recorded selected behavior-policy probability before legacy posterior fallbacks
-- structural prior stats/source summaries persist behavior-policy probability, SNIPS reward prior, and doubly robust reward prior; `structural-experience-priors` exposes the compact correction fields
+- structural prior stats/source summaries persist behavior-policy probability, SNIPS reward prior, SNIPS effective sample size, and doubly robust reward prior; `structural-experience-priors` exposes the compact correction fields
 
 Literature mechanisms still worth importing
-- better calibrated target-policy probability and variance penalties on top of the clipped SNIPS/DR correction
+- better calibrated target-policy probability and variance penalties beyond the current SNIPS effective-sample diagnostic
 - maturity / censoring logic for delayed reward
 - richer maturity / censoring logic for delayed reward beyond simple delayed -> resolved replacement
 - compliance / propensity correction before updating execution value
@@ -215,7 +215,7 @@ Suggested outcome decomposition
 
 Current repo gap
 - feedback learning is real and no longer heuristic-only; delayed outcomes now resolve into one posterior event and abandoned/invalidated outcomes use explicit pseudo-count weights
-- not-followed recommendations now carry separate propensity/off-policy exposure fields and clipped IPS counterfactual reward priors; recommended path bundles, feedback templates, and execution contracts log behavior-policy probability; submitted feedback consumes that probability and structural stats expose clipped SNIPS/DR reward priors; richer target-policy calibration remains
+- not-followed recommendations now carry separate propensity/off-policy exposure fields and clipped IPS counterfactual reward priors; recommended path bundles, feedback templates, and execution contracts log behavior-policy probability; submitted feedback consumes that probability and structural stats expose clipped SNIPS/DR reward priors plus SNIPS effective sample size; richer target-policy calibration remains
 
 ---
 
@@ -325,5 +325,5 @@ Use this summary when deciding the next coding slice:
 The repo is no longer blocked on surface drift. The highest-value remaining work is now:
 1. full Dawid-Skene / EM-style source reliability learning on top of the compact outcome-confusion cells once enough cross-source labels exist
 2. BOCPD-style break detection on top of the current HSMM-style empirical dwell distribution and transition state
-3. target-policy calibration, maturity/censoring, and variance diagnostics beyond the current clipped IPS / SNIPS / DR surfaces
+3. target-policy calibration and maturity/censoring beyond the current clipped IPS / SNIPS / DR plus ESS diagnostics
 4. CatBoost training and production validation on top of exported P6 target rows once raw-scored history exists
