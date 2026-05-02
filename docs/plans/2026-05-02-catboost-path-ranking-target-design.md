@@ -18,6 +18,7 @@ Implemented:
 - candidate-set scoped CSV / JSONL / summary export under `policy_training/`
 - summary-level trainer manifest for external ranker services; Rust core should not require CatBoost
 - `policy-training-status` readiness reporting for export and calibration state
+- `policy-training-status` trainer manifest readiness/counts for the external ranker handoff contract
 - empirical Beta-smoothed calibration from raw-scored mature observations
 - compact calibration-quality evaluation fields in `policy-training-status`
 

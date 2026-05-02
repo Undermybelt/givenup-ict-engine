@@ -245,6 +245,7 @@ Already in repo
 - target rows now carry mature reward labels plus clipped IPS/sample weights so a downstream ranker can train without treating censored rows as negatives
 - `policy-training-status` separates calibration-quality readiness from production-validation readiness by requiring enough propensity-weighted calibrated rows before declaring the target production-validatable
 - the target summary carries an external trainer manifest describing group, label, weight, feature, calibration, and guardrail columns without adding a CatBoost runtime dependency
+- `policy-training-status` surfaces trainer manifest readiness with protocol/dataset role plus compact feature/calibration/guardrail column counts, and warns on incomplete manifests without loading an external trainer
 
 Not yet in repo
 - propensity-aware model training loop
