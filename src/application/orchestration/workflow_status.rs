@@ -5506,6 +5506,15 @@ mod tests {
                 delayed_reward_avg_elapsed_hours: 2.0,
                 delayed_reward_success_hazard_per_hour: 2.0 / 6.0,
                 delayed_reward_failure_hazard_per_hour: 1.0 / 6.0,
+                delayed_reward_resolution_horizon_1h_count: 3,
+                delayed_reward_resolution_within_1h_count: 1,
+                delayed_reward_resolution_probability_1h: 2.0 / 5.0,
+                delayed_reward_resolution_horizon_4h_count: 3,
+                delayed_reward_resolution_within_4h_count: 2,
+                delayed_reward_resolution_probability_4h: 3.0 / 5.0,
+                delayed_reward_resolution_horizon_24h_count: 3,
+                delayed_reward_resolution_within_24h_count: 3,
+                delayed_reward_resolution_probability_24h: 4.0 / 5.0,
                 source_panel_summaries: std::collections::BTreeMap::from([
                     (
                         "analyze".to_string(),
@@ -5721,6 +5730,15 @@ mod tests {
                 .get("delayed_reward_invalidation_hazard_per_hour")
                 .is_none()
         );
+        assert_eq!(value["path"]["delayed_reward_resolution_horizon_1h_count"], 3);
+        assert_eq!(value["path"]["delayed_reward_resolution_within_1h_count"], 1);
+        assert_eq!(value["path"]["delayed_reward_resolution_probability_1h"], 2.0 / 5.0);
+        assert_eq!(value["path"]["delayed_reward_resolution_horizon_4h_count"], 3);
+        assert_eq!(value["path"]["delayed_reward_resolution_within_4h_count"], 2);
+        assert_eq!(value["path"]["delayed_reward_resolution_probability_4h"], 3.0 / 5.0);
+        assert_eq!(value["path"]["delayed_reward_resolution_horizon_24h_count"], 3);
+        assert_eq!(value["path"]["delayed_reward_resolution_within_24h_count"], 3);
+        assert_eq!(value["path"]["delayed_reward_resolution_probability_24h"], 4.0 / 5.0);
         assert_eq!(value["path"]["matured_feedback_count"], 3);
         assert_eq!(value["path"]["unresolved_feedback_count"], 0);
         assert_eq!(value["path"]["maturity_coverage"], 1.0);

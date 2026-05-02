@@ -652,6 +652,24 @@ pub struct StructuralExperiencePriorEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delayed_reward_abandonment_hazard_per_hour: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_resolution_horizon_1h_count: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_resolution_within_1h_count: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_resolution_probability_1h: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_resolution_horizon_4h_count: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_resolution_within_4h_count: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_resolution_probability_4h: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_resolution_horizon_24h_count: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_resolution_within_24h_count: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_resolution_probability_24h: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_streak_count: Option<usize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_avg_streak_length: Option<f64>,
@@ -1331,6 +1349,24 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_delayed_reward_invalidation_hazard_per_hour(prior_stats),
                 delayed_reward_abandonment_hazard_per_hour:
                     structural_prior_delayed_reward_abandonment_hazard_per_hour(prior_stats),
+                delayed_reward_resolution_horizon_1h_count:
+                    structural_prior_delayed_reward_resolution_horizon_1h_count(prior_stats),
+                delayed_reward_resolution_within_1h_count:
+                    structural_prior_delayed_reward_resolution_within_1h_count(prior_stats),
+                delayed_reward_resolution_probability_1h:
+                    structural_prior_delayed_reward_resolution_probability_1h(prior_stats),
+                delayed_reward_resolution_horizon_4h_count:
+                    structural_prior_delayed_reward_resolution_horizon_4h_count(prior_stats),
+                delayed_reward_resolution_within_4h_count:
+                    structural_prior_delayed_reward_resolution_within_4h_count(prior_stats),
+                delayed_reward_resolution_probability_4h:
+                    structural_prior_delayed_reward_resolution_probability_4h(prior_stats),
+                delayed_reward_resolution_horizon_24h_count:
+                    structural_prior_delayed_reward_resolution_horizon_24h_count(prior_stats),
+                delayed_reward_resolution_within_24h_count:
+                    structural_prior_delayed_reward_resolution_within_24h_count(prior_stats),
+                delayed_reward_resolution_probability_24h:
+                    structural_prior_delayed_reward_resolution_probability_24h(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1453,6 +1489,32 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             structural_prior_delayed_reward_abandonment_hazard_per_hour(
                                 prior_stats,
                             ),
+                        delayed_reward_resolution_horizon_1h_count:
+                            structural_prior_delayed_reward_resolution_horizon_1h_count(
+                                prior_stats,
+                            ),
+                        delayed_reward_resolution_within_1h_count:
+                            structural_prior_delayed_reward_resolution_within_1h_count(prior_stats),
+                        delayed_reward_resolution_probability_1h:
+                            structural_prior_delayed_reward_resolution_probability_1h(prior_stats),
+                        delayed_reward_resolution_horizon_4h_count:
+                            structural_prior_delayed_reward_resolution_horizon_4h_count(
+                                prior_stats,
+                            ),
+                        delayed_reward_resolution_within_4h_count:
+                            structural_prior_delayed_reward_resolution_within_4h_count(prior_stats),
+                        delayed_reward_resolution_probability_4h:
+                            structural_prior_delayed_reward_resolution_probability_4h(prior_stats),
+                        delayed_reward_resolution_horizon_24h_count:
+                            structural_prior_delayed_reward_resolution_horizon_24h_count(
+                                prior_stats,
+                            ),
+                        delayed_reward_resolution_within_24h_count:
+                            structural_prior_delayed_reward_resolution_within_24h_count(
+                                prior_stats,
+                            ),
+                        delayed_reward_resolution_probability_24h:
+                            structural_prior_delayed_reward_resolution_probability_24h(prior_stats),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1566,6 +1628,24 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_delayed_reward_invalidation_hazard_per_hour(prior_stats),
                 delayed_reward_abandonment_hazard_per_hour:
                     structural_prior_delayed_reward_abandonment_hazard_per_hour(prior_stats),
+                delayed_reward_resolution_horizon_1h_count:
+                    structural_prior_delayed_reward_resolution_horizon_1h_count(prior_stats),
+                delayed_reward_resolution_within_1h_count:
+                    structural_prior_delayed_reward_resolution_within_1h_count(prior_stats),
+                delayed_reward_resolution_probability_1h:
+                    structural_prior_delayed_reward_resolution_probability_1h(prior_stats),
+                delayed_reward_resolution_horizon_4h_count:
+                    structural_prior_delayed_reward_resolution_horizon_4h_count(prior_stats),
+                delayed_reward_resolution_within_4h_count:
+                    structural_prior_delayed_reward_resolution_within_4h_count(prior_stats),
+                delayed_reward_resolution_probability_4h:
+                    structural_prior_delayed_reward_resolution_probability_4h(prior_stats),
+                delayed_reward_resolution_horizon_24h_count:
+                    structural_prior_delayed_reward_resolution_horizon_24h_count(prior_stats),
+                delayed_reward_resolution_within_24h_count:
+                    structural_prior_delayed_reward_resolution_within_24h_count(prior_stats),
+                delayed_reward_resolution_probability_24h:
+                    structural_prior_delayed_reward_resolution_probability_24h(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1687,6 +1767,32 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             structural_prior_delayed_reward_abandonment_hazard_per_hour(
                                 prior_stats,
                             ),
+                        delayed_reward_resolution_horizon_1h_count:
+                            structural_prior_delayed_reward_resolution_horizon_1h_count(
+                                prior_stats,
+                            ),
+                        delayed_reward_resolution_within_1h_count:
+                            structural_prior_delayed_reward_resolution_within_1h_count(prior_stats),
+                        delayed_reward_resolution_probability_1h:
+                            structural_prior_delayed_reward_resolution_probability_1h(prior_stats),
+                        delayed_reward_resolution_horizon_4h_count:
+                            structural_prior_delayed_reward_resolution_horizon_4h_count(
+                                prior_stats,
+                            ),
+                        delayed_reward_resolution_within_4h_count:
+                            structural_prior_delayed_reward_resolution_within_4h_count(prior_stats),
+                        delayed_reward_resolution_probability_4h:
+                            structural_prior_delayed_reward_resolution_probability_4h(prior_stats),
+                        delayed_reward_resolution_horizon_24h_count:
+                            structural_prior_delayed_reward_resolution_horizon_24h_count(
+                                prior_stats,
+                            ),
+                        delayed_reward_resolution_within_24h_count:
+                            structural_prior_delayed_reward_resolution_within_24h_count(
+                                prior_stats,
+                            ),
+                        delayed_reward_resolution_probability_24h:
+                            structural_prior_delayed_reward_resolution_probability_24h(prior_stats),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1800,6 +1906,24 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_delayed_reward_invalidation_hazard_per_hour(prior_stats),
                 delayed_reward_abandonment_hazard_per_hour:
                     structural_prior_delayed_reward_abandonment_hazard_per_hour(prior_stats),
+                delayed_reward_resolution_horizon_1h_count:
+                    structural_prior_delayed_reward_resolution_horizon_1h_count(prior_stats),
+                delayed_reward_resolution_within_1h_count:
+                    structural_prior_delayed_reward_resolution_within_1h_count(prior_stats),
+                delayed_reward_resolution_probability_1h:
+                    structural_prior_delayed_reward_resolution_probability_1h(prior_stats),
+                delayed_reward_resolution_horizon_4h_count:
+                    structural_prior_delayed_reward_resolution_horizon_4h_count(prior_stats),
+                delayed_reward_resolution_within_4h_count:
+                    structural_prior_delayed_reward_resolution_within_4h_count(prior_stats),
+                delayed_reward_resolution_probability_4h:
+                    structural_prior_delayed_reward_resolution_probability_4h(prior_stats),
+                delayed_reward_resolution_horizon_24h_count:
+                    structural_prior_delayed_reward_resolution_horizon_24h_count(prior_stats),
+                delayed_reward_resolution_within_24h_count:
+                    structural_prior_delayed_reward_resolution_within_24h_count(prior_stats),
+                delayed_reward_resolution_probability_24h:
+                    structural_prior_delayed_reward_resolution_probability_24h(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1922,6 +2046,32 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             structural_prior_delayed_reward_abandonment_hazard_per_hour(
                                 prior_stats,
                             ),
+                        delayed_reward_resolution_horizon_1h_count:
+                            structural_prior_delayed_reward_resolution_horizon_1h_count(
+                                prior_stats,
+                            ),
+                        delayed_reward_resolution_within_1h_count:
+                            structural_prior_delayed_reward_resolution_within_1h_count(prior_stats),
+                        delayed_reward_resolution_probability_1h:
+                            structural_prior_delayed_reward_resolution_probability_1h(prior_stats),
+                        delayed_reward_resolution_horizon_4h_count:
+                            structural_prior_delayed_reward_resolution_horizon_4h_count(
+                                prior_stats,
+                            ),
+                        delayed_reward_resolution_within_4h_count:
+                            structural_prior_delayed_reward_resolution_within_4h_count(prior_stats),
+                        delayed_reward_resolution_probability_4h:
+                            structural_prior_delayed_reward_resolution_probability_4h(prior_stats),
+                        delayed_reward_resolution_horizon_24h_count:
+                            structural_prior_delayed_reward_resolution_horizon_24h_count(
+                                prior_stats,
+                            ),
+                        delayed_reward_resolution_within_24h_count:
+                            structural_prior_delayed_reward_resolution_within_24h_count(
+                                prior_stats,
+                            ),
+                        delayed_reward_resolution_probability_24h:
+                            structural_prior_delayed_reward_resolution_probability_24h(prior_stats),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -2063,6 +2213,24 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 structural_prior_delayed_reward_invalidation_hazard_per_hour(node_prior_stats),
             delayed_reward_abandonment_hazard_per_hour:
                 structural_prior_delayed_reward_abandonment_hazard_per_hour(node_prior_stats),
+            delayed_reward_resolution_horizon_1h_count:
+                structural_prior_delayed_reward_resolution_horizon_1h_count(node_prior_stats),
+            delayed_reward_resolution_within_1h_count:
+                structural_prior_delayed_reward_resolution_within_1h_count(node_prior_stats),
+            delayed_reward_resolution_probability_1h:
+                structural_prior_delayed_reward_resolution_probability_1h(node_prior_stats),
+            delayed_reward_resolution_horizon_4h_count:
+                structural_prior_delayed_reward_resolution_horizon_4h_count(node_prior_stats),
+            delayed_reward_resolution_within_4h_count:
+                structural_prior_delayed_reward_resolution_within_4h_count(node_prior_stats),
+            delayed_reward_resolution_probability_4h:
+                structural_prior_delayed_reward_resolution_probability_4h(node_prior_stats),
+            delayed_reward_resolution_horizon_24h_count:
+                structural_prior_delayed_reward_resolution_horizon_24h_count(node_prior_stats),
+            delayed_reward_resolution_within_24h_count:
+                structural_prior_delayed_reward_resolution_within_24h_count(node_prior_stats),
+            delayed_reward_resolution_probability_24h:
+                structural_prior_delayed_reward_resolution_probability_24h(node_prior_stats),
             duration_streak_count: node_temporal_state
                 .map(|state| state.streak_count)
                 .or_else(|| structural_duration_streak_count(node_duration_prior)),
@@ -5040,6 +5208,78 @@ fn structural_prior_delayed_reward_abandonment_hazard_per_hour(
     })
 }
 
+fn structural_prior_delayed_reward_resolution_horizon_1h_count(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<usize> {
+    structural_prior_positive_count(prior_stats, |stats| {
+        stats.delayed_reward_resolution_horizon_1h_count
+    })
+}
+
+fn structural_prior_delayed_reward_resolution_within_1h_count(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<usize> {
+    structural_prior_positive_count(prior_stats, |stats| {
+        stats.delayed_reward_resolution_within_1h_count
+    })
+}
+
+fn structural_prior_delayed_reward_resolution_probability_1h(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_resolution_probability_1h
+    })
+}
+
+fn structural_prior_delayed_reward_resolution_horizon_4h_count(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<usize> {
+    structural_prior_positive_count(prior_stats, |stats| {
+        stats.delayed_reward_resolution_horizon_4h_count
+    })
+}
+
+fn structural_prior_delayed_reward_resolution_within_4h_count(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<usize> {
+    structural_prior_positive_count(prior_stats, |stats| {
+        stats.delayed_reward_resolution_within_4h_count
+    })
+}
+
+fn structural_prior_delayed_reward_resolution_probability_4h(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_resolution_probability_4h
+    })
+}
+
+fn structural_prior_delayed_reward_resolution_horizon_24h_count(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<usize> {
+    structural_prior_positive_count(prior_stats, |stats| {
+        stats.delayed_reward_resolution_horizon_24h_count
+    })
+}
+
+fn structural_prior_delayed_reward_resolution_within_24h_count(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<usize> {
+    structural_prior_positive_count(prior_stats, |stats| {
+        stats.delayed_reward_resolution_within_24h_count
+    })
+}
+
+fn structural_prior_delayed_reward_resolution_probability_24h(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_resolution_probability_24h
+    })
+}
+
 fn structural_duration_streak_count(
     duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
 ) -> Option<usize> {
@@ -6541,6 +6781,15 @@ mod tests {
             delayed_reward_avg_elapsed_hours: 2.0,
             delayed_reward_success_hazard_per_hour: 1.5 / 6.0,
             delayed_reward_failure_hazard_per_hour: 1.5 / 6.0,
+            delayed_reward_resolution_horizon_1h_count: 3,
+            delayed_reward_resolution_within_1h_count: 1,
+            delayed_reward_resolution_probability_1h: 2.0 / 5.0,
+            delayed_reward_resolution_horizon_4h_count: 3,
+            delayed_reward_resolution_within_4h_count: 3,
+            delayed_reward_resolution_probability_4h: 4.0 / 5.0,
+            delayed_reward_resolution_horizon_24h_count: 3,
+            delayed_reward_resolution_within_24h_count: 3,
+            delayed_reward_resolution_probability_24h: 4.0 / 5.0,
             ..StructuralPriorStats::default()
         };
 
@@ -6622,6 +6871,26 @@ mod tests {
         assert_eq!(
             structural_prior_delayed_reward_invalidation_hazard_per_hour(Some(&stats)),
             None
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_resolution_horizon_1h_count(Some(&stats)),
+            Some(3)
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_resolution_within_1h_count(Some(&stats)),
+            Some(1)
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_resolution_probability_1h(Some(&stats)),
+            Some(2.0 / 5.0)
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_resolution_probability_4h(Some(&stats)),
+            Some(4.0 / 5.0)
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_resolution_probability_24h(Some(&stats)),
+            Some(4.0 / 5.0)
         );
 
         let not_followed_only = StructuralPriorStats {

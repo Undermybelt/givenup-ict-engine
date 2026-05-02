@@ -211,6 +211,24 @@ pub struct StructuralPriorStats {
     #[serde(default)]
     pub delayed_reward_abandonment_hazard_per_hour: f64,
     #[serde(default)]
+    pub delayed_reward_resolution_horizon_1h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_within_1h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_probability_1h: f64,
+    #[serde(default)]
+    pub delayed_reward_resolution_horizon_4h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_within_4h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_probability_4h: f64,
+    #[serde(default)]
+    pub delayed_reward_resolution_horizon_24h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_within_24h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_probability_24h: f64,
+    #[serde(default)]
     pub source_panel_summaries: BTreeMap<String, StructuralPriorSourceSummary>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_offline_seed_source: Option<String>,
@@ -289,6 +307,24 @@ pub struct StructuralPriorMassSnapshot {
     pub delayed_reward_invalidation_hazard_per_hour: f64,
     #[serde(default)]
     pub delayed_reward_abandonment_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_resolution_horizon_1h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_within_1h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_probability_1h: f64,
+    #[serde(default)]
+    pub delayed_reward_resolution_horizon_4h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_within_4h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_probability_4h: f64,
+    #[serde(default)]
+    pub delayed_reward_resolution_horizon_24h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_within_24h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_probability_24h: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_offline_seed_source: Option<String>,
 }
@@ -420,6 +456,24 @@ pub struct StructuralPriorSourceSummary {
     pub delayed_reward_invalidation_hazard_per_hour: f64,
     #[serde(default)]
     pub delayed_reward_abandonment_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_resolution_horizon_1h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_within_1h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_probability_1h: f64,
+    #[serde(default)]
+    pub delayed_reward_resolution_horizon_4h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_within_4h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_probability_4h: f64,
+    #[serde(default)]
+    pub delayed_reward_resolution_horizon_24h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_within_24h_count: usize,
+    #[serde(default)]
+    pub delayed_reward_resolution_probability_24h: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_tempering_coefficient: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4230,6 +4284,21 @@ fn structural_prior_mass_snapshot(
             .delayed_reward_invalidation_hazard_per_hour,
         delayed_reward_abandonment_hazard_per_hour: stats
             .delayed_reward_abandonment_hazard_per_hour,
+        delayed_reward_resolution_horizon_1h_count: stats
+            .delayed_reward_resolution_horizon_1h_count,
+        delayed_reward_resolution_within_1h_count: stats
+            .delayed_reward_resolution_within_1h_count,
+        delayed_reward_resolution_probability_1h: stats.delayed_reward_resolution_probability_1h,
+        delayed_reward_resolution_horizon_4h_count: stats
+            .delayed_reward_resolution_horizon_4h_count,
+        delayed_reward_resolution_within_4h_count: stats
+            .delayed_reward_resolution_within_4h_count,
+        delayed_reward_resolution_probability_4h: stats.delayed_reward_resolution_probability_4h,
+        delayed_reward_resolution_horizon_24h_count: stats
+            .delayed_reward_resolution_horizon_24h_count,
+        delayed_reward_resolution_within_24h_count: stats
+            .delayed_reward_resolution_within_24h_count,
+        delayed_reward_resolution_probability_24h: stats.delayed_reward_resolution_probability_24h,
         last_offline_seed_source: stats.last_offline_seed_source.clone(),
     }
 }
@@ -4305,6 +4374,28 @@ fn update_structural_prior_stats(
     if let Some(elapsed_hours) = structural_delayed_reward_elapsed_hours(record, followed_path) {
         stats.delayed_reward_elapsed_feedback_count += 1;
         stats.delayed_reward_elapsed_hours_at_risk += elapsed_hours;
+        let matured = structural_feedback_counter_outcome(record).is_some();
+        structural_delayed_reward_update_resolution_horizon(
+            elapsed_hours,
+            matured,
+            1.0,
+            &mut stats.delayed_reward_resolution_horizon_1h_count,
+            &mut stats.delayed_reward_resolution_within_1h_count,
+        );
+        structural_delayed_reward_update_resolution_horizon(
+            elapsed_hours,
+            matured,
+            4.0,
+            &mut stats.delayed_reward_resolution_horizon_4h_count,
+            &mut stats.delayed_reward_resolution_within_4h_count,
+        );
+        structural_delayed_reward_update_resolution_horizon(
+            elapsed_hours,
+            matured,
+            24.0,
+            &mut stats.delayed_reward_resolution_horizon_24h_count,
+            &mut stats.delayed_reward_resolution_within_24h_count,
+        );
     }
     match structural_feedback_counter_outcome(record) {
         Some("win") => {
@@ -4814,6 +4905,32 @@ fn structural_delayed_reward_avg_elapsed_hours(count: usize, elapsed_hours: f64)
     }
 }
 
+fn structural_delayed_reward_update_resolution_horizon(
+    elapsed_hours: f64,
+    matured: bool,
+    horizon_hours: f64,
+    horizon_count: &mut usize,
+    within_count: &mut usize,
+) {
+    if elapsed_hours >= horizon_hours || matured {
+        *horizon_count += 1;
+        if matured && elapsed_hours <= horizon_hours {
+            *within_count += 1;
+        }
+    }
+}
+
+fn structural_delayed_reward_resolution_horizon_probability(
+    within_count: usize,
+    horizon_count: usize,
+) -> f64 {
+    if horizon_count == 0 {
+        0.0
+    } else {
+        ((1.0 + within_count as f64) / (2.0 + horizon_count as f64)).clamp(0.0, 1.0)
+    }
+}
+
 #[derive(Debug, Clone, Copy, Default)]
 struct StructuralDelayedRewardCompetingRisks {
     success: f64,
@@ -5057,6 +5174,21 @@ fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
     stats.delayed_reward_failure_hazard_per_hour = elapsed_hazards.failure;
     stats.delayed_reward_invalidation_hazard_per_hour = elapsed_hazards.invalidation;
     stats.delayed_reward_abandonment_hazard_per_hour = elapsed_hazards.abandonment;
+    stats.delayed_reward_resolution_probability_1h =
+        structural_delayed_reward_resolution_horizon_probability(
+            stats.delayed_reward_resolution_within_1h_count,
+            stats.delayed_reward_resolution_horizon_1h_count,
+        );
+    stats.delayed_reward_resolution_probability_4h =
+        structural_delayed_reward_resolution_horizon_probability(
+            stats.delayed_reward_resolution_within_4h_count,
+            stats.delayed_reward_resolution_horizon_4h_count,
+        );
+    stats.delayed_reward_resolution_probability_24h =
+        structural_delayed_reward_resolution_horizon_probability(
+            stats.delayed_reward_resolution_within_24h_count,
+            stats.delayed_reward_resolution_horizon_24h_count,
+        );
 }
 
 fn update_structural_prior_source_summary_from_feedback(
@@ -5089,6 +5221,28 @@ fn update_structural_prior_source_summary_from_feedback(
     if let Some(elapsed_hours) = structural_delayed_reward_elapsed_hours(record, followed_path) {
         summary.delayed_reward_elapsed_feedback_count += 1;
         summary.delayed_reward_elapsed_hours_at_risk += elapsed_hours;
+        let matured = structural_feedback_counter_outcome(record).is_some();
+        structural_delayed_reward_update_resolution_horizon(
+            elapsed_hours,
+            matured,
+            1.0,
+            &mut summary.delayed_reward_resolution_horizon_1h_count,
+            &mut summary.delayed_reward_resolution_within_1h_count,
+        );
+        structural_delayed_reward_update_resolution_horizon(
+            elapsed_hours,
+            matured,
+            4.0,
+            &mut summary.delayed_reward_resolution_horizon_4h_count,
+            &mut summary.delayed_reward_resolution_within_4h_count,
+        );
+        structural_delayed_reward_update_resolution_horizon(
+            elapsed_hours,
+            matured,
+            24.0,
+            &mut summary.delayed_reward_resolution_horizon_24h_count,
+            &mut summary.delayed_reward_resolution_within_24h_count,
+        );
     }
     match structural_feedback_counter_outcome(record) {
         Some("win") => {
@@ -5331,6 +5485,21 @@ fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSu
     summary.delayed_reward_failure_hazard_per_hour = elapsed_hazards.failure;
     summary.delayed_reward_invalidation_hazard_per_hour = elapsed_hazards.invalidation;
     summary.delayed_reward_abandonment_hazard_per_hour = elapsed_hazards.abandonment;
+    summary.delayed_reward_resolution_probability_1h =
+        structural_delayed_reward_resolution_horizon_probability(
+            summary.delayed_reward_resolution_within_1h_count,
+            summary.delayed_reward_resolution_horizon_1h_count,
+        );
+    summary.delayed_reward_resolution_probability_4h =
+        structural_delayed_reward_resolution_horizon_probability(
+            summary.delayed_reward_resolution_within_4h_count,
+            summary.delayed_reward_resolution_horizon_4h_count,
+        );
+    summary.delayed_reward_resolution_probability_24h =
+        structural_delayed_reward_resolution_horizon_probability(
+            summary.delayed_reward_resolution_within_24h_count,
+            summary.delayed_reward_resolution_horizon_24h_count,
+        );
 }
 
 fn update_structural_source_reliability_from_feedback(
@@ -7735,6 +7904,15 @@ mod tests {
         assert!((path.delayed_reward_failure_hazard_per_hour - (1.0 / 1.5)).abs() < 1e-9);
         assert!(path.delayed_reward_invalidation_hazard_per_hour.abs() < 1e-9);
         assert!(path.delayed_reward_abandonment_hazard_per_hour.abs() < 1e-9);
+        assert_eq!(path.delayed_reward_resolution_horizon_1h_count, 2);
+        assert_eq!(path.delayed_reward_resolution_within_1h_count, 2);
+        assert!((path.delayed_reward_resolution_probability_1h - 0.75).abs() < 1e-9);
+        assert_eq!(path.delayed_reward_resolution_horizon_4h_count, 2);
+        assert_eq!(path.delayed_reward_resolution_within_4h_count, 2);
+        assert!((path.delayed_reward_resolution_probability_4h - 0.75).abs() < 1e-9);
+        assert_eq!(path.delayed_reward_resolution_horizon_24h_count, 2);
+        assert_eq!(path.delayed_reward_resolution_within_24h_count, 2);
+        assert!((path.delayed_reward_resolution_probability_24h - 0.75).abs() < 1e-9);
         let source_summary = path
             .source_panel_summaries
             .get("structural_feedback_submission")
@@ -7843,6 +8021,15 @@ mod tests {
             .delayed_reward_abandonment_hazard_per_hour
             .abs()
             < 1e-9);
+        assert_eq!(source_summary.delayed_reward_resolution_horizon_1h_count, 2);
+        assert_eq!(source_summary.delayed_reward_resolution_within_1h_count, 2);
+        assert!((source_summary.delayed_reward_resolution_probability_1h - 0.75).abs() < 1e-9);
+        assert_eq!(source_summary.delayed_reward_resolution_horizon_4h_count, 2);
+        assert_eq!(source_summary.delayed_reward_resolution_within_4h_count, 2);
+        assert!((source_summary.delayed_reward_resolution_probability_4h - 0.75).abs() < 1e-9);
+        assert_eq!(source_summary.delayed_reward_resolution_horizon_24h_count, 2);
+        assert_eq!(source_summary.delayed_reward_resolution_within_24h_count, 2);
+        assert!((source_summary.delayed_reward_resolution_probability_24h - 0.75).abs() < 1e-9);
     }
 
     #[test]
