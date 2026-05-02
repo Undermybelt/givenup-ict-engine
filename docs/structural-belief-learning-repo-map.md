@@ -266,6 +266,8 @@ Already in repo
 - `register-structural-path-ranking-trainer-artifact` lets a user explicitly register an external artifact URI into that handoff file without auto-loading personal paths or requiring manual JSON edits
 - registered external trainer artifacts now default their trained/calibration row counts from accumulated history when that history exists, so the handoff metadata matches the dataset that `policy-training-status` validates
 - `clear-structural-path-ranking-trainer-artifact` lets a user explicitly remove that personal artifact wiring and return the status surface to repo-default behavior
+- externally applied raw scores now persist through later target re-exports when the candidate-set/path key still matches, so users do not need to reapply the same scores after every export
+- `policy-training-status` now distinguishes pending update templates from applied structural feedback history, which makes “no mature rows yet” easier to diagnose on real local state
 - `apply-structural-path-ranking-external-scores` lets a user explicitly merge external raw scores back into the latest export and accumulated history datasets, after which repo-native calibration/gating surfaces recompute from the updated rows
 
 Not yet in repo

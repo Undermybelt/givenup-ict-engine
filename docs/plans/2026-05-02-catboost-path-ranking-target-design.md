@@ -32,6 +32,8 @@ Implemented:
 - cumulative history CSV export in `policy_training/structural_path_ranking_target_history.csv`, so external trainers can consume the accumulated dataset without translating JSONL first
 - external artifact registration now defaults trained/calibration row counts from accumulated history when it exists, instead of only the latest candidate snapshot
 - `policy-training-status` history-side score/calibration/propensity/training-weight counters now derive from the accumulated dataset when it exists, so readiness counts stay aligned with the same history-backed basis
+- externally applied raw scores now persist through later target re-exports when the candidate-set/path key still matches, instead of being dropped on the next export pass
+- `policy-training-status` now distinguishes “pending update templates exist but no structural feedback has been applied yet” from cases where there is simply no update/feedback history at all
 - `policy-training-status` history-side score/calibration/propensity/training-weight counters now derive from the accumulated dataset when present, so readiness booleans and nested counts share the same basis
 
 Still not implemented:
