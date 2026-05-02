@@ -18,7 +18,8 @@ use crate::state::{
     structural_source_reliability_em_diagnostics, structural_source_reliability_em_fit_from_state,
     save_text_state, FeedbackFactorUsage, FeedbackRecord, ModelProbabilitySnapshot,
     StructuralFeedbackLearningOutcome, StructuralFeedbackRefs, StructuralPriorLearningState,
-    StructuralPriorStats, StructuralSourceReliabilityPosterior, WorkflowSnapshot,
+    StructuralPriorStats, StructuralSourceReliabilityPosterior,
+    StructuralTargetPolicyContextPosterior, WorkflowSnapshot,
     STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS,
 };
 use crate::types::{Direction, Regime};
@@ -27,6 +28,7 @@ const STRUCTURAL_PLAYBOOK_ARTIFACT_VERSION: &str = "structural-playbook-v1";
 const STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR: &str = "policy_training";
 const STRUCTURAL_PATH_RANKING_IPS_WEIGHT_CLIP: f64 = 5.0;
 const STRUCTURAL_PATH_RANKING_EXECUTION_GATE_MIN_PATH_PROB: f64 = 0.5;
+const STRUCTURAL_TARGET_POLICY_CONTEXT_SURFACE_LIMIT: usize = 3;
 pub const STRUCTURAL_PATH_RANKING_TARGET_CSV_FILE: &str = "structural_path_ranking_target.csv";
 pub const STRUCTURAL_PATH_RANKING_TARGET_JSONL_FILE: &str = "structural_path_ranking_target.jsonl";
 pub const STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE: &str =
@@ -269,6 +271,8 @@ pub struct StructuralExperiencePriorSurfaceArtifact {
     pub symbol: String,
     #[serde(default)]
     pub source_reliability_em: StructuralSourceReliabilityEmReadiness,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub target_policy_contexts: Vec<StructuralTargetPolicyContextSurface>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub node: Option<StructuralExperiencePriorEntry>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -277,6 +281,22 @@ pub struct StructuralExperiencePriorSurfaceArtifact {
     pub scenario: Option<StructuralExperiencePriorEntry>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<StructuralExperiencePriorEntry>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct StructuralTargetPolicyContextSurface {
+    pub context_key: String,
+    pub observations: usize,
+    pub weighted_observation_mass: f64,
+    pub behavior_policy_probability: f64,
+    pub behavior_policy_probability_variance: f64,
+    pub learned_target_policy_probability: f64,
+    pub learned_target_policy_probability_lower_bound: f64,
+    pub learned_target_policy_probability_confidence: f64,
+    pub target_policy_probability_brier_score: f64,
+    pub target_policy_probability_calibration_error: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_recommendation_id: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -2093,6 +2113,7 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
     StructuralExperiencePriorSurfaceArtifact {
         symbol: structural_symbol(snapshot),
         source_reliability_em: structural_source_reliability_em_readiness(structural_prior_state),
+        target_policy_contexts: structural_target_policy_context_surfaces(structural_prior_state),
         node: Some(StructuralExperiencePriorEntry {
             entity_kind: "node".to_string(),
             entity_id: node_id.to_string(),
@@ -4839,6 +4860,51 @@ fn structural_selected_entry_quality(snapshot: &WorkflowSnapshot) -> Option<Stri
                 .map(|candidate| candidate.pre_bayes_bridge_selected_entry_quality.clone())
                 .filter(|value| !value.trim().is_empty())
         })
+}
+
+fn structural_target_policy_context_surfaces(
+    structural_prior_state: &StructuralPriorLearningState,
+) -> Vec<StructuralTargetPolicyContextSurface> {
+    let mut contexts = structural_prior_state
+        .target_policy_context_posteriors
+        .iter()
+        .filter(|(_, posterior)| posterior.weighted_observation_mass > f64::EPSILON)
+        .collect::<Vec<_>>();
+    contexts.sort_by(|(left_key, left), (right_key, right)| {
+        right
+            .weighted_observation_mass
+            .total_cmp(&left.weighted_observation_mass)
+            .then_with(|| left_key.cmp(right_key))
+    });
+    contexts
+        .into_iter()
+        .take(STRUCTURAL_TARGET_POLICY_CONTEXT_SURFACE_LIMIT)
+        .map(|(context_key, posterior)| {
+            structural_target_policy_context_surface(context_key, posterior)
+        })
+        .collect()
+}
+
+fn structural_target_policy_context_surface(
+    context_key: &str,
+    posterior: &StructuralTargetPolicyContextPosterior,
+) -> StructuralTargetPolicyContextSurface {
+    StructuralTargetPolicyContextSurface {
+        context_key: context_key.to_string(),
+        observations: posterior.observations,
+        weighted_observation_mass: posterior.weighted_observation_mass,
+        behavior_policy_probability: posterior.behavior_policy_probability,
+        behavior_policy_probability_variance: posterior.behavior_policy_probability_variance,
+        learned_target_policy_probability: posterior.learned_target_policy_probability,
+        learned_target_policy_probability_lower_bound: posterior
+            .learned_target_policy_probability_lower_bound,
+        learned_target_policy_probability_confidence: posterior
+            .learned_target_policy_probability_confidence,
+        target_policy_probability_brier_score: posterior.target_policy_probability_brier_score,
+        target_policy_probability_calibration_error: posterior
+            .target_policy_probability_calibration_error,
+        last_recommendation_id: posterior.last_recommendation_id.clone(),
+    }
 }
 
 fn structural_source_panel_count(prior_stats: Option<&StructuralPriorStats>) -> usize {

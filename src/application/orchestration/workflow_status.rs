@@ -5587,6 +5587,27 @@ mod tests {
                 ..crate::state::StructuralPriorStats::default()
             },
         );
+        structural_prior_state
+            .target_policy_context_posteriors
+            .insert(
+                "NQ:manipulation_expansion:bull".to_string(),
+                crate::state::StructuralTargetPolicyContextPosterior {
+                    observations: 3,
+                    weighted_observation_mass: 2.05,
+                    success_mass: 1.30,
+                    failure_mass: 0.75,
+                    behavior_policy_probability: 0.42,
+                    behavior_policy_probability_squared_mass: 0.38,
+                    behavior_policy_probability_variance: 0.018,
+                    learned_target_policy_probability: 2.30 / 4.05,
+                    learned_target_policy_probability_lower_bound: 0.32,
+                    learned_target_policy_probability_confidence: 0.41,
+                    target_policy_probability_brier_score: 0.15625,
+                    target_policy_probability_calibration_error: 0.375,
+                    last_recommendation_id: Some("rec-context".to_string()),
+                    ..crate::state::StructuralTargetPolicyContextPosterior::default()
+                },
+            );
         structural_prior_state.node_duration_priors.insert(
             "NQ:belief_regime_node:trend".to_string(),
             crate::state::StructuralNodeDurationPrior {
@@ -5642,6 +5663,23 @@ mod tests {
         assert_eq!(value["path"]["ips_weight"], 1.25);
         assert_eq!(value["path"]["counterfactual_reward_prior"], 0.5753424658);
         assert_eq!(value["path"]["off_policy_adjusted_prior"], 0.4602739726);
+        assert_eq!(
+            value["target_policy_contexts"][0]["context_key"],
+            "NQ:manipulation_expansion:bull"
+        );
+        assert_eq!(value["target_policy_contexts"][0]["observations"], 3);
+        assert_eq!(
+            value["target_policy_contexts"][0]["learned_target_policy_probability"],
+            2.30 / 4.05
+        );
+        assert_eq!(
+            value["target_policy_contexts"][0]["learned_target_policy_probability_lower_bound"],
+            0.32
+        );
+        assert_eq!(
+            value["target_policy_contexts"][0]["target_policy_probability_brier_score"],
+            0.15625
+        );
         assert_eq!(value["path"]["behavior_policy_probability"], 0.42);
         assert_eq!(value["path"]["behavior_policy_probability_variance"], 0.018);
         assert_eq!(value["path"]["target_policy_probability_confidence"], 0.57);

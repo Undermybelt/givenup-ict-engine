@@ -98,6 +98,43 @@ pub struct StructuralPriorLearningState {
         BTreeMap<String, StructuralSourceReliabilityEmSourceSummary>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source_reliability_em_calibration: Option<StructuralSourceReliabilityEmCalibrationSummary>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub target_policy_context_posteriors: BTreeMap<String, StructuralTargetPolicyContextPosterior>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralTargetPolicyContextPosterior {
+    pub observations: usize,
+    #[serde(default)]
+    pub weighted_observation_mass: f64,
+    #[serde(default)]
+    pub success_mass: f64,
+    #[serde(default)]
+    pub failure_mass: f64,
+    #[serde(default)]
+    pub behavior_policy_probability: f64,
+    #[serde(default)]
+    pub behavior_policy_probability_squared_mass: f64,
+    #[serde(default)]
+    pub behavior_policy_probability_variance: f64,
+    #[serde(default)]
+    pub learned_target_policy_probability: f64,
+    #[serde(default)]
+    pub learned_target_policy_probability_lower_bound: f64,
+    #[serde(default)]
+    pub learned_target_policy_probability_confidence: f64,
+    #[serde(default)]
+    pub target_policy_probability_brier_score_mass: f64,
+    #[serde(default)]
+    pub target_policy_probability_calibration_error_mass: f64,
+    #[serde(default)]
+    pub target_policy_probability_brier_score: f64,
+    #[serde(default)]
+    pub target_policy_probability_calibration_error: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_recommendation_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_updated_at: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -3701,6 +3738,11 @@ impl LearningState {
                 record,
                 refs.followed_path,
             );
+            update_structural_target_policy_context_posterior(
+                &mut self.structural_prior_state,
+                record,
+                refs.followed_path,
+            );
             update_structural_prior_stats(
                 self.structural_prior_state
                     .nodes
@@ -4732,6 +4774,138 @@ fn update_structural_policy_correction_stats(
     *snips_reward_mass += contribution.snips_reward_mass;
     *doubly_robust_reward_mass +=
         contribution.weighted_observation * contribution.doubly_robust_reward;
+}
+
+fn structural_target_policy_context_key(record: &FeedbackRecord) -> String {
+    let symbol = record.symbol.trim();
+    let symbol = if symbol.is_empty() { "unknown" } else { symbol };
+    format!(
+        "{}:{}:{}",
+        symbol,
+        structural_regime_context_label(record.regime_at_entry),
+        structural_direction_context_label(
+            record
+                .model_probabilities_before_trade
+                .selected_direction,
+        )
+    )
+}
+
+fn structural_regime_context_label(regime: Regime) -> &'static str {
+    match regime {
+        Regime::Accumulation => "accumulation",
+        Regime::ManipulationExpansion => "manipulation_expansion",
+        Regime::Distribution => "distribution",
+    }
+}
+
+fn structural_direction_context_label(direction: Direction) -> &'static str {
+    match direction {
+        Direction::Bull => "bull",
+        Direction::Bear => "bear",
+        Direction::Neutral => "neutral",
+    }
+}
+
+fn update_structural_target_policy_context_posterior(
+    state: &mut StructuralPriorLearningState,
+    record: &FeedbackRecord,
+    followed_path: bool,
+) {
+    let Some(pseudo_counts) = structural_feedback_pseudo_counts(record, followed_path) else {
+        return;
+    };
+    let weighted_observation =
+        structural_prior_source_weight(&record.source) * pseudo_counts.observation_weight;
+    let Some(contribution) =
+        structural_policy_correction_contribution(record, pseudo_counts, weighted_observation)
+    else {
+        return;
+    };
+    let key = structural_target_policy_context_key(record);
+    let posterior = state
+        .target_policy_context_posteriors
+        .entry(key)
+        .or_default();
+    let previous_mass = posterior.weighted_observation_mass.max(0.0);
+    let next_mass = previous_mass + contribution.weighted_observation;
+    if next_mass > f64::EPSILON {
+        posterior.behavior_policy_probability = ((posterior.behavior_policy_probability
+            * previous_mass)
+            + contribution.behavior_policy_probability * contribution.weighted_observation)
+            / next_mass;
+    }
+    posterior.observations += 1;
+    posterior.weighted_observation_mass = next_mass;
+    posterior.success_mass +=
+        contribution.weighted_observation * pseudo_counts.success_credit.clamp(0.0, 1.0);
+    posterior.failure_mass +=
+        contribution.weighted_observation * (1.0 - pseudo_counts.success_credit.clamp(0.0, 1.0));
+    posterior.behavior_policy_probability_squared_mass +=
+        contribution.behavior_policy_probability_squared_mass;
+    posterior.target_policy_probability_brier_score_mass +=
+        contribution.target_policy_probability_brier_score_mass;
+    posterior.target_policy_probability_calibration_error_mass +=
+        contribution.target_policy_probability_calibration_error_mass;
+    posterior.last_updated_at = Some(record.timestamp.to_rfc3339_opts(SecondsFormat::Secs, true));
+    posterior.last_recommendation_id = record
+        .structural_feedback
+        .as_ref()
+        .map(|refs| refs.recommendation_id.clone());
+    refresh_structural_target_policy_context_posterior(posterior);
+}
+
+fn refresh_structural_target_policy_context_posterior(
+    posterior: &mut StructuralTargetPolicyContextPosterior,
+) {
+    posterior.behavior_policy_probability = posterior.behavior_policy_probability.clamp(0.0, 1.0);
+    posterior.behavior_policy_probability_variance =
+        structural_behavior_policy_probability_variance(
+            posterior.weighted_observation_mass,
+            posterior.behavior_policy_probability,
+            posterior.behavior_policy_probability_squared_mass,
+        );
+    posterior.target_policy_probability_brier_score = structural_policy_probability_average_error(
+        posterior.weighted_observation_mass,
+        posterior.target_policy_probability_brier_score_mass,
+    );
+    posterior.target_policy_probability_calibration_error =
+        structural_policy_probability_average_error(
+            posterior.weighted_observation_mass,
+            posterior.target_policy_probability_calibration_error_mass,
+        );
+    posterior.learned_target_policy_probability =
+        structural_beta_mean(posterior.success_mass, posterior.failure_mass);
+    posterior.learned_target_policy_probability_lower_bound =
+        structural_learned_target_policy_probability_lower_bound(
+            posterior.learned_target_policy_probability,
+            posterior.weighted_observation_mass,
+        );
+    posterior.learned_target_policy_probability_confidence =
+        structural_learned_target_policy_probability_confidence(
+            posterior.weighted_observation_mass,
+            posterior.target_policy_probability_brier_score,
+        );
+}
+
+fn structural_learned_target_policy_probability_lower_bound(probability: f64, mass: f64) -> f64 {
+    if mass <= f64::EPSILON {
+        return 0.0;
+    }
+    let probability = probability.clamp(0.0, 1.0);
+    let penalty = ((probability * (1.0 - probability)) / (1.0 + mass.max(0.0)))
+        .sqrt()
+        .clamp(0.0, 1.0);
+    (probability - penalty).clamp(0.0, 1.0)
+}
+
+fn structural_learned_target_policy_probability_confidence(mass: f64, brier_score: f64) -> f64 {
+    if mass <= f64::EPSILON {
+        return 0.0;
+    }
+    let mass_confidence = (mass / (1.0 + mass)).clamp(0.0, 1.0);
+    let calibration_confidence = (1.0 - brier_score.clamp(0.0, 1.0).sqrt()).clamp(0.0, 1.0);
+    (mass_confidence * calibration_confidence).clamp(0.0, 1.0)
 }
 
 fn structural_snips_effective_sample_size(
@@ -7913,6 +8087,49 @@ mod tests {
         assert_eq!(path.delayed_reward_resolution_horizon_24h_count, 2);
         assert_eq!(path.delayed_reward_resolution_within_24h_count, 2);
         assert!((path.delayed_reward_resolution_probability_24h - 0.75).abs() < 1e-9);
+        let context = state
+            .structural_prior_state
+            .target_policy_context_posteriors
+            .get("NQ:manipulation_expansion:bull")
+            .expect("contextual target-policy probability posterior");
+        assert_eq!(context.observations, 2);
+        assert!((context.weighted_observation_mass - 2.0).abs() < 1e-9);
+        assert!((context.success_mass - 1.0).abs() < 1e-9);
+        assert!((context.failure_mass - 1.0).abs() < 1e-9);
+        assert!((context.behavior_policy_probability - 0.375).abs() < 1e-9);
+        assert!(
+            (context.behavior_policy_probability_variance - 0.015625).abs() < 1e-9
+        );
+        assert!((context.learned_target_policy_probability - 0.5).abs() < 1e-9);
+        let expected_context_lower_bound = 0.5 - (0.25_f64 / 3.0).sqrt();
+        assert!(
+            (context.learned_target_policy_probability_lower_bound
+                - expected_context_lower_bound)
+                .abs()
+                < 1e-9
+        );
+        let expected_context_confidence =
+            (2.0 / 3.0) * (1.0 - context.target_policy_probability_brier_score.sqrt());
+        assert!(
+            (context.learned_target_policy_probability_confidence
+                - expected_context_confidence)
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (context.target_policy_probability_brier_score - 0.15625).abs() < 1e-9
+        );
+        assert!(
+            (context.target_policy_probability_calibration_error - 0.375).abs() < 1e-9
+        );
+        assert_eq!(
+            context.last_recommendation_id.as_deref(),
+            Some("rec-policy-loss")
+        );
+        assert_eq!(
+            context.last_updated_at.as_deref(),
+            Some("2026-04-30T01:05:00Z")
+        );
         let source_summary = path
             .source_panel_summaries
             .get("structural_feedback_submission")
