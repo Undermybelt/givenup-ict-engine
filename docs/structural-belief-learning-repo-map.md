@@ -103,12 +103,12 @@ Already in repo
 - `regime_posterior`, `belief_posteriors["market_regime"]`, `gate_decision`, `strategy_recommendation`, and selected market subgraph are synchronized after adjustment
 - workflow snapshot and ensemble surfaces reuse canonical structural regime posteriors across phases
 - `workflow-status` temporal summary exposes the maintained normalized branch and node transition posterior for consumer agents
-- node/regime posterior adjustment prefers maintained node transition posterior state, then uses a discounted two-step node-transition fallback when direct node evidence is missing, then falls back to branch-transition aggregation and finally unadjusted probabilities; complete/partial candidate-set branch posterior adjustment reads maintained branch transition posterior state
+- node/regime posterior adjustment prefers maintained node transition posterior state, then uses a bounded discounted recursive node-transition fallback when direct node evidence is missing, then falls back to branch-transition aggregation and finally unadjusted probabilities; complete/partial candidate-set branch posterior adjustment reads maintained branch transition posterior state
 
 Literature mechanisms still worth importing
 - discounted transition-count updates:
   - `N_ij(t) = lambda * N_ij(t-1) + P(z_(t-1)=i, z_t=j | x_1:t)`
-- Hamilton/DBN-style recursive node/branch posterior maintenance beyond the compact one-step plus discounted two-step transition surfaces
+- Hamilton/DBN-style recursive node/branch posterior maintenance beyond the compact one-step plus bounded discounted recursive transition surfaces
 - BOCPD-style hazard handling for branch birth / node break
 - moving branch posterior maintenance out of display-layer blending and into core belief-state updates
 
@@ -125,7 +125,7 @@ Suggested implementation hooks
 
 Current repo gap
 - branch transition priors already affect branch prior/posterior surfaces and belief snapshots, maintained branch temporal posterior state carries normalized outgoing posterior mass, and maintained node transition posterior state now carries normalized outgoing node posterior mass
-- node/regime posterior adjustment plus complete and partial candidate sets now consume maintained node/branch transition posterior state directly, including discounted two-step node fallback when direct node evidence is absent; remaining work is deeper multi-step DBN/Hamilton filtering rather than display-layer fallback cleanup
+- node/regime posterior adjustment plus complete and partial candidate sets now consume maintained node/branch transition posterior state directly, including bounded discounted recursive node fallback when direct node evidence is absent; remaining work is deeper multi-step DBN/Hamilton filtering rather than display-layer fallback cleanup
 
 ---
 
@@ -254,6 +254,7 @@ Already in repo
 - `policy-training-status` also reports a clipped-IPS propensity-weighted Brier score for calibrated mature rows when `propensity_estimate` is available
 - `policy-training-status` also reports raw-scored mature-row sufficiency and shortfall separately from propensity-weighted production-validation rows, so missing score history versus missing calibrated propensity coverage stay distinguishable
 - `policy-training-status` summary lines now include the path-ranking readiness shortfalls directly, so consumer agents do not need to inspect nested fields to see the blocking counts
+- `policy-training-status` now derives its history-side score/calibration/propensity/training-weight counters from the accumulated dataset itself when present, so top-line readiness and nested counters no longer mix snapshot-only and history-backed bases
 - path-ranking export now maintains an upserted history JSONL alongside the latest snapshot export, and `policy-training-status` evaluates production-validation readiness from that accumulated history instead of a single latest candidate set
 - path-ranking export also writes a matching accumulated history CSV, so external trainers can consume the same accumulated dataset without translating the JSONL stream
 - calibrated target rows include advisory execution-gate status fields from `path_prob_lower_bound` and a fixed repo threshold, without blocking zero-config uncalibrated flows

@@ -31,6 +31,8 @@ Implemented:
 - cumulative upserted history export in `policy_training/structural_path_ranking_target_history.jsonl`, so production-validation counts can accumulate across exports instead of resetting to the latest candidate set snapshot
 - cumulative history CSV export in `policy_training/structural_path_ranking_target_history.csv`, so external trainers can consume the accumulated dataset without translating JSONL first
 - external artifact registration now defaults trained/calibration row counts from accumulated history when it exists, instead of only the latest candidate snapshot
+- `policy-training-status` history-side score/calibration/propensity/training-weight counters now derive from the accumulated dataset when it exists, so readiness counts stay aligned with the same history-backed basis
+- `policy-training-status` history-side score/calibration/propensity/training-weight counters now derive from the accumulated dataset when present, so readiness booleans and nested counts share the same basis
 
 Still not implemented:
 - production calibration validation after enough exported raw-scored rows exist
