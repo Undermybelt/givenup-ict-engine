@@ -255,6 +255,7 @@ Already in repo
 - `policy-training-status` also reports raw-scored mature-row sufficiency and shortfall separately from propensity-weighted production-validation rows, so missing score history versus missing calibrated propensity coverage stay distinguishable
 - `policy-training-status` summary lines now include the path-ranking readiness shortfalls directly, so consumer agents do not need to inspect nested fields to see the blocking counts
 - path-ranking export now maintains an upserted history JSONL alongside the latest snapshot export, and `policy-training-status` evaluates production-validation readiness from that accumulated history instead of a single latest candidate set
+- path-ranking export also writes a matching accumulated history CSV, so external trainers can consume the same accumulated dataset without translating the JSONL stream
 - calibrated target rows include advisory execution-gate status fields from `path_prob_lower_bound` and a fixed repo threshold, without blocking zero-config uncalibrated flows
 - target rows now carry mature reward labels plus clipped IPS/sample weights so a downstream ranker can train without treating censored rows as negatives
 - `policy-training-status` separates calibration-quality readiness from production-validation readiness by requiring enough propensity-weighted calibrated rows before declaring the target production-validatable
@@ -262,6 +263,7 @@ Already in repo
 - `policy-training-status` surfaces trainer manifest readiness with protocol/dataset role plus compact feature/calibration/guardrail column counts, and warns on incomplete manifests without loading an external trainer
 - `policy-training-status` also recognizes an optional `policy_training/structural_path_ranking_trainer_artifact.json` handoff file, reporting artifact readiness, protocol/dataset role, model family, score column, trained/calibration row counts, feature-column count, and URI presence without dumping a user-specific artifact URI
 - `register-structural-path-ranking-trainer-artifact` lets a user explicitly register an external artifact URI into that handoff file without auto-loading personal paths or requiring manual JSON edits
+- registered external trainer artifacts now default their trained/calibration row counts from accumulated history when that history exists, so the handoff metadata matches the dataset that `policy-training-status` validates
 - `clear-structural-path-ranking-trainer-artifact` lets a user explicitly remove that personal artifact wiring and return the status surface to repo-default behavior
 
 Not yet in repo
