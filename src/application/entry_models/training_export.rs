@@ -8,7 +8,8 @@ use std::path::Path;
 use crate::application::orchestration::{
     evaluate_structural_path_probability_calibration_rows,
     StructuralPathProbabilityCalibrationEvaluationReport, StructuralPathRankingTargetExportSummary,
-    StructuralPathRankingTargetRow, STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE,
+    StructuralPathRankingTargetRow, StructuralPathRankingTrainerManifest,
+    STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE,
 };
 use crate::state::{
     load_state_or_default, save_text_state, AnalyzeRunRecord, UpdateRunRecord, ANALYZE_RUNS_FILE,
@@ -240,6 +241,18 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub calibration_ready: bool,
     #[serde(default)]
     pub calibration_quality_ready: bool,
+    #[serde(default)]
+    pub trainer_manifest_ready: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub trainer_manifest_protocol_version: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub trainer_manifest_dataset_role: Option<String>,
+    #[serde(default)]
+    pub trainer_feature_columns: usize,
+    #[serde(default)]
+    pub trainer_calibration_columns: usize,
+    #[serde(default)]
+    pub trainer_guardrail_columns: usize,
     pub rows: usize,
     pub candidate_set_id: Option<String>,
     pub candidate_set_size: usize,
@@ -677,8 +690,10 @@ pub fn structural_path_ranking_target_training_status(
     }
     let raw = fs::read_to_string(&summary_path)?;
     let summary: StructuralPathRankingTargetExportSummary = serde_json::from_str(&raw)?;
-    let calibration_ready = summary.rows_with_calibrated_path_prob > 0
-        && summary.rows_with_path_prob_lower_bound > 0;
+    let calibration_ready =
+        summary.rows_with_calibrated_path_prob > 0 && summary.rows_with_path_prob_lower_bound > 0;
+    let trainer_manifest = &summary.trainer_manifest;
+    let trainer_manifest_ready = structural_path_ranking_trainer_manifest_ready(trainer_manifest);
     let calibration_evaluation =
         structural_path_ranking_target_calibration_evaluation(&summary.jsonl_path)?;
     let calibration_quality_ready = calibration_evaluation.status == "evaluated";
@@ -699,6 +714,9 @@ pub fn structural_path_ranking_target_training_status(
     if !calibration_ready {
         warnings.push("structural_path_ranking_target_calibration_not_fitted".to_string());
     }
+    if !trainer_manifest_ready {
+        warnings.push("structural_path_ranking_target_trainer_manifest_incomplete".to_string());
+    }
     if !calibration_quality_ready {
         warnings.extend(calibration_evaluation.warnings.clone());
     }
@@ -712,6 +730,12 @@ pub fn structural_path_ranking_target_training_status(
         export_ready: summary.rows > 0,
         calibration_ready,
         calibration_quality_ready,
+        trainer_manifest_ready,
+        trainer_manifest_protocol_version: non_empty_string(&trainer_manifest.protocol_version),
+        trainer_manifest_dataset_role: non_empty_string(&trainer_manifest.dataset_role),
+        trainer_feature_columns: trainer_manifest.feature_columns.len(),
+        trainer_calibration_columns: trainer_manifest.calibration_columns.len(),
+        trainer_guardrail_columns: trainer_manifest.guardrail_columns.len(),
         rows: summary.rows,
         candidate_set_id: Some(summary.candidate_set_id),
         candidate_set_size: summary.candidate_set_size,
@@ -736,6 +760,30 @@ pub fn structural_path_ranking_target_training_status(
         warnings,
         summary_line: summary.summary_line,
     })
+}
+
+fn non_empty_string(value: &str) -> Option<String> {
+    let value = value.trim();
+    (!value.is_empty()).then(|| value.to_string())
+}
+
+fn structural_path_ranking_trainer_manifest_ready(
+    manifest: &StructuralPathRankingTrainerManifest,
+) -> bool {
+    [
+        manifest.protocol_version.as_str(),
+        manifest.dataset_role.as_str(),
+        manifest.group_id_column.as_str(),
+        manifest.label_column.as_str(),
+        manifest.weight_column.as_str(),
+        manifest.maturity_column.as_str(),
+        manifest.raw_score_column.as_str(),
+    ]
+    .iter()
+    .all(|value| !value.trim().is_empty())
+        && !manifest.feature_columns.is_empty()
+        && !manifest.calibration_columns.is_empty()
+        && !manifest.guardrail_columns.is_empty()
 }
 
 fn structural_path_ranking_target_calibration_evaluation(
@@ -1440,6 +1488,22 @@ mod tests {
         }
     }
 
+    fn structural_path_ranking_trainer_manifest_for_test() -> StructuralPathRankingTrainerManifest {
+        StructuralPathRankingTrainerManifest {
+            protocol_version: "structural-path-ranking-trainer-manifest-v1".to_string(),
+            dataset_role: "external_path_ranker_training_dataset".to_string(),
+            group_id_column: "candidate_set_id".to_string(),
+            label_column: "calibrated_label".to_string(),
+            weight_column: "training_weight".to_string(),
+            maturity_column: "maturity_mask".to_string(),
+            raw_score_column: "raw_path_score".to_string(),
+            feature_columns: vec!["rank".to_string(), "raw_path_score".to_string()],
+            calibration_columns: vec!["calibrated_path_prob".to_string()],
+            guardrail_columns: vec!["candidate_set_size".to_string()],
+            notes: Vec::new(),
+        }
+    }
+
     #[test]
     fn exports_training_tables_from_matched_histories() {
         let temp = tempfile::tempdir().unwrap();
@@ -1603,9 +1667,16 @@ mod tests {
             Some("structural-candidates:NQ:test")
         );
         assert_eq!(status.rows_with_propensity_estimate, 2);
+        assert!(!status.trainer_manifest_ready);
+        assert_eq!(status.trainer_feature_columns, 0);
+        assert_eq!(status.trainer_calibration_columns, 0);
+        assert_eq!(status.trainer_guardrail_columns, 0);
         assert!(status
             .warnings
             .contains(&"structural_path_ranking_target_calibration_not_fitted".to_string()));
+        assert!(status
+            .warnings
+            .contains(&"structural_path_ranking_target_trainer_manifest_incomplete".to_string()));
     }
 
     #[test]
@@ -1634,6 +1705,7 @@ mod tests {
                 .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
                 .to_string_lossy()
                 .to_string(),
+            trainer_manifest: structural_path_ranking_trainer_manifest_for_test(),
             summary_line: "structural_path_ranking_target rows=2".to_string(),
             ..StructuralPathRankingTargetExportSummary::default()
         };
@@ -1675,20 +1747,29 @@ mod tests {
         assert_eq!(status.mature_rows, 2);
         assert_eq!(status.rows_with_execution_gate_status, 2);
         assert_eq!(status.rows_with_training_weight, 2);
+        assert!(status.trainer_manifest_ready);
+        assert_eq!(
+            status.trainer_manifest_protocol_version.as_deref(),
+            Some("structural-path-ranking-trainer-manifest-v1")
+        );
+        assert_eq!(
+            status.trainer_manifest_dataset_role.as_deref(),
+            Some("external_path_ranker_training_dataset")
+        );
+        assert_eq!(status.trainer_feature_columns, 2);
+        assert_eq!(status.trainer_calibration_columns, 1);
+        assert_eq!(status.trainer_guardrail_columns, 1);
         assert_eq!(status.calibration_evaluation_rows, 2);
         assert_eq!(status.calibration_propensity_weighted_rows, 2);
         assert!((status.calibration_brier_score.unwrap() - 0.04).abs() < 1e-9);
-        assert!(
-            (status
-                .calibration_propensity_weighted_brier_score
-                .unwrap()
-                - 0.04)
-                .abs()
-                < 1e-9
-        );
+        assert!((status.calibration_propensity_weighted_brier_score.unwrap() - 0.04).abs() < 1e-9);
         assert!((status.calibration_expected_error.unwrap() - 0.0).abs() < 1e-9);
-        assert!(status.warnings.iter().any(|warning| warning
-            .starts_with("structural_path_ranking_target_production_validation_insufficient_rows")));
+        assert!(status.warnings.iter().any(|warning| warning.starts_with(
+            "structural_path_ranking_target_production_validation_insufficient_rows"
+        )));
+        assert!(!status
+            .warnings
+            .contains(&"structural_path_ranking_target_trainer_manifest_incomplete".to_string()));
     }
 
     #[test]
@@ -1718,6 +1799,7 @@ mod tests {
                 .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
                 .to_string_lossy()
                 .to_string(),
+            trainer_manifest: structural_path_ranking_trainer_manifest_for_test(),
             summary_line: format!("structural_path_ranking_target rows={row_count}"),
             ..StructuralPathRankingTargetExportSummary::default()
         };
@@ -1750,9 +1832,14 @@ mod tests {
                 .unwrap();
 
         assert!(status.calibration_quality_ready);
+        assert!(status.trainer_manifest_ready);
         assert!(status.production_validation_ready);
         assert_eq!(status.production_validation_rows, row_count);
-        assert!(!status.warnings.iter().any(|warning| warning
-            .starts_with("structural_path_ranking_target_production_validation_insufficient_rows")));
+        assert!(!status.warnings.iter().any(|warning| warning.starts_with(
+            "structural_path_ranking_target_production_validation_insufficient_rows"
+        )));
+        assert!(!status
+            .warnings
+            .contains(&"structural_path_ranking_target_trainer_manifest_incomplete".to_string()));
     }
 }
