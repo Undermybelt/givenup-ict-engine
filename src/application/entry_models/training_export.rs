@@ -1081,6 +1081,11 @@ fn register_structural_path_ranking_trainer_artifact(
     }
     let raw = fs::read_to_string(&summary_path)?;
     let summary: StructuralPathRankingTargetExportSummary = serde_json::from_str(&raw)?;
+    let evaluation_jsonl_path = if !summary.history_jsonl_path.trim().is_empty() {
+        summary.history_jsonl_path.as_str()
+    } else {
+        summary.jsonl_path.as_str()
+    };
     if !structural_path_ranking_trainer_manifest_ready(&summary.trainer_manifest) {
         bail!(
             "structural path ranking trainer manifest incomplete at {}; export target rows with the current repo before registering an external trainer artifact",
@@ -1088,7 +1093,21 @@ fn register_structural_path_ranking_trainer_artifact(
         );
     }
     let raw_scored_mature_rows =
-        structural_path_ranking_target_raw_scored_mature_rows(&summary.jsonl_path)?;
+        structural_path_ranking_target_raw_scored_mature_rows(evaluation_jsonl_path)?;
+    let trained_row_default = if summary.history_rows > 0 {
+        summary.history_rows
+    } else if summary.rows_with_training_weight > 0 {
+        summary.rows_with_training_weight
+    } else if summary.mature_rows > 0 {
+        summary.mature_rows
+    } else {
+        summary.rows
+    };
+    let calibration_row_default = if summary.history_mature_rows > 0 {
+        summary.history_mature_rows
+    } else {
+        raw_scored_mature_rows.max(summary.rows_with_calibrated_path_prob)
+    };
     let artifact = StructuralPathRankingTrainerArtifact {
         protocol_version: STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION.to_string(),
         dataset_role: summary.trainer_manifest.dataset_role.clone(),
@@ -1099,17 +1118,8 @@ fn register_structural_path_ranking_trainer_artifact(
             .filter(|value| !value.is_empty())
             .unwrap_or(summary.trainer_manifest.raw_score_column.as_str())
             .to_string(),
-        trained_rows: trained_rows.unwrap_or_else(|| {
-            if summary.rows_with_training_weight > 0 {
-                summary.rows_with_training_weight
-            } else if summary.mature_rows > 0 {
-                summary.mature_rows
-            } else {
-                summary.rows
-            }
-        }),
-        calibration_rows: calibration_rows
-            .unwrap_or(raw_scored_mature_rows.max(summary.rows_with_calibrated_path_prob)),
+        trained_rows: trained_rows.unwrap_or(trained_row_default),
+        calibration_rows: calibration_rows.unwrap_or(calibration_row_default),
         feature_columns: summary.trainer_manifest.feature_columns.clone(),
         created_at: Some(Utc::now().to_rfc3339()),
         notes: vec![
@@ -2440,6 +2450,77 @@ mod tests {
         assert_eq!(status.trainer_artifact_calibration_rows, 2);
         assert!(status.trainer_artifact_uri_present);
         assert!(status.summary_line.contains("trainer_artifact=ready"));
+    }
+
+    #[test]
+    fn register_structural_path_ranking_trainer_artifact_prefers_history_counts() {
+        let temp = tempfile::tempdir().unwrap();
+        let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let history_jsonl_path = summary_dir.join("structural_path_ranking_target_history.jsonl");
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: "NQ".to_string(),
+            rows: 2,
+            history_rows: 11,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 2,
+            mature_rows: 2,
+            history_mature_rows: 7,
+            rows_with_training_weight: 2,
+            rows_with_propensity_estimate: 2,
+            rows_with_calibrated_path_prob: 2,
+            rows_with_path_prob_lower_bound: 2,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            history_jsonl_path: history_jsonl_path.to_string_lossy().to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            trainer_manifest: structural_path_ranking_trainer_manifest_for_test(),
+            summary_line: "structural_path_ranking_target rows=2 history_rows=11".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        let latest_jsonl = [
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-win",
+                0.8,
+                "matured_success",
+            ))
+            .unwrap(),
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-loss",
+                0.2,
+                "matured_failure",
+            ))
+            .unwrap(),
+        ]
+        .join("\n");
+        std::fs::write(&jsonl_path, format!("{latest_jsonl}\n")).unwrap();
+        std::fs::write(&history_jsonl_path, format!("{latest_jsonl}\n")).unwrap();
+
+        let (_, artifact) = register_structural_path_ranking_trainer_artifact(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            "s3://rankers/nq-path-ranker-v2.bin",
+            "catboost",
+            None,
+            None,
+            None,
+        )
+        .unwrap();
+
+        assert_eq!(artifact.trained_rows, 11);
+        assert_eq!(artifact.calibration_rows, 7);
     }
 
     #[test]
