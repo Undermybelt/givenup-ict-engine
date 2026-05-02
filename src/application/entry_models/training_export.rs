@@ -301,11 +301,19 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub calibration_max_error: Option<f64>,
     #[serde(default)]
+    pub raw_scored_mature_rows: usize,
+    #[serde(default)]
+    pub raw_scored_mature_min_rows: usize,
+    #[serde(default)]
+    pub raw_scored_mature_shortfall_rows: usize,
+    #[serde(default)]
     pub production_validation_ready: bool,
     #[serde(default)]
     pub production_validation_rows: usize,
     #[serde(default)]
     pub production_validation_min_rows: usize,
+    #[serde(default)]
+    pub production_validation_shortfall_rows: usize,
     pub summary_path: String,
     pub csv_path: Option<String>,
     pub jsonl_path: Option<String>,
@@ -759,8 +767,15 @@ pub fn structural_path_ranking_target_training_status(
     let calibration_evaluation =
         structural_path_ranking_target_calibration_evaluation(&summary.jsonl_path)?;
     let calibration_quality_ready = calibration_evaluation.status == "evaluated";
+    let raw_scored_mature_rows =
+        structural_path_ranking_target_raw_scored_mature_rows(&summary.jsonl_path)?;
+    let raw_scored_mature_min_rows = STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS;
+    let raw_scored_mature_shortfall_rows =
+        raw_scored_mature_min_rows.saturating_sub(raw_scored_mature_rows);
     let production_validation_rows = calibration_evaluation.propensity_weighted_rows;
     let production_validation_min_rows = STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS;
+    let production_validation_shortfall_rows =
+        production_validation_min_rows.saturating_sub(production_validation_rows);
     let production_validation_ready =
         calibration_quality_ready && production_validation_rows >= production_validation_min_rows;
     let mut warnings = Vec::new();
@@ -791,6 +806,12 @@ pub fn structural_path_ranking_target_training_status(
     }
     if !calibration_quality_ready {
         warnings.extend(calibration_evaluation.warnings.clone());
+    }
+    if raw_scored_mature_shortfall_rows > 0 {
+        warnings.push(format!(
+            "structural_path_ranking_target_raw_scored_mature_rows_insufficient:min={} observed={}",
+            raw_scored_mature_min_rows, raw_scored_mature_rows
+        ));
     }
     if !production_validation_ready {
         warnings.push(format!(
@@ -853,9 +874,13 @@ pub fn structural_path_ranking_target_training_status(
             .propensity_weighted_brier_score,
         calibration_expected_error: calibration_evaluation.expected_calibration_error,
         calibration_max_error: calibration_evaluation.max_calibration_error,
+        raw_scored_mature_rows,
+        raw_scored_mature_min_rows,
+        raw_scored_mature_shortfall_rows,
         production_validation_ready,
         production_validation_rows,
         production_validation_min_rows,
+        production_validation_shortfall_rows,
         summary_path: summary.summary_path,
         csv_path: Some(summary.csv_path),
         jsonl_path: Some(summary.jsonl_path),
@@ -951,6 +976,22 @@ fn structural_path_ranking_target_calibration_evaluation(
         .map(serde_json::from_str::<StructuralPathRankingTargetRow>)
         .collect::<std::result::Result<Vec<_>, _>>()?;
     Ok(evaluate_structural_path_probability_calibration_rows(&rows))
+}
+
+fn structural_path_ranking_target_raw_scored_mature_rows(jsonl_path: &str) -> Result<usize> {
+    if !Path::new(jsonl_path).exists() {
+        return Ok(0);
+    }
+    let raw = fs::read_to_string(jsonl_path)?;
+    let rows = raw
+        .lines()
+        .filter(|line| !line.trim().is_empty())
+        .map(serde_json::from_str::<StructuralPathRankingTargetRow>)
+        .collect::<std::result::Result<Vec<_>, _>>()?;
+    Ok(rows
+        .iter()
+        .filter(|row| row.raw_path_score.is_some() && row.calibrated_label.is_some())
+        .count())
 }
 
 pub fn policy_training_status_command(
@@ -1961,9 +2002,25 @@ mod tests {
         assert!(status.trainer_artifact_uri_present);
         assert_eq!(status.calibration_evaluation_rows, 2);
         assert_eq!(status.calibration_propensity_weighted_rows, 2);
+        assert_eq!(status.raw_scored_mature_rows, 2);
+        assert_eq!(
+            status.raw_scored_mature_min_rows,
+            STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS
+        );
+        assert_eq!(
+            status.raw_scored_mature_shortfall_rows,
+            STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS - 2
+        );
+        assert_eq!(
+            status.production_validation_shortfall_rows,
+            STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS - 2
+        );
         assert!((status.calibration_brier_score.unwrap() - 0.04).abs() < 1e-9);
         assert!((status.calibration_propensity_weighted_brier_score.unwrap() - 0.04).abs() < 1e-9);
         assert!((status.calibration_expected_error.unwrap() - 0.0).abs() < 1e-9);
+        assert!(status.warnings.iter().any(|warning| warning.starts_with(
+            "structural_path_ranking_target_raw_scored_mature_rows_insufficient"
+        )));
         assert!(status.warnings.iter().any(|warning| warning.starts_with(
             "structural_path_ranking_target_production_validation_insufficient_rows"
         )));
@@ -2040,7 +2097,13 @@ mod tests {
         assert!(status.calibration_quality_ready);
         assert!(status.trainer_manifest_ready);
         assert!(status.production_validation_ready);
+        assert_eq!(status.raw_scored_mature_rows, row_count);
+        assert_eq!(status.raw_scored_mature_shortfall_rows, 0);
         assert_eq!(status.production_validation_rows, row_count);
+        assert_eq!(status.production_validation_shortfall_rows, 0);
+        assert!(!status.warnings.iter().any(|warning| warning.starts_with(
+            "structural_path_ranking_target_raw_scored_mature_rows_insufficient"
+        )));
         assert!(!status.warnings.iter().any(|warning| warning.starts_with(
             "structural_path_ranking_target_production_validation_insufficient_rows"
         )));
