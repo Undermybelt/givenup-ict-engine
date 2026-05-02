@@ -23,7 +23,7 @@ Aligned source docs:
 | `P1` Canonical structural anchor | `已实现` | downstream phases no longer redefine canonical structural lineage |
 | `P2` Live feedback posterior update | `基本实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, clipped IPS counterfactual reward priors, candidate-set policy logging, feedback-time selected policy probability consumption, clipped SNIPS/DR reward priors, SNIPS effective-sample diagnostics, compact target-policy variance/Brier/calibration-error diagnostics, delayed-reward resolution/censoring adjustment diagnostics, compact competing-risk outcome probabilities, elapsed-hour hazard diagnostics, compact event-time survival diagnostics, 1h/4h/24h resolution horizon probabilities, compact 4h cause-specific cumulative-incidence diagnostics, and compact online target-policy context posteriors with confidence-calibrated probability scalars exist; deeper learned target-policy and full delayed-reward competing-risk calibration remains |
 | `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, compact outcome-confusion profiles, persisted EM source-confusion summaries, compact EM calibration diagnostics, and reliability-weighted panel aggregation exist |
-| `P4` Structural prior state upgrade | `部分实现` | duration, transition, dwell/hazard fields, compact BOCPD run-length and sequence-change diagnostics, source panels, event ledger, separated prior-mass snapshots, and latest offline seed snapshot exist; fitted dwell-time theory remains |
+| `P4` Structural prior state upgrade | `部分实现` | duration, transition, dwell/hazard fields, compact BOCPD run-length, sequence-change, and recursive sequence posterior diagnostics, source panels, event ledger, separated prior-mass snapshots, and latest offline seed snapshot exist; fitted dwell-time theory remains |
 | `P5` BBN node/branch posterior update | `基本实现` | temporal priors adjust belief snapshots and branch surfaces, normalized outgoing branch-transition posterior state persists, and node/regime plus complete/partial candidate-set branch adjustment consume it directly |
 | `P6` CatBoost path ranking target | `部分实现` | target surface contract, explicit row fields, workflow surface, persisted target-row export, empirical calibration utility, and calibration-quality evaluator exist; production validation on sufficient raw-scored rows is still not landed |
 
@@ -59,12 +59,12 @@ Already in repo
 - `event_ledger`
 - `node_duration_priors`
 - `branch_transition_priors`
-- duration `expected_dwell_steps`, `remaining_dwell_steps`, empirical dwell distribution, fitted completion hazard, BOCPD evidence weight/raw break probability, compact run-length mode/probability/tail/mass diagnostics, compact one-step recursive run-length posterior diagnostics, sequence-change intensity, sequence break probability, and `sticky_self_transition_strength`
-- `structural-temporal-summary` exposes compact duration-distribution entropy, survival, completion-hazard, BOCPD evidence-weight, raw break, calibrated break/continue, empirical run-length, recursive run-length posterior, and sequence-break diagnostics without dumping the full histogram
+- duration `expected_dwell_steps`, `remaining_dwell_steps`, empirical dwell distribution, fitted completion hazard, BOCPD evidence weight/raw break probability, compact run-length mode/probability/tail/mass diagnostics, compact one-step recursive run-length posterior diagnostics, sequence-change intensity, sequence break probability, compact recursive sequence run-length diagnostics, and `sticky_self_transition_strength`
+- `structural-temporal-summary` exposes compact duration-distribution entropy, survival, completion-hazard, BOCPD evidence-weight, raw break, calibrated break/continue, empirical run-length, recursive run-length posterior, sequence-break, and sequence-reset diagnostics without dumping the full histogram
 - panel-derived prior reconstruction before structural display / ranking surfaces
 
 Literature mechanisms still worth importing
-- full recursive BOCPD changepoint filtering over richer sequence history beyond the current compact duration-surprise, empirical run-length, one-step recursive run-length, evidence-weighted break/continue probabilities, and adjacent-streak sequence-change scalars
+- full production-grade BOCPD changepoint filtering over richer sequence history and emissions beyond the current compact duration-surprise, empirical run-length, one-step recursive run-length, evidence-weighted break/continue probabilities, adjacent-streak sequence-change scalars, and compact recursive sequence posterior diagnostics
 - source-panel posterior aggregation written as explicit panel likelihood / prior math, not only weighted summary blending
 - clearer node-level prior mass separation from branch/path-level prior mass
 
@@ -76,11 +76,11 @@ Suggested state fields
 - `last_offline_seed_snapshot`
 
 Current repo gap
-- `node_duration_priors` and `branch_transition_priors` are real; duration state now carries expected dwell, remaining dwell, empirical dwell distribution, completion hazard, BOCPD evidence weight, raw/calibrated break probability, compact empirical and one-step recursive run-length diagnostics, adjacent-streak sequence-change/break diagnostics, break hazard, and sticky self-transition strength; `node_prior_mass` / `branch_prior_mass` / `scenario_prior_mass` / `path_prior_mass` keep entity-scaled prior mass auditable outside the generic stats maps
+- `node_duration_priors` and `branch_transition_priors` are real; duration state now carries expected dwell, remaining dwell, empirical dwell distribution, completion hazard, BOCPD evidence weight, raw/calibrated break probability, compact empirical and one-step recursive run-length diagnostics, adjacent-streak sequence-change/break diagnostics, compact recursive sequence run-length diagnostics, break hazard, and sticky self-transition strength; `node_prior_mass` / `branch_prior_mass` / `scenario_prior_mass` / `path_prior_mass` keep entity-scaled prior mass auditable outside the generic stats maps
 - `last_offline_seed_snapshot` is formalized as a persistent theory object for the latest offline seed, but deeper snapshot history / recalibration policy remains future work
 
 Upgrade path
-1. calibrate the compact BOCPD-style break, one-step recursive run-length, and adjacent-streak sequence-change diagnostics against richer sequence history once enough observations exist
+1. calibrate the compact BOCPD-style break, one-step recursive run-length, adjacent-streak sequence-change, and recursive sequence run-length diagnostics against richer sequence history once enough observations exist
 2. treat source panels as pre-merge posterior contributors, not only audit surfaces
 
 ---
@@ -337,6 +337,6 @@ Use this summary when deciding the next coding slice:
 
 The repo is no longer blocked on surface drift. The highest-value remaining work is now:
 1. collect or opt into larger real cross-source panels, then inspect the persisted Dawid-Skene / EM-style calibration diagnostics over out-of-sample windows
-2. richer BOCPD posterior calibration on top of the current HSMM-style empirical dwell distribution and compact evidence-weighted break/continue plus empirical/recursive run-length and adjacent-streak sequence telemetry
+2. richer BOCPD posterior calibration on top of the current HSMM-style empirical dwell distribution and compact evidence-weighted break/continue plus empirical/recursive run-length, adjacent-streak sequence, and recursive sequence-posterior telemetry
 3. deeper target-policy probability calibration and delayed-reward competing-risk modeling beyond the current clipped IPS / SNIPS / DR, ESS-weighted reward, variance, Brier/calibration-error, compact context posterior, context-confidence-calibrated probability scalars, compact censoring-adjusted diagnostics, counter-derived competing-risk probabilities, elapsed-hour hazards, fixed-horizon survival diagnostics, fixed-horizon resolution CDF diagnostics, and compact 4h cause-specific cumulative-incidence diagnostics
 4. CatBoost training and production validation on top of exported P6 target rows once raw-scored history exists
