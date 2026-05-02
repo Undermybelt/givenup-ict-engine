@@ -115,6 +115,7 @@ use ict_engine::application::{
         pre_bayes_gate_regressed, research_objective_label, ResearchObjectiveMode,
     },
     entry_models::{
+        apply_structural_path_ranking_external_scores_command,
         build_entry_model_packet_store_for_analyze,
         clear_structural_path_ranking_trainer_artifact_command,
         export_structural_path_ranking_target_command,
@@ -1380,6 +1381,22 @@ enum Commands {
             help = "State directory containing workflow snapshot, learning state, and policy_training artifacts"
         )]
         state_dir: String,
+    },
+    /// Apply explicit external raw path scores onto the latest and accumulated structural path-ranking target datasets.
+    ApplyStructuralPathRankingExternalScores {
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
+        symbol: String,
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory containing workflow snapshot, learning state, and policy_training artifacts"
+        )]
+        state_dir: String,
+        #[arg(
+            long,
+            help = "Path to a CSV or JSONL file with candidate_set_id,path_id,raw_path_score rows"
+        )]
+        scores_file: String,
     },
     /// Show a global read-only catalog of providers grouped by domain.
     ProviderStatus {
@@ -2831,6 +2848,18 @@ fn main() -> Result<()> {
         Commands::ExportStructuralPathRankingTarget { symbol, state_dir } => {
             ensure_state_dir_ready(&state_dir)?;
             export_structural_path_ranking_target_command(&state_dir, &symbol)?
+        }
+        Commands::ApplyStructuralPathRankingExternalScores {
+            symbol,
+            state_dir,
+            scores_file,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            apply_structural_path_ranking_external_scores_command(
+                &state_dir,
+                &symbol,
+                &scores_file,
+            )?
         }
         Commands::ProviderStatus {
             domain,

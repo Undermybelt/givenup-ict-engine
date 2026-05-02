@@ -7111,6 +7111,94 @@ mod tests {
     }
 
     #[test]
+    fn applying_structural_path_ranking_external_scores_updates_current_and_history_exports() {
+        let snapshot = sample_human_workflow_snapshot();
+        let history = sample_structural_feedback_history();
+        let path_id = "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary";
+        let mut structural_prior_state = StructuralPriorLearningState::default();
+        structural_prior_state.paths.insert(
+            path_id.to_string(),
+            crate::state::StructuralPriorStats {
+                smoothed_prior: 0.62,
+                execution_propensity: 0.6,
+                target_policy_probability_confidence: 0.57,
+                target_policy_probability_lower_bound: 0.31,
+                target_policy_reward_prior: 0.58,
+                target_policy_reward_lower_bound: 0.29,
+                ..crate::state::StructuralPriorStats::default()
+            },
+        );
+        let temp = tempfile::tempdir().unwrap();
+        let summary = crate::application::orchestration::export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &sample_provider_agent_surface(),
+            &history,
+            &structural_prior_state,
+        )
+        .unwrap();
+        let current_rows: Vec<
+            crate::application::orchestration::StructuralPathRankingTargetRow,
+        > = std::fs::read_to_string(&summary.jsonl_path)
+            .unwrap()
+            .lines()
+            .filter(|line| !line.trim().is_empty())
+            .map(serde_json::from_str)
+            .collect::<std::result::Result<_, _>>()
+            .unwrap();
+        let scored_row = current_rows.first().expect("exported row").clone();
+        let updated_summary =
+            crate::application::orchestration::apply_structural_path_ranking_external_scores(
+                temp.path().to_str().unwrap(),
+                "NQ",
+                &[crate::application::orchestration::StructuralPathRankingExternalScoreInput {
+                    candidate_set_id: scored_row.candidate_set_id.clone(),
+                    path_id: scored_row.path_id.clone(),
+                    raw_path_score: 0.91,
+                }],
+            )
+            .unwrap();
+        let updated_current: Vec<
+            crate::application::orchestration::StructuralPathRankingTargetRow,
+        > = std::fs::read_to_string(&updated_summary.jsonl_path)
+            .unwrap()
+            .lines()
+            .filter(|line| !line.trim().is_empty())
+            .map(serde_json::from_str)
+            .collect::<std::result::Result<_, _>>()
+            .unwrap();
+        let updated_history: Vec<
+            crate::application::orchestration::StructuralPathRankingTargetRow,
+        > = std::fs::read_to_string(&updated_summary.history_jsonl_path)
+            .unwrap()
+            .lines()
+            .filter(|line| !line.trim().is_empty())
+            .map(serde_json::from_str)
+            .collect::<std::result::Result<_, _>>()
+            .unwrap();
+        assert!(std::path::Path::new(&updated_summary.history_csv_path).exists());
+        assert!(updated_summary.rows_with_raw_path_score >= 1);
+        assert_eq!(
+            updated_current
+                .iter()
+                .find(|row| row.path_id == scored_row.path_id)
+                .and_then(|row| row.raw_path_score),
+            Some(0.91)
+        );
+        assert_eq!(
+            updated_history
+                .iter()
+                .find(|row| {
+                    row.path_id == scored_row.path_id
+                        && row.candidate_set_id == scored_row.candidate_set_id
+                })
+                .and_then(|row| row.raw_path_score),
+            Some(0.91)
+        );
+    }
+
+    #[test]
     fn agent_workflow_status_view_exposes_latest_structural_feedback() {
         let mut snapshot = sample_human_workflow_snapshot();
         if let Some(update) = snapshot.latest_update.as_mut() {

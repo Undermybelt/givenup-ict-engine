@@ -7,9 +7,11 @@ use std::fs;
 use std::path::Path;
 
 use crate::application::orchestration::{
+    apply_structural_path_ranking_external_scores,
     evaluate_structural_path_probability_calibration_rows, export_structural_path_ranking_target,
     StructuralPathProbabilityCalibrationEvaluationReport, StructuralPathRankingTargetExportSummary,
-    StructuralPathRankingTargetRow, StructuralPathRankingTrainerManifest,
+    StructuralPathRankingExternalScoreInput, StructuralPathRankingTargetRow,
+    StructuralPathRankingTrainerManifest,
     STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE,
 };
 use crate::application::provider_catalog::provider_status_agent_surface;
@@ -1045,6 +1047,26 @@ fn structural_path_ranking_target_raw_scored_mature_rows(jsonl_path: &str) -> Re
         .count())
 }
 
+fn load_structural_path_ranking_external_scores(
+    scores_path: &str,
+) -> Result<Vec<StructuralPathRankingExternalScoreInput>> {
+    if scores_path.ends_with(".jsonl") {
+        let raw = fs::read_to_string(scores_path)?;
+        return raw
+            .lines()
+            .filter(|line| !line.trim().is_empty())
+            .map(serde_json::from_str::<StructuralPathRankingExternalScoreInput>)
+            .collect::<std::result::Result<Vec<_>, _>>()
+            .map_err(Into::into);
+    }
+    let mut reader = csv::Reader::from_path(scores_path)?;
+    let mut rows = Vec::new();
+    for row in reader.deserialize::<StructuralPathRankingExternalScoreInput>() {
+        rows.push(row?);
+    }
+    Ok(rows)
+}
+
 pub fn policy_training_status_command(
     state_dir: &str,
     symbol: &str,
@@ -1217,6 +1239,20 @@ pub fn export_structural_path_ranking_target_command(
     symbol: &str,
 ) -> Result<()> {
     let summary = export_structural_path_ranking_target_from_state_dir(state_dir, symbol)?;
+    println!("{}", serde_json::to_string_pretty(&summary)?);
+    Ok(())
+}
+
+pub fn apply_structural_path_ranking_external_scores_command(
+    state_dir: &str,
+    symbol: &str,
+    scores_path: &str,
+) -> Result<()> {
+    let scores = load_structural_path_ranking_external_scores(scores_path)?;
+    if scores.is_empty() {
+        bail!("no structural path ranking external scores found in '{}'", scores_path);
+    }
+    let summary = apply_structural_path_ranking_external_scores(state_dir, symbol, &scores)?;
     println!("{}", serde_json::to_string_pretty(&summary)?);
     Ok(())
 }

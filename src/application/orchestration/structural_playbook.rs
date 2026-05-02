@@ -1,5 +1,5 @@
 use anyhow::Result;
-use chrono::SecondsFormat;
+use chrono::{SecondsFormat, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::fs;
@@ -607,6 +607,13 @@ pub struct StructuralPathRankingTargetRow {
     pub experience_prior: f64,
     pub current_posterior: f64,
     pub structural_baseline_score: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankingExternalScoreInput {
+    pub candidate_set_id: String,
+    pub path_id: String,
+    pub raw_path_score: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -3028,6 +3035,114 @@ pub fn export_structural_path_ranking_target(
     Ok(summary)
 }
 
+pub fn apply_structural_path_ranking_external_scores(
+    state_dir: &str,
+    symbol: &str,
+    scores: &[StructuralPathRankingExternalScoreInput],
+) -> Result<StructuralPathRankingTargetExportSummary> {
+    let summary_path = Path::new(state_dir)
+        .join(symbol)
+        .join(STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR)
+        .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE);
+    let raw = fs::read_to_string(&summary_path)?;
+    let summary: StructuralPathRankingTargetExportSummary = serde_json::from_str(&raw)?;
+    let mut current_rows = load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path))?;
+    let history_jsonl_path = if !summary.history_jsonl_path.is_empty() {
+        Path::new(&summary.history_jsonl_path).to_path_buf()
+    } else {
+        Path::new(&summary.jsonl_path).to_path_buf()
+    };
+    let mut history_rows = load_structural_path_ranking_target_rows(&history_jsonl_path)?;
+    let score_map = scores
+        .iter()
+        .map(|item| {
+            (
+                format!("{}|{}", item.candidate_set_id, item.path_id),
+                item.raw_path_score.clamp(0.0, 1.0),
+            )
+        })
+        .collect::<BTreeMap<_, _>>();
+    let mut matched = 0usize;
+    for row in &mut current_rows {
+        if let Some(raw_score) = score_map.get(&structural_path_ranking_target_row_history_key(row)) {
+            row.raw_path_score = Some(*raw_score);
+            clear_structural_path_ranking_target_row_outputs(row);
+            matched += 1;
+        }
+    }
+    for row in &mut history_rows {
+        if let Some(raw_score) = score_map.get(&structural_path_ranking_target_row_history_key(row)) {
+            row.raw_path_score = Some(*raw_score);
+            clear_structural_path_ranking_target_row_outputs(row);
+        }
+    }
+    if matched == 0 {
+        anyhow::bail!("no structural path ranking target rows matched the supplied scores");
+    }
+    let generated_at = Utc::now().to_rfc3339_opts(SecondsFormat::Secs, true);
+    let mut history_artifact = StructuralPathRankingTargetArtifact {
+        protocol_version: "structural-path-ranking-target-v1".to_string(),
+        symbol: symbol.to_string(),
+        candidate_set_id: summary.candidate_set_id.clone(),
+        candidate_set_size: summary.candidate_set_size,
+        generated_at: generated_at.clone(),
+        rows: history_rows,
+    };
+    let history_report = apply_structural_path_probability_calibration(&mut history_artifact);
+    let mut current_artifact = StructuralPathRankingTargetArtifact {
+        protocol_version: "structural-path-ranking-target-v1".to_string(),
+        symbol: symbol.to_string(),
+        candidate_set_id: summary.candidate_set_id.clone(),
+        candidate_set_size: summary.candidate_set_size,
+        generated_at: generated_at.clone(),
+        rows: current_rows,
+    };
+    apply_structural_path_probability_bins(&mut current_artifact.rows, &history_report.bins);
+    apply_structural_path_ranking_execution_gates(&mut current_artifact);
+    let csv_name = format!(
+        "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_CSV_FILE}"
+    );
+    let jsonl_name = format!(
+        "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_JSONL_FILE}"
+    );
+    let history_csv_name = format!(
+        "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_HISTORY_CSV_FILE}"
+    );
+    let history_jsonl_name = format!(
+        "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_HISTORY_JSONL_FILE}"
+    );
+    let summary_name = format!(
+        "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE}"
+    );
+    let current_csv = render_structural_path_ranking_target_csv(&current_artifact);
+    let current_jsonl = render_structural_path_ranking_target_jsonl(&current_artifact)?;
+    let history_csv = render_structural_path_ranking_target_rows_csv(
+        &current_artifact.protocol_version,
+        &current_artifact.symbol,
+        &current_artifact.generated_at,
+        &history_artifact.rows,
+    );
+    let history_jsonl = render_structural_path_ranking_target_rows_jsonl(&history_artifact.rows)?;
+    let updated_summary = structural_path_ranking_target_export_summary(
+        state_dir,
+        symbol,
+        &current_artifact,
+        &csv_name,
+        &jsonl_name,
+        &history_csv_name,
+        &history_jsonl_name,
+        &history_artifact.rows,
+        &summary_name,
+    );
+    let summary_json = serde_json::to_string_pretty(&updated_summary)?;
+    save_text_state(state_dir, symbol, &csv_name, &current_csv)?;
+    save_text_state(state_dir, symbol, &jsonl_name, &current_jsonl)?;
+    save_text_state(state_dir, symbol, &history_csv_name, &history_csv)?;
+    save_text_state(state_dir, symbol, &history_jsonl_name, &history_jsonl)?;
+    save_text_state(state_dir, symbol, &summary_name, &summary_json)?;
+    Ok(updated_summary)
+}
+
 fn structural_candidate_policy_denominator(candidate_paths: &[StructuralPathArtifact]) -> f64 {
     candidate_paths
         .iter()
@@ -3289,23 +3404,7 @@ pub fn apply_structural_path_probability_calibration(
         });
     }
 
-    let mut calibrated_rows = 0;
-    for row in &mut artifact.rows {
-        let Some(raw_score) = row.raw_path_score else {
-            continue;
-        };
-        let raw_score = raw_score.clamp(0.0, 1.0);
-        let Some(bin) = bins.iter().find(|bin| {
-            bin.regime_calibration_bucket == row.regime_calibration_bucket
-                && raw_score >= bin.raw_path_score_min
-                && raw_score <= bin.raw_path_score_max
-        }) else {
-            continue;
-        };
-        row.calibrated_path_prob = Some(bin.calibrated_path_prob);
-        row.path_prob_lower_bound = Some(bin.path_prob_lower_bound);
-        calibrated_rows += 1;
-    }
+    let calibrated_rows = apply_structural_path_probability_bins(&mut artifact.rows, &bins);
 
     let status = if calibrated_rows > 0 {
         "calibrated"
@@ -3514,6 +3613,14 @@ fn load_structural_path_ranking_target_rows(
         .map_err(Into::into)
 }
 
+fn clear_structural_path_ranking_target_row_outputs(row: &mut StructuralPathRankingTargetRow) {
+    row.calibrated_path_prob = None;
+    row.path_prob_lower_bound = None;
+    row.execution_gate_status = None;
+    row.execution_gate_min_path_prob = None;
+    row.execution_gate_reason = None;
+}
+
 fn upsert_structural_path_ranking_target_history(
     history_jsonl_path: &Path,
     rows: &[StructuralPathRankingTargetRow],
@@ -3534,6 +3641,30 @@ fn upsert_structural_path_ranking_target_history(
         }
     }
     Ok(history)
+}
+
+fn apply_structural_path_probability_bins(
+    rows: &mut [StructuralPathRankingTargetRow],
+    bins: &[StructuralPathProbabilityCalibrationBin],
+) -> usize {
+    let mut calibrated_rows = 0;
+    for row in rows {
+        let Some(raw_score) = row.raw_path_score else {
+            continue;
+        };
+        let raw_score = raw_score.clamp(0.0, 1.0);
+        let Some(bin) = bins.iter().find(|bin| {
+            bin.regime_calibration_bucket == row.regime_calibration_bucket
+                && raw_score >= bin.raw_path_score_min
+                && raw_score <= bin.raw_path_score_max
+        }) else {
+            continue;
+        };
+        row.calibrated_path_prob = Some(bin.calibrated_path_prob);
+        row.path_prob_lower_bound = Some(bin.path_prob_lower_bound);
+        calibrated_rows += 1;
+    }
+    calibrated_rows
 }
 
 fn render_structural_path_ranking_target_rows_jsonl(

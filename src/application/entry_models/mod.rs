@@ -129,6 +129,7 @@ pub use cisd_rb::{
     CISD_RB_SETUP_MODEL_ID,
 };
 pub use training_export::{
+    apply_structural_path_ranking_external_scores_command,
     clear_structural_path_ranking_trainer_artifact_command,
     export_structural_path_ranking_target_command,
     export_policy_training_tables, policy_training_status, policy_training_status_command,
