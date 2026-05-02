@@ -194,11 +194,11 @@ Already in repo
 - structural feedback templates and inline execution contracts carry the logged candidate-set policy context without adding required flags
 - structural feedback submissions consume `selected_path_probability` as the recorded selected behavior-policy probability before legacy posterior fallbacks
 - structural prior stats/source summaries persist behavior-policy probability, SNIPS reward prior, SNIPS effective sample size, doubly robust reward prior, target-policy calibration weight, variance penalty, calibrated reward prior, and conservative reward lower bound; `structural-experience-priors` exposes the compact correction fields
+- `structural-experience-priors` now exposes compact maturity/censoring diagnostics from existing counters: matured feedback count, unresolved feedback count, maturity coverage, and censoring rate
 
 Literature mechanisms still worth importing
 - full target-policy probability model calibration beyond the current compact ESS-weighted reward prior and variance penalty
-- maturity / censoring logic for delayed reward
-- richer maturity / censoring logic for delayed reward beyond simple delayed -> resolved replacement
+- full maturity / censoring probability model for delayed reward beyond compact resolved/unresolved counters
 - compliance / propensity correction before updating execution value
 
 Suggested formulas
@@ -217,7 +217,7 @@ Suggested outcome decomposition
 
 Current repo gap
 - feedback learning is real and no longer heuristic-only; delayed outcomes now resolve into one posterior event and abandoned/invalidated outcomes use explicit pseudo-count weights
-- not-followed recommendations now carry separate propensity/off-policy exposure fields and clipped IPS counterfactual reward priors; recommended path bundles, feedback templates, and execution contracts log behavior-policy probability; submitted feedback consumes that probability and structural stats expose clipped SNIPS/DR reward priors plus ESS-weighted target-policy reward and variance diagnostics; full target-policy probability model calibration remains
+- not-followed recommendations now carry separate propensity/off-policy exposure fields and clipped IPS counterfactual reward priors; recommended path bundles, feedback templates, and execution contracts log behavior-policy probability; submitted feedback consumes that probability and structural stats expose clipped SNIPS/DR reward priors plus ESS-weighted target-policy reward, variance diagnostics, and compact maturity/censoring coverage; full target-policy probability and delayed-reward censoring models remain
 
 ---
 
