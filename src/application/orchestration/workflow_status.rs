@@ -6077,6 +6077,10 @@ mod tests {
                 bocpd_raw_break_probability: 0.44,
                 bocpd_break_probability: 0.36,
                 bocpd_continue_probability: 0.64,
+                bocpd_run_length_mode: 1,
+                bocpd_run_length_mode_probability: 0.5405405405,
+                bocpd_run_length_tail_probability: 1.0,
+                bocpd_run_length_observation_mass: 1.85,
                 duration_outcome_support: 0.7407407407,
                 temporal_posterior_support: 0.6422222222,
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
@@ -6162,6 +6166,10 @@ mod tests {
         assert_eq!(value["bocpd_raw_break_probability"], 0.44);
         assert_eq!(value["bocpd_break_probability"], 0.36);
         assert_eq!(value["bocpd_continue_probability"], 0.64);
+        assert_eq!(value["bocpd_run_length_mode"], 1);
+        assert_eq!(value["bocpd_run_length_mode_probability"], 0.5405405405);
+        assert_eq!(value["bocpd_run_length_tail_probability"], 1.0);
+        assert_eq!(value["bocpd_run_length_observation_mass"], 1.85);
         assert_eq!(value["duration_outcome_support"], 0.75);
         assert_eq!(value["duration_temporal_posterior_support"], 0.65);
         assert_eq!(value["duration_posterior_blend_weight"], 0.42);

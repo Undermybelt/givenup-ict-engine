@@ -424,6 +424,14 @@ pub struct StructuralNodeDurationPrior {
     #[serde(default)]
     pub bocpd_continue_probability: f64,
     #[serde(default)]
+    pub bocpd_run_length_mode: usize,
+    #[serde(default)]
+    pub bocpd_run_length_mode_probability: f64,
+    #[serde(default)]
+    pub bocpd_run_length_tail_probability: f64,
+    #[serde(default)]
+    pub bocpd_run_length_observation_mass: f64,
+    #[serde(default)]
     pub sticky_self_transition_strength: f64,
     #[serde(default)]
     pub duration_outcome_support: f64,
@@ -5257,6 +5265,10 @@ struct StructuralNodeDurationDistributionFit {
     entropy: f64,
     survival_probability: f64,
     completion_hazard: f64,
+    run_length_mode: usize,
+    run_length_mode_probability: f64,
+    run_length_tail_probability: f64,
+    run_length_observation_mass: f64,
 }
 
 fn structural_node_duration_distribution_fit(
@@ -5270,10 +5282,18 @@ fn structural_node_duration_distribution_fit(
 
     let mut entropy = 0.0;
     let mut distribution = Vec::with_capacity(duration_length_stats.len());
+    let mut run_length_mode = 0;
+    let mut run_length_mode_mass = 0.0;
+    let mut run_length_mode_probability = 0.0;
     for (dwell_steps, (streak_count, weighted_streak_mass)) in duration_length_stats {
         let probability = (*weighted_streak_mass / total_weighted_streak_mass).clamp(0.0, 1.0);
         if probability > f64::EPSILON {
             entropy -= probability * probability.ln();
+        }
+        if *weighted_streak_mass > run_length_mode_mass {
+            run_length_mode = *dwell_steps;
+            run_length_mode_mass = *weighted_streak_mass;
+            run_length_mode_probability = probability;
         }
         let survival_mass: f64 = duration_length_stats
             .iter()
@@ -5321,6 +5341,10 @@ fn structural_node_duration_distribution_fit(
         entropy,
         survival_probability,
         completion_hazard,
+        run_length_mode,
+        run_length_mode_probability,
+        run_length_tail_probability: survival_probability,
+        run_length_observation_mass: total_weighted_streak_mass,
     }
 }
 
@@ -5417,6 +5441,10 @@ fn rebuild_discounted_node_duration_priors(
             + prior.bocpd_evidence_weight * prior.bocpd_raw_break_probability)
             .clamp(0.0, 1.0);
         prior.bocpd_continue_probability = (1.0 - prior.bocpd_break_probability).clamp(0.0, 1.0);
+        prior.bocpd_run_length_mode = duration_fit.run_length_mode;
+        prior.bocpd_run_length_mode_probability = duration_fit.run_length_mode_probability;
+        prior.bocpd_run_length_tail_probability = duration_fit.run_length_tail_probability;
+        prior.bocpd_run_length_observation_mass = duration_fit.run_length_observation_mass;
         prior.sticky_self_transition_strength = ((1.0 - prior.break_hazard) * 0.7
             + prior.duration_outcome_support * 0.3)
             .clamp(0.0, 1.0);
@@ -6728,6 +6756,10 @@ mod tests {
         assert!(trend.bocpd_evidence_weight > 0.0);
         assert!(trend.bocpd_evidence_weight < 1.0);
         assert!(trend.bocpd_raw_break_probability > 0.0);
+        assert_eq!(trend.bocpd_run_length_mode, 1);
+        assert!((trend.bocpd_run_length_mode_probability - (1.0 / 1.85)).abs() < 1e-9);
+        assert!((trend.bocpd_run_length_tail_probability - 1.0).abs() < 1e-9);
+        assert!((trend.bocpd_run_length_observation_mass - 1.85).abs() < 1e-9);
         let parametric_break_hazard =
             structural_duration_break_hazard(trend.last_streak_length, trend.expected_dwell_steps);
         assert!(
