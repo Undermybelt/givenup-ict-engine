@@ -557,6 +557,16 @@ pub struct StructuralNodeDurationPrior {
     #[serde(default)]
     pub bocpd_run_length_observation_mass: f64,
     #[serde(default)]
+    pub bocpd_recursive_reset_probability: f64,
+    #[serde(default)]
+    pub bocpd_recursive_run_length_mode: usize,
+    #[serde(default)]
+    pub bocpd_recursive_run_length_mode_probability: f64,
+    #[serde(default)]
+    pub bocpd_recursive_run_length_expected_value: f64,
+    #[serde(default)]
+    pub bocpd_recursive_run_length_entropy: f64,
+    #[serde(default)]
     pub sticky_self_transition_strength: f64,
     #[serde(default)]
     pub duration_outcome_support: f64,
@@ -618,6 +628,16 @@ pub struct StructuralNodeTemporalPosteriorState {
     pub break_hazard: f64,
     #[serde(default)]
     pub sticky_self_transition_strength: f64,
+    #[serde(default)]
+    pub bocpd_recursive_reset_probability: f64,
+    #[serde(default)]
+    pub bocpd_recursive_run_length_mode: usize,
+    #[serde(default)]
+    pub bocpd_recursive_run_length_mode_probability: f64,
+    #[serde(default)]
+    pub bocpd_recursive_run_length_expected_value: f64,
+    #[serde(default)]
+    pub bocpd_recursive_run_length_entropy: f64,
     pub duration_outcome_support: f64,
     pub temporal_posterior_support: f64,
     #[serde(default)]
@@ -6261,6 +6281,15 @@ struct StructuralNodeDurationDistributionFit {
     run_length_observation_mass: f64,
 }
 
+#[derive(Debug, Clone, Default)]
+struct StructuralNodeBocpdRecursiveRunLengthFit {
+    reset_probability: f64,
+    run_length_mode: usize,
+    run_length_mode_probability: f64,
+    expected_run_length: f64,
+    entropy: f64,
+}
+
 fn structural_node_duration_distribution_fit(
     duration_length_stats: &BTreeMap<usize, (usize, f64)>,
     total_weighted_streak_mass: f64,
@@ -6336,6 +6365,55 @@ fn structural_node_duration_distribution_fit(
         run_length_tail_probability: survival_probability,
         run_length_observation_mass: total_weighted_streak_mass,
     }
+}
+
+fn structural_node_bocpd_recursive_run_length_fit(
+    distribution: &[StructuralNodeDurationBucket],
+    evidence_weight: f64,
+    fallback_break_probability: f64,
+) -> StructuralNodeBocpdRecursiveRunLengthFit {
+    if distribution.is_empty() {
+        return StructuralNodeBocpdRecursiveRunLengthFit::default();
+    }
+
+    let evidence_weight = evidence_weight.clamp(0.0, 1.0);
+    let fallback_break_probability = fallback_break_probability.clamp(0.0, 1.0);
+    let mut posterior = BTreeMap::<usize, f64>::new();
+    for bucket in distribution {
+        let prior_probability = bucket.probability.clamp(0.0, 1.0);
+        if prior_probability <= f64::EPSILON {
+            continue;
+        }
+        let hazard = ((1.0 - evidence_weight) * fallback_break_probability
+            + evidence_weight * bucket.completion_hazard.clamp(0.0, 1.0))
+            .clamp(0.0, 1.0);
+        *posterior.entry(0).or_default() += prior_probability * hazard;
+        *posterior
+            .entry(bucket.dwell_steps.saturating_add(1))
+            .or_default() += prior_probability * (1.0 - hazard);
+    }
+
+    let total_probability: f64 = posterior.values().copied().sum();
+    if total_probability <= f64::EPSILON {
+        return StructuralNodeBocpdRecursiveRunLengthFit::default();
+    }
+
+    let mut fit = StructuralNodeBocpdRecursiveRunLengthFit::default();
+    for (run_length, probability) in posterior {
+        let probability = (probability / total_probability).clamp(0.0, 1.0);
+        if run_length == 0 {
+            fit.reset_probability = probability;
+        }
+        if probability > fit.run_length_mode_probability {
+            fit.run_length_mode = run_length;
+            fit.run_length_mode_probability = probability;
+        }
+        fit.expected_run_length += run_length as f64 * probability;
+        if probability > f64::EPSILON {
+            fit.entropy -= probability * probability.ln();
+        }
+    }
+    fit
 }
 
 fn rebuild_discounted_node_duration_priors(
@@ -6435,6 +6513,18 @@ fn rebuild_discounted_node_duration_priors(
         prior.bocpd_run_length_mode_probability = duration_fit.run_length_mode_probability;
         prior.bocpd_run_length_tail_probability = duration_fit.run_length_tail_probability;
         prior.bocpd_run_length_observation_mass = duration_fit.run_length_observation_mass;
+        let recursive_run_length_fit = structural_node_bocpd_recursive_run_length_fit(
+            &prior.duration_distribution,
+            prior.bocpd_evidence_weight,
+            prior.bocpd_break_probability,
+        );
+        prior.bocpd_recursive_reset_probability = recursive_run_length_fit.reset_probability;
+        prior.bocpd_recursive_run_length_mode = recursive_run_length_fit.run_length_mode;
+        prior.bocpd_recursive_run_length_mode_probability =
+            recursive_run_length_fit.run_length_mode_probability;
+        prior.bocpd_recursive_run_length_expected_value =
+            recursive_run_length_fit.expected_run_length;
+        prior.bocpd_recursive_run_length_entropy = recursive_run_length_fit.entropy;
         prior.sticky_self_transition_strength = ((1.0 - prior.break_hazard) * 0.7
             + prior.duration_outcome_support * 0.3)
             .clamp(0.0, 1.0);
@@ -6454,6 +6544,13 @@ fn rebuild_discounted_node_duration_priors(
             remaining_dwell_steps: prior.remaining_dwell_steps,
             break_hazard: prior.break_hazard,
             sticky_self_transition_strength: prior.sticky_self_transition_strength,
+            bocpd_recursive_reset_probability: prior.bocpd_recursive_reset_probability,
+            bocpd_recursive_run_length_mode: prior.bocpd_recursive_run_length_mode,
+            bocpd_recursive_run_length_mode_probability:
+                prior.bocpd_recursive_run_length_mode_probability,
+            bocpd_recursive_run_length_expected_value:
+                prior.bocpd_recursive_run_length_expected_value,
+            bocpd_recursive_run_length_entropy: prior.bocpd_recursive_run_length_entropy,
             duration_outcome_support: prior.duration_outcome_support,
             temporal_posterior_support: prior.temporal_posterior_support,
             posterior_blend_weight,
@@ -7903,6 +8000,11 @@ mod tests {
         assert!((trend.bocpd_run_length_mode_probability - (1.0 / 1.85)).abs() < 1e-9);
         assert!((trend.bocpd_run_length_tail_probability - 1.0).abs() < 1e-9);
         assert!((trend.bocpd_run_length_observation_mass - 1.85).abs() < 1e-9);
+        assert!(trend.bocpd_recursive_reset_probability > trend.bocpd_break_probability);
+        assert_eq!(trend.bocpd_recursive_run_length_mode, 0);
+        assert!(trend.bocpd_recursive_run_length_mode_probability > 0.5);
+        assert!(trend.bocpd_recursive_run_length_expected_value > 0.0);
+        assert!(trend.bocpd_recursive_run_length_entropy > 0.0);
         let parametric_break_hazard =
             structural_duration_break_hazard(trend.last_streak_length, trend.expected_dwell_steps);
         assert!(
@@ -7931,6 +8033,18 @@ mod tests {
         assert_eq!(
             temporal.sticky_self_transition_strength,
             trend.sticky_self_transition_strength
+        );
+        assert_eq!(
+            temporal.bocpd_recursive_reset_probability,
+            trend.bocpd_recursive_reset_probability
+        );
+        assert_eq!(
+            temporal.bocpd_recursive_run_length_mode,
+            trend.bocpd_recursive_run_length_mode
+        );
+        assert_eq!(
+            temporal.bocpd_recursive_run_length_expected_value,
+            trend.bocpd_recursive_run_length_expected_value
         );
         assert_eq!(temporal.temporal_posterior_support, trend.temporal_posterior_support);
     }

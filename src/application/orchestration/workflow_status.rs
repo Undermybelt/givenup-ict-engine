@@ -6107,6 +6107,11 @@ mod tests {
                 bocpd_run_length_mode_probability: 0.5405405405,
                 bocpd_run_length_tail_probability: 1.0,
                 bocpd_run_length_observation_mass: 1.85,
+                bocpd_recursive_reset_probability: 0.609,
+                bocpd_recursive_run_length_mode: 0,
+                bocpd_recursive_run_length_mode_probability: 0.609,
+                bocpd_recursive_run_length_expected_value: 0.891,
+                bocpd_recursive_run_length_entropy: 0.913,
                 duration_outcome_support: 0.7407407407,
                 temporal_posterior_support: 0.6422222222,
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
@@ -6129,6 +6134,7 @@ mod tests {
                 posterior_blend_weight: 0.42,
                 summary_line: "duration_mass=1.900 duration_support=0.750 duration_temporal=0.650 blend=0.420".to_string(),
                 last_recommended_at: Some("2026-04-30T04:00:00Z".to_string()),
+                ..crate::state::StructuralNodeTemporalPosteriorState::default()
             },
         );
         structural_prior_state.branch_transition_priors.insert(
@@ -6196,6 +6202,11 @@ mod tests {
         assert_eq!(value["bocpd_run_length_mode_probability"], 0.5405405405);
         assert_eq!(value["bocpd_run_length_tail_probability"], 1.0);
         assert_eq!(value["bocpd_run_length_observation_mass"], 1.85);
+        assert_eq!(value["bocpd_recursive_reset_probability"], 0.609);
+        assert_eq!(value["bocpd_recursive_run_length_mode"], 0);
+        assert_eq!(value["bocpd_recursive_run_length_mode_probability"], 0.609);
+        assert_eq!(value["bocpd_recursive_run_length_expected_value"], 0.891);
+        assert_eq!(value["bocpd_recursive_run_length_entropy"], 0.913);
         assert_eq!(value["duration_outcome_support"], 0.75);
         assert_eq!(value["duration_temporal_posterior_support"], 0.65);
         assert_eq!(value["duration_posterior_blend_weight"], 0.42);

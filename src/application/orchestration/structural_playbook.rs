@@ -238,6 +238,16 @@ pub struct StructuralTemporalSummaryArtifact {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bocpd_run_length_observation_mass: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bocpd_recursive_reset_probability: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bocpd_recursive_run_length_mode: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bocpd_recursive_run_length_mode_probability: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bocpd_recursive_run_length_expected_value: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bocpd_recursive_run_length_entropy: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_posterior_blend_weight: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub transition_prior: Option<f64>,
@@ -1943,6 +1953,38 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
             structural_duration_bocpd_run_length_tail_probability(node_duration_prior),
         bocpd_run_length_observation_mass:
             structural_duration_bocpd_run_length_observation_mass(node_duration_prior),
+        bocpd_recursive_reset_probability: node_temporal_state
+            .and_then(|state| structural_positive_f64(state.bocpd_recursive_reset_probability))
+            .or_else(|| structural_duration_bocpd_recursive_reset_probability(node_duration_prior)),
+        bocpd_recursive_run_length_mode: node_temporal_state
+            .and_then(|state| {
+                structural_run_length_mode(
+                    state.bocpd_recursive_run_length_mode,
+                    state.bocpd_recursive_run_length_mode_probability,
+                )
+            })
+            .or_else(|| structural_duration_bocpd_recursive_run_length_mode(node_duration_prior)),
+        bocpd_recursive_run_length_mode_probability: node_temporal_state
+            .and_then(|state| {
+                structural_positive_f64(state.bocpd_recursive_run_length_mode_probability)
+            })
+            .or_else(|| {
+                structural_duration_bocpd_recursive_run_length_mode_probability(
+                    node_duration_prior,
+                )
+            }),
+        bocpd_recursive_run_length_expected_value: node_temporal_state
+            .and_then(|state| {
+                structural_positive_f64(state.bocpd_recursive_run_length_expected_value)
+            })
+            .or_else(|| {
+                structural_duration_bocpd_recursive_run_length_expected_value(
+                    node_duration_prior,
+                )
+            }),
+        bocpd_recursive_run_length_entropy: node_temporal_state
+            .and_then(|state| structural_positive_f64(state.bocpd_recursive_run_length_entropy))
+            .or_else(|| structural_duration_bocpd_recursive_run_length_entropy(node_duration_prior)),
         duration_posterior_blend_weight: node_temporal_state
             .map(|state| state.posterior_blend_weight),
         transition_prior: transition_prior.map(|prior| prior.transition_prior),
@@ -4739,13 +4781,70 @@ fn structural_duration_bocpd_run_length_observation_mass(
     })
 }
 
+fn structural_duration_bocpd_recursive_reset_probability(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    structural_duration_positive_value(duration_prior, |prior| {
+        prior.bocpd_recursive_reset_probability
+    })
+}
+
+fn structural_duration_bocpd_recursive_run_length_mode(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<usize> {
+    duration_prior.and_then(|prior| {
+        structural_run_length_mode(
+            prior.bocpd_recursive_run_length_mode,
+            prior.bocpd_recursive_run_length_mode_probability,
+        )
+    })
+}
+
+fn structural_duration_bocpd_recursive_run_length_mode_probability(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    structural_duration_positive_value(duration_prior, |prior| {
+        prior.bocpd_recursive_run_length_mode_probability
+    })
+}
+
+fn structural_duration_bocpd_recursive_run_length_expected_value(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    structural_duration_positive_value(duration_prior, |prior| {
+        prior.bocpd_recursive_run_length_expected_value
+    })
+}
+
+fn structural_duration_bocpd_recursive_run_length_entropy(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    structural_duration_positive_value(duration_prior, |prior| {
+        prior.bocpd_recursive_run_length_entropy
+    })
+}
+
+fn structural_run_length_mode(mode: usize, probability: f64) -> Option<usize> {
+    if probability.is_finite() && probability > f64::EPSILON {
+        Some(mode)
+    } else {
+        None
+    }
+}
+
+fn structural_positive_f64(value: f64) -> Option<f64> {
+    if value.is_finite() && value > f64::EPSILON {
+        Some(value)
+    } else {
+        None
+    }
+}
+
 fn structural_duration_positive_value(
     duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
     value: impl FnOnce(&crate::state::StructuralNodeDurationPrior) -> f64,
 ) -> Option<f64> {
-    duration_prior
-        .map(value)
-        .filter(|value| value.is_finite() && *value > f64::EPSILON)
+    duration_prior.and_then(|prior| structural_positive_f64(value(prior)))
 }
 
 fn structural_dominant_source_panel(
