@@ -606,6 +606,14 @@ pub struct StructuralExperiencePriorEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub censoring_rate: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_resolution_probability: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_censoring_probability: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub censoring_adjusted_reward_prior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub censoring_adjusted_reward_lower_bound: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_streak_count: Option<usize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_avg_streak_length: Option<f64>,
@@ -1249,6 +1257,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 unresolved_feedback_count: structural_prior_unresolved_feedback_count(prior_stats),
                 maturity_coverage: structural_prior_maturity_coverage(prior_stats),
                 censoring_rate: structural_prior_censoring_rate(prior_stats),
+                delayed_reward_resolution_probability:
+                    structural_prior_delayed_reward_resolution_probability(prior_stats),
+                delayed_reward_censoring_probability:
+                    structural_prior_delayed_reward_censoring_probability(prior_stats),
+                censoring_adjusted_reward_prior:
+                    structural_prior_censoring_adjusted_reward_prior(prior_stats),
+                censoring_adjusted_reward_lower_bound:
+                    structural_prior_censoring_adjusted_reward_lower_bound(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1325,6 +1341,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         ),
                         maturity_coverage: structural_prior_maturity_coverage(prior_stats),
                         censoring_rate: structural_prior_censoring_rate(prior_stats),
+                        delayed_reward_resolution_probability:
+                            structural_prior_delayed_reward_resolution_probability(prior_stats),
+                        delayed_reward_censoring_probability:
+                            structural_prior_delayed_reward_censoring_probability(prior_stats),
+                        censoring_adjusted_reward_prior:
+                            structural_prior_censoring_adjusted_reward_prior(prior_stats),
+                        censoring_adjusted_reward_lower_bound:
+                            structural_prior_censoring_adjusted_reward_lower_bound(prior_stats),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1402,6 +1426,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 unresolved_feedback_count: structural_prior_unresolved_feedback_count(prior_stats),
                 maturity_coverage: structural_prior_maturity_coverage(prior_stats),
                 censoring_rate: structural_prior_censoring_rate(prior_stats),
+                delayed_reward_resolution_probability:
+                    structural_prior_delayed_reward_resolution_probability(prior_stats),
+                delayed_reward_censoring_probability:
+                    structural_prior_delayed_reward_censoring_probability(prior_stats),
+                censoring_adjusted_reward_prior:
+                    structural_prior_censoring_adjusted_reward_prior(prior_stats),
+                censoring_adjusted_reward_lower_bound:
+                    structural_prior_censoring_adjusted_reward_lower_bound(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1477,6 +1509,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         ),
                         maturity_coverage: structural_prior_maturity_coverage(prior_stats),
                         censoring_rate: structural_prior_censoring_rate(prior_stats),
+                        delayed_reward_resolution_probability:
+                            structural_prior_delayed_reward_resolution_probability(prior_stats),
+                        delayed_reward_censoring_probability:
+                            structural_prior_delayed_reward_censoring_probability(prior_stats),
+                        censoring_adjusted_reward_prior:
+                            structural_prior_censoring_adjusted_reward_prior(prior_stats),
+                        censoring_adjusted_reward_lower_bound:
+                            structural_prior_censoring_adjusted_reward_lower_bound(prior_stats),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1554,6 +1594,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 unresolved_feedback_count: structural_prior_unresolved_feedback_count(prior_stats),
                 maturity_coverage: structural_prior_maturity_coverage(prior_stats),
                 censoring_rate: structural_prior_censoring_rate(prior_stats),
+                delayed_reward_resolution_probability:
+                    structural_prior_delayed_reward_resolution_probability(prior_stats),
+                delayed_reward_censoring_probability:
+                    structural_prior_delayed_reward_censoring_probability(prior_stats),
+                censoring_adjusted_reward_prior:
+                    structural_prior_censoring_adjusted_reward_prior(prior_stats),
+                censoring_adjusted_reward_lower_bound:
+                    structural_prior_censoring_adjusted_reward_lower_bound(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1630,6 +1678,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         ),
                         maturity_coverage: structural_prior_maturity_coverage(prior_stats),
                         censoring_rate: structural_prior_censoring_rate(prior_stats),
+                        delayed_reward_resolution_probability:
+                            structural_prior_delayed_reward_resolution_probability(prior_stats),
+                        delayed_reward_censoring_probability:
+                            structural_prior_delayed_reward_censoring_probability(prior_stats),
+                        censoring_adjusted_reward_prior:
+                            structural_prior_censoring_adjusted_reward_prior(prior_stats),
+                        censoring_adjusted_reward_lower_bound:
+                            structural_prior_censoring_adjusted_reward_lower_bound(prior_stats),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1735,6 +1791,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
             unresolved_feedback_count: structural_prior_unresolved_feedback_count(node_prior_stats),
             maturity_coverage: structural_prior_maturity_coverage(node_prior_stats),
             censoring_rate: structural_prior_censoring_rate(node_prior_stats),
+            delayed_reward_resolution_probability:
+                structural_prior_delayed_reward_resolution_probability(node_prior_stats),
+            delayed_reward_censoring_probability:
+                structural_prior_delayed_reward_censoring_probability(node_prior_stats),
+            censoring_adjusted_reward_prior:
+                structural_prior_censoring_adjusted_reward_prior(node_prior_stats),
+            censoring_adjusted_reward_lower_bound:
+                structural_prior_censoring_adjusted_reward_lower_bound(node_prior_stats),
             duration_streak_count: node_temporal_state
                 .map(|state| state.streak_count)
                 .or_else(|| structural_duration_streak_count(node_duration_prior)),
@@ -4482,6 +4546,55 @@ fn structural_prior_censoring_rate(prior_stats: Option<&StructuralPriorStats>) -
     }
 }
 
+fn structural_prior_delayed_reward_resolution_probability(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    let stats = prior_stats?;
+    if stats.followed_count == 0 {
+        return None;
+    }
+    let matured = structural_matured_feedback_count_value(stats).min(stats.followed_count) as f64;
+    Some(((1.0 + matured) / (2.0 + stats.followed_count as f64)).clamp(0.0, 1.0))
+}
+
+fn structural_prior_delayed_reward_censoring_probability(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    let stats = prior_stats?;
+    if stats.followed_count == 0 {
+        return None;
+    }
+    let unresolved = stats
+        .followed_count
+        .saturating_sub(structural_matured_feedback_count_value(stats)) as f64;
+    Some(((1.0 + unresolved) / (2.0 + stats.followed_count as f64)).clamp(0.0, 1.0))
+}
+
+fn structural_prior_censoring_adjusted_reward_prior(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    let stats = prior_stats?;
+    let resolution = structural_prior_delayed_reward_resolution_probability(Some(stats))?;
+    Some(
+        (stats.target_policy_reward_prior.clamp(0.0, 1.0) * resolution
+            + stats.smoothed_prior.clamp(0.0, 1.0) * (1.0 - resolution))
+            .clamp(0.0, 1.0),
+    )
+}
+
+fn structural_prior_censoring_adjusted_reward_lower_bound(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    let stats = prior_stats?;
+    let resolution = structural_prior_delayed_reward_resolution_probability(Some(stats))?;
+    let censoring = structural_prior_delayed_reward_censoring_probability(Some(stats))?;
+    Some(
+        (stats.target_policy_reward_lower_bound.clamp(0.0, 1.0) * resolution
+            + stats.smoothed_prior.clamp(0.0, 1.0) * 0.5 * censoring)
+            .clamp(0.0, 1.0),
+    )
+}
+
 fn structural_duration_streak_count(
     duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
 ) -> Option<usize> {
@@ -5918,6 +6031,9 @@ mod tests {
             invalidated: 0,
             abandoned: 0,
             not_followed: 1,
+            smoothed_prior: 0.5,
+            target_policy_reward_prior: 0.6,
+            target_policy_reward_lower_bound: 0.3,
             ..StructuralPriorStats::default()
         };
 
@@ -5928,6 +6044,26 @@ mod tests {
         );
         assert_eq!(structural_prior_maturity_coverage(Some(&stats)), Some(0.75));
         assert_eq!(structural_prior_censoring_rate(Some(&stats)), Some(0.25));
+        assert_eq!(
+            structural_prior_delayed_reward_resolution_probability(Some(&stats)),
+            Some(4.0 / 6.0)
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_censoring_probability(Some(&stats)),
+            Some(2.0 / 6.0)
+        );
+        assert!(
+            (structural_prior_censoring_adjusted_reward_prior(Some(&stats)).unwrap()
+                - ((0.6 * (4.0 / 6.0)) + (0.5 * (2.0 / 6.0))))
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (structural_prior_censoring_adjusted_reward_lower_bound(Some(&stats)).unwrap()
+                - ((0.3 * (4.0 / 6.0)) + (0.5 * 0.5 * (2.0 / 6.0))))
+                .abs()
+                < 1e-9
+        );
 
         let not_followed_only = StructuralPriorStats {
             observations: 1,
@@ -5944,6 +6080,10 @@ mod tests {
         );
         assert_eq!(structural_prior_maturity_coverage(Some(&not_followed_only)), None);
         assert_eq!(structural_prior_censoring_rate(Some(&not_followed_only)), None);
+        assert_eq!(
+            structural_prior_delayed_reward_resolution_probability(Some(&not_followed_only)),
+            None
+        );
     }
 
     #[test]

@@ -171,6 +171,14 @@ pub struct StructuralPriorStats {
     #[serde(default)]
     pub target_policy_reward_lower_bound: f64,
     #[serde(default)]
+    pub delayed_reward_resolution_probability: f64,
+    #[serde(default)]
+    pub delayed_reward_censoring_probability: f64,
+    #[serde(default)]
+    pub censoring_adjusted_reward_prior: f64,
+    #[serde(default)]
+    pub censoring_adjusted_reward_lower_bound: f64,
+    #[serde(default)]
     pub source_panel_summaries: BTreeMap<String, StructuralPriorSourceSummary>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_offline_seed_source: Option<String>,
@@ -213,6 +221,14 @@ pub struct StructuralPriorMassSnapshot {
     pub target_policy_variance_penalty: f64,
     #[serde(default)]
     pub target_policy_reward_lower_bound: f64,
+    #[serde(default)]
+    pub delayed_reward_resolution_probability: f64,
+    #[serde(default)]
+    pub delayed_reward_censoring_probability: f64,
+    #[serde(default)]
+    pub censoring_adjusted_reward_prior: f64,
+    #[serde(default)]
+    pub censoring_adjusted_reward_lower_bound: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_offline_seed_source: Option<String>,
 }
@@ -304,6 +320,14 @@ pub struct StructuralPriorSourceSummary {
     pub target_policy_variance_penalty: f64,
     #[serde(default)]
     pub target_policy_reward_lower_bound: f64,
+    #[serde(default)]
+    pub delayed_reward_resolution_probability: f64,
+    #[serde(default)]
+    pub delayed_reward_censoring_probability: f64,
+    #[serde(default)]
+    pub censoring_adjusted_reward_prior: f64,
+    #[serde(default)]
+    pub censoring_adjusted_reward_lower_bound: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_tempering_coefficient: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4071,6 +4095,10 @@ fn structural_prior_mass_snapshot(
         target_policy_reward_prior: stats.target_policy_reward_prior,
         target_policy_variance_penalty: stats.target_policy_variance_penalty,
         target_policy_reward_lower_bound: stats.target_policy_reward_lower_bound,
+        delayed_reward_resolution_probability: stats.delayed_reward_resolution_probability,
+        delayed_reward_censoring_probability: stats.delayed_reward_censoring_probability,
+        censoring_adjusted_reward_prior: stats.censoring_adjusted_reward_prior,
+        censoring_adjusted_reward_lower_bound: stats.censoring_adjusted_reward_lower_bound,
         last_offline_seed_source: stats.last_offline_seed_source.clone(),
     }
 }
@@ -4568,6 +4596,62 @@ fn structural_target_policy_reward_prior(
     }
 }
 
+fn structural_matured_feedback_count(
+    wins: usize,
+    losses: usize,
+    breakevens: usize,
+    invalidated: usize,
+    abandoned: usize,
+) -> usize {
+    wins + losses + breakevens + invalidated + abandoned
+}
+
+fn structural_delayed_reward_resolution_probability(
+    followed_count: usize,
+    matured_feedback_count: usize,
+) -> f64 {
+    if followed_count == 0 {
+        return 0.0;
+    }
+    let matured = matured_feedback_count.min(followed_count) as f64;
+    ((1.0 + matured) / (2.0 + followed_count as f64)).clamp(0.0, 1.0)
+}
+
+fn structural_delayed_reward_censoring_probability(
+    followed_count: usize,
+    matured_feedback_count: usize,
+) -> f64 {
+    if followed_count == 0 {
+        return 0.0;
+    }
+    let unresolved = followed_count.saturating_sub(matured_feedback_count) as f64;
+    ((1.0 + unresolved) / (2.0 + followed_count as f64)).clamp(0.0, 1.0)
+}
+
+fn structural_censoring_adjusted_reward_prior(
+    target_policy_reward_prior: f64,
+    smoothed_prior: f64,
+    delayed_reward_resolution_probability: f64,
+) -> f64 {
+    let resolution = delayed_reward_resolution_probability.clamp(0.0, 1.0);
+    (target_policy_reward_prior.clamp(0.0, 1.0) * resolution
+        + smoothed_prior.clamp(0.0, 1.0) * (1.0 - resolution))
+        .clamp(0.0, 1.0)
+}
+
+fn structural_censoring_adjusted_reward_lower_bound(
+    target_policy_reward_lower_bound: f64,
+    smoothed_prior: f64,
+    delayed_reward_resolution_probability: f64,
+    delayed_reward_censoring_probability: f64,
+) -> f64 {
+    let resolution = delayed_reward_resolution_probability.clamp(0.0, 1.0);
+    let censoring = delayed_reward_censoring_probability.clamp(0.0, 1.0);
+    (target_policy_reward_lower_bound.clamp(0.0, 1.0) * resolution
+        + smoothed_prior.clamp(0.0, 1.0) * 0.5 * censoring)
+        .clamp(0.0, 1.0)
+}
+
 fn structural_beta_mean(success_mass: f64, failure_mass: f64) -> f64 {
     let alpha = 1.0 + success_mass.max(0.0);
     let beta = 1.0 + failure_mass.max(0.0);
@@ -4645,6 +4729,34 @@ fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
     );
     stats.target_policy_reward_lower_bound =
         (stats.target_policy_reward_prior - stats.target_policy_variance_penalty).clamp(0.0, 1.0);
+    let matured_feedback_count = structural_matured_feedback_count(
+        stats.wins,
+        stats.losses,
+        stats.breakevens,
+        stats.invalidated,
+        stats.abandoned,
+    );
+    stats.delayed_reward_resolution_probability =
+        structural_delayed_reward_resolution_probability(
+            stats.followed_count,
+            matured_feedback_count,
+        );
+    stats.delayed_reward_censoring_probability =
+        structural_delayed_reward_censoring_probability(
+            stats.followed_count,
+            matured_feedback_count,
+        );
+    stats.censoring_adjusted_reward_prior = structural_censoring_adjusted_reward_prior(
+        stats.target_policy_reward_prior,
+        stats.smoothed_prior,
+        stats.delayed_reward_resolution_probability,
+    );
+    stats.censoring_adjusted_reward_lower_bound = structural_censoring_adjusted_reward_lower_bound(
+        stats.target_policy_reward_lower_bound,
+        stats.smoothed_prior,
+        stats.delayed_reward_resolution_probability,
+        stats.delayed_reward_censoring_probability,
+    );
 }
 
 fn update_structural_prior_source_summary_from_feedback(
@@ -4846,6 +4958,34 @@ fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSu
     summary.target_policy_reward_lower_bound =
         (summary.target_policy_reward_prior - summary.target_policy_variance_penalty)
             .clamp(0.0, 1.0);
+    let matured_feedback_count = structural_matured_feedback_count(
+        summary.wins,
+        summary.losses,
+        summary.breakevens,
+        summary.invalidated,
+        summary.abandoned,
+    );
+    summary.delayed_reward_resolution_probability =
+        structural_delayed_reward_resolution_probability(
+            summary.followed_count,
+            matured_feedback_count,
+        );
+    summary.delayed_reward_censoring_probability =
+        structural_delayed_reward_censoring_probability(
+            summary.followed_count,
+            matured_feedback_count,
+        );
+    summary.censoring_adjusted_reward_prior = structural_censoring_adjusted_reward_prior(
+        summary.target_policy_reward_prior,
+        summary.smoothed_prior,
+        summary.delayed_reward_resolution_probability,
+    );
+    summary.censoring_adjusted_reward_lower_bound = structural_censoring_adjusted_reward_lower_bound(
+        summary.target_policy_reward_lower_bound,
+        summary.smoothed_prior,
+        summary.delayed_reward_resolution_probability,
+        summary.delayed_reward_censoring_probability,
+    );
 }
 
 fn update_structural_source_reliability_from_feedback(
@@ -7121,6 +7261,15 @@ mod tests {
                 .abs()
                 < 1e-9
         );
+        assert!((path.delayed_reward_resolution_probability - 0.75).abs() < 1e-9);
+        assert!((path.delayed_reward_censoring_probability - 0.25).abs() < 1e-9);
+        assert!((path.censoring_adjusted_reward_prior - 0.5).abs() < 1e-9);
+        assert!(
+            (path.censoring_adjusted_reward_lower_bound
+                - ((0.5 - expected_target_policy_variance_penalty) * 0.75 + 0.0625))
+                .abs()
+                < 1e-9
+        );
         let source_summary = path
             .source_panel_summaries
             .get("structural_feedback_submission")
@@ -7162,6 +7311,19 @@ mod tests {
         assert!(
             (source_summary.target_policy_reward_lower_bound
                 - (0.5 - expected_target_policy_variance_penalty))
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (source_summary.delayed_reward_resolution_probability - 0.75).abs() < 1e-9
+        );
+        assert!(
+            (source_summary.delayed_reward_censoring_probability - 0.25).abs() < 1e-9
+        );
+        assert!((source_summary.censoring_adjusted_reward_prior - 0.5).abs() < 1e-9);
+        assert!(
+            (source_summary.censoring_adjusted_reward_lower_bound
+                - ((0.5 - expected_target_policy_variance_penalty) * 0.75 + 0.0625))
                 .abs()
                 < 1e-9
         );

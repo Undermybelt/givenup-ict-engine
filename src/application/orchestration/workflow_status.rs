@@ -5568,6 +5568,7 @@ mod tests {
                     ),
                 ]),
                 last_offline_seed_source: Some("backtest".to_string()),
+                ..crate::state::StructuralPriorStats::default()
             },
         );
         structural_prior_state.node_duration_priors.insert(
@@ -5643,6 +5644,24 @@ mod tests {
         assert_eq!(
             value["path"]["target_policy_reward_lower_bound"],
             0.2981196989
+        );
+        assert_eq!(value["path"]["delayed_reward_resolution_probability"], 0.8);
+        assert_eq!(value["path"]["delayed_reward_censoring_probability"], 0.2);
+        assert!(
+            (value["path"]["censoring_adjusted_reward_prior"]
+                .as_f64()
+                .unwrap()
+                - (0.5827956989 * 0.8 + 0.5483870968 * 0.2))
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (value["path"]["censoring_adjusted_reward_lower_bound"]
+                .as_f64()
+                .unwrap()
+                - (0.2981196989 * 0.8 + 0.5483870968 * 0.5 * 0.2))
+                .abs()
+                < 1e-9
         );
         assert_eq!(value["path"]["matured_feedback_count"], 3);
         assert_eq!(value["path"]["unresolved_feedback_count"], 0);
