@@ -7085,8 +7085,10 @@ mod tests {
             .contains(&"target_policy_reward_prior".to_string()));
         assert_eq!(summary.candidate_set_id, value["candidate_set_id"]);
         assert_eq!(summary.pending_reward_states["matured_invalidated"], 1);
+        assert!(summary.history_rows >= summary.rows);
         assert!(std::path::Path::new(&summary.csv_path).exists());
         assert!(std::path::Path::new(&summary.jsonl_path).exists());
+        assert!(std::path::Path::new(&summary.history_jsonl_path).exists());
         assert!(std::path::Path::new(&summary.summary_path).exists());
         let csv = std::fs::read_to_string(&summary.csv_path).unwrap();
         assert!(csv.contains("pending_reward_state"));

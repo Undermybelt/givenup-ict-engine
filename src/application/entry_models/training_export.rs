@@ -291,6 +291,10 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     #[serde(default)]
     pub rows_with_training_weight: usize,
     #[serde(default)]
+    pub history_rows: usize,
+    #[serde(default)]
+    pub history_mature_rows: usize,
+    #[serde(default)]
     pub calibration_evaluation_rows: usize,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub calibration_brier_score: Option<f64>,
@@ -319,6 +323,8 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub summary_path: String,
     pub csv_path: Option<String>,
     pub jsonl_path: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub history_jsonl_path: Option<String>,
     pub warnings: Vec<String>,
     pub summary_line: String,
 }
@@ -753,6 +759,11 @@ pub fn structural_path_ranking_target_training_status(
     }
     let raw = fs::read_to_string(&summary_path)?;
     let summary: StructuralPathRankingTargetExportSummary = serde_json::from_str(&raw)?;
+    let evaluation_jsonl_path = if !summary.history_jsonl_path.trim().is_empty() {
+        summary.history_jsonl_path.as_str()
+    } else {
+        summary.jsonl_path.as_str()
+    };
     let calibration_ready =
         summary.rows_with_calibrated_path_prob > 0 && summary.rows_with_path_prob_lower_bound > 0;
     let trainer_manifest = &summary.trainer_manifest;
@@ -772,10 +783,10 @@ pub fn structural_path_ranking_target_training_status(
         structural_path_ranking_trainer_artifact_ready(artifact, trainer_manifest)
     });
     let calibration_evaluation =
-        structural_path_ranking_target_calibration_evaluation(&summary.jsonl_path)?;
+        structural_path_ranking_target_calibration_evaluation(evaluation_jsonl_path)?;
     let calibration_quality_ready = calibration_evaluation.status == "evaluated";
     let raw_scored_mature_rows =
-        structural_path_ranking_target_raw_scored_mature_rows(&summary.jsonl_path)?;
+        structural_path_ranking_target_raw_scored_mature_rows(evaluation_jsonl_path)?;
     let raw_scored_mature_min_rows = STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS;
     let raw_scored_mature_shortfall_rows =
         raw_scored_mature_min_rows.saturating_sub(raw_scored_mature_rows);
@@ -841,9 +852,11 @@ pub fn structural_path_ranking_target_training_status(
         "missing"
     };
     let summary_line = format!(
-        "structural_path_ranking_target rows={} mature_rows={} raw_scored_mature={}/{} production_validation={}/{} calibration={} trainer_artifact={}",
+        "structural_path_ranking_target rows={} history_rows={} mature_rows={} history_mature_rows={} raw_scored_mature={}/{} production_validation={}/{} calibration={} trainer_artifact={}",
         summary.rows,
+        summary.history_rows,
         summary.mature_rows,
+        summary.history_mature_rows,
         raw_scored_mature_rows,
         raw_scored_mature_min_rows,
         production_validation_rows,
@@ -899,6 +912,8 @@ pub fn structural_path_ranking_target_training_status(
         rows_with_calibrated_path_prob: summary.rows_with_calibrated_path_prob,
         rows_with_execution_gate_status: summary.rows_with_execution_gate_status,
         rows_with_training_weight: summary.rows_with_training_weight,
+        history_rows: summary.history_rows,
+        history_mature_rows: summary.history_mature_rows,
         calibration_evaluation_rows: calibration_evaluation.eligible_rows,
         calibration_brier_score: calibration_evaluation.brier_score,
         calibration_propensity_weighted_rows: calibration_evaluation.propensity_weighted_rows,
@@ -916,6 +931,7 @@ pub fn structural_path_ranking_target_training_status(
         summary_path: summary.summary_path,
         csv_path: Some(summary.csv_path),
         jsonl_path: Some(summary.jsonl_path),
+        history_jsonl_path: non_empty_string(&summary.history_jsonl_path),
         warnings,
         summary_line,
     })
@@ -2058,6 +2074,8 @@ mod tests {
         assert!(!status.calibration_ready);
         assert_eq!(status.rows, 3);
         assert_eq!(status.mature_rows, 0);
+        assert_eq!(status.history_rows, 0);
+        assert_eq!(status.history_mature_rows, 0);
         assert_eq!(
             status.candidate_set_id.as_deref(),
             Some("structural-candidates:NQ:test")
@@ -2110,6 +2128,9 @@ mod tests {
                 .to_string_lossy()
                 .to_string(),
             jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            history_jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            history_rows: 2,
+            history_mature_rows: 2,
             summary_path: summary_dir
                 .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
                 .to_string_lossy()
@@ -2155,6 +2176,8 @@ mod tests {
         assert!(status.calibration_quality_ready);
         assert!(!status.production_validation_ready);
         assert_eq!(status.production_validation_rows, 2);
+        assert_eq!(status.history_rows, 2);
+        assert_eq!(status.history_mature_rows, 2);
         assert_eq!(
             status.production_validation_min_rows,
             STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS
@@ -2220,6 +2243,7 @@ mod tests {
             "structural_path_ranking_target_production_validation_insufficient_rows"
         )));
         assert!(status.summary_line.contains("raw_scored_mature=2/30"));
+        assert!(status.summary_line.contains("history_rows=2"));
         assert!(status.summary_line.contains("production_validation=2/30"));
         assert!(status.summary_line.contains("calibration=evaluated"));
         assert!(status.summary_line.contains("trainer_artifact=ready"));
@@ -2257,6 +2281,9 @@ mod tests {
                 .to_string_lossy()
                 .to_string(),
             jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            history_jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            history_rows: row_count,
+            history_mature_rows: row_count,
             summary_path: summary_dir
                 .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
                 .to_string_lossy()
@@ -2296,10 +2323,15 @@ mod tests {
         assert!(status.calibration_quality_ready);
         assert!(status.trainer_manifest_ready);
         assert!(status.production_validation_ready);
+        assert_eq!(status.history_rows, row_count);
+        assert_eq!(status.history_mature_rows, row_count);
         assert_eq!(status.raw_scored_mature_rows, row_count);
         assert_eq!(status.raw_scored_mature_shortfall_rows, 0);
         assert_eq!(status.production_validation_rows, row_count);
         assert_eq!(status.production_validation_shortfall_rows, 0);
+        assert!(status.summary_line.contains(&format!(
+            "history_rows={row_count}"
+        )));
         assert!(status.summary_line.contains(&format!(
             "raw_scored_mature={row_count}/{row_count}"
         )));
@@ -2508,8 +2540,16 @@ mod tests {
                 .unwrap();
 
         assert_eq!(summary.symbol, "NQ");
+        assert!(summary.history_rows >= summary.rows);
+        assert!(summary.history_jsonl_path.ends_with("structural_path_ranking_target_history.jsonl"));
         assert!(std::path::Path::new(&summary.csv_path).exists());
         assert!(std::path::Path::new(&summary.jsonl_path).exists());
+        assert!(std::path::Path::new(&summary.history_jsonl_path).exists());
         assert!(std::path::Path::new(&summary.summary_path).exists());
+
+        let second_summary =
+            export_structural_path_ranking_target_from_state_dir(temp.path().to_str().unwrap(), "NQ")
+                .unwrap();
+        assert_eq!(second_summary.history_rows, summary.history_rows);
     }
 }

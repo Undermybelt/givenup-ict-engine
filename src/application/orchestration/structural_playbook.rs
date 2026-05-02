@@ -31,6 +31,8 @@ const STRUCTURAL_PATH_RANKING_EXECUTION_GATE_MIN_PATH_PROB: f64 = 0.5;
 const STRUCTURAL_TARGET_POLICY_CONTEXT_SURFACE_LIMIT: usize = 3;
 pub const STRUCTURAL_PATH_RANKING_TARGET_CSV_FILE: &str = "structural_path_ranking_target.csv";
 pub const STRUCTURAL_PATH_RANKING_TARGET_JSONL_FILE: &str = "structural_path_ranking_target.jsonl";
+pub const STRUCTURAL_PATH_RANKING_TARGET_HISTORY_JSONL_FILE: &str =
+    "structural_path_ranking_target_history.jsonl";
 pub const STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE: &str =
     "structural_path_ranking_target_summary.json";
 
@@ -468,6 +470,12 @@ pub struct StructuralPathRankingTargetExportSummary {
     pub rows_with_training_weight: usize,
     pub csv_path: String,
     pub jsonl_path: String,
+    #[serde(default)]
+    pub history_jsonl_path: String,
+    #[serde(default)]
+    pub history_rows: usize,
+    #[serde(default)]
+    pub history_mature_rows: usize,
     pub summary_path: String,
     #[serde(default)]
     pub trainer_manifest: StructuralPathRankingTrainerManifest,
@@ -2975,20 +2983,32 @@ pub fn export_structural_path_ranking_target(
     let jsonl_name = format!(
         "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_JSONL_FILE}"
     );
+    let history_jsonl_name = format!(
+        "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_HISTORY_JSONL_FILE}"
+    );
     let summary_name = format!(
         "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE}"
     );
+    let history_jsonl_path = Path::new(state_dir).join(symbol).join(&history_jsonl_name);
+    let history_rows = upsert_structural_path_ranking_target_history(
+        &history_jsonl_path,
+        &artifact.rows,
+    )?;
+    let history_jsonl = render_structural_path_ranking_target_rows_jsonl(&history_rows)?;
     let summary = structural_path_ranking_target_export_summary(
         state_dir,
         symbol,
         &artifact,
         &csv_name,
         &jsonl_name,
+        &history_jsonl_name,
+        &history_rows,
         &summary_name,
     );
     let summary_json = serde_json::to_string_pretty(&summary)?;
     save_text_state(state_dir, symbol, &csv_name, &csv)?;
     save_text_state(state_dir, symbol, &jsonl_name, &jsonl)?;
+    save_text_state(state_dir, symbol, &history_jsonl_name, &history_jsonl)?;
     save_text_state(state_dir, symbol, &summary_name, &summary_json)?;
     Ok(summary)
 }
@@ -3042,6 +3062,8 @@ fn structural_path_ranking_target_export_summary(
     artifact: &StructuralPathRankingTargetArtifact,
     csv_name: &str,
     jsonl_name: &str,
+    history_jsonl_name: &str,
+    history_rows: &[StructuralPathRankingTargetRow],
     summary_name: &str,
 ) -> StructuralPathRankingTargetExportSummary {
     let mut pending_reward_states = BTreeMap::new();
@@ -3086,11 +3108,17 @@ fn structural_path_ranking_target_export_summary(
         .iter()
         .filter(|row| row.training_weight.is_some())
         .count();
+    let history_mature_rows = history_rows
+        .iter()
+        .filter(|row| row.maturity_mask)
+        .count();
     let summary_line = format!(
-        "structural_path_ranking_target rows={} candidate_set_size={} mature_rows={} propensity_rows={} calibrated_rows={} execution_gate_rows={} training_weight_rows={}",
+        "structural_path_ranking_target rows={} history_rows={} candidate_set_size={} mature_rows={} history_mature_rows={} propensity_rows={} calibrated_rows={} execution_gate_rows={} training_weight_rows={}",
         rows,
+        history_rows.len(),
         artifact.candidate_set_size,
         mature_rows,
+        history_mature_rows,
         rows_with_propensity_estimate,
         rows_with_calibrated_path_prob,
         rows_with_execution_gate_status,
@@ -3119,6 +3147,13 @@ fn structural_path_ranking_target_export_summary(
             .join(jsonl_name)
             .to_string_lossy()
             .to_string(),
+        history_jsonl_path: Path::new(state_dir)
+            .join(symbol)
+            .join(history_jsonl_name)
+            .to_string_lossy()
+            .to_string(),
+        history_rows: history_rows.len(),
+        history_mature_rows,
         summary_path: Path::new(state_dir)
             .join(symbol)
             .join(summary_name)
@@ -3440,15 +3475,61 @@ fn structural_path_ranking_beta_lower_bound(success_mass: f64, failure_mass: f64
     (mean - 1.64 * standard_error).clamp(0.0, 1.0)
 }
 
-fn render_structural_path_ranking_target_jsonl(
-    artifact: &StructuralPathRankingTargetArtifact,
+fn structural_path_ranking_target_row_history_key(row: &StructuralPathRankingTargetRow) -> String {
+    format!("{}|{}", row.candidate_set_id, row.path_id)
+}
+
+fn load_structural_path_ranking_target_rows(
+    jsonl_path: &Path,
+) -> Result<Vec<StructuralPathRankingTargetRow>> {
+    if !jsonl_path.exists() {
+        return Ok(Vec::new());
+    }
+    let raw = fs::read_to_string(jsonl_path)?;
+    raw.lines()
+        .filter(|line| !line.trim().is_empty())
+        .map(serde_json::from_str::<StructuralPathRankingTargetRow>)
+        .collect::<std::result::Result<Vec<_>, _>>()
+        .map_err(Into::into)
+}
+
+fn upsert_structural_path_ranking_target_history(
+    history_jsonl_path: &Path,
+    rows: &[StructuralPathRankingTargetRow],
+) -> Result<Vec<StructuralPathRankingTargetRow>> {
+    let mut history = load_structural_path_ranking_target_rows(history_jsonl_path)?;
+    let mut index = history
+        .iter()
+        .enumerate()
+        .map(|(position, row)| (structural_path_ranking_target_row_history_key(row), position))
+        .collect::<BTreeMap<_, _>>();
+    for row in rows {
+        let key = structural_path_ranking_target_row_history_key(row);
+        if let Some(position) = index.get(&key).copied() {
+            history[position] = row.clone();
+        } else {
+            index.insert(key, history.len());
+            history.push(row.clone());
+        }
+    }
+    Ok(history)
+}
+
+fn render_structural_path_ranking_target_rows_jsonl(
+    rows: &[StructuralPathRankingTargetRow],
 ) -> Result<String> {
     let mut out = String::new();
-    for row in &artifact.rows {
+    for row in rows {
         out.push_str(&serde_json::to_string(row)?);
         out.push('\n');
     }
     Ok(out)
+}
+
+fn render_structural_path_ranking_target_jsonl(
+    artifact: &StructuralPathRankingTargetArtifact,
+) -> Result<String> {
+    render_structural_path_ranking_target_rows_jsonl(&artifact.rows)
 }
 
 fn render_structural_path_ranking_target_csv(
