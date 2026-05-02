@@ -3503,12 +3503,22 @@ fn structural_panel_derived_smoothed_prior(
     stats: &StructuralPriorStats,
     structural_prior_state: &StructuralPriorLearningState,
 ) -> Option<f64> {
+    let em_fit = structural_source_reliability_em_fit_from_state(structural_prior_state);
+    let em_source_reliability = if em_fit.iteration_count == 0 {
+        None
+    } else {
+        Some(&em_fit.source_reliability)
+    };
     let success_mass: f64 = stats
         .source_panel_summaries
         .iter()
         .map(|(source_label, summary)| {
             summary.weighted_success_mass.max(0.0)
-                * structural_source_reliability_multiplier(structural_prior_state, source_label)
+                * structural_source_reliability_multiplier(
+                    structural_prior_state,
+                    source_label,
+                    em_source_reliability,
+                )
         })
         .sum();
     let failure_mass: f64 = stats
@@ -3516,7 +3526,11 @@ fn structural_panel_derived_smoothed_prior(
         .iter()
         .map(|(source_label, summary)| {
             summary.weighted_failure_mass.max(0.0)
-                * structural_source_reliability_multiplier(structural_prior_state, source_label)
+                * structural_source_reliability_multiplier(
+                    structural_prior_state,
+                    source_label,
+                    em_source_reliability,
+                )
         })
         .sum();
     if success_mass <= f64::EPSILON && failure_mass <= f64::EPSILON {
@@ -3530,10 +3544,12 @@ fn structural_panel_derived_smoothed_prior(
 fn structural_source_reliability_multiplier(
     structural_prior_state: &StructuralPriorLearningState,
     source_label: &str,
+    em_source_reliability: Option<&BTreeMap<String, f64>>,
 ) -> f64 {
-    structural_prior_state
+    let posterior = structural_prior_state
         .source_reliability_posteriors
-        .get(source_label)
+        .get(source_label);
+    let posterior_multiplier = posterior
         .map(|posterior| {
             if posterior.observations == 0
                 && posterior.weighted_observation_mass <= f64::EPSILON
@@ -3545,7 +3561,20 @@ fn structural_source_reliability_multiplier(
                         .unwrap_or(1.0)
             }
         })
-        .unwrap_or(1.0)
+        .unwrap_or(1.0);
+    let Some(em_multiplier) = em_source_reliability
+        .and_then(|source_reliability| source_reliability.get(source_label))
+        .copied()
+        .map(|value| value.clamp(0.0, 1.0))
+    else {
+        return posterior_multiplier;
+    };
+
+    if posterior.is_some() {
+        (posterior_multiplier * 0.5 + em_multiplier * 0.5).clamp(0.0, 1.0)
+    } else {
+        em_multiplier
+    }
 }
 
 fn structural_source_confusion_concentration_multiplier(
@@ -3588,10 +3617,18 @@ struct StructuralSourceReliabilityEmFit {
     latent_item_count: usize,
     distinct_label_count: usize,
     confusion_cell_count: usize,
+    source_reliability: BTreeMap<String, f64>,
     avg_latent_confidence: Option<f64>,
     min_latent_confidence: Option<f64>,
     avg_source_reliability: Option<f64>,
     min_source_reliability: Option<f64>,
+}
+
+#[derive(Debug, Default)]
+struct StructuralSourceReliabilityEmLedger {
+    items: BTreeMap<String, StructuralSourceReliabilityEmItem>,
+    distinct_sources: BTreeSet<String>,
+    observed_label_count: usize,
 }
 
 fn structural_source_reliability_em_item_key(event: &crate::state::StructuralPriorEvent) -> String {
@@ -3609,38 +3646,8 @@ fn structural_source_reliability_em_item_key(event: &crate::state::StructuralPri
 fn structural_source_reliability_em_readiness(
     structural_prior_state: &StructuralPriorLearningState,
 ) -> StructuralSourceReliabilityEmReadiness {
-    let mut items = BTreeMap::<String, StructuralSourceReliabilityEmItem>::new();
-    let mut distinct_sources = BTreeSet::<String>::new();
-    let mut observed_label_count = 0;
-    for event in &structural_prior_state.event_ledger {
-        let source_label = event.source_label.trim();
-        if source_label.is_empty() {
-            continue;
-        }
-        let item = items
-            .entry(structural_source_reliability_em_item_key(event))
-            .or_default();
-        item.sources.insert(source_label.to_string());
-        distinct_sources.insert(source_label.to_string());
-        if let Some(credit_class) = event
-            .realized_outcome
-            .as_deref()
-            .and_then(structural_source_reliability_em_credit_class)
-        {
-            item.observed_labels += 1;
-            *item
-                .observed_credit_classes
-                .entry(credit_class.to_string())
-                .or_default() += 1;
-            *item
-                .source_credit_classes
-                .entry(source_label.to_string())
-                .or_default()
-                .entry(credit_class.to_string())
-                .or_default() += 1;
-            observed_label_count += 1;
-        }
-    }
+    let ledger = structural_source_reliability_em_ledger(structural_prior_state);
+    let items = ledger.items;
     let candidate_item_count = items.len();
     let labeled_item_count = items
         .values()
@@ -3655,7 +3662,7 @@ fn structural_source_reliability_em_readiness(
         .map(|item| item.sources.len())
         .max()
         .unwrap_or_default();
-    let distinct_source_count = distinct_sources.len();
+    let distinct_source_count = ledger.distinct_sources.len();
     let consensus_confidences = items
         .values()
         .filter_map(structural_source_reliability_em_consensus_confidence)
@@ -3694,7 +3701,7 @@ fn structural_source_reliability_em_readiness(
         labeled_item_count,
         multi_source_item_count,
         distinct_source_count,
-        observed_label_count,
+        observed_label_count: ledger.observed_label_count,
         max_sources_per_item,
         min_multi_source_items: STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS,
         consensus_item_count,
@@ -3710,6 +3717,50 @@ fn structural_source_reliability_em_readiness(
         avg_em_source_reliability: em_fit.avg_source_reliability,
         min_em_source_reliability: em_fit.min_source_reliability,
     }
+}
+
+fn structural_source_reliability_em_fit_from_state(
+    structural_prior_state: &StructuralPriorLearningState,
+) -> StructuralSourceReliabilityEmFit {
+    let ledger = structural_source_reliability_em_ledger(structural_prior_state);
+    structural_source_reliability_em_fit(&ledger.items)
+}
+
+fn structural_source_reliability_em_ledger(
+    structural_prior_state: &StructuralPriorLearningState,
+) -> StructuralSourceReliabilityEmLedger {
+    let mut ledger = StructuralSourceReliabilityEmLedger::default();
+    for event in &structural_prior_state.event_ledger {
+        let source_label = event.source_label.trim();
+        if source_label.is_empty() {
+            continue;
+        }
+        let item = ledger
+            .items
+            .entry(structural_source_reliability_em_item_key(event))
+            .or_default();
+        item.sources.insert(source_label.to_string());
+        ledger.distinct_sources.insert(source_label.to_string());
+        if let Some(credit_class) = event
+            .realized_outcome
+            .as_deref()
+            .and_then(structural_source_reliability_em_credit_class)
+        {
+            item.observed_labels += 1;
+            *item
+                .observed_credit_classes
+                .entry(credit_class.to_string())
+                .or_default() += 1;
+            *item
+                .source_credit_classes
+                .entry(source_label.to_string())
+                .or_default()
+                .entry(credit_class.to_string())
+                .or_default() += 1;
+            ledger.observed_label_count += 1;
+        }
+    }
+    ledger
 }
 
 type StructuralSourceReliabilityEmPosteriors = BTreeMap<String, BTreeMap<String, f64>>;
@@ -3758,9 +3809,14 @@ fn structural_source_reliability_em_fit(
 
     let latent_confidences = posteriors
         .values()
-        .filter_map(|posterior| posterior.values().copied().max_by(|left, right| left.total_cmp(right)))
+        .filter_map(|posterior| {
+            posterior
+                .values()
+                .copied()
+                .max_by(|left, right| left.total_cmp(right))
+        })
         .collect::<Vec<_>>();
-    let source_reliabilities = sources
+    let source_reliability = sources
         .iter()
         .filter_map(|source| {
             let source_confusion = confusion.get(source)?;
@@ -3769,14 +3825,17 @@ fn structural_source_reliability_em_fit(
                 .filter_map(|label| source_confusion.get(label)?.get(label).copied())
                 .collect::<Vec<_>>();
             structural_source_reliability_em_avg(&diagonal)
+                .map(|source_reliability| (source.clone(), source_reliability))
         })
-        .collect::<Vec<_>>();
+        .collect::<BTreeMap<_, _>>();
+    let source_reliabilities = source_reliability.values().copied().collect::<Vec<_>>();
 
     StructuralSourceReliabilityEmFit {
         iteration_count: STRUCTURAL_SOURCE_RELIABILITY_EM_ITERATIONS,
         latent_item_count,
         distinct_label_count,
         confusion_cell_count,
+        source_reliability,
         avg_latent_confidence: structural_source_reliability_em_avg(&latent_confidences),
         min_latent_confidence: structural_source_reliability_em_min(&latent_confidences),
         avg_source_reliability: structural_source_reliability_em_avg(&source_reliabilities),
@@ -6011,6 +6070,45 @@ mod tests {
         assert!(avg_source_reliability >= min_source_reliability);
         assert!((0.0..=1.0).contains(&avg_source_reliability));
         assert!((0.0..=1.0).contains(&min_source_reliability));
+    }
+
+    #[test]
+    fn source_reliability_em_fit_learns_lower_reliability_for_conflicting_source() {
+        let mut state = StructuralPriorLearningState::default();
+        state.event_ledger.extend([
+            source_em_event("backtest", "rec-1", Some("win")),
+            source_em_event("live", "rec-1", Some("win")),
+            source_em_event("analyze", "rec-1", Some("loss")),
+            source_em_event("backtest", "rec-2", Some("loss")),
+            source_em_event("live", "rec-2", Some("loss")),
+            source_em_event("analyze", "rec-2", Some("win")),
+            source_em_event("backtest", "rec-3", Some("win")),
+            source_em_event("live", "rec-3", Some("win")),
+            source_em_event("analyze", "rec-3", Some("loss")),
+        ]);
+
+        let fit = structural_source_reliability_em_fit_from_state(&state);
+
+        assert_eq!(
+            fit.iteration_count,
+            STRUCTURAL_SOURCE_RELIABILITY_EM_ITERATIONS
+        );
+        let backtest = fit.source_reliability["backtest"];
+        let live = fit.source_reliability["live"];
+        let analyze = fit.source_reliability["analyze"];
+        assert!(backtest > analyze);
+        assert!(live > analyze);
+        assert!(
+            structural_source_reliability_multiplier(
+                &state,
+                "backtest",
+                Some(&fit.source_reliability)
+            ) > structural_source_reliability_multiplier(
+                &state,
+                "analyze",
+                Some(&fit.source_reliability)
+            )
+        );
     }
 
     #[test]
