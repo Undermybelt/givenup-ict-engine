@@ -12,12 +12,28 @@ loading user-specific data unless it is explicit and opt-in.
 | Criterion | Evidence | Status |
 |---|---|---|
 | Treat `docs/plans/20260501repo.md` as implementation input | P6 path-ranking rows and the later source-reliability, Dawid-Skene readiness, duration, BOCPD calibration, off-policy, and target-policy variance diagnostics all map to the document's CatBoost, Dawid-Skene, HSMM, BOCPD, and OPE sections | partial |
-| Land decisions as versioned repo artifacts | Commits `acce819`, `2bb1c8e`, `bb57d73`, `2253bfe`, `05caf1d`, `45fc44c`, `05d4ca7`, `d9631fc`, `400b00c`, `983e622`, `3f67add`, `1cc6825`, `c494b60`, `0cbd46e`, `1cbf9fc`, and `4cc3d66` are committed on `green-baseline` | done for current slices |
+| Land decisions as versioned repo artifacts | Commits `acce819`, `2bb1c8e`, `bb57d73`, `2253bfe`, `05caf1d`, `45fc44c`, `05d4ca7`, `d9631fc`, `400b00c`, `983e622`, `3f67add`, `1cc6825`, `c494b60`, `0cbd46e`, `1cbf9fc`, `4cc3d66`, and `0175b3c` are committed on `green-baseline` | done for current slices |
 | Preserve zero-config behavior | New path-ranking, source-reliability, duration, SNIPS/DR, and target-policy diagnostics are derived from existing structural state/export rows; no new required CLI flags or environment variables were added | done for current slices |
 | Keep consumer surfaces token-friendly | `policy-training-status`, `structural-experience-priors`, and `structural-temporal-summary` expose compact booleans, counts, probabilities, scalar diagnostics, warnings, and paths rather than verbose model dumps | done for current slices |
 | Avoid repo/runtime pollution | Verification used normal cargo targets and tempdirs in tests; final `git status --short` was clean after each committed slice | done for current slices |
 | Keep user-specific data hot-pluggable/opt-in | No personal data path, account config, provider default, or environment auto-load was added | done for current slices |
 | Do not claim complete without audit | This audit records remaining gaps and does not mark the active goal complete | done |
+
+## Prompt-to-Artifact Checklist
+
+| Prompt requirement / TODO input | Concrete artifact evidence | Verification / gate | Status |
+|---|---|---|---|
+| Use `docs/plans/20260501repo.md` as a TODO source | `docs/structural-belief-learning-repo-map.md` maps plan sections to P2/P3/P4/P5/P6 status; this audit records TODO closure and remaining gaps | manual inspection of docs plus committed implementation slices | partial |
+| Implement scoped slices and commit as appropriate | Recent code commits cover path-ranking target rows, source reliability/confusion, duration distributions, SNIPS/DR/target-policy diagnostics, EM readiness, and BOCPD calibration | `git log --oneline` on `green-baseline` | done for current slices |
+| Preserve zero-config behavior | New surfaces derive from `StructuralPriorLearningState`, exported target rows, or workflow snapshots; no required CLI flag, env var, provider config, or state-dir default was added | code review of touched files and `cargo check --all-targets` | done for current slices |
+| Keep consumer surfaces usable and token-friendly | `policy-training-status`, `structural-experience-priors`, and `structural-temporal-summary` expose compact scalar fields, booleans, counts, warnings, and paths | targeted workflow/status tests and JSON field assertions | done for current slices |
+| Keep user-specific data explicit and hot-pluggable | No personal account/provider/default market data path was introduced; external trainer/service and live data remain explicit future inputs | code/doc inspection; no env auto-load added | done for current slices |
+| Avoid pollution / debt | Verification used normal cargo targets; runtime/data generation was not run into repo-local `state/`; checkpoint `git status --short --branch` is clean after commits | `git diff --check`; `git status --short --branch` | done for current slices |
+| CatBoost / path-ranker target from plan | Target rows, maturity fields, lower-bound gates, training weights, calibration evaluator, and trainer manifest exist | `cargo test --lib structural_path_ranking_target`; `cargo test --lib structural_path_ranking_target_training_status` | partial: no trained service or sufficient real raw-scored rows |
+| Dawid-Skene / source reliability from plan | Source posterior, outcome-confusion likelihoods, panel tempering, and EM-readiness counts exist | `cargo test --lib source_reliability`; `cargo test --lib source_outcome_confusion`; `cargo test --lib source_reliability_em_readiness_requires_multi_source_overlap` | partial: no full latent-class EM update yet |
+| HSMM / BOCPD duration prior from plan | Empirical dwell distribution, hazard/survival, evidence-weighted BOCPD raw/calibrated break probability, temporal summary fields exist | `cargo test --lib duration`; `cargo test --lib structural_temporal_summary_node_prefers_persisted_temporal_state_streak_count` | partial: no full run-length posterior model |
+| Logged-bandit / OPE target-policy learning from plan | Behavior probability logging, IPS/SNIPS/DR, ESS, target-policy reward prior, variance penalty, and conservative lower bound exist | `cargo test --lib test_structural_feedback_records_snips_and_dr_policy_priors`; `cargo test --lib structural_experience_prior` | partial: no full target-policy probability model or mature censoring model |
+| Hamilton / DBN recursive filtering from plan | Transition posterior state persists and downstream branch/candidate surfaces consume it | transition and structural workflow tests listed below | partial: no deeper Hamilton/DBN recursive filter |
 
 ## Implemented Evidence
 
@@ -32,6 +48,7 @@ Recent committed slices:
 - `0cbd46e feat: calibrate target policy feedback priors`
 - `1cbf9fc feat: surface source reliability em readiness`
 - `4cc3d66 feat: calibrate bocpd break probability`
+- `0175b3c docs: audit bocpd calibration progress`
 - `acce819 feat: expose path ranking maturity fields`
 - `2bb1c8e feat: weight path ranking calibration by propensity`
 - `bb57d73 feat: add path ranking lower-bound gates`
