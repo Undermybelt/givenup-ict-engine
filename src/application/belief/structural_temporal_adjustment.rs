@@ -6,6 +6,8 @@ use crate::state::{
     StructuralNodeTransitionPosteriorState,
 };
 
+const NODE_TRANSITION_TWO_STEP_DISCOUNT: f64 = 0.5;
+
 pub fn blend_node_posterior_with_duration_prior(
     base_posterior: f64,
     duration_prior: Option<&StructuralNodeDurationPrior>,
@@ -176,8 +178,11 @@ pub fn transition_adjusted_node_posteriors(
         .map(|prior| prior.from_node_id.as_str())
         .or_else(|| latest_branch_id.rsplit_once(':').map(|(node_id, _)| node_id));
     if let Some(latest_node_id) = latest_node_id {
+        let two_step_posteriors =
+            structural_two_step_node_transition_posteriors(latest_node_id, node_transition_posteriors);
         let mut normalized_posterior = Vec::new();
         let mut missing_posterior_candidates = Vec::new();
+        let mut used_two_step_fallback = false;
         for (regime, probability) in regime_probabilities {
             let node_id = format!("{symbol}:belief_regime_node:{regime}");
             let transition_key = format!("{latest_node_id}=>{node_id}");
@@ -186,6 +191,23 @@ pub fn transition_adjusted_node_posteriors(
                     normalized_posterior.push((
                         regime.clone(),
                         state.normalized_transition_posterior.clamp(0.0, 1.0),
+                    ));
+                }
+                _ if two_step_posteriors
+                    .get(&node_id)
+                    .copied()
+                    .unwrap_or_default()
+                    > f64::EPSILON =>
+                {
+                    used_two_step_fallback = true;
+                    normalized_posterior.push((
+                        regime.clone(),
+                        (two_step_posteriors
+                            .get(&node_id)
+                            .copied()
+                            .unwrap_or_default()
+                            * NODE_TRANSITION_TWO_STEP_DISCOUNT)
+                            .clamp(0.0, 1.0),
                     ));
                 }
                 _ => {
@@ -213,7 +235,7 @@ pub fn transition_adjusted_node_posteriors(
                 normalized_posterior.push((regime, residual_weight.clamp(0.0, 1.0)));
             }
             let total: f64 = normalized_posterior.iter().map(|(_, weight)| *weight).sum();
-            if total > f64::EPSILON {
+            if total > f64::EPSILON && (used_two_step_fallback || residual > f64::EPSILON) {
                 return normalized_posterior
                     .into_iter()
                     .map(|(regime, weight)| (regime, (weight / total).clamp(0.0, 1.0)))
@@ -283,6 +305,39 @@ pub fn transition_adjusted_node_posteriors(
         .into_iter()
         .map(|(regime, weight)| (regime, (weight / total).clamp(0.0, 1.0)))
         .collect()
+}
+
+fn structural_two_step_node_transition_posteriors(
+    latest_node_id: &str,
+    node_transition_posteriors: &BTreeMap<String, StructuralNodeTransitionPosteriorState>,
+) -> BTreeMap<String, f64> {
+    let adjacency = node_transition_posteriors
+        .values()
+        .filter(|state| state.normalized_transition_posterior > f64::EPSILON)
+        .fold(
+            BTreeMap::<String, Vec<(&str, f64)>>::new(),
+            |mut acc, state| {
+                acc.entry(state.from_node_id.clone()).or_default().push((
+                    state.to_node_id.as_str(),
+                    state.normalized_transition_posterior.clamp(0.0, 1.0),
+                ));
+                acc
+            },
+        );
+    let mut two_step = BTreeMap::<String, f64>::new();
+    let Some(first_hops) = adjacency.get(latest_node_id) else {
+        return two_step;
+    };
+    for (intermediate_node, first_probability) in first_hops {
+        let Some(second_hops) = adjacency.get(*intermediate_node) else {
+            continue;
+        };
+        for (target_node, second_probability) in second_hops {
+            *two_step.entry((*target_node).to_string()).or_insert(0.0) +=
+                first_probability * second_probability;
+        }
+    }
+    two_step
 }
 
 #[cfg(test)]
@@ -671,5 +726,67 @@ mod tests {
         assert!((adjusted["transition"] - 0.8).abs() < 1e-9);
         assert!((adjusted["trend"] - 0.15).abs() < 1e-9);
         assert!((adjusted["range"] - 0.05).abs() < 1e-9);
+    }
+
+    #[test]
+    fn transition_adjusted_node_posteriors_use_discounted_two_step_fallback() {
+        let mut node_states = BTreeMap::new();
+        node_states.insert(
+            "NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition".to_string(),
+            StructuralNodeTransitionPosteriorState {
+                transition_key:
+                    "NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition".to_string(),
+                from_node_id: "NQ:belief_regime_node:trend".to_string(),
+                to_node_id: "NQ:belief_regime_node:transition".to_string(),
+                observations: 3,
+                weighted_observation_mass: 2.1,
+                transition_prior: 0.7,
+                weighted_success_mass: 1.4,
+                weighted_failure_mass: 0.7,
+                transition_outcome_support: 0.8,
+                temporal_posterior_support: 0.7,
+                posterior_multiplier: 1.2,
+                normalized_transition_posterior: 0.7,
+                summary_line: String::new(),
+                last_recommended_at: None,
+            },
+        );
+        node_states.insert(
+            "NQ:belief_regime_node:transition=>NQ:belief_regime_node:range".to_string(),
+            StructuralNodeTransitionPosteriorState {
+                transition_key:
+                    "NQ:belief_regime_node:transition=>NQ:belief_regime_node:range".to_string(),
+                from_node_id: "NQ:belief_regime_node:transition".to_string(),
+                to_node_id: "NQ:belief_regime_node:range".to_string(),
+                observations: 2,
+                weighted_observation_mass: 1.6,
+                transition_prior: 0.8,
+                weighted_success_mass: 1.2,
+                weighted_failure_mass: 0.4,
+                transition_outcome_support: 0.75,
+                temporal_posterior_support: 0.78,
+                posterior_multiplier: 1.1,
+                normalized_transition_posterior: 0.8,
+                summary_line: String::new(),
+                last_recommended_at: None,
+            },
+        );
+
+        let adjusted = transition_adjusted_node_posteriors(
+            "NQ",
+            &[
+                ("trend".to_string(), 0.6),
+                ("range".to_string(), 0.2),
+                ("transition".to_string(), 0.2),
+            ],
+            Some("NQ:belief_regime_node:trend:trend_follow_through"),
+            &BTreeMap::new(),
+            &BTreeMap::new(),
+            &node_states,
+        );
+
+        assert!((adjusted["transition"] - 0.7).abs() < 1e-9);
+        assert!((adjusted["range"] - 0.28).abs() < 1e-9);
+        assert!((adjusted["trend"] - 0.02).abs() < 1e-9);
     }
 }
