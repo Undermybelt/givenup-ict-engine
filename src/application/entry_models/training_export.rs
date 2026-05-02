@@ -297,6 +297,16 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     #[serde(default)]
     pub history_mature_rows: usize,
     #[serde(default)]
+    pub history_rows_with_raw_path_score: usize,
+    #[serde(default)]
+    pub history_rows_with_calibrated_path_prob: usize,
+    #[serde(default)]
+    pub history_rows_with_path_prob_lower_bound: usize,
+    #[serde(default)]
+    pub history_rows_with_propensity_estimate: usize,
+    #[serde(default)]
+    pub history_rows_with_training_weight: usize,
+    #[serde(default)]
     pub calibration_evaluation_rows: usize,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub calibration_brier_score: Option<f64>,
@@ -768,8 +778,50 @@ pub fn structural_path_ranking_target_training_status(
     } else {
         summary.jsonl_path.as_str()
     };
+    let history_rows = load_structural_path_ranking_target_rows_from_jsonl(evaluation_jsonl_path)?;
+    let history_row_count = history_rows.len().max(summary.history_rows);
+    let history_mature_rows = history_rows
+        .iter()
+        .filter(|row| row.maturity_mask)
+        .count()
+        .max(summary.history_mature_rows);
+    let history_rows_with_calibrated_path_prob =
+        history_rows
+            .iter()
+            .filter(|row| row.calibrated_path_prob.is_some())
+            .count()
+            .max(summary.history_rows_with_calibrated_path_prob)
+            .max(summary.rows_with_calibrated_path_prob);
+    let history_rows_with_path_prob_lower_bound = summary
+        .history_rows_with_path_prob_lower_bound
+        .max(history_rows
+            .iter()
+            .filter(|row| row.path_prob_lower_bound.is_some())
+            .count())
+        .max(summary.rows_with_path_prob_lower_bound);
+    let history_rows_with_raw_path_score =
+        history_rows
+            .iter()
+            .filter(|row| row.raw_path_score.is_some())
+            .count()
+            .max(summary.history_rows_with_raw_path_score)
+            .max(summary.rows_with_raw_path_score);
+    let history_rows_with_propensity_estimate = summary
+        .history_rows_with_propensity_estimate
+        .max(history_rows
+            .iter()
+            .filter(|row| row.propensity_estimate.is_some())
+            .count())
+        .max(summary.rows_with_propensity_estimate);
+    let history_rows_with_training_weight = summary
+        .history_rows_with_training_weight
+        .max(history_rows
+            .iter()
+            .filter(|row| row.training_weight.is_some())
+            .count())
+        .max(summary.rows_with_training_weight);
     let calibration_ready =
-        summary.rows_with_calibrated_path_prob > 0 && summary.rows_with_path_prob_lower_bound > 0;
+        history_rows_with_calibrated_path_prob > 0 && history_rows_with_path_prob_lower_bound > 0;
     let trainer_manifest = &summary.trainer_manifest;
     let trainer_manifest_ready = structural_path_ranking_trainer_manifest_ready(trainer_manifest);
     let trainer_artifact_path = summary_path
@@ -807,7 +859,7 @@ pub fn structural_path_ranking_target_training_status(
     if summary.mature_rows == 0 {
         warnings.push("structural_path_ranking_target_mature_rows_missing".to_string());
     }
-    if summary.rows_with_propensity_estimate == 0 {
+    if history_rows_with_propensity_estimate == 0 {
         warnings.push("structural_path_ranking_target_propensity_missing".to_string());
     }
     if !calibration_ready {
@@ -916,8 +968,13 @@ pub fn structural_path_ranking_target_training_status(
         rows_with_calibrated_path_prob: summary.rows_with_calibrated_path_prob,
         rows_with_execution_gate_status: summary.rows_with_execution_gate_status,
         rows_with_training_weight: summary.rows_with_training_weight,
-        history_rows: summary.history_rows,
-        history_mature_rows: summary.history_mature_rows,
+        history_rows: history_row_count,
+        history_mature_rows,
+        history_rows_with_raw_path_score,
+        history_rows_with_calibrated_path_prob,
+        history_rows_with_path_prob_lower_bound,
+        history_rows_with_propensity_estimate,
+        history_rows_with_training_weight,
         calibration_evaluation_rows: calibration_evaluation.eligible_rows,
         calibration_brier_score: calibration_evaluation.brier_score,
         calibration_propensity_weighted_rows: calibration_evaluation.propensity_weighted_rows,
@@ -1012,7 +1069,8 @@ fn structural_path_ranking_trainer_artifact_ready(
 fn structural_path_ranking_target_calibration_evaluation(
     jsonl_path: &str,
 ) -> Result<StructuralPathProbabilityCalibrationEvaluationReport> {
-    if !Path::new(jsonl_path).exists() {
+    let rows = load_structural_path_ranking_target_rows_from_jsonl(jsonl_path)?;
+    if rows.is_empty() && !Path::new(jsonl_path).exists() {
         return Ok(StructuralPathProbabilityCalibrationEvaluationReport {
             status: "calibration_evaluation_export_missing".to_string(),
             warnings: vec!["structural_path_ranking_target_jsonl_missing".to_string()],
@@ -1022,25 +1080,25 @@ fn structural_path_ranking_target_calibration_evaluation(
             ..StructuralPathProbabilityCalibrationEvaluationReport::default()
         });
     }
-    let raw = fs::read_to_string(jsonl_path)?;
-    let rows = raw
-        .lines()
-        .filter(|line| !line.trim().is_empty())
-        .map(serde_json::from_str::<StructuralPathRankingTargetRow>)
-        .collect::<std::result::Result<Vec<_>, _>>()?;
     Ok(evaluate_structural_path_probability_calibration_rows(&rows))
 }
 
-fn structural_path_ranking_target_raw_scored_mature_rows(jsonl_path: &str) -> Result<usize> {
+fn load_structural_path_ranking_target_rows_from_jsonl(
+    jsonl_path: &str,
+) -> Result<Vec<StructuralPathRankingTargetRow>> {
     if !Path::new(jsonl_path).exists() {
-        return Ok(0);
+        return Ok(Vec::new());
     }
     let raw = fs::read_to_string(jsonl_path)?;
-    let rows = raw
-        .lines()
+    raw.lines()
         .filter(|line| !line.trim().is_empty())
         .map(serde_json::from_str::<StructuralPathRankingTargetRow>)
-        .collect::<std::result::Result<Vec<_>, _>>()?;
+        .collect::<std::result::Result<Vec<_>, _>>()
+        .map_err(Into::into)
+}
+
+fn structural_path_ranking_target_raw_scored_mature_rows(jsonl_path: &str) -> Result<usize> {
+    let rows = load_structural_path_ranking_target_rows_from_jsonl(jsonl_path)?;
     Ok(rows
         .iter()
         .filter(|row| row.raw_path_score.is_some() && row.calibrated_label.is_some())
@@ -2125,6 +2183,10 @@ mod tests {
         assert_eq!(status.mature_rows, 0);
         assert_eq!(status.history_rows, 0);
         assert_eq!(status.history_mature_rows, 0);
+        assert_eq!(status.history_rows_with_raw_path_score, 0);
+        assert_eq!(status.history_rows_with_calibrated_path_prob, 0);
+        assert_eq!(status.history_rows_with_path_prob_lower_bound, 0);
+        assert_eq!(status.history_rows_with_propensity_estimate, 2);
         assert_eq!(
             status.candidate_set_id.as_deref(),
             Some("structural-candidates:NQ:test")
@@ -2234,6 +2296,11 @@ mod tests {
         assert_eq!(status.production_validation_rows, 2);
         assert_eq!(status.history_rows, 2);
         assert_eq!(status.history_mature_rows, 2);
+        assert_eq!(status.history_rows_with_raw_path_score, 2);
+        assert_eq!(status.history_rows_with_calibrated_path_prob, 2);
+        assert_eq!(status.history_rows_with_path_prob_lower_bound, 2);
+        assert_eq!(status.history_rows_with_propensity_estimate, 2);
+        assert_eq!(status.history_rows_with_training_weight, 2);
         assert_eq!(
             status.production_validation_min_rows,
             STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS
@@ -2402,6 +2469,11 @@ mod tests {
         assert!(status.production_validation_ready);
         assert_eq!(status.history_rows, row_count);
         assert_eq!(status.history_mature_rows, row_count);
+        assert_eq!(status.history_rows_with_raw_path_score, row_count);
+        assert_eq!(status.history_rows_with_calibrated_path_prob, row_count);
+        assert_eq!(status.history_rows_with_path_prob_lower_bound, row_count);
+        assert_eq!(status.history_rows_with_propensity_estimate, row_count);
+        assert_eq!(status.history_rows_with_training_weight, row_count);
         assert_eq!(status.raw_scored_mature_rows, row_count);
         assert_eq!(status.raw_scored_mature_shortfall_rows, 0);
         assert_eq!(status.production_validation_rows, row_count);

@@ -480,6 +480,16 @@ pub struct StructuralPathRankingTargetExportSummary {
     pub history_rows: usize,
     #[serde(default)]
     pub history_mature_rows: usize,
+    #[serde(default)]
+    pub history_rows_with_raw_path_score: usize,
+    #[serde(default)]
+    pub history_rows_with_calibrated_path_prob: usize,
+    #[serde(default)]
+    pub history_rows_with_path_prob_lower_bound: usize,
+    #[serde(default)]
+    pub history_rows_with_propensity_estimate: usize,
+    #[serde(default)]
+    pub history_rows_with_training_weight: usize,
     pub summary_path: String,
     #[serde(default)]
     pub trainer_manifest: StructuralPathRankingTrainerManifest,
@@ -3243,6 +3253,26 @@ fn structural_path_ranking_target_export_summary(
         .iter()
         .filter(|row| row.maturity_mask)
         .count();
+    let history_rows_with_raw_path_score = history_rows
+        .iter()
+        .filter(|row| row.raw_path_score.is_some())
+        .count();
+    let history_rows_with_calibrated_path_prob = history_rows
+        .iter()
+        .filter(|row| row.calibrated_path_prob.is_some())
+        .count();
+    let history_rows_with_path_prob_lower_bound = history_rows
+        .iter()
+        .filter(|row| row.path_prob_lower_bound.is_some())
+        .count();
+    let history_rows_with_propensity_estimate = history_rows
+        .iter()
+        .filter(|row| row.propensity_estimate.is_some())
+        .count();
+    let history_rows_with_training_weight = history_rows
+        .iter()
+        .filter(|row| row.training_weight.is_some())
+        .count();
     let summary_line = format!(
         "structural_path_ranking_target rows={} history_rows={} candidate_set_size={} mature_rows={} history_mature_rows={} propensity_rows={} calibrated_rows={} execution_gate_rows={} training_weight_rows={}",
         rows,
@@ -3290,6 +3320,11 @@ fn structural_path_ranking_target_export_summary(
             .to_string(),
         history_rows: history_rows.len(),
         history_mature_rows,
+        history_rows_with_raw_path_score,
+        history_rows_with_calibrated_path_prob,
+        history_rows_with_path_prob_lower_bound,
+        history_rows_with_propensity_estimate,
+        history_rows_with_training_weight,
         summary_path: Path::new(state_dir)
             .join(symbol)
             .join(summary_name)
