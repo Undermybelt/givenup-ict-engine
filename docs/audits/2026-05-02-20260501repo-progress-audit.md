@@ -94,7 +94,6 @@ Recent committed slices:
 - `61a14c4 feat: add recursive node transition fallback`
 - `8660e81 feat: add recursive branch transition fallback`
 - `998d500 feat: align path ranker status with history`
-- `61a14c4 feat: add recursive node transition fallback`
 
 Primary files now carrying the P6 contract:
 
