@@ -247,6 +247,7 @@ Already in repo
 - `structural-path-ranking-target` workflow surface exists and reuses the declared structural candidate set
 - target rows expose `raw_path_score`, `calibrated_path_prob`, `path_prob_lower_bound`, lower-bound execution-gate fields, `pending_reward_state`, `maturity_mask`, `maturity_weight`, `calibrated_label`, `propensity_estimate`, `ips_weight`, `training_weight`, `regime_calibration_bucket`, and compact target-policy confidence/lower-bound/reward-prior diagnostics for external trainers
 - target rows export to `policy_training/structural_path_ranking_target.csv` and `.jsonl` with a summary file during the normal update flow
+- `export-structural-path-ranking-target` provides the same export contract on demand from persisted workflow state, which is useful for isolated collection without relying on update-side effects
 - `policy-training-status` reports structural path-ranking export readiness, mature-row availability, and calibration readiness without requiring a new CLI flag
 - empirical Beta-smoothed calibration writes `calibrated_path_prob` and `path_prob_lower_bound` only when a regime bucket has raw-scored mature outcome observations
 - `policy-training-status` evaluates exported mature calibrated rows with compact Brier / calibration-error fields when enough rows exist

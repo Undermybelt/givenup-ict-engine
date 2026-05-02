@@ -16,6 +16,7 @@ Implemented:
 - serializable target artifact and rows
 - `structural-path-ranking-target` workflow surface
 - candidate-set scoped CSV / JSONL / summary export under `policy_training/`
+- explicit CLI export path for structural path-ranking target rows, so users can refresh the export on demand from persisted state instead of relying on update-side effects
 - summary-level trainer manifest for external ranker services; Rust core should not require CatBoost
 - `policy-training-status` readiness reporting for export and calibration state
 - `policy-training-status` trainer manifest readiness/counts for the external ranker handoff contract
