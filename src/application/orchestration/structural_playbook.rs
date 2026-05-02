@@ -664,6 +664,16 @@ pub struct StructuralExperiencePriorEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delayed_reward_avg_elapsed_hours: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_resolution_hazard_per_hour: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_expected_resolution_hours: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_survival_probability_1h: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_survival_probability_4h: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_survival_probability_24h: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delayed_reward_success_hazard_per_hour: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delayed_reward_failure_hazard_per_hour: Option<f64>,
@@ -1361,6 +1371,16 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_delayed_reward_elapsed_hours_at_risk(prior_stats),
                 delayed_reward_avg_elapsed_hours:
                     structural_prior_delayed_reward_avg_elapsed_hours(prior_stats),
+                delayed_reward_resolution_hazard_per_hour:
+                    structural_prior_delayed_reward_resolution_hazard_per_hour(prior_stats),
+                delayed_reward_expected_resolution_hours:
+                    structural_prior_delayed_reward_expected_resolution_hours(prior_stats),
+                delayed_reward_survival_probability_1h:
+                    structural_prior_delayed_reward_survival_probability_1h(prior_stats),
+                delayed_reward_survival_probability_4h:
+                    structural_prior_delayed_reward_survival_probability_4h(prior_stats),
+                delayed_reward_survival_probability_24h:
+                    structural_prior_delayed_reward_survival_probability_24h(prior_stats),
                 delayed_reward_success_hazard_per_hour:
                     structural_prior_delayed_reward_success_hazard_per_hour(prior_stats),
                 delayed_reward_failure_hazard_per_hour:
@@ -1497,6 +1517,18 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             structural_prior_delayed_reward_elapsed_hours_at_risk(prior_stats),
                         delayed_reward_avg_elapsed_hours:
                             structural_prior_delayed_reward_avg_elapsed_hours(prior_stats),
+                        delayed_reward_resolution_hazard_per_hour:
+                            structural_prior_delayed_reward_resolution_hazard_per_hour(
+                                prior_stats,
+                            ),
+                        delayed_reward_expected_resolution_hours:
+                            structural_prior_delayed_reward_expected_resolution_hours(prior_stats),
+                        delayed_reward_survival_probability_1h:
+                            structural_prior_delayed_reward_survival_probability_1h(prior_stats),
+                        delayed_reward_survival_probability_4h:
+                            structural_prior_delayed_reward_survival_probability_4h(prior_stats),
+                        delayed_reward_survival_probability_24h:
+                            structural_prior_delayed_reward_survival_probability_24h(prior_stats),
                         delayed_reward_success_hazard_per_hour:
                             structural_prior_delayed_reward_success_hazard_per_hour(prior_stats),
                         delayed_reward_failure_hazard_per_hour:
@@ -1640,6 +1672,16 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_delayed_reward_elapsed_hours_at_risk(prior_stats),
                 delayed_reward_avg_elapsed_hours:
                     structural_prior_delayed_reward_avg_elapsed_hours(prior_stats),
+                delayed_reward_resolution_hazard_per_hour:
+                    structural_prior_delayed_reward_resolution_hazard_per_hour(prior_stats),
+                delayed_reward_expected_resolution_hours:
+                    structural_prior_delayed_reward_expected_resolution_hours(prior_stats),
+                delayed_reward_survival_probability_1h:
+                    structural_prior_delayed_reward_survival_probability_1h(prior_stats),
+                delayed_reward_survival_probability_4h:
+                    structural_prior_delayed_reward_survival_probability_4h(prior_stats),
+                delayed_reward_survival_probability_24h:
+                    structural_prior_delayed_reward_survival_probability_24h(prior_stats),
                 delayed_reward_success_hazard_per_hour:
                     structural_prior_delayed_reward_success_hazard_per_hour(prior_stats),
                 delayed_reward_failure_hazard_per_hour:
@@ -1775,6 +1817,18 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             structural_prior_delayed_reward_elapsed_hours_at_risk(prior_stats),
                         delayed_reward_avg_elapsed_hours:
                             structural_prior_delayed_reward_avg_elapsed_hours(prior_stats),
+                        delayed_reward_resolution_hazard_per_hour:
+                            structural_prior_delayed_reward_resolution_hazard_per_hour(
+                                prior_stats,
+                            ),
+                        delayed_reward_expected_resolution_hours:
+                            structural_prior_delayed_reward_expected_resolution_hours(prior_stats),
+                        delayed_reward_survival_probability_1h:
+                            structural_prior_delayed_reward_survival_probability_1h(prior_stats),
+                        delayed_reward_survival_probability_4h:
+                            structural_prior_delayed_reward_survival_probability_4h(prior_stats),
+                        delayed_reward_survival_probability_24h:
+                            structural_prior_delayed_reward_survival_probability_24h(prior_stats),
                         delayed_reward_success_hazard_per_hour:
                             structural_prior_delayed_reward_success_hazard_per_hour(prior_stats),
                         delayed_reward_failure_hazard_per_hour:
@@ -1918,6 +1972,16 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_delayed_reward_elapsed_hours_at_risk(prior_stats),
                 delayed_reward_avg_elapsed_hours:
                     structural_prior_delayed_reward_avg_elapsed_hours(prior_stats),
+                delayed_reward_resolution_hazard_per_hour:
+                    structural_prior_delayed_reward_resolution_hazard_per_hour(prior_stats),
+                delayed_reward_expected_resolution_hours:
+                    structural_prior_delayed_reward_expected_resolution_hours(prior_stats),
+                delayed_reward_survival_probability_1h:
+                    structural_prior_delayed_reward_survival_probability_1h(prior_stats),
+                delayed_reward_survival_probability_4h:
+                    structural_prior_delayed_reward_survival_probability_4h(prior_stats),
+                delayed_reward_survival_probability_24h:
+                    structural_prior_delayed_reward_survival_probability_24h(prior_stats),
                 delayed_reward_success_hazard_per_hour:
                     structural_prior_delayed_reward_success_hazard_per_hour(prior_stats),
                 delayed_reward_failure_hazard_per_hour:
@@ -2054,6 +2118,18 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             structural_prior_delayed_reward_elapsed_hours_at_risk(prior_stats),
                         delayed_reward_avg_elapsed_hours:
                             structural_prior_delayed_reward_avg_elapsed_hours(prior_stats),
+                        delayed_reward_resolution_hazard_per_hour:
+                            structural_prior_delayed_reward_resolution_hazard_per_hour(
+                                prior_stats,
+                            ),
+                        delayed_reward_expected_resolution_hours:
+                            structural_prior_delayed_reward_expected_resolution_hours(prior_stats),
+                        delayed_reward_survival_probability_1h:
+                            structural_prior_delayed_reward_survival_probability_1h(prior_stats),
+                        delayed_reward_survival_probability_4h:
+                            structural_prior_delayed_reward_survival_probability_4h(prior_stats),
+                        delayed_reward_survival_probability_24h:
+                            structural_prior_delayed_reward_survival_probability_24h(prior_stats),
                         delayed_reward_success_hazard_per_hour:
                             structural_prior_delayed_reward_success_hazard_per_hour(prior_stats),
                         delayed_reward_failure_hazard_per_hour:
@@ -2226,6 +2302,16 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 structural_prior_delayed_reward_elapsed_hours_at_risk(node_prior_stats),
             delayed_reward_avg_elapsed_hours:
                 structural_prior_delayed_reward_avg_elapsed_hours(node_prior_stats),
+            delayed_reward_resolution_hazard_per_hour:
+                structural_prior_delayed_reward_resolution_hazard_per_hour(node_prior_stats),
+            delayed_reward_expected_resolution_hours:
+                structural_prior_delayed_reward_expected_resolution_hours(node_prior_stats),
+            delayed_reward_survival_probability_1h:
+                structural_prior_delayed_reward_survival_probability_1h(node_prior_stats),
+            delayed_reward_survival_probability_4h:
+                structural_prior_delayed_reward_survival_probability_4h(node_prior_stats),
+            delayed_reward_survival_probability_24h:
+                structural_prior_delayed_reward_survival_probability_24h(node_prior_stats),
             delayed_reward_success_hazard_per_hour:
                 structural_prior_delayed_reward_success_hazard_per_hour(node_prior_stats),
             delayed_reward_failure_hazard_per_hour:
@@ -5242,6 +5328,46 @@ fn structural_prior_delayed_reward_avg_elapsed_hours(
     structural_prior_positive_value(prior_stats, |stats| stats.delayed_reward_avg_elapsed_hours)
 }
 
+fn structural_prior_delayed_reward_resolution_hazard_per_hour(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_resolution_hazard_per_hour
+    })
+}
+
+fn structural_prior_delayed_reward_expected_resolution_hours(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_expected_resolution_hours
+    })
+}
+
+fn structural_prior_delayed_reward_survival_probability_1h(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_survival_probability_1h
+    })
+}
+
+fn structural_prior_delayed_reward_survival_probability_4h(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_survival_probability_4h
+    })
+}
+
+fn structural_prior_delayed_reward_survival_probability_24h(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_survival_probability_24h
+    })
+}
+
 fn structural_prior_delayed_reward_success_hazard_per_hour(
     prior_stats: Option<&StructuralPriorStats>,
 ) -> Option<f64> {
@@ -6845,6 +6971,11 @@ mod tests {
             delayed_reward_elapsed_feedback_count: 3,
             delayed_reward_elapsed_hours_at_risk: 6.0,
             delayed_reward_avg_elapsed_hours: 2.0,
+            delayed_reward_resolution_hazard_per_hour: 3.0 / 6.0,
+            delayed_reward_expected_resolution_hours: 2.0,
+            delayed_reward_survival_probability_1h: (-0.5_f64).exp(),
+            delayed_reward_survival_probability_4h: (-2.0_f64).exp(),
+            delayed_reward_survival_probability_24h: (-12.0_f64).exp(),
             delayed_reward_success_hazard_per_hour: 1.5 / 6.0,
             delayed_reward_failure_hazard_per_hour: 1.5 / 6.0,
             delayed_reward_resolution_horizon_1h_count: 3,
@@ -6925,6 +7056,26 @@ mod tests {
         assert_eq!(
             structural_prior_delayed_reward_avg_elapsed_hours(Some(&stats)),
             Some(2.0)
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_resolution_hazard_per_hour(Some(&stats)),
+            Some(3.0 / 6.0)
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_expected_resolution_hours(Some(&stats)),
+            Some(2.0)
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_survival_probability_1h(Some(&stats)),
+            Some((-0.5_f64).exp())
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_survival_probability_4h(Some(&stats)),
+            Some((-2.0_f64).exp())
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_survival_probability_24h(Some(&stats)),
+            Some((-12.0_f64).exp())
         );
         assert_eq!(
             structural_prior_delayed_reward_success_hazard_per_hour(Some(&stats)),

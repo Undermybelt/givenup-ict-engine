@@ -5504,6 +5504,11 @@ mod tests {
                 delayed_reward_elapsed_feedback_count: 3,
                 delayed_reward_elapsed_hours_at_risk: 6.0,
                 delayed_reward_avg_elapsed_hours: 2.0,
+                delayed_reward_resolution_hazard_per_hour: 3.0 / 6.0,
+                delayed_reward_expected_resolution_hours: 2.0,
+                delayed_reward_survival_probability_1h: (-0.5_f64).exp(),
+                delayed_reward_survival_probability_4h: (-2.0_f64).exp(),
+                delayed_reward_survival_probability_24h: (-12.0_f64).exp(),
                 delayed_reward_success_hazard_per_hour: 2.0 / 6.0,
                 delayed_reward_failure_hazard_per_hour: 1.0 / 6.0,
                 delayed_reward_resolution_horizon_1h_count: 3,
@@ -5755,6 +5760,23 @@ mod tests {
         assert_eq!(value["path"]["delayed_reward_elapsed_feedback_count"], 3);
         assert_eq!(value["path"]["delayed_reward_elapsed_hours_at_risk"], 6.0);
         assert_eq!(value["path"]["delayed_reward_avg_elapsed_hours"], 2.0);
+        assert_eq!(
+            value["path"]["delayed_reward_resolution_hazard_per_hour"],
+            3.0 / 6.0
+        );
+        assert_eq!(value["path"]["delayed_reward_expected_resolution_hours"], 2.0);
+        assert_eq!(
+            value["path"]["delayed_reward_survival_probability_1h"],
+            (-0.5_f64).exp()
+        );
+        assert_eq!(
+            value["path"]["delayed_reward_survival_probability_4h"],
+            (-2.0_f64).exp()
+        );
+        assert_eq!(
+            value["path"]["delayed_reward_survival_probability_24h"],
+            (-12.0_f64).exp()
+        );
         assert_eq!(
             value["path"]["delayed_reward_success_hazard_per_hour"],
             2.0 / 6.0

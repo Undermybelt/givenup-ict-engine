@@ -240,6 +240,16 @@ pub struct StructuralPriorStats {
     #[serde(default)]
     pub delayed_reward_avg_elapsed_hours: f64,
     #[serde(default)]
+    pub delayed_reward_resolution_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_expected_resolution_hours: f64,
+    #[serde(default)]
+    pub delayed_reward_survival_probability_1h: f64,
+    #[serde(default)]
+    pub delayed_reward_survival_probability_4h: f64,
+    #[serde(default)]
+    pub delayed_reward_survival_probability_24h: f64,
+    #[serde(default)]
     pub delayed_reward_success_hazard_per_hour: f64,
     #[serde(default)]
     pub delayed_reward_failure_hazard_per_hour: f64,
@@ -336,6 +346,16 @@ pub struct StructuralPriorMassSnapshot {
     pub delayed_reward_elapsed_hours_at_risk: f64,
     #[serde(default)]
     pub delayed_reward_avg_elapsed_hours: f64,
+    #[serde(default)]
+    pub delayed_reward_resolution_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_expected_resolution_hours: f64,
+    #[serde(default)]
+    pub delayed_reward_survival_probability_1h: f64,
+    #[serde(default)]
+    pub delayed_reward_survival_probability_4h: f64,
+    #[serde(default)]
+    pub delayed_reward_survival_probability_24h: f64,
     #[serde(default)]
     pub delayed_reward_success_hazard_per_hour: f64,
     #[serde(default)]
@@ -485,6 +505,16 @@ pub struct StructuralPriorSourceSummary {
     pub delayed_reward_elapsed_hours_at_risk: f64,
     #[serde(default)]
     pub delayed_reward_avg_elapsed_hours: f64,
+    #[serde(default)]
+    pub delayed_reward_resolution_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_expected_resolution_hours: f64,
+    #[serde(default)]
+    pub delayed_reward_survival_probability_1h: f64,
+    #[serde(default)]
+    pub delayed_reward_survival_probability_4h: f64,
+    #[serde(default)]
+    pub delayed_reward_survival_probability_24h: f64,
     #[serde(default)]
     pub delayed_reward_success_hazard_per_hour: f64,
     #[serde(default)]
@@ -4320,6 +4350,12 @@ fn structural_prior_mass_snapshot(
         delayed_reward_elapsed_feedback_count: stats.delayed_reward_elapsed_feedback_count,
         delayed_reward_elapsed_hours_at_risk: stats.delayed_reward_elapsed_hours_at_risk,
         delayed_reward_avg_elapsed_hours: stats.delayed_reward_avg_elapsed_hours,
+        delayed_reward_resolution_hazard_per_hour: stats
+            .delayed_reward_resolution_hazard_per_hour,
+        delayed_reward_expected_resolution_hours: stats.delayed_reward_expected_resolution_hours,
+        delayed_reward_survival_probability_1h: stats.delayed_reward_survival_probability_1h,
+        delayed_reward_survival_probability_4h: stats.delayed_reward_survival_probability_4h,
+        delayed_reward_survival_probability_24h: stats.delayed_reward_survival_probability_24h,
         delayed_reward_success_hazard_per_hour: stats.delayed_reward_success_hazard_per_hour,
         delayed_reward_failure_hazard_per_hour: stats.delayed_reward_failure_hazard_per_hour,
         delayed_reward_invalidation_hazard_per_hour: stats
@@ -5079,6 +5115,37 @@ fn structural_delayed_reward_avg_elapsed_hours(count: usize, elapsed_hours: f64)
     }
 }
 
+fn structural_delayed_reward_resolution_hazard_per_hour(
+    matured_feedback_count: usize,
+    elapsed_hours_at_risk: f64,
+) -> f64 {
+    if matured_feedback_count == 0 || elapsed_hours_at_risk <= f64::EPSILON {
+        0.0
+    } else {
+        (matured_feedback_count as f64 / elapsed_hours_at_risk.max(f64::EPSILON)).max(0.0)
+    }
+}
+
+fn structural_delayed_reward_expected_resolution_hours(resolution_hazard_per_hour: f64) -> f64 {
+    if resolution_hazard_per_hour <= f64::EPSILON {
+        0.0
+    } else {
+        (1.0 / resolution_hazard_per_hour).max(0.0)
+    }
+}
+
+fn structural_delayed_reward_survival_probability(
+    resolution_hazard_per_hour: f64,
+    horizon_hours: f64,
+) -> f64 {
+    if resolution_hazard_per_hour <= f64::EPSILON || horizon_hours <= f64::EPSILON {
+        return 0.0;
+    }
+    (-resolution_hazard_per_hour * horizon_hours)
+        .exp()
+        .clamp(0.0, 1.0)
+}
+
 fn structural_delayed_reward_update_resolution_horizon(
     elapsed_hours: f64,
     matured: bool,
@@ -5335,6 +5402,30 @@ fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
         stats.delayed_reward_elapsed_feedback_count,
         stats.delayed_reward_elapsed_hours_at_risk,
     );
+    stats.delayed_reward_resolution_hazard_per_hour =
+        structural_delayed_reward_resolution_hazard_per_hour(
+            matured_feedback_count,
+            stats.delayed_reward_elapsed_hours_at_risk,
+        );
+    stats.delayed_reward_expected_resolution_hours =
+        structural_delayed_reward_expected_resolution_hours(
+            stats.delayed_reward_resolution_hazard_per_hour,
+        );
+    stats.delayed_reward_survival_probability_1h =
+        structural_delayed_reward_survival_probability(
+            stats.delayed_reward_resolution_hazard_per_hour,
+            1.0,
+        );
+    stats.delayed_reward_survival_probability_4h =
+        structural_delayed_reward_survival_probability(
+            stats.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    stats.delayed_reward_survival_probability_24h =
+        structural_delayed_reward_survival_probability(
+            stats.delayed_reward_resolution_hazard_per_hour,
+            24.0,
+        );
     let elapsed_hazards = structural_delayed_reward_elapsed_hazards(
         stats.wins,
         stats.losses,
@@ -5646,6 +5737,30 @@ fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSu
         summary.delayed_reward_elapsed_feedback_count,
         summary.delayed_reward_elapsed_hours_at_risk,
     );
+    summary.delayed_reward_resolution_hazard_per_hour =
+        structural_delayed_reward_resolution_hazard_per_hour(
+            matured_feedback_count,
+            summary.delayed_reward_elapsed_hours_at_risk,
+        );
+    summary.delayed_reward_expected_resolution_hours =
+        structural_delayed_reward_expected_resolution_hours(
+            summary.delayed_reward_resolution_hazard_per_hour,
+        );
+    summary.delayed_reward_survival_probability_1h =
+        structural_delayed_reward_survival_probability(
+            summary.delayed_reward_resolution_hazard_per_hour,
+            1.0,
+        );
+    summary.delayed_reward_survival_probability_4h =
+        structural_delayed_reward_survival_probability(
+            summary.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    summary.delayed_reward_survival_probability_24h =
+        structural_delayed_reward_survival_probability(
+            summary.delayed_reward_resolution_hazard_per_hour,
+            24.0,
+        );
     let elapsed_hazards = structural_delayed_reward_elapsed_hazards(
         summary.wins,
         summary.losses,
@@ -8074,6 +8189,30 @@ mod tests {
         assert_eq!(path.delayed_reward_elapsed_feedback_count, 2);
         assert!((path.delayed_reward_elapsed_hours_at_risk - 1.5).abs() < 1e-9);
         assert!((path.delayed_reward_avg_elapsed_hours - 0.75).abs() < 1e-9);
+        let expected_resolution_hazard = 2.0 / 1.5;
+        assert!(
+            (path.delayed_reward_resolution_hazard_per_hour - expected_resolution_hazard).abs()
+                < 1e-9
+        );
+        assert!((path.delayed_reward_expected_resolution_hours - 0.75).abs() < 1e-9);
+        assert!(
+            (path.delayed_reward_survival_probability_1h
+                - (-expected_resolution_hazard * 1.0).exp())
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (path.delayed_reward_survival_probability_4h
+                - (-expected_resolution_hazard * 4.0).exp())
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (path.delayed_reward_survival_probability_24h
+                - (-expected_resolution_hazard * 24.0).exp())
+                .abs()
+                < 1e-9
+        );
         assert!((path.delayed_reward_success_hazard_per_hour - (1.0 / 1.5)).abs() < 1e-9);
         assert!((path.delayed_reward_failure_hazard_per_hour - (1.0 / 1.5)).abs() < 1e-9);
         assert!(path.delayed_reward_invalidation_hazard_per_hour.abs() < 1e-9);
@@ -8224,6 +8363,33 @@ mod tests {
         assert_eq!(source_summary.delayed_reward_elapsed_feedback_count, 2);
         assert!((source_summary.delayed_reward_elapsed_hours_at_risk - 1.5).abs() < 1e-9);
         assert!((source_summary.delayed_reward_avg_elapsed_hours - 0.75).abs() < 1e-9);
+        assert!(
+            (source_summary.delayed_reward_resolution_hazard_per_hour
+                - expected_resolution_hazard)
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (source_summary.delayed_reward_expected_resolution_hours - 0.75).abs() < 1e-9
+        );
+        assert!(
+            (source_summary.delayed_reward_survival_probability_1h
+                - (-expected_resolution_hazard * 1.0).exp())
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (source_summary.delayed_reward_survival_probability_4h
+                - (-expected_resolution_hazard * 4.0).exp())
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (source_summary.delayed_reward_survival_probability_24h
+                - (-expected_resolution_hazard * 24.0).exp())
+                .abs()
+                < 1e-9
+        );
         assert!(
             (source_summary.delayed_reward_success_hazard_per_hour - (1.0 / 1.5)).abs() < 1e-9
         );
