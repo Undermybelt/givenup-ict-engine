@@ -7,14 +7,15 @@ use std::fs;
 use std::path::Path;
 
 use crate::application::orchestration::{
-    evaluate_structural_path_probability_calibration_rows,
+    evaluate_structural_path_probability_calibration_rows, export_structural_path_ranking_target,
     StructuralPathProbabilityCalibrationEvaluationReport, StructuralPathRankingTargetExportSummary,
     StructuralPathRankingTargetRow, StructuralPathRankingTrainerManifest,
     STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE,
 };
+use crate::application::provider_catalog::provider_status_agent_surface;
 use crate::state::{
-    load_state_or_default, save_text_state, AnalyzeRunRecord, UpdateRunRecord, ANALYZE_RUNS_FILE,
-    UPDATE_RUNS_FILE,
+    load_learning_state, load_state_or_default, load_workflow_snapshot, save_text_state,
+    AnalyzeRunRecord, UpdateRunRecord, ANALYZE_RUNS_FILE, UPDATE_RUNS_FILE,
 };
 use crate::types::RegimeProbs;
 
@@ -1161,6 +1162,33 @@ pub fn clear_structural_path_ranking_trainer_artifact_command(
     clear_structural_path_ranking_trainer_artifact(state_dir, symbol)?;
     let surface = structural_path_ranking_target_training_status(state_dir, symbol)?;
     println!("{}", serde_json::to_string_pretty(&surface)?);
+    Ok(())
+}
+
+fn export_structural_path_ranking_target_from_state_dir(
+    state_dir: &str,
+    symbol: &str,
+) -> Result<StructuralPathRankingTargetExportSummary> {
+    let snapshot = load_workflow_snapshot(state_dir, symbol)?;
+    let learning_state = load_learning_state(state_dir, symbol)?;
+    let provider_status_agent =
+        provider_status_agent_surface(None, None, None).unwrap_or_default();
+    export_structural_path_ranking_target(
+        state_dir,
+        symbol,
+        &snapshot,
+        &provider_status_agent,
+        &learning_state.feedback_history,
+        &learning_state.structural_prior_state,
+    )
+}
+
+pub fn export_structural_path_ranking_target_command(
+    state_dir: &str,
+    symbol: &str,
+) -> Result<()> {
+    let summary = export_structural_path_ranking_target_from_state_dir(state_dir, symbol)?;
+    println!("{}", serde_json::to_string_pretty(&summary)?);
     Ok(())
 }
 
@@ -2464,5 +2492,24 @@ mod tests {
         assert!(status
             .warnings
             .contains(&"structural_path_ranking_target_trainer_artifact_missing".to_string()));
+    }
+
+    #[test]
+    fn export_structural_path_ranking_target_from_state_dir_uses_persisted_snapshot_and_learning_state(
+    ) {
+        let temp = tempfile::tempdir().unwrap();
+        let snapshot = crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        crate::state::save_workflow_snapshot(temp.path(), "NQ", &snapshot).unwrap();
+        crate::state::save_learning_state(temp.path(), "NQ", &crate::state::LearningState::default())
+            .unwrap();
+
+        let summary =
+            export_structural_path_ranking_target_from_state_dir(temp.path().to_str().unwrap(), "NQ")
+                .unwrap();
+
+        assert_eq!(summary.symbol, "NQ");
+        assert!(std::path::Path::new(&summary.csv_path).exists());
+        assert!(std::path::Path::new(&summary.jsonl_path).exists());
+        assert!(std::path::Path::new(&summary.summary_path).exists());
     }
 }

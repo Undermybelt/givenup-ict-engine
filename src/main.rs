@@ -117,6 +117,7 @@ use ict_engine::application::{
     entry_models::{
         build_entry_model_packet_store_for_analyze,
         clear_structural_path_ranking_trainer_artifact_command,
+        export_structural_path_ranking_target_command,
         policy_training_status_command,
         register_structural_path_ranking_trainer_artifact_command,
     },
@@ -1366,6 +1367,17 @@ enum Commands {
             long,
             default_value = "state",
             help = "State directory containing policy_training artifacts"
+        )]
+        state_dir: String,
+    },
+    /// Export the structural path-ranking target summary and row files on demand from persisted workflow state.
+    ExportStructuralPathRankingTarget {
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
+        symbol: String,
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory containing workflow snapshot, learning state, and policy_training artifacts"
         )]
         state_dir: String,
     },
@@ -2815,6 +2827,10 @@ fn main() -> Result<()> {
         Commands::ClearStructuralPathRankingTrainerArtifact { symbol, state_dir } => {
             ensure_state_dir_ready(&state_dir)?;
             clear_structural_path_ranking_trainer_artifact_command(&state_dir, &symbol)?
+        }
+        Commands::ExportStructuralPathRankingTarget { symbol, state_dir } => {
+            ensure_state_dir_ready(&state_dir)?;
+            export_structural_path_ranking_target_command(&state_dir, &symbol)?
         }
         Commands::ProviderStatus {
             domain,

@@ -130,6 +130,7 @@ pub use cisd_rb::{
 };
 pub use training_export::{
     clear_structural_path_ranking_trainer_artifact_command,
+    export_structural_path_ranking_target_command,
     export_policy_training_tables, policy_training_status, policy_training_status_command,
     register_structural_path_ranking_trainer_artifact_command,
     BreakerRbEntryModelProvider, CisdRbBbnTrainingRow, CisdRbCatBoostTrainingRow,
