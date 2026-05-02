@@ -429,6 +429,7 @@ fn apply_structural_prior_state_to_belief_report(
             Some(latest_branch_id),
             &structural_prior_state.branch_transition_priors,
             &structural_prior_state.branch_temporal_posteriors,
+            &structural_prior_state.node_transition_posteriors,
         );
         let node_transition_adjusted = adjusted_node_probabilities.iter().any(|(regime, probability)| {
             (canonical_probabilities.get(regime).copied().unwrap_or_default() - *probability).abs()

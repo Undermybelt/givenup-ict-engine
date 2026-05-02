@@ -90,6 +90,8 @@ pub struct StructuralPriorLearningState {
     #[serde(default)]
     pub node_temporal_posteriors: BTreeMap<String, StructuralNodeTemporalPosteriorState>,
     #[serde(default)]
+    pub node_transition_posteriors: BTreeMap<String, StructuralNodeTransitionPosteriorState>,
+    #[serde(default)]
     pub branch_temporal_posteriors: BTreeMap<String, StructuralBranchTemporalPosteriorState>,
     #[serde(default)]
     pub source_reliability_posteriors: BTreeMap<String, StructuralSourceReliabilityPosterior>,
@@ -926,6 +928,31 @@ pub struct StructuralBranchTemporalPosteriorState {
     pub weighted_observation_mass: f64,
     #[serde(default)]
     pub transition_prior: f64,
+    pub transition_outcome_support: f64,
+    pub temporal_posterior_support: f64,
+    #[serde(default)]
+    pub posterior_multiplier: f64,
+    #[serde(default)]
+    pub normalized_transition_posterior: f64,
+    #[serde(default)]
+    pub summary_line: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_recommended_at: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralNodeTransitionPosteriorState {
+    pub transition_key: String,
+    pub from_node_id: String,
+    pub to_node_id: String,
+    pub observations: usize,
+    pub weighted_observation_mass: f64,
+    #[serde(default)]
+    pub transition_prior: f64,
+    #[serde(default)]
+    pub weighted_success_mass: f64,
+    #[serde(default)]
+    pub weighted_failure_mass: f64,
     pub transition_outcome_support: f64,
     pub temporal_posterior_support: f64,
     #[serde(default)]
@@ -6954,6 +6981,7 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
     state.node_duration_priors.clear();
     state.branch_transition_priors.clear();
     state.node_temporal_posteriors.clear();
+    state.node_transition_posteriors.clear();
     state.branch_temporal_posteriors.clear();
     state.source_reliability_em_summaries.clear();
     let mut events = state.event_ledger.clone();
@@ -7085,6 +7113,106 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
             }
             entry.last_recommended_at = Some(event.recommended_at.clone());
         }
+    }
+
+    for transition_events in symbol_transition_events.values() {
+        let total_transitions = transition_events.len();
+        for (index, (previous, event)) in transition_events.iter().enumerate() {
+            let transition_key = format!("{}=>{}", previous.node_id, event.node_id);
+            let entry = state
+                .node_transition_posteriors
+                .entry(transition_key.clone())
+                .or_insert_with(|| StructuralNodeTransitionPosteriorState {
+                    transition_key,
+                    from_node_id: previous.node_id.clone(),
+                    to_node_id: event.node_id.clone(),
+                    ..StructuralNodeTransitionPosteriorState::default()
+                });
+            let recency_rank = total_transitions.saturating_sub(index + 1) as f64;
+            let recency_decay = 0.85_f64.powf(recency_rank);
+            let weighted_mass =
+                structural_prior_source_weight(&event.source_label) * recency_decay;
+            entry.observations += 1;
+            if let Some(pseudo_counts) =
+                structural_event_outcome_pseudo_counts(event.realized_outcome.as_deref())
+            {
+                let weighted_observation = weighted_mass * pseudo_counts.observation_weight;
+                entry.weighted_observation_mass += weighted_observation;
+                entry.weighted_success_mass +=
+                    weighted_observation * pseudo_counts.success_credit;
+                entry.weighted_failure_mass +=
+                    weighted_observation * (1.0 - pseudo_counts.success_credit);
+            }
+            entry.last_recommended_at = Some(event.recommended_at.clone());
+        }
+    }
+    let mut outgoing_node_mass = BTreeMap::<String, f64>::new();
+    for transition in state.node_transition_posteriors.values() {
+        *outgoing_node_mass
+            .entry(transition.from_node_id.clone())
+            .or_insert(0.0) += transition.weighted_observation_mass;
+    }
+    for transition in state.node_transition_posteriors.values_mut() {
+        let total = outgoing_node_mass
+            .get(&transition.from_node_id)
+            .copied()
+            .unwrap_or_default();
+        transition.transition_prior = if total <= f64::EPSILON {
+            0.0
+        } else {
+            (transition.weighted_observation_mass / total).clamp(0.0, 1.0)
+        };
+        let alpha = 1.0 + transition.weighted_success_mass.max(0.0);
+        let beta = 1.0 + transition.weighted_failure_mass.max(0.0);
+        transition.transition_outcome_support =
+            (alpha / (alpha + beta)).clamp(0.0, 1.0);
+        transition.temporal_posterior_support =
+            (transition.transition_prior * 0.7 + transition.transition_outcome_support * 0.3)
+                .clamp(0.0, 1.0);
+    }
+    let mut node_posterior_weights = BTreeMap::<String, f64>::new();
+    let mut node_posterior_multipliers = BTreeMap::<String, f64>::new();
+    let mut outgoing_node_posterior_weight = BTreeMap::<String, f64>::new();
+    for (transition_key, transition) in &state.node_transition_posteriors {
+        let sample_weight = (transition.weighted_observation_mass / 3.0).min(1.0);
+        let temporal_bias = (transition.temporal_posterior_support - 0.5) * 2.0;
+        let posterior_multiplier = (1.0 + temporal_bias * sample_weight).clamp(0.05, 2.0);
+        let posterior_weight = (transition.transition_prior * posterior_multiplier).max(0.0);
+        node_posterior_weights.insert(transition_key.clone(), posterior_weight);
+        node_posterior_multipliers.insert(transition_key.clone(), posterior_multiplier);
+        *outgoing_node_posterior_weight
+            .entry(transition.from_node_id.clone())
+            .or_insert(0.0) += posterior_weight;
+    }
+    for (transition_key, transition) in state.node_transition_posteriors.iter_mut() {
+        let posterior_multiplier = node_posterior_multipliers
+            .get(transition_key)
+            .copied()
+            .unwrap_or(1.0);
+        let posterior_weight = node_posterior_weights
+            .get(transition_key)
+            .copied()
+            .unwrap_or_default();
+        let posterior_total = outgoing_node_posterior_weight
+            .get(&transition.from_node_id)
+            .copied()
+            .unwrap_or_default();
+        let normalized_transition_posterior = if posterior_total <= f64::EPSILON {
+            transition.transition_prior
+        } else {
+            (posterior_weight / posterior_total).clamp(0.0, 1.0)
+        };
+        transition.posterior_multiplier = posterior_multiplier;
+        transition.normalized_transition_posterior = normalized_transition_posterior;
+        transition.summary_line = format!(
+            "node_transition_mass={:.3} node_transition_prior={:.3} node_transition_support={:.3} node_transition_temporal={:.3} multiplier={:.3} normalized_posterior={:.3}",
+            transition.weighted_observation_mass,
+            transition.transition_prior,
+            transition.transition_outcome_support,
+            transition.temporal_posterior_support,
+            posterior_multiplier,
+            normalized_transition_posterior
+        );
     }
 
     let mut outgoing_mass = BTreeMap::<String, f64>::new();
@@ -9758,6 +9886,19 @@ mod tests {
             temporal.temporal_posterior_support,
             transition_ac.temporal_posterior_support
         );
+        let node_temporal = state
+            .structural_prior_state
+            .node_transition_posteriors
+            .get("NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition")
+            .expect("node transition temporal posterior");
+        assert_eq!(
+            node_temporal.transition_key,
+            "NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition"
+        );
+        assert_eq!(node_temporal.from_node_id, "NQ:belief_regime_node:trend");
+        assert_eq!(node_temporal.to_node_id, "NQ:belief_regime_node:transition");
+        assert!(node_temporal.weighted_observation_mass > 0.0);
+        assert!(node_temporal.normalized_transition_posterior > 0.0);
     }
 
     #[test]
@@ -9955,6 +10096,27 @@ mod tests {
         assert!(
             (trend_to_transition.normalized_transition_posterior
                 + trend_to_range.normalized_transition_posterior
+                - 1.0)
+                .abs()
+                < 1e-9
+        );
+        let node_trend_to_transition = state
+            .structural_prior_state
+            .node_transition_posteriors
+            .get("NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition")
+            .expect("trend to transition node posterior");
+        let node_trend_to_range = state
+            .structural_prior_state
+            .node_transition_posteriors
+            .get("NQ:belief_regime_node:trend=>NQ:belief_regime_node:range")
+            .expect("trend to range node posterior");
+        assert!(
+            node_trend_to_transition.normalized_transition_posterior
+                > node_trend_to_range.normalized_transition_posterior
+        );
+        assert!(
+            (node_trend_to_transition.normalized_transition_posterior
+                + node_trend_to_range.normalized_transition_posterior
                 - 1.0)
                 .abs()
                 < 1e-9

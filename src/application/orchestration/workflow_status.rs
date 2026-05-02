@@ -6343,6 +6343,26 @@ mod tests {
                 last_recommended_at: Some("2026-04-30T05:00:00Z".to_string()),
             },
         );
+        structural_prior_state.node_transition_posteriors.insert(
+            "NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition".to_string(),
+            crate::state::StructuralNodeTransitionPosteriorState {
+                transition_key:
+                    "NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition".to_string(),
+                from_node_id: "NQ:belief_regime_node:trend".to_string(),
+                to_node_id: "NQ:belief_regime_node:transition".to_string(),
+                observations: 2,
+                weighted_observation_mass: 1.5,
+                transition_prior: 0.71,
+                weighted_success_mass: 1.2,
+                weighted_failure_mass: 0.3,
+                transition_outcome_support: 0.76,
+                temporal_posterior_support: 0.725,
+                posterior_multiplier: 1.31,
+                normalized_transition_posterior: 0.74,
+                summary_line: "node_transition_mass=1.500 node_transition_support=0.760 node_transition_temporal=0.725 multiplier=1.310".to_string(),
+                last_recommended_at: Some("2026-04-30T05:00:00Z".to_string()),
+            },
+        );
 
         let value = build_workflow_status_phase_value_with_structural_prior_state(
             &snapshot,
@@ -6385,6 +6405,10 @@ mod tests {
         assert_eq!(value["transition_temporal_posterior_support"], 0.70);
         assert_eq!(value["transition_posterior_multiplier"], 1.28);
         assert_eq!(value["transition_normalized_posterior"], 0.68);
+        assert_eq!(value["node_transition_prior"], 0.71);
+        assert_eq!(value["node_transition_temporal_posterior_support"], 0.725);
+        assert_eq!(value["node_transition_posterior_multiplier"], 1.31);
+        assert_eq!(value["node_transition_normalized_posterior"], 0.74);
     }
 
     #[test]

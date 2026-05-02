@@ -277,6 +277,14 @@ pub struct StructuralTemporalSummaryArtifact {
     pub transition_posterior_multiplier: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub transition_normalized_posterior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub node_transition_prior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub node_transition_temporal_posterior_support: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub node_transition_posterior_multiplier: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub node_transition_normalized_posterior: Option<f64>,
     pub summary_line: String,
 }
 
@@ -2511,6 +2519,11 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
                 .get(&format!("{}=>{}", refs.branch_id, branch_id))
         })
     });
+    let node_transition_state = latest_feedback.as_ref().and_then(|refs| {
+        structural_prior_state
+            .node_transition_posteriors
+            .get(&format!("{}=>{}", refs.node_id, node.node_id))
+    });
     let transition_prior = latest_feedback
         .as_ref()
         .and_then(|refs| {
@@ -2709,6 +2722,13 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
         transition_posterior_multiplier: branch_temporal_state
             .map(|state| state.posterior_multiplier),
         transition_normalized_posterior: branch_temporal_state
+            .map(|state| state.normalized_transition_posterior),
+        node_transition_prior: node_transition_state.map(|state| state.transition_prior),
+        node_transition_temporal_posterior_support: node_transition_state
+            .map(|state| state.temporal_posterior_support),
+        node_transition_posterior_multiplier: node_transition_state
+            .map(|state| state.posterior_multiplier),
+        node_transition_normalized_posterior: node_transition_state
             .map(|state| state.normalized_transition_posterior),
         summary_line,
     }
