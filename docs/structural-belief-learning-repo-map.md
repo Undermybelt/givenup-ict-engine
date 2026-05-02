@@ -251,6 +251,7 @@ Already in repo
 - empirical Beta-smoothed calibration writes `calibrated_path_prob` and `path_prob_lower_bound` only when a regime bucket has raw-scored mature outcome observations
 - `policy-training-status` evaluates exported mature calibrated rows with compact Brier / calibration-error fields when enough rows exist
 - `policy-training-status` also reports a clipped-IPS propensity-weighted Brier score for calibrated mature rows when `propensity_estimate` is available
+- `policy-training-status` also reports raw-scored mature-row sufficiency and shortfall separately from propensity-weighted production-validation rows, so missing score history versus missing calibrated propensity coverage stay distinguishable
 - calibrated target rows include advisory execution-gate status fields from `path_prob_lower_bound` and a fixed repo threshold, without blocking zero-config uncalibrated flows
 - target rows now carry mature reward labels plus clipped IPS/sample weights so a downstream ranker can train without treating censored rows as negatives
 - `policy-training-status` separates calibration-quality readiness from production-validation readiness by requiring enough propensity-weighted calibrated rows before declaring the target production-validatable
