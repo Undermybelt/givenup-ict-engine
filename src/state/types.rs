@@ -1,11 +1,14 @@
 use chrono::{DateTime, SecondsFormat, Utc};
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use crate::types::{Direction, FactorIC, Regime, RegimeProbs};
 
 const STRUCTURAL_IPS_WEIGHT_CLIP: f64 = 5.0;
 const STRUCTURAL_SOURCE_CONFUSION_LAPLACE_ALPHA: f64 = 1.0;
+pub const STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS: usize = 3;
+pub const STRUCTURAL_SOURCE_RELIABILITY_EM_ITERATIONS: usize = 5;
+const STRUCTURAL_SOURCE_RELIABILITY_EM_LAPLACE_ALPHA: f64 = 0.5;
 
 pub const LEARNING_STATE_FILE: &str = "learning_state.json";
 pub const TRADE_HISTORY_FILE: &str = "trade_history.json";
@@ -89,6 +92,9 @@ pub struct StructuralPriorLearningState {
     pub branch_temporal_posteriors: BTreeMap<String, StructuralBranchTemporalPosteriorState>,
     #[serde(default)]
     pub source_reliability_posteriors: BTreeMap<String, StructuralSourceReliabilityPosterior>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub source_reliability_em_summaries:
+        BTreeMap<String, StructuralSourceReliabilityEmSourceSummary>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -389,6 +395,61 @@ pub struct StructuralSourceOutcomeConfusionCell {
     pub credit_class_observed_outcome_count: usize,
     #[serde(default)]
     pub observed_given_credit_likelihood: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralSourceReliabilityEmSourceSummary {
+    pub source_label: String,
+    pub iteration_count: usize,
+    pub latent_item_count: usize,
+    pub distinct_label_count: usize,
+    pub confusion_cell_count: usize,
+    #[serde(default)]
+    pub posterior_reliability: f64,
+    #[serde(default)]
+    pub min_diagonal_probability: f64,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub confusion: BTreeMap<String, StructuralSourceReliabilityEmConfusionCell>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralSourceReliabilityEmConfusionCell {
+    pub true_credit_class: String,
+    pub observed_credit_class: String,
+    pub probability: f64,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct StructuralSourceReliabilityEmDiagnostics {
+    pub candidate_item_count: usize,
+    pub labeled_item_count: usize,
+    pub multi_source_item_count: usize,
+    pub distinct_source_count: usize,
+    pub observed_label_count: usize,
+    pub max_sources_per_item: usize,
+    pub consensus_item_count: usize,
+    pub conflict_item_count: usize,
+    pub avg_consensus_confidence: Option<f64>,
+    pub min_consensus_confidence: Option<f64>,
+    pub fit: StructuralSourceReliabilityEmFit,
+    pub persisted_source_summary_count: usize,
+    pub persisted_confusion_cell_count: usize,
+    pub avg_persisted_source_reliability: Option<f64>,
+    pub min_persisted_source_reliability: Option<f64>,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct StructuralSourceReliabilityEmFit {
+    pub iteration_count: usize,
+    pub latent_item_count: usize,
+    pub distinct_label_count: usize,
+    pub confusion_cell_count: usize,
+    pub source_reliability: BTreeMap<String, f64>,
+    pub avg_latent_confidence: Option<f64>,
+    pub min_latent_confidence: Option<f64>,
+    pub avg_source_reliability: Option<f64>,
+    pub min_source_reliability: Option<f64>,
+    confusion: StructuralSourceReliabilityEmConfusion,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -5037,6 +5098,532 @@ fn structural_source_confusion_row_stats(
     (row_mass, row_count)
 }
 
+#[derive(Debug, Default)]
+struct StructuralSourceReliabilityEmItem {
+    sources: BTreeSet<String>,
+    observed_labels: usize,
+    observed_credit_classes: BTreeMap<String, usize>,
+    source_credit_classes: BTreeMap<String, BTreeMap<String, usize>>,
+}
+
+#[derive(Debug, Default)]
+struct StructuralSourceReliabilityEmLedger {
+    items: BTreeMap<String, StructuralSourceReliabilityEmItem>,
+    distinct_sources: BTreeSet<String>,
+    observed_label_count: usize,
+}
+
+type StructuralSourceReliabilityEmPosteriors = BTreeMap<String, BTreeMap<String, f64>>;
+type StructuralSourceReliabilityEmConfusion =
+    BTreeMap<String, BTreeMap<String, BTreeMap<String, f64>>>;
+
+pub fn structural_source_reliability_em_diagnostics(
+    structural_prior_state: &StructuralPriorLearningState,
+) -> StructuralSourceReliabilityEmDiagnostics {
+    let ledger = structural_source_reliability_em_ledger(structural_prior_state);
+    let items = ledger.items;
+    let candidate_item_count = items.len();
+    let labeled_item_count = items
+        .values()
+        .filter(|item| item.observed_labels > 0)
+        .count();
+    let multi_source_item_count = items
+        .values()
+        .filter(|item| item.sources.len() >= 2 && item.observed_labels >= 2)
+        .count();
+    let max_sources_per_item = items
+        .values()
+        .map(|item| item.sources.len())
+        .max()
+        .unwrap_or_default();
+    let consensus_confidences = items
+        .values()
+        .filter_map(structural_source_reliability_em_consensus_confidence)
+        .collect::<Vec<_>>();
+    let consensus_item_count = consensus_confidences.len();
+    let conflict_item_count = items
+        .values()
+        .filter(|item| item.observed_credit_classes.len() > 1)
+        .count();
+    let avg_consensus_confidence = structural_source_reliability_em_avg(&consensus_confidences);
+    let min_consensus_confidence = structural_source_reliability_em_min(&consensus_confidences);
+    let fit = structural_source_reliability_em_fit(&items);
+    let persisted_source_reliabilities = structural_prior_state
+        .source_reliability_em_summaries
+        .values()
+        .map(|summary| summary.posterior_reliability.clamp(0.0, 1.0))
+        .collect::<Vec<_>>();
+
+    StructuralSourceReliabilityEmDiagnostics {
+        candidate_item_count,
+        labeled_item_count,
+        multi_source_item_count,
+        distinct_source_count: ledger.distinct_sources.len(),
+        observed_label_count: ledger.observed_label_count,
+        max_sources_per_item,
+        consensus_item_count,
+        conflict_item_count,
+        avg_consensus_confidence,
+        min_consensus_confidence,
+        fit,
+        persisted_source_summary_count: structural_prior_state
+            .source_reliability_em_summaries
+            .len(),
+        persisted_confusion_cell_count: structural_prior_state
+            .source_reliability_em_summaries
+            .values()
+            .map(|summary| summary.confusion_cell_count)
+            .sum(),
+        avg_persisted_source_reliability: structural_source_reliability_em_avg(
+            &persisted_source_reliabilities,
+        ),
+        min_persisted_source_reliability: structural_source_reliability_em_min(
+            &persisted_source_reliabilities,
+        ),
+    }
+}
+
+pub fn structural_source_reliability_em_fit_from_state(
+    structural_prior_state: &StructuralPriorLearningState,
+) -> StructuralSourceReliabilityEmFit {
+    if let Some(fit) =
+        structural_source_reliability_em_fit_from_persisted_state(structural_prior_state)
+    {
+        return fit;
+    }
+    let ledger = structural_source_reliability_em_ledger(structural_prior_state);
+    structural_source_reliability_em_fit(&ledger.items)
+}
+
+pub fn refresh_structural_source_reliability_em_state(
+    structural_prior_state: &mut StructuralPriorLearningState,
+) {
+    structural_prior_state.source_reliability_em_summaries.clear();
+    let ledger = structural_source_reliability_em_ledger(structural_prior_state);
+    let fit = structural_source_reliability_em_fit(&ledger.items);
+    if fit.iteration_count == 0 {
+        return;
+    }
+    for (source_label, source_confusion) in &fit.confusion {
+        let diagonal = source_confusion
+            .iter()
+            .filter_map(|(true_label, row)| row.get(true_label).copied())
+            .collect::<Vec<_>>();
+        let confusion = source_confusion
+            .iter()
+            .flat_map(|(true_label, row)| {
+                row.iter().map(move |(observed_label, probability)| {
+                    let key = format!("{true_label}->{observed_label}");
+                    (
+                        key,
+                        StructuralSourceReliabilityEmConfusionCell {
+                            true_credit_class: true_label.clone(),
+                            observed_credit_class: observed_label.clone(),
+                            probability: probability.clamp(0.0, 1.0),
+                        },
+                    )
+                })
+            })
+            .collect::<BTreeMap<_, _>>();
+        structural_prior_state.source_reliability_em_summaries.insert(
+            source_label.clone(),
+            StructuralSourceReliabilityEmSourceSummary {
+                source_label: source_label.clone(),
+                iteration_count: fit.iteration_count,
+                latent_item_count: fit.latent_item_count,
+                distinct_label_count: fit.distinct_label_count,
+                confusion_cell_count: confusion.len(),
+                posterior_reliability: fit
+                    .source_reliability
+                    .get(source_label)
+                    .copied()
+                    .unwrap_or_default()
+                    .clamp(0.0, 1.0),
+                min_diagonal_probability: structural_source_reliability_em_min(&diagonal)
+                    .unwrap_or_default()
+                    .clamp(0.0, 1.0),
+                confusion,
+            },
+        );
+    }
+}
+
+fn structural_source_reliability_em_fit_from_persisted_state(
+    structural_prior_state: &StructuralPriorLearningState,
+) -> Option<StructuralSourceReliabilityEmFit> {
+    if structural_prior_state
+        .source_reliability_em_summaries
+        .is_empty()
+    {
+        return None;
+    }
+    let source_reliability = structural_prior_state
+        .source_reliability_em_summaries
+        .iter()
+        .map(|(source_label, summary)| {
+            (
+                source_label.clone(),
+                summary.posterior_reliability.clamp(0.0, 1.0),
+            )
+        })
+        .collect::<BTreeMap<_, _>>();
+    let source_reliabilities = source_reliability.values().copied().collect::<Vec<_>>();
+    Some(StructuralSourceReliabilityEmFit {
+        iteration_count: structural_prior_state
+            .source_reliability_em_summaries
+            .values()
+            .map(|summary| summary.iteration_count)
+            .max()
+            .unwrap_or_default(),
+        latent_item_count: structural_prior_state
+            .source_reliability_em_summaries
+            .values()
+            .map(|summary| summary.latent_item_count)
+            .max()
+            .unwrap_or_default(),
+        distinct_label_count: structural_prior_state
+            .source_reliability_em_summaries
+            .values()
+            .map(|summary| summary.distinct_label_count)
+            .max()
+            .unwrap_or_default(),
+        confusion_cell_count: structural_prior_state
+            .source_reliability_em_summaries
+            .values()
+            .map(|summary| summary.confusion_cell_count)
+            .sum(),
+        source_reliability,
+        avg_source_reliability: structural_source_reliability_em_avg(&source_reliabilities),
+        min_source_reliability: structural_source_reliability_em_min(&source_reliabilities),
+        ..StructuralSourceReliabilityEmFit::default()
+    })
+}
+
+fn structural_source_reliability_em_item_key(event: &StructuralPriorEvent) -> String {
+    format!(
+        "{}|{}|{}|{}|{}|{}",
+        event.symbol,
+        event.recommendation_id,
+        event.node_id,
+        event.branch_id,
+        event.scenario_id,
+        event.path_id
+    )
+}
+
+fn structural_source_reliability_em_ledger(
+    structural_prior_state: &StructuralPriorLearningState,
+) -> StructuralSourceReliabilityEmLedger {
+    let mut ledger = StructuralSourceReliabilityEmLedger::default();
+    for event in &structural_prior_state.event_ledger {
+        let source_label = event.source_label.trim();
+        if source_label.is_empty() {
+            continue;
+        }
+        let item = ledger
+            .items
+            .entry(structural_source_reliability_em_item_key(event))
+            .or_default();
+        item.sources.insert(source_label.to_string());
+        ledger.distinct_sources.insert(source_label.to_string());
+        if let Some(credit_class) = event
+            .realized_outcome
+            .as_deref()
+            .and_then(structural_source_reliability_em_credit_class)
+        {
+            item.observed_labels += 1;
+            *item
+                .observed_credit_classes
+                .entry(credit_class.to_string())
+                .or_default() += 1;
+            *item
+                .source_credit_classes
+                .entry(source_label.to_string())
+                .or_default()
+                .entry(credit_class.to_string())
+                .or_default() += 1;
+            ledger.observed_label_count += 1;
+        }
+    }
+    ledger
+}
+
+fn structural_source_reliability_em_fit(
+    items: &BTreeMap<String, StructuralSourceReliabilityEmItem>,
+) -> StructuralSourceReliabilityEmFit {
+    let fit_items = items
+        .iter()
+        .filter(|(_, item)| item.sources.len() >= 2 && item.observed_labels >= 2)
+        .collect::<BTreeMap<_, _>>();
+    let latent_item_count = fit_items.len();
+    let mut labels = BTreeSet::<String>::new();
+    let mut sources = BTreeSet::<String>::new();
+    for item in fit_items.values() {
+        labels.extend(item.observed_credit_classes.keys().cloned());
+        sources.extend(item.source_credit_classes.keys().cloned());
+    }
+    let labels = labels.into_iter().collect::<Vec<_>>();
+    let distinct_label_count = labels.len();
+    let confusion_cell_count = sources.len() * distinct_label_count * distinct_label_count;
+    if latent_item_count == 0 || sources.len() < 2 || distinct_label_count < 2 {
+        return StructuralSourceReliabilityEmFit {
+            latent_item_count,
+            distinct_label_count,
+            confusion_cell_count,
+            ..StructuralSourceReliabilityEmFit::default()
+        };
+    }
+
+    let mut posteriors = structural_source_reliability_em_initial_posteriors(&fit_items, &labels);
+    let mut confusion = StructuralSourceReliabilityEmConfusion::new();
+    for _ in 0..STRUCTURAL_SOURCE_RELIABILITY_EM_ITERATIONS {
+        confusion =
+            structural_source_reliability_em_confusion(&fit_items, &posteriors, &labels, &sources);
+        let class_prior = structural_source_reliability_em_class_prior(&posteriors, &labels);
+        posteriors = structural_source_reliability_em_update_posteriors(
+            &fit_items,
+            &labels,
+            &class_prior,
+            &confusion,
+        );
+    }
+
+    let latent_confidences = posteriors
+        .values()
+        .filter_map(|posterior| {
+            posterior
+                .values()
+                .copied()
+                .max_by(|left, right| left.total_cmp(right))
+        })
+        .collect::<Vec<_>>();
+    let source_reliability = sources
+        .iter()
+        .filter_map(|source| {
+            let source_confusion = confusion.get(source)?;
+            let diagonal = labels
+                .iter()
+                .filter_map(|label| source_confusion.get(label)?.get(label).copied())
+                .collect::<Vec<_>>();
+            structural_source_reliability_em_avg(&diagonal)
+                .map(|source_reliability| (source.clone(), source_reliability))
+        })
+        .collect::<BTreeMap<_, _>>();
+    let source_reliabilities = source_reliability.values().copied().collect::<Vec<_>>();
+
+    StructuralSourceReliabilityEmFit {
+        iteration_count: STRUCTURAL_SOURCE_RELIABILITY_EM_ITERATIONS,
+        latent_item_count,
+        distinct_label_count,
+        confusion_cell_count,
+        source_reliability,
+        avg_latent_confidence: structural_source_reliability_em_avg(&latent_confidences),
+        min_latent_confidence: structural_source_reliability_em_min(&latent_confidences),
+        avg_source_reliability: structural_source_reliability_em_avg(&source_reliabilities),
+        min_source_reliability: structural_source_reliability_em_min(&source_reliabilities),
+        confusion,
+    }
+}
+
+fn structural_source_reliability_em_initial_posteriors(
+    items: &BTreeMap<&String, &StructuralSourceReliabilityEmItem>,
+    labels: &[String],
+) -> StructuralSourceReliabilityEmPosteriors {
+    items
+        .iter()
+        .map(|(item_key, item)| {
+            let mut posterior = BTreeMap::<String, f64>::new();
+            let denominator =
+                item.observed_labels as f64 + STRUCTURAL_SOURCE_RELIABILITY_EM_LAPLACE_ALPHA
+                    * labels.len() as f64;
+            for label in labels {
+                let count = item
+                    .observed_credit_classes
+                    .get(label)
+                    .copied()
+                    .unwrap_or_default() as f64;
+                posterior.insert(
+                    label.clone(),
+                    ((count + STRUCTURAL_SOURCE_RELIABILITY_EM_LAPLACE_ALPHA) / denominator)
+                        .clamp(0.0, 1.0),
+                );
+            }
+            ((*item_key).clone(), posterior)
+        })
+        .collect()
+}
+
+fn structural_source_reliability_em_confusion(
+    items: &BTreeMap<&String, &StructuralSourceReliabilityEmItem>,
+    posteriors: &StructuralSourceReliabilityEmPosteriors,
+    labels: &[String],
+    sources: &BTreeSet<String>,
+) -> StructuralSourceReliabilityEmConfusion {
+    let mut confusion = StructuralSourceReliabilityEmConfusion::new();
+    for source in sources {
+        let mut source_rows = BTreeMap::<String, BTreeMap<String, f64>>::new();
+        for true_label in labels {
+            let mut observed_counts = labels
+                .iter()
+                .map(|label| (label.clone(), STRUCTURAL_SOURCE_RELIABILITY_EM_LAPLACE_ALPHA))
+                .collect::<BTreeMap<_, _>>();
+            for (item_key, item) in items {
+                let true_probability = posteriors
+                    .get(*item_key)
+                    .and_then(|posterior| posterior.get(true_label))
+                    .copied()
+                    .unwrap_or_default();
+                if true_probability <= f64::EPSILON {
+                    continue;
+                }
+                if let Some(source_labels) = item.source_credit_classes.get(source) {
+                    for (observed_label, count) in source_labels {
+                        *observed_counts.entry(observed_label.clone()).or_default() +=
+                            true_probability * *count as f64;
+                    }
+                }
+            }
+            let denominator = observed_counts.values().sum::<f64>();
+            let row = observed_counts
+                .into_iter()
+                .map(|(observed_label, count)| {
+                    let probability = if denominator <= f64::EPSILON {
+                        1.0 / labels.len() as f64
+                    } else {
+                        (count / denominator).clamp(0.0, 1.0)
+                    };
+                    (observed_label, probability)
+                })
+                .collect::<BTreeMap<_, _>>();
+            source_rows.insert(true_label.clone(), row);
+        }
+        confusion.insert(source.clone(), source_rows);
+    }
+    confusion
+}
+
+fn structural_source_reliability_em_class_prior(
+    posteriors: &StructuralSourceReliabilityEmPosteriors,
+    labels: &[String],
+) -> BTreeMap<String, f64> {
+    let mut prior = labels
+        .iter()
+        .map(|label| (label.clone(), STRUCTURAL_SOURCE_RELIABILITY_EM_LAPLACE_ALPHA))
+        .collect::<BTreeMap<_, _>>();
+    for posterior in posteriors.values() {
+        for label in labels {
+            *prior.entry(label.clone()).or_default() +=
+                posterior.get(label).copied().unwrap_or_default();
+        }
+    }
+    let denominator = prior.values().sum::<f64>();
+    if denominator <= f64::EPSILON {
+        return labels
+            .iter()
+            .map(|label| (label.clone(), 1.0 / labels.len() as f64))
+            .collect();
+    }
+    prior
+        .into_iter()
+        .map(|(label, value)| (label, (value / denominator).clamp(0.0, 1.0)))
+        .collect()
+}
+
+fn structural_source_reliability_em_update_posteriors(
+    items: &BTreeMap<&String, &StructuralSourceReliabilityEmItem>,
+    labels: &[String],
+    class_prior: &BTreeMap<String, f64>,
+    confusion: &StructuralSourceReliabilityEmConfusion,
+) -> StructuralSourceReliabilityEmPosteriors {
+    let mut posteriors = StructuralSourceReliabilityEmPosteriors::new();
+    for (item_key, item) in items {
+        let mut log_scores = Vec::<(String, f64)>::new();
+        for true_label in labels {
+            let mut log_score = class_prior
+                .get(true_label)
+                .copied()
+                .unwrap_or(1.0 / labels.len() as f64)
+                .clamp(1e-12, 1.0)
+                .ln();
+            for (source, observed_labels) in &item.source_credit_classes {
+                for (observed_label, count) in observed_labels {
+                    let likelihood = confusion
+                        .get(source)
+                        .and_then(|source_rows| source_rows.get(true_label))
+                        .and_then(|row| row.get(observed_label))
+                        .copied()
+                        .unwrap_or(1.0 / labels.len() as f64)
+                        .clamp(1e-12, 1.0);
+                    log_score += *count as f64 * likelihood.ln();
+                }
+            }
+            log_scores.push((true_label.clone(), log_score));
+        }
+        let max_log_score = log_scores
+            .iter()
+            .map(|(_, score)| *score)
+            .fold(f64::NEG_INFINITY, f64::max);
+        let denominator = log_scores
+            .iter()
+            .map(|(_, score)| (*score - max_log_score).exp())
+            .sum::<f64>();
+        let posterior = log_scores
+            .into_iter()
+            .map(|(label, score)| {
+                let probability = if denominator <= f64::EPSILON {
+                    1.0 / labels.len() as f64
+                } else {
+                    ((score - max_log_score).exp() / denominator).clamp(0.0, 1.0)
+                };
+                (label, probability)
+            })
+            .collect::<BTreeMap<_, _>>();
+        posteriors.insert((*item_key).clone(), posterior);
+    }
+    posteriors
+}
+
+fn structural_source_reliability_em_avg(values: &[f64]) -> Option<f64> {
+    if values.is_empty() {
+        None
+    } else {
+        Some((values.iter().sum::<f64>() / values.len() as f64).clamp(0.0, 1.0))
+    }
+}
+
+fn structural_source_reliability_em_min(values: &[f64]) -> Option<f64> {
+    values
+        .iter()
+        .copied()
+        .min_by(|left, right| left.total_cmp(right))
+}
+
+fn structural_source_reliability_em_credit_class(outcome: &str) -> Option<&'static str> {
+    let outcome = outcome.trim().to_ascii_lowercase();
+    if outcome.is_empty() || structural_feedback_outcome_is_unresolved(&outcome) {
+        return None;
+    }
+    match outcome.as_str() {
+        "win" | "profit" | "tp" | "take_profit" => Some("positive_executed"),
+        "loss" | "lose" | "sl" | "stop" | "stop_loss" | "invalidated" => {
+            Some("negative_executed")
+        }
+        "breakeven" | "abandoned" => Some("neutral_executed"),
+        "not_followed" => Some("no_credit_not_followed"),
+        _ => Some("other_observed"),
+    }
+}
+
+fn structural_source_reliability_em_consensus_confidence(
+    item: &StructuralSourceReliabilityEmItem,
+) -> Option<f64> {
+    if item.observed_labels < 2 {
+        return None;
+    }
+    let max_class_count = item.observed_credit_classes.values().copied().max()?;
+    Some((max_class_count as f64 / item.observed_labels as f64).clamp(0.0, 1.0))
+}
+
 fn structural_prior_symbol_from_node_id(node_id: &str) -> String {
     node_id.split(':').next().unwrap_or_default().to_string()
 }
@@ -5109,6 +5696,7 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
     state.branch_transition_priors.clear();
     state.node_temporal_posteriors.clear();
     state.branch_temporal_posteriors.clear();
+    state.source_reliability_em_summaries.clear();
     let mut events = state.event_ledger.clone();
     events.sort_by(|left, right| {
         left.symbol
@@ -5322,6 +5910,7 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
             },
         );
     }
+    refresh_structural_source_reliability_em_state(state);
 }
 
 fn finalize_node_duration_streak(
@@ -6627,6 +7216,83 @@ mod tests {
             ) - 0.5)
                 .abs()
                 < 1e-9
+        );
+    }
+
+    #[test]
+    fn test_structural_prior_seed_persists_source_reliability_em_summaries() {
+        fn seed_with_outcome(source_label: &str, outcome: &str) -> StructuralPriorSeed {
+            let mut seed = StructuralPriorSeed {
+                source_label: source_label.to_string(),
+                observations: 1,
+                followed_count: 1,
+                avg_pnl: 0.01,
+                ..StructuralPriorSeed::default()
+            };
+            match outcome {
+                "win" => seed.wins = 1,
+                "loss" => seed.losses = 1,
+                _ => seed.breakevens = 1,
+            }
+            seed
+        }
+
+        fn refs_for_rec(recommendation_id: &str) -> StructuralFeedbackRefs {
+            StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: recommendation_id.to_string(),
+                recommended_at: format!("2026-05-02T00:00:0{}Z", &recommendation_id[4..]),
+                node_id: "NQ:belief_regime_node:trend".to_string(),
+                branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                scenario_id: "scenario-em".to_string(),
+                path_id: format!("path-{recommendation_id}"),
+                followed_path: true,
+                exit_reason: None,
+                notes: None,
+            }
+        }
+
+        let mut state = LearningState::default();
+        for (recommendation_id, backtest_outcome, live_outcome, analyze_outcome) in [
+            ("rec-1", "win", "win", "loss"),
+            ("rec-2", "loss", "loss", "win"),
+            ("rec-3", "win", "win", "loss"),
+        ] {
+            let refs = refs_for_rec(recommendation_id);
+            state.apply_structural_prior_seed(
+                &refs,
+                &seed_with_outcome("backtest", backtest_outcome),
+            );
+            state.apply_structural_prior_seed(&refs, &seed_with_outcome("live", live_outcome));
+            state.apply_structural_prior_seed(
+                &refs,
+                &seed_with_outcome("analyze", analyze_outcome),
+            );
+        }
+
+        let summaries = &state.structural_prior_state.source_reliability_em_summaries;
+        assert_eq!(summaries.len(), 3);
+        let backtest = summaries
+            .get("backtest")
+            .expect("backtest persisted EM summary");
+        let live = summaries.get("live").expect("live persisted EM summary");
+        let analyze = summaries
+            .get("analyze")
+            .expect("analyze persisted EM summary");
+        assert_eq!(
+            backtest.iteration_count,
+            STRUCTURAL_SOURCE_RELIABILITY_EM_ITERATIONS
+        );
+        assert_eq!(backtest.latent_item_count, 3);
+        assert_eq!(backtest.distinct_label_count, 2);
+        assert_eq!(backtest.confusion_cell_count, 4);
+        assert!(backtest.posterior_reliability > analyze.posterior_reliability);
+        assert!(live.posterior_reliability > analyze.posterior_reliability);
+        assert!(
+            backtest.confusion["positive_executed->positive_executed"].probability > 0.5
+        );
+        assert!(
+            analyze.confusion["positive_executed->negative_executed"].probability > 0.5
         );
     }
 
