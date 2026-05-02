@@ -1,7 +1,7 @@
 use anyhow::Result;
 use chrono::SecondsFormat;
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::Path;
 
@@ -25,6 +25,7 @@ const STRUCTURAL_PLAYBOOK_ARTIFACT_VERSION: &str = "structural-playbook-v1";
 const STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR: &str = "policy_training";
 const STRUCTURAL_PATH_RANKING_IPS_WEIGHT_CLIP: f64 = 5.0;
 const STRUCTURAL_PATH_RANKING_EXECUTION_GATE_MIN_PATH_PROB: f64 = 0.5;
+const STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS: usize = 3;
 pub const STRUCTURAL_PATH_RANKING_TARGET_CSV_FILE: &str = "structural_path_ranking_target.csv";
 pub const STRUCTURAL_PATH_RANKING_TARGET_JSONL_FILE: &str = "structural_path_ranking_target.jsonl";
 pub const STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE: &str =
@@ -243,6 +244,8 @@ pub struct StructuralTemporalSummaryArtifact {
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct StructuralExperiencePriorSurfaceArtifact {
     pub symbol: String,
+    #[serde(default)]
+    pub source_reliability_em: StructuralSourceReliabilityEmReadiness,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub node: Option<StructuralExperiencePriorEntry>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -251,6 +254,19 @@ pub struct StructuralExperiencePriorSurfaceArtifact {
     pub scenario: Option<StructuralExperiencePriorEntry>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<StructuralExperiencePriorEntry>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralSourceReliabilityEmReadiness {
+    pub ready: bool,
+    pub status: String,
+    pub candidate_item_count: usize,
+    pub labeled_item_count: usize,
+    pub multi_source_item_count: usize,
+    pub distinct_source_count: usize,
+    pub observed_label_count: usize,
+    pub max_sources_per_item: usize,
+    pub min_multi_source_items: usize,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -1491,6 +1507,7 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
     let node_temporal_state = structural_prior_state.node_temporal_posteriors.get(node_id);
     StructuralExperiencePriorSurfaceArtifact {
         symbol: structural_symbol(snapshot),
+        source_reliability_em: structural_source_reliability_em_readiness(structural_prior_state),
         node: Some(StructuralExperiencePriorEntry {
             entity_kind: "node".to_string(),
             entity_id: node_id.to_string(),
@@ -3460,6 +3477,84 @@ fn structural_source_confusion_concentration_multiplier(
     }
 }
 
+#[derive(Debug, Default)]
+struct StructuralSourceReliabilityEmItem {
+    sources: BTreeSet<String>,
+    observed_labels: usize,
+}
+
+fn structural_source_reliability_em_item_key(event: &crate::state::StructuralPriorEvent) -> String {
+    format!(
+        "{}|{}|{}|{}|{}|{}",
+        event.symbol,
+        event.recommendation_id,
+        event.node_id,
+        event.branch_id,
+        event.scenario_id,
+        event.path_id
+    )
+}
+
+fn structural_source_reliability_em_readiness(
+    structural_prior_state: &StructuralPriorLearningState,
+) -> StructuralSourceReliabilityEmReadiness {
+    let mut items = BTreeMap::<String, StructuralSourceReliabilityEmItem>::new();
+    let mut distinct_sources = BTreeSet::<String>::new();
+    let mut observed_label_count = 0;
+    for event in &structural_prior_state.event_ledger {
+        let source_label = event.source_label.trim();
+        if source_label.is_empty() {
+            continue;
+        }
+        let item = items
+            .entry(structural_source_reliability_em_item_key(event))
+            .or_default();
+        item.sources.insert(source_label.to_string());
+        distinct_sources.insert(source_label.to_string());
+        if let Some(outcome) = event.realized_outcome.as_deref() {
+            if !structural_feedback_outcome_is_unresolved(outcome) {
+                item.observed_labels += 1;
+                observed_label_count += 1;
+            }
+        }
+    }
+    let candidate_item_count = items.len();
+    let labeled_item_count = items
+        .values()
+        .filter(|item| item.observed_labels > 0)
+        .count();
+    let multi_source_item_count = items
+        .values()
+        .filter(|item| item.sources.len() >= 2 && item.observed_labels >= 2)
+        .count();
+    let max_sources_per_item = items
+        .values()
+        .map(|item| item.sources.len())
+        .max()
+        .unwrap_or_default();
+    let distinct_source_count = distinct_sources.len();
+    let ready = distinct_source_count >= 2
+        && multi_source_item_count >= STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS;
+    let status = if ready {
+        "ready"
+    } else if distinct_source_count < 2 {
+        "needs_multiple_sources"
+    } else {
+        "needs_multi_source_overlap"
+    };
+    StructuralSourceReliabilityEmReadiness {
+        ready,
+        status: status.to_string(),
+        candidate_item_count,
+        labeled_item_count,
+        multi_source_item_count,
+        distinct_source_count,
+        observed_label_count,
+        max_sources_per_item,
+        min_multi_source_items: STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS,
+    }
+}
+
 fn structural_resolved_observations(
     prior_stats: Option<&StructuralPriorStats>,
     fallback: usize,
@@ -5328,6 +5423,55 @@ mod tests {
             current_posterior: 0.7,
             structural_baseline_score: 0.4,
         }
+    }
+
+    fn source_em_event(
+        source_label: &str,
+        recommendation_id: &str,
+        realized_outcome: Option<&str>,
+    ) -> crate::state::StructuralPriorEvent {
+        crate::state::StructuralPriorEvent {
+            source_label: source_label.to_string(),
+            symbol: "NQ".to_string(),
+            recommendation_id: recommendation_id.to_string(),
+            recommended_at: "2026-05-02T00:00:00Z".to_string(),
+            node_id: "node-em".to_string(),
+            branch_id: "branch-em".to_string(),
+            scenario_id: "scenario-em".to_string(),
+            path_id: format!("path-{recommendation_id}"),
+            followed_path: true,
+            realized_outcome: realized_outcome.map(str::to_string),
+        }
+    }
+
+    #[test]
+    fn source_reliability_em_readiness_requires_multi_source_overlap() {
+        let mut state = StructuralPriorLearningState::default();
+        state.event_ledger.extend([
+            source_em_event("backtest", "rec-1", Some("win")),
+            source_em_event("live", "rec-1", Some("win")),
+            source_em_event("backtest", "rec-2", Some("loss")),
+            source_em_event("live", "rec-2", Some("invalidated")),
+            source_em_event("backtest", "rec-3", Some("breakeven")),
+            source_em_event("live", "rec-3", Some("win")),
+            source_em_event("backtest", "rec-4", Some("loss")),
+            source_em_event("live", "rec-4", Some("pending")),
+        ]);
+
+        let readiness = structural_source_reliability_em_readiness(&state);
+
+        assert!(readiness.ready);
+        assert_eq!(readiness.status, "ready");
+        assert_eq!(readiness.candidate_item_count, 4);
+        assert_eq!(readiness.labeled_item_count, 4);
+        assert_eq!(readiness.multi_source_item_count, 3);
+        assert_eq!(readiness.distinct_source_count, 2);
+        assert_eq!(readiness.observed_label_count, 7);
+        assert_eq!(readiness.max_sources_per_item, 2);
+        assert_eq!(
+            readiness.min_multi_source_items,
+            STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS
+        );
     }
 
     #[test]
