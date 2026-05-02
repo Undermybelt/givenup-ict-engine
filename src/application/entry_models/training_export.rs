@@ -692,7 +692,7 @@ pub fn policy_training_status(
         })
         .map(|provider| provider.status_surface(state_dir, symbol))
         .collect::<Result<Vec<_>>>()?;
-    let summary_line = if providers.iter().all(|provider| provider.ready) {
+    let provider_summary_line = if providers.iter().all(|provider| provider.ready) {
         format!(
             "all entry-model training modules ready: {}",
             providers
@@ -718,6 +718,11 @@ pub fn policy_training_status(
             pending.join(",")
         )
     };
+    let summary_line = format!(
+        "{} | {}",
+        provider_summary_line,
+        structural_path_ranking_target.summary_line
+    );
     Ok(PolicyTrainingStatusSurface {
         symbol: symbol.to_string(),
         analyze_runs: cisd_rb.analyze_runs,
@@ -819,6 +824,31 @@ pub fn structural_path_ranking_target_training_status(
             production_validation_min_rows, production_validation_rows
         ));
     }
+    let calibration_status = if !calibration_ready {
+        "not_fitted"
+    } else if !calibration_quality_ready {
+        "pending_eval"
+    } else {
+        "evaluated"
+    };
+    let trainer_status = if trainer_artifact_ready {
+        "ready"
+    } else if trainer_artifact_file_present {
+        "incomplete"
+    } else {
+        "missing"
+    };
+    let summary_line = format!(
+        "structural_path_ranking_target rows={} mature_rows={} raw_scored_mature={}/{} production_validation={}/{} calibration={} trainer_artifact={}",
+        summary.rows,
+        summary.mature_rows,
+        raw_scored_mature_rows,
+        raw_scored_mature_min_rows,
+        production_validation_rows,
+        production_validation_min_rows,
+        calibration_status,
+        trainer_status
+    );
     Ok(StructuralPathRankingTargetTrainingStatusSurface {
         export_ready: summary.rows > 0,
         calibration_ready,
@@ -885,7 +915,7 @@ pub fn structural_path_ranking_target_training_status(
         csv_path: Some(summary.csv_path),
         jsonl_path: Some(summary.jsonl_path),
         warnings,
-        summary_line: summary.summary_line,
+        summary_line,
     })
 }
 
@@ -1822,6 +1852,9 @@ mod tests {
             .structural_path_ranking_target
             .warnings
             .contains(&"structural_path_ranking_target_export_missing".to_string()));
+        assert!(status
+            .summary_line
+            .contains("structural path ranking target export missing"));
     }
 
     #[test]
@@ -1872,6 +1905,10 @@ mod tests {
             Some("structural-candidates:NQ:test")
         );
         assert_eq!(status.rows_with_propensity_estimate, 2);
+        assert!(status.summary_line.contains("raw_scored_mature=0/30"));
+        assert!(status.summary_line.contains("production_validation=0/30"));
+        assert!(status.summary_line.contains("calibration=not_fitted"));
+        assert!(status.summary_line.contains("trainer_artifact=missing"));
         assert!(!status.trainer_manifest_ready);
         assert_eq!(status.trainer_feature_columns, 0);
         assert_eq!(status.trainer_calibration_columns, 0);
@@ -2024,6 +2061,10 @@ mod tests {
         assert!(status.warnings.iter().any(|warning| warning.starts_with(
             "structural_path_ranking_target_production_validation_insufficient_rows"
         )));
+        assert!(status.summary_line.contains("raw_scored_mature=2/30"));
+        assert!(status.summary_line.contains("production_validation=2/30"));
+        assert!(status.summary_line.contains("calibration=evaluated"));
+        assert!(status.summary_line.contains("trainer_artifact=ready"));
         assert!(!status
             .warnings
             .contains(&"structural_path_ranking_target_trainer_manifest_incomplete".to_string()));
@@ -2101,6 +2142,12 @@ mod tests {
         assert_eq!(status.raw_scored_mature_shortfall_rows, 0);
         assert_eq!(status.production_validation_rows, row_count);
         assert_eq!(status.production_validation_shortfall_rows, 0);
+        assert!(status.summary_line.contains(&format!(
+            "raw_scored_mature={row_count}/{row_count}"
+        )));
+        assert!(status.summary_line.contains(&format!(
+            "production_validation={row_count}/{row_count}"
+        )));
         assert!(!status.warnings.iter().any(|warning| warning.starts_with(
             "structural_path_ranking_target_raw_scored_mature_rows_insufficient"
         )));
