@@ -114,7 +114,11 @@ use ict_engine::application::{
         normalize_trade_outcome_label, parse_research_objective, pre_bayes_gate_is_hard_pass,
         pre_bayes_gate_regressed, research_objective_label, ResearchObjectiveMode,
     },
-    entry_models::{build_entry_model_packet_store_for_analyze, policy_training_status_command},
+    entry_models::{
+        build_entry_model_packet_store_for_analyze,
+        policy_training_status_command,
+        register_structural_path_ranking_trainer_artifact_command,
+    },
     factor_lifecycle::build_factor_lifecycle_view,
     factor_lifecycle::{
         apply_expansion_manipulation_objective, expansion_factor_scores_for_market,
@@ -1315,6 +1319,43 @@ enum Commands {
             help = "Optional entry-model id filter. Available ids are listed in the command output."
         )]
         entry_model: Option<String>,
+    },
+    /// Register an explicit external structural path-ranker artifact into the policy_training contract.
+    RegisterStructuralPathRankingTrainerArtifact {
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
+        symbol: String,
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory containing policy_training artifacts"
+        )]
+        state_dir: String,
+        #[arg(
+            long,
+            help = "Explicit external trainer artifact URI or path to register; this is opt-in and never auto-loaded"
+        )]
+        artifact_uri: String,
+        #[arg(
+            long,
+            help = "External model family label, for example catboost or xgboost"
+        )]
+        model_family: String,
+        #[arg(
+            long,
+            default_value = "raw_path_score",
+            help = "Score column emitted by the external trainer artifact"
+        )]
+        score_column: String,
+        #[arg(
+            long,
+            help = "Optional override for the trained row count recorded in the artifact"
+        )]
+        trained_rows: Option<usize>,
+        #[arg(
+            long,
+            help = "Optional override for the calibration row count recorded in the artifact"
+        )]
+        calibration_rows: Option<usize>,
     },
     /// Show a global read-only catalog of providers grouped by domain.
     ProviderStatus {
@@ -2738,6 +2779,26 @@ fn main() -> Result<()> {
         } => {
             ensure_state_dir_ready(&state_dir)?;
             policy_training_status_command(&state_dir, &symbol, entry_model.as_deref())?
+        }
+        Commands::RegisterStructuralPathRankingTrainerArtifact {
+            symbol,
+            state_dir,
+            artifact_uri,
+            model_family,
+            score_column,
+            trained_rows,
+            calibration_rows,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            register_structural_path_ranking_trainer_artifact_command(
+                &state_dir,
+                &symbol,
+                &artifact_uri,
+                &model_family,
+                Some(score_column.as_str()),
+                trained_rows,
+                calibration_rows,
+            )?
         }
         Commands::ProviderStatus {
             domain,

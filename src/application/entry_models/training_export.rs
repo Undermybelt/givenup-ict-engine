@@ -1,4 +1,5 @@
 use anyhow::{bail, Result};
+use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::BTreeMap;
@@ -1030,6 +1031,110 @@ pub fn policy_training_status_command(
     provider_filter: Option<&str>,
 ) -> Result<()> {
     let surface = policy_training_status(state_dir, symbol, provider_filter)?;
+    println!("{}", serde_json::to_string_pretty(&surface)?);
+    Ok(())
+}
+
+fn register_structural_path_ranking_trainer_artifact(
+    state_dir: &str,
+    symbol: &str,
+    artifact_uri: &str,
+    model_family: &str,
+    score_column: Option<&str>,
+    trained_rows: Option<usize>,
+    calibration_rows: Option<usize>,
+) -> Result<(String, StructuralPathRankingTrainerArtifact)> {
+    let artifact_uri = artifact_uri.trim();
+    if artifact_uri.is_empty() {
+        bail!("artifact uri must not be empty");
+    }
+    let model_family = model_family.trim();
+    if model_family.is_empty() {
+        bail!("model family must not be empty");
+    }
+    let summary_path = Path::new(state_dir)
+        .join(symbol)
+        .join(POLICY_TRAINING_DIR)
+        .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE);
+    if !summary_path.exists() {
+        bail!(
+            "structural path ranking target export missing at {}; export target rows before registering an external trainer artifact",
+            summary_path.to_string_lossy()
+        );
+    }
+    let raw = fs::read_to_string(&summary_path)?;
+    let summary: StructuralPathRankingTargetExportSummary = serde_json::from_str(&raw)?;
+    if !structural_path_ranking_trainer_manifest_ready(&summary.trainer_manifest) {
+        bail!(
+            "structural path ranking trainer manifest incomplete at {}; export target rows with the current repo before registering an external trainer artifact",
+            summary_path.to_string_lossy()
+        );
+    }
+    let raw_scored_mature_rows =
+        structural_path_ranking_target_raw_scored_mature_rows(&summary.jsonl_path)?;
+    let artifact = StructuralPathRankingTrainerArtifact {
+        protocol_version: STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION.to_string(),
+        dataset_role: summary.trainer_manifest.dataset_role.clone(),
+        model_family: model_family.to_string(),
+        artifact_uri: artifact_uri.to_string(),
+        score_column: score_column
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+            .unwrap_or(summary.trainer_manifest.raw_score_column.as_str())
+            .to_string(),
+        trained_rows: trained_rows.unwrap_or_else(|| {
+            if summary.rows_with_training_weight > 0 {
+                summary.rows_with_training_weight
+            } else if summary.mature_rows > 0 {
+                summary.mature_rows
+            } else {
+                summary.rows
+            }
+        }),
+        calibration_rows: calibration_rows
+            .unwrap_or(raw_scored_mature_rows.max(summary.rows_with_calibrated_path_prob)),
+        feature_columns: summary.trainer_manifest.feature_columns.clone(),
+        created_at: Some(Utc::now().to_rfc3339()),
+        notes: vec![
+            "registered_via=explicit_external_artifact".to_string(),
+            "uri_source=cli_opt_in".to_string(),
+        ],
+    };
+    let artifact_filename =
+        format!("{POLICY_TRAINING_DIR}/{STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_FILE}");
+    save_text_state(
+        state_dir,
+        symbol,
+        &artifact_filename,
+        &serde_json::to_string_pretty(&artifact)?,
+    )?;
+    let artifact_path = Path::new(state_dir)
+        .join(symbol)
+        .join(&artifact_filename)
+        .to_string_lossy()
+        .to_string();
+    Ok((artifact_path, artifact))
+}
+
+pub fn register_structural_path_ranking_trainer_artifact_command(
+    state_dir: &str,
+    symbol: &str,
+    artifact_uri: &str,
+    model_family: &str,
+    score_column: Option<&str>,
+    trained_rows: Option<usize>,
+    calibration_rows: Option<usize>,
+) -> Result<()> {
+    register_structural_path_ranking_trainer_artifact(
+        state_dir,
+        symbol,
+        artifact_uri,
+        model_family,
+        score_column,
+        trained_rows,
+        calibration_rows,
+    )?;
+    let surface = structural_path_ranking_target_training_status(state_dir, symbol)?;
     println!("{}", serde_json::to_string_pretty(&surface)?);
     Ok(())
 }
@@ -2157,5 +2262,98 @@ mod tests {
         assert!(!status
             .warnings
             .contains(&"structural_path_ranking_target_trainer_manifest_incomplete".to_string()));
+    }
+
+    #[test]
+    fn register_structural_path_ranking_trainer_artifact_writes_ready_artifact() {
+        let temp = tempfile::tempdir().unwrap();
+        let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: "NQ".to_string(),
+            rows: 3,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 3,
+            mature_rows: 2,
+            rows_with_training_weight: 2,
+            rows_with_propensity_estimate: 2,
+            rows_with_calibrated_path_prob: 1,
+            rows_with_path_prob_lower_bound: 1,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            trainer_manifest: structural_path_ranking_trainer_manifest_for_test(),
+            summary_line: "structural_path_ranking_target rows=3".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        let jsonl = [
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-win",
+                0.8,
+                "matured_success",
+            ))
+            .unwrap(),
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-loss",
+                0.2,
+                "matured_failure",
+            ))
+            .unwrap(),
+            serde_json::to_string(&StructuralPathRankingTargetRow {
+                raw_path_score: None,
+                calibrated_path_prob: None,
+                path_prob_lower_bound: None,
+                training_weight: None,
+                calibrated_label: None,
+                pending_reward_state: "unobserved".to_string(),
+                maturity_mask: false,
+                maturity_weight: 0.0,
+                ..structural_path_ranking_row("path-pending", 0.4, "unobserved")
+            })
+            .unwrap(),
+        ]
+        .join("\n");
+        std::fs::write(&jsonl_path, format!("{jsonl}\n")).unwrap();
+
+        let (artifact_path, artifact) = register_structural_path_ranking_trainer_artifact(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            "s3://rankers/nq-path-ranker-v1.bin",
+            "catboost",
+            None,
+            None,
+            None,
+        )
+        .unwrap();
+
+        assert!(artifact_path.ends_with(STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_FILE));
+        assert_eq!(artifact.dataset_role, "external_path_ranker_training_dataset");
+        assert_eq!(artifact.model_family, "catboost");
+        assert_eq!(artifact.score_column, "raw_path_score");
+        assert_eq!(artifact.trained_rows, 2);
+        assert_eq!(artifact.calibration_rows, 2);
+        assert_eq!(artifact.feature_columns.len(), 2);
+
+        let status =
+            structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
+                .unwrap();
+        assert!(status.trainer_artifact_ready);
+        assert_eq!(status.trainer_artifact_model_family.as_deref(), Some("catboost"));
+        assert_eq!(status.trainer_artifact_trained_rows, 2);
+        assert_eq!(status.trainer_artifact_calibration_rows, 2);
+        assert!(status.trainer_artifact_uri_present);
+        assert!(status.summary_line.contains("trainer_artifact=ready"));
     }
 }
