@@ -562,6 +562,14 @@ pub struct StructuralPathRankingTargetRow {
     pub behavior_policy_probability: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub execution_propensity: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub target_policy_probability_confidence: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub target_policy_probability_lower_bound: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub target_policy_reward_prior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub target_policy_reward_lower_bound: Option<f64>,
     pub experience_prior: f64,
     pub current_posterior: f64,
     pub structural_baseline_score: f64,
@@ -2801,6 +2809,7 @@ pub fn build_structural_path_ranking_target_artifact_with_prior_state(
                 maturity_weight,
                 ips_weight,
             );
+            let prior_stats = structural_prior_state.paths.get(&path.path_id);
             StructuralPathRankingTargetRow {
                 rank: index + 1,
                 candidate_set_id: candidate_set_id.clone(),
@@ -2825,6 +2834,15 @@ pub fn build_structural_path_ranking_target_artifact_with_prior_state(
                 regime_calibration_bucket: regime_calibration_bucket.clone(),
                 behavior_policy_probability,
                 execution_propensity: path.execution_propensity,
+                target_policy_probability_confidence:
+                    structural_prior_target_policy_probability_confidence(prior_stats),
+                target_policy_probability_lower_bound:
+                    structural_prior_target_policy_probability_lower_bound(prior_stats),
+                target_policy_reward_prior: structural_prior_target_policy_reward_prior(
+                    prior_stats,
+                ),
+                target_policy_reward_lower_bound:
+                    structural_prior_target_policy_reward_lower_bound(prior_stats),
                 experience_prior: path.path_prior,
                 current_posterior: path.path_posterior,
                 structural_baseline_score: path.composite_preference_score,
@@ -3040,6 +3058,10 @@ fn structural_path_ranking_trainer_manifest() -> StructuralPathRankingTrainerMan
             "regime_calibration_bucket".to_string(),
             "behavior_policy_probability".to_string(),
             "execution_propensity".to_string(),
+            "target_policy_probability_confidence".to_string(),
+            "target_policy_probability_lower_bound".to_string(),
+            "target_policy_reward_prior".to_string(),
+            "target_policy_reward_lower_bound".to_string(),
             "experience_prior".to_string(),
             "current_posterior".to_string(),
             "structural_baseline_score".to_string(),
@@ -3347,7 +3369,7 @@ fn render_structural_path_ranking_target_csv(
     artifact: &StructuralPathRankingTargetArtifact,
 ) -> String {
     let mut out = String::from(
-        "protocol_version,symbol,generated_at,candidate_set_id,candidate_set_size,rank,path_id,scenario_id,path_label,direction,raw_path_score,calibrated_path_prob,path_prob_lower_bound,execution_gate_status,execution_gate_min_path_prob,execution_gate_reason,pending_reward_state,maturity_mask,maturity_weight,calibrated_label,propensity_estimate,ips_weight,training_weight,regime_calibration_bucket,behavior_policy_probability,execution_propensity,experience_prior,current_posterior,structural_baseline_score\n",
+        "protocol_version,symbol,generated_at,candidate_set_id,candidate_set_size,rank,path_id,scenario_id,path_label,direction,raw_path_score,calibrated_path_prob,path_prob_lower_bound,execution_gate_status,execution_gate_min_path_prob,execution_gate_reason,pending_reward_state,maturity_mask,maturity_weight,calibrated_label,propensity_estimate,ips_weight,training_weight,regime_calibration_bucket,behavior_policy_probability,execution_propensity,target_policy_probability_confidence,target_policy_probability_lower_bound,target_policy_reward_prior,target_policy_reward_lower_bound,experience_prior,current_posterior,structural_baseline_score\n",
     );
     for row in &artifact.rows {
         let fields = [
@@ -3377,6 +3399,10 @@ fn render_structural_path_ranking_target_csv(
             csv_escape(&row.regime_calibration_bucket),
             csv_f64(row.behavior_policy_probability),
             csv_optional_f64(row.execution_propensity),
+            csv_optional_f64(row.target_policy_probability_confidence),
+            csv_optional_f64(row.target_policy_probability_lower_bound),
+            csv_optional_f64(row.target_policy_reward_prior),
+            csv_optional_f64(row.target_policy_reward_lower_bound),
             csv_f64(row.experience_prior),
             csv_f64(row.current_posterior),
             csv_f64(row.structural_baseline_score),
@@ -6904,6 +6930,10 @@ mod tests {
             regime_calibration_bucket: "NQ:trend".to_string(),
             behavior_policy_probability: 0.33,
             execution_propensity: Some(0.6),
+            target_policy_probability_confidence: Some(0.55),
+            target_policy_probability_lower_bound: Some(0.30),
+            target_policy_reward_prior: Some(0.58),
+            target_policy_reward_lower_bound: Some(0.28),
             experience_prior: 0.5,
             current_posterior: 0.7,
             structural_baseline_score: 0.4,

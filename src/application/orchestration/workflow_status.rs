@@ -6931,6 +6931,10 @@ mod tests {
             crate::state::StructuralPriorStats {
                 smoothed_prior: 0.62,
                 execution_propensity: 0.6,
+                target_policy_probability_confidence: 0.57,
+                target_policy_probability_lower_bound: 0.31,
+                target_policy_reward_prior: 0.58,
+                target_policy_reward_lower_bound: 0.29,
                 ..crate::state::StructuralPriorStats::default()
             },
         );
@@ -6968,6 +6972,10 @@ mod tests {
                 .abs()
                 < 1e-9
         );
+        assert_eq!(first["target_policy_probability_confidence"], 0.57);
+        assert_eq!(first["target_policy_probability_lower_bound"], 0.31);
+        assert_eq!(first["target_policy_reward_prior"], 0.58);
+        assert_eq!(first["target_policy_reward_lower_bound"], 0.29);
         assert!(first["ips_weight"].as_f64().unwrap() > 0.0);
         assert!(first["training_weight"].as_f64().unwrap() > 0.0);
 
@@ -7005,6 +7013,10 @@ mod tests {
         assert_eq!(summary.trainer_manifest.group_id_column, "candidate_set_id");
         assert_eq!(summary.trainer_manifest.label_column, "calibrated_label");
         assert_eq!(summary.trainer_manifest.weight_column, "training_weight");
+        assert!(summary
+            .trainer_manifest
+            .feature_columns
+            .contains(&"target_policy_reward_prior".to_string()));
         assert_eq!(summary.candidate_set_id, value["candidate_set_id"]);
         assert_eq!(summary.pending_reward_states["matured_invalidated"], 1);
         assert!(std::path::Path::new(&summary.csv_path).exists());
@@ -7020,11 +7032,14 @@ mod tests {
         assert!(csv.contains("ips_weight"));
         assert!(csv.contains("training_weight"));
         assert!(csv.contains("propensity_estimate"));
+        assert!(csv.contains("target_policy_probability_confidence"));
+        assert!(csv.contains("target_policy_reward_lower_bound"));
         let jsonl = std::fs::read_to_string(&summary.jsonl_path).unwrap();
         assert!(jsonl.contains("\"pending_reward_state\":\"matured_invalidated\""));
         assert!(jsonl.contains("\"maturity_mask\":true"));
         assert!(jsonl.contains("\"maturity_weight\":1.0"));
         assert!(jsonl.contains("\"calibrated_label\":0.0"));
+        assert!(jsonl.contains("\"target_policy_reward_prior\":0.58"));
     }
 
     #[test]
