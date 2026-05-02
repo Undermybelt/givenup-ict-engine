@@ -59,12 +59,12 @@ Already in repo
 - `event_ledger`
 - `node_duration_priors`
 - `branch_transition_priors`
-- duration `expected_dwell_steps`, `remaining_dwell_steps`, empirical dwell distribution, fitted completion hazard, and `sticky_self_transition_strength`
-- `structural-temporal-summary` exposes compact duration-distribution entropy, survival, completion-hazard, and BOCPD-style break/continue telemetry without dumping the full histogram
+- duration `expected_dwell_steps`, `remaining_dwell_steps`, empirical dwell distribution, fitted completion hazard, BOCPD evidence weight/raw break probability, and `sticky_self_transition_strength`
+- `structural-temporal-summary` exposes compact duration-distribution entropy, survival, completion-hazard, BOCPD evidence-weight, raw break, and calibrated break/continue telemetry without dumping the full histogram
 - panel-derived prior reconstruction before structural display / ranking surfaces
 
 Literature mechanisms still worth importing
-- richer BOCPD calibration beyond the current compact duration-surprise and break/continue probabilities
+- richer BOCPD posterior calibration beyond the current compact duration-surprise and evidence-weighted break/continue probabilities
 - source-panel posterior aggregation written as explicit panel likelihood / prior math, not only weighted summary blending
 - clearer node-level prior mass separation from branch/path-level prior mass
 
@@ -76,7 +76,7 @@ Suggested state fields
 - `last_offline_seed_snapshot`
 
 Current repo gap
-- `node_duration_priors` and `branch_transition_priors` are real; duration state now carries expected dwell, remaining dwell, empirical dwell distribution, completion hazard, BOCPD-style break/continue probability, break hazard, and sticky self-transition strength; `node_prior_mass` / `branch_prior_mass` / `scenario_prior_mass` / `path_prior_mass` keep entity-scaled prior mass auditable outside the generic stats maps
+- `node_duration_priors` and `branch_transition_priors` are real; duration state now carries expected dwell, remaining dwell, empirical dwell distribution, completion hazard, BOCPD evidence weight, raw/calibrated break probability, break hazard, and sticky self-transition strength; `node_prior_mass` / `branch_prior_mass` / `scenario_prior_mass` / `path_prior_mass` keep entity-scaled prior mass auditable outside the generic stats maps
 - `last_offline_seed_snapshot` is formalized as a persistent theory object for the latest offline seed, but deeper snapshot history / recalibration policy remains future work
 
 Upgrade path
@@ -326,6 +326,6 @@ Use this summary when deciding the next coding slice:
 
 The repo is no longer blocked on surface drift. The highest-value remaining work is now:
 1. full Dawid-Skene / EM-style source reliability learning on top of the compact outcome-confusion cells once the readiness surface shows enough cross-source labels
-2. richer BOCPD calibration on top of the current HSMM-style empirical dwell distribution and compact break/continue telemetry
+2. richer BOCPD posterior calibration on top of the current HSMM-style empirical dwell distribution and compact evidence-weighted break/continue telemetry
 3. full target-policy probability calibration and maturity/censoring beyond the current clipped IPS / SNIPS / DR plus ESS-weighted reward and variance diagnostics
 4. CatBoost training and production validation on top of exported P6 target rows once raw-scored history exists

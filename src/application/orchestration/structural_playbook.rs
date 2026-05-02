@@ -221,6 +221,10 @@ pub struct StructuralTemporalSummaryArtifact {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bocpd_duration_surprise: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bocpd_evidence_weight: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bocpd_raw_break_probability: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bocpd_break_probability: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bocpd_continue_probability: Option<f64>,
@@ -1711,6 +1715,10 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
         empirical_duration_completion_hazard:
             structural_duration_empirical_completion_hazard(node_duration_prior),
         bocpd_duration_surprise: structural_duration_bocpd_surprise(node_duration_prior),
+        bocpd_evidence_weight: structural_duration_bocpd_evidence_weight(node_duration_prior),
+        bocpd_raw_break_probability: structural_duration_bocpd_raw_break_probability(
+            node_duration_prior,
+        ),
         bocpd_break_probability: structural_duration_bocpd_break_probability(node_duration_prior),
         bocpd_continue_probability: structural_duration_bocpd_continue_probability(
             node_duration_prior,
@@ -4315,6 +4323,18 @@ fn structural_duration_bocpd_surprise(
     duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
 ) -> Option<f64> {
     structural_duration_positive_value(duration_prior, |prior| prior.bocpd_duration_surprise)
+}
+
+fn structural_duration_bocpd_evidence_weight(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    structural_duration_positive_value(duration_prior, |prior| prior.bocpd_evidence_weight)
+}
+
+fn structural_duration_bocpd_raw_break_probability(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    structural_duration_positive_value(duration_prior, |prior| prior.bocpd_raw_break_probability)
 }
 
 fn structural_duration_bocpd_break_probability(

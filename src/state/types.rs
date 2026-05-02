@@ -416,6 +416,10 @@ pub struct StructuralNodeDurationPrior {
     #[serde(default)]
     pub bocpd_duration_surprise: f64,
     #[serde(default)]
+    pub bocpd_evidence_weight: f64,
+    #[serde(default)]
+    pub bocpd_raw_break_probability: f64,
+    #[serde(default)]
     pub bocpd_break_probability: f64,
     #[serde(default)]
     pub bocpd_continue_probability: f64,
@@ -5402,11 +5406,16 @@ fn rebuild_discounted_node_duration_priors(
         prior.duration_outcome_support = (alpha / (alpha + beta)).clamp(0.0, 1.0);
         prior.bocpd_duration_surprise =
             structural_duration_surprise(prior.empirical_duration_survival);
-        prior.bocpd_break_probability = structural_bocpd_break_probability(
+        prior.bocpd_evidence_weight = fit_weight;
+        prior.bocpd_raw_break_probability = structural_bocpd_break_probability(
             prior.empirical_duration_completion_hazard,
             prior.bocpd_duration_surprise,
             prior.duration_outcome_support,
         );
+        prior.bocpd_break_probability = ((1.0 - prior.bocpd_evidence_weight)
+            * parametric_break_hazard
+            + prior.bocpd_evidence_weight * prior.bocpd_raw_break_probability)
+            .clamp(0.0, 1.0);
         prior.bocpd_continue_probability = (1.0 - prior.bocpd_break_probability).clamp(0.0, 1.0);
         prior.sticky_self_transition_strength = ((1.0 - prior.break_hazard) * 0.7
             + prior.duration_outcome_support * 0.3)
@@ -6716,6 +6725,18 @@ mod tests {
         assert!(trend.duration_distribution_entropy > 0.0);
         assert!((trend.empirical_duration_survival - 1.0).abs() < 1e-9);
         assert!((trend.empirical_duration_completion_hazard - (1.0 / 1.85)).abs() < 1e-9);
+        assert!(trend.bocpd_evidence_weight > 0.0);
+        assert!(trend.bocpd_evidence_weight < 1.0);
+        assert!(trend.bocpd_raw_break_probability > 0.0);
+        let parametric_break_hazard =
+            structural_duration_break_hazard(trend.last_streak_length, trend.expected_dwell_steps);
+        assert!(
+            (trend.bocpd_break_probability
+                - ((1.0 - trend.bocpd_evidence_weight) * parametric_break_hazard
+                    + trend.bocpd_evidence_weight * trend.bocpd_raw_break_probability))
+                .abs()
+                < 1e-9
+        );
         assert!(trend.bocpd_break_probability > 0.0);
         assert!((trend.bocpd_continue_probability - (1.0 - trend.bocpd_break_probability)).abs() < 1e-9);
         assert!(trend.sticky_self_transition_strength > 0.0);
