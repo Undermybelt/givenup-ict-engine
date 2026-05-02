@@ -32,6 +32,10 @@ pub const CISD_RB_TRAINING_SUMMARY_FILE: &str = "cisd_rb_training_export_summary
 pub const BREAKER_RB_BBN_TRAINING_FILE: &str = "breaker_rb_bbn_training.csv";
 pub const BREAKER_RB_CATBOOST_TRAINING_FILE: &str = "breaker_rb_catboost_training.csv";
 pub const BREAKER_RB_TRAINING_SUMMARY_FILE: &str = "breaker_rb_training_export_summary.json";
+pub const STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_FILE: &str =
+    "structural_path_ranking_trainer_artifact.json";
+const STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION: &str =
+    "structural-path-ranking-trainer-artifact-v1";
 const STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS: usize = 30;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
@@ -253,6 +257,26 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub trainer_calibration_columns: usize,
     #[serde(default)]
     pub trainer_guardrail_columns: usize,
+    #[serde(default)]
+    pub trainer_artifact_ready: bool,
+    #[serde(default)]
+    pub trainer_artifact_path: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub trainer_artifact_protocol_version: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub trainer_artifact_dataset_role: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub trainer_artifact_model_family: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub trainer_artifact_score_column: Option<String>,
+    #[serde(default)]
+    pub trainer_artifact_trained_rows: usize,
+    #[serde(default)]
+    pub trainer_artifact_calibration_rows: usize,
+    #[serde(default)]
+    pub trainer_artifact_feature_columns: usize,
+    #[serde(default)]
+    pub trainer_artifact_uri_present: bool,
     pub rows: usize,
     pub candidate_set_id: Option<String>,
     pub candidate_set_size: usize,
@@ -287,6 +311,30 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub jsonl_path: Option<String>,
     pub warnings: Vec<String>,
     pub summary_line: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankingTrainerArtifact {
+    #[serde(default)]
+    pub protocol_version: String,
+    #[serde(default)]
+    pub dataset_role: String,
+    #[serde(default)]
+    pub model_family: String,
+    #[serde(default)]
+    pub artifact_uri: String,
+    #[serde(default)]
+    pub score_column: String,
+    #[serde(default)]
+    pub trained_rows: usize,
+    #[serde(default)]
+    pub calibration_rows: usize,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub feature_columns: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub created_at: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub notes: Vec<String>,
 }
 
 #[derive(Debug, Clone, Copy, Default)]
@@ -694,6 +742,20 @@ pub fn structural_path_ranking_target_training_status(
         summary.rows_with_calibrated_path_prob > 0 && summary.rows_with_path_prob_lower_bound > 0;
     let trainer_manifest = &summary.trainer_manifest;
     let trainer_manifest_ready = structural_path_ranking_trainer_manifest_ready(trainer_manifest);
+    let trainer_artifact_path = summary_path
+        .parent()
+        .map(|parent| parent.join(STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_FILE))
+        .unwrap_or_else(|| {
+            Path::new(state_dir)
+                .join(symbol)
+                .join(POLICY_TRAINING_DIR)
+                .join(STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_FILE)
+        });
+    let (trainer_artifact, trainer_artifact_file_present, trainer_artifact_warning) =
+        structural_path_ranking_trainer_artifact(&trainer_artifact_path);
+    let trainer_artifact_ready = trainer_artifact.as_ref().is_some_and(|artifact| {
+        structural_path_ranking_trainer_artifact_ready(artifact, trainer_manifest)
+    });
     let calibration_evaluation =
         structural_path_ranking_target_calibration_evaluation(&summary.jsonl_path)?;
     let calibration_quality_ready = calibration_evaluation.status == "evaluated";
@@ -717,6 +779,16 @@ pub fn structural_path_ranking_target_training_status(
     if !trainer_manifest_ready {
         warnings.push("structural_path_ranking_target_trainer_manifest_incomplete".to_string());
     }
+    if let Some(warning) = trainer_artifact_warning {
+        warnings.push(warning);
+    }
+    if !trainer_artifact_ready {
+        if trainer_artifact_file_present {
+            warnings.push("structural_path_ranking_target_trainer_artifact_incomplete".to_string());
+        } else {
+            warnings.push("structural_path_ranking_target_trainer_artifact_missing".to_string());
+        }
+    }
     if !calibration_quality_ready {
         warnings.extend(calibration_evaluation.warnings.clone());
     }
@@ -736,6 +808,36 @@ pub fn structural_path_ranking_target_training_status(
         trainer_feature_columns: trainer_manifest.feature_columns.len(),
         trainer_calibration_columns: trainer_manifest.calibration_columns.len(),
         trainer_guardrail_columns: trainer_manifest.guardrail_columns.len(),
+        trainer_artifact_ready,
+        trainer_artifact_path: trainer_artifact_path.to_string_lossy().to_string(),
+        trainer_artifact_protocol_version: trainer_artifact
+            .as_ref()
+            .and_then(|artifact| non_empty_string(&artifact.protocol_version)),
+        trainer_artifact_dataset_role: trainer_artifact
+            .as_ref()
+            .and_then(|artifact| non_empty_string(&artifact.dataset_role)),
+        trainer_artifact_model_family: trainer_artifact
+            .as_ref()
+            .and_then(|artifact| non_empty_string(&artifact.model_family)),
+        trainer_artifact_score_column: trainer_artifact
+            .as_ref()
+            .and_then(|artifact| non_empty_string(&artifact.score_column)),
+        trainer_artifact_trained_rows: trainer_artifact
+            .as_ref()
+            .map(|artifact| artifact.trained_rows)
+            .unwrap_or_default(),
+        trainer_artifact_calibration_rows: trainer_artifact
+            .as_ref()
+            .map(|artifact| artifact.calibration_rows)
+            .unwrap_or_default(),
+        trainer_artifact_feature_columns: trainer_artifact
+            .as_ref()
+            .map(|artifact| artifact.feature_columns.len())
+            .unwrap_or_default(),
+        trainer_artifact_uri_present: trainer_artifact
+            .as_ref()
+            .and_then(|artifact| non_empty_string(&artifact.artifact_uri))
+            .is_some(),
         rows: summary.rows,
         candidate_set_id: Some(summary.candidate_set_id),
         candidate_set_size: summary.candidate_set_size,
@@ -784,6 +886,49 @@ fn structural_path_ranking_trainer_manifest_ready(
         && !manifest.feature_columns.is_empty()
         && !manifest.calibration_columns.is_empty()
         && !manifest.guardrail_columns.is_empty()
+}
+
+fn structural_path_ranking_trainer_artifact(
+    artifact_path: &Path,
+) -> (
+    Option<StructuralPathRankingTrainerArtifact>,
+    bool,
+    Option<String>,
+) {
+    if !artifact_path.exists() {
+        return (None, false, None);
+    }
+    let raw = match fs::read_to_string(artifact_path) {
+        Ok(raw) => raw,
+        Err(_) => {
+            return (
+                None,
+                true,
+                Some("structural_path_ranking_target_trainer_artifact_unreadable".to_string()),
+            );
+        }
+    };
+    match serde_json::from_str::<StructuralPathRankingTrainerArtifact>(&raw) {
+        Ok(artifact) => (Some(artifact), true, None),
+        Err(_) => (
+            None,
+            true,
+            Some("structural_path_ranking_target_trainer_artifact_invalid_json".to_string()),
+        ),
+    }
+}
+
+fn structural_path_ranking_trainer_artifact_ready(
+    artifact: &StructuralPathRankingTrainerArtifact,
+    manifest: &StructuralPathRankingTrainerManifest,
+) -> bool {
+    artifact.protocol_version.trim() == STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION
+        && artifact.dataset_role.trim() == manifest.dataset_role.trim()
+        && !artifact.model_family.trim().is_empty()
+        && !artifact.artifact_uri.trim().is_empty()
+        && !artifact.score_column.trim().is_empty()
+        && artifact.trained_rows > 0
+        && !artifact.feature_columns.is_empty()
 }
 
 fn structural_path_ranking_target_calibration_evaluation(
@@ -1504,6 +1649,21 @@ mod tests {
         }
     }
 
+    fn structural_path_ranking_trainer_artifact_for_test() -> StructuralPathRankingTrainerArtifact {
+        StructuralPathRankingTrainerArtifact {
+            protocol_version: STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION.to_string(),
+            dataset_role: "external_path_ranker_training_dataset".to_string(),
+            model_family: "catboost".to_string(),
+            artifact_uri: "/opt/external/path-ranker/model.cbm".to_string(),
+            score_column: "raw_path_score".to_string(),
+            trained_rows: 42,
+            calibration_rows: 12,
+            feature_columns: vec!["rank".to_string(), "raw_path_score".to_string()],
+            created_at: Some("2026-05-02T00:00:00Z".to_string()),
+            notes: Vec::new(),
+        }
+    }
+
     #[test]
     fn exports_training_tables_from_matched_histories() {
         let temp = tempfile::tempdir().unwrap();
@@ -1671,12 +1831,21 @@ mod tests {
         assert_eq!(status.trainer_feature_columns, 0);
         assert_eq!(status.trainer_calibration_columns, 0);
         assert_eq!(status.trainer_guardrail_columns, 0);
+        assert!(!status.trainer_artifact_ready);
+        assert!(status
+            .trainer_artifact_path
+            .ends_with(STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_FILE));
+        assert_eq!(status.trainer_artifact_trained_rows, 0);
+        assert!(!status.trainer_artifact_uri_present);
         assert!(status
             .warnings
             .contains(&"structural_path_ranking_target_calibration_not_fitted".to_string()));
         assert!(status
             .warnings
             .contains(&"structural_path_ranking_target_trainer_manifest_incomplete".to_string()));
+        assert!(status
+            .warnings
+            .contains(&"structural_path_ranking_target_trainer_artifact_missing".to_string()));
     }
 
     #[test]
@@ -1712,6 +1881,12 @@ mod tests {
         std::fs::write(
             summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
             serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_FILE),
+            serde_json::to_string_pretty(&structural_path_ranking_trainer_artifact_for_test())
+                .unwrap(),
         )
         .unwrap();
         let jsonl = [
@@ -1759,6 +1934,27 @@ mod tests {
         assert_eq!(status.trainer_feature_columns, 2);
         assert_eq!(status.trainer_calibration_columns, 1);
         assert_eq!(status.trainer_guardrail_columns, 1);
+        assert!(status.trainer_artifact_ready);
+        assert_eq!(
+            status.trainer_artifact_protocol_version.as_deref(),
+            Some(STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION)
+        );
+        assert_eq!(
+            status.trainer_artifact_dataset_role.as_deref(),
+            Some("external_path_ranker_training_dataset")
+        );
+        assert_eq!(
+            status.trainer_artifact_model_family.as_deref(),
+            Some("catboost")
+        );
+        assert_eq!(
+            status.trainer_artifact_score_column.as_deref(),
+            Some("raw_path_score")
+        );
+        assert_eq!(status.trainer_artifact_trained_rows, 42);
+        assert_eq!(status.trainer_artifact_calibration_rows, 12);
+        assert_eq!(status.trainer_artifact_feature_columns, 2);
+        assert!(status.trainer_artifact_uri_present);
         assert_eq!(status.calibration_evaluation_rows, 2);
         assert_eq!(status.calibration_propensity_weighted_rows, 2);
         assert!((status.calibration_brier_score.unwrap() - 0.04).abs() < 1e-9);
@@ -1770,6 +1966,12 @@ mod tests {
         assert!(!status
             .warnings
             .contains(&"structural_path_ranking_target_trainer_manifest_incomplete".to_string()));
+        assert!(!status
+            .warnings
+            .contains(&"structural_path_ranking_target_trainer_artifact_missing".to_string()));
+        assert!(!status
+            .warnings
+            .contains(&"structural_path_ranking_target_trainer_artifact_incomplete".to_string()));
     }
 
     #[test]
