@@ -5491,6 +5491,10 @@ mod tests {
                 snips_reward_prior: 0.6,
                 doubly_robust_reward_mass: 1.23,
                 doubly_robust_reward_prior: 0.6,
+                target_policy_calibration_weight: 0.6666666667,
+                target_policy_reward_prior: 0.5827956989,
+                target_policy_variance_penalty: 0.284676,
+                target_policy_reward_lower_bound: 0.2981196989,
                 source_panel_summaries: std::collections::BTreeMap::from([
                     (
                         "analyze".to_string(),
@@ -5623,6 +5627,16 @@ mod tests {
         assert_eq!(value["path"]["snips_effective_sample_size"], 2.0);
         assert_eq!(value["path"]["snips_reward_prior"], 0.6);
         assert_eq!(value["path"]["doubly_robust_reward_prior"], 0.6);
+        assert_eq!(
+            value["path"]["target_policy_calibration_weight"],
+            0.6666666667
+        );
+        assert_eq!(value["path"]["target_policy_reward_prior"], 0.5827956989);
+        assert_eq!(value["path"]["target_policy_variance_penalty"], 0.284676);
+        assert_eq!(
+            value["path"]["target_policy_reward_lower_bound"],
+            0.2981196989
+        );
         assert_eq!(value["node"]["duration_streak_count"], 2);
         assert_eq!(value["node"]["duration_avg_streak_length"], 1.5);
         assert_eq!(value["node"]["duration_persistence_prior"], 0.6);

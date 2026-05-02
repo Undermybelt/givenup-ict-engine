@@ -146,6 +146,14 @@ pub struct StructuralPriorStats {
     #[serde(default)]
     pub doubly_robust_reward_prior: f64,
     #[serde(default)]
+    pub target_policy_calibration_weight: f64,
+    #[serde(default)]
+    pub target_policy_reward_prior: f64,
+    #[serde(default)]
+    pub target_policy_variance_penalty: f64,
+    #[serde(default)]
+    pub target_policy_reward_lower_bound: f64,
+    #[serde(default)]
     pub source_panel_summaries: BTreeMap<String, StructuralPriorSourceSummary>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_offline_seed_source: Option<String>,
@@ -172,6 +180,14 @@ pub struct StructuralPriorMassSnapshot {
     pub snips_reward_prior: f64,
     #[serde(default)]
     pub doubly_robust_reward_prior: f64,
+    #[serde(default)]
+    pub target_policy_calibration_weight: f64,
+    #[serde(default)]
+    pub target_policy_reward_prior: f64,
+    #[serde(default)]
+    pub target_policy_variance_penalty: f64,
+    #[serde(default)]
+    pub target_policy_reward_lower_bound: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_offline_seed_source: Option<String>,
 }
@@ -247,6 +263,14 @@ pub struct StructuralPriorSourceSummary {
     pub doubly_robust_reward_mass: f64,
     #[serde(default)]
     pub doubly_robust_reward_prior: f64,
+    #[serde(default)]
+    pub target_policy_calibration_weight: f64,
+    #[serde(default)]
+    pub target_policy_reward_prior: f64,
+    #[serde(default)]
+    pub target_policy_variance_penalty: f64,
+    #[serde(default)]
+    pub target_policy_reward_lower_bound: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_tempering_coefficient: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -3926,6 +3950,10 @@ fn structural_prior_mass_snapshot(
         behavior_policy_probability: stats.behavior_policy_probability,
         snips_reward_prior: stats.snips_reward_prior,
         doubly_robust_reward_prior: stats.doubly_robust_reward_prior,
+        target_policy_calibration_weight: stats.target_policy_calibration_weight,
+        target_policy_reward_prior: stats.target_policy_reward_prior,
+        target_policy_variance_penalty: stats.target_policy_variance_penalty,
+        target_policy_reward_lower_bound: stats.target_policy_reward_lower_bound,
         last_offline_seed_source: stats.last_offline_seed_source.clone(),
     }
 }
@@ -4324,6 +4352,42 @@ fn structural_snips_effective_sample_size(
     }
 }
 
+fn structural_target_policy_calibration_weight(snips_effective_sample_size: f64) -> f64 {
+    let effective_sample_size = snips_effective_sample_size.max(0.0);
+    if effective_sample_size <= f64::EPSILON {
+        0.0
+    } else {
+        (effective_sample_size / (1.0 + effective_sample_size)).clamp(0.0, 1.0)
+    }
+}
+
+fn structural_target_policy_variance_penalty(
+    reward_prior: f64,
+    snips_effective_sample_size: f64,
+) -> f64 {
+    if snips_effective_sample_size <= f64::EPSILON {
+        return 0.0;
+    }
+    let reward_prior = reward_prior.clamp(0.0, 1.0);
+    ((reward_prior * (1.0 - reward_prior)) / (1.0 + snips_effective_sample_size))
+        .sqrt()
+        .clamp(0.0, 1.0)
+}
+
+fn structural_target_policy_reward_prior(
+    smoothed_prior: f64,
+    doubly_robust_reward_prior: f64,
+    target_policy_calibration_weight: f64,
+) -> f64 {
+    if target_policy_calibration_weight <= f64::EPSILON {
+        0.0
+    } else {
+        ((doubly_robust_reward_prior.clamp(0.0, 1.0) * target_policy_calibration_weight)
+            + (smoothed_prior.clamp(0.0, 1.0) * (1.0 - target_policy_calibration_weight)))
+            .clamp(0.0, 1.0)
+    }
+}
+
 fn structural_beta_mean(success_mass: f64, failure_mass: f64) -> f64 {
     let alpha = 1.0 + success_mass.max(0.0);
     let beta = 1.0 + failure_mass.max(0.0);
@@ -4374,6 +4438,19 @@ fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
         } else {
             0.0
         };
+    stats.target_policy_calibration_weight =
+        structural_target_policy_calibration_weight(stats.snips_effective_sample_size);
+    stats.target_policy_reward_prior = structural_target_policy_reward_prior(
+        stats.smoothed_prior,
+        stats.doubly_robust_reward_prior,
+        stats.target_policy_calibration_weight,
+    );
+    stats.target_policy_variance_penalty = structural_target_policy_variance_penalty(
+        stats.target_policy_reward_prior,
+        stats.snips_effective_sample_size,
+    );
+    stats.target_policy_reward_lower_bound =
+        (stats.target_policy_reward_prior - stats.target_policy_variance_penalty).clamp(0.0, 1.0);
 }
 
 fn update_structural_prior_source_summary_from_feedback(
@@ -4543,6 +4620,20 @@ fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSu
         } else {
             0.0
         };
+    summary.target_policy_calibration_weight =
+        structural_target_policy_calibration_weight(summary.snips_effective_sample_size);
+    summary.target_policy_reward_prior = structural_target_policy_reward_prior(
+        summary.smoothed_prior,
+        summary.doubly_robust_reward_prior,
+        summary.target_policy_calibration_weight,
+    );
+    summary.target_policy_variance_penalty = structural_target_policy_variance_penalty(
+        summary.target_policy_reward_prior,
+        summary.snips_effective_sample_size,
+    );
+    summary.target_policy_reward_lower_bound =
+        (summary.target_policy_reward_prior - summary.target_policy_variance_penalty)
+            .clamp(0.0, 1.0);
 }
 
 fn update_structural_source_reliability_from_feedback(
@@ -6115,6 +6206,22 @@ mod tests {
         assert!((path.snips_reward_prior - (1.0 / 3.0)).abs() < 1e-9);
         assert!((path.doubly_robust_reward_mass - 1.0).abs() < 1e-9);
         assert!((path.doubly_robust_reward_prior - 0.5).abs() < 1e-9);
+        let expected_target_policy_weight = 1.8 / 2.8;
+        let expected_target_policy_variance_penalty = (0.25_f64 / 2.8).sqrt();
+        assert!(
+            (path.target_policy_calibration_weight - expected_target_policy_weight).abs() < 1e-9
+        );
+        assert!((path.target_policy_reward_prior - 0.5).abs() < 1e-9);
+        assert!(
+            (path.target_policy_variance_penalty - expected_target_policy_variance_penalty).abs()
+                < 1e-9
+        );
+        assert!(
+            (path.target_policy_reward_lower_bound
+                - (0.5 - expected_target_policy_variance_penalty))
+                .abs()
+                < 1e-9
+        );
         let source_summary = path
             .source_panel_summaries
             .get("structural_feedback_submission")
@@ -6124,6 +6231,23 @@ mod tests {
         assert!((source_summary.snips_effective_sample_size - 1.8).abs() < 1e-9);
         assert!((source_summary.snips_reward_prior - (1.0 / 3.0)).abs() < 1e-9);
         assert!((source_summary.doubly_robust_reward_prior - 0.5).abs() < 1e-9);
+        assert!(
+            (source_summary.target_policy_calibration_weight - expected_target_policy_weight).abs()
+                < 1e-9
+        );
+        assert!((source_summary.target_policy_reward_prior - 0.5).abs() < 1e-9);
+        assert!(
+            (source_summary.target_policy_variance_penalty
+                - expected_target_policy_variance_penalty)
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (source_summary.target_policy_reward_lower_bound
+                - (0.5 - expected_target_policy_variance_penalty))
+                .abs()
+                < 1e-9
+        );
     }
 
     #[test]

@@ -511,6 +511,14 @@ pub struct StructuralExperiencePriorEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub doubly_robust_reward_prior: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub target_policy_calibration_weight: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub target_policy_reward_prior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub target_policy_variance_penalty: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub target_policy_reward_lower_bound: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_streak_count: Option<usize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_avg_streak_length: Option<f64>,
@@ -1135,6 +1143,15 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                     prior_stats,
                 ),
+                target_policy_calibration_weight:
+                    structural_prior_target_policy_calibration_weight(prior_stats),
+                target_policy_reward_prior: structural_prior_target_policy_reward_prior(
+                    prior_stats,
+                ),
+                target_policy_variance_penalty:
+                    structural_prior_target_policy_variance_penalty(prior_stats),
+                target_policy_reward_lower_bound:
+                    structural_prior_target_policy_reward_lower_bound(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1188,6 +1205,15 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                             prior_stats,
                         ),
+                        target_policy_calibration_weight:
+                            structural_prior_target_policy_calibration_weight(prior_stats),
+                        target_policy_reward_prior: structural_prior_target_policy_reward_prior(
+                            prior_stats,
+                        ),
+                        target_policy_variance_penalty:
+                            structural_prior_target_policy_variance_penalty(prior_stats),
+                        target_policy_reward_lower_bound:
+                            structural_prior_target_policy_reward_lower_bound(prior_stats),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1246,6 +1272,15 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                     prior_stats,
                 ),
+                target_policy_calibration_weight:
+                    structural_prior_target_policy_calibration_weight(prior_stats),
+                target_policy_reward_prior: structural_prior_target_policy_reward_prior(
+                    prior_stats,
+                ),
+                target_policy_variance_penalty:
+                    structural_prior_target_policy_variance_penalty(prior_stats),
+                target_policy_reward_lower_bound:
+                    structural_prior_target_policy_reward_lower_bound(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1298,6 +1333,15 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                             prior_stats,
                         ),
+                        target_policy_calibration_weight:
+                            structural_prior_target_policy_calibration_weight(prior_stats),
+                        target_policy_reward_prior: structural_prior_target_policy_reward_prior(
+                            prior_stats,
+                        ),
+                        target_policy_variance_penalty:
+                            structural_prior_target_policy_variance_penalty(prior_stats),
+                        target_policy_reward_lower_bound:
+                            structural_prior_target_policy_reward_lower_bound(prior_stats),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1356,6 +1400,15 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                     prior_stats,
                 ),
+                target_policy_calibration_weight:
+                    structural_prior_target_policy_calibration_weight(prior_stats),
+                target_policy_reward_prior: structural_prior_target_policy_reward_prior(
+                    prior_stats,
+                ),
+                target_policy_variance_penalty:
+                    structural_prior_target_policy_variance_penalty(prior_stats),
+                target_policy_reward_lower_bound:
+                    structural_prior_target_policy_reward_lower_bound(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1409,6 +1462,15 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
                             prior_stats,
                         ),
+                        target_policy_calibration_weight:
+                            structural_prior_target_policy_calibration_weight(prior_stats),
+                        target_policy_reward_prior: structural_prior_target_policy_reward_prior(
+                            prior_stats,
+                        ),
+                        target_policy_variance_penalty:
+                            structural_prior_target_policy_variance_penalty(prior_stats),
+                        target_policy_reward_lower_bound:
+                            structural_prior_target_policy_reward_lower_bound(prior_stats),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1489,6 +1551,18 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
             ),
             snips_reward_prior: structural_prior_snips_reward_prior(node_prior_stats),
             doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
+                node_prior_stats,
+            ),
+            target_policy_calibration_weight: structural_prior_target_policy_calibration_weight(
+                node_prior_stats,
+            ),
+            target_policy_reward_prior: structural_prior_target_policy_reward_prior(
+                node_prior_stats,
+            ),
+            target_policy_variance_penalty: structural_prior_target_policy_variance_penalty(
+                node_prior_stats,
+            ),
+            target_policy_reward_lower_bound: structural_prior_target_policy_reward_lower_bound(
                 node_prior_stats,
             ),
             duration_streak_count: node_temporal_state
@@ -4034,6 +4108,30 @@ fn structural_prior_doubly_robust_reward_prior(
     prior_stats: Option<&StructuralPriorStats>,
 ) -> Option<f64> {
     structural_prior_positive_value(prior_stats, |stats| stats.doubly_robust_reward_prior)
+}
+
+fn structural_prior_target_policy_calibration_weight(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.target_policy_calibration_weight)
+}
+
+fn structural_prior_target_policy_reward_prior(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.target_policy_reward_prior)
+}
+
+fn structural_prior_target_policy_variance_penalty(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.target_policy_variance_penalty)
+}
+
+fn structural_prior_target_policy_reward_lower_bound(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.target_policy_reward_lower_bound)
 }
 
 fn structural_duration_streak_count(
