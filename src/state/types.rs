@@ -390,6 +390,12 @@ pub struct StructuralNodeDurationPrior {
     #[serde(default)]
     pub empirical_duration_completion_hazard: f64,
     #[serde(default)]
+    pub bocpd_duration_surprise: f64,
+    #[serde(default)]
+    pub bocpd_break_probability: f64,
+    #[serde(default)]
+    pub bocpd_continue_probability: f64,
+    #[serde(default)]
     pub sticky_self_transition_strength: f64,
     #[serde(default)]
     pub duration_outcome_support: f64,
@@ -5125,6 +5131,31 @@ fn structural_duration_break_hazard(last_streak_length: usize, expected_dwell_st
     (elapsed / (elapsed + expected_dwell_steps)).clamp(0.0, 1.0)
 }
 
+fn structural_duration_surprise(survival_probability: f64) -> f64 {
+    if survival_probability <= f64::EPSILON {
+        20.0
+    } else {
+        (-survival_probability.clamp(f64::EPSILON, 1.0).ln()).min(20.0)
+    }
+}
+
+fn structural_bocpd_break_probability(
+    completion_hazard: f64,
+    duration_surprise: f64,
+    duration_outcome_support: f64,
+) -> f64 {
+    let surprise_pressure = if duration_surprise <= f64::EPSILON {
+        0.0
+    } else {
+        duration_surprise / (1.0 + duration_surprise)
+    };
+    let negative_outcome_pressure = (1.0 - duration_outcome_support).clamp(0.0, 1.0);
+    (completion_hazard.clamp(0.0, 1.0) * 0.60
+        + surprise_pressure.clamp(0.0, 1.0) * 0.25
+        + negative_outcome_pressure * 0.15)
+        .clamp(0.0, 1.0)
+}
+
 #[derive(Debug, Clone, Default)]
 struct StructuralNodeDurationDistributionFit {
     distribution: Vec<StructuralNodeDurationBucket>,
@@ -5278,6 +5309,14 @@ fn rebuild_discounted_node_duration_priors(
         let alpha = 1.0 + weighted_success_mass.max(0.0);
         let beta = 1.0 + weighted_failure_mass.max(0.0);
         prior.duration_outcome_support = (alpha / (alpha + beta)).clamp(0.0, 1.0);
+        prior.bocpd_duration_surprise =
+            structural_duration_surprise(prior.empirical_duration_survival);
+        prior.bocpd_break_probability = structural_bocpd_break_probability(
+            prior.empirical_duration_completion_hazard,
+            prior.bocpd_duration_surprise,
+            prior.duration_outcome_support,
+        );
+        prior.bocpd_continue_probability = (1.0 - prior.bocpd_break_probability).clamp(0.0, 1.0);
         prior.sticky_self_transition_strength = ((1.0 - prior.break_hazard) * 0.7
             + prior.duration_outcome_support * 0.3)
             .clamp(0.0, 1.0);
@@ -6553,6 +6592,8 @@ mod tests {
         assert!(trend.duration_distribution_entropy > 0.0);
         assert!((trend.empirical_duration_survival - 1.0).abs() < 1e-9);
         assert!((trend.empirical_duration_completion_hazard - (1.0 / 1.85)).abs() < 1e-9);
+        assert!(trend.bocpd_break_probability > 0.0);
+        assert!((trend.bocpd_continue_probability - (1.0 - trend.bocpd_break_probability)).abs() < 1e-9);
         assert!(trend.sticky_self_transition_strength > 0.0);
         assert!(trend.persistence_prior > range.persistence_prior);
         assert_eq!(range.observations, 1);
@@ -6765,6 +6806,7 @@ mod tests {
         assert!(prior.weighted_success_mass > 0.0);
         assert!(prior.weighted_failure_mass > 0.0);
         assert!(prior.duration_outcome_support < baseline.duration_outcome_support);
+        assert!(prior.bocpd_break_probability > baseline.bocpd_break_probability);
     }
 
     #[test]

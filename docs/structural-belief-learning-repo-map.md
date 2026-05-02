@@ -60,11 +60,11 @@ Already in repo
 - `node_duration_priors`
 - `branch_transition_priors`
 - duration `expected_dwell_steps`, `remaining_dwell_steps`, empirical dwell distribution, fitted completion hazard, and `sticky_self_transition_strength`
-- `structural-temporal-summary` exposes compact duration-distribution entropy, survival, and completion-hazard telemetry without dumping the full histogram
+- `structural-temporal-summary` exposes compact duration-distribution entropy, survival, completion-hazard, and BOCPD-style break/continue telemetry without dumping the full histogram
 - panel-derived prior reconstruction before structural display / ranking surfaces
 
 Literature mechanisms still worth importing
-- BOCPD-style break detection beyond the current empirical dwell distribution and completion hazard
+- richer BOCPD calibration beyond the current compact duration-surprise and break/continue probabilities
 - source-panel posterior aggregation written as explicit panel likelihood / prior math, not only weighted summary blending
 - clearer node-level prior mass separation from branch/path-level prior mass
 
@@ -76,11 +76,11 @@ Suggested state fields
 - `last_offline_seed_snapshot`
 
 Current repo gap
-- `node_duration_priors` and `branch_transition_priors` are real; duration state now carries expected dwell, remaining dwell, empirical dwell distribution, completion hazard, break hazard, and sticky self-transition strength; `node_prior_mass` / `branch_prior_mass` / `scenario_prior_mass` / `path_prior_mass` keep entity-scaled prior mass auditable outside the generic stats maps
+- `node_duration_priors` and `branch_transition_priors` are real; duration state now carries expected dwell, remaining dwell, empirical dwell distribution, completion hazard, BOCPD-style break/continue probability, break hazard, and sticky self-transition strength; `node_prior_mass` / `branch_prior_mass` / `scenario_prior_mass` / `path_prior_mass` keep entity-scaled prior mass auditable outside the generic stats maps
 - `last_offline_seed_snapshot` is formalized as a persistent theory object for the latest offline seed, but deeper snapshot history / recalibration policy remains future work
 
 Upgrade path
-1. upgrade empirical dwell distribution into BOCPD-style break detection once enough sequence history exists
+1. calibrate the compact BOCPD-style break probability against richer sequence history once enough observations exist
 2. treat source panels as pre-merge posterior contributors, not only audit surfaces
 
 ---
@@ -325,6 +325,6 @@ Use this summary when deciding the next coding slice:
 
 The repo is no longer blocked on surface drift. The highest-value remaining work is now:
 1. full Dawid-Skene / EM-style source reliability learning on top of the compact outcome-confusion cells once enough cross-source labels exist
-2. BOCPD-style break detection on top of the current HSMM-style empirical dwell distribution and transition state
+2. richer BOCPD calibration on top of the current HSMM-style empirical dwell distribution and compact break/continue telemetry
 3. target-policy calibration and maturity/censoring beyond the current clipped IPS / SNIPS / DR plus ESS diagnostics
 4. CatBoost training and production validation on top of exported P6 target rows once raw-scored history exists

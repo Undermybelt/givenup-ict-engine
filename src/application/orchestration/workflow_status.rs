@@ -5578,6 +5578,9 @@ mod tests {
                 duration_distribution_entropy: 0.6931471806,
                 empirical_duration_survival: 1.0,
                 empirical_duration_completion_hazard: 0.5405405405,
+                bocpd_duration_surprise: 0.0,
+                bocpd_break_probability: 0.36,
+                bocpd_continue_probability: 0.64,
                 duration_outcome_support: 0.7407407407,
                 temporal_posterior_support: 0.6422222222,
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
@@ -6129,6 +6132,8 @@ mod tests {
         assert_eq!(value["duration_distribution_entropy"], 0.6931471806);
         assert_eq!(value["empirical_duration_survival"], 1.0);
         assert_eq!(value["empirical_duration_completion_hazard"], 0.5405405405);
+        assert_eq!(value["bocpd_break_probability"], 0.36);
+        assert_eq!(value["bocpd_continue_probability"], 0.64);
         assert_eq!(value["duration_outcome_support"], 0.75);
         assert_eq!(value["duration_temporal_posterior_support"], 0.65);
         assert_eq!(value["duration_posterior_blend_weight"], 0.42);
