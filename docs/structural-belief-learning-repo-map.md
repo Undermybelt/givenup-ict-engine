@@ -60,6 +60,7 @@ Already in repo
 - `node_duration_priors`
 - `branch_transition_priors`
 - duration `expected_dwell_steps`, `remaining_dwell_steps`, empirical dwell distribution, fitted completion hazard, and `sticky_self_transition_strength`
+- `structural-temporal-summary` exposes compact duration-distribution entropy, survival, and completion-hazard telemetry without dumping the full histogram
 - panel-derived prior reconstruction before structural display / ranking surfaces
 
 Literature mechanisms still worth importing

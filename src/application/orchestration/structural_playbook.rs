@@ -212,6 +212,12 @@ pub struct StructuralTemporalSummaryArtifact {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_temporal_posterior_support: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub duration_distribution_entropy: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub empirical_duration_survival: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub empirical_duration_completion_hazard: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_posterior_blend_weight: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub transition_prior: Option<f64>,
@@ -1601,6 +1607,12 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
         duration_temporal_posterior_support: node_temporal_state
             .map(|state| state.temporal_posterior_support)
             .or_else(|| structural_duration_temporal_posterior_support(node_duration_prior)),
+        duration_distribution_entropy: structural_duration_distribution_entropy(
+            node_duration_prior,
+        ),
+        empirical_duration_survival: structural_duration_empirical_survival(node_duration_prior),
+        empirical_duration_completion_hazard:
+            structural_duration_empirical_completion_hazard(node_duration_prior),
         duration_posterior_blend_weight: node_temporal_state
             .map(|state| state.posterior_blend_weight),
         transition_prior: transition_prior.map(|prior| prior.transition_prior),
@@ -4071,6 +4083,37 @@ fn structural_duration_temporal_posterior_support(
     duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
 ) -> Option<f64> {
     duration_prior.map(|prior| prior.temporal_posterior_support)
+}
+
+fn structural_duration_distribution_entropy(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    structural_duration_positive_value(duration_prior, |prior| {
+        prior.duration_distribution_entropy
+    })
+}
+
+fn structural_duration_empirical_survival(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    structural_duration_positive_value(duration_prior, |prior| prior.empirical_duration_survival)
+}
+
+fn structural_duration_empirical_completion_hazard(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    structural_duration_positive_value(duration_prior, |prior| {
+        prior.empirical_duration_completion_hazard
+    })
+}
+
+fn structural_duration_positive_value(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+    value: impl FnOnce(&crate::state::StructuralNodeDurationPrior) -> f64,
+) -> Option<f64> {
+    duration_prior
+        .map(value)
+        .filter(|value| value.is_finite() && *value > f64::EPSILON)
 }
 
 fn structural_dominant_source_panel(
