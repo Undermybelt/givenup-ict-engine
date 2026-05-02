@@ -12,7 +12,7 @@ loading user-specific data unless it is explicit and opt-in.
 | Criterion | Evidence | Status |
 |---|---|---|
 | Treat `docs/plans/20260501repo.md` as implementation input | P6 path-ranking rows and the later source-reliability, Dawid-Skene readiness, duration, BOCPD calibration, off-policy, and target-policy variance diagnostics all map to the document's CatBoost, Dawid-Skene, HSMM, BOCPD, and OPE sections | partial |
-| Land decisions as versioned repo artifacts | Commits `acce819`, `2bb1c8e`, `bb57d73`, `2253bfe`, `05caf1d`, `45fc44c`, `05d4ca7`, `d9631fc`, `400b00c`, `983e622`, `3f67add`, `1cc6825`, `c494b60`, `0cbd46e`, `1cbf9fc`, `4cc3d66`, `0175b3c`, `fc04494`, `a880cb4`, `3fb108f`, `de0f1bb`, `eb3cff2`, `aee6e83`, `ffae6fd`, and `f5714d3` are committed on `green-baseline` | done for current slices |
+| Land decisions as versioned repo artifacts | Commits `acce819`, `2bb1c8e`, `bb57d73`, `2253bfe`, `05caf1d`, `45fc44c`, `05d4ca7`, `d9631fc`, `400b00c`, `983e622`, `3f67add`, `1cc6825`, `c494b60`, `0cbd46e`, `1cbf9fc`, `4cc3d66`, `0175b3c`, `fc04494`, `a880cb4`, `3fb108f`, `de0f1bb`, `eb3cff2`, `aee6e83`, `ffae6fd`, `f5714d3`, and `7c1dcf6` are committed on `green-baseline` | done for current slices |
 | Preserve zero-config behavior | New path-ranking, source-reliability, duration, SNIPS/DR, and target-policy diagnostics are derived from existing structural state/export rows; no new required CLI flags or environment variables were added | done for current slices |
 | Keep consumer surfaces token-friendly | `policy-training-status`, `structural-experience-priors`, and `structural-temporal-summary` expose compact booleans, counts, probabilities, scalar diagnostics, warnings, and paths rather than verbose model dumps | done for current slices |
 | Avoid repo/runtime pollution | Verification used normal cargo targets and tempdirs in tests; final `git status --short` was clean after each committed slice | done for current slices |
@@ -24,13 +24,13 @@ loading user-specific data unless it is explicit and opt-in.
 | Prompt requirement / TODO input | Concrete artifact evidence | Verification / gate | Status |
 |---|---|---|---|
 | Use `docs/plans/20260501repo.md` as a TODO source | `docs/structural-belief-learning-repo-map.md` maps plan sections to P2/P3/P4/P5/P6 status; this audit records TODO closure and remaining gaps | manual inspection of docs plus committed implementation slices | partial |
-| Implement scoped slices and commit as appropriate | Recent code commits cover path-ranking target rows, source reliability/confusion, duration distributions, SNIPS/DR/target-policy diagnostics, target-policy probability diagnostics, EM readiness, fixed-iteration EM fit diagnostics and consumption, BOCPD calibration, and compact run-length diagnostics | `git log --oneline` on `green-baseline` | done for current slices |
+| Implement scoped slices and commit as appropriate | Recent code commits cover path-ranking target rows, source reliability/confusion, duration distributions, SNIPS/DR/target-policy diagnostics, target-policy probability diagnostics, EM readiness, fixed-iteration EM fit diagnostics, persisted EM source-confusion summaries, EM reliability consumption, BOCPD calibration, and compact run-length diagnostics | `git log --oneline` on `green-baseline` | done for current slices |
 | Preserve zero-config behavior | New surfaces derive from `StructuralPriorLearningState`, exported target rows, or workflow snapshots; no required CLI flag, env var, provider config, or state-dir default was added | code review of touched files and `cargo check --all-targets` | done for current slices |
 | Keep consumer surfaces usable and token-friendly | `policy-training-status`, `structural-experience-priors`, and `structural-temporal-summary` expose compact scalar fields, booleans, counts, warnings, and paths | targeted workflow/status tests and JSON field assertions | done for current slices |
 | Keep user-specific data explicit and hot-pluggable | No personal account/provider/default market data path was introduced; external trainer/service and live data remain explicit future inputs | code/doc inspection; no env auto-load added | done for current slices |
 | Avoid pollution / debt | Verification used normal cargo targets; runtime/data generation was not run into repo-local `state/`; checkpoint `git status --short --branch` is clean after commits | `git diff --check`; `git status --short --branch` | done for current slices |
 | CatBoost / path-ranker target from plan | Target rows, maturity fields, lower-bound gates, training weights, calibration evaluator, trainer manifest readiness, and optional external trainer artifact status boundary exist | `cargo test --lib structural_path_ranking_target`; `cargo test --lib structural_path_ranking_target_training_status` | partial: no real trained service/artifact or sufficient real raw-scored rows |
-| Dawid-Skene / source reliability from plan | Source posterior, outcome-confusion likelihoods, panel tempering, EM-readiness counts, latent-label consensus/conflict diagnostics, compact fixed-iteration EM fit diagnostics, and in-memory EM source-reliability consumption exist | `cargo test --lib source_reliability`; `cargo test --lib source_outcome_confusion`; `cargo test --lib source_reliability_em_readiness_requires_multi_source_overlap` | partial: no persisted full source confusion-matrix learning yet |
+| Dawid-Skene / source reliability from plan | Source posterior, outcome-confusion likelihoods, panel tempering, EM-readiness counts, latent-label consensus/conflict diagnostics, compact fixed-iteration EM fit diagnostics, persisted source-specific EM confusion summaries, compact persisted-EM status fields, and persisted EM source-reliability consumption exist | `cargo test --lib source_reliability`; `cargo test --lib source_outcome_confusion`; `cargo test --lib source_reliability_em`; `cargo test --lib workflow_status_phase_structural_experience_priors_tracks_current_lineage` | partial: no larger-panel calibration validation yet |
 | HSMM / BOCPD duration prior from plan | Empirical dwell distribution, hazard/survival, evidence-weighted BOCPD raw/calibrated break probability, compact empirical run-length mode/probability/tail/mass diagnostics, and temporal summary fields exist | `cargo test --lib duration`; `cargo test --lib workflow_status_phase_structural_temporal_summary_exposes_discounted_masses`; `cargo test --lib structural_temporal_summary_node_prefers_persisted_temporal_state_streak_count` | partial: no full recursive run-length posterior model |
 | Logged-bandit / OPE target-policy learning from plan | Behavior probability logging, logged probability variance/confidence/lower-bound diagnostics, IPS/SNIPS/DR, ESS, target-policy reward prior, variance penalty, conservative lower bound, and compact maturity/censoring counters exist | `cargo test --lib test_structural_feedback_records_snips_and_dr_policy_priors`; `cargo test --lib structural_experience_prior`; `cargo test --lib structural_prior_maturity_diagnostics_count_unresolved_followed_feedback` | partial: no full target-policy probability model or delayed-reward censoring model |
 | Hamilton / DBN recursive filtering from plan | Transition posterior state persists and downstream branch/candidate surfaces consume it | transition and structural workflow tests listed below | partial: no deeper Hamilton/DBN recursive filter |
@@ -57,6 +57,7 @@ Recent committed slices:
 - `aee6e83 feat: surface source reliability em fit diagnostics`
 - `ffae6fd feat: consume source reliability em fit`
 - `f5714d3 feat: surface target policy probability diagnostics`
+- `7c1dcf6 feat: persist source reliability em summaries`
 - `acce819 feat: expose path ranking maturity fields`
 - `2bb1c8e feat: weight path ranking calibration by propensity`
 - `bb57d73 feat: add path ranking lower-bound gates`
@@ -79,7 +80,10 @@ Verified commands during this iteration line:
 
 - `cargo test --lib source_outcome_confusion`
 - `cargo test --lib source_reliability`
+- `cargo test --lib source_reliability_em`
 - `cargo test --lib source_reliability_em_readiness_requires_multi_source_overlap`
+- `cargo test --lib test_structural_prior_seed_persists_source_reliability_em_summaries`
+- `cargo test --lib panel_derived_prior_uses_persisted_source_reliability_em_summary`
 - `cargo test --lib panel_derived_prior_uses_source_confusion_concentration`
 - `cargo test --lib structural_experience_prior_surface_prefers_panel_derived_prior_over_stale_aggregate_prior`
 - `cargo test --lib test_structural_prior_seed_rebuilds_node_duration_priors`
@@ -108,14 +112,14 @@ The objective is not complete.
 - P6 still lacks real exported raw-scored rows sufficient for production validation.
 - P6 production validation is now gated, but not satisfied by live historical data.
 - `live feedback posterior update` now has logged behavior-policy probability variance/confidence/lower-bound diagnostics, ESS-weighted target-policy reward prior, variance penalty, conservative lower-bound diagnostics, and compact maturity/censoring counters, but still lacks a fully calibrated target-policy probability model and delayed-reward censoring model.
-- `artifact-validation prior source` now has compact source-confusion likelihood cells, panel tempering, cross-source EM-readiness diagnostics, latent-label consensus telemetry, fixed-iteration EM fit diagnostics, and in-memory EM source-reliability consumption, but still lacks persisted full Dawid-Skene source confusion-matrix learning and larger-panel calibration validation.
+- `artifact-validation prior source` now has compact source-confusion likelihood cells, panel tempering, cross-source EM-readiness diagnostics, latent-label consensus telemetry, fixed-iteration EM fit diagnostics, persisted source-specific EM confusion summaries, compact persisted-EM status fields, and persisted EM source-reliability consumption, but still lacks larger-panel calibration validation.
 - `structural_prior_state` now has empirical HSMM-style duration distributions plus compact evidence-weighted BOCPD-style raw/calibrated break/continue and run-length telemetry, but still lacks richer recursive run-length posterior change-point modeling.
 - `BBN node/branch posterior update` still lacks deeper Hamilton/DBN recursive filtering beyond maintained transition posterior state.
 
 ## Next Concrete Options
 
 1. Generate or collect enough raw-scored structural path-ranking rows in an isolated state dir, then validate the production gate.
-2. Move to a non-P6 TODO slice: fuller recursive BOCPD run-length posterior modeling, full target-policy probability calibration, or persisted source-reliability EM confusion matrices once readiness and fit diagnostics are sufficient.
+2. Move to a non-P6 TODO slice: fuller recursive BOCPD run-length posterior modeling, full target-policy probability calibration, or larger-panel source-reliability EM calibration validation once enough cross-source labels exist.
 3. Build a real opt-in external path-ranker artifact/service that writes the already-defined trainer artifact file.
 
 Do not call the active goal complete until one of those remaining lines is either implemented or explicitly descoped.

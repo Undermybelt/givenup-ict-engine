@@ -22,7 +22,7 @@ Aligned source docs:
 | `P0` Repo truth | `已实现` | execution plan, literature docs, and paper-code readmes are committed |
 | `P1` Canonical structural anchor | `已实现` | downstream phases no longer redefine canonical structural lineage |
 | `P2` Live feedback posterior update | `基本实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, clipped IPS counterfactual reward priors, candidate-set policy logging, feedback-time selected policy probability consumption, clipped SNIPS/DR reward priors, SNIPS effective-sample diagnostics, and compact target-policy calibration/variance diagnostics exist; deeper target-policy model calibration remains |
-| `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, compact outcome-confusion profiles, and reliability-weighted panel aggregation exist |
+| `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, compact outcome-confusion profiles, persisted EM source-confusion summaries, and reliability-weighted panel aggregation exist |
 | `P4` Structural prior state upgrade | `部分实现` | duration, transition, dwell/hazard fields, source panels, event ledger, separated prior-mass snapshots, and latest offline seed snapshot exist; fitted dwell-time theory remains |
 | `P5` BBN node/branch posterior update | `基本实现` | temporal priors adjust belief snapshots and branch surfaces, normalized outgoing branch-transition posterior state persists, and node/regime plus complete/partial candidate-set branch adjustment consume it directly |
 | `P6` CatBoost path ranking target | `部分实现` | target surface contract, explicit row fields, workflow surface, persisted target-row export, empirical calibration utility, and calibration-quality evaluator exist; production validation on sufficient raw-scored rows is still not landed |
@@ -134,6 +134,7 @@ Status: `部分实现`
 
 Primary papers
 - `Power Prior Distributions for Regression Models`
+- `Maximum Likelihood Estimation of Observer Error-Rates Using the EM Algorithm`
 - `Using Bayesian Model Averaging to Calibrate Forecast Ensembles`
 
 Already in repo
@@ -150,12 +151,14 @@ Already in repo
 - `structural-experience-priors` exposes compact Dawid-Skene / EM readiness counts from the structural prior event ledger: candidate items, multi-source overlap, distinct sources, observed labels, and readiness status
 - `structural-experience-priors` also surfaces compact latent-label consensus diagnostics for cross-source items: consensus item count, conflict item count, average consensus confidence, and minimum consensus confidence
 - `structural-experience-priors` runs a dependency-free fixed-iteration Dawid-Skene-style EM fit over multi-source event-ledger items, exposing latent item confidence and learned source-reliability summary diagnostics without dumping confusion matrices
-- panel-derived priors consume the in-memory EM source reliability as a conservative multiplier, blending it with persisted source posterior reliability when both are available
+- `structural_prior_state.source_reliability_em_summaries` persists the learned source-specific EM confusion matrices with source reliability and compact matrix cell counts
+- `structural-experience-priors` exposes compact persisted EM summary counts and reliability ranges without dumping the full matrices
+- panel-derived priors prefer persisted EM source reliability as a conservative multiplier, blending it with persisted source posterior reliability when both are available
 
 Literature mechanisms still worth importing
 - richer aggregate power-prior / tempered likelihood composition across source-panel contributions:
   - `posterior(theta) propto prior(theta) * product_s L_s(theta)^(tau_s)`
-- persisting learned EM source-specific confusion matrices and validating their calibration over larger cross-source panels
+- validating persisted EM source-specific confusion matrices over larger cross-source panels
 - clearer split between source rank, evidence quality, recency, and drift penalty
 
 Suggested formula
@@ -171,7 +174,7 @@ Suggested `tau_s` ingredients
 - break penalty
 
 Current repo gap
-- source reliability now has compact outcome-confusion likelihood cells, cross-source EM-readiness diagnostics, latent-label consensus telemetry, fixed-iteration EM fit diagnostics, and in-memory EM source-reliability consumption in panel-derived priors; remaining work is persisting full Dawid-Skene confusion matrices and validating calibration over larger cross-source panels
+- source reliability now has compact outcome-confusion likelihood cells, cross-source EM-readiness diagnostics, latent-label consensus telemetry, fixed-iteration EM fit diagnostics, persisted source-specific EM confusion summaries, and persisted EM source-reliability consumption in panel-derived priors; remaining work is calibration validation over larger cross-source panels
 
 ---
 
@@ -330,7 +333,7 @@ Use this summary when deciding the next coding slice:
 - `CatBoost calibrated path target`: `部分实现`
 
 The repo is no longer blocked on surface drift. The highest-value remaining work is now:
-1. persist Dawid-Skene / EM-style source confusion matrices on top of the compact fixed-iteration fit once the readiness surface shows enough cross-source labels
+1. validate the persisted Dawid-Skene / EM-style source confusion matrices over larger cross-source panels once the readiness surface shows enough labels
 2. richer BOCPD posterior calibration on top of the current HSMM-style empirical dwell distribution and compact evidence-weighted break/continue plus run-length telemetry
 3. full target-policy probability calibration and maturity/censoring beyond the current clipped IPS / SNIPS / DR plus ESS-weighted reward and variance diagnostics
 4. CatBoost training and production validation on top of exported P6 target rows once raw-scored history exists
