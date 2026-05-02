@@ -23,6 +23,7 @@ Implemented:
 - empirical Beta-smoothed calibration from raw-scored mature observations
 - compact calibration-quality evaluation fields in `policy-training-status`
 - compact raw-scored mature-row sufficiency / shortfall fields in `policy-training-status`, separated from propensity-weighted production-validation readiness
+- compact `policy-training-status` summary lines that carry the path-ranking shortfalls instead of hiding them only in nested fields
 
 Still not implemented:
 - production calibration validation after enough exported raw-scored rows exist
