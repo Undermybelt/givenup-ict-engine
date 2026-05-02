@@ -259,6 +259,7 @@ Already in repo
 - the target summary carries an external trainer manifest describing group, label, weight, target-policy feature, calibration, and guardrail columns without adding a CatBoost runtime dependency
 - `policy-training-status` surfaces trainer manifest readiness with protocol/dataset role plus compact feature/calibration/guardrail column counts, and warns on incomplete manifests without loading an external trainer
 - `policy-training-status` also recognizes an optional `policy_training/structural_path_ranking_trainer_artifact.json` handoff file, reporting artifact readiness, protocol/dataset role, model family, score column, trained/calibration row counts, feature-column count, and URI presence without dumping a user-specific artifact URI
+- `register-structural-path-ranking-trainer-artifact` lets a user explicitly register an external artifact URI into that handoff file without auto-loading personal paths or requiring manual JSON edits
 
 Not yet in repo
 - propensity-aware model training loop
@@ -285,7 +286,7 @@ Suggested fields
 - `regime_calibration_bucket`
 
 Current repo gap
-- CatBoost training and production calibration validation are still downstream work; current path ranking surfaces are structural-orchestration target rows, empirical calibration/evaluation utilities, and an optional external artifact status boundary, not a learned calibrated ranker runtime
+- CatBoost training and production calibration validation are still downstream work; current path ranking surfaces are structural-orchestration target rows, empirical calibration/evaluation utilities, and an explicit external artifact registration/status boundary, not a learned calibrated ranker runtime
 - the P6 target design is versioned in `docs/plans/2026-05-02-catboost-path-ranking-target-design.md`; next implementation needs a real trained external ranker artifact/service and enough real exported raw-scored rows, not more candidate-surface expansion
 
 ---

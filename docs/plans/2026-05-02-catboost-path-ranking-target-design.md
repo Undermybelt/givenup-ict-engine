@@ -20,6 +20,7 @@ Implemented:
 - `policy-training-status` readiness reporting for export and calibration state
 - `policy-training-status` trainer manifest readiness/counts for the external ranker handoff contract
 - optional `policy_training/structural_path_ranking_trainer_artifact.json` status boundary for trained external ranker artifacts; the status surface reports compact readiness/count fields and URI presence without dumping the URI
+- explicit opt-in CLI registration path for external trainer artifacts, so users can wire in a personal artifact URI without hand-authoring the JSON boundary file
 - empirical Beta-smoothed calibration from raw-scored mature observations
 - compact calibration-quality evaluation fields in `policy-training-status`
 - compact raw-scored mature-row sufficiency / shortfall fields in `policy-training-status`, separated from propensity-weighted production-validation readiness
