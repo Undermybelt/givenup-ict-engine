@@ -148,6 +148,7 @@ Already in repo
 - outcome-confusion cells derive smoothed `P(observed_outcome | credit_class, source)` likelihoods for downstream source-reliability consumers
 - panel-derived aggregate priors consume source-reliability posteriors and outcome-confusion likelihood concentration so low-reliability or diffuse high-mass panels shrink toward neutral instead of dominating by raw mass
 - `structural-experience-priors` exposes compact Dawid-Skene / EM readiness counts from the structural prior event ledger: candidate items, multi-source overlap, distinct sources, observed labels, and readiness status
+- `structural-experience-priors` also surfaces compact latent-label consensus diagnostics for cross-source items: consensus item count, conflict item count, average consensus confidence, and minimum consensus confidence
 
 Literature mechanisms still worth importing
 - richer aggregate power-prior / tempered likelihood composition across source-panel contributions:
@@ -168,7 +169,7 @@ Suggested `tau_s` ingredients
 - break penalty
 
 Current repo gap
-- source reliability now has compact outcome-confusion likelihood cells and cross-source EM-readiness diagnostics, but reliability learning is still not a full Dawid-Skene EM confusion-matrix model over latent true classes and multiple sources
+- source reliability now has compact outcome-confusion likelihood cells, cross-source EM-readiness diagnostics, and latent-label consensus telemetry, but reliability learning is still not a full Dawid-Skene EM confusion-matrix model over latent true classes and multiple sources
 
 ---
 
