@@ -24,7 +24,7 @@ Aligned source docs:
 | `P2` Live feedback posterior update | `基本实现` | delayed resolution, fractional pseudo-count updates, compliance/off-policy exposure fields, clipped IPS counterfactual reward priors, candidate-set policy logging, feedback-time selected policy probability consumption, clipped SNIPS/DR reward priors, SNIPS effective-sample diagnostics, compact target-policy variance/Brier/calibration-error diagnostics, delayed-reward resolution/censoring adjustment diagnostics, compact competing-risk outcome probabilities, elapsed-hour hazard diagnostics, compact event-time survival diagnostics, 1h/4h/24h resolution horizon probabilities, compact 4h cause-specific cumulative-incidence diagnostics, and compact online target-policy context posteriors with confidence-calibrated probability scalars exist; deeper learned target-policy and full delayed-reward competing-risk calibration remains |
 | `P3` Offline evidence tempering | `部分实现` | source weighting, quality calibration, source panels, power-prior contribution objects, reusable source-reliability posteriors, compact outcome-confusion profiles, persisted EM source-confusion summaries, compact EM calibration diagnostics, and reliability-weighted panel aggregation exist |
 | `P4` Structural prior state upgrade | `部分实现` | duration, transition, dwell/hazard fields, compact BOCPD run-length, sequence-change, and recursive sequence posterior diagnostics, source panels, event ledger, separated prior-mass snapshots, and latest offline seed snapshot exist; fitted dwell-time theory remains |
-| `P5` BBN node/branch posterior update | `基本实现` | temporal priors adjust belief snapshots and branch surfaces, normalized outgoing branch-transition posterior state persists, and node/regime plus complete/partial candidate-set branch adjustment consume it directly |
+| `P5` BBN node/branch posterior update | `基本实现` | temporal priors adjust belief snapshots and branch surfaces, normalized outgoing branch and node-transition posterior state persists, and node/regime plus complete/partial candidate-set branch adjustment consume it directly |
 | `P6` CatBoost path ranking target | `部分实现` | target surface contract, explicit row fields, workflow surface, persisted target-row export, empirical calibration utility, and calibration-quality evaluator exist; production validation on sufficient raw-scored rows is still not landed |
 
 ## Repo Targets
@@ -99,15 +99,16 @@ Already in repo
 - node duration prior adjusts regime confidence in belief snapshot
 - branch transition prior adjusts canonical regime probabilities
 - branch temporal posterior state stores `transition_prior`, `posterior_multiplier`, and normalized outgoing `normalized_transition_posterior`
+- node transition posterior state stores node-to-node transition prior, posterior multiplier, and normalized outgoing node posterior for compact Hamilton/DBN-style filtering
 - `regime_posterior`, `belief_posteriors["market_regime"]`, `gate_decision`, `strategy_recommendation`, and selected market subgraph are synchronized after adjustment
 - workflow snapshot and ensemble surfaces reuse canonical structural regime posteriors across phases
-- `workflow-status` temporal summary exposes the maintained normalized transition posterior for consumer agents
-- node/regime posterior adjustment and complete/partial candidate-set branch posterior adjustment read maintained normalized transition posterior state before falling back to unadjusted probabilities
+- `workflow-status` temporal summary exposes the maintained normalized branch and node transition posterior for consumer agents
+- node/regime posterior adjustment prefers maintained node transition posterior state, then falls back to branch-transition aggregation and finally unadjusted probabilities; complete/partial candidate-set branch posterior adjustment reads maintained branch transition posterior state
 
 Literature mechanisms still worth importing
 - discounted transition-count updates:
   - `N_ij(t) = lambda * N_ij(t-1) + P(z_(t-1)=i, z_t=j | x_1:t)`
-- Hamilton/DBN-style recursive branch posterior maintenance
+- Hamilton/DBN-style recursive node/branch posterior maintenance beyond the compact one-step transition surfaces
 - BOCPD-style hazard handling for branch birth / node break
 - moving branch posterior maintenance out of display-layer blending and into core belief-state updates
 
@@ -123,8 +124,8 @@ Suggested implementation hooks
 - `src/state/*`
 
 Current repo gap
-- branch transition priors already affect branch prior/posterior surfaces and belief snapshots, and maintained branch temporal posterior state now carries normalized outgoing posterior mass
-- node/regime posterior adjustment plus complete and partial candidate sets now consume the maintained transition posterior directly; remaining work is deeper DBN/Hamilton filtering rather than display-layer fallback cleanup
+- branch transition priors already affect branch prior/posterior surfaces and belief snapshots, maintained branch temporal posterior state carries normalized outgoing posterior mass, and maintained node transition posterior state now carries normalized outgoing node posterior mass
+- node/regime posterior adjustment plus complete and partial candidate sets now consume maintained node/branch transition posterior state directly; remaining work is deeper multi-step DBN/Hamilton filtering rather than display-layer fallback cleanup
 
 ---
 
