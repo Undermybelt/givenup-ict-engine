@@ -116,6 +116,7 @@ use ict_engine::application::{
     },
     entry_models::{
         build_entry_model_packet_store_for_analyze,
+        clear_structural_path_ranking_trainer_artifact_command,
         policy_training_status_command,
         register_structural_path_ranking_trainer_artifact_command,
     },
@@ -1356,6 +1357,17 @@ enum Commands {
             help = "Optional override for the calibration row count recorded in the artifact"
         )]
         calibration_rows: Option<usize>,
+    },
+    /// Remove a previously registered external structural path-ranker artifact from the policy_training contract.
+    ClearStructuralPathRankingTrainerArtifact {
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
+        symbol: String,
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory containing policy_training artifacts"
+        )]
+        state_dir: String,
     },
     /// Show a global read-only catalog of providers grouped by domain.
     ProviderStatus {
@@ -2799,6 +2811,10 @@ fn main() -> Result<()> {
                 trained_rows,
                 calibration_rows,
             )?
+        }
+        Commands::ClearStructuralPathRankingTrainerArtifact { symbol, state_dir } => {
+            ensure_state_dir_ready(&state_dir)?;
+            clear_structural_path_ranking_trainer_artifact_command(&state_dir, &symbol)?
         }
         Commands::ProviderStatus {
             domain,

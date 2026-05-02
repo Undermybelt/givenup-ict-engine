@@ -1139,6 +1139,31 @@ pub fn register_structural_path_ranking_trainer_artifact_command(
     Ok(())
 }
 
+fn clear_structural_path_ranking_trainer_artifact(
+    state_dir: &str,
+    symbol: &str,
+) -> Result<bool> {
+    let artifact_path = Path::new(state_dir)
+        .join(symbol)
+        .join(POLICY_TRAINING_DIR)
+        .join(STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_FILE);
+    if !artifact_path.exists() {
+        return Ok(false);
+    }
+    fs::remove_file(&artifact_path)?;
+    Ok(true)
+}
+
+pub fn clear_structural_path_ranking_trainer_artifact_command(
+    state_dir: &str,
+    symbol: &str,
+) -> Result<()> {
+    clear_structural_path_ranking_trainer_artifact(state_dir, symbol)?;
+    let surface = structural_path_ranking_target_training_status(state_dir, symbol)?;
+    println!("{}", serde_json::to_string_pretty(&surface)?);
+    Ok(())
+}
+
 fn collect_training_rows(state_dir: &str, symbol: &str) -> Result<CisdRbCollectedTrainingRows> {
     let analyze_runs: Vec<AnalyzeRunRecord> =
         load_state_or_default(state_dir, symbol, ANALYZE_RUNS_FILE)?;
@@ -2355,5 +2380,89 @@ mod tests {
         assert_eq!(status.trainer_artifact_calibration_rows, 2);
         assert!(status.trainer_artifact_uri_present);
         assert!(status.summary_line.contains("trainer_artifact=ready"));
+    }
+
+    #[test]
+    fn clear_structural_path_ranking_trainer_artifact_removes_registered_artifact() {
+        let temp = tempfile::tempdir().unwrap();
+        let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: "NQ".to_string(),
+            rows: 2,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 2,
+            mature_rows: 2,
+            rows_with_training_weight: 2,
+            rows_with_propensity_estimate: 2,
+            rows_with_calibrated_path_prob: 2,
+            rows_with_path_prob_lower_bound: 2,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            trainer_manifest: structural_path_ranking_trainer_manifest_for_test(),
+            summary_line: "structural_path_ranking_target rows=2".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        let jsonl = [
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-win",
+                0.8,
+                "matured_success",
+            ))
+            .unwrap(),
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-loss",
+                0.2,
+                "matured_failure",
+            ))
+            .unwrap(),
+        ]
+        .join("\n");
+        std::fs::write(&jsonl_path, format!("{jsonl}\n")).unwrap();
+        register_structural_path_ranking_trainer_artifact(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            "s3://rankers/nq-path-ranker-v1.bin",
+            "catboost",
+            None,
+            None,
+            None,
+        )
+        .unwrap();
+
+        assert!(clear_structural_path_ranking_trainer_artifact(
+            temp.path().to_str().unwrap(),
+            "NQ"
+        )
+        .unwrap());
+        assert!(!clear_structural_path_ranking_trainer_artifact(
+            temp.path().to_str().unwrap(),
+            "NQ"
+        )
+        .unwrap());
+
+        let status =
+            structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
+                .unwrap();
+        assert!(!status.trainer_artifact_ready);
+        assert_eq!(status.trainer_artifact_trained_rows, 0);
+        assert!(!status.trainer_artifact_uri_present);
+        assert!(status.summary_line.contains("trainer_artifact=missing"));
+        assert!(status
+            .warnings
+            .contains(&"structural_path_ranking_target_trainer_artifact_missing".to_string()));
     }
 }
