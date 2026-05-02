@@ -324,6 +324,8 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub csv_path: Option<String>,
     pub jsonl_path: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub history_csv_path: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub history_jsonl_path: Option<String>,
     pub warnings: Vec<String>,
     pub summary_line: String,
@@ -931,6 +933,7 @@ pub fn structural_path_ranking_target_training_status(
         summary_path: summary.summary_path,
         csv_path: Some(summary.csv_path),
         jsonl_path: Some(summary.jsonl_path),
+        history_csv_path: non_empty_string(&summary.history_csv_path),
         history_jsonl_path: non_empty_string(&summary.history_jsonl_path),
         warnings,
         summary_line,
@@ -2095,6 +2098,8 @@ mod tests {
         assert!(status.summary_line.contains("production_validation=0/30"));
         assert!(status.summary_line.contains("calibration=not_fitted"));
         assert!(status.summary_line.contains("trainer_artifact=missing"));
+        assert!(status.history_csv_path.is_none());
+        assert!(status.history_jsonl_path.is_none());
         assert!(!status.trainer_manifest_ready);
         assert_eq!(status.trainer_feature_columns, 0);
         assert_eq!(status.trainer_calibration_columns, 0);
@@ -2122,6 +2127,8 @@ mod tests {
         let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
         std::fs::create_dir_all(&summary_dir).unwrap();
         let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let history_csv_path = summary_dir.join("structural_path_ranking_target_history.csv");
+        let history_jsonl_path = summary_dir.join("structural_path_ranking_target_history.jsonl");
         let summary = StructuralPathRankingTargetExportSummary {
             symbol: "NQ".to_string(),
             rows: 2,
@@ -2138,7 +2145,8 @@ mod tests {
                 .to_string_lossy()
                 .to_string(),
             jsonl_path: jsonl_path.to_string_lossy().to_string(),
-            history_jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            history_csv_path: history_csv_path.to_string_lossy().to_string(),
+            history_jsonl_path: history_jsonl_path.to_string_lossy().to_string(),
             history_rows: 2,
             history_mature_rows: 2,
             summary_path: summary_dir
@@ -2176,6 +2184,8 @@ mod tests {
         ]
         .join("\n");
         std::fs::write(&jsonl_path, format!("{jsonl}\n")).unwrap();
+        std::fs::write(&history_csv_path, "header\n").unwrap();
+        std::fs::write(&history_jsonl_path, format!("{jsonl}\n")).unwrap();
 
         let status =
             structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
@@ -2231,6 +2241,22 @@ mod tests {
         assert_eq!(status.calibration_evaluation_rows, 2);
         assert_eq!(status.calibration_propensity_weighted_rows, 2);
         assert_eq!(status.raw_scored_mature_rows, 2);
+        let expected_history_csv_path = jsonl_path
+            .with_file_name("structural_path_ranking_target_history.csv")
+            .to_string_lossy()
+            .to_string();
+        let expected_history_jsonl_path = jsonl_path
+            .with_file_name("structural_path_ranking_target_history.jsonl")
+            .to_string_lossy()
+            .to_string();
+        assert_eq!(
+            status.history_csv_path.as_deref(),
+            Some(expected_history_csv_path.as_str())
+        );
+        assert_eq!(
+            status.history_jsonl_path.as_deref(),
+            Some(expected_history_jsonl_path.as_str())
+        );
         assert_eq!(
             status.raw_scored_mature_min_rows,
             STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS
@@ -2274,6 +2300,8 @@ mod tests {
         let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
         std::fs::create_dir_all(&summary_dir).unwrap();
         let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let history_csv_path = summary_dir.join("structural_path_ranking_target_history.csv");
+        let history_jsonl_path = summary_dir.join("structural_path_ranking_target_history.jsonl");
         let row_count = STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS;
         let summary = StructuralPathRankingTargetExportSummary {
             symbol: "NQ".to_string(),
@@ -2291,7 +2319,8 @@ mod tests {
                 .to_string_lossy()
                 .to_string(),
             jsonl_path: jsonl_path.to_string_lossy().to_string(),
-            history_jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            history_csv_path: history_csv_path.to_string_lossy().to_string(),
+            history_jsonl_path: history_jsonl_path.to_string_lossy().to_string(),
             history_rows: row_count,
             history_mature_rows: row_count,
             summary_path: summary_dir
@@ -2325,6 +2354,8 @@ mod tests {
             .collect::<Vec<_>>()
             .join("\n");
         std::fs::write(&jsonl_path, format!("{jsonl}\n")).unwrap();
+        std::fs::write(&history_csv_path, "header\n").unwrap();
+        std::fs::write(&history_jsonl_path, format!("{jsonl}\n")).unwrap();
 
         let status =
             structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
@@ -2622,9 +2653,13 @@ mod tests {
 
         assert_eq!(summary.symbol, "NQ");
         assert!(summary.history_rows >= summary.rows);
+        assert!(summary
+            .history_csv_path
+            .ends_with("structural_path_ranking_target_history.csv"));
         assert!(summary.history_jsonl_path.ends_with("structural_path_ranking_target_history.jsonl"));
         assert!(std::path::Path::new(&summary.csv_path).exists());
         assert!(std::path::Path::new(&summary.jsonl_path).exists());
+        assert!(std::path::Path::new(&summary.history_csv_path).exists());
         assert!(std::path::Path::new(&summary.history_jsonl_path).exists());
         assert!(std::path::Path::new(&summary.summary_path).exists());
 

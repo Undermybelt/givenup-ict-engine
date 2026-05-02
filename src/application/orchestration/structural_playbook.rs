@@ -31,6 +31,8 @@ const STRUCTURAL_PATH_RANKING_EXECUTION_GATE_MIN_PATH_PROB: f64 = 0.5;
 const STRUCTURAL_TARGET_POLICY_CONTEXT_SURFACE_LIMIT: usize = 3;
 pub const STRUCTURAL_PATH_RANKING_TARGET_CSV_FILE: &str = "structural_path_ranking_target.csv";
 pub const STRUCTURAL_PATH_RANKING_TARGET_JSONL_FILE: &str = "structural_path_ranking_target.jsonl";
+pub const STRUCTURAL_PATH_RANKING_TARGET_HISTORY_CSV_FILE: &str =
+    "structural_path_ranking_target_history.csv";
 pub const STRUCTURAL_PATH_RANKING_TARGET_HISTORY_JSONL_FILE: &str =
     "structural_path_ranking_target_history.jsonl";
 pub const STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE: &str =
@@ -470,6 +472,8 @@ pub struct StructuralPathRankingTargetExportSummary {
     pub rows_with_training_weight: usize,
     pub csv_path: String,
     pub jsonl_path: String,
+    #[serde(default)]
+    pub history_csv_path: String,
     #[serde(default)]
     pub history_jsonl_path: String,
     #[serde(default)]
@@ -2983,6 +2987,9 @@ pub fn export_structural_path_ranking_target(
     let jsonl_name = format!(
         "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_JSONL_FILE}"
     );
+    let history_csv_name = format!(
+        "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_HISTORY_CSV_FILE}"
+    );
     let history_jsonl_name = format!(
         "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_HISTORY_JSONL_FILE}"
     );
@@ -2994,6 +3001,12 @@ pub fn export_structural_path_ranking_target(
         &history_jsonl_path,
         &artifact.rows,
     )?;
+    let history_csv = render_structural_path_ranking_target_rows_csv(
+        &artifact.protocol_version,
+        &artifact.symbol,
+        &artifact.generated_at,
+        &history_rows,
+    );
     let history_jsonl = render_structural_path_ranking_target_rows_jsonl(&history_rows)?;
     let summary = structural_path_ranking_target_export_summary(
         state_dir,
@@ -3001,6 +3014,7 @@ pub fn export_structural_path_ranking_target(
         &artifact,
         &csv_name,
         &jsonl_name,
+        &history_csv_name,
         &history_jsonl_name,
         &history_rows,
         &summary_name,
@@ -3008,6 +3022,7 @@ pub fn export_structural_path_ranking_target(
     let summary_json = serde_json::to_string_pretty(&summary)?;
     save_text_state(state_dir, symbol, &csv_name, &csv)?;
     save_text_state(state_dir, symbol, &jsonl_name, &jsonl)?;
+    save_text_state(state_dir, symbol, &history_csv_name, &history_csv)?;
     save_text_state(state_dir, symbol, &history_jsonl_name, &history_jsonl)?;
     save_text_state(state_dir, symbol, &summary_name, &summary_json)?;
     Ok(summary)
@@ -3062,6 +3077,7 @@ fn structural_path_ranking_target_export_summary(
     artifact: &StructuralPathRankingTargetArtifact,
     csv_name: &str,
     jsonl_name: &str,
+    history_csv_name: &str,
     history_jsonl_name: &str,
     history_rows: &[StructuralPathRankingTargetRow],
     summary_name: &str,
@@ -3145,6 +3161,11 @@ fn structural_path_ranking_target_export_summary(
         jsonl_path: Path::new(state_dir)
             .join(symbol)
             .join(jsonl_name)
+            .to_string_lossy()
+            .to_string(),
+        history_csv_path: Path::new(state_dir)
+            .join(symbol)
+            .join(history_csv_name)
             .to_string_lossy()
             .to_string(),
         history_jsonl_path: Path::new(state_dir)
@@ -3532,17 +3553,20 @@ fn render_structural_path_ranking_target_jsonl(
     render_structural_path_ranking_target_rows_jsonl(&artifact.rows)
 }
 
-fn render_structural_path_ranking_target_csv(
-    artifact: &StructuralPathRankingTargetArtifact,
+fn render_structural_path_ranking_target_rows_csv(
+    protocol_version: &str,
+    symbol: &str,
+    generated_at: &str,
+    rows: &[StructuralPathRankingTargetRow],
 ) -> String {
     let mut out = String::from(
         "protocol_version,symbol,generated_at,candidate_set_id,candidate_set_size,rank,path_id,scenario_id,path_label,direction,raw_path_score,calibrated_path_prob,path_prob_lower_bound,execution_gate_status,execution_gate_min_path_prob,execution_gate_reason,pending_reward_state,maturity_mask,maturity_weight,calibrated_label,propensity_estimate,ips_weight,training_weight,regime_calibration_bucket,behavior_policy_probability,execution_propensity,target_policy_probability_confidence,target_policy_probability_lower_bound,target_policy_reward_prior,target_policy_reward_lower_bound,experience_prior,current_posterior,structural_baseline_score\n",
     );
-    for row in &artifact.rows {
+    for row in rows {
         let fields = [
-            csv_escape(&artifact.protocol_version),
-            csv_escape(&artifact.symbol),
-            csv_escape(&artifact.generated_at),
+            csv_escape(protocol_version),
+            csv_escape(symbol),
+            csv_escape(generated_at),
             csv_escape(&row.candidate_set_id),
             row.candidate_set_size.to_string(),
             row.rank.to_string(),
@@ -3578,6 +3602,17 @@ fn render_structural_path_ranking_target_csv(
         out.push('\n');
     }
     out
+}
+
+fn render_structural_path_ranking_target_csv(
+    artifact: &StructuralPathRankingTargetArtifact,
+) -> String {
+    render_structural_path_ranking_target_rows_csv(
+        &artifact.protocol_version,
+        &artifact.symbol,
+        &artifact.generated_at,
+        &artifact.rows,
+    )
 }
 
 fn csv_f64(value: f64) -> String {
