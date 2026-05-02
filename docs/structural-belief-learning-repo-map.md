@@ -244,7 +244,7 @@ Already in repo
 - path / branch / scenario / node history surfaces exist
 - recommended path bundle and top-path candidate surfaces already exist for consumption
 - `structural-path-ranking-target` workflow surface exists and reuses the declared structural candidate set
-- target rows expose `raw_path_score`, `calibrated_path_prob`, `path_prob_lower_bound`, lower-bound execution-gate fields, `pending_reward_state`, `maturity_mask`, `maturity_weight`, `calibrated_label`, `propensity_estimate`, `ips_weight`, `training_weight`, and `regime_calibration_bucket`
+- target rows expose `raw_path_score`, `calibrated_path_prob`, `path_prob_lower_bound`, lower-bound execution-gate fields, `pending_reward_state`, `maturity_mask`, `maturity_weight`, `calibrated_label`, `propensity_estimate`, `ips_weight`, `training_weight`, `regime_calibration_bucket`, and compact target-policy confidence/lower-bound/reward-prior diagnostics for external trainers
 - target rows export to `policy_training/structural_path_ranking_target.csv` and `.jsonl` with a summary file during the normal update flow
 - `policy-training-status` reports structural path-ranking export readiness, mature-row availability, and calibration readiness without requiring a new CLI flag
 - empirical Beta-smoothed calibration writes `calibrated_path_prob` and `path_prob_lower_bound` only when a regime bucket has raw-scored mature outcome observations
@@ -253,7 +253,7 @@ Already in repo
 - calibrated target rows include advisory execution-gate status fields from `path_prob_lower_bound` and a fixed repo threshold, without blocking zero-config uncalibrated flows
 - target rows now carry mature reward labels plus clipped IPS/sample weights so a downstream ranker can train without treating censored rows as negatives
 - `policy-training-status` separates calibration-quality readiness from production-validation readiness by requiring enough propensity-weighted calibrated rows before declaring the target production-validatable
-- the target summary carries an external trainer manifest describing group, label, weight, feature, calibration, and guardrail columns without adding a CatBoost runtime dependency
+- the target summary carries an external trainer manifest describing group, label, weight, target-policy feature, calibration, and guardrail columns without adding a CatBoost runtime dependency
 - `policy-training-status` surfaces trainer manifest readiness with protocol/dataset role plus compact feature/calibration/guardrail column counts, and warns on incomplete manifests without loading an external trainer
 - `policy-training-status` also recognizes an optional `policy_training/structural_path_ranking_trainer_artifact.json` handoff file, reporting artifact readiness, protocol/dataset role, model family, score column, trained/calibration row counts, feature-column count, and URI presence without dumping a user-specific artifact URI
 
