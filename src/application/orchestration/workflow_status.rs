@@ -5488,6 +5488,8 @@ mod tests {
                 behavior_policy_probability_variance: 0.018,
                 target_policy_probability_confidence: 0.57,
                 target_policy_probability_lower_bound: 0.31,
+                target_policy_probability_brier_score: 0.15625,
+                target_policy_probability_calibration_error: 0.375,
                 snips_weight_mass: 4.5,
                 snips_weight_squared_mass: 10.125,
                 snips_effective_sample_size: 2.0,
@@ -5630,6 +5632,11 @@ mod tests {
         assert_eq!(value["path"]["behavior_policy_probability_variance"], 0.018);
         assert_eq!(value["path"]["target_policy_probability_confidence"], 0.57);
         assert_eq!(value["path"]["target_policy_probability_lower_bound"], 0.31);
+        assert_eq!(value["path"]["target_policy_probability_brier_score"], 0.15625);
+        assert_eq!(
+            value["path"]["target_policy_probability_calibration_error"],
+            0.375
+        );
         assert_eq!(value["path"]["snips_weight_mass"], 4.5);
         assert_eq!(value["path"]["snips_weight_squared_mass"], 10.125);
         assert_eq!(value["path"]["snips_effective_sample_size"], 2.0);
