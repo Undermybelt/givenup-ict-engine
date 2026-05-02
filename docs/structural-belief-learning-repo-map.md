@@ -149,11 +149,12 @@ Already in repo
 - panel-derived aggregate priors consume source-reliability posteriors and outcome-confusion likelihood concentration so low-reliability or diffuse high-mass panels shrink toward neutral instead of dominating by raw mass
 - `structural-experience-priors` exposes compact Dawid-Skene / EM readiness counts from the structural prior event ledger: candidate items, multi-source overlap, distinct sources, observed labels, and readiness status
 - `structural-experience-priors` also surfaces compact latent-label consensus diagnostics for cross-source items: consensus item count, conflict item count, average consensus confidence, and minimum consensus confidence
+- `structural-experience-priors` runs a dependency-free fixed-iteration Dawid-Skene-style EM fit over multi-source event-ledger items, exposing latent item confidence and learned source-reliability summary diagnostics without dumping confusion matrices
 
 Literature mechanisms still worth importing
 - richer aggregate power-prior / tempered likelihood composition across source-panel contributions:
   - `posterior(theta) propto prior(theta) * product_s L_s(theta)^(tau_s)`
-- consuming learned source-specific reliability posteriors during cross-source aggregation
+- persisting and consuming learned EM source-specific confusion matrices during cross-source aggregation
 - clearer split between source rank, evidence quality, recency, and drift penalty
 
 Suggested formula
@@ -169,7 +170,7 @@ Suggested `tau_s` ingredients
 - break penalty
 
 Current repo gap
-- source reliability now has compact outcome-confusion likelihood cells, cross-source EM-readiness diagnostics, and latent-label consensus telemetry, but reliability learning is still not a full Dawid-Skene EM confusion-matrix model over latent true classes and multiple sources
+- source reliability now has compact outcome-confusion likelihood cells, cross-source EM-readiness diagnostics, latent-label consensus telemetry, and fixed-iteration EM fit diagnostics; remaining work is persisting and consuming full Dawid-Skene confusion matrices in source aggregation
 
 ---
 
@@ -328,7 +329,7 @@ Use this summary when deciding the next coding slice:
 - `CatBoost calibrated path target`: `部分实现`
 
 The repo is no longer blocked on surface drift. The highest-value remaining work is now:
-1. full Dawid-Skene / EM-style source reliability learning on top of the compact outcome-confusion cells once the readiness surface shows enough cross-source labels
+1. persist and consume Dawid-Skene / EM-style source confusion matrices on top of the compact fixed-iteration fit once the readiness surface shows enough cross-source labels
 2. richer BOCPD posterior calibration on top of the current HSMM-style empirical dwell distribution and compact evidence-weighted break/continue plus run-length telemetry
 3. full target-policy probability calibration and maturity/censoring beyond the current clipped IPS / SNIPS / DR plus ESS-weighted reward and variance diagnostics
 4. CatBoost training and production validation on top of exported P6 target rows once raw-scored history exists
