@@ -254,6 +254,7 @@ Already in repo
 - `policy-training-status` also reports a clipped-IPS propensity-weighted Brier score for calibrated mature rows when `propensity_estimate` is available
 - `policy-training-status` also reports raw-scored mature-row sufficiency and shortfall separately from propensity-weighted production-validation rows, so missing score history versus missing calibrated propensity coverage stay distinguishable
 - `policy-training-status` summary lines now include the path-ranking readiness shortfalls directly, so consumer agents do not need to inspect nested fields to see the blocking counts
+- path-ranking export now maintains an upserted history JSONL alongside the latest snapshot export, and `policy-training-status` evaluates production-validation readiness from that accumulated history instead of a single latest candidate set
 - calibrated target rows include advisory execution-gate status fields from `path_prob_lower_bound` and a fixed repo threshold, without blocking zero-config uncalibrated flows
 - target rows now carry mature reward labels plus clipped IPS/sample weights so a downstream ranker can train without treating censored rows as negatives
 - `policy-training-status` separates calibration-quality readiness from production-validation readiness by requiring enough propensity-weighted calibrated rows before declaring the target production-validatable

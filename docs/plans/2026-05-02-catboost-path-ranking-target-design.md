@@ -27,6 +27,7 @@ Implemented:
 - compact calibration-quality evaluation fields in `policy-training-status`
 - compact raw-scored mature-row sufficiency / shortfall fields in `policy-training-status`, separated from propensity-weighted production-validation readiness
 - compact `policy-training-status` summary lines that carry the path-ranking shortfalls instead of hiding them only in nested fields
+- cumulative upserted history export in `policy_training/structural_path_ranking_target_history.jsonl`, so production-validation counts can accumulate across exports instead of resetting to the latest candidate set snapshot
 
 Still not implemented:
 - production calibration validation after enough exported raw-scored rows exist
