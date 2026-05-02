@@ -316,6 +316,10 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub feedback_rows_total: usize,
     #[serde(default)]
     pub feedback_rows_without_structural_feedback: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub feedback_rows_without_structural_feedback_dominant_source: Option<String>,
+    #[serde(default)]
+    pub feedback_rows_without_structural_feedback_dominant_count: usize,
     #[serde(default)]
     pub feedback_rows_matured: usize,
     #[serde(default)]
@@ -823,6 +827,20 @@ pub fn structural_path_ranking_target_training_status(
         .count();
     let feedback_rows_without_structural_feedback =
         feedback_rows_total.saturating_sub(feedback_rows_with_structural_feedback);
+    let feedback_rows_without_structural_feedback_by_source = learning_state
+        .feedback_history
+        .iter()
+        .filter(|record| record.structural_feedback.is_none())
+        .fold(BTreeMap::<String, usize>::new(), |mut acc, record| {
+            *acc.entry(record.source.clone()).or_insert(0) += 1;
+            acc
+        });
+    let (feedback_rows_without_structural_feedback_dominant_source, feedback_rows_without_structural_feedback_dominant_count) =
+        feedback_rows_without_structural_feedback_by_source
+            .iter()
+            .max_by(|left, right| left.1.cmp(right.1).then_with(|| left.0.cmp(right.0)))
+            .map(|(source, count)| (Some(source.clone()), *count))
+            .unwrap_or((None, 0));
     let feedback_rows_pending = learning_state
         .feedback_history
         .iter()
@@ -932,7 +950,17 @@ pub fn structural_path_ranking_target_training_status(
         }
     }
     if feedback_rows_total > 0 && feedback_rows_with_structural_feedback == 0 {
-        warnings.push("structural_path_ranking_target_feedback_rows_missing_structural_refs".to_string());
+        if let Some(source) = feedback_rows_without_structural_feedback_dominant_source.as_deref() {
+            warnings.push(format!(
+                "structural_path_ranking_target_feedback_rows_missing_structural_refs:dominant_source={} count={}",
+                source,
+                feedback_rows_without_structural_feedback_dominant_count
+            ));
+        } else {
+            warnings.push(
+                "structural_path_ranking_target_feedback_rows_missing_structural_refs".to_string(),
+            );
+        }
     }
     if history_rows_with_propensity_estimate == 0 {
         warnings.push("structural_path_ranking_target_propensity_missing".to_string());
@@ -1054,6 +1082,8 @@ pub fn structural_path_ranking_target_training_status(
         feedback_rows_total,
         feedback_rows_with_structural_feedback,
         feedback_rows_without_structural_feedback,
+        feedback_rows_without_structural_feedback_dominant_source,
+        feedback_rows_without_structural_feedback_dominant_count,
         feedback_rows_matured,
         feedback_rows_pending,
         pending_update_artifact_present,
@@ -2344,6 +2374,11 @@ mod tests {
         assert_eq!(status.feedback_rows_total, 1);
         assert_eq!(status.feedback_rows_without_structural_feedback, 1);
         assert_eq!(
+            status.feedback_rows_without_structural_feedback_dominant_source.as_deref(),
+            Some("legacy_feedback")
+        );
+        assert_eq!(status.feedback_rows_without_structural_feedback_dominant_count, 1);
+        assert_eq!(
             status.candidate_set_id.as_deref(),
             Some("structural-candidates:NQ:test")
         );
@@ -2384,7 +2419,10 @@ mod tests {
             .contains(&"structural_path_ranking_target_pending_update_templates_present".to_string()));
         assert!(status
             .warnings
-            .contains(&"structural_path_ranking_target_feedback_rows_missing_structural_refs".to_string()));
+            .iter()
+            .any(|warning| warning.contains(
+                "structural_path_ranking_target_feedback_rows_missing_structural_refs:dominant_source=legacy_feedback count=1"
+            )));
     }
 
     #[test]
@@ -2471,6 +2509,8 @@ mod tests {
         assert_eq!(status.history_rows_with_training_weight, 2);
         assert_eq!(status.update_runs_with_structural_feedback, 0);
         assert_eq!(status.feedback_rows_with_structural_feedback, 0);
+        assert_eq!(status.feedback_rows_total, 0);
+        assert_eq!(status.feedback_rows_without_structural_feedback, 0);
         assert!(!status.pending_update_artifact_present);
         assert_eq!(status.pending_update_history_rows, 0);
         assert_eq!(
@@ -2648,6 +2688,8 @@ mod tests {
         assert_eq!(status.history_rows_with_training_weight, row_count);
         assert_eq!(status.update_runs_with_structural_feedback, 0);
         assert_eq!(status.feedback_rows_with_structural_feedback, 0);
+        assert_eq!(status.feedback_rows_total, 0);
+        assert_eq!(status.feedback_rows_without_structural_feedback, 0);
         assert!(!status.pending_update_artifact_present);
         assert_eq!(status.pending_update_history_rows, 0);
         assert_eq!(status.raw_scored_mature_rows, row_count);
