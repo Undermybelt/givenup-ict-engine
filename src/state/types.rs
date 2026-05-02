@@ -808,6 +808,10 @@ pub struct StructuralNodeDurationPrior {
     #[serde(default)]
     pub bocpd_recursive_run_length_entropy: f64,
     #[serde(default)]
+    pub bocpd_sequence_change_intensity: f64,
+    #[serde(default)]
+    pub bocpd_sequence_break_probability: f64,
+    #[serde(default)]
     pub sticky_self_transition_strength: f64,
     #[serde(default)]
     pub duration_outcome_support: f64,
@@ -879,6 +883,10 @@ pub struct StructuralNodeTemporalPosteriorState {
     pub bocpd_recursive_run_length_expected_value: f64,
     #[serde(default)]
     pub bocpd_recursive_run_length_entropy: f64,
+    #[serde(default)]
+    pub bocpd_sequence_change_intensity: f64,
+    #[serde(default)]
+    pub bocpd_sequence_break_probability: f64,
     pub duration_outcome_support: f64,
     pub temporal_posterior_support: f64,
     #[serde(default)]
@@ -7349,6 +7357,61 @@ fn structural_node_bocpd_recursive_run_length_fit(
     fit
 }
 
+fn structural_node_streak_outcome_support(streak: &StructuralNodeStreakRecord) -> f64 {
+    let success = streak.weighted_success_mass.max(0.0);
+    let failure = streak.weighted_failure_mass.max(0.0);
+    ((1.0 + success) / (2.0 + success + failure)).clamp(0.0, 1.0)
+}
+
+fn structural_node_bocpd_sequence_change_intensity(
+    streaks: &[StructuralNodeStreakRecord],
+    expected_dwell_steps: f64,
+) -> f64 {
+    if streaks.len() < 2 {
+        return 0.0;
+    }
+    let total_streaks = streaks.len();
+    let mut weighted_change_sum = 0.0;
+    let mut weighted_pair_mass = 0.0;
+    for index in 1..streaks.len() {
+        let previous = &streaks[index - 1];
+        let current = &streaks[index];
+        let recency_rank = total_streaks.saturating_sub(index + 1) as f64;
+        let recency_decay = 0.85_f64.powf(recency_rank);
+        let duration_denominator = previous
+            .streak_length
+            .max(current.streak_length)
+            .max(expected_dwell_steps.ceil() as usize)
+            .max(1) as f64;
+        let duration_change = (current.streak_length as f64 - previous.streak_length as f64).abs()
+            / duration_denominator;
+        let outcome_change = (structural_node_streak_outcome_support(current)
+            - structural_node_streak_outcome_support(previous))
+        .abs();
+        let pair_change = (duration_change.clamp(0.0, 1.0) * 0.7
+            + outcome_change.clamp(0.0, 1.0) * 0.3)
+            .clamp(0.0, 1.0);
+        weighted_change_sum += recency_decay * pair_change;
+        weighted_pair_mass += recency_decay;
+    }
+    if weighted_pair_mass <= f64::EPSILON {
+        0.0
+    } else {
+        (weighted_change_sum / weighted_pair_mass).clamp(0.0, 1.0)
+    }
+}
+
+fn structural_node_bocpd_sequence_break_probability(
+    recursive_break_probability: f64,
+    sequence_change_intensity: f64,
+    evidence_weight: f64,
+) -> f64 {
+    let sequence_weight = (evidence_weight * 0.5).clamp(0.0, 0.5);
+    (recursive_break_probability.clamp(0.0, 1.0) * (1.0 - sequence_weight)
+        + sequence_change_intensity.clamp(0.0, 1.0) * sequence_weight)
+        .clamp(0.0, 1.0)
+}
+
 fn rebuild_discounted_node_duration_priors(
     node_duration_priors: &mut BTreeMap<String, StructuralNodeDurationPrior>,
     node_temporal_posteriors: &mut BTreeMap<String, StructuralNodeTemporalPosteriorState>,
@@ -7458,6 +7521,13 @@ fn rebuild_discounted_node_duration_priors(
         prior.bocpd_recursive_run_length_expected_value =
             recursive_run_length_fit.expected_run_length;
         prior.bocpd_recursive_run_length_entropy = recursive_run_length_fit.entropy;
+        prior.bocpd_sequence_change_intensity =
+            structural_node_bocpd_sequence_change_intensity(streaks, prior.expected_dwell_steps);
+        prior.bocpd_sequence_break_probability = structural_node_bocpd_sequence_break_probability(
+            prior.bocpd_recursive_reset_probability,
+            prior.bocpd_sequence_change_intensity,
+            prior.bocpd_evidence_weight,
+        );
         prior.sticky_self_transition_strength = ((1.0 - prior.break_hazard) * 0.7
             + prior.duration_outcome_support * 0.3)
             .clamp(0.0, 1.0);
@@ -7484,14 +7554,17 @@ fn rebuild_discounted_node_duration_priors(
             bocpd_recursive_run_length_expected_value:
                 prior.bocpd_recursive_run_length_expected_value,
             bocpd_recursive_run_length_entropy: prior.bocpd_recursive_run_length_entropy,
+            bocpd_sequence_change_intensity: prior.bocpd_sequence_change_intensity,
+            bocpd_sequence_break_probability: prior.bocpd_sequence_break_probability,
             duration_outcome_support: prior.duration_outcome_support,
             temporal_posterior_support: prior.temporal_posterior_support,
             posterior_blend_weight,
             summary_line: format!(
-                "duration_mass={:.3} expected_dwell={:.3} break_hazard={:.3} sticky_self_transition={:.3} duration_support={:.3} duration_temporal={:.3} blend={:.3}",
+                "duration_mass={:.3} expected_dwell={:.3} break_hazard={:.3} sequence_break={:.3} sticky_self_transition={:.3} duration_support={:.3} duration_temporal={:.3} blend={:.3}",
                 prior.weighted_streak_mass,
                 prior.expected_dwell_steps,
                 prior.break_hazard,
+                prior.bocpd_sequence_break_probability,
                 prior.sticky_self_transition_strength,
                 prior.duration_outcome_support,
                 prior.temporal_posterior_support,
@@ -9202,6 +9275,8 @@ mod tests {
         assert!(trend.bocpd_recursive_run_length_mode_probability > 0.5);
         assert!(trend.bocpd_recursive_run_length_expected_value > 0.0);
         assert!(trend.bocpd_recursive_run_length_entropy > 0.0);
+        assert!(trend.bocpd_sequence_change_intensity > 0.0);
+        assert!(trend.bocpd_sequence_break_probability > 0.0);
         let parametric_break_hazard =
             structural_duration_break_hazard(trend.last_streak_length, trend.expected_dwell_steps);
         assert!(
@@ -9242,6 +9317,14 @@ mod tests {
         assert_eq!(
             temporal.bocpd_recursive_run_length_expected_value,
             trend.bocpd_recursive_run_length_expected_value
+        );
+        assert_eq!(
+            temporal.bocpd_sequence_change_intensity,
+            trend.bocpd_sequence_change_intensity
+        );
+        assert_eq!(
+            temporal.bocpd_sequence_break_probability,
+            trend.bocpd_sequence_break_probability
         );
         assert_eq!(temporal.temporal_posterior_support, trend.temporal_posterior_support);
     }

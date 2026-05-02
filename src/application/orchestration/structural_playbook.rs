@@ -250,6 +250,10 @@ pub struct StructuralTemporalSummaryArtifact {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bocpd_recursive_run_length_entropy: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bocpd_sequence_change_intensity: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bocpd_sequence_break_probability: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_posterior_blend_weight: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub transition_prior: Option<f64>,
@@ -2508,10 +2512,12 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
         .map(|state| state.summary_line.clone())
         .unwrap_or_else(|| {
             format!(
-                "duration_mass={:.3} expected_dwell={:.3} break_hazard={:.3} sticky_self_transition={:.3} duration_support={:.3} duration_temporal={:.3} blend=0.000",
+                "duration_mass={:.3} expected_dwell={:.3} break_hazard={:.3} sequence_break={:.3} sticky_self_transition={:.3} duration_support={:.3} duration_temporal={:.3} blend=0.000",
                 structural_duration_weighted_streak_mass(node_duration_prior).unwrap_or_default(),
                 structural_duration_expected_dwell_steps(node_duration_prior).unwrap_or_default(),
                 structural_duration_break_hazard(node_duration_prior).unwrap_or_default(),
+                structural_duration_bocpd_sequence_break_probability(node_duration_prior)
+                    .unwrap_or_default(),
                 structural_duration_sticky_self_transition_strength(node_duration_prior)
                     .unwrap_or_default(),
                 structural_duration_outcome_support(node_duration_prior).unwrap_or_default(),
@@ -2628,6 +2634,12 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
         bocpd_recursive_run_length_entropy: node_temporal_state
             .and_then(|state| structural_positive_f64(state.bocpd_recursive_run_length_entropy))
             .or_else(|| structural_duration_bocpd_recursive_run_length_entropy(node_duration_prior)),
+        bocpd_sequence_change_intensity: node_temporal_state
+            .and_then(|state| structural_positive_f64(state.bocpd_sequence_change_intensity))
+            .or_else(|| structural_duration_bocpd_sequence_change_intensity(node_duration_prior)),
+        bocpd_sequence_break_probability: node_temporal_state
+            .and_then(|state| structural_positive_f64(state.bocpd_sequence_break_probability))
+            .or_else(|| structural_duration_bocpd_sequence_break_probability(node_duration_prior)),
         duration_posterior_blend_weight: node_temporal_state
             .map(|state| state.posterior_blend_weight),
         transition_prior: transition_prior.map(|prior| prior.transition_prior),
@@ -5823,6 +5835,22 @@ fn structural_duration_bocpd_recursive_run_length_entropy(
 ) -> Option<f64> {
     structural_duration_positive_value(duration_prior, |prior| {
         prior.bocpd_recursive_run_length_entropy
+    })
+}
+
+fn structural_duration_bocpd_sequence_change_intensity(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    structural_duration_positive_value(duration_prior, |prior| {
+        prior.bocpd_sequence_change_intensity
+    })
+}
+
+fn structural_duration_bocpd_sequence_break_probability(
+    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
+) -> Option<f64> {
+    structural_duration_positive_value(duration_prior, |prior| {
+        prior.bocpd_sequence_break_probability
     })
 }
 

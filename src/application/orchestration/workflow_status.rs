@@ -6459,10 +6459,12 @@ mod tests {
                 observations: 3,
                 streak_count: 2,
                 weighted_streak_mass: 1.1,
+                bocpd_sequence_change_intensity: 0.25,
+                bocpd_sequence_break_probability: 0.33,
                 duration_outcome_support: 0.2,
                 temporal_posterior_support: 0.3,
                 posterior_blend_weight: 0.2,
-                summary_line: "duration_mass=1.100 duration_support=0.200 duration_temporal=0.300 blend=0.200".to_string(),
+                summary_line: "duration_mass=1.100 sequence_break=0.330 duration_support=0.200 duration_temporal=0.300 blend=0.200".to_string(),
                 last_recommended_at: Some("2026-04-30T04:00:00Z".to_string()),
                 ..crate::state::StructuralNodeTemporalPosteriorState::default()
             },
@@ -6554,10 +6556,12 @@ mod tests {
                 observations: 3,
                 streak_count: 5,
                 weighted_streak_mass: 1.1,
+                bocpd_sequence_change_intensity: 0.25,
+                bocpd_sequence_break_probability: 0.33,
                 duration_outcome_support: 0.2,
                 temporal_posterior_support: 0.3,
                 posterior_blend_weight: 0.2,
-                summary_line: "duration_mass=1.100 duration_support=0.200 duration_temporal=0.300 blend=0.200".to_string(),
+                summary_line: "duration_mass=1.100 sequence_break=0.330 duration_support=0.200 duration_temporal=0.300 blend=0.200".to_string(),
                 last_recommended_at: Some("2026-04-30T04:00:00Z".to_string()),
                 ..crate::state::StructuralNodeTemporalPosteriorState::default()
             },
@@ -6574,6 +6578,8 @@ mod tests {
         .unwrap();
 
         assert_eq!(value["duration_streak_count"], 5);
+        assert_eq!(value["bocpd_sequence_change_intensity"], 0.25);
+        assert_eq!(value["bocpd_sequence_break_probability"], 0.33);
     }
 
     #[test]
@@ -6653,6 +6659,8 @@ mod tests {
                 max_streak_length: 2,
                 last_streak_length: 1,
                 persistence_prior: 0.6,
+                bocpd_sequence_change_intensity: 0.25,
+                bocpd_sequence_break_probability: 0.33,
                 duration_outcome_support: 0.7407407407,
                 temporal_posterior_support: 0.6422222222,
                 last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
@@ -6713,6 +6721,10 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("duration_temporal=0.642"));
+        assert!(human_value["structural_temporal_line"]
+            .as_str()
+            .unwrap()
+            .contains("sequence_break=0.330"));
         assert!(human_value["structural_temporal_line"]
             .as_str()
             .unwrap()
