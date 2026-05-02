@@ -59,12 +59,12 @@ Already in repo
 - `event_ledger`
 - `node_duration_priors`
 - `branch_transition_priors`
-- duration `expected_dwell_steps`, `remaining_dwell_steps`, empirical dwell distribution, fitted completion hazard, BOCPD evidence weight/raw break probability, compact run-length mode/probability/tail/mass diagnostics, and `sticky_self_transition_strength`
-- `structural-temporal-summary` exposes compact duration-distribution entropy, survival, completion-hazard, BOCPD evidence-weight, raw break, calibrated break/continue, and run-length posterior diagnostics without dumping the full histogram
+- duration `expected_dwell_steps`, `remaining_dwell_steps`, empirical dwell distribution, fitted completion hazard, BOCPD evidence weight/raw break probability, compact run-length mode/probability/tail/mass diagnostics, compact one-step recursive run-length posterior diagnostics, and `sticky_self_transition_strength`
+- `structural-temporal-summary` exposes compact duration-distribution entropy, survival, completion-hazard, BOCPD evidence-weight, raw break, calibrated break/continue, empirical run-length, and recursive run-length posterior diagnostics without dumping the full histogram
 - panel-derived prior reconstruction before structural display / ranking surfaces
 
 Literature mechanisms still worth importing
-- richer recursive BOCPD posterior calibration beyond the current compact duration-surprise, empirical run-length, and evidence-weighted break/continue probabilities
+- full recursive BOCPD changepoint filtering over richer sequence history beyond the current compact duration-surprise, empirical run-length, one-step recursive run-length, and evidence-weighted break/continue probabilities
 - source-panel posterior aggregation written as explicit panel likelihood / prior math, not only weighted summary blending
 - clearer node-level prior mass separation from branch/path-level prior mass
 
@@ -76,11 +76,11 @@ Suggested state fields
 - `last_offline_seed_snapshot`
 
 Current repo gap
-- `node_duration_priors` and `branch_transition_priors` are real; duration state now carries expected dwell, remaining dwell, empirical dwell distribution, completion hazard, BOCPD evidence weight, raw/calibrated break probability, compact run-length diagnostics, break hazard, and sticky self-transition strength; `node_prior_mass` / `branch_prior_mass` / `scenario_prior_mass` / `path_prior_mass` keep entity-scaled prior mass auditable outside the generic stats maps
+- `node_duration_priors` and `branch_transition_priors` are real; duration state now carries expected dwell, remaining dwell, empirical dwell distribution, completion hazard, BOCPD evidence weight, raw/calibrated break probability, compact empirical and one-step recursive run-length diagnostics, break hazard, and sticky self-transition strength; `node_prior_mass` / `branch_prior_mass` / `scenario_prior_mass` / `path_prior_mass` keep entity-scaled prior mass auditable outside the generic stats maps
 - `last_offline_seed_snapshot` is formalized as a persistent theory object for the latest offline seed, but deeper snapshot history / recalibration policy remains future work
 
 Upgrade path
-1. calibrate the compact BOCPD-style break and run-length diagnostics against richer sequence history once enough observations exist
+1. calibrate the compact BOCPD-style break and one-step recursive run-length diagnostics against richer sequence history once enough observations exist
 2. treat source panels as pre-merge posterior contributors, not only audit surfaces
 
 ---
@@ -336,6 +336,6 @@ Use this summary when deciding the next coding slice:
 
 The repo is no longer blocked on surface drift. The highest-value remaining work is now:
 1. collect or opt into larger real cross-source panels, then inspect the persisted Dawid-Skene / EM-style calibration diagnostics over out-of-sample windows
-2. richer BOCPD posterior calibration on top of the current HSMM-style empirical dwell distribution and compact evidence-weighted break/continue plus run-length telemetry
+2. richer BOCPD posterior calibration on top of the current HSMM-style empirical dwell distribution and compact evidence-weighted break/continue plus empirical/recursive run-length telemetry
 3. full target-policy probability calibration and delayed-reward survival/competing-risk modeling beyond the current clipped IPS / SNIPS / DR, ESS-weighted reward, variance, and compact censoring-adjusted diagnostics
 4. CatBoost training and production validation on top of exported P6 target rows once raw-scored history exists
