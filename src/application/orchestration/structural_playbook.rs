@@ -628,6 +628,16 @@ pub struct StructuralExperiencePriorEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub censoring_adjusted_reward_lower_bound: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_success_competing_risk: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_failure_competing_risk: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_invalidation_competing_risk: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_abandonment_competing_risk: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_competing_risk_entropy: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_streak_count: Option<usize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_avg_streak_length: Option<f64>,
@@ -1283,6 +1293,16 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_censoring_adjusted_reward_prior(prior_stats),
                 censoring_adjusted_reward_lower_bound:
                     structural_prior_censoring_adjusted_reward_lower_bound(prior_stats),
+                delayed_reward_success_competing_risk:
+                    structural_prior_delayed_reward_success_competing_risk(prior_stats),
+                delayed_reward_failure_competing_risk:
+                    structural_prior_delayed_reward_failure_competing_risk(prior_stats),
+                delayed_reward_invalidation_competing_risk:
+                    structural_prior_delayed_reward_invalidation_competing_risk(prior_stats),
+                delayed_reward_abandonment_competing_risk:
+                    structural_prior_delayed_reward_abandonment_competing_risk(prior_stats),
+                delayed_reward_competing_risk_entropy:
+                    structural_prior_delayed_reward_competing_risk_entropy(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1373,6 +1393,20 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             structural_prior_censoring_adjusted_reward_prior(prior_stats),
                         censoring_adjusted_reward_lower_bound:
                             structural_prior_censoring_adjusted_reward_lower_bound(prior_stats),
+                        delayed_reward_success_competing_risk:
+                            structural_prior_delayed_reward_success_competing_risk(prior_stats),
+                        delayed_reward_failure_competing_risk:
+                            structural_prior_delayed_reward_failure_competing_risk(prior_stats),
+                        delayed_reward_invalidation_competing_risk:
+                            structural_prior_delayed_reward_invalidation_competing_risk(
+                                prior_stats,
+                            ),
+                        delayed_reward_abandonment_competing_risk:
+                            structural_prior_delayed_reward_abandonment_competing_risk(
+                                prior_stats,
+                            ),
+                        delayed_reward_competing_risk_entropy:
+                            structural_prior_delayed_reward_competing_risk_entropy(prior_stats),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1462,6 +1496,16 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_censoring_adjusted_reward_prior(prior_stats),
                 censoring_adjusted_reward_lower_bound:
                     structural_prior_censoring_adjusted_reward_lower_bound(prior_stats),
+                delayed_reward_success_competing_risk:
+                    structural_prior_delayed_reward_success_competing_risk(prior_stats),
+                delayed_reward_failure_competing_risk:
+                    structural_prior_delayed_reward_failure_competing_risk(prior_stats),
+                delayed_reward_invalidation_competing_risk:
+                    structural_prior_delayed_reward_invalidation_competing_risk(prior_stats),
+                delayed_reward_abandonment_competing_risk:
+                    structural_prior_delayed_reward_abandonment_competing_risk(prior_stats),
+                delayed_reward_competing_risk_entropy:
+                    structural_prior_delayed_reward_competing_risk_entropy(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1551,6 +1595,20 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             structural_prior_censoring_adjusted_reward_prior(prior_stats),
                         censoring_adjusted_reward_lower_bound:
                             structural_prior_censoring_adjusted_reward_lower_bound(prior_stats),
+                        delayed_reward_success_competing_risk:
+                            structural_prior_delayed_reward_success_competing_risk(prior_stats),
+                        delayed_reward_failure_competing_risk:
+                            structural_prior_delayed_reward_failure_competing_risk(prior_stats),
+                        delayed_reward_invalidation_competing_risk:
+                            structural_prior_delayed_reward_invalidation_competing_risk(
+                                prior_stats,
+                            ),
+                        delayed_reward_abandonment_competing_risk:
+                            structural_prior_delayed_reward_abandonment_competing_risk(
+                                prior_stats,
+                            ),
+                        delayed_reward_competing_risk_entropy:
+                            structural_prior_delayed_reward_competing_risk_entropy(prior_stats),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1640,6 +1698,16 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_censoring_adjusted_reward_prior(prior_stats),
                 censoring_adjusted_reward_lower_bound:
                     structural_prior_censoring_adjusted_reward_lower_bound(prior_stats),
+                delayed_reward_success_competing_risk:
+                    structural_prior_delayed_reward_success_competing_risk(prior_stats),
+                delayed_reward_failure_competing_risk:
+                    structural_prior_delayed_reward_failure_competing_risk(prior_stats),
+                delayed_reward_invalidation_competing_risk:
+                    structural_prior_delayed_reward_invalidation_competing_risk(prior_stats),
+                delayed_reward_abandonment_competing_risk:
+                    structural_prior_delayed_reward_abandonment_competing_risk(prior_stats),
+                delayed_reward_competing_risk_entropy:
+                    structural_prior_delayed_reward_competing_risk_entropy(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1730,6 +1798,20 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             structural_prior_censoring_adjusted_reward_prior(prior_stats),
                         censoring_adjusted_reward_lower_bound:
                             structural_prior_censoring_adjusted_reward_lower_bound(prior_stats),
+                        delayed_reward_success_competing_risk:
+                            structural_prior_delayed_reward_success_competing_risk(prior_stats),
+                        delayed_reward_failure_competing_risk:
+                            structural_prior_delayed_reward_failure_competing_risk(prior_stats),
+                        delayed_reward_invalidation_competing_risk:
+                            structural_prior_delayed_reward_invalidation_competing_risk(
+                                prior_stats,
+                            ),
+                        delayed_reward_abandonment_competing_risk:
+                            structural_prior_delayed_reward_abandonment_competing_risk(
+                                prior_stats,
+                            ),
+                        delayed_reward_competing_risk_entropy:
+                            structural_prior_delayed_reward_competing_risk_entropy(prior_stats),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1847,6 +1929,16 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 structural_prior_censoring_adjusted_reward_prior(node_prior_stats),
             censoring_adjusted_reward_lower_bound:
                 structural_prior_censoring_adjusted_reward_lower_bound(node_prior_stats),
+            delayed_reward_success_competing_risk:
+                structural_prior_delayed_reward_success_competing_risk(node_prior_stats),
+            delayed_reward_failure_competing_risk:
+                structural_prior_delayed_reward_failure_competing_risk(node_prior_stats),
+            delayed_reward_invalidation_competing_risk:
+                structural_prior_delayed_reward_invalidation_competing_risk(node_prior_stats),
+            delayed_reward_abandonment_competing_risk:
+                structural_prior_delayed_reward_abandonment_competing_risk(node_prior_stats),
+            delayed_reward_competing_risk_entropy:
+                structural_prior_delayed_reward_competing_risk_entropy(node_prior_stats),
             duration_streak_count: node_temporal_state
                 .map(|state| state.streak_count)
                 .or_else(|| structural_duration_streak_count(node_duration_prior)),
@@ -4691,6 +4783,78 @@ fn structural_prior_censoring_adjusted_reward_lower_bound(
     )
 }
 
+#[derive(Debug, Clone, Copy)]
+struct StructuralPriorCompetingRisks {
+    success: f64,
+    failure: f64,
+    invalidation: f64,
+    abandonment: f64,
+    entropy: f64,
+}
+
+fn structural_prior_delayed_reward_competing_risks(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<StructuralPriorCompetingRisks> {
+    let stats = prior_stats?;
+    if structural_matured_feedback_count_value(stats) == 0 {
+        return None;
+    }
+    let success_mass = stats.wins as f64 + stats.breakevens as f64 * 0.5;
+    let failure_mass = stats.losses as f64 + stats.breakevens as f64 * 0.5;
+    let invalidation_mass = stats.invalidated as f64;
+    let abandonment_mass = stats.abandoned as f64;
+    let denominator = success_mass + failure_mass + invalidation_mass + abandonment_mass + 4.0;
+    if denominator <= f64::EPSILON {
+        return None;
+    }
+    let success = ((1.0 + success_mass) / denominator).clamp(0.0, 1.0);
+    let failure = ((1.0 + failure_mass) / denominator).clamp(0.0, 1.0);
+    let invalidation = ((1.0 + invalidation_mass) / denominator).clamp(0.0, 1.0);
+    let abandonment = ((1.0 + abandonment_mass) / denominator).clamp(0.0, 1.0);
+    let entropy = [success, failure, invalidation, abandonment]
+        .into_iter()
+        .filter(|risk| *risk > f64::EPSILON)
+        .map(|risk| -risk * risk.ln())
+        .sum();
+    Some(StructuralPriorCompetingRisks {
+        success,
+        failure,
+        invalidation,
+        abandonment,
+        entropy,
+    })
+}
+
+fn structural_prior_delayed_reward_success_competing_risk(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_delayed_reward_competing_risks(prior_stats).map(|risks| risks.success)
+}
+
+fn structural_prior_delayed_reward_failure_competing_risk(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_delayed_reward_competing_risks(prior_stats).map(|risks| risks.failure)
+}
+
+fn structural_prior_delayed_reward_invalidation_competing_risk(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_delayed_reward_competing_risks(prior_stats).map(|risks| risks.invalidation)
+}
+
+fn structural_prior_delayed_reward_abandonment_competing_risk(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_delayed_reward_competing_risks(prior_stats).map(|risks| risks.abandonment)
+}
+
+fn structural_prior_delayed_reward_competing_risk_entropy(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_delayed_reward_competing_risks(prior_stats).map(|risks| risks.entropy)
+}
+
 fn structural_duration_streak_count(
     duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
 ) -> Option<usize> {
@@ -6217,6 +6381,34 @@ mod tests {
                 .abs()
                 < 1e-9
         );
+        let expected_competing_risks: [f64; 4] =
+            [2.5 / 7.0, 2.5 / 7.0, 1.0 / 7.0, 1.0 / 7.0];
+        let expected_competing_risk_entropy: f64 = expected_competing_risks
+            .iter()
+            .map(|risk| -*risk * (*risk).ln())
+            .sum();
+        assert_eq!(
+            structural_prior_delayed_reward_success_competing_risk(Some(&stats)),
+            Some(expected_competing_risks[0])
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_failure_competing_risk(Some(&stats)),
+            Some(expected_competing_risks[1])
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_invalidation_competing_risk(Some(&stats)),
+            Some(expected_competing_risks[2])
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_abandonment_competing_risk(Some(&stats)),
+            Some(expected_competing_risks[3])
+        );
+        assert!(
+            (structural_prior_delayed_reward_competing_risk_entropy(Some(&stats)).unwrap()
+                - expected_competing_risk_entropy)
+                .abs()
+                < 1e-9
+        );
 
         let not_followed_only = StructuralPriorStats {
             observations: 1,
@@ -6235,6 +6427,10 @@ mod tests {
         assert_eq!(structural_prior_censoring_rate(Some(&not_followed_only)), None);
         assert_eq!(
             structural_prior_delayed_reward_resolution_probability(Some(&not_followed_only)),
+            None
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_success_competing_risk(Some(&not_followed_only)),
             None
         );
     }

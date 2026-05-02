@@ -5670,6 +5670,36 @@ mod tests {
                 .abs()
                 < 1e-9
         );
+        let expected_competing_risks: [f64; 4] =
+            [3.0 / 7.0, 2.0 / 7.0, 1.0 / 7.0, 1.0 / 7.0];
+        let expected_competing_risk_entropy: f64 = expected_competing_risks
+            .iter()
+            .map(|risk| -*risk * (*risk).ln())
+            .sum();
+        assert_eq!(
+            value["path"]["delayed_reward_success_competing_risk"],
+            expected_competing_risks[0]
+        );
+        assert_eq!(
+            value["path"]["delayed_reward_failure_competing_risk"],
+            expected_competing_risks[1]
+        );
+        assert_eq!(
+            value["path"]["delayed_reward_invalidation_competing_risk"],
+            expected_competing_risks[2]
+        );
+        assert_eq!(
+            value["path"]["delayed_reward_abandonment_competing_risk"],
+            expected_competing_risks[3]
+        );
+        assert!(
+            (value["path"]["delayed_reward_competing_risk_entropy"]
+                .as_f64()
+                .unwrap()
+                - expected_competing_risk_entropy)
+                .abs()
+                < 1e-9
+        );
         assert_eq!(value["path"]["matured_feedback_count"], 3);
         assert_eq!(value["path"]["unresolved_feedback_count"], 0);
         assert_eq!(value["path"]["maturity_coverage"], 1.0);

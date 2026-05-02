@@ -187,6 +187,16 @@ pub struct StructuralPriorStats {
     #[serde(default)]
     pub censoring_adjusted_reward_lower_bound: f64,
     #[serde(default)]
+    pub delayed_reward_success_competing_risk: f64,
+    #[serde(default)]
+    pub delayed_reward_failure_competing_risk: f64,
+    #[serde(default)]
+    pub delayed_reward_invalidation_competing_risk: f64,
+    #[serde(default)]
+    pub delayed_reward_abandonment_competing_risk: f64,
+    #[serde(default)]
+    pub delayed_reward_competing_risk_entropy: f64,
+    #[serde(default)]
     pub source_panel_summaries: BTreeMap<String, StructuralPriorSourceSummary>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_offline_seed_source: Option<String>,
@@ -241,6 +251,16 @@ pub struct StructuralPriorMassSnapshot {
     pub censoring_adjusted_reward_prior: f64,
     #[serde(default)]
     pub censoring_adjusted_reward_lower_bound: f64,
+    #[serde(default)]
+    pub delayed_reward_success_competing_risk: f64,
+    #[serde(default)]
+    pub delayed_reward_failure_competing_risk: f64,
+    #[serde(default)]
+    pub delayed_reward_invalidation_competing_risk: f64,
+    #[serde(default)]
+    pub delayed_reward_abandonment_competing_risk: f64,
+    #[serde(default)]
+    pub delayed_reward_competing_risk_entropy: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_offline_seed_source: Option<String>,
 }
@@ -348,6 +368,16 @@ pub struct StructuralPriorSourceSummary {
     pub censoring_adjusted_reward_prior: f64,
     #[serde(default)]
     pub censoring_adjusted_reward_lower_bound: f64,
+    #[serde(default)]
+    pub delayed_reward_success_competing_risk: f64,
+    #[serde(default)]
+    pub delayed_reward_failure_competing_risk: f64,
+    #[serde(default)]
+    pub delayed_reward_invalidation_competing_risk: f64,
+    #[serde(default)]
+    pub delayed_reward_abandonment_competing_risk: f64,
+    #[serde(default)]
+    pub delayed_reward_competing_risk_entropy: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_tempering_coefficient: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4142,6 +4172,13 @@ fn structural_prior_mass_snapshot(
         delayed_reward_censoring_probability: stats.delayed_reward_censoring_probability,
         censoring_adjusted_reward_prior: stats.censoring_adjusted_reward_prior,
         censoring_adjusted_reward_lower_bound: stats.censoring_adjusted_reward_lower_bound,
+        delayed_reward_success_competing_risk: stats.delayed_reward_success_competing_risk,
+        delayed_reward_failure_competing_risk: stats.delayed_reward_failure_competing_risk,
+        delayed_reward_invalidation_competing_risk: stats
+            .delayed_reward_invalidation_competing_risk,
+        delayed_reward_abandonment_competing_risk: stats
+            .delayed_reward_abandonment_competing_risk,
+        delayed_reward_competing_risk_entropy: stats.delayed_reward_competing_risk_entropy,
         last_offline_seed_source: stats.last_offline_seed_source.clone(),
     }
 }
@@ -4696,6 +4733,51 @@ fn structural_delayed_reward_censoring_probability(
     ((1.0 + unresolved) / (2.0 + followed_count as f64)).clamp(0.0, 1.0)
 }
 
+#[derive(Debug, Clone, Copy, Default)]
+struct StructuralDelayedRewardCompetingRisks {
+    success: f64,
+    failure: f64,
+    invalidation: f64,
+    abandonment: f64,
+    entropy: f64,
+}
+
+fn structural_delayed_reward_competing_risks(
+    wins: usize,
+    losses: usize,
+    breakevens: usize,
+    invalidated: usize,
+    abandoned: usize,
+) -> Option<StructuralDelayedRewardCompetingRisks> {
+    if structural_matured_feedback_count(wins, losses, breakevens, invalidated, abandoned) == 0 {
+        return None;
+    }
+    let success_mass = wins as f64 + breakevens as f64 * 0.5;
+    let failure_mass = losses as f64 + breakevens as f64 * 0.5;
+    let invalidation_mass = invalidated as f64;
+    let abandonment_mass = abandoned as f64;
+    let denominator = success_mass + failure_mass + invalidation_mass + abandonment_mass + 4.0;
+    if denominator <= f64::EPSILON {
+        return None;
+    }
+    let success = ((1.0 + success_mass) / denominator).clamp(0.0, 1.0);
+    let failure = ((1.0 + failure_mass) / denominator).clamp(0.0, 1.0);
+    let invalidation = ((1.0 + invalidation_mass) / denominator).clamp(0.0, 1.0);
+    let abandonment = ((1.0 + abandonment_mass) / denominator).clamp(0.0, 1.0);
+    let entropy = [success, failure, invalidation, abandonment]
+        .into_iter()
+        .filter(|risk| *risk > f64::EPSILON)
+        .map(|risk| -risk * risk.ln())
+        .sum();
+    Some(StructuralDelayedRewardCompetingRisks {
+        success,
+        failure,
+        invalidation,
+        abandonment,
+        entropy,
+    })
+}
+
 fn structural_censoring_adjusted_reward_prior(
     target_policy_reward_prior: f64,
     smoothed_prior: f64,
@@ -4834,6 +4916,19 @@ fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
         stats.delayed_reward_resolution_probability,
         stats.delayed_reward_censoring_probability,
     );
+    let competing_risks = structural_delayed_reward_competing_risks(
+        stats.wins,
+        stats.losses,
+        stats.breakevens,
+        stats.invalidated,
+        stats.abandoned,
+    )
+    .unwrap_or_default();
+    stats.delayed_reward_success_competing_risk = competing_risks.success;
+    stats.delayed_reward_failure_competing_risk = competing_risks.failure;
+    stats.delayed_reward_invalidation_competing_risk = competing_risks.invalidation;
+    stats.delayed_reward_abandonment_competing_risk = competing_risks.abandonment;
+    stats.delayed_reward_competing_risk_entropy = competing_risks.entropy;
 }
 
 fn update_structural_prior_source_summary_from_feedback(
@@ -5074,6 +5169,19 @@ fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSu
         summary.delayed_reward_resolution_probability,
         summary.delayed_reward_censoring_probability,
     );
+    let competing_risks = structural_delayed_reward_competing_risks(
+        summary.wins,
+        summary.losses,
+        summary.breakevens,
+        summary.invalidated,
+        summary.abandoned,
+    )
+    .unwrap_or_default();
+    summary.delayed_reward_success_competing_risk = competing_risks.success;
+    summary.delayed_reward_failure_competing_risk = competing_risks.failure;
+    summary.delayed_reward_invalidation_competing_risk = competing_risks.invalidation;
+    summary.delayed_reward_abandonment_competing_risk = competing_risks.abandonment;
+    summary.delayed_reward_competing_risk_entropy = competing_risks.entropy;
 }
 
 fn update_structural_source_reliability_from_feedback(
@@ -7439,6 +7547,32 @@ mod tests {
                 .abs()
                 < 1e-9
         );
+        let expected_competing_risks: [f64; 4] =
+            [2.0 / 6.0, 2.0 / 6.0, 1.0 / 6.0, 1.0 / 6.0];
+        let expected_competing_risk_entropy: f64 = expected_competing_risks
+            .iter()
+            .map(|risk| -*risk * (*risk).ln())
+            .sum();
+        assert!(
+            (path.delayed_reward_success_competing_risk - expected_competing_risks[0]).abs()
+                < 1e-9
+        );
+        assert!(
+            (path.delayed_reward_failure_competing_risk - expected_competing_risks[1]).abs()
+                < 1e-9
+        );
+        assert!(
+            (path.delayed_reward_invalidation_competing_risk - expected_competing_risks[2]).abs()
+                < 1e-9
+        );
+        assert!(
+            (path.delayed_reward_abandonment_competing_risk - expected_competing_risks[3]).abs()
+                < 1e-9
+        );
+        assert!(
+            (path.delayed_reward_competing_risk_entropy - expected_competing_risk_entropy).abs()
+                < 1e-9
+        );
         let source_summary = path
             .source_panel_summaries
             .get("structural_feedback_submission")
@@ -7499,6 +7633,34 @@ mod tests {
         assert!(
             (source_summary.censoring_adjusted_reward_lower_bound
                 - ((0.5 - expected_target_policy_variance_penalty) * 0.75 + 0.0625))
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (source_summary.delayed_reward_success_competing_risk - expected_competing_risks[0])
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (source_summary.delayed_reward_failure_competing_risk - expected_competing_risks[1])
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (source_summary.delayed_reward_invalidation_competing_risk
+                - expected_competing_risks[2])
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (source_summary.delayed_reward_abandonment_competing_risk
+                - expected_competing_risks[3])
+                .abs()
+                < 1e-9
+        );
+        assert!(
+            (source_summary.delayed_reward_competing_risk_entropy
+                - expected_competing_risk_entropy)
                 .abs()
                 < 1e-9
         );
