@@ -312,6 +312,18 @@ pub struct StructuralSourceReliabilityEmReadiness {
     pub avg_persisted_source_reliability: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub min_persisted_source_reliability: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub em_calibration_status: Option<String>,
+    #[serde(default)]
+    pub em_calibration_observation_count: usize,
+    #[serde(default)]
+    pub em_calibration_source_count: usize,
+    #[serde(default)]
+    pub em_calibration_min_observations: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub em_calibration_brier_score: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub em_calibration_log_loss: Option<f64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -3698,6 +3710,33 @@ fn structural_source_reliability_em_readiness(
         persisted_confusion_cell_count: diagnostics.persisted_confusion_cell_count,
         avg_persisted_source_reliability: diagnostics.avg_persisted_source_reliability,
         min_persisted_source_reliability: diagnostics.min_persisted_source_reliability,
+        em_calibration_status: diagnostics
+            .calibration
+            .as_ref()
+            .map(|calibration| calibration.status.clone()),
+        em_calibration_observation_count: diagnostics
+            .calibration
+            .as_ref()
+            .map(|calibration| calibration.observation_count)
+            .unwrap_or_default(),
+        em_calibration_source_count: diagnostics
+            .calibration
+            .as_ref()
+            .map(|calibration| calibration.source_count)
+            .unwrap_or_default(),
+        em_calibration_min_observations: diagnostics
+            .calibration
+            .as_ref()
+            .map(|calibration| calibration.min_observations)
+            .unwrap_or_default(),
+        em_calibration_brier_score: diagnostics
+            .calibration
+            .as_ref()
+            .and_then(|calibration| calibration.brier_score),
+        em_calibration_log_loss: diagnostics
+            .calibration
+            .as_ref()
+            .and_then(|calibration| calibration.log_loss),
     }
 }
 
@@ -5758,6 +5797,15 @@ mod tests {
         assert_eq!(readiness.persisted_confusion_cell_count, 18);
         assert!(readiness.avg_persisted_source_reliability.is_some());
         assert!(readiness.min_persisted_source_reliability.is_some());
+        assert_eq!(readiness.em_calibration_status.as_deref(), Some("ready"));
+        assert_eq!(readiness.em_calibration_observation_count, 6);
+        assert_eq!(readiness.em_calibration_source_count, 2);
+        assert_eq!(
+            readiness.em_calibration_min_observations,
+            crate::state::STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_CALIBRATION_OBSERVATIONS
+        );
+        assert!(readiness.em_calibration_brier_score.unwrap() >= 0.0);
+        assert!(readiness.em_calibration_log_loss.unwrap() >= 0.0);
     }
 
     #[test]

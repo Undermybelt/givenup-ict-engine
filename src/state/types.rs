@@ -8,6 +8,7 @@ const STRUCTURAL_IPS_WEIGHT_CLIP: f64 = 5.0;
 const STRUCTURAL_SOURCE_CONFUSION_LAPLACE_ALPHA: f64 = 1.0;
 pub const STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS: usize = 3;
 pub const STRUCTURAL_SOURCE_RELIABILITY_EM_ITERATIONS: usize = 5;
+pub const STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_CALIBRATION_OBSERVATIONS: usize = 6;
 const STRUCTURAL_SOURCE_RELIABILITY_EM_LAPLACE_ALPHA: f64 = 0.5;
 
 pub const LEARNING_STATE_FILE: &str = "learning_state.json";
@@ -95,6 +96,8 @@ pub struct StructuralPriorLearningState {
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub source_reliability_em_summaries:
         BTreeMap<String, StructuralSourceReliabilityEmSourceSummary>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_reliability_em_calibration: Option<StructuralSourceReliabilityEmCalibrationSummary>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -419,6 +422,18 @@ pub struct StructuralSourceReliabilityEmConfusionCell {
     pub probability: f64,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralSourceReliabilityEmCalibrationSummary {
+    pub status: String,
+    pub observation_count: usize,
+    pub source_count: usize,
+    pub min_observations: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub brier_score: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub log_loss: Option<f64>,
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct StructuralSourceReliabilityEmDiagnostics {
     pub candidate_item_count: usize,
@@ -436,6 +451,7 @@ pub struct StructuralSourceReliabilityEmDiagnostics {
     pub persisted_confusion_cell_count: usize,
     pub avg_persisted_source_reliability: Option<f64>,
     pub min_persisted_source_reliability: Option<f64>,
+    pub calibration: Option<StructuralSourceReliabilityEmCalibrationSummary>,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -5180,6 +5196,9 @@ pub fn structural_source_reliability_em_diagnostics(
         min_persisted_source_reliability: structural_source_reliability_em_min(
             &persisted_source_reliabilities,
         ),
+        calibration: structural_prior_state
+            .source_reliability_em_calibration
+            .clone(),
     }
 }
 
@@ -5199,6 +5218,7 @@ pub fn refresh_structural_source_reliability_em_state(
     structural_prior_state: &mut StructuralPriorLearningState,
 ) {
     structural_prior_state.source_reliability_em_summaries.clear();
+    structural_prior_state.source_reliability_em_calibration = None;
     let ledger = structural_source_reliability_em_ledger(structural_prior_state);
     let fit = structural_source_reliability_em_fit(&ledger.items);
     if fit.iteration_count == 0 {
@@ -5246,6 +5266,124 @@ pub fn refresh_structural_source_reliability_em_state(
             },
         );
     }
+    structural_prior_state.source_reliability_em_calibration =
+        structural_source_reliability_em_calibration_summary(
+            &ledger.items,
+            &structural_prior_state.source_reliability_em_summaries,
+        );
+}
+
+fn structural_source_reliability_em_calibration_summary(
+    items: &BTreeMap<String, StructuralSourceReliabilityEmItem>,
+    summaries: &BTreeMap<String, StructuralSourceReliabilityEmSourceSummary>,
+) -> Option<StructuralSourceReliabilityEmCalibrationSummary> {
+    if summaries.is_empty() {
+        return None;
+    }
+    let mut weighted_brier = 0.0;
+    let mut weighted_log_loss = 0.0;
+    let mut observation_count = 0usize;
+    let mut calibrated_sources = BTreeSet::<String>::new();
+
+    for item in items.values() {
+        if item.sources.len() < 2 || item.observed_labels < 2 {
+            continue;
+        }
+        for (source_label, observed_counts) in &item.source_credit_classes {
+            let Some(consensus_label) =
+                structural_source_reliability_em_leave_source_out_consensus(item, source_label)
+            else {
+                continue;
+            };
+            let Some(summary) = summaries.get(source_label) else {
+                continue;
+            };
+            let row = summary
+                .confusion
+                .values()
+                .filter(|cell| cell.true_credit_class == consensus_label)
+                .map(|cell| {
+                    (
+                        cell.observed_credit_class.clone(),
+                        cell.probability.clamp(0.0, 1.0),
+                    )
+                })
+                .collect::<BTreeMap<_, _>>();
+            if row.is_empty() {
+                continue;
+            }
+            for (observed_label, count) in observed_counts {
+                if *count == 0 {
+                    continue;
+                }
+                let mut brier = row
+                    .iter()
+                    .map(|(row_label, probability)| {
+                        let target = if row_label == observed_label { 1.0 } else { 0.0 };
+                        (probability - target) * (probability - target)
+                    })
+                    .sum::<f64>();
+                if !row.contains_key(observed_label) {
+                    brier += 1.0;
+                }
+                let observed_probability = row
+                    .get(observed_label)
+                    .copied()
+                    .unwrap_or(1e-12)
+                    .clamp(1e-12, 1.0);
+                weighted_brier += brier * *count as f64;
+                weighted_log_loss += -observed_probability.ln() * *count as f64;
+                observation_count += *count;
+                calibrated_sources.insert(source_label.clone());
+            }
+        }
+    }
+
+    if observation_count == 0 {
+        return None;
+    }
+    let source_count = calibrated_sources.len();
+    let status = if source_count < 2 {
+        "needs_multiple_sources"
+    } else if observation_count < STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_CALIBRATION_OBSERVATIONS {
+        "needs_larger_panel"
+    } else {
+        "ready"
+    };
+    Some(StructuralSourceReliabilityEmCalibrationSummary {
+        status: status.to_string(),
+        observation_count,
+        source_count,
+        min_observations: STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_CALIBRATION_OBSERVATIONS,
+        brier_score: Some((weighted_brier / observation_count as f64).clamp(0.0, 2.0)),
+        log_loss: Some((weighted_log_loss / observation_count as f64).max(0.0)),
+    })
+}
+
+fn structural_source_reliability_em_leave_source_out_consensus(
+    item: &StructuralSourceReliabilityEmItem,
+    source_label: &str,
+) -> Option<String> {
+    let mut other_counts = item.observed_credit_classes.clone();
+    if let Some(source_counts) = item.source_credit_classes.get(source_label) {
+        for (label, count) in source_counts {
+            let entry = other_counts.get_mut(label)?;
+            *entry = entry.saturating_sub(*count);
+        }
+    }
+    other_counts.retain(|_, count| *count > 0);
+    let max_count = other_counts.values().copied().max()?;
+    if other_counts
+        .values()
+        .filter(|count| **count == max_count)
+        .count()
+        != 1
+    {
+        return None;
+    }
+    other_counts
+        .into_iter()
+        .find_map(|(label, count)| (count == max_count).then_some(label))
 }
 
 fn structural_source_reliability_em_fit_from_persisted_state(
@@ -7253,10 +7391,16 @@ mod tests {
         }
 
         let mut state = LearningState::default();
-        for (recommendation_id, backtest_outcome, live_outcome, analyze_outcome) in [
-            ("rec-1", "win", "win", "loss"),
-            ("rec-2", "loss", "loss", "win"),
-            ("rec-3", "win", "win", "loss"),
+        for (
+            recommendation_id,
+            backtest_outcome,
+            live_outcome,
+            research_outcome,
+            analyze_outcome,
+        ) in [
+            ("rec-1", "win", "win", "win", "loss"),
+            ("rec-2", "loss", "loss", "loss", "win"),
+            ("rec-3", "win", "win", "win", "loss"),
         ] {
             let refs = refs_for_rec(recommendation_id);
             state.apply_structural_prior_seed(
@@ -7266,12 +7410,16 @@ mod tests {
             state.apply_structural_prior_seed(&refs, &seed_with_outcome("live", live_outcome));
             state.apply_structural_prior_seed(
                 &refs,
+                &seed_with_outcome("research", research_outcome),
+            );
+            state.apply_structural_prior_seed(
+                &refs,
                 &seed_with_outcome("analyze", analyze_outcome),
             );
         }
 
         let summaries = &state.structural_prior_state.source_reliability_em_summaries;
-        assert_eq!(summaries.len(), 3);
+        assert_eq!(summaries.len(), 4);
         let backtest = summaries
             .get("backtest")
             .expect("backtest persisted EM summary");
@@ -7294,6 +7442,20 @@ mod tests {
         assert!(
             analyze.confusion["positive_executed->negative_executed"].probability > 0.5
         );
+        let calibration = state
+            .structural_prior_state
+            .source_reliability_em_calibration
+            .as_ref()
+            .expect("persisted EM calibration summary");
+        assert_eq!(calibration.status, "ready");
+        assert_eq!(calibration.observation_count, 12);
+        assert_eq!(calibration.source_count, 4);
+        assert_eq!(
+            calibration.min_observations,
+            STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_CALIBRATION_OBSERVATIONS
+        );
+        assert!(calibration.brier_score.unwrap() < 0.6);
+        assert!(calibration.log_loss.unwrap() < 0.8);
     }
 
     #[test]
