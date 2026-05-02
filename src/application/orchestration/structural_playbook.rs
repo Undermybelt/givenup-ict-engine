@@ -539,6 +539,14 @@ pub struct StructuralExperiencePriorEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub target_policy_reward_lower_bound: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub matured_feedback_count: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub unresolved_feedback_count: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub maturity_coverage: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub censoring_rate: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_streak_count: Option<usize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_avg_streak_length: Option<f64>,
@@ -1172,6 +1180,10 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_target_policy_variance_penalty(prior_stats),
                 target_policy_reward_lower_bound:
                     structural_prior_target_policy_reward_lower_bound(prior_stats),
+                matured_feedback_count: structural_prior_matured_feedback_count(prior_stats),
+                unresolved_feedback_count: structural_prior_unresolved_feedback_count(prior_stats),
+                maturity_coverage: structural_prior_maturity_coverage(prior_stats),
+                censoring_rate: structural_prior_censoring_rate(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1234,6 +1246,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             structural_prior_target_policy_variance_penalty(prior_stats),
                         target_policy_reward_lower_bound:
                             structural_prior_target_policy_reward_lower_bound(prior_stats),
+                        matured_feedback_count: structural_prior_matured_feedback_count(
+                            prior_stats,
+                        ),
+                        unresolved_feedback_count: structural_prior_unresolved_feedback_count(
+                            prior_stats,
+                        ),
+                        maturity_coverage: structural_prior_maturity_coverage(prior_stats),
+                        censoring_rate: structural_prior_censoring_rate(prior_stats),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1301,6 +1321,10 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_target_policy_variance_penalty(prior_stats),
                 target_policy_reward_lower_bound:
                     structural_prior_target_policy_reward_lower_bound(prior_stats),
+                matured_feedback_count: structural_prior_matured_feedback_count(prior_stats),
+                unresolved_feedback_count: structural_prior_unresolved_feedback_count(prior_stats),
+                maturity_coverage: structural_prior_maturity_coverage(prior_stats),
+                censoring_rate: structural_prior_censoring_rate(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1362,6 +1386,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             structural_prior_target_policy_variance_penalty(prior_stats),
                         target_policy_reward_lower_bound:
                             structural_prior_target_policy_reward_lower_bound(prior_stats),
+                        matured_feedback_count: structural_prior_matured_feedback_count(
+                            prior_stats,
+                        ),
+                        unresolved_feedback_count: structural_prior_unresolved_feedback_count(
+                            prior_stats,
+                        ),
+                        maturity_coverage: structural_prior_maturity_coverage(prior_stats),
+                        censoring_rate: structural_prior_censoring_rate(prior_stats),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1429,6 +1461,10 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_target_policy_variance_penalty(prior_stats),
                 target_policy_reward_lower_bound:
                     structural_prior_target_policy_reward_lower_bound(prior_stats),
+                matured_feedback_count: structural_prior_matured_feedback_count(prior_stats),
+                unresolved_feedback_count: structural_prior_unresolved_feedback_count(prior_stats),
+                maturity_coverage: structural_prior_maturity_coverage(prior_stats),
+                censoring_rate: structural_prior_censoring_rate(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1491,6 +1527,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             structural_prior_target_policy_variance_penalty(prior_stats),
                         target_policy_reward_lower_bound:
                             structural_prior_target_policy_reward_lower_bound(prior_stats),
+                        matured_feedback_count: structural_prior_matured_feedback_count(
+                            prior_stats,
+                        ),
+                        unresolved_feedback_count: structural_prior_unresolved_feedback_count(
+                            prior_stats,
+                        ),
+                        maturity_coverage: structural_prior_maturity_coverage(prior_stats),
+                        censoring_rate: structural_prior_censoring_rate(prior_stats),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1586,6 +1630,10 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
             target_policy_reward_lower_bound: structural_prior_target_policy_reward_lower_bound(
                 node_prior_stats,
             ),
+            matured_feedback_count: structural_prior_matured_feedback_count(node_prior_stats),
+            unresolved_feedback_count: structural_prior_unresolved_feedback_count(node_prior_stats),
+            maturity_coverage: structural_prior_maturity_coverage(node_prior_stats),
+            censoring_rate: structural_prior_censoring_rate(node_prior_stats),
             duration_streak_count: node_temporal_state
                 .map(|state| state.streak_count)
                 .or_else(|| structural_duration_streak_count(node_duration_prior)),
@@ -4237,6 +4285,50 @@ fn structural_prior_target_policy_reward_lower_bound(
     structural_prior_positive_value(prior_stats, |stats| stats.target_policy_reward_lower_bound)
 }
 
+fn structural_matured_feedback_count_value(stats: &StructuralPriorStats) -> usize {
+    stats.wins + stats.losses + stats.breakevens + stats.invalidated + stats.abandoned
+}
+
+fn structural_prior_matured_feedback_count(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<usize> {
+    prior_stats.map(structural_matured_feedback_count_value)
+}
+
+fn structural_prior_unresolved_feedback_count(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<usize> {
+    prior_stats.map(|stats| {
+        stats
+            .followed_count
+            .saturating_sub(structural_matured_feedback_count_value(stats))
+    })
+}
+
+fn structural_prior_maturity_coverage(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
+    let stats = prior_stats?;
+    if stats.followed_count == 0 {
+        None
+    } else {
+        Some(
+            (structural_matured_feedback_count_value(stats) as f64 / stats.followed_count as f64)
+                .clamp(0.0, 1.0),
+        )
+    }
+}
+
+fn structural_prior_censoring_rate(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
+    let stats = prior_stats?;
+    if stats.followed_count == 0 {
+        None
+    } else {
+        let unresolved = stats
+            .followed_count
+            .saturating_sub(structural_matured_feedback_count_value(stats));
+        Some((unresolved as f64 / stats.followed_count as f64).clamp(0.0, 1.0))
+    }
+}
+
 fn structural_duration_streak_count(
     duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
 ) -> Option<usize> {
@@ -5492,6 +5584,45 @@ mod tests {
             readiness.min_multi_source_items,
             STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS
         );
+    }
+
+    #[test]
+    fn structural_prior_maturity_diagnostics_count_unresolved_followed_feedback() {
+        let stats = StructuralPriorStats {
+            observations: 5,
+            followed_count: 4,
+            wins: 1,
+            losses: 1,
+            breakevens: 1,
+            invalidated: 0,
+            abandoned: 0,
+            not_followed: 1,
+            ..StructuralPriorStats::default()
+        };
+
+        assert_eq!(structural_prior_matured_feedback_count(Some(&stats)), Some(3));
+        assert_eq!(
+            structural_prior_unresolved_feedback_count(Some(&stats)),
+            Some(1)
+        );
+        assert_eq!(structural_prior_maturity_coverage(Some(&stats)), Some(0.75));
+        assert_eq!(structural_prior_censoring_rate(Some(&stats)), Some(0.25));
+
+        let not_followed_only = StructuralPriorStats {
+            observations: 1,
+            not_followed: 1,
+            ..StructuralPriorStats::default()
+        };
+        assert_eq!(
+            structural_prior_matured_feedback_count(Some(&not_followed_only)),
+            Some(0)
+        );
+        assert_eq!(
+            structural_prior_unresolved_feedback_count(Some(&not_followed_only)),
+            Some(0)
+        );
+        assert_eq!(structural_prior_maturity_coverage(Some(&not_followed_only)), None);
+        assert_eq!(structural_prior_censoring_rate(Some(&not_followed_only)), None);
     }
 
     #[test]

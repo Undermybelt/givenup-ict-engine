@@ -5637,6 +5637,10 @@ mod tests {
             value["path"]["target_policy_reward_lower_bound"],
             0.2981196989
         );
+        assert_eq!(value["path"]["matured_feedback_count"], 3);
+        assert_eq!(value["path"]["unresolved_feedback_count"], 0);
+        assert_eq!(value["path"]["maturity_coverage"], 1.0);
+        assert_eq!(value["path"]["censoring_rate"], 0.0);
         assert_eq!(value["node"]["duration_streak_count"], 2);
         assert_eq!(value["node"]["duration_avg_streak_length"], 1.5);
         assert_eq!(value["node"]["duration_persistence_prior"], 0.6);
