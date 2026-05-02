@@ -16,9 +16,10 @@ use crate::application::orchestration::{
 };
 use crate::application::provider_catalog::provider_status_agent_surface;
 use crate::state::{
-    load_learning_state, load_state_or_default, load_workflow_snapshot, save_text_state,
-    structural_feedback_outcome_is_unresolved, AnalyzeRunRecord, UpdateRunRecord,
-    ANALYZE_RUNS_FILE, UPDATE_RUNS_FILE,
+    load_learning_state, load_pending_update_history, load_state_or_default,
+    load_workflow_snapshot, save_text_state, structural_feedback_outcome_is_unresolved,
+    AnalyzeRunRecord, UpdateRunRecord, ANALYZE_RUNS_FILE, PENDING_UPDATE_ARTIFACT_FILE,
+    UPDATE_RUNS_FILE,
 };
 use crate::types::RegimeProbs;
 
@@ -315,6 +316,12 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub feedback_rows_matured: usize,
     #[serde(default)]
     pub feedback_rows_pending: usize,
+    #[serde(default)]
+    pub pending_update_artifact_present: bool,
+    #[serde(default)]
+    pub pending_update_history_rows: usize,
+    #[serde(default)]
+    pub pending_update_templates_with_structural_feedback: usize,
     #[serde(default)]
     pub calibration_evaluation_rows: usize,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -789,7 +796,17 @@ pub fn structural_path_ranking_target_training_status(
     };
     let update_runs: Vec<UpdateRunRecord> =
         load_state_or_default(state_dir, symbol, UPDATE_RUNS_FILE).unwrap_or_default();
+    let pending_update_history = load_pending_update_history(state_dir, symbol).unwrap_or_default();
     let learning_state = load_learning_state(state_dir, symbol).unwrap_or_default();
+    let pending_update_artifact_present = Path::new(state_dir)
+        .join(symbol)
+        .join(PENDING_UPDATE_ARTIFACT_FILE)
+        .exists();
+    let pending_update_history_rows = pending_update_history.len();
+    let pending_update_templates_with_structural_feedback = pending_update_history
+        .iter()
+        .filter(|artifact| artifact.template_feedback.structural_feedback.is_some())
+        .count();
     let update_runs_with_structural_feedback = update_runs
         .iter()
         .filter(|run| run.structural_feedback.is_some())
@@ -901,6 +918,11 @@ pub fn structural_path_ranking_target_training_status(
     }
     if update_runs_with_structural_feedback == 0 && feedback_rows_with_structural_feedback == 0 {
         warnings.push("structural_path_ranking_target_structural_feedback_missing".to_string());
+        if pending_update_history_rows > 0 || pending_update_artifact_present {
+            warnings.push(
+                "structural_path_ranking_target_pending_update_templates_present".to_string(),
+            );
+        }
     }
     if history_rows_with_propensity_estimate == 0 {
         warnings.push("structural_path_ranking_target_propensity_missing".to_string());
@@ -1022,6 +1044,9 @@ pub fn structural_path_ranking_target_training_status(
         feedback_rows_with_structural_feedback,
         feedback_rows_matured,
         feedback_rows_pending,
+        pending_update_artifact_present,
+        pending_update_history_rows,
+        pending_update_templates_with_structural_feedback,
         calibration_evaluation_rows: calibration_evaluation.eligible_rows,
         calibration_brier_score: calibration_evaluation.brier_score,
         calibration_propensity_weighted_rows: calibration_evaluation.propensity_weighted_rows,
@@ -2190,6 +2215,7 @@ mod tests {
         let temp = tempfile::tempdir().unwrap();
         let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
         std::fs::create_dir_all(&summary_dir).unwrap();
+        let symbol_dir = temp.path().join("NQ");
         let summary = StructuralPathRankingTargetExportSummary {
             symbol: "NQ".to_string(),
             rows: 3,
@@ -2219,6 +2245,34 @@ mod tests {
             serde_json::to_string_pretty(&summary).unwrap(),
         )
         .unwrap();
+        let mut pending_artifact = crate::state::PendingUpdateArtifact::default();
+        pending_artifact.symbol = "NQ".to_string();
+        pending_artifact.template_feedback.structural_feedback =
+            Some(crate::state::StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "rec-1".to_string(),
+                recommended_at: "2026-05-02T00:00:00Z".to_string(),
+                node_id: "NQ:belief_regime_node:trend".to_string(),
+                branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                    .to_string(),
+                path_id:
+                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                        .to_string(),
+                followed_path: true,
+                exit_reason: None,
+                notes: None,
+            });
+        std::fs::write(
+            symbol_dir.join(crate::state::PENDING_UPDATE_ARTIFACT_FILE),
+            serde_json::to_string_pretty(&pending_artifact).unwrap(),
+        )
+        .unwrap();
+        std::fs::write(
+            symbol_dir.join(crate::state::PENDING_UPDATE_HISTORY_FILE),
+            serde_json::to_string_pretty(&vec![pending_artifact]).unwrap(),
+        )
+        .unwrap();
 
         let status =
             structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
@@ -2238,6 +2292,9 @@ mod tests {
         assert_eq!(status.feedback_rows_with_structural_feedback, 0);
         assert_eq!(status.feedback_rows_matured, 0);
         assert_eq!(status.feedback_rows_pending, 0);
+        assert!(status.pending_update_artifact_present);
+        assert_eq!(status.pending_update_history_rows, 1);
+        assert_eq!(status.pending_update_templates_with_structural_feedback, 1);
         assert_eq!(
             status.candidate_set_id.as_deref(),
             Some("structural-candidates:NQ:test")
@@ -2274,6 +2331,9 @@ mod tests {
         assert!(status
             .warnings
             .contains(&"structural_path_ranking_target_structural_feedback_missing".to_string()));
+        assert!(status
+            .warnings
+            .contains(&"structural_path_ranking_target_pending_update_templates_present".to_string()));
     }
 
     #[test]
@@ -2360,6 +2420,8 @@ mod tests {
         assert_eq!(status.history_rows_with_training_weight, 2);
         assert_eq!(status.update_runs_with_structural_feedback, 0);
         assert_eq!(status.feedback_rows_with_structural_feedback, 0);
+        assert!(!status.pending_update_artifact_present);
+        assert_eq!(status.pending_update_history_rows, 0);
         assert_eq!(
             status.production_validation_min_rows,
             STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS
@@ -2535,6 +2597,8 @@ mod tests {
         assert_eq!(status.history_rows_with_training_weight, row_count);
         assert_eq!(status.update_runs_with_structural_feedback, 0);
         assert_eq!(status.feedback_rows_with_structural_feedback, 0);
+        assert!(!status.pending_update_artifact_present);
+        assert_eq!(status.pending_update_history_rows, 0);
         assert_eq!(status.raw_scored_mature_rows, row_count);
         assert_eq!(status.raw_scored_mature_shortfall_rows, 0);
         assert_eq!(status.production_validation_rows, row_count);

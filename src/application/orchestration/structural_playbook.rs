@@ -2986,14 +2986,12 @@ pub fn export_structural_path_ranking_target(
     feedback_history: &[FeedbackRecord],
     structural_prior_state: &StructuralPriorLearningState,
 ) -> Result<StructuralPathRankingTargetExportSummary> {
-    let artifact = build_structural_path_ranking_target_artifact_with_prior_state(
+    let mut artifact = build_structural_path_ranking_target_artifact_with_prior_state(
         snapshot,
         provider_status_agent,
         feedback_history,
         structural_prior_state,
     );
-    let csv = render_structural_path_ranking_target_csv(&artifact);
-    let jsonl = render_structural_path_ranking_target_jsonl(&artifact)?;
     let symbol_dir = Path::new(state_dir)
         .join(symbol)
         .join(STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR);
@@ -3014,29 +3012,66 @@ pub fn export_structural_path_ranking_target(
         "{STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR}/{STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE}"
     );
     let history_jsonl_path = Path::new(state_dir).join(symbol).join(&history_jsonl_name);
+    let existing_history_rows = load_structural_path_ranking_target_rows(&history_jsonl_path)?;
+    let existing_history_score_map = existing_history_rows
+        .iter()
+        .filter_map(|row| {
+            row.raw_path_score
+                .map(|score| (structural_path_ranking_target_row_history_key(row), score))
+        })
+        .collect::<BTreeMap<_, _>>();
+    for row in &mut artifact.rows {
+        if let Some(raw_score) =
+            existing_history_score_map.get(&structural_path_ranking_target_row_history_key(row))
+        {
+            row.raw_path_score = Some(*raw_score);
+            clear_structural_path_ranking_target_row_outputs(row);
+        }
+    }
     let history_rows = upsert_structural_path_ranking_target_history(
         &history_jsonl_path,
         &artifact.rows,
     )?;
+    let mut history_artifact = StructuralPathRankingTargetArtifact {
+        protocol_version: artifact.protocol_version.clone(),
+        symbol: artifact.symbol.clone(),
+        candidate_set_id: artifact.candidate_set_id.clone(),
+        candidate_set_size: artifact.candidate_set_size,
+        generated_at: artifact.generated_at.clone(),
+        rows: history_rows,
+    };
+    let history_report = apply_structural_path_probability_calibration(&mut history_artifact);
+    let mut current_artifact = StructuralPathRankingTargetArtifact {
+        protocol_version: artifact.protocol_version.clone(),
+        symbol: artifact.symbol.clone(),
+        candidate_set_id: artifact.candidate_set_id.clone(),
+        candidate_set_size: artifact.candidate_set_size,
+        generated_at: artifact.generated_at.clone(),
+        rows: artifact.rows,
+    };
+    apply_structural_path_probability_bins(&mut current_artifact.rows, &history_report.bins);
+    apply_structural_path_ranking_execution_gates(&mut current_artifact);
     let history_csv = render_structural_path_ranking_target_rows_csv(
-        &artifact.protocol_version,
-        &artifact.symbol,
-        &artifact.generated_at,
-        &history_rows,
+        &history_artifact.protocol_version,
+        &history_artifact.symbol,
+        &history_artifact.generated_at,
+        &history_artifact.rows,
     );
-    let history_jsonl = render_structural_path_ranking_target_rows_jsonl(&history_rows)?;
+    let history_jsonl = render_structural_path_ranking_target_rows_jsonl(&history_artifact.rows)?;
     let summary = structural_path_ranking_target_export_summary(
         state_dir,
         symbol,
-        &artifact,
+        &current_artifact,
         &csv_name,
         &jsonl_name,
         &history_csv_name,
         &history_jsonl_name,
-        &history_rows,
+        &history_artifact.rows,
         &summary_name,
     );
     let summary_json = serde_json::to_string_pretty(&summary)?;
+    let csv = render_structural_path_ranking_target_csv(&current_artifact);
+    let jsonl = render_structural_path_ranking_target_jsonl(&current_artifact)?;
     save_text_state(state_dir, symbol, &csv_name, &csv)?;
     save_text_state(state_dir, symbol, &jsonl_name, &jsonl)?;
     save_text_state(state_dir, symbol, &history_csv_name, &history_csv)?;
