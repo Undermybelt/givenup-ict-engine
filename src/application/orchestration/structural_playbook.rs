@@ -638,6 +638,20 @@ pub struct StructuralExperiencePriorEntry {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delayed_reward_competing_risk_entropy: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_elapsed_feedback_count: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_elapsed_hours_at_risk: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_avg_elapsed_hours: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_success_hazard_per_hour: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_failure_hazard_per_hour: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_invalidation_hazard_per_hour: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_abandonment_hazard_per_hour: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_streak_count: Option<usize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_avg_streak_length: Option<f64>,
@@ -1303,6 +1317,20 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_delayed_reward_abandonment_competing_risk(prior_stats),
                 delayed_reward_competing_risk_entropy:
                     structural_prior_delayed_reward_competing_risk_entropy(prior_stats),
+                delayed_reward_elapsed_feedback_count:
+                    structural_prior_delayed_reward_elapsed_feedback_count(prior_stats),
+                delayed_reward_elapsed_hours_at_risk:
+                    structural_prior_delayed_reward_elapsed_hours_at_risk(prior_stats),
+                delayed_reward_avg_elapsed_hours:
+                    structural_prior_delayed_reward_avg_elapsed_hours(prior_stats),
+                delayed_reward_success_hazard_per_hour:
+                    structural_prior_delayed_reward_success_hazard_per_hour(prior_stats),
+                delayed_reward_failure_hazard_per_hour:
+                    structural_prior_delayed_reward_failure_hazard_per_hour(prior_stats),
+                delayed_reward_invalidation_hazard_per_hour:
+                    structural_prior_delayed_reward_invalidation_hazard_per_hour(prior_stats),
+                delayed_reward_abandonment_hazard_per_hour:
+                    structural_prior_delayed_reward_abandonment_hazard_per_hour(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1407,6 +1435,24 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             ),
                         delayed_reward_competing_risk_entropy:
                             structural_prior_delayed_reward_competing_risk_entropy(prior_stats),
+                        delayed_reward_elapsed_feedback_count:
+                            structural_prior_delayed_reward_elapsed_feedback_count(prior_stats),
+                        delayed_reward_elapsed_hours_at_risk:
+                            structural_prior_delayed_reward_elapsed_hours_at_risk(prior_stats),
+                        delayed_reward_avg_elapsed_hours:
+                            structural_prior_delayed_reward_avg_elapsed_hours(prior_stats),
+                        delayed_reward_success_hazard_per_hour:
+                            structural_prior_delayed_reward_success_hazard_per_hour(prior_stats),
+                        delayed_reward_failure_hazard_per_hour:
+                            structural_prior_delayed_reward_failure_hazard_per_hour(prior_stats),
+                        delayed_reward_invalidation_hazard_per_hour:
+                            structural_prior_delayed_reward_invalidation_hazard_per_hour(
+                                prior_stats,
+                            ),
+                        delayed_reward_abandonment_hazard_per_hour:
+                            structural_prior_delayed_reward_abandonment_hazard_per_hour(
+                                prior_stats,
+                            ),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1506,6 +1552,20 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_delayed_reward_abandonment_competing_risk(prior_stats),
                 delayed_reward_competing_risk_entropy:
                     structural_prior_delayed_reward_competing_risk_entropy(prior_stats),
+                delayed_reward_elapsed_feedback_count:
+                    structural_prior_delayed_reward_elapsed_feedback_count(prior_stats),
+                delayed_reward_elapsed_hours_at_risk:
+                    structural_prior_delayed_reward_elapsed_hours_at_risk(prior_stats),
+                delayed_reward_avg_elapsed_hours:
+                    structural_prior_delayed_reward_avg_elapsed_hours(prior_stats),
+                delayed_reward_success_hazard_per_hour:
+                    structural_prior_delayed_reward_success_hazard_per_hour(prior_stats),
+                delayed_reward_failure_hazard_per_hour:
+                    structural_prior_delayed_reward_failure_hazard_per_hour(prior_stats),
+                delayed_reward_invalidation_hazard_per_hour:
+                    structural_prior_delayed_reward_invalidation_hazard_per_hour(prior_stats),
+                delayed_reward_abandonment_hazard_per_hour:
+                    structural_prior_delayed_reward_abandonment_hazard_per_hour(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1609,6 +1669,24 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             ),
                         delayed_reward_competing_risk_entropy:
                             structural_prior_delayed_reward_competing_risk_entropy(prior_stats),
+                        delayed_reward_elapsed_feedback_count:
+                            structural_prior_delayed_reward_elapsed_feedback_count(prior_stats),
+                        delayed_reward_elapsed_hours_at_risk:
+                            structural_prior_delayed_reward_elapsed_hours_at_risk(prior_stats),
+                        delayed_reward_avg_elapsed_hours:
+                            structural_prior_delayed_reward_avg_elapsed_hours(prior_stats),
+                        delayed_reward_success_hazard_per_hour:
+                            structural_prior_delayed_reward_success_hazard_per_hour(prior_stats),
+                        delayed_reward_failure_hazard_per_hour:
+                            structural_prior_delayed_reward_failure_hazard_per_hour(prior_stats),
+                        delayed_reward_invalidation_hazard_per_hour:
+                            structural_prior_delayed_reward_invalidation_hazard_per_hour(
+                                prior_stats,
+                            ),
+                        delayed_reward_abandonment_hazard_per_hour:
+                            structural_prior_delayed_reward_abandonment_hazard_per_hour(
+                                prior_stats,
+                            ),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1708,6 +1786,20 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_delayed_reward_abandonment_competing_risk(prior_stats),
                 delayed_reward_competing_risk_entropy:
                     structural_prior_delayed_reward_competing_risk_entropy(prior_stats),
+                delayed_reward_elapsed_feedback_count:
+                    structural_prior_delayed_reward_elapsed_feedback_count(prior_stats),
+                delayed_reward_elapsed_hours_at_risk:
+                    structural_prior_delayed_reward_elapsed_hours_at_risk(prior_stats),
+                delayed_reward_avg_elapsed_hours:
+                    structural_prior_delayed_reward_avg_elapsed_hours(prior_stats),
+                delayed_reward_success_hazard_per_hour:
+                    structural_prior_delayed_reward_success_hazard_per_hour(prior_stats),
+                delayed_reward_failure_hazard_per_hour:
+                    structural_prior_delayed_reward_failure_hazard_per_hour(prior_stats),
+                delayed_reward_invalidation_hazard_per_hour:
+                    structural_prior_delayed_reward_invalidation_hazard_per_hour(prior_stats),
+                delayed_reward_abandonment_hazard_per_hour:
+                    structural_prior_delayed_reward_abandonment_hazard_per_hour(prior_stats),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1812,6 +1904,24 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             ),
                         delayed_reward_competing_risk_entropy:
                             structural_prior_delayed_reward_competing_risk_entropy(prior_stats),
+                        delayed_reward_elapsed_feedback_count:
+                            structural_prior_delayed_reward_elapsed_feedback_count(prior_stats),
+                        delayed_reward_elapsed_hours_at_risk:
+                            structural_prior_delayed_reward_elapsed_hours_at_risk(prior_stats),
+                        delayed_reward_avg_elapsed_hours:
+                            structural_prior_delayed_reward_avg_elapsed_hours(prior_stats),
+                        delayed_reward_success_hazard_per_hour:
+                            structural_prior_delayed_reward_success_hazard_per_hour(prior_stats),
+                        delayed_reward_failure_hazard_per_hour:
+                            structural_prior_delayed_reward_failure_hazard_per_hour(prior_stats),
+                        delayed_reward_invalidation_hazard_per_hour:
+                            structural_prior_delayed_reward_invalidation_hazard_per_hour(
+                                prior_stats,
+                            ),
+                        delayed_reward_abandonment_hazard_per_hour:
+                            structural_prior_delayed_reward_abandonment_hazard_per_hour(
+                                prior_stats,
+                            ),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1939,6 +2049,20 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 structural_prior_delayed_reward_abandonment_competing_risk(node_prior_stats),
             delayed_reward_competing_risk_entropy:
                 structural_prior_delayed_reward_competing_risk_entropy(node_prior_stats),
+            delayed_reward_elapsed_feedback_count:
+                structural_prior_delayed_reward_elapsed_feedback_count(node_prior_stats),
+            delayed_reward_elapsed_hours_at_risk:
+                structural_prior_delayed_reward_elapsed_hours_at_risk(node_prior_stats),
+            delayed_reward_avg_elapsed_hours:
+                structural_prior_delayed_reward_avg_elapsed_hours(node_prior_stats),
+            delayed_reward_success_hazard_per_hour:
+                structural_prior_delayed_reward_success_hazard_per_hour(node_prior_stats),
+            delayed_reward_failure_hazard_per_hour:
+                structural_prior_delayed_reward_failure_hazard_per_hour(node_prior_stats),
+            delayed_reward_invalidation_hazard_per_hour:
+                structural_prior_delayed_reward_invalidation_hazard_per_hour(node_prior_stats),
+            delayed_reward_abandonment_hazard_per_hour:
+                structural_prior_delayed_reward_abandonment_hazard_per_hour(node_prior_stats),
             duration_streak_count: node_temporal_state
                 .map(|state| state.streak_count)
                 .or_else(|| structural_duration_streak_count(node_duration_prior)),
@@ -4570,6 +4694,13 @@ fn structural_prior_positive_value(
         .filter(|candidate| *candidate > f64::EPSILON)
 }
 
+fn structural_prior_positive_count(
+    prior_stats: Option<&StructuralPriorStats>,
+    value: impl Fn(&StructuralPriorStats) -> usize,
+) -> Option<usize> {
+    prior_stats.map(value).filter(|candidate| *candidate > 0)
+}
+
 fn structural_prior_execution_propensity(
     prior_stats: Option<&StructuralPriorStats>,
 ) -> Option<f64> {
@@ -4853,6 +4984,60 @@ fn structural_prior_delayed_reward_competing_risk_entropy(
     prior_stats: Option<&StructuralPriorStats>,
 ) -> Option<f64> {
     structural_prior_delayed_reward_competing_risks(prior_stats).map(|risks| risks.entropy)
+}
+
+fn structural_prior_delayed_reward_elapsed_feedback_count(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<usize> {
+    structural_prior_positive_count(prior_stats, |stats| {
+        stats.delayed_reward_elapsed_feedback_count
+    })
+}
+
+fn structural_prior_delayed_reward_elapsed_hours_at_risk(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_elapsed_hours_at_risk
+    })
+}
+
+fn structural_prior_delayed_reward_avg_elapsed_hours(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.delayed_reward_avg_elapsed_hours)
+}
+
+fn structural_prior_delayed_reward_success_hazard_per_hour(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_success_hazard_per_hour
+    })
+}
+
+fn structural_prior_delayed_reward_failure_hazard_per_hour(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_failure_hazard_per_hour
+    })
+}
+
+fn structural_prior_delayed_reward_invalidation_hazard_per_hour(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_invalidation_hazard_per_hour
+    })
+}
+
+fn structural_prior_delayed_reward_abandonment_hazard_per_hour(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.delayed_reward_abandonment_hazard_per_hour
+    })
 }
 
 fn structural_duration_streak_count(
@@ -6351,6 +6536,11 @@ mod tests {
             smoothed_prior: 0.5,
             target_policy_reward_prior: 0.6,
             target_policy_reward_lower_bound: 0.3,
+            delayed_reward_elapsed_feedback_count: 3,
+            delayed_reward_elapsed_hours_at_risk: 6.0,
+            delayed_reward_avg_elapsed_hours: 2.0,
+            delayed_reward_success_hazard_per_hour: 1.5 / 6.0,
+            delayed_reward_failure_hazard_per_hour: 1.5 / 6.0,
             ..StructuralPriorStats::default()
         };
 
@@ -6408,6 +6598,30 @@ mod tests {
                 - expected_competing_risk_entropy)
                 .abs()
                 < 1e-9
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_elapsed_feedback_count(Some(&stats)),
+            Some(3)
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_elapsed_hours_at_risk(Some(&stats)),
+            Some(6.0)
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_avg_elapsed_hours(Some(&stats)),
+            Some(2.0)
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_success_hazard_per_hour(Some(&stats)),
+            Some(1.5 / 6.0)
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_failure_hazard_per_hour(Some(&stats)),
+            Some(1.5 / 6.0)
+        );
+        assert_eq!(
+            structural_prior_delayed_reward_invalidation_hazard_per_hour(Some(&stats)),
+            None
         );
 
         let not_followed_only = StructuralPriorStats {

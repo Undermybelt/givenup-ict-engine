@@ -197,6 +197,20 @@ pub struct StructuralPriorStats {
     #[serde(default)]
     pub delayed_reward_competing_risk_entropy: f64,
     #[serde(default)]
+    pub delayed_reward_elapsed_feedback_count: usize,
+    #[serde(default)]
+    pub delayed_reward_elapsed_hours_at_risk: f64,
+    #[serde(default)]
+    pub delayed_reward_avg_elapsed_hours: f64,
+    #[serde(default)]
+    pub delayed_reward_success_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_failure_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_invalidation_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_abandonment_hazard_per_hour: f64,
+    #[serde(default)]
     pub source_panel_summaries: BTreeMap<String, StructuralPriorSourceSummary>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_offline_seed_source: Option<String>,
@@ -261,6 +275,20 @@ pub struct StructuralPriorMassSnapshot {
     pub delayed_reward_abandonment_competing_risk: f64,
     #[serde(default)]
     pub delayed_reward_competing_risk_entropy: f64,
+    #[serde(default)]
+    pub delayed_reward_elapsed_feedback_count: usize,
+    #[serde(default)]
+    pub delayed_reward_elapsed_hours_at_risk: f64,
+    #[serde(default)]
+    pub delayed_reward_avg_elapsed_hours: f64,
+    #[serde(default)]
+    pub delayed_reward_success_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_failure_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_invalidation_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_abandonment_hazard_per_hour: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_offline_seed_source: Option<String>,
 }
@@ -378,6 +406,20 @@ pub struct StructuralPriorSourceSummary {
     pub delayed_reward_abandonment_competing_risk: f64,
     #[serde(default)]
     pub delayed_reward_competing_risk_entropy: f64,
+    #[serde(default)]
+    pub delayed_reward_elapsed_feedback_count: usize,
+    #[serde(default)]
+    pub delayed_reward_elapsed_hours_at_risk: f64,
+    #[serde(default)]
+    pub delayed_reward_avg_elapsed_hours: f64,
+    #[serde(default)]
+    pub delayed_reward_success_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_failure_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_invalidation_hazard_per_hour: f64,
+    #[serde(default)]
+    pub delayed_reward_abandonment_hazard_per_hour: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_tempering_coefficient: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -4179,6 +4221,15 @@ fn structural_prior_mass_snapshot(
         delayed_reward_abandonment_competing_risk: stats
             .delayed_reward_abandonment_competing_risk,
         delayed_reward_competing_risk_entropy: stats.delayed_reward_competing_risk_entropy,
+        delayed_reward_elapsed_feedback_count: stats.delayed_reward_elapsed_feedback_count,
+        delayed_reward_elapsed_hours_at_risk: stats.delayed_reward_elapsed_hours_at_risk,
+        delayed_reward_avg_elapsed_hours: stats.delayed_reward_avg_elapsed_hours,
+        delayed_reward_success_hazard_per_hour: stats.delayed_reward_success_hazard_per_hour,
+        delayed_reward_failure_hazard_per_hour: stats.delayed_reward_failure_hazard_per_hour,
+        delayed_reward_invalidation_hazard_per_hour: stats
+            .delayed_reward_invalidation_hazard_per_hour,
+        delayed_reward_abandonment_hazard_per_hour: stats
+            .delayed_reward_abandonment_hazard_per_hour,
         last_offline_seed_source: stats.last_offline_seed_source.clone(),
     }
 }
@@ -4250,6 +4301,10 @@ fn update_structural_prior_stats(
     if not_followed_path {
         stats.not_followed += 1;
         stats.weighted_not_followed_mass += source_weight;
+    }
+    if let Some(elapsed_hours) = structural_delayed_reward_elapsed_hours(record, followed_path) {
+        stats.delayed_reward_elapsed_feedback_count += 1;
+        stats.delayed_reward_elapsed_hours_at_risk += elapsed_hours;
     }
     match structural_feedback_counter_outcome(record) {
         Some("win") => {
@@ -4733,6 +4788,32 @@ fn structural_delayed_reward_censoring_probability(
     ((1.0 + unresolved) / (2.0 + followed_count as f64)).clamp(0.0, 1.0)
 }
 
+fn structural_delayed_reward_elapsed_hours(
+    record: &FeedbackRecord,
+    followed_path: bool,
+) -> Option<f64> {
+    if !followed_path || record.realized_outcome.trim().eq_ignore_ascii_case("not_followed") {
+        return None;
+    }
+    let refs = record.structural_feedback.as_ref()?;
+    let recommended_at = DateTime::parse_from_rfc3339(refs.recommended_at.trim())
+        .ok()?
+        .with_timezone(&Utc);
+    let elapsed_seconds = record
+        .timestamp
+        .signed_duration_since(recommended_at)
+        .num_seconds();
+    (elapsed_seconds >= 0).then_some(elapsed_seconds as f64 / 3600.0)
+}
+
+fn structural_delayed_reward_avg_elapsed_hours(count: usize, elapsed_hours: f64) -> f64 {
+    if count == 0 {
+        0.0
+    } else {
+        (elapsed_hours.max(0.0) / count as f64).max(0.0)
+    }
+}
+
 #[derive(Debug, Clone, Copy, Default)]
 struct StructuralDelayedRewardCompetingRisks {
     success: f64,
@@ -4775,6 +4856,36 @@ fn structural_delayed_reward_competing_risks(
         invalidation,
         abandonment,
         entropy,
+    })
+}
+
+#[derive(Debug, Clone, Copy, Default)]
+struct StructuralDelayedRewardElapsedHazards {
+    success: f64,
+    failure: f64,
+    invalidation: f64,
+    abandonment: f64,
+}
+
+fn structural_delayed_reward_elapsed_hazards(
+    wins: usize,
+    losses: usize,
+    breakevens: usize,
+    invalidated: usize,
+    abandoned: usize,
+    elapsed_hours_at_risk: f64,
+) -> Option<StructuralDelayedRewardElapsedHazards> {
+    if structural_matured_feedback_count(wins, losses, breakevens, invalidated, abandoned) == 0
+        || elapsed_hours_at_risk <= f64::EPSILON
+    {
+        return None;
+    }
+    let denominator = elapsed_hours_at_risk.max(f64::EPSILON);
+    Some(StructuralDelayedRewardElapsedHazards {
+        success: (wins as f64 + breakevens as f64 * 0.5) / denominator,
+        failure: (losses as f64 + breakevens as f64 * 0.5) / denominator,
+        invalidation: invalidated as f64 / denominator,
+        abandonment: abandoned as f64 / denominator,
     })
 }
 
@@ -4929,6 +5040,23 @@ fn refresh_structural_smoothed_prior(stats: &mut StructuralPriorStats) {
     stats.delayed_reward_invalidation_competing_risk = competing_risks.invalidation;
     stats.delayed_reward_abandonment_competing_risk = competing_risks.abandonment;
     stats.delayed_reward_competing_risk_entropy = competing_risks.entropy;
+    stats.delayed_reward_avg_elapsed_hours = structural_delayed_reward_avg_elapsed_hours(
+        stats.delayed_reward_elapsed_feedback_count,
+        stats.delayed_reward_elapsed_hours_at_risk,
+    );
+    let elapsed_hazards = structural_delayed_reward_elapsed_hazards(
+        stats.wins,
+        stats.losses,
+        stats.breakevens,
+        stats.invalidated,
+        stats.abandoned,
+        stats.delayed_reward_elapsed_hours_at_risk,
+    )
+    .unwrap_or_default();
+    stats.delayed_reward_success_hazard_per_hour = elapsed_hazards.success;
+    stats.delayed_reward_failure_hazard_per_hour = elapsed_hazards.failure;
+    stats.delayed_reward_invalidation_hazard_per_hour = elapsed_hazards.invalidation;
+    stats.delayed_reward_abandonment_hazard_per_hour = elapsed_hazards.abandonment;
 }
 
 fn update_structural_prior_source_summary_from_feedback(
@@ -4957,6 +5085,10 @@ fn update_structural_prior_source_summary_from_feedback(
     if not_followed_path {
         summary.not_followed += 1;
         summary.weighted_not_followed_mass += source_weight;
+    }
+    if let Some(elapsed_hours) = structural_delayed_reward_elapsed_hours(record, followed_path) {
+        summary.delayed_reward_elapsed_feedback_count += 1;
+        summary.delayed_reward_elapsed_hours_at_risk += elapsed_hours;
     }
     match structural_feedback_counter_outcome(record) {
         Some("win") => {
@@ -5182,6 +5314,23 @@ fn refresh_structural_prior_source_summary(summary: &mut StructuralPriorSourceSu
     summary.delayed_reward_invalidation_competing_risk = competing_risks.invalidation;
     summary.delayed_reward_abandonment_competing_risk = competing_risks.abandonment;
     summary.delayed_reward_competing_risk_entropy = competing_risks.entropy;
+    summary.delayed_reward_avg_elapsed_hours = structural_delayed_reward_avg_elapsed_hours(
+        summary.delayed_reward_elapsed_feedback_count,
+        summary.delayed_reward_elapsed_hours_at_risk,
+    );
+    let elapsed_hazards = structural_delayed_reward_elapsed_hazards(
+        summary.wins,
+        summary.losses,
+        summary.breakevens,
+        summary.invalidated,
+        summary.abandoned,
+        summary.delayed_reward_elapsed_hours_at_risk,
+    )
+    .unwrap_or_default();
+    summary.delayed_reward_success_hazard_per_hour = elapsed_hazards.success;
+    summary.delayed_reward_failure_hazard_per_hour = elapsed_hazards.failure;
+    summary.delayed_reward_invalidation_hazard_per_hour = elapsed_hazards.invalidation;
+    summary.delayed_reward_abandonment_hazard_per_hour = elapsed_hazards.abandonment;
 }
 
 fn update_structural_source_reliability_from_feedback(
@@ -7462,6 +7611,9 @@ mod tests {
     #[test]
     fn test_structural_feedback_records_snips_and_dr_policy_priors() {
         let mut win = sample_feedback();
+        win.timestamp = DateTime::parse_from_rfc3339("2026-04-30T00:30:00Z")
+            .unwrap()
+            .with_timezone(&Utc);
         win.source = "structural_feedback_submission".to_string();
         win.realized_outcome = "win".to_string();
         win.model_probabilities_before_trade.selected_probability = 0.50;
@@ -7480,6 +7632,9 @@ mod tests {
         });
 
         let mut loss = win.clone();
+        loss.timestamp = DateTime::parse_from_rfc3339("2026-04-30T01:05:00Z")
+            .unwrap()
+            .with_timezone(&Utc);
         loss.realized_outcome = "loss".to_string();
         loss.pnl = -0.01;
         loss.model_probabilities_before_trade.selected_probability = 0.25;
@@ -7573,6 +7728,13 @@ mod tests {
             (path.delayed_reward_competing_risk_entropy - expected_competing_risk_entropy).abs()
                 < 1e-9
         );
+        assert_eq!(path.delayed_reward_elapsed_feedback_count, 2);
+        assert!((path.delayed_reward_elapsed_hours_at_risk - 1.5).abs() < 1e-9);
+        assert!((path.delayed_reward_avg_elapsed_hours - 0.75).abs() < 1e-9);
+        assert!((path.delayed_reward_success_hazard_per_hour - (1.0 / 1.5)).abs() < 1e-9);
+        assert!((path.delayed_reward_failure_hazard_per_hour - (1.0 / 1.5)).abs() < 1e-9);
+        assert!(path.delayed_reward_invalidation_hazard_per_hour.abs() < 1e-9);
+        assert!(path.delayed_reward_abandonment_hazard_per_hour.abs() < 1e-9);
         let source_summary = path
             .source_panel_summaries
             .get("structural_feedback_submission")
@@ -7664,6 +7826,23 @@ mod tests {
                 .abs()
                 < 1e-9
         );
+        assert_eq!(source_summary.delayed_reward_elapsed_feedback_count, 2);
+        assert!((source_summary.delayed_reward_elapsed_hours_at_risk - 1.5).abs() < 1e-9);
+        assert!((source_summary.delayed_reward_avg_elapsed_hours - 0.75).abs() < 1e-9);
+        assert!(
+            (source_summary.delayed_reward_success_hazard_per_hour - (1.0 / 1.5)).abs() < 1e-9
+        );
+        assert!(
+            (source_summary.delayed_reward_failure_hazard_per_hour - (1.0 / 1.5)).abs() < 1e-9
+        );
+        assert!(source_summary
+            .delayed_reward_invalidation_hazard_per_hour
+            .abs()
+            < 1e-9);
+        assert!(source_summary
+            .delayed_reward_abandonment_hazard_per_hour
+            .abs()
+            < 1e-9);
     }
 
     #[test]

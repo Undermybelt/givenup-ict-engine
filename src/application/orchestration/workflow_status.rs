@@ -5501,6 +5501,11 @@ mod tests {
                 target_policy_reward_prior: 0.5827956989,
                 target_policy_variance_penalty: 0.284676,
                 target_policy_reward_lower_bound: 0.2981196989,
+                delayed_reward_elapsed_feedback_count: 3,
+                delayed_reward_elapsed_hours_at_risk: 6.0,
+                delayed_reward_avg_elapsed_hours: 2.0,
+                delayed_reward_success_hazard_per_hour: 2.0 / 6.0,
+                delayed_reward_failure_hazard_per_hour: 1.0 / 6.0,
                 source_panel_summaries: std::collections::BTreeMap::from([
                     (
                         "analyze".to_string(),
@@ -5699,6 +5704,22 @@ mod tests {
                 - expected_competing_risk_entropy)
                 .abs()
                 < 1e-9
+        );
+        assert_eq!(value["path"]["delayed_reward_elapsed_feedback_count"], 3);
+        assert_eq!(value["path"]["delayed_reward_elapsed_hours_at_risk"], 6.0);
+        assert_eq!(value["path"]["delayed_reward_avg_elapsed_hours"], 2.0);
+        assert_eq!(
+            value["path"]["delayed_reward_success_hazard_per_hour"],
+            2.0 / 6.0
+        );
+        assert_eq!(
+            value["path"]["delayed_reward_failure_hazard_per_hour"],
+            1.0 / 6.0
+        );
+        assert!(
+            value["path"]
+                .get("delayed_reward_invalidation_hazard_per_hour")
+                .is_none()
         );
         assert_eq!(value["path"]["matured_feedback_count"], 3);
         assert_eq!(value["path"]["unresolved_feedback_count"], 0);
