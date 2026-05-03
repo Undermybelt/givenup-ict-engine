@@ -5,6 +5,7 @@ mod factor_backtest_runtime;
 mod factor_research_runtime;
 mod policy_training_command;
 mod probabilistic_backtest_runtime;
+mod release_closure_command;
 mod status_command;
 mod update_command;
 mod update_output;
@@ -201,6 +202,7 @@ use policy_training_command::{
     register_structural_path_ranking_trainer_artifact_shell,
 };
 use probabilistic_backtest_runtime::{finalize_backtest_report, run_probabilistic_backtest};
+use release_closure_command::{evidence_quality_breakdown_shell, research_verdict_shell};
 use serde_json::Value;
 use status_command::{
     artifact_diff_shell, artifact_lineage_shell, artifact_status_shell, pre_bayes_diff_shell,
@@ -2375,15 +2377,13 @@ fn main() -> Result<()> {
             limit,
         )?,
         Commands::ResearchVerdict { symbol, state_dir } => {
-            ict_engine::application::release_closure::research_verdict_command(&symbol, &state_dir)?
+            research_verdict_shell(&symbol, &state_dir)?
         }
         Commands::EvidenceQualityBreakdown {
             symbol,
             state_dir,
             refresh,
-        } => ict_engine::application::release_closure::evidence_quality_breakdown_command(
-            &symbol, &state_dir, refresh,
-        )?,
+        } => evidence_quality_breakdown_shell(&symbol, &state_dir, refresh)?,
         Commands::FactorBacktest {
             symbol,
             data,
