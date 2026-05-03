@@ -61,6 +61,7 @@ Primary source docs:
 - [x] Workstream 1 now also has path experience-prior runtime metric assembly routed through `src/belief_core/source_reliability.rs`, so `structural_playbook.rs` no longer has to spell out the full path-level target-policy / delayed-reward metric block inline.
 - [x] Workstream 1 now also has branch experience-prior runtime metric assembly routed through the same shared helper in `src/belief_core/source_reliability.rs`, further shrinking `structural_playbook.rs`.
 - [x] Workstream 1 now also has scenario experience-prior runtime metric assembly routed through that same shared helper, further reducing duplicate field-by-field metric wiring in `structural_playbook.rs`.
+- [x] Workstream 1 now also has node experience-prior runtime metric assembly routing through that same shared helper for the non-duration metrics, leaving only node-specific temporal/duration fields locally owned in `structural_playbook.rs`.
 - [x] Workstream 1 now also has `workflow-status` structural branch/scenario/path/feedback-template phase rendering reusing the shared structural playbook bundle instead of rebuilding those subtrees separately per case.
 
 ### Next
@@ -71,6 +72,7 @@ Primary source docs:
   - latest: path experience-prior runtime metric assembly now also routes through a shared `belief_core/source_reliability.rs` helper instead of an inline field-by-field block
   - latest: branch experience-prior runtime metric assembly now routes through that same shared helper
   - latest: scenario experience-prior runtime metric assembly now routes through that same shared helper
+  - latest: node experience-prior runtime metrics now also route through that same shared helper, except for node-only duration/temporal fields
   - latest: `workflow_status.rs` structural branch/scenario/path/feedback-template phase cases now reuse the shared playbook bundle instead of rebuilding each subtree independently
 - [ ] Replace the current heuristic transition/break mixing with a maintained, emission-aware regime transition core instead of only snapshot-time posterior reweighting.
   - started: transition posterior, blend-helper, temporal accessor, temporal-summary builder extraction, maintained node/branch transition posterior refresh, and explicit emission-conditioned support helpers into `src/belief_core/regime_filter.rs`
