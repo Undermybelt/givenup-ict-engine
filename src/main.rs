@@ -17,7 +17,7 @@ use chrono::{Duration, Utc};
 use clap::{Parser, Subcommand};
 mod analyze_command;
 use analyze_command::analyze_command;
-use analyze_live_command::{analyze_live_command, AnalyzeLiveCommandInput};
+use analyze_live_command::{analyze_live_shell, AnalyzeLiveShellInput};
 use analyze_shared::{
     apply_command_context_to_analyze_report, persist_analyze_run,
     persist_execution_candidate_from_analyze, persist_pending_update_artifact_from_analyze,
@@ -232,7 +232,7 @@ use status_command::{
     pre_bayes_status_shell, provider_status_shell, workflow_status_shell, ArtifactDiffShellInput,
     ArtifactLineageShellInput, ArtifactStatusShellInput, WorkflowStatusShellInput,
 };
-use update_command::update_command;
+use update_command::update_shell;
 use update_output::{
     apply_update_outcome_to_executor_scorecards, build_ensemble_vote_record, emit_update_output,
     feedback_record_from_artifact, latest_execution_candidate_for_source_run,
@@ -1992,33 +1992,19 @@ fn main() -> Result<()> {
             openalice_base_url,
             nofx_base_url,
             state_dir,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            let futures_base_url =
-                ict_engine::application::data_sources::resolve_live_backend_base_url(
-                    &futures_backend,
-                    &openalice_base_url,
-                    &nofx_base_url,
-                );
-            let aux_base_url = ict_engine::application::data_sources::resolve_live_backend_base_url(
-                &aux_backend,
-                &openalice_base_url,
-                &nofx_base_url,
-            );
-            analyze_live_command(AnalyzeLiveCommandInput {
-                symbol: &symbol,
-                futures_symbol: futures_symbol.as_deref(),
-                spot_symbol: spot_symbol.as_deref(),
-                options_symbol: options_symbol.as_deref(),
-                options_volatility_proxy_symbol: options_volatility_proxy_symbol.as_deref(),
-                spot_kind: spot_kind.as_deref(),
-                futures_backend: &futures_backend,
-                aux_backend: &aux_backend,
-                futures_base_url: &futures_base_url,
-                aux_base_url: &aux_base_url,
-                state_dir: &state_dir,
-            })?
-        }
+        } => analyze_live_shell(AnalyzeLiveShellInput {
+            symbol: &symbol,
+            futures_symbol: futures_symbol.as_deref(),
+            spot_symbol: spot_symbol.as_deref(),
+            options_symbol: options_symbol.as_deref(),
+            options_volatility_proxy_symbol: options_volatility_proxy_symbol.as_deref(),
+            spot_kind: spot_kind.as_deref(),
+            futures_backend: &futures_backend,
+            aux_backend: &aux_backend,
+            openalice_base_url: &openalice_base_url,
+            nofx_base_url: &nofx_base_url,
+            state_dir: &state_dir,
+        })?,
         Commands::Train {
             symbol,
             data,
@@ -2167,20 +2153,17 @@ fn main() -> Result<()> {
             direction,
             feedback_file,
             ensemble,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            update_command(UpdateCommandInput {
-                symbol: &symbol,
-                outcome: &outcome,
-                entry_signal: Some(&entry_signal),
-                feedback_file: feedback_file.as_deref(),
-                state_dir: &state_dir,
-                pnl,
-                regime: regime.as_deref(),
-                direction: direction.as_deref(),
-                ensemble,
-            })?
-        }
+        } => update_shell(UpdateCommandInput {
+            symbol: &symbol,
+            outcome: &outcome,
+            entry_signal: Some(&entry_signal),
+            feedback_file: feedback_file.as_deref(),
+            state_dir: &state_dir,
+            pnl,
+            regime: regime.as_deref(),
+            direction: direction.as_deref(),
+            ensemble,
+        })?,
         Commands::FactorResearch {
             symbol,
             data,

@@ -69,8 +69,10 @@ fn append_learning_semantics_to_update_gate_prompts(
     for prompt in &mut prompts.prompts {
         if prompt.id == "promotion_gate" || prompt.id == "rollback_review" {
             if !prompt.user_prompt.contains("learning_semantics=") {
-                prompt.user_prompt =
-                    format!("{} learning_semantics={}", prompt.user_prompt, semantics_summary);
+                prompt.user_prompt = format!(
+                    "{} learning_semantics={}",
+                    prompt.user_prompt, semantics_summary
+                );
             }
             let criterion = "Use learning_semantics to distinguish full-credit, fractional-credit, and no-credit feedback before approving promotion or rollback.";
             if !prompt
@@ -82,6 +84,11 @@ fn append_learning_semantics_to_update_gate_prompts(
             }
         }
     }
+}
+
+pub(crate) fn update_shell(input: UpdateCommandInput<'_>) -> Result<()> {
+    ensure_state_dir_ready(input.state_dir)?;
+    update_command(input)
 }
 
 pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
@@ -238,12 +245,9 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         .map(|feedback| feedback.realized_outcome.as_str())
         .unwrap_or(raw_outcome.as_str());
 
-    if let Some(feedback) = new_feedback
-        .first()
-        .filter(|feedback| {
-            ict_engine::state::structural_feedback_counts_as_executed_trade(feedback)
-        })
-    {
+    if let Some(feedback) = new_feedback.first().filter(|feedback| {
+        ict_engine::state::structural_feedback_counts_as_executed_trade(feedback)
+    }) {
         let outcome_label = ict_engine::state::structural_feedback_trade_outcome_proxy(feedback)
             .unwrap_or_else(|| normalize_trade_outcome_label(&feedback.realized_outcome));
         let realized_state_index = network
@@ -660,8 +664,7 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
             realized_outcome: report.realized_outcome.clone(),
             structural_learning_credit_class: report.structural_learning_credit_class.clone(),
             structural_learning_success_credit: report.structural_learning_success_credit,
-            structural_learning_observation_weight: report
-                .structural_learning_observation_weight,
+            structural_learning_observation_weight: report.structural_learning_observation_weight,
             structural_feedback: report.structural_feedback.clone(),
             feedback_records_applied,
             duplicate_feedback_skipped: report.duplicate_feedback_skipped,
@@ -761,8 +764,7 @@ pub(crate) fn update_command(input: UpdateCommandInput<'_>) -> Result<()> {
         learning_state.apply_structural_prior_seed(refs, &seed);
         save_learning_state(state_dir, symbol, &learning_state)?;
     }
-    let provider_status_agent =
-        provider_status_agent_surface(None, None, None).unwrap_or_default();
+    let provider_status_agent = provider_status_agent_surface(None, None, None).unwrap_or_default();
     if let Err(err) = export_structural_path_ranking_target(
         state_dir,
         symbol,

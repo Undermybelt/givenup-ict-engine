@@ -77,6 +77,7 @@ Primary source docs:
 - [x] Workstream 1 now also has `factor-research` / `factor-autoresearch` bin-side shell dispatch moved out of the `main.rs` match-arm body, leaving the runtime closure logic owned by the dedicated research runtime module.
 - [x] Workstream 1 now also has `clean-futures` / `futures-sop` / `market-data-harness` thin shell dispatch moved out of `main.rs` into a focused bin-side market-data shell.
 - [x] Workstream 1 now also has `expansion-sop` thin shell dispatch moved into that same bin-side market-data shell, removing one of the last large wrapper-style match arms from `main.rs`.
+- [x] Workstream 1 now also has `analyze-live` / `update` thin shell dispatch moved out of the `main.rs` match-arm body and into their existing bin-side command modules.
 
 ### Next
 
@@ -102,6 +103,7 @@ Primary source docs:
   - latest: `main.rs` no longer owns the direct `factor-research` / `factor-autoresearch` bin-side shell wrapper logic either
   - latest: `main.rs` no longer owns the direct `clean-futures` / `futures-sop` / `market-data-harness` thin shell wrapper logic either
   - latest: `main.rs` no longer owns the direct `expansion-sop` thin shell wrapper logic either
+  - latest: `main.rs` no longer owns the direct `analyze-live` / `update` thin shell wrapper logic either
 - [ ] Replace the current heuristic transition/break mixing with a maintained, emission-aware regime transition core instead of only snapshot-time posterior reweighting.
   - started: transition posterior, blend-helper, temporal accessor, temporal-summary builder extraction, maintained node/branch transition posterior refresh, and explicit emission-conditioned support helpers into `src/belief_core/regime_filter.rs`
 - [ ] Replace the current heuristic temporal break logic with a clearer `changepoint_gate` owner instead of keeping BOCPD helpers inside `src/state/types.rs`.

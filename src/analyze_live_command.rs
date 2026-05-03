@@ -157,6 +157,60 @@ pub(crate) struct AnalyzeLiveCommandInput<'a> {
     pub state_dir: &'a str,
 }
 
+pub(crate) struct AnalyzeLiveShellInput<'a> {
+    pub symbol: &'a str,
+    pub futures_symbol: Option<&'a str>,
+    pub spot_symbol: Option<&'a str>,
+    pub options_symbol: Option<&'a str>,
+    pub options_volatility_proxy_symbol: Option<&'a str>,
+    pub spot_kind: Option<&'a str>,
+    pub futures_backend: &'a str,
+    pub aux_backend: &'a str,
+    pub openalice_base_url: &'a str,
+    pub nofx_base_url: &'a str,
+    pub state_dir: &'a str,
+}
+
+pub(crate) fn analyze_live_shell(input: AnalyzeLiveShellInput<'_>) -> Result<()> {
+    let AnalyzeLiveShellInput {
+        symbol,
+        futures_symbol,
+        spot_symbol,
+        options_symbol,
+        options_volatility_proxy_symbol,
+        spot_kind,
+        futures_backend,
+        aux_backend,
+        openalice_base_url,
+        nofx_base_url,
+        state_dir,
+    } = input;
+    ensure_state_dir_ready(state_dir)?;
+    let futures_base_url = ict_engine::application::data_sources::resolve_live_backend_base_url(
+        futures_backend,
+        openalice_base_url,
+        nofx_base_url,
+    );
+    let aux_base_url = ict_engine::application::data_sources::resolve_live_backend_base_url(
+        aux_backend,
+        openalice_base_url,
+        nofx_base_url,
+    );
+    analyze_live_command(AnalyzeLiveCommandInput {
+        symbol,
+        futures_symbol,
+        spot_symbol,
+        options_symbol,
+        options_volatility_proxy_symbol,
+        spot_kind,
+        futures_backend,
+        aux_backend,
+        futures_base_url: &futures_base_url,
+        aux_base_url: &aux_base_url,
+        state_dir,
+    })
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct ResolvedLiveSymbolInputs {
     futures_symbol: String,
