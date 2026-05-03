@@ -5,8 +5,11 @@ use crate::state::{
     structural_source_observed_outcome_likelihood, structural_source_reliability_em_diagnostics,
     structural_source_reliability_em_fit_from_state, StructuralPriorLearningState,
     StructuralPriorStats, StructuralSourceReliabilityPosterior,
+    StructuralTargetPolicyContextPosterior,
     STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS,
 };
+
+pub const STRUCTURAL_TARGET_POLICY_CONTEXT_SURFACE_LIMIT: usize = 3;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct StructuralExperiencePriorSurfaceArtifact {
@@ -445,4 +448,114 @@ pub fn structural_source_reliability_em_readiness(
             .as_ref()
             .and_then(|calibration| calibration.log_loss),
     }
+}
+
+pub fn structural_target_policy_context_surfaces(
+    structural_prior_state: &StructuralPriorLearningState,
+) -> Vec<StructuralTargetPolicyContextSurface> {
+    let mut contexts = structural_prior_state
+        .target_policy_context_posteriors
+        .iter()
+        .filter(|(_, posterior)| posterior.weighted_observation_mass > f64::EPSILON)
+        .collect::<Vec<_>>();
+    contexts.sort_by(|(left_key, left), (right_key, right)| {
+        right
+            .weighted_observation_mass
+            .total_cmp(&left.weighted_observation_mass)
+            .then_with(|| left_key.cmp(right_key))
+    });
+    contexts
+        .into_iter()
+        .take(STRUCTURAL_TARGET_POLICY_CONTEXT_SURFACE_LIMIT)
+        .map(|(context_key, posterior)| {
+            structural_target_policy_context_surface(context_key, posterior)
+        })
+        .collect()
+}
+
+pub fn structural_target_policy_context_surface(
+    context_key: &str,
+    posterior: &StructuralTargetPolicyContextPosterior,
+) -> StructuralTargetPolicyContextSurface {
+    StructuralTargetPolicyContextSurface {
+        context_key: context_key.to_string(),
+        observations: posterior.observations,
+        weighted_observation_mass: posterior.weighted_observation_mass,
+        behavior_policy_probability: posterior.behavior_policy_probability,
+        behavior_policy_probability_variance: posterior.behavior_policy_probability_variance,
+        learned_target_policy_probability: posterior.learned_target_policy_probability,
+        learned_target_policy_probability_lower_bound: posterior
+            .learned_target_policy_probability_lower_bound,
+        learned_target_policy_probability_confidence: posterior
+            .learned_target_policy_probability_confidence,
+        calibrated_target_policy_probability: posterior.calibrated_target_policy_probability,
+        calibrated_target_policy_probability_lower_bound: posterior
+            .calibrated_target_policy_probability_lower_bound,
+        target_policy_probability_brier_score: posterior.target_policy_probability_brier_score,
+        target_policy_probability_calibration_error: posterior
+            .target_policy_probability_calibration_error,
+        last_recommendation_id: posterior.last_recommendation_id.clone(),
+    }
+}
+
+pub fn structural_source_panel_count(prior_stats: Option<&StructuralPriorStats>) -> usize {
+    prior_stats
+        .map(|stats| stats.source_panel_summaries.len())
+        .unwrap_or(0)
+}
+
+pub fn structural_last_offline_seed_source(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<String> {
+    prior_stats.and_then(|stats| stats.last_offline_seed_source.clone())
+}
+
+pub fn structural_prior_positive_value(
+    prior_stats: Option<&StructuralPriorStats>,
+    value: impl Fn(&StructuralPriorStats) -> f64,
+) -> Option<f64> {
+    prior_stats.map(value).filter(|candidate| *candidate > f64::EPSILON)
+}
+
+pub fn structural_prior_positive_count(
+    prior_stats: Option<&StructuralPriorStats>,
+    value: impl Fn(&StructuralPriorStats) -> usize,
+) -> Option<usize> {
+    prior_stats.map(value).filter(|candidate| *candidate > 0)
+}
+
+pub fn structural_prior_execution_propensity(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.execution_propensity)
+}
+
+pub fn structural_prior_ips_weight(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.ips_weight)
+}
+
+pub fn structural_prior_counterfactual_reward_prior(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.counterfactual_reward_prior)
+}
+
+pub fn structural_prior_off_policy_adjusted_prior(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.off_policy_adjusted_prior)
+}
+
+pub fn structural_prior_behavior_policy_probability(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| stats.behavior_policy_probability)
+}
+
+pub fn structural_prior_behavior_policy_probability_variance(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    structural_prior_positive_value(prior_stats, |stats| {
+        stats.behavior_policy_probability_variance
+    })
 }
