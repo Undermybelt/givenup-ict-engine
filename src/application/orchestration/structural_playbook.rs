@@ -54,8 +54,13 @@ pub use crate::belief_core::ranking_label::{
 };
 pub use crate::belief_core::structural_state::{
     StructuralBranchArtifact, StructuralBranchSetArtifact, StructuralNodeArtifact,
-    StructuralPathArtifact, StructuralPathPlanArtifact, StructuralPlaybookBundle,
+    StructuralBranchHistoryArtifact, StructuralBranchOutcomeSummary, StructuralEntityHistorySummary,
+    StructuralFeedbackField, StructuralFeedbackTemplateArtifact, StructuralHistorySummaryArtifact,
+    StructuralNodeHistoryArtifact, StructuralNodeOutcomeSummary, StructuralPathArtifact,
+    StructuralPathHistoryArtifact, StructuralPathHistorySummary, StructuralPathOutcomeSummary,
+    StructuralPathPlanArtifact, StructuralPlaybookBundle,
     StructuralRecommendedPathBundleArtifact, StructuralScenarioArtifact,
+    StructuralScenarioHistoryArtifact, StructuralScenarioOutcomeSummary,
     StructuralScenarioPlaybookArtifact, StructuralTopPathCandidate,
     StructuralTopPathCandidatesArtifact,
 };
@@ -85,30 +90,6 @@ pub const STRUCTURAL_PATH_RANKING_TARGET_HISTORY_JSONL_FILE: &str =
     "structural_path_ranking_target_history.jsonl";
 pub const STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE: &str =
     "structural_path_ranking_target_summary.json";
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralPathHistoryArtifact {
-    pub summary: StructuralPathHistorySummary,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub paths: Vec<StructuralPathOutcomeSummary>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralHistorySummaryArtifact {
-    pub total_records: usize,
-    pub distinct_nodes: usize,
-    pub distinct_branches: usize,
-    pub distinct_scenarios: usize,
-    pub distinct_paths: usize,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub latest_node_id: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub latest_branch_id: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub latest_scenario_id: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub latest_path_id: Option<String>,
-}
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct StructuralTemporalSummaryArtifact {
@@ -484,139 +465,6 @@ pub struct StructuralExperiencePriorEntry {
     pub transition_temporal_posterior_support: Option<f64>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralNodeHistoryArtifact {
-    pub summary: StructuralEntityHistorySummary,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub nodes: Vec<StructuralNodeOutcomeSummary>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralBranchHistoryArtifact {
-    pub summary: StructuralEntityHistorySummary,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub branches: Vec<StructuralBranchOutcomeSummary>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralScenarioHistoryArtifact {
-    pub summary: StructuralEntityHistorySummary,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub scenarios: Vec<StructuralScenarioOutcomeSummary>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralEntityHistorySummary {
-    pub total_records: usize,
-    pub distinct_entities: usize,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub latest_entity_id: Option<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralNodeOutcomeSummary {
-    pub node_id: String,
-    pub total_records: usize,
-    pub followed_count: usize,
-    pub wins: usize,
-    pub losses: usize,
-    pub breakevens: usize,
-    pub invalidated: usize,
-    pub abandoned: usize,
-    pub not_followed: usize,
-    pub avg_pnl: f64,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub execution_propensity: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub off_policy_exposure_rate: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub last_recommended_at: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub last_realized_outcome: Option<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralBranchOutcomeSummary {
-    pub node_id: String,
-    pub branch_id: String,
-    pub total_records: usize,
-    pub followed_count: usize,
-    pub wins: usize,
-    pub losses: usize,
-    pub breakevens: usize,
-    pub invalidated: usize,
-    pub abandoned: usize,
-    pub not_followed: usize,
-    pub avg_pnl: f64,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub execution_propensity: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub off_policy_exposure_rate: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub last_recommended_at: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub last_realized_outcome: Option<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralScenarioOutcomeSummary {
-    pub node_id: String,
-    pub branch_id: String,
-    pub scenario_id: String,
-    pub total_records: usize,
-    pub followed_count: usize,
-    pub wins: usize,
-    pub losses: usize,
-    pub breakevens: usize,
-    pub invalidated: usize,
-    pub abandoned: usize,
-    pub not_followed: usize,
-    pub avg_pnl: f64,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub execution_propensity: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub off_policy_exposure_rate: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub last_recommended_at: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub last_realized_outcome: Option<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralPathHistorySummary {
-    pub total_records: usize,
-    pub distinct_paths: usize,
-    pub distinct_branches: usize,
-    pub distinct_scenarios: usize,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub latest_path_id: Option<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralPathOutcomeSummary {
-    pub node_id: String,
-    pub branch_id: String,
-    pub scenario_id: String,
-    pub path_id: String,
-    pub total_records: usize,
-    pub followed_count: usize,
-    pub wins: usize,
-    pub losses: usize,
-    pub breakevens: usize,
-    pub invalidated: usize,
-    pub abandoned: usize,
-    pub not_followed: usize,
-    pub avg_pnl: f64,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub execution_propensity: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub off_policy_exposure_rate: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub last_recommended_at: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub last_realized_outcome: Option<String>,
-}
-
 pub fn resolved_latest_ensemble_vote(
     snapshot: &WorkflowSnapshot,
 ) -> Option<crate::state::EnsembleVoteRecord> {
@@ -729,48 +577,6 @@ pub fn canonical_analyze_regime_surface(
     analyze: &crate::state::WorkflowPhaseSnapshot,
 ) -> Option<(String, std::collections::BTreeMap<String, f64>, f64)> {
     canonical_phase_regime_surface(analyze)
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralFeedbackTemplateArtifact {
-    pub protocol_version: String,
-    pub recommendation_id: String,
-    pub recommended_at: String,
-    pub symbol: String,
-    pub node_id: String,
-    pub branch_id: String,
-    pub scenario_id: String,
-    pub path_id: String,
-    pub candidate_set_id: String,
-    pub candidate_set_size: usize,
-    pub selected_path_probability: f64,
-    pub direction: String,
-    pub entry_style: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub selected_entry_quality: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub selected_entry_quality_probability: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub pre_bayes_gate_status: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub path_posterior: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bbn_support_score: Option<f64>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub allowed_outcomes: Vec<String>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub feedback_fields: Vec<StructuralFeedbackField>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub notes: Vec<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralFeedbackField {
-    pub field_id: String,
-    pub label: String,
-    pub value_type: String,
-    pub required: bool,
-    pub description: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
