@@ -3138,6 +3138,9 @@ mod tests {
     use crate::application::provider_catalog::{
         ProviderCatalogAgentSurface, ProviderCatalogPendingAgentItem,
     };
+    use std::io::{Read, Write};
+    use std::net::TcpListener;
+    use std::thread;
 
     fn sample_provider_agent_surface() -> ProviderCatalogAgentSurface {
         ProviderCatalogAgentSurface {
@@ -3183,6 +3186,32 @@ mod tests {
             ],
             selected_profile: None,
         }
+    }
+
+    fn serve_http_response(path: &str, body: String, request_count: usize) -> String {
+        let listener = TcpListener::bind("127.0.0.1:0").expect("bind test server");
+        let address = listener.local_addr().expect("listener addr");
+        let expected_path = format!("/{path}");
+        let response_path = expected_path.clone();
+        thread::spawn(move || {
+            for _ in 0..request_count {
+                if let Ok((mut stream, _)) = listener.accept() {
+                    let mut buffer = [0_u8; 2048];
+                    let read = stream.read(&mut buffer).unwrap_or_default();
+                    let request = String::from_utf8_lossy(&buffer[..read]);
+                    assert!(request.starts_with("GET "));
+                    assert!(request.contains(&expected_path));
+                    let response = format!(
+                        "HTTP/1.1 200 OK\r\nContent-Type: application/jsonl\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+                        body.len(),
+                        body
+                    );
+                    let _ = stream.write_all(response.as_bytes());
+                    let _ = stream.flush();
+                }
+            }
+        });
+        format!("http://{address}{response_path}")
     }
 
     fn sample_provider_agent_surface_with_profile() -> ProviderCatalogAgentSurface {
@@ -7423,6 +7452,219 @@ mod tests {
                 .as_str()
                 .unwrap_or_default()
                 .contains("raw="));
+    }
+
+    #[test]
+    fn agent_workflow_status_prefers_registered_artifact_scores_when_present() {
+        let snapshot = sample_human_workflow_snapshot();
+        let history = sample_structural_feedback_history();
+        let path_id = "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary";
+        let mut structural_prior_state = StructuralPriorLearningState::default();
+        structural_prior_state.paths.insert(
+            path_id.to_string(),
+            crate::state::StructuralPriorStats {
+                smoothed_prior: 0.62,
+                execution_propensity: 0.6,
+                target_policy_probability_confidence: 0.57,
+                target_policy_probability_lower_bound: 0.31,
+                target_policy_reward_prior: 0.58,
+                target_policy_reward_lower_bound: 0.29,
+                ..crate::state::StructuralPriorStats::default()
+            },
+        );
+        let temp = tempfile::tempdir().unwrap();
+        let summary = crate::application::orchestration::export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &sample_provider_agent_surface(),
+            &history,
+            &structural_prior_state,
+        )
+        .unwrap();
+        let current_rows: Vec<
+            crate::application::orchestration::StructuralPathRankingTargetRow,
+        > = std::fs::read_to_string(&summary.jsonl_path)
+            .unwrap()
+            .lines()
+            .filter(|line| !line.trim().is_empty())
+            .map(serde_json::from_str)
+            .collect::<std::result::Result<_, _>>()
+            .unwrap();
+        let artifact_scored_row = current_rows.first().expect("exported row").clone();
+        let artifact_dir = std::path::Path::new(&summary.summary_path)
+            .parent()
+            .expect("summary parent")
+            .to_path_buf();
+        std::fs::write(
+            artifact_dir.join("artifact_scores.jsonl"),
+            format!(
+                "{}\n{}\n",
+                serde_json::json!({
+                    "candidate_set_id": summary.candidate_set_id,
+                    "path_id": artifact_scored_row.path_id,
+                    "raw_path_score": 0.97,
+                    "calibrated_path_prob": 0.88,
+                    "path_prob_lower_bound": 0.79,
+                    "execution_gate_status": "pass"
+                }),
+                serde_json::json!({
+                    "candidate_set_id": "structural-candidates:NQ:other",
+                    "path_id": "path:scenario:NQ:belief_regime_node:range:observe_only:primary",
+                    "raw_path_score": 0.12,
+                    "calibrated_path_prob": 0.18,
+                    "path_prob_lower_bound": 0.08,
+                    "execution_gate_status": "observe"
+                })
+            ),
+        )
+        .unwrap();
+        let artifact = crate::application::entry_models::training_export::StructuralPathRankingTrainerArtifact {
+            protocol_version: "structural-path-ranking-trainer-artifact-v1".to_string(),
+            dataset_role: "external_path_ranker_training_dataset".to_string(),
+            model_family: "catboost".to_string(),
+            artifact_uri: "artifact_scores.jsonl".to_string(),
+            score_column: "raw_path_score".to_string(),
+            trained_rows: 42,
+            calibration_rows: 12,
+            feature_columns: vec!["rank".to_string(), "raw_path_score".to_string()],
+            created_at: None,
+            notes: vec![],
+        };
+        std::fs::write(
+            artifact_dir.join("structural_path_ranking_trainer_artifact.json"),
+            serde_json::to_string_pretty(&artifact).unwrap(),
+        )
+        .unwrap();
+        crate::application::entry_models::enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            crate::application::orchestration::STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+        )
+        .unwrap();
+
+        let agent_value =
+            build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+                &snapshot,
+                &[],
+                &sample_provider_agent_surface(),
+                &history,
+                &structural_prior_state,
+                Some(temp.path().to_str().unwrap()),
+            );
+        assert_eq!(
+            agent_value["path_ranking_target"]["rows"][0]["raw_path_score"].as_f64(),
+            Some(0.97)
+        );
+        assert_eq!(
+            agent_value["recommended_path_bundle"]["path_ranker_raw_score"].as_f64(),
+            Some(0.97)
+        );
+        assert_eq!(
+            agent_value["recommended_path_bundle"]["path_ranker_runtime_source"].as_str(),
+            Some("registered_artifact")
+        );
+        assert_eq!(
+            agent_value["recommended_path_bundle"]["path_ranker_runtime"]["status"].as_str(),
+            Some("using_registered_artifact_scores")
+        );
+    }
+
+    #[test]
+    fn agent_workflow_status_can_consume_remote_registered_artifact_scores() {
+        let snapshot = sample_human_workflow_snapshot();
+        let history = sample_structural_feedback_history();
+        let path_id = "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary";
+        let mut structural_prior_state = StructuralPriorLearningState::default();
+        structural_prior_state.paths.insert(
+            path_id.to_string(),
+            crate::state::StructuralPriorStats {
+                smoothed_prior: 0.62,
+                execution_propensity: 0.6,
+                target_policy_probability_confidence: 0.57,
+                target_policy_probability_lower_bound: 0.31,
+                target_policy_reward_prior: 0.58,
+                target_policy_reward_lower_bound: 0.29,
+                ..crate::state::StructuralPriorStats::default()
+            },
+        );
+        let temp = tempfile::tempdir().unwrap();
+        let summary = crate::application::orchestration::export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &sample_provider_agent_surface(),
+            &history,
+            &structural_prior_state,
+        )
+        .unwrap();
+        let current_rows: Vec<
+            crate::application::orchestration::StructuralPathRankingTargetRow,
+        > = std::fs::read_to_string(&summary.jsonl_path)
+            .unwrap()
+            .lines()
+            .filter(|line| !line.trim().is_empty())
+            .map(serde_json::from_str)
+            .collect::<std::result::Result<_, _>>()
+            .unwrap();
+        let artifact_scored_row = current_rows.first().expect("exported row").clone();
+        let body = format!(
+            "{}\n",
+            serde_json::json!({
+                "candidate_set_id": summary.candidate_set_id,
+                "path_id": artifact_scored_row.path_id,
+                "raw_path_score": 0.93,
+                "calibrated_path_prob": 0.84,
+                "path_prob_lower_bound": 0.74,
+                "execution_gate_status": "pass"
+            })
+        );
+        let remote_uri = serve_http_response("artifact_scores.jsonl", body, 8);
+        let artifact_dir = std::path::Path::new(&summary.summary_path)
+            .parent()
+            .expect("summary parent")
+            .to_path_buf();
+        let artifact = crate::application::entry_models::training_export::StructuralPathRankingTrainerArtifact {
+            protocol_version: "structural-path-ranking-trainer-artifact-v1".to_string(),
+            dataset_role: "external_path_ranker_training_dataset".to_string(),
+            model_family: "catboost".to_string(),
+            artifact_uri: remote_uri,
+            score_column: "raw_path_score".to_string(),
+            trained_rows: 42,
+            calibration_rows: 12,
+            feature_columns: vec!["rank".to_string(), "raw_path_score".to_string()],
+            created_at: None,
+            notes: vec![],
+        };
+        std::fs::write(
+            artifact_dir.join("structural_path_ranking_trainer_artifact.json"),
+            serde_json::to_string_pretty(&artifact).unwrap(),
+        )
+        .unwrap();
+        crate::application::entry_models::enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            crate::application::orchestration::STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+        )
+        .unwrap();
+
+        let agent_value =
+            build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+                &snapshot,
+                &[],
+                &sample_provider_agent_surface(),
+                &history,
+                &structural_prior_state,
+                Some(temp.path().to_str().unwrap()),
+            );
+        assert_eq!(
+            agent_value["recommended_path_bundle"]["path_ranker_raw_score"].as_f64(),
+            Some(0.93)
+        );
+        assert_eq!(
+            agent_value["recommended_path_bundle"]["path_ranker_runtime_source"].as_str(),
+            Some("registered_artifact")
+        );
     }
 
     #[test]

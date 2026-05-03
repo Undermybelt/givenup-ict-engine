@@ -45,12 +45,13 @@ Primary source docs:
 - [x] The structural path-ranking export/status path exists, including trainer manifest checks and explicit external artifact registration.
 - [x] A repo-local audit now states which parts of the long plan are real, partial, or still missing.
 - [x] Structural path-ranking now has an opt-in runtime reuse contract for externally scored rows: zero-config default stays unchanged, while users can explicitly enable `candidate_set_only` or `prefer_history` reuse from `policy_training` state.
+- [x] Registered trainer artifacts can now act as a direct runtime score source for structural path-ranking consumer surfaces when runtime reuse is explicitly enabled, for both local file-backed and remote scored-row feeds.
 
 ### Next
 
 - [ ] Extract the belief core out of the oversized files so the core learning math stops living inside `src/state/types.rs`, `src/application/orchestration/structural_playbook.rs`, `src/application/orchestration/workflow_status.rs`, and `src/main.rs`.
 - [ ] Replace the current heuristic transition/break mixing with a maintained, emission-aware regime transition core instead of only snapshot-time posterior reweighting.
-- [ ] Promote the new opt-in scored-row runtime reuse into direct artifact loading or service-backed scoring for the structural path-ranker.
+- [ ] Promote the new opt-in runtime path from scored-row feed consumption into model-native scoring for the structural path-ranker.
 - [ ] Add stronger verification lanes for source reliability and delayed reward handling so the repo stops relying only on in-ledger compact calibration summaries.
 
 ### Not Yet
@@ -64,7 +65,7 @@ Primary source docs:
   - `ranking_label.rs`
 - [ ] production-grade `regime_filter` with maintained transition logic and explicit emission-conditioned updates
 - [ ] production-grade `changepoint_gate` instead of the current fixed-weight BOCPD-style heuristic blend
-- [ ] real runtime loading or service-based consumption of the structural path-ranking trainer artifact beyond scored-row reuse
+- [ ] model-native runtime consumption of the structural path-ranking trainer artifact beyond scored-row feed loading
 - [ ] deeper learned/contextual target-policy probability model beyond the current `symbol:regime:direction` bucket posterior
 - [ ] out-of-sample / replay-grade source reliability validation beyond fixed-iteration leave-source-out summaries
 - [ ] full elapsed-time competing-risk delayed-reward censoring model rather than only compact aggregate hazard/incidence summaries
@@ -133,7 +134,9 @@ Primary source docs:
 - trainer artifact readiness is checked
 - artifact URI presence is reported
 - opt-in scored-row reuse is now available for current consumer surfaces
-- direct artifact loading or service-backed inference is still missing
+- local artifact-backed scored-row loading now works
+- remote scored-row feed loading now works
+- model-native inference is still missing
 
 **Acceptance:**
 
