@@ -50,6 +50,7 @@ Primary source docs:
 - [x] Workstream 1 now also has source-reliability / experience-prior shared contracts and panel/reliability / target-policy / delayed-reward accessor helper ownership starting to move into `src/belief_core/source_reliability.rs`.
 - [x] Workstream 1 now also has shared Beta / pseudo-count update ownership starting to move into `src/belief_core/beta_dirichlet_update.rs`, with structural power-prior mass assembly, target-policy context posterior updates, source-reliability updates, transition support means, and path-ranking Beta summaries beginning to reuse that helper layer instead of open-coding the same math in `src/state/types.rs`.
 - [x] Workstream 2 has also started at the owner level: node/branch transition posterior adjustment plus duration/branch blend helpers, temporal accessor math, and `structural-temporal-summary` assembly now live under `src/belief_core/regime_filter.rs`, with `application/belief/structural_temporal_adjustment.rs` reduced toward a thinner compatibility shell.
+- [x] Workstream 2 now also has maintained transition-posterior refresh ownership beginning to move into `src/belief_core/regime_filter.rs`: the node/branch transition prior normalization, outcome-support recompute, posterior multiplier recompute, and normalized posterior rebuild no longer have to stay open-coded inside `rebuild_structural_sequence_priors(...)`.
 - [x] Workstream 2 now also has BOCPD / sequence-break helper ownership starting to move into `src/belief_core/changepoint_gate.rs`, including discounted node-duration prior / temporal-posterior rebuild logic.
 
 ### Next
@@ -57,7 +58,7 @@ Primary source docs:
 - [ ] Extract the belief core out of the oversized files so the core learning math stops living inside `src/state/types.rs`, `src/application/orchestration/structural_playbook.rs`, `src/application/orchestration/workflow_status.rs`, and `src/main.rs`.
   - started: path-ranker runtime owner, contracts, calibration helpers, row IO extraction into `src/belief_core/ranking_label.rs`, shared structural contracts into `src/belief_core/structural_state.rs`, source-reliability / experience-prior contracts plus panel/reliability / target-policy / delayed-reward helper ownership into `src/belief_core/source_reliability.rs`, and shared Beta / pseudo-count update helpers into `src/belief_core/beta_dirichlet_update.rs`
 - [ ] Replace the current heuristic transition/break mixing with a maintained, emission-aware regime transition core instead of only snapshot-time posterior reweighting.
-  - started: transition posterior, blend-helper, temporal accessor, and temporal-summary builder extraction into `src/belief_core/regime_filter.rs`
+  - started: transition posterior, blend-helper, temporal accessor, temporal-summary builder extraction, and maintained node/branch transition posterior refresh into `src/belief_core/regime_filter.rs`
 - [ ] Replace the current heuristic temporal break logic with a clearer `changepoint_gate` owner instead of keeping BOCPD helpers inside `src/state/types.rs`.
   - started: BOCPD / sequence-break helper and duration-prior rebuild owner extraction into `src/belief_core/changepoint_gate.rs`
 - [ ] Promote the new opt-in runtime path from scored-row feed consumption into model-native scoring for the structural path-ranker.

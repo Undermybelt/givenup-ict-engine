@@ -3,11 +3,14 @@ use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 
 use crate::belief_core::beta_dirichlet_update::{
-    beta_posterior_mean, beta_update_factor, dirichlet_component_mean, weighted_seed_beta_update,
+    beta_posterior_mean, beta_update_factor, weighted_seed_beta_update,
     weighted_success_credit_beta_update,
 };
 use crate::belief_core::changepoint_gate::{
     rebuild_discounted_node_duration_priors, StructuralNodeStreakRecord,
+};
+use crate::belief_core::regime_filter::{
+    refresh_branch_transition_posteriors, refresh_node_transition_posteriors,
 };
 use crate::types::{Direction, FactorIC, Regime, RegimeProbs};
 
@@ -7236,151 +7239,11 @@ fn rebuild_structural_sequence_priors(state: &mut StructuralPriorLearningState) 
             entry.last_recommended_at = Some(event.recommended_at.clone());
         }
     }
-    let mut outgoing_node_mass = BTreeMap::<String, f64>::new();
-    for transition in state.node_transition_posteriors.values() {
-        *outgoing_node_mass
-            .entry(transition.from_node_id.clone())
-            .or_insert(0.0) += transition.weighted_observation_mass;
-    }
-    for transition in state.node_transition_posteriors.values_mut() {
-        let total = outgoing_node_mass
-            .get(&transition.from_node_id)
-            .copied()
-            .unwrap_or_default();
-        transition.transition_prior =
-            dirichlet_component_mean(transition.weighted_observation_mass, total);
-        transition.transition_outcome_support = beta_posterior_mean(
-            transition.weighted_success_mass,
-            transition.weighted_failure_mass,
-        );
-        transition.temporal_posterior_support = (transition.transition_prior * 0.7
-            + transition.transition_outcome_support * 0.3)
-            .clamp(0.0, 1.0);
-    }
-    let mut node_posterior_weights = BTreeMap::<String, f64>::new();
-    let mut node_posterior_multipliers = BTreeMap::<String, f64>::new();
-    let mut outgoing_node_posterior_weight = BTreeMap::<String, f64>::new();
-    for (transition_key, transition) in &state.node_transition_posteriors {
-        let sample_weight = (transition.weighted_observation_mass / 3.0).min(1.0);
-        let temporal_bias = (transition.temporal_posterior_support - 0.5) * 2.0;
-        let posterior_multiplier = (1.0 + temporal_bias * sample_weight).clamp(0.05, 2.0);
-        let posterior_weight = (transition.transition_prior * posterior_multiplier).max(0.0);
-        node_posterior_weights.insert(transition_key.clone(), posterior_weight);
-        node_posterior_multipliers.insert(transition_key.clone(), posterior_multiplier);
-        *outgoing_node_posterior_weight
-            .entry(transition.from_node_id.clone())
-            .or_insert(0.0) += posterior_weight;
-    }
-    for (transition_key, transition) in state.node_transition_posteriors.iter_mut() {
-        let posterior_multiplier = node_posterior_multipliers
-            .get(transition_key)
-            .copied()
-            .unwrap_or(1.0);
-        let posterior_weight = node_posterior_weights
-            .get(transition_key)
-            .copied()
-            .unwrap_or_default();
-        let posterior_total = outgoing_node_posterior_weight
-            .get(&transition.from_node_id)
-            .copied()
-            .unwrap_or_default();
-        let normalized_transition_posterior = if posterior_total <= f64::EPSILON {
-            transition.transition_prior
-        } else {
-            (posterior_weight / posterior_total).clamp(0.0, 1.0)
-        };
-        transition.posterior_multiplier = posterior_multiplier;
-        transition.normalized_transition_posterior = normalized_transition_posterior;
-        transition.summary_line = format!(
-            "node_transition_mass={:.3} node_transition_prior={:.3} node_transition_support={:.3} node_transition_temporal={:.3} multiplier={:.3} normalized_posterior={:.3}",
-            transition.weighted_observation_mass,
-            transition.transition_prior,
-            transition.transition_outcome_support,
-            transition.temporal_posterior_support,
-            posterior_multiplier,
-            normalized_transition_posterior
-        );
-    }
-
-    let mut outgoing_mass = BTreeMap::<String, f64>::new();
-    for transition in state.branch_transition_priors.values() {
-        *outgoing_mass
-            .entry(transition.from_branch_id.clone())
-            .or_insert(0.0) += transition.weighted_observation_mass;
-    }
-    for transition in state.branch_transition_priors.values_mut() {
-        let total = outgoing_mass
-            .get(&transition.from_branch_id)
-            .copied()
-            .unwrap_or_default();
-        transition.transition_prior =
-            dirichlet_component_mean(transition.weighted_observation_mass, total);
-        transition.transition_outcome_support = beta_posterior_mean(
-            transition.weighted_success_mass,
-            transition.weighted_failure_mass,
-        );
-        transition.temporal_posterior_support = (transition.transition_prior * 0.7
-            + transition.transition_outcome_support * 0.3)
-            .clamp(0.0, 1.0);
-    }
-    let mut transition_posterior_weights = BTreeMap::<String, f64>::new();
-    let mut transition_posterior_multipliers = BTreeMap::<String, f64>::new();
-    let mut outgoing_posterior_weight = BTreeMap::<String, f64>::new();
-    for (transition_key, transition) in &state.branch_transition_priors {
-        let sample_weight = (transition.weighted_observation_mass / 3.0).min(1.0);
-        let temporal_bias = (transition.temporal_posterior_support - 0.5) * 2.0;
-        let posterior_multiplier = (1.0 + temporal_bias * sample_weight).clamp(0.05, 2.0);
-        let posterior_weight = (transition.transition_prior * posterior_multiplier).max(0.0);
-        transition_posterior_weights.insert(transition_key.clone(), posterior_weight);
-        transition_posterior_multipliers.insert(transition_key.clone(), posterior_multiplier);
-        *outgoing_posterior_weight
-            .entry(transition.from_branch_id.clone())
-            .or_insert(0.0) += posterior_weight;
-    }
-    for (transition_key, transition) in &state.branch_transition_priors {
-        let posterior_multiplier = transition_posterior_multipliers
-            .get(transition_key)
-            .copied()
-            .unwrap_or(1.0);
-        let posterior_weight = transition_posterior_weights
-            .get(transition_key)
-            .copied()
-            .unwrap_or_default();
-        let posterior_total = outgoing_posterior_weight
-            .get(&transition.from_branch_id)
-            .copied()
-            .unwrap_or_default();
-        let normalized_transition_posterior = if posterior_total <= f64::EPSILON {
-            transition.transition_prior
-        } else {
-            (posterior_weight / posterior_total).clamp(0.0, 1.0)
-        };
-        state.branch_temporal_posteriors.insert(
-            transition_key.clone(),
-            StructuralBranchTemporalPosteriorState {
-                transition_key: transition_key.clone(),
-                from_branch_id: transition.from_branch_id.clone(),
-                to_branch_id: transition.to_branch_id.clone(),
-                observations: transition.observations,
-                weighted_observation_mass: transition.weighted_observation_mass,
-                transition_prior: transition.transition_prior,
-                transition_outcome_support: transition.transition_outcome_support,
-                temporal_posterior_support: transition.temporal_posterior_support,
-                posterior_multiplier,
-                normalized_transition_posterior,
-                summary_line: format!(
-                    "transition_mass={:.3} transition_prior={:.3} transition_support={:.3} transition_temporal={:.3} multiplier={:.3} normalized_posterior={:.3}",
-                    transition.weighted_observation_mass,
-                    transition.transition_prior,
-                    transition.transition_outcome_support,
-                    transition.temporal_posterior_support,
-                    posterior_multiplier,
-                    normalized_transition_posterior
-                ),
-                last_recommended_at: transition.last_recommended_at.clone(),
-            },
-        );
-    }
+    refresh_node_transition_posteriors(&mut state.node_transition_posteriors);
+    refresh_branch_transition_posteriors(
+        &mut state.branch_transition_priors,
+        &mut state.branch_temporal_posteriors,
+    );
     refresh_structural_source_reliability_em_state(state);
 }
 

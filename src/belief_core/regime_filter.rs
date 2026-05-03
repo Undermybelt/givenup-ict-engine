@@ -1,5 +1,6 @@
 use std::collections::BTreeMap;
 
+use crate::belief_core::beta_dirichlet_update::{beta_posterior_mean, dirichlet_component_mean};
 use crate::state::{
     StructuralBranchTemporalPosteriorState, StructuralBranchTransitionPrior,
     StructuralNodeDurationPrior, StructuralNodeTemporalPosteriorState,
@@ -174,8 +175,10 @@ pub fn transition_adjusted_branch_posteriors(
             .collect();
     };
 
-    let recursive_branch_posteriors =
-        structural_recursive_branch_transition_posteriors(latest_branch_id, branch_temporal_posteriors);
+    let recursive_branch_posteriors = structural_recursive_branch_transition_posteriors(
+        latest_branch_id,
+        branch_temporal_posteriors,
+    );
     let mut normalized_posterior = Vec::new();
     let mut missing_posterior_candidates = Vec::new();
     for (regime, probability) in regime_probabilities {
@@ -207,7 +210,10 @@ pub fn transition_adjusted_branch_posteriors(
         }
     }
     if !normalized_posterior.is_empty() {
-        let known_total: f64 = normalized_posterior.iter().map(|(_, posterior)| *posterior).sum();
+        let known_total: f64 = normalized_posterior
+            .iter()
+            .map(|(_, posterior)| *posterior)
+            .sum();
         let residual = (1.0 - known_total).max(0.0);
         let missing_total: f64 = missing_posterior_candidates
             .iter()
@@ -247,7 +253,10 @@ pub fn transition_adjusted_branch_posteriors(
                 })
             })
             .unwrap_or(1.0);
-        weighted.push((branch_id, (*probability * transition_weight).clamp(0.0, 1.0)));
+        weighted.push((
+            branch_id,
+            (*probability * transition_weight).clamp(0.0, 1.0),
+        ));
     }
 
     let total: f64 = weighted.iter().map(|(_, weight)| *weight).sum();
@@ -288,7 +297,11 @@ pub fn transition_adjusted_node_posteriors(
         .values()
         .find(|prior| prior.from_branch_id == latest_branch_id)
         .map(|prior| prior.from_node_id.as_str())
-        .or_else(|| latest_branch_id.rsplit_once(':').map(|(node_id, _)| node_id));
+        .or_else(|| {
+            latest_branch_id
+                .rsplit_once(':')
+                .map(|(node_id, _)| node_id)
+        });
     if let Some(latest_node_id) = latest_node_id {
         let recursive_posteriors = structural_recursive_node_transition_posteriors(
             latest_node_id,
@@ -327,7 +340,10 @@ pub fn transition_adjusted_node_posteriors(
             }
         }
         if !normalized_posterior.is_empty() {
-            let known_total: f64 = normalized_posterior.iter().map(|(_, posterior)| *posterior).sum();
+            let known_total: f64 = normalized_posterior
+                .iter()
+                .map(|(_, posterior)| *posterior)
+                .sum();
             let residual = (1.0 - known_total).max(0.0);
             let missing_total: f64 = missing_posterior_candidates
                 .iter()
@@ -383,7 +399,10 @@ pub fn transition_adjusted_node_posteriors(
             .collect();
     }
 
-    let known_total: f64 = normalized_posterior.iter().map(|(_, posterior)| *posterior).sum();
+    let known_total: f64 = normalized_posterior
+        .iter()
+        .map(|(_, posterior)| *posterior)
+        .sum();
     let residual = (1.0 - known_total).max(0.0);
     let missing_total: f64 = missing_posterior_candidates
         .iter()
@@ -463,7 +482,9 @@ pub fn build_structural_temporal_summary_artifact(
         duration_summary,
         structural_duration_persistence_prior(node_duration_prior).unwrap_or_default(),
         transition_summary,
-        transition_prior.map(|prior| prior.transition_prior).unwrap_or_default()
+        transition_prior
+            .map(|prior| prior.transition_prior)
+            .unwrap_or_default()
     );
 
     StructuralTemporalSummaryArtifact {
@@ -497,10 +518,13 @@ pub fn build_structural_temporal_summary_artifact(
         duration_temporal_posterior_support: node_temporal_state
             .map(|state| state.temporal_posterior_support)
             .or_else(|| structural_duration_temporal_posterior_support(node_duration_prior)),
-        duration_distribution_entropy: structural_duration_distribution_entropy(node_duration_prior),
+        duration_distribution_entropy: structural_duration_distribution_entropy(
+            node_duration_prior,
+        ),
         empirical_duration_survival: structural_duration_empirical_survival(node_duration_prior),
-        empirical_duration_completion_hazard:
-            structural_duration_empirical_completion_hazard(node_duration_prior),
+        empirical_duration_completion_hazard: structural_duration_empirical_completion_hazard(
+            node_duration_prior,
+        ),
         bocpd_duration_surprise: structural_duration_bocpd_surprise(node_duration_prior),
         bocpd_evidence_weight: structural_duration_bocpd_evidence_weight(node_duration_prior),
         bocpd_raw_break_probability: structural_duration_bocpd_raw_break_probability(
@@ -511,12 +535,15 @@ pub fn build_structural_temporal_summary_artifact(
             node_duration_prior,
         ),
         bocpd_run_length_mode: structural_duration_bocpd_run_length_mode(node_duration_prior),
-        bocpd_run_length_mode_probability:
-            structural_duration_bocpd_run_length_mode_probability(node_duration_prior),
-        bocpd_run_length_tail_probability:
-            structural_duration_bocpd_run_length_tail_probability(node_duration_prior),
-        bocpd_run_length_observation_mass:
-            structural_duration_bocpd_run_length_observation_mass(node_duration_prior),
+        bocpd_run_length_mode_probability: structural_duration_bocpd_run_length_mode_probability(
+            node_duration_prior,
+        ),
+        bocpd_run_length_tail_probability: structural_duration_bocpd_run_length_tail_probability(
+            node_duration_prior,
+        ),
+        bocpd_run_length_observation_mass: structural_duration_bocpd_run_length_observation_mass(
+            node_duration_prior,
+        ),
         bocpd_recursive_reset_probability: node_temporal_state
             .and_then(|state| structural_positive_f64(state.bocpd_recursive_reset_probability))
             .or_else(|| structural_duration_bocpd_recursive_reset_probability(node_duration_prior)),
@@ -529,22 +556,24 @@ pub fn build_structural_temporal_summary_artifact(
             })
             .or_else(|| structural_duration_bocpd_recursive_run_length_mode(node_duration_prior)),
         bocpd_recursive_run_length_mode_probability: node_temporal_state
-            .and_then(|state| structural_positive_f64(state.bocpd_recursive_run_length_mode_probability))
+            .and_then(|state| {
+                structural_positive_f64(state.bocpd_recursive_run_length_mode_probability)
+            })
             .or_else(|| {
-                structural_duration_bocpd_recursive_run_length_mode_probability(
-                    node_duration_prior,
-                )
+                structural_duration_bocpd_recursive_run_length_mode_probability(node_duration_prior)
             }),
         bocpd_recursive_run_length_expected_value: node_temporal_state
-            .and_then(|state| structural_positive_f64(state.bocpd_recursive_run_length_expected_value))
+            .and_then(|state| {
+                structural_positive_f64(state.bocpd_recursive_run_length_expected_value)
+            })
             .or_else(|| {
-                structural_duration_bocpd_recursive_run_length_expected_value(
-                    node_duration_prior,
-                )
+                structural_duration_bocpd_recursive_run_length_expected_value(node_duration_prior)
             }),
         bocpd_recursive_run_length_entropy: node_temporal_state
             .and_then(|state| structural_positive_f64(state.bocpd_recursive_run_length_entropy))
-            .or_else(|| structural_duration_bocpd_recursive_run_length_entropy(node_duration_prior)),
+            .or_else(|| {
+                structural_duration_bocpd_recursive_run_length_entropy(node_duration_prior)
+            }),
         bocpd_sequence_change_intensity: node_temporal_state
             .and_then(|state| structural_positive_f64(state.bocpd_sequence_change_intensity))
             .or_else(|| structural_duration_bocpd_sequence_change_intensity(node_duration_prior)),
@@ -552,7 +581,9 @@ pub fn build_structural_temporal_summary_artifact(
             .and_then(|state| structural_positive_f64(state.bocpd_sequence_break_probability))
             .or_else(|| structural_duration_bocpd_sequence_break_probability(node_duration_prior)),
         bocpd_sequence_recursive_reset_probability: node_temporal_state
-            .and_then(|state| structural_positive_f64(state.bocpd_sequence_recursive_reset_probability))
+            .and_then(|state| {
+                structural_positive_f64(state.bocpd_sequence_recursive_reset_probability)
+            })
             .or_else(|| {
                 structural_duration_bocpd_sequence_recursive_reset_probability(node_duration_prior)
             }),
@@ -563,23 +594,31 @@ pub fn build_structural_temporal_summary_artifact(
                     state.bocpd_sequence_recursive_run_length_mode_probability,
                 )
             })
-            .or_else(|| structural_duration_bocpd_sequence_recursive_run_length_mode(node_duration_prior)),
+            .or_else(|| {
+                structural_duration_bocpd_sequence_recursive_run_length_mode(node_duration_prior)
+            }),
         bocpd_sequence_recursive_run_length_mode_probability: node_temporal_state
-            .and_then(|state| structural_positive_f64(state.bocpd_sequence_recursive_run_length_mode_probability))
+            .and_then(|state| {
+                structural_positive_f64(state.bocpd_sequence_recursive_run_length_mode_probability)
+            })
             .or_else(|| {
                 structural_duration_bocpd_sequence_recursive_run_length_mode_probability(
                     node_duration_prior,
                 )
             }),
         bocpd_sequence_recursive_run_length_expected_value: node_temporal_state
-            .and_then(|state| structural_positive_f64(state.bocpd_sequence_recursive_run_length_expected_value))
+            .and_then(|state| {
+                structural_positive_f64(state.bocpd_sequence_recursive_run_length_expected_value)
+            })
             .or_else(|| {
                 structural_duration_bocpd_sequence_recursive_run_length_expected_value(
                     node_duration_prior,
                 )
             }),
         bocpd_sequence_recursive_run_length_entropy: node_temporal_state
-            .and_then(|state| structural_positive_f64(state.bocpd_sequence_recursive_run_length_entropy))
+            .and_then(|state| {
+                structural_positive_f64(state.bocpd_sequence_recursive_run_length_entropy)
+            })
             .or_else(|| {
                 structural_duration_bocpd_sequence_recursive_run_length_entropy(node_duration_prior)
             }),
@@ -872,6 +911,166 @@ pub(crate) fn structural_positive_f64(value: f64) -> Option<f64> {
     }
 }
 
+pub fn refresh_node_transition_posteriors(
+    node_transition_posteriors: &mut BTreeMap<String, StructuralNodeTransitionPosteriorState>,
+) {
+    let mut outgoing_node_mass = BTreeMap::<String, f64>::new();
+    for transition in node_transition_posteriors.values() {
+        *outgoing_node_mass
+            .entry(transition.from_node_id.clone())
+            .or_insert(0.0) += transition.weighted_observation_mass;
+    }
+    for transition in node_transition_posteriors.values_mut() {
+        let total = outgoing_node_mass
+            .get(&transition.from_node_id)
+            .copied()
+            .unwrap_or_default();
+        transition.transition_prior =
+            dirichlet_component_mean(transition.weighted_observation_mass, total);
+        transition.transition_outcome_support = beta_posterior_mean(
+            transition.weighted_success_mass,
+            transition.weighted_failure_mass,
+        );
+        transition.temporal_posterior_support = (transition.transition_prior * 0.7
+            + transition.transition_outcome_support * 0.3)
+            .clamp(0.0, 1.0);
+    }
+
+    let mut posterior_weights = BTreeMap::<String, f64>::new();
+    let mut posterior_multipliers = BTreeMap::<String, f64>::new();
+    let mut outgoing_posterior_weight = BTreeMap::<String, f64>::new();
+    for (transition_key, transition) in node_transition_posteriors.iter() {
+        let sample_weight = (transition.weighted_observation_mass / 3.0).min(1.0);
+        let temporal_bias = (transition.temporal_posterior_support - 0.5) * 2.0;
+        let posterior_multiplier = (1.0 + temporal_bias * sample_weight).clamp(0.05, 2.0);
+        let posterior_weight = (transition.transition_prior * posterior_multiplier).max(0.0);
+        posterior_weights.insert(transition_key.clone(), posterior_weight);
+        posterior_multipliers.insert(transition_key.clone(), posterior_multiplier);
+        *outgoing_posterior_weight
+            .entry(transition.from_node_id.clone())
+            .or_insert(0.0) += posterior_weight;
+    }
+
+    for (transition_key, transition) in node_transition_posteriors.iter_mut() {
+        let posterior_multiplier = posterior_multipliers
+            .get(transition_key)
+            .copied()
+            .unwrap_or(1.0);
+        let posterior_weight = posterior_weights
+            .get(transition_key)
+            .copied()
+            .unwrap_or_default();
+        let posterior_total = outgoing_posterior_weight
+            .get(&transition.from_node_id)
+            .copied()
+            .unwrap_or_default();
+        let normalized_transition_posterior = if posterior_total <= f64::EPSILON {
+            transition.transition_prior
+        } else {
+            (posterior_weight / posterior_total).clamp(0.0, 1.0)
+        };
+        transition.posterior_multiplier = posterior_multiplier;
+        transition.normalized_transition_posterior = normalized_transition_posterior;
+        transition.summary_line = format!(
+            "node_transition_mass={:.3} node_transition_prior={:.3} node_transition_support={:.3} node_transition_temporal={:.3} multiplier={:.3} normalized_posterior={:.3}",
+            transition.weighted_observation_mass,
+            transition.transition_prior,
+            transition.transition_outcome_support,
+            transition.temporal_posterior_support,
+            posterior_multiplier,
+            normalized_transition_posterior
+        );
+    }
+}
+
+pub fn refresh_branch_transition_posteriors(
+    branch_transition_priors: &mut BTreeMap<String, StructuralBranchTransitionPrior>,
+    branch_temporal_posteriors: &mut BTreeMap<String, StructuralBranchTemporalPosteriorState>,
+) {
+    let mut outgoing_mass = BTreeMap::<String, f64>::new();
+    for transition in branch_transition_priors.values() {
+        *outgoing_mass
+            .entry(transition.from_branch_id.clone())
+            .or_insert(0.0) += transition.weighted_observation_mass;
+    }
+    for transition in branch_transition_priors.values_mut() {
+        let total = outgoing_mass
+            .get(&transition.from_branch_id)
+            .copied()
+            .unwrap_or_default();
+        transition.transition_prior =
+            dirichlet_component_mean(transition.weighted_observation_mass, total);
+        transition.transition_outcome_support = beta_posterior_mean(
+            transition.weighted_success_mass,
+            transition.weighted_failure_mass,
+        );
+        transition.temporal_posterior_support = (transition.transition_prior * 0.7
+            + transition.transition_outcome_support * 0.3)
+            .clamp(0.0, 1.0);
+    }
+
+    let mut posterior_weights = BTreeMap::<String, f64>::new();
+    let mut posterior_multipliers = BTreeMap::<String, f64>::new();
+    let mut outgoing_posterior_weight = BTreeMap::<String, f64>::new();
+    for (transition_key, transition) in branch_transition_priors.iter() {
+        let sample_weight = (transition.weighted_observation_mass / 3.0).min(1.0);
+        let temporal_bias = (transition.temporal_posterior_support - 0.5) * 2.0;
+        let posterior_multiplier = (1.0 + temporal_bias * sample_weight).clamp(0.05, 2.0);
+        let posterior_weight = (transition.transition_prior * posterior_multiplier).max(0.0);
+        posterior_weights.insert(transition_key.clone(), posterior_weight);
+        posterior_multipliers.insert(transition_key.clone(), posterior_multiplier);
+        *outgoing_posterior_weight
+            .entry(transition.from_branch_id.clone())
+            .or_insert(0.0) += posterior_weight;
+    }
+
+    branch_temporal_posteriors.clear();
+    for (transition_key, transition) in branch_transition_priors.iter() {
+        let posterior_multiplier = posterior_multipliers
+            .get(transition_key)
+            .copied()
+            .unwrap_or(1.0);
+        let posterior_weight = posterior_weights
+            .get(transition_key)
+            .copied()
+            .unwrap_or_default();
+        let posterior_total = outgoing_posterior_weight
+            .get(&transition.from_branch_id)
+            .copied()
+            .unwrap_or_default();
+        let normalized_transition_posterior = if posterior_total <= f64::EPSILON {
+            transition.transition_prior
+        } else {
+            (posterior_weight / posterior_total).clamp(0.0, 1.0)
+        };
+        branch_temporal_posteriors.insert(
+            transition_key.clone(),
+            StructuralBranchTemporalPosteriorState {
+                transition_key: transition_key.clone(),
+                from_branch_id: transition.from_branch_id.clone(),
+                to_branch_id: transition.to_branch_id.clone(),
+                observations: transition.observations,
+                weighted_observation_mass: transition.weighted_observation_mass,
+                transition_prior: transition.transition_prior,
+                transition_outcome_support: transition.transition_outcome_support,
+                temporal_posterior_support: transition.temporal_posterior_support,
+                posterior_multiplier,
+                normalized_transition_posterior,
+                summary_line: format!(
+                    "transition_mass={:.3} transition_prior={:.3} transition_support={:.3} transition_temporal={:.3} multiplier={:.3} normalized_posterior={:.3}",
+                    transition.weighted_observation_mass,
+                    transition.transition_prior,
+                    transition.transition_outcome_support,
+                    transition.temporal_posterior_support,
+                    posterior_multiplier,
+                    normalized_transition_posterior
+                ),
+                last_recommended_at: transition.last_recommended_at.clone(),
+            },
+        );
+    }
+}
+
 fn structural_duration_positive_value(
     duration_prior: Option<&StructuralNodeDurationPrior>,
     value: impl FnOnce(&StructuralNodeDurationPrior) -> f64,
@@ -905,13 +1104,13 @@ fn structural_recursive_branch_transition_posteriors(
                 continue;
             };
             for (target_branch, edge_probability) in targets {
-                *next_frontier.entry((*target_branch).to_string()).or_insert(0.0) +=
-                    source_mass * edge_probability;
+                *next_frontier
+                    .entry((*target_branch).to_string())
+                    .or_insert(0.0) += source_mass * edge_probability;
             }
         }
         if depth >= 2 {
-            let depth_discount =
-                NODE_TRANSITION_RECURSIVE_STEP_DISCOUNT.powi((depth - 1) as i32);
+            let depth_discount = NODE_TRANSITION_RECURSIVE_STEP_DISCOUNT.powi((depth - 1) as i32);
             for (target_branch, path_probability) in &next_frontier {
                 *recursive.entry(target_branch.clone()).or_insert(0.0) +=
                     path_probability * depth_discount;
@@ -951,13 +1150,13 @@ fn structural_recursive_node_transition_posteriors(
                 continue;
             };
             for (target_node, edge_probability) in targets {
-                *next_frontier.entry((*target_node).to_string()).or_insert(0.0) +=
-                    source_mass * edge_probability;
+                *next_frontier
+                    .entry((*target_node).to_string())
+                    .or_insert(0.0) += source_mass * edge_probability;
             }
         }
         if depth >= 2 {
-            let depth_discount =
-                NODE_TRANSITION_RECURSIVE_STEP_DISCOUNT.powi((depth - 1) as i32);
+            let depth_discount = NODE_TRANSITION_RECURSIVE_STEP_DISCOUNT.powi((depth - 1) as i32);
             for (target_node, path_probability) in &next_frontier {
                 *recursive.entry(target_node.clone()).or_insert(0.0) +=
                     path_probability * depth_discount;
