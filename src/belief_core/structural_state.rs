@@ -321,6 +321,44 @@ pub struct StructuralFeedbackField {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralFeedbackSubmission {
+    pub protocol_version: String,
+    pub recommendation_id: String,
+    pub recommended_at: String,
+    pub symbol: String,
+    pub node_id: String,
+    pub branch_id: String,
+    pub scenario_id: String,
+    pub path_id: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub candidate_set_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub candidate_set_size: Option<usize>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selected_path_probability: Option<f64>,
+    pub direction: String,
+    pub entry_style: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selected_entry_quality: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selected_entry_quality_probability: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pre_bayes_gate_status: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub path_posterior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bbn_support_score: Option<f64>,
+    pub followed_path: bool,
+    pub realized_outcome: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub realized_pnl: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub exit_reason: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub notes: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct StructuralPathPlanArtifact {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub required_data_contracts: Vec<String>,

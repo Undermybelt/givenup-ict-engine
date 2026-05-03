@@ -1,6 +1,5 @@
 use anyhow::Result;
 use chrono::{SecondsFormat, Utc};
-use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::Path;
@@ -56,9 +55,10 @@ pub use crate::belief_core::regime_filter::StructuralTemporalSummaryArtifact;
 pub use crate::belief_core::structural_state::{
     StructuralBranchArtifact, StructuralBranchSetArtifact, StructuralNodeArtifact,
     StructuralBranchHistoryArtifact, StructuralBranchOutcomeSummary, StructuralEntityHistorySummary,
-    StructuralFeedbackField, StructuralFeedbackTemplateArtifact, StructuralHistorySummaryArtifact,
-    StructuralNodeHistoryArtifact, StructuralNodeOutcomeSummary, StructuralPathArtifact,
-    StructuralPathHistoryArtifact, StructuralPathHistorySummary, StructuralPathOutcomeSummary,
+    StructuralFeedbackField, StructuralFeedbackSubmission, StructuralFeedbackTemplateArtifact,
+    StructuralHistorySummaryArtifact, StructuralNodeHistoryArtifact,
+    StructuralNodeOutcomeSummary, StructuralPathArtifact, StructuralPathHistoryArtifact,
+    StructuralPathHistorySummary, StructuralPathOutcomeSummary,
     StructuralPathPlanArtifact, StructuralPlaybookBundle,
     StructuralRecommendedPathBundleArtifact, StructuralScenarioArtifact,
     StructuralScenarioHistoryArtifact, StructuralScenarioOutcomeSummary,
@@ -226,44 +226,6 @@ pub fn canonical_analyze_regime_surface(
     analyze: &crate::state::WorkflowPhaseSnapshot,
 ) -> Option<(String, std::collections::BTreeMap<String, f64>, f64)> {
     canonical_phase_regime_surface(analyze)
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralFeedbackSubmission {
-    pub protocol_version: String,
-    pub recommendation_id: String,
-    pub recommended_at: String,
-    pub symbol: String,
-    pub node_id: String,
-    pub branch_id: String,
-    pub scenario_id: String,
-    pub path_id: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub candidate_set_id: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub candidate_set_size: Option<usize>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub selected_path_probability: Option<f64>,
-    pub direction: String,
-    pub entry_style: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub selected_entry_quality: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub selected_entry_quality_probability: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub pre_bayes_gate_status: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub path_posterior: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bbn_support_score: Option<f64>,
-    pub followed_path: bool,
-    pub realized_outcome: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub realized_pnl: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub exit_reason: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub notes: Option<String>,
 }
 
 pub fn build_structural_playbook_bundle(
