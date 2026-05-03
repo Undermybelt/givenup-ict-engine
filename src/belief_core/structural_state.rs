@@ -3,6 +3,125 @@ use serde::{Deserialize, Serialize};
 use crate::belief_core::ranking_label::StructuralPathRankerRuntimeSurface;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralPlaybookBundle {
+    pub artifact_version: String,
+    pub symbol: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selected_profile_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub selected_profile_data_contracts: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub selected_profile_track_statuses: Vec<String>,
+    pub node: StructuralNodeArtifact,
+    pub branch_set: StructuralBranchSetArtifact,
+    pub scenario_playbook: StructuralScenarioPlaybookArtifact,
+    pub path_plan: StructuralPathPlanArtifact,
+    pub history_summary: crate::application::orchestration::StructuralHistorySummaryArtifact,
+    pub node_history: crate::application::orchestration::StructuralNodeHistoryArtifact,
+    pub branch_history: crate::application::orchestration::StructuralBranchHistoryArtifact,
+    pub scenario_history: crate::application::orchestration::StructuralScenarioHistoryArtifact,
+    pub path_history: crate::application::orchestration::StructuralPathHistoryArtifact,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub recommended_path_bundle: Option<StructuralRecommendedPathBundleArtifact>,
+    pub feedback_template: crate::application::orchestration::StructuralFeedbackTemplateArtifact,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralNodeArtifact {
+    pub node_id: String,
+    pub node_family: String,
+    pub node_label: String,
+    pub focus_phase: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub market_context: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub timeframe_scope: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub supporting_evidence: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub invalidating_evidence: Vec<String>,
+    pub belief_prior: f64,
+    pub belief_posterior: f64,
+    pub posterior_confidence: f64,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub origin_artifacts: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralBranchSetArtifact {
+    pub from_node_id: String,
+    pub branches: Vec<StructuralBranchArtifact>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralBranchArtifact {
+    pub branch_id: String,
+    pub target_node_id: String,
+    pub branch_label: String,
+    pub prior_probability: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transition_prior: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transition_weighted_observation_mass: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transition_outcome_support: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transition_temporal_posterior_support: Option<f64>,
+    pub posterior_probability: f64,
+    #[serde(default)]
+    pub historical_total_records: usize,
+    #[serde(default)]
+    pub historical_followed_count: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub historical_win_rate: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub historical_invalidation_rate: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub historical_avg_pnl: Option<f64>,
+    pub composite_branch_score: f64,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub activation_conditions: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub failure_conditions: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub supporting_evidence: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralScenarioPlaybookArtifact {
+    pub scenarios: Vec<StructuralScenarioArtifact>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralScenarioArtifact {
+    pub scenario_id: String,
+    pub branch_id: String,
+    pub scenario_label: String,
+    pub narrative: String,
+    pub prior_probability: f64,
+    pub posterior_probability: f64,
+    #[serde(default)]
+    pub historical_total_records: usize,
+    #[serde(default)]
+    pub historical_followed_count: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub historical_win_rate: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub historical_invalidation_rate: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub historical_avg_pnl: Option<f64>,
+    pub composite_scenario_score: f64,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub required_confirmations: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub hard_invalidations: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub timing_constraints: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub path_ids: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct StructuralPathPlanArtifact {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub required_data_contracts: Vec<String>,
