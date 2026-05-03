@@ -22,6 +22,7 @@ const STRUCTURAL_SOURCE_CONFUSION_LAPLACE_ALPHA: f64 = 1.0;
 pub const STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS: usize = 3;
 pub const STRUCTURAL_SOURCE_RELIABILITY_EM_ITERATIONS: usize = 5;
 pub const STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_CALIBRATION_OBSERVATIONS: usize = 6;
+pub const STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_HOLDOUT_TRAIN_ITEMS: usize = 4;
 const STRUCTURAL_SOURCE_RELIABILITY_EM_LAPLACE_ALPHA: f64 = 0.5;
 
 pub const LEARNING_STATE_FILE: &str = "learning_state.json";
@@ -714,6 +715,21 @@ pub struct StructuralSourceReliabilityEmCalibrationSummary {
     pub log_loss: Option<f64>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralSourceReliabilityEmHoldoutSummary {
+    pub status: String,
+    pub training_item_count: usize,
+    pub evaluation_item_count: usize,
+    pub observation_count: usize,
+    pub source_count: usize,
+    pub min_training_items: usize,
+    pub min_observations: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub brier_score: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub log_loss: Option<f64>,
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct StructuralSourceReliabilityEmDiagnostics {
     pub candidate_item_count: usize,
@@ -732,6 +748,7 @@ pub struct StructuralSourceReliabilityEmDiagnostics {
     pub avg_persisted_source_reliability: Option<f64>,
     pub min_persisted_source_reliability: Option<f64>,
     pub calibration: Option<StructuralSourceReliabilityEmCalibrationSummary>,
+    pub holdout: Option<StructuralSourceReliabilityEmHoldoutSummary>,
 }
 
 #[derive(Debug, Clone, Default)]
@@ -6344,7 +6361,7 @@ fn structural_source_confusion_row_stats(
     (row_mass, row_count)
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Clone, Default)]
 struct StructuralSourceReliabilityEmItem {
     sources: BTreeSet<String>,
     observed_labels: usize,
@@ -6429,6 +6446,7 @@ pub fn structural_source_reliability_em_diagnostics(
         calibration: structural_prior_state
             .source_reliability_em_calibration
             .clone(),
+        holdout: structural_source_reliability_em_holdout_summary(&items),
     }
 }
 
@@ -6596,6 +6614,162 @@ fn structural_source_reliability_em_calibration_summary(
         brier_score: Some((weighted_brier / observation_count as f64).clamp(0.0, 2.0)),
         log_loss: Some((weighted_log_loss / observation_count as f64).max(0.0)),
     })
+}
+
+fn structural_source_reliability_em_holdout_summary(
+    items: &BTreeMap<String, StructuralSourceReliabilityEmItem>,
+) -> Option<StructuralSourceReliabilityEmHoldoutSummary> {
+    let fit_items = items
+        .iter()
+        .filter(|(_, item)| item.sources.len() >= 2 && item.observed_labels >= 2)
+        .collect::<Vec<_>>();
+    if fit_items.is_empty() {
+        return None;
+    }
+    let min_training_items = STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_HOLDOUT_TRAIN_ITEMS;
+    let min_observations = STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_CALIBRATION_OBSERVATIONS;
+    if fit_items.len() <= min_training_items {
+        return Some(StructuralSourceReliabilityEmHoldoutSummary {
+            status: "needs_more_items".to_string(),
+            training_item_count: fit_items.len(),
+            evaluation_item_count: 0,
+            observation_count: 0,
+            source_count: 0,
+            min_training_items,
+            min_observations,
+            brier_score: None,
+            log_loss: None,
+        });
+    }
+    let split_index = fit_items.len().saturating_mul(2) / 3;
+    let split_index = split_index.clamp(min_training_items, fit_items.len().saturating_sub(1));
+    let training_items = fit_items
+        .iter()
+        .take(split_index)
+        .map(|(key, item)| ((*key).clone(), (**item).clone()))
+        .collect::<BTreeMap<_, _>>();
+    let evaluation_items = fit_items
+        .iter()
+        .skip(split_index)
+        .map(|(key, item)| ((*key).clone(), (**item).clone()))
+        .collect::<BTreeMap<_, _>>();
+    if evaluation_items.is_empty() {
+        return Some(StructuralSourceReliabilityEmHoldoutSummary {
+            status: "needs_more_items".to_string(),
+            training_item_count: training_items.len(),
+            evaluation_item_count: 0,
+            observation_count: 0,
+            source_count: 0,
+            min_training_items,
+            min_observations,
+            brier_score: None,
+            log_loss: None,
+        });
+    }
+    let fit = structural_source_reliability_em_fit(&training_items);
+    if fit.iteration_count == 0 {
+        return Some(StructuralSourceReliabilityEmHoldoutSummary {
+            status: "needs_multiple_sources".to_string(),
+            training_item_count: training_items.len(),
+            evaluation_item_count: evaluation_items.len(),
+            observation_count: 0,
+            source_count: fit.source_reliability.len(),
+            min_training_items,
+            min_observations,
+            brier_score: None,
+            log_loss: None,
+        });
+    }
+    let (observation_count, source_count, weighted_brier, weighted_log_loss) =
+        structural_source_reliability_em_score_items(&evaluation_items, &fit.confusion);
+    let status = if source_count < 2 {
+        "needs_multiple_sources"
+    } else if observation_count < min_observations {
+        "needs_larger_panel"
+    } else {
+        "ready"
+    };
+    Some(StructuralSourceReliabilityEmHoldoutSummary {
+        status: status.to_string(),
+        training_item_count: training_items.len(),
+        evaluation_item_count: evaluation_items.len(),
+        observation_count,
+        source_count,
+        min_training_items,
+        min_observations,
+        brier_score: (observation_count > 0)
+            .then_some((weighted_brier / observation_count as f64).clamp(0.0, 2.0)),
+        log_loss: (observation_count > 0)
+            .then_some((weighted_log_loss / observation_count as f64).max(0.0)),
+    })
+}
+
+fn structural_source_reliability_em_score_items(
+    items: &BTreeMap<String, StructuralSourceReliabilityEmItem>,
+    confusion: &StructuralSourceReliabilityEmConfusion,
+) -> (usize, usize, f64, f64) {
+    let mut weighted_brier = 0.0;
+    let mut weighted_log_loss = 0.0;
+    let mut observation_count = 0usize;
+    let mut calibrated_sources = BTreeSet::<String>::new();
+
+    for item in items.values() {
+        if item.sources.len() < 2 || item.observed_labels < 2 {
+            continue;
+        }
+        for (source_label, observed_counts) in &item.source_credit_classes {
+            let Some(consensus_label) =
+                structural_source_reliability_em_leave_source_out_consensus(item, source_label)
+            else {
+                continue;
+            };
+            let Some(source_confusion) = confusion.get(source_label) else {
+                continue;
+            };
+            let row = source_confusion
+                .get(&consensus_label)
+                .cloned()
+                .unwrap_or_default();
+            if row.is_empty() {
+                continue;
+            }
+            for (observed_label, count) in observed_counts {
+                if *count == 0 {
+                    continue;
+                }
+                let mut brier = row
+                    .iter()
+                    .map(|(row_label, probability)| {
+                        let target = if row_label == observed_label {
+                            1.0
+                        } else {
+                            0.0
+                        };
+                        (probability - target) * (probability - target)
+                    })
+                    .sum::<f64>();
+                if !row.contains_key(observed_label) {
+                    brier += 1.0;
+                }
+                let observed_probability = row
+                    .get(observed_label)
+                    .copied()
+                    .unwrap_or(1e-12)
+                    .clamp(1e-12, 1.0);
+                weighted_brier += brier * *count as f64;
+                weighted_log_loss += -observed_probability.ln() * *count as f64;
+                observation_count += *count;
+                calibrated_sources.insert(source_label.clone());
+            }
+        }
+    }
+
+    (
+        observation_count,
+        calibrated_sources.len(),
+        weighted_brier,
+        weighted_log_loss,
+    )
 }
 
 fn structural_source_reliability_em_leave_source_out_consensus(
@@ -8653,6 +8827,22 @@ mod tests {
         );
         assert!(calibration.brier_score.unwrap() < 0.6);
         assert!(calibration.log_loss.unwrap() < 0.8);
+        let diagnostics =
+            structural_source_reliability_em_diagnostics(&state.structural_prior_state);
+        let holdout = diagnostics
+            .holdout
+            .as_ref()
+            .expect("holdout diagnostics summary");
+        assert!(holdout.training_item_count > 0);
+        assert!(holdout.evaluation_item_count <= holdout.training_item_count);
+        assert_eq!(
+            holdout.min_training_items,
+            STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_HOLDOUT_TRAIN_ITEMS
+        );
+        assert!(matches!(
+            holdout.status.as_str(),
+            "ready" | "needs_larger_panel" | "needs_more_items"
+        ));
     }
 
     #[test]

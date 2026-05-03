@@ -6,6 +6,7 @@ use crate::state::{
     structural_source_reliability_em_fit_from_state, StructuralPriorLearningState,
     StructuralPriorStats, StructuralSourceReliabilityPosterior,
     StructuralTargetPolicyContextPosterior,
+    STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_HOLDOUT_TRAIN_ITEMS,
     STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS,
 };
 
@@ -101,6 +102,24 @@ pub struct StructuralSourceReliabilityEmReadiness {
     pub em_calibration_brier_score: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub em_calibration_log_loss: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub em_holdout_status: Option<String>,
+    #[serde(default)]
+    pub em_holdout_training_item_count: usize,
+    #[serde(default)]
+    pub em_holdout_evaluation_item_count: usize,
+    #[serde(default)]
+    pub em_holdout_observation_count: usize,
+    #[serde(default)]
+    pub em_holdout_source_count: usize,
+    #[serde(default)]
+    pub em_holdout_min_training_items: usize,
+    #[serde(default)]
+    pub em_holdout_min_observations: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub em_holdout_brier_score: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub em_holdout_log_loss: Option<f64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -334,8 +353,7 @@ pub fn structural_source_reliability_multiplier(
                 1.0
             } else {
                 posterior.posterior_reliability.clamp(0.0, 1.0)
-                    * structural_source_confusion_concentration_multiplier(posterior)
-                        .unwrap_or(1.0)
+                    * structural_source_confusion_concentration_multiplier(posterior).unwrap_or(1.0)
             }
         })
         .unwrap_or(1.0);
@@ -447,6 +465,48 @@ pub fn structural_source_reliability_em_readiness(
             .calibration
             .as_ref()
             .and_then(|calibration| calibration.log_loss),
+        em_holdout_status: diagnostics
+            .holdout
+            .as_ref()
+            .map(|holdout| holdout.status.clone()),
+        em_holdout_training_item_count: diagnostics
+            .holdout
+            .as_ref()
+            .map(|holdout| holdout.training_item_count)
+            .unwrap_or_default(),
+        em_holdout_evaluation_item_count: diagnostics
+            .holdout
+            .as_ref()
+            .map(|holdout| holdout.evaluation_item_count)
+            .unwrap_or_default(),
+        em_holdout_observation_count: diagnostics
+            .holdout
+            .as_ref()
+            .map(|holdout| holdout.observation_count)
+            .unwrap_or_default(),
+        em_holdout_source_count: diagnostics
+            .holdout
+            .as_ref()
+            .map(|holdout| holdout.source_count)
+            .unwrap_or_default(),
+        em_holdout_min_training_items: diagnostics
+            .holdout
+            .as_ref()
+            .map(|holdout| holdout.min_training_items)
+            .unwrap_or(STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_HOLDOUT_TRAIN_ITEMS),
+        em_holdout_min_observations: diagnostics
+            .holdout
+            .as_ref()
+            .map(|holdout| holdout.min_observations)
+            .unwrap_or_default(),
+        em_holdout_brier_score: diagnostics
+            .holdout
+            .as_ref()
+            .and_then(|holdout| holdout.brier_score),
+        em_holdout_log_loss: diagnostics
+            .holdout
+            .as_ref()
+            .and_then(|holdout| holdout.log_loss),
     }
 }
 
@@ -514,7 +574,9 @@ pub fn structural_prior_positive_value(
     prior_stats: Option<&StructuralPriorStats>,
     value: impl Fn(&StructuralPriorStats) -> f64,
 ) -> Option<f64> {
-    prior_stats.map(value).filter(|candidate| *candidate > f64::EPSILON)
+    prior_stats
+        .map(value)
+        .filter(|candidate| *candidate > f64::EPSILON)
 }
 
 pub fn structural_prior_positive_count(
@@ -592,7 +654,9 @@ pub fn structural_prior_target_policy_probability_calibration_error(
     })
 }
 
-pub fn structural_prior_snips_weight_mass(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
+pub fn structural_prior_snips_weight_mass(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
     structural_prior_positive_value(prior_stats, |stats| stats.snips_weight_mass)
 }
 
@@ -608,7 +672,9 @@ pub fn structural_prior_snips_effective_sample_size(
     structural_prior_positive_value(prior_stats, |stats| stats.snips_effective_sample_size)
 }
 
-pub fn structural_prior_snips_reward_prior(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
+pub fn structural_prior_snips_reward_prior(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
     structural_prior_positive_value(prior_stats, |stats| stats.snips_reward_prior)
 }
 

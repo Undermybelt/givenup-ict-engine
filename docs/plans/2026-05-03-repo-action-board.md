@@ -53,6 +53,7 @@ Primary source docs:
 - [x] Workstream 2 now also has maintained transition-posterior refresh ownership beginning to move into `src/belief_core/regime_filter.rs`: the node/branch transition prior normalization, outcome-support recompute, posterior multiplier recompute, and normalized posterior rebuild no longer have to stay open-coded inside `rebuild_structural_sequence_priors(...)`.
 - [x] Workstream 2 now also has BOCPD / sequence-break helper ownership starting to move into `src/belief_core/changepoint_gate.rs`, including discounted node-duration prior / temporal-posterior rebuild logic.
 - [x] Workstream 3 now has two real opt-in runtime consumer paths for structural path ranking: a direct weighted-feature model artifact path and a declared external scoring-service path, both hanging off the existing `policy_training` registration/runtime-selection contract without changing the zero-config default.
+- [x] Workstream 4 has started with a concrete source-reliability validation lane: EM diagnostics/readiness now carry a holdout-style train/eval summary in addition to the existing same-ledger leave-source-out calibration summary.
 
 ### Next
 
@@ -65,6 +66,7 @@ Primary source docs:
 - [x] Promote the new opt-in runtime path from scored-row feed consumption into model-native scoring for the structural path-ranker.
   - landed: registered trainer artifacts can now either score the current candidate-set rows directly through an opt-in weighted-feature model artifact family or call an explicit external row-scoring service, while existing scored-row feed reuse remains available and zero-config default behavior stays unchanged
 - [ ] Add stronger verification lanes for source reliability and delayed reward handling so the repo stops relying only on in-ledger compact calibration summaries.
+  - started: source reliability EM diagnostics now expose a holdout-style train/eval summary beside the older same-ledger leave-source-out calibration summary
 
 ### Not Yet
 
@@ -81,6 +83,7 @@ Primary source docs:
   - remaining gap: broader artifact-family coverage beyond the current direct weighted-feature model path and row-scoring service contract
 - [ ] deeper learned/contextual target-policy probability model beyond the current `symbol:regime:direction` bucket posterior
 - [ ] out-of-sample / replay-grade source reliability validation beyond fixed-iteration leave-source-out summaries
+  - partial: an on-demand holdout-style EM summary now exists; larger-panel and true chronological replay validation are still missing
 - [ ] full elapsed-time competing-risk delayed-reward censoring model rather than only compact aggregate hazard/incidence summaries
 
 ## Ordered Work Items
