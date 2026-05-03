@@ -6143,6 +6143,10 @@ pub fn feedback_record_from_structural_submission(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::state::{
+        structural_source_reliability_em_fit_from_state,
+        STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS,
+    };
 
     fn calibration_row(
         path_id: &str,
