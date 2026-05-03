@@ -47,13 +47,13 @@ Primary source docs:
 - [x] Structural path-ranking now has an opt-in runtime reuse contract for externally scored rows: zero-config default stays unchanged, while users can explicitly enable `candidate_set_only` or `prefer_history` reuse from `policy_training` state.
 - [x] Registered trainer artifacts can now act as a direct runtime score source for structural path-ranking consumer surfaces when runtime reuse is explicitly enabled, for both local file-backed and remote scored-row feeds.
 - [x] Workstream 1 has started with a concrete owner extraction: path-ranker runtime selection, artifact-row loading, data contracts, calibration math, and row IO/render helpers now live under `src/belief_core/ranking_label.rs`, and shared structural contracts for path / node / branch / scenario / playbook / history / feedback-template have started moving into `src/belief_core/structural_state.rs`.
-- [x] Workstream 1 now also has source-reliability / experience-prior shared contracts starting to move into `src/belief_core/source_reliability.rs`.
+- [x] Workstream 1 now also has source-reliability / experience-prior shared contracts and panel/reliability helper ownership starting to move into `src/belief_core/source_reliability.rs`.
 - [x] Workstream 2 has also started at the owner level: node/branch transition posterior adjustment plus duration/branch blend helpers now live under `src/belief_core/regime_filter.rs`, with `application/belief/structural_temporal_adjustment.rs` reduced toward a thinner compatibility shell.
 
 ### Next
 
 - [ ] Extract the belief core out of the oversized files so the core learning math stops living inside `src/state/types.rs`, `src/application/orchestration/structural_playbook.rs`, `src/application/orchestration/workflow_status.rs`, and `src/main.rs`.
-  - started: path-ranker runtime owner, contracts, calibration helpers, row IO extraction into `src/belief_core/ranking_label.rs`, shared structural contracts into `src/belief_core/structural_state.rs`, and source-reliability / experience-prior contracts into `src/belief_core/source_reliability.rs`
+  - started: path-ranker runtime owner, contracts, calibration helpers, row IO extraction into `src/belief_core/ranking_label.rs`, shared structural contracts into `src/belief_core/structural_state.rs`, and source-reliability / experience-prior contracts plus helper ownership into `src/belief_core/source_reliability.rs`
 - [ ] Replace the current heuristic transition/break mixing with a maintained, emission-aware regime transition core instead of only snapshot-time posterior reweighting.
   - started: transition posterior and blend-helper owner extraction into `src/belief_core/regime_filter.rs`
 - [ ] Promote the new opt-in runtime path from scored-row feed consumption into model-native scoring for the structural path-ranker.
