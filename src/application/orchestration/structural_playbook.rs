@@ -23,7 +23,9 @@ pub use crate::belief_core::ranking_label::{
     render_structural_path_ranking_target_rows_csv,
     render_structural_path_ranking_target_rows_jsonl,
     score_structural_path_ranker_runtime_rows_with_direct_model,
-    structural_path_ranker_supports_direct_model_family, structural_path_ranking_beta_lower_bound,
+    score_structural_path_ranker_runtime_rows_with_service,
+    structural_path_ranker_supports_direct_model_family,
+    structural_path_ranker_supports_service_family, structural_path_ranking_beta_lower_bound,
     structural_path_ranking_beta_mean, structural_path_ranking_ips_weight,
     structural_path_ranking_propensity_estimate,
     structural_path_ranking_propensity_evaluation_weight, structural_path_ranking_reward_label,
@@ -313,6 +315,7 @@ pub(crate) fn build_structural_playbook_bundle_with_runtime_context_and_prior_st
         provider_status_agent,
         &provider_support,
         &scenario_playbook,
+        feedback_history,
         &path_history,
         structural_prior_state,
         runtime_context.clone(),
@@ -2296,8 +2299,32 @@ fn resolve_structural_path_ranker_runtime(
         })
         .unwrap_or_default();
     let using_direct_model = !direct_model_rows.is_empty();
+    let service_rows = artifact_metadata
+        .as_ref()
+        .and_then(|artifact| {
+            if !structural_path_ranker_supports_service_family(&artifact.model_family) {
+                return None;
+            }
+            score_structural_path_ranker_runtime_rows_with_service(
+                symbol,
+                &artifact.artifact_uri,
+                &artifact.score_column,
+                &artifact.model_family,
+                current_candidate_rows,
+            )
+            .ok()
+        })
+        .unwrap_or_default();
+    let using_service = !service_rows.is_empty();
+    let service_declared = artifact_metadata.as_ref().is_some_and(|artifact| {
+        structural_path_ranker_supports_service_family(&artifact.model_family)
+    });
     let artifact_rows = if using_direct_model {
         direct_model_rows
+    } else if using_service {
+        service_rows
+    } else if service_declared {
+        Vec::new()
     } else {
         artifact_metadata
             .as_ref()
@@ -2396,12 +2423,15 @@ fn resolve_structural_path_ranker_runtime(
             Some(StructuralPathRankerRuntimeRowMatch {
                 source: if using_direct_model {
                     "registered_model_artifact"
+                } else if using_service {
+                    "registered_service"
                 } else {
                     "registered_artifact"
                 },
                 row: row.clone(),
             })
         } else if !using_direct_model
+            && !using_service
             && reuse_mode == STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY
         {
             artifact_history_matches
@@ -2492,6 +2522,8 @@ fn resolve_structural_path_ranker_runtime(
         enabled: true,
         status: if using_direct_model && artifact_match_count > 0 {
             "using_registered_model_artifact".to_string()
+        } else if using_service && artifact_match_count > 0 {
+            "using_registered_service_scores".to_string()
         } else if artifact_match_count > 0 {
             "using_registered_artifact_scores".to_string()
         } else if candidate_set_match_count > 0 {
@@ -3212,6 +3244,7 @@ pub fn build_structural_path_plan_artifact(
     provider_status_agent: &ProviderCatalogAgentSurface,
     provider_support: &crate::application::provider_catalog::WorkflowProviderSupportSurface,
     scenarios: &StructuralScenarioPlaybookArtifact,
+    feedback_history: &[FeedbackRecord],
     path_history: &StructuralPathHistoryArtifact,
 ) -> StructuralPathPlanArtifact {
     build_structural_path_plan_artifact_with_prior_state(
@@ -3219,6 +3252,7 @@ pub fn build_structural_path_plan_artifact(
         provider_status_agent,
         provider_support,
         scenarios,
+        feedback_history,
         path_history,
         &StructuralPriorLearningState::default(),
     )
@@ -3229,6 +3263,7 @@ pub fn build_structural_path_plan_artifact_with_prior_state(
     provider_status_agent: &ProviderCatalogAgentSurface,
     provider_support: &crate::application::provider_catalog::WorkflowProviderSupportSurface,
     scenarios: &StructuralScenarioPlaybookArtifact,
+    feedback_history: &[FeedbackRecord],
     path_history: &StructuralPathHistoryArtifact,
     structural_prior_state: &StructuralPriorLearningState,
 ) -> StructuralPathPlanArtifact {
@@ -3237,6 +3272,7 @@ pub fn build_structural_path_plan_artifact_with_prior_state(
         provider_status_agent,
         provider_support,
         scenarios,
+        feedback_history,
         path_history,
         structural_prior_state,
         StructuralPathRankerRuntimeContext::default(),
@@ -3248,6 +3284,7 @@ pub(crate) fn build_structural_path_plan_artifact_with_runtime_context_and_prior
     provider_status_agent: &ProviderCatalogAgentSurface,
     provider_support: &crate::application::provider_catalog::WorkflowProviderSupportSurface,
     scenarios: &StructuralScenarioPlaybookArtifact,
+    feedback_history: &[FeedbackRecord],
     path_history: &StructuralPathHistoryArtifact,
     structural_prior_state: &StructuralPriorLearningState,
     runtime_context: StructuralPathRankerRuntimeContext<'_>,
@@ -3476,6 +3513,7 @@ fn structural_ranked_paths_with_runtime_context_and_prior_state(
         provider_status_agent,
         &provider_support,
         &scenario_playbook,
+        feedback_history,
         &path_history,
         structural_prior_state,
         runtime_context,

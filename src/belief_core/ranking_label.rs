@@ -24,6 +24,7 @@ pub const STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_WEIGHTED_SUM_V1: &str =
     "weighted_feature_sum_v1";
 pub const STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_LINEAR_SCORE_V1: &str =
     "linear_feature_score_v1";
+pub const STRUCTURAL_PATH_RANKER_SERVICE_FAMILY_ROW_SCORING_V1: &str = "row_scoring_service_v1";
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
 pub struct StructuralPathRankingRuntimeSelection {
@@ -288,6 +289,15 @@ pub struct StructuralPathRankerDirectModelArtifact {
     pub notes: Vec<String>,
 }
 
+#[derive(Debug, Clone, Serialize)]
+struct StructuralPathRankerServiceRequest<'a> {
+    protocol_version: &'static str,
+    symbol: &'a str,
+    candidate_set_id: &'a str,
+    score_column: &'a str,
+    rows: &'a [StructuralPathRankingTargetRow],
+}
+
 pub fn structural_path_ranking_runtime_selection_path(state_dir: &str, symbol: &str) -> String {
     Path::new(state_dir)
         .join(symbol)
@@ -324,6 +334,13 @@ pub fn structural_path_ranker_supports_direct_model_family(model_family: &str) -
         model_family.trim(),
         STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_WEIGHTED_SUM_V1
             | STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_LINEAR_SCORE_V1
+    )
+}
+
+pub fn structural_path_ranker_supports_service_family(model_family: &str) -> bool {
+    matches!(
+        model_family.trim(),
+        STRUCTURAL_PATH_RANKER_SERVICE_FAMILY_ROW_SCORING_V1
     )
 }
 
@@ -503,6 +520,19 @@ fn parse_structural_path_ranker_runtime_rows_from_raw(
                         structural_path_ranker_runtime_row_from_value(item, score_column)
                     })
                     .collect(),
+                Value::Object(ref object)
+                    if object.get("rows").and_then(Value::as_array).is_some() =>
+                {
+                    object
+                        .get("rows")
+                        .and_then(Value::as_array)
+                        .into_iter()
+                        .flatten()
+                        .filter_map(|item| {
+                            structural_path_ranker_runtime_row_from_value(item, score_column)
+                        })
+                        .collect()
+                }
                 Value::Object(_) => {
                     structural_path_ranker_runtime_row_from_value(&value, score_column)
                         .into_iter()
@@ -690,6 +720,37 @@ pub fn score_structural_path_ranker_runtime_rows_with_direct_model(
             }
         })
         .collect())
+}
+
+pub fn score_structural_path_ranker_runtime_rows_with_service(
+    symbol: &str,
+    artifact_uri: &str,
+    score_column: &str,
+    model_family: &str,
+    candidate_rows: &[StructuralPathRankingTargetRow],
+) -> Result<Vec<StructuralPathRankerRuntimeRow>> {
+    if !structural_path_ranker_supports_service_family(model_family) {
+        return Ok(Vec::new());
+    }
+    let candidate_set_id = candidate_rows
+        .first()
+        .map(|row| row.candidate_set_id.as_str())
+        .unwrap_or_default();
+    let request = StructuralPathRankerServiceRequest {
+        protocol_version: "structural-path-ranking-service-request-v1",
+        symbol,
+        candidate_set_id,
+        score_column,
+        rows: candidate_rows,
+    };
+    let client = Client::builder().timeout(Duration::from_secs(3)).build()?;
+    let raw = client
+        .post(artifact_uri)
+        .json(&request)
+        .send()?
+        .error_for_status()?
+        .text()?;
+    parse_structural_path_ranker_runtime_rows_from_raw("service_response.json", &raw, score_column)
 }
 
 pub fn structural_path_ranking_target_row_history_key(

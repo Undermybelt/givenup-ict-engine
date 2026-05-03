@@ -19,9 +19,10 @@ use crate::belief_core::ranking_label::{
     load_structural_path_ranker_runtime_artifact_rows,
     load_structural_path_ranking_runtime_selection,
     score_structural_path_ranker_runtime_rows_with_direct_model,
+    score_structural_path_ranker_runtime_rows_with_service,
     structural_path_ranker_supports_direct_model_family,
-    structural_path_ranking_runtime_selection_path, StructuralPathRankingRuntimeSelection,
-    STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+    structural_path_ranker_supports_service_family, structural_path_ranking_runtime_selection_path,
+    StructuralPathRankingRuntimeSelection, STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
     STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY,
     STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION,
 };
@@ -973,6 +974,23 @@ pub fn structural_path_ranking_target_training_status(
         })
         .unwrap_or_default();
     let runtime_direct_model_ready = !runtime_direct_model_rows.is_empty();
+    let runtime_service_rows = trainer_artifact
+        .as_ref()
+        .and_then(|artifact| {
+            if !structural_path_ranker_supports_service_family(&artifact.model_family) {
+                return None;
+            }
+            score_structural_path_ranker_runtime_rows_with_service(
+                symbol,
+                &artifact.artifact_uri,
+                &artifact.score_column,
+                &artifact.model_family,
+                &direct_model_candidate_rows,
+            )
+            .ok()
+        })
+        .unwrap_or_default();
+    let runtime_service_ready = !runtime_service_rows.is_empty();
     let runtime_direct_model_loadable = trainer_artifact
         .as_ref()
         .and_then(|artifact| {
@@ -989,8 +1007,15 @@ pub fn structural_path_ranking_target_training_status(
             .flatten()
         })
         .is_some();
+    let runtime_service_declared = trainer_artifact.as_ref().is_some_and(|artifact| {
+        structural_path_ranker_supports_service_family(&artifact.model_family)
+    });
     let runtime_artifact_rows = if runtime_direct_model_ready {
         runtime_direct_model_rows
+    } else if runtime_service_ready {
+        runtime_service_rows
+    } else if runtime_service_declared {
+        Vec::new()
     } else {
         trainer_artifact
             .as_ref()
@@ -1133,6 +1158,7 @@ pub fn structural_path_ranking_target_training_status(
         None => "disabled".to_string(),
         Some(selection) if !selection.enabled => "disabled".to_string(),
         Some(_) if runtime_direct_model_ready => "enabled_registered_model_ready".to_string(),
+        Some(_) if runtime_service_ready => "enabled_registered_service_ready".to_string(),
         Some(_)
             if trainer_artifact.as_ref().is_some_and(|artifact| {
                 structural_path_ranker_supports_direct_model_family(&artifact.model_family)
@@ -1140,6 +1166,7 @@ pub fn structural_path_ranking_target_training_status(
         {
             "enabled_registered_model_invalid".to_string()
         }
+        Some(_) if runtime_service_declared => "enabled_registered_service_invalid".to_string(),
         Some(_) if runtime_artifact_match_count > 0 => {
             "enabled_registered_artifact_ready".to_string()
         }
@@ -1157,6 +1184,7 @@ pub fn structural_path_ranking_target_training_status(
     let runtime_selection_ready = matches!(
         runtime_selection_status.as_str(),
         "enabled_registered_model_ready"
+            | "enabled_registered_service_ready"
             | "enabled_registered_artifact_ready"
             | "enabled_candidate_set_ready"
             | "enabled_history_ready"
