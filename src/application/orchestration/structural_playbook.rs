@@ -52,6 +52,35 @@ pub use crate::belief_core::ranking_label::{
     STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION,
 };
 pub use crate::belief_core::regime_filter::StructuralTemporalSummaryArtifact;
+pub use crate::belief_core::regime_filter::{
+    structural_duration_avg_streak_length, structural_duration_bocpd_break_probability,
+    structural_duration_bocpd_continue_probability, structural_duration_bocpd_evidence_weight,
+    structural_duration_bocpd_raw_break_probability,
+    structural_duration_bocpd_recursive_reset_probability,
+    structural_duration_bocpd_recursive_run_length_entropy,
+    structural_duration_bocpd_recursive_run_length_expected_value,
+    structural_duration_bocpd_recursive_run_length_mode,
+    structural_duration_bocpd_recursive_run_length_mode_probability,
+    structural_duration_bocpd_run_length_mode,
+    structural_duration_bocpd_run_length_mode_probability,
+    structural_duration_bocpd_run_length_observation_mass,
+    structural_duration_bocpd_run_length_tail_probability,
+    structural_duration_bocpd_sequence_break_probability,
+    structural_duration_bocpd_sequence_change_intensity,
+    structural_duration_bocpd_sequence_recursive_reset_probability,
+    structural_duration_bocpd_sequence_recursive_run_length_entropy,
+    structural_duration_bocpd_sequence_recursive_run_length_expected_value,
+    structural_duration_bocpd_sequence_recursive_run_length_mode,
+    structural_duration_bocpd_sequence_recursive_run_length_mode_probability,
+    structural_duration_bocpd_surprise, structural_duration_break_hazard,
+    structural_duration_distribution_entropy, structural_duration_empirical_completion_hazard,
+    structural_duration_empirical_survival, structural_duration_expected_dwell_steps,
+    structural_duration_outcome_support, structural_duration_persistence_prior,
+    structural_duration_remaining_dwell_steps, structural_duration_sticky_self_transition_strength,
+    structural_duration_streak_count, structural_duration_temporal_posterior_support,
+    structural_duration_weighted_streak_mass,
+};
+use crate::belief_core::regime_filter::{structural_positive_f64, structural_run_length_mode};
 pub use crate::belief_core::structural_state::{
     StructuralBranchArtifact, StructuralBranchSetArtifact, StructuralNodeArtifact,
     StructuralBranchHistoryArtifact, StructuralBranchOutcomeSummary, StructuralEntityHistorySummary,
@@ -4697,275 +4726,6 @@ fn structural_prior_delayed_reward_resolution_probability_24h(
     structural_prior_positive_value(prior_stats, |stats| {
         stats.delayed_reward_resolution_probability_24h
     })
-}
-
-fn structural_duration_streak_count(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<usize> {
-    duration_prior.map(|prior| prior.streak_count)
-}
-
-fn structural_duration_avg_streak_length(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    duration_prior.map(|prior| prior.avg_streak_length)
-}
-
-fn structural_duration_persistence_prior(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    duration_prior.map(|prior| prior.persistence_prior)
-}
-
-fn structural_duration_expected_dwell_steps(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    duration_prior.map(|prior| prior.expected_dwell_steps)
-}
-
-fn structural_duration_remaining_dwell_steps(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    duration_prior.map(|prior| prior.remaining_dwell_steps)
-}
-
-fn structural_duration_break_hazard(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    duration_prior.map(|prior| prior.break_hazard)
-}
-
-fn structural_duration_sticky_self_transition_strength(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    duration_prior.map(|prior| prior.sticky_self_transition_strength)
-}
-
-fn structural_duration_weighted_streak_mass(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    duration_prior.map(|prior| prior.weighted_streak_mass)
-}
-
-fn structural_duration_outcome_support(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    duration_prior.map(|prior| prior.duration_outcome_support)
-}
-
-fn structural_duration_temporal_posterior_support(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    duration_prior.map(|prior| prior.temporal_posterior_support)
-}
-
-fn structural_duration_distribution_entropy(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| {
-        prior.duration_distribution_entropy
-    })
-}
-
-fn structural_duration_empirical_survival(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| prior.empirical_duration_survival)
-}
-
-fn structural_duration_empirical_completion_hazard(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| {
-        prior.empirical_duration_completion_hazard
-    })
-}
-
-fn structural_duration_bocpd_surprise(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| prior.bocpd_duration_surprise)
-}
-
-fn structural_duration_bocpd_evidence_weight(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| prior.bocpd_evidence_weight)
-}
-
-fn structural_duration_bocpd_raw_break_probability(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| prior.bocpd_raw_break_probability)
-}
-
-fn structural_duration_bocpd_break_probability(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| prior.bocpd_break_probability)
-}
-
-fn structural_duration_bocpd_continue_probability(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| prior.bocpd_continue_probability)
-}
-
-fn structural_duration_bocpd_run_length_mode(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<usize> {
-    duration_prior
-        .map(|prior| prior.bocpd_run_length_mode)
-        .filter(|mode| *mode > 0)
-}
-
-fn structural_duration_bocpd_run_length_mode_probability(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| {
-        prior.bocpd_run_length_mode_probability
-    })
-}
-
-fn structural_duration_bocpd_run_length_tail_probability(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| {
-        prior.bocpd_run_length_tail_probability
-    })
-}
-
-fn structural_duration_bocpd_run_length_observation_mass(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| {
-        prior.bocpd_run_length_observation_mass
-    })
-}
-
-fn structural_duration_bocpd_recursive_reset_probability(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| {
-        prior.bocpd_recursive_reset_probability
-    })
-}
-
-fn structural_duration_bocpd_recursive_run_length_mode(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<usize> {
-    duration_prior.and_then(|prior| {
-        structural_run_length_mode(
-            prior.bocpd_recursive_run_length_mode,
-            prior.bocpd_recursive_run_length_mode_probability,
-        )
-    })
-}
-
-fn structural_duration_bocpd_recursive_run_length_mode_probability(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| {
-        prior.bocpd_recursive_run_length_mode_probability
-    })
-}
-
-fn structural_duration_bocpd_recursive_run_length_expected_value(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| {
-        prior.bocpd_recursive_run_length_expected_value
-    })
-}
-
-fn structural_duration_bocpd_recursive_run_length_entropy(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| {
-        prior.bocpd_recursive_run_length_entropy
-    })
-}
-
-fn structural_duration_bocpd_sequence_change_intensity(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| {
-        prior.bocpd_sequence_change_intensity
-    })
-}
-
-fn structural_duration_bocpd_sequence_break_probability(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| {
-        prior.bocpd_sequence_break_probability
-    })
-}
-
-fn structural_duration_bocpd_sequence_recursive_reset_probability(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| {
-        prior.bocpd_sequence_recursive_reset_probability
-    })
-}
-
-fn structural_duration_bocpd_sequence_recursive_run_length_mode(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<usize> {
-    duration_prior.and_then(|prior| {
-        structural_run_length_mode(
-            prior.bocpd_sequence_recursive_run_length_mode,
-            prior.bocpd_sequence_recursive_run_length_mode_probability,
-        )
-    })
-}
-
-fn structural_duration_bocpd_sequence_recursive_run_length_mode_probability(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| {
-        prior.bocpd_sequence_recursive_run_length_mode_probability
-    })
-}
-
-fn structural_duration_bocpd_sequence_recursive_run_length_expected_value(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| {
-        prior.bocpd_sequence_recursive_run_length_expected_value
-    })
-}
-
-fn structural_duration_bocpd_sequence_recursive_run_length_entropy(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-) -> Option<f64> {
-    structural_duration_positive_value(duration_prior, |prior| {
-        prior.bocpd_sequence_recursive_run_length_entropy
-    })
-}
-
-fn structural_run_length_mode(mode: usize, probability: f64) -> Option<usize> {
-    if probability.is_finite() && probability > f64::EPSILON {
-        Some(mode)
-    } else {
-        None
-    }
-}
-
-fn structural_positive_f64(value: f64) -> Option<f64> {
-    if value.is_finite() && value > f64::EPSILON {
-        Some(value)
-    } else {
-        None
-    }
-}
-
-fn structural_duration_positive_value(
-    duration_prior: Option<&crate::state::StructuralNodeDurationPrior>,
-    value: impl FnOnce(&crate::state::StructuralNodeDurationPrior) -> f64,
-) -> Option<f64> {
-    duration_prior.and_then(|prior| structural_positive_f64(value(prior)))
 }
 
 fn structural_dominant_source_panel(
