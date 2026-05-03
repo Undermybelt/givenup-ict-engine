@@ -49,7 +49,7 @@ Primary source docs:
 - [x] Workstream 1 has started with a concrete owner extraction: path-ranker runtime selection, artifact-row loading, data contracts, calibration math, and row IO/render helpers now live under `src/belief_core/ranking_label.rs`, and shared structural contracts for path / node / branch / scenario / playbook / history / feedback-template / feedback-submission have started moving into `src/belief_core/structural_state.rs`.
 - [x] Workstream 1 now also has source-reliability / experience-prior shared contracts and panel/reliability helper ownership starting to move into `src/belief_core/source_reliability.rs`.
 - [x] Workstream 2 has also started at the owner level: node/branch transition posterior adjustment plus duration/branch blend helpers now live under `src/belief_core/regime_filter.rs`, with `application/belief/structural_temporal_adjustment.rs` reduced toward a thinner compatibility shell.
-- [x] Workstream 2 now also has BOCPD / sequence-break helper ownership starting to move into `src/belief_core/changepoint_gate.rs`.
+- [x] Workstream 2 now also has BOCPD / sequence-break helper ownership starting to move into `src/belief_core/changepoint_gate.rs`, including discounted node-duration prior / temporal-posterior rebuild logic.
 
 ### Next
 
@@ -58,7 +58,7 @@ Primary source docs:
 - [ ] Replace the current heuristic transition/break mixing with a maintained, emission-aware regime transition core instead of only snapshot-time posterior reweighting.
   - started: transition posterior and blend-helper owner extraction into `src/belief_core/regime_filter.rs`
 - [ ] Replace the current heuristic temporal break logic with a clearer `changepoint_gate` owner instead of keeping BOCPD helpers inside `src/state/types.rs`.
-  - started: BOCPD / sequence-break helper owner extraction into `src/belief_core/changepoint_gate.rs`
+  - started: BOCPD / sequence-break helper and duration-prior rebuild owner extraction into `src/belief_core/changepoint_gate.rs`
 - [ ] Promote the new opt-in runtime path from scored-row feed consumption into model-native scoring for the structural path-ranker.
 - [ ] Add stronger verification lanes for source reliability and delayed reward handling so the repo stops relying only on in-ledger compact calibration summaries.
 
