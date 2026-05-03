@@ -1,0 +1,73 @@
+use super::*;
+
+pub(crate) fn policy_training_status_shell(
+    symbol: &str,
+    state_dir: &str,
+    entry_model: Option<&str>,
+) -> Result<()> {
+    ensure_state_dir_ready(state_dir)?;
+    policy_training_status_command(state_dir, symbol, entry_model)
+}
+
+pub(crate) fn register_structural_path_ranking_trainer_artifact_shell(
+    symbol: &str,
+    state_dir: &str,
+    artifact_uri: &str,
+    model_family: &str,
+    score_column: &str,
+    trained_rows: usize,
+    calibration_rows: usize,
+) -> Result<()> {
+    ensure_state_dir_ready(state_dir)?;
+    register_structural_path_ranking_trainer_artifact_command(
+        state_dir,
+        symbol,
+        artifact_uri,
+        model_family,
+        Some(score_column),
+        trained_rows,
+        calibration_rows,
+    )
+}
+
+pub(crate) fn clear_structural_path_ranking_trainer_artifact_shell(
+    symbol: &str,
+    state_dir: &str,
+) -> Result<()> {
+    ensure_state_dir_ready(state_dir)?;
+    clear_structural_path_ranking_trainer_artifact_command(state_dir, symbol)
+}
+
+pub(crate) fn enable_structural_path_ranking_runtime_shell(
+    symbol: &str,
+    state_dir: &str,
+    reuse_mode: &str,
+) -> Result<()> {
+    ensure_state_dir_ready(state_dir)?;
+    enable_structural_path_ranking_runtime_command(state_dir, symbol, reuse_mode)
+}
+
+pub(crate) fn disable_structural_path_ranking_runtime_shell(
+    symbol: &str,
+    state_dir: &str,
+) -> Result<()> {
+    ensure_state_dir_ready(state_dir)?;
+    disable_structural_path_ranking_runtime_command(state_dir, symbol)
+}
+
+pub(crate) fn export_structural_path_ranking_target_shell(
+    symbol: &str,
+    state_dir: &str,
+) -> Result<()> {
+    ensure_state_dir_ready(state_dir)?;
+    export_structural_path_ranking_target_command(state_dir, symbol)
+}
+
+pub(crate) fn apply_structural_path_ranking_external_scores_shell(
+    symbol: &str,
+    state_dir: &str,
+    scores_file: &str,
+) -> Result<()> {
+    ensure_state_dir_ready(state_dir)?;
+    apply_structural_path_ranking_external_scores_command(state_dir, symbol, scores_file)
+}

@@ -3,6 +3,7 @@ mod analyze_live_command;
 mod analyze_shared;
 mod factor_backtest_runtime;
 mod factor_research_runtime;
+mod policy_training_command;
 mod probabilistic_backtest_runtime;
 mod update_command;
 mod update_output;
@@ -90,7 +91,8 @@ use ict_engine::application::{
         CommandContext,
     },
     belief::{
-        apply_factor_outcome_overlay, build_canonical_belief_snapshot_with_pda_and_structural_prior_state,
+        apply_factor_outcome_overlay,
+        build_canonical_belief_snapshot_with_pda_and_structural_prior_state,
         build_expansion_factor_pipeline_report as build_expansion_factor_pipeline_report_v2,
         build_expansion_factor_pipeline_report_with_registry as build_expansion_factor_pipeline_report_with_registry_v2,
         build_pre_bayes_entry_quality_bridge, combine_bias_vectors, combine_liquidity_labels,
@@ -114,16 +116,7 @@ use ict_engine::application::{
         normalize_trade_outcome_label, parse_research_objective, pre_bayes_gate_is_hard_pass,
         pre_bayes_gate_regressed, research_objective_label, ResearchObjectiveMode,
     },
-    entry_models::{
-        apply_structural_path_ranking_external_scores_command,
-        build_entry_model_packet_store_for_analyze,
-        clear_structural_path_ranking_trainer_artifact_command,
-        disable_structural_path_ranking_runtime_command,
-        enable_structural_path_ranking_runtime_command,
-        export_structural_path_ranking_target_command,
-        policy_training_status_command,
-        register_structural_path_ranking_trainer_artifact_command,
-    },
+    entry_models::build_entry_model_packet_store_for_analyze,
     factor_lifecycle::build_factor_lifecycle_view,
     factor_lifecycle::{
         apply_expansion_manipulation_objective, expansion_factor_scores_for_market,
@@ -198,6 +191,13 @@ use ict_engine::pda_timeline::{build_pda_timeline, PdaEvent};
 use ict_engine::planner::{
     generate_probabilistic_trade_plan, probabilistic_decision_snapshot,
     ProbabilisticDecisionSnapshot, ProbabilisticPlanConfig, ProbabilisticTradePlanInput,
+};
+use policy_training_command::{
+    apply_structural_path_ranking_external_scores_shell,
+    clear_structural_path_ranking_trainer_artifact_shell,
+    disable_structural_path_ranking_runtime_shell, enable_structural_path_ranking_runtime_shell,
+    export_structural_path_ranking_target_shell, policy_training_status_shell,
+    register_structural_path_ranking_trainer_artifact_shell,
 };
 use probabilistic_backtest_runtime::{finalize_backtest_report, run_probabilistic_backtest};
 use serde_json::Value;
@@ -2847,10 +2847,7 @@ fn main() -> Result<()> {
             symbol,
             state_dir,
             entry_model,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            policy_training_status_command(&state_dir, &symbol, entry_model.as_deref())?
-        }
+        } => policy_training_status_shell(&symbol, &state_dir, entry_model.as_deref())?,
         Commands::RegisterStructuralPathRankingTrainerArtifact {
             symbol,
             state_dir,
@@ -2859,49 +2856,35 @@ fn main() -> Result<()> {
             score_column,
             trained_rows,
             calibration_rows,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            register_structural_path_ranking_trainer_artifact_command(
-                &state_dir,
-                &symbol,
-                &artifact_uri,
-                &model_family,
-                Some(score_column.as_str()),
-                trained_rows,
-                calibration_rows,
-            )?
-        }
+        } => register_structural_path_ranking_trainer_artifact_shell(
+            &symbol,
+            &state_dir,
+            &artifact_uri,
+            &model_family,
+            &score_column,
+            trained_rows,
+            calibration_rows,
+        )?,
         Commands::ClearStructuralPathRankingTrainerArtifact { symbol, state_dir } => {
-            ensure_state_dir_ready(&state_dir)?;
-            clear_structural_path_ranking_trainer_artifact_command(&state_dir, &symbol)?
+            clear_structural_path_ranking_trainer_artifact_shell(&symbol, &state_dir)?
         }
         Commands::EnableStructuralPathRankingRuntime {
             symbol,
             state_dir,
             reuse_mode,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            enable_structural_path_ranking_runtime_command(&state_dir, &symbol, &reuse_mode)?
-        }
+        } => enable_structural_path_ranking_runtime_shell(&symbol, &state_dir, &reuse_mode)?,
         Commands::DisableStructuralPathRankingRuntime { symbol, state_dir } => {
-            ensure_state_dir_ready(&state_dir)?;
-            disable_structural_path_ranking_runtime_command(&state_dir, &symbol)?
+            disable_structural_path_ranking_runtime_shell(&symbol, &state_dir)?
         }
         Commands::ExportStructuralPathRankingTarget { symbol, state_dir } => {
-            ensure_state_dir_ready(&state_dir)?;
-            export_structural_path_ranking_target_command(&state_dir, &symbol)?
+            export_structural_path_ranking_target_shell(&symbol, &state_dir)?
         }
         Commands::ApplyStructuralPathRankingExternalScores {
             symbol,
             state_dir,
             scores_file,
         } => {
-            ensure_state_dir_ready(&state_dir)?;
-            apply_structural_path_ranking_external_scores_command(
-                &state_dir,
-                &symbol,
-                &scores_file,
-            )?
+            apply_structural_path_ranking_external_scores_shell(&symbol, &state_dir, &scores_file)?
         }
         Commands::ProviderStatus {
             domain,
@@ -3822,9 +3805,13 @@ fn synthetic_phase_ensemble_vote(
             .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
             .map(|(label, _)| label.clone())
     })?;
-    let confidence = canonical
-        .confidence
-        .unwrap_or_else(|| canonical.probabilities.get(&active_regime).copied().unwrap_or(0.5));
+    let confidence = canonical.confidence.unwrap_or_else(|| {
+        canonical
+            .probabilities
+            .get(&active_regime)
+            .copied()
+            .unwrap_or(0.5)
+    });
 
     Some(EnsembleVoteRecord {
         artifact_id: format!("ensemble-vote:synthetic:{}", run_id),
@@ -3842,9 +3829,7 @@ fn synthetic_phase_ensemble_vote(
         confidence,
         consensus_strength: confidence,
         disagreement_flags: Vec::new(),
-        executor_summaries: vec![
-            "synthetic_from_phase_canonical_structural_posterior".to_string(),
-        ],
+        executor_summaries: vec!["synthetic_from_phase_canonical_structural_posterior".to_string()],
         split_explanations: vec![format!("active_regime={active_regime}")],
         executor_scorecards: Vec::new(),
         executor_scorecards_source: None,
@@ -4959,7 +4944,10 @@ fn workflow_market_regime_diff_value(snapshot: &WorkflowPhaseSnapshot) -> String
     if !snapshot.canonical_structural_probabilities.is_empty() {
         format!("{:?}", snapshot.canonical_structural_probabilities)
     } else {
-        format!("{:?}", snapshot.pre_bayes_soft_evidence.get("market_regime"))
+        format!(
+            "{:?}",
+            snapshot.pre_bayes_soft_evidence.get("market_regime")
+        )
     }
 }
 
@@ -6802,20 +6790,27 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         native_ltf,
         &pre_bayes_evidence_filter,
     );
-    let canonical_belief_report = build_canonical_belief_snapshot_with_pda_and_structural_prior_state(
-        symbol,
-        Some(infer_market_from_symbol(symbol).as_str()),
-        &pre_bayes_evidence_filter,
-        pda_sequence_artifact.as_ref(),
-        Some(&hybrid_regime_packet),
-        None,
-        Some(&build_context.learning_state.structural_prior_state),
-    )?;
+    let canonical_belief_report =
+        build_canonical_belief_snapshot_with_pda_and_structural_prior_state(
+            symbol,
+            Some(infer_market_from_symbol(symbol).as_str()),
+            &pre_bayes_evidence_filter,
+            pda_sequence_artifact.as_ref(),
+            Some(&hybrid_regime_packet),
+            None,
+            Some(&build_context.learning_state.structural_prior_state),
+        )?;
     let canonical_structural_regime_posterior =
         ict_engine::state::CanonicalStructuralRegimePosterior {
-            active_regime: canonical_belief_report.regime_posterior.active_regime.clone(),
+            active_regime: canonical_belief_report
+                .regime_posterior
+                .active_regime
+                .clone(),
             confidence: canonical_belief_report.regime_posterior.confidence,
-            probabilities: canonical_belief_report.regime_posterior.probabilities.clone(),
+            probabilities: canonical_belief_report
+                .regime_posterior
+                .probabilities
+                .clone(),
             evidence: canonical_belief_report.regime_posterior.evidence.clone(),
         };
     let agent_prompts = build_analyze_agent_prompts(BuildAnalyzeAgentPromptsInput {
@@ -7970,9 +7965,7 @@ fn build_update_agent_prompts(input: BuildUpdateAgentPromptsInput<'_>) -> AgentP
         consumed_multi_timeframe_summary,
     } = input;
     let consumed_canonical_structural_regime_summary =
-        compact_canonical_structural_regime_summary(
-            consumed_canonical_structural_regime_posterior,
-        );
+        compact_canonical_structural_regime_summary(consumed_canonical_structural_regime_posterior);
     let structural_learning_semantics_summary =
         ict_engine::state::structural_learning_semantics_summary(
             structural_learning_credit_class,
@@ -9202,9 +9195,7 @@ mod tests {
             .phase_summary
             .contains("objective_market_credibility="));
         assert_eq!(
-            snapshot
-                .canonical_structural_active_regime
-                .as_deref(),
+            snapshot.canonical_structural_active_regime.as_deref(),
             Some("trend")
         );
         assert_eq!(snapshot.canonical_structural_confidence, Some(0.78));
@@ -9236,9 +9227,7 @@ mod tests {
         let snapshot = workflow_phase_snapshot_from_research_run(&run);
 
         assert_eq!(
-            snapshot
-                .canonical_structural_active_regime
-                .as_deref(),
+            snapshot.canonical_structural_active_regime.as_deref(),
             Some("range")
         );
         assert_eq!(snapshot.canonical_structural_confidence, Some(0.61));
@@ -12729,7 +12718,14 @@ mod tests {
         );
         assert!(refs.followed_path);
         assert_eq!(refs.exit_reason.as_deref(), Some("target_hit"));
-        assert!((feedback.model_probabilities_before_trade.selected_probability - 0.42).abs() < 1e-9);
+        assert!(
+            (feedback
+                .model_probabilities_before_trade
+                .selected_probability
+                - 0.42)
+                .abs()
+                < 1e-9
+        );
         let run_refs = runs[0]
             .structural_feedback
             .as_ref()
@@ -12750,13 +12746,10 @@ mod tests {
         assert_eq!(path_prior.followed_count, 1);
         assert_eq!(path_prior.wins, 1);
         assert!(path_prior.smoothed_prior > 0.5);
-        assert!(runs[0]
-            .factor_family_outcomes
-            .iter()
-            .all(|outcome| outcome
-                .promotion_decision
-                .reason
-                .contains("learning_semantics=")));
+        assert!(runs[0].factor_family_outcomes.iter().all(|outcome| outcome
+            .promotion_decision
+            .reason
+            .contains("learning_semantics=")));
         assert!(runs[0]
             .artifact_action_summary
             .iter()
@@ -13658,8 +13651,8 @@ mod tests {
     }
 
     #[test]
-    fn test_workflow_snapshot_overlays_recent_analyze_ensemble_history_with_canonical_structural_posterior()
-     {
+    fn test_workflow_snapshot_overlays_recent_analyze_ensemble_history_with_canonical_structural_posterior(
+    ) {
         let temp = tempfile::tempdir().unwrap();
         let analyze = AnalyzeRunRecord {
             run_id: "analyze:1".to_string(),
@@ -13691,11 +13684,12 @@ mod tests {
                 dataset_comparability: DatasetComparability::default(),
                 ensemble_version: "ensemble-audit-v2".to_string(),
                 final_action: "execute_follow_through".to_string(),
-                recommended_command:
-                    "ict-engine workflow-status --symbol NQ --phase human-next".to_string(),
-                human_next_triage:
-                    "hard_blocked=false ensemble_action=execute_follow_through".to_string(),
-                hard_block: ict_engine::application::orchestration::EnsembleHardBlockArtifact::default(),
+                recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next"
+                    .to_string(),
+                human_next_triage: "hard_blocked=false ensemble_action=execute_follow_through"
+                    .to_string(),
+                hard_block:
+                    ict_engine::application::orchestration::EnsembleHardBlockArtifact::default(),
                 confidence: 0.55,
                 consensus_strength: 0.55,
                 disagreement_flags: Vec::new(),
@@ -13794,10 +13788,11 @@ mod tests {
                 dataset_comparability: DatasetComparability::default(),
                 ensemble_version: "ensemble-audit-v2".to_string(),
                 final_action: "observe".to_string(),
-                recommended_command:
-                    "ict-engine workflow-status --symbol NQ --phase human-next".to_string(),
+                recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next"
+                    .to_string(),
                 human_next_triage: "history-old".to_string(),
-                hard_block: ict_engine::application::orchestration::EnsembleHardBlockArtifact::default(),
+                hard_block:
+                    ict_engine::application::orchestration::EnsembleHardBlockArtifact::default(),
                 confidence: 0.20,
                 consensus_strength: 0.20,
                 disagreement_flags: Vec::new(),
@@ -13880,10 +13875,11 @@ mod tests {
                 dataset_comparability: DatasetComparability::default(),
                 ensemble_version: "ensemble-audit-v2".to_string(),
                 final_action: "observe".to_string(),
-                recommended_command:
-                    "ict-engine workflow-status --symbol NQ --phase human-next".to_string(),
+                recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next"
+                    .to_string(),
                 human_next_triage: "history-research".to_string(),
-                hard_block: ict_engine::application::orchestration::EnsembleHardBlockArtifact::default(),
+                hard_block:
+                    ict_engine::application::orchestration::EnsembleHardBlockArtifact::default(),
                 confidence: 0.20,
                 consensus_strength: 0.20,
                 disagreement_flags: Vec::new(),
@@ -13991,7 +13987,9 @@ mod tests {
             artifact_ledger: &[],
         });
 
-        let vote = snapshot.latest_ensemble_vote.expect("synthetic research vote");
+        let vote = snapshot
+            .latest_ensemble_vote
+            .expect("synthetic research vote");
         assert_eq!(vote.source_phase, "research");
         assert_eq!(vote.source_run_id.as_deref(), Some("research:new"));
         assert_eq!(vote.posterior_active_regime, "range");
@@ -14038,7 +14036,9 @@ mod tests {
             artifact_ledger: &[],
         });
 
-        let vote = snapshot.latest_ensemble_vote.expect("synthetic research vote");
+        let vote = snapshot
+            .latest_ensemble_vote
+            .expect("synthetic research vote");
         assert_eq!(vote.source_phase, "research");
         assert_eq!(vote.source_run_id.as_deref(), Some("research:synthetic"));
         assert_eq!(vote.posterior_active_regime, "range");
@@ -14407,9 +14407,9 @@ mod tests {
             .prompts
             .iter()
             .find(|prompt| prompt.id == "update_consumed_pre_bayes_review")
-            .map(|prompt| prompt.user_prompt.contains(
-                "consumed_canonical_structural_regime=active=trend confidence=0.780"
-            ))
+            .map(|prompt| prompt
+                .user_prompt
+                .contains("consumed_canonical_structural_regime=active=trend confidence=0.780"))
             .unwrap_or(false));
     }
 
@@ -15888,11 +15888,12 @@ mod tests {
             snapshot.pre_bayes_filtered_assignments["market_regime"],
             "trend"
         );
-        assert_eq!(snapshot.pre_bayes_soft_evidence["market_regime"]["trend"], 0.78);
         assert_eq!(
-            snapshot
-                .canonical_structural_active_regime
-                .as_deref(),
+            snapshot.pre_bayes_soft_evidence["market_regime"]["trend"],
+            0.78
+        );
+        assert_eq!(
+            snapshot.canonical_structural_active_regime.as_deref(),
             Some("trend")
         );
         assert_eq!(snapshot.canonical_structural_confidence, Some(0.78));
@@ -15949,11 +15950,12 @@ mod tests {
             snapshot.pre_bayes_filtered_assignments["market_regime"],
             "trend"
         );
-        assert_eq!(snapshot.pre_bayes_soft_evidence["market_regime"]["trend"], 0.78);
         assert_eq!(
-            snapshot
-                .canonical_structural_active_regime
-                .as_deref(),
+            snapshot.pre_bayes_soft_evidence["market_regime"]["trend"],
+            0.78
+        );
+        assert_eq!(
+            snapshot.canonical_structural_active_regime.as_deref(),
             Some("trend")
         );
         assert_eq!(snapshot.canonical_structural_confidence, Some(0.78));
