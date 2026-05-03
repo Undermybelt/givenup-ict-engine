@@ -16,7 +16,13 @@ pub use crate::belief_core::ranking_label::{
     evaluate_structural_path_probability_calibration_rows,
     load_structural_path_ranker_runtime_artifact_ref,
     load_structural_path_ranker_runtime_artifact_rows,
+    load_structural_path_ranking_target_rows,
+    render_structural_path_ranking_target_csv,
+    render_structural_path_ranking_target_jsonl,
+    render_structural_path_ranking_target_rows_csv,
+    render_structural_path_ranking_target_rows_jsonl,
     load_structural_path_ranking_runtime_selection,
+    structural_path_ranking_target_row_history_key,
     structural_path_ranking_runtime_selection_path,
     structural_path_ranking_beta_lower_bound,
     structural_path_ranking_beta_mean,
@@ -3388,24 +3394,6 @@ fn structural_path_ranking_trainer_manifest() -> StructuralPathRankingTrainerMan
     }
 }
 
-fn structural_path_ranking_target_row_history_key(row: &StructuralPathRankingTargetRow) -> String {
-    format!("{}|{}", row.candidate_set_id, row.path_id)
-}
-
-fn load_structural_path_ranking_target_rows(
-    jsonl_path: &Path,
-) -> Result<Vec<StructuralPathRankingTargetRow>> {
-    if !jsonl_path.exists() {
-        return Ok(Vec::new());
-    }
-    let raw = fs::read_to_string(jsonl_path)?;
-    raw.lines()
-        .filter(|line| !line.trim().is_empty())
-        .map(serde_json::from_str::<StructuralPathRankingTargetRow>)
-        .collect::<std::result::Result<Vec<_>, _>>()
-        .map_err(Into::into)
-}
-
 fn resolve_structural_path_ranker_runtime(
     state_dir: Option<&str>,
     symbol: &str,
@@ -3668,105 +3656,6 @@ fn upsert_structural_path_ranking_target_history(
         }
     }
     Ok(history)
-}
-
-fn render_structural_path_ranking_target_rows_jsonl(
-    rows: &[StructuralPathRankingTargetRow],
-) -> Result<String> {
-    let mut out = String::new();
-    for row in rows {
-        out.push_str(&serde_json::to_string(row)?);
-        out.push('\n');
-    }
-    Ok(out)
-}
-
-fn render_structural_path_ranking_target_jsonl(
-    artifact: &StructuralPathRankingTargetArtifact,
-) -> Result<String> {
-    render_structural_path_ranking_target_rows_jsonl(&artifact.rows)
-}
-
-fn render_structural_path_ranking_target_rows_csv(
-    protocol_version: &str,
-    symbol: &str,
-    generated_at: &str,
-    rows: &[StructuralPathRankingTargetRow],
-) -> String {
-    let mut out = String::from(
-        "protocol_version,symbol,generated_at,candidate_set_id,candidate_set_size,rank,path_id,scenario_id,path_label,direction,raw_path_score,calibrated_path_prob,path_prob_lower_bound,execution_gate_status,execution_gate_min_path_prob,execution_gate_reason,pending_reward_state,maturity_mask,maturity_weight,calibrated_label,propensity_estimate,ips_weight,training_weight,regime_calibration_bucket,behavior_policy_probability,execution_propensity,target_policy_probability_confidence,target_policy_probability_lower_bound,target_policy_reward_prior,target_policy_reward_lower_bound,experience_prior,current_posterior,structural_baseline_score\n",
-    );
-    for row in rows {
-        let fields = [
-            csv_escape(protocol_version),
-            csv_escape(symbol),
-            csv_escape(generated_at),
-            csv_escape(&row.candidate_set_id),
-            row.candidate_set_size.to_string(),
-            row.rank.to_string(),
-            csv_escape(&row.path_id),
-            csv_escape(&row.scenario_id),
-            csv_escape(&row.path_label),
-            csv_escape(&row.direction),
-            csv_optional_f64(row.raw_path_score),
-            csv_optional_f64(row.calibrated_path_prob),
-            csv_optional_f64(row.path_prob_lower_bound),
-            csv_optional_string(row.execution_gate_status.as_deref()),
-            csv_optional_f64(row.execution_gate_min_path_prob),
-            csv_optional_string(row.execution_gate_reason.as_deref()),
-            csv_escape(&row.pending_reward_state),
-            row.maturity_mask.to_string(),
-            csv_f64(row.maturity_weight),
-            csv_optional_f64(row.calibrated_label),
-            csv_optional_f64(row.propensity_estimate),
-            csv_optional_f64(row.ips_weight),
-            csv_optional_f64(row.training_weight),
-            csv_escape(&row.regime_calibration_bucket),
-            csv_f64(row.behavior_policy_probability),
-            csv_optional_f64(row.execution_propensity),
-            csv_optional_f64(row.target_policy_probability_confidence),
-            csv_optional_f64(row.target_policy_probability_lower_bound),
-            csv_optional_f64(row.target_policy_reward_prior),
-            csv_optional_f64(row.target_policy_reward_lower_bound),
-            csv_f64(row.experience_prior),
-            csv_f64(row.current_posterior),
-            csv_f64(row.structural_baseline_score),
-        ];
-        out.push_str(&fields.join(","));
-        out.push('\n');
-    }
-    out
-}
-
-fn render_structural_path_ranking_target_csv(
-    artifact: &StructuralPathRankingTargetArtifact,
-) -> String {
-    render_structural_path_ranking_target_rows_csv(
-        &artifact.protocol_version,
-        &artifact.symbol,
-        &artifact.generated_at,
-        &artifact.rows,
-    )
-}
-
-fn csv_f64(value: f64) -> String {
-    format!("{value:.6}")
-}
-
-fn csv_optional_f64(value: Option<f64>) -> String {
-    value.map(csv_f64).unwrap_or_default()
-}
-
-fn csv_optional_string(value: Option<&str>) -> String {
-    value.map(csv_escape).unwrap_or_default()
-}
-
-fn csv_escape(value: &str) -> String {
-    if value.contains(',') || value.contains('"') || value.contains('\n') || value.contains('\r') {
-        format!("\"{}\"", value.replace('"', "\"\""))
-    } else {
-        value.to_string()
-    }
 }
 
 fn structural_path_ranking_regime_bucket(snapshot: &WorkflowSnapshot) -> String {
