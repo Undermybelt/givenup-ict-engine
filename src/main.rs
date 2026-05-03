@@ -7,6 +7,7 @@ mod factor_research_runtime;
 mod policy_training_command;
 mod probabilistic_backtest_runtime;
 mod release_closure_command;
+mod research_debug_command;
 mod status_command;
 mod update_command;
 mod update_output;
@@ -214,6 +215,7 @@ use policy_training_command::{
 };
 use probabilistic_backtest_runtime::{finalize_backtest_report, run_probabilistic_backtest};
 use release_closure_command::{evidence_quality_breakdown_shell, research_verdict_shell};
+use research_debug_command::{factor_backtest_shell, factor_pipeline_debug_shell};
 use serde_json::Value;
 use status_command::{
     artifact_diff_shell, artifact_lineage_shell, artifact_status_shell,
@@ -2402,23 +2404,19 @@ fn main() -> Result<()> {
             agent,
             human,
             ..
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            ict_engine::application::backtest::factor_backtest_command(
-                &symbol,
-                &data,
-                paired_data.as_deref(),
-                ensemble,
-                &state_dir,
-                match resolve_output_format(&output_format, compact, agent, human)? {
-                    OutputFormat::Json => "json",
-                    OutputFormat::Compact => "compact",
-                    OutputFormat::Agent => "agent",
-                    OutputFormat::Human => "human",
-                },
-                run_factor_backtest,
-            )?
-        }
+        } => factor_backtest_shell(
+            &symbol,
+            &data,
+            paired_data.as_deref(),
+            ensemble,
+            &state_dir,
+            match resolve_output_format(&output_format, compact, agent, human)? {
+                OutputFormat::Json => "json",
+                OutputFormat::Compact => "compact",
+                OutputFormat::Agent => "agent",
+                OutputFormat::Human => "human",
+            },
+        )?,
         Commands::Env => env_command()?,
         Commands::AutoQuantStatus { state_dir } => auto_quant_status_shell(&state_dir)?,
         Commands::AutoQuantBootstrap {
@@ -2753,7 +2751,7 @@ fn main() -> Result<()> {
             data_1h,
             data_4h,
             data_1d,
-        } => ict_engine::application::factor_pipeline_debug::factor_pipeline_debug_command(
+        } => factor_pipeline_debug_shell(
             ict_engine::application::factor_pipeline_debug::FactorPipelineDebugCommandInput {
                 symbol: &symbol,
                 data: &data,
