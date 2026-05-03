@@ -3,6 +3,7 @@ mod analyze_live_command;
 mod analyze_shared;
 mod auto_quant_command;
 mod factor_backtest_runtime;
+mod factor_research_command;
 mod factor_research_runtime;
 mod market_data_command;
 mod policy_training_command;
@@ -32,6 +33,10 @@ use auto_quant_command::{
     auto_quant_update_shell,
 };
 use factor_backtest_runtime::run_factor_backtest;
+use factor_research_command::{
+    factor_autoresearch_shell, factor_research_shell, FactorAutoresearchShellInput,
+    FactorResearchShellInput,
+};
 use factor_research_runtime::run_factor_research;
 use ict_engine::agent::{
     dataset_audit_prompt, factor_iteration_prompt_pack, promotion_gate_prompt,
@@ -2198,70 +2203,29 @@ fn main() -> Result<()> {
             agent,
             human,
             backend,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            if backend == "auto-quant" {
-                auto_quant_factor_research_command(AutoQuantFactorResearchCommandInput {
-                    symbol: &symbol,
-                    data: &data,
-                    objective: &objective,
-                    paired_data: paired_data.as_deref(),
-                    mutation_spec_path: mutation_spec.as_deref(),
-                    strategy_material_root: strategy_material_root.as_deref(),
-                    state_dir: &state_dir,
-                })?;
-            } else {
-                ict_engine::application::backtest::factor_research_command(
-                    ict_engine::application::backtest::FactorResearchCommandInput {
-                        symbol: &symbol,
-                        data: &data,
-                        objective: &objective,
-                        mutation_spec_path: mutation_spec.as_deref(),
-                        control_matrix_pb12,
-                        emit_mutation_evaluation,
-                        ensemble,
-                        state_dir: &state_dir,
-                        output_format: match resolve_output_format(
-                            &output_format,
-                            compact,
-                            agent,
-                            human,
-                        )? {
-                            OutputFormat::Json => "json",
-                            OutputFormat::Compact => "compact",
-                            OutputFormat::Agent => "agent",
-                            OutputFormat::Human => "human",
-                        },
-                    },
-                    load_factor_mutation_spec,
-                    |objective_mode,
-                     mutation_spec,
-                     control_matrix_plan,
-                     _control_matrix_run,
-                     runtime_overrides,
-                     run_state_dir| {
-                        run_factor_research(RunFactorResearchInput {
-                            symbol: &symbol,
-                            data: &data,
-                            objective: objective_mode,
-                            data_1m: data_1m.as_deref(),
-                            data_5m: data_5m.as_deref(),
-                            data_15m: data_15m.as_deref(),
-                            data_1h: data_1h.as_deref(),
-                            data_4h: data_4h.as_deref(),
-                            data_1d: data_1d.as_deref(),
-                            paired_data: paired_data.as_deref(),
-                            paired_candles_override: runtime_overrides.paired_candles,
-                            auxiliary_override: runtime_overrides.auxiliary,
-                            runtime_notes: runtime_overrides.runtime_notes,
-                            mutation_spec: mutation_spec.as_ref(),
-                            control_matrix_plan,
-                            state_dir: run_state_dir,
-                        })
-                    },
-                )?;
-            }
-        }
+        } => factor_research_shell(FactorResearchShellInput {
+            symbol: &symbol,
+            data: &data,
+            objective: &objective,
+            data_1m: data_1m.as_deref(),
+            data_5m: data_5m.as_deref(),
+            data_15m: data_15m.as_deref(),
+            data_1h: data_1h.as_deref(),
+            data_4h: data_4h.as_deref(),
+            data_1d: data_1d.as_deref(),
+            paired_data: paired_data.as_deref(),
+            mutation_spec: mutation_spec.as_deref(),
+            control_matrix_pb12,
+            strategy_material_root: strategy_material_root.as_deref(),
+            emit_mutation_evaluation,
+            ensemble,
+            state_dir: &state_dir,
+            output_format: &output_format,
+            compact,
+            agent,
+            human,
+            backend: &backend,
+        })?,
         Commands::AutoQuantPromoteCanonicalSetup {
             symbol,
             setup_name,
@@ -2318,64 +2282,26 @@ fn main() -> Result<()> {
             ensemble: _,
             state_dir,
             backend,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            if backend == "auto-quant" {
-                auto_quant_factor_autoresearch_command(AutoQuantFactorAutoresearchCommandInput {
-                    symbol: &symbol,
-                    data: &data,
-                    objective: &objective,
-                    paired_data: paired_data.as_deref(),
-                    mutation_spec_path: mutation_spec.as_deref(),
-                    strategy_material_root: strategy_material_root.as_deref(),
-                    iterations,
-                    session_id: session_id.as_deref(),
-                    state_dir: &state_dir,
-                })?;
-            } else {
-                ict_engine::application::factor_lifecycle::factor_autoresearch_command(
-                    ict_engine::application::factor_lifecycle::FactorAutoresearchCommandInput {
-                        symbol: &symbol,
-                        data: &data,
-                        objective: &objective,
-                        mutation_spec_path: mutation_spec.as_deref(),
-                        iterations,
-                        data_1m: data_1m.as_deref(),
-                        data_5m: data_5m.as_deref(),
-                        data_15m: data_15m.as_deref(),
-                        data_1h: data_1h.as_deref(),
-                        data_4h: data_4h.as_deref(),
-                        data_1d: data_1d.as_deref(),
-                        paired_data: paired_data.as_deref(),
-                        session_id: session_id.as_deref(),
-                        resume_latest,
-                        max_cluster_fail_streak,
-                        state_dir: &state_dir,
-                    },
-                    load_factor_mutation_spec,
-                    |objective_mode, mutation_spec| {
-                        run_factor_research(RunFactorResearchInput {
-                            symbol: &symbol,
-                            data: &data,
-                            objective: objective_mode,
-                            data_1m: data_1m.as_deref(),
-                            data_5m: data_5m.as_deref(),
-                            data_15m: data_15m.as_deref(),
-                            data_1h: data_1h.as_deref(),
-                            data_4h: data_4h.as_deref(),
-                            data_1d: data_1d.as_deref(),
-                            paired_data: paired_data.as_deref(),
-                            paired_candles_override: None,
-                            auxiliary_override: None,
-                            runtime_notes: Vec::new(),
-                            mutation_spec: Some(mutation_spec),
-                            control_matrix_plan: None,
-                            state_dir: &state_dir,
-                        })
-                    },
-                )?;
-            }
-        }
+        } => factor_autoresearch_shell(FactorAutoresearchShellInput {
+            symbol: &symbol,
+            data: &data,
+            objective: &objective,
+            mutation_spec: mutation_spec.as_deref(),
+            iterations,
+            data_1m: data_1m.as_deref(),
+            data_5m: data_5m.as_deref(),
+            data_15m: data_15m.as_deref(),
+            data_1h: data_1h.as_deref(),
+            data_4h: data_4h.as_deref(),
+            data_1d: data_1d.as_deref(),
+            paired_data: paired_data.as_deref(),
+            strategy_material_root: strategy_material_root.as_deref(),
+            session_id: session_id.as_deref(),
+            resume_latest,
+            max_cluster_fail_streak,
+            state_dir: &state_dir,
+            backend: &backend,
+        })?,
         Commands::FactorAutoresearchStatus {
             symbol,
             state_dir,
