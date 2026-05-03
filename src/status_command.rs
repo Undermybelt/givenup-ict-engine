@@ -197,3 +197,39 @@ pub(crate) fn artifact_lineage_shell(input: ArtifactLineageShellInput<'_>) -> Re
         rule_break_only,
     })
 }
+
+pub(crate) fn factor_mutation_status_shell(
+    symbol: &str,
+    state_dir: &str,
+    source_command: Option<&str>,
+    latest_only: bool,
+    accepted_only: bool,
+    bucket_by_source: bool,
+    limit: Option<usize>,
+) -> Result<()> {
+    ict_engine::application::factor_lifecycle::factor_mutation_status_command(
+        symbol,
+        state_dir,
+        source_command,
+        latest_only,
+        accepted_only,
+        bucket_by_source,
+        limit,
+    )
+}
+
+pub(crate) fn factor_autoresearch_status_shell(
+    symbol: &str,
+    state_dir: &str,
+    session_id: Option<&str>,
+    latest_only: bool,
+    limit: Option<usize>,
+) -> Result<()> {
+    ict_engine::application::factor_lifecycle::factor_autoresearch_status_command(
+        symbol,
+        state_dir,
+        session_id,
+        latest_only,
+        limit,
+    )
+}

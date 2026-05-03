@@ -70,6 +70,7 @@ Primary source docs:
 - [x] Workstream 1 now also has `provider-status` / `artifact-status` thin shell dispatch moved into that same bin-side status command module, further reducing entrypoint glue in `main.rs`.
 - [x] Workstream 1 now also has `pre-bayes-diff` / `artifact-diff` / `artifact-lineage` thin shell dispatch moved into the same bin-side status command module, so the related `main.rs` match arms are now thin command routing only.
 - [x] Workstream 1 now also has release-closure CLI dispatch for `research-verdict` / `evidence-quality-breakdown` moved out of the `main.rs` match-arm body into a focused bin-side shell module.
+- [x] Workstream 1 now also has `factor-mutation-status` / `factor-autoresearch-status` thin shell dispatch moved into that same bin-side status command module.
 
 ### Next
 
@@ -88,6 +89,7 @@ Primary source docs:
   - latest: `main.rs` no longer owns the direct `provider-status` / `artifact-status` thin shell wrapper logic either
   - latest: `main.rs` no longer owns the direct `pre-bayes-diff` / `artifact-diff` / `artifact-lineage` thin shell wrapper logic either
   - latest: `main.rs` no longer owns the direct `research-verdict` / `evidence-quality-breakdown` thin shell wrapper logic either
+  - latest: `main.rs` no longer owns the direct `factor-mutation-status` / `factor-autoresearch-status` thin shell wrapper logic either
 - [ ] Replace the current heuristic transition/break mixing with a maintained, emission-aware regime transition core instead of only snapshot-time posterior reweighting.
   - started: transition posterior, blend-helper, temporal accessor, temporal-summary builder extraction, maintained node/branch transition posterior refresh, and explicit emission-conditioned support helpers into `src/belief_core/regime_filter.rs`
 - [ ] Replace the current heuristic temporal break logic with a clearer `changepoint_gate` owner instead of keeping BOCPD helpers inside `src/state/types.rs`.

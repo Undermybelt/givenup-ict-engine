@@ -205,7 +205,8 @@ use probabilistic_backtest_runtime::{finalize_backtest_report, run_probabilistic
 use release_closure_command::{evidence_quality_breakdown_shell, research_verdict_shell};
 use serde_json::Value;
 use status_command::{
-    artifact_diff_shell, artifact_lineage_shell, artifact_status_shell, pre_bayes_diff_shell,
+    artifact_diff_shell, artifact_lineage_shell, artifact_status_shell,
+    factor_autoresearch_status_shell, factor_mutation_status_shell, pre_bayes_diff_shell,
     pre_bayes_status_shell, provider_status_shell, workflow_status_shell, ArtifactDiffShellInput,
     ArtifactLineageShellInput, ArtifactStatusShellInput, WorkflowStatusShellInput,
 };
@@ -2276,7 +2277,7 @@ fn main() -> Result<()> {
             accepted_only,
             bucket_by_source,
             limit,
-        } => ict_engine::application::factor_lifecycle::factor_mutation_status_command(
+        } => factor_mutation_status_shell(
             &symbol,
             &state_dir,
             source_command.as_deref(),
@@ -2369,7 +2370,7 @@ fn main() -> Result<()> {
             session_id,
             latest_only,
             limit,
-        } => ict_engine::application::factor_lifecycle::factor_autoresearch_status_command(
+        } => factor_autoresearch_status_shell(
             &symbol,
             &state_dir,
             session_id.as_deref(),
