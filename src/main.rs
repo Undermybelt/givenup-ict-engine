@@ -118,6 +118,8 @@ use ict_engine::application::{
         apply_structural_path_ranking_external_scores_command,
         build_entry_model_packet_store_for_analyze,
         clear_structural_path_ranking_trainer_artifact_command,
+        disable_structural_path_ranking_runtime_command,
+        enable_structural_path_ranking_runtime_command,
         export_structural_path_ranking_target_command,
         policy_training_status_command,
         register_structural_path_ranking_trainer_artifact_command,
@@ -1335,7 +1337,7 @@ enum Commands {
         state_dir: String,
         #[arg(
             long,
-            help = "Explicit external trainer artifact URI or path to register; this is opt-in and never auto-loaded"
+            help = "Explicit external trainer artifact URI or path to register; runtime reuse remains disabled until explicitly enabled"
         )]
         artifact_uri: String,
         #[arg(
@@ -1368,6 +1370,34 @@ enum Commands {
             long,
             default_value = "state",
             help = "State directory containing policy_training artifacts"
+        )]
+        state_dir: String,
+    },
+    /// Opt in to reusing external structural path-ranking scores for current consumer surfaces.
+    EnableStructuralPathRankingRuntime {
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
+        symbol: String,
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory containing workflow snapshot, learning state, and policy_training artifacts"
+        )]
+        state_dir: String,
+        #[arg(
+            long,
+            default_value = "candidate_set_only",
+            help = "Reuse mode: candidate_set_only or prefer_history"
+        )]
+        reuse_mode: String,
+    },
+    /// Disable previously enabled structural path-ranking runtime reuse and return to zero-config defaults.
+    DisableStructuralPathRankingRuntime {
+        #[arg(long, help = "Instrument identifier supplied by the caller")]
+        symbol: String,
+        #[arg(
+            long,
+            default_value = "state",
+            help = "State directory containing workflow snapshot, learning state, and policy_training artifacts"
         )]
         state_dir: String,
     },
@@ -2844,6 +2874,18 @@ fn main() -> Result<()> {
         Commands::ClearStructuralPathRankingTrainerArtifact { symbol, state_dir } => {
             ensure_state_dir_ready(&state_dir)?;
             clear_structural_path_ranking_trainer_artifact_command(&state_dir, &symbol)?
+        }
+        Commands::EnableStructuralPathRankingRuntime {
+            symbol,
+            state_dir,
+            reuse_mode,
+        } => {
+            ensure_state_dir_ready(&state_dir)?;
+            enable_structural_path_ranking_runtime_command(&state_dir, &symbol, &reuse_mode)?
+        }
+        Commands::DisableStructuralPathRankingRuntime { symbol, state_dir } => {
+            ensure_state_dir_ready(&state_dir)?;
+            disable_structural_path_ranking_runtime_command(&state_dir, &symbol)?
         }
         Commands::ExportStructuralPathRankingTarget { symbol, state_dir } => {
             ensure_state_dir_ready(&state_dir)?;

@@ -2,16 +2,21 @@ use anyhow::{bail, Result};
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::Path;
 
 use crate::application::orchestration::{
     apply_structural_path_ranking_external_scores,
     evaluate_structural_path_probability_calibration_rows, export_structural_path_ranking_target,
+    load_structural_path_ranking_runtime_selection,
+    structural_path_ranking_runtime_selection_path,
     StructuralPathProbabilityCalibrationEvaluationReport, StructuralPathRankingTargetExportSummary,
     StructuralPathRankingExternalScoreInput, StructuralPathRankingTargetRow,
-    StructuralPathRankingTrainerManifest,
+    StructuralPathRankingRuntimeSelection, StructuralPathRankingTrainerManifest,
+    STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+    STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY,
+    STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION,
     STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE,
 };
 use crate::application::provider_catalog::provider_status_agent_surface;
@@ -283,6 +288,20 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub trainer_artifact_feature_columns: usize,
     #[serde(default)]
     pub trainer_artifact_uri_present: bool,
+    #[serde(default)]
+    pub runtime_selection_enabled: bool,
+    #[serde(default)]
+    pub runtime_selection_ready: bool,
+    #[serde(default)]
+    pub runtime_selection_status: String,
+    #[serde(default)]
+    pub runtime_selection_path: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub runtime_selection_mode: Option<String>,
+    #[serde(default)]
+    pub runtime_candidate_set_match_count: usize,
+    #[serde(default)]
+    pub runtime_history_match_count: usize,
     pub rows: usize,
     pub candidate_set_id: Option<String>,
     pub candidate_set_size: usize,
@@ -899,6 +918,7 @@ pub fn structural_path_ranking_target_training_status(
             .filter(|row| row.training_weight.is_some())
             .count())
         .max(summary.rows_with_training_weight);
+    let current_rows = load_structural_path_ranking_target_rows_from_jsonl(&summary.jsonl_path)?;
     let calibration_ready =
         history_rows_with_calibrated_path_prob > 0 && history_rows_with_path_prob_lower_bound > 0;
     let trainer_manifest = &summary.trainer_manifest;
@@ -917,6 +937,24 @@ pub fn structural_path_ranking_target_training_status(
     let trainer_artifact_ready = trainer_artifact.as_ref().is_some_and(|artifact| {
         structural_path_ranking_trainer_artifact_ready(artifact, trainer_manifest)
     });
+    let runtime_selection_path = structural_path_ranking_runtime_selection_path(state_dir, symbol);
+    let runtime_selection = load_structural_path_ranking_runtime_selection(state_dir, symbol);
+    let runtime_candidate_set_match_count = history_rows
+        .iter()
+        .chain(current_rows.iter())
+        .filter(|row| {
+            row.candidate_set_id == summary.candidate_set_id && row.raw_path_score.is_some()
+        })
+        .map(|row| row.path_id.clone())
+        .collect::<BTreeSet<_>>()
+        .len();
+    let runtime_history_match_count = history_rows
+        .iter()
+        .chain(current_rows.iter())
+        .filter(|row| row.raw_path_score.is_some())
+        .map(|row| row.path_id.clone())
+        .collect::<BTreeSet<_>>()
+        .len();
     let calibration_evaluation =
         structural_path_ranking_target_calibration_evaluation(evaluation_jsonl_path)?;
     let calibration_quality_ready = calibration_evaluation.status == "evaluated";
@@ -1010,8 +1048,31 @@ pub fn structural_path_ranking_target_training_status(
     } else {
         "missing"
     };
+    let runtime_selection_enabled = runtime_selection
+        .as_ref()
+        .map(|selection| selection.enabled)
+        .unwrap_or(false);
+    let runtime_selection_mode = runtime_selection
+        .as_ref()
+        .and_then(|selection| non_empty_string(&selection.reuse_mode));
+    let runtime_selection_status = match runtime_selection.as_ref() {
+        None => "disabled".to_string(),
+        Some(selection) if !selection.enabled => "disabled".to_string(),
+        Some(_) if runtime_candidate_set_match_count > 0 => "enabled_candidate_set_ready".to_string(),
+        Some(selection)
+            if selection.reuse_mode == STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY
+                && runtime_history_match_count > 0 =>
+        {
+            "enabled_history_ready".to_string()
+        }
+        Some(_) => "enabled_no_matching_scores".to_string(),
+    };
+    let runtime_selection_ready = matches!(
+        runtime_selection_status.as_str(),
+        "enabled_candidate_set_ready" | "enabled_history_ready"
+    );
     let summary_line = format!(
-        "structural_path_ranking_target rows={} history_rows={} mature_rows={} history_mature_rows={} raw_scored_mature={}/{} production_validation={}/{} calibration={} trainer_artifact={}",
+        "structural_path_ranking_target rows={} history_rows={} mature_rows={} history_mature_rows={} raw_scored_mature={}/{} production_validation={}/{} calibration={} trainer_artifact={} runtime_selection={}",
         summary.rows,
         summary.history_rows,
         summary.mature_rows,
@@ -1021,7 +1082,8 @@ pub fn structural_path_ranking_target_training_status(
         production_validation_rows,
         production_validation_min_rows,
         calibration_status,
-        trainer_status
+        trainer_status,
+        runtime_selection_status
     );
     Ok(StructuralPathRankingTargetTrainingStatusSurface {
         export_ready: summary.rows > 0,
@@ -1063,6 +1125,13 @@ pub fn structural_path_ranking_target_training_status(
             .as_ref()
             .and_then(|artifact| non_empty_string(&artifact.artifact_uri))
             .is_some(),
+        runtime_selection_enabled,
+        runtime_selection_ready,
+        runtime_selection_status,
+        runtime_selection_path,
+        runtime_selection_mode,
+        runtime_candidate_set_match_count,
+        runtime_history_match_count,
         rows: summary.rows,
         candidate_set_id: Some(summary.candidate_set_id),
         candidate_set_size: summary.candidate_set_size,
@@ -1383,6 +1452,96 @@ pub fn clear_structural_path_ranking_trainer_artifact_command(
     symbol: &str,
 ) -> Result<()> {
     clear_structural_path_ranking_trainer_artifact(state_dir, symbol)?;
+    let surface = structural_path_ranking_target_training_status(state_dir, symbol)?;
+    println!("{}", serde_json::to_string_pretty(&surface)?);
+    Ok(())
+}
+
+fn normalize_structural_path_ranking_runtime_reuse_mode(mode: &str) -> Result<&'static str> {
+    let mode = mode.trim();
+    match mode {
+        STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY => {
+            Ok(STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY)
+        }
+        STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY => {
+            Ok(STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY)
+        }
+        _ => bail!(
+            "unsupported runtime reuse mode '{}'; expected '{}' or '{}'",
+            mode,
+            STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+            STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY
+        ),
+    }
+}
+
+fn set_structural_path_ranking_runtime_selection(
+    state_dir: &str,
+    symbol: &str,
+    reuse_mode: &str,
+) -> Result<String> {
+    let summary_path = Path::new(state_dir)
+        .join(symbol)
+        .join(POLICY_TRAINING_DIR)
+        .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE);
+    if !summary_path.exists() {
+        bail!(
+            "structural path ranking target export missing at {}; export target rows before enabling runtime reuse",
+            summary_path.to_string_lossy()
+        );
+    }
+    let reuse_mode = normalize_structural_path_ranking_runtime_reuse_mode(reuse_mode)?;
+    let selection = StructuralPathRankingRuntimeSelection {
+        protocol_version: STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION.to_string(),
+        enabled: true,
+        reuse_mode: reuse_mode.to_string(),
+        selected_at: Some(Utc::now().to_rfc3339()),
+        notes: vec![
+            "opt_in_runtime_reuse=true".to_string(),
+            "zero_config_default_preserved=true".to_string(),
+        ],
+    };
+    let relative_path = format!(
+        "{POLICY_TRAINING_DIR}/{}",
+        crate::application::orchestration::STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_FILE
+    );
+    save_text_state(
+        state_dir,
+        symbol,
+        &relative_path,
+        &serde_json::to_string_pretty(&selection)?,
+    )?;
+    Ok(structural_path_ranking_runtime_selection_path(state_dir, symbol))
+}
+
+pub fn enable_structural_path_ranking_runtime_command(
+    state_dir: &str,
+    symbol: &str,
+    reuse_mode: &str,
+) -> Result<()> {
+    set_structural_path_ranking_runtime_selection(state_dir, symbol, reuse_mode)?;
+    let surface = structural_path_ranking_target_training_status(state_dir, symbol)?;
+    println!("{}", serde_json::to_string_pretty(&surface)?);
+    Ok(())
+}
+
+fn clear_structural_path_ranking_runtime_selection(state_dir: &str, symbol: &str) -> Result<bool> {
+    let selection_path = Path::new(state_dir)
+        .join(symbol)
+        .join(POLICY_TRAINING_DIR)
+        .join(crate::application::orchestration::STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_FILE);
+    if !selection_path.exists() {
+        return Ok(false);
+    }
+    fs::remove_file(&selection_path)?;
+    Ok(true)
+}
+
+pub fn disable_structural_path_ranking_runtime_command(
+    state_dir: &str,
+    symbol: &str,
+) -> Result<()> {
+    clear_structural_path_ranking_runtime_selection(state_dir, symbol)?;
     let surface = structural_path_ranking_target_training_status(state_dir, symbol)?;
     println!("{}", serde_json::to_string_pretty(&surface)?);
     Ok(())
@@ -2962,6 +3121,97 @@ mod tests {
         assert!(status
             .warnings
             .contains(&"structural_path_ranking_target_trainer_artifact_missing".to_string()));
+    }
+
+    #[test]
+    fn enable_and_disable_structural_path_ranking_runtime_updates_status_surface() {
+        let temp = tempfile::tempdir().unwrap();
+        let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let history_jsonl_path = summary_dir.join("structural_path_ranking_target_history.jsonl");
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: "NQ".to_string(),
+            rows: 2,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 2,
+            mature_rows: 2,
+            rows_with_propensity_estimate: 2,
+            rows_with_calibrated_path_prob: 2,
+            rows_with_path_prob_lower_bound: 2,
+            rows_with_execution_gate_status: 2,
+            rows_with_training_weight: 2,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            history_jsonl_path: history_jsonl_path.to_string_lossy().to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            trainer_manifest: structural_path_ranking_trainer_manifest_for_test(),
+            summary_line: "structural_path_ranking_target rows=2".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        let jsonl = [
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-win",
+                0.8,
+                "matured_success",
+            ))
+            .unwrap(),
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-loss",
+                0.2,
+                "matured_failure",
+            ))
+            .unwrap(),
+        ]
+        .join("\n");
+        std::fs::write(&jsonl_path, format!("{jsonl}\n")).unwrap();
+        std::fs::write(&history_jsonl_path, format!("{jsonl}\n")).unwrap();
+
+        enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY,
+        )
+        .unwrap();
+        let enabled = structural_path_ranking_target_training_status(
+            temp.path().to_str().unwrap(),
+            "NQ",
+        )
+        .unwrap();
+        assert!(enabled.runtime_selection_enabled);
+        assert!(enabled.runtime_selection_ready);
+        assert_eq!(
+            enabled.runtime_selection_mode.as_deref(),
+            Some(STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY)
+        );
+        assert_eq!(enabled.runtime_selection_status, "enabled_candidate_set_ready");
+        assert_eq!(enabled.runtime_candidate_set_match_count, 2);
+        assert!(enabled.summary_line.contains("runtime_selection=enabled_candidate_set_ready"));
+
+        disable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+        )
+        .unwrap();
+        let disabled = structural_path_ranking_target_training_status(
+            temp.path().to_str().unwrap(),
+            "NQ",
+        )
+        .unwrap();
+        assert!(!disabled.runtime_selection_enabled);
+        assert!(!disabled.runtime_selection_ready);
+        assert_eq!(disabled.runtime_selection_status, "disabled");
     }
 
     #[test]
