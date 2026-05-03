@@ -76,9 +76,54 @@ pub use crate::belief_core::source_reliability::{
     structural_last_offline_seed_source, structural_panel_derived_smoothed_prior,
     structural_prior_behavior_policy_probability,
     structural_prior_behavior_policy_probability_variance,
-    structural_prior_counterfactual_reward_prior, structural_prior_execution_propensity,
-    structural_prior_ips_weight, structural_prior_off_policy_adjusted_prior,
+    structural_prior_censoring_adjusted_reward_lower_bound,
+    structural_prior_censoring_adjusted_reward_prior, structural_prior_censoring_rate,
+    structural_prior_counterfactual_reward_prior,
+    structural_prior_delayed_reward_abandonment_competing_risk,
+    structural_prior_delayed_reward_abandonment_cumulative_incidence_4h,
+    structural_prior_delayed_reward_abandonment_hazard_per_hour,
+    structural_prior_delayed_reward_avg_elapsed_hours,
+    structural_prior_delayed_reward_censoring_probability,
+    structural_prior_delayed_reward_competing_risk_entropy,
+    structural_prior_delayed_reward_elapsed_feedback_count,
+    structural_prior_delayed_reward_elapsed_hours_at_risk,
+    structural_prior_delayed_reward_expected_resolution_hours,
+    structural_prior_delayed_reward_failure_competing_risk,
+    structural_prior_delayed_reward_failure_cumulative_incidence_4h,
+    structural_prior_delayed_reward_failure_hazard_per_hour,
+    structural_prior_delayed_reward_invalidation_competing_risk,
+    structural_prior_delayed_reward_invalidation_cumulative_incidence_4h,
+    structural_prior_delayed_reward_invalidation_hazard_per_hour,
+    structural_prior_delayed_reward_resolution_hazard_per_hour,
+    structural_prior_delayed_reward_resolution_horizon_1h_count,
+    structural_prior_delayed_reward_resolution_horizon_24h_count,
+    structural_prior_delayed_reward_resolution_horizon_4h_count,
+    structural_prior_delayed_reward_resolution_probability,
+    structural_prior_delayed_reward_resolution_probability_1h,
+    structural_prior_delayed_reward_resolution_probability_24h,
+    structural_prior_delayed_reward_resolution_probability_4h,
+    structural_prior_delayed_reward_resolution_within_1h_count,
+    structural_prior_delayed_reward_resolution_within_24h_count,
+    structural_prior_delayed_reward_resolution_within_4h_count,
+    structural_prior_delayed_reward_success_competing_risk,
+    structural_prior_delayed_reward_success_cumulative_incidence_4h,
+    structural_prior_delayed_reward_success_hazard_per_hour,
+    structural_prior_delayed_reward_survival_probability_1h,
+    structural_prior_delayed_reward_survival_probability_24h,
+    structural_prior_delayed_reward_survival_probability_4h,
+    structural_prior_doubly_robust_reward_prior, structural_prior_execution_propensity,
+    structural_prior_ips_weight, structural_prior_matured_feedback_count,
+    structural_prior_maturity_coverage, structural_prior_off_policy_adjusted_prior,
     structural_prior_positive_count, structural_prior_positive_value,
+    structural_prior_snips_effective_sample_size, structural_prior_snips_reward_prior,
+    structural_prior_snips_weight_mass, structural_prior_snips_weight_squared_mass,
+    structural_prior_target_policy_calibration_weight,
+    structural_prior_target_policy_probability_brier_score,
+    structural_prior_target_policy_probability_calibration_error,
+    structural_prior_target_policy_probability_confidence,
+    structural_prior_target_policy_probability_lower_bound,
+    structural_prior_target_policy_reward_lower_bound, structural_prior_target_policy_reward_prior,
+    structural_prior_target_policy_variance_penalty, structural_prior_unresolved_feedback_count,
     structural_resolved_smoothed_prior, structural_source_confusion_concentration_multiplier,
     structural_source_panel_count, structural_source_reliability_em_readiness,
     structural_source_reliability_multiplier, structural_target_policy_context_surface,
@@ -4126,451 +4171,6 @@ fn structural_selected_entry_quality(snapshot: &WorkflowSnapshot) -> Option<Stri
                 .map(|candidate| candidate.pre_bayes_bridge_selected_entry_quality.clone())
                 .filter(|value| !value.trim().is_empty())
         })
-}
-
-fn structural_prior_target_policy_probability_confidence(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.target_policy_probability_confidence
-    })
-}
-
-fn structural_prior_target_policy_probability_lower_bound(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.target_policy_probability_lower_bound
-    })
-}
-
-fn structural_prior_target_policy_probability_brier_score(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.target_policy_probability_brier_score
-    })
-}
-
-fn structural_prior_target_policy_probability_calibration_error(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.target_policy_probability_calibration_error
-    })
-}
-
-fn structural_prior_snips_weight_mass(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| stats.snips_weight_mass)
-}
-
-fn structural_prior_snips_weight_squared_mass(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| stats.snips_weight_squared_mass)
-}
-
-fn structural_prior_snips_effective_sample_size(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| stats.snips_effective_sample_size)
-}
-
-fn structural_prior_snips_reward_prior(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| stats.snips_reward_prior)
-}
-
-fn structural_prior_doubly_robust_reward_prior(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| stats.doubly_robust_reward_prior)
-}
-
-fn structural_prior_target_policy_calibration_weight(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| stats.target_policy_calibration_weight)
-}
-
-fn structural_prior_target_policy_reward_prior(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| stats.target_policy_reward_prior)
-}
-
-fn structural_prior_target_policy_variance_penalty(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| stats.target_policy_variance_penalty)
-}
-
-fn structural_prior_target_policy_reward_lower_bound(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| stats.target_policy_reward_lower_bound)
-}
-
-fn structural_matured_feedback_count_value(stats: &StructuralPriorStats) -> usize {
-    stats.wins + stats.losses + stats.breakevens + stats.invalidated + stats.abandoned
-}
-
-fn structural_prior_matured_feedback_count(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<usize> {
-    prior_stats.map(structural_matured_feedback_count_value)
-}
-
-fn structural_prior_unresolved_feedback_count(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<usize> {
-    prior_stats.map(|stats| {
-        stats
-            .followed_count
-            .saturating_sub(structural_matured_feedback_count_value(stats))
-    })
-}
-
-fn structural_prior_maturity_coverage(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
-    let stats = prior_stats?;
-    if stats.followed_count == 0 {
-        None
-    } else {
-        Some(
-            (structural_matured_feedback_count_value(stats) as f64 / stats.followed_count as f64)
-                .clamp(0.0, 1.0),
-        )
-    }
-}
-
-fn structural_prior_censoring_rate(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
-    let stats = prior_stats?;
-    if stats.followed_count == 0 {
-        None
-    } else {
-        let unresolved = stats
-            .followed_count
-            .saturating_sub(structural_matured_feedback_count_value(stats));
-        Some((unresolved as f64 / stats.followed_count as f64).clamp(0.0, 1.0))
-    }
-}
-
-fn structural_prior_delayed_reward_resolution_probability(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    let stats = prior_stats?;
-    if stats.followed_count == 0 {
-        return None;
-    }
-    let matured = structural_matured_feedback_count_value(stats).min(stats.followed_count) as f64;
-    Some(((1.0 + matured) / (2.0 + stats.followed_count as f64)).clamp(0.0, 1.0))
-}
-
-fn structural_prior_delayed_reward_censoring_probability(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    let stats = prior_stats?;
-    if stats.followed_count == 0 {
-        return None;
-    }
-    let unresolved = stats
-        .followed_count
-        .saturating_sub(structural_matured_feedback_count_value(stats)) as f64;
-    Some(((1.0 + unresolved) / (2.0 + stats.followed_count as f64)).clamp(0.0, 1.0))
-}
-
-fn structural_prior_censoring_adjusted_reward_prior(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    let stats = prior_stats?;
-    let resolution = structural_prior_delayed_reward_resolution_probability(Some(stats))?;
-    Some(
-        (stats.target_policy_reward_prior.clamp(0.0, 1.0) * resolution
-            + stats.smoothed_prior.clamp(0.0, 1.0) * (1.0 - resolution))
-            .clamp(0.0, 1.0),
-    )
-}
-
-fn structural_prior_censoring_adjusted_reward_lower_bound(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    let stats = prior_stats?;
-    let resolution = structural_prior_delayed_reward_resolution_probability(Some(stats))?;
-    let censoring = structural_prior_delayed_reward_censoring_probability(Some(stats))?;
-    Some(
-        (stats.target_policy_reward_lower_bound.clamp(0.0, 1.0) * resolution
-            + stats.smoothed_prior.clamp(0.0, 1.0) * 0.5 * censoring)
-            .clamp(0.0, 1.0),
-    )
-}
-
-#[derive(Debug, Clone, Copy)]
-struct StructuralPriorCompetingRisks {
-    success: f64,
-    failure: f64,
-    invalidation: f64,
-    abandonment: f64,
-    entropy: f64,
-}
-
-fn structural_prior_delayed_reward_competing_risks(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<StructuralPriorCompetingRisks> {
-    let stats = prior_stats?;
-    if structural_matured_feedback_count_value(stats) == 0 {
-        return None;
-    }
-    let success_mass = stats.wins as f64 + stats.breakevens as f64 * 0.5;
-    let failure_mass = stats.losses as f64 + stats.breakevens as f64 * 0.5;
-    let invalidation_mass = stats.invalidated as f64;
-    let abandonment_mass = stats.abandoned as f64;
-    let denominator = success_mass + failure_mass + invalidation_mass + abandonment_mass + 4.0;
-    if denominator <= f64::EPSILON {
-        return None;
-    }
-    let success = ((1.0 + success_mass) / denominator).clamp(0.0, 1.0);
-    let failure = ((1.0 + failure_mass) / denominator).clamp(0.0, 1.0);
-    let invalidation = ((1.0 + invalidation_mass) / denominator).clamp(0.0, 1.0);
-    let abandonment = ((1.0 + abandonment_mass) / denominator).clamp(0.0, 1.0);
-    let entropy = [success, failure, invalidation, abandonment]
-        .into_iter()
-        .filter(|risk| *risk > f64::EPSILON)
-        .map(|risk| -risk * risk.ln())
-        .sum();
-    Some(StructuralPriorCompetingRisks {
-        success,
-        failure,
-        invalidation,
-        abandonment,
-        entropy,
-    })
-}
-
-fn structural_prior_delayed_reward_success_competing_risk(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_delayed_reward_competing_risks(prior_stats).map(|risks| risks.success)
-}
-
-fn structural_prior_delayed_reward_failure_competing_risk(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_delayed_reward_competing_risks(prior_stats).map(|risks| risks.failure)
-}
-
-fn structural_prior_delayed_reward_invalidation_competing_risk(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_delayed_reward_competing_risks(prior_stats).map(|risks| risks.invalidation)
-}
-
-fn structural_prior_delayed_reward_abandonment_competing_risk(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_delayed_reward_competing_risks(prior_stats).map(|risks| risks.abandonment)
-}
-
-fn structural_prior_delayed_reward_competing_risk_entropy(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_delayed_reward_competing_risks(prior_stats).map(|risks| risks.entropy)
-}
-
-fn structural_prior_delayed_reward_elapsed_feedback_count(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<usize> {
-    structural_prior_positive_count(prior_stats, |stats| {
-        stats.delayed_reward_elapsed_feedback_count
-    })
-}
-
-fn structural_prior_delayed_reward_elapsed_hours_at_risk(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_elapsed_hours_at_risk
-    })
-}
-
-fn structural_prior_delayed_reward_avg_elapsed_hours(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| stats.delayed_reward_avg_elapsed_hours)
-}
-
-fn structural_prior_delayed_reward_resolution_hazard_per_hour(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_resolution_hazard_per_hour
-    })
-}
-
-fn structural_prior_delayed_reward_expected_resolution_hours(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_expected_resolution_hours
-    })
-}
-
-fn structural_prior_delayed_reward_survival_probability_1h(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_survival_probability_1h
-    })
-}
-
-fn structural_prior_delayed_reward_survival_probability_4h(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_survival_probability_4h
-    })
-}
-
-fn structural_prior_delayed_reward_survival_probability_24h(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_survival_probability_24h
-    })
-}
-
-fn structural_prior_delayed_reward_success_hazard_per_hour(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_success_hazard_per_hour
-    })
-}
-
-fn structural_prior_delayed_reward_failure_hazard_per_hour(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_failure_hazard_per_hour
-    })
-}
-
-fn structural_prior_delayed_reward_invalidation_hazard_per_hour(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_invalidation_hazard_per_hour
-    })
-}
-
-fn structural_prior_delayed_reward_abandonment_hazard_per_hour(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_abandonment_hazard_per_hour
-    })
-}
-
-fn structural_prior_delayed_reward_success_cumulative_incidence_4h(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_success_cumulative_incidence_4h
-    })
-}
-
-fn structural_prior_delayed_reward_failure_cumulative_incidence_4h(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_failure_cumulative_incidence_4h
-    })
-}
-
-fn structural_prior_delayed_reward_invalidation_cumulative_incidence_4h(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_invalidation_cumulative_incidence_4h
-    })
-}
-
-fn structural_prior_delayed_reward_abandonment_cumulative_incidence_4h(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_abandonment_cumulative_incidence_4h
-    })
-}
-
-fn structural_prior_delayed_reward_resolution_horizon_1h_count(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<usize> {
-    structural_prior_positive_count(prior_stats, |stats| {
-        stats.delayed_reward_resolution_horizon_1h_count
-    })
-}
-
-fn structural_prior_delayed_reward_resolution_within_1h_count(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<usize> {
-    structural_prior_positive_count(prior_stats, |stats| {
-        stats.delayed_reward_resolution_within_1h_count
-    })
-}
-
-fn structural_prior_delayed_reward_resolution_probability_1h(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_resolution_probability_1h
-    })
-}
-
-fn structural_prior_delayed_reward_resolution_horizon_4h_count(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<usize> {
-    structural_prior_positive_count(prior_stats, |stats| {
-        stats.delayed_reward_resolution_horizon_4h_count
-    })
-}
-
-fn structural_prior_delayed_reward_resolution_within_4h_count(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<usize> {
-    structural_prior_positive_count(prior_stats, |stats| {
-        stats.delayed_reward_resolution_within_4h_count
-    })
-}
-
-fn structural_prior_delayed_reward_resolution_probability_4h(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_resolution_probability_4h
-    })
-}
-
-fn structural_prior_delayed_reward_resolution_horizon_24h_count(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<usize> {
-    structural_prior_positive_count(prior_stats, |stats| {
-        stats.delayed_reward_resolution_horizon_24h_count
-    })
-}
-
-fn structural_prior_delayed_reward_resolution_within_24h_count(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<usize> {
-    structural_prior_positive_count(prior_stats, |stats| {
-        stats.delayed_reward_resolution_within_24h_count
-    })
-}
-
-fn structural_prior_delayed_reward_resolution_probability_24h(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    structural_prior_positive_value(prior_stats, |stats| {
-        stats.delayed_reward_resolution_probability_24h
-    })
 }
 
 fn structural_dominant_source_panel(
