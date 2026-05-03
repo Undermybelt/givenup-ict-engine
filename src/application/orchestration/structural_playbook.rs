@@ -5236,9 +5236,11 @@ pub fn feedback_record_from_structural_submission(
 mod tests {
     use super::*;
     use crate::state::{
-        structural_source_reliability_em_fit_from_state,
-        STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS,
+        structural_source_reliability_em_fit_from_state, FeedbackRecord, ModelProbabilitySnapshot,
+        StructuralFeedbackRefs, STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS,
     };
+    use crate::types::{Direction, Regime};
+    use chrono::Utc;
 
     fn calibration_row(
         path_id: &str,
@@ -5376,6 +5378,235 @@ mod tests {
         );
         assert!(readiness.em_calibration_brier_score.unwrap() >= 0.0);
         assert!(readiness.em_calibration_log_loss.unwrap() >= 0.0);
+    }
+
+    #[test]
+    fn experience_prior_surface_path_includes_delayed_reward_replay_validation() {
+        let snapshot =
+            crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        let discovered_path_id =
+            build_structural_experience_prior_surface_artifact_with_prior_state(
+                &snapshot,
+                &crate::application::provider_catalog::ProviderCatalogAgentSurface::default(),
+                &[],
+                &StructuralPriorLearningState::default(),
+            )
+            .path
+            .as_ref()
+            .map(|path| path.entity_id.clone())
+            .expect("sample path id");
+        let feedback_history = vec![
+            FeedbackRecord {
+                timestamp: chrono::DateTime::parse_from_rfc3339("2026-04-30T00:30:00Z")
+                    .unwrap()
+                    .with_timezone(&Utc),
+                symbol: "NQ".to_string(),
+                source: "live_feedback".to_string(),
+                run_id: None,
+                trade_id: None,
+                prompt_version: None,
+                factor_version: None,
+                data_fingerprint: None,
+                factors_used: Vec::new(),
+                model_probabilities_before_trade: ModelProbabilitySnapshot {
+                    selected_direction: Direction::Bull,
+                    selected_probability: 0.6,
+                    long_score: 0.6,
+                    short_score: 0.4,
+                    win_prob_long: 0.6,
+                    win_prob_short: 0.4,
+                    uncertainty: 0.2,
+                },
+                realized_outcome: "win".to_string(),
+                pnl: 1.0,
+                regime_at_entry: Regime::Accumulation,
+                structural_feedback: Some(StructuralFeedbackRefs {
+                    protocol_version: "structural-feedback-v1".to_string(),
+                    recommendation_id: "rec-1".to_string(),
+                    recommended_at: "2026-04-30T00:00:00Z".to_string(),
+                    node_id: "NQ:belief_regime_node:trend".to_string(),
+                    branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                    scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                        .to_string(),
+                    path_id: discovered_path_id.clone(),
+                    followed_path: true,
+                    exit_reason: None,
+                    notes: None,
+                }),
+                reflection_mismatch_tags: Vec::new(),
+            },
+            FeedbackRecord {
+                timestamp: chrono::DateTime::parse_from_rfc3339("2026-04-30T03:00:00Z")
+                    .unwrap()
+                    .with_timezone(&Utc),
+                symbol: "NQ".to_string(),
+                source: "live_feedback".to_string(),
+                run_id: None,
+                trade_id: None,
+                prompt_version: None,
+                factor_version: None,
+                data_fingerprint: None,
+                factors_used: Vec::new(),
+                model_probabilities_before_trade: ModelProbabilitySnapshot {
+                    selected_direction: Direction::Bull,
+                    selected_probability: 0.6,
+                    long_score: 0.6,
+                    short_score: 0.4,
+                    win_prob_long: 0.6,
+                    win_prob_short: 0.4,
+                    uncertainty: 0.2,
+                },
+                realized_outcome: "loss".to_string(),
+                pnl: -1.0,
+                regime_at_entry: Regime::Accumulation,
+                structural_feedback: Some(StructuralFeedbackRefs {
+                    protocol_version: "structural-feedback-v1".to_string(),
+                    recommendation_id: "rec-2".to_string(),
+                    recommended_at: "2026-04-30T01:00:00Z".to_string(),
+                    node_id: "NQ:belief_regime_node:trend".to_string(),
+                    branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                    scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                        .to_string(),
+                    path_id: discovered_path_id.clone(),
+                    followed_path: true,
+                    exit_reason: None,
+                    notes: None,
+                }),
+                reflection_mismatch_tags: Vec::new(),
+            },
+            FeedbackRecord {
+                timestamp: chrono::DateTime::parse_from_rfc3339("2026-04-30T08:00:00Z")
+                    .unwrap()
+                    .with_timezone(&Utc),
+                symbol: "NQ".to_string(),
+                source: "live_feedback".to_string(),
+                run_id: None,
+                trade_id: None,
+                prompt_version: None,
+                factor_version: None,
+                data_fingerprint: None,
+                factors_used: Vec::new(),
+                model_probabilities_before_trade: ModelProbabilitySnapshot {
+                    selected_direction: Direction::Bull,
+                    selected_probability: 0.6,
+                    long_score: 0.6,
+                    short_score: 0.4,
+                    win_prob_long: 0.6,
+                    win_prob_short: 0.4,
+                    uncertainty: 0.2,
+                },
+                realized_outcome: "invalidated".to_string(),
+                pnl: -0.5,
+                regime_at_entry: Regime::Accumulation,
+                structural_feedback: Some(StructuralFeedbackRefs {
+                    protocol_version: "structural-feedback-v1".to_string(),
+                    recommendation_id: "rec-3".to_string(),
+                    recommended_at: "2026-04-30T02:00:00Z".to_string(),
+                    node_id: "NQ:belief_regime_node:trend".to_string(),
+                    branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                    scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                        .to_string(),
+                    path_id: discovered_path_id.clone(),
+                    followed_path: true,
+                    exit_reason: None,
+                    notes: None,
+                }),
+                reflection_mismatch_tags: Vec::new(),
+            },
+            FeedbackRecord {
+                timestamp: chrono::DateTime::parse_from_rfc3339("2026-04-30T03:45:00Z")
+                    .unwrap()
+                    .with_timezone(&Utc),
+                symbol: "NQ".to_string(),
+                source: "live_feedback".to_string(),
+                run_id: None,
+                trade_id: None,
+                prompt_version: None,
+                factor_version: None,
+                data_fingerprint: None,
+                factors_used: Vec::new(),
+                model_probabilities_before_trade: ModelProbabilitySnapshot {
+                    selected_direction: Direction::Bull,
+                    selected_probability: 0.6,
+                    long_score: 0.6,
+                    short_score: 0.4,
+                    win_prob_long: 0.6,
+                    win_prob_short: 0.4,
+                    uncertainty: 0.2,
+                },
+                realized_outcome: "win".to_string(),
+                pnl: 1.1,
+                regime_at_entry: Regime::Accumulation,
+                structural_feedback: Some(StructuralFeedbackRefs {
+                    protocol_version: "structural-feedback-v1".to_string(),
+                    recommendation_id: "rec-4".to_string(),
+                    recommended_at: "2026-04-30T03:00:00Z".to_string(),
+                    node_id: "NQ:belief_regime_node:trend".to_string(),
+                    branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                    scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                        .to_string(),
+                    path_id: discovered_path_id.clone(),
+                    followed_path: true,
+                    exit_reason: None,
+                    notes: None,
+                }),
+                reflection_mismatch_tags: Vec::new(),
+            },
+            FeedbackRecord {
+                timestamp: chrono::DateTime::parse_from_rfc3339("2026-04-30T10:00:00Z")
+                    .unwrap()
+                    .with_timezone(&Utc),
+                symbol: "NQ".to_string(),
+                source: "live_feedback".to_string(),
+                run_id: None,
+                trade_id: None,
+                prompt_version: None,
+                factor_version: None,
+                data_fingerprint: None,
+                factors_used: Vec::new(),
+                model_probabilities_before_trade: ModelProbabilitySnapshot {
+                    selected_direction: Direction::Bull,
+                    selected_probability: 0.6,
+                    long_score: 0.6,
+                    short_score: 0.4,
+                    win_prob_long: 0.6,
+                    win_prob_short: 0.4,
+                    uncertainty: 0.2,
+                },
+                realized_outcome: "loss".to_string(),
+                pnl: -1.2,
+                regime_at_entry: Regime::Accumulation,
+                structural_feedback: Some(StructuralFeedbackRefs {
+                    protocol_version: "structural-feedback-v1".to_string(),
+                    recommendation_id: "rec-5".to_string(),
+                    recommended_at: "2026-04-30T04:00:00Z".to_string(),
+                    node_id: "NQ:belief_regime_node:trend".to_string(),
+                    branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                    scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                        .to_string(),
+                    path_id: discovered_path_id.clone(),
+                    followed_path: true,
+                    exit_reason: None,
+                    notes: None,
+                }),
+                reflection_mismatch_tags: Vec::new(),
+            },
+        ];
+        let surface = build_structural_experience_prior_surface_artifact_with_prior_state(
+            &snapshot,
+            &crate::application::provider_catalog::ProviderCatalogAgentSurface::default(),
+            &feedback_history,
+            &StructuralPriorLearningState::default(),
+        );
+        let replay = surface
+            .path
+            .as_ref()
+            .and_then(|path| path.delayed_reward_replay_validation.as_ref())
+            .expect("path replay validation");
+        assert_eq!(replay.status, "ready");
+        assert!(replay.training_record_count >= 3);
+        assert!(replay.evaluation_record_count >= 1);
+        assert!(replay.resolution_brier_score.is_some());
     }
 
     #[test]
