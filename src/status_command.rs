@@ -66,3 +66,69 @@ pub(crate) fn pre_bayes_status_shell(
         refresh_workflow_snapshot,
     )
 }
+
+pub(crate) fn provider_status_shell(
+    domain: Option<&str>,
+    provider: Option<&str>,
+    compact: bool,
+    agent: bool,
+    jsonl: bool,
+    profile: Option<&str>,
+) -> Result<()> {
+    provider_status_command(domain, provider, compact, agent, jsonl, profile)
+}
+
+pub(crate) struct ArtifactStatusShellInput<'a> {
+    pub(crate) symbol: &'a str,
+    pub(crate) state_dir: &'a str,
+    pub(crate) artifact_id: Option<&'a str>,
+    pub(crate) kind: Option<&'a str>,
+    pub(crate) latest_only: bool,
+    pub(crate) actionable_only: bool,
+    pub(crate) rule_break_only: bool,
+    pub(crate) sort_by: &'a str,
+    pub(crate) descending: bool,
+    pub(crate) limit: Option<usize>,
+    pub(crate) recent_n: Option<usize>,
+    pub(crate) consumed_only: bool,
+    pub(crate) bucket_by_kind: bool,
+    pub(crate) bucket_order_by: &'a str,
+    pub(crate) bucket_limit: Option<usize>,
+}
+
+pub(crate) fn artifact_status_shell(input: ArtifactStatusShellInput<'_>) -> Result<()> {
+    let ArtifactStatusShellInput {
+        symbol,
+        state_dir,
+        artifact_id,
+        kind,
+        latest_only,
+        actionable_only,
+        rule_break_only,
+        sort_by,
+        descending,
+        limit,
+        recent_n,
+        consumed_only,
+        bucket_by_kind,
+        bucket_order_by,
+        bucket_limit,
+    } = input;
+    artifact_status_command(ArtifactStatusCommandInput {
+        symbol,
+        state_dir,
+        artifact_id,
+        kind,
+        latest_only,
+        actionable_only,
+        rule_break_only,
+        sort_by,
+        descending,
+        limit,
+        recent_n,
+        consumed_only,
+        bucket_by_kind,
+        bucket_order_by,
+        bucket_limit,
+    })
+}

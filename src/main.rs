@@ -202,7 +202,10 @@ use policy_training_command::{
 };
 use probabilistic_backtest_runtime::{finalize_backtest_report, run_probabilistic_backtest};
 use serde_json::Value;
-use status_command::{pre_bayes_status_shell, workflow_status_shell, WorkflowStatusShellInput};
+use status_command::{
+    artifact_status_shell, pre_bayes_status_shell, provider_status_shell, workflow_status_shell,
+    ArtifactStatusShellInput, WorkflowStatusShellInput,
+};
 use update_command::update_command;
 use update_output::{
     apply_update_outcome_to_executor_scorecards, build_ensemble_vote_record, emit_update_output,
@@ -2886,7 +2889,7 @@ fn main() -> Result<()> {
             compact,
             agent,
             jsonl,
-        } => provider_status_command(
+        } => provider_status_shell(
             domain.as_deref(),
             provider.as_deref(),
             compact,
@@ -2920,7 +2923,7 @@ fn main() -> Result<()> {
             bucket_by_kind,
             bucket_order_by,
             bucket_limit,
-        } => artifact_status_command(ArtifactStatusCommandInput {
+        } => artifact_status_shell(ArtifactStatusShellInput {
             symbol: &symbol,
             state_dir: &state_dir,
             artifact_id: artifact_id.as_deref(),
