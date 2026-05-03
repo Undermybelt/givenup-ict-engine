@@ -4,6 +4,7 @@ mod analyze_shared;
 mod auto_quant_command;
 mod factor_backtest_runtime;
 mod factor_research_runtime;
+mod market_data_command;
 mod policy_training_command;
 mod probabilistic_backtest_runtime;
 mod release_closure_command;
@@ -206,6 +207,7 @@ use ict_engine::planner::{
     generate_probabilistic_trade_plan, probabilistic_decision_snapshot,
     ProbabilisticDecisionSnapshot, ProbabilisticPlanConfig, ProbabilisticTradePlanInput,
 };
+use market_data_command::{clean_futures_shell, futures_sop_shell, market_data_harness_shell};
 use policy_training_command::{
     apply_structural_path_ranking_external_scores_shell,
     clear_structural_path_ranking_trainer_artifact_shell,
@@ -2599,24 +2601,12 @@ fn main() -> Result<()> {
             output_dir,
             interval,
             multi_timeframe,
-        } => ict_engine::application::data_sources::clean_futures_command(
-            root.as_deref(),
-            &output_dir,
-            &interval,
-            multi_timeframe,
-            run_clean_futures_multi_timeframe,
-            run_clean_futures,
-        )?,
+        } => clean_futures_shell(root.as_deref(), &output_dir, &interval, multi_timeframe)?,
         Commands::FuturesSop {
             root,
             output_dir,
             interval,
-        } => ict_engine::application::data_sources::futures_sop_command(
-            root.as_deref(),
-            &output_dir,
-            &interval,
-            run_futures_sop,
-        )?,
+        } => futures_sop_shell(root.as_deref(), &output_dir, &interval)?,
         Commands::ExpansionSop {
             root,
             output_dir,
@@ -2734,11 +2724,7 @@ fn main() -> Result<()> {
                 options_volatility_proxy_symbol: options_volatility_proxy_symbol.as_deref(),
                 request_json: request_json.as_deref(),
             };
-            match action.trim().to_ascii_lowercase().as_str() {
-                "plan" => market_data_harness_plan_command(input)?,
-                "fetch" => market_data_harness_fetch_command(input)?,
-                other => anyhow::bail!("unsupported market-data-harness action '{}'", other),
-            }
+            market_data_harness_shell(&action, input)?
         }
         Commands::FactorPipelineDebug {
             symbol,
