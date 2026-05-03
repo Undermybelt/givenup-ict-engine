@@ -51,6 +51,7 @@ Primary source docs:
 - [x] Workstream 1 now also has shared Beta / pseudo-count update ownership starting to move into `src/belief_core/beta_dirichlet_update.rs`, with structural power-prior mass assembly, target-policy context posterior updates, source-reliability updates, transition support means, and path-ranking Beta summaries beginning to reuse that helper layer instead of open-coding the same math in `src/state/types.rs`.
 - [x] Workstream 2 has also started at the owner level: node/branch transition posterior adjustment plus duration/branch blend helpers, temporal accessor math, and `structural-temporal-summary` assembly now live under `src/belief_core/regime_filter.rs`, with `application/belief/structural_temporal_adjustment.rs` reduced toward a thinner compatibility shell.
 - [x] Workstream 2 now also has maintained transition-posterior refresh ownership beginning to move into `src/belief_core/regime_filter.rs`: the node/branch transition prior normalization, outcome-support recompute, posterior multiplier recompute, and normalized posterior rebuild no longer have to stay open-coded inside `rebuild_structural_sequence_priors(...)`.
+- [x] Workstream 2 now also has explicit emission-conditioned transition support helpers in `src/belief_core/regime_filter.rs`, so maintained node/branch refresh no longer depends on a fixed prior/outcome scalar blend.
 - [x] Workstream 2 now also has BOCPD / sequence-break helper ownership starting to move into `src/belief_core/changepoint_gate.rs`, including discounted node-duration prior / temporal-posterior rebuild logic.
 - [x] Workstream 3 now has two real opt-in runtime consumer paths for structural path ranking: a direct weighted-feature model artifact path and a declared external scoring-service path, both hanging off the existing `policy_training` registration/runtime-selection contract without changing the zero-config default.
 - [x] Workstream 4 has started with a concrete source-reliability validation lane: EM diagnostics/readiness now carry a holdout-style train/eval summary in addition to the existing same-ledger leave-source-out calibration summary.
@@ -60,7 +61,7 @@ Primary source docs:
 - [ ] Extract the belief core out of the oversized files so the core learning math stops living inside `src/state/types.rs`, `src/application/orchestration/structural_playbook.rs`, `src/application/orchestration/workflow_status.rs`, and `src/main.rs`.
   - started: path-ranker runtime owner, contracts, calibration helpers, row IO extraction into `src/belief_core/ranking_label.rs`, shared structural contracts into `src/belief_core/structural_state.rs`, source-reliability / experience-prior contracts plus panel/reliability / target-policy / delayed-reward helper ownership into `src/belief_core/source_reliability.rs`, and shared Beta / pseudo-count update helpers into `src/belief_core/beta_dirichlet_update.rs`
 - [ ] Replace the current heuristic transition/break mixing with a maintained, emission-aware regime transition core instead of only snapshot-time posterior reweighting.
-  - started: transition posterior, blend-helper, temporal accessor, temporal-summary builder extraction, and maintained node/branch transition posterior refresh into `src/belief_core/regime_filter.rs`
+  - started: transition posterior, blend-helper, temporal accessor, temporal-summary builder extraction, maintained node/branch transition posterior refresh, and explicit emission-conditioned support helpers into `src/belief_core/regime_filter.rs`
 - [ ] Replace the current heuristic temporal break logic with a clearer `changepoint_gate` owner instead of keeping BOCPD helpers inside `src/state/types.rs`.
   - started: BOCPD / sequence-break helper and duration-prior rebuild owner extraction into `src/belief_core/changepoint_gate.rs`
 - [x] Promote the new opt-in runtime path from scored-row feed consumption into model-native scoring for the structural path-ranker.
@@ -77,6 +78,7 @@ Primary source docs:
   - `changepoint_gate.rs`
   - `ranking_label.rs`
 - [ ] production-grade `regime_filter` with maintained transition logic and explicit emission-conditioned updates
+  - partial: maintained transition refresh now uses explicit emission-conditioned support helpers, but the overall regime filter is still simpler than a fuller state-space/HMM-grade transition engine
 - [ ] production-grade `changepoint_gate` instead of the current fixed-weight BOCPD-style heuristic blend
 - [x] model-native runtime consumption of the structural path-ranking trainer artifact beyond scored-row feed loading
   - current implementation: direct weighted-feature model artifact loading and declared external scoring service calls are both live
