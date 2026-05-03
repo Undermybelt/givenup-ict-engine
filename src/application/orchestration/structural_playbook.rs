@@ -52,6 +52,7 @@ pub use crate::belief_core::ranking_label::{
     STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_FILE,
     STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION,
 };
+pub use crate::belief_core::regime_filter::StructuralTemporalSummaryArtifact;
 pub use crate::belief_core::structural_state::{
     StructuralBranchArtifact, StructuralBranchSetArtifact, StructuralNodeArtifact,
     StructuralBranchHistoryArtifact, StructuralBranchOutcomeSummary, StructuralEntityHistorySummary,
@@ -94,108 +95,6 @@ pub const STRUCTURAL_PATH_RANKING_TARGET_HISTORY_JSONL_FILE: &str =
     "structural_path_ranking_target_history.jsonl";
 pub const STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE: &str =
     "structural_path_ranking_target_summary.json";
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralTemporalSummaryArtifact {
-    pub symbol: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub node_id: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub from_branch_id: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub to_branch_id: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub duration_streak_count: Option<usize>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub duration_avg_streak_length: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub duration_persistence_prior: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub duration_expected_dwell_steps: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub duration_remaining_dwell_steps: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub duration_break_hazard: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub duration_sticky_self_transition_strength: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub duration_weighted_streak_mass: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub duration_outcome_support: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub duration_temporal_posterior_support: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub duration_distribution_entropy: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub empirical_duration_survival: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub empirical_duration_completion_hazard: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_duration_surprise: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_evidence_weight: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_raw_break_probability: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_break_probability: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_continue_probability: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_run_length_mode: Option<usize>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_run_length_mode_probability: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_run_length_tail_probability: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_run_length_observation_mass: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_recursive_reset_probability: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_recursive_run_length_mode: Option<usize>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_recursive_run_length_mode_probability: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_recursive_run_length_expected_value: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_recursive_run_length_entropy: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_sequence_change_intensity: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_sequence_break_probability: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_sequence_recursive_reset_probability: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_sequence_recursive_run_length_mode: Option<usize>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_sequence_recursive_run_length_mode_probability: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_sequence_recursive_run_length_expected_value: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub bocpd_sequence_recursive_run_length_entropy: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub duration_posterior_blend_weight: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub transition_prior: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub transition_weighted_observation_mass: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub transition_outcome_support: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub transition_temporal_posterior_support: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub transition_posterior_multiplier: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub transition_normalized_posterior: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub node_transition_prior: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub node_transition_temporal_posterior_support: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub node_transition_posterior_multiplier: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub node_transition_normalized_posterior: Option<f64>,
-    pub summary_line: String,
-}
 
 #[derive(Debug, Clone, Default)]
 pub(crate) struct StructuralPathRankerRuntimeContext<'a> {
