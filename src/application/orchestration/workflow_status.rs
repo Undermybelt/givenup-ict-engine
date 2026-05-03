@@ -10,19 +10,18 @@ use super::structural_playbook::{
     build_structural_branch_set_artifact_with_prior_state,
     build_structural_experience_prior_surface_artifact_with_prior_state,
     build_structural_feedback_template_artifact, build_structural_history_summary_artifact,
-    build_structural_node_artifact_with_prior_state,
-    build_structural_node_history_artifact, build_structural_path_history_artifact,
-    build_structural_path_ranking_target_artifact_with_runtime_context_and_prior_state,
+    build_structural_node_artifact_with_prior_state, build_structural_node_history_artifact,
+    build_structural_path_history_artifact,
     build_structural_path_plan_artifact_with_runtime_context_and_prior_state,
-    build_structural_recommended_path_bundle_artifact_with_runtime_context_and_prior_state,
+    build_structural_path_ranking_target_artifact_with_runtime_context_and_prior_state,
     build_structural_playbook_bundle_with_runtime_context_and_prior_state,
+    build_structural_recommended_path_bundle_artifact_with_runtime_context_and_prior_state,
     build_structural_scenario_history_artifact,
     build_structural_scenario_playbook_artifact_with_prior_state,
     build_structural_temporal_summary_artifact_with_prior_state,
     build_structural_top_path_candidates_artifact_with_runtime_context_and_prior_state,
-    StructuralPathRankerRuntimeContext,
     resolved_ensemble_vote_for_snapshot, resolved_latest_ensemble_vote,
-    StructuralRecommendedPathBundleArtifact,
+    StructuralPathRankerRuntimeContext, StructuralRecommendedPathBundleArtifact,
 };
 use crate::application::belief::{
     jump_calibration_gate_workflow_summary, jump_model_workflow_summary,
@@ -751,30 +750,35 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
         .map(|path| {
             format!(
                 "Path: {} total={} wins={} losses={} invalidated={} avg_pnl={:.4}",
-                path.path_id, path.total_records, path.wins, path.losses, path.invalidated, path.avg_pnl
+                path.path_id,
+                path.total_records,
+                path.wins,
+                path.losses,
+                path.invalidated,
+                path.avg_pnl
             )
         });
-    let structural_history_summary = build_structural_history_summary_artifact(snapshot, feedback_history);
-    let experience_prior_surface = build_structural_experience_prior_surface_artifact_with_prior_state(
-        snapshot,
-        provider_status_agent,
-        feedback_history,
-        structural_prior_state,
-    );
-    let structural_temporal_summary =
-        build_structural_temporal_summary_artifact_with_prior_state(
+    let structural_history_summary =
+        build_structural_history_summary_artifact(snapshot, feedback_history);
+    let experience_prior_surface =
+        build_structural_experience_prior_surface_artifact_with_prior_state(
             snapshot,
             provider_status_agent,
+            feedback_history,
             structural_prior_state,
         );
+    let structural_temporal_summary = build_structural_temporal_summary_artifact_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        structural_prior_state,
+    );
     let experience_prior_line = experience_prior_surface.path.as_ref().map(|path| {
         format!(
             "Experience: path_prior={:.3} path_score={:.3} total={} wins={}",
             path.experience_prior,
             path.composite_score,
             path.historical_total_records,
-            ((path.historical_win_rate.unwrap_or(0.0)
-                * path.historical_followed_count as f64)
+            ((path.historical_win_rate.unwrap_or(0.0) * path.historical_followed_count as f64)
                 .round()) as usize
         )
     });
@@ -924,10 +928,12 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
         })
         .cloned()
         .collect::<Vec<_>>();
-    let ensemble_summary = resolved_latest_ensemble_vote(snapshot).as_ref().map(|vote| {
-        let surface = build_ensemble_vote_surface(vote, persisted_scorecards);
-        serde_json::to_value(surface).unwrap_or_default()
-    });
+    let ensemble_summary = resolved_latest_ensemble_vote(snapshot)
+        .as_ref()
+        .map(|vote| {
+            let surface = build_ensemble_vote_surface(vote, persisted_scorecards);
+            serde_json::to_value(surface).unwrap_or_default()
+        });
     let agent_fill_path_instructions = if selected_data_candidates.is_empty() {
         Vec::new()
     } else {
@@ -1110,10 +1116,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
             "path_ranking_target".to_string(),
             serde_json::to_value(path_ranking_target).unwrap_or_default(),
         );
-        map.insert(
-            "recommended_next_step".to_string(),
-            recommended_next_step,
-        );
+        map.insert("recommended_next_step".to_string(), recommended_next_step);
     }
     value
 }
@@ -1286,25 +1289,28 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
             "decision_hint": artifact.decision_hint,
         })
     });
-    let ensemble_summary = resolved_latest_ensemble_vote(snapshot).as_ref().map(|vote| {
-        let (scorecards, scorecard_source) = resolved_vote_scorecards(persisted_scorecards, vote);
-        serde_json::json!({
-            "final_action": vote.final_action,
-            "confidence": vote.confidence,
-            "consensus_strength": vote.consensus_strength,
-            "hard_block_active": vote.hard_block.active,
-            "hard_block_reason": vote.hard_block.reason,
-            "recommended_command": vote.recommended_command,
-            "executor_scorecard_source": scorecard_source,
-            "top_executor": scorecards.first().map(|item| {
-                serde_json::json!({
-                    "executor": item.executor,
-                    "latest_weight_hint": item.latest_weight_hint,
-                    "wins": item.wins,
-                })
-            }),
-        })
-    });
+    let ensemble_summary = resolved_latest_ensemble_vote(snapshot)
+        .as_ref()
+        .map(|vote| {
+            let (scorecards, scorecard_source) =
+                resolved_vote_scorecards(persisted_scorecards, vote);
+            serde_json::json!({
+                "final_action": vote.final_action,
+                "confidence": vote.confidence,
+                "consensus_strength": vote.consensus_strength,
+                "hard_block_active": vote.hard_block.active,
+                "hard_block_reason": vote.hard_block.reason,
+                "recommended_command": vote.recommended_command,
+                "executor_scorecard_source": scorecard_source,
+                "top_executor": scorecards.first().map(|item| {
+                    serde_json::json!({
+                        "executor": item.executor,
+                        "latest_weight_hint": item.latest_weight_hint,
+                        "wins": item.wins,
+                    })
+                }),
+            })
+        });
     let provider_support_reason =
         if blocking_reason != "none" && blocking_reason != NO_WORKFLOW_STATE {
             Some(blocking_reason.as_str())
@@ -1333,19 +1339,20 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
                 .into_iter()
                 .find(|path| path.path_id == feedback.path_id)
         });
-    let structural_history_summary = build_structural_history_summary_artifact(snapshot, feedback_history);
-    let experience_prior_surface = build_structural_experience_prior_surface_artifact_with_prior_state(
-        snapshot,
-        provider_status_agent,
-        feedback_history,
-        structural_prior_state,
-    );
-    let structural_temporal_summary =
-        build_structural_temporal_summary_artifact_with_prior_state(
+    let structural_history_summary =
+        build_structural_history_summary_artifact(snapshot, feedback_history);
+    let experience_prior_surface =
+        build_structural_experience_prior_surface_artifact_with_prior_state(
             snapshot,
             provider_status_agent,
+            feedback_history,
             structural_prior_state,
         );
+    let structural_temporal_summary = build_structural_temporal_summary_artifact_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        structural_prior_state,
+    );
     let runtime_context = StructuralPathRankerRuntimeContext { state_dir };
     let top_path_candidates =
         build_structural_top_path_candidates_artifact_with_runtime_context_and_prior_state(
@@ -2832,8 +2839,8 @@ pub fn build_ensemble_vote_history_view(
         .recent_ensemble_votes
         .iter()
         .map(|vote| {
-            let vote = resolved_ensemble_vote_for_snapshot(snapshot, vote)
-                .unwrap_or_else(|| vote.clone());
+            let vote =
+                resolved_ensemble_vote_for_snapshot(snapshot, vote).unwrap_or_else(|| vote.clone());
             let surface = build_ensemble_vote_surface(&vote, persisted_scorecards);
             WorkflowEnsembleVoteHistoryRow {
                 artifact_id: surface.artifact_id,
@@ -3133,11 +3140,11 @@ pub fn sample_human_workflow_snapshot() -> WorkflowSnapshot {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chrono::TimeZone;
     use crate::application::orchestration::EnsembleHardBlockArtifact;
     use crate::application::provider_catalog::{
         ProviderCatalogAgentSurface, ProviderCatalogPendingAgentItem,
     };
+    use chrono::TimeZone;
     use std::io::{Read, Write};
     use std::net::TcpListener;
     use std::thread;
@@ -3417,7 +3424,10 @@ mod tests {
         assert_eq!(value["latest_soft_evidence"]["node"]["state"], 0.25);
         assert_eq!(value["latest_canonical_structural_active_regime"], "trend");
         assert_eq!(value["latest_canonical_structural_confidence"], 0.78);
-        assert_eq!(value["latest_canonical_structural_probabilities"]["trend"], 0.78);
+        assert_eq!(
+            value["latest_canonical_structural_probabilities"]["trend"],
+            0.78
+        );
         assert_eq!(
             value["latest_soft_evidence_diff"].as_array().unwrap().len(),
             1
@@ -3456,7 +3466,10 @@ mod tests {
         assert_eq!(value["latest_uses_soft_evidence"], false);
         assert_eq!(value["latest_canonical_structural_active_regime"], "range");
         assert_eq!(value["latest_canonical_structural_confidence"], 0.61);
-        assert_eq!(value["latest_canonical_structural_probabilities"]["range"], 0.61);
+        assert_eq!(
+            value["latest_canonical_structural_probabilities"]["range"],
+            0.61
+        );
         assert_eq!(
             value["latest_soft_evidence_diff"].as_array().unwrap().len(),
             1
@@ -3498,7 +3511,10 @@ mod tests {
         assert_eq!(value["latest_policy_version"], "v-update");
         assert_eq!(value["latest_canonical_structural_active_regime"], "range");
         assert_eq!(value["latest_canonical_structural_confidence"], 0.61);
-        assert_eq!(value["latest_soft_evidence"]["market_regime"]["range"], 0.61);
+        assert_eq!(
+            value["latest_soft_evidence"]["market_regime"]["range"],
+            0.61
+        );
     }
 
     #[test]
@@ -3549,7 +3565,10 @@ mod tests {
         assert_eq!(value["latest_policy_version"], "v-analyze");
         assert_eq!(value["latest_canonical_structural_active_regime"], "trend");
         assert_eq!(value["latest_canonical_structural_confidence"], 0.78);
-        assert_eq!(value["latest_soft_evidence"]["market_regime"]["trend"], 0.78);
+        assert_eq!(
+            value["latest_soft_evidence"]["market_regime"]["trend"],
+            0.78
+        );
     }
 
     #[test]
@@ -3611,7 +3630,10 @@ mod tests {
         assert_eq!(value["latest_policy_version"], "v-research");
         assert_eq!(value["latest_canonical_structural_active_regime"], "trend");
         assert_eq!(value["latest_canonical_structural_confidence"], 0.78);
-        assert_eq!(value["latest_soft_evidence"]["market_regime"]["trend"], 0.78);
+        assert_eq!(
+            value["latest_soft_evidence"]["market_regime"]["trend"],
+            0.78
+        );
     }
 
     #[test]
@@ -4329,8 +4351,8 @@ mod tests {
     }
 
     #[test]
-    fn structural_node_falls_back_to_latest_analyze_anchor_when_latest_ensemble_vote_is_non_structural()
-     {
+    fn structural_node_falls_back_to_latest_analyze_anchor_when_latest_ensemble_vote_is_non_structural(
+    ) {
         let mut snapshot = WorkflowSnapshot::default();
         snapshot.symbol = "NQ".to_string();
         snapshot.current_focus_phase = "backtest".to_string();
@@ -4560,12 +4582,13 @@ mod tests {
     }
 
     #[test]
-    fn structural_playbook_prefers_canonical_analyze_ensemble_surface_when_latest_vote_is_raw_analyze() {
+    fn structural_playbook_prefers_canonical_analyze_ensemble_surface_when_latest_vote_is_raw_analyze(
+    ) {
         let snapshot = WorkflowSnapshot {
             symbol: "NQ".to_string(),
             current_focus_phase: "analyze".to_string(),
-            recommended_next_command:
-                "ict-engine workflow-status --symbol NQ --phase human-next".to_string(),
+            recommended_next_command: "ict-engine workflow-status --symbol NQ --phase human-next"
+                .to_string(),
             latest_analyze: Some(crate::state::WorkflowPhaseSnapshot {
                 phase: "analyze".to_string(),
                 run_id: "analyze:1".to_string(),
@@ -4638,7 +4661,10 @@ mod tests {
             .as_array()
             .unwrap()
             .iter()
-            .any(|item| item.as_str().unwrap().contains("posterior_active_regime=trend")));
+            .any(|item| item
+                .as_str()
+                .unwrap()
+                .contains("posterior_active_regime=trend")));
     }
 
     #[test]
@@ -4826,11 +4852,10 @@ mod tests {
                 recommended_at: "2026-04-30T01:00:00Z".to_string(),
                 node_id: "NQ:belief_regime_node:trend".to_string(),
                 branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
-                scenario_id:
-                    "scenario:NQ:belief_regime_node:trend:trend_follow_through".to_string(),
-                path_id:
-                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
-                        .to_string(),
+                scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                    .to_string(),
+                path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                    .to_string(),
                 followed_path: true,
                 exit_reason: Some("target_hit".to_string()),
                 notes: None,
@@ -4916,7 +4941,8 @@ mod tests {
     }
 
     #[test]
-    fn structural_branches_prefer_persisted_temporal_state_values_over_raw_transition_prior_fields() {
+    fn structural_branches_prefer_persisted_temporal_state_values_over_raw_transition_prior_fields()
+    {
         let mut snapshot = WorkflowSnapshot::default();
         snapshot.symbol = "NQ".to_string();
         snapshot.current_focus_phase = "analyze".to_string();
@@ -4935,11 +4961,10 @@ mod tests {
                 recommended_at: "2026-04-30T01:00:00Z".to_string(),
                 node_id: "NQ:belief_regime_node:trend".to_string(),
                 branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
-                scenario_id:
-                    "scenario:NQ:belief_regime_node:trend:trend_follow_through".to_string(),
-                path_id:
-                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
-                        .to_string(),
+                scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                    .to_string(),
+                path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                    .to_string(),
                 followed_path: true,
                 exit_reason: Some("target_hit".to_string()),
                 notes: None,
@@ -5354,15 +5379,14 @@ mod tests {
         )
         .unwrap();
 
-        assert_eq!(
-            value["paths"][0]["historical_total_records"],
-            3
-        );
+        assert_eq!(value["paths"][0]["historical_total_records"], 3);
         assert!(value["paths"][0]["path_prior"].as_f64().unwrap() > 0.5);
-        assert!(value["paths"][0]["composite_preference_score"]
-            .as_f64()
-            .unwrap()
-            >= value["paths"][0]["path_posterior"].as_f64().unwrap() * 0.7);
+        assert!(
+            value["paths"][0]["composite_preference_score"]
+                .as_f64()
+                .unwrap()
+                >= value["paths"][0]["path_posterior"].as_f64().unwrap() * 0.7
+        );
     }
 
     #[test]
@@ -5675,10 +5699,10 @@ mod tests {
                 delayed_reward_survival_probability_24h: (-12.0_f64).exp(),
                 delayed_reward_success_hazard_per_hour: 2.0 / 6.0,
                 delayed_reward_failure_hazard_per_hour: 1.0 / 6.0,
-                delayed_reward_success_cumulative_incidence_4h:
-                    (2.0 / 3.0) * (1.0 - (-2.0_f64).exp()),
-                delayed_reward_failure_cumulative_incidence_4h:
-                    (1.0 / 3.0) * (1.0 - (-2.0_f64).exp()),
+                delayed_reward_success_cumulative_incidence_4h: (2.0 / 3.0)
+                    * (1.0 - (-2.0_f64).exp()),
+                delayed_reward_failure_cumulative_incidence_4h: (1.0 / 3.0)
+                    * (1.0 - (-2.0_f64).exp()),
                 delayed_reward_resolution_horizon_1h_count: 3,
                 delayed_reward_resolution_within_1h_count: 1,
                 delayed_reward_resolution_probability_1h: 2.0 / 5.0,
@@ -5830,10 +5854,7 @@ mod tests {
         assert_eq!(value["path"]["source_panel_count"], 2);
         assert_eq!(value["path"]["last_offline_seed_source"], "backtest");
         assert_eq!(value["path"]["dominant_source_panel"], "backtest");
-        assert!(value["path"]["dominant_source_share"]
-            .as_f64()
-            .unwrap()
-            > 0.80);
+        assert!(value["path"]["dominant_source_share"].as_f64().unwrap() > 0.80);
         assert_eq!(value["path"]["dominant_source_prior"], 0.5);
         assert_eq!(value["path"]["execution_propensity"], 0.8);
         assert_eq!(value["path"]["ips_weight"], 1.25);
@@ -5868,7 +5889,10 @@ mod tests {
         assert_eq!(value["path"]["behavior_policy_probability_variance"], 0.018);
         assert_eq!(value["path"]["target_policy_probability_confidence"], 0.57);
         assert_eq!(value["path"]["target_policy_probability_lower_bound"], 0.31);
-        assert_eq!(value["path"]["target_policy_probability_brier_score"], 0.15625);
+        assert_eq!(
+            value["path"]["target_policy_probability_brier_score"],
+            0.15625
+        );
         assert_eq!(
             value["path"]["target_policy_probability_calibration_error"],
             0.375
@@ -5906,8 +5930,7 @@ mod tests {
                 .abs()
                 < 1e-9
         );
-        let expected_competing_risks: [f64; 4] =
-            [3.0 / 7.0, 2.0 / 7.0, 1.0 / 7.0, 1.0 / 7.0];
+        let expected_competing_risks: [f64; 4] = [3.0 / 7.0, 2.0 / 7.0, 1.0 / 7.0, 1.0 / 7.0];
         let expected_competing_risk_entropy: f64 = expected_competing_risks
             .iter()
             .map(|risk| -*risk * (*risk).ln())
@@ -5943,7 +5966,10 @@ mod tests {
             value["path"]["delayed_reward_resolution_hazard_per_hour"],
             3.0 / 6.0
         );
-        assert_eq!(value["path"]["delayed_reward_expected_resolution_hours"], 2.0);
+        assert_eq!(
+            value["path"]["delayed_reward_expected_resolution_hours"],
+            2.0
+        );
         assert_eq!(
             value["path"]["delayed_reward_survival_probability_1h"],
             (-0.5_f64).exp()
@@ -5972,30 +5998,51 @@ mod tests {
             value["path"]["delayed_reward_failure_cumulative_incidence_4h"],
             (1.0 / 3.0) * (1.0 - (-2.0_f64).exp())
         );
-        assert!(
-            value["path"]
-                .get("delayed_reward_invalidation_cumulative_incidence_4h")
-                .is_none()
+        assert!(value["path"]
+            .get("delayed_reward_invalidation_cumulative_incidence_4h")
+            .is_none());
+        assert!(value["path"]
+            .get("delayed_reward_abandonment_cumulative_incidence_4h")
+            .is_none());
+        assert!(value["path"]
+            .get("delayed_reward_invalidation_hazard_per_hour")
+            .is_none());
+        assert_eq!(
+            value["path"]["delayed_reward_resolution_horizon_1h_count"],
+            3
         );
-        assert!(
-            value["path"]
-                .get("delayed_reward_abandonment_cumulative_incidence_4h")
-                .is_none()
+        assert_eq!(
+            value["path"]["delayed_reward_resolution_within_1h_count"],
+            1
         );
-        assert!(
-            value["path"]
-                .get("delayed_reward_invalidation_hazard_per_hour")
-                .is_none()
+        assert_eq!(
+            value["path"]["delayed_reward_resolution_probability_1h"],
+            2.0 / 5.0
         );
-        assert_eq!(value["path"]["delayed_reward_resolution_horizon_1h_count"], 3);
-        assert_eq!(value["path"]["delayed_reward_resolution_within_1h_count"], 1);
-        assert_eq!(value["path"]["delayed_reward_resolution_probability_1h"], 2.0 / 5.0);
-        assert_eq!(value["path"]["delayed_reward_resolution_horizon_4h_count"], 3);
-        assert_eq!(value["path"]["delayed_reward_resolution_within_4h_count"], 2);
-        assert_eq!(value["path"]["delayed_reward_resolution_probability_4h"], 3.0 / 5.0);
-        assert_eq!(value["path"]["delayed_reward_resolution_horizon_24h_count"], 3);
-        assert_eq!(value["path"]["delayed_reward_resolution_within_24h_count"], 3);
-        assert_eq!(value["path"]["delayed_reward_resolution_probability_24h"], 4.0 / 5.0);
+        assert_eq!(
+            value["path"]["delayed_reward_resolution_horizon_4h_count"],
+            3
+        );
+        assert_eq!(
+            value["path"]["delayed_reward_resolution_within_4h_count"],
+            2
+        );
+        assert_eq!(
+            value["path"]["delayed_reward_resolution_probability_4h"],
+            3.0 / 5.0
+        );
+        assert_eq!(
+            value["path"]["delayed_reward_resolution_horizon_24h_count"],
+            3
+        );
+        assert_eq!(
+            value["path"]["delayed_reward_resolution_within_24h_count"],
+            3
+        );
+        assert_eq!(
+            value["path"]["delayed_reward_resolution_probability_24h"],
+            4.0 / 5.0
+        );
         assert_eq!(value["path"]["matured_feedback_count"], 3);
         assert_eq!(value["path"]["unresolved_feedback_count"], 0);
         assert_eq!(value["path"]["maturity_coverage"], 1.0);
@@ -6005,7 +6052,10 @@ mod tests {
         assert_eq!(value["node"]["duration_persistence_prior"], 0.6);
         assert_eq!(value["node"]["duration_weighted_streak_mass"], 1.85);
         assert_eq!(value["node"]["duration_outcome_support"], 0.7407407407);
-        assert_eq!(value["node"]["duration_temporal_posterior_support"], 0.6422222222);
+        assert_eq!(
+            value["node"]["duration_temporal_posterior_support"],
+            0.6422222222
+        );
         assert_eq!(
             value["branch"]["entity_id"],
             "NQ:belief_regime_node:trend:trend_follow_through"
@@ -6029,7 +6079,8 @@ mod tests {
     }
 
     #[test]
-    fn structural_experience_prior_surface_prefers_panel_derived_prior_over_stale_aggregate_prior() {
+    fn structural_experience_prior_surface_prefers_panel_derived_prior_over_stale_aggregate_prior()
+    {
         let mut snapshot = WorkflowSnapshot::default();
         snapshot.symbol = "NQ".to_string();
         snapshot.current_focus_phase = "analyze".to_string();
@@ -6271,13 +6322,16 @@ mod tests {
             value["candidates"][0]["path_id"],
             "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
         );
-        assert!(value["candidates"][0]["composite_score"].as_f64().unwrap()
-            >= value["candidates"][1]["composite_score"].as_f64().unwrap());
+        assert!(
+            value["candidates"][0]["composite_score"].as_f64().unwrap()
+                >= value["candidates"][1]["composite_score"].as_f64().unwrap()
+        );
         assert!(value["candidates"][0]["experience_prior"].as_f64().unwrap() > 0.5);
     }
 
     #[test]
-    fn workflow_status_phase_structural_top_path_candidates_exposes_recommended_next_step_contract() {
+    fn workflow_status_phase_structural_top_path_candidates_exposes_recommended_next_step_contract()
+    {
         let mut snapshot = WorkflowSnapshot::default();
         snapshot.symbol = "NQ".to_string();
         snapshot.current_focus_phase = "analyze".to_string();
@@ -6371,11 +6425,10 @@ mod tests {
                 recommended_at: "2026-04-30T01:00:00Z".to_string(),
                 node_id: "NQ:belief_regime_node:trend".to_string(),
                 branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
-                scenario_id:
-                    "scenario:NQ:belief_regime_node:trend:trend_follow_through".to_string(),
-                path_id:
-                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
-                        .to_string(),
+                scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                    .to_string(),
+                path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                    .to_string(),
                 followed_path: true,
                 exit_reason: Some("target_hit".to_string()),
                 notes: None,
@@ -6465,7 +6518,9 @@ mod tests {
                 duration_outcome_support: 0.75,
                 temporal_posterior_support: 0.65,
                 posterior_blend_weight: 0.42,
-                summary_line: "duration_mass=1.900 duration_support=0.750 duration_temporal=0.650 blend=0.420".to_string(),
+                summary_line:
+                    "duration_mass=1.900 duration_support=0.750 duration_temporal=0.650 blend=0.420"
+                        .to_string(),
                 last_recommended_at: Some("2026-04-30T04:00:00Z".to_string()),
                 ..crate::state::StructuralNodeTemporalPosteriorState::default()
             },
@@ -6811,11 +6866,10 @@ mod tests {
                 recommended_at: "2026-04-30T01:00:00Z".to_string(),
                 node_id: "NQ:belief_regime_node:trend".to_string(),
                 branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
-                scenario_id:
-                    "scenario:NQ:belief_regime_node:trend:trend_follow_through".to_string(),
-                path_id:
-                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
-                        .to_string(),
+                scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
+                    .to_string(),
+                path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                    .to_string(),
                 followed_path: true,
                 exit_reason: Some("target_hit".to_string()),
                 notes: None,
@@ -7099,7 +7153,10 @@ mod tests {
             .starts_with("structural-candidates:NQ:"));
         assert_eq!(value["candidate_set_size"], 3);
         assert!(value["selected_path_probability"].as_f64().unwrap() > 0.0);
-        assert!(value["trigger_summary"].as_str().unwrap().contains("regime"));
+        assert!(value["trigger_summary"]
+            .as_str()
+            .unwrap()
+            .contains("regime"));
         assert!(value["stop_summary"].as_str().unwrap().len() > 4);
         assert!(value["confirmation_summary"].as_str().unwrap().len() > 4);
         assert!(value["invalidation_summary"].as_str().unwrap().len() > 4);
@@ -7197,8 +7254,7 @@ mod tests {
         let behavior_policy_probability = first["behavior_policy_probability"].as_f64().unwrap();
         assert!(behavior_policy_probability > 0.0);
         assert!(
-            (first["propensity_estimate"].as_f64().unwrap()
-                - behavior_policy_probability * 0.6)
+            (first["propensity_estimate"].as_f64().unwrap() - behavior_policy_probability * 0.6)
                 .abs()
                 < 1e-9
         );
@@ -7302,25 +7358,26 @@ mod tests {
             &structural_prior_state,
         )
         .unwrap();
-        let current_rows: Vec<
-            crate::application::orchestration::StructuralPathRankingTargetRow,
-        > = std::fs::read_to_string(&summary.jsonl_path)
-            .unwrap()
-            .lines()
-            .filter(|line| !line.trim().is_empty())
-            .map(serde_json::from_str)
-            .collect::<std::result::Result<_, _>>()
-            .unwrap();
+        let current_rows: Vec<crate::application::orchestration::StructuralPathRankingTargetRow> =
+            std::fs::read_to_string(&summary.jsonl_path)
+                .unwrap()
+                .lines()
+                .filter(|line| !line.trim().is_empty())
+                .map(serde_json::from_str)
+                .collect::<std::result::Result<_, _>>()
+                .unwrap();
         let scored_row = current_rows.first().expect("exported row").clone();
         let updated_summary =
             crate::application::orchestration::apply_structural_path_ranking_external_scores(
                 temp.path().to_str().unwrap(),
                 "NQ",
-                &[crate::application::orchestration::StructuralPathRankingExternalScoreInput {
-                    candidate_set_id: scored_row.candidate_set_id.clone(),
-                    path_id: scored_row.path_id.clone(),
-                    raw_path_score: 0.91,
-                }],
+                &[
+                    crate::application::orchestration::StructuralPathRankingExternalScoreInput {
+                        candidate_set_id: scored_row.candidate_set_id.clone(),
+                        path_id: scored_row.path_id.clone(),
+                        raw_path_score: 0.91,
+                    },
+                ],
             )
             .unwrap();
         let updated_current: Vec<
@@ -7390,24 +7447,25 @@ mod tests {
             &structural_prior_state,
         )
         .unwrap();
-        let current_rows: Vec<
-            crate::application::orchestration::StructuralPathRankingTargetRow,
-        > = std::fs::read_to_string(&summary.jsonl_path)
-            .unwrap()
-            .lines()
-            .filter(|line| !line.trim().is_empty())
-            .map(serde_json::from_str)
-            .collect::<std::result::Result<_, _>>()
-            .unwrap();
+        let current_rows: Vec<crate::application::orchestration::StructuralPathRankingTargetRow> =
+            std::fs::read_to_string(&summary.jsonl_path)
+                .unwrap()
+                .lines()
+                .filter(|line| !line.trim().is_empty())
+                .map(serde_json::from_str)
+                .collect::<std::result::Result<_, _>>()
+                .unwrap();
         let scored_row = current_rows.first().expect("exported row").clone();
         crate::application::orchestration::apply_structural_path_ranking_external_scores(
             temp.path().to_str().unwrap(),
             "NQ",
-            &[crate::application::orchestration::StructuralPathRankingExternalScoreInput {
-                candidate_set_id: scored_row.candidate_set_id.clone(),
-                path_id: scored_row.path_id.clone(),
-                raw_path_score: 0.91,
-            }],
+            &[
+                crate::application::orchestration::StructuralPathRankingExternalScoreInput {
+                    candidate_set_id: scored_row.candidate_set_id.clone(),
+                    path_id: scored_row.path_id.clone(),
+                    raw_path_score: 0.91,
+                },
+            ],
         )
         .unwrap();
         crate::application::entry_models::enable_structural_path_ranking_runtime_command(
@@ -7444,14 +7502,16 @@ mod tests {
                 &structural_prior_state,
                 Some(temp.path().to_str().unwrap()),
             );
-        assert!(human_value["recommended_path_line"]
-            .as_str()
-            .unwrap_or_default()
-            .contains("lb=")
-            || human_value["recommended_path_line"]
+        assert!(
+            human_value["recommended_path_line"]
                 .as_str()
                 .unwrap_or_default()
-                .contains("raw="));
+                .contains("lb=")
+                || human_value["recommended_path_line"]
+                    .as_str()
+                    .unwrap_or_default()
+                    .contains("raw=")
+        );
     }
 
     #[test]
@@ -7482,15 +7542,14 @@ mod tests {
             &structural_prior_state,
         )
         .unwrap();
-        let current_rows: Vec<
-            crate::application::orchestration::StructuralPathRankingTargetRow,
-        > = std::fs::read_to_string(&summary.jsonl_path)
-            .unwrap()
-            .lines()
-            .filter(|line| !line.trim().is_empty())
-            .map(serde_json::from_str)
-            .collect::<std::result::Result<_, _>>()
-            .unwrap();
+        let current_rows: Vec<crate::application::orchestration::StructuralPathRankingTargetRow> =
+            std::fs::read_to_string(&summary.jsonl_path)
+                .unwrap()
+                .lines()
+                .filter(|line| !line.trim().is_empty())
+                .map(serde_json::from_str)
+                .collect::<std::result::Result<_, _>>()
+                .unwrap();
         let artifact_scored_row = current_rows.first().expect("exported row").clone();
         let artifact_dir = std::path::Path::new(&summary.summary_path)
             .parent()
@@ -7571,6 +7630,103 @@ mod tests {
     }
 
     #[test]
+    fn agent_workflow_status_can_consume_registered_direct_model_scores() {
+        let snapshot = sample_human_workflow_snapshot();
+        let history = sample_structural_feedback_history();
+        let path_id = "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary";
+        let mut structural_prior_state = StructuralPriorLearningState::default();
+        structural_prior_state.paths.insert(
+            path_id.to_string(),
+            crate::state::StructuralPriorStats {
+                smoothed_prior: 0.62,
+                execution_propensity: 0.6,
+                target_policy_probability_confidence: 0.57,
+                target_policy_probability_lower_bound: 0.31,
+                target_policy_reward_prior: 0.58,
+                target_policy_reward_lower_bound: 0.29,
+                ..crate::state::StructuralPriorStats::default()
+            },
+        );
+        let temp = tempfile::tempdir().unwrap();
+        let summary = crate::application::orchestration::export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &sample_provider_agent_surface(),
+            &history,
+            &structural_prior_state,
+        )
+        .unwrap();
+        let artifact_dir = std::path::Path::new(&summary.summary_path)
+            .parent()
+            .expect("summary parent")
+            .to_path_buf();
+        std::fs::write(
+            artifact_dir.join("path_ranker_direct_model.json"),
+            serde_json::to_string_pretty(&serde_json::json!({
+                "protocol_version": "structural-path-ranking-direct-model-v1",
+                "model_family": crate::belief_core::ranking_label::STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_WEIGHTED_SUM_V1,
+                "feature_schema_version": "structural-path-ranking-trainer-manifest-v1",
+                "output_transform": "sigmoid",
+                "intercept": 2.0,
+                "numerical_feature_weights": {
+                    "rank": -1.0,
+                    "experience_prior": 0.25
+                },
+                "lower_bound_margin": 0.05,
+                "execution_gate_min_path_prob": 0.5
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let artifact = crate::application::entry_models::training_export::StructuralPathRankingTrainerArtifact {
+            protocol_version: "structural-path-ranking-trainer-artifact-v1".to_string(),
+            dataset_role: "external_path_ranker_training_dataset".to_string(),
+            model_family: crate::belief_core::ranking_label::STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_WEIGHTED_SUM_V1.to_string(),
+            artifact_uri: "path_ranker_direct_model.json".to_string(),
+            score_column: "raw_path_score".to_string(),
+            trained_rows: 42,
+            calibration_rows: 12,
+            feature_columns: vec!["rank".to_string(), "experience_prior".to_string()],
+            created_at: None,
+            notes: vec![],
+        };
+        std::fs::write(
+            artifact_dir.join("structural_path_ranking_trainer_artifact.json"),
+            serde_json::to_string_pretty(&artifact).unwrap(),
+        )
+        .unwrap();
+        crate::application::entry_models::enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            crate::application::orchestration::STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+        )
+        .unwrap();
+
+        let agent_value =
+            build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+                &snapshot,
+                &[],
+                &sample_provider_agent_surface(),
+                &history,
+                &structural_prior_state,
+                Some(temp.path().to_str().unwrap()),
+            );
+        let score = agent_value["recommended_path_bundle"]["path_ranker_raw_score"]
+            .as_f64()
+            .unwrap_or_default();
+        assert!(score > 0.7);
+        assert_eq!(
+            agent_value["recommended_path_bundle"]["path_ranker_runtime_source"].as_str(),
+            Some("registered_model_artifact")
+        );
+        assert_eq!(
+            agent_value["recommended_path_bundle"]["path_ranker_runtime"]["status"].as_str(),
+            Some("using_registered_model_artifact")
+        );
+    }
+
+    #[test]
     fn agent_workflow_status_can_consume_remote_registered_artifact_scores() {
         let snapshot = sample_human_workflow_snapshot();
         let history = sample_structural_feedback_history();
@@ -7598,15 +7754,14 @@ mod tests {
             &structural_prior_state,
         )
         .unwrap();
-        let current_rows: Vec<
-            crate::application::orchestration::StructuralPathRankingTargetRow,
-        > = std::fs::read_to_string(&summary.jsonl_path)
-            .unwrap()
-            .lines()
-            .filter(|line| !line.trim().is_empty())
-            .map(serde_json::from_str)
-            .collect::<std::result::Result<_, _>>()
-            .unwrap();
+        let current_rows: Vec<crate::application::orchestration::StructuralPathRankingTargetRow> =
+            std::fs::read_to_string(&summary.jsonl_path)
+                .unwrap()
+                .lines()
+                .filter(|line| !line.trim().is_empty())
+                .map(serde_json::from_str)
+                .collect::<std::result::Result<_, _>>()
+                .unwrap();
         let artifact_scored_row = current_rows.first().expect("exported row").clone();
         let body = format!(
             "{}\n",
@@ -7679,9 +7834,8 @@ mod tests {
                 branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
                 scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
                     .to_string(),
-                path_id:
-                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
-                        .to_string(),
+                path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                    .to_string(),
                 followed_path: true,
                 exit_reason: Some("target_hit".to_string()),
                 notes: Some("user followed structural path".to_string()),
@@ -8099,7 +8253,10 @@ mod tests {
             human_value["ensemble_consensus"]["posterior_active_regime"],
             "trend"
         );
-        assert_eq!(human_value["ensemble_consensus"]["posterior_confidence"], 0.78);
+        assert_eq!(
+            human_value["ensemble_consensus"]["posterior_confidence"],
+            0.78
+        );
         assert_eq!(agent_value["ensemble"]["confidence"], 0.78);
     }
 
@@ -8296,9 +8453,8 @@ mod tests {
                 branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
                 scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
                     .to_string(),
-                path_id:
-                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
-                        .to_string(),
+                path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                    .to_string(),
                 followed_path: true,
                 exit_reason: Some("target_hit".to_string()),
                 notes: Some("user followed structural path".to_string()),
@@ -8319,7 +8475,9 @@ mod tests {
         assert!(value["structural_feedback_line"]
             .as_str()
             .unwrap()
-            .contains("path=path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"));
+            .contains(
+                "path=path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+            ));
     }
 
     #[test]

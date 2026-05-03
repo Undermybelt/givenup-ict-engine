@@ -20,6 +20,10 @@ pub const STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION: &str =
     "structural-path-ranking-runtime-selection-v1";
 pub const STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY: &str = "candidate_set_only";
 pub const STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY: &str = "prefer_history";
+pub const STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_WEIGHTED_SUM_V1: &str =
+    "weighted_feature_sum_v1";
+pub const STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_LINEAR_SCORE_V1: &str =
+    "linear_feature_score_v1";
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
 pub struct StructuralPathRankingRuntimeSelection {
@@ -246,16 +250,42 @@ pub struct StructuralPathRankingExternalScoreInput {
     pub raw_path_score: f64,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-struct StructuralPathRankerRuntimeArtifactRef {
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankerRuntimeArtifactMetadata {
     #[serde(default)]
-    protocol_version: String,
+    pub protocol_version: String,
     #[serde(default)]
-    dataset_role: String,
+    pub dataset_role: String,
     #[serde(default)]
-    artifact_uri: String,
+    pub model_family: String,
     #[serde(default)]
-    score_column: String,
+    pub artifact_uri: String,
+    #[serde(default)]
+    pub score_column: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankerDirectModelArtifact {
+    #[serde(default)]
+    pub protocol_version: String,
+    #[serde(default)]
+    pub model_family: String,
+    #[serde(default)]
+    pub feature_schema_version: String,
+    #[serde(default)]
+    pub output_transform: String,
+    #[serde(default)]
+    pub intercept: f64,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub numerical_feature_weights: BTreeMap<String, f64>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub categorical_feature_weights: BTreeMap<String, BTreeMap<String, f64>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub lower_bound_margin: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub execution_gate_min_path_prob: Option<f64>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub notes: Vec<String>,
 }
 
 pub fn structural_path_ranking_runtime_selection_path(state_dir: &str, symbol: &str) -> String {
@@ -289,6 +319,14 @@ pub fn load_structural_path_ranking_runtime_selection(
     Some(selection)
 }
 
+pub fn structural_path_ranker_supports_direct_model_family(model_family: &str) -> bool {
+    matches!(
+        model_family.trim(),
+        STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_WEIGHTED_SUM_V1
+            | STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_LINEAR_SCORE_V1
+    )
+}
+
 fn structural_path_ranker_artifact_json_path(state_dir: &str, symbol: &str) -> PathBuf {
     Path::new(state_dir)
         .join(symbol)
@@ -296,16 +334,25 @@ fn structural_path_ranker_artifact_json_path(state_dir: &str, symbol: &str) -> P
         .join("structural_path_ranking_trainer_artifact.json")
 }
 
+pub fn load_structural_path_ranker_runtime_artifact_metadata(
+    state_dir: &str,
+    symbol: &str,
+) -> Option<StructuralPathRankerRuntimeArtifactMetadata> {
+    let path = structural_path_ranker_artifact_json_path(state_dir, symbol);
+    let raw = fs::read_to_string(path).ok()?;
+    let artifact =
+        serde_json::from_str::<StructuralPathRankerRuntimeArtifactMetadata>(&raw).ok()?;
+    if artifact.artifact_uri.trim().is_empty() || artifact.score_column.trim().is_empty() {
+        return None;
+    }
+    Some(artifact)
+}
+
 pub fn load_structural_path_ranker_runtime_artifact_ref(
     state_dir: &str,
     symbol: &str,
 ) -> Option<(String, String)> {
-    let path = structural_path_ranker_artifact_json_path(state_dir, symbol);
-    let raw = fs::read_to_string(path).ok()?;
-    let artifact = serde_json::from_str::<StructuralPathRankerRuntimeArtifactRef>(&raw).ok()?;
-    if artifact.artifact_uri.trim().is_empty() || artifact.score_column.trim().is_empty() {
-        return None;
-    }
+    let artifact = load_structural_path_ranker_runtime_artifact_metadata(state_dir, symbol)?;
     Some((artifact.artifact_uri, artifact.score_column))
 }
 
@@ -335,6 +382,30 @@ fn structural_path_ranker_artifact_uri_path(
                 .join(path),
         )
     }
+}
+
+fn load_structural_path_ranker_runtime_artifact_raw(
+    state_dir: &str,
+    symbol: &str,
+    artifact_uri: &str,
+) -> Result<Option<(String, String)>> {
+    if structural_path_ranker_runtime_source_kind(artifact_uri) == "remote" {
+        let client = Client::builder().timeout(Duration::from_secs(3)).build()?;
+        let raw = client
+            .get(artifact_uri)
+            .send()?
+            .error_for_status()?
+            .text()?;
+        return Ok(Some((artifact_uri.to_string(), raw)));
+    }
+    let artifact_path =
+        structural_path_ranker_artifact_uri_path(state_dir, symbol, artifact_uri)
+            .ok_or_else(|| anyhow::anyhow!("artifact uri is not a supported local path"))?;
+    if !artifact_path.exists() {
+        return Ok(None);
+    }
+    let raw = fs::read_to_string(&artifact_path)?;
+    Ok(Some((artifact_path.to_string_lossy().to_string(), raw)))
 }
 
 fn structural_path_ranker_runtime_source_kind(artifact_uri: &str) -> &'static str {
@@ -465,31 +536,160 @@ pub fn load_structural_path_ranker_runtime_artifact_rows(
     artifact_uri: &str,
     score_column: &str,
 ) -> Result<Vec<StructuralPathRankerRuntimeRow>> {
-    if structural_path_ranker_runtime_source_kind(artifact_uri) == "remote" {
-        let client = Client::builder().timeout(Duration::from_secs(3)).build()?;
-        let raw = client
-            .get(artifact_uri)
-            .send()?
-            .error_for_status()?
-            .text()?;
-        return parse_structural_path_ranker_runtime_rows_from_raw(
-            artifact_uri,
-            &raw,
-            score_column,
-        );
-    }
-    let artifact_path =
-        structural_path_ranker_artifact_uri_path(state_dir, symbol, artifact_uri)
-            .ok_or_else(|| anyhow::anyhow!("artifact uri is not a supported local path"))?;
-    if !artifact_path.exists() {
+    let Some((source_hint, raw)) =
+        load_structural_path_ranker_runtime_artifact_raw(state_dir, symbol, artifact_uri)?
+    else {
         return Ok(Vec::new());
+    };
+    parse_structural_path_ranker_runtime_rows_from_raw(&source_hint, &raw, score_column)
+}
+
+fn structural_path_ranker_row_numeric_feature(
+    row: &StructuralPathRankingTargetRow,
+    feature_name: &str,
+) -> Option<f64> {
+    match feature_name.trim() {
+        "rank" => Some(row.rank as f64),
+        "candidate_set_size" => Some(row.candidate_set_size as f64),
+        "behavior_policy_probability" => Some(row.behavior_policy_probability),
+        "execution_propensity" => row.execution_propensity,
+        "target_policy_probability_confidence" => row.target_policy_probability_confidence,
+        "target_policy_probability_lower_bound" => row.target_policy_probability_lower_bound,
+        "target_policy_reward_prior" => row.target_policy_reward_prior,
+        "target_policy_reward_lower_bound" => row.target_policy_reward_lower_bound,
+        "experience_prior" => Some(row.experience_prior),
+        "current_posterior" => Some(row.current_posterior),
+        "structural_baseline_score" => Some(row.structural_baseline_score),
+        "maturity_weight" => Some(row.maturity_weight),
+        "propensity_estimate" => row.propensity_estimate,
+        "ips_weight" => row.ips_weight,
+        "training_weight" => row.training_weight,
+        "calibrated_label" => row.calibrated_label,
+        "raw_path_score" => row.raw_path_score,
+        "calibrated_path_prob" => row.calibrated_path_prob,
+        "path_prob_lower_bound" => row.path_prob_lower_bound,
+        _ => None,
     }
-    let raw = fs::read_to_string(&artifact_path)?;
-    parse_structural_path_ranker_runtime_rows_from_raw(
-        artifact_path.to_string_lossy().as_ref(),
-        &raw,
-        score_column,
-    )
+}
+
+fn structural_path_ranker_row_categorical_feature<'a>(
+    row: &'a StructuralPathRankingTargetRow,
+    feature_name: &str,
+) -> Option<&'a str> {
+    match feature_name.trim() {
+        "direction" => Some(row.direction.as_str()),
+        "regime_calibration_bucket" => Some(row.regime_calibration_bucket.as_str()),
+        "path_id" => Some(row.path_id.as_str()),
+        "scenario_id" => Some(row.scenario_id.as_str()),
+        "pending_reward_state" => Some(row.pending_reward_state.as_str()),
+        "execution_gate_status" => row.execution_gate_status.as_deref(),
+        _ => None,
+    }
+}
+
+fn structural_path_ranker_direct_model_probability(
+    model: &StructuralPathRankerDirectModelArtifact,
+    row: &StructuralPathRankingTargetRow,
+) -> f64 {
+    let mut score = model.intercept;
+    for (feature_name, weight) in &model.numerical_feature_weights {
+        if let Some(value) = structural_path_ranker_row_numeric_feature(row, feature_name) {
+            score += value * *weight;
+        }
+    }
+    for (feature_name, weights) in &model.categorical_feature_weights {
+        if let Some(value) = structural_path_ranker_row_categorical_feature(row, feature_name) {
+            score += weights
+                .get(value)
+                .copied()
+                .or_else(|| weights.get("*").copied())
+                .unwrap_or_default();
+        }
+    }
+    match model.output_transform.trim() {
+        "" | "sigmoid" => (1.0 / (1.0 + (-score).exp())).clamp(0.0, 1.0),
+        "identity" | "clamp_01" | "identity_clamped" => score.clamp(0.0, 1.0),
+        _ => score.clamp(0.0, 1.0),
+    }
+}
+
+pub fn load_structural_path_ranker_direct_model_artifact(
+    state_dir: &str,
+    symbol: &str,
+    artifact_uri: &str,
+    model_family: &str,
+) -> Result<Option<StructuralPathRankerDirectModelArtifact>> {
+    if !structural_path_ranker_supports_direct_model_family(model_family) {
+        return Ok(None);
+    }
+    let Some((_, raw)) =
+        load_structural_path_ranker_runtime_artifact_raw(state_dir, symbol, artifact_uri)?
+    else {
+        return Ok(None);
+    };
+    let artifact = serde_json::from_str::<StructuralPathRankerDirectModelArtifact>(&raw)?;
+    let declared_family = artifact.model_family.trim();
+    if !declared_family.is_empty()
+        && declared_family != model_family.trim()
+        && !structural_path_ranker_supports_direct_model_family(declared_family)
+    {
+        return Err(anyhow::anyhow!(
+            "runtime direct model family mismatch: declared='{}' registered='{}'",
+            declared_family,
+            model_family
+        ));
+    }
+    Ok(Some(artifact))
+}
+
+pub fn score_structural_path_ranker_runtime_rows_with_direct_model(
+    state_dir: &str,
+    symbol: &str,
+    artifact_uri: &str,
+    model_family: &str,
+    candidate_rows: &[StructuralPathRankingTargetRow],
+) -> Result<Vec<StructuralPathRankerRuntimeRow>> {
+    let Some(model) = load_structural_path_ranker_direct_model_artifact(
+        state_dir,
+        symbol,
+        artifact_uri,
+        model_family,
+    )?
+    else {
+        return Ok(Vec::new());
+    };
+    let lower_bound_margin = model.lower_bound_margin.unwrap_or_default().clamp(0.0, 1.0);
+    let gate_threshold = model
+        .execution_gate_min_path_prob
+        .unwrap_or(STRUCTURAL_PATH_RANKING_EXECUTION_GATE_MIN_PATH_PROB)
+        .clamp(0.0, 1.0);
+    Ok(candidate_rows
+        .iter()
+        .map(|row| {
+            let probability = structural_path_ranker_direct_model_probability(&model, row);
+            let path_prob_lower_bound = if lower_bound_margin > f64::EPSILON {
+                Some((probability - lower_bound_margin).clamp(0.0, 1.0))
+            } else {
+                None
+            };
+            let gate_signal = path_prob_lower_bound.unwrap_or(probability);
+            StructuralPathRankerRuntimeRow {
+                candidate_set_id: row.candidate_set_id.clone(),
+                path_id: row.path_id.clone(),
+                raw_path_score: Some(probability),
+                calibrated_path_prob: Some(probability),
+                path_prob_lower_bound,
+                execution_gate_status: Some(
+                    if gate_signal >= gate_threshold {
+                        "pass"
+                    } else {
+                        "observe"
+                    }
+                    .to_string(),
+                ),
+            }
+        })
+        .collect())
 }
 
 pub fn structural_path_ranking_target_row_history_key(

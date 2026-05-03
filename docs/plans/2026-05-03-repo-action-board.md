@@ -62,6 +62,7 @@ Primary source docs:
 - [ ] Replace the current heuristic temporal break logic with a clearer `changepoint_gate` owner instead of keeping BOCPD helpers inside `src/state/types.rs`.
   - started: BOCPD / sequence-break helper and duration-prior rebuild owner extraction into `src/belief_core/changepoint_gate.rs`
 - [ ] Promote the new opt-in runtime path from scored-row feed consumption into model-native scoring for the structural path-ranker.
+  - started: registered trainer artifacts can now begin to drive a generic direct-model runtime path in addition to scored-row feeds, using an explicit opt-in weighted-feature model artifact family that scores the current candidate-set rows without changing the zero-config default
 - [ ] Add stronger verification lanes for source reliability and delayed reward handling so the repo stops relying only on in-ledger compact calibration summaries.
 
 ### Not Yet
@@ -75,6 +76,7 @@ Primary source docs:
 - [ ] production-grade `regime_filter` with maintained transition logic and explicit emission-conditioned updates
 - [ ] production-grade `changepoint_gate` instead of the current fixed-weight BOCPD-style heuristic blend
 - [ ] model-native runtime consumption of the structural path-ranking trainer artifact beyond scored-row feed loading
+  - remaining gap: broader artifact-family coverage and/or declared external scoring service support beyond the current direct weighted-feature model path
 - [ ] deeper learned/contextual target-policy probability model beyond the current `symbol:regime:direction` bucket posterior
 - [ ] out-of-sample / replay-grade source reliability validation beyond fixed-iteration leave-source-out summaries
 - [ ] full elapsed-time competing-risk delayed-reward censoring model rather than only compact aggregate hazard/incidence summaries
@@ -145,7 +147,7 @@ Primary source docs:
 - opt-in scored-row reuse is now available for current consumer surfaces
 - local artifact-backed scored-row loading now works
 - remote scored-row feed loading now works
-- model-native inference is still missing
+- generic direct-model inference has started, but broader model/service runtime coverage is still missing
 
 **Acceptance:**
 

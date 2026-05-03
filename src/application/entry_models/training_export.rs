@@ -6,24 +6,25 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::Path;
 
+use crate::application::orchestration::{
+    apply_structural_path_ranking_external_scores,
+    evaluate_structural_path_probability_calibration_rows, export_structural_path_ranking_target,
+    StructuralPathProbabilityCalibrationEvaluationReport, StructuralPathRankingExternalScoreInput,
+    StructuralPathRankingTargetExportSummary, StructuralPathRankingTargetRow,
+    StructuralPathRankingTrainerManifest, STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE,
+};
+use crate::application::provider_catalog::provider_status_agent_surface;
 use crate::belief_core::ranking_label::{
+    load_structural_path_ranker_direct_model_artifact,
     load_structural_path_ranker_runtime_artifact_rows,
     load_structural_path_ranking_runtime_selection,
-    structural_path_ranking_runtime_selection_path,
-    StructuralPathRankingRuntimeSelection,
+    score_structural_path_ranker_runtime_rows_with_direct_model,
+    structural_path_ranker_supports_direct_model_family,
+    structural_path_ranking_runtime_selection_path, StructuralPathRankingRuntimeSelection,
     STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
     STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY,
     STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION,
 };
-use crate::application::orchestration::{
-    apply_structural_path_ranking_external_scores,
-    evaluate_structural_path_probability_calibration_rows, export_structural_path_ranking_target,
-    StructuralPathProbabilityCalibrationEvaluationReport, StructuralPathRankingTargetExportSummary,
-    StructuralPathRankingExternalScoreInput, StructuralPathRankingTargetRow,
-    StructuralPathRankingTrainerManifest,
-    STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE,
-};
-use crate::application::provider_catalog::provider_status_agent_surface;
 use crate::state::{
     load_learning_state, load_pending_update_history, load_state_or_default,
     load_workflow_snapshot, save_text_state, structural_feedback_outcome_is_unresolved,
@@ -791,8 +792,7 @@ pub fn policy_training_status(
     };
     let summary_line = format!(
         "{} | {}",
-        provider_summary_line,
-        structural_path_ranking_target.summary_line
+        provider_summary_line, structural_path_ranking_target.summary_line
     );
     Ok(PolicyTrainingStatusSurface {
         symbol: symbol.to_string(),
@@ -860,12 +860,14 @@ pub fn structural_path_ranking_target_training_status(
             *acc.entry(record.source.clone()).or_insert(0) += 1;
             acc
         });
-    let (feedback_rows_without_structural_feedback_dominant_source, feedback_rows_without_structural_feedback_dominant_count) =
-        feedback_rows_without_structural_feedback_by_source
-            .iter()
-            .max_by(|left, right| left.1.cmp(right.1).then_with(|| left.0.cmp(right.0)))
-            .map(|(source, count)| (Some(source.clone()), *count))
-            .unwrap_or((None, 0));
+    let (
+        feedback_rows_without_structural_feedback_dominant_source,
+        feedback_rows_without_structural_feedback_dominant_count,
+    ) = feedback_rows_without_structural_feedback_by_source
+        .iter()
+        .max_by(|left, right| left.1.cmp(right.1).then_with(|| left.0.cmp(right.0)))
+        .map(|(source, count)| (Some(source.clone()), *count))
+        .unwrap_or((None, 0));
     let feedback_rows_pending = learning_state
         .feedback_history
         .iter()
@@ -889,40 +891,44 @@ pub fn structural_path_ranking_target_training_status(
         .filter(|row| row.maturity_mask)
         .count()
         .max(summary.history_mature_rows);
-    let history_rows_with_calibrated_path_prob =
-        history_rows
-            .iter()
-            .filter(|row| row.calibrated_path_prob.is_some())
-            .count()
-            .max(summary.history_rows_with_calibrated_path_prob)
-            .max(summary.rows_with_calibrated_path_prob);
+    let history_rows_with_calibrated_path_prob = history_rows
+        .iter()
+        .filter(|row| row.calibrated_path_prob.is_some())
+        .count()
+        .max(summary.history_rows_with_calibrated_path_prob)
+        .max(summary.rows_with_calibrated_path_prob);
     let history_rows_with_path_prob_lower_bound = summary
         .history_rows_with_path_prob_lower_bound
-        .max(history_rows
-            .iter()
-            .filter(|row| row.path_prob_lower_bound.is_some())
-            .count())
+        .max(
+            history_rows
+                .iter()
+                .filter(|row| row.path_prob_lower_bound.is_some())
+                .count(),
+        )
         .max(summary.rows_with_path_prob_lower_bound);
-    let history_rows_with_raw_path_score =
-        history_rows
-            .iter()
-            .filter(|row| row.raw_path_score.is_some())
-            .count()
-            .max(summary.history_rows_with_raw_path_score)
-            .max(summary.rows_with_raw_path_score);
+    let history_rows_with_raw_path_score = history_rows
+        .iter()
+        .filter(|row| row.raw_path_score.is_some())
+        .count()
+        .max(summary.history_rows_with_raw_path_score)
+        .max(summary.rows_with_raw_path_score);
     let history_rows_with_propensity_estimate = summary
         .history_rows_with_propensity_estimate
-        .max(history_rows
-            .iter()
-            .filter(|row| row.propensity_estimate.is_some())
-            .count())
+        .max(
+            history_rows
+                .iter()
+                .filter(|row| row.propensity_estimate.is_some())
+                .count(),
+        )
         .max(summary.rows_with_propensity_estimate);
     let history_rows_with_training_weight = summary
         .history_rows_with_training_weight
-        .max(history_rows
-            .iter()
-            .filter(|row| row.training_weight.is_some())
-            .count())
+        .max(
+            history_rows
+                .iter()
+                .filter(|row| row.training_weight.is_some())
+                .count(),
+        )
         .max(summary.rows_with_training_weight);
     let current_rows = load_structural_path_ranking_target_rows_from_jsonl(&summary.jsonl_path)?;
     let calibration_ready =
@@ -945,18 +951,60 @@ pub fn structural_path_ranking_target_training_status(
     });
     let runtime_selection_path = structural_path_ranking_runtime_selection_path(state_dir, symbol);
     let runtime_selection = load_structural_path_ranking_runtime_selection(state_dir, symbol);
-    let runtime_artifact_rows = trainer_artifact
+    let direct_model_candidate_rows = current_rows
+        .iter()
+        .filter(|row| row.candidate_set_id == summary.candidate_set_id)
+        .cloned()
+        .collect::<Vec<_>>();
+    let runtime_direct_model_rows = trainer_artifact
         .as_ref()
         .and_then(|artifact| {
-            load_structural_path_ranker_runtime_artifact_rows(
+            if !structural_path_ranker_supports_direct_model_family(&artifact.model_family) {
+                return None;
+            }
+            score_structural_path_ranker_runtime_rows_with_direct_model(
                 state_dir,
                 symbol,
                 &artifact.artifact_uri,
-                &artifact.score_column,
+                &artifact.model_family,
+                &direct_model_candidate_rows,
             )
             .ok()
         })
         .unwrap_or_default();
+    let runtime_direct_model_ready = !runtime_direct_model_rows.is_empty();
+    let runtime_direct_model_loadable = trainer_artifact
+        .as_ref()
+        .and_then(|artifact| {
+            if !structural_path_ranker_supports_direct_model_family(&artifact.model_family) {
+                return None;
+            }
+            load_structural_path_ranker_direct_model_artifact(
+                state_dir,
+                symbol,
+                &artifact.artifact_uri,
+                &artifact.model_family,
+            )
+            .ok()
+            .flatten()
+        })
+        .is_some();
+    let runtime_artifact_rows = if runtime_direct_model_ready {
+        runtime_direct_model_rows
+    } else {
+        trainer_artifact
+            .as_ref()
+            .and_then(|artifact| {
+                load_structural_path_ranker_runtime_artifact_rows(
+                    state_dir,
+                    symbol,
+                    &artifact.artifact_uri,
+                    &artifact.score_column,
+                )
+                .ok()
+            })
+            .unwrap_or_default()
+    };
     let runtime_artifact_match_count = runtime_artifact_rows
         .iter()
         .filter(|row| {
@@ -1084,8 +1132,20 @@ pub fn structural_path_ranking_target_training_status(
     let runtime_selection_status = match runtime_selection.as_ref() {
         None => "disabled".to_string(),
         Some(selection) if !selection.enabled => "disabled".to_string(),
-        Some(_) if runtime_artifact_match_count > 0 => "enabled_registered_artifact_ready".to_string(),
-        Some(_) if runtime_candidate_set_match_count > 0 => "enabled_candidate_set_ready".to_string(),
+        Some(_) if runtime_direct_model_ready => "enabled_registered_model_ready".to_string(),
+        Some(_)
+            if trainer_artifact.as_ref().is_some_and(|artifact| {
+                structural_path_ranker_supports_direct_model_family(&artifact.model_family)
+            }) && !runtime_direct_model_loadable =>
+        {
+            "enabled_registered_model_invalid".to_string()
+        }
+        Some(_) if runtime_artifact_match_count > 0 => {
+            "enabled_registered_artifact_ready".to_string()
+        }
+        Some(_) if runtime_candidate_set_match_count > 0 => {
+            "enabled_candidate_set_ready".to_string()
+        }
         Some(selection)
             if selection.reuse_mode == STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY
                 && runtime_history_match_count > 0 =>
@@ -1096,7 +1156,10 @@ pub fn structural_path_ranking_target_training_status(
     };
     let runtime_selection_ready = matches!(
         runtime_selection_status.as_str(),
-        "enabled_registered_artifact_ready" | "enabled_candidate_set_ready" | "enabled_history_ready"
+        "enabled_registered_model_ready"
+            | "enabled_registered_artifact_ready"
+            | "enabled_candidate_set_ready"
+            | "enabled_history_ready"
     );
     let summary_line = format!(
         "structural_path_ranking_target rows={} history_rows={} mature_rows={} history_mature_rows={} raw_scored_mature={}/{} production_validation={}/{} calibration={} trainer_artifact={} runtime_selection={}",
@@ -1460,10 +1523,7 @@ pub fn register_structural_path_ranking_trainer_artifact_command(
     Ok(())
 }
 
-fn clear_structural_path_ranking_trainer_artifact(
-    state_dir: &str,
-    symbol: &str,
-) -> Result<bool> {
+fn clear_structural_path_ranking_trainer_artifact(state_dir: &str, symbol: &str) -> Result<bool> {
     let artifact_path = Path::new(state_dir)
         .join(symbol)
         .join(POLICY_TRAINING_DIR)
@@ -1539,7 +1599,9 @@ fn set_structural_path_ranking_runtime_selection(
         &relative_path,
         &serde_json::to_string_pretty(&selection)?,
     )?;
-    Ok(structural_path_ranking_runtime_selection_path(state_dir, symbol))
+    Ok(structural_path_ranking_runtime_selection_path(
+        state_dir, symbol,
+    ))
 }
 
 pub fn enable_structural_path_ranking_runtime_command(
@@ -1581,8 +1643,7 @@ fn export_structural_path_ranking_target_from_state_dir(
 ) -> Result<StructuralPathRankingTargetExportSummary> {
     let snapshot = load_workflow_snapshot(state_dir, symbol)?;
     let learning_state = load_learning_state(state_dir, symbol)?;
-    let provider_status_agent =
-        provider_status_agent_surface(None, None, None).unwrap_or_default();
+    let provider_status_agent = provider_status_agent_surface(None, None, None).unwrap_or_default();
     export_structural_path_ranking_target(
         state_dir,
         symbol,
@@ -1593,10 +1654,7 @@ fn export_structural_path_ranking_target_from_state_dir(
     )
 }
 
-pub fn export_structural_path_ranking_target_command(
-    state_dir: &str,
-    symbol: &str,
-) -> Result<()> {
+pub fn export_structural_path_ranking_target_command(state_dir: &str, symbol: &str) -> Result<()> {
     let summary = export_structural_path_ranking_target_from_state_dir(state_dir, symbol)?;
     println!("{}", serde_json::to_string_pretty(&summary)?);
     Ok(())
@@ -1609,7 +1667,10 @@ pub fn apply_structural_path_ranking_external_scores_command(
 ) -> Result<()> {
     let scores = load_structural_path_ranking_external_scores(scores_path)?;
     if scores.is_empty() {
-        bail!("no structural path ranking external scores found in '{}'", scores_path);
+        bail!(
+            "no structural path ranking external scores found in '{}'",
+            scores_path
+        );
     }
     let summary = apply_structural_path_ranking_external_scores(state_dir, symbol, &scores)?;
     println!("{}", serde_json::to_string_pretty(&summary)?);
@@ -2485,9 +2546,8 @@ mod tests {
                 branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
                 scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
                     .to_string(),
-                path_id:
-                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
-                        .to_string(),
+                path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                    .to_string(),
                 followed_path: true,
                 exit_reason: None,
                 notes: None,
@@ -2561,10 +2621,15 @@ mod tests {
         assert_eq!(status.feedback_rows_total, 1);
         assert_eq!(status.feedback_rows_without_structural_feedback, 1);
         assert_eq!(
-            status.feedback_rows_without_structural_feedback_dominant_source.as_deref(),
+            status
+                .feedback_rows_without_structural_feedback_dominant_source
+                .as_deref(),
             Some("legacy_feedback")
         );
-        assert_eq!(status.feedback_rows_without_structural_feedback_dominant_count, 1);
+        assert_eq!(
+            status.feedback_rows_without_structural_feedback_dominant_count,
+            1
+        );
         assert_eq!(
             status.candidate_set_id.as_deref(),
             Some("structural-candidates:NQ:test")
@@ -2601,9 +2666,9 @@ mod tests {
         assert!(status
             .warnings
             .contains(&"structural_path_ranking_target_structural_feedback_missing".to_string()));
-        assert!(status
-            .warnings
-            .contains(&"structural_path_ranking_target_pending_update_templates_present".to_string()));
+        assert!(status.warnings.contains(
+            &"structural_path_ranking_target_pending_update_templates_present".to_string()
+        ));
         assert!(status
             .warnings
             .iter()
@@ -2774,9 +2839,8 @@ mod tests {
         assert!((status.calibration_brier_score.unwrap() - 0.04).abs() < 1e-9);
         assert!((status.calibration_propensity_weighted_brier_score.unwrap() - 0.04).abs() < 1e-9);
         assert!((status.calibration_expected_error.unwrap() - 0.0).abs() < 1e-9);
-        assert!(status.warnings.iter().any(|warning| warning.starts_with(
-            "structural_path_ranking_target_raw_scored_mature_rows_insufficient"
-        )));
+        assert!(status.warnings.iter().any(|warning| warning
+            .starts_with("structural_path_ranking_target_raw_scored_mature_rows_insufficient")));
         assert!(status.warnings.iter().any(|warning| warning.starts_with(
             "structural_path_ranking_target_production_validation_insufficient_rows"
         )));
@@ -2883,18 +2947,17 @@ mod tests {
         assert_eq!(status.raw_scored_mature_shortfall_rows, 0);
         assert_eq!(status.production_validation_rows, row_count);
         assert_eq!(status.production_validation_shortfall_rows, 0);
-        assert!(status.summary_line.contains(&format!(
-            "history_rows={row_count}"
-        )));
-        assert!(status.summary_line.contains(&format!(
-            "raw_scored_mature={row_count}/{row_count}"
-        )));
-        assert!(status.summary_line.contains(&format!(
-            "production_validation={row_count}/{row_count}"
-        )));
-        assert!(!status.warnings.iter().any(|warning| warning.starts_with(
-            "structural_path_ranking_target_raw_scored_mature_rows_insufficient"
-        )));
+        assert!(status
+            .summary_line
+            .contains(&format!("history_rows={row_count}")));
+        assert!(status
+            .summary_line
+            .contains(&format!("raw_scored_mature={row_count}/{row_count}")));
+        assert!(status
+            .summary_line
+            .contains(&format!("production_validation={row_count}/{row_count}")));
+        assert!(!status.warnings.iter().any(|warning| warning
+            .starts_with("structural_path_ranking_target_raw_scored_mature_rows_insufficient")));
         assert!(!status.warnings.iter().any(|warning| warning.starts_with(
             "structural_path_ranking_target_production_validation_insufficient_rows"
         )));
@@ -2978,7 +3041,10 @@ mod tests {
         .unwrap();
 
         assert!(artifact_path.ends_with(STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_FILE));
-        assert_eq!(artifact.dataset_role, "external_path_ranker_training_dataset");
+        assert_eq!(
+            artifact.dataset_role,
+            "external_path_ranker_training_dataset"
+        );
         assert_eq!(artifact.model_family, "catboost");
         assert_eq!(artifact.score_column, "raw_path_score");
         assert_eq!(artifact.trained_rows, 2);
@@ -2989,7 +3055,10 @@ mod tests {
             structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
                 .unwrap();
         assert!(status.trainer_artifact_ready);
-        assert_eq!(status.trainer_artifact_model_family.as_deref(), Some("catboost"));
+        assert_eq!(
+            status.trainer_artifact_model_family.as_deref(),
+            Some("catboost")
+        );
         assert_eq!(status.trainer_artifact_trained_rows, 2);
         assert_eq!(status.trainer_artifact_calibration_rows, 2);
         assert!(status.trainer_artifact_uri_present);
@@ -3212,31 +3281,29 @@ mod tests {
             STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY,
         )
         .unwrap();
-        let enabled = structural_path_ranking_target_training_status(
-            temp.path().to_str().unwrap(),
-            "NQ",
-        )
-        .unwrap();
+        let enabled =
+            structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
+                .unwrap();
         assert!(enabled.runtime_selection_enabled);
         assert!(enabled.runtime_selection_ready);
         assert_eq!(
             enabled.runtime_selection_mode.as_deref(),
             Some(STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY)
         );
-        assert_eq!(enabled.runtime_selection_status, "enabled_candidate_set_ready");
+        assert_eq!(
+            enabled.runtime_selection_status,
+            "enabled_candidate_set_ready"
+        );
         assert_eq!(enabled.runtime_candidate_set_match_count, 2);
-        assert!(enabled.summary_line.contains("runtime_selection=enabled_candidate_set_ready"));
+        assert!(enabled
+            .summary_line
+            .contains("runtime_selection=enabled_candidate_set_ready"));
 
-        disable_structural_path_ranking_runtime_command(
-            temp.path().to_str().unwrap(),
-            "NQ",
-        )
-        .unwrap();
-        let disabled = structural_path_ranking_target_training_status(
-            temp.path().to_str().unwrap(),
-            "NQ",
-        )
-        .unwrap();
+        disable_structural_path_ranking_runtime_command(temp.path().to_str().unwrap(), "NQ")
+            .unwrap();
+        let disabled =
+            structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
+                .unwrap();
         assert!(!disabled.runtime_selection_enabled);
         assert!(!disabled.runtime_selection_ready);
         assert_eq!(disabled.runtime_selection_status, "disabled");
@@ -3343,14 +3410,123 @@ mod tests {
             STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
         )
         .unwrap();
-        let status = structural_path_ranking_target_training_status(
-            temp.path().to_str().unwrap(),
-            "NQ",
-        )
-        .unwrap();
+        let status =
+            structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
+                .unwrap();
         assert!(status.runtime_selection_enabled);
         assert!(status.runtime_selection_ready);
-        assert_eq!(status.runtime_selection_status, "enabled_registered_artifact_ready");
+        assert_eq!(
+            status.runtime_selection_status,
+            "enabled_registered_artifact_ready"
+        );
+        assert_eq!(status.runtime_artifact_match_count, 2);
+    }
+
+    #[test]
+    fn runtime_status_reports_registered_direct_model_when_available() {
+        let temp = tempfile::tempdir().unwrap();
+        let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let history_jsonl_path = summary_dir.join("structural_path_ranking_target_history.jsonl");
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: "NQ".to_string(),
+            rows: 2,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 2,
+            mature_rows: 2,
+            rows_with_propensity_estimate: 2,
+            rows_with_calibrated_path_prob: 0,
+            rows_with_path_prob_lower_bound: 0,
+            rows_with_execution_gate_status: 0,
+            rows_with_training_weight: 2,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            history_jsonl_path: history_jsonl_path.to_string_lossy().to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            trainer_manifest: structural_path_ranking_trainer_manifest_for_test(),
+            summary_line: "structural_path_ranking_target rows=2".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        let jsonl = [
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-win",
+                0.0,
+                "matured_success",
+            ))
+            .unwrap(),
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-loss",
+                0.0,
+                "matured_failure",
+            ))
+            .unwrap(),
+        ]
+        .join("\n");
+        std::fs::write(&jsonl_path, format!("{jsonl}\n")).unwrap();
+        std::fs::write(&history_jsonl_path, format!("{jsonl}\n")).unwrap();
+        std::fs::write(
+            summary_dir.join("path_ranker_direct_model.json"),
+            serde_json::to_string_pretty(&serde_json::json!({
+                "protocol_version": "structural-path-ranking-direct-model-v1",
+                "model_family": crate::belief_core::ranking_label::STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_WEIGHTED_SUM_V1,
+                "feature_schema_version": "structural-path-ranking-trainer-manifest-v1",
+                "output_transform": "sigmoid",
+                "intercept": 2.0,
+                "numerical_feature_weights": {
+                    "rank": -1.0,
+                    "experience_prior": 0.25
+                },
+                "lower_bound_margin": 0.05,
+                "execution_gate_min_path_prob": 0.5
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let artifact = StructuralPathRankingTrainerArtifact {
+            protocol_version: STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION.to_string(),
+            dataset_role: "external_path_ranker_training_dataset".to_string(),
+            model_family: crate::belief_core::ranking_label::STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_WEIGHTED_SUM_V1.to_string(),
+            artifact_uri: "path_ranker_direct_model.json".to_string(),
+            score_column: "raw_path_score".to_string(),
+            trained_rows: 42,
+            calibration_rows: 12,
+            feature_columns: vec!["rank".to_string(), "experience_prior".to_string()],
+            created_at: None,
+            notes: vec![],
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_FILE),
+            serde_json::to_string_pretty(&artifact).unwrap(),
+        )
+        .unwrap();
+
+        enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+        )
+        .unwrap();
+        let status =
+            structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
+                .unwrap();
+        assert!(status.runtime_selection_enabled);
+        assert!(status.runtime_selection_ready);
+        assert_eq!(
+            status.runtime_selection_status,
+            "enabled_registered_model_ready"
+        );
         assert_eq!(status.runtime_artifact_match_count, 2);
     }
 
@@ -3358,30 +3534,41 @@ mod tests {
     fn export_structural_path_ranking_target_from_state_dir_uses_persisted_snapshot_and_learning_state(
     ) {
         let temp = tempfile::tempdir().unwrap();
-        let snapshot = crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        let snapshot =
+            crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
         crate::state::save_workflow_snapshot(temp.path(), "NQ", &snapshot).unwrap();
-        crate::state::save_learning_state(temp.path(), "NQ", &crate::state::LearningState::default())
-            .unwrap();
+        crate::state::save_learning_state(
+            temp.path(),
+            "NQ",
+            &crate::state::LearningState::default(),
+        )
+        .unwrap();
 
-        let summary =
-            export_structural_path_ranking_target_from_state_dir(temp.path().to_str().unwrap(), "NQ")
-                .unwrap();
+        let summary = export_structural_path_ranking_target_from_state_dir(
+            temp.path().to_str().unwrap(),
+            "NQ",
+        )
+        .unwrap();
 
         assert_eq!(summary.symbol, "NQ");
         assert!(summary.history_rows >= summary.rows);
         assert!(summary
             .history_csv_path
             .ends_with("structural_path_ranking_target_history.csv"));
-        assert!(summary.history_jsonl_path.ends_with("structural_path_ranking_target_history.jsonl"));
+        assert!(summary
+            .history_jsonl_path
+            .ends_with("structural_path_ranking_target_history.jsonl"));
         assert!(std::path::Path::new(&summary.csv_path).exists());
         assert!(std::path::Path::new(&summary.jsonl_path).exists());
         assert!(std::path::Path::new(&summary.history_csv_path).exists());
         assert!(std::path::Path::new(&summary.history_jsonl_path).exists());
         assert!(std::path::Path::new(&summary.summary_path).exists());
 
-        let second_summary =
-            export_structural_path_ranking_target_from_state_dir(temp.path().to_str().unwrap(), "NQ")
-                .unwrap();
+        let second_summary = export_structural_path_ranking_target_from_state_dir(
+            temp.path().to_str().unwrap(),
+            "NQ",
+        )
+        .unwrap();
         assert_eq!(second_summary.history_rows, summary.history_rows);
     }
 }

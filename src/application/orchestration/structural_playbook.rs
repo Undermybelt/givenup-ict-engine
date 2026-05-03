@@ -8,55 +8,44 @@ use crate::application::belief::{
     blend_branch_prior_with_transition_prior, blend_node_posterior_with_duration_prior,
     transition_adjusted_branch_posteriors,
 };
+use crate::application::provider_catalog::{
+    build_workflow_provider_support, ProviderCatalogAgentSurface,
+};
 pub use crate::belief_core::ranking_label::{
-    apply_structural_path_probability_calibration,
-    apply_structural_path_probability_bins,
+    apply_structural_path_probability_bins, apply_structural_path_probability_calibration,
     apply_structural_path_ranking_execution_gates,
     clear_structural_path_ranking_target_row_outputs,
     evaluate_structural_path_probability_calibration_rows,
-    load_structural_path_ranker_runtime_artifact_ref,
+    load_structural_path_ranker_runtime_artifact_metadata,
     load_structural_path_ranker_runtime_artifact_rows,
-    load_structural_path_ranking_target_rows,
-    render_structural_path_ranking_target_csv,
-    render_structural_path_ranking_target_jsonl,
+    load_structural_path_ranking_runtime_selection, load_structural_path_ranking_target_rows,
+    render_structural_path_ranking_target_csv, render_structural_path_ranking_target_jsonl,
     render_structural_path_ranking_target_rows_csv,
     render_structural_path_ranking_target_rows_jsonl,
-    load_structural_path_ranking_runtime_selection,
-    structural_path_ranking_target_export_summary,
-    structural_path_ranking_target_row_history_key,
-    structural_path_ranking_runtime_selection_path,
-    structural_path_ranking_beta_lower_bound,
-    structural_path_ranking_beta_mean,
-    structural_path_ranking_ips_weight,
+    score_structural_path_ranker_runtime_rows_with_direct_model,
+    structural_path_ranker_supports_direct_model_family, structural_path_ranking_beta_lower_bound,
+    structural_path_ranking_beta_mean, structural_path_ranking_ips_weight,
     structural_path_ranking_propensity_estimate,
-    structural_path_ranking_propensity_evaluation_weight,
-    structural_path_ranking_reward_label,
-    structural_path_ranking_trainer_manifest,
-    structural_path_ranking_training_weight,
-    upsert_structural_path_ranking_target_history,
-    StructuralPathProbabilityCalibrationBin,
-    StructuralPathProbabilityCalibrationEvaluationBin,
+    structural_path_ranking_propensity_evaluation_weight, structural_path_ranking_reward_label,
+    structural_path_ranking_runtime_selection_path, structural_path_ranking_target_export_summary,
+    structural_path_ranking_target_row_history_key, structural_path_ranking_trainer_manifest,
+    structural_path_ranking_training_weight, upsert_structural_path_ranking_target_history,
+    StructuralPathProbabilityCalibrationBin, StructuralPathProbabilityCalibrationEvaluationBin,
     StructuralPathProbabilityCalibrationEvaluationReport,
-    StructuralPathProbabilityCalibrationReport,
-    StructuralPathRankerRuntimeRow,
-    StructuralPathRankerRuntimeSurface,
-    StructuralPathRankingExternalScoreInput,
-    StructuralPathRankingTargetExportSummary,
-    StructuralPathRankingTargetArtifact,
-    StructuralPathRankingTargetRow,
-    StructuralPathRankingRuntimeSelection,
-    StructuralPathRankingTrainerManifest,
-    STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+    StructuralPathProbabilityCalibrationReport, StructuralPathRankerRuntimeRow,
+    StructuralPathRankerRuntimeSurface, StructuralPathRankingExternalScoreInput,
+    StructuralPathRankingRuntimeSelection, StructuralPathRankingTargetArtifact,
+    StructuralPathRankingTargetExportSummary, StructuralPathRankingTargetRow,
+    StructuralPathRankingTrainerManifest, STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
     STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY,
     STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_FILE,
     STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION,
 };
 pub use crate::belief_core::regime_filter::StructuralTemporalSummaryArtifact;
 pub use crate::belief_core::regime_filter::{
-    build_structural_temporal_summary_artifact,
-    structural_duration_avg_streak_length, structural_duration_bocpd_break_probability,
-    structural_duration_bocpd_continue_probability, structural_duration_bocpd_evidence_weight,
-    structural_duration_bocpd_raw_break_probability,
+    build_structural_temporal_summary_artifact, structural_duration_avg_streak_length,
+    structural_duration_bocpd_break_probability, structural_duration_bocpd_continue_probability,
+    structural_duration_bocpd_evidence_weight, structural_duration_bocpd_raw_break_probability,
     structural_duration_bocpd_recursive_reset_probability,
     structural_duration_bocpd_recursive_run_length_entropy,
     structural_duration_bocpd_recursive_run_length_expected_value,
@@ -81,21 +70,7 @@ pub use crate::belief_core::regime_filter::{
     structural_duration_streak_count, structural_duration_temporal_posterior_support,
     structural_duration_weighted_streak_mass,
 };
-pub use crate::belief_core::structural_state::{
-    StructuralBranchArtifact, StructuralBranchSetArtifact, StructuralNodeArtifact,
-    StructuralBranchHistoryArtifact, StructuralBranchOutcomeSummary, StructuralEntityHistorySummary,
-    StructuralFeedbackField, StructuralFeedbackSubmission, StructuralFeedbackTemplateArtifact,
-    StructuralHistorySummaryArtifact, StructuralNodeHistoryArtifact,
-    StructuralNodeOutcomeSummary, StructuralPathArtifact, StructuralPathHistoryArtifact,
-    StructuralPathHistorySummary, StructuralPathOutcomeSummary,
-    StructuralPathPlanArtifact, StructuralPlaybookBundle,
-    StructuralRecommendedPathBundleArtifact, StructuralScenarioArtifact,
-    StructuralScenarioHistoryArtifact, StructuralScenarioOutcomeSummary,
-    StructuralScenarioPlaybookArtifact, StructuralTopPathCandidate,
-    StructuralTopPathCandidatesArtifact,
-};
 pub use crate::belief_core::source_reliability::{
-    StructuralExperiencePriorEntry, StructuralExperiencePriorSurfaceArtifact,
     structural_last_offline_seed_source, structural_panel_derived_smoothed_prior,
     structural_prior_behavior_policy_probability,
     structural_prior_behavior_policy_probability_variance,
@@ -105,17 +80,27 @@ pub use crate::belief_core::source_reliability::{
     structural_resolved_smoothed_prior, structural_source_confusion_concentration_multiplier,
     structural_source_panel_count, structural_source_reliability_em_readiness,
     structural_source_reliability_multiplier, structural_target_policy_context_surface,
-    structural_target_policy_context_surfaces, StructuralSourceReliabilityEmReadiness,
+    structural_target_policy_context_surfaces, StructuralExperiencePriorEntry,
+    StructuralExperiencePriorSurfaceArtifact, StructuralSourceReliabilityEmReadiness,
     StructuralTargetPolicyContextSurface,
 };
-use crate::application::provider_catalog::{
-    build_workflow_provider_support, ProviderCatalogAgentSurface,
+pub use crate::belief_core::structural_state::{
+    StructuralBranchArtifact, StructuralBranchHistoryArtifact, StructuralBranchOutcomeSummary,
+    StructuralBranchSetArtifact, StructuralEntityHistorySummary, StructuralFeedbackField,
+    StructuralFeedbackSubmission, StructuralFeedbackTemplateArtifact,
+    StructuralHistorySummaryArtifact, StructuralNodeArtifact, StructuralNodeHistoryArtifact,
+    StructuralNodeOutcomeSummary, StructuralPathArtifact, StructuralPathHistoryArtifact,
+    StructuralPathHistorySummary, StructuralPathOutcomeSummary, StructuralPathPlanArtifact,
+    StructuralPlaybookBundle, StructuralRecommendedPathBundleArtifact, StructuralScenarioArtifact,
+    StructuralScenarioHistoryArtifact, StructuralScenarioOutcomeSummary,
+    StructuralScenarioPlaybookArtifact, StructuralTopPathCandidate,
+    StructuralTopPathCandidatesArtifact,
 };
 use crate::state::{
-    recommended_next_command_meta, structural_feedback_learning_outcome,
-    structural_feedback_outcome_is_unresolved, save_text_state, FeedbackFactorUsage,
-    FeedbackRecord, ModelProbabilitySnapshot, StructuralFeedbackLearningOutcome,
-    StructuralFeedbackRefs, StructuralPriorLearningState, StructuralPriorStats, WorkflowSnapshot,
+    recommended_next_command_meta, save_text_state, structural_feedback_learning_outcome,
+    structural_feedback_outcome_is_unresolved, FeedbackFactorUsage, FeedbackRecord,
+    ModelProbabilitySnapshot, StructuralFeedbackLearningOutcome, StructuralFeedbackRefs,
+    StructuralPriorLearningState, StructuralPriorStats, WorkflowSnapshot,
 };
 use crate::types::{Direction, Regime};
 
@@ -165,8 +150,7 @@ pub fn resolved_ensemble_vote_for_snapshot(
     let Some(phase) = matching_phase_snapshot_for_ensemble_vote(snapshot, &vote) else {
         return Some(vote);
     };
-    let Some((active_regime, probabilities, confidence)) =
-        canonical_phase_regime_surface(phase)
+    let Some((active_regime, probabilities, confidence)) = canonical_phase_regime_surface(phase)
     else {
         return Some(vote);
     };
@@ -308,8 +292,7 @@ pub(crate) fn build_structural_playbook_bundle_with_runtime_context_and_prior_st
         structural_prior_state,
     );
     let branch_history = build_structural_branch_history_artifact(snapshot, feedback_history);
-    let scenario_history =
-        build_structural_scenario_history_artifact(snapshot, feedback_history);
+    let scenario_history = build_structural_scenario_history_artifact(snapshot, feedback_history);
     let path_history = build_structural_path_history_artifact(snapshot, feedback_history);
     let branch_set = build_structural_branch_set_artifact_with_prior_state(
         snapshot,
@@ -416,7 +399,13 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
     let branch_id = latest_feedback
         .as_ref()
         .map(|refs| refs.branch_id.as_str())
-        .or_else(|| playbook.branch_set.branches.first().map(|branch| branch.branch_id.as_str()));
+        .or_else(|| {
+            playbook
+                .branch_set
+                .branches
+                .first()
+                .map(|branch| branch.branch_id.as_str())
+        });
     let scenario_id = latest_feedback
         .as_ref()
         .map(|refs| refs.scenario_id.as_str())
@@ -430,7 +419,13 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
     let path_id = latest_feedback
         .as_ref()
         .map(|refs| refs.path_id.as_str())
-        .or_else(|| playbook.path_plan.paths.first().map(|path| path.path_id.as_str()));
+        .or_else(|| {
+            playbook
+                .path_plan
+                .paths
+                .first()
+                .map(|path| path.path_id.as_str())
+        });
     let node_summary = playbook
         .node_history
         .nodes
@@ -1455,8 +1450,12 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
         node: Some(StructuralExperiencePriorEntry {
             entity_kind: "node".to_string(),
             entity_id: node_id.to_string(),
-            historical_total_records: node_summary.map(|summary| summary.total_records).unwrap_or(0),
-            historical_followed_count: node_summary.map(|summary| summary.followed_count).unwrap_or(0),
+            historical_total_records: node_summary
+                .map(|summary| summary.total_records)
+                .unwrap_or(0),
+            historical_followed_count: node_summary
+                .map(|summary| summary.followed_count)
+                .unwrap_or(0),
             historical_win_rate: structural_resolved_node_win_rate(
                 structural_prior_state.nodes.get(node_id),
                 node_summary,
@@ -1480,15 +1479,14 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 structural_resolved_smoothed_prior(
                     structural_prior_state.nodes.get(node_id),
                     structural_prior_state,
-                    structural_history_adjusted_node_prior(playbook.node.belief_prior, node_summary),
+                    structural_history_adjusted_node_prior(
+                        playbook.node.belief_prior,
+                        node_summary,
+                    ),
                 ),
             ),
-            source_panel_count: structural_source_panel_count(
-                node_prior_stats,
-            ),
-            last_offline_seed_source: structural_last_offline_seed_source(
-                node_prior_stats,
-            ),
+            source_panel_count: structural_source_panel_count(node_prior_stats),
+            last_offline_seed_source: structural_last_offline_seed_source(node_prior_stats),
             dominant_source_panel,
             dominant_source_share,
             dominant_source_prior,
@@ -1497,9 +1495,7 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
             counterfactual_reward_prior: structural_prior_counterfactual_reward_prior(
                 node_prior_stats,
             ),
-            off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
-                node_prior_stats,
-            ),
+            off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(node_prior_stats),
             behavior_policy_probability: structural_prior_behavior_policy_probability(
                 node_prior_stats,
             ),
@@ -1514,9 +1510,7 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
             target_policy_probability_calibration_error:
                 structural_prior_target_policy_probability_calibration_error(node_prior_stats),
             snips_weight_mass: structural_prior_snips_weight_mass(node_prior_stats),
-            snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(
-                node_prior_stats,
-            ),
+            snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(node_prior_stats),
             snips_effective_sample_size: structural_prior_snips_effective_sample_size(
                 node_prior_stats,
             ),
@@ -1544,8 +1538,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 structural_prior_delayed_reward_resolution_probability(node_prior_stats),
             delayed_reward_censoring_probability:
                 structural_prior_delayed_reward_censoring_probability(node_prior_stats),
-            censoring_adjusted_reward_prior:
-                structural_prior_censoring_adjusted_reward_prior(node_prior_stats),
+            censoring_adjusted_reward_prior: structural_prior_censoring_adjusted_reward_prior(
+                node_prior_stats,
+            ),
             censoring_adjusted_reward_lower_bound:
                 structural_prior_censoring_adjusted_reward_lower_bound(node_prior_stats),
             delayed_reward_success_competing_risk:
@@ -1562,8 +1557,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 structural_prior_delayed_reward_elapsed_feedback_count(node_prior_stats),
             delayed_reward_elapsed_hours_at_risk:
                 structural_prior_delayed_reward_elapsed_hours_at_risk(node_prior_stats),
-            delayed_reward_avg_elapsed_hours:
-                structural_prior_delayed_reward_avg_elapsed_hours(node_prior_stats),
+            delayed_reward_avg_elapsed_hours: structural_prior_delayed_reward_avg_elapsed_hours(
+                node_prior_stats,
+            ),
             delayed_reward_resolution_hazard_per_hour:
                 structural_prior_delayed_reward_resolution_hazard_per_hour(node_prior_stats),
             delayed_reward_expected_resolution_hours:
@@ -1641,14 +1637,25 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
     provider_status_agent: &ProviderCatalogAgentSurface,
     structural_prior_state: &StructuralPriorLearningState,
 ) -> StructuralTemporalSummaryArtifact {
-    let node =
-        build_structural_node_artifact_with_prior_state(snapshot, provider_status_agent, structural_prior_state);
-    let node_duration_prior = structural_prior_state.node_duration_priors.get(&node.node_id);
-    let node_temporal_state = structural_prior_state.node_temporal_posteriors.get(&node.node_id);
+    let node = build_structural_node_artifact_with_prior_state(
+        snapshot,
+        provider_status_agent,
+        structural_prior_state,
+    );
+    let node_duration_prior = structural_prior_state
+        .node_duration_priors
+        .get(&node.node_id);
+    let node_temporal_state = structural_prior_state
+        .node_temporal_posteriors
+        .get(&node.node_id);
     let active_regime = structural_active_regime(snapshot);
-    let to_branch_id = active_regime
-        .as_ref()
-        .map(|regime| format!("{}:{}", node.node_id, structural_branch_label_for_regime(regime)));
+    let to_branch_id = active_regime.as_ref().map(|regime| {
+        format!(
+            "{}:{}",
+            node.node_id,
+            structural_branch_label_for_regime(regime)
+        )
+    });
     let latest_feedback = structural_latest_feedback_refs(snapshot);
     let branch_temporal_state = latest_feedback.as_ref().and_then(|refs| {
         to_branch_id.as_ref().and_then(|branch_id| {
@@ -1662,13 +1669,11 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
             .node_transition_posteriors
             .get(&format!("{}=>{}", refs.node_id, node.node_id))
     });
-    let transition_prior = latest_feedback
-        .as_ref()
-        .and_then(|refs| {
-            to_branch_id.as_ref().and_then(|branch_id| {
-                structural_branch_transition_prior(structural_prior_state, &refs.branch_id, branch_id)
-            })
-        });
+    let transition_prior = latest_feedback.as_ref().and_then(|refs| {
+        to_branch_id.as_ref().and_then(|branch_id| {
+            structural_branch_transition_prior(structural_prior_state, &refs.branch_id, branch_id)
+        })
+    });
     build_structural_temporal_summary_artifact(
         structural_symbol(snapshot),
         node.node_id,
@@ -1687,10 +1692,11 @@ pub fn build_structural_top_path_candidates_artifact(
     provider_status_agent: &ProviderCatalogAgentSurface,
     feedback_history: &[FeedbackRecord],
 ) -> StructuralTopPathCandidatesArtifact {
-    let candidate_paths = structural_ranked_paths(snapshot, provider_status_agent, feedback_history)
-        .into_iter()
-        .take(3)
-        .collect::<Vec<_>>();
+    let candidate_paths =
+        structural_ranked_paths(snapshot, provider_status_agent, feedback_history)
+            .into_iter()
+            .take(3)
+            .collect::<Vec<_>>();
     let symbol = structural_symbol(snapshot);
     let candidate_set_id = structural_candidate_set_id(&symbol, &candidate_paths);
     let denominator = structural_candidate_policy_denominator(&candidate_paths);
@@ -1765,11 +1771,7 @@ pub(crate) fn build_structural_top_path_candidates_artifact_with_runtime_context
         structural_prior_state,
         runtime_context,
     );
-    let candidate_paths = selection
-        .paths
-        .into_iter()
-        .take(3)
-        .collect::<Vec<_>>();
+    let candidate_paths = selection.paths.into_iter().take(3).collect::<Vec<_>>();
     let symbol = structural_symbol(snapshot);
     let candidate_set_id = if selection.candidate_set_id.is_empty() {
         structural_candidate_set_id(&symbol, &candidate_paths)
@@ -1847,31 +1849,16 @@ pub fn build_structural_path_ranking_target_artifact_with_prior_state(
     )
 }
 
-pub(crate) fn build_structural_path_ranking_target_artifact_with_runtime_context_and_prior_state(
+fn structural_path_ranking_target_artifact_from_candidates(
     snapshot: &WorkflowSnapshot,
-    provider_status_agent: &ProviderCatalogAgentSurface,
     feedback_history: &[FeedbackRecord],
     structural_prior_state: &StructuralPriorLearningState,
-    runtime_context: StructuralPathRankerRuntimeContext<'_>,
+    candidate_paths: Vec<StructuralPathArtifact>,
+    candidate_set_id: Option<String>,
 ) -> StructuralPathRankingTargetArtifact {
-    let selection = structural_ranked_paths_with_runtime_context_and_prior_state(
-        snapshot,
-        provider_status_agent,
-        feedback_history,
-        structural_prior_state,
-        runtime_context,
-    );
-    let candidate_paths = selection
-        .paths
-        .into_iter()
-        .take(3)
-        .collect::<Vec<_>>();
     let symbol = structural_symbol(snapshot);
-    let candidate_set_id = if selection.candidate_set_id.is_empty() {
-        structural_candidate_set_id(&symbol, &candidate_paths)
-    } else {
-        selection.candidate_set_id
-    };
+    let candidate_set_id =
+        candidate_set_id.unwrap_or_else(|| structural_candidate_set_id(&symbol, &candidate_paths));
     let denominator = structural_candidate_policy_denominator(&candidate_paths);
     let candidate_set_size = candidate_paths.len();
     let regime_calibration_bucket = structural_path_ranking_regime_bucket(snapshot);
@@ -1884,10 +1871,8 @@ pub(crate) fn build_structural_path_ranking_target_artifact_with_runtime_context
                 denominator,
                 candidate_set_size,
             );
-            let pending_reward_state = structural_path_ranking_pending_reward_state(
-                &path.path_id,
-                feedback_history,
-            );
+            let pending_reward_state =
+                structural_path_ranking_pending_reward_state(&path.path_id, feedback_history);
             let calibrated_label = structural_path_ranking_reward_label(&pending_reward_state);
             let maturity_mask = calibrated_label.is_some();
             let maturity_weight = if maturity_mask { 1.0 } else { 0.0 };
@@ -1933,8 +1918,9 @@ pub(crate) fn build_structural_path_ranking_target_artifact_with_runtime_context
                 target_policy_reward_prior: structural_prior_target_policy_reward_prior(
                     prior_stats,
                 ),
-                target_policy_reward_lower_bound:
-                    structural_prior_target_policy_reward_lower_bound(prior_stats),
+                target_policy_reward_lower_bound: structural_prior_target_policy_reward_lower_bound(
+                    prior_stats,
+                ),
                 experience_prior: path.path_prior,
                 current_posterior: path.path_posterior,
                 structural_baseline_score: path.composite_preference_score,
@@ -1953,6 +1939,36 @@ pub(crate) fn build_structural_path_ranking_target_artifact_with_runtime_context
     };
     apply_structural_path_probability_calibration(&mut artifact);
     artifact
+}
+
+pub(crate) fn build_structural_path_ranking_target_artifact_with_runtime_context_and_prior_state(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
+    runtime_context: StructuralPathRankerRuntimeContext<'_>,
+) -> StructuralPathRankingTargetArtifact {
+    let selection = structural_ranked_paths_with_runtime_context_and_prior_state(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        structural_prior_state,
+        runtime_context,
+    );
+    let candidate_paths = selection.paths.into_iter().take(3).collect::<Vec<_>>();
+    let symbol = structural_symbol(snapshot);
+    let candidate_set_id = if selection.candidate_set_id.is_empty() {
+        structural_candidate_set_id(&symbol, &candidate_paths)
+    } else {
+        selection.candidate_set_id
+    };
+    structural_path_ranking_target_artifact_from_candidates(
+        snapshot,
+        feedback_history,
+        structural_prior_state,
+        candidate_paths,
+        Some(candidate_set_id),
+    )
 }
 
 pub fn export_structural_path_ranking_target(
@@ -2005,10 +2021,8 @@ pub fn export_structural_path_ranking_target(
             clear_structural_path_ranking_target_row_outputs(row);
         }
     }
-    let history_rows = upsert_structural_path_ranking_target_history(
-        &history_jsonl_path,
-        &artifact.rows,
-    )?;
+    let history_rows =
+        upsert_structural_path_ranking_target_history(&history_jsonl_path, &artifact.rows)?;
     let mut history_artifact = StructuralPathRankingTargetArtifact {
         protocol_version: artifact.protocol_version.clone(),
         symbol: artifact.symbol.clone(),
@@ -2068,7 +2082,8 @@ pub fn apply_structural_path_ranking_external_scores(
         .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE);
     let raw = fs::read_to_string(&summary_path)?;
     let summary: StructuralPathRankingTargetExportSummary = serde_json::from_str(&raw)?;
-    let mut current_rows = load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path))?;
+    let mut current_rows =
+        load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path))?;
     let history_jsonl_path = if !summary.history_jsonl_path.is_empty() {
         Path::new(&summary.history_jsonl_path).to_path_buf()
     } else {
@@ -2086,14 +2101,16 @@ pub fn apply_structural_path_ranking_external_scores(
         .collect::<BTreeMap<_, _>>();
     let mut matched = 0usize;
     for row in &mut current_rows {
-        if let Some(raw_score) = score_map.get(&structural_path_ranking_target_row_history_key(row)) {
+        if let Some(raw_score) = score_map.get(&structural_path_ranking_target_row_history_key(row))
+        {
             row.raw_path_score = Some(*raw_score);
             clear_structural_path_ranking_target_row_outputs(row);
             matched += 1;
         }
     }
     for row in &mut history_rows {
-        if let Some(raw_score) = score_map.get(&structural_path_ranking_target_row_history_key(row)) {
+        if let Some(raw_score) = score_map.get(&structural_path_ranking_target_row_history_key(row))
+        {
             row.raw_path_score = Some(*raw_score);
             clear_structural_path_ranking_target_row_outputs(row);
         }
@@ -2212,6 +2229,7 @@ fn resolve_structural_path_ranker_runtime(
     state_dir: Option<&str>,
     symbol: &str,
     candidate_set_id: &str,
+    current_candidate_rows: &[StructuralPathRankingTargetRow],
     candidate_paths: &mut [StructuralPathArtifact],
 ) -> Option<StructuralPathRankerRuntimeSurface> {
     let Some(state_dir) = state_dir else {
@@ -2241,7 +2259,8 @@ fn resolve_structural_path_ranker_runtime(
             ..StructuralPathRankerRuntimeSurface::default()
         });
     };
-    let Ok(summary) = serde_json::from_str::<StructuralPathRankingTargetExportSummary>(&raw_summary)
+    let Ok(summary) =
+        serde_json::from_str::<StructuralPathRankingTargetExportSummary>(&raw_summary)
     else {
         return Some(StructuralPathRankerRuntimeSurface {
             enabled: true,
@@ -2250,32 +2269,58 @@ fn resolve_structural_path_ranker_runtime(
             ..StructuralPathRankerRuntimeSurface::default()
         });
     };
-    let current_rows =
-        load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap_or_default();
+    let current_rows = load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path))
+        .unwrap_or_default();
     let history_path = if summary.history_jsonl_path.trim().is_empty() {
         Path::new(&summary.jsonl_path).to_path_buf()
     } else {
         Path::new(&summary.history_jsonl_path).to_path_buf()
     };
     let history_rows = load_structural_path_ranking_target_rows(&history_path).unwrap_or_default();
-    let artifact_rows = load_structural_path_ranker_runtime_artifact_ref(state_dir, symbol)
-        .and_then(|(artifact_uri, score_column)| {
-            load_structural_path_ranker_runtime_artifact_rows(
+    let artifact_metadata =
+        load_structural_path_ranker_runtime_artifact_metadata(state_dir, symbol);
+    let direct_model_rows = artifact_metadata
+        .as_ref()
+        .and_then(|artifact| {
+            if !structural_path_ranker_supports_direct_model_family(&artifact.model_family) {
+                return None;
+            }
+            score_structural_path_ranker_runtime_rows_with_direct_model(
                 state_dir,
                 symbol,
-                &artifact_uri,
-                &score_column,
+                &artifact.artifact_uri,
+                &artifact.model_family,
+                current_candidate_rows,
             )
             .ok()
         })
         .unwrap_or_default();
+    let using_direct_model = !direct_model_rows.is_empty();
+    let artifact_rows = if using_direct_model {
+        direct_model_rows
+    } else {
+        artifact_metadata
+            .as_ref()
+            .and_then(|artifact| {
+                load_structural_path_ranker_runtime_artifact_rows(
+                    state_dir,
+                    symbol,
+                    &artifact.artifact_uri,
+                    &artifact.score_column,
+                )
+                .ok()
+            })
+            .unwrap_or_default()
+    };
 
     let artifact_exact_matches = artifact_rows
         .iter()
         .filter(|row| {
             row.candidate_set_id == candidate_set_id
                 && row.raw_path_score.is_some()
-                && candidate_paths.iter().any(|path| path.path_id == row.path_id)
+                && candidate_paths
+                    .iter()
+                    .any(|path| path.path_id == row.path_id)
         })
         .cloned()
         .map(|row| (row.path_id.clone(), row))
@@ -2285,7 +2330,10 @@ fn resolve_structural_path_ranker_runtime(
         if row.raw_path_score.is_none() {
             continue;
         }
-        if candidate_paths.iter().any(|path| path.path_id == row.path_id) {
+        if candidate_paths
+            .iter()
+            .any(|path| path.path_id == row.path_id)
+        {
             artifact_history_matches.insert(row.path_id.clone(), row.clone());
         }
     }
@@ -2296,7 +2344,9 @@ fn resolve_structural_path_ranker_runtime(
         .filter(|row| {
             row.candidate_set_id == candidate_set_id
                 && row.raw_path_score.is_some()
-                && candidate_paths.iter().any(|path| path.path_id == row.path_id)
+                && candidate_paths
+                    .iter()
+                    .any(|path| path.path_id == row.path_id)
         })
         .map(|row| {
             (
@@ -2318,7 +2368,10 @@ fn resolve_structural_path_ranker_runtime(
         if row.raw_path_score.is_none() {
             continue;
         }
-        if candidate_paths.iter().any(|path| path.path_id == row.path_id) {
+        if candidate_paths
+            .iter()
+            .any(|path| path.path_id == row.path_id)
+        {
             latest_history_matches.insert(
                 row.path_id.clone(),
                 StructuralPathRankerRuntimeRow {
@@ -2341,17 +2394,26 @@ fn resolve_structural_path_ranker_runtime(
         let matched = if let Some(row) = artifact_exact_matches.get(&path.path_id) {
             artifact_match_count += 1;
             Some(StructuralPathRankerRuntimeRowMatch {
-                source: "registered_artifact",
+                source: if using_direct_model {
+                    "registered_model_artifact"
+                } else {
+                    "registered_artifact"
+                },
                 row: row.clone(),
             })
-        } else if reuse_mode == STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY {
-            artifact_history_matches.get(&path.path_id).cloned().map(|row| {
-                artifact_match_count += 1;
-                StructuralPathRankerRuntimeRowMatch {
-                    source: "registered_artifact_history",
-                    row,
-                }
-            })
+        } else if !using_direct_model
+            && reuse_mode == STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY
+        {
+            artifact_history_matches
+                .get(&path.path_id)
+                .cloned()
+                .map(|row| {
+                    artifact_match_count += 1;
+                    StructuralPathRankerRuntimeRowMatch {
+                        source: "registered_artifact_history",
+                        row,
+                    }
+                })
         } else if let Some(row) = exact_matches.get(&path.path_id) {
             candidate_set_match_count += 1;
             Some(StructuralPathRankerRuntimeRowMatch {
@@ -2359,13 +2421,16 @@ fn resolve_structural_path_ranker_runtime(
                 row: row.clone(),
             })
         } else if reuse_mode == STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY {
-            latest_history_matches.get(&path.path_id).cloned().map(|row| {
-                history_match_count += 1;
-                StructuralPathRankerRuntimeRowMatch {
-                    source: "history_path",
-                    row,
-                }
-            })
+            latest_history_matches
+                .get(&path.path_id)
+                .cloned()
+                .map(|row| {
+                    history_match_count += 1;
+                    StructuralPathRankerRuntimeRowMatch {
+                        source: "history_path",
+                        row,
+                    }
+                })
         } else {
             None
         };
@@ -2425,7 +2490,9 @@ fn resolve_structural_path_ranker_runtime(
 
     Some(StructuralPathRankerRuntimeSurface {
         enabled: true,
-        status: if artifact_match_count > 0 {
+        status: if using_direct_model && artifact_match_count > 0 {
+            "using_registered_model_artifact".to_string()
+        } else if artifact_match_count > 0 {
             "using_registered_artifact_scores".to_string()
         } else if candidate_set_match_count > 0 {
             "using_candidate_set_scores".to_string()
@@ -2473,7 +2540,12 @@ fn structural_path_ranking_pending_reward_state(
         .as_ref()
         .map(|refs| refs.followed_path)
         .unwrap_or(true);
-    if !followed || record.realized_outcome.trim().eq_ignore_ascii_case("not_followed") {
+    if !followed
+        || record
+            .realized_outcome
+            .trim()
+            .eq_ignore_ascii_case("not_followed")
+    {
         return "not_followed".to_string();
     }
     if record
@@ -2486,9 +2558,7 @@ fn structural_path_ranking_pending_reward_state(
     match structural_feedback_learning_outcome(record) {
         Some(StructuralFeedbackLearningOutcome::Positive) => "matured_success".to_string(),
         Some(StructuralFeedbackLearningOutcome::Neutral)
-        | Some(StructuralFeedbackLearningOutcome::Negative) => {
-            "matured_failure".to_string()
-        }
+        | Some(StructuralFeedbackLearningOutcome::Negative) => "matured_failure".to_string(),
         None => "unobserved".to_string(),
     }
 }
@@ -2498,13 +2568,19 @@ pub fn build_structural_recommended_path_bundle_artifact(
     provider_status_agent: &ProviderCatalogAgentSurface,
     feedback_history: &[FeedbackRecord],
 ) -> Option<StructuralRecommendedPathBundleArtifact> {
-    let candidate_paths = structural_ranked_paths(snapshot, provider_status_agent, feedback_history)
-        .into_iter()
-        .take(3)
-        .collect::<Vec<_>>();
+    let candidate_paths =
+        structural_ranked_paths(snapshot, provider_status_agent, feedback_history)
+            .into_iter()
+            .take(3)
+            .collect::<Vec<_>>();
     let symbol = structural_symbol(snapshot);
     let candidate_set_id = structural_candidate_set_id(&symbol, &candidate_paths);
-    structural_recommended_path_bundle_from_candidates(symbol, candidate_set_id, None, candidate_paths)
+    structural_recommended_path_bundle_from_candidates(
+        symbol,
+        candidate_set_id,
+        None,
+        candidate_paths,
+    )
 }
 
 fn structural_recommended_path_bundle_from_candidates(
@@ -2606,11 +2682,7 @@ pub(crate) fn build_structural_recommended_path_bundle_artifact_with_runtime_con
         structural_prior_state,
         runtime_context,
     );
-    let candidate_paths = selection
-        .paths
-        .into_iter()
-        .take(3)
-        .collect::<Vec<_>>();
+    let candidate_paths = selection.paths.into_iter().take(3).collect::<Vec<_>>();
     let symbol = structural_symbol(snapshot);
     let candidate_set_id = if selection.candidate_set_id.is_empty() {
         structural_candidate_set_id(&symbol, &candidate_paths)
@@ -2865,22 +2937,20 @@ pub fn build_structural_branch_set_artifact_with_prior_state(
                     .get(&branch_id)
                     .copied()
                     .unwrap_or(probability);
-                let resolved_prior =
-                    structural_resolved_smoothed_prior(
-                        prior_stats,
-                        structural_prior_state,
-                        history_adjusted_prior,
-                    );
-                let blended_prior =
-                    blend_branch_prior_with_transition_prior(
-                        resolved_prior,
-                        transition_prior,
-                        latest_feedback.as_ref().and_then(|refs| {
-                            structural_prior_state.branch_temporal_posteriors.get(
-                                &format!("{}=>{}", refs.branch_id, branch_id),
-                            )
-                        }),
-                    );
+                let resolved_prior = structural_resolved_smoothed_prior(
+                    prior_stats,
+                    structural_prior_state,
+                    history_adjusted_prior,
+                );
+                let blended_prior = blend_branch_prior_with_transition_prior(
+                    resolved_prior,
+                    transition_prior,
+                    latest_feedback.as_ref().and_then(|refs| {
+                        structural_prior_state
+                            .branch_temporal_posteriors
+                            .get(&format!("{}=>{}", refs.branch_id, branch_id))
+                    }),
+                );
                 let branch_temporal_state = latest_feedback.as_ref().and_then(|refs| {
                     structural_prior_state
                         .branch_temporal_posteriors
@@ -3213,12 +3283,11 @@ pub(crate) fn build_structural_path_plan_artifact_with_runtime_context_and_prior
             let history_adjusted_prior =
                 structural_history_adjusted_path_prior(base_prior, historical_summary);
             let prior_stats = structural_prior_state.paths.get(&path_id);
-            let resolved_prior =
-                structural_resolved_smoothed_prior(
-                    prior_stats,
-                    structural_prior_state,
-                    history_adjusted_prior,
-                );
+            let resolved_prior = structural_resolved_smoothed_prior(
+                prior_stats,
+                structural_prior_state,
+                history_adjusted_prior,
+            );
             let composite_preference_score = structural_composite_preference_score(
                 structural_posterior_confidence(snapshot),
                 resolved_prior,
@@ -3249,11 +3318,15 @@ pub(crate) fn build_structural_path_plan_artifact_with_runtime_context_and_prior
                     .and_then(|phase| phase.execution_edge_share),
                 historical_total_records: structural_resolved_observations(
                     prior_stats,
-                    historical_summary.map(|summary| summary.total_records).unwrap_or(0),
+                    historical_summary
+                        .map(|summary| summary.total_records)
+                        .unwrap_or(0),
                 ),
                 historical_followed_count: structural_resolved_followed_count(
                     prior_stats,
-                    historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
+                    historical_summary
+                        .map(|summary| summary.followed_count)
+                        .unwrap_or(0),
                 ),
                 execution_propensity: structural_prior_execution_propensity(prior_stats),
                 historical_win_rate: structural_resolved_path_win_rate(
@@ -3307,10 +3380,19 @@ pub(crate) fn build_structural_path_plan_artifact_with_runtime_context_and_prior
     });
     let top_candidate_paths = paths.iter().take(3).cloned().collect::<Vec<_>>();
     let candidate_set_id = structural_candidate_set_id(&symbol, &top_candidate_paths);
+    let current_candidate_rows = structural_path_ranking_target_artifact_from_candidates(
+        snapshot,
+        feedback_history,
+        structural_prior_state,
+        top_candidate_paths,
+        Some(candidate_set_id.clone()),
+    )
+    .rows;
     let runtime = resolve_structural_path_ranker_runtime(
         runtime_context.state_dir,
         &symbol,
         &candidate_set_id,
+        &current_candidate_rows,
         &mut paths,
     );
     StructuralPathPlanArtifact {
@@ -3373,8 +3455,7 @@ fn structural_ranked_paths_with_runtime_context_and_prior_state(
         structural_prior_state,
     );
     let branch_history = build_structural_branch_history_artifact(snapshot, feedback_history);
-    let scenario_history =
-        build_structural_scenario_history_artifact(snapshot, feedback_history);
+    let scenario_history = build_structural_scenario_history_artifact(snapshot, feedback_history);
     let path_history = build_structural_path_history_artifact(snapshot, feedback_history);
     let branch_set = build_structural_branch_set_artifact_with_prior_state(
         snapshot,
@@ -3415,7 +3496,9 @@ fn structural_resolved_observations(
     prior_stats: Option<&StructuralPriorStats>,
     fallback: usize,
 ) -> usize {
-    prior_stats.map(|stats| stats.observations).unwrap_or(fallback)
+    prior_stats
+        .map(|stats| stats.observations)
+        .unwrap_or(fallback)
 }
 
 fn structural_resolved_followed_count(
@@ -3519,7 +3602,8 @@ fn structural_resolved_path_invalidation_rate(
 }
 
 fn structural_short_rule_summary(items: &[String], fallback: &str) -> String {
-    items.first()
+    items
+        .first()
         .map(|value| value.trim())
         .filter(|value| !value.is_empty())
         .map(str::to_string)
@@ -3542,9 +3626,7 @@ fn structural_why_this_path_summary(path: &StructuralPathArtifact) -> String {
         .unwrap_or_else(|| "n/a".to_string());
     format!(
         "posterior={:.3} prior={:.3} invalidation_rate={}",
-        path.path_posterior,
-        path.path_prior,
-        invalidation
+        path.path_posterior, path.path_prior, invalidation
     )
 }
 
@@ -3554,7 +3636,9 @@ fn structural_history_adjusted_branch_prior(
 ) -> f64 {
     structural_history_adjusted_prior(
         base_prior,
-        historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
         historical_summary.map(|summary| summary.wins).unwrap_or(0),
         historical_summary
             .map(|summary| summary.breakevens)
@@ -3577,7 +3661,9 @@ fn structural_history_adjusted_node_prior(
 ) -> f64 {
     structural_history_adjusted_prior(
         base_prior,
-        historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
         historical_summary.map(|summary| summary.wins).unwrap_or(0),
         historical_summary
             .map(|summary| summary.breakevens)
@@ -3591,7 +3677,9 @@ fn structural_history_adjusted_scenario_prior(
 ) -> f64 {
     structural_history_adjusted_prior(
         base_prior,
-        historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
         historical_summary.map(|summary| summary.wins).unwrap_or(0),
         historical_summary
             .map(|summary| summary.breakevens)
@@ -3613,10 +3701,7 @@ fn structural_history_adjusted_prior(
     (base_prior * (1.0 - sample_weight) + empirical_success * sample_weight).clamp(0.0, 1.0)
 }
 
-fn structural_history_win_rate_from_counts(
-    followed_count: usize,
-    wins: usize,
-) -> Option<f64> {
+fn structural_history_win_rate_from_counts(followed_count: usize, wins: usize) -> Option<f64> {
     if followed_count == 0 {
         None
     } else {
@@ -3639,7 +3724,9 @@ fn structural_node_history_win_rate(
     historical_summary: Option<&StructuralNodeOutcomeSummary>,
 ) -> Option<f64> {
     structural_history_win_rate_from_counts(
-        historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
         historical_summary.map(|summary| summary.wins).unwrap_or(0),
     )
 }
@@ -3648,8 +3735,12 @@ fn structural_node_history_invalidation_rate(
     historical_summary: Option<&StructuralNodeOutcomeSummary>,
 ) -> Option<f64> {
     structural_history_invalidation_rate_from_counts(
-        historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
-        historical_summary.map(|summary| summary.invalidated).unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.invalidated)
+            .unwrap_or(0),
     )
 }
 
@@ -3657,7 +3748,9 @@ fn structural_branch_history_win_rate(
     historical_summary: Option<&StructuralBranchOutcomeSummary>,
 ) -> Option<f64> {
     structural_history_win_rate_from_counts(
-        historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
         historical_summary.map(|summary| summary.wins).unwrap_or(0),
     )
 }
@@ -3666,8 +3759,12 @@ fn structural_branch_history_invalidation_rate(
     historical_summary: Option<&StructuralBranchOutcomeSummary>,
 ) -> Option<f64> {
     structural_history_invalidation_rate_from_counts(
-        historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
-        historical_summary.map(|summary| summary.invalidated).unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.invalidated)
+            .unwrap_or(0),
     )
 }
 
@@ -3675,7 +3772,9 @@ fn structural_scenario_history_win_rate(
     historical_summary: Option<&StructuralScenarioOutcomeSummary>,
 ) -> Option<f64> {
     structural_history_win_rate_from_counts(
-        historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
         historical_summary.map(|summary| summary.wins).unwrap_or(0),
     )
 }
@@ -3684,8 +3783,12 @@ fn structural_scenario_history_invalidation_rate(
     historical_summary: Option<&StructuralScenarioOutcomeSummary>,
 ) -> Option<f64> {
     structural_history_invalidation_rate_from_counts(
-        historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
-        historical_summary.map(|summary| summary.invalidated).unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.invalidated)
+            .unwrap_or(0),
     )
 }
 
@@ -3715,7 +3818,9 @@ fn structural_history_win_rate(
     historical_summary: Option<&StructuralPathOutcomeSummary>,
 ) -> Option<f64> {
     structural_history_win_rate_from_counts(
-        historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
         historical_summary.map(|summary| summary.wins).unwrap_or(0),
     )
 }
@@ -3724,8 +3829,12 @@ fn structural_history_invalidation_rate(
     historical_summary: Option<&StructuralPathOutcomeSummary>,
 ) -> Option<f64> {
     structural_history_invalidation_rate_from_counts(
-        historical_summary.map(|summary| summary.followed_count).unwrap_or(0),
-        historical_summary.map(|summary| summary.invalidated).unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.invalidated)
+            .unwrap_or(0),
     )
 }
 
@@ -3897,15 +4006,12 @@ fn structural_active_regime(snapshot: &WorkflowSnapshot) -> Option<String> {
                 .and_then(|vote| canonical_structural_regime_label(&vote.posterior_active_regime))
         })
         .or_else(|| {
-            snapshot
-                .latest_analyze
-                .as_ref()
-                .and_then(|analyze| {
-                    analyze
-                        .pre_bayes_filtered_assignments
-                        .get("market_regime")
-                        .and_then(|value| canonical_structural_regime_label(value))
-                })
+            snapshot.latest_analyze.as_ref().and_then(|analyze| {
+                analyze
+                    .pre_bayes_filtered_assignments
+                    .get("market_regime")
+                    .and_then(|value| canonical_structural_regime_label(value))
+            })
         })
 }
 
@@ -4032,9 +4138,7 @@ fn structural_prior_snips_effective_sample_size(
     structural_prior_positive_value(prior_stats, |stats| stats.snips_effective_sample_size)
 }
 
-fn structural_prior_snips_reward_prior(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
+fn structural_prior_snips_reward_prior(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
     structural_prior_positive_value(prior_stats, |stats| stats.snips_reward_prior)
 }
 
@@ -4995,9 +5099,8 @@ fn structural_history_execution_propensity(
     not_followed: usize,
 ) -> Option<f64> {
     let exposure = followed_count + not_followed;
-    (exposure > 0).then(|| {
-        ((1.0 + followed_count as f64) / (2.0 + exposure as f64)).clamp(0.0, 1.0)
-    })
+    (exposure > 0)
+        .then(|| ((1.0 + followed_count as f64) / (2.0 + exposure as f64)).clamp(0.0, 1.0))
 }
 
 fn structural_history_off_policy_exposure_rate(
@@ -5005,8 +5108,7 @@ fn structural_history_off_policy_exposure_rate(
     not_followed: usize,
 ) -> Option<f64> {
     let exposure = followed_count + not_followed;
-    (exposure > 0)
-        .then(|| ((1.0 + not_followed as f64) / (2.0 + exposure as f64)).clamp(0.0, 1.0))
+    (exposure > 0).then(|| ((1.0 + not_followed as f64) / (2.0 + exposure as f64)).clamp(0.0, 1.0))
 }
 
 pub fn build_structural_history_summary_artifact(
@@ -5063,15 +5165,15 @@ pub fn build_structural_node_history_artifact(
     snapshot: &WorkflowSnapshot,
     feedback_history: &[FeedbackRecord],
 ) -> StructuralNodeHistoryArtifact {
-    let mut summaries =
-        std::collections::BTreeMap::<String, StructuralNodeOutcomeSummary>::new();
+    let mut summaries = std::collections::BTreeMap::<String, StructuralNodeOutcomeSummary>::new();
     for row in structural_feedback_history_rows(feedback_history) {
-        let entry = summaries
-            .entry(row.node_id.clone())
-            .or_insert_with(|| StructuralNodeOutcomeSummary {
-                node_id: row.node_id.clone(),
-                ..StructuralNodeOutcomeSummary::default()
-            });
+        let entry =
+            summaries
+                .entry(row.node_id.clone())
+                .or_insert_with(|| StructuralNodeOutcomeSummary {
+                    node_id: row.node_id.clone(),
+                    ..StructuralNodeOutcomeSummary::default()
+                });
         entry.total_records += 1;
         entry.avg_pnl += row.pnl;
         if row.followed_path {
@@ -5112,10 +5214,8 @@ pub fn build_structural_branch_history_artifact(
     snapshot: &WorkflowSnapshot,
     feedback_history: &[FeedbackRecord],
 ) -> StructuralBranchHistoryArtifact {
-    let mut summaries = std::collections::BTreeMap::<
-        (String, String),
-        StructuralBranchOutcomeSummary,
-    >::new();
+    let mut summaries =
+        std::collections::BTreeMap::<(String, String), StructuralBranchOutcomeSummary>::new();
     for row in structural_feedback_history_rows(feedback_history) {
         let entry = summaries
             .entry((row.node_id.clone(), row.branch_id.clone()))
@@ -5205,7 +5305,10 @@ pub fn build_structural_scenario_history_artifact(
     finalize_structural_scenario_summaries(&mut scenarios);
     StructuralScenarioHistoryArtifact {
         summary: StructuralEntityHistorySummary {
-            total_records: scenarios.iter().map(|scenario| scenario.total_records).sum(),
+            total_records: scenarios
+                .iter()
+                .map(|scenario| scenario.total_records)
+                .sum(),
             distinct_entities: scenarios.len(),
             latest_entity_id: snapshot
                 .latest_update
@@ -5576,9 +5679,7 @@ mod tests {
         );
         assert_eq!(readiness.consensus_item_count, 3);
         assert_eq!(readiness.conflict_item_count, 1);
-        assert!(
-            (readiness.avg_consensus_confidence.unwrap() - (2.5 / 3.0)).abs() < 1e-9
-        );
+        assert!((readiness.avg_consensus_confidence.unwrap() - (2.5 / 3.0)).abs() < 1e-9);
         assert_eq!(readiness.min_consensus_confidence, Some(0.5));
         assert_eq!(
             readiness.em_iteration_count,
@@ -5749,7 +5850,10 @@ mod tests {
             ..StructuralPriorStats::default()
         };
 
-        assert_eq!(structural_prior_matured_feedback_count(Some(&stats)), Some(3));
+        assert_eq!(
+            structural_prior_matured_feedback_count(Some(&stats)),
+            Some(3)
+        );
         assert_eq!(
             structural_prior_unresolved_feedback_count(Some(&stats)),
             Some(1)
@@ -5776,8 +5880,7 @@ mod tests {
                 .abs()
                 < 1e-9
         );
-        let expected_competing_risks: [f64; 4] =
-            [2.5 / 7.0, 2.5 / 7.0, 1.0 / 7.0, 1.0 / 7.0];
+        let expected_competing_risks: [f64; 4] = [2.5 / 7.0, 2.5 / 7.0, 1.0 / 7.0, 1.0 / 7.0];
         let expected_competing_risk_entropy: f64 = expected_competing_risks
             .iter()
             .map(|risk| -*risk * (*risk).ln())
@@ -5898,8 +6001,14 @@ mod tests {
             structural_prior_unresolved_feedback_count(Some(&not_followed_only)),
             Some(0)
         );
-        assert_eq!(structural_prior_maturity_coverage(Some(&not_followed_only)), None);
-        assert_eq!(structural_prior_censoring_rate(Some(&not_followed_only)), None);
+        assert_eq!(
+            structural_prior_maturity_coverage(Some(&not_followed_only)),
+            None
+        );
+        assert_eq!(
+            structural_prior_censoring_rate(Some(&not_followed_only)),
+            None
+        );
         assert_eq!(
             structural_prior_delayed_reward_resolution_probability(Some(&not_followed_only)),
             None
@@ -5956,8 +6065,8 @@ mod tests {
             },
         );
 
-        let prior = structural_panel_derived_smoothed_prior(&stats, &state)
-            .expect("panel-derived prior");
+        let prior =
+            structural_panel_derived_smoothed_prior(&stats, &state).expect("panel-derived prior");
 
         assert!((prior - (2.0 / 3.0)).abs() < 1e-9);
     }
@@ -6068,13 +6177,7 @@ mod tests {
             calibrated_evaluation_row("pending", 0.5, 0.5, "unobserved", "NQ:trend"),
             StructuralPathRankingTargetRow {
                 raw_path_score: None,
-                ..calibrated_evaluation_row(
-                    "no-score",
-                    0.5,
-                    0.5,
-                    "matured_success",
-                    "NQ:trend",
-                )
+                ..calibrated_evaluation_row("no-score", 0.5, 0.5, "matured_success", "NQ:trend")
             },
         ];
 
@@ -6120,8 +6223,6 @@ mod tests {
         assert_eq!(report.eligible_rows, 2);
         assert_eq!(report.propensity_weighted_rows, 2);
         assert!((report.brier_score.unwrap() - 0.53).abs() < 1e-9);
-        assert!(
-            (report.propensity_weighted_brier_score.unwrap() - 0.698).abs() < 1e-9
-        );
+        assert!((report.propensity_weighted_brier_score.unwrap() - 0.698).abs() < 1e-9);
     }
 }
