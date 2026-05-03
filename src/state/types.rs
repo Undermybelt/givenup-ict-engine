@@ -9141,14 +9141,20 @@ mod tests {
         assert!(trend.bocpd_sequence_recursive_run_length_entropy >= 0.0);
         let parametric_break_hazard =
             structural_duration_break_hazard(trend.last_streak_length, trend.expected_dwell_steps);
-        assert!(
-            (trend.bocpd_break_probability
-                - ((1.0 - trend.bocpd_evidence_weight) * parametric_break_hazard
-                    + trend.bocpd_evidence_weight * trend.bocpd_raw_break_probability))
-                .abs()
-                < 1e-9
-        );
         assert!(trend.bocpd_break_probability > 0.0);
+        assert!(trend.bocpd_break_probability < 1.0);
+        assert!(
+            trend.bocpd_break_probability
+                > parametric_break_hazard.min(trend.bocpd_raw_break_probability)
+        );
+        assert!(
+            trend.bocpd_break_probability
+                < parametric_break_hazard.max(trend.bocpd_raw_break_probability)
+                || (trend.bocpd_break_probability
+                    - parametric_break_hazard.max(trend.bocpd_raw_break_probability))
+                .abs()
+                    < 1e-9
+        );
         assert!(
             (trend.bocpd_continue_probability - (1.0 - trend.bocpd_break_probability)).abs() < 1e-9
         );

@@ -1,9 +1,10 @@
 use std::collections::BTreeMap;
 
 use crate::state::{
-    StructuralNodeDurationBucket, StructuralNodeDurationPrior,
-    StructuralNodeTemporalPosteriorState,
+    StructuralNodeDurationBucket, StructuralNodeDurationPrior, StructuralNodeTemporalPosteriorState,
 };
+
+const CHANGEPOINT_PROBABILITY_EPSILON: f64 = 1e-3;
 
 #[derive(Debug, Clone, Default)]
 pub(crate) struct StructuralNodeStreakRecord {
@@ -53,6 +54,31 @@ pub(crate) fn structural_duration_break_hazard(
     (elapsed / (elapsed + expected_dwell_steps)).clamp(0.0, 1.0)
 }
 
+fn structural_changepoint_clamped_probability(value: f64) -> f64 {
+    value.clamp(
+        CHANGEPOINT_PROBABILITY_EPSILON,
+        1.0 - CHANGEPOINT_PROBABILITY_EPSILON,
+    )
+}
+
+fn structural_changepoint_log_odds_update(
+    prior_probability: f64,
+    weighted_likelihoods: &[(f64, f64)],
+) -> f64 {
+    let prior = structural_changepoint_clamped_probability(prior_probability);
+    let prior_log_odds = (prior / (1.0 - prior)).ln();
+    let evidence_log_odds = weighted_likelihoods
+        .iter()
+        .map(|(probability, _weight)| {
+            let probability = structural_changepoint_clamped_probability(*probability);
+            probability / (1.0 - probability)
+        })
+        .zip(weighted_likelihoods.iter().map(|(_, weight)| *weight))
+        .map(|(odds, weight)| weight.clamp(0.0, 1.0) * odds.ln())
+        .sum::<f64>();
+    (1.0 / (1.0 + (-(prior_log_odds + evidence_log_odds)).exp())).clamp(0.0, 1.0)
+}
+
 pub(crate) fn structural_bocpd_break_probability(
     completion_hazard: f64,
     duration_surprise: f64,
@@ -64,10 +90,13 @@ pub(crate) fn structural_bocpd_break_probability(
         duration_surprise / (1.0 + duration_surprise)
     };
     let negative_outcome_pressure = (1.0 - duration_outcome_support).clamp(0.0, 1.0);
-    (completion_hazard.clamp(0.0, 1.0) * 0.60
-        + surprise_pressure.clamp(0.0, 1.0) * 0.25
-        + negative_outcome_pressure * 0.15)
-        .clamp(0.0, 1.0)
+    structural_changepoint_log_odds_update(
+        completion_hazard.clamp(0.0, 1.0),
+        &[
+            (surprise_pressure.clamp(0.0, 1.0), 0.6),
+            (negative_outcome_pressure, 0.4),
+        ],
+    )
 }
 
 pub(crate) fn structural_node_duration_distribution_fit(
@@ -99,8 +128,7 @@ pub(crate) fn structural_node_duration_distribution_fit(
             .filter(|(candidate_steps, _)| *candidate_steps >= dwell_steps)
             .map(|(_, (_, weighted_mass))| *weighted_mass)
             .sum();
-        let survival_probability =
-            (survival_mass / total_weighted_streak_mass).clamp(0.0, 1.0);
+        let survival_probability = (survival_mass / total_weighted_streak_mass).clamp(0.0, 1.0);
         let completion_hazard = if survival_mass <= f64::EPSILON {
             0.0
         } else {
@@ -125,8 +153,7 @@ pub(crate) fn structural_node_duration_distribution_fit(
         .get(&elapsed_dwell_steps)
         .map(|(_, weighted_mass)| *weighted_mass)
         .unwrap_or_default();
-    let survival_probability =
-        (elapsed_survival_mass / total_weighted_streak_mass).clamp(0.0, 1.0);
+    let survival_probability = (elapsed_survival_mass / total_weighted_streak_mass).clamp(0.0, 1.0);
     let completion_hazard = if elapsed_dwell_steps == 0 {
         0.0
     } else if elapsed_survival_mass <= f64::EPSILON {
@@ -166,7 +193,7 @@ pub(crate) fn structural_node_bocpd_recursive_run_length_fit(
         }
         let hazard = ((1.0 - evidence_weight) * fallback_break_probability
             + evidence_weight * bucket.completion_hazard.clamp(0.0, 1.0))
-            .clamp(0.0, 1.0);
+        .clamp(0.0, 1.0);
         *posterior.entry(0).or_default() += prior_probability * hazard;
         *posterior
             .entry(bucket.dwell_steps.saturating_add(1))
@@ -212,14 +239,12 @@ fn structural_node_streak_pair_change(
         .max(current.streak_length)
         .max(expected_dwell_steps.ceil() as usize)
         .max(1) as f64;
-    let duration_change = (current.streak_length as f64 - previous.streak_length as f64).abs()
-        / duration_denominator;
+    let duration_change =
+        (current.streak_length as f64 - previous.streak_length as f64).abs() / duration_denominator;
     let outcome_change = (structural_node_streak_outcome_support(current)
         - structural_node_streak_outcome_support(previous))
     .abs();
-    (duration_change.clamp(0.0, 1.0) * 0.7
-        + outcome_change.clamp(0.0, 1.0) * 0.3)
-        .clamp(0.0, 1.0)
+    (duration_change.clamp(0.0, 1.0) * 0.7 + outcome_change.clamp(0.0, 1.0) * 0.3).clamp(0.0, 1.0)
 }
 
 pub(crate) fn structural_node_bocpd_sequence_change_intensity(
@@ -254,10 +279,13 @@ pub(crate) fn structural_node_bocpd_sequence_break_probability(
     sequence_change_intensity: f64,
     evidence_weight: f64,
 ) -> f64 {
-    let sequence_weight = (evidence_weight * 0.5).clamp(0.0, 0.5);
-    (recursive_break_probability.clamp(0.0, 1.0) * (1.0 - sequence_weight)
-        + sequence_change_intensity.clamp(0.0, 1.0) * sequence_weight)
-        .clamp(0.0, 1.0)
+    structural_changepoint_log_odds_update(
+        recursive_break_probability.clamp(0.0, 1.0),
+        &[(
+            sequence_change_intensity.clamp(0.0, 1.0),
+            (evidence_weight * 0.75).clamp(0.0, 0.75),
+        )],
+    )
 }
 
 pub(crate) fn structural_node_bocpd_sequence_recursive_run_length_fit(
@@ -302,7 +330,10 @@ pub(crate) fn structural_node_bocpd_sequence_recursive_run_length_fit(
         posterior = next
             .into_iter()
             .map(|(run_length, probability)| {
-                (run_length, (probability / total_probability).clamp(0.0, 1.0))
+                (
+                    run_length,
+                    (probability / total_probability).clamp(0.0, 1.0),
+                )
             })
             .collect();
     }
@@ -397,7 +428,8 @@ pub(crate) fn rebuild_discounted_node_duration_priors(
         prior.break_hazard = ((1.0 - fit_weight) * parametric_break_hazard
             + fit_weight * prior.empirical_duration_completion_hazard)
             .clamp(0.0, 1.0);
-        prior.persistence_prior = (weighted_avg_length / (weighted_avg_length + 1.0)).clamp(0.0, 1.0);
+        prior.persistence_prior =
+            (weighted_avg_length / (weighted_avg_length + 1.0)).clamp(0.0, 1.0);
         let alpha = 1.0 + weighted_success_mass.max(0.0);
         let beta = 1.0 + weighted_failure_mass.max(0.0);
         prior.duration_outcome_support = (alpha / (alpha + beta)).clamp(0.0, 1.0);
@@ -409,10 +441,13 @@ pub(crate) fn rebuild_discounted_node_duration_priors(
             prior.bocpd_duration_surprise,
             prior.duration_outcome_support,
         );
-        prior.bocpd_break_probability = ((1.0 - prior.bocpd_evidence_weight)
-            * parametric_break_hazard
-            + prior.bocpd_evidence_weight * prior.bocpd_raw_break_probability)
-            .clamp(0.0, 1.0);
+        prior.bocpd_break_probability = structural_changepoint_log_odds_update(
+            parametric_break_hazard,
+            &[(
+                prior.bocpd_raw_break_probability,
+                prior.bocpd_evidence_weight,
+            )],
+        );
         prior.bocpd_continue_probability = (1.0 - prior.bocpd_break_probability).clamp(0.0, 1.0);
         prior.bocpd_run_length_mode = duration_fit.run_length_mode;
         prior.bocpd_run_length_mode_probability = duration_fit.run_length_mode_probability;
@@ -437,12 +472,13 @@ pub(crate) fn rebuild_discounted_node_duration_priors(
             prior.bocpd_sequence_change_intensity,
             prior.bocpd_evidence_weight,
         );
-        let sequence_recursive_run_length_fit = structural_node_bocpd_sequence_recursive_run_length_fit(
-            streaks,
-            prior.expected_dwell_steps,
-            prior.bocpd_sequence_break_probability,
-            prior.bocpd_evidence_weight,
-        );
+        let sequence_recursive_run_length_fit =
+            structural_node_bocpd_sequence_recursive_run_length_fit(
+                streaks,
+                prior.expected_dwell_steps,
+                prior.bocpd_sequence_break_probability,
+                prior.bocpd_evidence_weight,
+            );
         prior.bocpd_sequence_recursive_reset_probability =
             sequence_recursive_run_length_fit.reset_probability;
         prior.bocpd_sequence_recursive_run_length_mode =
@@ -457,8 +493,7 @@ pub(crate) fn rebuild_discounted_node_duration_priors(
             + prior.duration_outcome_support * 0.3)
             .clamp(0.0, 1.0);
         prior.temporal_posterior_support =
-            (prior.persistence_prior * 0.7 + prior.duration_outcome_support * 0.3)
-                .clamp(0.0, 1.0);
+            (prior.persistence_prior * 0.7 + prior.duration_outcome_support * 0.3).clamp(0.0, 1.0);
         let observation_weight = (prior.weighted_streak_mass / 3.0).min(1.0);
         let streak_weight = (prior.streak_count as f64 / 3.0).min(1.0);
         let posterior_blend_weight = (observation_weight * streak_weight * 0.5).clamp(0.0, 0.5);
