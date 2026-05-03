@@ -2,11 +2,54 @@ use std::collections::BTreeMap;
 
 use crate::state::{
     StructuralBranchTemporalPosteriorState, StructuralBranchTransitionPrior,
+    StructuralNodeDurationPrior, StructuralNodeTemporalPosteriorState,
     StructuralNodeTransitionPosteriorState,
 };
 
 const NODE_TRANSITION_RECURSIVE_STEP_DISCOUNT: f64 = 0.5;
 const NODE_TRANSITION_RECURSIVE_MAX_DEPTH: usize = 4;
+
+pub fn blend_node_posterior_with_duration_prior(
+    base_posterior: f64,
+    duration_prior: Option<&StructuralNodeDurationPrior>,
+    temporal_state: Option<&StructuralNodeTemporalPosteriorState>,
+) -> f64 {
+    let temporal_support = temporal_state
+        .map(|state| state.temporal_posterior_support)
+        .or_else(|| duration_prior.map(|prior| prior.temporal_posterior_support));
+    let blend_weight = temporal_state
+        .map(|state| state.posterior_blend_weight)
+        .or_else(|| {
+            duration_prior.map(|prior| {
+                let observation_weight = (prior.weighted_streak_mass / 3.0).min(1.0);
+                let streak_weight = (prior.streak_count as f64 / 3.0).min(1.0);
+                (observation_weight * streak_weight * 0.5).clamp(0.0, 0.5)
+            })
+        });
+    let (Some(blend_weight), Some(temporal_support)) = (blend_weight, temporal_support) else {
+        return base_posterior;
+    };
+    ((1.0 - blend_weight) * base_posterior + blend_weight * temporal_support).clamp(0.0, 1.0)
+}
+
+pub fn blend_branch_prior_with_transition_prior(
+    base_prior: f64,
+    transition_prior: Option<&StructuralBranchTransitionPrior>,
+    temporal_state: Option<&StructuralBranchTemporalPosteriorState>,
+) -> f64 {
+    if let Some(state) = temporal_state {
+        return ((1.0 - (state.weighted_observation_mass / 3.0).min(1.0)) * base_prior
+            + (state.weighted_observation_mass / 3.0).min(1.0) * state.temporal_posterior_support)
+            .clamp(0.0, 1.0);
+    }
+    let Some(transition_prior) = transition_prior else {
+        return base_prior;
+    };
+    let transition_weight = (transition_prior.weighted_observation_mass / 3.0).min(1.0);
+    ((1.0 - transition_weight) * base_prior
+        + transition_weight * transition_prior.temporal_posterior_support)
+        .clamp(0.0, 1.0)
+}
 
 pub fn transition_adjusted_branch_posteriors(
     node_id: &str,
