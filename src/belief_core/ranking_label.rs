@@ -8,6 +8,8 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 
+use crate::belief_core::beta_dirichlet_update::{beta_posterior_lower_bound, beta_posterior_mean};
+
 const STRUCTURAL_PATH_RANKING_RUNTIME_DIR: &str = "policy_training";
 pub const STRUCTURAL_PATH_RANKING_IPS_WEIGHT_CLIP: f64 = 5.0;
 pub const STRUCTURAL_PATH_RANKING_EXECUTION_GATE_MIN_PATH_PROB: f64 = 0.5;
@@ -16,8 +18,7 @@ pub const STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_FILE: &str =
     "structural_path_ranking_runtime_selection.json";
 pub const STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION: &str =
     "structural-path-ranking-runtime-selection-v1";
-pub const STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY: &str =
-    "candidate_set_only";
+pub const STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY: &str = "candidate_set_only";
 pub const STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY: &str = "prefer_history";
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
@@ -273,7 +274,8 @@ pub fn load_structural_path_ranking_runtime_selection(
     let path = structural_path_ranking_runtime_selection_path(state_dir, symbol);
     let raw = fs::read_to_string(path).ok()?;
     let selection = serde_json::from_str::<StructuralPathRankingRuntimeSelection>(&raw).ok()?;
-    if selection.protocol_version.trim() != STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION
+    if selection.protocol_version.trim()
+        != STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION
     {
         return None;
     }
@@ -426,11 +428,15 @@ fn parse_structural_path_ranker_runtime_rows_from_raw(
             let rows = match value {
                 Value::Array(items) => items
                     .iter()
-                    .filter_map(|item| structural_path_ranker_runtime_row_from_value(item, score_column))
+                    .filter_map(|item| {
+                        structural_path_ranker_runtime_row_from_value(item, score_column)
+                    })
                     .collect(),
-                Value::Object(_) => structural_path_ranker_runtime_row_from_value(&value, score_column)
-                    .into_iter()
-                    .collect(),
+                Value::Object(_) => {
+                    structural_path_ranker_runtime_row_from_value(&value, score_column)
+                        .into_iter()
+                        .collect()
+                }
                 _ => Vec::new(),
             };
             Ok(rows)
@@ -466,10 +472,15 @@ pub fn load_structural_path_ranker_runtime_artifact_rows(
             .send()?
             .error_for_status()?
             .text()?;
-        return parse_structural_path_ranker_runtime_rows_from_raw(artifact_uri, &raw, score_column);
+        return parse_structural_path_ranker_runtime_rows_from_raw(
+            artifact_uri,
+            &raw,
+            score_column,
+        );
     }
-    let artifact_path = structural_path_ranker_artifact_uri_path(state_dir, symbol, artifact_uri)
-        .ok_or_else(|| anyhow::anyhow!("artifact uri is not a supported local path"))?;
+    let artifact_path =
+        structural_path_ranker_artifact_uri_path(state_dir, symbol, artifact_uri)
+            .ok_or_else(|| anyhow::anyhow!("artifact uri is not a supported local path"))?;
     if !artifact_path.exists() {
         return Ok(Vec::new());
     }
@@ -609,16 +620,11 @@ pub fn structural_path_ranking_reward_label(pending_reward_state: &str) -> Optio
 }
 
 pub fn structural_path_ranking_beta_mean(success_mass: f64, failure_mass: f64) -> f64 {
-    let alpha = 1.0 + success_mass.max(0.0);
-    let beta = 1.0 + failure_mass.max(0.0);
-    (alpha / (alpha + beta)).clamp(0.0, 1.0)
+    beta_posterior_mean(success_mass, failure_mass)
 }
 
 pub fn structural_path_ranking_beta_lower_bound(success_mass: f64, failure_mass: f64) -> f64 {
-    let mean = structural_path_ranking_beta_mean(success_mass, failure_mass);
-    let n = 2.0 + success_mass.max(0.0) + failure_mass.max(0.0);
-    let standard_error = (mean * (1.0 - mean) / (n + 1.0)).sqrt();
-    (mean - 1.64 * standard_error).clamp(0.0, 1.0)
+    beta_posterior_lower_bound(success_mass, failure_mass, 1.64)
 }
 
 pub fn structural_path_ranking_ips_weight(propensity_estimate: Option<f64>) -> Option<f64> {
@@ -635,8 +641,7 @@ pub fn structural_path_ranking_propensity_estimate(
     behavior_policy_probability: f64,
 ) -> Option<f64> {
     execution_propensity.map(|propensity| {
-        (propensity.clamp(0.0, 1.0) * behavior_policy_probability.clamp(0.0, 1.0))
-            .clamp(0.0, 1.0)
+        (propensity.clamp(0.0, 1.0) * behavior_policy_probability.clamp(0.0, 1.0)).clamp(0.0, 1.0)
     })
 }
 
@@ -1000,10 +1005,7 @@ pub fn structural_path_ranking_target_export_summary(
         .iter()
         .filter(|row| row.training_weight.is_some())
         .count();
-    let history_mature_rows = history_rows
-        .iter()
-        .filter(|row| row.maturity_mask)
-        .count();
+    let history_mature_rows = history_rows.iter().filter(|row| row.maturity_mask).count();
     let history_rows_with_raw_path_score = history_rows
         .iter()
         .filter(|row| row.raw_path_score.is_some())
@@ -1086,9 +1088,7 @@ pub fn structural_path_ranking_target_export_summary(
     }
 }
 
-pub fn clear_structural_path_ranking_target_row_outputs(
-    row: &mut StructuralPathRankingTargetRow,
-) {
+pub fn clear_structural_path_ranking_target_row_outputs(row: &mut StructuralPathRankingTargetRow) {
     row.calibrated_path_prob = None;
     row.path_prob_lower_bound = None;
     row.execution_gate_status = None;
@@ -1104,7 +1104,12 @@ pub fn upsert_structural_path_ranking_target_history(
     let mut index = history
         .iter()
         .enumerate()
-        .map(|(position, row)| (structural_path_ranking_target_row_history_key(row), position))
+        .map(|(position, row)| {
+            (
+                structural_path_ranking_target_row_history_key(row),
+                position,
+            )
+        })
         .collect::<BTreeMap<_, _>>();
     for row in rows {
         let key = structural_path_ranking_target_row_history_key(row);
