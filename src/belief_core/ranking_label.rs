@@ -881,3 +881,184 @@ pub fn evaluate_structural_path_probability_calibration_rows(
         ),
     }
 }
+
+pub fn structural_path_ranking_trainer_manifest() -> StructuralPathRankingTrainerManifest {
+    StructuralPathRankingTrainerManifest {
+        protocol_version: "structural-path-ranking-trainer-manifest-v1".to_string(),
+        dataset_role: "external_path_ranker_training_dataset".to_string(),
+        group_id_column: "candidate_set_id".to_string(),
+        label_column: "calibrated_label".to_string(),
+        weight_column: "training_weight".to_string(),
+        maturity_column: "maturity_mask".to_string(),
+        raw_score_column: "raw_path_score".to_string(),
+        feature_columns: vec![
+            "rank".to_string(),
+            "direction".to_string(),
+            "regime_calibration_bucket".to_string(),
+            "behavior_policy_probability".to_string(),
+            "execution_propensity".to_string(),
+            "target_policy_probability_confidence".to_string(),
+            "target_policy_probability_lower_bound".to_string(),
+            "target_policy_reward_prior".to_string(),
+            "target_policy_reward_lower_bound".to_string(),
+            "experience_prior".to_string(),
+            "current_posterior".to_string(),
+            "structural_baseline_score".to_string(),
+        ],
+        calibration_columns: vec![
+            "calibrated_path_prob".to_string(),
+            "path_prob_lower_bound".to_string(),
+            "execution_gate_status".to_string(),
+        ],
+        guardrail_columns: vec![
+            "candidate_set_size".to_string(),
+            "path_id".to_string(),
+            "scenario_id".to_string(),
+            "pending_reward_state".to_string(),
+            "maturity_weight".to_string(),
+            "propensity_estimate".to_string(),
+            "ips_weight".to_string(),
+        ],
+        notes: vec![
+            "Trainer runs outside the Rust belief engine; this manifest only describes exported columns."
+                .to_string(),
+            "Rows without calibrated_label or training_weight are censored/unusable for supervised ranker loss."
+                .to_string(),
+        ],
+    }
+}
+
+pub fn structural_path_ranking_target_export_summary(
+    state_dir: &str,
+    symbol: &str,
+    artifact: &StructuralPathRankingTargetArtifact,
+    csv_name: &str,
+    jsonl_name: &str,
+    history_csv_name: &str,
+    history_jsonl_name: &str,
+    history_rows: &[StructuralPathRankingTargetRow],
+    summary_name: &str,
+) -> StructuralPathRankingTargetExportSummary {
+    let mut pending_reward_states = BTreeMap::new();
+    for row in &artifact.rows {
+        *pending_reward_states
+            .entry(row.pending_reward_state.clone())
+            .or_insert(0) += 1;
+    }
+    let rows = artifact.rows.len();
+    let mature_rows = artifact.rows.iter().filter(|row| row.maturity_mask).count();
+    let rows_with_raw_path_score = artifact
+        .rows
+        .iter()
+        .filter(|row| row.raw_path_score.is_some())
+        .count();
+    let rows_with_calibrated_path_prob = artifact
+        .rows
+        .iter()
+        .filter(|row| row.calibrated_path_prob.is_some())
+        .count();
+    let rows_with_path_prob_lower_bound = artifact
+        .rows
+        .iter()
+        .filter(|row| row.path_prob_lower_bound.is_some())
+        .count();
+    let rows_with_propensity_estimate = artifact
+        .rows
+        .iter()
+        .filter(|row| row.propensity_estimate.is_some())
+        .count();
+    let rows_with_execution_gate_status = artifact
+        .rows
+        .iter()
+        .filter(|row| row.execution_gate_status.is_some())
+        .count();
+    let rows_with_training_weight = artifact
+        .rows
+        .iter()
+        .filter(|row| row.training_weight.is_some())
+        .count();
+    let history_mature_rows = history_rows
+        .iter()
+        .filter(|row| row.maturity_mask)
+        .count();
+    let history_rows_with_raw_path_score = history_rows
+        .iter()
+        .filter(|row| row.raw_path_score.is_some())
+        .count();
+    let history_rows_with_calibrated_path_prob = history_rows
+        .iter()
+        .filter(|row| row.calibrated_path_prob.is_some())
+        .count();
+    let history_rows_with_path_prob_lower_bound = history_rows
+        .iter()
+        .filter(|row| row.path_prob_lower_bound.is_some())
+        .count();
+    let history_rows_with_propensity_estimate = history_rows
+        .iter()
+        .filter(|row| row.propensity_estimate.is_some())
+        .count();
+    let history_rows_with_training_weight = history_rows
+        .iter()
+        .filter(|row| row.training_weight.is_some())
+        .count();
+    let summary_line = format!(
+        "structural_path_ranking_target rows={} history_rows={} candidate_set_size={} mature_rows={} history_mature_rows={} propensity_rows={} calibrated_rows={} execution_gate_rows={} training_weight_rows={}",
+        rows,
+        history_rows.len(),
+        artifact.candidate_set_size,
+        mature_rows,
+        history_mature_rows,
+        rows_with_propensity_estimate,
+        rows_with_calibrated_path_prob,
+        rows_with_execution_gate_status,
+        rows_with_training_weight
+    );
+    StructuralPathRankingTargetExportSummary {
+        symbol: artifact.symbol.clone(),
+        rows,
+        candidate_set_id: artifact.candidate_set_id.clone(),
+        candidate_set_size: artifact.candidate_set_size,
+        pending_reward_states,
+        mature_rows,
+        rows_with_raw_path_score,
+        rows_with_calibrated_path_prob,
+        rows_with_path_prob_lower_bound,
+        rows_with_propensity_estimate,
+        rows_with_execution_gate_status,
+        rows_with_training_weight,
+        csv_path: Path::new(state_dir)
+            .join(symbol)
+            .join(csv_name)
+            .to_string_lossy()
+            .to_string(),
+        jsonl_path: Path::new(state_dir)
+            .join(symbol)
+            .join(jsonl_name)
+            .to_string_lossy()
+            .to_string(),
+        history_csv_path: Path::new(state_dir)
+            .join(symbol)
+            .join(history_csv_name)
+            .to_string_lossy()
+            .to_string(),
+        history_jsonl_path: Path::new(state_dir)
+            .join(symbol)
+            .join(history_jsonl_name)
+            .to_string_lossy()
+            .to_string(),
+        history_rows: history_rows.len(),
+        history_mature_rows,
+        history_rows_with_raw_path_score,
+        history_rows_with_calibrated_path_prob,
+        history_rows_with_path_prob_lower_bound,
+        history_rows_with_propensity_estimate,
+        history_rows_with_training_weight,
+        summary_path: Path::new(state_dir)
+            .join(symbol)
+            .join(summary_name)
+            .to_string_lossy()
+            .to_string(),
+        trainer_manifest: structural_path_ranking_trainer_manifest(),
+        summary_line,
+    }
+}
