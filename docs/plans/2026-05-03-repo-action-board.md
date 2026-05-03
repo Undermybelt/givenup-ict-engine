@@ -72,6 +72,7 @@ Primary source docs:
 - [x] Workstream 1 now also has release-closure CLI dispatch for `research-verdict` / `evidence-quality-breakdown` moved out of the `main.rs` match-arm body into a focused bin-side shell module.
 - [x] Workstream 1 now also has `factor-mutation-status` / `factor-autoresearch-status` thin shell dispatch moved into that same bin-side status command module.
 - [x] Workstream 1 now also has the thin `auto_quant` management/control wrappers (`status/bootstrap/update/adoption review/decision/seed evidence/promote canonical setup`) moved out of `main.rs` and into a focused bin-side command shell.
+- [x] Workstream 1 now also has the remaining `auto_quant` batch/dispatch/import/ingest thin wrappers (`pda-unit`, `agent-material`, `results-import`, `prior-init`, `consume-live-signals`, `ingest-real-trades`) moved out of `main.rs` and into that same bin-side command shell.
 
 ### Next
 
@@ -92,6 +93,7 @@ Primary source docs:
   - latest: `main.rs` no longer owns the direct `research-verdict` / `evidence-quality-breakdown` thin shell wrapper logic either
   - latest: `main.rs` no longer owns the direct `factor-mutation-status` / `factor-autoresearch-status` thin shell wrapper logic either
   - latest: `main.rs` no longer owns the direct `auto_quant` management/control thin shell wrapper logic for that command cluster either
+  - latest: `main.rs` no longer owns the direct `auto_quant` batch/dispatch/import/ingest thin shell wrapper logic for the rest of that command cluster either
 - [ ] Replace the current heuristic transition/break mixing with a maintained, emission-aware regime transition core instead of only snapshot-time posterior reweighting.
   - started: transition posterior, blend-helper, temporal accessor, temporal-summary builder extraction, maintained node/branch transition posterior refresh, and explicit emission-conditioned support helpers into `src/belief_core/regime_filter.rs`
 - [ ] Replace the current heuristic temporal break logic with a clearer `changepoint_gate` owner instead of keeping BOCPD helpers inside `src/state/types.rs`.

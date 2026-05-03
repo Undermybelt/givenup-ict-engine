@@ -21,8 +21,13 @@ use analyze_shared::{
 };
 use auto_quant_command::{
     auto_quant_adoption_decision_shell, auto_quant_adoption_review_shell,
-    auto_quant_bootstrap_shell, auto_quant_promote_canonical_setup_shell,
-    auto_quant_seed_evidence_shell, auto_quant_status_shell, auto_quant_update_shell,
+    auto_quant_agent_material_batch_shell, auto_quant_agent_material_dispatch_shell,
+    auto_quant_agent_material_rank_shell, auto_quant_bootstrap_shell,
+    auto_quant_consume_live_signals_shell, auto_quant_ingest_real_trades_shell,
+    auto_quant_pda_unit_batch_shell, auto_quant_pda_unit_dispatch_shell,
+    auto_quant_prior_init_shell, auto_quant_promote_canonical_setup_shell,
+    auto_quant_results_import_shell, auto_quant_seed_evidence_shell, auto_quant_status_shell,
+    auto_quant_update_shell,
 };
 use factor_backtest_runtime::run_factor_backtest;
 use factor_research_runtime::run_factor_research;
@@ -2475,39 +2480,33 @@ fn main() -> Result<()> {
             state_dir,
             repo_url,
             tracked_branch,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            auto_quant_pda_unit_batch_command(AutoQuantPdaUnitBatchCommandInput {
-                symbol: &symbol,
-                objective: &objective,
-                factors: &factors,
-                combination_size,
-                directions: &directions,
-                timeframes: &timeframes,
-                timeframe_data: &timeframe_data,
-                evidence_surfaces: &evidence_surfaces,
-                indicator_list: &indicator_list,
-                evidence_notes: &evidence_notes,
-                max_parallel,
-                state_dir: &state_dir,
-                repo_url: repo_url.as_deref(),
-                tracked_branch: tracked_branch.as_deref(),
-            })?
-        }
+        } => auto_quant_pda_unit_batch_shell(AutoQuantPdaUnitBatchCommandInput {
+            symbol: &symbol,
+            objective: &objective,
+            factors: &factors,
+            combination_size,
+            directions: &directions,
+            timeframes: &timeframes,
+            timeframe_data: &timeframe_data,
+            evidence_surfaces: &evidence_surfaces,
+            indicator_list: &indicator_list,
+            evidence_notes: &evidence_notes,
+            max_parallel,
+            state_dir: &state_dir,
+            repo_url: repo_url.as_deref(),
+            tracked_branch: tracked_branch.as_deref(),
+        })?,
         Commands::AutoQuantPdaUnitDispatch {
             symbol,
             state_dir,
             batch_artifact_id,
             group_indices,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            auto_quant_pda_unit_dispatch_command(AutoQuantPdaUnitDispatchCommandInput {
-                symbol: &symbol,
-                state_dir: &state_dir,
-                batch_artifact_id: batch_artifact_id.as_deref(),
-                group_indices: group_indices.as_deref(),
-            })?
-        }
+        } => auto_quant_pda_unit_dispatch_shell(AutoQuantPdaUnitDispatchCommandInput {
+            symbol: &symbol,
+            state_dir: &state_dir,
+            batch_artifact_id: batch_artifact_id.as_deref(),
+            group_indices: group_indices.as_deref(),
+        })?,
         Commands::AutoQuantAgentMaterialBatch {
             symbol,
             materials,
@@ -2515,34 +2514,27 @@ fn main() -> Result<()> {
             state_dir,
             repo_url,
             tracked_branch,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            auto_quant_agent_material_batch_command(AutoQuantAgentMaterialBatchCommandInput {
-                symbol: &symbol,
-                material_paths: &materials,
-                max_parallel,
-                state_dir: &state_dir,
-                repo_url: repo_url.as_deref(),
-                tracked_branch: tracked_branch.as_deref(),
-            })?
-        }
+        } => auto_quant_agent_material_batch_shell(AutoQuantAgentMaterialBatchCommandInput {
+            symbol: &symbol,
+            material_paths: &materials,
+            max_parallel,
+            state_dir: &state_dir,
+            repo_url: repo_url.as_deref(),
+            tracked_branch: tracked_branch.as_deref(),
+        })?,
         Commands::AutoQuantAgentMaterialDispatch {
             symbol,
             state_dir,
             group_indices,
         } => {
-            ensure_state_dir_ready(&state_dir)?;
-            auto_quant_agent_material_dispatch_command(
-                AutoQuantAgentMaterialDispatchCommandInput {
-                    symbol: &symbol,
-                    state_dir: &state_dir,
-                    group_indices: group_indices.as_deref(),
-                },
-            )?
+            auto_quant_agent_material_dispatch_shell(AutoQuantAgentMaterialDispatchCommandInput {
+                symbol: &symbol,
+                state_dir: &state_dir,
+                group_indices: group_indices.as_deref(),
+            })?
         }
         Commands::AutoQuantAgentMaterialRank { symbol, state_dir } => {
-            ensure_state_dir_ready(&state_dir)?;
-            auto_quant_agent_material_rank_command(AutoQuantAgentMaterialRankCommandInput {
+            auto_quant_agent_material_rank_shell(AutoQuantAgentMaterialRankCommandInput {
                 symbol: &symbol,
                 state_dir: &state_dir,
             })?
@@ -2552,10 +2544,7 @@ fn main() -> Result<()> {
             state_dir,
             library,
             log,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            auto_quant_results_import_command(&symbol, &state_dir, &library, log.as_deref())?
-        }
+        } => auto_quant_results_import_shell(&symbol, &state_dir, &library, log.as_deref())?,
         Commands::AutoQuantPriorInit {
             symbol,
             state_dir,
@@ -2566,20 +2555,17 @@ fn main() -> Result<()> {
             parent_config,
             dry_run,
             force,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            auto_quant_prior_init_command(AutoQuantPriorInitCommandInput {
-                symbol: &symbol,
-                state_dir: &state_dir,
-                library_path: library.as_deref(),
-                strategy_filter: strategies.as_deref(),
-                temper,
-                prior_strength,
-                parent_config,
-                dry_run,
-                force,
-            })?
-        }
+        } => auto_quant_prior_init_shell(AutoQuantPriorInitCommandInput {
+            symbol: &symbol,
+            state_dir: &state_dir,
+            library_path: library.as_deref(),
+            strategy_filter: strategies.as_deref(),
+            temper,
+            prior_strength,
+            parent_config,
+            dry_run,
+            force,
+        })?,
         Commands::AutoQuantConsumeLiveSignals {
             symbol,
             state_dir,
@@ -2587,17 +2573,14 @@ fn main() -> Result<()> {
             max_iter,
             block_ms,
             start_from,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            auto_quant_consume_live_signals_command(AutoQuantConsumeLiveSignalsInput {
-                symbol: &symbol,
-                state_dir: &state_dir,
-                redis_url: &redis_url,
-                max_iterations: max_iter,
-                block_ms,
-                initial_id: &start_from,
-            })?
-        }
+        } => auto_quant_consume_live_signals_shell(AutoQuantConsumeLiveSignalsInput {
+            symbol: &symbol,
+            state_dir: &state_dir,
+            redis_url: &redis_url,
+            max_iterations: max_iter,
+            block_ms,
+            initial_id: &start_from,
+        })?,
         Commands::AutoQuantIngestRealTrades {
             symbol,
             state_dir,
@@ -2605,17 +2588,14 @@ fn main() -> Result<()> {
             source,
             dry_run,
             force,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            auto_quant_ingest_real_trades_command(AutoQuantIngestRealTradesInput {
-                symbol: &symbol,
-                state_dir: &state_dir,
-                trades_path: &trades,
-                source: &source,
-                dry_run,
-                force,
-            })?
-        }
+        } => auto_quant_ingest_real_trades_shell(AutoQuantIngestRealTradesInput {
+            symbol: &symbol,
+            state_dir: &state_dir,
+            trades_path: &trades,
+            source: &source,
+            dry_run,
+            force,
+        })?,
         Commands::CleanFutures {
             root,
             output_dir,
