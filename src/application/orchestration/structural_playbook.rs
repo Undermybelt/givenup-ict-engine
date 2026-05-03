@@ -14,8 +14,15 @@ pub use crate::belief_core::ranking_label::{
     load_structural_path_ranker_runtime_artifact_rows,
     load_structural_path_ranking_runtime_selection,
     structural_path_ranking_runtime_selection_path,
+    StructuralPathProbabilityCalibrationBin,
+    StructuralPathProbabilityCalibrationEvaluationBin,
+    StructuralPathProbabilityCalibrationEvaluationReport,
+    StructuralPathProbabilityCalibrationReport,
     StructuralPathRankerRuntimeRow,
     StructuralPathRankerRuntimeSurface,
+    StructuralPathRankingExternalScoreInput,
+    StructuralPathRankingTargetArtifact,
+    StructuralPathRankingTargetRow,
     StructuralPathRankingRuntimeSelection,
     STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
     STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY,
@@ -481,17 +488,6 @@ pub struct StructuralTopPathCandidate {
     pub recommended_command: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralPathRankingTargetArtifact {
-    pub protocol_version: String,
-    pub symbol: String,
-    pub candidate_set_id: String,
-    pub candidate_set_size: usize,
-    pub generated_at: String,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub rows: Vec<StructuralPathRankingTargetRow>,
-}
-
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
 pub struct StructuralPathRankingTargetExportSummary {
     pub symbol: String,
@@ -552,117 +548,6 @@ pub struct StructuralPathRankingTrainerManifest {
     pub guardrail_columns: Vec<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub notes: Vec<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
-pub struct StructuralPathProbabilityCalibrationReport {
-    pub status: String,
-    pub observed_rows: usize,
-    pub calibrated_rows: usize,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub bins: Vec<StructuralPathProbabilityCalibrationBin>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub warnings: Vec<String>,
-    pub summary_line: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
-pub struct StructuralPathProbabilityCalibrationBin {
-    pub regime_calibration_bucket: String,
-    pub observations: usize,
-    pub successes: usize,
-    pub raw_path_score_min: f64,
-    pub raw_path_score_max: f64,
-    pub calibrated_path_prob: f64,
-    pub path_prob_lower_bound: f64,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
-pub struct StructuralPathProbabilityCalibrationEvaluationReport {
-    pub status: String,
-    pub eligible_rows: usize,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub brier_score: Option<f64>,
-    #[serde(default)]
-    pub propensity_weighted_rows: usize,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub propensity_weighted_brier_score: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub expected_calibration_error: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub max_calibration_error: Option<f64>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub bins: Vec<StructuralPathProbabilityCalibrationEvaluationBin>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub warnings: Vec<String>,
-    pub summary_line: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
-pub struct StructuralPathProbabilityCalibrationEvaluationBin {
-    pub regime_calibration_bucket: String,
-    pub observations: usize,
-    pub mean_calibrated_path_prob: f64,
-    pub empirical_success_rate: f64,
-    pub absolute_error: f64,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralPathRankingTargetRow {
-    pub rank: usize,
-    pub candidate_set_id: String,
-    pub candidate_set_size: usize,
-    pub path_id: String,
-    pub scenario_id: String,
-    pub path_label: String,
-    pub direction: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub raw_path_score: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub calibrated_path_prob: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub path_prob_lower_bound: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub execution_gate_status: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub execution_gate_min_path_prob: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub execution_gate_reason: Option<String>,
-    pub pending_reward_state: String,
-    #[serde(default)]
-    pub maturity_mask: bool,
-    #[serde(default)]
-    pub maturity_weight: f64,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub calibrated_label: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub propensity_estimate: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub ips_weight: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub training_weight: Option<f64>,
-    pub regime_calibration_bucket: String,
-    pub behavior_policy_probability: f64,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub execution_propensity: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target_policy_probability_confidence: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target_policy_probability_lower_bound: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target_policy_reward_prior: Option<f64>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub target_policy_reward_lower_bound: Option<f64>,
-    pub experience_prior: f64,
-    pub current_posterior: f64,
-    pub structural_baseline_score: f64,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
-pub struct StructuralPathRankingExternalScoreInput {
-    pub candidate_set_id: String,
-    pub path_id: String,
-    pub raw_path_score: f64,
 }
 
 #[derive(Debug, Clone, Default)]
