@@ -546,3 +546,28 @@ pub(crate) fn rebuild_discounted_node_duration_priors(
         node_temporal_posteriors.insert(node_id.clone(), temporal_state);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{
+        structural_bocpd_break_probability, structural_node_bocpd_sequence_break_probability,
+    };
+
+    #[test]
+    fn bocpd_break_probability_rises_with_surprise_and_negative_outcomes() {
+        let quiet = structural_bocpd_break_probability(0.35, 0.1, 0.9);
+        let stressed = structural_bocpd_break_probability(0.35, 3.0, 0.2);
+        assert!(stressed > quiet);
+        assert!((0.0..=1.0).contains(&quiet));
+        assert!((0.0..=1.0).contains(&stressed));
+    }
+
+    #[test]
+    fn sequence_break_probability_increases_with_sequence_change() {
+        let calm = structural_node_bocpd_sequence_break_probability(0.30, 0.10, 0.6);
+        let unstable = structural_node_bocpd_sequence_break_probability(0.30, 0.85, 0.6);
+        assert!(unstable > calm);
+        assert!((0.0..=1.0).contains(&calm));
+        assert!((0.0..=1.0).contains(&unstable));
+    }
+}
