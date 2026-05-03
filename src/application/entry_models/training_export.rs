@@ -2289,6 +2289,9 @@ mod tests {
         insert_entry_model_packet, EntryModelPacketStore, CISD_RB_SETUP_MODEL_ID,
     };
     use crate::state::{save_state, AnalyzeRunRecord, UpdateRunRecord};
+    use std::io::{Read, Write};
+    use std::net::TcpListener;
+    use std::thread;
 
     fn sample_packet() -> CisdRbEntryModelPacket {
         CisdRbEntryModelPacket {
@@ -2317,6 +2320,38 @@ mod tests {
             filtered_resonance_label: "aligned".to_string(),
             evidence_quality_score: 0.72,
         }
+    }
+
+    fn serve_http_response_with_method(
+        path: &str,
+        body: String,
+        request_count: usize,
+        method: &str,
+    ) -> String {
+        let listener = TcpListener::bind("127.0.0.1:0").expect("bind test server");
+        let address = listener.local_addr().expect("listener addr");
+        let expected_path = format!("/{path}");
+        let expected_method = method.to_string();
+        let response_path = expected_path.clone();
+        thread::spawn(move || {
+            for _ in 0..request_count {
+                if let Ok((mut stream, _)) = listener.accept() {
+                    let mut buffer = [0_u8; 4096];
+                    let read = stream.read(&mut buffer).unwrap_or_default();
+                    let request = String::from_utf8_lossy(&buffer[..read]);
+                    assert!(request.starts_with(&format!("{expected_method} ")));
+                    assert!(request.contains(&expected_path));
+                    let response = format!(
+                        "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+                        body.len(),
+                        body
+                    );
+                    let _ = stream.write_all(response.as_bytes());
+                    let _ = stream.flush();
+                }
+            }
+        });
+        format!("http://{address}{response_path}")
     }
 
     fn structural_path_ranking_row(
@@ -3554,6 +3589,122 @@ mod tests {
         assert_eq!(
             status.runtime_selection_status,
             "enabled_registered_model_ready"
+        );
+        assert_eq!(status.runtime_artifact_match_count, 2);
+    }
+
+    #[test]
+    fn runtime_status_reports_registered_service_when_available() {
+        let temp = tempfile::tempdir().unwrap();
+        let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let history_jsonl_path = summary_dir.join("structural_path_ranking_target_history.jsonl");
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: "NQ".to_string(),
+            rows: 2,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 2,
+            mature_rows: 2,
+            rows_with_propensity_estimate: 2,
+            rows_with_calibrated_path_prob: 0,
+            rows_with_path_prob_lower_bound: 0,
+            rows_with_execution_gate_status: 0,
+            rows_with_training_weight: 2,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            history_jsonl_path: history_jsonl_path.to_string_lossy().to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            trainer_manifest: structural_path_ranking_trainer_manifest_for_test(),
+            summary_line: "structural_path_ranking_target rows=2".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        let jsonl = [
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-win",
+                0.0,
+                "matured_success",
+            ))
+            .unwrap(),
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-loss",
+                0.0,
+                "matured_failure",
+            ))
+            .unwrap(),
+        ]
+        .join("\n");
+        std::fs::write(&jsonl_path, format!("{jsonl}\n")).unwrap();
+        std::fs::write(&history_jsonl_path, format!("{jsonl}\n")).unwrap();
+        let service_uri = serve_http_response_with_method(
+            "rank-paths",
+            serde_json::json!({
+                "rows": [
+                    {
+                        "candidate_set_id": "structural-candidates:NQ:test",
+                        "path_id": "path-win",
+                        "raw_path_score": 0.91,
+                        "calibrated_path_prob": 0.82,
+                        "path_prob_lower_bound": 0.72,
+                        "execution_gate_status": "pass"
+                    },
+                    {
+                        "candidate_set_id": "structural-candidates:NQ:test",
+                        "path_id": "path-loss",
+                        "raw_path_score": 0.19,
+                        "calibrated_path_prob": 0.21,
+                        "path_prob_lower_bound": 0.11,
+                        "execution_gate_status": "observe"
+                    }
+                ]
+            })
+            .to_string(),
+            8,
+            "POST",
+        );
+        let artifact = StructuralPathRankingTrainerArtifact {
+            protocol_version: STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION.to_string(),
+            dataset_role: "external_path_ranker_training_dataset".to_string(),
+            model_family: crate::belief_core::ranking_label::STRUCTURAL_PATH_RANKER_SERVICE_FAMILY_ROW_SCORING_V1.to_string(),
+            artifact_uri: service_uri,
+            score_column: "raw_path_score".to_string(),
+            trained_rows: 42,
+            calibration_rows: 12,
+            feature_columns: vec!["rank".to_string(), "experience_prior".to_string()],
+            created_at: None,
+            notes: vec![],
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_FILE),
+            serde_json::to_string_pretty(&artifact).unwrap(),
+        )
+        .unwrap();
+
+        enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+        )
+        .unwrap();
+        let status =
+            structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
+                .unwrap();
+        assert!(status.runtime_selection_enabled);
+        assert!(status.runtime_selection_ready);
+        assert_eq!(
+            status.runtime_selection_status,
+            "enabled_registered_service_ready"
         );
         assert_eq!(status.runtime_artifact_match_count, 2);
     }
