@@ -1,6 +1,7 @@
 use anyhow::{anyhow, bail, Context, Result};
 mod analyze_live_command;
 mod analyze_shared;
+mod auto_quant_command;
 mod factor_backtest_runtime;
 mod factor_research_runtime;
 mod policy_training_command;
@@ -17,6 +18,11 @@ use analyze_live_command::{analyze_live_command, AnalyzeLiveCommandInput};
 use analyze_shared::{
     apply_command_context_to_analyze_report, persist_analyze_run,
     persist_execution_candidate_from_analyze, persist_pending_update_artifact_from_analyze,
+};
+use auto_quant_command::{
+    auto_quant_adoption_decision_shell, auto_quant_adoption_review_shell,
+    auto_quant_bootstrap_shell, auto_quant_promote_canonical_setup_shell,
+    auto_quant_seed_evidence_shell, auto_quant_status_shell, auto_quant_update_shell,
 };
 use factor_backtest_runtime::run_factor_backtest;
 use factor_research_runtime::run_factor_research;
@@ -2253,22 +2259,17 @@ fn main() -> Result<()> {
             sweep_id,
             horizon_bars,
             state_dir,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            let report =
-                ict_engine::application::backtest::auto_quant_promote_canonical_setup_command(
-                    ict_engine::application::backtest::PromoteCanonicalSetupCommandInput {
-                        symbol: &symbol,
-                        state_dir: &state_dir,
-                        setup_name: &setup_name,
-                        sequence_label: &sequence_label,
-                        direction: direction.as_deref(),
-                        sweep_id: sweep_id.as_deref(),
-                        horizon_bars,
-                    },
-                )?;
-            println!("{}", serde_json::to_string_pretty(&report)?);
-        }
+        } => auto_quant_promote_canonical_setup_shell(
+            ict_engine::application::backtest::PromoteCanonicalSetupCommandInput {
+                symbol: &symbol,
+                state_dir: &state_dir,
+                setup_name: &setup_name,
+                sequence_label: &sequence_label,
+                direction: direction.as_deref(),
+                sweep_id: sweep_id.as_deref(),
+                horizon_bars,
+            },
+        )?,
         Commands::FactorMutationStatus {
             symbol,
             state_dir,
@@ -2414,38 +2415,30 @@ fn main() -> Result<()> {
             )?
         }
         Commands::Env => env_command()?,
-        Commands::AutoQuantStatus { state_dir } => auto_quant_status_command(&state_dir)?,
+        Commands::AutoQuantStatus { state_dir } => auto_quant_status_shell(&state_dir)?,
         Commands::AutoQuantBootstrap {
             state_dir,
             repo_url,
             tracked_branch,
         } => {
-            ensure_state_dir_ready(&state_dir)?;
-            auto_quant_bootstrap_command(
-                &state_dir,
-                repo_url.as_deref(),
-                tracked_branch.as_deref(),
-            )?
+            auto_quant_bootstrap_shell(&state_dir, repo_url.as_deref(), tracked_branch.as_deref())?
         }
         Commands::AutoQuantUpdate {
             state_dir,
             repo_url,
             tracked_branch,
             target_ref,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            auto_quant_update_command(
-                &state_dir,
-                repo_url.as_deref(),
-                tracked_branch.as_deref(),
-                target_ref.as_deref(),
-            )?
-        }
+        } => auto_quant_update_shell(
+            &state_dir,
+            repo_url.as_deref(),
+            tracked_branch.as_deref(),
+            target_ref.as_deref(),
+        )?,
         Commands::AutoQuantAdoptionReview {
             symbol,
             state_dir,
             artifact_id,
-        } => auto_quant_adoption_review_command(&symbol, &state_dir, artifact_id.as_deref())?,
+        } => auto_quant_adoption_review_shell(&symbol, &state_dir, artifact_id.as_deref())?,
         Commands::AutoQuantAdoptionDecision {
             symbol,
             state_dir,
@@ -2453,7 +2446,7 @@ fn main() -> Result<()> {
             decision,
             rationale,
             requested_by,
-        } => auto_quant_adoption_decision_command(
+        } => auto_quant_adoption_decision_shell(
             &symbol,
             &state_dir,
             artifact_id.as_deref(),
@@ -2466,10 +2459,7 @@ fn main() -> Result<()> {
             state_dir,
             strategy_material_root,
             limit,
-        } => {
-            ensure_state_dir_ready(&state_dir)?;
-            auto_quant_seed_evidence_command(&symbol, &state_dir, &strategy_material_root, limit)?
-        }
+        } => auto_quant_seed_evidence_shell(&symbol, &state_dir, &strategy_material_root, limit)?,
         Commands::AutoQuantPdaUnitBatch {
             symbol,
             objective,
