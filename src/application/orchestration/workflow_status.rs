@@ -7,8 +7,7 @@ use std::time::Duration;
 
 use super::structural_playbook::{
     build_structural_experience_prior_surface_artifact_with_prior_state,
-    build_structural_history_summary_artifact, build_structural_node_artifact_with_prior_state,
-    build_structural_path_history_artifact,
+    build_structural_history_summary_artifact, build_structural_path_history_artifact,
     build_structural_path_ranking_target_artifact_with_runtime_context_and_prior_state,
     build_structural_playbook_bundle_with_runtime_context_and_prior_state,
     build_structural_recommended_path_bundle_artifact_with_runtime_context_and_prior_state,
@@ -2190,20 +2189,25 @@ fn build_workflow_status_phase_value_with_structural_prior_state_and_state_dir(
                 recommended_next_step,
             )
         }
-        "structural-node" => workflow_status_value_with_recommended_next_step(
-            serde_json::to_value(build_structural_node_artifact_with_prior_state(
-                snapshot,
-                provider_status_agent,
-                structural_prior_state,
-            ))?,
-            workflow_status_structural_recommended_next_step_with_state_dir(
+        "structural-node" => {
+            let bundle = build_structural_playbook_bundle_with_runtime_context_and_prior_state(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
                 structural_prior_state,
-                state_dir,
-            ),
-        ),
+                StructuralPathRankerRuntimeContext { state_dir },
+            );
+            workflow_status_value_with_recommended_next_step(
+                serde_json::to_value(bundle.node)?,
+                workflow_status_structural_recommended_next_step_with_state_dir(
+                    snapshot,
+                    provider_status_agent,
+                    feedback_history,
+                    structural_prior_state,
+                    state_dir,
+                ),
+            )
+        }
         "structural-branch-set" | "structural-branches" => {
             let bundle = build_structural_playbook_bundle_with_runtime_context_and_prior_state(
                 snapshot,
@@ -2280,16 +2284,25 @@ fn build_workflow_status_phase_value_with_structural_prior_state_and_state_dir(
                 ),
             )
         }
-        "structural-path-outcome-summary" => workflow_status_value_with_recommended_next_step(
-            serde_json::to_value(build_structural_path_history_artifact(snapshot, feedback_history).summary)?,
-            workflow_status_structural_recommended_next_step_with_state_dir(
+        "structural-path-outcome-summary" => {
+            let bundle = build_structural_playbook_bundle_with_runtime_context_and_prior_state(
                 snapshot,
                 provider_status_agent,
                 feedback_history,
                 structural_prior_state,
-                state_dir,
-            ),
-        ),
+                StructuralPathRankerRuntimeContext { state_dir },
+            );
+            workflow_status_value_with_recommended_next_step(
+                serde_json::to_value(bundle.path_history.summary)?,
+                workflow_status_structural_recommended_next_step_with_state_dir(
+                    snapshot,
+                    provider_status_agent,
+                    feedback_history,
+                    structural_prior_state,
+                    state_dir,
+                ),
+            )
+        }
         "structural-node-history" => {
             let bundle = build_structural_playbook_bundle_with_runtime_context_and_prior_state(
                 snapshot,
