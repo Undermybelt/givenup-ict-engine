@@ -73,8 +73,8 @@ pub use crate::belief_core::regime_filter::{
     structural_duration_weighted_streak_mass,
 };
 pub use crate::belief_core::source_reliability::{
-    structural_last_offline_seed_source, structural_panel_derived_smoothed_prior,
-    structural_prior_behavior_policy_probability,
+    structural_delayed_reward_replay_validation, structural_last_offline_seed_source,
+    structural_panel_derived_smoothed_prior, structural_prior_behavior_policy_probability,
     structural_prior_behavior_policy_probability_variance,
     structural_prior_censoring_adjusted_reward_lower_bound,
     structural_prior_censoring_adjusted_reward_prior, structural_prior_censoring_rate,
@@ -427,6 +427,22 @@ pub fn build_structural_experience_prior_surface_artifact(
     )
 }
 
+fn structural_feedback_records_for_path<'a>(
+    feedback_history: &'a [FeedbackRecord],
+    path_id: &str,
+) -> Vec<&'a FeedbackRecord> {
+    feedback_history
+        .iter()
+        .filter(|record| {
+            record
+                .structural_feedback
+                .as_ref()
+                .map(|refs| refs.path_id == path_id)
+                .unwrap_or(false)
+        })
+        .collect()
+}
+
 pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
     snapshot: &WorkflowSnapshot,
     provider_status_agent: &ProviderCatalogAgentSurface,
@@ -640,6 +656,7 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_delayed_reward_resolution_within_24h_count(prior_stats),
                 delayed_reward_resolution_probability_24h:
                     structural_prior_delayed_reward_resolution_probability_24h(prior_stats),
+                delayed_reward_replay_validation: None,
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -816,6 +833,7 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             ),
                         delayed_reward_resolution_probability_24h:
                             structural_prior_delayed_reward_resolution_probability_24h(prior_stats),
+                        delayed_reward_replay_validation: None,
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -969,6 +987,7 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_delayed_reward_resolution_within_24h_count(prior_stats),
                 delayed_reward_resolution_probability_24h:
                     structural_prior_delayed_reward_resolution_probability_24h(prior_stats),
+                delayed_reward_replay_validation: None,
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1144,6 +1163,7 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             ),
                         delayed_reward_resolution_probability_24h:
                             structural_prior_delayed_reward_resolution_probability_24h(prior_stats),
+                        delayed_reward_replay_validation: None,
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1159,6 +1179,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
     });
     let path = path_id.and_then(|id| {
         let prior_stats = structural_prior_state.paths.get(id);
+        let delayed_reward_replay_validation = structural_delayed_reward_replay_validation(
+            &structural_feedback_records_for_path(feedback_history, id),
+        );
         let (dominant_source_panel, dominant_source_share, dominant_source_prior) =
             structural_dominant_source_panel(prior_stats);
         playbook
@@ -1297,6 +1320,7 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                     structural_prior_delayed_reward_resolution_within_24h_count(prior_stats),
                 delayed_reward_resolution_probability_24h:
                     structural_prior_delayed_reward_resolution_probability_24h(prior_stats),
+                delayed_reward_replay_validation: delayed_reward_replay_validation.clone(),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1473,6 +1497,8 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                             ),
                         delayed_reward_resolution_probability_24h:
                             structural_prior_delayed_reward_resolution_probability_24h(prior_stats),
+                        delayed_reward_replay_validation: delayed_reward_replay_validation
+                            .clone(),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1656,6 +1682,7 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 structural_prior_delayed_reward_resolution_within_24h_count(node_prior_stats),
             delayed_reward_resolution_probability_24h:
                 structural_prior_delayed_reward_resolution_probability_24h(node_prior_stats),
+            delayed_reward_replay_validation: None,
             duration_streak_count: node_temporal_state
                 .map(|state| state.streak_count)
                 .or_else(|| structural_duration_streak_count(node_duration_prior)),

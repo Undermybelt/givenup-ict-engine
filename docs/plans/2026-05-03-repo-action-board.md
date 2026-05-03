@@ -55,6 +55,7 @@ Primary source docs:
 - [x] Workstream 2 now also has BOCPD / sequence-break helper ownership starting to move into `src/belief_core/changepoint_gate.rs`, including discounted node-duration prior / temporal-posterior rebuild logic.
 - [x] Workstream 3 now has two real opt-in runtime consumer paths for structural path ranking: a direct weighted-feature model artifact path and a declared external scoring-service path, both hanging off the existing `policy_training` registration/runtime-selection contract without changing the zero-config default.
 - [x] Workstream 4 has started with a concrete source-reliability validation lane: EM diagnostics/readiness now carry a holdout-style train/eval summary in addition to the existing same-ledger leave-source-out calibration summary.
+- [x] Workstream 4 now also has a concrete delayed-reward validation lane starting to surface through path experience-prior data: chronological train/eval replay summary for resolution and 1h/4h/24h horizon Brier checks now exists alongside the aggregate delayed-reward hazard/incidence metrics.
 - [x] Workstream 1 now also has more of the experience-prior/path-validation accessor surface routed through `src/belief_core/source_reliability.rs`, with duplicate target-policy / SNIPS / delayed-reward helper logic removed from `src/application/orchestration/structural_playbook.rs`.
 
 ### Next
@@ -70,6 +71,7 @@ Primary source docs:
   - landed: registered trainer artifacts can now either score the current candidate-set rows directly through an opt-in weighted-feature model artifact family or call an explicit external row-scoring service, while existing scored-row feed reuse remains available and zero-config default behavior stays unchanged
 - [ ] Add stronger verification lanes for source reliability and delayed reward handling so the repo stops relying only on in-ledger compact calibration summaries.
   - started: source reliability EM diagnostics now expose a holdout-style train/eval summary beside the older same-ledger leave-source-out calibration summary
+  - started: delayed reward path experience-prior data now has a chronological replay summary for resolution and 1h/4h/24h horizon validation
 
 ### Not Yet
 
@@ -89,6 +91,7 @@ Primary source docs:
 - [ ] out-of-sample / replay-grade source reliability validation beyond fixed-iteration leave-source-out summaries
   - partial: an on-demand holdout-style EM summary now exists; larger-panel and true chronological replay validation are still missing
 - [ ] full elapsed-time competing-risk delayed-reward censoring model rather than only compact aggregate hazard/incidence summaries
+  - partial: chronological replay validation for delayed reward resolution has started, but the underlying model is still the compact aggregate hazard/incidence family rather than a fuller competing-risk censoring model
 
 ## Ordered Work Items
 

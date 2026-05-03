@@ -1,16 +1,18 @@
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 use crate::state::{
-    structural_source_observed_outcome_likelihood, structural_source_reliability_em_diagnostics,
-    structural_source_reliability_em_fit_from_state, StructuralPriorLearningState,
-    StructuralPriorStats, StructuralSourceReliabilityPosterior,
-    StructuralTargetPolicyContextPosterior,
+    structural_feedback_outcome_is_unresolved, structural_source_observed_outcome_likelihood,
+    structural_source_reliability_em_diagnostics, structural_source_reliability_em_fit_from_state,
+    FeedbackRecord, StructuralPriorLearningState, StructuralPriorStats,
+    StructuralSourceReliabilityPosterior, StructuralTargetPolicyContextPosterior,
     STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_HOLDOUT_TRAIN_ITEMS,
     STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS,
 };
 
 pub const STRUCTURAL_TARGET_POLICY_CONTEXT_SURFACE_LIMIT: usize = 3;
+pub const STRUCTURAL_DELAYED_REWARD_REPLAY_MIN_TRAIN_RECORDS: usize = 3;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct StructuralExperiencePriorSurfaceArtifact {
@@ -45,6 +47,26 @@ pub struct StructuralTargetPolicyContextSurface {
     pub target_policy_probability_calibration_error: f64,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub last_recommendation_id: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralDelayedRewardReplayValidationSurface {
+    pub status: String,
+    pub training_record_count: usize,
+    pub evaluation_record_count: usize,
+    pub resolution_observation_count: usize,
+    pub resolution_1h_observation_count: usize,
+    pub resolution_4h_observation_count: usize,
+    pub resolution_24h_observation_count: usize,
+    pub min_training_records: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resolution_brier_score: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resolution_1h_brier_score: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resolution_4h_brier_score: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resolution_24h_brier_score: Option<f64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -264,6 +286,8 @@ pub struct StructuralExperiencePriorEntry {
     pub delayed_reward_resolution_within_24h_count: Option<usize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub delayed_reward_resolution_probability_24h: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delayed_reward_replay_validation: Option<StructuralDelayedRewardReplayValidationSurface>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub duration_streak_count: Option<usize>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -531,6 +555,172 @@ pub fn structural_target_policy_context_surfaces(
             structural_target_policy_context_surface(context_key, posterior)
         })
         .collect()
+}
+
+pub fn structural_delayed_reward_replay_validation(
+    records: &[&FeedbackRecord],
+) -> Option<StructuralDelayedRewardReplayValidationSurface> {
+    let mut followed_records = records
+        .iter()
+        .filter_map(|record| {
+            let refs = record.structural_feedback.as_ref()?;
+            if !refs.followed_path {
+                return None;
+            }
+            let recommended_at = DateTime::parse_from_rfc3339(refs.recommended_at.trim())
+                .ok()?
+                .with_timezone(&Utc);
+            let elapsed_hours = record
+                .timestamp
+                .signed_duration_since(recommended_at)
+                .num_seconds()
+                .max(0) as f64
+                / 3600.0;
+            Some((*record, elapsed_hours))
+        })
+        .collect::<Vec<_>>();
+    followed_records.sort_by_key(|(record, _)| record.timestamp);
+    if followed_records.is_empty() {
+        return None;
+    }
+
+    let min_training_records = STRUCTURAL_DELAYED_REWARD_REPLAY_MIN_TRAIN_RECORDS;
+    if followed_records.len() <= min_training_records {
+        return Some(StructuralDelayedRewardReplayValidationSurface {
+            status: "needs_more_history".to_string(),
+            training_record_count: followed_records.len(),
+            evaluation_record_count: 0,
+            resolution_observation_count: 0,
+            resolution_1h_observation_count: 0,
+            resolution_4h_observation_count: 0,
+            resolution_24h_observation_count: 0,
+            min_training_records,
+            resolution_brier_score: None,
+            resolution_1h_brier_score: None,
+            resolution_4h_brier_score: None,
+            resolution_24h_brier_score: None,
+        });
+    }
+
+    let split_index =
+        ((followed_records.len() * 2) / 3).clamp(min_training_records, followed_records.len() - 1);
+    let training = &followed_records[..split_index];
+    let evaluation = &followed_records[split_index..];
+
+    #[derive(Default)]
+    struct HorizonStats {
+        observations: usize,
+        within: usize,
+    }
+
+    let mut matured_train = 0usize;
+    let mut horizon_1h = HorizonStats::default();
+    let mut horizon_4h = HorizonStats::default();
+    let mut horizon_24h = HorizonStats::default();
+
+    for (record, elapsed_hours) in training {
+        let matured = !structural_feedback_outcome_is_unresolved(&record.realized_outcome);
+        if matured {
+            matured_train += 1;
+        }
+        for (horizon_hours, stats) in [
+            (1.0, &mut horizon_1h),
+            (4.0, &mut horizon_4h),
+            (24.0, &mut horizon_24h),
+        ] {
+            if *elapsed_hours >= horizon_hours || matured {
+                stats.observations += 1;
+                if matured && *elapsed_hours <= horizon_hours {
+                    stats.within += 1;
+                }
+            }
+        }
+    }
+
+    let predicted_resolution =
+        ((1.0 + matured_train as f64) / (2.0 + training.len() as f64)).clamp(0.0, 1.0);
+    let predicted_horizon = |stats: &HorizonStats| -> Option<f64> {
+        (stats.observations > 0).then_some(
+            ((1.0 + stats.within as f64) / (2.0 + stats.observations as f64)).clamp(0.0, 1.0),
+        )
+    };
+    let predicted_1h = predicted_horizon(&horizon_1h);
+    let predicted_4h = predicted_horizon(&horizon_4h);
+    let predicted_24h = predicted_horizon(&horizon_24h);
+
+    let mut resolution_brier = 0.0;
+    let mut resolution_count = 0usize;
+    let mut resolution_1h_brier = 0.0;
+    let mut resolution_1h_count = 0usize;
+    let mut resolution_4h_brier = 0.0;
+    let mut resolution_4h_count = 0usize;
+    let mut resolution_24h_brier = 0.0;
+    let mut resolution_24h_count = 0usize;
+
+    for (record, elapsed_hours) in evaluation {
+        let matured = !structural_feedback_outcome_is_unresolved(&record.realized_outcome);
+        let actual_resolution = if matured { 1.0 } else { 0.0 };
+        resolution_brier += (predicted_resolution - actual_resolution).powi(2);
+        resolution_count += 1;
+
+        for (horizon_hours, predicted, brier, count) in [
+            (
+                1.0,
+                predicted_1h,
+                &mut resolution_1h_brier,
+                &mut resolution_1h_count,
+            ),
+            (
+                4.0,
+                predicted_4h,
+                &mut resolution_4h_brier,
+                &mut resolution_4h_count,
+            ),
+            (
+                24.0,
+                predicted_24h,
+                &mut resolution_24h_brier,
+                &mut resolution_24h_count,
+            ),
+        ] {
+            let Some(predicted) = predicted else {
+                continue;
+            };
+            if *elapsed_hours >= horizon_hours || matured {
+                let actual = if matured && *elapsed_hours <= horizon_hours {
+                    1.0
+                } else {
+                    0.0
+                };
+                *brier += (predicted - actual).powi(2);
+                *count += 1;
+            }
+        }
+    }
+
+    let status = if evaluation.is_empty() {
+        "needs_more_history"
+    } else {
+        "ready"
+    };
+    Some(StructuralDelayedRewardReplayValidationSurface {
+        status: status.to_string(),
+        training_record_count: training.len(),
+        evaluation_record_count: evaluation.len(),
+        resolution_observation_count: resolution_count,
+        resolution_1h_observation_count: resolution_1h_count,
+        resolution_4h_observation_count: resolution_4h_count,
+        resolution_24h_observation_count: resolution_24h_count,
+        min_training_records,
+        resolution_brier_score: (resolution_count > 0)
+            .then_some((resolution_brier / resolution_count as f64).clamp(0.0, 1.0)),
+        resolution_1h_brier_score: (resolution_1h_count > 0)
+            .then_some((resolution_1h_brier / resolution_1h_count as f64).clamp(0.0, 1.0)),
+        resolution_4h_brier_score: (resolution_4h_count > 0)
+            .then_some((resolution_4h_brier / resolution_4h_count as f64).clamp(0.0, 1.0)),
+        resolution_24h_brier_score: (resolution_24h_count > 0)
+            .then_some((resolution_24h_brier / resolution_24h_count as f64).clamp(0.0, 1.0)),
+    })
 }
 
 pub fn structural_target_policy_context_surface(
@@ -1102,4 +1292,130 @@ pub fn structural_dominant_source_panel(
             (Some(label.clone()), share, Some(summary.smoothed_prior))
         });
     dominant.unwrap_or((None, None, None))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{
+        structural_delayed_reward_replay_validation,
+        STRUCTURAL_DELAYED_REWARD_REPLAY_MIN_TRAIN_RECORDS,
+    };
+    use crate::state::{FeedbackRecord, ModelProbabilitySnapshot, StructuralFeedbackRefs};
+    use crate::types::{Direction, Regime};
+    use chrono::{DateTime, Utc};
+
+    fn replay_record(
+        recommendation_id: &str,
+        recommended_at: &str,
+        feedback_at: &str,
+        path_id: &str,
+        realized_outcome: &str,
+    ) -> FeedbackRecord {
+        FeedbackRecord {
+            timestamp: DateTime::parse_from_rfc3339(feedback_at)
+                .unwrap()
+                .with_timezone(&Utc),
+            symbol: "NQ".to_string(),
+            source: "live_feedback".to_string(),
+            run_id: None,
+            trade_id: None,
+            prompt_version: None,
+            factor_version: None,
+            data_fingerprint: None,
+            factors_used: Vec::new(),
+            model_probabilities_before_trade: ModelProbabilitySnapshot {
+                selected_direction: Direction::Bull,
+                selected_probability: 0.6,
+                long_score: 0.6,
+                short_score: 0.4,
+                win_prob_long: 0.6,
+                win_prob_short: 0.4,
+                uncertainty: 0.2,
+            },
+            realized_outcome: realized_outcome.to_string(),
+            pnl: 1.0,
+            regime_at_entry: Regime::Accumulation,
+            structural_feedback: Some(StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: recommendation_id.to_string(),
+                recommended_at: recommended_at.to_string(),
+                node_id: "node".to_string(),
+                branch_id: "branch".to_string(),
+                scenario_id: "scenario".to_string(),
+                path_id: path_id.to_string(),
+                followed_path: true,
+                exit_reason: None,
+                notes: None,
+            }),
+            reflection_mismatch_tags: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn delayed_reward_replay_validation_scores_future_resolution_horizons() {
+        let path_id = "path:scenario:NQ:test:primary";
+        let records = vec![
+            replay_record(
+                "rec-1",
+                "2026-04-30T00:00:00Z",
+                "2026-04-30T00:30:00Z",
+                path_id,
+                "win",
+            ),
+            replay_record(
+                "rec-2",
+                "2026-04-30T01:00:00Z",
+                "2026-04-30T03:00:00Z",
+                path_id,
+                "loss",
+            ),
+            replay_record(
+                "rec-3",
+                "2026-04-30T02:00:00Z",
+                "2026-04-30T08:00:00Z",
+                path_id,
+                "invalidated",
+            ),
+            replay_record(
+                "rec-4",
+                "2026-04-30T03:00:00Z",
+                "2026-04-30T03:45:00Z",
+                path_id,
+                "win",
+            ),
+            replay_record(
+                "rec-5",
+                "2026-04-30T04:00:00Z",
+                "2026-04-30T10:00:00Z",
+                path_id,
+                "loss",
+            ),
+        ];
+        let refs = records.iter().collect::<Vec<_>>();
+        let summary =
+            structural_delayed_reward_replay_validation(&refs).expect("replay validation");
+        assert_eq!(summary.status, "ready");
+        assert_eq!(
+            summary.min_training_records,
+            STRUCTURAL_DELAYED_REWARD_REPLAY_MIN_TRAIN_RECORDS
+        );
+        assert_eq!(summary.training_record_count, 3);
+        assert_eq!(summary.evaluation_record_count, 2);
+        assert_eq!(summary.resolution_observation_count, 2);
+        assert_eq!(summary.resolution_1h_observation_count, 2);
+        assert_eq!(summary.resolution_4h_observation_count, 2);
+        assert_eq!(summary.resolution_24h_observation_count, 2);
+        let overall = summary.resolution_brier_score.unwrap();
+        let horizon_1h = summary.resolution_1h_brier_score.unwrap();
+        let horizon_4h = summary.resolution_4h_brier_score.unwrap();
+        let horizon_24h = summary.resolution_24h_brier_score.unwrap();
+        assert!((0.0..=1.0).contains(&overall));
+        assert!((0.0..=1.0).contains(&horizon_1h));
+        assert!((0.0..=1.0).contains(&horizon_4h));
+        assert!((0.0..=1.0).contains(&horizon_24h));
+        assert!(horizon_1h > overall);
+        assert!(horizon_4h > overall);
+        assert!(horizon_24h <= horizon_1h);
+        assert!(horizon_24h <= horizon_4h);
+    }
 }
