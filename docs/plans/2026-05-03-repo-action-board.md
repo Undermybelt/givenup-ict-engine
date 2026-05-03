@@ -66,6 +66,7 @@ Primary source docs:
 - [x] Workstream 1 now also has `workflow-status` structural history phase rendering reusing the same shared playbook bundle/history artifacts instead of rebuilding those history subtrees independently per case.
 - [x] Workstream 1 now also has `workflow-status` structural node and path-outcome phases reusing the shared playbook bundle instead of rebuilding those slices independently.
 - [x] Workstream 1 now also has policy-training / structural path-ranker CLI dispatch moved out of the `main.rs` match-arm noise into a focused bin-side shell module, reducing entrypoint glue without changing the public command surface.
+- [x] Workstream 1 now also has `workflow-status` / `pre-bayes-status` thin shell dispatch moved out of the `main.rs` match-arm body into a focused bin-side status command module, again without changing the public CLI contract.
 
 ### Next
 
@@ -80,6 +81,7 @@ Primary source docs:
   - latest: `workflow_status.rs` structural history phase cases now reuse the shared playbook bundle/history artifacts as well
   - latest: `workflow_status.rs` structural node and path-outcome phases now reuse that same shared bundle
   - latest: `main.rs` no longer owns the direct policy-training / structural path-ranker wrapper logic for those command arms
+  - latest: `main.rs` no longer owns the direct `workflow-status` / `pre-bayes-status` thin shell wrapper logic either
 - [ ] Replace the current heuristic transition/break mixing with a maintained, emission-aware regime transition core instead of only snapshot-time posterior reweighting.
   - started: transition posterior, blend-helper, temporal accessor, temporal-summary builder extraction, maintained node/branch transition posterior refresh, and explicit emission-conditioned support helpers into `src/belief_core/regime_filter.rs`
 - [ ] Replace the current heuristic temporal break logic with a clearer `changepoint_gate` owner instead of keeping BOCPD helpers inside `src/state/types.rs`.

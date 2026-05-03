@@ -5,6 +5,7 @@ mod factor_backtest_runtime;
 mod factor_research_runtime;
 mod policy_training_command;
 mod probabilistic_backtest_runtime;
+mod status_command;
 mod update_command;
 mod update_output;
 use chrono::{Duration, Utc};
@@ -201,6 +202,7 @@ use policy_training_command::{
 };
 use probabilistic_backtest_runtime::{finalize_backtest_report, run_probabilistic_backtest};
 use serde_json::Value;
+use status_command::{pre_bayes_status_shell, workflow_status_shell, WorkflowStatusShellInput};
 use update_command::update_command;
 use update_output::{
     apply_update_outcome_to_executor_scorecards, build_ensemble_vote_record, emit_update_output,
@@ -2808,41 +2810,32 @@ fn main() -> Result<()> {
             human,
             stable,
             no_execution_focus: _no_execution_focus,
-        } => ict_engine::application::orchestration::workflow_status_command(
-            ict_engine::application::orchestration::WorkflowStatusCommandInput {
-                symbol: &symbol,
-                state_dir: &state_dir,
-                refresh,
-                provider_profile: profile.as_deref(),
-                phase: phase.as_deref(),
-                actionable_only,
-                conflicts_only,
-                latest_promotable,
-                hard_block_only,
-                hard_block_reason: hard_block_reason.as_deref(),
-                limit,
-                output_format: match resolve_output_format(&output_format, compact, agent, human)? {
-                    OutputFormat::Json => "json",
-                    OutputFormat::Compact => "compact",
-                    OutputFormat::Agent => "agent",
-                    OutputFormat::Human => "human",
-                },
-                stable,
+        } => workflow_status_shell(WorkflowStatusShellInput {
+            symbol: &symbol,
+            state_dir: &state_dir,
+            refresh,
+            provider_profile: profile.as_deref(),
+            phase: phase.as_deref(),
+            actionable_only,
+            conflicts_only,
+            latest_promotable,
+            hard_block_only,
+            hard_block_reason: hard_block_reason.as_deref(),
+            limit,
+            output_format: match resolve_output_format(&output_format, compact, agent, human)? {
+                OutputFormat::Json => "json",
+                OutputFormat::Compact => "compact",
+                OutputFormat::Agent => "agent",
+                OutputFormat::Human => "human",
             },
-            refresh_workflow_snapshot,
-        )?,
+            stable,
+        })?,
         Commands::PreBayesStatus {
             symbol,
             state_dir,
             refresh,
             section,
-        } => ict_engine::application::orchestration::pre_bayes_status_command(
-            &symbol,
-            &state_dir,
-            refresh,
-            section.as_deref(),
-            refresh_workflow_snapshot,
-        )?,
+        } => pre_bayes_status_shell(&symbol, &state_dir, refresh, section.as_deref())?,
         Commands::PolicyTrainingStatus {
             symbol,
             state_dir,
