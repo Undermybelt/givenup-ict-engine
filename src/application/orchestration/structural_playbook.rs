@@ -13,6 +13,7 @@ pub use crate::belief_core::ranking_label::{
     apply_structural_path_probability_calibration,
     apply_structural_path_probability_bins,
     apply_structural_path_ranking_execution_gates,
+    clear_structural_path_ranking_target_row_outputs,
     evaluate_structural_path_probability_calibration_rows,
     load_structural_path_ranker_runtime_artifact_ref,
     load_structural_path_ranker_runtime_artifact_rows,
@@ -31,6 +32,7 @@ pub use crate::belief_core::ranking_label::{
     structural_path_ranking_propensity_evaluation_weight,
     structural_path_ranking_reward_label,
     structural_path_ranking_trainer_manifest,
+    upsert_structural_path_ranking_target_history,
     StructuralPathProbabilityCalibrationBin,
     StructuralPathProbabilityCalibrationEvaluationBin,
     StructuralPathProbabilityCalibrationEvaluationReport,
@@ -3445,36 +3447,6 @@ fn resolve_structural_path_ranker_runtime(
         history_match_count,
         applied_path_count,
     })
-}
-
-fn clear_structural_path_ranking_target_row_outputs(row: &mut StructuralPathRankingTargetRow) {
-    row.calibrated_path_prob = None;
-    row.path_prob_lower_bound = None;
-    row.execution_gate_status = None;
-    row.execution_gate_min_path_prob = None;
-    row.execution_gate_reason = None;
-}
-
-fn upsert_structural_path_ranking_target_history(
-    history_jsonl_path: &Path,
-    rows: &[StructuralPathRankingTargetRow],
-) -> Result<Vec<StructuralPathRankingTargetRow>> {
-    let mut history = load_structural_path_ranking_target_rows(history_jsonl_path)?;
-    let mut index = history
-        .iter()
-        .enumerate()
-        .map(|(position, row)| (structural_path_ranking_target_row_history_key(row), position))
-        .collect::<BTreeMap<_, _>>();
-    for row in rows {
-        let key = structural_path_ranking_target_row_history_key(row);
-        if let Some(position) = index.get(&key).copied() {
-            history[position] = row.clone();
-        } else {
-            index.insert(key, history.len());
-            history.push(row.clone());
-        }
-    }
-    Ok(history)
 }
 
 fn structural_path_ranking_regime_bucket(snapshot: &WorkflowSnapshot) -> String {

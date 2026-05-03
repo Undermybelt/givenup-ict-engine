@@ -1062,3 +1062,35 @@ pub fn structural_path_ranking_target_export_summary(
         summary_line,
     }
 }
+
+pub fn clear_structural_path_ranking_target_row_outputs(
+    row: &mut StructuralPathRankingTargetRow,
+) {
+    row.calibrated_path_prob = None;
+    row.path_prob_lower_bound = None;
+    row.execution_gate_status = None;
+    row.execution_gate_min_path_prob = None;
+    row.execution_gate_reason = None;
+}
+
+pub fn upsert_structural_path_ranking_target_history(
+    history_jsonl_path: &Path,
+    rows: &[StructuralPathRankingTargetRow],
+) -> Result<Vec<StructuralPathRankingTargetRow>> {
+    let mut history = load_structural_path_ranking_target_rows(history_jsonl_path)?;
+    let mut index = history
+        .iter()
+        .enumerate()
+        .map(|(position, row)| (structural_path_ranking_target_row_history_key(row), position))
+        .collect::<BTreeMap<_, _>>();
+    for row in rows {
+        let key = structural_path_ranking_target_row_history_key(row);
+        if let Some(position) = index.get(&key).copied() {
+            history[position] = row.clone();
+        } else {
+            index.insert(key, history.len());
+            history.push(row.clone());
+        }
+    }
+    Ok(history)
+}
