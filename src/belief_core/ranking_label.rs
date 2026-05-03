@@ -630,6 +630,29 @@ pub fn structural_path_ranking_ips_weight(propensity_estimate: Option<f64>) -> O
     }
 }
 
+pub fn structural_path_ranking_propensity_estimate(
+    execution_propensity: Option<f64>,
+    behavior_policy_probability: f64,
+) -> Option<f64> {
+    execution_propensity.map(|propensity| {
+        (propensity.clamp(0.0, 1.0) * behavior_policy_probability.clamp(0.0, 1.0))
+            .clamp(0.0, 1.0)
+    })
+}
+
+pub fn structural_path_ranking_training_weight(
+    calibrated_label: Option<f64>,
+    maturity_weight: f64,
+    ips_weight: Option<f64>,
+) -> Option<f64> {
+    calibrated_label?;
+    let maturity_weight = maturity_weight.clamp(0.0, 1.0);
+    if maturity_weight <= f64::EPSILON {
+        return None;
+    }
+    Some(maturity_weight * ips_weight?)
+}
+
 pub fn structural_path_ranking_propensity_evaluation_weight(
     row: &StructuralPathRankingTargetRow,
 ) -> Option<f64> {

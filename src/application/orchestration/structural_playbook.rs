@@ -29,9 +29,11 @@ pub use crate::belief_core::ranking_label::{
     structural_path_ranking_beta_lower_bound,
     structural_path_ranking_beta_mean,
     structural_path_ranking_ips_weight,
+    structural_path_ranking_propensity_estimate,
     structural_path_ranking_propensity_evaluation_weight,
     structural_path_ranking_reward_label,
     structural_path_ranking_trainer_manifest,
+    structural_path_ranking_training_weight,
     upsert_structural_path_ranking_target_history,
     StructuralPathProbabilityCalibrationBin,
     StructuralPathProbabilityCalibrationEvaluationBin,
@@ -3453,29 +3455,6 @@ fn structural_path_ranking_regime_bucket(snapshot: &WorkflowSnapshot) -> String 
     let symbol = structural_symbol(snapshot);
     let regime = structural_active_regime(snapshot).unwrap_or_else(|| "unknown".to_string());
     format!("{symbol}:{regime}")
-}
-
-fn structural_path_ranking_propensity_estimate(
-    execution_propensity: Option<f64>,
-    behavior_policy_probability: f64,
-) -> Option<f64> {
-    execution_propensity.map(|propensity| {
-        (propensity.clamp(0.0, 1.0) * behavior_policy_probability.clamp(0.0, 1.0))
-            .clamp(0.0, 1.0)
-    })
-}
-
-fn structural_path_ranking_training_weight(
-    calibrated_label: Option<f64>,
-    maturity_weight: f64,
-    ips_weight: Option<f64>,
-) -> Option<f64> {
-    calibrated_label?;
-    let maturity_weight = maturity_weight.clamp(0.0, 1.0);
-    if maturity_weight <= f64::EPSILON {
-        return None;
-    }
-    Some(maturity_weight * ips_weight?)
 }
 
 fn structural_path_ranking_pending_reward_state(
