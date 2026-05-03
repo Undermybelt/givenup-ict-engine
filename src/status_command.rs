@@ -132,3 +132,68 @@ pub(crate) fn artifact_status_shell(input: ArtifactStatusShellInput<'_>) -> Resu
         bucket_limit,
     })
 }
+
+pub(crate) fn pre_bayes_diff_shell(symbol: &str, state_dir: &str, refresh: bool) -> Result<()> {
+    ict_engine::application::orchestration::pre_bayes_diff_command(
+        symbol,
+        state_dir,
+        refresh,
+        refresh_workflow_snapshot,
+    )
+}
+
+pub(crate) struct ArtifactDiffShellInput<'a> {
+    pub(crate) symbol: &'a str,
+    pub(crate) state_dir: &'a str,
+    pub(crate) left_artifact_id: &'a str,
+    pub(crate) right_artifact_id: &'a str,
+}
+
+pub(crate) fn artifact_diff_shell(input: ArtifactDiffShellInput<'_>) -> Result<()> {
+    let ArtifactDiffShellInput {
+        symbol,
+        state_dir,
+        left_artifact_id,
+        right_artifact_id,
+    } = input;
+    artifact_diff_command(ArtifactDiffCommandInput {
+        symbol,
+        state_dir,
+        left_artifact_id,
+        right_artifact_id,
+    })
+}
+
+pub(crate) struct ArtifactLineageShellInput<'a> {
+    pub(crate) symbol: &'a str,
+    pub(crate) state_dir: &'a str,
+    pub(crate) artifact_id: Option<&'a str>,
+    pub(crate) latest_only: bool,
+    pub(crate) improving_only: bool,
+    pub(crate) regressing_only: bool,
+    pub(crate) rule_break_only: bool,
+}
+
+pub(crate) fn artifact_lineage_shell(input: ArtifactLineageShellInput<'_>) -> Result<()> {
+    let ArtifactLineageShellInput {
+        symbol,
+        state_dir,
+        artifact_id,
+        latest_only,
+        improving_only,
+        regressing_only,
+        rule_break_only,
+    } = input;
+    let ledger = load_artifact_ledger(state_dir, symbol)?;
+    let snapshot = refresh_workflow_snapshot(state_dir, symbol)?;
+    artifact_lineage_command(ArtifactLineageCommandInput {
+        symbol,
+        ledger: &ledger,
+        summaries: snapshot.artifact_lineage_summaries,
+        artifact_id,
+        latest_only,
+        improving_only,
+        regressing_only,
+        rule_break_only,
+    })
+}

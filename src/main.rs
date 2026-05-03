@@ -203,8 +203,9 @@ use policy_training_command::{
 use probabilistic_backtest_runtime::{finalize_backtest_report, run_probabilistic_backtest};
 use serde_json::Value;
 use status_command::{
-    artifact_status_shell, pre_bayes_status_shell, provider_status_shell, workflow_status_shell,
-    ArtifactStatusShellInput, WorkflowStatusShellInput,
+    artifact_diff_shell, artifact_lineage_shell, artifact_status_shell, pre_bayes_diff_shell,
+    pre_bayes_status_shell, provider_status_shell, workflow_status_shell, ArtifactDiffShellInput,
+    ArtifactLineageShellInput, ArtifactStatusShellInput, WorkflowStatusShellInput,
 };
 use update_command::update_command;
 use update_output::{
@@ -2901,12 +2902,7 @@ fn main() -> Result<()> {
             symbol,
             state_dir,
             refresh,
-        } => ict_engine::application::orchestration::pre_bayes_diff_command(
-            &symbol,
-            &state_dir,
-            refresh,
-            refresh_workflow_snapshot,
-        )?,
+        } => pre_bayes_diff_shell(&symbol, &state_dir, refresh)?,
         Commands::ArtifactStatus {
             symbol,
             state_dir,
@@ -2945,7 +2941,7 @@ fn main() -> Result<()> {
             state_dir,
             left_artifact_id,
             right_artifact_id,
-        } => artifact_diff_command(ArtifactDiffCommandInput {
+        } => artifact_diff_shell(ArtifactDiffShellInput {
             symbol: &symbol,
             state_dir: &state_dir,
             left_artifact_id: &left_artifact_id,
@@ -2959,20 +2955,15 @@ fn main() -> Result<()> {
             improving_only,
             regressing_only,
             rule_break_only,
-        } => {
-            let ledger = load_artifact_ledger(&state_dir, &symbol)?;
-            let snapshot = refresh_workflow_snapshot(&state_dir, &symbol)?;
-            artifact_lineage_command(ArtifactLineageCommandInput {
-                symbol: &symbol,
-                ledger: &ledger,
-                summaries: snapshot.artifact_lineage_summaries,
-                artifact_id: artifact_id.as_deref(),
-                latest_only,
-                improving_only,
-                regressing_only,
-                rule_break_only,
-            })?
-        }
+        } => artifact_lineage_shell(ArtifactLineageShellInput {
+            symbol: &symbol,
+            state_dir: &state_dir,
+            artifact_id: artifact_id.as_deref(),
+            latest_only,
+            improving_only,
+            regressing_only,
+            rule_break_only,
+        })?,
     }
 
     Ok(())
