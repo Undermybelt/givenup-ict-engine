@@ -74,7 +74,8 @@ pub use crate::belief_core::regime_filter::{
 };
 pub use crate::belief_core::source_reliability::{
     structural_delayed_reward_replay_validation, structural_last_offline_seed_source,
-    structural_panel_derived_smoothed_prior, structural_prior_behavior_policy_probability,
+    structural_experience_prior_runtime_metrics, structural_panel_derived_smoothed_prior,
+    structural_prior_behavior_policy_probability,
     structural_prior_behavior_policy_probability_variance,
     structural_prior_censoring_adjusted_reward_lower_bound,
     structural_prior_censoring_adjusted_reward_prior, structural_prior_censoring_rate,
@@ -1200,127 +1201,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 experience_prior: path.path_prior,
                 current_posterior: Some(path.path_posterior),
                 composite_score: path.composite_preference_score,
-                source_panel_count: structural_source_panel_count(prior_stats),
-                last_offline_seed_source: structural_last_offline_seed_source(prior_stats),
                 dominant_source_panel: dominant_source_panel.clone(),
                 dominant_source_share,
                 dominant_source_prior,
-                execution_propensity: structural_prior_execution_propensity(prior_stats),
-                ips_weight: structural_prior_ips_weight(prior_stats),
-                counterfactual_reward_prior: structural_prior_counterfactual_reward_prior(
-                    prior_stats,
-                ),
-                off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
-                    prior_stats,
-                ),
-                behavior_policy_probability: structural_prior_behavior_policy_probability(
-                    prior_stats,
-                ),
-                behavior_policy_probability_variance:
-                    structural_prior_behavior_policy_probability_variance(prior_stats),
-                target_policy_probability_confidence:
-                    structural_prior_target_policy_probability_confidence(prior_stats),
-                target_policy_probability_lower_bound:
-                    structural_prior_target_policy_probability_lower_bound(prior_stats),
-                target_policy_probability_brier_score:
-                    structural_prior_target_policy_probability_brier_score(prior_stats),
-                target_policy_probability_calibration_error:
-                    structural_prior_target_policy_probability_calibration_error(prior_stats),
-                snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
-                snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(prior_stats),
-                snips_effective_sample_size: structural_prior_snips_effective_sample_size(
-                    prior_stats,
-                ),
-                snips_reward_prior: structural_prior_snips_reward_prior(prior_stats),
-                doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
-                    prior_stats,
-                ),
-                target_policy_calibration_weight:
-                    structural_prior_target_policy_calibration_weight(prior_stats),
-                target_policy_reward_prior: structural_prior_target_policy_reward_prior(
-                    prior_stats,
-                ),
-                target_policy_variance_penalty:
-                    structural_prior_target_policy_variance_penalty(prior_stats),
-                target_policy_reward_lower_bound:
-                    structural_prior_target_policy_reward_lower_bound(prior_stats),
-                matured_feedback_count: structural_prior_matured_feedback_count(prior_stats),
-                unresolved_feedback_count: structural_prior_unresolved_feedback_count(prior_stats),
-                maturity_coverage: structural_prior_maturity_coverage(prior_stats),
-                censoring_rate: structural_prior_censoring_rate(prior_stats),
-                delayed_reward_resolution_probability:
-                    structural_prior_delayed_reward_resolution_probability(prior_stats),
-                delayed_reward_censoring_probability:
-                    structural_prior_delayed_reward_censoring_probability(prior_stats),
-                censoring_adjusted_reward_prior:
-                    structural_prior_censoring_adjusted_reward_prior(prior_stats),
-                censoring_adjusted_reward_lower_bound:
-                    structural_prior_censoring_adjusted_reward_lower_bound(prior_stats),
-                delayed_reward_success_competing_risk:
-                    structural_prior_delayed_reward_success_competing_risk(prior_stats),
-                delayed_reward_failure_competing_risk:
-                    structural_prior_delayed_reward_failure_competing_risk(prior_stats),
-                delayed_reward_invalidation_competing_risk:
-                    structural_prior_delayed_reward_invalidation_competing_risk(prior_stats),
-                delayed_reward_abandonment_competing_risk:
-                    structural_prior_delayed_reward_abandonment_competing_risk(prior_stats),
-                delayed_reward_competing_risk_entropy:
-                    structural_prior_delayed_reward_competing_risk_entropy(prior_stats),
-                delayed_reward_elapsed_feedback_count:
-                    structural_prior_delayed_reward_elapsed_feedback_count(prior_stats),
-                delayed_reward_elapsed_hours_at_risk:
-                    structural_prior_delayed_reward_elapsed_hours_at_risk(prior_stats),
-                delayed_reward_avg_elapsed_hours:
-                    structural_prior_delayed_reward_avg_elapsed_hours(prior_stats),
-                delayed_reward_resolution_hazard_per_hour:
-                    structural_prior_delayed_reward_resolution_hazard_per_hour(prior_stats),
-                delayed_reward_expected_resolution_hours:
-                    structural_prior_delayed_reward_expected_resolution_hours(prior_stats),
-                delayed_reward_survival_probability_1h:
-                    structural_prior_delayed_reward_survival_probability_1h(prior_stats),
-                delayed_reward_survival_probability_4h:
-                    structural_prior_delayed_reward_survival_probability_4h(prior_stats),
-                delayed_reward_survival_probability_24h:
-                    structural_prior_delayed_reward_survival_probability_24h(prior_stats),
-                delayed_reward_success_hazard_per_hour:
-                    structural_prior_delayed_reward_success_hazard_per_hour(prior_stats),
-                delayed_reward_failure_hazard_per_hour:
-                    structural_prior_delayed_reward_failure_hazard_per_hour(prior_stats),
-                delayed_reward_invalidation_hazard_per_hour:
-                    structural_prior_delayed_reward_invalidation_hazard_per_hour(prior_stats),
-                delayed_reward_abandonment_hazard_per_hour:
-                    structural_prior_delayed_reward_abandonment_hazard_per_hour(prior_stats),
-                delayed_reward_success_cumulative_incidence_4h:
-                    structural_prior_delayed_reward_success_cumulative_incidence_4h(prior_stats),
-                delayed_reward_failure_cumulative_incidence_4h:
-                    structural_prior_delayed_reward_failure_cumulative_incidence_4h(prior_stats),
-                delayed_reward_invalidation_cumulative_incidence_4h:
-                    structural_prior_delayed_reward_invalidation_cumulative_incidence_4h(
-                        prior_stats,
-                    ),
-                delayed_reward_abandonment_cumulative_incidence_4h:
-                    structural_prior_delayed_reward_abandonment_cumulative_incidence_4h(
-                        prior_stats,
-                    ),
-                delayed_reward_resolution_horizon_1h_count:
-                    structural_prior_delayed_reward_resolution_horizon_1h_count(prior_stats),
-                delayed_reward_resolution_within_1h_count:
-                    structural_prior_delayed_reward_resolution_within_1h_count(prior_stats),
-                delayed_reward_resolution_probability_1h:
-                    structural_prior_delayed_reward_resolution_probability_1h(prior_stats),
-                delayed_reward_resolution_horizon_4h_count:
-                    structural_prior_delayed_reward_resolution_horizon_4h_count(prior_stats),
-                delayed_reward_resolution_within_4h_count:
-                    structural_prior_delayed_reward_resolution_within_4h_count(prior_stats),
-                delayed_reward_resolution_probability_4h:
-                    structural_prior_delayed_reward_resolution_probability_4h(prior_stats),
-                delayed_reward_resolution_horizon_24h_count:
-                    structural_prior_delayed_reward_resolution_horizon_24h_count(prior_stats),
-                delayed_reward_resolution_within_24h_count:
-                    structural_prior_delayed_reward_resolution_within_24h_count(prior_stats),
-                delayed_reward_resolution_probability_24h:
-                    structural_prior_delayed_reward_resolution_probability_24h(prior_stats),
-                delayed_reward_replay_validation: delayed_reward_replay_validation.clone(),
                 duration_streak_count: None,
                 duration_avg_streak_length: None,
                 duration_persistence_prior: None,
@@ -1330,6 +1213,10 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                 duration_temporal_posterior_support: None,
                 transition_outcome_support: None,
                 transition_temporal_posterior_support: None,
+                ..structural_experience_prior_runtime_metrics(
+                    prior_stats,
+                    delayed_reward_replay_validation.clone(),
+                )
             })
             .or_else(|| {
                 path_summary.map(|summary| {
@@ -1348,157 +1235,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         experience_prior,
                         current_posterior: None,
                         composite_score: experience_prior,
-                        source_panel_count: structural_source_panel_count(prior_stats),
-                        last_offline_seed_source: structural_last_offline_seed_source(prior_stats),
                         dominant_source_panel: dominant_source_panel.clone(),
                         dominant_source_share,
                         dominant_source_prior,
-                        execution_propensity: structural_prior_execution_propensity(prior_stats),
-                        ips_weight: structural_prior_ips_weight(prior_stats),
-                        counterfactual_reward_prior:
-                            structural_prior_counterfactual_reward_prior(prior_stats),
-                        off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(
-                            prior_stats,
-                        ),
-                        behavior_policy_probability: structural_prior_behavior_policy_probability(
-                            prior_stats,
-                        ),
-                        behavior_policy_probability_variance:
-                            structural_prior_behavior_policy_probability_variance(prior_stats),
-                        target_policy_probability_confidence:
-                            structural_prior_target_policy_probability_confidence(prior_stats),
-                        target_policy_probability_lower_bound:
-                            structural_prior_target_policy_probability_lower_bound(prior_stats),
-                        target_policy_probability_brier_score:
-                            structural_prior_target_policy_probability_brier_score(prior_stats),
-                        target_policy_probability_calibration_error:
-                            structural_prior_target_policy_probability_calibration_error(
-                                prior_stats,
-                            ),
-                        snips_weight_mass: structural_prior_snips_weight_mass(prior_stats),
-                        snips_weight_squared_mass: structural_prior_snips_weight_squared_mass(
-                            prior_stats,
-                        ),
-                        snips_effective_sample_size: structural_prior_snips_effective_sample_size(
-                            prior_stats,
-                        ),
-                        snips_reward_prior: structural_prior_snips_reward_prior(prior_stats),
-                        doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(
-                            prior_stats,
-                        ),
-                        target_policy_calibration_weight:
-                            structural_prior_target_policy_calibration_weight(prior_stats),
-                        target_policy_reward_prior: structural_prior_target_policy_reward_prior(
-                            prior_stats,
-                        ),
-                        target_policy_variance_penalty:
-                            structural_prior_target_policy_variance_penalty(prior_stats),
-                        target_policy_reward_lower_bound:
-                            structural_prior_target_policy_reward_lower_bound(prior_stats),
-                        matured_feedback_count: structural_prior_matured_feedback_count(
-                            prior_stats,
-                        ),
-                        unresolved_feedback_count: structural_prior_unresolved_feedback_count(
-                            prior_stats,
-                        ),
-                        maturity_coverage: structural_prior_maturity_coverage(prior_stats),
-                        censoring_rate: structural_prior_censoring_rate(prior_stats),
-                        delayed_reward_resolution_probability:
-                            structural_prior_delayed_reward_resolution_probability(prior_stats),
-                        delayed_reward_censoring_probability:
-                            structural_prior_delayed_reward_censoring_probability(prior_stats),
-                        censoring_adjusted_reward_prior:
-                            structural_prior_censoring_adjusted_reward_prior(prior_stats),
-                        censoring_adjusted_reward_lower_bound:
-                            structural_prior_censoring_adjusted_reward_lower_bound(prior_stats),
-                        delayed_reward_success_competing_risk:
-                            structural_prior_delayed_reward_success_competing_risk(prior_stats),
-                        delayed_reward_failure_competing_risk:
-                            structural_prior_delayed_reward_failure_competing_risk(prior_stats),
-                        delayed_reward_invalidation_competing_risk:
-                            structural_prior_delayed_reward_invalidation_competing_risk(
-                                prior_stats,
-                            ),
-                        delayed_reward_abandonment_competing_risk:
-                            structural_prior_delayed_reward_abandonment_competing_risk(
-                                prior_stats,
-                            ),
-                        delayed_reward_competing_risk_entropy:
-                            structural_prior_delayed_reward_competing_risk_entropy(prior_stats),
-                        delayed_reward_elapsed_feedback_count:
-                            structural_prior_delayed_reward_elapsed_feedback_count(prior_stats),
-                        delayed_reward_elapsed_hours_at_risk:
-                            structural_prior_delayed_reward_elapsed_hours_at_risk(prior_stats),
-                        delayed_reward_avg_elapsed_hours:
-                            structural_prior_delayed_reward_avg_elapsed_hours(prior_stats),
-                        delayed_reward_resolution_hazard_per_hour:
-                            structural_prior_delayed_reward_resolution_hazard_per_hour(
-                                prior_stats,
-                            ),
-                        delayed_reward_expected_resolution_hours:
-                            structural_prior_delayed_reward_expected_resolution_hours(prior_stats),
-                        delayed_reward_survival_probability_1h:
-                            structural_prior_delayed_reward_survival_probability_1h(prior_stats),
-                        delayed_reward_survival_probability_4h:
-                            structural_prior_delayed_reward_survival_probability_4h(prior_stats),
-                        delayed_reward_survival_probability_24h:
-                            structural_prior_delayed_reward_survival_probability_24h(prior_stats),
-                        delayed_reward_success_hazard_per_hour:
-                            structural_prior_delayed_reward_success_hazard_per_hour(prior_stats),
-                        delayed_reward_failure_hazard_per_hour:
-                            structural_prior_delayed_reward_failure_hazard_per_hour(prior_stats),
-                        delayed_reward_invalidation_hazard_per_hour:
-                            structural_prior_delayed_reward_invalidation_hazard_per_hour(
-                                prior_stats,
-                            ),
-                        delayed_reward_abandonment_hazard_per_hour:
-                            structural_prior_delayed_reward_abandonment_hazard_per_hour(
-                                prior_stats,
-                            ),
-                        delayed_reward_success_cumulative_incidence_4h:
-                            structural_prior_delayed_reward_success_cumulative_incidence_4h(
-                                prior_stats,
-                            ),
-                        delayed_reward_failure_cumulative_incidence_4h:
-                            structural_prior_delayed_reward_failure_cumulative_incidence_4h(
-                                prior_stats,
-                            ),
-                        delayed_reward_invalidation_cumulative_incidence_4h:
-                            structural_prior_delayed_reward_invalidation_cumulative_incidence_4h(
-                                prior_stats,
-                            ),
-                        delayed_reward_abandonment_cumulative_incidence_4h:
-                            structural_prior_delayed_reward_abandonment_cumulative_incidence_4h(
-                                prior_stats,
-                            ),
-                        delayed_reward_resolution_horizon_1h_count:
-                            structural_prior_delayed_reward_resolution_horizon_1h_count(
-                                prior_stats,
-                            ),
-                        delayed_reward_resolution_within_1h_count:
-                            structural_prior_delayed_reward_resolution_within_1h_count(prior_stats),
-                        delayed_reward_resolution_probability_1h:
-                            structural_prior_delayed_reward_resolution_probability_1h(prior_stats),
-                        delayed_reward_resolution_horizon_4h_count:
-                            structural_prior_delayed_reward_resolution_horizon_4h_count(
-                                prior_stats,
-                            ),
-                        delayed_reward_resolution_within_4h_count:
-                            structural_prior_delayed_reward_resolution_within_4h_count(prior_stats),
-                        delayed_reward_resolution_probability_4h:
-                            structural_prior_delayed_reward_resolution_probability_4h(prior_stats),
-                        delayed_reward_resolution_horizon_24h_count:
-                            structural_prior_delayed_reward_resolution_horizon_24h_count(
-                                prior_stats,
-                            ),
-                        delayed_reward_resolution_within_24h_count:
-                            structural_prior_delayed_reward_resolution_within_24h_count(
-                                prior_stats,
-                            ),
-                        delayed_reward_resolution_probability_24h:
-                            structural_prior_delayed_reward_resolution_probability_24h(prior_stats),
-                        delayed_reward_replay_validation: delayed_reward_replay_validation
-                            .clone(),
                         duration_streak_count: None,
                         duration_avg_streak_length: None,
                         duration_persistence_prior: None,
@@ -1508,6 +1247,10 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         duration_temporal_posterior_support: None,
                         transition_outcome_support: None,
                         transition_temporal_posterior_support: None,
+                        ..structural_experience_prior_runtime_metrics(
+                            prior_stats,
+                            delayed_reward_replay_validation.clone(),
+                        )
                     }
                 })
             })
