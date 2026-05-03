@@ -8,6 +8,7 @@ pub mod backtest;
 pub mod backtest_report_shell;
 pub mod bayesian;
 pub mod bbn;
+pub mod belief_core;
 pub mod bvar;
 pub mod config;
 pub mod data;

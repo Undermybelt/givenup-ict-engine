@@ -1,17 +1,26 @@
 use anyhow::Result;
 use chrono::{SecondsFormat, Utc};
-use csv::StringRecord;
-use reqwest::blocking::Client;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use std::collections::BTreeMap;
 use std::fs;
-use std::path::{Path, PathBuf};
-use std::time::Duration;
+use std::path::Path;
 
 use crate::application::belief::{
     blend_branch_prior_with_transition_prior, blend_node_posterior_with_duration_prior,
     transition_adjusted_branch_posteriors,
+};
+pub use crate::belief_core::ranking_label::{
+    load_structural_path_ranker_runtime_artifact_ref,
+    load_structural_path_ranker_runtime_artifact_rows,
+    load_structural_path_ranking_runtime_selection,
+    structural_path_ranking_runtime_selection_path,
+    StructuralPathRankerRuntimeRow,
+    StructuralPathRankerRuntimeSurface,
+    StructuralPathRankingRuntimeSelection,
+    STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+    STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY,
+    STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_FILE,
+    STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION,
 };
 use crate::application::provider_catalog::{
     build_workflow_provider_support, ProviderCatalogAgentSurface,
@@ -41,14 +50,6 @@ pub const STRUCTURAL_PATH_RANKING_TARGET_HISTORY_JSONL_FILE: &str =
     "structural_path_ranking_target_history.jsonl";
 pub const STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE: &str =
     "structural_path_ranking_target_summary.json";
-pub const STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_FILE: &str =
-    "structural_path_ranking_runtime_selection.json";
-pub const STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION: &str =
-    "structural-path-ranking-runtime-selection-v1";
-pub const STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY: &str =
-    "candidate_set_only";
-pub const STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY: &str =
-    "prefer_history";
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct StructuralPlaybookBundle {
@@ -178,33 +179,6 @@ pub struct StructuralPathPlanArtifact {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path_ranker_runtime: Option<StructuralPathRankerRuntimeSurface>,
     pub paths: Vec<StructuralPathArtifact>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
-pub struct StructuralPathRankingRuntimeSelection {
-    pub protocol_version: String,
-    pub enabled: bool,
-    pub reuse_mode: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub selected_at: Option<String>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub notes: Vec<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct StructuralPathRankerRuntimeSurface {
-    pub enabled: bool,
-    pub status: String,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub reuse_mode: Option<String>,
-    #[serde(default)]
-    pub artifact_match_count: usize,
-    #[serde(default)]
-    pub candidate_set_match_count: usize,
-    #[serde(default)]
-    pub history_match_count: usize,
-    #[serde(default)]
-    pub applied_path_count: usize,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -706,49 +680,7 @@ struct StructuralRankedPathSelection {
 #[derive(Debug, Clone)]
 struct StructuralPathRankerRuntimeRowMatch {
     source: &'static str,
-    row: StructuralPathRankingTargetRow,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-struct StructuralPathRankerRuntimeArtifactRef {
-    #[serde(default)]
-    protocol_version: String,
-    #[serde(default)]
-    dataset_role: String,
-    #[serde(default)]
-    artifact_uri: String,
-    #[serde(default)]
-    score_column: String,
-}
-
-pub fn structural_path_ranking_runtime_selection_path(state_dir: &str, symbol: &str) -> String {
-    Path::new(state_dir)
-        .join(symbol)
-        .join(STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR)
-        .join(STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_FILE)
-        .to_string_lossy()
-        .to_string()
-}
-
-pub fn load_structural_path_ranking_runtime_selection(
-    state_dir: &str,
-    symbol: &str,
-) -> Option<StructuralPathRankingRuntimeSelection> {
-    let path = structural_path_ranking_runtime_selection_path(state_dir, symbol);
-    let raw = fs::read_to_string(path).ok()?;
-    let selection = serde_json::from_str::<StructuralPathRankingRuntimeSelection>(&raw).ok()?;
-    if selection.protocol_version.trim() != STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION
-    {
-        return None;
-    }
-    if !matches!(
-        selection.reuse_mode.as_str(),
-        STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY
-            | STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY
-    ) {
-        return None;
-    }
-    Some(selection)
+    row: StructuralPathRankerRuntimeRow,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -3893,202 +3825,6 @@ fn load_structural_path_ranking_target_rows(
         .map_err(Into::into)
 }
 
-fn structural_path_ranker_artifact_json_path(state_dir: &str, symbol: &str) -> PathBuf {
-    Path::new(state_dir)
-        .join(symbol)
-        .join(STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR)
-        .join("structural_path_ranking_trainer_artifact.json")
-}
-
-fn load_structural_path_ranker_runtime_artifact_ref(
-    state_dir: &str,
-    symbol: &str,
-) -> Option<StructuralPathRankerRuntimeArtifactRef> {
-    let path = structural_path_ranker_artifact_json_path(state_dir, symbol);
-    let raw = fs::read_to_string(path).ok()?;
-    let artifact = serde_json::from_str::<StructuralPathRankerRuntimeArtifactRef>(&raw).ok()?;
-    if artifact.artifact_uri.trim().is_empty() || artifact.score_column.trim().is_empty() {
-        return None;
-    }
-    Some(artifact)
-}
-
-fn structural_path_ranker_artifact_uri_path(
-    state_dir: &str,
-    symbol: &str,
-    artifact_uri: &str,
-) -> Option<PathBuf> {
-    let artifact_uri = artifact_uri.trim();
-    if artifact_uri.is_empty() {
-        return None;
-    }
-    if let Some(path) = artifact_uri.strip_prefix("file://") {
-        return Some(PathBuf::from(path));
-    }
-    if artifact_uri.contains("://") {
-        return None;
-    }
-    let path = Path::new(artifact_uri);
-    if path.is_absolute() {
-        Some(path.to_path_buf())
-    } else {
-        Some(
-            Path::new(state_dir)
-                .join(symbol)
-                .join(STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR)
-                .join(path),
-        )
-    }
-}
-
-fn structural_path_ranker_runtime_source_kind(artifact_uri: &str) -> &'static str {
-    let artifact_uri = artifact_uri.trim();
-    if artifact_uri.starts_with("http://") || artifact_uri.starts_with("https://") {
-        "remote"
-    } else {
-        "local"
-    }
-}
-
-fn structural_path_ranker_runtime_source_extension(source_hint: &str) -> String {
-    let trimmed = source_hint.trim();
-    let path_like = trimmed
-        .split('?')
-        .next()
-        .unwrap_or(trimmed)
-        .split('#')
-        .next()
-        .unwrap_or(trimmed);
-    Path::new(path_like)
-        .extension()
-        .and_then(|value| value.to_str())
-        .unwrap_or_default()
-        .to_ascii_lowercase()
-}
-
-fn structural_path_ranker_runtime_row_from_value(
-    value: &Value,
-    score_column: &str,
-) -> Option<StructuralPathRankingTargetRow> {
-    let candidate_set_id = value.get("candidate_set_id")?.as_str()?.trim().to_string();
-    let path_id = value.get("path_id")?.as_str()?.trim().to_string();
-    let raw_path_score = value.get(score_column).and_then(Value::as_f64);
-    let calibrated_path_prob = value.get("calibrated_path_prob").and_then(Value::as_f64);
-    let path_prob_lower_bound = value.get("path_prob_lower_bound").and_then(Value::as_f64);
-    let execution_gate_status = value
-        .get("execution_gate_status")
-        .and_then(Value::as_str)
-        .map(ToString::to_string);
-    Some(StructuralPathRankingTargetRow {
-        candidate_set_id,
-        path_id,
-        raw_path_score,
-        calibrated_path_prob,
-        path_prob_lower_bound,
-        execution_gate_status,
-        ..StructuralPathRankingTargetRow::default()
-    })
-}
-
-fn structural_path_ranker_runtime_row_from_csv_record(
-    headers: &StringRecord,
-    record: &StringRecord,
-    score_column: &str,
-) -> Option<StructuralPathRankingTargetRow> {
-    let value_for = |name: &str| -> Option<&str> {
-        let index = headers.iter().position(|header| header == name)?;
-        record.get(index)
-    };
-    let candidate_set_id = value_for("candidate_set_id")?.trim().to_string();
-    let path_id = value_for("path_id")?.trim().to_string();
-    let parse_f64 = |name: &str| -> Option<f64> { value_for(name)?.trim().parse::<f64>().ok() };
-    let execution_gate_status = value_for("execution_gate_status")
-        .map(str::trim)
-        .filter(|value| !value.is_empty())
-        .map(ToString::to_string);
-    Some(StructuralPathRankingTargetRow {
-        candidate_set_id,
-        path_id,
-        raw_path_score: parse_f64(score_column),
-        calibrated_path_prob: parse_f64("calibrated_path_prob"),
-        path_prob_lower_bound: parse_f64("path_prob_lower_bound"),
-        execution_gate_status,
-        ..StructuralPathRankingTargetRow::default()
-    })
-}
-
-fn parse_structural_path_ranker_runtime_rows_from_raw(
-    source_hint: &str,
-    raw: &str,
-    score_column: &str,
-) -> Result<Vec<StructuralPathRankingTargetRow>> {
-    match structural_path_ranker_runtime_source_extension(source_hint).as_str() {
-        "jsonl" => Ok(raw
-            .lines()
-            .filter(|line| !line.trim().is_empty())
-            .filter_map(|line| serde_json::from_str::<Value>(line).ok())
-            .filter_map(|value| structural_path_ranker_runtime_row_from_value(&value, score_column))
-            .collect()),
-        "json" => {
-            let value = serde_json::from_str::<Value>(raw)?;
-            let rows = match value {
-                Value::Array(items) => items
-                    .iter()
-                    .filter_map(|item| structural_path_ranker_runtime_row_from_value(item, score_column))
-                    .collect(),
-                Value::Object(_) => structural_path_ranker_runtime_row_from_value(&value, score_column)
-                    .into_iter()
-                    .collect(),
-                _ => Vec::new(),
-            };
-            Ok(rows)
-        }
-        _ => {
-            let mut reader = csv::Reader::from_reader(raw.as_bytes());
-            let headers = reader.headers()?.clone();
-            Ok(reader
-                .records()
-                .filter_map(|record| record.ok())
-                .filter_map(|record| {
-                    structural_path_ranker_runtime_row_from_csv_record(
-                        &headers,
-                        &record,
-                        score_column,
-                    )
-                })
-                .collect())
-        }
-    }
-}
-
-pub fn load_structural_path_ranker_runtime_artifact_rows(
-    state_dir: &str,
-    symbol: &str,
-    artifact_uri: &str,
-    score_column: &str,
-) -> Result<Vec<StructuralPathRankingTargetRow>> {
-    if structural_path_ranker_runtime_source_kind(artifact_uri) == "remote" {
-        let client = Client::builder().timeout(Duration::from_secs(3)).build()?;
-        let raw = client
-            .get(artifact_uri)
-            .send()?
-            .error_for_status()?
-            .text()?;
-        return parse_structural_path_ranker_runtime_rows_from_raw(artifact_uri, &raw, score_column);
-    }
-    let artifact_path = structural_path_ranker_artifact_uri_path(state_dir, symbol, artifact_uri)
-        .ok_or_else(|| anyhow::anyhow!("artifact uri is not a supported local path"))?;
-    if !artifact_path.exists() {
-        return Ok(Vec::new());
-    }
-    let raw = fs::read_to_string(&artifact_path)?;
-    parse_structural_path_ranker_runtime_rows_from_raw(
-        artifact_path.to_string_lossy().as_ref(),
-        &raw,
-        score_column,
-    )
-}
-
 fn resolve_structural_path_ranker_runtime(
     state_dir: Option<&str>,
     symbol: &str,
@@ -4140,12 +3876,12 @@ fn resolve_structural_path_ranker_runtime(
     };
     let history_rows = load_structural_path_ranking_target_rows(&history_path).unwrap_or_default();
     let artifact_rows = load_structural_path_ranker_runtime_artifact_ref(state_dir, symbol)
-        .and_then(|artifact| {
+        .and_then(|(artifact_uri, score_column)| {
             load_structural_path_ranker_runtime_artifact_rows(
                 state_dir,
                 symbol,
-                &artifact.artifact_uri,
-                &artifact.score_column,
+                &artifact_uri,
+                &score_column,
             )
             .ok()
         })
@@ -4161,7 +3897,7 @@ fn resolve_structural_path_ranker_runtime(
         .cloned()
         .map(|row| (row.path_id.clone(), row))
         .collect::<BTreeMap<_, _>>();
-    let mut artifact_history_matches = BTreeMap::<String, StructuralPathRankingTargetRow>::new();
+    let mut artifact_history_matches = BTreeMap::<String, StructuralPathRankerRuntimeRow>::new();
     for row in &artifact_rows {
         if row.raw_path_score.is_none() {
             continue;
@@ -4179,17 +3915,38 @@ fn resolve_structural_path_ranker_runtime(
                 && row.raw_path_score.is_some()
                 && candidate_paths.iter().any(|path| path.path_id == row.path_id)
         })
-        .cloned()
-        .map(|row| (row.path_id.clone(), row))
+        .map(|row| {
+            (
+                row.path_id.clone(),
+                StructuralPathRankerRuntimeRow {
+                    candidate_set_id: row.candidate_set_id.clone(),
+                    path_id: row.path_id.clone(),
+                    raw_path_score: row.raw_path_score,
+                    calibrated_path_prob: row.calibrated_path_prob,
+                    path_prob_lower_bound: row.path_prob_lower_bound,
+                    execution_gate_status: row.execution_gate_status.clone(),
+                },
+            )
+        })
         .collect::<BTreeMap<_, _>>();
 
-    let mut latest_history_matches = BTreeMap::<String, StructuralPathRankingTargetRow>::new();
+    let mut latest_history_matches = BTreeMap::<String, StructuralPathRankerRuntimeRow>::new();
     for row in history_rows.iter().chain(current_rows.iter()) {
         if row.raw_path_score.is_none() {
             continue;
         }
         if candidate_paths.iter().any(|path| path.path_id == row.path_id) {
-            latest_history_matches.insert(row.path_id.clone(), row.clone());
+            latest_history_matches.insert(
+                row.path_id.clone(),
+                StructuralPathRankerRuntimeRow {
+                    candidate_set_id: row.candidate_set_id.clone(),
+                    path_id: row.path_id.clone(),
+                    raw_path_score: row.raw_path_score,
+                    calibrated_path_prob: row.calibrated_path_prob,
+                    path_prob_lower_bound: row.path_prob_lower_bound,
+                    execution_gate_status: row.execution_gate_status.clone(),
+                },
+            );
         }
     }
 
