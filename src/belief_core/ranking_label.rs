@@ -3,6 +3,7 @@ use csv::StringRecord;
 use reqwest::blocking::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
@@ -56,6 +57,68 @@ pub struct StructuralPathRankerRuntimeRow {
     pub path_prob_lower_bound: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub execution_gate_status: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankingTrainerManifest {
+    pub protocol_version: String,
+    pub dataset_role: String,
+    pub group_id_column: String,
+    pub label_column: String,
+    pub weight_column: String,
+    pub maturity_column: String,
+    pub raw_score_column: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub feature_columns: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub calibration_columns: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub guardrail_columns: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub notes: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankingTargetExportSummary {
+    pub symbol: String,
+    pub rows: usize,
+    pub candidate_set_id: String,
+    pub candidate_set_size: usize,
+    pub pending_reward_states: BTreeMap<String, usize>,
+    #[serde(default)]
+    pub mature_rows: usize,
+    pub rows_with_raw_path_score: usize,
+    pub rows_with_calibrated_path_prob: usize,
+    pub rows_with_path_prob_lower_bound: usize,
+    pub rows_with_propensity_estimate: usize,
+    #[serde(default)]
+    pub rows_with_execution_gate_status: usize,
+    #[serde(default)]
+    pub rows_with_training_weight: usize,
+    pub csv_path: String,
+    pub jsonl_path: String,
+    #[serde(default)]
+    pub history_csv_path: String,
+    #[serde(default)]
+    pub history_jsonl_path: String,
+    #[serde(default)]
+    pub history_rows: usize,
+    #[serde(default)]
+    pub history_mature_rows: usize,
+    #[serde(default)]
+    pub history_rows_with_raw_path_score: usize,
+    #[serde(default)]
+    pub history_rows_with_calibrated_path_prob: usize,
+    #[serde(default)]
+    pub history_rows_with_path_prob_lower_bound: usize,
+    #[serde(default)]
+    pub history_rows_with_propensity_estimate: usize,
+    #[serde(default)]
+    pub history_rows_with_training_weight: usize,
+    pub summary_path: String,
+    #[serde(default)]
+    pub trainer_manifest: StructuralPathRankingTrainerManifest,
+    pub summary_line: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
