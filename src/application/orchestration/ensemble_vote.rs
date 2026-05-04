@@ -646,12 +646,11 @@ fn policy_decision_to_executor(
 }
 
 fn policy_runtime_source(name: &str, engine: &CatBoostCompatiblePolicyEngine) -> String {
-    if engine
-        .artifact_version()
-        .to_ascii_lowercase()
-        .contains("placeholder")
-    {
+    let artifact_version = engine.artifact_version().to_ascii_lowercase();
+    if artifact_version.contains("placeholder") {
         format!("{name}:placeholder")
+    } else if artifact_version.contains("sample") {
+        format!("{name}:sample_file")
     } else {
         format!("{name}:artifact")
     }
@@ -1063,11 +1062,11 @@ mod tests {
         assert!(artifact
             .policy_runtime_sources
             .iter()
-            .all(|item| item.contains("placeholder") || item.contains("artifact")));
+            .all(|item| item.contains("placeholder") || item.contains("sample_file")));
         assert!(artifact
             .executor_summaries
             .iter()
-            .any(|line| line.contains("policy_source=catboost_file:")));
+            .any(|line| line.contains("policy_source=catboost_file:sample_file")));
     }
 
     #[test]
