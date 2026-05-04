@@ -1357,6 +1357,16 @@ enum Commands {
             help = "Optional entry-model id filter. Available ids are listed in the command output."
         )]
         entry_model: Option<String>,
+        #[arg(
+            long,
+            default_value = "",
+            help = "Output format: json (default), compact, agent, or human. `--compact` and `--human` are aliases; do not combine them with `--output-format`."
+        )]
+        output_format: String,
+        #[arg(long, help = "Alias for --output-format compact")]
+        compact: bool,
+        #[arg(long, help = "Alias for --output-format human")]
+        human: bool,
     },
     /// Register an explicit external structural path-ranker artifact into the policy_training contract.
     RegisterStructuralPathRankingTrainerArtifact {
@@ -2639,7 +2649,20 @@ fn main() -> Result<()> {
             symbol,
             state_dir,
             entry_model,
-        } => policy_training_status_shell(&symbol, &state_dir, entry_model.as_deref())?,
+            output_format,
+            compact,
+            human,
+        } => policy_training_status_shell(
+            &symbol,
+            &state_dir,
+            entry_model.as_deref(),
+            match resolve_output_format(&output_format, compact, false, human)? {
+                OutputFormat::Json => "json",
+                OutputFormat::Compact => "compact",
+                OutputFormat::Agent => "agent",
+                OutputFormat::Human => "human",
+            },
+        )?,
         Commands::RegisterStructuralPathRankingTrainerArtifact {
             symbol,
             state_dir,

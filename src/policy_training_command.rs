@@ -12,9 +12,27 @@ pub(crate) fn policy_training_status_shell(
     symbol: &str,
     state_dir: &str,
     entry_model: Option<&str>,
+    output_format: &str,
 ) -> Result<()> {
     ensure_state_dir_ready(state_dir)?;
-    policy_training_status_command(state_dir, symbol, entry_model)
+    match output_format {
+        "json" | "agent" => policy_training_status_command(state_dir, symbol, entry_model),
+        "compact" | "human" => {
+            let surface = ict_engine::application::entry_models::policy_training_status(
+                state_dir,
+                symbol,
+                entry_model,
+            )?;
+            println!("{}", surface.summary_line);
+            println!("{}", surface.structural_path_ranking_runtime_summary);
+            println!("{}", surface.structural_path_ranking_validation_summary);
+            Ok(())
+        }
+        other => anyhow::bail!(
+            "unsupported policy-training-status output format '{}'; expected json, compact, agent, or human",
+            other
+        ),
+    }
 }
 
 pub(crate) fn register_structural_path_ranking_trainer_artifact_shell(
