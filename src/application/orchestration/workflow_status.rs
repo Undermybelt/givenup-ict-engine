@@ -1805,6 +1805,11 @@ fn build_agent_bootstrap_view_with_candidates(
         .as_ref()
         .map(|profile| profile.track_statuses.iter().take(4).cloned().collect::<Vec<_>>())
         .unwrap_or_default();
+    let provider_access_requests = provider_status_agent
+        .selected_profile
+        .as_ref()
+        .map(|profile| profile.install_prompts.clone())
+        .unwrap_or_else(|| provider_status_agent.install_prompts.clone());
     AgentBootstrapView {
         symbol: symbol.to_string(),
         project_role: "closed_loop_multi_timeframe_pre_bayes_bbn_engine".to_string(),
@@ -1859,7 +1864,7 @@ fn build_agent_bootstrap_view_with_candidates(
                 selected_profile_summary,
                 selected_profile_data_contracts,
                 selected_profile_track_statuses,
-                provider_access_requests: provider_status_agent.install_prompts.clone(),
+                provider_access_requests,
                 provider_status_agent: provider_status_agent.clone(),
                 provider_status_command,
                 ibkr_gateway_summary,
@@ -4315,6 +4320,10 @@ mod tests {
             .selected_profile_track_statuses
             .iter()
             .any(|item| item.contains("options_enriched:pending:tradingview_mcp")));
+        assert_eq!(
+            view.input_acquisition.live.provider_access_requests,
+            vec!["Ask for TradingViewRemix MCP API key.".to_string()]
+        );
     }
 
     #[test]
