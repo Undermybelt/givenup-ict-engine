@@ -293,6 +293,28 @@ fn workflow_status_human_empty_state_suppresses_validation_noise() {
 }
 
 #[test]
+fn workflow_status_human_empty_state_suppresses_ranker_noise() {
+    let binary = env!("CARGO_BIN_EXE_ict-engine");
+    let state = TempDir::new().unwrap();
+
+    let output = Command::new(binary)
+        .args([
+            "workflow-status",
+            "--symbol",
+            "DEMO",
+            "--state-dir",
+            state.path().to_str().unwrap(),
+            "--human",
+        ])
+        .output()
+        .unwrap();
+
+    assert!(output.status.success());
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    assert!(!stdout.contains("Ranker:"));
+}
+
+#[test]
 fn workflow_status_structural_validation_phase_is_available() {
     let binary = env!("CARGO_BIN_EXE_ict-engine");
     let state = TempDir::new().unwrap();

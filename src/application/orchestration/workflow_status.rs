@@ -141,6 +141,15 @@ fn build_path_ranker_line(
         .path_ranker_runtime_source
         .as_deref()
         .unwrap_or("none");
+    let has_runtime_signal = bundle.path_ranker_runtime.is_some()
+        || bundle.path_ranker_runtime_source.is_some()
+        || bundle.path_ranker_raw_score.is_some()
+        || bundle.path_ranker_calibrated_path_prob.is_some()
+        || bundle.path_ranker_path_prob_lower_bound.is_some()
+        || bundle.path_ranker_execution_gate_status.is_some();
+    if !has_runtime_signal {
+        return None;
+    }
     let score = bundle
         .path_ranker_path_prob_lower_bound
         .map(|value| format!("lb={value:.3}"))
@@ -8792,10 +8801,7 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("posterior"));
-        assert!(human_value["path_ranker_line"]
-            .as_str()
-            .unwrap()
-            .contains("Ranker:"));
+        assert!(human_value["path_ranker_line"].is_null());
         assert!(human_value["recommended_path_line"]
             .as_str()
             .unwrap()
