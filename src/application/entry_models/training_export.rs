@@ -304,6 +304,10 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub runtime_selection_path: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub runtime_selection_mode: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub runtime_source_kind: Option<String>,
+    #[serde(default)]
+    pub runtime_active_match_count: usize,
     #[serde(default)]
     pub runtime_artifact_match_count: usize,
     #[serde(default)]
@@ -1189,8 +1193,16 @@ pub fn structural_path_ranking_target_training_status(
             | "enabled_candidate_set_ready"
             | "enabled_history_ready"
     );
+    let runtime_source_kind =
+        structural_path_ranking_runtime_source_kind(&runtime_selection_status).map(str::to_string);
+    let runtime_active_match_count = structural_path_ranking_runtime_active_match_count(
+        runtime_source_kind.as_deref(),
+        runtime_artifact_match_count,
+        runtime_candidate_set_match_count,
+        runtime_history_match_count,
+    );
     let summary_line = format!(
-        "structural_path_ranking_target rows={} history_rows={} mature_rows={} history_mature_rows={} raw_scored_mature={}/{} production_validation={}/{} calibration={} trainer_artifact={} runtime_selection={}",
+        "structural_path_ranking_target rows={} history_rows={} mature_rows={} history_mature_rows={} raw_scored_mature={}/{} production_validation={}/{} calibration={} trainer_artifact={} runtime_selection={} runtime_mode={} runtime_source={} runtime_matches={}",
         summary.rows,
         summary.history_rows,
         summary.mature_rows,
@@ -1201,7 +1213,10 @@ pub fn structural_path_ranking_target_training_status(
         production_validation_min_rows,
         calibration_status,
         trainer_status,
-        runtime_selection_status
+        runtime_selection_status,
+        runtime_selection_mode.as_deref().unwrap_or("none"),
+        runtime_source_kind.as_deref().unwrap_or("none"),
+        runtime_active_match_count
     );
     Ok(StructuralPathRankingTargetTrainingStatusSurface {
         export_ready: summary.rows > 0,
@@ -1248,6 +1263,8 @@ pub fn structural_path_ranking_target_training_status(
         runtime_selection_status,
         runtime_selection_path,
         runtime_selection_mode,
+        runtime_source_kind,
+        runtime_active_match_count,
         runtime_artifact_match_count,
         runtime_candidate_set_match_count,
         runtime_history_match_count,
@@ -1304,6 +1321,37 @@ pub fn structural_path_ranking_target_training_status(
 fn non_empty_string(value: &str) -> Option<String> {
     let value = value.trim();
     (!value.is_empty()).then(|| value.to_string())
+}
+
+fn structural_path_ranking_runtime_source_kind(status: &str) -> Option<&'static str> {
+    match status {
+        "enabled_registered_model_ready" | "enabled_registered_model_invalid" => {
+            Some("registered_model_artifact")
+        }
+        "enabled_registered_service_ready" | "enabled_registered_service_invalid" => {
+            Some("registered_service")
+        }
+        "enabled_registered_artifact_ready" => Some("registered_artifact"),
+        "enabled_candidate_set_ready" => Some("candidate_set"),
+        "enabled_history_ready" => Some("history"),
+        _ => None,
+    }
+}
+
+fn structural_path_ranking_runtime_active_match_count(
+    runtime_source_kind: Option<&str>,
+    runtime_artifact_match_count: usize,
+    runtime_candidate_set_match_count: usize,
+    runtime_history_match_count: usize,
+) -> usize {
+    match runtime_source_kind {
+        Some("registered_model_artifact" | "registered_service" | "registered_artifact") => {
+            runtime_artifact_match_count
+        }
+        Some("candidate_set") => runtime_candidate_set_match_count,
+        Some("history") => runtime_history_match_count,
+        _ => 0,
+    }
 }
 
 fn structural_path_ranking_trainer_manifest_ready(
@@ -3357,7 +3405,17 @@ mod tests {
             enabled.runtime_selection_status,
             "enabled_candidate_set_ready"
         );
+        assert_eq!(
+            enabled.runtime_source_kind.as_deref(),
+            Some("candidate_set")
+        );
+        assert_eq!(enabled.runtime_active_match_count, 2);
         assert_eq!(enabled.runtime_candidate_set_match_count, 2);
+        assert!(enabled.summary_line.contains("runtime_mode=prefer_history"));
+        assert!(enabled
+            .summary_line
+            .contains("runtime_source=candidate_set"));
+        assert!(enabled.summary_line.contains("runtime_matches=2"));
         assert!(enabled
             .summary_line
             .contains("runtime_selection=enabled_candidate_set_ready"));
@@ -3370,6 +3428,8 @@ mod tests {
         assert!(!disabled.runtime_selection_enabled);
         assert!(!disabled.runtime_selection_ready);
         assert_eq!(disabled.runtime_selection_status, "disabled");
+        assert!(disabled.runtime_source_kind.is_none());
+        assert_eq!(disabled.runtime_active_match_count, 0);
     }
 
     #[test]
@@ -3482,7 +3542,16 @@ mod tests {
             status.runtime_selection_status,
             "enabled_registered_artifact_ready"
         );
+        assert_eq!(
+            status.runtime_source_kind.as_deref(),
+            Some("registered_artifact")
+        );
+        assert_eq!(status.runtime_active_match_count, 2);
         assert_eq!(status.runtime_artifact_match_count, 2);
+        assert!(status
+            .summary_line
+            .contains("runtime_source=registered_artifact"));
+        assert!(status.summary_line.contains("runtime_matches=2"));
     }
 
     #[test]
@@ -3590,7 +3659,16 @@ mod tests {
             status.runtime_selection_status,
             "enabled_registered_model_ready"
         );
+        assert_eq!(
+            status.runtime_source_kind.as_deref(),
+            Some("registered_model_artifact")
+        );
+        assert_eq!(status.runtime_active_match_count, 2);
         assert_eq!(status.runtime_artifact_match_count, 2);
+        assert!(status
+            .summary_line
+            .contains("runtime_source=registered_model_artifact"));
+        assert!(status.summary_line.contains("runtime_matches=2"));
     }
 
     #[test]
@@ -3706,7 +3784,16 @@ mod tests {
             status.runtime_selection_status,
             "enabled_registered_service_ready"
         );
+        assert_eq!(
+            status.runtime_source_kind.as_deref(),
+            Some("registered_service")
+        );
+        assert_eq!(status.runtime_active_match_count, 2);
         assert_eq!(status.runtime_artifact_match_count, 2);
+        assert!(status
+            .summary_line
+            .contains("runtime_source=registered_service"));
+        assert!(status.summary_line.contains("runtime_matches=2"));
     }
 
     #[test]
