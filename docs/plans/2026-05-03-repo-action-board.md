@@ -344,6 +344,9 @@ What this now means in concrete repo behavior:
   - agent JSON includes a `structural_validation_summary` block derived from the existing experience-prior validation surfaces
   - source-reliability EM holdout now explicitly surfaces `split_strategy=chronological_recommended_at`
   - source-reliability EM replay now explicitly surfaces `split_strategy=expanding_window_recommended_at`
+- Workstream 4 validation logic itself has now moved one step closer to real out-of-sample behavior:
+  - source-reliability EM holdout is no longer implicitly keyed by map order; it now splits by `recommended_at`
+  - source-reliability EM replay now exists as a separate expanding-window summary instead of relying only on the single holdout slice
 - `workflow-status` consumer surfaces now also expose a low-token path-ranker runtime summary:
   - human output includes a compact `Ranker: status=... source=...` line when a recommended path is present
   - agent JSON includes `path_ranker_summary`, so consumers can distinguish registered artifact/model/service-backed ranking from baseline-only behavior without traversing the full bundle
