@@ -797,6 +797,15 @@ where
                 .join(", ")
         })
         .filter(|value| !value.is_empty());
+    let report_value = serde_json::to_value(&report).unwrap_or_default();
+    let ranker_validation_summary = report_value
+        .get("supporting")
+        .and_then(|value| value.get("workflow_snapshot"))
+        .and_then(|value| value.get("policy_training_status"))
+        .and_then(|value| value.get("structural_path_ranking_validation_summary"))
+        .and_then(Value::as_str)
+        .map(str::to_string)
+        .filter(|value| !value.trim().is_empty());
 
     AnalyzeOutputEnvelope {
         execution_triage: None,
@@ -813,6 +822,9 @@ where
             let mut lines = format_executor_summary_lines(&executor_summaries);
             if let Some(summary) = policy_runtime_summary {
                 lines.push(format!("policy_runtime={summary}"));
+            }
+            if let Some(summary) = ranker_validation_summary {
+                lines.push(format!("ranker_validation={summary}"));
             }
             lines
         },
@@ -1064,6 +1076,17 @@ mod tests {
             symbol: "NQ".to_string(),
             path: None,
         };
+        let report_value = serde_json::json!({
+            "symbol": report.symbol,
+            "path": report.path,
+            "supporting": {
+                "workflow_snapshot": {
+                    "policy_training_status": {
+                        "structural_path_ranking_validation_summary": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 ready=true"
+                    }
+                }
+            }
+        });
         let compact_report = build_compact_analyze_report(
             "observe_only",
             Some("Bull".to_string()),
@@ -1117,7 +1140,7 @@ mod tests {
         };
 
         let output = build_analyze_output_envelope(AnalyzeOutputEnvelopeInput {
-            report,
+            report: report_value,
             compact_report,
             agent_report,
             human_report: &human_report,
@@ -1133,12 +1156,16 @@ mod tests {
             executor_scorecard_source: "persisted".to_string(),
         });
 
-        assert_eq!(output.executor_scorecard_summary.len(), 2);
+        assert_eq!(output.executor_scorecard_summary.len(), 3);
         assert_eq!(output.executor_scorecard_source, "persisted");
         assert!(output
             .executor_scorecard_summary
             .iter()
             .any(|line| line.contains("policy_runtime=")));
+        assert!(output
+            .executor_scorecard_summary
+            .iter()
+            .any(|line| line.contains("ranker_validation=")));
         assert!(output.human_report.contains("Plan:"));
     }
 
