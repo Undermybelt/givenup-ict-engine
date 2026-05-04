@@ -28,7 +28,7 @@ Current blocker shape:
 
 - the repo is no longer blocked on “whether the structural learning direction exists”
 - it is blocked on “the core math and runtime wiring are still fragmented, heuristic, or docs-only”
-- the highest-value remaining work is architectural closure, not more surface proliferation
+- the highest-value remaining work is belief-core / transition ownership closure plus validation hardening, not more surface proliferation or provider-profile polish
 
 Primary source docs:
 
@@ -80,6 +80,9 @@ Primary source docs:
 - [x] Workstream 1 now also has `analyze-live` / `update` thin shell dispatch moved out of the `main.rs` match-arm body and into their existing bin-side command modules.
 - [x] Workstream 1 now also has the `train` runtime shell moved out of `main.rs` into a focused bin-side module, taking the multi-timeframe HMM training path with it.
 - [x] The opt-in provider-profile hot-plug lane is now materially closed for the current public workflow surfaces: `provider-status`, `provider-status --compact`, `workflow-status --agent|--human`, and agent bootstrap all preserve zero-config default behavior while exposing explicit `--profile` selection, token-friendlier selectors/provenance, direct selected-profile summary fields, and profile-scoped provider guidance only when the caller opts in.
+- [x] `workflow-status` now exposes low-token structural validation and ranker-runtime summaries directly through `structural_validation_summary`, `path_ranker_summary`, `--phase structural-validation`, and `--phase structural-ranker-runtime`, so Workstream 4 readiness is no longer buried only inside deep structural payloads.
+- [x] `workflow-status` ranker summaries now also expose runtime-enabled state plus applied/artifact/candidate/history match counts, so consumers can tell whether ranking is still baseline-only or is actually being driven by an opted-in registered artifact / model / service path without expanding the full structural bundle.
+- [x] Offline structural prior seeding now extends beyond `analyze` into adjacent lanes: `factor-research` writes `research_run_structural_prior_seed`, mutation evaluation writes `factor_mutation_structural_prior_seed`, and `factor-backtest` writes `backtest_run_structural_prior_seed`.
 
 ### Next
 
@@ -117,26 +120,22 @@ Primary source docs:
 - [ ] Add stronger verification lanes for source reliability and delayed reward handling so the repo stops relying only on in-ledger compact calibration summaries.
   - started: source reliability EM diagnostics now expose a holdout-style train/eval summary beside the older same-ledger leave-source-out calibration summary
   - started: delayed reward path experience-prior data now has a chronological replay summary for resolution and 1h/4h/24h horizon validation
-- [ ] Move to the next post-profile lane instead of further polishing profile surfaces: validation hardening and fake-real usage shakedown now have higher value than more provider-profile payload trimming.
+  - latest: source-reliability holdout now splits by `recommended_at`, and replay now surfaces an `expanding_window_recommended_at` summary instead of relying only on a single holdout slice
+  - latest: top-level `workflow-status` human and agent surfaces now summarize those validation lanes directly instead of requiring deep playbook traversal
+- [ ] Keep the repo on the post-profile lane: stop spending the next closure slice on provider-profile payload polish and switch back to Workstream 1 / Workstream 2 owner extraction plus Workstream 4 validation hardening.
 
 ### Not Yet
 
-- [ ] belief-core module split proposed in `20260501repo.md`:
-  - `structural_state.rs`
-  - `source_reliability.rs`
-  - `regime_filter.rs`
-  - `changepoint_gate.rs`
-  - `ranking_label.rs`
+- [ ] belief-core owner split completion proposed in `20260501repo.md`
+  - partial: `structural_state.rs`, `source_reliability.rs`, `regime_filter.rs`, `changepoint_gate.rs`, `ranking_label.rs`, and `beta_dirichlet_update.rs` all exist, but the remaining learning / EM / temporal owner logic still sits largely in `src/state/types.rs`, `src/application/orchestration/workflow_status.rs`, and `src/application/orchestration/structural_playbook.rs`
 - [ ] production-grade `regime_filter` with maintained transition logic and explicit emission-conditioned updates
   - partial: maintained transition refresh now uses explicit emission-conditioned support helpers, but the overall regime filter is still simpler than a fuller state-space/HMM-grade transition engine
 - [ ] production-grade `changepoint_gate` instead of the current fixed-weight BOCPD-style heuristic blend
   - partial: BOCPD break and sequence-break maintenance now use posterior-style emission updates, but the overall gate is still simpler than a fuller competing-hypothesis changepoint engine
-- [x] model-native runtime consumption of the structural path-ranking trainer artifact beyond scored-row feed loading
-  - current implementation: direct weighted-feature model artifact loading and declared external scoring service calls are both live
-  - remaining gap: broader artifact-family coverage beyond the current direct weighted-feature model path and row-scoring service contract
+- [ ] broader model/service runtime coverage for structural path-ranking beyond the current weighted-feature direct-model path and row-scoring service contract
 - [ ] deeper learned/contextual target-policy probability model beyond the current `symbol:regime:direction` bucket posterior
 - [ ] out-of-sample / replay-grade source reliability validation beyond fixed-iteration leave-source-out summaries
-  - partial: an on-demand holdout-style EM summary now exists; larger-panel and true chronological replay validation are still missing
+  - partial: holdout and replay summaries now exist, with chronological `recommended_at` splits, but larger-panel and stronger out-of-sample validation are still missing
 - [ ] full elapsed-time competing-risk delayed-reward censoring model rather than only compact aggregate hazard/incidence summaries
   - partial: chronological replay validation for delayed reward resolution has started, but the underlying model is still the compact aggregate hazard/incidence family rather than a fuller competing-risk censoring model
 
@@ -236,8 +235,8 @@ Primary source docs:
 Current verdict:
 
 - directionally correct: keep modularizing the repo monolith; do not pivot this work into distributed services
-- still materially bloated at the implementation layer: the current checkout still has very large ownership files, including `src/main.rs` (~16793 lines), `src/state/types.rs` (~9857), `src/application/orchestration/workflow_status.rs` (~8685), and `src/application/orchestration/structural_playbook.rs` (~5221)
-- therefore architecture cleanup is real work, but it is not the highest-priority blocker while functional closure and usability validation are still incomplete
+- still materially bloated at the implementation layer: the current checkout still has very large ownership files, including `src/main.rs` (~16860 lines), `src/state/types.rs` (~10006), `src/application/orchestration/workflow_status.rs` (~9544), and `src/application/orchestration/structural_playbook.rs` (~5222)
+- therefore architecture cleanup is real work, but owner closure and validation hardening are still higher-priority blockers than another cleanup-only pass
 
 Planning rule for this board:
 
@@ -300,7 +299,7 @@ Scope of this pass:
 - [ ] Workstream 2 acceptance is not yet met. Transition and break logic is better-factored than before, but still heuristic: maintained transition refresh is not yet a fuller unified state-space / HMM-grade engine, and break maintenance is not yet a fuller competing-hypothesis changepoint engine.
 - [ ] The board’s “replace heuristic transition/break mixing with a maintained, emission-aware core” item is still open. Current code has explicit emission-conditioned helpers, but it still relies on fixed recursive discounts and fixed weighted blends in the current owner layer.
 - [ ] A deeper learned/contextual target-policy probability model is still not landed. Current target-policy context learning remains the compact `symbol:regime:direction` bucket-posterior family.
-- [ ] Replay-grade / out-of-sample source-reliability validation is still not landed. The new holdout summary is useful, but it is not yet larger-panel or true chronological replay validation.
+- [ ] Replay-grade / out-of-sample source-reliability validation is still not landed. Holdout and replay summaries now exist, but they are still compact diagnostics rather than the larger-panel validation end-state.
 - [ ] A full elapsed-time competing-risk delayed-reward censoring model is still not landed. Current code exposes compact hazard / incidence / horizon diagnostics, but not the fuller event-time competing-risk model described by the longer plan.
 
 ### What Needs To Be Done Next
@@ -308,7 +307,7 @@ Scope of this pass:
 1. Finish Workstream 1 for real: keep the new `belief_core` files, but move the remaining learning / EM / temporal update ownership out of `src/state/types.rs` so it stops being the dominant math owner.
 2. Finish Workstream 2 immediately after that: make maintained transition refresh, emission-conditioned updates, and changepoint maintenance one clear core, with snapshot-time reweighting reduced to a consumer layer.
 3. Narrow the remaining Workstream 3 gap explicitly: keep the current opt-in structural path-ranker runtime, but make the repo’s downstream runtime behavior clearly distinguish artifact-backed behavior from sample / placeholder behavior and decide whether `policy_engine.rs` is inside this closure slice or not.
-4. Then deepen Workstream 4: upgrade holdout-only validation into replay / out-of-sample validation, and decide whether to stop at compact delayed-reward diagnostics or invest in the fuller competing-risk model the longer plan points to.
+4. Then deepen Workstream 4: keep the current holdout + replay summaries, but upgrade them into stronger out-of-sample / larger-panel validation and decide whether to stop at compact delayed-reward diagnostics or invest in the fuller competing-risk model the longer plan points to.
 
 ## 2026-05-04 Provider-Profile Progress Addendum
 
@@ -385,3 +384,37 @@ Priority change after this sweep:
 
 - the provider-profile hot-plug lane is now in a good enough state that further polish there is lower value
 - the next highest-value work should switch back to broader runtime closure or validation hardening rather than more profile payload tuning
+
+## 2026-05-04 Repo-State Reconciliation Update
+
+Scope of this pass:
+
+- current inspected `HEAD`: `9fcec9e`
+- recent landed checkpoints verified from `git log`
+- current dirty-worktree diff reviewed so this board does not accidentally credit uncommitted formatting drift as finished implementation
+
+### Reconciled Done
+
+- [x] The provider-profile lane is materially closed for the current public workflow surfaces, and zero-config default no longer auto-reuses maintainer-local Tomac roots without explicit `--profile`.
+- [x] `workflow-status` now surfaces validation and ranker-readiness status at the top level through `structural_validation_summary`, `path_ranker_summary`, `--phase structural-validation`, and `--phase structural-ranker-runtime`.
+- [x] Source-reliability holdout now uses a chronological `recommended_at` split, and replay now has its own `expanding_window_recommended_at` summary instead of being implied only by the holdout slice.
+- [x] Offline structural prior seeding now lands in the adjacent research/backtest lanes through `research_run_structural_prior_seed`, `factor_mutation_structural_prior_seed`, and `backtest_run_structural_prior_seed`.
+
+### Reconciled Not Done
+
+- [ ] Workstream 1 acceptance is still open: the new `belief_core` owners exist, but `src/state/types.rs`, `src/application/orchestration/workflow_status.rs`, `src/main.rs`, and `src/application/orchestration/structural_playbook.rs` remain oversized owners.
+- [ ] Workstream 2 acceptance is still open: `regime_filter.rs` and `changepoint_gate.rs` exist and own more logic, but the engine is still heuristic rather than a fuller maintained filter / changepoint core.
+- [ ] Workstream 3 closure is still open beyond the current direct weighted-feature model path and row-scoring service contract.
+- [ ] Workstream 4 closure is still open beyond the current compact holdout / replay diagnostics and delayed-reward horizon summaries.
+
+### Current Worktree Note
+
+- [~] This checkout still has 11 modified files in `git status --short`, but the diffs inspected in this pass are formatting / reflow / export-order cleanup only, including the current `src/application/orchestration/structural_playbook.rs` diff.
+- [~] This pass therefore does not credit any additional uncommitted functionality beyond `HEAD`.
+
+### Next Actual Work
+
+1. Keep extracting the remaining structural learning / EM / temporal ownership out of `src/state/types.rs` so Workstream 1 stops being only a partial owner split.
+2. Finish unifying maintained transition refresh and break maintenance in `belief_core::{regime_filter, changepoint_gate}` so snapshot-time reweighting becomes a consumer layer instead of the main engine.
+3. Deepen Workstream 4 with stronger out-of-sample / replay validation before opening another surface-polish slice.
+4. Return to broader path-ranker runtime expansion only if a concrete downstream consumer gap remains after validation hardening.

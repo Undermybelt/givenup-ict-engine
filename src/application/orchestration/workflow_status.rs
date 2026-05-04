@@ -149,10 +149,16 @@ fn build_path_ranker_summary_value(
     let Some(bundle) = recommended_path_bundle else {
         return Value::Null;
     };
+    let runtime = bundle.path_ranker_runtime.as_ref();
     serde_json::json!({
-        "status": bundle.path_ranker_runtime.as_ref().map(|runtime| runtime.status.clone()),
-        "reuse_mode": bundle.path_ranker_runtime.as_ref().and_then(|runtime| runtime.reuse_mode.clone()),
+        "runtime_enabled": runtime.map(|runtime| runtime.enabled),
+        "status": runtime.map(|runtime| runtime.status.clone()),
+        "reuse_mode": runtime.and_then(|runtime| runtime.reuse_mode.clone()),
         "runtime_source": bundle.path_ranker_runtime_source,
+        "applied_path_count": runtime.map(|runtime| runtime.applied_path_count),
+        "artifact_match_count": runtime.map(|runtime| runtime.artifact_match_count),
+        "candidate_set_match_count": runtime.map(|runtime| runtime.candidate_set_match_count),
+        "history_match_count": runtime.map(|runtime| runtime.history_match_count),
         "raw_path_score": bundle.path_ranker_raw_score,
         "calibrated_path_prob": bundle.path_ranker_calibrated_path_prob,
         "path_prob_lower_bound": bundle.path_ranker_path_prob_lower_bound,
@@ -164,16 +170,15 @@ fn build_path_ranker_line(
     recommended_path_bundle: Option<&StructuralRecommendedPathBundleArtifact>,
 ) -> Option<String> {
     let bundle = recommended_path_bundle?;
-    let status = bundle
-        .path_ranker_runtime
-        .as_ref()
+    let runtime = bundle.path_ranker_runtime.as_ref();
+    let status = runtime
         .map(|runtime| runtime.status.as_str())
         .unwrap_or("baseline_only");
     let source = bundle
         .path_ranker_runtime_source
         .as_deref()
         .unwrap_or("none");
-    let has_runtime_signal = bundle.path_ranker_runtime.is_some()
+    let has_runtime_signal = runtime.is_some()
         || bundle.path_ranker_runtime_source.is_some()
         || bundle.path_ranker_raw_score.is_some()
         || bundle.path_ranker_calibrated_path_prob.is_some()
@@ -185,13 +190,33 @@ fn build_path_ranker_line(
     let score = bundle
         .path_ranker_path_prob_lower_bound
         .map(|value| format!("lb={value:.3}"))
-        .or_else(|| bundle.path_ranker_calibrated_path_prob.map(|value| format!("prob={value:.3}")))
-        .or_else(|| bundle.path_ranker_raw_score.map(|value| format!("raw={value:.3}")))
+        .or_else(|| {
+            bundle
+                .path_ranker_calibrated_path_prob
+                .map(|value| format!("prob={value:.3}"))
+        })
+        .or_else(|| {
+            bundle
+                .path_ranker_raw_score
+                .map(|value| format!("raw={value:.3}"))
+        })
         .unwrap_or_else(|| "score=n/a".to_string());
+    let match_summary = runtime
+        .map(|runtime| {
+            format!(
+                "applied={} artifact={} candidate={} history={}",
+                runtime.applied_path_count,
+                runtime.artifact_match_count,
+                runtime.candidate_set_match_count,
+                runtime.history_match_count
+            )
+        })
+        .unwrap_or_else(|| "applied=0 artifact=0 candidate=0 history=0".to_string());
     Some(format!(
-        "Ranker: status={} source={} {} gate={}",
+        "Ranker: status={} source={} {} {} gate={}",
         status,
         source,
+        match_summary,
         score,
         bundle
             .path_ranker_execution_gate_status
@@ -1861,7 +1886,10 @@ pub fn emit_workflow_status_output(
             if let Some(path) = value.get("structural_path_line").and_then(Value::as_str) {
                 println!("{}", redact_local_paths_in_human_text(path));
             }
-            if let Some(validation) = value.get("structural_validation_line").and_then(Value::as_str) {
+            if let Some(validation) = value
+                .get("structural_validation_line")
+                .and_then(Value::as_str)
+            {
                 println!("{}", redact_local_paths_in_human_text(validation));
             }
             if let Some(ranker) = value.get("path_ranker_line").and_then(Value::as_str) {
@@ -6887,14 +6915,18 @@ mod tests {
         )
         .unwrap();
 
-        assert!(value["source_reliability"]["status"]
-            .as_str()
-            .unwrap()
-            .len()
-            > 3);
+        assert!(
+            value["source_reliability"]["status"]
+                .as_str()
+                .unwrap()
+                .len()
+                > 3
+        );
         assert!(value["source_reliability"].get("holdout_status").is_some());
         assert!(value["delayed_reward"]["status"].as_str().unwrap().len() > 3);
-        assert!(value["delayed_reward"].get("resolution_brier_score").is_some());
+        assert!(value["delayed_reward"]
+            .get("resolution_brier_score")
+            .is_some());
     }
 
     #[test]
@@ -6988,11 +7020,19 @@ mod tests {
         )
         .unwrap();
 
-        assert_eq!(value["runtime_source"].as_str(), Some("registered_artifact"));
+        assert_eq!(
+            value["runtime_source"].as_str(),
+            Some("registered_artifact")
+        );
         assert_eq!(
             value["status"].as_str(),
             Some("using_registered_artifact_scores")
         );
+        assert_eq!(value["runtime_enabled"].as_bool(), Some(true));
+        assert_eq!(value["applied_path_count"].as_u64(), Some(1));
+        assert_eq!(value["artifact_match_count"].as_u64(), Some(1));
+        assert_eq!(value["candidate_set_match_count"].as_u64(), Some(0));
+        assert_eq!(value["history_match_count"].as_u64(), Some(0));
         assert!(value.get("recommended_next_step").is_some());
     }
 
@@ -8374,6 +8414,26 @@ mod tests {
             agent_value["path_ranker_summary"]["status"].as_str(),
             Some("using_registered_artifact_scores")
         );
+        assert_eq!(
+            agent_value["path_ranker_summary"]["runtime_enabled"].as_bool(),
+            Some(true)
+        );
+        assert_eq!(
+            agent_value["path_ranker_summary"]["applied_path_count"].as_u64(),
+            Some(1)
+        );
+        assert_eq!(
+            agent_value["path_ranker_summary"]["artifact_match_count"].as_u64(),
+            Some(1)
+        );
+        assert_eq!(
+            agent_value["path_ranker_summary"]["candidate_set_match_count"].as_u64(),
+            Some(0)
+        );
+        assert_eq!(
+            agent_value["path_ranker_summary"]["history_match_count"].as_u64(),
+            Some(0)
+        );
     }
 
     #[test]
@@ -8809,11 +8869,13 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("replay="));
-        assert!(agent_value["structural_validation_summary"]["source_reliability"]["status"]
-            .as_str()
-            .unwrap()
-            .len()
-            > 3);
+        assert!(
+            agent_value["structural_validation_summary"]["source_reliability"]["status"]
+                .as_str()
+                .unwrap()
+                .len()
+                > 3
+        );
         assert!(
             agent_value["structural_validation_summary"]["source_reliability"]
                 .get("holdout_split_strategy")
@@ -8825,14 +8887,17 @@ mod tests {
                 .is_some()
         );
         assert_eq!(
-            agent_value["structural_validation_summary"]["target_policy"]["current_model"]
-                .as_str(),
+            agent_value["structural_validation_summary"]["target_policy"]["current_model"].as_str(),
             Some("symbol:regime:direction_bucket_posterior")
         );
-        assert!(agent_value["structural_validation_summary"]["delayed_reward"]["resolution_brier_score"]
-            .is_number()
-            || agent_value["structural_validation_summary"]["delayed_reward"]["resolution_brier_score"]
-                .is_null());
+        assert!(
+            agent_value["structural_validation_summary"]["delayed_reward"]
+                ["resolution_brier_score"]
+                .is_number()
+                || agent_value["structural_validation_summary"]["delayed_reward"]
+                    ["resolution_brier_score"]
+                    .is_null()
+        );
     }
 
     #[test]
