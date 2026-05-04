@@ -14773,6 +14773,12 @@ mod tests {
             serde_json::json!({"credibility": true}),
             None,
             "ict-engine update --symbol NQ --outcome <win|loss|breakeven> --state-dir state",
+            Some(
+                "Ranker runtime: runtime enabled=true ready=true source=registered_artifact status=enabled_registered_artifact_ready mode=candidate_set_only matches=2",
+            ),
+            Some(
+                "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 ready=true",
+            ),
         );
 
         assert_eq!(
@@ -14783,6 +14789,18 @@ mod tests {
         );
         assert!(payload.get("compact_compare_report").is_some());
         assert!(payload.get("backtest_compare_report").is_some());
+        assert_eq!(
+            payload["structural_path_ranking_runtime_summary"],
+            serde_json::json!(
+                "Ranker runtime: runtime enabled=true ready=true source=registered_artifact status=enabled_registered_artifact_ready mode=candidate_set_only matches=2"
+            )
+        );
+        assert_eq!(
+            payload["structural_path_ranking_validation_summary"],
+            serde_json::json!(
+                "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 ready=true"
+            )
+        );
         let human_output = payload["human_output"].as_str().unwrap_or_default();
         assert!(human_output.contains("Factor backtest |"));
         assert!(!human_output.contains("\"factor_results\""));
@@ -14799,6 +14817,8 @@ mod tests {
             serde_json::json!({"credibility": true}),
             None,
             expected,
+            None,
+            None,
         );
 
         assert_eq!(

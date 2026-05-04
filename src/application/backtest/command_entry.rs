@@ -399,6 +399,8 @@ where
             shell_quote(state_dir)
         )
     };
+    let policy_training_status =
+        crate::application::entry_models::policy_training_status(state_dir, symbol, None)?;
     let payload = crate::application::reporting::build_factor_backtest_output_payload(
         &report,
         &compact_report,
@@ -406,10 +408,9 @@ where
         credibility_summary,
         ensemble_surface,
         &suggested_update_command,
+        Some(&policy_training_status.structural_path_ranking_runtime_summary),
+        Some(&policy_training_status.structural_path_ranking_validation_summary),
     );
-    let policy_training_status =
-        crate::application::entry_models::policy_training_status(state_dir, symbol, None)?;
-    let payload = attach_policy_training_summaries(payload, &policy_training_status);
     crate::application::reporting::emit_structured_output_payload(
         output_format,
         &payload,

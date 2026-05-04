@@ -230,6 +230,8 @@ pub fn build_factor_backtest_output_payload(
     credibility_summary: Value,
     ensemble_surface: Option<Value>,
     suggested_update_command: &str,
+    structural_path_ranking_runtime_summary: Option<&str>,
+    structural_path_ranking_validation_summary: Option<&str>,
 ) -> Value {
     let compact_compare_report = build_compact_compare_report(compare.as_ref());
     let human_backtest_compare_summary = human_backtest_compare_summary(compare.as_ref());
@@ -242,6 +244,8 @@ pub fn build_factor_backtest_output_payload(
         "human_backtest_compare_summary": human_backtest_compare_summary,
         "credibility_summary": credibility_summary,
         "ensemble": ensemble_surface,
+        "structural_path_ranking_runtime_summary": structural_path_ranking_runtime_summary,
+        "structural_path_ranking_validation_summary": structural_path_ranking_validation_summary,
         "human_output": human_output,
         "suggested_update_command": suggested_update_command,
     })
