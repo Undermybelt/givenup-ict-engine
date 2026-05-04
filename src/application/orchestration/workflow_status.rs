@@ -656,6 +656,20 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
         &top_level_command,
         provider_support_reason,
     );
+    let selected_profile_summary = provider_status_agent
+        .selected_profile
+        .as_ref()
+        .map(|profile| profile.summary.clone());
+    let selected_profile_data_contracts = provider_status_agent
+        .selected_profile
+        .as_ref()
+        .map(|profile| profile.data_contract_labels.iter().take(3).cloned().collect::<Vec<_>>())
+        .unwrap_or_default();
+    let selected_profile_track_statuses = provider_status_agent
+        .selected_profile
+        .as_ref()
+        .map(|profile| profile.track_statuses.iter().take(4).cloned().collect::<Vec<_>>())
+        .unwrap_or_default();
     let human_next_action = if provider_support.active {
         format!(
             "Resolve provider prerequisites for {} before continuing. {}",
@@ -1110,6 +1124,28 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
             "path_ranking_target".to_string(),
             serde_json::to_value(path_ranking_target).unwrap_or_default(),
         );
+        map.insert(
+            "selected_profile_id".to_string(),
+            serde_json::to_value(
+                provider_status_agent
+                    .selected_profile
+                    .as_ref()
+                    .map(|profile| profile.profile_id.clone()),
+            )
+            .unwrap_or_default(),
+        );
+        map.insert(
+            "selected_profile_summary".to_string(),
+            serde_json::to_value(selected_profile_summary).unwrap_or_default(),
+        );
+        map.insert(
+            "selected_profile_data_contracts".to_string(),
+            serde_json::to_value(selected_profile_data_contracts).unwrap_or_default(),
+        );
+        map.insert(
+            "selected_profile_track_statuses".to_string(),
+            serde_json::to_value(selected_profile_track_statuses).unwrap_or_default(),
+        );
         map.insert("recommended_next_step".to_string(), recommended_next_step);
     }
     value
@@ -1318,6 +1354,20 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         &next_command,
         provider_support_reason,
     );
+    let selected_profile_summary = provider_status_agent
+        .selected_profile
+        .as_ref()
+        .map(|profile| profile.summary.clone());
+    let selected_profile_data_contracts = provider_status_agent
+        .selected_profile
+        .as_ref()
+        .map(|profile| profile.data_contract_labels.iter().take(3).cloned().collect::<Vec<_>>())
+        .unwrap_or_default();
+    let selected_profile_track_statuses = provider_status_agent
+        .selected_profile
+        .as_ref()
+        .map(|profile| profile.track_statuses.iter().take(4).cloned().collect::<Vec<_>>())
+        .unwrap_or_default();
     let execution_contract_active = !hard_block_active && !provider_support.active;
     let latest_structural_feedback = snapshot
         .latest_update
@@ -1433,6 +1483,28 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         map.insert(
             "recommended_path_contract".to_string(),
             serde_json::to_value(recommended_path_contract).unwrap_or_default(),
+        );
+        map.insert(
+            "selected_profile_id".to_string(),
+            serde_json::to_value(
+                provider_status_agent
+                    .selected_profile
+                    .as_ref()
+                    .map(|profile| profile.profile_id.clone()),
+            )
+            .unwrap_or_default(),
+        );
+        map.insert(
+            "selected_profile_summary".to_string(),
+            serde_json::to_value(selected_profile_summary).unwrap_or_default(),
+        );
+        map.insert(
+            "selected_profile_data_contracts".to_string(),
+            serde_json::to_value(selected_profile_data_contracts).unwrap_or_default(),
+        );
+        map.insert(
+            "selected_profile_track_statuses".to_string(),
+            serde_json::to_value(selected_profile_track_statuses).unwrap_or_default(),
         );
         map.insert("recommended_next_step".to_string(), next_step.clone());
     }
@@ -4173,6 +4245,56 @@ mod tests {
                 "ict-engine provider-status --agent --profile thrill3r-nq-closed-loop-v1"
             )
         );
+    }
+
+    #[test]
+    fn agent_workflow_status_view_surfaces_selected_profile_summary_contracts() {
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            current_focus_phase: "analyze_live".to_string(),
+            current_focus_reason: "provider_runtime_required".to_string(),
+            blocking_truth: crate::state::WorkflowBlockingTruth {
+                status: "blocked".to_string(),
+                reason: "provider_runtime_required".to_string(),
+                next_command: "ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --futures-backend openalice --aux-backend nofx".to_string(),
+                ..crate::state::WorkflowBlockingTruth::default()
+            },
+            latest_analyze: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "analyze_live".to_string(),
+                phase_summary: "live_provider_runtime_pending".to_string(),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_agent_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface_with_profile(),
+            &[],
+        );
+
+        assert_eq!(value["selected_profile_id"], "thrill3r_nq_closed_loop_v1");
+        assert!(value["selected_profile_summary"]
+            .as_str()
+            .unwrap()
+            .contains("Personal NQ workflow"));
+        assert!(value["selected_profile_data_contracts"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item
+                .as_str()
+                .unwrap()
+                .contains("Tomac cleaned multi-timeframe futures root")));
+        assert!(value["selected_profile_track_statuses"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| item
+                .as_str()
+                .unwrap()
+                .contains("options_enriched:pending:tradingview_mcp")));
     }
 
     #[test]
