@@ -1109,13 +1109,22 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
                     .find(|line| line.contains("jump_disagreement"))
                     .cloned()
             }),
-        "provider_support": {
-            "command": provider_status_command,
-            "agent_summary": provider_status_agent,
-            "workflow_support": provider_support,
-        },
     });
     if let Value::Object(map) = &mut value {
+        map.insert(
+            "provider_support".to_string(),
+            serde_json::json!({
+                "command": provider_status_command,
+                "agent_summary": provider_status_agent,
+                "workflow_support": {
+                    "active": provider_support.active,
+                    "profile_id": provider_support.profile_id,
+                    "provider_status_command": provider_support.provider_status_command,
+                    "pending_providers": provider_support.pending_providers,
+                    "install_prompts": provider_support.install_prompts,
+                },
+            }),
+        );
         map.insert(
             "structural_temporal_line".to_string(),
             serde_json::to_value(structural_temporal_line).unwrap_or_default(),

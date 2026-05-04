@@ -191,7 +191,7 @@ fn workflow_status_agent_accepts_opt_in_profile_path() {
     assert!(output.status.success());
     let value: Value = serde_json::from_slice(&output.stdout).unwrap();
     assert_eq!(
-        value["provider_support"]["selected_profile"]["profile_id"],
+        value["selected_profile_id"],
         "thrill3r_nq_closed_loop_v1"
     );
     assert_eq!(
@@ -199,10 +199,11 @@ fn workflow_status_agent_accepts_opt_in_profile_path() {
         "thrill3r_nq_closed_loop_v1"
     );
     assert!(
-        value["provider_support"]["selected_profile"]["track_statuses"]
+        value["selected_profile_track_statuses"]
             .as_array()
             .unwrap()
             .iter()
-            .any(|item| item.as_str().unwrap().contains("options_enriched"))
+            .any(|item| item.as_str().unwrap().contains("live_zero_config"))
     );
+    assert!(value["provider_support"]["workflow_support"]["selected_profile"].is_null());
 }
