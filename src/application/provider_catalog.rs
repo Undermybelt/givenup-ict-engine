@@ -224,7 +224,7 @@ pub struct ProviderProfileAgentSelectionSurface {
     pub profile_id: String,
     pub display_name: String,
     pub opt_in_only: bool,
-    pub source: String,
+    pub source_kind: String,
     pub selector: String,
     pub summary: String,
     pub data_contract_labels: Vec<String>,
@@ -996,11 +996,19 @@ fn build_provider_catalog_agent_surface(
 fn build_agent_selected_profile_surface(
     profile: &ProviderProfileSelectionSurface,
 ) -> ProviderProfileAgentSelectionSurface {
+    let source_kind = if profile.source.starts_with("http://") || profile.source.starts_with("https://")
+    {
+        "remote".to_string()
+    } else if profile.source == "repo-example" {
+        "repo-example".to_string()
+    } else {
+        "local_path".to_string()
+    };
     ProviderProfileAgentSelectionSurface {
         profile_id: profile.profile_id.clone(),
         display_name: profile.display_name.clone(),
         opt_in_only: profile.opt_in_only,
-        source: profile.source.clone(),
+        source_kind,
         selector: profile.selector.clone(),
         summary: profile.summary.clone(),
         data_contract_labels: profile.data_contract_labels.clone(),
@@ -1414,10 +1422,12 @@ mod tests {
         let selected = &value["selected_profile"];
 
         assert_eq!(selected["profile_id"], "thrill3r_nq_closed_loop_v1");
+        assert_eq!(selected["source_kind"], "repo-example");
         assert!(selected["data_contract_labels"].is_array());
         assert!(selected["track_statuses"].is_array());
         assert!(selected.get("data_contracts").is_none());
         assert!(selected.get("track_details").is_none());
+        assert!(selected.get("source").is_none());
     }
 
     #[test]
@@ -1596,7 +1606,7 @@ mod tests {
             profile_id: "thrill3r_nq_closed_loop_v1".to_string(),
             display_name: "Thrill3r NQ Closed Loop v1".to_string(),
             opt_in_only: true,
-            source: "/tmp/provider profile.json".to_string(),
+            source_kind: "local_path".to_string(),
             selector: "/tmp/provider profile.json".to_string(),
             summary: "Personal NQ workflow".to_string(),
             data_contract_labels: Vec::new(),

@@ -3333,7 +3333,7 @@ mod tests {
                 profile_id: full.profile_id.clone(),
                 display_name: full.display_name.clone(),
                 opt_in_only: full.opt_in_only,
-                source: full.source.clone(),
+                source_kind: "repo-example".to_string(),
                 selector: full.selector.clone(),
                 summary: full.summary.clone(),
                 data_contract_labels: full.data_contract_labels.clone(),
