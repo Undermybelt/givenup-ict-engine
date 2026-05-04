@@ -786,6 +786,17 @@ where
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default();
+    let policy_runtime_summary = ensemble_value
+        .get("policy_runtime_sources")
+        .and_then(Value::as_array)
+        .map(|items| {
+            items
+                .iter()
+                .filter_map(Value::as_str)
+                .collect::<Vec<_>>()
+                .join(", ")
+        })
+        .filter(|value| !value.is_empty());
 
     AnalyzeOutputEnvelope {
         execution_triage: None,
@@ -798,7 +809,13 @@ where
         belief_policy_lineage,
         ensemble_vote,
         pda_sequence_summary,
-        executor_scorecard_summary: format_executor_summary_lines(&executor_summaries),
+        executor_scorecard_summary: {
+            let mut lines = format_executor_summary_lines(&executor_summaries);
+            if let Some(summary) = policy_runtime_summary {
+                lines.push(format!("policy_runtime={summary}"));
+            }
+            lines
+        },
         executor_scorecard_source,
     }
 }
@@ -1018,6 +1035,7 @@ mod tests {
     struct StubEnsembleVote {
         executor_summaries: Vec<String>,
         final_action: String,
+        policy_runtime_sources: Vec<String>,
     }
 
     #[derive(Debug, Clone, Serialize)]
@@ -1092,6 +1110,10 @@ mod tests {
                 "executor=catboost_file action=observe confidence=0.55 weight=0.55".to_string(),
             ],
             final_action: "observe".to_string(),
+            policy_runtime_sources: vec![
+                "catboost-compatible-placeholder:placeholder".to_string(),
+                "catboost-compatible-placeholder:artifact".to_string(),
+            ],
         };
 
         let output = build_analyze_output_envelope(AnalyzeOutputEnvelopeInput {
@@ -1111,8 +1133,12 @@ mod tests {
             executor_scorecard_source: "persisted".to_string(),
         });
 
-        assert_eq!(output.executor_scorecard_summary.len(), 1);
+        assert_eq!(output.executor_scorecard_summary.len(), 2);
         assert_eq!(output.executor_scorecard_source, "persisted");
+        assert!(output
+            .executor_scorecard_summary
+            .iter()
+            .any(|line| line.contains("policy_runtime=")));
         assert!(output.human_report.contains("Plan:"));
     }
 
@@ -1166,6 +1192,7 @@ mod tests {
             ensemble_vote: StubEnsembleVote {
                 executor_summaries: Vec::new(),
                 final_action: "observe".to_string(),
+                policy_runtime_sources: Vec::new(),
             },
             pda_sequence_summary: Some(PdaSequenceArtifactSummary {
                 method: "pda_sequence_analysis_v2".to_string(),
@@ -1426,6 +1453,7 @@ mod tests {
             ensemble_vote: StubEnsembleVote {
                 executor_summaries: Vec::new(),
                 final_action: "observe".to_string(),
+                policy_runtime_sources: Vec::new(),
             },
             pda_sequence_summary: None,
             executor_scorecard_source: "persisted".to_string(),
@@ -1526,6 +1554,7 @@ mod tests {
             ensemble_vote: StubEnsembleVote {
                 executor_summaries: Vec::new(),
                 final_action: "observe".to_string(),
+                policy_runtime_sources: Vec::new(),
             },
             pda_sequence_summary: None,
             executor_scorecard_source: "persisted".to_string(),
