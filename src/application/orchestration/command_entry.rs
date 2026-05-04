@@ -96,9 +96,20 @@ where
     let learning_state = load_learning_state(state_dir, symbol).unwrap_or_default();
     let provider_status_agent =
         provider_status_agent_surface(None, None, provider_profile).unwrap_or_default();
-    let detected_tomac_root = detected_tomac_root();
-    let multi_timeframe_clean_root =
-        detected_multi_timeframe_clean_root(detected_tomac_root.as_deref());
+    let (detected_tomac_root, multi_timeframe_clean_root, tomac_root_placeholder) =
+        if provider_status_agent.selected_profile.is_some() {
+            let detected_tomac_root = detected_tomac_root();
+            let multi_timeframe_clean_root =
+                detected_multi_timeframe_clean_root(detected_tomac_root.as_deref());
+            let tomac_root_placeholder = detected_tomac_root_or_placeholder();
+            (
+                detected_tomac_root,
+                multi_timeframe_clean_root,
+                tomac_root_placeholder,
+            )
+        } else {
+            (None, None, "<tomac-root>".to_string())
+        };
     dispatch_workflow_status(
         &snapshot,
         &persisted_scorecards,
@@ -121,7 +132,7 @@ where
             state_dir,
             detected_tomac_root,
             multi_timeframe_clean_root,
-            tomac_root_placeholder: detected_tomac_root_or_placeholder(),
+            tomac_root_placeholder,
         },
     )
 }

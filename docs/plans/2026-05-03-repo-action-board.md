@@ -336,6 +336,9 @@ What this now means in concrete repo behavior:
   - `provider-status --agent` and JSONL/compact surfaces expose `available_opt_in_profiles`
   - `workflow-status --human` emits a short `Profiles: opt-in only...` hint when no profile is selected
   - `workflow-status --agent` mirrors the same lightweight available-profile list for consumer agents that want to offer an explicit reuse choice
+- fake-real bootstrap shakedown closed a remaining contract leak:
+  - default `workflow-status --phase agent-bootstrap` no longer auto-reuses maintainer-local Tomac roots or cleaned-path commands
+  - personal historical path hints now only flow into bootstrap commands/detected paths when the caller explicitly opts into a provider profile
 
 Verification for this lane is no longer just static inspection:
 
@@ -351,6 +354,8 @@ Verification for this lane is no longer just static inspection:
 - `provider_status_agent_lists_available_opt_in_profiles_without_selecting_one`
 - `workflow_status_agent_accepts_opt_in_profile_path`
 - `workflow_status_human_surfaces_opt_in_profile_hint_without_selecting_one`
+- `agent_bootstrap_without_profile_does_not_reuse_detected_personal_paths`
+- `bootstrap_output_does_not_auto_reuse_personal_tomac_paths_without_profile`
 
 Priority change after this sweep:
 

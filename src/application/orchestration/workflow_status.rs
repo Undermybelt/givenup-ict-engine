@@ -1805,6 +1805,20 @@ fn build_agent_bootstrap_view_with_candidates(
         multi_timeframe_clean_root,
         tomac_root_placeholder,
     } = input;
+    let profile_tomac_clean_root = provider_status_agent
+        .selected_profile_full
+        .as_ref()
+        .and_then(selected_profile_tomac_clean_root);
+    let bootstrap_tomac_root = if provider_status_agent.selected_profile.is_some() {
+        detected_tomac_root
+    } else {
+        None
+    };
+    let bootstrap_clean_root = if provider_status_agent.selected_profile.is_some() {
+        multi_timeframe_clean_root.or(profile_tomac_clean_root)
+    } else {
+        None
+    };
     let ibkr_gateway_summary = build_ibkr_gateway_summary(&ibkr_gateway_candidates);
     let provider_status_command = provider_status_agent_command_for_surface(provider_status_agent);
     let agent_brief = vec![
@@ -1814,7 +1828,7 @@ fn build_agent_bootstrap_view_with_candidates(
         "success: either find a real structure_ict mutation win or prove near-local-optimum then shift to label refinement / market fork".to_string(),
         "live-provider prerequisite: if IBKR or TradingViewRemix MCP is needed, ask the user for local runtime/API access before attempting provider calls".to_string(),
     ];
-    let analyze_command = if let Some(clean_root) = &multi_timeframe_clean_root {
+    let analyze_command = if let Some(clean_root) = &bootstrap_clean_root {
         format!(
             "ict-engine analyze --symbol {} --data-root {} --state-dir {}",
             shell_quote(symbol),
@@ -1825,7 +1839,7 @@ fn build_agent_bootstrap_view_with_candidates(
         "ict-engine analyze --symbol <symbol> --data-root <clean-root> --state-dir <state-dir>"
             .to_string()
     };
-    let train_command = if let Some(clean_root) = &multi_timeframe_clean_root {
+    let train_command = if let Some(clean_root) = &bootstrap_clean_root {
         format!(
             "ict-engine train --symbol {} --data {}/cleaned-15m/{}.continuous-15m.json --epochs 200 --state-dir {}",
             shell_quote(symbol),
@@ -1836,12 +1850,12 @@ fn build_agent_bootstrap_view_with_candidates(
     } else {
         "ict-engine train --symbol <symbol> --data <clean-root>/cleaned-15m/<market>.continuous-15m.json --epochs 200 --state-dir <state-dir>".to_string()
     };
-    let clean_command = if let Some(root) = &detected_tomac_root {
+    let clean_command = if let Some(root) = &bootstrap_tomac_root {
         format!(
             "ict-engine clean-futures --root {} --output-dir {} --multi-timeframe",
             shell_quote(root),
             shell_quote(
-                &multi_timeframe_clean_root
+                &bootstrap_clean_root
                     .clone()
                     .unwrap_or_else(|| format!("{}/ict-engine-mtf", root))
             )
@@ -1906,8 +1920,8 @@ fn build_agent_bootstrap_view_with_candidates(
             "keep_six_timeframe_resonance_in_train_analyze_bridge_artifact_update".to_string(),
         ],
         detected_paths: AgentBootstrapPaths {
-            tomac_history_root: detected_tomac_root,
-            multi_timeframe_clean_root: multi_timeframe_clean_root.clone(),
+            tomac_history_root: bootstrap_tomac_root,
+            multi_timeframe_clean_root: bootstrap_clean_root.clone(),
             state_dir: state_dir.to_string(),
         },
         input_acquisition: AgentBootstrapInputs {
@@ -1957,7 +1971,7 @@ fn build_agent_bootstrap_view_with_candidates(
                 "ict-engine futures-sop --root {} --output-dir {} --interval 15m",
                 shell_quote(tomac_root_placeholder),
                 shell_quote(
-                    &multi_timeframe_clean_root
+                    &bootstrap_clean_root
                         .clone()
                         .unwrap_or_else(|| "<output-dir>".to_string())
                 )
@@ -1966,7 +1980,7 @@ fn build_agent_bootstrap_view_with_candidates(
                 "ict-engine expansion-sop --root {} --output-dir {} --interval 15m --lookback 20 --atr-multiplier 1.50",
                 shell_quote(tomac_root_placeholder),
                 shell_quote(
-                    &multi_timeframe_clean_root
+                    &bootstrap_clean_root
                         .clone()
                         .unwrap_or_else(|| "<output-dir>".to_string())
                 )
@@ -1991,6 +2005,20 @@ fn build_agent_bootstrap_view_with_candidates(
                 .map(|phase| phase.pre_bayes_gate_status.clone()),
         },
     }
+}
+
+fn selected_profile_tomac_clean_root(
+    profile: &crate::application::provider_catalog::ProviderProfileSelectionSurface,
+) -> Option<String> {
+    profile
+        .data_contracts
+        .iter()
+        .find(|contract| {
+            contract.contract_id == "tomac_clean_root"
+                && contract.category == "historical"
+                && contract.required
+        })
+        .and_then(|contract| contract.path_hint.clone())
 }
 
 #[cfg(test)]
@@ -4442,6 +4470,33 @@ mod tests {
         assert_eq!(
             view.input_acquisition.live.provider_access_requests,
             vec!["Ask for TradingViewRemix MCP API key.".to_string()]
+        );
+    }
+
+    #[test]
+    fn agent_bootstrap_without_profile_does_not_reuse_detected_personal_paths() {
+        let view = build_agent_bootstrap_view_with_candidates(
+            AgentBootstrapBuildInput {
+                symbol: "NQ",
+                state_dir: "/tmp/state",
+                snapshot: &WorkflowSnapshot::default(),
+                provider_status_agent: &sample_provider_agent_surface(),
+                detected_tomac_root: Some("/tmp/tomac".to_string()),
+                multi_timeframe_clean_root: Some("/tmp/ict-engine-mtf".to_string()),
+                tomac_root_placeholder: "<tomac-root>",
+            },
+            Vec::new(),
+        );
+
+        assert!(view.detected_paths.tomac_history_root.is_none());
+        assert!(view.detected_paths.multi_timeframe_clean_root.is_none());
+        assert!(view
+            .commands
+            .clean_multi_timeframe
+            .contains("ict-engine clean-futures --root <tomac-root> --output-dir <output-dir> --multi-timeframe"));
+        assert_eq!(
+            view.commands.analyze,
+            "ict-engine analyze --symbol <symbol> --data-root <clean-root> --state-dir <state-dir>"
         );
     }
 
