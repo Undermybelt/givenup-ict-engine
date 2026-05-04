@@ -799,6 +799,43 @@ mod tests {
     }
 
     #[test]
+    fn attach_policy_training_summaries_preserves_existing_payload_fields() {
+        let payload = serde_json::json!({
+            "human_output": "Factor research | objective=generic",
+            "compact_compare_report": {"highlights": []}
+        });
+        let surface = PolicyTrainingStatusSurface {
+            structural_path_ranking_runtime_summary:
+                "Ranker runtime: runtime enabled=false ready=false source=none status=disabled mode=none matches=0"
+                    .to_string(),
+            structural_path_ranking_validation_summary:
+                "Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/0 production_validation=0/0 ready=false"
+                    .to_string(),
+            ..PolicyTrainingStatusSurface::default()
+        };
+
+        let payload = attach_policy_training_summaries(payload, &surface);
+
+        assert_eq!(
+            payload["human_output"],
+            serde_json::json!("Factor research | objective=generic")
+        );
+        assert!(payload.get("compact_compare_report").is_some());
+        assert_eq!(
+            payload["structural_path_ranking_runtime_summary"],
+            serde_json::json!(
+                "Ranker runtime: runtime enabled=false ready=false source=none status=disabled mode=none matches=0"
+            )
+        );
+        assert_eq!(
+            payload["structural_path_ranking_validation_summary"],
+            serde_json::json!(
+                "Ranker validation: calibration=false quality_ready=false raw_scored_mature=0/0 production_validation=0/0 ready=false"
+            )
+        );
+    }
+
+    #[test]
     fn test_factor_research_command_pb12_uses_isolated_state_and_persists_sweep_artifact() {
         let temp = tempfile::tempdir().unwrap();
         let symbol = "NQ";
