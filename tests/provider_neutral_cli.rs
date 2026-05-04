@@ -269,3 +269,27 @@ fn workflow_status_human_surfaces_opt_in_profile_hint_without_selecting_one() {
     assert!(stdout.contains("Profiles: opt-in only."));
     assert!(stdout.contains("thrill3r-nq-closed-loop-v1"));
 }
+
+#[test]
+fn workflow_status_structural_validation_phase_is_available() {
+    let binary = env!("CARGO_BIN_EXE_ict-engine");
+    let state = TempDir::new().unwrap();
+
+    let output = Command::new(binary)
+        .args([
+            "workflow-status",
+            "--symbol",
+            "DEMO",
+            "--state-dir",
+            state.path().to_str().unwrap(),
+            "--phase",
+            "structural-validation",
+        ])
+        .output()
+        .unwrap();
+
+    assert!(output.status.success());
+    let value: Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert!(value["source_reliability"]["status"].is_string());
+    assert!(value.get("recommended_next_step").is_some());
+}

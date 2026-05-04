@@ -78,15 +78,18 @@ fn build_structural_validation_line(
     experience_prior_surface: &crate::belief_core::source_reliability::StructuralExperiencePriorSurfaceArtifact,
 ) -> Option<String> {
     let em = &experience_prior_surface.source_reliability_em;
+    let replay = experience_prior_surface
+        .path
+        .as_ref()
+        .and_then(|path| path.delayed_reward_replay_validation.as_ref());
+    if em.em_holdout_status.is_none() && replay.is_none() {
+        return None;
+    }
     let holdout_status = em.em_holdout_status.as_deref().unwrap_or("unavailable");
     let holdout_brier = em
         .em_holdout_brier_score
         .map(|value| format!("{value:.3}"))
         .unwrap_or_else(|| "n/a".to_string());
-    let replay = experience_prior_surface
-        .path
-        .as_ref()
-        .and_then(|path| path.delayed_reward_replay_validation.as_ref());
     let replay_summary = replay.map(|replay| {
         format!(
             "replay={} overall_brier={} eval={}",
@@ -4375,6 +4378,7 @@ mod tests {
             value["latest_stage"]["summary_short"],
             "No workflow phase summary available yet."
         );
+        assert!(value["structural_validation_line"].is_null());
     }
 
     #[test]
