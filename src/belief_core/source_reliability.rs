@@ -150,6 +150,8 @@ pub struct StructuralSourceReliabilityEmReadiness {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub em_holdout_log_loss: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub em_holdout_observation_coverage: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub em_replay_status: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub em_replay_split_strategy: Option<String>,
@@ -163,6 +165,8 @@ pub struct StructuralSourceReliabilityEmReadiness {
     pub em_replay_brier_score: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub em_replay_log_loss: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub em_replay_observation_coverage: Option<f64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -556,6 +560,12 @@ pub fn structural_source_reliability_em_readiness(
             .holdout
             .as_ref()
             .and_then(|holdout| holdout.log_loss),
+        em_holdout_observation_coverage: diagnostics.holdout.as_ref().and_then(|holdout| {
+            (holdout.min_observations > 0).then_some(
+                (holdout.observation_count as f64 / holdout.min_observations as f64)
+                    .clamp(0.0, 1.0),
+            )
+        }),
         em_replay_status: diagnostics
             .replay
             .as_ref()
@@ -587,6 +597,11 @@ pub fn structural_source_reliability_em_readiness(
             .replay
             .as_ref()
             .and_then(|replay| replay.log_loss),
+        em_replay_observation_coverage: diagnostics.replay.as_ref().and_then(|replay| {
+            (replay.min_observations > 0).then_some(
+                (replay.observation_count as f64 / replay.min_observations as f64).clamp(0.0, 1.0),
+            )
+        }),
     }
 }
 

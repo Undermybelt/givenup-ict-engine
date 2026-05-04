@@ -59,6 +59,7 @@ fn build_structural_validation_summary_value(
             "holdout_split_strategy": em.em_holdout_split_strategy,
             "holdout_brier_score": em.em_holdout_brier_score,
             "holdout_log_loss": em.em_holdout_log_loss,
+            "holdout_observation_coverage": em.em_holdout_observation_coverage,
             "holdout_training_item_count": em.em_holdout_training_item_count,
             "holdout_evaluation_item_count": em.em_holdout_evaluation_item_count,
             "replay_status": em.em_replay_status,
@@ -68,6 +69,7 @@ fn build_structural_validation_summary_value(
             "replay_source_count": em.em_replay_source_count,
             "replay_brier_score": em.em_replay_brier_score,
             "replay_log_loss": em.em_replay_log_loss,
+            "replay_observation_coverage": em.em_replay_observation_coverage,
         },
         "delayed_reward": replay.map(|replay| {
             serde_json::json!({
@@ -150,13 +152,19 @@ fn build_structural_validation_line(
     });
     let target_policy_context_count = experience_prior_surface.target_policy_contexts.len();
     let mut parts = vec![format!(
-        "Validation: em={} holdout={} split={} holdout_brier={} replay={} replay_brier={} multi_source_items={} target_policy=bucket_posterior contexts={}",
+        "Validation: em={} holdout={} split={} holdout_brier={} holdout_cov={} replay={} replay_brier={} replay_cov={} multi_source_items={} target_policy=bucket_posterior contexts={}",
         em.status,
         holdout_status,
         holdout_split_strategy,
         holdout_brier,
+        em.em_holdout_observation_coverage
+            .map(|value| format!("{value:.2}"))
+            .unwrap_or_else(|| "n/a".to_string()),
         replay_status,
         replay_brier,
+        em.em_replay_observation_coverage
+            .map(|value| format!("{value:.2}"))
+            .unwrap_or_else(|| "n/a".to_string()),
         em.multi_source_item_count,
         target_policy_context_count
     )];
@@ -6966,6 +6974,9 @@ mod tests {
                 > 3
         );
         assert!(value["source_reliability"].get("holdout_status").is_some());
+        assert!(value["source_reliability"]
+            .get("holdout_observation_coverage")
+            .is_some());
         assert!(value["delayed_reward"]["status"].as_str().unwrap().len() > 3);
         assert!(value["delayed_reward"]
             .get("resolution_brier_score")
@@ -8920,7 +8931,15 @@ mod tests {
         assert!(human_value["structural_validation_line"]
             .as_str()
             .unwrap()
+            .contains("holdout_cov="));
+        assert!(human_value["structural_validation_line"]
+            .as_str()
+            .unwrap()
             .contains("replay="));
+        assert!(human_value["structural_validation_line"]
+            .as_str()
+            .unwrap()
+            .contains("replay_cov="));
         assert!(human_value["structural_validation_line"]
             .as_str()
             .unwrap()
@@ -8944,6 +8963,11 @@ mod tests {
         assert!(
             agent_value["structural_validation_summary"]["source_reliability"]
                 .get("replay_split_strategy")
+                .is_some()
+        );
+        assert!(
+            agent_value["structural_validation_summary"]["source_reliability"]
+                .get("replay_observation_coverage")
                 .is_some()
         );
         assert_eq!(
