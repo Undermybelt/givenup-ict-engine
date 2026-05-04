@@ -10,6 +10,7 @@ use crate::application::data_sources::{
     IBKR_CAPABILITIES_RELATIVE_PATH, IBKR_CONSENT_RELATIVE_PATH,
 };
 use crate::application::entry_models::{entry_model_providers, ConsumerDefaultMode};
+use crate::config::shell_quote;
 
 const PROVIDER_STATUS_AGENT_COMMAND: &str = "ict-engine provider-status --agent";
 const OPENALICE_DEFAULT_URL: &str = "http://127.0.0.1:6901/api/v1";
@@ -203,6 +204,7 @@ pub struct ProviderProfileSelectionSurface {
     pub display_name: String,
     pub opt_in_only: bool,
     pub source: String,
+    pub selector: String,
     pub summary: String,
     pub data_contracts: Vec<ProviderProfileDataContract>,
     pub data_contract_labels: Vec<String>,
@@ -245,9 +247,14 @@ pub fn provider_status_surface(
         }
     }
     let selected_profile = if let Some(selector) = profile_selector {
-        let (profile, source) = load_provider_profile_with_source(selector)?;
+        let (profile, source_path) = load_provider_profile_with_source(selector)?;
+        let source = source_path.to_string_lossy().to_string();
+        let command_selector = provider_profile_command_selector(&source_path);
         Some(build_selected_profile_surface_from_items(
-            &providers, &profile, &source,
+            &providers,
+            &profile,
+            &source,
+            &command_selector,
         )?)
     } else {
         None
@@ -960,7 +967,7 @@ pub fn build_workflow_provider_support(
             .map(|profile| profile.profile_id.clone())
             .unwrap_or_else(|| "workflow_auto".to_string()),
         support_reason: blocking_reason.unwrap_or_default().to_string(),
-        provider_status_command: PROVIDER_STATUS_AGENT_COMMAND.to_string(),
+        provider_status_command: provider_status_agent_command_for_surface(surface),
         summary_line: surface.summary_line.clone(),
         selected_profile,
         ..WorkflowProviderSupportSurface::default()
@@ -995,6 +1002,23 @@ pub fn build_workflow_provider_support(
     support.pending_provider_details = pending_provider_details;
     support.install_prompts = install_prompts;
     support
+}
+
+pub fn provider_status_agent_command_for_surface(surface: &ProviderCatalogAgentSurface) -> String {
+    provider_status_agent_command(surface.selected_profile.as_ref())
+}
+
+pub fn provider_status_agent_command(
+    selected_profile: Option<&ProviderProfileSelectionSurface>,
+) -> String {
+    if let Some(profile) = selected_profile {
+        return format!(
+            "{} --profile {}",
+            PROVIDER_STATUS_AGENT_COMMAND,
+            shell_quote(&profile.selector)
+        );
+    }
+    PROVIDER_STATUS_AGENT_COMMAND.to_string()
 }
 
 fn workflow_relevant_provider_ids(
@@ -1072,7 +1096,7 @@ pub fn load_provider_profile(selector: &str) -> Result<ProviderProfileDocument> 
     load_provider_profile_with_source(selector).map(|(profile, _)| profile)
 }
 
-fn load_provider_profile_with_source(selector: &str) -> Result<(ProviderProfileDocument, String)> {
+fn load_provider_profile_with_source(selector: &str) -> Result<(ProviderProfileDocument, PathBuf)> {
     let path = resolve_provider_profile_path(selector)?;
     let raw = fs::read_to_string(&path)?;
     let profile: ProviderProfileDocument = serde_json::from_str(&raw)?;
@@ -1086,7 +1110,19 @@ fn load_provider_profile_with_source(selector: &str) -> Result<(ProviderProfileD
     if profile.profile_id.trim().is_empty() {
         bail!("provider profile id must not be empty");
     }
-    Ok((profile, path.to_string_lossy().to_string()))
+    Ok((profile, path))
+}
+
+fn provider_profile_command_selector(path: &Path) -> String {
+    let repo_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(REPO_PROVIDER_PROFILE_DIR);
+    if path.starts_with(&repo_root) {
+        return path
+            .file_stem()
+            .and_then(|stem| stem.to_str())
+            .map(ToString::to_string)
+            .unwrap_or_else(|| path.to_string_lossy().to_string());
+    }
+    path.to_string_lossy().to_string()
 }
 
 fn resolve_provider_profile_path(selector: &str) -> Result<PathBuf> {
@@ -1118,6 +1154,7 @@ fn build_selected_profile_surface_from_items(
     items: &[ProviderCatalogItem],
     profile: &ProviderProfileDocument,
     source: &str,
+    selector: &str,
 ) -> Result<ProviderProfileSelectionSurface> {
     let item_map = items
         .iter()
@@ -1199,6 +1236,7 @@ fn build_selected_profile_surface_from_items(
         display_name: profile.display_name.clone(),
         opt_in_only: profile.opt_in_only,
         source: source.to_string(),
+        selector: selector.to_string(),
         summary: profile.summary.clone(),
         data_contracts: profile.data_contracts.clone(),
         data_contract_labels: profile
@@ -1219,8 +1257,9 @@ fn build_selected_profile_surface(
     surface: &ProviderCatalogSurface,
     profile: &ProviderProfileDocument,
     source: &str,
+    selector: &str,
 ) -> Result<ProviderProfileSelectionSurface> {
-    build_selected_profile_surface_from_items(&surface.providers, profile, source)
+    build_selected_profile_surface_from_items(&surface.providers, profile, source, selector)
 }
 
 #[cfg(test)]
@@ -1401,6 +1440,32 @@ mod tests {
     }
 
     #[test]
+    fn provider_status_agent_command_is_profile_aware_only_when_opted_in() {
+        let default_command = provider_status_agent_command(None);
+        assert_eq!(default_command, "ict-engine provider-status --agent");
+
+        let command = provider_status_agent_command(Some(&ProviderProfileSelectionSurface {
+            profile_id: "thrill3r_nq_closed_loop_v1".to_string(),
+            display_name: "Thrill3r NQ Closed Loop v1".to_string(),
+            opt_in_only: true,
+            source: "/tmp/provider profile.json".to_string(),
+            selector: "/tmp/provider profile.json".to_string(),
+            summary: "Personal NQ workflow".to_string(),
+            data_contracts: Vec::new(),
+            data_contract_labels: Vec::new(),
+            track_details: Vec::new(),
+            track_statuses: Vec::new(),
+            ready_provider_ids: Vec::new(),
+            pending_provider_ids: Vec::new(),
+            install_prompts: Vec::new(),
+        }));
+        assert_eq!(
+            command,
+            "ict-engine provider-status --agent --profile '/tmp/provider profile.json'"
+        );
+    }
+
+    #[test]
     fn repo_example_profile_can_be_loaded_by_id() {
         let profile = load_provider_profile("thrill3r-nq-closed-loop-v1").unwrap();
         assert_eq!(profile.profile_id, "thrill3r_nq_closed_loop_v1");
@@ -1434,9 +1499,16 @@ mod tests {
             ],
         });
         let profile = load_provider_profile("thrill3r-nq-closed-loop-v1").unwrap();
-        let selected = build_selected_profile_surface(&surface, &profile, "repo-example").unwrap();
+        let selected = build_selected_profile_surface(
+            &surface,
+            &profile,
+            "repo-example",
+            "thrill3r-nq-closed-loop-v1",
+        )
+        .unwrap();
 
         assert_eq!(selected.profile_id, "thrill3r_nq_closed_loop_v1");
+        assert_eq!(selected.selector, "thrill3r-nq-closed-loop-v1");
         assert!(selected
             .track_statuses
             .iter()

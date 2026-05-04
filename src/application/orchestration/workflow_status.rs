@@ -24,7 +24,8 @@ use crate::application::output_foundation::{
     short_workflow_phase_summary,
 };
 use crate::application::provider_catalog::{
-    build_workflow_provider_support, provider_status_agent_surface, ProviderCatalogAgentSurface,
+    build_workflow_provider_support, provider_status_agent_command_for_surface,
+    provider_status_agent_surface, ProviderCatalogAgentSurface,
 };
 use crate::application::release_closure::workflow_next_step_view;
 use crate::config::shell_quote;
@@ -564,7 +565,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     } else {
         snapshot.recommended_next_command.clone()
     };
-    let provider_status_command = "ict-engine provider-status --agent".to_string();
+    let provider_status_command = provider_status_agent_command_for_surface(provider_status_agent);
     let historical_data_gate_active = !selected_data_candidates.is_empty()
         && (top_level_command.contains("factor-research")
             || top_level_command.contains("factor-backtest")
@@ -1661,7 +1662,7 @@ fn build_agent_bootstrap_view_with_candidates(
         tomac_root_placeholder,
     } = input;
     let ibkr_gateway_summary = build_ibkr_gateway_summary(&ibkr_gateway_candidates);
-    let provider_status_command = "ict-engine provider-status --agent".to_string();
+    let provider_status_command = provider_status_agent_command_for_surface(provider_status_agent);
     let agent_brief = vec![
         "mission: formalize factor-pipeline debug from latest signal through pre-bayes / bridge / resonance".to_string(),
         "priority: promote expansion_manipulation to SOP-tier objective, not research-only".to_string(),
@@ -3158,6 +3159,7 @@ mod tests {
                 display_name: "Thrill3r NQ Closed Loop v1".to_string(),
                 opt_in_only: true,
                 source: "repo-example".to_string(),
+                selector: "thrill3r-nq-closed-loop-v1".to_string(),
                 summary: "Personal NQ workflow".to_string(),
                 data_contracts: vec![
                     crate::application::provider_catalog::ProviderProfileDataContract {
@@ -4132,6 +4134,44 @@ mod tests {
         assert_eq!(
             value["provider_support"]["workflow_support"]["active"],
             true
+        );
+    }
+
+    #[test]
+    fn human_workflow_status_view_keeps_selected_profile_in_provider_command() {
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            current_focus_phase: "analyze_live".to_string(),
+            current_focus_reason: "provider_runtime_required".to_string(),
+            recommended_next_command: "ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --futures-backend openalice --aux-backend nofx".to_string(),
+            latest_analyze: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "analyze_live".to_string(),
+                phase_summary: "live_provider_runtime_pending".to_string(),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let value = build_human_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface_with_profile(),
+            &[],
+        );
+
+        assert!(value["provider_line"]
+            .as_str()
+            .unwrap()
+            .contains("ict-engine provider-status --agent --profile"));
+        assert!(value["provider_line"]
+            .as_str()
+            .unwrap()
+            .contains("thrill3r-nq-closed-loop-v1"));
+        assert_eq!(
+            value["provider_support"]["workflow_support"]["provider_status_command"],
+            serde_json::json!(
+                "ict-engine provider-status --agent --profile thrill3r-nq-closed-loop-v1"
+            )
         );
     }
 

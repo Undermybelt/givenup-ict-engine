@@ -229,12 +229,32 @@ Primary source docs:
 - delayed reward handling has a clearer time-to-resolution validation lane
 - target-policy context learning has a documented upgrade path from bucket posterior to learned contextual model
 
+## Architecture Judgment
+
+Current verdict:
+
+- directionally correct: keep modularizing the repo monolith; do not pivot this work into distributed services
+- still materially bloated at the implementation layer: the current checkout still has very large ownership files, including `src/main.rs` (~16793 lines), `src/state/types.rs` (~9857), `src/application/orchestration/workflow_status.rs` (~8685), and `src/application/orchestration/structural_playbook.rs` (~5221)
+- therefore architecture cleanup is real work, but it is not the highest-priority blocker while functional closure and usability validation are still incomplete
+
+Planning rule for this board:
+
+- do not spend the current closure slice chasing architecture purity ahead of feature completion
+- use the remaining architecture work as a last-mile consolidation pass after functionality, testing, and fake-real usage shakedown have stabilized behavior
+- when that final pass happens, prefer extraction and ownership cleanup inside the current repo/module boundaries, not service splitting
+  - target shape: thinner command shells, thinner orchestration renderers, smaller `state/types.rs`, and clearer `belief_core` ownership
+  - non-goal: turning `ict-engine` into a distributed multi-service system just because some files are large
+
 ## Execution Order
 
 1. Finish Workstream 1 first.
 2. Then land Workstream 2 on top of the extracted core.
 3. Then land Workstream 3 so runtime can consume real path-ranking artifacts.
-4. Only after that spend time on Workstream 4 deeper validation and model upgrades.
+4. Then land Workstream 4 so deeper validation surfaces exist and the remaining model gaps are explicit.
+5. After the remaining functional items are closed, run the full verification lane: targeted tests first, then whole-flow checks.
+6. After tests are green, do a fake-real usage shakedown from actual operator/contributor perspectives instead of only code-path validation.
+7. Fix the bugs, UX drift, contract leaks, and workflow friction found in that shakedown before spending time on cleanup.
+8. Only then do the final architecture/bloat optimization pass, using the now-stable behavior and test coverage as guardrails.
 
 ## Completion Standard
 
@@ -245,3 +265,45 @@ This action board is only complete when all of these are true:
 - transition math is maintained in one principled core instead of heuristic glue spread across state/orchestration layers
 - structural path ranking has a real runtime consumer path, not only export + status + registration
 - remaining “future work” items are either executed or explicitly broken into a follow-up plan
+
+## 2026-05-04 Code Verification Snapshot
+
+Scope of this pass:
+
+- static repo inspection against the current `src/` tree and the linked plan docs
+- ownership / runtime / CLI-surface verification in code
+- no full `cargo test` or runtime smoke replay in this pass
+
+### Confirmed Done
+
+- [x] Repo truth docs are real and present: `docs/plans/20260501repo.md` and `docs/plans/2026-04-30-structural-belief-execution-plan.md` both exist and already carry the structural-belief plan plus later repo-status notes.
+- [x] `structural-temporal-summary`, `structural-experience-priors`, and `policy-training-status` are real code surfaces, not docs-only placeholders.
+- [x] `LearningState.structural_prior_state` really persists duration priors, branch-transition priors, temporal posterior state, source-reliability EM summaries, and target-policy context posteriors.
+- [x] The structural path-ranking export / status / registration path is real: trainer-manifest readiness, trainer-artifact readiness, runtime selection, and artifact registration all exist in code.
+- [x] The opt-in runtime reuse contract is real: `candidate_set_only` and `prefer_history` are live runtime-selection modes and do not change the zero-config default.
+- [x] Structural path-ranking runtime can already consume local file-backed and remote artifact rows, and can also use either a direct weighted-feature model artifact family or a declared row-scoring service when runtime reuse is enabled.
+- [x] The “thin shell moved out of `main.rs`” milestones are real for the command groups called out in this board: status, release-closure, research/debug, market-data, update/analyze-live, and the `auto_quant` wrapper clusters all have dedicated shell modules now.
+- [x] The Workstream 4 starter milestones are real: source-reliability EM diagnostics now include a holdout-style train/eval summary, and delayed-reward replay surfaces now expose chronological resolution validation plus `1h/4h/24h` Brier-style horizon checks.
+
+### Confirmed Partial Or Board Wording Too Optimistic
+
+- [~] `belief_core` is no longer “Not Yet” at the file-creation level. `src/belief_core/mod.rs`, `structural_state.rs`, `source_reliability.rs`, `regime_filter.rs`, `changepoint_gate.rs`, `ranking_label.rs`, and `beta_dirichlet_update.rs` already exist. The correct status is “started and partially routed”, not “unstarted module split”.
+- [~] `workflow_status.rs` really does reuse the shared structural playbook bundle for many structural phases now, but the file is still large and still owns a lot of surface assembly.
+- [~] `application/belief/structural_temporal_adjustment.rs` is now mostly a compatibility shell over `belief_core::regime_filter`, but the overall transition / changepoint engine is still not fully centralized.
+- [~] Workstream 3 is partially closed in a real way: structural consumer surfaces can consume artifact-backed scores at runtime, but broader downstream runtime behavior still mixes “real artifact-backed path” and “sample / placeholder path” depending on which surface is being discussed.
+
+### Still Not Done
+
+- [ ] Workstream 1 acceptance is not yet met. Core learning math still primarily lives in oversized files, especially `src/state/types.rs`; `src/application/orchestration/structural_playbook.rs` and `src/application/orchestration/workflow_status.rs` are also still large owners rather than thin consumers.
+- [ ] Workstream 2 acceptance is not yet met. Transition and break logic is better-factored than before, but still heuristic: maintained transition refresh is not yet a fuller unified state-space / HMM-grade engine, and break maintenance is not yet a fuller competing-hypothesis changepoint engine.
+- [ ] The board’s “replace heuristic transition/break mixing with a maintained, emission-aware core” item is still open. Current code has explicit emission-conditioned helpers, but it still relies on fixed recursive discounts and fixed weighted blends in the current owner layer.
+- [ ] A deeper learned/contextual target-policy probability model is still not landed. Current target-policy context learning remains the compact `symbol:regime:direction` bucket-posterior family.
+- [ ] Replay-grade / out-of-sample source-reliability validation is still not landed. The new holdout summary is useful, but it is not yet larger-panel or true chronological replay validation.
+- [ ] A full elapsed-time competing-risk delayed-reward censoring model is still not landed. Current code exposes compact hazard / incidence / horizon diagnostics, but not the fuller event-time competing-risk model described by the longer plan.
+
+### What Needs To Be Done Next
+
+1. Finish Workstream 1 for real: keep the new `belief_core` files, but move the remaining learning / EM / temporal update ownership out of `src/state/types.rs` so it stops being the dominant math owner.
+2. Finish Workstream 2 immediately after that: make maintained transition refresh, emission-conditioned updates, and changepoint maintenance one clear core, with snapshot-time reweighting reduced to a consumer layer.
+3. Narrow the remaining Workstream 3 gap explicitly: keep the current opt-in structural path-ranker runtime, but make the repo’s downstream runtime behavior clearly distinguish artifact-backed behavior from sample / placeholder behavior and decide whether `policy_engine.rs` is inside this closure slice or not.
+4. Then deepen Workstream 4: upgrade holdout-only validation into replay / out-of-sample validation, and decide whether to stop at compact delayed-reward diagnostics or invest in the fuller competing-risk model the longer plan points to.

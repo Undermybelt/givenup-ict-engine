@@ -1,4 +1,12 @@
 use super::*;
+use ict_engine::application::entry_models::{
+    apply_structural_path_ranking_external_scores_command,
+    clear_structural_path_ranking_trainer_artifact_command,
+    disable_structural_path_ranking_runtime_command,
+    enable_structural_path_ranking_runtime_command,
+    export_structural_path_ranking_target_command, policy_training_status_command,
+    register_structural_path_ranking_trainer_artifact_command,
+};
 
 pub(crate) fn policy_training_status_shell(
     symbol: &str,
@@ -15,8 +23,8 @@ pub(crate) fn register_structural_path_ranking_trainer_artifact_shell(
     artifact_uri: &str,
     model_family: &str,
     score_column: &str,
-    trained_rows: usize,
-    calibration_rows: usize,
+    trained_rows: Option<usize>,
+    calibration_rows: Option<usize>,
 ) -> Result<()> {
     ensure_state_dir_ready(state_dir)?;
     register_structural_path_ranking_trainer_artifact_command(

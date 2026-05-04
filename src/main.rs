@@ -12227,7 +12227,7 @@ mod tests {
             true,
         )
         .unwrap();
-        update_command(UpdateCommandInput {
+        crate::update_command::update_command(UpdateCommandInput {
             symbol: "NQ",
             outcome: "win",
             entry_signal: Some("strong_buy"),
@@ -12296,7 +12296,7 @@ mod tests {
         )
         .unwrap();
 
-        update_command(UpdateCommandInput {
+        crate::update_command::update_command(UpdateCommandInput {
             symbol: "NQ",
             outcome: "win",
             entry_signal: Some("medium"),
