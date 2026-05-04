@@ -5,7 +5,17 @@ use ict_engine::application::entry_models::{
     disable_structural_path_ranking_runtime_command,
     enable_structural_path_ranking_runtime_command, export_structural_path_ranking_target_command,
     policy_training_status_command, register_structural_path_ranking_trainer_artifact_command,
+    PolicyTrainingStatusSurface,
 };
+
+fn render_policy_training_status_low_token(surface: &PolicyTrainingStatusSurface) -> String {
+    [
+        surface.summary_line.as_str(),
+        surface.structural_path_ranking_runtime_summary.as_str(),
+        surface.structural_path_ranking_validation_summary.as_str(),
+    ]
+    .join("\n")
+}
 
 pub(crate) fn policy_training_status_shell(
     symbol: &str,
@@ -22,15 +32,33 @@ pub(crate) fn policy_training_status_shell(
                 symbol,
                 entry_model,
             )?;
-            println!("{}", surface.summary_line);
-            println!("{}", surface.structural_path_ranking_runtime_summary);
-            println!("{}", surface.structural_path_ranking_validation_summary);
+            println!("{}", render_policy_training_status_low_token(&surface));
             Ok(())
         }
         other => anyhow::bail!(
             "unsupported policy-training-status output format '{}'; expected json, compact, agent, or human",
             other
         ),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn render_policy_training_status_low_token_emits_three_summary_lines() {
+        let surface = PolicyTrainingStatusSurface {
+            summary_line: "top-level".to_string(),
+            structural_path_ranking_runtime_summary: "runtime-line".to_string(),
+            structural_path_ranking_validation_summary: "validation-line".to_string(),
+            ..PolicyTrainingStatusSurface::default()
+        };
+
+        let rendered = render_policy_training_status_low_token(&surface);
+        let lines = rendered.lines().collect::<Vec<_>>();
+
+        assert_eq!(lines, vec!["top-level", "runtime-line", "validation-line"]);
     }
 }
 
