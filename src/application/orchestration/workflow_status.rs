@@ -48,6 +48,7 @@ fn build_structural_validation_summary_value(
         .path
         .as_ref()
         .and_then(|path| path.delayed_reward_replay_validation.as_ref());
+    let target_policy_context_count = experience_prior_surface.target_policy_contexts.len();
     serde_json::json!({
         "source_reliability": {
             "status": em.status,
@@ -71,6 +72,12 @@ fn build_structural_validation_summary_value(
                 "resolution_24h_brier_score": replay.resolution_24h_brier_score,
             })
         }),
+        "target_policy": {
+            "current_model": "symbol:regime:direction_bucket_posterior",
+            "status": if target_policy_context_count > 0 { "bucket_posterior_live" } else { "bucket_posterior_empty" },
+            "context_count": target_policy_context_count,
+            "upgrade_path": "learned_contextual_model_not_yet_landed",
+        },
     })
 }
 
@@ -101,9 +108,14 @@ fn build_structural_validation_line(
             replay.evaluation_record_count
         )
     });
+    let target_policy_context_count = experience_prior_surface.target_policy_contexts.len();
     let mut parts = vec![format!(
-        "Validation: em={} holdout={} holdout_brier={} multi_source_items={}",
-        em.status, holdout_status, holdout_brier, em.multi_source_item_count
+        "Validation: em={} holdout={} holdout_brier={} multi_source_items={} target_policy=bucket_posterior contexts={}",
+        em.status,
+        holdout_status,
+        holdout_brier,
+        em.multi_source_item_count,
+        target_policy_context_count
     )];
     if let Some(replay_summary) = replay_summary {
         parts.push(replay_summary);
@@ -8765,11 +8777,20 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("Validation: em="));
+        assert!(human_value["structural_validation_line"]
+            .as_str()
+            .unwrap()
+            .contains("target_policy=bucket_posterior"));
         assert!(agent_value["structural_validation_summary"]["source_reliability"]["status"]
             .as_str()
             .unwrap()
             .len()
             > 3);
+        assert_eq!(
+            agent_value["structural_validation_summary"]["target_policy"]["current_model"]
+                .as_str(),
+            Some("symbol:regime:direction_bucket_posterior")
+        );
         assert!(agent_value["structural_validation_summary"]["delayed_reward"]["resolution_brier_score"]
             .is_number()
             || agent_value["structural_validation_summary"]["delayed_reward"]["resolution_brier_score"]
