@@ -837,6 +837,31 @@ fn render_provider_catalog_compact(surface: &ProviderCatalogSurface) -> String {
             profile.profile_id,
             profile.pending_provider_ids.join(", ")
         ));
+        lines.push(format!("  summary: {}", profile.summary));
+        if !profile.data_contract_labels.is_empty() {
+            lines.push(format!(
+                "  data_contracts: {}",
+                profile
+                    .data_contract_labels
+                    .iter()
+                    .take(3)
+                    .cloned()
+                    .collect::<Vec<_>>()
+                    .join(" | ")
+            ));
+        }
+        if !profile.track_statuses.is_empty() {
+            lines.push(format!(
+                "  tracks: {}",
+                profile
+                    .track_statuses
+                    .iter()
+                    .take(4)
+                    .cloned()
+                    .collect::<Vec<_>>()
+                    .join(" | ")
+            ));
+        }
     }
     for domain in &surface.domains {
         lines.push(format!(
@@ -1322,6 +1347,30 @@ mod tests {
             .pending_providers
             .iter()
             .any(|item| item.contains("ibkr@market_data")));
+    }
+
+    #[test]
+    fn compact_surface_summarizes_selected_profile_contracts_and_tracks() {
+        let mut surface = sample_surface();
+        let profile = load_provider_profile("thrill3r-nq-closed-loop-v1").unwrap();
+        surface.selected_profile = Some(
+            build_selected_profile_surface(
+                &surface,
+                &profile,
+                "repo-example",
+                "thrill3r-nq-closed-loop-v1",
+            )
+            .unwrap(),
+        );
+
+        let compact = render_provider_catalog_compact(&surface);
+
+        assert!(compact.contains("profile: thrill3r_nq_closed_loop_v1"));
+        assert!(compact.contains("summary: Personal NQ workflow"));
+        assert!(compact.contains("data_contracts:"));
+        assert!(compact.contains("Tomac cleaned multi-timeframe futures root"));
+        assert!(compact.contains("tracks:"));
+        assert!(compact.contains("live_zero_config:pending:openbb"));
     }
 
     #[test]
