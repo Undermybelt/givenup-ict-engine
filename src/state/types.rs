@@ -6363,6 +6363,7 @@ fn structural_source_confusion_row_stats(
 
 #[derive(Debug, Clone, Default)]
 struct StructuralSourceReliabilityEmItem {
+    last_recommended_at: Option<String>,
     sources: BTreeSet<String>,
     observed_labels: usize,
     observed_credit_classes: BTreeMap<String, usize>,
@@ -6619,13 +6620,18 @@ fn structural_source_reliability_em_calibration_summary(
 fn structural_source_reliability_em_holdout_summary(
     items: &BTreeMap<String, StructuralSourceReliabilityEmItem>,
 ) -> Option<StructuralSourceReliabilityEmHoldoutSummary> {
-    let fit_items = items
+    let mut fit_items = items
         .iter()
         .filter(|(_, item)| item.sources.len() >= 2 && item.observed_labels >= 2)
         .collect::<Vec<_>>();
     if fit_items.is_empty() {
         return None;
     }
+    fit_items.sort_by(|(left_key, left), (right_key, right)| {
+        left.last_recommended_at
+            .cmp(&right.last_recommended_at)
+            .then_with(|| left_key.cmp(right_key))
+    });
     let min_training_items = STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_HOLDOUT_TRAIN_ITEMS;
     let min_observations = STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_CALIBRATION_OBSERVATIONS;
     if fit_items.len() <= min_training_items {
@@ -6875,6 +6881,7 @@ fn structural_source_reliability_em_ledger(
             .entry(structural_source_reliability_em_item_key(event))
             .or_default();
         item.sources.insert(source_label.to_string());
+        item.last_recommended_at = Some(event.recommended_at.clone());
         ledger.distinct_sources.insert(source_label.to_string());
         if let Some(credit_class) = event
             .realized_outcome
@@ -8842,6 +8849,47 @@ mod tests {
         assert!(matches!(
             holdout.status.as_str(),
             "ready" | "needs_larger_panel" | "needs_more_items"
+        ));
+    }
+
+    #[test]
+    fn test_structural_source_reliability_em_holdout_prefers_chronological_split() {
+        let mut items = BTreeMap::new();
+        for idx in 0..6 {
+            let recommendation_id = format!("rec-{idx}");
+            let mut item = StructuralSourceReliabilityEmItem::default();
+            item.last_recommended_at = Some(format!("2026-05-0{}T00:00:00Z", idx + 1));
+            item.sources.insert("backtest".to_string());
+            item.sources.insert("live".to_string());
+            item.observed_labels = 2;
+            item.observed_credit_classes
+                .insert("positive_executed".to_string(), 1);
+            item.observed_credit_classes
+                .insert("negative_executed".to_string(), 1);
+            item.source_credit_classes.insert(
+                "backtest".to_string(),
+                BTreeMap::from([
+                    ("positive_executed".to_string(), 1),
+                    ("negative_executed".to_string(), 1),
+                ]),
+            );
+            item.source_credit_classes.insert(
+                "live".to_string(),
+                BTreeMap::from([
+                    ("positive_executed".to_string(), 1),
+                    ("negative_executed".to_string(), 1),
+                ]),
+            );
+            items.insert(recommendation_id, item);
+        }
+
+        let summary = structural_source_reliability_em_holdout_summary(&items)
+            .expect("chronological holdout summary");
+        assert_eq!(summary.training_item_count, 4);
+        assert_eq!(summary.evaluation_item_count, 2);
+        assert!(matches!(
+            summary.status.as_str(),
+            "ready" | "needs_larger_panel" | "needs_multiple_sources"
         ));
     }
 
