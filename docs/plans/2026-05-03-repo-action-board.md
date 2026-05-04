@@ -347,6 +347,10 @@ What this now means in concrete repo behavior:
 - Workstream 4 validation logic itself has now moved one step closer to real out-of-sample behavior:
   - source-reliability EM holdout is no longer implicitly keyed by map order; it now splits by `recommended_at`
   - source-reliability EM replay now exists as a separate expanding-window summary instead of relying only on the single holdout slice
+- offline structural prior seeding now extends beyond `analyze` into adjacent research/backtest lanes:
+  - `factor-research` writes `research_run_structural_prior_seed` after refreshing the workflow snapshot
+  - mutation evaluations in that lane write `factor_mutation_structural_prior_seed`
+  - `factor-backtest` writes `backtest_run_structural_prior_seed`
 - `workflow-status` consumer surfaces now also expose a low-token path-ranker runtime summary:
   - human output includes a compact `Ranker: status=... source=...` line when a recommended path is present
   - agent JSON includes `path_ranker_summary`, so consumers can distinguish registered artifact/model/service-backed ranking from baseline-only behavior without traversing the full bundle
@@ -374,6 +378,8 @@ Verification for this lane is no longer just static inspection:
 - `workflow_status_phase_structural_ranker_runtime_summarizes_runtime_source`
 - `test_structural_source_reliability_em_holdout_prefers_chronological_split`
 - `workflow_status_structural_ranker_runtime_phase_is_available`
+- `test_run_factor_research_persists_rankings_and_run_record`
+- `test_run_factor_backtest_persists_backtest_run_and_agent_bundle`
 
 Priority change after this sweep:
 
