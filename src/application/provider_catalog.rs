@@ -267,7 +267,7 @@ pub fn provider_status_surface(
     }
     let selected_profile = if let Some(selector) = profile_selector {
         let (profile, source_path) = load_provider_profile_with_source(selector)?;
-        let source = source_path.to_string_lossy().to_string();
+        let source = provider_profile_source_kind(&source_path);
         let command_selector = provider_profile_command_selector(&source_path);
         Some(build_selected_profile_surface_from_items(
             &providers,
@@ -1202,6 +1202,19 @@ fn provider_profile_command_selector(path: &Path) -> String {
             .unwrap_or_else(|| path.to_string_lossy().to_string());
     }
     path.to_string_lossy().to_string()
+}
+
+fn provider_profile_source_kind(path: &Path) -> String {
+    let repo_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(REPO_PROVIDER_PROFILE_DIR);
+    if path.starts_with(&repo_root) {
+        return "repo-example".to_string();
+    }
+    let raw = path.to_string_lossy();
+    if raw.starts_with("http://") || raw.starts_with("https://") {
+        "remote".to_string()
+    } else {
+        "local_path".to_string()
+    }
 }
 
 fn resolve_provider_profile_path(selector: &str) -> Result<PathBuf> {
