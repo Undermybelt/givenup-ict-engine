@@ -645,15 +645,15 @@ fn policy_decision_to_executor(
     }
 }
 
-fn policy_runtime_source(engine: &CatBoostCompatiblePolicyEngine) -> String {
+fn policy_runtime_source(name: &str, engine: &CatBoostCompatiblePolicyEngine) -> String {
     if engine
         .artifact_version()
         .to_ascii_lowercase()
         .contains("placeholder")
     {
-        format!("{}:placeholder", engine.engine_name())
+        format!("{name}:placeholder")
     } else {
-        format!("{}:artifact", engine.engine_name())
+        format!("{name}:artifact")
     }
 }
 
@@ -805,8 +805,8 @@ pub fn build_stub_ensemble_vote_from_input(
     let catboost_engine = CatBoostCompatiblePolicyEngine::load_default_or_placeholder();
     let xgboost_engine = load_named_policy_or_placeholder("xgboost_policy.sample.json");
     let policy_runtime_sources = vec![
-        policy_runtime_source(&catboost_engine),
-        policy_runtime_source(&xgboost_engine),
+        policy_runtime_source("catboost_file", &catboost_engine),
+        policy_runtime_source("xgboost_file", &xgboost_engine),
     ];
 
     let mut catboost_like = policy_decision_to_executor(
@@ -1067,7 +1067,7 @@ mod tests {
         assert!(artifact
             .executor_summaries
             .iter()
-            .any(|line| line.contains("policy_source=catboost-compatible-placeholder")));
+            .any(|line| line.contains("policy_source=catboost_file:")));
     }
 
     #[test]
