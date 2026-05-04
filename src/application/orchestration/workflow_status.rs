@@ -74,6 +74,10 @@ fn build_structural_validation_summary_value(
                 "status": replay.status,
                 "training_record_count": replay.training_record_count,
                 "evaluation_record_count": replay.evaluation_record_count,
+                "resolution_observation_count": replay.resolution_observation_count,
+                "resolution_1h_observation_count": replay.resolution_1h_observation_count,
+                "resolution_4h_observation_count": replay.resolution_4h_observation_count,
+                "resolution_24h_observation_count": replay.resolution_24h_observation_count,
                 "resolution_brier_score": replay.resolution_brier_score,
                 "resolution_1h_brier_score": replay.resolution_1h_brier_score,
                 "resolution_4h_brier_score": replay.resolution_4h_brier_score,
@@ -116,13 +120,17 @@ fn build_structural_validation_line(
         .unwrap_or_else(|| "n/a".to_string());
     let replay_summary = replay.map(|replay| {
         format!(
-            "replay={} overall_brier={} eval={}",
+            "replay={} overall_brier={} eval={} obs={} obs_1h={} obs_4h={} obs_24h={}",
             replay.status,
             replay
                 .resolution_brier_score
                 .map(|value| format!("{value:.3}"))
                 .unwrap_or_else(|| "n/a".to_string()),
-            replay.evaluation_record_count
+            replay.evaluation_record_count,
+            replay.resolution_observation_count,
+            replay.resolution_1h_observation_count,
+            replay.resolution_4h_observation_count,
+            replay.resolution_24h_observation_count
         )
     });
     let target_policy_context_count = experience_prior_surface.target_policy_contexts.len();
@@ -6947,6 +6955,12 @@ mod tests {
         assert!(value["delayed_reward"]
             .get("resolution_brier_score")
             .is_some());
+        assert!(value["delayed_reward"]
+            .get("resolution_observation_count")
+            .is_some());
+        assert!(value["delayed_reward"]
+            .get("resolution_24h_observation_count")
+            .is_some());
     }
 
     #[test]
@@ -8889,6 +8903,10 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("replay="));
+        assert!(human_value["structural_validation_line"]
+            .as_str()
+            .unwrap()
+            .contains("obs_1h="));
         assert!(
             agent_value["structural_validation_summary"]["source_reliability"]["status"]
                 .as_str()
@@ -8917,6 +8935,11 @@ mod tests {
                 || agent_value["structural_validation_summary"]["delayed_reward"]
                     ["resolution_brier_score"]
                     .is_null()
+        );
+        assert!(
+            agent_value["structural_validation_summary"]["delayed_reward"]
+                .get("resolution_observation_count")
+                .is_some()
         );
     }
 
