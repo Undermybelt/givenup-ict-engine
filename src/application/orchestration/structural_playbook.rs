@@ -3380,7 +3380,7 @@ fn structural_relevant_profile_data_contracts(
     snapshot: &WorkflowSnapshot,
     provider_status_agent: &ProviderCatalogAgentSurface,
 ) -> Vec<String> {
-    let Some(profile) = provider_status_agent.selected_profile.as_ref() else {
+    let Some(profile) = provider_status_agent.selected_profile_full.as_ref() else {
         return Vec::new();
     };
     let hints = structural_context_hints(snapshot);
@@ -3399,7 +3399,7 @@ fn structural_relevant_profile_track_statuses(
     snapshot: &WorkflowSnapshot,
     provider_status_agent: &ProviderCatalogAgentSurface,
 ) -> Vec<String> {
-    let Some(profile) = provider_status_agent.selected_profile.as_ref() else {
+    let Some(profile) = provider_status_agent.selected_profile_full.as_ref() else {
         return Vec::new();
     };
     let hints = structural_context_hints(snapshot);

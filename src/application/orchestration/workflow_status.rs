@@ -3219,6 +3219,7 @@ mod tests {
                 "Ask the user to install IBKR TWS or IB Gateway and enable the local API before attempting IBKR-backed live workflows. Search keywords: Interactive Brokers TWS download, IB Gateway download.".to_string(),
             ],
             selected_profile: None,
+            selected_profile_full: None,
         }
     }
 
@@ -3260,75 +3261,89 @@ mod tests {
 
     fn sample_provider_agent_surface_with_profile() -> ProviderCatalogAgentSurface {
         let mut surface = sample_provider_agent_surface();
+        let full = crate::application::provider_catalog::ProviderProfileSelectionSurface {
+            profile_id: "thrill3r_nq_closed_loop_v1".to_string(),
+            display_name: "Thrill3r NQ Closed Loop v1".to_string(),
+            opt_in_only: true,
+            source: "repo-example".to_string(),
+            selector: "thrill3r-nq-closed-loop-v1".to_string(),
+            summary: "Personal NQ workflow".to_string(),
+            data_contracts: vec![
+                crate::application::provider_catalog::ProviderProfileDataContract {
+                    contract_id: "tomac_clean_root".to_string(),
+                    category: "historical".to_string(),
+                    required: true,
+                    label: "Tomac cleaned multi-timeframe futures root".to_string(),
+                    symbols: vec!["NQ".to_string()],
+                    timeframes: vec!["1d".to_string(), "1h".to_string(), "15m".to_string()],
+                    path_hint: None,
+                    notes: Vec::new(),
+                },
+                crate::application::provider_catalog::ProviderProfileDataContract {
+                    contract_id: "qqq_options_surface".to_string(),
+                    category: "options".to_string(),
+                    required: true,
+                    label: "QQQ options Greeks / IV / OI".to_string(),
+                    symbols: vec!["QQQ".to_string()],
+                    timeframes: vec!["snapshot".to_string()],
+                    path_hint: None,
+                    notes: Vec::new(),
+                },
+            ],
+            data_contract_labels: vec![
+                "Tomac cleaned multi-timeframe futures root".to_string(),
+                "QQQ options Greeks / IV / OI".to_string(),
+            ],
+            track_details: vec![
+                crate::application::provider_catalog::ProviderProfileTrackSelection {
+                    track_id: "research_zero_config".to_string(),
+                    label: "Zero-config research companion data".to_string(),
+                    required: true,
+                    mode: "any_of".to_string(),
+                    activation_hints: vec!["research".to_string(), "backtest".to_string()],
+                    status: "ready".to_string(),
+                    ready_provider_ids: vec!["openbb".to_string()],
+                    pending_provider_ids: Vec::new(),
+                    install_prompts: Vec::new(),
+                    notes: Vec::new(),
+                },
+                crate::application::provider_catalog::ProviderProfileTrackSelection {
+                    track_id: "options_enriched".to_string(),
+                    label: "Options enrichment".to_string(),
+                    required: true,
+                    mode: "any_of".to_string(),
+                    activation_hints: vec!["research".to_string(), "options".to_string()],
+                    status: "pending".to_string(),
+                    ready_provider_ids: Vec::new(),
+                    pending_provider_ids: vec!["tradingview_mcp".to_string()],
+                    install_prompts: vec!["Ask for TradingViewRemix MCP API key.".to_string()],
+                    notes: Vec::new(),
+                },
+            ],
+            track_statuses: vec![
+                "research_zero_config:ready:openbb,yfinance".to_string(),
+                "options_enriched:pending:tradingview_mcp".to_string(),
+            ],
+            ready_provider_ids: vec!["openbb".to_string()],
+            pending_provider_ids: vec!["tradingview_mcp".to_string()],
+            install_prompts: vec!["Ask for TradingViewRemix MCP API key.".to_string()],
+        };
         surface.selected_profile = Some(
-            crate::application::provider_catalog::ProviderProfileSelectionSurface {
-                profile_id: "thrill3r_nq_closed_loop_v1".to_string(),
-                display_name: "Thrill3r NQ Closed Loop v1".to_string(),
-                opt_in_only: true,
-                source: "repo-example".to_string(),
-                selector: "thrill3r-nq-closed-loop-v1".to_string(),
-                summary: "Personal NQ workflow".to_string(),
-                data_contracts: vec![
-                    crate::application::provider_catalog::ProviderProfileDataContract {
-                        contract_id: "tomac_clean_root".to_string(),
-                        category: "historical".to_string(),
-                        required: true,
-                        label: "Tomac cleaned multi-timeframe futures root".to_string(),
-                        symbols: vec!["NQ".to_string()],
-                        timeframes: vec!["1d".to_string(), "1h".to_string(), "15m".to_string()],
-                        path_hint: None,
-                        notes: Vec::new(),
-                    },
-                    crate::application::provider_catalog::ProviderProfileDataContract {
-                        contract_id: "qqq_options_surface".to_string(),
-                        category: "options".to_string(),
-                        required: true,
-                        label: "QQQ options Greeks / IV / OI".to_string(),
-                        symbols: vec!["QQQ".to_string()],
-                        timeframes: vec!["snapshot".to_string()],
-                        path_hint: None,
-                        notes: Vec::new(),
-                    },
-                ],
-                data_contract_labels: vec![
-                    "Tomac cleaned multi-timeframe futures root".to_string(),
-                    "QQQ options Greeks / IV / OI".to_string(),
-                ],
-                track_details: vec![
-                    crate::application::provider_catalog::ProviderProfileTrackSelection {
-                        track_id: "research_zero_config".to_string(),
-                        label: "Zero-config research companion data".to_string(),
-                        required: true,
-                        mode: "any_of".to_string(),
-                        activation_hints: vec!["research".to_string(), "backtest".to_string()],
-                        status: "ready".to_string(),
-                        ready_provider_ids: vec!["openbb".to_string()],
-                        pending_provider_ids: Vec::new(),
-                        install_prompts: Vec::new(),
-                        notes: Vec::new(),
-                    },
-                    crate::application::provider_catalog::ProviderProfileTrackSelection {
-                        track_id: "options_enriched".to_string(),
-                        label: "Options enrichment".to_string(),
-                        required: true,
-                        mode: "any_of".to_string(),
-                        activation_hints: vec!["research".to_string(), "options".to_string()],
-                        status: "pending".to_string(),
-                        ready_provider_ids: Vec::new(),
-                        pending_provider_ids: vec!["tradingview_mcp".to_string()],
-                        install_prompts: vec!["Ask for TradingViewRemix MCP API key.".to_string()],
-                        notes: Vec::new(),
-                    },
-                ],
-                track_statuses: vec![
-                    "research_zero_config:ready:openbb,yfinance".to_string(),
-                    "options_enriched:pending:tradingview_mcp".to_string(),
-                ],
-                ready_provider_ids: vec!["openbb".to_string()],
-                pending_provider_ids: vec!["tradingview_mcp".to_string()],
-                install_prompts: vec!["Ask for TradingViewRemix MCP API key.".to_string()],
+            crate::application::provider_catalog::ProviderProfileAgentSelectionSurface {
+                profile_id: full.profile_id.clone(),
+                display_name: full.display_name.clone(),
+                opt_in_only: full.opt_in_only,
+                source: full.source.clone(),
+                selector: full.selector.clone(),
+                summary: full.summary.clone(),
+                data_contract_labels: full.data_contract_labels.clone(),
+                track_statuses: full.track_statuses.clone(),
+                ready_provider_ids: full.ready_provider_ids.clone(),
+                pending_provider_ids: full.pending_provider_ids.clone(),
+                install_prompts: full.install_prompts.clone(),
             },
         );
+        surface.selected_profile_full = Some(full);
         surface
     }
 

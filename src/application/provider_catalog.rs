@@ -99,7 +99,9 @@ pub struct ProviderCatalogAgentSurface {
     pub default_enabled_providers: Vec<String>,
     pub install_prompts: Vec<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub selected_profile: Option<ProviderProfileSelectionSurface>,
+    pub selected_profile: Option<ProviderProfileAgentSelectionSurface>,
+    #[serde(skip)]
+    pub selected_profile_full: Option<ProviderProfileSelectionSurface>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, Eq)]
@@ -122,7 +124,9 @@ pub struct WorkflowProviderSupportSurface {
     pub pending_provider_details: Vec<ProviderCatalogPendingAgentItem>,
     pub install_prompts: Vec<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub selected_profile: Option<ProviderProfileSelectionSurface>,
+    pub selected_profile: Option<ProviderProfileAgentSelectionSurface>,
+    #[serde(skip)]
+    pub selected_profile_full: Option<ProviderProfileSelectionSurface>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -209,6 +213,21 @@ pub struct ProviderProfileSelectionSurface {
     pub data_contracts: Vec<ProviderProfileDataContract>,
     pub data_contract_labels: Vec<String>,
     pub track_details: Vec<ProviderProfileTrackSelection>,
+    pub track_statuses: Vec<String>,
+    pub ready_provider_ids: Vec<String>,
+    pub pending_provider_ids: Vec<String>,
+    pub install_prompts: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, Eq)]
+pub struct ProviderProfileAgentSelectionSurface {
+    pub profile_id: String,
+    pub display_name: String,
+    pub opt_in_only: bool,
+    pub source: String,
+    pub selector: String,
+    pub summary: String,
+    pub data_contract_labels: Vec<String>,
     pub track_statuses: Vec<String>,
     pub ready_provider_ids: Vec<String>,
     pub pending_provider_ids: Vec<String>,
@@ -966,7 +985,29 @@ fn build_provider_catalog_agent_surface(
         selectable_providers,
         default_enabled_providers,
         install_prompts,
-        selected_profile: surface.selected_profile.clone(),
+        selected_profile: surface
+            .selected_profile
+            .as_ref()
+            .map(build_agent_selected_profile_surface),
+        selected_profile_full: surface.selected_profile.clone(),
+    }
+}
+
+fn build_agent_selected_profile_surface(
+    profile: &ProviderProfileSelectionSurface,
+) -> ProviderProfileAgentSelectionSurface {
+    ProviderProfileAgentSelectionSurface {
+        profile_id: profile.profile_id.clone(),
+        display_name: profile.display_name.clone(),
+        opt_in_only: profile.opt_in_only,
+        source: profile.source.clone(),
+        selector: profile.selector.clone(),
+        summary: profile.summary.clone(),
+        data_contract_labels: profile.data_contract_labels.clone(),
+        track_statuses: profile.track_statuses.clone(),
+        ready_provider_ids: profile.ready_provider_ids.clone(),
+        pending_provider_ids: profile.pending_provider_ids.clone(),
+        install_prompts: profile.install_prompts.clone(),
     }
 }
 
@@ -995,6 +1036,7 @@ pub fn build_workflow_provider_support(
         provider_status_command: provider_status_agent_command_for_surface(surface),
         summary_line: surface.summary_line.clone(),
         selected_profile,
+        selected_profile_full: surface.selected_profile_full.clone(),
         ..WorkflowProviderSupportSurface::default()
     };
     if relevant_provider_ids.is_empty() {
@@ -1034,7 +1076,7 @@ pub fn provider_status_agent_command_for_surface(surface: &ProviderCatalogAgentS
 }
 
 pub fn provider_status_agent_command(
-    selected_profile: Option<&ProviderProfileSelectionSurface>,
+    selected_profile: Option<&ProviderProfileAgentSelectionSurface>,
 ) -> String {
     if let Some(profile) = selected_profile {
         return format!(
@@ -1350,6 +1392,31 @@ mod tests {
     }
 
     #[test]
+    fn agent_surface_selected_profile_omits_heavy_contract_and_track_details() {
+        let mut surface = sample_surface();
+        let profile = load_provider_profile("thrill3r-nq-closed-loop-v1").unwrap();
+        surface.selected_profile = Some(
+            build_selected_profile_surface(
+                &surface,
+                &profile,
+                "repo-example",
+                "thrill3r-nq-closed-loop-v1",
+            )
+            .unwrap(),
+        );
+
+        let agent = build_provider_catalog_agent_surface(&surface);
+        let value = serde_json::to_value(&agent).unwrap();
+        let selected = &value["selected_profile"];
+
+        assert_eq!(selected["profile_id"], "thrill3r_nq_closed_loop_v1");
+        assert!(selected["data_contract_labels"].is_array());
+        assert!(selected["track_statuses"].is_array());
+        assert!(selected.get("data_contracts").is_none());
+        assert!(selected.get("track_details").is_none());
+    }
+
+    #[test]
     fn compact_surface_summarizes_selected_profile_contracts_and_tracks() {
         let mut surface = sample_surface();
         let profile = load_provider_profile("thrill3r-nq-closed-loop-v1").unwrap();
@@ -1434,6 +1501,7 @@ mod tests {
                 default_enabled_providers: vec!["openbb".to_string()],
                 install_prompts: vec![],
                 selected_profile: None,
+                selected_profile_full: None,
             },
             "ict-engine analyze-live --symbol NQ --futures-backend openalice --aux-backend nofx",
             Some("provider_runtime_required"),
@@ -1478,6 +1546,7 @@ mod tests {
                 default_enabled_providers: vec!["yfinance".to_string()],
                 install_prompts: vec!["ask for key".to_string()],
                 selected_profile: None,
+                selected_profile_full: None,
             },
             "ict-engine factor-research --symbol NQ --backend native",
             None,
@@ -1493,16 +1562,14 @@ mod tests {
         let default_command = provider_status_agent_command(None);
         assert_eq!(default_command, "ict-engine provider-status --agent");
 
-        let command = provider_status_agent_command(Some(&ProviderProfileSelectionSurface {
+        let command = provider_status_agent_command(Some(&ProviderProfileAgentSelectionSurface {
             profile_id: "thrill3r_nq_closed_loop_v1".to_string(),
             display_name: "Thrill3r NQ Closed Loop v1".to_string(),
             opt_in_only: true,
             source: "/tmp/provider profile.json".to_string(),
             selector: "/tmp/provider profile.json".to_string(),
             summary: "Personal NQ workflow".to_string(),
-            data_contracts: Vec::new(),
             data_contract_labels: Vec::new(),
-            track_details: Vec::new(),
             track_statuses: Vec::new(),
             ready_provider_ids: Vec::new(),
             pending_provider_ids: Vec::new(),
