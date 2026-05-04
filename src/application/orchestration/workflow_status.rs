@@ -2720,11 +2720,31 @@ fn build_workflow_status_phase_value_with_structural_prior_state_and_state_dir(
                 recommended_next_step,
             )
         }
+        "structural-validation" | "structural-validation-summary" => {
+            let artifact = build_structural_experience_prior_surface_artifact_with_prior_state(
+                snapshot,
+                provider_status_agent,
+                feedback_history,
+                structural_prior_state,
+            );
+            let recommended_next_step =
+                workflow_status_structural_recommended_next_step_with_state_dir(
+                    snapshot,
+                    provider_status_agent,
+                    feedback_history,
+                    structural_prior_state,
+                    state_dir,
+                );
+            workflow_status_value_with_recommended_next_step(
+                build_structural_validation_summary_value(&artifact),
+                recommended_next_step,
+            )
+        }
         "structural-top-path-candidates" | "structural-top-paths" => {
             let artifact =
                 build_structural_top_path_candidates_artifact_with_runtime_context_and_prior_state(
-                snapshot,
-                provider_status_agent,
+                    snapshot,
+                    provider_status_agent,
                 feedback_history,
                 structural_prior_state,
                 StructuralPathRankerRuntimeContext { state_dir },
@@ -6721,6 +6741,35 @@ mod tests {
         let prior = value["path"]["experience_prior"].as_f64().unwrap();
         assert!(prior < 0.57);
         assert!(prior > 0.54);
+    }
+
+    #[test]
+    fn workflow_status_phase_structural_validation_summarizes_holdout_and_replay() {
+        let mut snapshot = sample_human_workflow_snapshot();
+        if let Some(update) = snapshot.latest_update.as_mut() {
+            update.structural_feedback = sample_structural_feedback_history()[1]
+                .structural_feedback
+                .clone();
+        }
+        let history = sample_structural_feedback_history();
+
+        let value = build_workflow_status_phase_value(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &history,
+            "structural-validation",
+        )
+        .unwrap();
+
+        assert!(value["source_reliability"]["status"]
+            .as_str()
+            .unwrap()
+            .len()
+            > 3);
+        assert!(value["source_reliability"].get("holdout_status").is_some());
+        assert!(value["delayed_reward"]["status"].as_str().unwrap().len() > 3);
+        assert!(value["delayed_reward"].get("resolution_brier_score").is_some());
     }
 
     #[test]
