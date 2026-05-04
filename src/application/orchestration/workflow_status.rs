@@ -254,6 +254,14 @@ pub struct AgentBootstrapLiveInput {
     pub inferable_defaults:
         std::collections::BTreeMap<String, std::collections::BTreeMap<String, String>>,
     pub additional_user_inputs_if_not_inferable: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selected_profile_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub selected_profile_summary: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub selected_profile_data_contracts: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub selected_profile_track_statuses: Vec<String>,
     pub provider_access_requests: Vec<String>,
     pub provider_status_agent: ProviderCatalogAgentSurface,
     pub provider_status_command: String,
@@ -1779,6 +1787,24 @@ fn build_agent_bootstrap_view_with_candidates(
             .to_string()
     };
     let inferable_live_defaults = std::collections::BTreeMap::new();
+    let selected_profile_id = provider_status_agent
+        .selected_profile
+        .as_ref()
+        .map(|profile| profile.profile_id.clone());
+    let selected_profile_summary = provider_status_agent
+        .selected_profile
+        .as_ref()
+        .map(|profile| profile.summary.clone());
+    let selected_profile_data_contracts = provider_status_agent
+        .selected_profile
+        .as_ref()
+        .map(|profile| profile.data_contract_labels.iter().take(3).cloned().collect::<Vec<_>>())
+        .unwrap_or_default();
+    let selected_profile_track_statuses = provider_status_agent
+        .selected_profile
+        .as_ref()
+        .map(|profile| profile.track_statuses.iter().take(4).cloned().collect::<Vec<_>>())
+        .unwrap_or_default();
     AgentBootstrapView {
         symbol: symbol.to_string(),
         project_role: "closed_loop_multi_timeframe_pre_bayes_bbn_engine".to_string(),
@@ -1829,6 +1855,10 @@ fn build_agent_bootstrap_view_with_candidates(
                     "aux_backend".to_string(),
                     "backend_base_urls_if_non_default".to_string(),
                 ],
+                selected_profile_id,
+                selected_profile_summary,
+                selected_profile_data_contracts,
+                selected_profile_track_statuses,
                 provider_access_requests: provider_status_agent.install_prompts.clone(),
                 provider_status_agent: provider_status_agent.clone(),
                 provider_status_command,
@@ -4245,6 +4275,46 @@ mod tests {
                 "ict-engine provider-status --agent --profile thrill3r-nq-closed-loop-v1"
             )
         );
+    }
+
+    #[test]
+    fn agent_bootstrap_live_input_surfaces_selected_profile_contracts() {
+        let view = build_agent_bootstrap_view_with_candidates(
+            AgentBootstrapBuildInput {
+                symbol: "NQ",
+                state_dir: "/tmp/state",
+                snapshot: &WorkflowSnapshot::default(),
+                provider_status_agent: &sample_provider_agent_surface_with_profile(),
+                detected_tomac_root: Some("/tmp/tomac".to_string()),
+                multi_timeframe_clean_root: Some("/tmp/ict-engine-mtf".to_string()),
+                tomac_root_placeholder: "<tomac-root>",
+            },
+            Vec::new(),
+        );
+
+        assert_eq!(
+            view.input_acquisition.live.selected_profile_id.as_deref(),
+            Some("thrill3r_nq_closed_loop_v1")
+        );
+        assert!(view
+            .input_acquisition
+            .live
+            .selected_profile_summary
+            .as_deref()
+            .unwrap()
+            .contains("Personal NQ workflow"));
+        assert!(view
+            .input_acquisition
+            .live
+            .selected_profile_data_contracts
+            .iter()
+            .any(|item| item.contains("Tomac cleaned multi-timeframe futures root")));
+        assert!(view
+            .input_acquisition
+            .live
+            .selected_profile_track_statuses
+            .iter()
+            .any(|item| item.contains("options_enriched:pending:tradingview_mcp")));
     }
 
     #[test]
