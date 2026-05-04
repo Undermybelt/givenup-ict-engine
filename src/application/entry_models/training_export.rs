@@ -253,8 +253,10 @@ pub struct PolicyTrainingStatusSurface {
     #[serde(rename = "entry_models")]
     pub providers: Vec<PolicyTrainingProviderStatusSurface>,
     pub structural_path_ranking_runtime: StructuralPathRankingRuntimeSummarySurface,
+    pub structural_path_ranking_validation: StructuralPathRankingValidationSummarySurface,
     pub structural_path_ranking_target: StructuralPathRankingTargetTrainingStatusSurface,
     pub structural_path_ranking_runtime_summary: String,
+    pub structural_path_ranking_validation_summary: String,
     pub summary_line: String,
 }
 
@@ -271,6 +273,21 @@ pub struct StructuralPathRankingRuntimeSummarySurface {
     pub active_match_count: usize,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub model_family: Option<String>,
+    pub summary_line: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankingValidationSummarySurface {
+    pub calibration_ready: bool,
+    pub calibration_quality_ready: bool,
+    pub calibration_status: String,
+    pub raw_scored_mature_rows: usize,
+    pub raw_scored_mature_min_rows: usize,
+    pub raw_scored_mature_shortfall_rows: usize,
+    pub production_validation_ready: bool,
+    pub production_validation_rows: usize,
+    pub production_validation_min_rows: usize,
+    pub production_validation_shortfall_rows: usize,
     pub summary_line: String,
 }
 
@@ -821,6 +838,16 @@ pub fn policy_training_status(
         "Ranker runtime: {}",
         structural_path_ranking_target.summary_line
     );
+    let structural_path_ranking_validation_summary = format!(
+        "Ranker validation: calibration={} quality_ready={} raw_scored_mature={}/{} production_validation={}/{} ready={}",
+        structural_path_ranking_target.calibration_ready,
+        structural_path_ranking_target.calibration_quality_ready,
+        structural_path_ranking_target.raw_scored_mature_rows,
+        structural_path_ranking_target.raw_scored_mature_min_rows,
+        structural_path_ranking_target.production_validation_rows,
+        structural_path_ranking_target.production_validation_min_rows,
+        structural_path_ranking_target.production_validation_ready
+    );
     Ok(PolicyTrainingStatusSurface {
         symbol: symbol.to_string(),
         analyze_runs: cisd_rb.analyze_runs,
@@ -850,7 +877,30 @@ pub fn policy_training_status(
                 .clone(),
             summary_line: structural_path_ranking_runtime_summary.clone(),
         },
+        structural_path_ranking_validation: StructuralPathRankingValidationSummarySurface {
+            calibration_ready: structural_path_ranking_target.calibration_ready,
+            calibration_quality_ready: structural_path_ranking_target.calibration_quality_ready,
+            calibration_status: if !structural_path_ranking_target.calibration_ready {
+                "not_fitted".to_string()
+            } else if !structural_path_ranking_target.calibration_quality_ready {
+                "pending_eval".to_string()
+            } else {
+                "evaluated".to_string()
+            },
+            raw_scored_mature_rows: structural_path_ranking_target.raw_scored_mature_rows,
+            raw_scored_mature_min_rows: structural_path_ranking_target.raw_scored_mature_min_rows,
+            raw_scored_mature_shortfall_rows: structural_path_ranking_target
+                .raw_scored_mature_shortfall_rows,
+            production_validation_ready: structural_path_ranking_target.production_validation_ready,
+            production_validation_rows: structural_path_ranking_target.production_validation_rows,
+            production_validation_min_rows: structural_path_ranking_target
+                .production_validation_min_rows,
+            production_validation_shortfall_rows: structural_path_ranking_target
+                .production_validation_shortfall_rows,
+            summary_line: structural_path_ranking_validation_summary.clone(),
+        },
         structural_path_ranking_runtime_summary,
+        structural_path_ranking_validation_summary,
         structural_path_ranking_target,
         summary_line,
     })
@@ -2654,6 +2704,16 @@ mod tests {
         assert!(!status.structural_path_ranking_runtime.enabled);
         assert_eq!(status.structural_path_ranking_runtime.status, "disabled");
         assert!(status.structural_path_ranking_runtime.source_kind.is_none());
+        assert!(!status.structural_path_ranking_validation.calibration_ready);
+        assert_eq!(
+            status.structural_path_ranking_validation.calibration_status,
+            "not_fitted"
+        );
+        assert!(
+            !status
+                .structural_path_ranking_validation
+                .production_validation_ready
+        );
         assert!(status
             .structural_path_ranking_target
             .warnings
@@ -2661,6 +2721,9 @@ mod tests {
         assert!(status
             .structural_path_ranking_runtime_summary
             .contains("Ranker runtime:"));
+        assert!(status
+            .structural_path_ranking_validation_summary
+            .contains("Ranker validation:"));
         assert!(status
             .summary_line
             .contains("structural path ranking target export missing"));
@@ -3130,6 +3193,38 @@ mod tests {
         assert!(!status
             .warnings
             .contains(&"structural_path_ranking_target_trainer_manifest_incomplete".to_string()));
+        let full_status =
+            policy_training_status(temp.path().to_str().unwrap(), "NQ", None).unwrap();
+        assert!(
+            full_status
+                .structural_path_ranking_validation
+                .calibration_ready
+        );
+        assert!(
+            full_status
+                .structural_path_ranking_validation
+                .calibration_quality_ready
+        );
+        assert_eq!(
+            full_status
+                .structural_path_ranking_validation
+                .calibration_status,
+            "evaluated"
+        );
+        assert!(
+            full_status
+                .structural_path_ranking_validation
+                .production_validation_ready
+        );
+        assert_eq!(
+            full_status
+                .structural_path_ranking_validation
+                .production_validation_rows,
+            row_count
+        );
+        assert!(full_status
+            .structural_path_ranking_validation_summary
+            .contains("production_validation"));
     }
 
     #[test]
