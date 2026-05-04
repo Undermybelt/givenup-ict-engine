@@ -3,9 +3,8 @@ use ict_engine::application::entry_models::{
     apply_structural_path_ranking_external_scores_command,
     clear_structural_path_ranking_trainer_artifact_command,
     disable_structural_path_ranking_runtime_command,
-    enable_structural_path_ranking_runtime_command,
-    export_structural_path_ranking_target_command, policy_training_status_command,
-    register_structural_path_ranking_trainer_artifact_command,
+    enable_structural_path_ranking_runtime_command, export_structural_path_ranking_target_command,
+    policy_training_status_command, register_structural_path_ranking_trainer_artifact_command,
 };
 
 pub(crate) fn policy_training_status_shell(
