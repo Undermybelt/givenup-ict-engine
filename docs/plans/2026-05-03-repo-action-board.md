@@ -340,8 +340,10 @@ What this now means in concrete repo behavior:
   - default `workflow-status --phase agent-bootstrap` no longer auto-reuses maintainer-local Tomac roots or cleaned-path commands
   - personal historical path hints now only flow into bootstrap commands/detected paths when the caller explicitly opts into a provider profile
 - `workflow-status` top-level consumer surfaces now summarize existing validation lanes instead of burying them only inside deep structural payloads:
-  - human output includes a compact `Validation: ...` line with source-reliability EM / holdout and delayed-reward replay status
+  - human output includes a compact `Validation: ...` line with source-reliability EM / holdout / replay and delayed-reward replay status
   - agent JSON includes a `structural_validation_summary` block derived from the existing experience-prior validation surfaces
+  - source-reliability EM holdout now explicitly surfaces `split_strategy=chronological_recommended_at`
+  - source-reliability EM replay now explicitly surfaces `split_strategy=expanding_window_recommended_at`
 - `workflow-status` consumer surfaces now also expose a low-token path-ranker runtime summary:
   - human output includes a compact `Ranker: status=... source=...` line when a recommended path is present
   - agent JSON includes `path_ranker_summary`, so consumers can distinguish registered artifact/model/service-backed ranking from baseline-only behavior without traversing the full bundle
@@ -367,6 +369,8 @@ Verification for this lane is no longer just static inspection:
 - `agent_workflow_status_prefers_registered_artifact_scores_when_present`
 - `agent_and_human_workflow_status_views_expose_recommended_path_bundle`
 - `workflow_status_phase_structural_ranker_runtime_summarizes_runtime_source`
+- `test_structural_source_reliability_em_holdout_prefers_chronological_split`
+- `workflow_status_structural_ranker_runtime_phase_is_available`
 
 Priority change after this sweep:
 

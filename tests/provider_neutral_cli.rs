@@ -337,3 +337,26 @@ fn workflow_status_structural_validation_phase_is_available() {
     assert!(value["source_reliability"]["status"].is_string());
     assert!(value.get("recommended_next_step").is_some());
 }
+
+#[test]
+fn workflow_status_structural_ranker_runtime_phase_is_available() {
+    let binary = env!("CARGO_BIN_EXE_ict-engine");
+    let state = TempDir::new().unwrap();
+
+    let output = Command::new(binary)
+        .args([
+            "workflow-status",
+            "--symbol",
+            "DEMO",
+            "--state-dir",
+            state.path().to_str().unwrap(),
+            "--phase",
+            "structural-ranker-runtime",
+        ])
+        .output()
+        .unwrap();
+
+    assert!(output.status.success());
+    let value: Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert!(value.get("recommended_next_step").is_some());
+}
