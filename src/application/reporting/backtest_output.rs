@@ -255,6 +255,19 @@ pub fn build_factor_research_output_payload(
     factor_lifecycle: Value,
     control_matrix_plan: Option<Value>,
 ) -> Value {
+    let report_value = serde_json::to_value(report).unwrap_or(Value::Null);
+    let structural_path_ranking_runtime_summary = report_value
+        .get("workflow_snapshot")
+        .and_then(|value| value.get("policy_training_status"))
+        .and_then(|value| value.get("structural_path_ranking_runtime_summary"))
+        .cloned()
+        .unwrap_or(Value::Null);
+    let structural_path_ranking_validation_summary = report_value
+        .get("workflow_snapshot")
+        .and_then(|value| value.get("policy_training_status"))
+        .and_then(|value| value.get("structural_path_ranking_validation_summary"))
+        .cloned()
+        .unwrap_or(Value::Null);
     let compact_compare_report = build_compact_compare_report(compare.as_ref());
     let human_research_compare_summary = human_research_compare_summary(compare.as_ref());
     let human_output = render_factor_research_human_output(report, compare.as_ref());
@@ -267,6 +280,8 @@ pub fn build_factor_research_output_payload(
         "ensemble": ensemble_surface,
         "factor_lifecycle": factor_lifecycle,
         "control_matrix_plan": control_matrix_plan,
+        "structural_path_ranking_runtime_summary": structural_path_ranking_runtime_summary,
+        "structural_path_ranking_validation_summary": structural_path_ranking_validation_summary,
         "human_output": human_output,
     })
 }
@@ -566,5 +581,57 @@ mod tests {
         assert!(human_output.contains("pb12_run_12_baseline"));
         assert!(human_output.contains("Evidence: top candidates"));
         assert!(human_output.contains("Provider status:"));
+    }
+
+    #[test]
+    fn factor_research_output_payload_surfaces_ranker_status_summaries() {
+        let payload = build_factor_research_output_payload(
+            &serde_json::json!({
+                "report": "factor_research",
+                "workflow_snapshot": {
+                    "policy_training_status": {
+                        "structural_path_ranking_runtime_summary": "Ranker runtime: runtime enabled=true ready=true source=registered_artifact status=enabled_registered_artifact_ready mode=candidate_set_only matches=2",
+                        "structural_path_ranking_validation_summary": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 ready=true"
+                    }
+                }
+            }),
+            Some(crate::application::backtest::BacktestCompareReport {
+                summary: "same_data_same_config".to_string(),
+                shrink_comparison_summary: vec!["coverage_delta=+0.010".to_string()],
+                duration_sizing_delta_surface: vec![
+                    "duration_sizing_direction=scaled_up".to_string()
+                ],
+                improvements: vec![],
+                regressions: vec!["duration_sizing_scale_delta=-0.750".to_string()],
+                recommended_actions: vec!["inspect_duration_constraints".to_string()],
+                oos_quality_delta_surface: vec![],
+            }),
+            serde_json::json!({
+                "reflection": true,
+                "compare_summary": "Research compare: duration_sizing_direction=scaled_up | risk=duration_sizing_scale_delta=-0.750 | next=inspect_duration_constraints"
+            }),
+            None,
+            serde_json::json!({"lifecycle": true}),
+            Some(serde_json::json!({"kind": "pb12"})),
+        );
+
+        assert_eq!(
+            payload["structural_path_ranking_runtime_summary"],
+            serde_json::json!(
+                "Ranker runtime: runtime enabled=true ready=true source=registered_artifact status=enabled_registered_artifact_ready mode=candidate_set_only matches=2"
+            )
+        );
+        assert_eq!(
+            payload["structural_path_ranking_validation_summary"],
+            serde_json::json!(
+                "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 ready=true"
+            )
+        );
+        assert_eq!(
+            payload["human_research_compare_summary"],
+            serde_json::json!(
+                "Research compare: duration_sizing_direction=scaled_up | risk=duration_sizing_scale_delta=-0.750 | next=inspect_duration_constraints"
+            )
+        );
     }
 }
