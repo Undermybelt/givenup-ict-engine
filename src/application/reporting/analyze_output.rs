@@ -806,6 +806,14 @@ where
         .and_then(Value::as_str)
         .map(str::to_string)
         .filter(|value| !value.trim().is_empty());
+    let ranker_runtime_summary = report_value
+        .get("supporting")
+        .and_then(|value| value.get("workflow_snapshot"))
+        .and_then(|value| value.get("policy_training_status"))
+        .and_then(|value| value.get("structural_path_ranking_runtime_summary"))
+        .and_then(Value::as_str)
+        .map(str::to_string)
+        .filter(|value| !value.trim().is_empty());
 
     AnalyzeOutputEnvelope {
         execution_triage: None,
@@ -822,6 +830,9 @@ where
             let mut lines = format_executor_summary_lines(&executor_summaries);
             if let Some(summary) = policy_runtime_summary {
                 lines.push(format!("policy_runtime={summary}"));
+            }
+            if let Some(summary) = ranker_runtime_summary {
+                lines.push(format!("ranker_runtime={summary}"));
             }
             if let Some(summary) = ranker_validation_summary {
                 lines.push(format!("ranker_validation={summary}"));
@@ -1082,6 +1093,7 @@ mod tests {
             "supporting": {
                 "workflow_snapshot": {
                     "policy_training_status": {
+                        "structural_path_ranking_runtime_summary": "Ranker runtime: runtime enabled=false ready=false source=none status=disabled mode=none matches=0",
                         "structural_path_ranking_validation_summary": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 ready=true"
                     }
                 }
@@ -1156,12 +1168,16 @@ mod tests {
             executor_scorecard_source: "persisted".to_string(),
         });
 
-        assert_eq!(output.executor_scorecard_summary.len(), 3);
+        assert_eq!(output.executor_scorecard_summary.len(), 4);
         assert_eq!(output.executor_scorecard_source, "persisted");
         assert!(output
             .executor_scorecard_summary
             .iter()
             .any(|line| line.contains("policy_runtime=")));
+        assert!(output
+            .executor_scorecard_summary
+            .iter()
+            .any(|line| line.contains("ranker_runtime=")));
         assert!(output
             .executor_scorecard_summary
             .iter()
