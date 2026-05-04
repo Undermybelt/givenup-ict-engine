@@ -1133,12 +1133,16 @@ fn workflow_relevant_provider_ids(
 }
 
 fn render_provider_catalog_jsonl(surface: &ProviderCatalogSurface) -> Result<String> {
+    let selected_profile = surface
+        .selected_profile
+        .as_ref()
+        .map(build_agent_selected_profile_surface);
     let mut lines = Vec::new();
     lines.push(serde_json::to_string(&serde_json::json!({
         "type": "summary",
         "summary_line": surface.summary_line,
         "domains": surface.domains,
-        "selected_profile": surface.selected_profile,
+        "selected_profile": selected_profile,
     }))?);
     for provider in &surface.providers {
         lines.push(serde_json::to_string(&serde_json::json!({
@@ -1448,6 +1452,32 @@ mod tests {
         assert!(first.contains("\"type\":\"summary\""));
         let second = lines.next().unwrap_or("");
         assert!(second.contains("\"type\":\"provider\""));
+    }
+
+    #[test]
+    fn jsonl_summary_uses_lightweight_selected_profile_shape() {
+        let mut surface = sample_surface();
+        let profile = load_provider_profile("thrill3r-nq-closed-loop-v1").unwrap();
+        surface.selected_profile = Some(
+            build_selected_profile_surface(
+                &surface,
+                &profile,
+                "repo-example",
+                "thrill3r-nq-closed-loop-v1",
+            )
+            .unwrap(),
+        );
+
+        let jsonl = render_provider_catalog_jsonl(&surface).unwrap();
+        let first = jsonl.lines().next().unwrap_or("");
+        let value: serde_json::Value = serde_json::from_str(first).unwrap();
+        let selected = &value["selected_profile"];
+
+        assert_eq!(selected["profile_id"], "thrill3r_nq_closed_loop_v1");
+        assert!(selected["data_contract_labels"].is_array());
+        assert!(selected["track_statuses"].is_array());
+        assert!(selected.get("data_contracts").is_none());
+        assert!(selected.get("track_details").is_none());
     }
 
     #[test]
