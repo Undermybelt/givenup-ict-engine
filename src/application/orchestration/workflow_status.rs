@@ -243,6 +243,7 @@ pub struct WorkflowEnsembleVoteSurface {
     pub consensus_strength: f64,
     pub disagreement_flags: Vec<String>,
     pub executor_summaries: Vec<String>,
+    pub policy_runtime_line: Option<String>,
     pub split_explanations: Vec<String>,
     pub executor_scorecards: Vec<EnsembleExecutorScorecard>,
     pub executor_scorecard_source: String,
@@ -2402,6 +2403,22 @@ pub fn build_ensemble_vote_surface(
     persisted_scorecards: &[EnsembleExecutorScorecard],
 ) -> WorkflowEnsembleVoteSurface {
     let (scorecards, scorecard_source) = resolved_vote_scorecards(persisted_scorecards, vote);
+    let policy_runtime_line = {
+        let items = vote
+            .executor_summaries
+            .iter()
+            .filter_map(|line| {
+                line.split_whitespace()
+                    .find_map(|part| part.strip_prefix("policy_source="))
+                    .map(str::to_string)
+            })
+            .collect::<Vec<_>>();
+        if items.is_empty() {
+            None
+        } else {
+            Some(format!("Policy runtime: {}", items.join(", ")))
+        }
+    };
     WorkflowEnsembleVoteSurface {
         artifact_id: vote.artifact_id.clone(),
         generated_at: vote.generated_at,
@@ -2419,6 +2436,7 @@ pub fn build_ensemble_vote_surface(
         consensus_strength: vote.consensus_strength,
         disagreement_flags: vote.disagreement_flags.clone(),
         executor_summaries: vote.executor_summaries.clone(),
+        policy_runtime_line,
         split_explanations: vote.split_explanations.clone(),
         executor_scorecards: scorecards,
         executor_scorecard_source: scorecard_source.to_string(),
