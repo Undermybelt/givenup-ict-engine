@@ -266,6 +266,7 @@ pub struct WorkflowEnsembleVoteHistoryRow {
     pub recommended_command: String,
     pub human_next_triage: String,
     pub hard_block: super::EnsembleHardBlockArtifact,
+    pub policy_runtime_line: Option<String>,
     pub executor_scorecards: Vec<EnsembleExecutorScorecard>,
     pub executor_scorecard_source: String,
 }
@@ -3268,6 +3269,7 @@ pub fn build_ensemble_vote_history_view(
                 recommended_command: surface.recommended_command,
                 human_next_triage: surface.human_next_triage,
                 hard_block: surface.hard_block,
+                policy_runtime_line: surface.policy_runtime_line,
                 executor_scorecards: surface.executor_scorecards,
                 executor_scorecard_source: surface.executor_scorecard_source,
             }
@@ -9458,6 +9460,11 @@ mod tests {
         let vote = sample_human_workflow_snapshot()
             .latest_ensemble_vote
             .expect("sample ensemble vote");
+        let mut vote = vote;
+        vote.executor_summaries = vec![
+            "executor=catboost_file action=observe confidence=0.500 policy_source=catboost_file:placeholder".to_string(),
+            "executor=xgboost_file action=observe confidence=0.450 policy_source=xgboost_file:sample_file".to_string(),
+        ];
         let persisted = vec![EnsembleExecutorScorecard {
             executor: "xgboost_file".to_string(),
             latest_weight_hint: Some(0.80),
@@ -9477,6 +9484,10 @@ mod tests {
         );
         assert_eq!(value.hard_block_only[0].artifact_id, vote.artifact_id);
         assert_eq!(value.hard_block_summary.count, 1);
+        assert_eq!(
+            value.history[0].policy_runtime_line.as_deref(),
+            Some("Policy runtime: catboost_file:placeholder, xgboost_file:sample_file")
+        );
     }
 
     #[test]
