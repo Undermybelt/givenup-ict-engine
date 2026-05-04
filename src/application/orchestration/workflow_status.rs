@@ -56,6 +56,7 @@ fn build_structural_validation_summary_value(
             "multi_source_item_count": em.multi_source_item_count,
             "distinct_source_count": em.distinct_source_count,
             "holdout_status": em.em_holdout_status,
+            "holdout_split_strategy": em.em_holdout_split_strategy,
             "holdout_brier_score": em.em_holdout_brier_score,
             "holdout_log_loss": em.em_holdout_log_loss,
             "holdout_training_item_count": em.em_holdout_training_item_count,
@@ -93,6 +94,10 @@ fn build_structural_validation_line(
         return None;
     }
     let holdout_status = em.em_holdout_status.as_deref().unwrap_or("unavailable");
+    let holdout_split_strategy = em
+        .em_holdout_split_strategy
+        .as_deref()
+        .unwrap_or("unavailable");
     let holdout_brier = em
         .em_holdout_brier_score
         .map(|value| format!("{value:.3}"))
@@ -110,9 +115,10 @@ fn build_structural_validation_line(
     });
     let target_policy_context_count = experience_prior_surface.target_policy_contexts.len();
     let mut parts = vec![format!(
-        "Validation: em={} holdout={} holdout_brier={} multi_source_items={} target_policy=bucket_posterior contexts={}",
+        "Validation: em={} holdout={} split={} holdout_brier={} multi_source_items={} target_policy=bucket_posterior contexts={}",
         em.status,
         holdout_status,
+        holdout_split_strategy,
         holdout_brier,
         em.multi_source_item_count,
         target_policy_context_count
@@ -8781,11 +8787,20 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("target_policy=bucket_posterior"));
+        assert!(human_value["structural_validation_line"]
+            .as_str()
+            .unwrap()
+            .contains("split="));
         assert!(agent_value["structural_validation_summary"]["source_reliability"]["status"]
             .as_str()
             .unwrap()
             .len()
             > 3);
+        assert!(
+            agent_value["structural_validation_summary"]["source_reliability"]
+                .get("holdout_split_strategy")
+                .is_some()
+        );
         assert_eq!(
             agent_value["structural_validation_summary"]["target_policy"]["current_model"]
                 .as_str(),

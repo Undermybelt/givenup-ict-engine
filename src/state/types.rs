@@ -718,6 +718,7 @@ pub struct StructuralSourceReliabilityEmCalibrationSummary {
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct StructuralSourceReliabilityEmHoldoutSummary {
     pub status: String,
+    pub split_strategy: String,
     pub training_item_count: usize,
     pub evaluation_item_count: usize,
     pub observation_count: usize,
@@ -6637,6 +6638,7 @@ fn structural_source_reliability_em_holdout_summary(
     if fit_items.len() <= min_training_items {
         return Some(StructuralSourceReliabilityEmHoldoutSummary {
             status: "needs_more_items".to_string(),
+            split_strategy: "chronological_recommended_at".to_string(),
             training_item_count: fit_items.len(),
             evaluation_item_count: 0,
             observation_count: 0,
@@ -6662,6 +6664,7 @@ fn structural_source_reliability_em_holdout_summary(
     if evaluation_items.is_empty() {
         return Some(StructuralSourceReliabilityEmHoldoutSummary {
             status: "needs_more_items".to_string(),
+            split_strategy: "chronological_recommended_at".to_string(),
             training_item_count: training_items.len(),
             evaluation_item_count: 0,
             observation_count: 0,
@@ -6676,6 +6679,7 @@ fn structural_source_reliability_em_holdout_summary(
     if fit.iteration_count == 0 {
         return Some(StructuralSourceReliabilityEmHoldoutSummary {
             status: "needs_multiple_sources".to_string(),
+            split_strategy: "chronological_recommended_at".to_string(),
             training_item_count: training_items.len(),
             evaluation_item_count: evaluation_items.len(),
             observation_count: 0,
@@ -6697,6 +6701,7 @@ fn structural_source_reliability_em_holdout_summary(
     };
     Some(StructuralSourceReliabilityEmHoldoutSummary {
         status: status.to_string(),
+        split_strategy: "chronological_recommended_at".to_string(),
         training_item_count: training_items.len(),
         evaluation_item_count: evaluation_items.len(),
         observation_count,
@@ -8885,6 +8890,7 @@ mod tests {
 
         let summary = structural_source_reliability_em_holdout_summary(&items)
             .expect("chronological holdout summary");
+        assert_eq!(summary.split_strategy, "chronological_recommended_at");
         assert_eq!(summary.training_item_count, 4);
         assert_eq!(summary.evaluation_item_count, 2);
         assert!(matches!(

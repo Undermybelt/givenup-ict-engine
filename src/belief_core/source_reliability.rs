@@ -126,6 +126,7 @@ pub struct StructuralSourceReliabilityEmReadiness {
     pub em_calibration_log_loss: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub em_holdout_status: Option<String>,
+    pub em_holdout_split_strategy: Option<String>,
     #[serde(default)]
     pub em_holdout_training_item_count: usize,
     #[serde(default)]
@@ -493,6 +494,10 @@ pub fn structural_source_reliability_em_readiness(
             .holdout
             .as_ref()
             .map(|holdout| holdout.status.clone()),
+        em_holdout_split_strategy: diagnostics
+            .holdout
+            .as_ref()
+            .map(|holdout| holdout.split_strategy.clone()),
         em_holdout_training_item_count: diagnostics
             .holdout
             .as_ref()
@@ -1306,10 +1311,12 @@ pub fn structural_experience_prior_runtime_metrics(
         counterfactual_reward_prior: structural_prior_counterfactual_reward_prior(prior_stats),
         off_policy_adjusted_prior: structural_prior_off_policy_adjusted_prior(prior_stats),
         behavior_policy_probability: structural_prior_behavior_policy_probability(prior_stats),
-        behavior_policy_probability_variance:
-            structural_prior_behavior_policy_probability_variance(prior_stats),
-        target_policy_probability_confidence:
-            structural_prior_target_policy_probability_confidence(prior_stats),
+        behavior_policy_probability_variance: structural_prior_behavior_policy_probability_variance(
+            prior_stats,
+        ),
+        target_policy_probability_confidence: structural_prior_target_policy_probability_confidence(
+            prior_stats,
+        ),
         target_policy_probability_lower_bound:
             structural_prior_target_policy_probability_lower_bound(prior_stats),
         target_policy_probability_brier_score:
@@ -1321,23 +1328,28 @@ pub fn structural_experience_prior_runtime_metrics(
         snips_effective_sample_size: structural_prior_snips_effective_sample_size(prior_stats),
         snips_reward_prior: structural_prior_snips_reward_prior(prior_stats),
         doubly_robust_reward_prior: structural_prior_doubly_robust_reward_prior(prior_stats),
-        target_policy_calibration_weight:
-            structural_prior_target_policy_calibration_weight(prior_stats),
+        target_policy_calibration_weight: structural_prior_target_policy_calibration_weight(
+            prior_stats,
+        ),
         target_policy_reward_prior: structural_prior_target_policy_reward_prior(prior_stats),
-        target_policy_variance_penalty:
-            structural_prior_target_policy_variance_penalty(prior_stats),
-        target_policy_reward_lower_bound:
-            structural_prior_target_policy_reward_lower_bound(prior_stats),
+        target_policy_variance_penalty: structural_prior_target_policy_variance_penalty(
+            prior_stats,
+        ),
+        target_policy_reward_lower_bound: structural_prior_target_policy_reward_lower_bound(
+            prior_stats,
+        ),
         matured_feedback_count: structural_prior_matured_feedback_count(prior_stats),
         unresolved_feedback_count: structural_prior_unresolved_feedback_count(prior_stats),
         maturity_coverage: structural_prior_maturity_coverage(prior_stats),
         censoring_rate: structural_prior_censoring_rate(prior_stats),
         delayed_reward_resolution_probability:
             structural_prior_delayed_reward_resolution_probability(prior_stats),
-        delayed_reward_censoring_probability:
-            structural_prior_delayed_reward_censoring_probability(prior_stats),
-        censoring_adjusted_reward_prior:
-            structural_prior_censoring_adjusted_reward_prior(prior_stats),
+        delayed_reward_censoring_probability: structural_prior_delayed_reward_censoring_probability(
+            prior_stats,
+        ),
+        censoring_adjusted_reward_prior: structural_prior_censoring_adjusted_reward_prior(
+            prior_stats,
+        ),
         censoring_adjusted_reward_lower_bound:
             structural_prior_censoring_adjusted_reward_lower_bound(prior_stats),
         delayed_reward_success_competing_risk:
@@ -1352,10 +1364,12 @@ pub fn structural_experience_prior_runtime_metrics(
             structural_prior_delayed_reward_competing_risk_entropy(prior_stats),
         delayed_reward_elapsed_feedback_count:
             structural_prior_delayed_reward_elapsed_feedback_count(prior_stats),
-        delayed_reward_elapsed_hours_at_risk:
-            structural_prior_delayed_reward_elapsed_hours_at_risk(prior_stats),
-        delayed_reward_avg_elapsed_hours:
-            structural_prior_delayed_reward_avg_elapsed_hours(prior_stats),
+        delayed_reward_elapsed_hours_at_risk: structural_prior_delayed_reward_elapsed_hours_at_risk(
+            prior_stats,
+        ),
+        delayed_reward_avg_elapsed_hours: structural_prior_delayed_reward_avg_elapsed_hours(
+            prior_stats,
+        ),
         delayed_reward_resolution_hazard_per_hour:
             structural_prior_delayed_reward_resolution_hazard_per_hour(prior_stats),
         delayed_reward_expected_resolution_hours:
