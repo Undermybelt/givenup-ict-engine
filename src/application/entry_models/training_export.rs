@@ -252,8 +252,25 @@ pub struct PolicyTrainingStatusSurface {
     pub update_runs: usize,
     #[serde(rename = "entry_models")]
     pub providers: Vec<PolicyTrainingProviderStatusSurface>,
+    pub structural_path_ranking_runtime: StructuralPathRankingRuntimeSummarySurface,
     pub structural_path_ranking_target: StructuralPathRankingTargetTrainingStatusSurface,
     pub structural_path_ranking_runtime_summary: String,
+    pub summary_line: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankingRuntimeSummarySurface {
+    pub enabled: bool,
+    pub ready: bool,
+    pub status: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reuse_mode: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_kind: Option<String>,
+    #[serde(default)]
+    pub active_match_count: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub model_family: Option<String>,
     pub summary_line: String,
 }
 
@@ -800,15 +817,40 @@ pub fn policy_training_status(
         "{} | {}",
         provider_summary_line, structural_path_ranking_target.summary_line
     );
+    let structural_path_ranking_runtime_summary = format!(
+        "Ranker runtime: {}",
+        structural_path_ranking_target.summary_line
+    );
     Ok(PolicyTrainingStatusSurface {
         symbol: symbol.to_string(),
         analyze_runs: cisd_rb.analyze_runs,
         update_runs: cisd_rb.update_runs,
         providers,
-        structural_path_ranking_runtime_summary: format!(
-            "Ranker runtime: {}",
-            structural_path_ranking_target.summary_line
-        ),
+        structural_path_ranking_runtime: StructuralPathRankingRuntimeSummarySurface {
+            enabled: structural_path_ranking_target.runtime_selection_enabled,
+            ready: structural_path_ranking_target.runtime_selection_ready,
+            status: if structural_path_ranking_target
+                .runtime_selection_status
+                .trim()
+                .is_empty()
+            {
+                "disabled".to_string()
+            } else {
+                structural_path_ranking_target
+                    .runtime_selection_status
+                    .clone()
+            },
+            reuse_mode: structural_path_ranking_target
+                .runtime_selection_mode
+                .clone(),
+            source_kind: structural_path_ranking_target.runtime_source_kind.clone(),
+            active_match_count: structural_path_ranking_target.runtime_active_match_count,
+            model_family: structural_path_ranking_target
+                .trainer_artifact_model_family
+                .clone(),
+            summary_line: structural_path_ranking_runtime_summary.clone(),
+        },
+        structural_path_ranking_runtime_summary,
         structural_path_ranking_target,
         summary_line,
     })
@@ -2607,6 +2649,9 @@ mod tests {
         assert!(provider_ids.contains(&CISD_RB_SETUP_MODEL_ID));
         assert!(provider_ids.contains(&BREAKER_RB_SETUP_MODEL_ID));
         assert!(!status.structural_path_ranking_target.export_ready);
+        assert!(!status.structural_path_ranking_runtime.enabled);
+        assert_eq!(status.structural_path_ranking_runtime.status, "disabled");
+        assert!(status.structural_path_ranking_runtime.source_kind.is_none());
         assert!(status
             .structural_path_ranking_target
             .warnings
@@ -3558,6 +3603,21 @@ mod tests {
         assert_eq!(status.runtime_artifact_match_count, 2);
         let full_status =
             policy_training_status(temp.path().to_str().unwrap(), "NQ", None).unwrap();
+        assert!(full_status.structural_path_ranking_runtime.enabled);
+        assert!(full_status.structural_path_ranking_runtime.ready);
+        assert_eq!(
+            full_status
+                .structural_path_ranking_runtime
+                .source_kind
+                .as_deref(),
+            Some("registered_artifact")
+        );
+        assert_eq!(
+            full_status
+                .structural_path_ranking_runtime
+                .active_match_count,
+            2
+        );
         assert!(full_status
             .structural_path_ranking_runtime_summary
             .contains("runtime_source=registered_artifact"));
