@@ -9477,6 +9477,57 @@ mod tests {
     }
 
     #[test]
+    fn test_run_factor_research_with_mutation_seeds_factor_mutation_prior() {
+        let temp = tempfile::tempdir().unwrap();
+        let data = temp.path().join("candles.json");
+        std::fs::write(
+            &data,
+            serde_json::to_string(&serde_json::json!({
+                "candles": sample_candles(140)
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        let mutation_spec = FactorMutationSpec {
+            mutation_id: "mut-1".to_string(),
+            base_factor: "structure_ict".to_string(),
+            ..FactorMutationSpec::default()
+        };
+
+        let report = run_factor_research(RunFactorResearchInput {
+            symbol: "NQ",
+            data: data.to_str().unwrap(),
+            objective: ResearchObjectiveMode::Generic,
+            data_1m: None,
+            data_5m: None,
+            data_15m: None,
+            data_1h: None,
+            data_4h: None,
+            data_1d: None,
+            paired_data: None,
+            paired_candles_override: None,
+            auxiliary_override: None,
+            runtime_notes: Vec::new(),
+            mutation_spec: Some(&mutation_spec),
+            control_matrix_plan: None,
+            state_dir: temp.path().to_str().unwrap(),
+        })
+        .unwrap();
+
+        let learning_state = load_learning_state(temp.path(), "NQ").unwrap();
+        assert!(report.factor_mutation_evaluation.is_some());
+        assert_eq!(
+            learning_state
+                .structural_prior_state
+                .last_offline_seed_snapshot
+                .as_ref()
+                .map(|snapshot| snapshot.source_label.as_str()),
+            Some("factor_mutation_structural_prior_seed")
+        );
+    }
+
+    #[test]
     fn test_train_command_persists_train_run_and_snapshot() {
         let temp = tempfile::tempdir().unwrap();
         for interval in MULTI_TIMEFRAME_INTERVALS {
