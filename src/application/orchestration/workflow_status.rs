@@ -1809,8 +1809,11 @@ fn build_agent_bootstrap_view_with_candidates(
         .selected_profile_full
         .as_ref()
         .and_then(selected_profile_tomac_clean_root);
+    let profile_tomac_root = profile_tomac_clean_root
+        .as_deref()
+        .and_then(infer_tomac_root_from_clean_root);
     let bootstrap_tomac_root = if provider_status_agent.selected_profile.is_some() {
-        detected_tomac_root
+        detected_tomac_root.or(profile_tomac_root)
     } else {
         None
     };
@@ -2019,6 +2022,16 @@ fn selected_profile_tomac_clean_root(
                 && contract.required
         })
         .and_then(|contract| contract.path_hint.clone())
+}
+
+fn infer_tomac_root_from_clean_root(clean_root: &str) -> Option<String> {
+    let path = std::path::Path::new(clean_root);
+    let leaf = path.file_name()?.to_str()?;
+    if leaf != "ict-cleaned-mtf" {
+        return None;
+    }
+    path.parent()
+        .map(|parent| parent.to_string_lossy().to_string())
 }
 
 #[cfg(test)]
@@ -3390,7 +3403,7 @@ mod tests {
                     label: "Tomac cleaned multi-timeframe futures root".to_string(),
                     symbols: vec!["NQ".to_string()],
                     timeframes: vec!["1d".to_string(), "1h".to_string(), "15m".to_string()],
-                    path_hint: None,
+                    path_hint: Some("/tmp/tomac/ict-cleaned-mtf".to_string()),
                     notes: Vec::new(),
                 },
                 crate::application::provider_catalog::ProviderProfileDataContract {
@@ -4498,6 +4511,35 @@ mod tests {
             view.commands.analyze,
             "ict-engine analyze --symbol <symbol> --data-root <clean-root> --state-dir <state-dir>"
         );
+    }
+
+    #[test]
+    fn agent_bootstrap_profile_can_reuse_profile_path_hint_without_detected_root() {
+        let view = build_agent_bootstrap_view_with_candidates(
+            AgentBootstrapBuildInput {
+                symbol: "NQ",
+                state_dir: "/tmp/state",
+                snapshot: &WorkflowSnapshot::default(),
+                provider_status_agent: &sample_provider_agent_surface_with_profile(),
+                detected_tomac_root: None,
+                multi_timeframe_clean_root: None,
+                tomac_root_placeholder: "<tomac-root>",
+            },
+            Vec::new(),
+        );
+
+        assert_eq!(
+            view.detected_paths.tomac_history_root.as_deref(),
+            Some("/tmp/tomac")
+        );
+        assert_eq!(
+            view.detected_paths.multi_timeframe_clean_root.as_deref(),
+            Some("/tmp/ict-engine-mtf")
+        );
+        assert!(view
+            .commands
+            .clean_multi_timeframe
+            .contains("ict-engine clean-futures --root /tmp/tomac --output-dir /tmp/ict-engine-mtf --multi-timeframe"));
     }
 
     #[test]
