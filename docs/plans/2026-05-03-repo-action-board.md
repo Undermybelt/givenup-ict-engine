@@ -79,6 +79,7 @@ Primary source docs:
 - [x] Workstream 1 now also has `expansion-sop` thin shell dispatch moved into that same bin-side market-data shell, removing one of the last large wrapper-style match arms from `main.rs`.
 - [x] Workstream 1 now also has `analyze-live` / `update` thin shell dispatch moved out of the `main.rs` match-arm body and into their existing bin-side command modules.
 - [x] Workstream 1 now also has the `train` runtime shell moved out of `main.rs` into a focused bin-side module, taking the multi-timeframe HMM training path with it.
+- [x] The opt-in provider-profile hot-plug lane is now materially closed for the current public workflow surfaces: `provider-status`, `provider-status --compact`, `workflow-status --agent|--human`, and agent bootstrap all preserve zero-config default behavior while exposing explicit `--profile` selection, token-friendlier selectors/provenance, direct selected-profile summary fields, and profile-scoped provider guidance only when the caller opts in.
 
 ### Next
 
@@ -116,6 +117,7 @@ Primary source docs:
 - [ ] Add stronger verification lanes for source reliability and delayed reward handling so the repo stops relying only on in-ledger compact calibration summaries.
   - started: source reliability EM diagnostics now expose a holdout-style train/eval summary beside the older same-ledger leave-source-out calibration summary
   - started: delayed reward path experience-prior data now has a chronological replay summary for resolution and 1h/4h/24h horizon validation
+- [ ] Move to the next post-profile lane instead of further polishing profile surfaces: validation hardening and fake-real usage shakedown now have higher value than more provider-profile payload trimming.
 
 ### Not Yet
 
@@ -307,3 +309,43 @@ Scope of this pass:
 2. Finish Workstream 2 immediately after that: make maintained transition refresh, emission-conditioned updates, and changepoint maintenance one clear core, with snapshot-time reweighting reduced to a consumer layer.
 3. Narrow the remaining Workstream 3 gap explicitly: keep the current opt-in structural path-ranker runtime, but make the repo’s downstream runtime behavior clearly distinguish artifact-backed behavior from sample / placeholder behavior and decide whether `policy_engine.rs` is inside this closure slice or not.
 4. Then deepen Workstream 4: upgrade holdout-only validation into replay / out-of-sample validation, and decide whether to stop at compact delayed-reward diagnostics or invest in the fuller competing-risk model the longer plan points to.
+
+## 2026-05-04 Provider-Profile Progress Addendum
+
+Since the earlier code-verification snapshot, the repo landed a full opt-in provider-profile usability sweep as a sequence of checkpoint commits:
+
+- `e56cf73` `feat: preserve opt-in provider profile guidance`
+- `65e8fa9` `feat: surface selected profile workflow contracts`
+- `fa5d454` `feat: summarize opt-in profile compact output`
+- `06d9ee4` `feat: surface profile contracts in bootstrap input`
+- `6d70cc2` `feat: narrow bootstrap profile access prompts`
+- `0b63888` `refactor: slim agent profile payloads`
+- `5361a62` `refactor: shrink jsonl profile payloads`
+- `d87d54d` `refactor: trim agent profile provenance`
+- `d3689cf` `refactor: normalize profile source provenance`
+- `1a2275a` `refactor: dedupe workflow profile payloads`
+
+What this now means in concrete repo behavior:
+
+- zero-config default still does not auto-load personal data or maintainer profile state
+- explicit `--profile` selection now carries through provider guidance instead of being dropped on the next command hint
+- user-facing and agent-facing workflow surfaces expose direct selected-profile summary fields instead of forcing callers to inspect a buried blob
+- compact and JSONL provider views now keep profile payloads lightweight while still exposing the selected data-contract / provider-track summary needed for action selection
+- agent bootstrap live input now carries selected-profile id / summary / contract / track summaries, and its provider-access request list narrows to profile-scoped prompts when a profile is selected
+
+Verification for this lane is no longer just static inspection:
+
+- `CARGO_BUILD_JOBS=1 cargo check --tests`
+- `provider_status_agent_command_is_profile_aware_only_when_opted_in`
+- `agent_surface_selected_profile_omits_heavy_contract_and_track_details`
+- `compact_surface_summarizes_selected_profile_contracts_and_tracks`
+- `jsonl_summary_uses_lightweight_selected_profile_shape`
+- `human_workflow_status_view_keeps_selected_profile_in_provider_command`
+- `agent_workflow_status_view_surfaces_selected_profile_summary_contracts`
+- `agent_bootstrap_live_input_surfaces_selected_profile_contracts`
+- `workflow_status_agent_accepts_opt_in_profile_path`
+
+Priority change after this sweep:
+
+- the provider-profile hot-plug lane is now in a good enough state that further polish there is lower value
+- the next highest-value work should switch back to broader runtime closure or validation hardening rather than more profile payload tuning
