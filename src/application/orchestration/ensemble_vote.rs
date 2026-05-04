@@ -40,6 +40,7 @@ pub struct EnsembleExecutorDecision {
     pub action: String,
     pub confidence: f64,
     pub recommended_command: Option<String>,
+    pub policy_runtime_source: Option<String>,
     pub split_explanations: Vec<String>,
 }
 
@@ -102,8 +103,14 @@ fn fallback_command(symbol: &str, action: &str) -> String {
 
 fn summarize_executor(decision: &EnsembleExecutorDecision) -> String {
     format!(
-        "executor={} action={} confidence={:.3}",
-        decision.executor, decision.action, decision.confidence
+        "executor={} action={} confidence={:.3} policy_source={}",
+        decision.executor,
+        decision.action,
+        decision.confidence,
+        decision
+            .policy_runtime_source
+            .as_deref()
+            .unwrap_or("unknown")
     )
 }
 
@@ -620,6 +627,7 @@ fn load_named_policy_or_placeholder(filename: &str) -> CatBoostCompatiblePolicyE
 
 fn policy_decision_to_executor(
     name: &str,
+    policy_runtime_source: String,
     decision: super::PolicyDecisionArtifact,
 ) -> EnsembleExecutorDecision {
     let confidence = match decision.confidence_band.as_str() {
@@ -632,6 +640,7 @@ fn policy_decision_to_executor(
         action: decision.action,
         confidence,
         recommended_command: Some(decision.recommended_command),
+        policy_runtime_source: Some(policy_runtime_source),
         split_explanations: decision.split_trace,
     }
 }
@@ -800,10 +809,16 @@ pub fn build_stub_ensemble_vote_from_input(
         policy_runtime_source(&xgboost_engine),
     ];
 
-    let mut catboost_like =
-        policy_decision_to_executor("catboost_file", catboost_engine.infer(&features));
-    let mut xgboost_like =
-        policy_decision_to_executor("xgboost_file", xgboost_engine.infer(&features));
+    let mut catboost_like = policy_decision_to_executor(
+        "catboost_file",
+        policy_runtime_sources[0].clone(),
+        catboost_engine.infer(&features),
+    );
+    let mut xgboost_like = policy_decision_to_executor(
+        "xgboost_file",
+        policy_runtime_sources[1].clone(),
+        xgboost_engine.infer(&features),
+    );
 
     if catboost_like.action.eq_ignore_ascii_case("observe") && dominant >= 0.55 {
         catboost_like.action = decide_action(&active_regime, dominant);
@@ -987,6 +1002,10 @@ mod tests {
         assert_eq!(artifact.ensemble_version, "ensemble-audit-v2-weighted");
         assert_eq!(artifact.policy_runtime_sources.len(), 2);
         assert_eq!(artifact.executor_summaries.len(), 2);
+        assert!(artifact
+            .executor_summaries
+            .iter()
+            .all(|line| line.contains("policy_source=")));
         assert!(!artifact.hard_block.active);
     }
 
@@ -1045,6 +1064,10 @@ mod tests {
             .policy_runtime_sources
             .iter()
             .all(|item| item.contains("placeholder") || item.contains("artifact")));
+        assert!(artifact
+            .executor_summaries
+            .iter()
+            .any(|line| line.contains("policy_source=catboost-compatible-placeholder")));
     }
 
     #[test]
