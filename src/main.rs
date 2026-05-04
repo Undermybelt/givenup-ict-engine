@@ -9362,6 +9362,14 @@ mod tests {
         assert!(snapshot.latest_ensemble_vote.is_some());
         assert_eq!(snapshot.current_focus_phase, "research");
         assert!(!learning_state.structural_prior_state.paths.is_empty());
+        assert_eq!(
+            learning_state
+                .structural_prior_state
+                .last_offline_seed_snapshot
+                .as_ref()
+                .map(|snapshot| snapshot.source_label.as_str()),
+            Some("research_run_structural_prior_seed")
+        );
         assert!(snapshot
             .latest_research
             .as_ref()
@@ -9551,6 +9559,14 @@ mod tests {
         assert!(snapshot.latest_backtest.is_some());
         assert_eq!(snapshot.current_focus_phase, "backtest");
         assert!(!learning_state.structural_prior_state.paths.is_empty());
+        assert_eq!(
+            learning_state
+                .structural_prior_state
+                .last_offline_seed_snapshot
+                .as_ref()
+                .map(|snapshot| snapshot.source_label.as_str()),
+            Some("backtest_run_structural_prior_seed")
+        );
     }
 
     #[test]

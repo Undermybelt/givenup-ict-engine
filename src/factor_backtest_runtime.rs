@@ -479,32 +479,28 @@ pub(crate) fn run_factor_backtest(
         None,
     )?;
     report.workflow_snapshot = refresh_workflow_snapshot(state_dir, symbol)?;
-    let backtest_support_hint =
-        crate::analyze_shared::structural_support_hint_for_backtest(
-            crate::analyze_shared::BacktestStructuralSupportInput {
-                baseline_composite_score: report
-                    .scorecards
-                    .first()
-                    .map(|score| score.composite_score),
-                aggregate_return: report.aggregate_return,
-                execution_readiness: backtest_execution_fields.execution_readiness,
-                comparable_to_previous: report.dataset_comparability.comparable,
-                feedback_records_applied: report.feedback_records_applied,
-                conformal_coverage_1sigma: report
-                    .factor_results
-                    .first()
-                    .map(|result| result.metrics.conformal_coverage_1sigma),
-                regime_break_penalty: report
-                    .factor_results
-                    .first()
-                    .map(|result| result.metrics.regime_break_penalty),
-                structural_break_detected: report
-                    .factor_results
-                    .first()
-                    .map(|result| result.metrics.structural_break_detected),
-                quality_delta: first_score_delta,
-            },
-        );
+    let backtest_support_hint = crate::analyze_shared::structural_support_hint_for_backtest(
+        crate::analyze_shared::BacktestStructuralSupportInput {
+            baseline_composite_score: report.scorecards.first().map(|score| score.composite_score),
+            aggregate_return: report.aggregate_return,
+            execution_readiness: backtest_execution_fields.execution_readiness,
+            comparable_to_previous: report.dataset_comparability.comparable,
+            feedback_records_applied: report.feedback_records_applied,
+            conformal_coverage_1sigma: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.conformal_coverage_1sigma),
+            regime_break_penalty: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.regime_break_penalty),
+            structural_break_detected: report
+                .factor_results
+                .first()
+                .map(|result| result.metrics.structural_break_detected),
+            quality_delta: first_score_delta,
+        },
+    );
     let backtest_support_hint = crate::analyze_shared::offline_structural_support_hint(
         crate::analyze_shared::OfflineStructuralSupportHintInput {
             artifact_validation_bias: Some(
