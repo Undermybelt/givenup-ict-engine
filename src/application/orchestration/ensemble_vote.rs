@@ -636,6 +636,18 @@ fn policy_decision_to_executor(
     }
 }
 
+fn policy_runtime_source(engine: &CatBoostCompatiblePolicyEngine) -> String {
+    if engine
+        .artifact_version()
+        .to_ascii_lowercase()
+        .contains("placeholder")
+    {
+        format!("{}:placeholder", engine.engine_name())
+    } else {
+        format!("{}:artifact", engine.engine_name())
+    }
+}
+
 fn load_canonical_executor_scorecards(
     state_dir: &str,
     symbol: &str,
@@ -783,6 +795,10 @@ pub fn build_stub_ensemble_vote_from_input(
 
     let catboost_engine = CatBoostCompatiblePolicyEngine::load_default_or_placeholder();
     let xgboost_engine = load_named_policy_or_placeholder("xgboost_policy.sample.json");
+    let policy_runtime_sources = vec![
+        policy_runtime_source(&catboost_engine),
+        policy_runtime_source(&xgboost_engine),
+    ];
 
     let mut catboost_like =
         policy_decision_to_executor("catboost_file", catboost_engine.infer(&features));
@@ -817,6 +833,7 @@ pub fn build_stub_ensemble_vote_from_input(
 
     EnsembleVoteArtifact {
         ensemble_version: "ensemble-audit-v2-weighted".to_string(),
+        policy_runtime_sources,
         posterior,
         final_action: decision.final_action,
         recommended_command: decision.recommended_command,
@@ -968,6 +985,7 @@ mod tests {
         assert_eq!(artifact.posterior.normalization_status, "normalized");
         assert!(!artifact.final_action.is_empty());
         assert_eq!(artifact.ensemble_version, "ensemble-audit-v2-weighted");
+        assert_eq!(artifact.policy_runtime_sources.len(), 2);
         assert_eq!(artifact.executor_summaries.len(), 2);
         assert!(!artifact.hard_block.active);
     }
@@ -1022,6 +1040,11 @@ mod tests {
             ict_structure: None,
         });
         assert_eq!(artifact.executor_summaries.len(), 2);
+        assert_eq!(artifact.policy_runtime_sources.len(), 2);
+        assert!(artifact
+            .policy_runtime_sources
+            .iter()
+            .all(|item| item.contains("placeholder") || item.contains("artifact")));
     }
 
     #[test]
