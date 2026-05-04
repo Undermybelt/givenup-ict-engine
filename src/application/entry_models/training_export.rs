@@ -868,7 +868,9 @@ pub fn structural_path_ranking_target_training_status(
         return Ok(StructuralPathRankingTargetTrainingStatusSurface {
             summary_path: summary_path.to_string_lossy().to_string(),
             warnings: vec!["structural_path_ranking_target_export_missing".to_string()],
-            summary_line: "structural path ranking target export missing".to_string(),
+            runtime_selection_status: "disabled".to_string(),
+            summary_line:
+                "structural path ranking target export missing runtime_selection=disabled runtime_source=none runtime_matches=0".to_string(),
             ..StructuralPathRankingTargetTrainingStatusSurface::default()
         });
     }
