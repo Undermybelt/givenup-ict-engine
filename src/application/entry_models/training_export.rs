@@ -253,6 +253,7 @@ pub struct PolicyTrainingStatusSurface {
     #[serde(rename = "entry_models")]
     pub providers: Vec<PolicyTrainingProviderStatusSurface>,
     pub structural_path_ranking_target: StructuralPathRankingTargetTrainingStatusSurface,
+    pub structural_path_ranking_runtime_summary: String,
     pub summary_line: String,
 }
 
@@ -804,6 +805,10 @@ pub fn policy_training_status(
         analyze_runs: cisd_rb.analyze_runs,
         update_runs: cisd_rb.update_runs,
         providers,
+        structural_path_ranking_runtime_summary: format!(
+            "Ranker runtime: {}",
+            structural_path_ranking_target.summary_line
+        ),
         structural_path_ranking_target,
         summary_line,
     })
@@ -2607,6 +2612,9 @@ mod tests {
             .warnings
             .contains(&"structural_path_ranking_target_export_missing".to_string()));
         assert!(status
+            .structural_path_ranking_runtime_summary
+            .contains("Ranker runtime:"));
+        assert!(status
             .summary_line
             .contains("structural path ranking target export missing"));
     }
@@ -3548,6 +3556,14 @@ mod tests {
         );
         assert_eq!(status.runtime_active_match_count, 2);
         assert_eq!(status.runtime_artifact_match_count, 2);
+        let full_status =
+            policy_training_status(temp.path().to_str().unwrap(), "NQ", None).unwrap();
+        assert!(full_status
+            .structural_path_ranking_runtime_summary
+            .contains("runtime_source=registered_artifact"));
+        assert!(full_status
+            .structural_path_ranking_runtime_summary
+            .contains("runtime_matches=2"));
         assert!(status
             .summary_line
             .contains("runtime_source=registered_artifact"));
