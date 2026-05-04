@@ -342,6 +342,9 @@ What this now means in concrete repo behavior:
 - `workflow-status` top-level consumer surfaces now summarize existing validation lanes instead of burying them only inside deep structural payloads:
   - human output includes a compact `Validation: ...` line with source-reliability EM / holdout and delayed-reward replay status
   - agent JSON includes a `structural_validation_summary` block derived from the existing experience-prior validation surfaces
+- `workflow-status` consumer surfaces now also expose a low-token path-ranker runtime summary:
+  - human output includes a compact `Ranker: status=... source=...` line when a recommended path is present
+  - agent JSON includes `path_ranker_summary`, so consumers can distinguish registered artifact/model/service-backed ranking from baseline-only behavior without traversing the full bundle
 
 Verification for this lane is no longer just static inspection:
 
@@ -360,6 +363,8 @@ Verification for this lane is no longer just static inspection:
 - `agent_bootstrap_without_profile_does_not_reuse_detected_personal_paths`
 - `bootstrap_output_does_not_auto_reuse_personal_tomac_paths_without_profile`
 - `agent_and_human_workflow_status_views_expose_experience_prior_surface`
+- `agent_workflow_status_prefers_registered_artifact_scores_when_present`
+- `agent_and_human_workflow_status_views_expose_recommended_path_bundle`
 
 Priority change after this sweep:
 

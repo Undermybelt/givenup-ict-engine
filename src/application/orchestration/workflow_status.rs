@@ -111,6 +111,54 @@ fn build_structural_validation_line(
     Some(parts.join(" | "))
 }
 
+fn build_path_ranker_summary_value(
+    recommended_path_bundle: Option<&StructuralRecommendedPathBundleArtifact>,
+) -> Value {
+    let Some(bundle) = recommended_path_bundle else {
+        return Value::Null;
+    };
+    serde_json::json!({
+        "status": bundle.path_ranker_runtime.as_ref().map(|runtime| runtime.status.clone()),
+        "reuse_mode": bundle.path_ranker_runtime.as_ref().and_then(|runtime| runtime.reuse_mode.clone()),
+        "runtime_source": bundle.path_ranker_runtime_source,
+        "raw_path_score": bundle.path_ranker_raw_score,
+        "calibrated_path_prob": bundle.path_ranker_calibrated_path_prob,
+        "path_prob_lower_bound": bundle.path_ranker_path_prob_lower_bound,
+        "execution_gate_status": bundle.path_ranker_execution_gate_status,
+    })
+}
+
+fn build_path_ranker_line(
+    recommended_path_bundle: Option<&StructuralRecommendedPathBundleArtifact>,
+) -> Option<String> {
+    let bundle = recommended_path_bundle?;
+    let status = bundle
+        .path_ranker_runtime
+        .as_ref()
+        .map(|runtime| runtime.status.as_str())
+        .unwrap_or("baseline_only");
+    let source = bundle
+        .path_ranker_runtime_source
+        .as_deref()
+        .unwrap_or("none");
+    let score = bundle
+        .path_ranker_path_prob_lower_bound
+        .map(|value| format!("lb={value:.3}"))
+        .or_else(|| bundle.path_ranker_calibrated_path_prob.map(|value| format!("prob={value:.3}")))
+        .or_else(|| bundle.path_ranker_raw_score.map(|value| format!("raw={value:.3}")))
+        .unwrap_or_else(|| "score=n/a".to_string());
+    Some(format!(
+        "Ranker: status={} source={} {} gate={}",
+        status,
+        source,
+        score,
+        bundle
+            .path_ranker_execution_gate_status
+            .as_deref()
+            .unwrap_or("n/a")
+    ))
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct WorkflowEnsembleVoteSurface {
     pub artifact_id: String,
@@ -1006,6 +1054,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
             bundle.why_this_path
         )
     });
+    let path_ranker_line = build_path_ranker_line(recommended_path_bundle.as_ref());
     let recommended_path_contract =
         workflow_status_recommended_path_contract_value(recommended_path_bundle.as_ref());
     let recommended_next_step = workflow_status_next_step_with_execution_contract(
@@ -1081,6 +1130,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "structural_path_line": structural_path_line,
         "experience_prior_line": experience_prior_line,
         "structural_validation_line": structural_validation_line,
+        "path_ranker_line": path_ranker_line,
         "top_path_candidates_line": top_path_candidates_line,
         "structural_history_line": structural_history_line,
         "phase_summary_line": phase_summary_line,
@@ -1605,6 +1655,7 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "latest_structural_feedback": latest_structural_feedback,
         "experience_prior_surface": experience_prior_surface,
         "structural_validation_summary": structural_validation_summary,
+        "path_ranker_summary": build_path_ranker_summary_value(recommended_path_bundle.as_ref()),
         "top_path_candidates": top_path_candidates.candidates,
         "path_ranking_target": path_ranking_target,
         "available_opt_in_profiles": provider_status_agent.available_opt_in_profiles.clone(),
@@ -1618,7 +1669,7 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         );
         map.insert(
             "recommended_path_bundle".to_string(),
-            serde_json::to_value(recommended_path_bundle).unwrap_or_default(),
+            serde_json::to_value(&recommended_path_bundle).unwrap_or_default(),
         );
         map.insert(
             "recommended_path_contract".to_string(),
@@ -1649,6 +1700,10 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         map.insert(
             "structural_validation_summary".to_string(),
             build_structural_validation_summary_value(&experience_prior_surface),
+        );
+        map.insert(
+            "path_ranker_summary".to_string(),
+            build_path_ranker_summary_value(recommended_path_bundle.as_ref()),
         );
         map.insert(
             "available_opt_in_profiles".to_string(),
@@ -1767,6 +1822,9 @@ pub fn emit_workflow_status_output(
             }
             if let Some(validation) = value.get("structural_validation_line").and_then(Value::as_str) {
                 println!("{}", redact_local_paths_in_human_text(validation));
+            }
+            if let Some(ranker) = value.get("path_ranker_line").and_then(Value::as_str) {
+                println!("{}", redact_local_paths_in_human_text(ranker));
             }
             if let Some(history) = value.get("structural_history_line").and_then(Value::as_str) {
                 println!("{}", redact_local_paths_in_human_text(history));
@@ -8146,6 +8204,14 @@ mod tests {
             agent_value["recommended_path_bundle"]["path_ranker_runtime"]["status"].as_str(),
             Some("using_registered_artifact_scores")
         );
+        assert_eq!(
+            agent_value["path_ranker_summary"]["runtime_source"].as_str(),
+            Some("registered_artifact")
+        );
+        assert_eq!(
+            agent_value["path_ranker_summary"]["status"].as_str(),
+            Some("using_registered_artifact_scores")
+        );
     }
 
     #[test]
@@ -8726,6 +8792,10 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("posterior"));
+        assert!(human_value["path_ranker_line"]
+            .as_str()
+            .unwrap()
+            .contains("Ranker:"));
         assert!(human_value["recommended_path_line"]
             .as_str()
             .unwrap()
