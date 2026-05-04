@@ -671,13 +671,44 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     let selected_profile_data_contracts = provider_status_agent
         .selected_profile
         .as_ref()
-        .map(|profile| profile.data_contract_labels.iter().take(3).cloned().collect::<Vec<_>>())
+        .map(|profile| {
+            profile
+                .data_contract_labels
+                .iter()
+                .take(3)
+                .cloned()
+                .collect::<Vec<_>>()
+        })
         .unwrap_or_default();
     let selected_profile_track_statuses = provider_status_agent
         .selected_profile
         .as_ref()
-        .map(|profile| profile.track_statuses.iter().take(4).cloned().collect::<Vec<_>>())
+        .map(|profile| {
+            profile
+                .track_statuses
+                .iter()
+                .take(4)
+                .cloned()
+                .collect::<Vec<_>>()
+        })
         .unwrap_or_default();
+    let opt_in_profile_line = if provider_status_agent.selected_profile.is_none()
+        && !provider_status_agent.available_opt_in_profiles.is_empty()
+    {
+        let selectors = provider_status_agent
+            .available_opt_in_profiles
+            .iter()
+            .take(2)
+            .map(|profile| profile.selector.clone())
+            .collect::<Vec<_>>()
+            .join(", ");
+        Some(format!(
+            "Profiles: opt-in only. Use --profile <id-or-path> to reuse one of: {}",
+            selectors
+        ))
+    } else {
+        None
+    };
     let human_next_action = if provider_support.active {
         format!(
             "Resolve provider prerequisites for {} before continuing. {}",
@@ -973,6 +1004,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "blocking_line": blocking_line,
         "next_action_line": next_action_line,
         "provider_line": provider_line,
+        "opt_in_profile_line": opt_in_profile_line,
         "structural_feedback_line": structural_feedback_line,
         "structural_path_line": structural_path_line,
         "experience_prior_line": experience_prior_line,
@@ -1378,12 +1410,26 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
     let selected_profile_data_contracts = provider_status_agent
         .selected_profile
         .as_ref()
-        .map(|profile| profile.data_contract_labels.iter().take(3).cloned().collect::<Vec<_>>())
+        .map(|profile| {
+            profile
+                .data_contract_labels
+                .iter()
+                .take(3)
+                .cloned()
+                .collect::<Vec<_>>()
+        })
         .unwrap_or_default();
     let selected_profile_track_statuses = provider_status_agent
         .selected_profile
         .as_ref()
-        .map(|profile| profile.track_statuses.iter().take(4).cloned().collect::<Vec<_>>())
+        .map(|profile| {
+            profile
+                .track_statuses
+                .iter()
+                .take(4)
+                .cloned()
+                .collect::<Vec<_>>()
+        })
         .unwrap_or_default();
     let execution_contract_active = !hard_block_active && !provider_support.active;
     let latest_structural_feedback = snapshot
@@ -1485,6 +1531,7 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "experience_prior_surface": experience_prior_surface,
         "top_path_candidates": top_path_candidates.candidates,
         "path_ranking_target": path_ranking_target,
+        "available_opt_in_profiles": provider_status_agent.available_opt_in_profiles.clone(),
         "structural_history_summary": structural_history_summary,
         "structural_path_summary": structural_path_summary,
     });
@@ -1522,6 +1569,11 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         map.insert(
             "selected_profile_track_statuses".to_string(),
             serde_json::to_value(selected_profile_track_statuses).unwrap_or_default(),
+        );
+        map.insert(
+            "available_opt_in_profiles".to_string(),
+            serde_json::to_value(provider_status_agent.available_opt_in_profiles.clone())
+                .unwrap_or_default(),
         );
         map.insert("recommended_next_step".to_string(), next_step.clone());
     }
@@ -1620,6 +1672,9 @@ pub fn emit_workflow_status_output(
             }
             if let Some(provider) = value.get("provider_line").and_then(Value::as_str) {
                 println!("{}", redact_local_paths_in_human_text(provider));
+            }
+            if let Some(profile) = value.get("opt_in_profile_line").and_then(Value::as_str) {
+                println!("{}", redact_local_paths_in_human_text(profile));
             }
             if let Some(feedback) = value
                 .get("structural_feedback_line")
@@ -1807,12 +1862,26 @@ fn build_agent_bootstrap_view_with_candidates(
     let selected_profile_data_contracts = provider_status_agent
         .selected_profile
         .as_ref()
-        .map(|profile| profile.data_contract_labels.iter().take(3).cloned().collect::<Vec<_>>())
+        .map(|profile| {
+            profile
+                .data_contract_labels
+                .iter()
+                .take(3)
+                .cloned()
+                .collect::<Vec<_>>()
+        })
         .unwrap_or_default();
     let selected_profile_track_statuses = provider_status_agent
         .selected_profile
         .as_ref()
-        .map(|profile| profile.track_statuses.iter().take(4).cloned().collect::<Vec<_>>())
+        .map(|profile| {
+            profile
+                .track_statuses
+                .iter()
+                .take(4)
+                .cloned()
+                .collect::<Vec<_>>()
+        })
         .unwrap_or_default();
     let provider_access_requests = provider_status_agent
         .selected_profile
@@ -3179,6 +3248,7 @@ mod tests {
     use crate::application::orchestration::EnsembleHardBlockArtifact;
     use crate::application::provider_catalog::{
         ProviderCatalogAgentSurface, ProviderCatalogPendingAgentItem,
+        ProviderProfileReferenceSurface,
     };
     use chrono::TimeZone;
     use std::io::{Read, Write};
@@ -3227,6 +3297,13 @@ mod tests {
                 "Ask the user for a TradingViewRemix MCP API key before attempting TradingViewRemix-backed live or options workflows. Search keywords: TradingViewRemix MCP API key.".to_string(),
                 "Ask the user to install IBKR TWS or IB Gateway and enable the local API before attempting IBKR-backed live workflows. Search keywords: Interactive Brokers TWS download, IB Gateway download.".to_string(),
             ],
+            available_opt_in_profiles: vec![ProviderProfileReferenceSurface {
+                profile_id: "thrill3r_nq_closed_loop_v1".to_string(),
+                display_name: "Thrill3r NQ Closed Loop v1".to_string(),
+                selector: "thrill3r-nq-closed-loop-v1".to_string(),
+                opt_in_only: true,
+                summary: "Personal NQ workflow".to_string(),
+            }],
             selected_profile: None,
             selected_profile_full: None,
         }
@@ -4229,6 +4306,10 @@ mod tests {
             .unwrap()
             .iter()
             .any(|item| item.as_str().unwrap().contains("zero-config openbb")));
+        assert_eq!(
+            value["available_opt_in_profiles"][0]["selector"],
+            "thrill3r-nq-closed-loop-v1"
+        );
     }
 
     #[test]
@@ -4269,6 +4350,19 @@ mod tests {
     }
 
     #[test]
+    fn human_workflow_status_view_surfaces_opt_in_profile_hint_when_unselected() {
+        let value = build_human_workflow_status_view(&WorkflowSnapshot::default(), &[]);
+        assert!(value["opt_in_profile_line"]
+            .as_str()
+            .unwrap()
+            .contains("Use --profile <id-or-path>"));
+        assert!(value["opt_in_profile_line"]
+            .as_str()
+            .unwrap()
+            .contains("thrill3r-nq-closed-loop-v1"));
+    }
+
+    #[test]
     fn human_workflow_status_view_keeps_selected_profile_in_provider_command() {
         let snapshot = WorkflowSnapshot {
             symbol: "NQ".to_string(),
@@ -4304,6 +4398,7 @@ mod tests {
                 "ict-engine provider-status --agent --profile thrill3r-nq-closed-loop-v1"
             )
         );
+        assert!(value["opt_in_profile_line"].is_null());
     }
 
     #[test]

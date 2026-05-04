@@ -332,6 +332,10 @@ What this now means in concrete repo behavior:
 - user-facing and agent-facing workflow surfaces expose direct selected-profile summary fields instead of forcing callers to inspect a buried blob
 - compact and JSONL provider views now keep profile payloads lightweight while still exposing the selected data-contract / provider-track summary needed for action selection
 - agent bootstrap live input now carries selected-profile id / summary / contract / track summaries, and its provider-access request list narrows to profile-scoped prompts when a profile is selected
+- default zero-config surfaces now also advertise repo-example opt-in profiles without selecting them:
+  - `provider-status --agent` and JSONL/compact surfaces expose `available_opt_in_profiles`
+  - `workflow-status --human` emits a short `Profiles: opt-in only...` hint when no profile is selected
+  - `workflow-status --agent` mirrors the same lightweight available-profile list for consumer agents that want to offer an explicit reuse choice
 
 Verification for this lane is no longer just static inspection:
 
@@ -341,9 +345,12 @@ Verification for this lane is no longer just static inspection:
 - `compact_surface_summarizes_selected_profile_contracts_and_tracks`
 - `jsonl_summary_uses_lightweight_selected_profile_shape`
 - `human_workflow_status_view_keeps_selected_profile_in_provider_command`
+- `human_workflow_status_view_surfaces_opt_in_profile_hint_when_unselected`
 - `agent_workflow_status_view_surfaces_selected_profile_summary_contracts`
 - `agent_bootstrap_live_input_surfaces_selected_profile_contracts`
+- `provider_status_agent_lists_available_opt_in_profiles_without_selecting_one`
 - `workflow_status_agent_accepts_opt_in_profile_path`
+- `workflow_status_human_surfaces_opt_in_profile_hint_without_selecting_one`
 
 Priority change after this sweep:
 

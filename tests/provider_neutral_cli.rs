@@ -168,6 +168,24 @@ fn provider_status_agent_accepts_opt_in_profile_path() {
 }
 
 #[test]
+fn provider_status_agent_lists_available_opt_in_profiles_without_selecting_one() {
+    let binary = env!("CARGO_BIN_EXE_ict-engine");
+
+    let output = Command::new(binary)
+        .args(["provider-status", "--agent"])
+        .output()
+        .unwrap();
+
+    assert!(output.status.success());
+    let value: Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(
+        value["available_opt_in_profiles"][0]["selector"],
+        "thrill3r-nq-closed-loop-v1"
+    );
+    assert!(value["selected_profile"].is_null());
+}
+
+#[test]
 fn workflow_status_agent_accepts_opt_in_profile_path() {
     let binary = env!("CARGO_BIN_EXE_ict-engine");
     let state = TempDir::new().unwrap();
@@ -190,20 +208,38 @@ fn workflow_status_agent_accepts_opt_in_profile_path() {
 
     assert!(output.status.success());
     let value: Value = serde_json::from_slice(&output.stdout).unwrap();
-    assert_eq!(
-        value["selected_profile_id"],
-        "thrill3r_nq_closed_loop_v1"
-    );
+    assert_eq!(value["selected_profile_id"], "thrill3r_nq_closed_loop_v1");
     assert_eq!(
         value["provider_support"]["profile_id"],
         "thrill3r_nq_closed_loop_v1"
     );
-    assert!(
-        value["selected_profile_track_statuses"]
-            .as_array()
-            .unwrap()
-            .iter()
-            .any(|item| item.as_str().unwrap().contains("live_zero_config"))
-    );
+    assert!(value["selected_profile_track_statuses"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|item| item.as_str().unwrap().contains("live_zero_config")));
     assert!(value["provider_support"]["workflow_support"]["selected_profile"].is_null());
+}
+
+#[test]
+fn workflow_status_human_surfaces_opt_in_profile_hint_without_selecting_one() {
+    let binary = env!("CARGO_BIN_EXE_ict-engine");
+    let state = TempDir::new().unwrap();
+
+    let output = Command::new(binary)
+        .args([
+            "workflow-status",
+            "--symbol",
+            "DEMO",
+            "--state-dir",
+            state.path().to_str().unwrap(),
+            "--human",
+        ])
+        .output()
+        .unwrap();
+
+    assert!(output.status.success());
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    assert!(stdout.contains("Profiles: opt-in only."));
+    assert!(stdout.contains("thrill3r-nq-closed-loop-v1"));
 }

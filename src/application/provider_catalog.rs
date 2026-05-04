@@ -84,6 +84,8 @@ pub struct ProviderCatalogSurface {
     pub providers: Vec<ProviderCatalogItem>,
     pub domains: Vec<ProviderCatalogDomainSummary>,
     pub summary_line: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub available_opt_in_profiles: Vec<ProviderProfileReferenceSurface>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub selected_profile: Option<ProviderProfileSelectionSurface>,
 }
@@ -98,6 +100,8 @@ pub struct ProviderCatalogAgentSurface {
     pub selectable_providers: Vec<String>,
     pub default_enabled_providers: Vec<String>,
     pub install_prompts: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub available_opt_in_profiles: Vec<ProviderProfileReferenceSurface>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub selected_profile: Option<ProviderProfileAgentSelectionSurface>,
     #[serde(skip)]
@@ -111,6 +115,15 @@ pub struct ProviderCatalogPendingAgentItem {
     pub status: String,
     pub reason: String,
     pub install_prompts: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, Eq)]
+pub struct ProviderProfileReferenceSurface {
+    pub profile_id: String,
+    pub display_name: String,
+    pub selector: String,
+    pub opt_in_only: bool,
+    pub summary: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, Eq)]
@@ -265,6 +278,7 @@ pub fn provider_status_surface(
             providers.extend(source.collect_items()?);
         }
     }
+    let available_opt_in_profiles = list_repo_example_profiles()?;
     let selected_profile = if let Some(selector) = profile_selector {
         let (profile, source_path) = load_provider_profile_with_source(selector)?;
         let source = provider_profile_source_kind(&source_path);
@@ -319,6 +333,7 @@ pub fn provider_status_surface(
         providers,
         domains,
         summary_line,
+        available_opt_in_profiles,
         selected_profile,
     })
 }
@@ -850,6 +865,18 @@ fn command_exists(names: &[&str]) -> bool {
 fn render_provider_catalog_compact(surface: &ProviderCatalogSurface) -> String {
     let mut lines = Vec::new();
     lines.push(surface.summary_line.clone());
+    if !surface.available_opt_in_profiles.is_empty() {
+        let profiles = surface
+            .available_opt_in_profiles
+            .iter()
+            .map(|profile| profile.selector.clone())
+            .collect::<Vec<_>>()
+            .join(", ");
+        lines.push(format!(
+            "opt_in_profiles: {} (use --profile <id-or-path> to opt in)",
+            profiles
+        ));
+    }
     if let Some(profile) = surface.selected_profile.as_ref() {
         lines.push(format!(
             "profile: {} pending {}",
@@ -985,6 +1012,7 @@ fn build_provider_catalog_agent_surface(
         selectable_providers,
         default_enabled_providers,
         install_prompts,
+        available_opt_in_profiles: surface.available_opt_in_profiles.clone(),
         selected_profile: surface
             .selected_profile
             .as_ref()
@@ -996,14 +1024,14 @@ fn build_provider_catalog_agent_surface(
 fn build_agent_selected_profile_surface(
     profile: &ProviderProfileSelectionSurface,
 ) -> ProviderProfileAgentSelectionSurface {
-    let source_kind = if profile.source.starts_with("http://") || profile.source.starts_with("https://")
-    {
-        "remote".to_string()
-    } else if profile.source == "repo-example" {
-        "repo-example".to_string()
-    } else {
-        "local_path".to_string()
-    };
+    let source_kind =
+        if profile.source.starts_with("http://") || profile.source.starts_with("https://") {
+            "remote".to_string()
+        } else if profile.source == "repo-example" {
+            "repo-example".to_string()
+        } else {
+            "local_path".to_string()
+        };
     ProviderProfileAgentSelectionSurface {
         profile_id: profile.profile_id.clone(),
         display_name: profile.display_name.clone(),
@@ -1150,6 +1178,7 @@ fn render_provider_catalog_jsonl(surface: &ProviderCatalogSurface) -> Result<Str
         "type": "summary",
         "summary_line": surface.summary_line,
         "domains": surface.domains,
+        "available_opt_in_profiles": surface.available_opt_in_profiles,
         "selected_profile": selected_profile,
     }))?);
     for provider in &surface.providers {
@@ -1240,6 +1269,40 @@ fn resolve_provider_profile_path(selector: &str) -> Result<PathBuf> {
         trimmed,
         REPO_PROVIDER_PROFILE_DIR
     )
+}
+
+fn list_repo_example_profiles() -> Result<Vec<ProviderProfileReferenceSurface>> {
+    let repo_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(REPO_PROVIDER_PROFILE_DIR);
+    if !repo_root.exists() {
+        return Ok(Vec::new());
+    }
+
+    let mut profiles = Vec::new();
+    for entry in fs::read_dir(&repo_root)? {
+        let entry = entry?;
+        let path = entry.path();
+        if path.extension().and_then(|ext| ext.to_str()) != Some("json") {
+            continue;
+        }
+        let raw = fs::read_to_string(&path)?;
+        let profile: ProviderProfileDocument = serde_json::from_str(&raw)?;
+        if profile.schema_version != PROVIDER_PROFILE_SCHEMA_VERSION
+            || !profile.opt_in_only
+            || profile.profile_id.trim().is_empty()
+        {
+            continue;
+        }
+        let selector = provider_profile_command_selector(&path);
+        profiles.push(ProviderProfileReferenceSurface {
+            profile_id: profile.profile_id,
+            display_name: profile.display_name,
+            selector,
+            opt_in_only: profile.opt_in_only,
+            summary: profile.summary,
+        });
+    }
+    profiles.sort_by(|a, b| a.selector.cmp(&b.selector));
+    Ok(profiles)
 }
 
 fn build_selected_profile_surface_from_items(
@@ -1397,6 +1460,13 @@ mod tests {
                 provider_ids: vec!["yfinance".to_string(), "ibkr".to_string()],
             }],
             summary_line: "market_data:1/2 ready".to_string(),
+            available_opt_in_profiles: vec![ProviderProfileReferenceSurface {
+                profile_id: "thrill3r_nq_closed_loop_v1".to_string(),
+                display_name: "Thrill3r NQ Closed Loop v1".to_string(),
+                selector: "thrill3r-nq-closed-loop-v1".to_string(),
+                opt_in_only: true,
+                summary: "Personal NQ workflow".to_string(),
+            }],
             selected_profile: None,
         }
     }
@@ -1414,6 +1484,11 @@ mod tests {
             .pending_providers
             .iter()
             .any(|item| item.contains("ibkr@market_data")));
+        assert_eq!(agent.available_opt_in_profiles.len(), 1);
+        assert_eq!(
+            agent.available_opt_in_profiles[0].selector,
+            "thrill3r-nq-closed-loop-v1"
+        );
     }
 
     #[test]
@@ -1468,6 +1543,13 @@ mod tests {
     }
 
     #[test]
+    fn compact_surface_lists_available_opt_in_profiles() {
+        let compact = render_provider_catalog_compact(&sample_surface());
+        assert!(compact.contains("opt_in_profiles: thrill3r-nq-closed-loop-v1"));
+        assert!(compact.contains("use --profile <id-or-path> to opt in"));
+    }
+
+    #[test]
     fn jsonl_surface_starts_with_summary_record() {
         let jsonl = render_provider_catalog_jsonl(&sample_surface()).unwrap();
         let mut lines = jsonl.lines();
@@ -1494,6 +1576,10 @@ mod tests {
         let jsonl = render_provider_catalog_jsonl(&surface).unwrap();
         let first = jsonl.lines().next().unwrap_or("");
         let value: serde_json::Value = serde_json::from_str(first).unwrap();
+        assert_eq!(
+            value["available_opt_in_profiles"][0]["selector"],
+            "thrill3r-nq-closed-loop-v1"
+        );
         let selected = &value["selected_profile"];
 
         assert_eq!(selected["profile_id"], "thrill3r_nq_closed_loop_v1");
@@ -1553,6 +1639,7 @@ mod tests {
                 selectable_providers: vec!["openalice".to_string(), "nofx".to_string()],
                 default_enabled_providers: vec!["openbb".to_string()],
                 install_prompts: vec![],
+                available_opt_in_profiles: Vec::new(),
                 selected_profile: None,
                 selected_profile_full: None,
             },
@@ -1598,6 +1685,7 @@ mod tests {
                 selectable_providers: vec!["tradingview_mcp".to_string()],
                 default_enabled_providers: vec!["yfinance".to_string()],
                 install_prompts: vec!["ask for key".to_string()],
+                available_opt_in_profiles: Vec::new(),
                 selected_profile: None,
                 selected_profile_full: None,
             },
