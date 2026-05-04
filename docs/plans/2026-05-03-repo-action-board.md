@@ -345,6 +345,7 @@ What this now means in concrete repo behavior:
 - `workflow-status` consumer surfaces now also expose a low-token path-ranker runtime summary:
   - human output includes a compact `Ranker: status=... source=...` line when a recommended path is present
   - agent JSON includes `path_ranker_summary`, so consumers can distinguish registered artifact/model/service-backed ranking from baseline-only behavior without traversing the full bundle
+  - `workflow-status --phase structural-ranker-runtime` now exposes that same runtime/source summary directly for machine callers that only want ranker readiness/provenance
 
 Verification for this lane is no longer just static inspection:
 
@@ -365,6 +366,7 @@ Verification for this lane is no longer just static inspection:
 - `agent_and_human_workflow_status_views_expose_experience_prior_surface`
 - `agent_workflow_status_prefers_registered_artifact_scores_when_present`
 - `agent_and_human_workflow_status_views_expose_recommended_path_bundle`
+- `workflow_status_phase_structural_ranker_runtime_summarizes_runtime_source`
 
 Priority change after this sweep:
 
