@@ -339,6 +339,9 @@ What this now means in concrete repo behavior:
 - fake-real bootstrap shakedown closed a remaining contract leak:
   - default `workflow-status --phase agent-bootstrap` no longer auto-reuses maintainer-local Tomac roots or cleaned-path commands
   - personal historical path hints now only flow into bootstrap commands/detected paths when the caller explicitly opts into a provider profile
+- `workflow-status` top-level consumer surfaces now summarize existing validation lanes instead of burying them only inside deep structural payloads:
+  - human output includes a compact `Validation: ...` line with source-reliability EM / holdout and delayed-reward replay status
+  - agent JSON includes a `structural_validation_summary` block derived from the existing experience-prior validation surfaces
 
 Verification for this lane is no longer just static inspection:
 
@@ -356,6 +359,7 @@ Verification for this lane is no longer just static inspection:
 - `workflow_status_human_surfaces_opt_in_profile_hint_without_selecting_one`
 - `agent_bootstrap_without_profile_does_not_reuse_detected_personal_paths`
 - `bootstrap_output_does_not_auto_reuse_personal_tomac_paths_without_profile`
+- `agent_and_human_workflow_status_views_expose_experience_prior_surface`
 
 Priority change after this sweep:
 

@@ -40,6 +40,74 @@ use crate::state::{
     RunProvenance, StructuralPriorLearningState, WorkflowSnapshot,
 };
 
+fn build_structural_validation_summary_value(
+    experience_prior_surface: &crate::belief_core::source_reliability::StructuralExperiencePriorSurfaceArtifact,
+) -> Value {
+    let em = &experience_prior_surface.source_reliability_em;
+    let replay = experience_prior_surface
+        .path
+        .as_ref()
+        .and_then(|path| path.delayed_reward_replay_validation.as_ref());
+    serde_json::json!({
+        "source_reliability": {
+            "status": em.status,
+            "ready": em.ready,
+            "multi_source_item_count": em.multi_source_item_count,
+            "distinct_source_count": em.distinct_source_count,
+            "holdout_status": em.em_holdout_status,
+            "holdout_brier_score": em.em_holdout_brier_score,
+            "holdout_log_loss": em.em_holdout_log_loss,
+            "holdout_training_item_count": em.em_holdout_training_item_count,
+            "holdout_evaluation_item_count": em.em_holdout_evaluation_item_count,
+        },
+        "delayed_reward": replay.map(|replay| {
+            serde_json::json!({
+                "status": replay.status,
+                "training_record_count": replay.training_record_count,
+                "evaluation_record_count": replay.evaluation_record_count,
+                "resolution_brier_score": replay.resolution_brier_score,
+                "resolution_1h_brier_score": replay.resolution_1h_brier_score,
+                "resolution_4h_brier_score": replay.resolution_4h_brier_score,
+                "resolution_24h_brier_score": replay.resolution_24h_brier_score,
+            })
+        }),
+    })
+}
+
+fn build_structural_validation_line(
+    experience_prior_surface: &crate::belief_core::source_reliability::StructuralExperiencePriorSurfaceArtifact,
+) -> Option<String> {
+    let em = &experience_prior_surface.source_reliability_em;
+    let holdout_status = em.em_holdout_status.as_deref().unwrap_or("unavailable");
+    let holdout_brier = em
+        .em_holdout_brier_score
+        .map(|value| format!("{value:.3}"))
+        .unwrap_or_else(|| "n/a".to_string());
+    let replay = experience_prior_surface
+        .path
+        .as_ref()
+        .and_then(|path| path.delayed_reward_replay_validation.as_ref());
+    let replay_summary = replay.map(|replay| {
+        format!(
+            "replay={} overall_brier={} eval={}",
+            replay.status,
+            replay
+                .resolution_brier_score
+                .map(|value| format!("{value:.3}"))
+                .unwrap_or_else(|| "n/a".to_string()),
+            replay.evaluation_record_count
+        )
+    });
+    let mut parts = vec![format!(
+        "Validation: em={} holdout={} holdout_brier={} multi_source_items={}",
+        em.status, holdout_status, holdout_brier, em.multi_source_item_count
+    )];
+    if let Some(replay_summary) = replay_summary {
+        parts.push(replay_summary);
+    }
+    Some(parts.join(" | "))
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct WorkflowEnsembleVoteSurface {
     pub artifact_id: String,
@@ -829,6 +897,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
                 .round()) as usize
         )
     });
+    let structural_validation_line = build_structural_validation_line(&experience_prior_surface);
     let structural_temporal_line = Some(format!(
         "Temporal: {}",
         structural_temporal_summary.summary_line
@@ -1008,6 +1077,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "structural_feedback_line": structural_feedback_line,
         "structural_path_line": structural_path_line,
         "experience_prior_line": experience_prior_line,
+        "structural_validation_line": structural_validation_line,
         "top_path_candidates_line": top_path_candidates_line,
         "structural_history_line": structural_history_line,
         "phase_summary_line": phase_summary_line,
@@ -1460,6 +1530,8 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         provider_status_agent,
         structural_prior_state,
     );
+    let structural_validation_summary =
+        build_structural_validation_summary_value(&experience_prior_surface);
     let runtime_context = StructuralPathRankerRuntimeContext { state_dir };
     let top_path_candidates =
         build_structural_top_path_candidates_artifact_with_runtime_context_and_prior_state(
@@ -1529,6 +1601,7 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "provider_support": provider_support,
         "latest_structural_feedback": latest_structural_feedback,
         "experience_prior_surface": experience_prior_surface,
+        "structural_validation_summary": structural_validation_summary,
         "top_path_candidates": top_path_candidates.candidates,
         "path_ranking_target": path_ranking_target,
         "available_opt_in_profiles": provider_status_agent.available_opt_in_profiles.clone(),
@@ -1569,6 +1642,10 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         map.insert(
             "selected_profile_track_statuses".to_string(),
             serde_json::to_value(selected_profile_track_statuses).unwrap_or_default(),
+        );
+        map.insert(
+            "structural_validation_summary".to_string(),
+            build_structural_validation_summary_value(&experience_prior_surface),
         );
         map.insert(
             "available_opt_in_profiles".to_string(),
@@ -1684,6 +1761,9 @@ pub fn emit_workflow_status_output(
             }
             if let Some(path) = value.get("structural_path_line").and_then(Value::as_str) {
                 println!("{}", redact_local_paths_in_human_text(path));
+            }
+            if let Some(validation) = value.get("structural_validation_line").and_then(Value::as_str) {
+                println!("{}", redact_local_paths_in_human_text(validation));
             }
             if let Some(history) = value.get("structural_history_line").and_then(Value::as_str) {
                 println!("{}", redact_local_paths_in_human_text(history));
@@ -8432,6 +8512,19 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("path_prior="));
+        assert!(human_value["structural_validation_line"]
+            .as_str()
+            .unwrap()
+            .contains("Validation: em="));
+        assert!(agent_value["structural_validation_summary"]["source_reliability"]["status"]
+            .as_str()
+            .unwrap()
+            .len()
+            > 3);
+        assert!(agent_value["structural_validation_summary"]["delayed_reward"]["resolution_brier_score"]
+            .is_number()
+            || agent_value["structural_validation_summary"]["delayed_reward"]["resolution_brier_score"]
+                .is_null());
     }
 
     #[test]
