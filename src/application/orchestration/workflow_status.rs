@@ -61,6 +61,13 @@ fn build_structural_validation_summary_value(
             "holdout_log_loss": em.em_holdout_log_loss,
             "holdout_training_item_count": em.em_holdout_training_item_count,
             "holdout_evaluation_item_count": em.em_holdout_evaluation_item_count,
+            "replay_status": em.em_replay_status,
+            "replay_split_strategy": em.em_replay_split_strategy,
+            "replay_evaluation_item_count": em.em_replay_evaluation_item_count,
+            "replay_observation_count": em.em_replay_observation_count,
+            "replay_source_count": em.em_replay_source_count,
+            "replay_brier_score": em.em_replay_brier_score,
+            "replay_log_loss": em.em_replay_log_loss,
         },
         "delayed_reward": replay.map(|replay| {
             serde_json::json!({
@@ -102,6 +109,11 @@ fn build_structural_validation_line(
         .em_holdout_brier_score
         .map(|value| format!("{value:.3}"))
         .unwrap_or_else(|| "n/a".to_string());
+    let replay_status = em.em_replay_status.as_deref().unwrap_or("unavailable");
+    let replay_brier = em
+        .em_replay_brier_score
+        .map(|value| format!("{value:.3}"))
+        .unwrap_or_else(|| "n/a".to_string());
     let replay_summary = replay.map(|replay| {
         format!(
             "replay={} overall_brier={} eval={}",
@@ -115,11 +127,13 @@ fn build_structural_validation_line(
     });
     let target_policy_context_count = experience_prior_surface.target_policy_contexts.len();
     let mut parts = vec![format!(
-        "Validation: em={} holdout={} split={} holdout_brier={} multi_source_items={} target_policy=bucket_posterior contexts={}",
+        "Validation: em={} holdout={} split={} holdout_brier={} replay={} replay_brier={} multi_source_items={} target_policy=bucket_posterior contexts={}",
         em.status,
         holdout_status,
         holdout_split_strategy,
         holdout_brier,
+        replay_status,
+        replay_brier,
         em.multi_source_item_count,
         target_policy_context_count
     )];
@@ -8791,6 +8805,10 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("split="));
+        assert!(human_value["structural_validation_line"]
+            .as_str()
+            .unwrap()
+            .contains("replay="));
         assert!(agent_value["structural_validation_summary"]["source_reliability"]["status"]
             .as_str()
             .unwrap()
@@ -8799,6 +8817,11 @@ mod tests {
         assert!(
             agent_value["structural_validation_summary"]["source_reliability"]
                 .get("holdout_split_strategy")
+                .is_some()
+        );
+        assert!(
+            agent_value["structural_validation_summary"]["source_reliability"]
+                .get("replay_split_strategy")
                 .is_some()
         );
         assert_eq!(

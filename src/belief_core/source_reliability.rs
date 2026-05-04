@@ -143,6 +143,20 @@ pub struct StructuralSourceReliabilityEmReadiness {
     pub em_holdout_brier_score: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub em_holdout_log_loss: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub em_replay_status: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub em_replay_split_strategy: Option<String>,
+    #[serde(default)]
+    pub em_replay_evaluation_item_count: usize,
+    #[serde(default)]
+    pub em_replay_observation_count: usize,
+    #[serde(default)]
+    pub em_replay_source_count: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub em_replay_brier_score: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub em_replay_log_loss: Option<f64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -536,6 +550,37 @@ pub fn structural_source_reliability_em_readiness(
             .holdout
             .as_ref()
             .and_then(|holdout| holdout.log_loss),
+        em_replay_status: diagnostics
+            .replay
+            .as_ref()
+            .map(|replay| replay.status.clone()),
+        em_replay_split_strategy: diagnostics
+            .replay
+            .as_ref()
+            .map(|replay| replay.split_strategy.clone()),
+        em_replay_evaluation_item_count: diagnostics
+            .replay
+            .as_ref()
+            .map(|replay| replay.evaluation_item_count)
+            .unwrap_or_default(),
+        em_replay_observation_count: diagnostics
+            .replay
+            .as_ref()
+            .map(|replay| replay.observation_count)
+            .unwrap_or_default(),
+        em_replay_source_count: diagnostics
+            .replay
+            .as_ref()
+            .map(|replay| replay.source_count)
+            .unwrap_or_default(),
+        em_replay_brier_score: diagnostics
+            .replay
+            .as_ref()
+            .and_then(|replay| replay.brier_score),
+        em_replay_log_loss: diagnostics
+            .replay
+            .as_ref()
+            .and_then(|replay| replay.log_loss),
     }
 }
 
