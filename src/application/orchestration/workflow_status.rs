@@ -74,6 +74,9 @@ fn build_structural_validation_summary_value(
                 "status": replay.status,
                 "training_record_count": replay.training_record_count,
                 "evaluation_record_count": replay.evaluation_record_count,
+                "latest_training_recommended_at": replay.latest_training_recommended_at,
+                "first_evaluation_recommended_at": replay.first_evaluation_recommended_at,
+                "last_evaluation_recommended_at": replay.last_evaluation_recommended_at,
                 "resolution_observation_count": replay.resolution_observation_count,
                 "resolution_1h_observation_count": replay.resolution_1h_observation_count,
                 "resolution_4h_observation_count": replay.resolution_4h_observation_count,
@@ -120,13 +123,25 @@ fn build_structural_validation_line(
         .unwrap_or_else(|| "n/a".to_string());
     let replay_summary = replay.map(|replay| {
         format!(
-            "replay={} overall_brier={} eval={} obs={} obs_1h={} obs_4h={} obs_24h={}",
+            "replay={} overall_brier={} eval={} train_until={} eval_range={}..{} obs={} obs_1h={} obs_4h={} obs_24h={}",
             replay.status,
             replay
                 .resolution_brier_score
                 .map(|value| format!("{value:.3}"))
                 .unwrap_or_else(|| "n/a".to_string()),
             replay.evaluation_record_count,
+            replay
+                .latest_training_recommended_at
+                .as_deref()
+                .unwrap_or("n/a"),
+            replay
+                .first_evaluation_recommended_at
+                .as_deref()
+                .unwrap_or("n/a"),
+            replay
+                .last_evaluation_recommended_at
+                .as_deref()
+                .unwrap_or("n/a"),
             replay.resolution_observation_count,
             replay.resolution_1h_observation_count,
             replay.resolution_4h_observation_count,
@@ -6956,6 +6971,9 @@ mod tests {
             .get("resolution_brier_score")
             .is_some());
         assert!(value["delayed_reward"]
+            .get("latest_training_recommended_at")
+            .is_some());
+        assert!(value["delayed_reward"]
             .get("resolution_observation_count")
             .is_some());
         assert!(value["delayed_reward"]
@@ -8903,6 +8921,10 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("replay="));
+        assert!(human_value["structural_validation_line"]
+            .as_str()
+            .unwrap()
+            .contains("train_until="));
         assert!(human_value["structural_validation_line"]
             .as_str()
             .unwrap()

@@ -54,6 +54,12 @@ pub struct StructuralDelayedRewardReplayValidationSurface {
     pub status: String,
     pub training_record_count: usize,
     pub evaluation_record_count: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub latest_training_recommended_at: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub first_evaluation_recommended_at: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_evaluation_recommended_at: Option<String>,
     pub resolution_observation_count: usize,
     pub resolution_1h_observation_count: usize,
     pub resolution_4h_observation_count: usize,
@@ -626,10 +632,10 @@ pub fn structural_delayed_reward_replay_validation(
                 .num_seconds()
                 .max(0) as f64
                 / 3600.0;
-            Some((*record, elapsed_hours))
+            Some((*record, elapsed_hours, recommended_at))
         })
         .collect::<Vec<_>>();
-    followed_records.sort_by_key(|(record, _)| record.timestamp);
+    followed_records.sort_by_key(|(record, _, _)| record.timestamp);
     if followed_records.is_empty() {
         return None;
     }
@@ -640,6 +646,11 @@ pub fn structural_delayed_reward_replay_validation(
             status: "needs_more_history".to_string(),
             training_record_count: followed_records.len(),
             evaluation_record_count: 0,
+            latest_training_recommended_at: followed_records
+                .last()
+                .map(|(_, _, recommended_at)| recommended_at.to_rfc3339()),
+            first_evaluation_recommended_at: None,
+            last_evaluation_recommended_at: None,
             resolution_observation_count: 0,
             resolution_1h_observation_count: 0,
             resolution_4h_observation_count: 0,
@@ -668,7 +679,7 @@ pub fn structural_delayed_reward_replay_validation(
     let mut horizon_4h = HorizonStats::default();
     let mut horizon_24h = HorizonStats::default();
 
-    for (record, elapsed_hours) in training {
+    for (record, elapsed_hours, _) in training {
         let matured = !structural_feedback_outcome_is_unresolved(&record.realized_outcome);
         if matured {
             matured_train += 1;
@@ -707,7 +718,7 @@ pub fn structural_delayed_reward_replay_validation(
     let mut resolution_24h_brier = 0.0;
     let mut resolution_24h_count = 0usize;
 
-    for (record, elapsed_hours) in evaluation {
+    for (record, elapsed_hours, _) in evaluation {
         let matured = !structural_feedback_outcome_is_unresolved(&record.realized_outcome);
         let actual_resolution = if matured { 1.0 } else { 0.0 };
         resolution_brier += (predicted_resolution - actual_resolution).powi(2);
@@ -757,6 +768,15 @@ pub fn structural_delayed_reward_replay_validation(
         status: status.to_string(),
         training_record_count: training.len(),
         evaluation_record_count: evaluation.len(),
+        latest_training_recommended_at: training
+            .last()
+            .map(|(_, _, recommended_at)| recommended_at.to_rfc3339()),
+        first_evaluation_recommended_at: evaluation
+            .first()
+            .map(|(_, _, recommended_at)| recommended_at.to_rfc3339()),
+        last_evaluation_recommended_at: evaluation
+            .last()
+            .map(|(_, _, recommended_at)| recommended_at.to_rfc3339()),
         resolution_observation_count: resolution_count,
         resolution_1h_observation_count: resolution_1h_count,
         resolution_4h_observation_count: resolution_4h_count,
@@ -1571,6 +1591,18 @@ mod tests {
         );
         assert_eq!(summary.training_record_count, 3);
         assert_eq!(summary.evaluation_record_count, 2);
+        assert_eq!(
+            summary.latest_training_recommended_at.as_deref(),
+            Some("2026-04-30T03:00:00+00:00")
+        );
+        assert_eq!(
+            summary.first_evaluation_recommended_at.as_deref(),
+            Some("2026-04-30T02:00:00+00:00")
+        );
+        assert_eq!(
+            summary.last_evaluation_recommended_at.as_deref(),
+            Some("2026-04-30T04:00:00+00:00")
+        );
         assert_eq!(summary.resolution_observation_count, 2);
         assert_eq!(summary.resolution_1h_observation_count, 2);
         assert_eq!(summary.resolution_4h_observation_count, 2);
