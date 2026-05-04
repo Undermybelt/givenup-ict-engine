@@ -88,6 +88,23 @@ fn copy_directory_tree(source: &Path, target: &Path) -> Result<()> {
     Ok(())
 }
 
+fn attach_policy_training_summaries(
+    mut payload: serde_json::Value,
+    surface: &crate::application::entry_models::PolicyTrainingStatusSurface,
+) -> serde_json::Value {
+    if let Some(object) = payload.as_object_mut() {
+        object.insert(
+            "structural_path_ranking_runtime_summary".to_string(),
+            serde_json::json!(surface.structural_path_ranking_runtime_summary),
+        );
+        object.insert(
+            "structural_path_ranking_validation_summary".to_string(),
+            serde_json::json!(surface.structural_path_ranking_validation_summary),
+        );
+    }
+    payload
+}
+
 fn clone_symbol_state(source_root: &Path, symbol: &str, target_root: &Path) -> Result<()> {
     copy_directory_tree(&source_root.join(symbol), &target_root.join(symbol))
 }
@@ -390,6 +407,9 @@ where
         ensemble_surface,
         &suggested_update_command,
     );
+    let policy_training_status =
+        crate::application::entry_models::policy_training_status(state_dir, symbol, None)?;
+    let payload = attach_policy_training_summaries(payload, &policy_training_status);
     crate::application::reporting::emit_structured_output_payload(
         output_format,
         &payload,
@@ -566,6 +586,9 @@ where
                 .map(serde_json::to_value)
                 .transpose()?,
         );
+        let policy_training_status =
+            crate::application::entry_models::policy_training_status(state_dir, symbol, None)?;
+        let payload = attach_policy_training_summaries(payload, &policy_training_status);
         crate::application::reporting::emit_structured_output_payload(
             output_format,
             &payload,
@@ -714,6 +737,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::application::entry_models::PolicyTrainingStatusSurface;
     use crate::factor_lab::research::ResearchReport;
     use crate::state::{ArtifactLedgerEntry, ARTIFACT_LEDGER_FILE};
     use crate::types::Candle;
@@ -741,6 +765,37 @@ mod tests {
             base = close;
         }
         candles
+    }
+
+    #[test]
+    fn attach_policy_training_summaries_inserts_top_level_ranker_fields() {
+        let payload = serde_json::json!({
+            "report": {"kind": "factor_research"}
+        });
+        let surface = PolicyTrainingStatusSurface {
+            structural_path_ranking_runtime_summary:
+                "Ranker runtime: runtime enabled=true ready=true source=registered_artifact status=enabled_registered_artifact_ready mode=candidate_set_only matches=2"
+                    .to_string(),
+            structural_path_ranking_validation_summary:
+                "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 ready=true"
+                    .to_string(),
+            ..PolicyTrainingStatusSurface::default()
+        };
+
+        let payload = attach_policy_training_summaries(payload, &surface);
+
+        assert_eq!(
+            payload["structural_path_ranking_runtime_summary"],
+            serde_json::json!(
+                "Ranker runtime: runtime enabled=true ready=true source=registered_artifact status=enabled_registered_artifact_ready mode=candidate_set_only matches=2"
+            )
+        );
+        assert_eq!(
+            payload["structural_path_ranking_validation_summary"],
+            serde_json::json!(
+                "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 ready=true"
+            )
+        );
     }
 
     #[test]
