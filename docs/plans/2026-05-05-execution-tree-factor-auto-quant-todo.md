@@ -586,6 +586,39 @@ For cross-market families, add:
 - Family A is no longer blocked by the absence of a caller-choosable additive external path for user-specific non-crypto candle data.
 - The remaining work for this family is now iterative quality / coverage improvement on top of the new public surface, not surface absence.
 
+### 2026-05-06 Slice 4: Family A imported-run re-check
+
+**Execution**
+- imported the synthetic-profile strategy library into `ict-engine`:
+  - `./target/debug/ict-engine auto-quant-results-import --symbol NQ --state-dir /tmp/ict-engine-family-a-profile --library /tmp/ict-engine-family-a-profile/.deps/auto-quant/strategy_library.json --log /tmp/ict-engine-family-a-profile/.deps/auto-quant/run_tomac.log`
+- applied the imported library as a BBN prior-init:
+  - `./target/debug/ict-engine auto-quant-prior-init --symbol NQ --state-dir /tmp/ict-engine-family-a-profile`
+- re-checked the same trimmed NQ multi-timeframe baseline:
+  - `./target/debug/ict-engine analyze --symbol NQ --data-htf /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-1d.2023plus.json --data-mtf /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-1h.2023plus.json --data-ltf /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-15m.2023plus.json --state-dir /tmp/ict-engine-family-a-profile --human`
+  - `./target/debug/ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-family-a-profile --human`
+
+**Result**
+- prior-init apply succeeded with:
+  - `n_ok=3`
+  - `n_meta_invalid=0`
+  - `matched=3`
+  - `prior_init_artifact_id=auto_quant_prior_init_NQ_20260505T173430.030500000Z`
+- analyze outcome after import/prior-init remained:
+  - `Bull bias`
+  - `entry=medium`
+  - `gate=pass_neutralized`
+  - `quality=0.424`
+  - `Action: TUNE structure_ict`
+- `workflow-status --human` now correctly reflects the latest analyze state rather than the old handoff:
+  - `analyze | action_blocked`
+  - blocker: `user_selected_historical_data_missing`
+  - next research candidate remains the trimmed 15m path
+
+**Outcome**
+- Family A surface is resolved and end-to-end importable.
+- The first post-import re-check did not materially improve execution-tree quality yet.
+- Therefore Family A should remain the active quality-iteration lane rather than being treated as “finished”.
+
 ## Current Todo Board
 
 ### Done
@@ -599,10 +632,11 @@ For cross-market families, add:
 - [x] Run Family A through the current public Auto-Quant surface and record its stop reason.
 - [x] Expose a dedicated public auxiliary/options research input for Family G.
 - [x] Expose an opt-in additive external runner profile for Family A and obtain the first real importable after-run artifact.
+- [x] Re-check execution tree after the first real Family A imported run.
 
 ### Next
 
-- [ ] Re-check execution tree after the first real Family A imported run. If the blocker is still setup quality, keep iterating Family A; otherwise move on.
+- [ ] Because the first imported Family A re-check still says `TUNE structure_ict`, keep iterating Family A quality on the new public surface until execution-tree development actually moves.
 - [ ] Use the new Family G auxiliary/options surface to run the first real `options_hedging` / dealer-positioning research slice rather than only proving the input contract.
 - [ ] Run Family B: Directionality / Persistence only after Family A is stable.
 - [ ] Run Family C: Cross-Market Confirmation once paired data exists.
@@ -623,6 +657,9 @@ For cross-market families, add:
 - [ ] Family G Options / Dealer Positioning data quality for the chosen market slice
   - blocker: the new public input surface exists, but caller-supplied options / dealer-positioning evidence still needs to be gathered market-by-market and timeframe-by-timeframe before Family G quality can be judged
   - acceptable temporary state: keep the new surface active, then treat actual data coverage / quality as the next gating issue rather than CLI absence
+- [ ] Multi-timeframe coverage beyond the currently proven slices
+  - blocker: the new Family A synthetic profile is currently proven on `1h/4h/1d`; the broader target ladder `1m`, `5m`, `15m`, `1w`, `1M` still needs profile-aware data preparation and iteration evidence
+  - acceptable temporary state: keep logging which timeframes are proven, which are unsupported, and which still need additive data preparation
 
 ## Verification Checklist
 

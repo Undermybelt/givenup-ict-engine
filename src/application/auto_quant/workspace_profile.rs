@@ -289,13 +289,22 @@ fn write_strategy_with_meta(
             .and_then(|value| value.to_str())
             .unwrap_or("SyntheticProfileStrategy");
         let base_factor = camel_to_snake(strategy);
-        let hypothesis = extract_doc_field(&source, "Hypothesis")
-            .unwrap_or_else(|| format!("{strategy} hypothesis under synthetic_ohlcv profile."));
-        let paradigm =
-            extract_doc_field(&source, "Paradigm").unwrap_or_else(|| "other".to_string());
-        let parent = extract_doc_field(&source, "Parent").unwrap_or_else(|| "root".to_string());
-        let status = extract_doc_field(&source, "Status").unwrap_or_else(|| "active".to_string());
-        let created = extract_doc_field(&source, "Created").unwrap_or_default();
+        let hypothesis = sanitize_auto_quant_meta_value(
+            &extract_doc_field(&source, "Hypothesis")
+                .unwrap_or_else(|| format!("{strategy} hypothesis under synthetic_ohlcv profile.")),
+        );
+        let paradigm = sanitize_auto_quant_meta_value(
+            &extract_doc_field(&source, "Paradigm").unwrap_or_else(|| "other".to_string()),
+        );
+        let parent = sanitize_auto_quant_meta_value(
+            &extract_doc_field(&source, "Parent").unwrap_or_else(|| "root".to_string()),
+        );
+        let status = sanitize_auto_quant_meta_value(
+            &extract_doc_field(&source, "Status").unwrap_or_else(|| "active".to_string()),
+        );
+        let created = sanitize_auto_quant_meta_value(
+            &extract_doc_field(&source, "Created").unwrap_or_default(),
+        );
         let expected_regime =
             if source.contains("@informative(\"1d\")") || source.contains("@informative(\"4h\")") {
                 "multi_timeframe_intraday_resonance"
@@ -339,4 +348,14 @@ fn camel_to_snake(raw: &str) -> String {
         out.push(ch.to_ascii_lowercase());
     }
     out
+}
+
+fn sanitize_auto_quant_meta_value(raw: &str) -> String {
+    raw.replace("<=", " at_or_below ")
+        .replace(">=", " at_or_above ")
+        .replace('<', " below ")
+        .replace('>', " above ")
+        .split_whitespace()
+        .collect::<Vec<_>>()
+        .join(" ")
 }
