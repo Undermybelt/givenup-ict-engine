@@ -5,7 +5,7 @@
 
 **Goal:** drive Auto-Quant factor iteration from the execution tree’s actual decision needs rather than from the current in-repo factor registry, and keep iterating until every factor family is either exhausted, blocked by missing data/surface, or externalized as a future implementation need.
 
-**Architecture:** treat `ict-engine` as the execution-tree judge and Auto-Quant as the factor author / mutator. The execution tree defines what capabilities are missing or weak; Auto-Quant supplies or mutates factor families to improve those capabilities. Current in-repo factors may be used as temporary bootstrap seeds, but they are not the design boundary.
+**Architecture:** treat `ict-engine` as the execution-tree judge and Auto-Quant as the factor author / mutator. The execution tree defines what capabilities are missing or weak; Auto-Quant supplies or mutates factor families to improve those capabilities. Current in-repo factors may be used as temporary bootstrap seeds, but they are not the design boundary, and the agent must retain freedom to hardcode or synthesize factor families inside the Auto-Quant research workspace without requiring repo code changes first.
 
 **Tech Stack:** `./target/debug/ict-engine analyze`, `factor-research --backend auto-quant`, `factor-autoresearch --backend auto-quant`, `factor-autoresearch-status`, `workflow-status --human`, `artifact-status`, `auto-quant-status`, isolated `/tmp/...` state dirs.
 
@@ -26,6 +26,14 @@
 
 ### Fact
 
+- This todo is guidance-only. It should constrain loop shape and verification, but it should not overconstrain the agent’s factor design space once the execution-tree need is clear.
+- The reverse chain is not `execution tree -> factor` directly. The actual chain is:
+  - execution tree branch / gate / bias
+  - execution artifact + execution features
+  - CatBoost / XGBoost policy surfaces and prediction vote score
+  - Bayesian belief / BBN nodes and evidence-quality path
+  - temporal / HMM / regime filter layer
+  - factor families and Auto-Quant iteration
 - The execution tree branches on:
   - `execution_readiness`
   - `prediction_vote_score`
@@ -47,6 +55,7 @@
 
 - The correct factor backlog is defined by the execution tree’s missing capabilities, not by whichever factors the current Rust registry already happens to expose.
 - Auto-Quant should iterate factor families lane-by-lane, not treat the whole factor universe as one giant undifferentiated search.
+- Once a capability gap is identified, the agent may express it as a temporary hardcoded factor family or strategy hypothesis inside Auto-Quant, even if no equivalent factor exists yet in the Rust registry.
 
 ### Unknown
 
@@ -54,6 +63,19 @@
 - Which lanes will plateau because the missing ingredient is data/surface, not factor logic.
 
 ## Execution-Tree Reverse Map
+
+Before mapping to factor families, preserve this reasoning order:
+
+1. identify the execution-tree failure mode
+2. identify which execution feature or physics overlay is weak
+3. identify whether the weakness actually comes from:
+   - prediction vote layer
+   - belief / BBN evidence layer
+   - HMM / regime filter layer
+   - factor family itself
+4. only then decide which factor family Auto-Quant should mutate or invent
+
+Do not jump from branch name straight to factor family if an upstream layer is the real bottleneck.
 
 ### Branch 1: `block_crowded`
 
