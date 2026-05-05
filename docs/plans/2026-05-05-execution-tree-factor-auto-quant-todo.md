@@ -1189,6 +1189,57 @@ For cross-market families, add:
   - the Family A blocker is no longer surface, profile, or timeframe availability
   - it is strategy quality relative to what `structure_ict` still needs
 
+### 2026-05-06 Slice 20: Family A NQ displacement-quality fork
+
+**Execution**
+- forked another `NQ` 1h structure variant from the strongest current candidate:
+  - `TomacNQ_KillzoneBreakoutDisplacement`
+- this fork kept the same broad thesis but tightened:
+  - reclaim quality at the prior 24h high
+  - breakout candle body strength
+  - close location strength inside the breakout candle
+- reran the same `NQ` 1h synthetic-profile closure:
+  - `auto-quant-prepare`
+  - `run_tomac.py`
+  - `export_strategy_library.py`
+  - `auto-quant-results-import`
+
+**Result**
+- round 4 import closure succeeded:
+  - `n_ok=7`
+  - `n_meta_invalid=0`
+  - `matched=7`
+  - `library_artifact_id=auto_quant_strategy_library_NQ_20260505T191042.368235000Z`
+- new strategy metrics:
+  - `TomacNQ_KillzoneBreakoutDisplacement`
+    - `sharpe=0.8634`
+    - `profit=8.73%`
+    - `trade_count=18`
+    - `win_rate=83.3333%`
+    - `profit_factor=8.1291`
+- comparison with prior best:
+  - `TomacNQ_KillzoneBreakout`
+    - `sharpe=0.668`
+    - `profit=11.29%`
+    - `trade_count=19`
+    - `win_rate=89.4737%`
+    - `profit_factor=4.3778`
+- focused prior-init on the new displacement fork:
+  - `./target/debug/ict-engine auto-quant-prior-init --symbol NQ --state-dir /tmp/ict-engine-family-a-profile-displacement-check --force --strategies TomacNQ_KillzoneBreakoutDisplacement`
+  - result:
+    - `final_probs=[0.8407833372781065, 0.0000006171378479070786, 0.15921604558404556]`
+- post-apply re-check:
+  - `quality=0.424`
+  - `gate=pass_neutralized`
+  - `Action: TUNE structure_ict`
+
+**Outcome**
+- `TomacNQ_KillzoneBreakoutDisplacement` is now the strongest **backtest** candidate on the `NQ` 1h Family A lane.
+- but even this stronger structure-quality fork still does not move the execution-tree decision surface.
+- so the current leading interpretation is:
+  - Auto-Quant has produced better trade candidates
+  - yet the missing execution-tree ingredient is still upstream of raw backtest quality, or depends on evidence dimensions not yet covered by these forks
+
 ### 2026-05-06 Slice 10: Family G real-data acquisition attempts
 
 **Execution**
@@ -1240,6 +1291,7 @@ For cross-market families, add:
 - [x] Prove at least one real `5m` synthetic-profile execution slice end-to-end on `NQ`.
 - [x] Prove real `15m` and `1m` synthetic-profile execution slices end-to-end on `NQ`.
 - [x] Verify on isolated re-check states that the current `1dRegime` and `5m` NQ forks still do not move execution-tree `quality` or `gate_status`.
+- [x] Produce a stronger `NQ` 1h structure-quality fork (`TomacNQ_KillzoneBreakoutDisplacement`) and verify that it still does not move execution-tree `quality` or `gate_status`.
 
 ### Next
 
@@ -1250,6 +1302,7 @@ For cross-market families, add:
 - [ ] Decide whether to keep expanding `5m` Family A on `NQ`, or treat the current `5m` proof as sufficient and focus back on the stronger `1h` structure candidate.
 - [ ] Decide whether `15m` and `1m` need more Family A forks, or whether current evidence is already enough to deprioritize them behind the stronger `1h` and `5m` NQ lanes.
 - [ ] Stop spending cycles on `1dRegime`, `15m`, or `1m` NQ forks unless a new hypothesis explains why they should move `quality` rather than just produce a positive backtest.
+- [ ] Decide whether `TomacNQ_KillzoneBreakoutDisplacement` should replace `TomacNQ_KillzoneBreakout` as the default `NQ` Family A candidate for future no-code loops, or whether the extra displacement filter is only a backtest improvement without execution-tree value.
 - [ ] Use a reachable provider path or existing captured auxiliary evidence to run the first real Family G `options_hedging` / dealer-positioning research slice rather than only proving the input contract.
 - [ ] Run Family B: Directionality / Persistence only after Family A is stable.
 - [ ] Run Family C: Cross-Market Confirmation once paired data exists.
