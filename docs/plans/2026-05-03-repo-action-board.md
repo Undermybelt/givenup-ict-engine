@@ -19,6 +19,43 @@
 - Keep the repo low-pollution and low-debt. Prefer extraction and deletion of duplicate logic over adding one more wrapper layer.
 - Do not spend the current closure slice on surface proliferation when owner closure or verification hardening is still open.
 
+## New Trial Constraints
+
+This board now absorbs one concrete contributor trial result:
+
+- A layered Bayesian network is still a valid direction, but the first useful version should stay simple:
+  - layer 1: price / volume
+  - layer 2: technical indicators
+  - layer 3: PDA sequence
+  - layer 4: related-stock relative consistency
+- A small-zigzag + tiny-leg pipeline can still be useful, but only as retrospective segmentation and regime summarization.
+- Do **not** let zigzag / delayed pivot confirmation become the only live regime judge.
+- The runtime path must separate:
+  - confirmed retrospective structure
+  - current live regime evidence
+- If a regime method depends only on confirmed pivots, it is too delayed to be the sole runtime truth.
+
+## What To Keep vs Reject From This Trial
+
+Keep:
+
+- hardcoded first-pass layer probabilities are acceptable if they stay inspectable and replaceable later
+- six-period / multi-period evidence comparison is useful
+- tiny-leg features are useful for retrospective clustering:
+  - leg slope
+  - path efficiency
+  - leg length
+  - leg time
+  - max drawdown within leg
+- `16 -> 6` clustering/merge can be a research path for retrospective regime discovery
+
+Reject:
+
+- zigzag alone as runtime regime truth
+- pivot confirmation alone as current-state evidence
+- any pipeline that turns delayed structural confirmation directly into the only regime trigger
+- any design that hides layer-by-layer probability contribution from the operator or agent
+
 ## Agent Contract
 
 1. Read this file and the two source docs before changing code.
@@ -36,8 +73,57 @@
 
 - If no narrower instruction is given, start with `Workstream 1` and pick the first unchecked item.
 - Default first slice: move remaining delayed-reward aggregate / hazard / censoring / competing-risk owner logic out of `src/state/types.rs` into `src/belief_core/source_reliability.rs`.
+- If the user explicitly brings new regime-trial input like layered BBN / zigzag / leg clustering / related-stock consistency, run the one-shot checklist below before resuming lower-level owner extraction.
 - Do not start in `Workstream 3` unless `Workstream 1`, `Workstream 2`, and `Workstream 4` are no longer the real blocker.
 - Before editing, read the exact owner files and function anchors below. Do not guess the entry points.
+
+### One-Shot Checklist For This Trial Input
+
+1. Freeze the role of zigzag.
+   - zigzag may cut historical legs and stabilize past pivots
+   - zigzag may not be the only live regime input
+2. Add or refine a layered evidence packet with exactly four interpretable evidence families:
+   - price / volume
+   - technical indicators
+   - PDA sequence
+   - related-stock relative consistency
+3. Make each layer emit an explicit probability or score contribution.
+   - first version may be hardcoded
+   - contributions must be recorded layer by layer
+4. Support multi-period evaluation explicitly.
+   - treat six periods as a valid first-pass scaffold
+   - do not bury the period dimension in one blended scalar
+5. Put tiny-leg clustering on the research side first.
+   - tiny zigzag
+   - 5 leg factors
+   - `16` raw clusters
+   - merge to `6` higher-level regimes
+   - output is retrospective regime evidence, not sole runtime truth
+6. Add a live now-cast regime branch alongside retrospective leg confirmation.
+   - runtime belief must have a current-state input not dependent only on delayed pivot confirmation
+7. Verify a negative rule:
+   - no runtime path may determine regime from zigzag-confirmed pivots alone
+
+### Related Code And Docs For This Trial Input
+
+- `src/analyze_human_output.rs`
+  - already exposes a layered human-facing decomposition close to this trial's structure
+- `src/domain/regime/hybrid.rs`
+  - current hybrid regime packet and PDA-cluster interaction
+- `src/pda_sequence/`
+  - existing PDA sequence analysis surfaces
+- `src/hmm/`
+  - current temporal regime inference primitives
+- `src/belief_core/`
+  - current Bayesian / structural belief core
+- `docs/regime-aware`
+  - existing regime-aware clustering notes
+- `docs/experiments/oracle-regime-probe.md`
+  - research-only guardrails for retrospective label discovery
+- `docs/plans/nlp-inspired-pda-sequence-clustering-plan.md`
+  - DTW / sequence-aware PDA clustering direction
+- `docs/hybrid-regime-clustering-integration-note.md`
+  - current hybrid cluster + HMM integration notes
 
 ### Default First Slice: Open These First
 
@@ -152,6 +238,29 @@ rg -n 'rebuild_structural_sequence_priors|refresh_node_transition_posteriors|bra
 - [ ] Keep validation summaries low-token, but always expose panel size, coverage, split boundary, and failure reason.
 - [ ] Strengthen delayed-reward validation beyond current horizon-only diagnostics. If full event-time competing-risk is not landed in the slice, leave a clearer intermediate owner and explicit remaining gap here.
 - [ ] Keep the target-policy upgrade path explicit. Do not silently entrench the current `symbol:regime:direction` bucket-posterior model as the final state.
+- [ ] Add an explicit validation rule that retrospective zigzag / tiny-leg / cluster outputs are not sufficient by themselves for live regime truth.
+
+### Workstream 5: Trial-Driven Layered Regime Intake
+
+**Objective:** convert the contributor trial into repo-compatible constraints and a simple first-pass execution path.
+
+**Done when:** the repo has a clear dual-track design where retrospective tiny-leg regime evidence and live current-state evidence both exist, and the layered BBN path is inspectable layer by layer.
+
+- [ ] Add a typed layered evidence path for:
+  - price / volume
+  - technical indicators
+  - PDA sequence
+  - related-stock relative consistency
+- [ ] Keep the first version simple and inspectable: hardcoded per-layer probabilities are acceptable if recorded explicitly.
+- [ ] Model six-period evidence as an explicit dimension rather than collapsing it immediately.
+- [ ] Add a research-only tiny-leg regime discovery lane:
+  - small zigzag
+  - 5 leg factors
+  - `16` raw clusters
+  - merge to `6` higher-level regimes
+- [ ] Keep that tiny-leg regime discovery lane out of sole runtime truth until a live now-cast branch exists.
+- [ ] Add or refine a live current-state regime branch that is not delayed purely by pivot confirmation.
+- [ ] Expose layer-by-layer probability contribution to human and agent surfaces instead of only a final blended scalar.
 
 **Read first when working this lane:**
 
