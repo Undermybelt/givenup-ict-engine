@@ -1,4 +1,5 @@
 use super::*;
+use ict_engine::application::regime::HMM_STATE_FILE;
 
 pub(crate) fn train_command(
     symbol: &str,

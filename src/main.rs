@@ -203,7 +203,7 @@ use ict_engine::factor_lab::{
     FactorLab,
 };
 use ict_engine::factors::{FactorRegistry, WeightUpdater};
-use ict_engine::hmm::{init_hmm_params, state_name, BaumWelch, ForwardBackward, Viterbi};
+use ict_engine::hmm::{state_name, BaumWelch, ForwardBackward, Viterbi};
 use ict_engine::ict::{
     check_bear_expansion_exists, check_bull_expansion_exists, count_recent_breaks,
     count_recent_sweeps, detect_cisd, detect_liquidity_pools, detect_liquidity_sweep,
@@ -279,7 +279,7 @@ use ict_engine::state::{
     append_trade_history, append_train_run, append_update_run, load_artifact_ledger,
     load_ensemble_executor_scorecards, load_ensemble_vote_history,
     load_execution_candidate_history, load_learning_state, load_pending_update_artifact,
-    load_pending_update_history, load_pre_bayes_policy_history, load_state, load_state_or_default,
+    load_pending_update_history, load_pre_bayes_policy_history, load_state_or_default,
     mark_artifact_consumed, migrate_ensemble_executor_scorecards, recommended_next_command_meta,
     save_ensemble_executor_scorecards, save_ensemble_vote_artifact,
     save_execution_candidate_artifact, save_learning_state, save_pending_update_artifact,
@@ -334,7 +334,6 @@ impl OutputFormat {
 use std::collections::{BTreeMap, HashMap};
 use std::env;
 
-const HMM_STATE_FILE: &str = "hmm_params.json";
 type AnalyzeReport = ict_engine::analyze_report_shell::AnalyzeReport;
 type AnalyzeMeta = ict_engine::analyze_report_shell::AnalyzeMeta;
 type AnalyzeSupporting = ict_engine::analyze_report_shell::AnalyzeSupporting;
@@ -4749,31 +4748,9 @@ fn select_state_name(distribution: &[f64], node: &ict_engine::bbn::Node) -> Resu
 }
 
 fn load_or_init_hmm_params(symbol: &str, state_dir: &str) -> HMMParams {
-    if !state_exists(state_dir, symbol, HMM_STATE_FILE) {
-        return init_hmm_params(OBS_DIM);
-    }
-
-    match load_state::<HMMParams, _>(state_dir, symbol, HMM_STATE_FILE) {
-        Ok(params) if hmm_params_compatible(&params) => params,
-        Ok(_) => init_hmm_params(OBS_DIM),
-        Err(err) => {
-            eprintln!(
-                "warning: failed to load HMM state for '{}' from '{}': {}",
-                symbol, state_dir, err
-            );
-            init_hmm_params(OBS_DIM)
-        }
-    }
-}
-
-fn hmm_params_compatible(params: &HMMParams) -> bool {
-    params.n_states == 3
-        && params.transition.len() == params.n_states
-        && params.initial_probs.len() == params.n_states
-        && params.emission_means.len() == params.n_states
-        && params.emission_stds.len() == params.n_states
-        && params.emission_means.iter().all(|row| row.len() == OBS_DIM)
-        && params.emission_stds.iter().all(|row| row.len() == OBS_DIM)
+    ict_engine::application::regime::load_or_init_hmm_params_with_numeric_artifact(
+        symbol, state_dir, OBS_DIM,
+    )
 }
 
 fn regime_probs_from_log_gamma(log_gamma: Option<&Vec<f64>>) -> Result<RegimeProbs> {

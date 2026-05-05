@@ -120,15 +120,44 @@ These judgments are already made for this workstream. Do not reopen them unless 
       - `./target/debug/ict-engine enable-structural-path-ranking-runtime --symbol DEMO --state-dir /tmp/ict-engine-path-ranker`
       - `./target/debug/ict-engine policy-training-status --symbol DEMO --state-dir /tmp/ict-engine-path-ranker --human`
       - `./target/debug/ict-engine workflow-status --symbol DEMO --state-dir /tmp/ict-engine-path-ranker --agent`
+- [x] Execute `Workstream 2 / Slice 1`: define the HMM numeric trainer artifact schema and integrate artifact loading/fallback into the existing MECE recovery / regime persistence lane.
+  - landed `hmm_numeric_trainer_artifact.json` schema in `src/application/regime/persistence.rs`
+  - required fields now include:
+    - `parameter_vector`
+    - `parameter_names`
+    - `bounds`
+    - `objective_breakdown`
+    - `seed`
+    - `split_id`
+    - `best_iteration`
+    - `source_data_hash`
+    - `state_count`
+  - current supported numeric knobs for runtime consume:
+    - `transition_smoothing`
+    - `emission_std_floor`
+    - `posterior_temperature` accepted in schema and ignored safely by current HMM runtime until a later runtime consumer needs it
+  - the canonical HMM loader now lives in `src/application/regime/persistence.rs`:
+    - if a valid HMM numeric artifact exists, runtime uses it
+    - if the artifact is absent or invalid, runtime falls back safely to existing `hmm_params.json`
+    - if neither exists, runtime falls back to default `init_hmm_params(...)`
+  - `main.rs` now delegates HMM artifact loading to the regime persistence lane instead of owning the fallback logic itself
+  - verification:
+    - `cargo check`
+    - `cargo test --lib compute_rollout_segments_splits_and_measures -- --nocapture`
+    - `cargo test --lib promotes_at_or_above_threshold -- --nocapture`
+    - `cargo test --lib blocks_below_threshold -- --nocapture`
+    - `cargo test --lib combined_gate_blocks_on_any_subgate_failure -- --nocapture`
+    - `cargo test --lib load_or_init_hmm_params_with_numeric_artifact_prefers_artifact_when_valid -- --nocapture`
+    - `cargo test --lib load_or_init_hmm_params_with_numeric_artifact_falls_back_to_saved_state_when_artifact_invalid -- --nocapture`
 
 ### Next
 
-- [ ] Execute `Workstream 2 / Slice 1`: define the HMM numeric trainer artifact schema and integrate artifact loading/fallback into the existing MECE recovery / regime persistence lane.
-- [ ] Before opening `Workstream 2`, audit whether `Workstream 1` still needs one small follow-up for explicit artifact calibration/mature-row data quality or whether the remaining gaps are intentionally deferred to better labels/history.
+- [ ] Execute `Workstream 2 / Slice 2`: add the first bounded HMM numeric outer-loop trainer harness.
+- [ ] Decide whether `posterior_temperature` and any gate thresholds should remain schema-only for now or gain a first runtime consumer in the next HMM slice.
+- [ ] Before opening `Workstream 3`, audit whether `Workstream 1` still needs one small follow-up for explicit artifact calibration/mature-row data quality or whether the remaining gaps are intentionally deferred to better labels/history.
 
 ### Not Yet
 
-- [ ] Execute `Workstream 2 / Slice 2`: add the first bounded HMM numeric outer-loop trainer harness.
 - [ ] Execute `Workstream 3 / Slice 1`: add a BBN structure-learning export contract and candidate artifact schema.
 - [ ] Execute `Workstream 3 / Slice 2`: add constrained BBN candidate import/review wiring without turning runtime into an online learner.
 
@@ -279,8 +308,8 @@ cargo test --lib export_structural_path_ranking_target_from_state_dir_uses_persi
 
 ### Slice 1: Artifact Schema And Fallback Wiring
 
-- [ ] Define `hmm_numeric_trainer_artifact.json`.
-- [ ] Required fields:
+- [x] Define `hmm_numeric_trainer_artifact.json`.
+- [x] Required fields:
   - `parameter_vector`
   - `parameter_names`
   - `bounds`
@@ -290,13 +319,13 @@ cargo test --lib export_structural_path_ranking_target_from_state_dir_uses_persi
   - `best_iteration`
   - `source_data_hash`
   - `state_count`
-- [ ] Restrict the first supported parameter set to low-dimensional numeric knobs only:
+- [x] Restrict the first supported parameter set to low-dimensional numeric knobs only:
   - `transition_smoothing`
   - `emission_std_floor`
   - `posterior_temperature`
   - selected gate thresholds if they are already explicit numeric inputs
-- [ ] Keep state-count selection outside this trainer for the first pass.
-- [ ] Add loader/fallback behavior in the regime persistence lane. Runtime must not fail when the artifact is absent.
+- [x] Keep state-count selection outside this trainer for the first pass.
+- [x] Add loader/fallback behavior in the regime persistence lane. Runtime must not fail when the artifact is absent.
 
 **Minimum verification**
 
