@@ -17,10 +17,10 @@ use super::structural_playbook::{
     resolved_ensemble_vote_for_snapshot, resolved_latest_ensemble_vote,
     StructuralPathRankerRuntimeContext, StructuralRecommendedPathBundleArtifact,
 };
+use crate::application::auto_quant::AutoQuantResearchHandoffPayload;
 use crate::application::belief::{
     jump_calibration_gate_workflow_summary, jump_model_workflow_summary,
 };
-use crate::application::auto_quant::AutoQuantResearchHandoffPayload;
 use crate::application::output_foundation::{
     print_redacted_json, redact_local_paths_in_human_text, redact_local_paths_in_value,
     short_workflow_phase_summary,
@@ -33,13 +33,13 @@ use crate::application::release_closure::workflow_next_step_view;
 use crate::config::shell_quote;
 use crate::state::{
     ArtifactConsumedImpactSummary, ArtifactDecisionSummary, ArtifactFactorTrendSummary,
-    ArtifactFamilyTrendSummary, ArtifactHistorySummary, ArtifactLineageSummary,
-    ArtifactLedgerEntry, ArtifactRuleBreakEffect, ArtifactRuleBreakFactorImpact,
-    ArtifactRuleBreakFamilyImpact, DatasetComparability, EnsembleExecutorScorecard, EnsembleVoteRecord,
-    ExecutionCandidateArtifactSummary, PendingUpdateArtifactSummary, PreBayesEntryQualityBridge,
-    PreBayesEntryQualityBridgeDiff, PreBayesEvidencePolicy, PreBayesPolicyDiff,
-    PreBayesPolicyLineageSummary, PreBayesPolicyRecord, PreBayesSoftEvidenceNodeDiff,
-    RunProvenance, StructuralPriorLearningState, WorkflowSnapshot,
+    ArtifactFamilyTrendSummary, ArtifactHistorySummary, ArtifactLedgerEntry,
+    ArtifactLineageSummary, ArtifactRuleBreakEffect, ArtifactRuleBreakFactorImpact,
+    ArtifactRuleBreakFamilyImpact, DatasetComparability, EnsembleExecutorScorecard,
+    EnsembleVoteRecord, ExecutionCandidateArtifactSummary, PendingUpdateArtifactSummary,
+    PreBayesEntryQualityBridge, PreBayesEntryQualityBridgeDiff, PreBayesEvidencePolicy,
+    PreBayesPolicyDiff, PreBayesPolicyLineageSummary, PreBayesPolicyRecord,
+    PreBayesSoftEvidenceNodeDiff, RunProvenance, StructuralPriorLearningState, WorkflowSnapshot,
 };
 
 fn build_structural_validation_summary_value(
@@ -756,7 +756,8 @@ fn historical_data_candidate_display(path: &str) -> String {
 }
 
 fn historical_data_candidate_display_list(paths: &[String]) -> String {
-    paths.iter()
+    paths
+        .iter()
         .map(|path| historical_data_candidate_display(path))
         .collect::<Vec<_>>()
         .join(", ")
@@ -1600,8 +1601,10 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
             structural_prior_state,
             runtime_context,
         );
-    let execution_contract_active =
-        !no_workflow_state && !hard_block_active && !historical_data_gate_active && !provider_support.active;
+    let execution_contract_active = !no_workflow_state
+        && !hard_block_active
+        && !historical_data_gate_active
+        && !provider_support.active;
     let top_path_candidates_line = if top_path_candidates.candidates.is_empty() {
         None
     } else {
@@ -1890,7 +1893,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     });
     if let Value::Object(map) = &mut value {
         map.insert(
-        "provider_support".to_string(),
+            "provider_support".to_string(),
             serde_json::json!({
                 "command": provider_status_command,
                 "agent_summary": provider_status_agent,
@@ -2231,7 +2234,8 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default();
-    let execution_contract_active = !no_workflow_state && !hard_block_active && !provider_support.active;
+    let execution_contract_active =
+        !no_workflow_state && !hard_block_active && !provider_support.active;
     let latest_structural_feedback = snapshot
         .latest_update
         .as_ref()
@@ -4655,20 +4659,21 @@ mod tests {
     ) -> crate::state::ArtifactLedgerEntry {
         let mut payload =
             build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
-            symbol: "DEMO",
-            data: "examples/demo/demo-15m.json",
-            objective: "expansion_manipulation",
-            paired_data: None,
-            mutation_spec_path: None,
-            strategy_material_root: None,
-            state_dir: temp.path().to_str().unwrap(),
-            dependency_status: sample_auto_quant_dependency_status(
-                temp.path()
-                    .join(".deps/auto-quant")
-                    .to_string_lossy()
-                    .into_owned(),
-            ),
-        });
+                symbol: "DEMO",
+                data: "examples/demo/demo-15m.json",
+                objective: "expansion_manipulation",
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: sample_auto_quant_dependency_status(
+                    temp.path()
+                        .join(".deps/auto-quant")
+                        .to_string_lossy()
+                        .into_owned(),
+                ),
+            });
         let filename = format!("auto_quant_handoff.{}.json", payload.handoff_kind);
         crate::state::save_state(
             temp.path().to_str().unwrap(),
@@ -5687,7 +5692,10 @@ mod tests {
             Some(temp.path().to_str().unwrap()),
         );
         assert_eq!(agent["next_command_source"], "auto_quant_handoff_candidate");
-        assert_eq!(agent["top_actionable"]["artifact_kind"], "auto_quant_handoff_candidate");
+        assert_eq!(
+            agent["top_actionable"]["artifact_kind"],
+            "auto_quant_handoff_candidate"
+        );
         assert!(agent["recommended_next_step"]["deferred_command"]
             .as_str()
             .unwrap()
@@ -5734,7 +5742,10 @@ mod tests {
             .unwrap()
             .iter()
             .any(|item| item.as_str().unwrap().contains("zero-config openbb")));
-        assert!(value["available_opt_in_profiles"].as_array().unwrap().is_empty());
+        assert!(value["available_opt_in_profiles"]
+            .as_array()
+            .unwrap()
+            .is_empty());
     }
 
     #[test]
@@ -8056,7 +8067,9 @@ mod tests {
             .is_some());
         assert!(value["source_reliability"].get("holdout_reason").is_some());
         assert!(value["source_reliability"].get("replay_reason").is_some());
-        assert!(value["source_reliability"].get("calibration_status").is_some());
+        assert!(value["source_reliability"]
+            .get("calibration_status")
+            .is_some());
         assert!(value["delayed_reward"]["status"].as_str().unwrap().len() > 3);
         assert!(value["delayed_reward"].get("status_reason").is_some());
         assert_eq!(

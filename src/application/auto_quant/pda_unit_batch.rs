@@ -653,6 +653,7 @@ pub fn persist_auto_quant_pda_unit_batch(
                 data: &job.scope.data_path,
                 objective: input.objective,
                 paired_data: None,
+                auxiliary_evidence_path: None,
                 mutation_spec_path: None,
                 strategy_material_root: None,
                 state_dir: &job.isolated_state_dir,

@@ -7,8 +7,7 @@ use super::{
     auto_quant_bootstrap, auto_quant_readiness, auto_quant_status, auto_quant_update,
     handoff::{
         auto_quant_prepare_command as auto_quant_prepare_script_command,
-        auto_quant_workspace_config,
-        build_factor_autoresearch_handoff_payload,
+        auto_quant_workspace_config, build_factor_autoresearch_handoff_payload,
         build_factor_research_handoff_payload, AutoQuantFactorAutoresearchCommandInput,
         AutoQuantFactorResearchCommandInput, BuildFactorAutoresearchHandoffPayloadInput,
         BuildFactorResearchHandoffPayloadInput,
@@ -42,6 +41,7 @@ use anyhow::{anyhow, bail, Context, Result};
 use chrono::Utc;
 use serde_json::json;
 use std::process::Command;
+use std::path::PathBuf;
 
 /// Ledger artifact_kind written by `auto-quant-consume-live-signals`.
 pub const ARTIFACT_KIND_LIVE_SIGNALS: &str = "auto_quant_live_signals_ingested";
@@ -51,11 +51,11 @@ pub const ARTIFACT_KIND_LIVE_SIGNALS: &str = "auto_quant_live_signals_ingested";
 /// semantics.
 pub const LIVE_SIGNALS_RULE_VERSION: &str = "auto-quant-live-signals-v1";
 
-use crate::bbn::trading::persistence::load_or_init_trading_network;
 use crate::application::output_foundation::{
     print_redacted_json, redact_local_paths_in_human_text,
 };
 use crate::application::release_closure::workflow_next_step_view;
+use crate::bbn::trading::persistence::load_or_init_trading_network;
 use crate::state::{save_state, state_exists, BBN_STATE_FILE};
 
 fn ensure_dependency_ready(
@@ -96,7 +96,9 @@ struct AutoQuantReadinessCompactSurface<'a> {
     notes: &'a [String],
 }
 
-fn auto_quant_status_summary_line(readiness: &super::readiness::AutoQuantReadinessSurface) -> String {
+fn auto_quant_status_summary_line(
+    readiness: &super::readiness::AutoQuantReadinessSurface,
+) -> String {
     format!(
         "auto_quant_status {} healthy={} dependency_healthy={} data_ready={} bootstrap_needed={} update_available={}",
         readiness.status,
@@ -138,9 +140,8 @@ fn render_auto_quant_readiness_human_output(
         "dependency_unhealthy" => {
             lines.push("Next: repair the managed Auto-Quant checkout before use".to_string())
         }
-        "update_available" => {
-            lines.push("Next: update the managed Auto-Quant checkout to the tracked ref".to_string())
-        }
+        "update_available" => lines
+            .push("Next: update the managed Auto-Quant checkout to the tracked ref".to_string()),
         "dependency_ready_data_missing" => {
             lines.push("Next: prepare Auto-Quant market data before strategy execution".to_string())
         }
@@ -166,7 +167,9 @@ fn render_auto_quant_readiness_human_output(
     }
     lines.push(format!(
         "Workspace: repo={} | data={} | strategies={}",
-        readiness.workspace.repo_root, readiness.workspace.data_dir, readiness.workspace.strategies_dir
+        readiness.workspace.repo_root,
+        readiness.workspace.data_dir,
+        readiness.workspace.strategies_dir
     ));
     if !readiness.notes.is_empty() {
         lines.push(format!("Notes: {}", readiness.notes.join(" | ")));
@@ -291,7 +294,9 @@ fn emit_auto_quant_handoff_output(
         "compact" => print_redacted_json(&compact)?,
         "human" => println!(
             "{}",
-            redact_local_paths_in_human_text(structured["human_output"].as_str().unwrap_or_default())
+            redact_local_paths_in_human_text(
+                structured["human_output"].as_str().unwrap_or_default()
+            )
         ),
         other => bail!("unsupported auto-quant output format '{}'", other),
     }
@@ -350,16 +355,48 @@ pub fn auto_quant_prepare_workspace_command(state_dir: &str) -> Result<()> {
         );
     }
     let prepare_command = auto_quant_prepare_script_command(&readiness_before.workspace);
-    let output = Command::new("uv")
-        .args([
-            "run",
-            "--with",
-            "ta-lib",
-            readiness_before.workspace.prepare_script.as_str(),
-        ])
-        .current_dir(&readiness_before.workspace.repo_root)
-        .output()
-        .with_context(|| format!("failed to launch {}", prepare_command))?;
+    let output = if let Some(profile) =
+        super::workspace_profile::materialize_workspace_profile(state_dir, &readiness_before.workspace)?
+    {
+        let workspace_root = PathBuf::from(&readiness_before.workspace.repo_root);
+        let csv_path = workspace_root.join("profile_source.csv");
+        let timeframes = std::iter::once(profile.base_timeframe.clone())
+            .chain(profile.additional_timeframes.clone())
+            .collect::<Vec<_>>()
+            .join(",");
+        Command::new("uv")
+            .args([
+                "run",
+                "--with",
+                "ta-lib",
+                readiness_before.workspace.prepare_script.as_str(),
+                "--csv",
+                csv_path.to_str().unwrap_or("profile_source.csv"),
+                "--pair",
+                profile.pair.as_str(),
+                "--timeframes",
+                timeframes.as_str(),
+                "--datadir",
+                "user_data/data",
+                "--column-map",
+                "date:date,open:open,high:high,low:low,close:close,volume:volume",
+                "--no-clean",
+            ])
+            .current_dir(&readiness_before.workspace.repo_root)
+            .output()
+            .with_context(|| format!("failed to launch {}", prepare_command))?
+    } else {
+        Command::new("uv")
+            .args([
+                "run",
+                "--with",
+                "ta-lib",
+                readiness_before.workspace.prepare_script.as_str(),
+            ])
+            .current_dir(&readiness_before.workspace.repo_root)
+            .output()
+            .with_context(|| format!("failed to launch {}", prepare_command))?
+    };
     if !output.status.success() {
         bail!(
             "auto-quant prepare failed with status {} while running {}.\nstdout:\n{}\nstderr:\n{}",
@@ -606,11 +643,19 @@ pub fn auto_quant_factor_research_command(
         data,
         objective,
         paired_data,
+        auto_quant_profile,
+        auxiliary_evidence_path,
         mutation_spec_path,
         strategy_material_root,
         state_dir,
         output_format,
     } = input;
+    super::workspace_profile::persist_workspace_profile_selection(
+        state_dir,
+        auto_quant_profile,
+        symbol,
+        data,
+    )?;
     let dependency_status = ensure_dependency_ready(state_dir, None, None)?;
     let seed_evidence_artifact_id = maybe_persist_seed_material_evidence(
         symbol,
@@ -633,6 +678,7 @@ pub fn auto_quant_factor_research_command(
             data,
             objective,
             paired_data,
+            auxiliary_evidence_path,
             mutation_spec_path,
             strategy_material_root,
             state_dir,
@@ -657,12 +703,20 @@ pub fn auto_quant_factor_autoresearch_command(
         data,
         objective,
         paired_data,
+        auto_quant_profile,
+        auxiliary_evidence_path,
         mutation_spec_path,
         strategy_material_root,
         iterations,
         session_id,
         state_dir,
     } = input;
+    super::workspace_profile::persist_workspace_profile_selection(
+        state_dir,
+        auto_quant_profile,
+        symbol,
+        data,
+    )?;
     let dependency_status = ensure_dependency_ready(state_dir, None, None)?;
     let seed_evidence_artifact_id = maybe_persist_seed_material_evidence(
         symbol,
@@ -685,6 +739,7 @@ pub fn auto_quant_factor_autoresearch_command(
             data,
             objective,
             paired_data,
+            auxiliary_evidence_path,
             mutation_spec_path,
             strategy_material_root,
             iterations,
@@ -1165,11 +1220,11 @@ mod tests {
     use crate::application::auto_quant::handoff::{
         build_factor_research_handoff_payload, BuildFactorResearchHandoffPayloadInput,
     };
-    use crate::application::auto_quant::types::AutoQuantDependencyStatus;
     use crate::application::auto_quant::results::{
         StrategyLibraryEntry, StrategyLibraryManifest, StrategyLibraryMetadata,
         StrategyLibraryValidationMetrics,
     };
+    use crate::application::auto_quant::types::AutoQuantDependencyStatus;
 
     fn write_manifest_to(temp: &std::path::Path, manifest: &StrategyLibraryManifest) -> String {
         let path = temp.join("strategy_library.json");
@@ -1219,21 +1274,23 @@ mod tests {
     #[test]
     fn auto_quant_handoff_human_output_is_short_text_not_json_dump() {
         let temp = tempfile::tempdir().unwrap();
-        let payload = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
-            symbol: "DEMO",
-            data: "examples/demo/demo-15m.json",
-            objective: "expansion_manipulation",
-            paired_data: None,
-            mutation_spec_path: None,
-            strategy_material_root: None,
-            state_dir: temp.path().to_str().unwrap(),
-            dependency_status: healthy_dependency_status(
-                temp.path()
-                    .join(".deps/auto-quant")
-                    .to_string_lossy()
-                    .into_owned(),
-            ),
-        });
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "DEMO",
+                data: "examples/demo/demo-15m.json",
+                objective: "expansion_manipulation",
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status(
+                    temp.path()
+                        .join(".deps/auto-quant")
+                        .to_string_lossy()
+                        .into_owned(),
+                ),
+            });
 
         let output = build_auto_quant_handoff_output_payload(&payload);
         let human = output["human_output"].as_str().unwrap();
@@ -1241,7 +1298,10 @@ mod tests {
         assert!(human.contains("Auto-Quant handoff"));
         assert!(human.contains("Run:"));
         assert!(!human.trim_start().starts_with('{'));
-        assert_eq!(output["recommended_next_step"]["action_type"], "run_command");
+        assert_eq!(
+            output["recommended_next_step"]["action_type"],
+            "run_command"
+        );
     }
 
     #[test]
@@ -1263,7 +1323,9 @@ mod tests {
 
         let compact = build_auto_quant_readiness_compact_surface(&readiness);
 
-        assert!(compact.summary_line.contains("auto_quant_status missing_dependency"));
+        assert!(compact
+            .summary_line
+            .contains("auto_quant_status missing_dependency"));
         assert_eq!(compact.status, "missing_dependency");
         assert!(!compact.dependency_healthy);
     }

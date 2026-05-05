@@ -8,7 +8,7 @@ use crate::state::{recommended_next_command_meta, RecommendedNextCommandMeta};
 
 use super::handoff::{
     auto_quant_active_strategy_count, auto_quant_data_ready, auto_quant_prepare_cli_command,
-    auto_quant_run_command, auto_quant_workspace_config, AutoQuantWorkspaceConfig,
+    auto_quant_run_command, auto_quant_workspace_config_for_state, AutoQuantWorkspaceConfig,
 };
 use super::status::auto_quant_status;
 use super::types::AutoQuantDependencyStatus;
@@ -63,7 +63,7 @@ pub fn auto_quant_readiness_from_status_with_state_dir(
     dependency_status: &AutoQuantDependencyStatus,
     state_dir: &str,
 ) -> AutoQuantReadinessSurface {
-    let workspace = auto_quant_workspace_config(&dependency_status.managed_dir);
+    let workspace = auto_quant_workspace_config_for_state(&dependency_status.managed_dir, state_dir);
     let data_ready = auto_quant_data_ready(&workspace);
     auto_quant_readiness_from_status_and_data(dependency_status, state_dir, workspace, data_ready)
 }
@@ -114,6 +114,9 @@ pub fn auto_quant_readiness_from_status_and_data(
     };
     let command = command.to_string();
     let mut notes = dependency_status.notes.clone();
+    if let Some(profile) = &workspace.profile_name {
+        notes.push(format!("auto_quant_profile={profile}"));
+    }
     if data_ready && active_strategy_count == 0 {
         notes.push("auto_quant_seed_strategies_required".to_string());
     }

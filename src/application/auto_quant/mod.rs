@@ -17,6 +17,7 @@ mod status;
 mod strategy_materials;
 mod types;
 mod update;
+mod workspace_profile;
 
 pub use agent_material::{
     AgentMaterialAggregateMetrics, AgentMaterialBatchArtifact, AgentMaterialBatchJob,
@@ -51,6 +52,11 @@ pub use types::{
     DEFAULT_AUTO_QUANT_REPO_URL,
 };
 pub use update::{auto_quant_bootstrap, auto_quant_update};
+pub use workspace_profile::{
+    apply_workspace_profile, load_workspace_profile, materialize_workspace_profile,
+    persist_workspace_profile_selection, AutoQuantWorkspaceProfileConfig,
+    AUTO_QUANT_PROFILE_MANAGED, AUTO_QUANT_PROFILE_SYNTHETIC_OHLCV,
+};
 
 #[cfg(test)]
 mod tests {
@@ -236,6 +242,7 @@ mod tests {
                 data: "/tmp/nq.json",
                 objective: "generic",
                 paired_data: None,
+                auxiliary_evidence_path: None,
                 mutation_spec_path: None,
                 strategy_material_root: None,
                 state_dir: state.path().to_str().unwrap(),

@@ -74,6 +74,7 @@ mod tests {
                 data: "demo.json",
                 objective: "expansion_manipulation",
                 paired_data: None,
+                auxiliary_evidence_path: None,
                 mutation_spec_path: None,
                 strategy_material_root: None,
                 state_dir: temp.path().to_str().unwrap(),

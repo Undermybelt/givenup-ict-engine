@@ -7,6 +7,7 @@ use crate::config::shell_quote;
 use super::readiness::{auto_quant_readiness_from_status_and_data, AutoQuantReadinessSurface};
 use super::strategy_materials::{discover_strategy_materials, AutoQuantStrategyMaterialSummary};
 use super::types::AutoQuantDependencyStatus;
+use super::workspace_profile::apply_workspace_profile;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AutoQuantWorkspaceConfig {
@@ -17,6 +18,12 @@ pub struct AutoQuantWorkspaceConfig {
     pub config_json: String,
     pub strategies_dir: String,
     pub data_dir: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub profile_name: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub expected_data_files: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub strategy_seed_source_dir: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -42,6 +49,8 @@ pub struct AutoQuantResearchHandoffPayload {
     pub backend: String,
     pub data_path: String,
     pub paired_data_path: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub auxiliary_evidence_path: Option<String>,
     pub mutation_spec_path: Option<String>,
     pub iterations: Option<usize>,
     pub session_id: Option<String>,
@@ -68,6 +77,8 @@ pub struct AutoQuantFactorResearchCommandInput<'a> {
     pub data: &'a str,
     pub objective: &'a str,
     pub paired_data: Option<&'a str>,
+    pub auto_quant_profile: Option<&'a str>,
+    pub auxiliary_evidence_path: Option<&'a str>,
     pub mutation_spec_path: Option<&'a str>,
     pub strategy_material_root: Option<&'a str>,
     pub state_dir: &'a str,
@@ -79,6 +90,8 @@ pub struct AutoQuantFactorAutoresearchCommandInput<'a> {
     pub data: &'a str,
     pub objective: &'a str,
     pub paired_data: Option<&'a str>,
+    pub auto_quant_profile: Option<&'a str>,
+    pub auxiliary_evidence_path: Option<&'a str>,
     pub mutation_spec_path: Option<&'a str>,
     pub strategy_material_root: Option<&'a str>,
     pub iterations: usize,
@@ -91,6 +104,7 @@ pub struct BuildFactorResearchHandoffPayloadInput<'a> {
     pub data: &'a str,
     pub objective: &'a str,
     pub paired_data: Option<&'a str>,
+    pub auxiliary_evidence_path: Option<&'a str>,
     pub mutation_spec_path: Option<&'a str>,
     pub strategy_material_root: Option<&'a str>,
     pub state_dir: &'a str,
@@ -102,6 +116,7 @@ pub struct BuildFactorAutoresearchHandoffPayloadInput<'a> {
     pub data: &'a str,
     pub objective: &'a str,
     pub paired_data: Option<&'a str>,
+    pub auxiliary_evidence_path: Option<&'a str>,
     pub mutation_spec_path: Option<&'a str>,
     pub strategy_material_root: Option<&'a str>,
     pub iterations: usize,
@@ -126,7 +141,23 @@ pub fn auto_quant_workspace_config(managed_dir: &str) -> AutoQuantWorkspaceConfi
             .join("user_data/data")
             .to_string_lossy()
             .to_string(),
+        profile_name: None,
+        expected_data_files: Vec::new(),
+        strategy_seed_source_dir: None,
     }
+}
+
+pub fn auto_quant_workspace_config_for_state(
+    managed_dir: &str,
+    state_dir: &str,
+) -> AutoQuantWorkspaceConfig {
+    let mut workspace = auto_quant_workspace_config(managed_dir);
+    if let Err(err) = apply_workspace_profile(state_dir, &mut workspace) {
+        workspace
+            .expected_data_files
+            .push(format!("profile_apply_error:{err:#}"));
+    }
+    workspace
 }
 
 pub fn auto_quant_prepare_command(workspace: &AutoQuantWorkspaceConfig) -> String {
@@ -145,6 +176,12 @@ pub fn auto_quant_data_ready(workspace: &AutoQuantWorkspaceConfig) -> bool {
     let data_dir = Path::new(&workspace.data_dir);
     if !data_dir.exists() {
         return false;
+    }
+    if !workspace.expected_data_files.is_empty() {
+        return workspace
+            .expected_data_files
+            .iter()
+            .all(|filename| data_dir.join(filename).exists());
     }
     match std::fs::read_dir(data_dir) {
         Ok(entries) => {
@@ -168,7 +205,16 @@ pub fn auto_quant_data_ready(workspace: &AutoQuantWorkspaceConfig) -> bool {
 pub fn auto_quant_active_strategy_count(workspace: &AutoQuantWorkspaceConfig) -> usize {
     let strategies_dir = Path::new(&workspace.strategies_dir);
     if !strategies_dir.exists() {
-        return 0;
+        return workspace
+            .strategy_seed_source_dir
+            .as_deref()
+            .map(|path| {
+                let mut fallback = workspace.clone();
+                fallback.strategies_dir = path.to_string();
+                fallback.strategy_seed_source_dir = None;
+                auto_quant_active_strategy_count(&fallback)
+            })
+            .unwrap_or(0);
     }
     match std::fs::read_dir(strategies_dir) {
         Ok(entries) => entries
@@ -187,7 +233,19 @@ pub fn auto_quant_active_strategy_count(workspace: &AutoQuantWorkspaceConfig) ->
                     .unwrap_or(false);
                 is_python && is_active
             })
-            .count(),
+            .count()
+            .max(
+                workspace
+                    .strategy_seed_source_dir
+                    .as_deref()
+                    .map(|path| {
+                        let mut fallback = workspace.clone();
+                        fallback.strategies_dir = path.to_string();
+                        fallback.strategy_seed_source_dir = None;
+                        auto_quant_active_strategy_count(&fallback)
+                    })
+                    .unwrap_or(0),
+            ),
         Err(_) => 0,
     }
 }
@@ -234,10 +292,14 @@ pub fn base_suggested_commands(
     state_dir: &str,
     data_ready: bool,
     active_strategy_count: usize,
+    auxiliary_evidence_path: Option<&str>,
     strategy_material_root: Option<&str>,
     external_strategy_materials: &[AutoQuantStrategyMaterialSummary],
 ) -> Vec<String> {
     let mut commands = vec![format!("cat {}", workspace.program_md)];
+    if let Some(path) = auxiliary_evidence_path.filter(|value| !value.trim().is_empty()) {
+        commands.push(format!("cat {}", shell_quote(path)));
+    }
     if active_strategy_count == 0 {
         commands.push(format!(
             "cat {}",
@@ -308,6 +370,7 @@ fn build_auto_quant_agent_prompt(
     objective: &str,
     workspace: &AutoQuantWorkspaceConfig,
     active_strategy_count: usize,
+    auxiliary_evidence_path: Option<&str>,
     strategy_material_root: Option<&str>,
     external_strategy_materials: &[AutoQuantStrategyMaterialSummary],
 ) -> String {
@@ -327,19 +390,30 @@ fn build_auto_quant_agent_prompt(
             root, materials
         )
     };
+    let auxiliary_instruction = auxiliary_evidence_path
+        .filter(|value| !value.trim().is_empty())
+        .map(|path| {
+            format!(
+                " Auxiliary/options evidence is attached at {}; treat it as a static market overlay for options_hedging and dealer-positioning judgment rather than inventing a proxy from scratch.",
+                path
+            )
+        })
+        .unwrap_or_default();
     let seed_instruction = if active_strategy_count == 0 {
         format!(
-            "If {} has no active non-underscore .py strategies, first read {}, create 2-3 seed strategies across different paradigms, prefer archived winners or minimal descendants when available, and only then run {}.{}",
+            "If {} has no active non-underscore .py strategies, first read {}, create 2-3 seed strategies across different paradigms, prefer archived winners or minimal descendants when available, and only then run {}.{}{}",
             workspace.strategies_dir,
             template_path,
             auto_quant_run_command(workspace),
-            external_materials_summary
+            external_materials_summary,
+            auxiliary_instruction,
         )
     } else {
         format!(
-            "Run {} on the current active strategy set, review measured results, and iterate only from backtest evidence.{}",
+            "Run {} on the current active strategy set, review measured results, and iterate only from backtest evidence.{}{}",
             auto_quant_run_command(workspace),
-            external_materials_summary
+            external_materials_summary,
+            auxiliary_instruction,
         )
     };
     match handoff_kind {
@@ -362,12 +436,14 @@ pub fn build_factor_research_handoff_payload(
         data,
         objective,
         paired_data,
+        auxiliary_evidence_path,
         mutation_spec_path,
         strategy_material_root,
         state_dir,
         dependency_status,
     } = input;
-    let workspace = auto_quant_workspace_config(&dependency_status.managed_dir);
+    let workspace =
+        auto_quant_workspace_config_for_state(&dependency_status.managed_dir, state_dir);
     let data_ready = auto_quant_data_ready(&workspace);
     let active_strategy_count = auto_quant_active_strategy_count(&workspace);
     let external_strategy_materials = discover_strategy_materials(strategy_material_root, 3);
@@ -390,6 +466,7 @@ pub fn build_factor_research_handoff_payload(
         backend: "auto-quant".to_string(),
         data_path: data.to_string(),
         paired_data_path: paired_data.map(str::to_string),
+        auxiliary_evidence_path: auxiliary_evidence_path.map(str::to_string),
         mutation_spec_path: mutation_spec_path.map(str::to_string),
         iterations: None,
         session_id: None,
@@ -411,6 +488,7 @@ pub fn build_factor_research_handoff_payload(
         &payload.state_dir,
         payload.data_ready,
         active_strategy_count,
+        payload.auxiliary_evidence_path.as_deref(),
         payload.strategy_material_root.as_deref(),
         &payload.external_strategy_materials,
     );
@@ -425,6 +503,7 @@ pub fn build_factor_research_handoff_payload(
         &payload.objective,
         &payload.workspace,
         active_strategy_count,
+        payload.auxiliary_evidence_path.as_deref(),
         payload.strategy_material_root.as_deref(),
         &payload.external_strategy_materials,
     );
@@ -441,6 +520,11 @@ pub fn build_factor_research_handoff_payload(
     payload.notes.push(format!(
         "auto_quant_active_strategy_count={active_strategy_count}"
     ));
+    if let Some(path) = &payload.auxiliary_evidence_path {
+        payload
+            .notes
+            .push(format!("auto_quant_auxiliary_evidence_path={path}"));
+    }
     if let Some(root) = &payload.strategy_material_root {
         payload
             .notes
@@ -471,6 +555,7 @@ pub fn build_factor_autoresearch_handoff_payload(
         data,
         objective,
         paired_data,
+        auxiliary_evidence_path,
         mutation_spec_path,
         strategy_material_root,
         iterations,
@@ -478,7 +563,8 @@ pub fn build_factor_autoresearch_handoff_payload(
         state_dir,
         dependency_status,
     } = input;
-    let workspace = auto_quant_workspace_config(&dependency_status.managed_dir);
+    let workspace =
+        auto_quant_workspace_config_for_state(&dependency_status.managed_dir, state_dir);
     let data_ready = auto_quant_data_ready(&workspace);
     let active_strategy_count = auto_quant_active_strategy_count(&workspace);
     let external_strategy_materials = discover_strategy_materials(strategy_material_root, 3);
@@ -501,6 +587,7 @@ pub fn build_factor_autoresearch_handoff_payload(
         backend: "auto-quant".to_string(),
         data_path: data.to_string(),
         paired_data_path: paired_data.map(str::to_string),
+        auxiliary_evidence_path: auxiliary_evidence_path.map(str::to_string),
         mutation_spec_path: mutation_spec_path.map(str::to_string),
         iterations: Some(iterations),
         session_id: session_id.map(str::to_string),
@@ -522,6 +609,7 @@ pub fn build_factor_autoresearch_handoff_payload(
         &payload.state_dir,
         payload.data_ready,
         active_strategy_count,
+        payload.auxiliary_evidence_path.as_deref(),
         payload.strategy_material_root.as_deref(),
         &payload.external_strategy_materials,
     );
@@ -536,6 +624,7 @@ pub fn build_factor_autoresearch_handoff_payload(
         &payload.objective,
         &payload.workspace,
         active_strategy_count,
+        payload.auxiliary_evidence_path.as_deref(),
         payload.strategy_material_root.as_deref(),
         &payload.external_strategy_materials,
     );
@@ -552,6 +641,11 @@ pub fn build_factor_autoresearch_handoff_payload(
     payload.notes.push(format!(
         "auto_quant_active_strategy_count={active_strategy_count}"
     ));
+    if let Some(path) = &payload.auxiliary_evidence_path {
+        payload
+            .notes
+            .push(format!("auto_quant_auxiliary_evidence_path={path}"));
+    }
     if let Some(root) = &payload.strategy_material_root {
         payload
             .notes
@@ -638,6 +732,7 @@ mod tests {
                 data: "demo.json",
                 objective: "expansion_manipulation",
                 paired_data: None,
+                auxiliary_evidence_path: None,
                 mutation_spec_path: None,
                 strategy_material_root: Some(material_root.to_str().unwrap()),
                 state_dir: temp.path().to_str().unwrap(),
@@ -691,6 +786,7 @@ mod tests {
                 data: "demo.json",
                 objective: "expansion_manipulation",
                 paired_data: None,
+                auxiliary_evidence_path: None,
                 mutation_spec_path: Some("mutation.json"),
                 strategy_material_root: None,
                 iterations: 3,
@@ -729,6 +825,7 @@ mod tests {
                 data: "demo.json",
                 objective: "generic",
                 paired_data: None,
+                auxiliary_evidence_path: None,
                 mutation_spec_path: None,
                 strategy_material_root: None,
                 state_dir: temp.path().to_str().unwrap(),
@@ -751,6 +848,7 @@ mod tests {
             data: "demo.json",
             objective: "generic",
             paired_data: None,
+            auxiliary_evidence_path: None,
             mutation_spec_path: None,
             strategy_material_root: None,
             state_dir: temp.path().to_str().unwrap(),
@@ -783,6 +881,7 @@ mod tests {
                 data: "demo.json",
                 objective: "expansion_manipulation",
                 paired_data: None,
+                auxiliary_evidence_path: None,
                 mutation_spec_path: None,
                 strategy_material_root: None,
                 state_dir: temp.path().to_str().unwrap(),
@@ -806,5 +905,57 @@ mod tests {
         let unit = payload.iteration_unit.as_ref().unwrap();
         assert_eq!(unit.primitive_sequence, vec!["order_block".to_string()]);
         assert_eq!(unit.evaluation_priority[0], "win_rate");
+    }
+
+    #[test]
+    fn handoff_payload_carries_auxiliary_evidence_path_into_commands_and_prompt() {
+        let temp = tempfile::tempdir().unwrap();
+        let managed_dir = temp.path().join("managed-auto-quant");
+        let strategies_dir = managed_dir.join("user_data/strategies");
+        let data_dir = managed_dir.join("user_data/data");
+        std::fs::create_dir_all(&strategies_dir).unwrap();
+        std::fs::create_dir_all(&data_dir).unwrap();
+        std::fs::write(managed_dir.join("program.md"), "program").unwrap();
+        std::fs::write(managed_dir.join("prepare.py"), "print('prepare')").unwrap();
+        std::fs::write(managed_dir.join("run.py"), "print('run')").unwrap();
+        std::fs::write(
+            strategies_dir.join("_template.py.example"),
+            "class Template: pass",
+        )
+        .unwrap();
+        for index in 0..15 {
+            std::fs::write(data_dir.join(format!("prepared-{index}.feather")), "ready").unwrap();
+        }
+        let auxiliary_path = temp.path().join("family-g-aux.json");
+        std::fs::write(&auxiliary_path, "{}").unwrap();
+
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "NQ",
+                data: "demo.json",
+                objective: "generic",
+                paired_data: None,
+                auxiliary_evidence_path: Some(auxiliary_path.to_str().unwrap()),
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status_for(managed_dir.to_str().unwrap()),
+            });
+
+        assert_eq!(
+            payload.auxiliary_evidence_path.as_deref(),
+            Some(auxiliary_path.to_str().unwrap())
+        );
+        assert!(payload
+            .suggested_commands
+            .iter()
+            .any(|command| command.contains("family-g-aux.json")));
+        assert!(payload
+            .agent_prompt
+            .contains("Auxiliary/options evidence is attached"));
+        assert!(payload
+            .notes
+            .iter()
+            .any(|note| note.contains("auto_quant_auxiliary_evidence_path=")));
     }
 }

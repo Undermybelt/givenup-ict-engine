@@ -13,6 +13,18 @@
 
 **Compatibility Boundary:** preserve zero-config default behavior, consumer-usable CLI surfaces, token-friendly human/compact outputs, and low-pollution execution through explicit `/tmp/...` state dirs. Do not let the current Rust factor registry cap the factor family design space. Do not require repo code changes just to continue the Auto-Quant research loop.
 
+**Coverage Rule:** beyond broad market / high-liquidity instrument coverage, every factor family should also be evaluated against a multi-timeframe candle ladder whenever the public surface can support it:
+- `1m` minute
+- `5m`
+- `15m`
+- `1h`
+- `4h`
+- `1d`
+- `1w`
+- `1M` monthly
+
+Do not reject higher-timeframe factors just because they are less directly tradable intraday. They may still matter as regime / resonance / confirmation context for lower-timeframe execution.
+
 **Verification:** every lane must be proven by real command artifacts:
 - `./target/debug/ict-engine analyze ... --human`
 - `./target/debug/ict-engine factor-research ... --backend auto-quant --human`
@@ -406,6 +418,8 @@ For cross-market families, add:
 **Coverage rule**
 - Each factor family should strive for broad multi-market coverage.
 - Do not treat a single-symbol lift as closure unless it later generalizes across a wider market set.
+- Each factor family should also strive for multi-timeframe coverage across `1m`, `5m`, `15m`, `1h`, `4h`, `1d`, `1w`, and `1M` wherever the public surface or additive profile can support it.
+- Treat higher-timeframe factors as potentially important resonance / confirmation context even when the eventual execution target is intraday.
 
 **Execution context**
 - target baseline symbol: `NQ`
@@ -462,6 +476,116 @@ For cross-market families, add:
   - the public managed Auto-Quant loop reaches readiness, but its actual execution contract still points at the fixed crypto portfolio rather than the target execution-tree market slice or a broader full-market coverage lane
   - therefore this slice does not yet produce a valid after-run workflow/export artifact for Family A
 
+### 2026-05-06 Slice 2: Family G public auxiliary/options input surface
+
+**Implementation**
+- public `factor-research` and `factor-autoresearch` now expose:
+  - `--auxiliary-evidence <path>`
+- accepted input shapes:
+  - direct `AuxiliaryMarketEvidence` JSON
+  - full analyze-report JSON containing `supporting.auxiliary`
+- native research now injects that auxiliary evidence into the `options_hedging` / dealer-positioning runtime context
+- auto-quant handoff now preserves the same auxiliary evidence path inside:
+  - payload JSON
+  - suggested commands
+  - agent prompt
+  - notes
+
+**Verification**
+- help surface:
+  - `./target/debug/ict-engine factor-research --help`
+  - `./target/debug/ict-engine factor-autoresearch --help`
+- native smoke:
+  - `./target/debug/ict-engine factor-research --symbol DEMO --data examples/demo/demo-15m.json --backend native --auxiliary-evidence /tmp/ict-engine-family-g-aux-direct.json --state-dir /tmp/ict-engine-family-g-native --output-format json`
+  - output contained:
+    - `auxiliary_evidence_path=...`
+    - `auxiliary_spot_symbol=SPY`
+    - `auxiliary_options_symbol=SPY`
+- auto-quant research handoff smoke:
+  - `./target/debug/ict-engine factor-research --symbol NQ --data /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-15m.2023plus.json --backend auto-quant --auxiliary-evidence /tmp/ict-engine-family-g-aux-wrapper.json --state-dir /tmp/ict-engine-family-g-aq --human`
+  - `/tmp/ict-engine-family-g-aq/NQ/auto_quant_handoff.factor_research.json` preserved:
+    - `auxiliary_evidence_path`
+    - `auto_quant_auxiliary_evidence_path=...`
+- auto-quant autoresearch handoff smoke:
+  - `./target/debug/ict-engine factor-autoresearch --symbol NQ --data /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-15m.2023plus.json --backend auto-quant --auxiliary-evidence /tmp/ict-engine-family-g-aux-wrapper.json --state-dir /tmp/ict-engine-family-g-ar --iterations 2`
+  - output payload preserved the same auxiliary path
+- build / targeted verification:
+  - `cargo check --bin ict-engine`
+  - `cargo test --lib handoff_payload_carries_auxiliary_evidence_path_into_commands_and_prompt -- --nocapture`
+  - `cargo test --lib review_marks_prepare_required_when_data_is_missing -- --nocapture`
+
+**Outcome**
+- Family G is no longer blocked by the absence of a dedicated public auxiliary/options research input surface.
+- The remaining work for this family is now actual factor iteration quality and coverage, not CLI/input-surface absence.
+
+### 2026-05-06 Slice 3: Family A opt-in synthetic OHLCV profile
+
+**Implementation**
+- public `factor-research` and `factor-autoresearch` now expose:
+  - `--auto-quant-profile <managed|synthetic_ohlcv>`
+- `synthetic_ohlcv` behavior:
+  - opt-in and state-dir scoped
+  - persists `auto_quant_workspace_profile.json`
+  - switches Auto-Quant workspace contract from:
+    - `prepare.py`
+    - `run.py`
+    - `config.json`
+    - `user_data/strategies`
+  - to:
+    - `prepare_external.py`
+    - `run_tomac.py`
+    - `config.tomac.json`
+    - `user_data/strategies_external`
+  - derives `SYMBOL/USD` `1h/4h/1d` feather files from the caller-supplied cleaned candle JSON instead of assuming the fixed crypto universe
+  - keeps default managed behavior untouched unless the caller explicitly opts in
+- profile seeding is export-aware:
+  - active strategies are copied into `strategies_external`
+  - if they lack `AUTO_QUANT_META`, a minimal valid block is synthesized automatically during materialization
+  - if no active strategies exist, the repo fallback external strategy is seeded automatically
+
+**Verification**
+- handoff / state-profile persistence:
+  - `ICT_ENGINE_AUTO_QUANT_REPO_URL=/Users/thrill3r/Auto-Quant ICT_ENGINE_AUTO_QUANT_BRANCH=autoresearch/apr26 ./target/debug/ict-engine factor-research --symbol NQ --data /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-15m.2023plus.json --backend auto-quant --auto-quant-profile synthetic_ohlcv --state-dir /tmp/ict-engine-family-a-profile --human`
+  - persisted:
+    - `/tmp/ict-engine-family-a-profile/auto_quant_workspace_profile.json`
+    - `/tmp/ict-engine-family-a-profile/NQ/auto_quant_handoff.factor_research.json`
+  - handoff JSON now points at:
+    - `prepare_external.py`
+    - `run_tomac.py`
+    - `config.tomac.json`
+    - `user_data/strategies_external`
+    - `profile_name=synthetic_ohlcv`
+- prepare / readiness:
+  - `./target/debug/ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-family-a-profile`
+  - prepared files:
+    - `NQ_USD-1h.feather`
+    - `NQ_USD-4h.feather`
+    - `NQ_USD-1d.feather`
+  - `./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-family-a-profile`
+  - readiness now reports:
+    - `status=dependency_ready_data_ready`
+    - `recommended_next_command=uv run --with ta-lib .../run_tomac.py`
+    - `auto_quant_profile=synthetic_ohlcv`
+- real run:
+  - `cd /tmp/ict-engine-family-a-profile/.deps/auto-quant && uv run --with ta-lib run_tomac.py`
+  - real backtest output landed for:
+    - `TomacAggressiveBE`
+    - `TomacKillzoneBreakout`
+    - `TomacRRWinRate`
+- export / import closure:
+  - `uv run export_strategy_library.py --strategies-dir user_data/strategies_external --log run_tomac.log --config config.tomac.json --output strategy_library.json`
+  - `./target/debug/ict-engine auto-quant-results-import --symbol NQ --state-dir /tmp/ict-engine-family-a-profile --library /tmp/ict-engine-family-a-profile/.deps/auto-quant/strategy_library.json --log /tmp/ict-engine-family-a-profile/.deps/auto-quant/run_tomac.log`
+  - current imported result:
+    - `n_ok=2`
+    - `n_meta_invalid=1`
+    - `matched=2`
+    - `library_state_path=/tmp/ict-engine-family-a-profile/NQ/auto_quant_strategy_library.json`
+
+**Outcome**
+- Family A is no longer blocked by the fixed crypto-only managed contract.
+- Family A is no longer blocked by the absence of a caller-choosable additive external path for user-specific non-crypto candle data.
+- The remaining work for this family is now iterative quality / coverage improvement on top of the new public surface, not surface absence.
+
 ## Current Todo Board
 
 ### Done
@@ -473,34 +597,32 @@ For cross-market families, add:
 - [x] Identify which family is blocked by missing public input surface rather than by missing factor logic.
 - [x] Establish the baseline execution-tree snapshot for the target symbol.
 - [x] Run Family A through the current public Auto-Quant surface and record its stop reason.
+- [x] Expose a dedicated public auxiliary/options research input for Family G.
+- [x] Expose an opt-in additive external runner profile for Family A and obtain the first real importable after-run artifact.
 
 ### Next
 
-- [ ] Re-route Family A into a market-coverage-capable external runner and obtain the first real after-run workflow/export artifact.
-- [ ] Re-check execution tree after the first real Family A run. If the blocker is still setup quality, keep iterating Family A; otherwise move on.
+- [ ] Re-check execution tree after the first real Family A imported run. If the blocker is still setup quality, keep iterating Family A; otherwise move on.
+- [ ] Use the new Family G auxiliary/options surface to run the first real `options_hedging` / dealer-positioning research slice rather than only proving the input contract.
 - [ ] Run Family B: Directionality / Persistence only after Family A is stable.
 - [ ] Run Family C: Cross-Market Confirmation once paired data exists.
 - [ ] Run Family D whenever `wait_for_reversion` is the persistent blocker.
 - [ ] Run Family E whenever `block_crowded` is the persistent blocker.
 - [ ] Run Family F whenever readiness is suppressed by noise/chaos rather than by setup.
-- [ ] Keep Family G blocked until options/auxiliary public input exists.
+- [ ] Run Family G once options/dealer-positioning data is available for the chosen market/timeframe slice.
 - [ ] Run Family H when execution viability is clearly session-dependent.
 
 ### Not Yet
 
 - [ ] Treat current Rust factor registry as the final factor universe.
 - [ ] Implement new factor families in repo code before Auto-Quant iteration proves they are needed.
-- [ ] Pretend `options_hedging` is a complete public lane before auxiliary/options input exists.
+- [ ] Pretend `options_hedging` is fully validated across market/timeframe coverage just because the public auxiliary/options input surface now exists.
 
 ## Blocked
 
-- [ ] Family A Structure / Setup Quality
-  - blocker: the public managed Auto-Quant execution contract is still the fixed 5-pair crypto portfolio (`BTC/ETH/SOL/BNB/AVAX`), so `data_ready=true` does not yet mean “ready for NQ / full-market execution-tree evidence”
-  - blocker: the repo-owned additive route can target `NQ/USD`, but the currently available wider-market non-crypto data is not yet full `1h/4h/1d` across the broader market set
-  - acceptable temporary state: keep the handoff artifacts, then continue through the repo-owned additive external routing path plus wider-market data expansion before claiming any real Family A keep/discard result
-- [ ] Family G Options / Dealer Positioning
-  - blocker: public `factor-research` / `factor-autoresearch` does not yet expose a dedicated auxiliary/options input
-  - acceptable temporary state: leave blocked and continue the rest of the execution-tree family backlog
+- [ ] Family G Options / Dealer Positioning data quality for the chosen market slice
+  - blocker: the new public input surface exists, but caller-supplied options / dealer-positioning evidence still needs to be gathered market-by-market and timeframe-by-timeframe before Family G quality can be judged
+  - acceptable temporary state: keep the new surface active, then treat actual data coverage / quality as the next gating issue rather than CLI absence
 
 ## Verification Checklist
 
@@ -509,3 +631,4 @@ For cross-market families, add:
 - [ ] Every family has an explicit stop reason: `improved`, `plateaued`, `data_blocked`, or `surface_blocked`.
 - [ ] No family is declared “done” from return improvement alone; it must help execution-tree development.
 - [ ] No family is declared “done” from a single-symbol improvement alone; each factor family should strive for broad market coverage and log any remaining coverage gap explicitly.
+- [ ] No family is declared “done” from a single-timeframe improvement alone; each factor family should log which of `1m`, `5m`, `15m`, `1h`, `4h`, `1d`, `1w`, and `1M` are covered, unsupported, or still pending.

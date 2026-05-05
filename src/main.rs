@@ -29,8 +29,7 @@ use auto_quant_command::{
     auto_quant_agent_material_batch_shell, auto_quant_agent_material_dispatch_shell,
     auto_quant_agent_material_rank_shell, auto_quant_bootstrap_shell,
     auto_quant_consume_live_signals_shell, auto_quant_ingest_real_trades_shell,
-    auto_quant_prepare_shell,
-    auto_quant_pda_unit_batch_shell, auto_quant_pda_unit_dispatch_shell,
+    auto_quant_pda_unit_batch_shell, auto_quant_pda_unit_dispatch_shell, auto_quant_prepare_shell,
     auto_quant_prior_init_shell, auto_quant_promote_canonical_setup_shell,
     auto_quant_results_import_shell, auto_quant_seed_evidence_shell, auto_quant_status_shell,
     auto_quant_update_shell,
@@ -87,9 +86,9 @@ use ict_engine::application::{
         auto_quant_consume_live_signals_command, auto_quant_factor_autoresearch_command,
         auto_quant_factor_research_command, auto_quant_ingest_real_trades_command,
         auto_quant_pda_unit_batch_command, auto_quant_pda_unit_dispatch_command,
-        auto_quant_prepare_workspace_command,
-        auto_quant_prior_init_command, auto_quant_results_import_command,
-        auto_quant_seed_evidence_command, auto_quant_status_command, auto_quant_update_command,
+        auto_quant_prepare_workspace_command, auto_quant_prior_init_command,
+        auto_quant_results_import_command, auto_quant_seed_evidence_command,
+        auto_quant_status_command, auto_quant_update_command,
         AutoQuantAgentMaterialBatchCommandInput, AutoQuantAgentMaterialDispatchCommandInput,
         AutoQuantAgentMaterialRankCommandInput, AutoQuantConsumeLiveSignalsInput,
         AutoQuantIngestRealTradesInput, AutoQuantPdaUnitBatchCommandInput,
@@ -121,8 +120,7 @@ use ict_engine::application::{
         build_expansion_factor_pipeline_report as build_expansion_factor_pipeline_report_v2,
         build_expansion_factor_pipeline_report_with_registry as build_expansion_factor_pipeline_report_with_registry_v2,
         build_pre_bayes_entry_quality_bridge, combine_bias_vectors, combine_liquidity_labels,
-        combine_regime_labels,
-        historical_market_jump_objective_weight, infer_market_from_symbol,
+        combine_regime_labels, historical_market_jump_objective_weight, infer_market_from_symbol,
         market_behavior_profile_for_family, market_category_for_symbol,
         multi_timeframe_entry_quality_bias, persist_market_jump_calibration_from_backtest_runs,
         persist_market_jump_calibration_from_research_runs,
@@ -245,16 +243,15 @@ use update_output::{
     feedback_record_from_artifact, latest_execution_candidate_for_source_run,
     load_canonical_executor_scorecards, persist_ensemble_vote_record,
 };
-use workflow_snapshot_runtime::{
-    compact_canonical_structural_regime_summary, refresh_workflow_snapshot,
-    workflow_phase_snapshot_from_analyze_run,
-};
 #[cfg(test)]
 use workflow_snapshot_runtime::{
     build_workflow_snapshot, workflow_disagreements, workflow_field_diffs,
-    workflow_phase_snapshot_from_backtest_run,
-    workflow_phase_snapshot_from_research_run, workflow_phase_snapshot_from_update_run,
-    BuildWorkflowSnapshotInput,
+    workflow_phase_snapshot_from_backtest_run, workflow_phase_snapshot_from_research_run,
+    workflow_phase_snapshot_from_update_run, BuildWorkflowSnapshotInput,
+};
+use workflow_snapshot_runtime::{
+    compact_canonical_structural_regime_summary, refresh_workflow_snapshot,
+    workflow_phase_snapshot_from_analyze_run,
 };
 #[cfg(test)]
 use workflow_snapshot_runtime::{factor_conflict_sources, family_conflict_sources};
@@ -741,6 +738,16 @@ enum Commands {
         data_1d: Option<String>,
         #[arg(long, help = "Optional paired-market candle JSON path")]
         paired_data: Option<String>,
+        #[arg(
+            long,
+            help = "Optional managed Auto-Quant workspace profile. `synthetic_ohlcv` deploys the additive external runner against the provided primary candle JSON; `managed` clears any saved profile for this state dir."
+        )]
+        auto_quant_profile: Option<String>,
+        #[arg(
+            long,
+            help = "Optional path to AuxiliaryMarketEvidence JSON, or a full analyze-report JSON containing supporting.auxiliary"
+        )]
+        auxiliary_evidence: Option<String>,
         #[arg(long, help = "Optional mutation spec JSON path")]
         mutation_spec: Option<String>,
         #[arg(
@@ -894,6 +901,16 @@ enum Commands {
         data_1d: Option<String>,
         #[arg(long, help = "Optional paired-market candle JSON path")]
         paired_data: Option<String>,
+        #[arg(
+            long,
+            help = "Optional managed Auto-Quant workspace profile. `synthetic_ohlcv` deploys the additive external runner against the provided primary candle JSON; `managed` clears any saved profile for this state dir."
+        )]
+        auto_quant_profile: Option<String>,
+        #[arg(
+            long,
+            help = "Optional path to AuxiliaryMarketEvidence JSON, or a full analyze-report JSON containing supporting.auxiliary"
+        )]
+        auxiliary_evidence: Option<String>,
         #[arg(
             long,
             help = "Optional read-only external strategy material root (for example a Tomac py/csv workspace) used only to enrich auto-quant handoff seed guidance"
@@ -2230,6 +2247,8 @@ fn main() -> Result<()> {
             data_4h,
             data_1d,
             paired_data,
+            auto_quant_profile,
+            auxiliary_evidence,
             mutation_spec,
             control_matrix_pb12,
             strategy_material_root,
@@ -2252,6 +2271,8 @@ fn main() -> Result<()> {
             data_4h: data_4h.as_deref(),
             data_1d: data_1d.as_deref(),
             paired_data: paired_data.as_deref(),
+            auto_quant_profile: auto_quant_profile.as_deref(),
+            auxiliary_evidence: auxiliary_evidence.as_deref(),
             mutation_spec: mutation_spec.as_deref(),
             control_matrix_pb12,
             strategy_material_root: strategy_material_root.as_deref(),
@@ -2313,6 +2334,8 @@ fn main() -> Result<()> {
             data_4h,
             data_1d,
             paired_data,
+            auto_quant_profile,
+            auxiliary_evidence,
             strategy_material_root,
             session_id,
             resume_latest,
@@ -2333,6 +2356,8 @@ fn main() -> Result<()> {
             data_4h: data_4h.as_deref(),
             data_1d: data_1d.as_deref(),
             paired_data: paired_data.as_deref(),
+            auto_quant_profile: auto_quant_profile.as_deref(),
+            auxiliary_evidence: auxiliary_evidence.as_deref(),
             strategy_material_root: strategy_material_root.as_deref(),
             session_id: session_id.as_deref(),
             resume_latest,
