@@ -16,12 +16,16 @@ use crate::application::orchestration::{
 use crate::application::provider_catalog::provider_status_agent_surface;
 use crate::belief_core::ranking_label::{
     load_structural_path_ranker_direct_model_artifact,
+    score_structural_path_ranker_runtime_rows_with_explicit_family,
     load_structural_path_ranker_runtime_artifact_rows,
     load_structural_path_ranking_runtime_selection,
     score_structural_path_ranker_runtime_rows_with_direct_model,
     score_structural_path_ranker_runtime_rows_with_service,
+    structural_path_ranker_supports_explicit_family,
     structural_path_ranker_supports_direct_model_family,
     structural_path_ranker_supports_service_family, structural_path_ranking_runtime_selection_path,
+    StructuralPathRankerCalibrationMetrics, StructuralPathRankerRule,
+    StructuralPathRankerTreeNode, StructuralPathRankerValidationMetrics,
     StructuralPathRankingRuntimeSelection, STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
     STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY,
     STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION,
@@ -312,6 +316,8 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     #[serde(default)]
     pub trainer_artifact_ready: bool,
     #[serde(default)]
+    pub trainer_artifact_status: String,
+    #[serde(default)]
     pub trainer_artifact_path: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub trainer_artifact_protocol_version: Option<String>,
@@ -323,6 +329,8 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub trainer_artifact_score_column: Option<String>,
     #[serde(default)]
     pub trainer_artifact_trained_rows: usize,
+    #[serde(default)]
+    pub trainer_artifact_history_rows: usize,
     #[serde(default)]
     pub trainer_artifact_calibration_rows: usize,
     #[serde(default)]
@@ -448,9 +456,19 @@ pub struct StructuralPathRankingTrainerArtifact {
     #[serde(default)]
     pub trained_rows: usize,
     #[serde(default)]
+    pub history_rows: usize,
+    #[serde(default)]
     pub calibration_rows: usize,
+    #[serde(default, alias = "feature_columns", skip_serializing_if = "Vec::is_empty")]
+    pub selected_features: Vec<String>,
+    #[serde(default)]
+    pub validation_metrics: StructuralPathRankerValidationMetrics,
+    #[serde(default)]
+    pub calibration_metrics: StructuralPathRankerCalibrationMetrics,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub feature_columns: Vec<String>,
+    pub rule_list: Vec<StructuralPathRankerRule>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tree_json: Option<StructuralPathRankerTreeNode>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub created_at: Option<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -1077,6 +1095,22 @@ pub fn structural_path_ranking_target_training_status(
         })
         .unwrap_or_default();
     let runtime_direct_model_ready = !runtime_direct_model_rows.is_empty();
+    let runtime_explicit_rows = trainer_artifact
+        .as_ref()
+        .and_then(|artifact| {
+            if !structural_path_ranker_supports_explicit_family(&artifact.model_family) {
+                return None;
+            }
+            score_structural_path_ranker_runtime_rows_with_explicit_family(
+                state_dir,
+                symbol,
+                &artifact.model_family,
+                &direct_model_candidate_rows,
+            )
+            .ok()
+        })
+        .unwrap_or_default();
+    let runtime_explicit_ready = !runtime_explicit_rows.is_empty();
     let runtime_service_rows = trainer_artifact
         .as_ref()
         .and_then(|artifact| {
@@ -1115,6 +1149,8 @@ pub fn structural_path_ranking_target_training_status(
     });
     let runtime_artifact_rows = if runtime_direct_model_ready {
         runtime_direct_model_rows
+    } else if runtime_explicit_ready {
+        runtime_explicit_rows
     } else if runtime_service_ready {
         runtime_service_rows
     } else if runtime_service_declared {
@@ -1250,6 +1286,15 @@ pub fn structural_path_ranking_target_training_status(
     } else {
         "missing"
     };
+    let trainer_artifact_status = if !trainer_artifact_file_present {
+        "missing".to_string()
+    } else if !trainer_artifact_ready {
+        "present_validation_insufficient".to_string()
+    } else if calibration_quality_ready && production_validation_ready {
+        "runtime_eligible".to_string()
+    } else {
+        "present_validation_insufficient".to_string()
+    };
     let runtime_selection_enabled = runtime_selection
         .as_ref()
         .map(|selection| selection.enabled)
@@ -1261,6 +1306,7 @@ pub fn structural_path_ranking_target_training_status(
         None => "disabled".to_string(),
         Some(selection) if !selection.enabled => "disabled".to_string(),
         Some(_) if runtime_direct_model_ready => "enabled_registered_model_ready".to_string(),
+        Some(_) if runtime_explicit_ready => "enabled_registered_explicit_artifact_ready".to_string(),
         Some(_) if runtime_service_ready => "enabled_registered_service_ready".to_string(),
         Some(_)
             if trainer_artifact.as_ref().is_some_and(|artifact| {
@@ -1270,6 +1316,13 @@ pub fn structural_path_ranking_target_training_status(
             "enabled_registered_model_invalid".to_string()
         }
         Some(_) if runtime_service_declared => "enabled_registered_service_invalid".to_string(),
+        Some(_)
+            if trainer_artifact.as_ref().is_some_and(|artifact| {
+                structural_path_ranker_supports_explicit_family(&artifact.model_family)
+            }) =>
+        {
+            "enabled_registered_explicit_artifact_invalid".to_string()
+        }
         Some(_) if runtime_artifact_match_count > 0 => {
             "enabled_registered_artifact_ready".to_string()
         }
@@ -1287,6 +1340,7 @@ pub fn structural_path_ranking_target_training_status(
     let runtime_selection_ready = matches!(
         runtime_selection_status.as_str(),
         "enabled_registered_model_ready"
+            | "enabled_registered_explicit_artifact_ready"
             | "enabled_registered_service_ready"
             | "enabled_registered_artifact_ready"
             | "enabled_candidate_set_ready"
@@ -1301,7 +1355,7 @@ pub fn structural_path_ranking_target_training_status(
         runtime_history_match_count,
     );
     let summary_line = format!(
-        "structural_path_ranking_target rows={} history_rows={} mature_rows={} history_mature_rows={} raw_scored_mature={}/{} production_validation={}/{} calibration={} trainer_artifact={} runtime_selection={} runtime_mode={} runtime_source={} runtime_matches={}",
+        "structural_path_ranking_target rows={} history_rows={} mature_rows={} history_mature_rows={} raw_scored_mature={}/{} production_validation={}/{} calibration={} trainer_artifact={} trainer_status={} runtime_selection={} runtime_mode={} runtime_source={} runtime_matches={}",
         summary.rows,
         summary.history_rows,
         summary.mature_rows,
@@ -1312,6 +1366,7 @@ pub fn structural_path_ranking_target_training_status(
         production_validation_min_rows,
         calibration_status,
         trainer_status,
+        trainer_artifact_status,
         runtime_selection_status,
         runtime_selection_mode.as_deref().unwrap_or("none"),
         runtime_source_kind.as_deref().unwrap_or("none"),
@@ -1328,6 +1383,7 @@ pub fn structural_path_ranking_target_training_status(
         trainer_calibration_columns: trainer_manifest.calibration_columns.len(),
         trainer_guardrail_columns: trainer_manifest.guardrail_columns.len(),
         trainer_artifact_ready,
+        trainer_artifact_status,
         trainer_artifact_path: trainer_artifact_path.to_string_lossy().to_string(),
         trainer_artifact_protocol_version: trainer_artifact
             .as_ref()
@@ -1351,7 +1407,11 @@ pub fn structural_path_ranking_target_training_status(
             .unwrap_or_default(),
         trainer_artifact_feature_columns: trainer_artifact
             .as_ref()
-            .map(|artifact| artifact.feature_columns.len())
+            .map(|artifact| artifact.selected_features.len())
+            .unwrap_or_default(),
+        trainer_artifact_history_rows: trainer_artifact
+            .as_ref()
+            .map(|artifact| artifact.history_rows)
             .unwrap_or_default(),
         trainer_artifact_uri_present: trainer_artifact
             .as_ref()
@@ -1427,6 +1487,8 @@ fn structural_path_ranking_runtime_source_kind(status: &str) -> Option<&'static 
         "enabled_registered_model_ready" | "enabled_registered_model_invalid" => {
             Some("registered_model_artifact")
         }
+        "enabled_registered_explicit_artifact_ready"
+        | "enabled_registered_explicit_artifact_invalid" => Some("registered_explicit_artifact"),
         "enabled_registered_service_ready" | "enabled_registered_service_invalid" => {
             Some("registered_service")
         }
@@ -1509,10 +1571,77 @@ fn structural_path_ranking_trainer_artifact_ready(
     artifact.protocol_version.trim() == STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION
         && artifact.dataset_role.trim() == manifest.dataset_role.trim()
         && !artifact.model_family.trim().is_empty()
-        && !artifact.artifact_uri.trim().is_empty()
         && !artifact.score_column.trim().is_empty()
         && artifact.trained_rows > 0
-        && !artifact.feature_columns.is_empty()
+        && artifact.history_rows > 0
+        && !artifact.selected_features.is_empty()
+        && if structural_path_ranker_supports_explicit_family(&artifact.model_family) {
+            !artifact.rule_list.is_empty() || artifact.tree_json.is_some()
+        } else {
+            !artifact.artifact_uri.trim().is_empty()
+        }
+}
+
+fn structural_path_ranking_source_artifact_path(artifact_uri: &str) -> Option<std::path::PathBuf> {
+    let trimmed = artifact_uri.trim();
+    if trimmed.is_empty() || trimmed.contains("://") && !trimmed.starts_with("file://") {
+        return None;
+    }
+    if let Some(path) = trimmed.strip_prefix("file://") {
+        return Some(std::path::PathBuf::from(path));
+    }
+    Some(std::path::PathBuf::from(trimmed))
+}
+
+fn merge_structural_path_ranking_source_artifact(
+    artifact: &mut StructuralPathRankingTrainerArtifact,
+    artifact_uri: &str,
+) -> Result<bool> {
+    let Some(path) = structural_path_ranking_source_artifact_path(artifact_uri) else {
+        return Ok(false);
+    };
+    if !path.exists() {
+        return Ok(false);
+    }
+    let raw = fs::read_to_string(path)?;
+    let source = match serde_json::from_str::<StructuralPathRankingTrainerArtifact>(&raw) {
+        Ok(source) => source,
+        Err(_) => return Ok(false),
+    };
+    if let Some(source_family) = non_empty_string(&source.model_family) {
+        if source_family != artifact.model_family {
+            bail!(
+                "structural path ranking trainer artifact family mismatch: cli='{}' source='{}'",
+                artifact.model_family,
+                source_family
+            );
+        }
+    }
+    if let Some(score_column) = non_empty_string(&source.score_column) {
+        artifact.score_column = score_column;
+    }
+    if source.trained_rows > 0 {
+        artifact.trained_rows = source.trained_rows;
+    }
+    if source.history_rows > 0 {
+        artifact.history_rows = source.history_rows;
+    }
+    if source.calibration_rows > 0 {
+        artifact.calibration_rows = source.calibration_rows;
+    }
+    if !source.selected_features.is_empty() {
+        artifact.selected_features = source.selected_features;
+    }
+    if !source.rule_list.is_empty() {
+        artifact.rule_list = source.rule_list;
+    }
+    if source.tree_json.is_some() {
+        artifact.tree_json = source.tree_json;
+    }
+    if !source.notes.is_empty() {
+        artifact.notes.extend(source.notes);
+    }
+    Ok(true)
 }
 
 fn structural_path_ranking_target_calibration_evaluation(
@@ -1626,6 +1755,8 @@ fn register_structural_path_ranking_trainer_artifact(
     }
     let raw_scored_mature_rows =
         structural_path_ranking_target_raw_scored_mature_rows(evaluation_jsonl_path)?;
+    let calibration_evaluation =
+        structural_path_ranking_target_calibration_evaluation(evaluation_jsonl_path)?;
     let trained_row_default = if summary.history_rows > 0 {
         summary.history_rows
     } else if summary.rows_with_training_weight > 0 {
@@ -1640,6 +1771,19 @@ fn register_structural_path_ranking_trainer_artifact(
     } else {
         raw_scored_mature_rows.max(summary.rows_with_calibrated_path_prob)
     };
+    let validation_metrics = StructuralPathRankerValidationMetrics {
+        raw_scored_mature_rows,
+        raw_scored_mature_min_rows: STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS,
+        production_validation_rows: calibration_evaluation.propensity_weighted_rows,
+        production_validation_min_rows: STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS,
+    };
+    let calibration_metrics = StructuralPathRankerCalibrationMetrics {
+        eligible_rows: calibration_evaluation.eligible_rows,
+        brier_score: calibration_evaluation.brier_score,
+        propensity_weighted_brier_score: calibration_evaluation.propensity_weighted_brier_score,
+        expected_calibration_error: calibration_evaluation.expected_calibration_error,
+        max_calibration_error: calibration_evaluation.max_calibration_error,
+    };
     let artifact = StructuralPathRankingTrainerArtifact {
         protocol_version: STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION.to_string(),
         dataset_role: summary.trainer_manifest.dataset_role.clone(),
@@ -1651,14 +1795,29 @@ fn register_structural_path_ranking_trainer_artifact(
             .unwrap_or(summary.trainer_manifest.raw_score_column.as_str())
             .to_string(),
         trained_rows: trained_rows.unwrap_or(trained_row_default),
+        history_rows: summary.history_rows.max(trained_row_default),
         calibration_rows: calibration_rows.unwrap_or(calibration_row_default),
-        feature_columns: summary.trainer_manifest.feature_columns.clone(),
+        selected_features: summary.trainer_manifest.feature_columns.clone(),
+        validation_metrics,
+        calibration_metrics,
+        rule_list: Vec::new(),
+        tree_json: None,
         created_at: Some(Utc::now().to_rfc3339()),
         notes: vec![
             "registered_via=explicit_external_artifact".to_string(),
             "uri_source=cli_opt_in".to_string(),
         ],
     };
+    let mut artifact = artifact;
+    let merged_source = merge_structural_path_ranking_source_artifact(&mut artifact, artifact_uri)?;
+    if structural_path_ranker_supports_explicit_family(model_family)
+        && (!merged_source || (artifact.rule_list.is_empty() && artifact.tree_json.is_none()))
+    {
+        bail!(
+            "explicit path-ranker family '{}' requires a readable JSON artifact with either rule_list or tree_json",
+            model_family
+        );
+    }
     let artifact_filename =
         format!("{POLICY_TRAINING_DIR}/{STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_FILE}");
     save_text_state(
@@ -2585,8 +2744,13 @@ mod tests {
             artifact_uri: "/opt/external/path-ranker/model.cbm".to_string(),
             score_column: "raw_path_score".to_string(),
             trained_rows: 42,
+            history_rows: 42,
             calibration_rows: 12,
-            feature_columns: vec!["rank".to_string(), "raw_path_score".to_string()],
+            selected_features: vec!["rank".to_string(), "raw_path_score".to_string()],
+            validation_metrics: StructuralPathRankerValidationMetrics::default(),
+            calibration_metrics: StructuralPathRankerCalibrationMetrics::default(),
+            rule_list: Vec::new(),
+            tree_json: None,
             created_at: Some("2026-05-02T00:00:00Z".to_string()),
             notes: Vec::new(),
         }
@@ -3310,7 +3474,7 @@ mod tests {
         assert_eq!(artifact.score_column, "raw_path_score");
         assert_eq!(artifact.trained_rows, 2);
         assert_eq!(artifact.calibration_rows, 2);
-        assert_eq!(artifact.feature_columns.len(), 2);
+        assert_eq!(artifact.selected_features.len(), 2);
 
         let status =
             structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
@@ -3322,8 +3486,108 @@ mod tests {
         );
         assert_eq!(status.trainer_artifact_trained_rows, 2);
         assert_eq!(status.trainer_artifact_calibration_rows, 2);
+        assert_eq!(
+            status.trainer_artifact_status,
+            "present_validation_insufficient"
+        );
         assert!(status.trainer_artifact_uri_present);
         assert!(status.summary_line.contains("trainer_artifact=ready"));
+    }
+
+    #[test]
+    fn register_structural_path_ranking_trainer_artifact_requires_rule_or_tree_for_explicit_family()
+    {
+        let temp = tempfile::tempdir().unwrap();
+        let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: "NQ".to_string(),
+            rows: 2,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 2,
+            mature_rows: 2,
+            rows_with_training_weight: 2,
+            rows_with_propensity_estimate: 2,
+            rows_with_calibrated_path_prob: 2,
+            rows_with_path_prob_lower_bound: 2,
+            history_rows: 2,
+            history_mature_rows: 2,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            trainer_manifest: structural_path_ranking_trainer_manifest_for_test(),
+            summary_line: "structural_path_ranking_target rows=2".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        std::fs::write(
+            &jsonl_path,
+            format!(
+                "{}\n{}\n",
+                serde_json::to_string(&structural_path_ranking_row(
+                    "path-win",
+                    0.8,
+                    "matured_success",
+                ))
+                .unwrap(),
+                serde_json::to_string(&structural_path_ranking_row(
+                    "path-loss",
+                    0.2,
+                    "matured_failure",
+                ))
+                .unwrap()
+            ),
+        )
+        .unwrap();
+        let explicit_artifact_path = temp.path().join("corels-artifact.json");
+        std::fs::write(
+            &explicit_artifact_path,
+            serde_json::to_string_pretty(&serde_json::json!({
+                "protocol_version": STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION,
+                "dataset_role": "external_path_ranker_training_dataset",
+                "model_family": crate::belief_core::ranking_label::STRUCTURAL_PATH_RANKER_EXPLICIT_FAMILY_CORELS,
+                "selected_features": ["rank", "experience_prior"],
+                "trained_rows": 2,
+                "history_rows": 2,
+                "validation_metrics": {
+                    "raw_scored_mature_rows": 2,
+                    "raw_scored_mature_min_rows": 30,
+                    "production_validation_rows": 2,
+                    "production_validation_min_rows": 30
+                },
+                "calibration_metrics": {
+                    "eligible_rows": 2
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        let err = register_structural_path_ranking_trainer_artifact(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            explicit_artifact_path.to_str().unwrap(),
+            crate::belief_core::ranking_label::STRUCTURAL_PATH_RANKER_EXPLICIT_FAMILY_CORELS,
+            None,
+            None,
+            None,
+        )
+        .unwrap_err();
+
+        assert!(err
+            .to_string()
+            .contains("requires a readable JSON artifact with either rule_list or tree_json"));
     }
 
     #[test]
@@ -3666,8 +3930,13 @@ mod tests {
             artifact_uri: "artifact_scores.jsonl".to_string(),
             score_column: "raw_path_score".to_string(),
             trained_rows: 42,
+            history_rows: 42,
             calibration_rows: 12,
-            feature_columns: vec!["rank".to_string(), "raw_path_score".to_string()],
+            selected_features: vec!["rank".to_string(), "raw_path_score".to_string()],
+            validation_metrics: StructuralPathRankerValidationMetrics::default(),
+            calibration_metrics: StructuralPathRankerCalibrationMetrics::default(),
+            rule_list: Vec::new(),
+            tree_json: None,
             created_at: None,
             notes: vec![],
         };
@@ -3806,8 +4075,13 @@ mod tests {
             artifact_uri: "path_ranker_direct_model.json".to_string(),
             score_column: "raw_path_score".to_string(),
             trained_rows: 42,
+            history_rows: 42,
             calibration_rows: 12,
-            feature_columns: vec!["rank".to_string(), "experience_prior".to_string()],
+            selected_features: vec!["rank".to_string(), "experience_prior".to_string()],
+            validation_metrics: StructuralPathRankerValidationMetrics::default(),
+            calibration_metrics: StructuralPathRankerCalibrationMetrics::default(),
+            rule_list: Vec::new(),
+            tree_json: None,
             created_at: None,
             notes: vec![],
         };
@@ -3931,8 +4205,13 @@ mod tests {
             artifact_uri: service_uri,
             score_column: "raw_path_score".to_string(),
             trained_rows: 42,
+            history_rows: 42,
             calibration_rows: 12,
-            feature_columns: vec!["rank".to_string(), "experience_prior".to_string()],
+            selected_features: vec!["rank".to_string(), "experience_prior".to_string()],
+            validation_metrics: StructuralPathRankerValidationMetrics::default(),
+            calibration_metrics: StructuralPathRankerCalibrationMetrics::default(),
+            rule_list: Vec::new(),
+            tree_json: None,
             created_at: None,
             notes: vec![],
         };

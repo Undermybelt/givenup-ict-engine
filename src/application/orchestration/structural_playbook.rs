@@ -22,8 +22,10 @@ pub use crate::belief_core::ranking_label::{
     render_structural_path_ranking_target_csv, render_structural_path_ranking_target_jsonl,
     render_structural_path_ranking_target_rows_csv,
     render_structural_path_ranking_target_rows_jsonl,
+    score_structural_path_ranker_runtime_rows_with_explicit_family,
     score_structural_path_ranker_runtime_rows_with_direct_model,
     score_structural_path_ranker_runtime_rows_with_service,
+    structural_path_ranker_supports_explicit_family,
     structural_path_ranker_supports_direct_model_family,
     structural_path_ranker_supports_service_family, structural_path_ranking_beta_lower_bound,
     structural_path_ranking_beta_mean, structural_path_ranking_ips_weight,
@@ -1485,6 +1487,22 @@ fn resolve_structural_path_ranker_runtime(
         })
         .unwrap_or_default();
     let using_direct_model = !direct_model_rows.is_empty();
+    let explicit_rows = artifact_metadata
+        .as_ref()
+        .and_then(|artifact| {
+            if !structural_path_ranker_supports_explicit_family(&artifact.model_family) {
+                return None;
+            }
+            score_structural_path_ranker_runtime_rows_with_explicit_family(
+                state_dir,
+                symbol,
+                &artifact.model_family,
+                current_candidate_rows,
+            )
+            .ok()
+        })
+        .unwrap_or_default();
+    let using_explicit = !explicit_rows.is_empty();
     let service_rows = artifact_metadata
         .as_ref()
         .and_then(|artifact| {
@@ -1507,6 +1525,8 @@ fn resolve_structural_path_ranker_runtime(
     });
     let artifact_rows = if using_direct_model {
         direct_model_rows
+    } else if using_explicit {
+        explicit_rows
     } else if using_service {
         service_rows
     } else if service_declared {
@@ -1609,6 +1629,8 @@ fn resolve_structural_path_ranker_runtime(
             Some(StructuralPathRankerRuntimeRowMatch {
                 source: if using_direct_model {
                     "registered_model_artifact"
+                } else if using_explicit {
+                    "registered_explicit_artifact"
                 } else if using_service {
                     "registered_service"
                 } else {
@@ -1664,7 +1686,9 @@ fn resolve_structural_path_ranker_runtime(
             .or(matched.row.raw_path_score)
             .unwrap_or(raw_score)
             .clamp(0.0, 1.0);
-        let blend_weight = if matched.source.starts_with("registered_artifact") {
+        let blend_weight = if matched.source.starts_with("registered_artifact")
+            || matched.source == "registered_explicit_artifact"
+        {
             if matched.row.path_prob_lower_bound.is_some() {
                 0.45
             } else if matched.row.calibrated_path_prob.is_some() {
@@ -1708,6 +1732,8 @@ fn resolve_structural_path_ranker_runtime(
         enabled: true,
         status: if using_direct_model && artifact_match_count > 0 {
             "using_registered_model_artifact".to_string()
+        } else if using_explicit && artifact_match_count > 0 {
+            "using_registered_explicit_artifact".to_string()
         } else if using_service && artifact_match_count > 0 {
             "using_registered_service_scores".to_string()
         } else if artifact_match_count > 0 {

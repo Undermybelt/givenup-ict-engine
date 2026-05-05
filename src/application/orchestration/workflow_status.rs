@@ -7879,8 +7879,15 @@ mod tests {
             artifact_uri: "artifact_scores.jsonl".to_string(),
             score_column: "raw_path_score".to_string(),
             trained_rows: 42,
+            history_rows: 42,
             calibration_rows: 12,
-            feature_columns: vec!["rank".to_string(), "raw_path_score".to_string()],
+            selected_features: vec!["rank".to_string(), "raw_path_score".to_string()],
+            validation_metrics:
+                crate::belief_core::ranking_label::StructuralPathRankerValidationMetrics::default(),
+            calibration_metrics:
+                crate::belief_core::ranking_label::StructuralPathRankerCalibrationMetrics::default(),
+            rule_list: Vec::new(),
+            tree_json: None,
             created_at: None,
             notes: vec![],
         };
@@ -9251,8 +9258,15 @@ mod tests {
             artifact_uri: "artifact_scores.jsonl".to_string(),
             score_column: "raw_path_score".to_string(),
             trained_rows: 42,
+            history_rows: 42,
             calibration_rows: 12,
-            feature_columns: vec!["rank".to_string(), "raw_path_score".to_string()],
+            selected_features: vec!["rank".to_string(), "raw_path_score".to_string()],
+            validation_metrics:
+                crate::belief_core::ranking_label::StructuralPathRankerValidationMetrics::default(),
+            calibration_metrics:
+                crate::belief_core::ranking_label::StructuralPathRankerCalibrationMetrics::default(),
+            rule_list: Vec::new(),
+            tree_json: None,
             created_at: None,
             notes: vec![],
         };
@@ -9380,8 +9394,15 @@ mod tests {
             artifact_uri: "path_ranker_direct_model.json".to_string(),
             score_column: "raw_path_score".to_string(),
             trained_rows: 42,
+            history_rows: 42,
             calibration_rows: 12,
-            feature_columns: vec!["rank".to_string(), "experience_prior".to_string()],
+            selected_features: vec!["rank".to_string(), "experience_prior".to_string()],
+            validation_metrics:
+                crate::belief_core::ranking_label::StructuralPathRankerValidationMetrics::default(),
+            calibration_metrics:
+                crate::belief_core::ranking_label::StructuralPathRankerCalibrationMetrics::default(),
+            rule_list: Vec::new(),
+            tree_json: None,
             created_at: None,
             notes: vec![],
         };
@@ -9417,6 +9438,124 @@ mod tests {
         assert_eq!(
             agent_value["recommended_path_bundle"]["path_ranker_runtime"]["status"].as_str(),
             Some("using_registered_model_artifact")
+        );
+    }
+
+    #[test]
+    fn agent_workflow_status_can_consume_registered_explicit_rule_artifact() {
+        let snapshot = sample_human_workflow_snapshot();
+        let history = sample_structural_feedback_history();
+        let path_id = "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary";
+        let mut structural_prior_state = StructuralPriorLearningState::default();
+        structural_prior_state.paths.insert(
+            path_id.to_string(),
+            crate::state::StructuralPriorStats {
+                smoothed_prior: 0.62,
+                execution_propensity: 0.6,
+                target_policy_probability_confidence: 0.57,
+                target_policy_probability_lower_bound: 0.31,
+                target_policy_reward_prior: 0.58,
+                target_policy_reward_lower_bound: 0.29,
+                ..crate::state::StructuralPriorStats::default()
+            },
+        );
+        let temp = tempfile::tempdir().unwrap();
+        let summary = crate::application::orchestration::export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &sample_provider_agent_surface(),
+            &history,
+            &structural_prior_state,
+        )
+        .unwrap();
+        let artifact_dir = std::path::Path::new(&summary.summary_path)
+            .parent()
+            .expect("summary parent")
+            .to_path_buf();
+        let artifact =
+            crate::application::entry_models::training_export::StructuralPathRankingTrainerArtifact {
+                protocol_version: "structural-path-ranking-trainer-artifact-v1".to_string(),
+                dataset_role: "external_path_ranker_training_dataset".to_string(),
+                model_family:
+                    crate::belief_core::ranking_label::STRUCTURAL_PATH_RANKER_EXPLICIT_FAMILY_CORELS
+                        .to_string(),
+                artifact_uri: artifact_dir
+                    .join("corels_artifact.json")
+                    .to_string_lossy()
+                    .to_string(),
+                score_column: "raw_path_score".to_string(),
+                trained_rows: 42,
+                history_rows: 42,
+                calibration_rows: 12,
+                selected_features: vec!["rank".to_string(), "experience_prior".to_string()],
+                validation_metrics:
+                    crate::belief_core::ranking_label::StructuralPathRankerValidationMetrics::default(),
+                calibration_metrics:
+                    crate::belief_core::ranking_label::StructuralPathRankerCalibrationMetrics::default(),
+                rule_list: vec![
+                    crate::belief_core::ranking_label::StructuralPathRankerRule {
+                        conditions: vec![
+                            crate::belief_core::ranking_label::StructuralPathRankerRuleCondition {
+                                feature: "rank".to_string(),
+                                operator: "eq".to_string(),
+                                numeric_value: Some(1.0),
+                                string_value: None,
+                            },
+                            crate::belief_core::ranking_label::StructuralPathRankerRuleCondition {
+                                feature: "experience_prior".to_string(),
+                                operator: "ge".to_string(),
+                                numeric_value: Some(0.5),
+                                string_value: None,
+                            },
+                        ],
+                        score: 0.91,
+                        path_prob_lower_bound: Some(0.81),
+                        execution_gate_status: Some("pass".to_string()),
+                    },
+                    crate::belief_core::ranking_label::StructuralPathRankerRule {
+                        conditions: Vec::new(),
+                        score: 0.21,
+                        path_prob_lower_bound: Some(0.11),
+                        execution_gate_status: Some("observe".to_string()),
+                    },
+                ],
+                tree_json: None,
+                created_at: None,
+                notes: vec![],
+            };
+        std::fs::write(
+            artifact_dir.join("structural_path_ranking_trainer_artifact.json"),
+            serde_json::to_string_pretty(&artifact).unwrap(),
+        )
+        .unwrap();
+        crate::application::entry_models::enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            crate::application::orchestration::STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+        )
+        .unwrap();
+
+        let agent_value =
+            build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+                &snapshot,
+                &[],
+                &sample_provider_agent_surface(),
+                &history,
+                &structural_prior_state,
+                Some(temp.path().to_str().unwrap()),
+            );
+        assert_eq!(
+            agent_value["recommended_path_bundle"]["path_ranker_raw_score"].as_f64(),
+            Some(0.91)
+        );
+        assert_eq!(
+            agent_value["recommended_path_bundle"]["path_ranker_runtime_source"].as_str(),
+            Some("registered_explicit_artifact")
+        );
+        assert_eq!(
+            agent_value["recommended_path_bundle"]["path_ranker_runtime"]["status"].as_str(),
+            Some("using_registered_explicit_artifact")
         );
     }
 
@@ -9480,8 +9619,15 @@ mod tests {
             artifact_uri: remote_uri,
             score_column: "raw_path_score".to_string(),
             trained_rows: 42,
+            history_rows: 42,
             calibration_rows: 12,
-            feature_columns: vec!["rank".to_string(), "raw_path_score".to_string()],
+            selected_features: vec!["rank".to_string(), "raw_path_score".to_string()],
+            validation_metrics:
+                crate::belief_core::ranking_label::StructuralPathRankerValidationMetrics::default(),
+            calibration_metrics:
+                crate::belief_core::ranking_label::StructuralPathRankerCalibrationMetrics::default(),
+            rule_list: Vec::new(),
+            tree_json: None,
             created_at: None,
             notes: vec![],
         };
@@ -9578,8 +9724,15 @@ mod tests {
             artifact_uri: service_uri,
             score_column: "raw_path_score".to_string(),
             trained_rows: 42,
+            history_rows: 42,
             calibration_rows: 12,
-            feature_columns: vec!["rank".to_string(), "experience_prior".to_string()],
+            selected_features: vec!["rank".to_string(), "experience_prior".to_string()],
+            validation_metrics:
+                crate::belief_core::ranking_label::StructuralPathRankerValidationMetrics::default(),
+            calibration_metrics:
+                crate::belief_core::ranking_label::StructuralPathRankerCalibrationMetrics::default(),
+            rule_list: Vec::new(),
+            tree_json: None,
             created_at: None,
             notes: vec![],
         };

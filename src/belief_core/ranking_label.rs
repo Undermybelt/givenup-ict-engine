@@ -25,6 +25,9 @@ pub const STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_WEIGHTED_SUM_V1: &str =
 pub const STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_LINEAR_SCORE_V1: &str =
     "linear_feature_score_v1";
 pub const STRUCTURAL_PATH_RANKER_SERVICE_FAMILY_ROW_SCORING_V1: &str = "row_scoring_service_v1";
+pub const STRUCTURAL_PATH_RANKER_EXPLICIT_FAMILY_CORELS: &str = "corels";
+pub const STRUCTURAL_PATH_RANKER_EXPLICIT_FAMILY_GOSDT: &str = "gosdt";
+pub const STRUCTURAL_PATH_RANKER_EXPLICIT_FAMILY_GA_MASK_TREE: &str = "ga_mask_tree";
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
 pub struct StructuralPathRankingRuntimeSelection {
@@ -289,6 +292,106 @@ pub struct StructuralPathRankerDirectModelArtifact {
     pub notes: Vec<String>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankerValidationMetrics {
+    #[serde(default)]
+    pub raw_scored_mature_rows: usize,
+    #[serde(default)]
+    pub raw_scored_mature_min_rows: usize,
+    #[serde(default)]
+    pub production_validation_rows: usize,
+    #[serde(default)]
+    pub production_validation_min_rows: usize,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankerCalibrationMetrics {
+    #[serde(default)]
+    pub eligible_rows: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub brier_score: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub propensity_weighted_brier_score: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub expected_calibration_error: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub max_calibration_error: Option<f64>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankerRuleCondition {
+    #[serde(default)]
+    pub feature: String,
+    #[serde(default)]
+    pub operator: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub numeric_value: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub string_value: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankerRule {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub conditions: Vec<StructuralPathRankerRuleCondition>,
+    #[serde(default)]
+    pub score: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub path_prob_lower_bound: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub execution_gate_status: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankerTreeNode {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub feature: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub operator: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub numeric_value: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub string_value: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub left: Option<Box<StructuralPathRankerTreeNode>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub right: Option<Box<StructuralPathRankerTreeNode>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub score: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub path_prob_lower_bound: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub execution_gate_status: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+struct StructuralPathRankerExplicitArtifact {
+    #[serde(default)]
+    pub protocol_version: String,
+    #[serde(default)]
+    pub dataset_role: String,
+    #[serde(default)]
+    pub model_family: String,
+    #[serde(default)]
+    pub artifact_uri: String,
+    #[serde(default)]
+    pub score_column: String,
+    #[serde(default)]
+    pub trained_rows: usize,
+    #[serde(default)]
+    pub history_rows: usize,
+    #[serde(default, alias = "feature_columns", skip_serializing_if = "Vec::is_empty")]
+    pub selected_features: Vec<String>,
+    #[serde(default)]
+    pub validation_metrics: StructuralPathRankerValidationMetrics,
+    #[serde(default)]
+    pub calibration_metrics: StructuralPathRankerCalibrationMetrics,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub rule_list: Vec<StructuralPathRankerRule>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tree_json: Option<StructuralPathRankerTreeNode>,
+}
+
 #[derive(Debug, Clone, Serialize)]
 struct StructuralPathRankerServiceRequest<'a> {
     protocol_version: &'static str,
@@ -341,6 +444,15 @@ pub fn structural_path_ranker_supports_service_family(model_family: &str) -> boo
     matches!(
         model_family.trim(),
         STRUCTURAL_PATH_RANKER_SERVICE_FAMILY_ROW_SCORING_V1
+    )
+}
+
+pub fn structural_path_ranker_supports_explicit_family(model_family: &str) -> bool {
+    matches!(
+        model_family.trim(),
+        STRUCTURAL_PATH_RANKER_EXPLICIT_FAMILY_CORELS
+            | STRUCTURAL_PATH_RANKER_EXPLICIT_FAMILY_GOSDT
+            | STRUCTURAL_PATH_RANKER_EXPLICIT_FAMILY_GA_MASK_TREE
     )
 }
 
@@ -643,6 +755,139 @@ fn structural_path_ranker_direct_model_probability(
     }
 }
 
+fn structural_path_ranker_condition_matches(
+    condition: &StructuralPathRankerRuleCondition,
+    row: &StructuralPathRankingTargetRow,
+) -> bool {
+    let operator = condition.operator.trim().to_ascii_lowercase();
+    if let Some(value) = structural_path_ranker_row_numeric_feature(row, &condition.feature) {
+        let rhs = condition.numeric_value.unwrap_or_default();
+        return match operator.as_str() {
+            "gt" => value > rhs,
+            "ge" | ">=" => value >= rhs,
+            "lt" => value < rhs,
+            "le" | "<=" => value <= rhs,
+            "eq" | "==" => (value - rhs).abs() <= 1e-9,
+            "neq" | "!=" => (value - rhs).abs() > 1e-9,
+            _ => false,
+        };
+    }
+    if let Some(value) = structural_path_ranker_row_categorical_feature(row, &condition.feature) {
+        let rhs = condition.string_value.as_deref().unwrap_or_default();
+        return match operator.as_str() {
+            "eq" | "==" => value == rhs,
+            "neq" | "!=" => value != rhs,
+            _ => false,
+        };
+    }
+    false
+}
+
+fn structural_path_ranker_rule_matches(
+    rule: &StructuralPathRankerRule,
+    row: &StructuralPathRankingTargetRow,
+) -> bool {
+    rule.conditions
+        .iter()
+        .all(|condition| structural_path_ranker_condition_matches(condition, row))
+}
+
+fn structural_path_ranker_tree_leaf_row(
+    row: &StructuralPathRankingTargetRow,
+    score: f64,
+    path_prob_lower_bound: Option<f64>,
+    execution_gate_status: Option<String>,
+) -> StructuralPathRankerRuntimeRow {
+    let score = score.clamp(0.0, 1.0);
+    StructuralPathRankerRuntimeRow {
+        candidate_set_id: row.candidate_set_id.clone(),
+        path_id: row.path_id.clone(),
+        raw_path_score: Some(score),
+        calibrated_path_prob: Some(score),
+        path_prob_lower_bound,
+        execution_gate_status: Some(
+            execution_gate_status.unwrap_or_else(|| {
+                if path_prob_lower_bound.unwrap_or(score)
+                    >= STRUCTURAL_PATH_RANKING_EXECUTION_GATE_MIN_PATH_PROB
+                {
+                    "pass".to_string()
+                } else {
+                    "observe".to_string()
+                }
+            }),
+        ),
+    }
+}
+
+fn structural_path_ranker_tree_evaluate(
+    node: &StructuralPathRankerTreeNode,
+    row: &StructuralPathRankingTargetRow,
+) -> Option<StructuralPathRankerRuntimeRow> {
+    if let Some(score) = node.score {
+        return Some(structural_path_ranker_tree_leaf_row(
+            row,
+            score,
+            node.path_prob_lower_bound,
+            node.execution_gate_status.clone(),
+        ));
+    }
+    let condition = StructuralPathRankerRuleCondition {
+        feature: node.feature.clone().unwrap_or_default(),
+        operator: node.operator.clone().unwrap_or_default(),
+        numeric_value: node.numeric_value,
+        string_value: node.string_value.clone(),
+    };
+    let next = if structural_path_ranker_condition_matches(&condition, row) {
+        node.left.as_deref()
+    } else {
+        node.right.as_deref()
+    }?;
+    structural_path_ranker_tree_evaluate(next, row)
+}
+
+fn score_structural_path_ranker_runtime_rows_with_explicit_artifact(
+    artifact: &StructuralPathRankerExplicitArtifact,
+    candidate_rows: &[StructuralPathRankingTargetRow],
+) -> Vec<StructuralPathRankerRuntimeRow> {
+    candidate_rows
+        .iter()
+        .filter_map(|row| {
+            if !artifact.rule_list.is_empty() {
+                let rule = artifact
+                    .rule_list
+                    .iter()
+                    .find(|rule| structural_path_ranker_rule_matches(rule, row))?;
+                return Some(structural_path_ranker_tree_leaf_row(
+                    row,
+                    rule.score,
+                    rule.path_prob_lower_bound,
+                    rule.execution_gate_status.clone(),
+                ));
+            }
+            artifact
+                .tree_json
+                .as_ref()
+                .and_then(|tree| structural_path_ranker_tree_evaluate(tree, row))
+        })
+        .collect()
+}
+
+fn load_structural_path_ranker_explicit_artifact(
+    state_dir: &str,
+    symbol: &str,
+) -> Result<Option<StructuralPathRankerExplicitArtifact>> {
+    let path = structural_path_ranker_artifact_json_path(state_dir, symbol);
+    if !path.exists() {
+        return Ok(None);
+    }
+    let raw = fs::read_to_string(path)?;
+    let artifact = serde_json::from_str::<StructuralPathRankerExplicitArtifact>(&raw)?;
+    if !structural_path_ranker_supports_explicit_family(&artifact.model_family) {
+        return Ok(None);
+    }
+    Ok(Some(artifact))
+}
+
 pub fn load_structural_path_ranker_direct_model_artifact(
     state_dir: &str,
     symbol: &str,
@@ -751,6 +996,24 @@ pub fn score_structural_path_ranker_runtime_rows_with_service(
         .error_for_status()?
         .text()?;
     parse_structural_path_ranker_runtime_rows_from_raw("service_response.json", &raw, score_column)
+}
+
+pub fn score_structural_path_ranker_runtime_rows_with_explicit_family(
+    state_dir: &str,
+    symbol: &str,
+    model_family: &str,
+    candidate_rows: &[StructuralPathRankingTargetRow],
+) -> Result<Vec<StructuralPathRankerRuntimeRow>> {
+    if !structural_path_ranker_supports_explicit_family(model_family) {
+        return Ok(Vec::new());
+    }
+    let Some(artifact) = load_structural_path_ranker_explicit_artifact(state_dir, symbol)? else {
+        return Ok(Vec::new());
+    };
+    Ok(score_structural_path_ranker_runtime_rows_with_explicit_artifact(
+        &artifact,
+        candidate_rows,
+    ))
 }
 
 pub fn structural_path_ranking_target_row_history_key(
