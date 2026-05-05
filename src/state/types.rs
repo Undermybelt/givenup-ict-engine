@@ -13,9 +13,10 @@ use crate::belief_core::regime_filter::{
     refresh_branch_transition_posteriors, refresh_node_transition_posteriors,
 };
 use crate::belief_core::source_reliability::{
+    accumulate_structural_prior_source_summary_delayed_reward_observation,
+    accumulate_structural_prior_stats_delayed_reward_observation,
     refresh_structural_prior_delayed_reward_metrics,
     refresh_structural_source_summary_delayed_reward_metrics,
-    structural_delayed_reward_elapsed_hours, structural_delayed_reward_update_resolution_horizon,
 };
 use crate::types::{Direction, FactorIC, Regime, RegimeProbs};
 
@@ -1290,7 +1291,7 @@ fn structural_event_outcome_pseudo_counts(
     }
 }
 
-fn structural_feedback_counter_outcome(record: &FeedbackRecord) -> Option<&'static str> {
+pub(crate) fn structural_feedback_counter_outcome(record: &FeedbackRecord) -> Option<&'static str> {
     match record.realized_outcome.trim().to_ascii_lowercase().as_str() {
         "win" | "profit" | "tp" | "take_profit" => Some("win"),
         "loss" | "lose" | "sl" | "stop" | "stop_loss" => Some("loss"),
@@ -4586,51 +4587,7 @@ fn update_structural_prior_stats(
         stats.not_followed += 1;
         stats.weighted_not_followed_mass += source_weight;
     }
-    if let Some(elapsed_hours) = structural_delayed_reward_elapsed_hours(record, followed_path) {
-        stats.delayed_reward_elapsed_feedback_count += 1;
-        stats.delayed_reward_elapsed_hours_at_risk += elapsed_hours;
-        let matured = structural_feedback_counter_outcome(record).is_some();
-        structural_delayed_reward_update_resolution_horizon(
-            elapsed_hours,
-            matured,
-            1.0,
-            &mut stats.delayed_reward_resolution_horizon_1h_count,
-            &mut stats.delayed_reward_resolution_within_1h_count,
-        );
-        structural_delayed_reward_update_resolution_horizon(
-            elapsed_hours,
-            matured,
-            4.0,
-            &mut stats.delayed_reward_resolution_horizon_4h_count,
-            &mut stats.delayed_reward_resolution_within_4h_count,
-        );
-        structural_delayed_reward_update_resolution_horizon(
-            elapsed_hours,
-            matured,
-            24.0,
-            &mut stats.delayed_reward_resolution_horizon_24h_count,
-            &mut stats.delayed_reward_resolution_within_24h_count,
-        );
-    }
-    match structural_feedback_counter_outcome(record) {
-        Some("win") => {
-            stats.wins += 1;
-        }
-        Some("loss") => {
-            stats.losses += 1;
-        }
-        Some("breakeven") => {
-            stats.breakevens += 1;
-        }
-        Some("invalidated") => {
-            stats.invalidated += 1;
-        }
-        Some("abandoned") => {
-            stats.abandoned += 1;
-        }
-        Some("not_followed") => {}
-        _ => {}
-    }
+    accumulate_structural_prior_stats_delayed_reward_observation(stats, record, followed_path);
     if let Some(pseudo_counts) = structural_feedback_pseudo_counts(record, followed_path) {
         let mass_update = weighted_success_credit_beta_update(
             pseudo_counts.success_credit,
@@ -5389,51 +5346,11 @@ fn update_structural_prior_source_summary_from_feedback(
         summary.not_followed += 1;
         summary.weighted_not_followed_mass += source_weight;
     }
-    if let Some(elapsed_hours) = structural_delayed_reward_elapsed_hours(record, followed_path) {
-        summary.delayed_reward_elapsed_feedback_count += 1;
-        summary.delayed_reward_elapsed_hours_at_risk += elapsed_hours;
-        let matured = structural_feedback_counter_outcome(record).is_some();
-        structural_delayed_reward_update_resolution_horizon(
-            elapsed_hours,
-            matured,
-            1.0,
-            &mut summary.delayed_reward_resolution_horizon_1h_count,
-            &mut summary.delayed_reward_resolution_within_1h_count,
-        );
-        structural_delayed_reward_update_resolution_horizon(
-            elapsed_hours,
-            matured,
-            4.0,
-            &mut summary.delayed_reward_resolution_horizon_4h_count,
-            &mut summary.delayed_reward_resolution_within_4h_count,
-        );
-        structural_delayed_reward_update_resolution_horizon(
-            elapsed_hours,
-            matured,
-            24.0,
-            &mut summary.delayed_reward_resolution_horizon_24h_count,
-            &mut summary.delayed_reward_resolution_within_24h_count,
-        );
-    }
-    match structural_feedback_counter_outcome(record) {
-        Some("win") => {
-            summary.wins += 1;
-        }
-        Some("loss") => {
-            summary.losses += 1;
-        }
-        Some("breakeven") => {
-            summary.breakevens += 1;
-        }
-        Some("invalidated") => {
-            summary.invalidated += 1;
-        }
-        Some("abandoned") => {
-            summary.abandoned += 1;
-        }
-        Some("not_followed") => {}
-        _ => {}
-    }
+    accumulate_structural_prior_source_summary_delayed_reward_observation(
+        summary,
+        record,
+        followed_path,
+    );
     if let Some(pseudo_counts) = structural_feedback_pseudo_counts(record, followed_path) {
         let mass_update = weighted_success_credit_beta_update(
             pseudo_counts.success_credit,

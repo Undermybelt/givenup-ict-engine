@@ -2065,6 +2065,118 @@ pub(crate) fn structural_delayed_reward_update_resolution_horizon(
     }
 }
 
+fn apply_structural_delayed_reward_feedback(
+    wins: &mut usize,
+    losses: &mut usize,
+    breakevens: &mut usize,
+    invalidated: &mut usize,
+    abandoned: &mut usize,
+    delayed_reward_elapsed_feedback_count: &mut usize,
+    delayed_reward_elapsed_hours_at_risk: &mut f64,
+    delayed_reward_resolution_horizon_1h_count: &mut usize,
+    delayed_reward_resolution_within_1h_count: &mut usize,
+    delayed_reward_resolution_horizon_4h_count: &mut usize,
+    delayed_reward_resolution_within_4h_count: &mut usize,
+    delayed_reward_resolution_horizon_24h_count: &mut usize,
+    delayed_reward_resolution_within_24h_count: &mut usize,
+    record: &FeedbackRecord,
+    followed_path: bool,
+) {
+    let counter_outcome = crate::state::structural_feedback_counter_outcome(record);
+    match counter_outcome {
+        Some("win") => {
+            *wins += 1;
+        }
+        Some("loss") => {
+            *losses += 1;
+        }
+        Some("breakeven") => {
+            *breakevens += 1;
+        }
+        Some("invalidated") => {
+            *invalidated += 1;
+        }
+        Some("abandoned") => {
+            *abandoned += 1;
+        }
+        Some("not_followed") | Some(_) | None => {}
+    }
+    if let Some(elapsed_hours) = structural_delayed_reward_elapsed_hours(record, followed_path) {
+        *delayed_reward_elapsed_feedback_count += 1;
+        *delayed_reward_elapsed_hours_at_risk += elapsed_hours;
+        let matured = counter_outcome.is_some();
+        structural_delayed_reward_update_resolution_horizon(
+            elapsed_hours,
+            matured,
+            1.0,
+            delayed_reward_resolution_horizon_1h_count,
+            delayed_reward_resolution_within_1h_count,
+        );
+        structural_delayed_reward_update_resolution_horizon(
+            elapsed_hours,
+            matured,
+            4.0,
+            delayed_reward_resolution_horizon_4h_count,
+            delayed_reward_resolution_within_4h_count,
+        );
+        structural_delayed_reward_update_resolution_horizon(
+            elapsed_hours,
+            matured,
+            24.0,
+            delayed_reward_resolution_horizon_24h_count,
+            delayed_reward_resolution_within_24h_count,
+        );
+    }
+}
+
+pub(crate) fn accumulate_structural_prior_stats_delayed_reward_observation(
+    stats: &mut StructuralPriorStats,
+    record: &FeedbackRecord,
+    followed_path: bool,
+) {
+    apply_structural_delayed_reward_feedback(
+        &mut stats.wins,
+        &mut stats.losses,
+        &mut stats.breakevens,
+        &mut stats.invalidated,
+        &mut stats.abandoned,
+        &mut stats.delayed_reward_elapsed_feedback_count,
+        &mut stats.delayed_reward_elapsed_hours_at_risk,
+        &mut stats.delayed_reward_resolution_horizon_1h_count,
+        &mut stats.delayed_reward_resolution_within_1h_count,
+        &mut stats.delayed_reward_resolution_horizon_4h_count,
+        &mut stats.delayed_reward_resolution_within_4h_count,
+        &mut stats.delayed_reward_resolution_horizon_24h_count,
+        &mut stats.delayed_reward_resolution_within_24h_count,
+        record,
+        followed_path,
+    );
+}
+
+pub(crate) fn accumulate_structural_prior_source_summary_delayed_reward_observation(
+    summary: &mut StructuralPriorSourceSummary,
+    record: &FeedbackRecord,
+    followed_path: bool,
+) {
+    apply_structural_delayed_reward_feedback(
+        &mut summary.wins,
+        &mut summary.losses,
+        &mut summary.breakevens,
+        &mut summary.invalidated,
+        &mut summary.abandoned,
+        &mut summary.delayed_reward_elapsed_feedback_count,
+        &mut summary.delayed_reward_elapsed_hours_at_risk,
+        &mut summary.delayed_reward_resolution_horizon_1h_count,
+        &mut summary.delayed_reward_resolution_within_1h_count,
+        &mut summary.delayed_reward_resolution_horizon_4h_count,
+        &mut summary.delayed_reward_resolution_within_4h_count,
+        &mut summary.delayed_reward_resolution_horizon_24h_count,
+        &mut summary.delayed_reward_resolution_within_24h_count,
+        record,
+        followed_path,
+    );
+}
+
 pub(crate) fn structural_delayed_reward_resolution_horizon_probability(
     within_count: usize,
     horizon_count: usize,

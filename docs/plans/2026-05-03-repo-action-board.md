@@ -176,7 +176,7 @@ cargo test test_structural_source_reliability_em_holdout_prefers_chronological_s
 
 **Done when:** `src/state/types.rs`, `src/application/orchestration/structural_playbook.rs`, `src/application/orchestration/workflow_status.rs`, and `src/main.rs` are consumers or shells rather than dominant owners of structural math.
 
-- [ ] Move the remaining delayed-reward aggregate / hazard / censoring / competing-risk owner logic out of `src/state/types.rs` into `src/belief_core/source_reliability.rs`.
+- [x] Move the remaining delayed-reward aggregate / hazard / censoring / competing-risk owner logic out of `src/state/types.rs` into `src/belief_core/source_reliability.rs`.
 - [ ] Move the remaining temporal / duration rebuild ownership out of `src/state/types.rs` into `src/belief_core/{regime_filter, changepoint_gate}.rs`.
 - [ ] Reduce `src/application/orchestration/structural_playbook.rs` to shared-bundle assembly only. Remove remaining duplicated experience-prior and validation math.
 - [ ] Reduce `src/application/orchestration/workflow_status.rs` to phase selection and rendering only. No structural math ownership should remain there.
@@ -186,6 +186,7 @@ cargo test test_structural_source_reliability_em_holdout_prefers_chronological_s
 
 - `7fadd58` moved source-reliability EM diagnostics / fit / persisted-refresh ownership into `src/belief_core/source_reliability.rs`, with `src/state/types.rs` reduced to thin public wrappers for that lane.
 - delayed-reward aggregate / hazard / censoring / competing-risk formula ownership now also routes through `src/belief_core/source_reliability.rs`, with `src/state/types.rs` reduced further toward refresh-call consumers instead of formula owners.
+- delayed-reward feedback aggregation now also routes through `src/belief_core/source_reliability.rs`, with `src/state/types.rs` reduced to thin callers for stats/source-summary updates; verified with `cargo check`, `cargo test source_reliability_em_readiness_requires_multi_source_overlap`, `cargo test --lib source_reliability_em_fit_learns_lower_reliability_for_conflicting_source`, `cargo test --lib test_structural_source_reliability_em_holdout_prefers_chronological_split`, and `cargo test --lib test_structural_feedback_records_snips_and_dr_policy_priors`.
 
 **Read first when working this lane:**
 
