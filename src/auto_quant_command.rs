@@ -1,7 +1,7 @@
 use super::*;
 
-pub(crate) fn auto_quant_status_shell(state_dir: &str) -> Result<()> {
-    auto_quant_status_command(state_dir)
+pub(crate) fn auto_quant_status_shell(state_dir: &str, output_format: &str) -> Result<()> {
+    auto_quant_status_command(state_dir, output_format)
 }
 
 pub(crate) fn auto_quant_bootstrap_shell(

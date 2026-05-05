@@ -83,6 +83,97 @@ struct AutoQuantHandoffCompactSurface<'a> {
     suggested_next_steps: Vec<String>,
 }
 
+#[derive(Debug, serde::Serialize)]
+struct AutoQuantReadinessCompactSurface<'a> {
+    summary_line: String,
+    status: &'a str,
+    healthy: bool,
+    dependency_healthy: bool,
+    data_ready: bool,
+    bootstrap_needed: bool,
+    update_available: bool,
+    recommended_next_command: &'a str,
+    notes: &'a [String],
+}
+
+fn auto_quant_status_summary_line(readiness: &super::readiness::AutoQuantReadinessSurface) -> String {
+    format!(
+        "auto_quant_status {} healthy={} dependency_healthy={} data_ready={} bootstrap_needed={} update_available={}",
+        readiness.status,
+        readiness.healthy,
+        readiness.dependency_healthy,
+        readiness.data_ready,
+        readiness.bootstrap_needed,
+        readiness.update_available
+    )
+}
+
+fn build_auto_quant_readiness_compact_surface(
+    readiness: &super::readiness::AutoQuantReadinessSurface,
+) -> AutoQuantReadinessCompactSurface<'_> {
+    AutoQuantReadinessCompactSurface {
+        summary_line: auto_quant_status_summary_line(readiness),
+        status: &readiness.status,
+        healthy: readiness.healthy,
+        dependency_healthy: readiness.dependency_healthy,
+        data_ready: readiness.data_ready,
+        bootstrap_needed: readiness.bootstrap_needed,
+        update_available: readiness.update_available,
+        recommended_next_command: &readiness.recommended_next_command,
+        notes: &readiness.notes,
+    }
+}
+
+fn render_auto_quant_readiness_human_output(
+    readiness: &super::readiness::AutoQuantReadinessSurface,
+) -> String {
+    let mut lines = vec![format!(
+        "Auto-Quant status | {} | dependency_healthy={} | data_ready={}",
+        readiness.status, readiness.dependency_healthy, readiness.data_ready
+    )];
+    match readiness.status.as_str() {
+        "missing_dependency" => {
+            lines.push("Next: bootstrap the managed Auto-Quant checkout".to_string())
+        }
+        "dependency_unhealthy" => {
+            lines.push("Next: repair the managed Auto-Quant checkout before use".to_string())
+        }
+        "update_available" => {
+            lines.push("Next: update the managed Auto-Quant checkout to the tracked ref".to_string())
+        }
+        "dependency_ready_data_missing" => {
+            lines.push("Next: prepare Auto-Quant market data before strategy execution".to_string())
+        }
+        "dependency_ready_seed_required" => lines.push(
+            "Next: add 2-3 active non-underscore strategy files before external execution"
+                .to_string(),
+        ),
+        "dependency_ready_data_ready" => {
+            lines.push("Next: workspace is ready for managed external execution".to_string())
+        }
+        _ => {}
+    }
+    if readiness.recommended_next_command.starts_with("blocked:") {
+        lines.push(format!(
+            "Block: {}",
+            readiness
+                .recommended_next_command
+                .trim_start_matches("blocked:")
+                .trim()
+        ));
+    } else if !readiness.recommended_next_command.trim().is_empty() {
+        lines.push(format!("Run: {}", readiness.recommended_next_command));
+    }
+    lines.push(format!(
+        "Workspace: repo={} | data={} | strategies={}",
+        readiness.workspace.repo_root, readiness.workspace.data_dir, readiness.workspace.strategies_dir
+    ));
+    if !readiness.notes.is_empty() {
+        lines.push(format!("Notes: {}", readiness.notes.join(" | ")));
+    }
+    redact_local_paths_in_human_text(&lines.join("\n"))
+}
+
 fn auto_quant_handoff_recommended_next_command(
     payload: &super::handoff::AutoQuantResearchHandoffPayload,
 ) -> String {
@@ -207,10 +298,20 @@ fn emit_auto_quant_handoff_output(
     Ok(())
 }
 
-pub fn auto_quant_status_command(state_dir: &str) -> Result<()> {
+pub fn auto_quant_status_command(state_dir: &str, output_format: &str) -> Result<()> {
     let readiness = auto_quant_readiness(state_dir)?;
-    println!("{}", serde_json::to_string_pretty(&readiness)?);
-    Ok(())
+    match output_format.trim().to_ascii_lowercase().as_str() {
+        "json" => {
+            println!("{}", serde_json::to_string_pretty(&readiness)?);
+            Ok(())
+        }
+        "compact" => print_redacted_json(&build_auto_quant_readiness_compact_surface(&readiness)),
+        "human" => {
+            println!("{}", render_auto_quant_readiness_human_output(&readiness));
+            Ok(())
+        }
+        other => bail!("unsupported auto-quant output format '{}'", other),
+    }
 }
 
 pub fn auto_quant_bootstrap_command(
@@ -1141,6 +1242,30 @@ mod tests {
         assert!(human.contains("Run:"));
         assert!(!human.trim_start().starts_with('{'));
         assert_eq!(output["recommended_next_step"]["action_type"], "run_command");
+    }
+
+    #[test]
+    fn auto_quant_readiness_human_output_is_short_text_not_json_dump() {
+        let temp = tempfile::tempdir().unwrap();
+        let readiness = auto_quant_readiness(temp.path().to_str().unwrap()).unwrap();
+
+        let human = render_auto_quant_readiness_human_output(&readiness);
+
+        assert!(human.contains("Auto-Quant status | missing_dependency"));
+        assert!(human.contains("Run: ict-engine auto-quant-bootstrap"));
+        assert!(!human.trim_start().starts_with('{'));
+    }
+
+    #[test]
+    fn auto_quant_readiness_compact_surface_keeps_summary_line() {
+        let temp = tempfile::tempdir().unwrap();
+        let readiness = auto_quant_readiness(temp.path().to_str().unwrap()).unwrap();
+
+        let compact = build_auto_quant_readiness_compact_surface(&readiness);
+
+        assert!(compact.summary_line.contains("auto_quant_status missing_dependency"));
+        assert_eq!(compact.status, "missing_dependency");
+        assert!(!compact.dependency_healthy);
     }
 
     #[test]

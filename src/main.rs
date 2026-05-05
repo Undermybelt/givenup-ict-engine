@@ -944,6 +944,16 @@ enum Commands {
             help = "State directory holding Auto-Quant dependency metadata"
         )]
         state_dir: String,
+        #[arg(
+            long,
+            default_value = "",
+            help = "Output format: json (default), compact, or human. `--compact` and `--human` are aliases; do not combine them with `--output-format`."
+        )]
+        output_format: String,
+        #[arg(long, help = "Alias for --output-format compact")]
+        compact: bool,
+        #[arg(long, help = "Alias for --output-format human")]
+        human: bool,
     },
     /// Bootstrap the managed Auto-Quant dependency checkout
     AutoQuantBootstrap {
@@ -2376,7 +2386,20 @@ fn main() -> Result<()> {
             },
         )?,
         Commands::Env => env_command()?,
-        Commands::AutoQuantStatus { state_dir } => auto_quant_status_shell(&state_dir)?,
+        Commands::AutoQuantStatus {
+            state_dir,
+            output_format,
+            compact,
+            human,
+        } => auto_quant_status_shell(
+            &state_dir,
+            match resolve_output_format(&output_format, compact, false, human)? {
+                OutputFormat::Json => "json",
+                OutputFormat::Compact => "compact",
+                OutputFormat::Agent => "json",
+                OutputFormat::Human => "human",
+            },
+        )?,
         Commands::AutoQuantBootstrap {
             state_dir,
             repo_url,

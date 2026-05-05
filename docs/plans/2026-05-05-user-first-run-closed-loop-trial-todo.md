@@ -83,6 +83,18 @@
     - `cargo test --lib belief_core::beta_dirichlet_update::tests::weighted_seed_update_matches_structural_outcome_heuristic -- --nocapture`
     - `cargo test --lib state::types::tests::test_structural_prior_seed_rebuilds_node_duration_priors -- --nocapture`
     - `cargo test --lib`
+- [x] Consumer-surface slice 3:
+  - `auto-quant-status` now supports `json` (default), `--compact`, and `--human`
+  - help text now exposes the new consumer output modes
+  - missing-dependency human output now reports a short next step plus repo CLI command instead of raw JSON
+- [x] Focused verification for `auto-quant-status`:
+  - `cargo test --test provider_neutral_cli auto_quant_status_help_and_human_surface_expose_consumer_output_modes -- --nocapture`
+  - `cargo test --lib auto_quant_readiness_human_output_is_short_text_not_json_dump -- --nocapture`
+  - `cargo test --lib auto_quant_readiness_compact_surface_keeps_summary_line -- --nocapture`
+  - real CLI check:
+    - `./target/debug/ict-engine auto-quant-status --help`
+    - `./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-human-surface-aq --human`
+    - `./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-human-surface-aq --compact`
 
 ### Next
 

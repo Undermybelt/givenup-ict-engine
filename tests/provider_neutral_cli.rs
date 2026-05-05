@@ -322,6 +322,36 @@ fn analyze_live_and_pre_bayes_help_expose_human_output_modes() {
 }
 
 #[test]
+fn auto_quant_status_help_and_human_surface_expose_consumer_output_modes() {
+    let binary = env!("CARGO_BIN_EXE_ict-engine");
+    let state = TempDir::new().unwrap();
+
+    let help = Command::new(binary)
+        .args(["auto-quant-status", "--help"])
+        .output()
+        .unwrap();
+    assert!(help.status.success());
+    let help = String::from_utf8(help.stdout).unwrap();
+    assert!(help.contains("--human"));
+    assert!(help.contains("--compact"));
+
+    let output = Command::new(binary)
+        .args([
+            "auto-quant-status",
+            "--state-dir",
+            state.path().to_str().unwrap(),
+            "--human",
+        ])
+        .output()
+        .unwrap();
+    assert!(output.status.success());
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    assert!(stdout.contains("Auto-Quant status | missing_dependency"));
+    assert!(stdout.contains("Run: ict-engine auto-quant-bootstrap"));
+    assert!(!stdout.trim_start().starts_with('{'));
+}
+
+#[test]
 fn workflow_status_human_empty_state_suppresses_validation_noise() {
     let binary = env!("CARGO_BIN_EXE_ict-engine");
     let state = TempDir::new().unwrap();
