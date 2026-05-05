@@ -174,16 +174,81 @@ These judgments are already made for this workstream. Do not reopen them unless 
       - `/tmp/ict-engine-hmm-trainer-out/hmm_numeric_trainer_artifact.json`
       - `/tmp/ict-engine-hmm-trainer-out/candidate_history.jsonl`
       - `/tmp/ict-engine-hmm-trainer-out/replay_summary.json`
+- [x] Execute `Workstream 3 / Slice 1`: add a BBN structure-learning export contract and candidate artifact schema.
+  - landed export contract:
+    - `bbn_structure_learning_rows.jsonl`
+    - row fields:
+      - `market_regime`
+      - `liquidity_context`
+      - `factor_alignment`
+      - `factor_uncertainty`
+      - `multi_timeframe_resonance`
+      - `entry_quality`
+      - `trade_outcome`
+  - landed candidate artifact schema:
+    - `bbn_structure_candidate_artifact.json`
+    - required fields:
+      - `required_edges_satisfied`
+      - `forbidden_edges_violated`
+      - `max_parent_count`
+      - `score_name`
+      - `score_value`
+      - `structure_edges`
+      - `cpt_overrides`
+      - `source_dataset_hash`
+  - validation helper now enforces:
+    - no unknown node vocabulary
+    - no self edges
+    - no parent count above `max_parent_count`
+  - runtime boundary is still fixed-DAG consumer only; the new candidate artifact is review/import input, not permission for online search
+  - verification:
+    - `cargo check`
+    - `cargo test --lib family_overlay_changes_trade_outcome_distribution -- --nocapture`
+    - `cargo test --lib test_trade_evidence_with_timed_pda_summary_overrides_entry_quality -- --nocapture`
+    - `cargo test --lib test_infer_trade_outcome_with_entry_quality_bias -- --nocapture`
+    - `cargo test --lib validate_bbn_structure_candidate_artifact_rejects_unknown_nodes -- --nocapture`
+    - `cargo test --lib validate_bbn_structure_candidate_artifact_rejects_parent_overflow -- --nocapture`
+- [x] Execute `Workstream 3 / Slice 2`: add constrained BBN candidate import/review wiring without turning runtime into an online learner.
+  - landed `scripts/research/bbn_structure_search.py`
+    - constrained backend contract:
+      - `pgmpy_hc`
+      - `pgmpy_ges`
+      - `bnlearn_hc`
+      - `bnlearn_tabu`
+      - `gobnilp_oracle`
+    - when those optional research backends are unavailable locally, the script records `heuristic_fallback` in the candidate `score_name` instead of pretending runtime can learn online
+  - landed review/import helpers in `src/bbn/trading/persistence.rs`:
+    - `load_bbn_structure_candidate_artifact(...)`
+    - `review_bbn_structure_candidate_artifact(...)`
+  - updated `docs/repo-bbn-cpt-loader-notes.md` so reviewed candidates map back into the fixed-DAG loader path rather than a new runtime learner
+  - verification:
+    - `python3 -m py_compile scripts/research/bbn_structure_search.py`
+    - sample `/tmp` candidate generation:
+      - `python3 scripts/research/bbn_structure_search.py --rows-jsonl /tmp/ict-engine-bbn-rows.jsonl --out /tmp/ict-engine-bbn-candidate.json --max-parent-count 3 --backend pgmpy_hc`
+    - output artifact observed:
+      - `/tmp/ict-engine-bbn-candidate.json`
+
+- [x] Decide whether `posterior_temperature` and any gate thresholds should remain schema-only for now or gain a first runtime consumer in the next HMM slice.
+  - `posterior_temperature` stays schema-only for now.
+  - rationale:
+    - the current runtime HMM consumer only owns `transition_smoothing` and `emission_std_floor`
+    - forcing a `posterior_temperature` runtime consumer now would widen the runtime contract beyond the bounded slice
+    - the loader accepts the field and ignores it safely until a later explicit runtime consumer is approved
+
+- [x] Audit whether `Workstream 1` still needs one small follow-up for explicit artifact calibration/mature-row data quality or whether the remaining gaps are intentionally deferred to better labels/history.
+  - result: not a blocker for this algo lane closure
+  - reason:
+    - `policy-training-status` now explicitly reports `trainer_artifact_status=present_validation_insufficient`
+    - fresh `/tmp` first-pass loops can still export, register, enable, and consume explicit artifacts without pretending validation is green
+    - richer matured labels/history are a legitimate later-quality lane, not a schema/runtime-boundary blocker
 
 ### Next
 
-- [ ] Decide whether `posterior_temperature` and any gate thresholds should remain schema-only for now or gain a first runtime consumer in the next HMM slice.
-- [ ] Execute `Workstream 3 / Slice 1`: add a BBN structure-learning export contract and candidate artifact schema.
-- [ ] Before opening `Workstream 3`, audit whether `Workstream 1` still needs one small follow-up for explicit artifact calibration/mature-row data quality or whether the remaining gaps are intentionally deferred to better labels/history.
+- [x] No open implementation slice remains in this board.
 
 ### Not Yet
 
-- [ ] Execute `Workstream 3 / Slice 2`: add constrained BBN candidate import/review wiring without turning runtime into an online learner.
+- [x] Final whole-plan completion audit across Workstreams 1-3, including whether the remaining `posterior_temperature` / mature-row follow-up is a blocker or an explicitly deferred lane.
 
 ## Workstream 1: Structural Path Ranking Explicit Artifact
 
@@ -418,7 +483,7 @@ python3 scripts/research/hmm_numeric_trainer.py \
 
 ### Slice 1: Export And Candidate Schema
 
-- [ ] Define one structure-learning export contract with these columns:
+- [x] Define one structure-learning export contract with these columns:
   - `market_regime`
   - `liquidity_context`
   - `factor_alignment`
@@ -426,7 +491,7 @@ python3 scripts/research/hmm_numeric_trainer.py \
   - `multi_timeframe_resonance`
   - `entry_quality`
   - `trade_outcome`
-- [ ] Define one candidate artifact with:
+- [x] Define one candidate artifact with:
   - `required_edges_satisfied`
   - `forbidden_edges_violated`
   - `max_parent_count`
@@ -435,19 +500,19 @@ python3 scripts/research/hmm_numeric_trainer.py \
   - `structure_edges`
   - `cpt_overrides`
   - `source_dataset_hash`
-- [ ] Lock the first-pass constraints:
+- [x] Lock the first-pass constraints:
   - no new public node vocabulary
   - no runtime online edge search
   - no unrestricted parent growth
 
 ### Slice 2: Candidate Review / Import Path
 
-- [ ] Add `scripts/research/bbn_structure_search.py` for external candidate generation.
-- [ ] Keep the first search stack constrained to:
+- [x] Add `scripts/research/bbn_structure_search.py` for external candidate generation.
+- [x] Keep the first search stack constrained to:
   - `pgmpy` HillClimb / GES with expert knowledge
   - `bnlearn` HC / Tabu with whitelist / blacklist / `maxp`
   - optional reduced-node `GOBNILP` oracle
-- [ ] Map reviewed candidates back into:
+- [x] Map reviewed candidates back into:
   - `src/bbn/trading/topology.rs`
   - `src/bbn/trading/persistence.rs`
   - `docs/repo-bbn-cpt-loader-notes.md`
@@ -508,8 +573,8 @@ mkdir -p /tmp/ict-engine-algo20250505
 
 ## Success Standard
 
-- [ ] `Workstream 1` produces one explicit rule/tree artifact that can be exported, registered, enabled, and summarized through existing status surfaces.
-- [ ] `Workstream 2` produces one explicit HMM numeric artifact that can be loaded with safe fallback.
-- [ ] `Workstream 3` produces one explicit BBN structure/CPT candidate artifact without moving learning into runtime.
-- [ ] No slice breaks zero-config consumer behavior.
-- [ ] No slice introduces repo-default pollution or maintainer-local path leakage.
+- [x] `Workstream 1` produces one explicit rule/tree artifact that can be exported, registered, enabled, and summarized through existing status surfaces.
+- [x] `Workstream 2` produces one explicit HMM numeric artifact that can be loaded with safe fallback.
+- [x] `Workstream 3` produces one explicit BBN structure/CPT candidate artifact without moving learning into runtime.
+- [x] No slice breaks zero-config consumer behavior.
+- [x] No slice introduces repo-default pollution or maintainer-local path leakage.
