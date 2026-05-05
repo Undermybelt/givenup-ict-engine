@@ -25,7 +25,7 @@ use crate::application::output_foundation::{
 };
 use crate::application::provider_catalog::{
     build_workflow_provider_support, provider_status_agent_command_for_surface,
-    provider_status_agent_surface, ProviderCatalogAgentSurface,
+    provider_status_agent_surface, ProviderCatalogAgentItem, ProviderCatalogAgentSurface,
 };
 use crate::application::release_closure::workflow_next_step_view;
 use crate::config::shell_quote;
@@ -503,6 +503,27 @@ pub struct AgentBootstrapSnapshot {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct WorkflowFirstRunRoute {
+    pub route_id: String,
+    pub label: String,
+    pub summary: String,
+    pub command: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub follow_up_command: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct WorkflowFirstRunGuide {
+    pub active: bool,
+    pub summary: String,
+    pub provider_command: String,
+    pub provider_summary: String,
+    pub bootstrap_command: String,
+    pub optional_profile_policy: String,
+    pub routes: Vec<WorkflowFirstRunRoute>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct AgentBootstrapInputs {
     pub backtest: AgentBootstrapBacktestInput,
     pub live: AgentBootstrapLiveInput,
@@ -660,6 +681,172 @@ pub fn humanize_workflow_command(command: &str) -> String {
         return format!("Blocked: {}", trimmed.trim_start_matches("blocked:").trim());
     }
     format!("Next step: {}", trimmed)
+}
+
+fn workflow_status_bootstrap_command(symbol: &str, state_dir: Option<&str>) -> String {
+    format!(
+        "ict-engine workflow-status --symbol {} --state-dir {} --phase bootstrap",
+        shell_quote(symbol),
+        shell_quote(state_dir.unwrap_or("<state-dir>"))
+    )
+}
+
+fn workflow_status_provider_compact_command(
+    provider_status_agent: &ProviderCatalogAgentSurface,
+) -> String {
+    if let Some(profile) = provider_status_agent.selected_profile.as_ref() {
+        return format!(
+            "ict-engine provider-status --compact --profile {}",
+            shell_quote(&profile.selector)
+        );
+    }
+    "ict-engine provider-status --compact".to_string()
+}
+
+fn first_run_provider_ids(
+    providers: &[ProviderCatalogAgentItem],
+    predicate: impl Fn(&ProviderCatalogAgentItem) -> bool,
+) -> Vec<String> {
+    providers
+        .iter()
+        .filter(|provider| predicate(provider))
+        .map(|provider| provider.provider_id.clone())
+        .collect::<Vec<_>>()
+}
+
+fn build_first_run_provider_summary(provider_status_agent: &ProviderCatalogAgentSurface) -> String {
+    let tradfi = provider_status_agent
+        .providers
+        .iter()
+        .filter(|provider| {
+            provider.ready
+                && provider.user_access == "free_no_login"
+                && provider.market_fit.iter().any(|fit| fit == "tradfi")
+        })
+        .min_by_key(|provider| provider.fallback_priority.unwrap_or(u8::MAX))
+        .map(|provider| provider.provider_id.clone())
+        .unwrap_or_else(|| "none".to_string());
+    let live_zero_config = first_run_provider_ids(&provider_status_agent.providers, |provider| {
+        provider.ready && provider.user_access == "zero_config_local"
+    });
+    let crypto = first_run_provider_ids(&provider_status_agent.providers, |provider| {
+        provider.ready
+            && provider.user_access == "public_no_login"
+            && provider.market_fit.iter().any(|fit| fit == "crypto")
+    });
+    let setup_required = first_run_provider_ids(&provider_status_agent.providers, |provider| {
+        provider.selectable_by_user
+            && !provider.ready
+            && matches!(
+                provider.user_access.as_str(),
+                "login_and_local_runtime" | "api_key_required" | "operator_runtime_optional"
+            )
+    });
+    let live_zero_config = if live_zero_config.is_empty() {
+        "none".to_string()
+    } else {
+        live_zero_config.join(", ")
+    };
+    let crypto = if crypto.is_empty() {
+        "none".to_string()
+    } else {
+        crypto.join(", ")
+    };
+    let setup_required = if setup_required.is_empty() {
+        "none".to_string()
+    } else {
+        setup_required.join(", ")
+    };
+    format!(
+        "tradfi free fallback={} | live zero-config={} | crypto public={} | setup required={}",
+        tradfi, live_zero_config, crypto, setup_required
+    )
+}
+
+fn build_first_run_guide(
+    symbol: &str,
+    state_dir: Option<&str>,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+) -> WorkflowFirstRunGuide {
+    let bootstrap_command = workflow_status_bootstrap_command(symbol, state_dir);
+    let state_dir = shell_quote(state_dir.unwrap_or("<state-dir>"));
+    let symbol = shell_quote(symbol);
+    WorkflowFirstRunGuide {
+        active: true,
+        summary: "Choose a first path: replay a demo/historical run, iterate factors/backtests from historical data, or bootstrap the live path after provider selection.".to_string(),
+        provider_command: workflow_status_provider_compact_command(provider_status_agent),
+        provider_summary: build_first_run_provider_summary(provider_status_agent),
+        bootstrap_command: bootstrap_command.clone(),
+        optional_profile_policy:
+            "opt-in local profiles stay hidden by default; only reuse them when the user explicitly passes --profile.".to_string(),
+        routes: vec![
+            WorkflowFirstRunRoute {
+                route_id: "replay".to_string(),
+                label: "Replay / Review".to_string(),
+                summary:
+                    "Start with a safe demo or historical review path before changing factors."
+                        .to_string(),
+                command: format!(
+                    "ict-engine analyze --symbol {} --demo --state-dir {} --human",
+                    symbol, state_dir
+                ),
+                follow_up_command: None,
+            },
+            WorkflowFirstRunRoute {
+                route_id: "backtest_or_factor_loop".to_string(),
+                label: "Backtest / Factors".to_string(),
+                summary:
+                    "Use historical data to clarify strategy and iterate factors or backtests."
+                        .to_string(),
+                command: format!(
+                    "ict-engine factor-research --symbol {} --data <historical-data.json> --state-dir {} --human",
+                    symbol, state_dir
+                ),
+                follow_up_command: Some(format!(
+                    "ict-engine factor-backtest --symbol {} --data <historical-data.json> --state-dir {} --human",
+                    symbol, state_dir
+                )),
+            },
+            WorkflowFirstRunRoute {
+                route_id: "live".to_string(),
+                label: "Live".to_string(),
+                summary:
+                    "Inspect provider and symbol prerequisites first, then continue into analyze-live."
+                        .to_string(),
+                command: bootstrap_command,
+                follow_up_command: Some(format!(
+                    "ict-engine analyze-live --symbol {} --state-dir {}",
+                    symbol, state_dir
+                )),
+            },
+        ],
+    }
+}
+
+fn first_run_route_line(guide: &WorkflowFirstRunGuide) -> String {
+    let replay = guide
+        .routes
+        .iter()
+        .find(|route| route.route_id == "replay")
+        .map(|route| route.command.clone())
+        .unwrap_or_else(|| "ict-engine analyze --demo".to_string());
+    let factor_loop = guide
+        .routes
+        .iter()
+        .find(|route| route.route_id == "backtest_or_factor_loop")
+        .map(|route| route.command.clone())
+        .unwrap_or_else(|| "ict-engine factor-research --data <historical-data.json>".to_string());
+    format!(
+        "Routes: replay={} | factors/backtest={} | live bootstrap={}",
+        replay, factor_loop, guide.bootstrap_command
+    )
+}
+
+fn first_run_next_action(guide: &WorkflowFirstRunGuide) -> String {
+    format!(
+        "Start with {}. Then choose replay, factors/backtest, or live from the routes below.",
+        guide.provider_command
+    )
 }
 
 fn workflow_human_deferred_command(command: &str) -> Option<String> {
@@ -869,12 +1056,25 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     let hard_block_active = hard_block_statuses
         .iter()
         .any(|status| snapshot.blocking_truth.status == *status);
-    let top_level_command = if hard_block_active {
+    let raw_top_level_command = if hard_block_active {
         snapshot.blocking_truth.next_command.clone()
     } else {
         snapshot.recommended_next_command.clone()
     };
     let provider_status_command = provider_status_agent_command_for_surface(provider_status_agent);
+    let first_run_guide = if no_workflow_state && raw_top_level_command.trim().is_empty() {
+        Some(build_first_run_guide(
+            &snapshot.symbol,
+            state_dir,
+            provider_status_agent,
+        ))
+    } else {
+        None
+    };
+    let top_level_command = first_run_guide
+        .as_ref()
+        .map(|guide| guide.bootstrap_command.clone())
+        .unwrap_or(raw_top_level_command);
     let historical_data_gate_active = !selected_data_candidates.is_empty()
         && (top_level_command.contains("factor-research")
             || top_level_command.contains("factor-backtest")
@@ -907,7 +1107,9 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
             .reason
             .contains("user_selected_historical_data_missing");
     let deferred_user_selection_command = workflow_human_deferred_command(&top_level_command);
-    let base_human_next_action = if user_selection_pending {
+    let base_human_next_action = if let Some(guide) = first_run_guide.as_ref() {
+        first_run_next_action(guide)
+    } else if user_selection_pending {
         if !historical_data_request_template.is_empty() {
             match deferred_user_selection_command.as_deref() {
                 Some(command) => format!(
@@ -993,23 +1195,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default();
-    let opt_in_profile_line = if provider_status_agent.selected_profile.is_none()
-        && !provider_status_agent.available_opt_in_profiles.is_empty()
-    {
-        let selectors = provider_status_agent
-            .available_opt_in_profiles
-            .iter()
-            .take(2)
-            .map(|profile| profile.selector.clone())
-            .collect::<Vec<_>>()
-            .join(", ");
-        Some(format!(
-            "Profiles: opt-in only. Use --profile <id-or-path> to reuse one of: {}",
-            selectors
-        ))
-    } else {
-        None
-    };
+    let opt_in_profile_line = None::<String>;
     let human_next_action = if provider_support.active {
         format!(
             "Resolve provider prerequisites for {} before continuing. {}",
@@ -1019,7 +1205,12 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     } else {
         base_human_next_action
     };
-    let provider_line = if provider_support.active {
+    let provider_line = if let Some(guide) = first_run_guide.as_ref() {
+        Some(format!(
+            "Provider: {} Check: {}",
+            guide.provider_summary, guide.provider_command
+        ))
+    } else if provider_support.active {
         let prompt_summary = provider_support
             .install_prompts
             .iter()
@@ -1036,6 +1227,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     } else {
         None
     };
+    let route_line = first_run_guide.as_ref().map(first_run_route_line);
     let mut summary_parts = vec![
         snapshot.symbol.clone(),
         workflow_status_focus_phase(snapshot),
@@ -1161,7 +1353,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
             runtime_context,
         );
     let execution_contract_active =
-        !hard_block_active && !historical_data_gate_active && !provider_support.active;
+        !no_workflow_state && !hard_block_active && !historical_data_gate_active && !provider_support.active;
     let top_path_candidates_line = if top_path_candidates.candidates.is_empty() {
         None
     } else {
@@ -1307,6 +1499,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "blocking_line": blocking_line,
         "next_action_line": next_action_line,
         "provider_line": provider_line,
+        "route_line": route_line,
         "opt_in_profile_line": opt_in_profile_line,
         "structural_feedback_line": structural_feedback_line,
         "structural_path_line": structural_path_line,
@@ -1449,7 +1642,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     });
     if let Value::Object(map) = &mut value {
         map.insert(
-            "provider_support".to_string(),
+        "provider_support".to_string(),
             serde_json::json!({
                 "command": provider_status_command,
                 "agent_summary": provider_status_agent,
@@ -1461,6 +1654,10 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
                     "install_prompts": provider_support.install_prompts,
                 },
             }),
+        );
+        map.insert(
+            "first_run_router".to_string(),
+            serde_json::to_value(first_run_guide).unwrap_or_default(),
         );
         map.insert(
             "structural_temporal_line".to_string(),
@@ -1634,11 +1831,24 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
     } else {
         "recommended_next_command"
     };
-    let next_command = if hard_block_active {
+    let raw_next_command = if hard_block_active {
         snapshot.blocking_truth.next_command.clone()
     } else {
         snapshot.recommended_next_command.clone()
     };
+    let first_run_guide = if no_workflow_state && raw_next_command.trim().is_empty() {
+        Some(build_first_run_guide(
+            &snapshot.symbol,
+            state_dir,
+            provider_status_agent,
+        ))
+    } else {
+        None
+    };
+    let next_command = first_run_guide
+        .as_ref()
+        .map(|guide| guide.bootstrap_command.clone())
+        .unwrap_or(raw_next_command);
     let next_command_value = if no_workflow_state && next_command.trim().is_empty() {
         serde_json::Value::Null
     } else {
@@ -1736,7 +1946,7 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default();
-    let execution_contract_active = !hard_block_active && !provider_support.active;
+    let execution_contract_active = !no_workflow_state && !hard_block_active && !provider_support.active;
     let latest_structural_feedback = snapshot
         .latest_update
         .as_ref()
@@ -1823,7 +2033,11 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "blocking_reason": blocking_reason,
         "hard_block_active": hard_block_active,
         "next_command": next_command_value,
-        "next_command_source": command_source,
+        "next_command_source": if no_workflow_state && snapshot.recommended_next_command.trim().is_empty() {
+            "first_run_router"
+        } else {
+            command_source
+        },
         "pda_cluster_label": latest_phase.and_then(|phase| phase.pda_cluster_label.clone()),
         "hybrid_duration_model": latest_phase.and_then(|phase| phase.hybrid_duration_model.clone()),
         "hybrid_remaining_expected_bars": latest_phase.and_then(|phase| phase.hybrid_remaining_expected_bars),
@@ -1834,6 +2048,7 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "top_actionable": top_actionable,
         "ensemble": ensemble_summary,
         "provider_support": provider_support,
+        "first_run_router": first_run_guide,
         "latest_structural_feedback": latest_structural_feedback,
         "experience_prior_surface": experience_prior_surface,
         "structural_validation_summary": structural_validation_summary,
@@ -1989,6 +2204,9 @@ pub fn emit_workflow_status_output(
             }
             if let Some(provider) = value.get("provider_line").and_then(Value::as_str) {
                 println!("{}", redact_local_paths_in_human_text(provider));
+            }
+            if let Some(routes) = value.get("route_line").and_then(Value::as_str) {
+                println!("{}", redact_local_paths_in_human_text(routes));
             }
             if let Some(profile) = value.get("opt_in_profile_line").and_then(Value::as_str) {
                 println!("{}", redact_local_paths_in_human_text(profile));
@@ -3675,7 +3893,6 @@ mod tests {
     use crate::application::orchestration::EnsembleHardBlockArtifact;
     use crate::application::provider_catalog::{
         ProviderCatalogAgentSurface, ProviderCatalogPendingAgentItem,
-        ProviderProfileReferenceSurface,
     };
     use chrono::TimeZone;
     use std::io::{Read, Write};
@@ -3689,6 +3906,57 @@ mod tests {
                 "live_runtime".to_string(),
                 "1/3".to_string(),
             )]),
+            providers: vec![
+                ProviderCatalogAgentItem {
+                    provider_id: "openbb".to_string(),
+                    domain: "live_runtime".to_string(),
+                    selectable_by_user: true,
+                    adopted_by_default: true,
+                    ready: true,
+                    access_mode: "local_library".to_string(),
+                    user_access: "zero_config_local".to_string(),
+                    market_fit: vec!["tradfi".to_string(), "crypto".to_string()],
+                    fallback_priority: Some(1),
+                    status: "ready".to_string(),
+                    reason: "native_openbb_backend_available".to_string(),
+                    summary: "Zero-config live runtime.".to_string(),
+                    install_prompts: Vec::new(),
+                },
+                ProviderCatalogAgentItem {
+                    provider_id: "openalice".to_string(),
+                    domain: "live_runtime".to_string(),
+                    selectable_by_user: true,
+                    adopted_by_default: false,
+                    ready: false,
+                    access_mode: "external_http_runtime".to_string(),
+                    user_access: "operator_runtime_optional".to_string(),
+                    market_fit: vec!["tradfi".to_string(), "crypto".to_string()],
+                    fallback_priority: Some(20),
+                    status: "operator_runtime_required".to_string(),
+                    reason: "base_url_and_service_required".to_string(),
+                    summary: "Optional OpenAlice runtime.".to_string(),
+                    install_prompts: vec![
+                        "Ask whether the user wants zero-config openbb or openalice.".to_string(),
+                    ],
+                },
+                ProviderCatalogAgentItem {
+                    provider_id: "nofx".to_string(),
+                    domain: "live_runtime".to_string(),
+                    selectable_by_user: true,
+                    adopted_by_default: false,
+                    ready: false,
+                    access_mode: "external_http_runtime".to_string(),
+                    user_access: "operator_runtime_optional".to_string(),
+                    market_fit: vec!["tradfi".to_string(), "crypto".to_string()],
+                    fallback_priority: Some(21),
+                    status: "operator_runtime_required".to_string(),
+                    reason: "base_url_and_service_required".to_string(),
+                    summary: "Optional NoFX runtime.".to_string(),
+                    install_prompts: vec![
+                        "Ask whether the user wants zero-config openbb or nofx.".to_string(),
+                    ],
+                },
+            ],
             ready_providers: vec!["openbb".to_string()],
             pending_providers: vec![
                 "openalice@live_runtime:operator_runtime_required:base_url_and_service_required"
@@ -3724,13 +3992,7 @@ mod tests {
                 "Ask the user for a TradingViewRemix MCP API key before attempting TradingViewRemix-backed live or options workflows. Search keywords: TradingViewRemix MCP API key.".to_string(),
                 "Ask the user to install IBKR TWS or IB Gateway and enable the local API before attempting IBKR-backed live workflows. Search keywords: Interactive Brokers TWS download, IB Gateway download.".to_string(),
             ],
-            available_opt_in_profiles: vec![ProviderProfileReferenceSurface {
-                profile_id: "thrill3r_nq_closed_loop_v1".to_string(),
-                display_name: "Thrill3r NQ Closed Loop v1".to_string(),
-                selector: "thrill3r-nq-closed-loop-v1".to_string(),
-                opt_in_only: true,
-                summary: "Personal NQ workflow".to_string(),
-            }],
+            available_opt_in_profiles: Vec::new(),
             selected_profile: None,
             selected_profile_full: None,
         }
@@ -4662,6 +4924,14 @@ mod tests {
             "No workflow phase summary available yet."
         );
         assert!(value["structural_validation_line"].is_null());
+        assert!(value["next_action_line"]
+            .as_str()
+            .unwrap()
+            .contains("ict-engine provider-status --compact"));
+        assert!(value["route_line"]
+            .as_str()
+            .unwrap()
+            .contains("live bootstrap"));
     }
 
     #[test]
@@ -4695,8 +4965,16 @@ mod tests {
         assert_eq!(value["latest_phase"], "no_workflow_state");
         assert_eq!(value["blocking_status"], "no_workflow_state");
         assert_eq!(value["blocking_reason"], "no_workflow_state");
-        assert!(value["next_command"].is_null());
-        assert_eq!(value["next_step"]["action_type"], "none");
+        assert_eq!(value["next_command_source"], "first_run_router");
+        assert!(value["next_command"]
+            .as_str()
+            .unwrap()
+            .contains("--phase bootstrap"));
+        assert_eq!(value["next_step"]["action_type"], "run_command");
+        assert!(value["first_run_router"]["provider_summary"]
+            .as_str()
+            .unwrap()
+            .contains("tradfi free fallback"));
     }
 
     #[test]
@@ -4734,10 +5012,7 @@ mod tests {
             .unwrap()
             .iter()
             .any(|item| item.as_str().unwrap().contains("zero-config openbb")));
-        assert_eq!(
-            value["available_opt_in_profiles"][0]["selector"],
-            "thrill3r-nq-closed-loop-v1"
-        );
+        assert!(value["available_opt_in_profiles"].as_array().unwrap().is_empty());
     }
 
     #[test]
@@ -4778,16 +5053,13 @@ mod tests {
     }
 
     #[test]
-    fn human_workflow_status_view_surfaces_opt_in_profile_hint_when_unselected() {
+    fn human_workflow_status_view_hides_opt_in_profile_hint_when_unselected() {
         let value = build_human_workflow_status_view(&WorkflowSnapshot::default(), &[]);
-        assert!(value["opt_in_profile_line"]
+        assert!(value["opt_in_profile_line"].is_null());
+        assert!(value["provider_line"]
             .as_str()
             .unwrap()
-            .contains("Use --profile <id-or-path>"));
-        assert!(value["opt_in_profile_line"]
-            .as_str()
-            .unwrap()
-            .contains("thrill3r-nq-closed-loop-v1"));
+            .contains("tradfi free fallback"));
     }
 
     #[test]
@@ -4921,12 +5193,12 @@ mod tests {
         );
         assert_eq!(
             view.detected_paths.multi_timeframe_clean_root.as_deref(),
-            Some("/tmp/ict-engine-mtf")
+            Some("/tmp/tomac/ict-cleaned-mtf")
         );
         assert!(view
             .commands
             .clean_multi_timeframe
-            .contains("ict-engine clean-futures --root /tmp/tomac --output-dir /tmp/ict-engine-mtf --multi-timeframe"));
+            .contains("ict-engine clean-futures --root /tmp/tomac --output-dir /tmp/tomac/ict-cleaned-mtf --multi-timeframe"));
     }
 
     #[test]

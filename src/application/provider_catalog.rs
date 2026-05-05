@@ -61,6 +61,11 @@ pub struct ProviderCatalogItem {
     pub selectable_by_user: bool,
     pub adopted_by_default: bool,
     pub access_mode: String,
+    pub user_access: String,
+    pub market_fit: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fallback_priority: Option<u8>,
+    pub user_summary: String,
     pub ready: bool,
     pub status: String,
     pub reason: String,
@@ -94,6 +99,7 @@ pub struct ProviderCatalogSurface {
 pub struct ProviderCatalogAgentSurface {
     pub summary_line: String,
     pub ready_by_domain: BTreeMap<String, String>,
+    pub providers: Vec<ProviderCatalogAgentItem>,
     pub ready_providers: Vec<String>,
     pub pending_providers: Vec<String>,
     pub pending_provider_details: Vec<ProviderCatalogPendingAgentItem>,
@@ -106,6 +112,25 @@ pub struct ProviderCatalogAgentSurface {
     pub selected_profile: Option<ProviderProfileAgentSelectionSurface>,
     #[serde(skip)]
     pub selected_profile_full: Option<ProviderProfileSelectionSurface>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, Eq)]
+pub struct ProviderCatalogAgentItem {
+    pub provider_id: String,
+    pub domain: String,
+    pub selectable_by_user: bool,
+    pub adopted_by_default: bool,
+    pub ready: bool,
+    pub access_mode: String,
+    pub user_access: String,
+    pub market_fit: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fallback_priority: Option<u8>,
+    pub status: String,
+    pub reason: String,
+    pub summary: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub install_prompts: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, Eq)]
@@ -381,6 +406,10 @@ impl ProviderCatalogSource for MarketDataProviderCatalogSource {
                 selectable_by_user: true,
                 adopted_by_default: false,
                 access_mode: market_data_access_mode(&status.status, &status.reason),
+                user_access: String::new(),
+                market_fit: Vec::new(),
+                fallback_priority: None,
+                user_summary: String::new(),
                 ready: status.healthy,
                 status: status.status,
                 reason: status.reason,
@@ -425,6 +454,9 @@ impl ProviderCatalogSource for MarketDataProviderCatalogSource {
                 ],
             ),
         ]);
+        for item in &mut items {
+            apply_provider_user_semantics(item);
+        }
         Ok(items)
     }
 }
@@ -445,6 +477,12 @@ impl ProviderCatalogSource for LiveRuntimeProviderCatalogSource {
                 selectable_by_user: true,
                 adopted_by_default: true,
                 access_mode: "local_library".to_string(),
+                user_access: "zero_config_local".to_string(),
+                market_fit: vec!["tradfi".to_string(), "crypto".to_string()],
+                fallback_priority: Some(1),
+                user_summary:
+                    "Zero-config live runtime for data-only or paper-style live observation."
+                        .to_string(),
                 ready: true,
                 status: "ready".to_string(),
                 reason: "native_openbb_backend_available".to_string(),
@@ -462,6 +500,12 @@ impl ProviderCatalogSource for LiveRuntimeProviderCatalogSource {
                 selectable_by_user: true,
                 adopted_by_default: false,
                 access_mode: "external_http_runtime".to_string(),
+                user_access: "operator_runtime_optional".to_string(),
+                market_fit: vec!["tradfi".to_string(), "crypto".to_string()],
+                fallback_priority: Some(20),
+                user_summary:
+                    "Optional external live runtime when the user already has an OpenAlice-compatible service."
+                        .to_string(),
                 ready: false,
                 status: "operator_runtime_required".to_string(),
                 reason: "base_url_and_service_required".to_string(),
@@ -486,6 +530,12 @@ impl ProviderCatalogSource for LiveRuntimeProviderCatalogSource {
                 selectable_by_user: true,
                 adopted_by_default: false,
                 access_mode: "external_http_runtime".to_string(),
+                user_access: "operator_runtime_optional".to_string(),
+                market_fit: vec!["tradfi".to_string(), "crypto".to_string()],
+                fallback_priority: Some(21),
+                user_summary:
+                    "Optional external live runtime when the user already has a NoFX-compatible service."
+                        .to_string(),
                 ready: false,
                 status: "operator_runtime_required".to_string(),
                 reason: "base_url_and_service_required".to_string(),
@@ -526,6 +576,12 @@ impl ProviderCatalogSource for LocalRuntimeProviderCatalogSource {
                 selectable_by_user: false,
                 adopted_by_default: false,
                 access_mode: "local_consent_runtime".to_string(),
+                user_access: "login_and_local_runtime".to_string(),
+                market_fit: vec!["tradfi".to_string()],
+                fallback_priority: Some(40),
+                user_summary:
+                    "Local IBKR bridge reused by broker-linked workflows after the user enables the local API."
+                        .to_string(),
                 ready: ibkr_probe.ready,
                 status: ibkr_probe.status,
                 reason: ibkr_probe.reason,
@@ -542,6 +598,12 @@ impl ProviderCatalogSource for LocalRuntimeProviderCatalogSource {
                 selectable_by_user: false,
                 adopted_by_default: false,
                 access_mode: "local_cli_runtime".to_string(),
+                user_access: "login_and_local_runtime".to_string(),
+                market_fit: vec!["crypto".to_string()],
+                fallback_priority: Some(40),
+                user_summary:
+                    "Credentialed local Kraken CLI/runtime path for wallet or execution-adjacent flows."
+                        .to_string(),
                 ready: kraken_probe.ready,
                 status: kraken_probe.status,
                 reason: kraken_probe.reason,
@@ -576,6 +638,12 @@ impl ProviderCatalogSource for EntryModelProviderCatalogSource {
                 ),
                 adopted_by_default: provider.consumer_default_mode().adopted_by_default(),
                 access_mode: "internal_model_registry".to_string(),
+                user_access: "builtin_registry".to_string(),
+                market_fit: vec!["entry_model".to_string()],
+                fallback_priority: None,
+                user_summary:
+                    "Built-in entry-model registry member used by status and training surfaces."
+                        .to_string(),
                 ready: true,
                 status: "registered".to_string(),
                 reason: "entry_model_registry_member".to_string(),
@@ -624,6 +692,42 @@ fn public_provider_item(
         selectable_by_user: true,
         adopted_by_default: false,
         access_mode: "public_script_adapter".to_string(),
+        user_access: "public_no_login".to_string(),
+        market_fit: match provider_id {
+            "polymarket_public" => vec!["prediction_market".to_string()],
+            "kraken_public" => vec![
+                "crypto".to_string(),
+                "fx".to_string(),
+                "tokenized_assets".to_string(),
+            ],
+            _ => vec!["crypto".to_string()],
+        },
+        fallback_priority: match provider_id {
+            "bybit_public" => Some(1),
+            "binance_public" => Some(2),
+            "kraken_public" => Some(3),
+            "polymarket_public" => Some(4),
+            _ => None,
+        },
+        user_summary: match provider_id {
+            "bybit_public" => {
+                "Public no-login crypto market-data path for exchange-style replay and factor work."
+                    .to_string()
+            }
+            "binance_public" => {
+                "Public no-login crypto market-data path for broad spot/perp history."
+                    .to_string()
+            }
+            "kraken_public" => {
+                "Public no-login crypto, forex, and tokenized-asset data path; later wallet/runtime flows use kraken_cli separately."
+                    .to_string()
+            }
+            "polymarket_public" => {
+                "Public no-login prediction-market history path when network access is available."
+                    .to_string()
+            }
+            _ => "Public no-login market-data path.".to_string(),
+        },
         ready,
         status: if ready {
             "ready".to_string()
@@ -862,21 +966,149 @@ fn command_exists(names: &[&str]) -> bool {
     })
 }
 
+fn apply_provider_user_semantics(item: &mut ProviderCatalogItem) {
+    match item.provider_id.as_str() {
+        "yfinance" => {
+            item.user_access = "free_no_login".to_string();
+            item.market_fit = vec!["tradfi".to_string()];
+            item.fallback_priority = Some(1);
+            item.user_summary =
+                "Free historical tradfi fallback for replay, factor research, and factor backtests."
+                    .to_string();
+            item.notes
+                .push("zero_config_first_run_fallback".to_string());
+        }
+        "ibkr" => {
+            item.user_access = "login_and_local_runtime".to_string();
+            item.market_fit = vec!["tradfi".to_string()];
+            item.fallback_priority = Some(30);
+            item.user_summary =
+                "Setup-required IBKR market-data path for broker-linked futures and equities workflows."
+                    .to_string();
+        }
+        "tradingview_mcp" => {
+            item.user_access = "api_key_required".to_string();
+            item.market_fit = vec!["tradfi".to_string(), "crypto".to_string()];
+            item.fallback_priority = Some(31);
+            item.user_summary =
+                "Setup-required TradingViewRemix MCP path for chart-linked symbols and richer TradingView coverage."
+                    .to_string();
+        }
+        _ => {}
+    }
+    if item.user_access.is_empty() {
+        item.user_access = match item.domain.as_str() {
+            "market_data" => "operator_guided".to_string(),
+            "live_runtime" => "operator_runtime_optional".to_string(),
+            "local_runtime" => "local_runtime".to_string(),
+            _ => "builtin".to_string(),
+        };
+    }
+    if item.market_fit.is_empty() {
+        item.market_fit = match item.domain.as_str() {
+            "market_data" | "live_runtime" => vec!["tradfi".to_string(), "crypto".to_string()],
+            "local_runtime" => vec!["tradfi".to_string()],
+            _ => vec!["entry_model".to_string()],
+        };
+    }
+    if item.user_summary.is_empty() {
+        item.user_summary = format!(
+            "{} provider available through {}.",
+            item.provider_id, item.access_mode
+        );
+    }
+}
+
+fn compact_provider_guide_line(providers: &[ProviderCatalogItem]) -> Option<String> {
+    if providers.is_empty() {
+        return None;
+    }
+    if providers.len() <= 4 {
+        return Some(
+            providers
+                .iter()
+                .map(|provider| {
+                    let fit = if provider.market_fit.is_empty() {
+                        "general".to_string()
+                    } else {
+                        provider.market_fit.join("/")
+                    };
+                    let priority = provider
+                        .fallback_priority
+                        .map(|value| value.to_string())
+                        .unwrap_or_else(|| "n/a".to_string());
+                    format!(
+                        "{}: access={} fit={} fallback={} summary={}",
+                        provider.provider_id,
+                        provider.user_access,
+                        fit,
+                        priority,
+                        provider.user_summary
+                    )
+                })
+                .collect::<Vec<_>>()
+                .join(" | "),
+        );
+    }
+    let tradfi = providers
+        .iter()
+        .filter(|provider| {
+            provider.ready
+                && provider.user_access == "free_no_login"
+                && provider.market_fit.iter().any(|fit| fit == "tradfi")
+        })
+        .min_by_key(|provider| provider.fallback_priority.unwrap_or(u8::MAX))
+        .map(|provider| provider.provider_id.clone())
+        .unwrap_or_else(|| "none".to_string());
+    let live_zero_config = providers
+        .iter()
+        .filter(|provider| provider.ready && provider.user_access == "zero_config_local")
+        .map(|provider| provider.provider_id.clone())
+        .collect::<Vec<_>>();
+    let crypto = providers
+        .iter()
+        .filter(|provider| {
+            provider.ready
+                && provider.user_access == "public_no_login"
+                && provider.market_fit.iter().any(|fit| fit == "crypto")
+        })
+        .map(|provider| provider.provider_id.clone())
+        .collect::<Vec<_>>();
+    let setup_required = providers
+        .iter()
+        .filter(|provider| {
+            !provider.ready
+                && matches!(
+                    provider.user_access.as_str(),
+                    "login_and_local_runtime" | "api_key_required" | "operator_runtime_optional"
+                )
+        })
+        .map(|provider| provider.provider_id.clone())
+        .collect::<Vec<_>>();
+    let live_zero_config = if live_zero_config.is_empty() {
+        "none".to_string()
+    } else {
+        live_zero_config.join(", ")
+    };
+    let crypto = if crypto.is_empty() {
+        "none".to_string()
+    } else {
+        crypto.join(", ")
+    };
+    let setup_required = if setup_required.is_empty() {
+        "none".to_string()
+    } else {
+        setup_required.join(", ")
+    };
+    Some(format!(
+        "tradfi free fallback={} | live zero-config={} | crypto public={} | setup required={}",
+        tradfi, live_zero_config, crypto, setup_required
+    ))
+}
+
 fn render_provider_catalog_compact(surface: &ProviderCatalogSurface) -> String {
     let mut lines = Vec::new();
     lines.push(surface.summary_line.clone());
-    if !surface.available_opt_in_profiles.is_empty() {
-        let profiles = surface
-            .available_opt_in_profiles
-            .iter()
-            .map(|profile| profile.selector.clone())
-            .collect::<Vec<_>>()
-            .join(", ");
-        lines.push(format!(
-            "opt_in_profiles: {} (use --profile <id-or-path> to opt in)",
-            profiles
-        ));
-    }
     if let Some(profile) = surface.selected_profile.as_ref() {
         lines.push(format!(
             "profile: {} pending {}",
@@ -908,6 +1140,9 @@ fn render_provider_catalog_compact(surface: &ProviderCatalogSurface) -> String {
                     .join(" | ")
             ));
         }
+    }
+    if let Some(guide) = compact_provider_guide_line(&surface.providers) {
+        lines.push(format!("guide: {}", guide));
     }
     for domain in &surface.domains {
         lines.push(format!(
@@ -954,6 +1189,25 @@ fn build_provider_catalog_agent_surface(
             )
         })
         .collect::<BTreeMap<_, _>>();
+    let providers = surface
+        .providers
+        .iter()
+        .map(|provider| ProviderCatalogAgentItem {
+            provider_id: provider.provider_id.clone(),
+            domain: provider.domain.clone(),
+            selectable_by_user: provider.selectable_by_user,
+            adopted_by_default: provider.adopted_by_default,
+            ready: provider.ready,
+            access_mode: provider.access_mode.clone(),
+            user_access: provider.user_access.clone(),
+            market_fit: provider.market_fit.clone(),
+            fallback_priority: provider.fallback_priority,
+            status: provider.status.clone(),
+            reason: provider.reason.clone(),
+            summary: provider.user_summary.clone(),
+            install_prompts: provider.install_prompts.clone(),
+        })
+        .collect::<Vec<_>>();
     let ready_providers = surface
         .providers
         .iter()
@@ -1006,13 +1260,18 @@ fn build_provider_catalog_agent_surface(
     ProviderCatalogAgentSurface {
         summary_line: surface.summary_line.clone(),
         ready_by_domain,
+        providers,
         ready_providers,
         pending_providers,
         pending_provider_details,
         selectable_providers,
         default_enabled_providers,
         install_prompts,
-        available_opt_in_profiles: surface.available_opt_in_profiles.clone(),
+        available_opt_in_profiles: if surface.selected_profile.is_some() {
+            surface.available_opt_in_profiles.clone()
+        } else {
+            Vec::new()
+        },
         selected_profile: surface
             .selected_profile
             .as_ref()
@@ -1189,6 +1448,10 @@ fn render_provider_catalog_jsonl(surface: &ProviderCatalogSurface) -> Result<Str
             "selectable_by_user": provider.selectable_by_user,
             "adopted_by_default": provider.adopted_by_default,
             "access_mode": provider.access_mode,
+            "user_access": provider.user_access,
+            "market_fit": provider.market_fit,
+            "fallback_priority": provider.fallback_priority,
+            "user_summary": provider.user_summary,
             "ready": provider.ready,
             "status": provider.status,
             "reason": provider.reason,
@@ -1430,6 +1693,10 @@ mod tests {
                     selectable_by_user: true,
                     adopted_by_default: false,
                     access_mode: "public".to_string(),
+                    user_access: "free_no_login".to_string(),
+                    market_fit: vec!["tradfi".to_string()],
+                    fallback_priority: Some(1),
+                    user_summary: "Free historical tradfi fallback.".to_string(),
                     ready: true,
                     status: "ready".to_string(),
                     reason: "ok".to_string(),
@@ -1443,6 +1710,10 @@ mod tests {
                     selectable_by_user: true,
                     adopted_by_default: false,
                     access_mode: "local_consent_runtime".to_string(),
+                    user_access: "login_and_local_runtime".to_string(),
+                    market_fit: vec!["tradfi".to_string()],
+                    fallback_priority: Some(30),
+                    user_summary: "Setup-required IBKR path.".to_string(),
                     ready: false,
                     status: "install_required".to_string(),
                     reason: "missing_runtime".to_string(),
@@ -1484,11 +1755,10 @@ mod tests {
             .pending_providers
             .iter()
             .any(|item| item.contains("ibkr@market_data")));
-        assert_eq!(agent.available_opt_in_profiles.len(), 1);
-        assert_eq!(
-            agent.available_opt_in_profiles[0].selector,
-            "thrill3r-nq-closed-loop-v1"
-        );
+        assert!(agent.available_opt_in_profiles.is_empty());
+        assert_eq!(agent.providers[0].provider_id, "yfinance");
+        assert_eq!(agent.providers[0].user_access, "free_no_login");
+        assert_eq!(agent.providers[0].summary, "Free historical tradfi fallback.");
     }
 
     #[test]
@@ -1543,10 +1813,11 @@ mod tests {
     }
 
     #[test]
-    fn compact_surface_lists_available_opt_in_profiles() {
+    fn compact_surface_hides_available_opt_in_profiles_by_default() {
         let compact = render_provider_catalog_compact(&sample_surface());
-        assert!(compact.contains("opt_in_profiles: thrill3r-nq-closed-loop-v1"));
-        assert!(compact.contains("use --profile <id-or-path> to opt in"));
+        assert!(!compact.contains("opt_in_profiles:"));
+        assert!(compact.contains("guide:"));
+        assert!(compact.contains("yfinance: access=free_no_login"));
     }
 
     #[test]
@@ -1598,6 +1869,7 @@ mod tests {
                     ("live_runtime".to_string(), "1/3".to_string()),
                     ("local_runtime".to_string(), "0/2".to_string()),
                 ]),
+                providers: Vec::new(),
                 ready_providers: vec!["openbb".to_string()],
                 pending_providers: vec![
                     "openalice@live_runtime:operator_runtime_required:base_url_and_service_required"
@@ -1670,6 +1942,7 @@ mod tests {
             &ProviderCatalogAgentSurface {
                 summary_line: "market_data:5/7 ready".to_string(),
                 ready_by_domain: BTreeMap::new(),
+                providers: Vec::new(),
                 ready_providers: vec!["yfinance".to_string()],
                 pending_providers: vec![
                     "tradingview_mcp@market_data:install_required:missing_tradingview_mcp_api_key"
@@ -1742,6 +2015,10 @@ mod tests {
             selectable_by_user: true,
             adopted_by_default: false,
             access_mode: "api_key_required".to_string(),
+            user_access: "api_key_required".to_string(),
+            market_fit: vec!["tradfi".to_string(), "crypto".to_string()],
+            fallback_priority: Some(31),
+            user_summary: "Setup-required TradingViewRemix MCP path.".to_string(),
             ready: false,
             status: "install_required".to_string(),
             reason: "missing_tradingview_mcp_api_key".to_string(),

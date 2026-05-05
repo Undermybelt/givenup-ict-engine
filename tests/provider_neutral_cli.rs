@@ -194,7 +194,7 @@ fn provider_status_agent_accepts_opt_in_profile_path() {
 }
 
 #[test]
-fn provider_status_agent_lists_available_opt_in_profiles_without_selecting_one() {
+fn provider_status_agent_hides_opt_in_profiles_without_selecting_one() {
     let binary = env!("CARGO_BIN_EXE_ict-engine");
 
     let output = Command::new(binary)
@@ -204,11 +204,14 @@ fn provider_status_agent_lists_available_opt_in_profiles_without_selecting_one()
 
     assert!(output.status.success());
     let value: Value = serde_json::from_slice(&output.stdout).unwrap();
-    assert_eq!(
-        value["available_opt_in_profiles"][0]["selector"],
-        "thrill3r-nq-closed-loop-v1"
-    );
+    assert!(value.get("available_opt_in_profiles").is_none());
     assert!(value["selected_profile"].is_null());
+    assert!(value["providers"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|provider| provider["provider_id"] == "yfinance"
+            && provider["user_access"] == "free_no_login"));
 }
 
 #[test]
@@ -248,7 +251,7 @@ fn workflow_status_agent_accepts_opt_in_profile_path() {
 }
 
 #[test]
-fn workflow_status_human_surfaces_opt_in_profile_hint_without_selecting_one() {
+fn workflow_status_human_hides_opt_in_profile_hint_without_selecting_one() {
     let binary = env!("CARGO_BIN_EXE_ict-engine");
     let state = TempDir::new().unwrap();
 
@@ -266,8 +269,9 @@ fn workflow_status_human_surfaces_opt_in_profile_hint_without_selecting_one() {
 
     assert!(output.status.success());
     let stdout = String::from_utf8(output.stdout).unwrap();
-    assert!(stdout.contains("Profiles: opt-in only."));
-    assert!(stdout.contains("thrill3r-nq-closed-loop-v1"));
+    assert!(!stdout.contains("Profiles: opt-in only."));
+    assert!(stdout.contains("Provider: tradfi free fallback="));
+    assert!(stdout.contains("Routes: replay="));
 }
 
 #[test]
