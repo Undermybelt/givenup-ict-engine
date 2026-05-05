@@ -124,21 +124,39 @@ Reason:
     - `./target/debug/ict-engine factor-research --symbol DEMO --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-aq-ws3-live2-agent --backend auto-quant --agent`
     - `./target/debug/ict-engine workflow-status --symbol DEMO --state-dir /tmp/ict-engine-aq-ws3-live2 --human`
     - `./target/debug/ict-engine workflow-status --symbol DEMO --state-dir /tmp/ict-engine-aq-ws3-live2-agent --agent`
+- [x] **Workstream 4: Live / Backtest Entry Repair**
+  - `analyze-live` now reuses catalog live defaults when the symbol already maps to a known market key such as `NQ`
+  - missing-default cases now return guided errors with:
+    - explicit `--futures-symbol` / `--spot-symbol` / `--options-symbol` hints
+    - provider-first guidance via `ict-engine provider-status --domain live_runtime --agent`
+    - concrete market-key examples (`NQ`, `ES`, `GC`, `CL`)
+  - `backtest` short-history failure now routes the user toward:
+    - `factor-backtest`
+    - `analyze --demo`
+    - fetching a longer dataset via the provider route
+- [x] **Workstream 5: Evidence-Loop Translation**
+  - post-research `workflow-status --human` now routes users into:
+    - `workflow-status --phase ensemble-vote`
+    - `pre-bayes-status`
+    - `workflow-status --phase structural-recommended-path-bundle`
+  - human output stops blindly echoing another `factor-research` command when review surfaces are more useful
+  - agent output now exposes `evidence_review` and can route `recommended_next_step` through the evidence review router
+- [x] Workstream 4/5 verification evidence captured:
+  - `cargo test backtest_command_wraps_short_history_error_with_guidance --lib -- --nocapture`
+  - `cargo test resolve_live_symbol_inputs_infers_catalog_defaults_for_nq --bin ict-engine -- --nocapture`
+  - `cargo test resolve_live_symbol_inputs_guides_when_defaults_are_missing --bin ict-engine -- --nocapture`
+  - `cargo test workflow_status_routes_research_users_into_evidence_review_before_rerun --lib -- --nocapture`
+  - live CLI spot checks:
+    - `./target/debug/ict-engine analyze-live --symbol NQ --state-dir /tmp/ict-engine-live-ws4`
+    - `./target/debug/ict-engine backtest --symbol DEMO --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-backtest-ws4 --human`
+    - `./target/debug/ict-engine workflow-status --symbol DEMO --state-dir /tmp/ict-engine-ws5-native --human`
 
 ### Next
 
-- [ ] **Workstream 4: Live / Backtest Entry Repair**
-  - use existing live symbol defaults before erroring on missing symbol triples
-  - if inference fails, return guided errors with examples and provider prerequisites
-  - replace raw “52 < 71 candles” backtest failure with fallback guidance toward:
-    - `factor-backtest`
-    - `analyze --demo`
-    - acquiring longer historical data via the provider route
-
-- [ ] **Workstream 5: Evidence-Loop Translation**
-  - turn internal artifact availability into human next steps
-  - surface execution tree / artifact lineage / belief evidence as inspectable next actions
-  - stop blindly echoing another `factor-research` command when artifact review is the more useful route
+- [ ] Completion audit against the closure standard and user-facing regression list.
+  - rerun the named commands against the new behavior set
+  - confirm no requirement is only covered by unit tests or proxy signals
+  - record any residual gaps directly in this board instead of opening a parallel note
 
 ### Not Yet
 

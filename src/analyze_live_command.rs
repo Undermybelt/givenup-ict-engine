@@ -226,29 +226,60 @@ fn resolve_live_symbol_inputs(
     options_symbol: Option<&str>,
     spot_kind: Option<&str>,
 ) -> Result<ResolvedLiveSymbolInputs> {
-    let futures_symbol = futures_symbol.ok_or_else(|| {
-        anyhow!(
-            "external config required for analyze-live '{}': pass --futures-symbol, --spot-symbol, and --options-symbol",
-            symbol
-        )
-    })?;
-    let spot_symbol = spot_symbol.ok_or_else(|| {
-        anyhow!(
-            "external config required for analyze-live '{}': pass --futures-symbol, --spot-symbol, and --options-symbol",
-            symbol
-        )
-    })?;
-    let options_symbol = options_symbol.ok_or_else(|| {
-        anyhow!(
-            "external config required for analyze-live '{}': pass --futures-symbol, --spot-symbol, and --options-symbol",
-            symbol
-        )
-    })?;
+    let inferred = ict_engine::market_catalog::load_market_catalog(std::path::Path::new(
+        env!("CARGO_MANIFEST_DIR"),
+    ))
+    .ok()
+    .and_then(|catalog| {
+        ict_engine::application::data_sources::analyze_live_inferred_symbols(&catalog, symbol)
+    });
+    let futures_symbol = futures_symbol
+        .map(str::to_string)
+        .or_else(|| inferred.as_ref().map(|defaults| defaults.futures_symbol.clone()))
+        .ok_or_else(|| {
+            let inferred_examples = inferred
+                .as_ref()
+                .map(|defaults| {
+                    format!(
+                        "Catalog defaults exist: futures={} spot={} options={}.",
+                        defaults.futures_symbol, defaults.spot_symbol, defaults.options_symbol
+                    )
+                })
+                .unwrap_or_else(|| {
+                    "Try a market key with built-in defaults such as NQ, ES, GC, or CL.".to_string()
+                });
+            anyhow!(
+                "analyze-live '{}' needs live symbol defaults. {} Otherwise pass --futures-symbol <symbol> --spot-symbol <symbol> --options-symbol <symbol>. Provider-first path: ict-engine provider-status --domain live_runtime --agent",
+                symbol,
+                inferred_examples
+            )
+        })?;
+    let spot_symbol = spot_symbol
+        .map(str::to_string)
+        .or_else(|| inferred.as_ref().map(|defaults| defaults.spot_symbol.clone()))
+        .ok_or_else(|| {
+            anyhow!(
+                "analyze-live '{}' still needs a spot symbol. Pass --spot-symbol <symbol> or choose a market key with built-in defaults such as NQ, ES, GC, or CL. Provider-first path: ict-engine provider-status --domain live_runtime --agent",
+                symbol
+            )
+        })?;
+    let options_symbol = options_symbol
+        .map(str::to_string)
+        .or_else(|| inferred.as_ref().map(|defaults| defaults.options_symbol.clone()))
+        .ok_or_else(|| {
+            anyhow!(
+                "analyze-live '{}' still needs an options symbol. Pass --options-symbol <symbol> or choose a market key with built-in defaults such as NQ, ES, GC, or CL. Provider-first path: ict-engine provider-status --domain live_runtime --agent",
+                symbol
+            )
+        })?;
     Ok(ResolvedLiveSymbolInputs {
-        futures_symbol: futures_symbol.to_string(),
-        spot_symbol: spot_symbol.to_string(),
-        options_symbol: options_symbol.to_string(),
-        spot_kind: spot_kind.unwrap_or("equity").to_string(),
+        futures_symbol,
+        spot_symbol,
+        options_symbol,
+        spot_kind: spot_kind
+            .map(str::to_string)
+            .or_else(|| inferred.as_ref().map(|defaults| defaults.spot_kind.clone()))
+            .unwrap_or_else(|| "equity".to_string()),
     })
 }
 
@@ -616,12 +647,23 @@ mod tests {
     use super::*;
 
     #[test]
-    fn resolve_live_symbol_inputs_requires_explicit_external_configuration() {
-        let err = resolve_live_symbol_inputs("NQ", None, None, None, None).unwrap_err();
+    fn resolve_live_symbol_inputs_infers_catalog_defaults_for_nq() {
+        let resolved = resolve_live_symbol_inputs("NQ", None, None, None, None).unwrap();
+
+        assert_eq!(resolved.futures_symbol, "NQ=F");
+        assert_eq!(resolved.spot_symbol, "QQQ");
+        assert_eq!(resolved.options_symbol, "QQQ");
+        assert_eq!(resolved.spot_kind, "equity");
+    }
+
+    #[test]
+    fn resolve_live_symbol_inputs_guides_when_defaults_are_missing() {
+        let err = resolve_live_symbol_inputs("caller-symbol", None, None, None, None).unwrap_err();
 
         assert!(err
             .to_string()
-            .contains("external config required for analyze-live"));
+            .contains("provider-status --domain live_runtime --agent"));
+        assert!(err.to_string().contains("NQ, ES, GC, or CL"));
     }
 
     #[test]

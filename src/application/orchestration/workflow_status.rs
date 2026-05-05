@@ -539,6 +539,17 @@ pub struct WorkflowAutoQuantHandoffGuide {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct WorkflowEvidenceReviewGuide {
+    pub active: bool,
+    pub summary: String,
+    pub ensemble_vote_command: String,
+    pub pre_bayes_status_command: String,
+    pub structural_path_command: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub follow_up_command: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct AgentBootstrapInputs {
     pub backtest: AgentBootstrapBacktestInput,
     pub live: AgentBootstrapLiveInput,
@@ -941,6 +952,53 @@ fn auto_quant_handoff_next_action(guide: &WorkflowAutoQuantHandoffGuide) -> Stri
     )
 }
 
+fn build_evidence_review_guide(
+    snapshot: &WorkflowSnapshot,
+    state_dir: Option<&str>,
+) -> Option<WorkflowEvidenceReviewGuide> {
+    let latest_phase = latest_workflow_phase(snapshot)?;
+    if !matches!(
+        latest_phase.phase.as_str(),
+        "research" | "backtest" | "analyze" | "update"
+    ) {
+        return None;
+    }
+    let state_dir = shell_quote(state_dir.unwrap_or("<state-dir>"));
+    let symbol = shell_quote(&snapshot.symbol);
+    let ensemble_vote_command = format!(
+        "ict-engine workflow-status --symbol {} --state-dir {} --phase ensemble-vote",
+        symbol, state_dir
+    );
+    let pre_bayes_status_command = format!(
+        "ict-engine pre-bayes-status --symbol {} --state-dir {}",
+        symbol, state_dir
+    );
+    let structural_path_command = format!(
+        "ict-engine workflow-status --symbol {} --state-dir {} --phase structural-recommended-path-bundle",
+        symbol, state_dir
+    );
+    Some(WorkflowEvidenceReviewGuide {
+        active: true,
+        summary: format!(
+            "Review the latest ensemble, pre-bayes evidence, and structural path before rerunning {}.",
+            latest_phase.phase
+        ),
+        ensemble_vote_command,
+        pre_bayes_status_command,
+        structural_path_command,
+        follow_up_command: Some(snapshot.recommended_next_command.clone()),
+    })
+}
+
+fn evidence_review_route_line(guide: &WorkflowEvidenceReviewGuide) -> String {
+    format!(
+        "Evidence: {} | {} | {}",
+        guide.ensemble_vote_command,
+        guide.pre_bayes_status_command,
+        guide.structural_path_command
+    )
+}
+
 fn workflow_human_deferred_command(command: &str) -> Option<String> {
     let trimmed = command.trim();
     if trimmed.is_empty()
@@ -1171,6 +1229,11 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     } else {
         None
     };
+    let evidence_review_guide = if no_workflow_state || hard_block_active {
+        None
+    } else {
+        build_evidence_review_guide(snapshot, state_dir)
+    };
     let top_level_command = auto_quant_handoff_guide
         .as_ref()
         .map(|guide| guide.recommended_next_command.clone())
@@ -1178,6 +1241,17 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
             first_run_guide
                 .as_ref()
                 .map(|guide| guide.bootstrap_command.clone())
+        })
+        .or_else(|| {
+            if raw_top_level_command.contains("factor-research")
+                || raw_top_level_command.contains("factor-backtest")
+            {
+                evidence_review_guide
+                    .as_ref()
+                    .map(|guide| guide.ensemble_vote_command.clone())
+            } else {
+                None
+            }
         })
         .unwrap_or(raw_top_level_command);
     let historical_data_gate_active = !selected_data_candidates.is_empty()
@@ -1216,6 +1290,8 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
         auto_quant_handoff_next_action(guide)
     } else if let Some(guide) = first_run_guide.as_ref() {
         first_run_next_action(guide)
+    } else if let Some(guide) = evidence_review_guide.as_ref() {
+        format!("{} Start with {}.", guide.summary, guide.ensemble_vote_command)
     } else if user_selection_pending {
         if !historical_data_request_template.is_empty() {
             match deferred_user_selection_command.as_deref() {
@@ -1336,6 +1412,8 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     };
     let route_line = if let Some(guide) = auto_quant_handoff_guide.as_ref() {
         Some(auto_quant_handoff_route_line(guide))
+    } else if let Some(guide) = evidence_review_guide.as_ref() {
+        Some(evidence_review_route_line(guide))
     } else {
         first_run_guide.as_ref().map(first_run_route_line)
     };
@@ -1775,6 +1853,10 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
             serde_json::to_value(auto_quant_handoff_guide).unwrap_or_default(),
         );
         map.insert(
+            "evidence_review".to_string(),
+            serde_json::to_value(evidence_review_guide).unwrap_or_default(),
+        );
+        map.insert(
             "structural_temporal_line".to_string(),
             serde_json::to_value(structural_temporal_line).unwrap_or_default(),
         );
@@ -1968,6 +2050,11 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
     } else {
         None
     };
+    let evidence_review_guide = if no_workflow_state || hard_block_active {
+        None
+    } else {
+        build_evidence_review_guide(snapshot, state_dir)
+    };
     let next_command = auto_quant_handoff_guide
         .as_ref()
         .map(|guide| guide.recommended_next_command.clone())
@@ -1975,6 +2062,17 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
             first_run_guide
                 .as_ref()
                 .map(|guide| guide.bootstrap_command.clone())
+        })
+        .or_else(|| {
+            if raw_next_command.contains("factor-research")
+                || raw_next_command.contains("factor-backtest")
+            {
+                evidence_review_guide
+                    .as_ref()
+                    .map(|guide| guide.ensemble_vote_command.clone())
+            } else {
+                None
+            }
         })
         .unwrap_or(raw_next_command);
     let next_command_value = if no_workflow_state && next_command.trim().is_empty() {
@@ -2163,6 +2261,11 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "next_command": next_command_value,
         "next_command_source": if auto_quant_handoff_guide.is_some() {
             "auto_quant_handoff_candidate"
+        } else if evidence_review_guide.is_some()
+            && (snapshot.recommended_next_command.contains("factor-research")
+                || snapshot.recommended_next_command.contains("factor-backtest"))
+        {
+            "evidence_review_router"
         } else if no_workflow_state && snapshot.recommended_next_command.trim().is_empty() {
             "first_run_router"
         } else {
@@ -2180,6 +2283,7 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "provider_support": provider_support,
         "first_run_router": first_run_guide,
         "auto_quant_handoff": auto_quant_handoff_guide,
+        "evidence_review": evidence_review_guide,
         "latest_structural_feedback": latest_structural_feedback,
         "experience_prior_surface": experience_prior_surface,
         "structural_validation_summary": structural_validation_summary,
@@ -5201,6 +5305,61 @@ mod tests {
 
         assert_eq!(value["latest_stage"]["phase"], "research");
         assert_eq!(value["latest_stage"]["summary"], "newer_research_summary");
+    }
+
+    #[test]
+    fn workflow_status_routes_research_users_into_evidence_review_before_rerun() {
+        let snapshot = WorkflowSnapshot {
+            symbol: "DEMO".to_string(),
+            current_focus_phase: "research".to_string(),
+            current_focus_reason: "no_previous_run".to_string(),
+            recommended_next_command: "ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state --backend native --objective expansion_manipulation".to_string(),
+            latest_research: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "research".to_string(),
+                phase_summary: "objective=expansion_manipulation best_factor=trend_momentum aggregate_return=0.0017 feedback_applied=46 execution_gate=execution_observe_only".to_string(),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let human = build_human_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some("/tmp/state"),
+        );
+        assert!(human["next_action_line"]
+            .as_str()
+            .unwrap()
+            .contains("--phase ensemble-vote"));
+        assert!(human["route_line"]
+            .as_str()
+            .unwrap()
+            .contains("ict-engine pre-bayes-status --symbol DEMO"));
+        assert!(human["route_line"]
+            .as_str()
+            .unwrap()
+            .contains("--phase structural-recommended-path-bundle"));
+
+        let agent = build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some("/tmp/state"),
+        );
+        assert_eq!(agent["next_command_source"], "evidence_review_router");
+        assert!(agent["next_command"]
+            .as_str()
+            .unwrap()
+            .contains("--phase ensemble-vote"));
+        assert!(agent["evidence_review"]["pre_bayes_status_command"]
+            .as_str()
+            .unwrap()
+            .contains("ict-engine pre-bayes-status --symbol DEMO"));
     }
 
     #[test]

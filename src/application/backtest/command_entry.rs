@@ -637,7 +637,7 @@ where
 {
     let BacktestCommandInput {
         symbol,
-        data: _,
+        data,
         paired_data: _,
         state_dir,
         output_format,
@@ -652,7 +652,16 @@ where
 
     run_research()?;
     let realism = parse_realism(spread_bps, slippage_bps, fee_bps, ambiguous_bar_policy)?;
-    let report = finalize_report(run_backtest(&realism)?, &realism)?;
+    let report = finalize_report(run_backtest(&realism).map_err(|err| {
+        let message = err.to_string();
+        if message.contains("need more candles for backtest") {
+            anyhow::anyhow!(
+                "{message}. Try one of: 1. factor-only sanity check: ict-engine factor-backtest --symbol {symbol} --data {data} --state-dir {state_dir} --human 2. guided replay/demo review: ict-engine analyze --symbol {symbol} --demo --state-dir {state_dir} --human 3. fetch a longer dataset via ict-engine provider-status --compact and rerun backtest."
+            )
+        } else {
+            err
+        }
+    })?, &realism)?;
     let realism_summary = format!(
         "execution_realism=spread:{:.2}bps slippage:{:.2}bps fee:{:.2}bps policy={} trades={} comparable={}",
         report.spread_bps,
@@ -964,5 +973,35 @@ mod tests {
                 .exists(),
             "PB12 sweep must persist its artifact history"
         );
+    }
+
+    #[test]
+    fn backtest_command_wraps_short_history_error_with_guidance() {
+        let err = backtest_command(
+            BacktestCommandInput {
+                symbol: "DEMO",
+                data: "examples/demo/demo-15m.json",
+                paired_data: None,
+                state_dir: "/tmp/ict-engine-backtest-guidance",
+                output_format: "human",
+                warmup_bars: 20,
+                hold_bars: 50,
+                spread_bps: 0.0,
+                slippage_bps: 0.0,
+                fee_bps: 0.0,
+                ambiguous_bar_policy: "close",
+                online_learn: false,
+            },
+            || Ok(()),
+            |_, _, _, _| Ok(()),
+            |_| anyhow::bail!("need more candles for backtest: got 52, require at least 71"),
+            |_: (), _: &()| unreachable!("finalize should not run on short-history error"),
+        )
+        .unwrap_err();
+
+        let message = err.to_string();
+        assert!(message.contains("ict-engine factor-backtest --symbol DEMO"));
+        assert!(message.contains("ict-engine analyze --symbol DEMO --demo"));
+        assert!(message.contains("ict-engine provider-status --compact"));
     }
 }
