@@ -756,6 +756,101 @@ For cross-market families, add:
   - `ES`
 - broader market coverage is still incomplete, but the product surface is now demonstrably reusable across major futures-index instruments.
 
+### 2026-05-06 Slice 8: Family A ES round 2 candidate selection
+
+**Execution**
+- injected the current strongest NQ candidate into the `ES` managed seed source:
+  - `TomacNQ_KillzoneBreakout`
+- reran the same `synthetic_ohlcv` profile closure for `ES`
+
+**Result**
+- `ES` round 2 strategy results:
+  - `TomacAggressiveBE`
+    - `sharpe=-0.0972`
+    - `profit=-3.05%`
+    - `trade_count=59`
+  - `TomacKillzoneBreakout`
+    - `sharpe=0.2889`
+    - `profit=16.98%`
+    - `trade_count=40`
+    - `win_rate=60.0%`
+    - `profit_factor=2.1103`
+  - `TomacNQ_KillzoneBreakout`
+    - `sharpe=-0.0126`
+    - `profit=-0.59%`
+    - `trade_count=43`
+    - `win_rate=55.814%`
+    - `profit_factor=0.9707`
+  - `TomacRRWinRate`
+    - `sharpe=0.1593`
+    - `profit=9.21%`
+    - `trade_count=26`
+    - `win_rate=69.2308%`
+    - `profit_factor=1.9605`
+
+**Outcome**
+- the NQ-specific positive candidate does **not** currently generalize to `ES`.
+- `ES` still prefers its original generic breakout lane:
+  - best current `ES` structure/setup candidate remains `TomacKillzoneBreakout`
+- therefore Family A should now treat:
+  - `TomacNQ_KillzoneBreakout` as an `NQ`-leaning candidate
+  - `TomacKillzoneBreakout` as the stronger current `ES` structure/setup candidate
+
+### 2026-05-06 Slice 9: Family A YM expansion attempt
+
+**Execution**
+- attempted the same `synthetic_ohlcv` public profile on `YM`
+- profile materialized and prepared successfully
+- `run_tomac.py` then executed against the `YM/USD` synthetic workspace
+
+**Result**
+- profile surface itself succeeded:
+  - `YM/USD-1h.feather`
+  - `YM/USD-4h.feather`
+  - `YM/USD-1d.feather`
+- but strategy runtime quality was mixed:
+  - `TomacAggressiveBE`
+    - runtime failure: `UnboundLocalError: cannot access local variable 'price' where it is not associated with a value`
+  - `TomacKillzoneBreakout`
+    - same runtime failure
+  - `TomacRRWinRate`
+    - `trade_count=0`
+    - no usable edge evidence
+- because the run exited with mixed failures, no imported `YM` strategy library closure was kept as a valid Family A proof point
+
+**Outcome**
+- `YM` is now a concrete runtime blocker for the current profile + current strategy set.
+- this is not a surface-availability blocker anymore; it is a strategy/runtime compatibility blocker that needs a narrower follow-up slice.
+
+### 2026-05-06 Slice 10: Family G real-data acquisition attempts
+
+**Execution**
+- attempted to obtain a first real Family G options/dealer-positioning slice through existing public tooling:
+  - `./target/debug/ict-engine analyze-live --symbol NQ --state-dir /tmp/ict-engine-family-g-live --human`
+  - `./target/debug/ict-engine market-data-harness --action fetch --request-json /tmp/ict-engine-family-g-harness-request.json`
+  - `python scripts/auto_quant_external/fetch_external.py binance-kline ...`
+  - `python scripts/auto_quant_external/fetch_external.py binance-options ...`
+  - `python scripts/auto_quant_external/fetch_external.py bybit-kline ...`
+  - `python scripts/auto_quant_external/fetch_external.py bybit-options ...`
+
+**Result**
+- `analyze-live` default path failed on upstream data source access:
+  - `HTTP status client error (403 Forbidden)` for `NQ=F`
+- `market-data-harness` with `yfinance` for `QQQ` / `^VXN` failed:
+  - `yahoo chart returned error for 'QQQ'`
+  - `yahoo chart returned error for '^VXN'`
+- direct exchange fetchers also failed in this environment:
+  - Binance spot/options: retries exhausted after repeated `SSLError`
+  - Bybit spot/options: retries exhausted after repeated `SSLError`
+
+**Outcome**
+- Family G is no longer blocked by CLI surface absence.
+- Family G is currently blocked in this environment by **provider/network acquisition failure**, not by missing repo surface.
+- the next real Family G slice should reuse:
+  - a working local live backend, or
+  - an already captured options snapshot / auxiliary evidence file, or
+  - a network path that can actually reach the required options providers
+
 ## Current Todo Board
 
 ### Done
@@ -772,13 +867,14 @@ For cross-market families, add:
 - [x] Re-check execution tree after the first real Family A imported run.
 - [x] Run a second Family A iteration round and isolate the strongest current structure/setup candidate.
 - [x] Prove the synthetic Family A profile on a second major futures-index market (`ES`).
+- [x] Verify that the strongest current `NQ` candidate does not automatically generalize to `ES`.
 
 ### Next
 
 - [ ] Because the first imported Family A re-check still says `TUNE structure_ict`, keep iterating Family A quality on the new public surface until execution-tree development actually moves.
 - [ ] Fork from `TomacNQ_KillzoneBreakout` rather than from the weaker generic branches, and test whether structure-specific variants can move `quality` or `gate_status`.
 - [ ] Expand the proven synthetic-profile market set beyond `NQ` and `ES` to other priority markets, and keep logging which markets still lack a real importable loop.
-- [ ] Use the new Family G auxiliary/options surface to run the first real `options_hedging` / dealer-positioning research slice rather than only proving the input contract.
+- [ ] Use a reachable provider path or existing captured auxiliary evidence to run the first real Family G `options_hedging` / dealer-positioning research slice rather than only proving the input contract.
 - [ ] Run Family B: Directionality / Persistence only after Family A is stable.
 - [ ] Run Family C: Cross-Market Confirmation once paired data exists.
 - [ ] Run Family D whenever `wait_for_reversion` is the persistent blocker.
@@ -796,11 +892,14 @@ For cross-market families, add:
 ## Blocked
 
 - [ ] Family G Options / Dealer Positioning data quality for the chosen market slice
-  - blocker: the new public input surface exists, but caller-supplied options / dealer-positioning evidence still needs to be gathered market-by-market and timeframe-by-timeframe before Family G quality can be judged
-  - acceptable temporary state: keep the new surface active, then treat actual data coverage / quality as the next gating issue rather than CLI absence
+  - blocker: the new public input surface exists, but this environment currently cannot reach the needed live/options providers (`Yahoo 403`, `Binance SSLError`, `Bybit SSLError`) and has no running local live backend
+  - acceptable temporary state: keep the new surface active, then treat provider reachability / captured evidence availability as the next gating issue rather than CLI absence
 - [ ] Multi-timeframe coverage beyond the currently proven slices
   - blocker: the new Family A synthetic profile is currently proven on `1h/4h/1d`; the broader target ladder `1m`, `5m`, `15m`, `1w`, `1M` still needs profile-aware data preparation and iteration evidence
   - acceptable temporary state: keep logging which timeframes are proven, which are unsupported, and which still need additive data preparation
+- [ ] YM synthetic-profile runtime stability
+  - blocker: the current Family A strategy set hits `UnboundLocalError: cannot access local variable 'price' where it is not associated with a value` on `YM` for at least `TomacAggressiveBE` and `TomacKillzoneBreakout`
+  - acceptable temporary state: do not count `YM` as a proven market until a narrower follow-up slice identifies whether the failure is strategy-specific or a broader synthetic futures runtime issue
 
 ## Verification Checklist
 
