@@ -1345,6 +1345,55 @@ For cross-market families, add:
 - `Family C` now has both `1h` and `5m` real slices.
 - but the cross-market candidates remain clearly weaker than the stronger existing `NQ` baseline candidates.
 
+### 2026-05-06 Slice 25: Family F NQ stability/chaos proxy
+
+**Execution**
+- created a fresh isolated state dir:
+  - `/tmp/ict-engine-family-f-nq-profile`
+- added a dedicated stability/chaos-aware candidate:
+  - `TomacNQStabilityBreakout`
+- completed the same synthetic-profile closure:
+  - `auto-quant-prepare`
+  - `run_tomac.py`
+  - `export_strategy_library.py`
+  - `auto-quant-results-import`
+- then reran after the candidate was correctly materialized into `strategies_external`
+
+**Result**
+- Family F strategy metrics after the corrected rerun:
+  - `TomacAggressiveBE`
+    - `sharpe=-0.2597`
+    - `profit=-4.19%`
+    - `trade_count=19`
+  - `TomacKillzoneBreakout`
+    - `sharpe=0.0315`
+    - `profit=1.31%`
+    - `trade_count=21`
+  - `TomacNQStabilityBreakout`
+    - `sharpe=-100.0`
+    - `profit=0.71%`
+    - `trade_count=1`
+    - `win_rate=100.0%`
+    - `profit_factor=0.0`
+  - `TomacRRWinRate`
+    - `sharpe=-0.0158`
+    - `profit=-0.4%`
+    - `trade_count=2`
+- import closure succeeded:
+  - `n_ok=4`
+  - `n_meta_invalid=0`
+  - `matched=4`
+  - `library_artifact_id=auto_quant_strategy_library_NQ_20260505T195642.037962000Z`
+- focused prior-init dry-run on `TomacNQStabilityBreakout`:
+  - `final_probs=[0.9999608888888889, 0.000019555555555555554, 0.000019555555555555554]`
+
+**Outcome**
+- `Family F` is now no longer untested.
+- its first real `NQ` slice is materially weaker than the stronger `Family A` candidates and barely moves prior-init at all.
+- current interpretation:
+  - `Family F` does not deserve priority under the present no-code constraints
+  - if revisited later, it should be because real upstream spectral/chaos evidence becomes available, not because this proxy filter is promising
+
 ### 2026-05-06 Slice 24: No-code plateau diagnostic
 
 **Execution**
@@ -1500,19 +1549,20 @@ For cross-market families, add:
 - [x] Run the first real `Family C` paired-market auto-quant slices (`1h` and `5m`) using `NQ + ES`.
 - [x] Run the first real `Family B` no-code `NQ` directionality/persistence slice and verify that it still does not move execution-tree `quality` or `gate_status`.
 - [x] Confirm with runtime evidence that current no-code Auto-Quant loops are plateaued at the execution-tree layer even when trade_outcome priors move.
+- [x] Run the first real `Family F` no-code `NQ` stability/chaos proxy slice and verify that it is still weaker than the stronger `Family A` candidates.
 
 ### Next
 
 - [ ] Because the first imported Family A re-check still says `TUNE structure_ict`, keep iterating Family A quality on the new public surface until execution-tree development actually moves.
 - [ ] Fork from `TomacNQ_KillzoneBreakout` rather than from the weaker generic branches, and test whether structure-specific variants can move `quality` or `gate_status`.
 - [ ] Expand the set of **positive** synthetic-profile markets beyond `NQ` and `ES`; `YM` and `XAU` are now surface-proven but still not quality-proven.
-- [ ] Decide whether `EUR` should stay on the Family A structure lane at all, or whether it should be handed off to another factor family led by the currently stronger `TomacRRWinRate` branch.
-- [ ] Decide whether to keep expanding `5m` Family A on `NQ`, or treat the current `5m` proof as sufficient and focus back on the stronger `1h` structure candidate.
-- [ ] Decide whether `15m` and `1m` need more Family A forks, or whether current evidence is already enough to deprioritize them behind the stronger `1h` and `5m` NQ lanes.
-- [ ] Stop spending cycles on `1dRegime`, `15m`, or `1m` NQ forks unless a new hypothesis explains why they should move `quality` rather than just produce a positive backtest.
+- [x] Decide that `EUR` should not stay on the Family A structure lane for now; its strongest current candidate is the `TomacRRWinRate` branch.
+- [x] Decide that `5m` is proven but secondary, and the main `NQ` focus should return to the stronger `1h` structure lane.
+- [x] Decide that `15m` and `1m` should be deprioritized behind the stronger `1h` and `5m` `NQ` lanes unless a new hypothesis appears.
+- [x] Decide to stop spending cycles on `1dRegime`, `15m`, or `1m` `NQ` forks unless a new hypothesis explains why they should move `quality` rather than just produce a positive backtest.
 - [ ] Decide whether `TomacNQ_KillzoneBreakoutDisplacement` should replace `TomacNQ_KillzoneBreakout` as the default `NQ` Family A candidate for future no-code loops, or whether the extra displacement filter is only a backtest improvement without execution-tree value.
-- [ ] Decide whether `Family C` deserves any more no-code auto-quant forks at all, since both `1h` and `5m` paired-market candidates are positive but clearly weaker than the stronger baseline candidates.
-- [ ] Decide whether `Family B` should be actively deprioritized in the todo board now that its first real slice is weaker than `Family A` and still leaves execution-tree unchanged.
+- [x] Decide that `Family C` should be deprioritized for now, since both `1h` and `5m` paired-market candidates are positive but clearly weaker than the stronger baseline candidates.
+- [x] Decide that `Family B` should be actively deprioritized in the todo board now that its first real slice is weaker than `Family A` and still leaves execution-tree unchanged.
 - [ ] Decide whether the objective should stay in “no-code iteration” mode at all, now that runtime evidence shows prior-init-only loops are not moving the execution-tree inputs.
 - [ ] Use a reachable provider path or existing captured auxiliary evidence to run the first real Family G `options_hedging` / dealer-positioning research slice rather than only proving the input contract.
 - [ ] Run Family B: Directionality / Persistence only after Family A is stable.
