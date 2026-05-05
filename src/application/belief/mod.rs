@@ -52,6 +52,8 @@ pub use pre_bayes_summary::{
 pub use shadow_policy_surface::{build_belief_shadow_policy_surface, BeliefShadowPolicySurface};
 pub use spectral_overlay::{apply_spectral_overlay, SpectralOverlayState};
 pub use structural_temporal_adjustment::{
+    apply_duration_sizing_adjustment, apply_regime_execution_guardrail,
     blend_branch_prior_with_transition_prior, blend_node_posterior_with_duration_prior,
-    transition_adjusted_branch_posteriors, transition_adjusted_node_posteriors,
+    duration_sizing_scale, transition_adjusted_branch_posteriors,
+    transition_adjusted_node_posteriors,
 };

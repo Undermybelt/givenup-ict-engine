@@ -33,8 +33,9 @@ pub use canonical_promotion::{
     PromoteCanonicalSetupReport,
 };
 pub use command_entry::{
-    backtest_command, factor_backtest_command, factor_research_command, BacktestCommandInput,
-    FactorResearchCommandInput,
+    backtest_command, build_duration_surface_from_artifacts, factor_backtest_command,
+    factor_research_command, latest_duration_phase, parse_duration_sizing_scale,
+    BacktestCommandInput, FactorResearchCommandInput,
 };
 pub use control_matrix::{
     append_control_matrix_research_artifact, build_control_matrix_discovery_summary,

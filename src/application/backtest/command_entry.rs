@@ -30,7 +30,7 @@ use crate::state::{
     RESEARCH_RUNS_FILE,
 };
 
-fn latest_duration_phase(
+pub fn latest_duration_phase(
     snapshot: &WorkflowSnapshot,
 ) -> Option<&crate::state::WorkflowPhaseSnapshot> {
     snapshot
@@ -41,7 +41,7 @@ fn latest_duration_phase(
         .or(snapshot.latest_analyze.as_ref())
 }
 
-fn parse_duration_sizing_scale(summary: &[String]) -> Option<f64> {
+pub fn parse_duration_sizing_scale(summary: &[String]) -> Option<f64> {
     summary.iter().find_map(|line| {
         line.split_whitespace().find_map(|fragment| {
             fragment
@@ -51,7 +51,7 @@ fn parse_duration_sizing_scale(summary: &[String]) -> Option<f64> {
     })
 }
 
-fn build_duration_surface_from_artifacts(
+pub fn build_duration_surface_from_artifacts(
     snapshot: &WorkflowSnapshot,
     artifact_action_summary: &[String],
 ) -> Vec<String> {

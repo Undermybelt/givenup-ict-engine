@@ -1,4 +1,5 @@
 use super::*;
+use ict_engine::application::backtest::parse_duration_sizing_scale;
 
 pub(crate) fn run_factor_backtest(
     symbol: &str,

@@ -112,12 +112,14 @@ use ict_engine::application::{
         CommandContext,
     },
     belief::{
-        apply_factor_outcome_overlay,
+        apply_duration_sizing_adjustment, apply_factor_outcome_overlay,
+        apply_regime_execution_guardrail,
         build_canonical_belief_snapshot_with_pda_and_structural_prior_state,
         build_expansion_factor_pipeline_report as build_expansion_factor_pipeline_report_v2,
         build_expansion_factor_pipeline_report_with_registry as build_expansion_factor_pipeline_report_with_registry_v2,
         build_pre_bayes_entry_quality_bridge, combine_bias_vectors, combine_liquidity_labels,
-        combine_regime_labels, historical_market_jump_objective_weight, infer_market_from_symbol,
+        combine_regime_labels,
+        historical_market_jump_objective_weight, infer_market_from_symbol,
         market_behavior_profile_for_family, market_category_for_symbol,
         multi_timeframe_entry_quality_bias, persist_market_jump_calibration_from_backtest_runs,
         persist_market_jump_calibration_from_research_runs,
@@ -242,7 +244,11 @@ use update_output::{
 };
 
 #[cfg(test)]
+use ict_engine::application::backtest::build_duration_surface_from_artifacts;
+#[cfg(test)]
 use ict_engine::application::backtest::recommended_command;
+#[cfg(test)]
+use ict_engine::application::belief::duration_sizing_scale;
 #[cfg(test)]
 use ict_engine::application::factor_lifecycle::forced_cluster_jump_template;
 #[cfg(test)]
@@ -6850,184 +6856,6 @@ fn build_trade_plan_section(
         uncertainties: trade_plan.uncertainties.clone(),
         narrative,
     }
-}
-
-fn apply_duration_sizing_adjustment(
-    mut trade_plan: TradePlan,
-    market: &str,
-    hybrid_regime: &RegimeSegmentationPacket,
-) -> TradePlan {
-    let Some(remaining) = hybrid_regime.duration_remaining_expected_bars else {
-        return trade_plan;
-    };
-    let family = hybrid_regime
-        .active_regime_cluster
-        .as_deref()
-        .map(|label| {
-            if label.contains("trend") {
-                "trend"
-            } else if label.contains("range") {
-                "range"
-            } else {
-                "transition"
-            }
-        })
-        .unwrap_or("transition");
-    let scale = duration_sizing_scale(market, family, remaining);
-    if scale < 1.0 {
-        trade_plan.kelly_fraction *= scale;
-        trade_plan.position_size *= scale;
-        trade_plan.uncertainties.push(format!(
-            "duration_sizing_scale={scale:.2} remaining_expected_bars={remaining:.3} market={} family={}",
-            market,
-            family
-        ));
-        if scale == 0.0 {
-            trade_plan
-                .uncertainties
-                .push("duration_window_too_short_for_execution_size_zeroed".to_string());
-        }
-    }
-    trade_plan
-}
-
-fn duration_sizing_scale(market: &str, family: &str, remaining_expected_bars: f64) -> f64 {
-    let _ = market;
-    match family {
-        "trend" => {
-            if remaining_expected_bars <= 1.5 {
-                0.0
-            } else if remaining_expected_bars <= 2.5 {
-                0.25
-            } else if remaining_expected_bars <= 4.0 {
-                0.50
-            } else {
-                1.0
-            }
-        }
-        "range" => {
-            if remaining_expected_bars <= 1.0 {
-                0.0
-            } else if remaining_expected_bars <= 2.0 {
-                0.35
-            } else if remaining_expected_bars <= 3.5 {
-                0.60
-            } else {
-                1.0
-            }
-        }
-        _ => {
-            if remaining_expected_bars <= 1.5 {
-                0.0
-            } else if remaining_expected_bars <= 3.0 {
-                0.40
-            } else if remaining_expected_bars <= 5.0 {
-                0.70
-            } else {
-                1.0
-            }
-        }
-    }
-}
-
-#[cfg(test)]
-fn latest_duration_phase(
-    snapshot: &WorkflowSnapshot,
-) -> Option<&ict_engine::state::WorkflowPhaseSnapshot> {
-    snapshot
-        .latest_backtest
-        .as_ref()
-        .or(snapshot.latest_research.as_ref())
-        .or(snapshot.latest_update.as_ref())
-        .or(snapshot.latest_analyze.as_ref())
-}
-
-fn parse_duration_sizing_scale(summary: &[String]) -> Option<f64> {
-    summary.iter().find_map(|line| {
-        line.split_whitespace().find_map(|fragment| {
-            fragment
-                .strip_prefix("duration_sizing_scale=")
-                .and_then(|value| value.parse::<f64>().ok())
-        })
-    })
-}
-
-#[cfg(test)]
-fn build_duration_surface_from_artifacts(
-    snapshot: &WorkflowSnapshot,
-    artifact_action_summary: &[String],
-) -> Vec<String> {
-    let phase = latest_duration_phase(snapshot);
-    let duration_model = phase.and_then(|phase| phase.hybrid_duration_model.as_deref());
-    let remaining_expected_bars = phase.and_then(|phase| phase.hybrid_remaining_expected_bars);
-    let scale = parse_duration_sizing_scale(artifact_action_summary).unwrap_or(1.0);
-    ict_engine::application::backtest::build_duration_sizing_delta_surface(
-        1.0,
-        scale,
-        1.0,
-        scale,
-        duration_model,
-        remaining_expected_bars,
-    )
-}
-
-fn apply_regime_execution_guardrail(
-    mut output: ict_engine::application::orchestration::ExecutionTreeOutput,
-    hybrid_regime: &RegimeSegmentationPacket,
-) -> ict_engine::application::orchestration::ExecutionTreeOutput {
-    let high_transition_hazard = hybrid_regime.transition_hazard.unwrap_or_default() >= 0.60;
-    let pda_disagreement = hybrid_regime
-        .evidence
-        .iter()
-        .any(|line| line == "pda_hybrid_alignment=false");
-    let low_remaining_duration = hybrid_regime
-        .duration_remaining_expected_bars
-        .unwrap_or(f64::INFINITY)
-        <= 1.5;
-    let short_remaining_duration = hybrid_regime
-        .duration_remaining_expected_bars
-        .unwrap_or(f64::INFINITY)
-        <= 2.5;
-    if high_transition_hazard || pda_disagreement || low_remaining_duration {
-        output.gate_status = "observe".to_string();
-        output.branch = "transition_guardrail".to_string();
-        output.execution_bias = "guarded".to_string();
-        output.branch_probability = output.branch_probability.min(0.50);
-        output.posterior_uncertainty = output.posterior_uncertainty.max(0.60);
-        output.decision_hint = if low_remaining_duration {
-            "execution_guarded_due_to_low_remaining_regime_duration".to_string()
-        } else if pda_disagreement {
-            "execution_guarded_due_to_pda_hybrid_disagreement".to_string()
-        } else {
-            "execution_guarded_due_to_high_transition_hazard".to_string()
-        };
-        output.split_reason_lineage.push(format!(
-            "hybrid_transition_hazard={:.3}",
-            hybrid_regime.transition_hazard.unwrap_or_default()
-        ));
-        if pda_disagreement {
-            output
-                .split_reason_lineage
-                .push("pda_hybrid_alignment=false".to_string());
-        }
-        if low_remaining_duration {
-            output.split_reason_lineage.push(format!(
-                "duration_remaining_expected_bars={:.3}",
-                hybrid_regime
-                    .duration_remaining_expected_bars
-                    .unwrap_or_default()
-            ));
-        }
-    } else if short_remaining_duration && output.execution_bias == "aggressive" {
-        output.execution_bias = "passive".to_string();
-        output.split_reason_lineage.push(format!(
-            "duration_remaining_expected_bars={:.3} → execution_bias=passive",
-            hybrid_regime
-                .duration_remaining_expected_bars
-                .unwrap_or_default()
-        ));
-    }
-    output
 }
 
 fn pre_bayes_policy_diff(
