@@ -1,6 +1,8 @@
 use std::collections::BTreeMap;
 
 use crate::state::{
+    structural_event_outcome_pseudo_counts, structural_prior_source_weight,
+    structural_sorted_prior_events, StructuralPriorEvent,
     StructuralNodeDurationBucket, StructuralNodeDurationPrior, StructuralNodeTemporalPosteriorState,
 };
 
@@ -545,6 +547,104 @@ pub(crate) fn rebuild_discounted_node_duration_priors(
         node_duration_priors.insert(node_id.clone(), prior);
         node_temporal_posteriors.insert(node_id.clone(), temporal_state);
     }
+}
+
+pub(crate) fn rebuild_node_duration_priors_from_events(
+    node_duration_priors: &mut BTreeMap<String, StructuralNodeDurationPrior>,
+    node_temporal_posteriors: &mut BTreeMap<String, StructuralNodeTemporalPosteriorState>,
+    event_ledger: &[StructuralPriorEvent],
+) {
+    node_duration_priors.clear();
+    node_temporal_posteriors.clear();
+    let events = structural_sorted_prior_events(event_ledger);
+    let mut current_symbol: Option<String> = None;
+    let mut current_node_id: Option<String> = None;
+    let mut current_streak_length: usize = 0;
+    let mut current_recommended_at: Option<String> = None;
+    let mut current_streak_success_mass = 0.0;
+    let mut current_streak_failure_mass = 0.0;
+    let mut node_streaks = BTreeMap::<String, Vec<StructuralNodeStreakRecord>>::new();
+
+    for event in &events {
+        if current_symbol.as_deref() != Some(event.symbol.as_str()) {
+            finalize_node_duration_streak(
+                &mut node_streaks,
+                current_node_id.take(),
+                current_streak_length,
+                current_streak_success_mass,
+                current_streak_failure_mass,
+                current_recommended_at.take(),
+            );
+            current_symbol = Some(event.symbol.clone());
+            current_node_id = Some(event.node_id.clone());
+            current_streak_length = 1;
+            current_streak_success_mass = 0.0;
+            current_streak_failure_mass = 0.0;
+        } else if current_node_id.as_deref() == Some(event.node_id.as_str()) {
+            current_streak_length += 1;
+        } else {
+            finalize_node_duration_streak(
+                &mut node_streaks,
+                current_node_id.replace(event.node_id.clone()),
+                current_streak_length,
+                current_streak_success_mass,
+                current_streak_failure_mass,
+                current_recommended_at.take(),
+            );
+            current_streak_length = 1;
+            current_streak_success_mass = 0.0;
+            current_streak_failure_mass = 0.0;
+        }
+        current_recommended_at = Some(event.recommended_at.clone());
+        let event_weight = structural_prior_source_weight(&event.source_label);
+        if let Some(pseudo_counts) =
+            structural_event_outcome_pseudo_counts(event.realized_outcome.as_deref())
+        {
+            let weighted_observation = event_weight * pseudo_counts.observation_weight;
+            current_streak_success_mass += weighted_observation * pseudo_counts.success_credit;
+            current_streak_failure_mass +=
+                weighted_observation * (1.0 - pseudo_counts.success_credit);
+        }
+    }
+
+    finalize_node_duration_streak(
+        &mut node_streaks,
+        current_node_id.take(),
+        current_streak_length,
+        current_streak_success_mass,
+        current_streak_failure_mass,
+        current_recommended_at.take(),
+    );
+    rebuild_discounted_node_duration_priors(
+        node_duration_priors,
+        node_temporal_posteriors,
+        &node_streaks,
+    );
+}
+
+fn finalize_node_duration_streak(
+    node_streaks: &mut BTreeMap<String, Vec<StructuralNodeStreakRecord>>,
+    node_id: Option<String>,
+    streak_length: usize,
+    weighted_success_mass: f64,
+    weighted_failure_mass: f64,
+    last_recommended_at: Option<String>,
+) {
+    if streak_length == 0 {
+        return;
+    }
+    let Some(node_id) = node_id else {
+        return;
+    };
+    node_streaks
+        .entry(node_id)
+        .or_default()
+        .push(StructuralNodeStreakRecord {
+            streak_length,
+            weighted_success_mass,
+            weighted_failure_mass,
+            last_recommended_at,
+        });
 }
 
 #[cfg(test)]

@@ -177,7 +177,7 @@ cargo test test_structural_source_reliability_em_holdout_prefers_chronological_s
 **Done when:** `src/state/types.rs`, `src/application/orchestration/structural_playbook.rs`, `src/application/orchestration/workflow_status.rs`, and `src/main.rs` are consumers or shells rather than dominant owners of structural math.
 
 - [x] Move the remaining delayed-reward aggregate / hazard / censoring / competing-risk owner logic out of `src/state/types.rs` into `src/belief_core/source_reliability.rs`.
-- [ ] Move the remaining temporal / duration rebuild ownership out of `src/state/types.rs` into `src/belief_core/{regime_filter, changepoint_gate}.rs`.
+- [x] Move the remaining temporal / duration rebuild ownership out of `src/state/types.rs` into `src/belief_core/{regime_filter, changepoint_gate}.rs`.
 - [ ] Reduce `src/application/orchestration/structural_playbook.rs` to shared-bundle assembly only. Remove remaining duplicated experience-prior and validation math.
 - [ ] Reduce `src/application/orchestration/workflow_status.rs` to phase selection and rendering only. No structural math ownership should remain there.
 - [ ] Keep `src/main.rs` on thin dispatch only. Do not add new structural-learning math or new surface-specific structural glue there.
@@ -187,6 +187,7 @@ cargo test test_structural_source_reliability_em_holdout_prefers_chronological_s
 - `7fadd58` moved source-reliability EM diagnostics / fit / persisted-refresh ownership into `src/belief_core/source_reliability.rs`, with `src/state/types.rs` reduced to thin public wrappers for that lane.
 - delayed-reward aggregate / hazard / censoring / competing-risk formula ownership now also routes through `src/belief_core/source_reliability.rs`, with `src/state/types.rs` reduced further toward refresh-call consumers instead of formula owners.
 - delayed-reward feedback aggregation now also routes through `src/belief_core/source_reliability.rs`, with `src/state/types.rs` reduced to thin callers for stats/source-summary updates; verified with `cargo check`, `cargo test source_reliability_em_readiness_requires_multi_source_overlap`, `cargo test --lib source_reliability_em_fit_learns_lower_reliability_for_conflicting_source`, `cargo test --lib test_structural_source_reliability_em_holdout_prefers_chronological_split`, and `cargo test --lib test_structural_feedback_records_snips_and_dr_policy_priors`.
+- temporal / duration rebuild ownership now routes through `src/belief_core/changepoint_gate.rs` and `src/belief_core/regime_filter.rs`, with `src/state/types.rs::rebuild_structural_sequence_priors(...)` reduced to a thin shell plus EM refresh; verified with `cargo check`, `cargo test --lib test_structural_node_duration_priors_discount_older_streaks`, and `cargo test --lib test_structural_prior_seed_rebuilds_branch_transition_priors`.
 
 **Read first when working this lane:**
 
@@ -321,4 +322,4 @@ cargo test test_structural_source_reliability_em_holdout_prefers_chronological_s
 
 ## Blocked
 
-- None currently.
+- Existing red baseline in `src/state/types.rs`: `cargo test --lib test_structural_prior_seed_rebuilds_node_duration_priors` still fails on this branch and on parent commit `35cac8a` at `trend.bocpd_recursive_run_length_mode_probability > 0.5`; this slice did not introduce that failure, but the lane is not fully green until that expectation or the underlying changepoint math is reconciled.

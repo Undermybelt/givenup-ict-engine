@@ -2,6 +2,8 @@ use std::collections::BTreeMap;
 
 use crate::belief_core::beta_dirichlet_update::{beta_posterior_mean, dirichlet_component_mean};
 use crate::state::{
+    structural_event_outcome_pseudo_counts, structural_prior_source_weight,
+    structural_sorted_prior_events, StructuralPriorEvent,
     StructuralBranchTemporalPosteriorState, StructuralBranchTransitionPrior,
     StructuralNodeDurationPrior, StructuralNodeTemporalPosteriorState,
     StructuralNodeTransitionPosteriorState,
@@ -958,6 +960,110 @@ pub fn structural_transition_posterior_multiplier(
     let prior_odds = prior / (1.0 - prior);
     let posterior_odds = support / (1.0 - support);
     (posterior_odds / prior_odds).clamp(0.05, 3.0)
+}
+
+pub(crate) fn rebuild_transition_posteriors_from_events(
+    branch_transition_priors: &mut BTreeMap<String, StructuralBranchTransitionPrior>,
+    branch_temporal_posteriors: &mut BTreeMap<String, StructuralBranchTemporalPosteriorState>,
+    node_transition_posteriors: &mut BTreeMap<String, StructuralNodeTransitionPosteriorState>,
+    event_ledger: &[StructuralPriorEvent],
+) {
+    branch_transition_priors.clear();
+    branch_temporal_posteriors.clear();
+    node_transition_posteriors.clear();
+    let events = structural_sorted_prior_events(event_ledger);
+    let mut previous_event: Option<StructuralPriorEvent> = None;
+    let mut symbol_transition_events =
+        BTreeMap::<String, Vec<(StructuralPriorEvent, StructuralPriorEvent)>>::new();
+
+    for event in &events {
+        if let Some(previous) = previous_event.as_ref() {
+            if previous.symbol == event.symbol {
+                symbol_transition_events
+                    .entry(event.symbol.clone())
+                    .or_default()
+                    .push((previous.clone(), event.clone()));
+            }
+        }
+        previous_event = Some(event.clone());
+    }
+
+    for transition_events in symbol_transition_events.values() {
+        let total_transitions = transition_events.len();
+        for (index, (previous, event)) in transition_events.iter().enumerate() {
+            let transition_key = format!("{}=>{}", previous.branch_id, event.branch_id);
+            let entry = branch_transition_priors
+                .entry(transition_key)
+                .or_insert_with(|| StructuralBranchTransitionPrior {
+                    from_node_id: previous.node_id.clone(),
+                    to_node_id: event.node_id.clone(),
+                    from_branch_id: previous.branch_id.clone(),
+                    to_branch_id: event.branch_id.clone(),
+                    ..StructuralBranchTransitionPrior::default()
+                });
+            let recency_rank = total_transitions.saturating_sub(index + 1) as f64;
+            let recency_decay = 0.85_f64.powf(recency_rank);
+            let weighted_mass = structural_prior_source_weight(&event.source_label) * recency_decay;
+            entry.observations += 1;
+            match event.realized_outcome.as_deref() {
+                Some("win") | Some("profit") | Some("tp") | Some("take_profit") => {
+                    entry.wins += 1;
+                }
+                Some("loss") | Some("lose") | Some("sl") | Some("stop") | Some("stop_loss") => {
+                    entry.losses += 1;
+                }
+                Some("invalidated") => {
+                    entry.invalidated += 1;
+                }
+                _ => {}
+            }
+            if let Some(pseudo_counts) =
+                structural_event_outcome_pseudo_counts(event.realized_outcome.as_deref())
+            {
+                let weighted_observation = weighted_mass * pseudo_counts.observation_weight;
+                entry.weighted_observation_mass += weighted_observation;
+                entry.weighted_success_mass += weighted_observation * pseudo_counts.success_credit;
+                entry.weighted_failure_mass +=
+                    weighted_observation * (1.0 - pseudo_counts.success_credit);
+            }
+            entry.last_recommended_at = Some(event.recommended_at.clone());
+        }
+    }
+
+    for transition_events in symbol_transition_events.values() {
+        let total_transitions = transition_events.len();
+        for (index, (previous, event)) in transition_events.iter().enumerate() {
+            let transition_key = format!("{}=>{}", previous.node_id, event.node_id);
+            let entry = node_transition_posteriors
+                .entry(transition_key.clone())
+                .or_insert_with(|| StructuralNodeTransitionPosteriorState {
+                    transition_key,
+                    from_node_id: previous.node_id.clone(),
+                    to_node_id: event.node_id.clone(),
+                    ..StructuralNodeTransitionPosteriorState::default()
+                });
+            let recency_rank = total_transitions.saturating_sub(index + 1) as f64;
+            let recency_decay = 0.85_f64.powf(recency_rank);
+            let weighted_mass = structural_prior_source_weight(&event.source_label) * recency_decay;
+            entry.observations += 1;
+            if let Some(pseudo_counts) =
+                structural_event_outcome_pseudo_counts(event.realized_outcome.as_deref())
+            {
+                let weighted_observation = weighted_mass * pseudo_counts.observation_weight;
+                entry.weighted_observation_mass += weighted_observation;
+                entry.weighted_success_mass += weighted_observation * pseudo_counts.success_credit;
+                entry.weighted_failure_mass +=
+                    weighted_observation * (1.0 - pseudo_counts.success_credit);
+            }
+            entry.last_recommended_at = Some(event.recommended_at.clone());
+        }
+    }
+
+    refresh_node_transition_posteriors(node_transition_posteriors);
+    refresh_branch_transition_posteriors(
+        branch_transition_priors,
+        branch_temporal_posteriors,
+    );
 }
 
 pub fn refresh_node_transition_posteriors(
