@@ -32,6 +32,49 @@
 9. If the worktree is dirty in unrelated files, isolate your slice and work with the existing state. Do not revert others' changes.
 10. If blocked, write a short blocker note into the `Blocked` section with exact file / function / test evidence.
 
+## Agent Quick Start
+
+- If no narrower instruction is given, start with `Workstream 1` and pick the first unchecked item.
+- Default first slice: move remaining delayed-reward aggregate / hazard / censoring / competing-risk owner logic out of `src/state/types.rs` into `src/belief_core/source_reliability.rs`.
+- Do not start in `Workstream 3` unless `Workstream 1`, `Workstream 2`, and `Workstream 4` are no longer the real blocker.
+- Before editing, read the exact owner files and function anchors below. Do not guess the entry points.
+
+### Default First Slice: Open These First
+
+- `src/belief_core/source_reliability.rs`
+  - `structural_source_reliability_em_diagnostics`
+  - `structural_source_reliability_em_fit_from_state`
+  - `refresh_structural_source_reliability_em_state`
+  - `structural_delayed_reward_replay_validation`
+  - `structural_experience_prior_runtime_metrics`
+- `src/state/types.rs`
+  - `structural_source_reliability_em_diagnostics`
+  - `structural_source_reliability_em_fit_from_state`
+  - `refresh_structural_source_reliability_em_state`
+  - `rebuild_structural_sequence_priors`
+- `src/application/orchestration/structural_playbook.rs`
+  - `build_structural_experience_prior_surface_artifact_with_prior_state`
+  - call sites of `structural_experience_prior_runtime_metrics(...)`
+  - call site of `structural_delayed_reward_replay_validation(...)`
+
+Locate them with:
+
+```bash
+rg -n 'structural_source_reliability_em_diagnostics|structural_source_reliability_em_fit_from_state|refresh_structural_source_reliability_em_state|structural_delayed_reward_replay_validation|structural_experience_prior_runtime_metrics|rebuild_structural_sequence_priors' \
+  src/belief_core/source_reliability.rs \
+  src/state/types.rs \
+  src/application/orchestration/structural_playbook.rs
+```
+
+Minimum verification for this default first slice:
+
+```bash
+cargo check
+cargo test source_reliability_em_readiness_requires_multi_source_overlap
+cargo test source_reliability_em_fit_learns_lower_reliability_for_conflicting_source
+cargo test test_structural_source_reliability_em_holdout_prefers_chronological_split
+```
+
 ## Already Landed, Do Not Redo
 
 - `belief_core::{structural_state, source_reliability, regime_filter, changepoint_gate, ranking_label, beta_dirichlet_update}` already exist. Do not waste time recreating modules.
@@ -58,6 +101,13 @@
 
 - `7fadd58` moved source-reliability EM diagnostics / fit / persisted-refresh ownership into `src/belief_core/source_reliability.rs`, with `src/state/types.rs` reduced to thin public wrappers for that lane.
 
+**Read first when working this lane:**
+
+- `src/state/types.rs`: `rebuild_structural_sequence_priors(...)`
+- `src/belief_core/source_reliability.rs`: EM / delayed-reward owner functions listed in `Agent Quick Start`
+- `src/application/orchestration/structural_playbook.rs`: experience-prior surface assembly
+- `src/application/orchestration/workflow_status.rs`: validation-summary and ranker-summary rendering only if a surface contract is touched
+
 ### Workstream 2: Transition And Changepoint Closure
 
 **Objective:** replace heuristic transition and break blending with one maintained core.
@@ -69,6 +119,28 @@
 - [ ] Remove fixed weighted blends from consumer layers. Snapshot-time reweighting must consume maintained filter state instead of acting as the main engine.
 - [ ] Reduce `src/application/belief/structural_temporal_adjustment.rs` to compatibility-only usage of the maintained core.
 
+**Read first when working this lane:**
+
+- `src/state/types.rs`: `rebuild_structural_sequence_priors(...)`
+- `src/belief_core/regime_filter.rs`
+  - `refresh_node_transition_posteriors`
+  - branch-temporal posterior refresh / recursive transition helpers
+- `src/belief_core/changepoint_gate.rs`
+  - `structural_bocpd_break_probability`
+  - `structural_node_bocpd_sequence_break_probability`
+  - duration-prior changepoint update block
+- `src/application/belief/structural_temporal_adjustment.rs`: compatibility-shell call sites and tests
+
+Locate them with:
+
+```bash
+rg -n 'rebuild_structural_sequence_priors|refresh_node_transition_posteriors|branch_temporal_posteriors|bocpd|sequence_break|break_probability' \
+  src/state/types.rs \
+  src/belief_core/regime_filter.rs \
+  src/belief_core/changepoint_gate.rs \
+  src/application/belief/structural_temporal_adjustment.rs
+```
+
 ### Workstream 4: Validation Hardening
 
 **Objective:** move from compact diagnostics to stronger evidence-bearing validation.
@@ -79,6 +151,32 @@
 - [ ] Keep validation summaries low-token, but always expose panel size, coverage, split boundary, and failure reason.
 - [ ] Strengthen delayed-reward validation beyond current horizon-only diagnostics. If full event-time competing-risk is not landed in the slice, leave a clearer intermediate owner and explicit remaining gap here.
 - [ ] Keep the target-policy upgrade path explicit. Do not silently entrench the current `symbol:regime:direction` bucket-posterior model as the final state.
+
+**Read first when working this lane:**
+
+- `src/belief_core/source_reliability.rs`: holdout / replay / delayed-reward replay owner functions and tests
+- `src/application/orchestration/workflow_status.rs`
+  - `build_structural_validation_summary_value`
+  - `build_path_ranker_summary_value`
+- `src/application/orchestration/structural_playbook.rs`: experience-prior artifact assembly
+
+Locate them with:
+
+```bash
+rg -n 'build_structural_validation_summary_value|build_path_ranker_summary_value|structural_validation_summary|path_ranker_summary|structural_delayed_reward_replay_validation|structural_source_reliability_em_diagnostics' \
+  src/application/orchestration/workflow_status.rs \
+  src/application/orchestration/structural_playbook.rs \
+  src/belief_core/source_reliability.rs
+```
+
+Minimum verification for this lane:
+
+```bash
+cargo check
+cargo test delayed_reward_replay_validation_scores_future_resolution_horizons
+cargo test source_reliability_em_readiness_requires_multi_source_overlap
+cargo test test_structural_source_reliability_em_holdout_prefers_chronological_split
+```
 
 ## Later Only If Still Needed
 
