@@ -1157,6 +1157,38 @@ For cross-market families, add:
   - `1m` coverage is proven
   - but `1m` is not currently the preferred Family A quality lane for `NQ`
 
+### 2026-05-06 Slice 19: Family A focused re-checks on new NQ forks
+
+**Execution**
+- created isolated copies of the current `NQ` Family A state:
+  - `/tmp/ict-engine-family-a-profile-1dregime-check`
+  - `/tmp/ict-engine-family-a-profile-5m-check`
+- applied focused prior-init on each candidate and reran `analyze` with the same trimmed `NQ` multi-timeframe baseline:
+  - `TomacNQ_KillzoneBreakout1dRegime`
+  - `TomacNQKillzoneBreakout5m`
+
+**Result**
+- `TomacNQ_KillzoneBreakout1dRegime`
+  - prior-init moved the CPT row to:
+    - `final_probs=[0.8860366769230769, 0.0000016045584045584045, 0.11396171851851851]`
+  - post-apply analyze still returned:
+    - `quality=0.424`
+    - `gate=pass_neutralized`
+    - `Action: TUNE structure_ict`
+- `TomacNQKillzoneBreakout5m`
+  - prior-init moved the CPT row to:
+    - `final_probs=[0.7857991255060729, 0.0000004222522117258959, 0.2142004522417154]`
+  - post-apply analyze still returned:
+    - `quality=0.424`
+    - `gate=pass_neutralized`
+    - `Action: TUNE structure_ict`
+
+**Outcome**
+- both focused forks can move the BBN prior, but neither one moves the execution-tree decision surface yet.
+- this strengthens the current conclusion:
+  - the Family A blocker is no longer surface, profile, or timeframe availability
+  - it is strategy quality relative to what `structure_ict` still needs
+
 ### 2026-05-06 Slice 10: Family G real-data acquisition attempts
 
 **Execution**
@@ -1207,6 +1239,7 @@ For cross-market families, add:
 - [x] Confirm that local cleaned data already exists for `1m/5m/15m/1h/4h/1d` on multiple markets.
 - [x] Prove at least one real `5m` synthetic-profile execution slice end-to-end on `NQ`.
 - [x] Prove real `15m` and `1m` synthetic-profile execution slices end-to-end on `NQ`.
+- [x] Verify on isolated re-check states that the current `1dRegime` and `5m` NQ forks still do not move execution-tree `quality` or `gate_status`.
 
 ### Next
 
@@ -1216,6 +1249,7 @@ For cross-market families, add:
 - [ ] Decide whether `EUR` should stay on the Family A structure lane at all, or whether it should be handed off to another factor family led by the currently stronger `TomacRRWinRate` branch.
 - [ ] Decide whether to keep expanding `5m` Family A on `NQ`, or treat the current `5m` proof as sufficient and focus back on the stronger `1h` structure candidate.
 - [ ] Decide whether `15m` and `1m` need more Family A forks, or whether current evidence is already enough to deprioritize them behind the stronger `1h` and `5m` NQ lanes.
+- [ ] Stop spending cycles on `1dRegime`, `15m`, or `1m` NQ forks unless a new hypothesis explains why they should move `quality` rather than just produce a positive backtest.
 - [ ] Use a reachable provider path or existing captured auxiliary evidence to run the first real Family G `options_hedging` / dealer-positioning research slice rather than only proving the input contract.
 - [ ] Run Family B: Directionality / Persistence only after Family A is stable.
 - [ ] Run Family C: Cross-Market Confirmation once paired data exists.
