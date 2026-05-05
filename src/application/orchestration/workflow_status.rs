@@ -19,6 +19,7 @@ use super::structural_playbook::{
 use crate::application::belief::{
     jump_calibration_gate_workflow_summary, jump_model_workflow_summary,
 };
+use crate::application::auto_quant::AutoQuantResearchHandoffPayload;
 use crate::application::output_foundation::{
     print_redacted_json, redact_local_paths_in_human_text, redact_local_paths_in_value,
     short_workflow_phase_summary,
@@ -32,8 +33,8 @@ use crate::config::shell_quote;
 use crate::state::{
     ArtifactConsumedImpactSummary, ArtifactDecisionSummary, ArtifactFactorTrendSummary,
     ArtifactFamilyTrendSummary, ArtifactHistorySummary, ArtifactLineageSummary,
-    ArtifactRuleBreakEffect, ArtifactRuleBreakFactorImpact, ArtifactRuleBreakFamilyImpact,
-    DatasetComparability, EnsembleExecutorScorecard, EnsembleVoteRecord,
+    ArtifactLedgerEntry, ArtifactRuleBreakEffect, ArtifactRuleBreakFactorImpact,
+    ArtifactRuleBreakFamilyImpact, DatasetComparability, EnsembleExecutorScorecard, EnsembleVoteRecord,
     ExecutionCandidateArtifactSummary, PendingUpdateArtifactSummary, PreBayesEntryQualityBridge,
     PreBayesEntryQualityBridgeDiff, PreBayesEvidencePolicy, PreBayesPolicyDiff,
     PreBayesPolicyLineageSummary, PreBayesPolicyRecord, PreBayesSoftEvidenceNodeDiff,
@@ -524,6 +525,20 @@ pub struct WorkflowFirstRunGuide {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct WorkflowAutoQuantHandoffGuide {
+    pub active: bool,
+    pub artifact_id: String,
+    pub handoff_kind: String,
+    pub status: String,
+    pub data_ready: bool,
+    pub recommended_next_command: String,
+    pub review_command: String,
+    pub workflow_status_command: String,
+    pub suggested_next_steps: Vec<String>,
+    pub handoff_artifact_path: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct AgentBootstrapInputs {
     pub backtest: AgentBootstrapBacktestInput,
     pub live: AgentBootstrapLiveInput,
@@ -849,6 +864,83 @@ fn first_run_next_action(guide: &WorkflowFirstRunGuide) -> String {
     )
 }
 
+fn latest_auto_quant_handoff_entry(snapshot: &WorkflowSnapshot) -> Option<&ArtifactLedgerEntry> {
+    snapshot
+        .actionable_artifacts
+        .iter()
+        .filter(|entry| entry.artifact_kind == "auto_quant_handoff_candidate")
+        .max_by_key(|entry| entry.generated_at)
+}
+
+fn load_auto_quant_handoff_payload(
+    entry: &ArtifactLedgerEntry,
+) -> Option<AutoQuantResearchHandoffPayload> {
+    std::fs::read_to_string(&entry.path)
+        .ok()
+        .and_then(|raw| serde_json::from_str::<AutoQuantResearchHandoffPayload>(&raw).ok())
+}
+
+fn build_auto_quant_handoff_guide(
+    snapshot: &WorkflowSnapshot,
+) -> Option<WorkflowAutoQuantHandoffGuide> {
+    let entry = latest_auto_quant_handoff_entry(snapshot)?;
+    let payload = load_auto_quant_handoff_payload(entry)?;
+    let recommended_next_command = payload
+        .readiness
+        .as_ref()
+        .map(|readiness| readiness.recommended_next_command.clone())
+        .unwrap_or_default();
+    Some(WorkflowAutoQuantHandoffGuide {
+        active: true,
+        artifact_id: payload.artifact_id.clone(),
+        handoff_kind: payload.handoff_kind.clone(),
+        status: payload
+            .readiness
+            .as_ref()
+            .map(|readiness| readiness.status.clone())
+            .unwrap_or_else(|| "status_unavailable".to_string()),
+        data_ready: payload.data_ready,
+        review_command: format!(
+            "ict-engine auto-quant-adoption-review --symbol {} --state-dir {} --artifact-id {}",
+            payload.symbol, payload.state_dir, payload.artifact_id
+        ),
+        workflow_status_command: format!(
+            "ict-engine workflow-status --symbol {} --state-dir {} --human",
+            payload.symbol, payload.state_dir
+        ),
+        recommended_next_command,
+        suggested_next_steps: payload.suggested_next_steps.clone(),
+        handoff_artifact_path: payload.handoff_artifact_path.clone(),
+    })
+}
+
+fn auto_quant_handoff_route_line(guide: &WorkflowAutoQuantHandoffGuide) -> String {
+    let next_summary = guide
+        .suggested_next_steps
+        .iter()
+        .take(2)
+        .cloned()
+        .collect::<Vec<_>>()
+        .join(" | ");
+    format!(
+        "Auto-Quant: {} Review: {} Workflow: {}",
+        next_summary, guide.review_command, guide.workflow_status_command
+    )
+}
+
+fn auto_quant_handoff_next_action(guide: &WorkflowAutoQuantHandoffGuide) -> String {
+    if guide.recommended_next_command.trim().is_empty() {
+        return format!(
+            "Continue the Auto-Quant handoff review with {}.",
+            guide.review_command
+        );
+    }
+    format!(
+        "Continue the Auto-Quant handoff. Run {} and then review with {}.",
+        guide.recommended_next_command, guide.review_command
+    )
+}
+
 fn workflow_human_deferred_command(command: &str) -> Option<String> {
     let trimmed = command.trim();
     if trimmed.is_empty()
@@ -1062,7 +1154,15 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
         snapshot.recommended_next_command.clone()
     };
     let provider_status_command = provider_status_agent_command_for_surface(provider_status_agent);
-    let first_run_guide = if no_workflow_state && raw_top_level_command.trim().is_empty() {
+    let auto_quant_handoff_guide = if no_workflow_state && raw_top_level_command.trim().is_empty() {
+        build_auto_quant_handoff_guide(snapshot)
+    } else {
+        None
+    };
+    let first_run_guide = if no_workflow_state
+        && raw_top_level_command.trim().is_empty()
+        && auto_quant_handoff_guide.is_none()
+    {
         Some(build_first_run_guide(
             &snapshot.symbol,
             state_dir,
@@ -1071,9 +1171,14 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     } else {
         None
     };
-    let top_level_command = first_run_guide
+    let top_level_command = auto_quant_handoff_guide
         .as_ref()
-        .map(|guide| guide.bootstrap_command.clone())
+        .map(|guide| guide.recommended_next_command.clone())
+        .or_else(|| {
+            first_run_guide
+                .as_ref()
+                .map(|guide| guide.bootstrap_command.clone())
+        })
         .unwrap_or(raw_top_level_command);
     let historical_data_gate_active = !selected_data_candidates.is_empty()
         && (top_level_command.contains("factor-research")
@@ -1107,7 +1212,9 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
             .reason
             .contains("user_selected_historical_data_missing");
     let deferred_user_selection_command = workflow_human_deferred_command(&top_level_command);
-    let base_human_next_action = if let Some(guide) = first_run_guide.as_ref() {
+    let base_human_next_action = if let Some(guide) = auto_quant_handoff_guide.as_ref() {
+        auto_quant_handoff_next_action(guide)
+    } else if let Some(guide) = first_run_guide.as_ref() {
         first_run_next_action(guide)
     } else if user_selection_pending {
         if !historical_data_request_template.is_empty() {
@@ -1227,7 +1334,11 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     } else {
         None
     };
-    let route_line = first_run_guide.as_ref().map(first_run_route_line);
+    let route_line = if let Some(guide) = auto_quant_handoff_guide.as_ref() {
+        Some(auto_quant_handoff_route_line(guide))
+    } else {
+        first_run_guide.as_ref().map(first_run_route_line)
+    };
     let mut summary_parts = vec![
         snapshot.symbol.clone(),
         workflow_status_focus_phase(snapshot),
@@ -1660,6 +1771,10 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
             serde_json::to_value(first_run_guide).unwrap_or_default(),
         );
         map.insert(
+            "auto_quant_handoff".to_string(),
+            serde_json::to_value(auto_quant_handoff_guide).unwrap_or_default(),
+        );
+        map.insert(
             "structural_temporal_line".to_string(),
             serde_json::to_value(structural_temporal_line).unwrap_or_default(),
         );
@@ -1836,7 +1951,15 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
     } else {
         snapshot.recommended_next_command.clone()
     };
-    let first_run_guide = if no_workflow_state && raw_next_command.trim().is_empty() {
+    let auto_quant_handoff_guide = if no_workflow_state && raw_next_command.trim().is_empty() {
+        build_auto_quant_handoff_guide(snapshot)
+    } else {
+        None
+    };
+    let first_run_guide = if no_workflow_state
+        && raw_next_command.trim().is_empty()
+        && auto_quant_handoff_guide.is_none()
+    {
         Some(build_first_run_guide(
             &snapshot.symbol,
             state_dir,
@@ -1845,9 +1968,14 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
     } else {
         None
     };
-    let next_command = first_run_guide
+    let next_command = auto_quant_handoff_guide
         .as_ref()
-        .map(|guide| guide.bootstrap_command.clone())
+        .map(|guide| guide.recommended_next_command.clone())
+        .or_else(|| {
+            first_run_guide
+                .as_ref()
+                .map(|guide| guide.bootstrap_command.clone())
+        })
         .unwrap_or(raw_next_command);
     let next_command_value = if no_workflow_state && next_command.trim().is_empty() {
         serde_json::Value::Null
@@ -2033,7 +2161,9 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "blocking_reason": blocking_reason,
         "hard_block_active": hard_block_active,
         "next_command": next_command_value,
-        "next_command_source": if no_workflow_state && snapshot.recommended_next_command.trim().is_empty() {
+        "next_command_source": if auto_quant_handoff_guide.is_some() {
+            "auto_quant_handoff_candidate"
+        } else if no_workflow_state && snapshot.recommended_next_command.trim().is_empty() {
             "first_run_router"
         } else {
             command_source
@@ -2049,6 +2179,7 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
         "ensemble": ensemble_summary,
         "provider_support": provider_support,
         "first_run_router": first_run_guide,
+        "auto_quant_handoff": auto_quant_handoff_guide,
         "latest_structural_feedback": latest_structural_feedback,
         "experience_prior_surface": experience_prior_surface,
         "structural_validation_summary": structural_validation_summary,
@@ -3890,6 +4021,10 @@ pub fn sample_human_workflow_snapshot() -> WorkflowSnapshot {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::application::auto_quant::handoff::{
+        build_factor_research_handoff_payload, BuildFactorResearchHandoffPayloadInput,
+    };
+    use crate::application::auto_quant::AutoQuantDependencyStatus;
     use crate::application::orchestration::EnsembleHardBlockArtifact;
     use crate::application::provider_catalog::{
         ProviderCatalogAgentSurface, ProviderCatalogPendingAgentItem,
@@ -4120,6 +4255,116 @@ mod tests {
         );
         surface.selected_profile_full = Some(full);
         surface
+    }
+
+    fn sample_auto_quant_dependency_status(managed_dir: String) -> AutoQuantDependencyStatus {
+        AutoQuantDependencyStatus {
+            repo_url: "repo".to_string(),
+            managed_dir,
+            tracked_branch: "master".to_string(),
+            pinned_ref: None,
+            current_commit: None,
+            upstream_commit: None,
+            bootstrap_needed: false,
+            config_present: true,
+            managed_repo_present: true,
+            healthy: true,
+            update_available: false,
+            required_files: Vec::new(),
+            notes: Vec::new(),
+            adapter_version: "v1".to_string(),
+            last_sync: None,
+        }
+    }
+
+    fn persist_sample_auto_quant_handoff(
+        temp: &tempfile::TempDir,
+    ) -> crate::state::ArtifactLedgerEntry {
+        let mut payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+            symbol: "DEMO",
+            data: "examples/demo/demo-15m.json",
+            objective: "expansion_manipulation",
+            paired_data: None,
+            mutation_spec_path: None,
+            strategy_material_root: None,
+            state_dir: temp.path().to_str().unwrap(),
+            dependency_status: sample_auto_quant_dependency_status(
+                temp.path()
+                    .join(".deps/auto-quant")
+                    .to_string_lossy()
+                    .into_owned(),
+            ),
+        });
+        let filename = format!("auto_quant_handoff.{}.json", payload.handoff_kind);
+        crate::state::save_state(
+            temp.path().to_str().unwrap(),
+            &payload.symbol,
+            &filename,
+            &payload,
+        )
+        .unwrap();
+        let path = crate::state::artifact_state_path(
+            temp.path().to_str().unwrap(),
+            &payload.symbol,
+            &filename,
+        );
+        payload.handoff_artifact_path = path.clone();
+        crate::state::save_state(
+            temp.path().to_str().unwrap(),
+            &payload.symbol,
+            &filename,
+            &payload,
+        )
+        .unwrap();
+        crate::state::append_artifact_ledger_entry(
+            temp.path().to_str().unwrap(),
+            &payload.symbol,
+            crate::state::ArtifactLedgerEntry {
+                entry_id: format!("ledger:{}", payload.artifact_id),
+                artifact_kind: "auto_quant_handoff_candidate".to_string(),
+                artifact_id: payload.artifact_id.clone(),
+                version: 1,
+                generated_at: chrono::Utc::now(),
+                symbol: payload.symbol.clone(),
+                source_phase: payload.handoff_kind.clone(),
+                source_run_id: payload.session_id.clone(),
+                path: path.clone(),
+                status: if payload.data_ready {
+                    "ready_for_external_run".to_string()
+                } else {
+                    "prepare_required".to_string()
+                },
+                promote_candidate: false,
+                actionable: true,
+                decision_hint: payload.backend.clone(),
+                review_reason: payload.suggested_next_steps.join(" | "),
+                review_rule_version: "auto-quant-handoff-v1".to_string(),
+                top_factor_name: None,
+                top_factor_action: Some("review".to_string()),
+                family_scores: std::collections::BTreeMap::new(),
+                supersedes_artifact_id: None,
+                quality_score: if payload.data_ready { 70 } else { 30 },
+                consumed_by_update_run_id: None,
+                consumed_at: None,
+                consumed_outcome: None,
+                regraded_at: None,
+                consumption_regrade_status: None,
+                consumption_regrade_reason: None,
+            },
+        )
+        .unwrap();
+        let ledger =
+            crate::state::load_state_or_default::<Vec<crate::state::ArtifactLedgerEntry>, _>(
+                temp.path().to_str().unwrap(),
+                "DEMO",
+                crate::state::ARTIFACT_LEDGER_FILE,
+            )
+            .unwrap()
+            .into_iter()
+            .find(|entry| entry.path == path)
+            .unwrap();
+        ledger
     }
 
     fn sample_structural_feedback_history() -> Vec<crate::state::FeedbackRecord> {
@@ -4975,6 +5220,55 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("tradfi free fallback"));
+    }
+
+    #[test]
+    fn workflow_status_routes_auto_quant_handoff_candidate_before_first_run_router() {
+        let temp = tempfile::tempdir().unwrap();
+        let handoff = persist_sample_auto_quant_handoff(&temp);
+        let snapshot = WorkflowSnapshot {
+            symbol: "DEMO".to_string(),
+            actionable_artifacts: vec![handoff],
+            ..WorkflowSnapshot::default()
+        };
+
+        let human = build_human_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some(temp.path().to_str().unwrap()),
+        );
+        assert!(human["next_action_line"]
+            .as_str()
+            .unwrap()
+            .contains("Auto-Quant handoff"));
+        assert!(human["route_line"]
+            .as_str()
+            .unwrap()
+            .contains("auto-quant-adoption-review"));
+        assert!(human["first_run_router"].is_null());
+
+        let agent = build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some(temp.path().to_str().unwrap()),
+        );
+        assert_eq!(agent["next_command_source"], "auto_quant_handoff_candidate");
+        assert_eq!(agent["top_actionable"]["artifact_kind"], "auto_quant_handoff_candidate");
+        assert!(agent["recommended_next_step"]["deferred_command"]
+            .as_str()
+            .unwrap()
+            .contains("prepare.py"));
+        assert_eq!(agent["first_run_router"], serde_json::Value::Null);
+        assert!(agent["auto_quant_handoff"]["review_command"]
+            .as_str()
+            .unwrap()
+            .contains("auto-quant-adoption-review"));
     }
 
     #[test]

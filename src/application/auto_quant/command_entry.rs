@@ -49,6 +49,10 @@ pub const ARTIFACT_KIND_LIVE_SIGNALS: &str = "auto_quant_live_signals_ingested";
 pub const LIVE_SIGNALS_RULE_VERSION: &str = "auto-quant-live-signals-v1";
 
 use crate::bbn::trading::persistence::load_or_init_trading_network;
+use crate::application::output_foundation::{
+    print_redacted_json, redact_local_paths_in_human_text,
+};
+use crate::application::release_closure::workflow_next_step_view;
 use crate::state::{save_state, state_exists, BBN_STATE_FILE};
 
 fn ensure_dependency_ready(
@@ -62,6 +66,142 @@ fn ensure_dependency_ready(
     } else {
         Ok(status)
     }
+}
+
+#[derive(Debug, serde::Serialize)]
+struct AutoQuantHandoffCompactSurface<'a> {
+    summary_line: String,
+    handoff_kind: &'a str,
+    status: String,
+    data_ready: bool,
+    recommended_next_command: String,
+    review_command: String,
+    workflow_status_command: String,
+    suggested_next_steps: Vec<String>,
+}
+
+fn auto_quant_handoff_recommended_next_command(
+    payload: &super::handoff::AutoQuantResearchHandoffPayload,
+) -> String {
+    payload
+        .readiness
+        .as_ref()
+        .map(|readiness| readiness.recommended_next_command.clone())
+        .unwrap_or_default()
+}
+
+fn auto_quant_handoff_review_command(
+    payload: &super::handoff::AutoQuantResearchHandoffPayload,
+) -> String {
+    format!(
+        "ict-engine auto-quant-adoption-review --symbol {} --state-dir {} --artifact-id {}",
+        payload.symbol, payload.state_dir, payload.artifact_id
+    )
+}
+
+fn auto_quant_handoff_workflow_status_command(
+    payload: &super::handoff::AutoQuantResearchHandoffPayload,
+) -> String {
+    format!(
+        "ict-engine workflow-status --symbol {} --state-dir {} --human",
+        payload.symbol, payload.state_dir
+    )
+}
+
+fn render_auto_quant_handoff_human_output(
+    payload: &super::handoff::AutoQuantResearchHandoffPayload,
+) -> String {
+    let status = payload
+        .readiness
+        .as_ref()
+        .map(|readiness| readiness.status.clone())
+        .unwrap_or_else(|| {
+            if payload.data_ready {
+                "dependency_ready_data_ready".to_string()
+            } else {
+                "dependency_ready_data_missing".to_string()
+            }
+        });
+    let next_command = auto_quant_handoff_recommended_next_command(payload);
+    let mut lines = vec![format!(
+        "Auto-Quant handoff | status={} | objective={} | data_ready={}",
+        status, payload.objective, payload.data_ready
+    )];
+    if let Some(step) = payload.suggested_next_steps.first() {
+        lines.push(format!("Next: {}", step));
+    }
+    if !next_command.trim().is_empty() {
+        lines.push(format!("Run: {}", next_command));
+    }
+    lines.push(format!(
+        "Review: {}",
+        auto_quant_handoff_review_command(payload)
+    ));
+    lines.push(format!(
+        "Workflow: {}",
+        auto_quant_handoff_workflow_status_command(payload)
+    ));
+    redact_local_paths_in_human_text(&lines.join("\n"))
+}
+
+fn build_auto_quant_handoff_compact_surface(
+    payload: &super::handoff::AutoQuantResearchHandoffPayload,
+) -> AutoQuantHandoffCompactSurface<'_> {
+    AutoQuantHandoffCompactSurface {
+        summary_line: format!(
+            "auto_quant_handoff {} data_ready={} objective={}",
+            payload.handoff_kind, payload.data_ready, payload.objective
+        ),
+        handoff_kind: &payload.handoff_kind,
+        status: payload
+            .readiness
+            .as_ref()
+            .map(|readiness| readiness.status.clone())
+            .unwrap_or_else(|| "status_unavailable".to_string()),
+        data_ready: payload.data_ready,
+        recommended_next_command: auto_quant_handoff_recommended_next_command(payload),
+        review_command: auto_quant_handoff_review_command(payload),
+        workflow_status_command: auto_quant_handoff_workflow_status_command(payload),
+        suggested_next_steps: payload.suggested_next_steps.clone(),
+    }
+}
+
+fn build_auto_quant_handoff_output_payload(
+    payload: &super::handoff::AutoQuantResearchHandoffPayload,
+) -> serde_json::Value {
+    let recommended_next_command = auto_quant_handoff_recommended_next_command(payload);
+    let recommended_next_step = payload
+        .readiness
+        .as_ref()
+        .map(|readiness| readiness.next_step.clone())
+        .unwrap_or_else(|| workflow_next_step_view(&recommended_next_command, None));
+    json!({
+        "auto_quant_handoff_candidate": payload,
+        "recommended_next_command": recommended_next_command,
+        "recommended_next_step": recommended_next_step,
+        "review_command": auto_quant_handoff_review_command(payload),
+        "workflow_status_command": auto_quant_handoff_workflow_status_command(payload),
+        "suggested_next_steps": payload.suggested_next_steps,
+        "human_output": render_auto_quant_handoff_human_output(payload),
+    })
+}
+
+fn emit_auto_quant_handoff_output(
+    output_format: &str,
+    payload: &super::handoff::AutoQuantResearchHandoffPayload,
+) -> Result<()> {
+    let structured = build_auto_quant_handoff_output_payload(payload);
+    let compact = build_auto_quant_handoff_compact_surface(payload);
+    match output_format.trim().to_ascii_lowercase().as_str() {
+        "json" | "agent" => println!("{}", serde_json::to_string_pretty(&structured)?),
+        "compact" => print_redacted_json(&compact)?,
+        "human" => println!(
+            "{}",
+            redact_local_paths_in_human_text(structured["human_output"].as_str().unwrap_or_default())
+        ),
+        other => bail!("unsupported auto-quant output format '{}'", other),
+    }
+    Ok(())
 }
 
 pub fn auto_quant_status_command(state_dir: &str) -> Result<()> {
@@ -311,6 +451,7 @@ pub fn auto_quant_factor_research_command(
         mutation_spec_path,
         strategy_material_root,
         state_dir,
+        output_format,
     } = input;
     let dependency_status = ensure_dependency_ready(state_dir, None, None)?;
     let seed_evidence_artifact_id = maybe_persist_seed_material_evidence(
@@ -347,8 +488,7 @@ pub fn auto_quant_factor_research_command(
     }
     let handoff_path = persist_handoff_payload(state_dir, &payload)?;
     payload.handoff_artifact_path = handoff_path;
-    println!("{}", serde_json::to_string_pretty(&payload)?);
-    Ok(())
+    emit_auto_quant_handoff_output(output_format, &payload)
 }
 
 pub fn auto_quant_factor_autoresearch_command(
@@ -864,6 +1004,10 @@ fn sanitise_redis_url(raw: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::application::auto_quant::handoff::{
+        build_factor_research_handoff_payload, BuildFactorResearchHandoffPayloadInput,
+    };
+    use crate::application::auto_quant::types::AutoQuantDependencyStatus;
     use crate::application::auto_quant::results::{
         StrategyLibraryEntry, StrategyLibraryManifest, StrategyLibraryMetadata,
         StrategyLibraryValidationMetrics,
@@ -892,6 +1036,54 @@ mod tests {
             }),
             ..Default::default()
         }
+    }
+
+    fn healthy_dependency_status(managed_dir: String) -> AutoQuantDependencyStatus {
+        AutoQuantDependencyStatus {
+            repo_url: "repo".to_string(),
+            managed_dir,
+            tracked_branch: "master".to_string(),
+            pinned_ref: None,
+            current_commit: None,
+            upstream_commit: None,
+            bootstrap_needed: false,
+            config_present: true,
+            managed_repo_present: true,
+            healthy: true,
+            update_available: false,
+            required_files: Vec::new(),
+            notes: Vec::new(),
+            adapter_version: "v1".to_string(),
+            last_sync: None,
+        }
+    }
+
+    #[test]
+    fn auto_quant_handoff_human_output_is_short_text_not_json_dump() {
+        let temp = tempfile::tempdir().unwrap();
+        let payload = build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+            symbol: "DEMO",
+            data: "examples/demo/demo-15m.json",
+            objective: "expansion_manipulation",
+            paired_data: None,
+            mutation_spec_path: None,
+            strategy_material_root: None,
+            state_dir: temp.path().to_str().unwrap(),
+            dependency_status: healthy_dependency_status(
+                temp.path()
+                    .join(".deps/auto-quant")
+                    .to_string_lossy()
+                    .into_owned(),
+            ),
+        });
+
+        let output = build_auto_quant_handoff_output_payload(&payload);
+        let human = output["human_output"].as_str().unwrap();
+
+        assert!(human.contains("Auto-Quant handoff"));
+        assert!(human.contains("Run:"));
+        assert!(!human.trim_start().starts_with('{'));
+        assert_eq!(output["recommended_next_step"]["action_type"], "run_command");
     }
 
     #[test]

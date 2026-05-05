@@ -105,14 +105,27 @@ Reason:
     - `./target/debug/ict-engine provider-status --provider yfinance --agent`
     - `./target/debug/ict-engine workflow-status --symbol DEMO --state-dir /tmp/ict-engine-regress-demo-ws1b --human`
     - `./target/debug/ict-engine workflow-status --symbol DEMO --state-dir /tmp/ict-engine-regress-demo-ws1c --agent`
+- [x] **Workstream 3: Auto-Quant Contract Parity**
+  - `factor-research --backend auto-quant` now receives the resolved output mode instead of hard-printing the raw handoff JSON
+  - Auto-Quant handoff output now exposes:
+    - `recommended_next_command`
+    - `recommended_next_step`
+    - `review_command`
+    - `workflow_status_command`
+    - `human_output`
+  - human output is now short text with the prepare/review/workflow loop instead of a raw JSON blob
+  - `workflow-status` now prefers `auto_quant_handoff_candidate` over the generic first-run router when no phase history exists yet
+  - agent output now surfaces `auto_quant_handoff` and routes `recommended_next_step` to the handoff's next command
+- [x] Workstream 3 verification evidence captured:
+  - `cargo test auto_quant_handoff_human_output_is_short_text_not_json_dump --lib -- --nocapture`
+  - `cargo test workflow_status_routes_auto_quant_handoff_candidate_before_first_run_router --lib -- --nocapture`
+  - live CLI spot checks:
+    - `./target/debug/ict-engine factor-research --symbol DEMO --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-aq-ws3-live2 --backend auto-quant --human`
+    - `./target/debug/ict-engine factor-research --symbol DEMO --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-aq-ws3-live2-agent --backend auto-quant --agent`
+    - `./target/debug/ict-engine workflow-status --symbol DEMO --state-dir /tmp/ict-engine-aq-ws3-live2 --human`
+    - `./target/debug/ict-engine workflow-status --symbol DEMO --state-dir /tmp/ict-engine-aq-ws3-live2-agent --agent`
 
 ### Next
-
-- [ ] **Workstream 3: Auto-Quant Contract Parity**
-  - thread `output_format` through the Auto-Quant `factor-research` path
-  - stop direct JSON printing in the Auto-Quant handoff command path
-  - emit human/compact/agent outputs using the same contract shape as native `factor-research`
-  - make `workflow-status` recognize and route from `auto_quant_handoff_candidate`
 
 - [ ] **Workstream 4: Live / Backtest Entry Repair**
   - use existing live symbol defaults before erroring on missing symbol triples

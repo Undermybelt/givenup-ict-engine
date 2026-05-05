@@ -50,6 +50,12 @@ pub(crate) fn factor_research_shell(input: FactorResearchShellInput<'_>) -> Resu
     } = input;
 
     ensure_state_dir_ready(state_dir)?;
+    let output_format = match resolve_output_format(output_format, compact, agent, human)? {
+        OutputFormat::Json => "json",
+        OutputFormat::Compact => "compact",
+        OutputFormat::Agent => "agent",
+        OutputFormat::Human => "human",
+    };
     if backend == "auto-quant" {
         auto_quant_factor_research_command(AutoQuantFactorResearchCommandInput {
             symbol,
@@ -59,6 +65,7 @@ pub(crate) fn factor_research_shell(input: FactorResearchShellInput<'_>) -> Resu
             mutation_spec_path: mutation_spec,
             strategy_material_root,
             state_dir,
+            output_format,
         })
     } else {
         ict_engine::application::backtest::factor_research_command(
@@ -71,12 +78,7 @@ pub(crate) fn factor_research_shell(input: FactorResearchShellInput<'_>) -> Resu
                 emit_mutation_evaluation,
                 ensemble,
                 state_dir,
-                output_format: match resolve_output_format(output_format, compact, agent, human)? {
-                    OutputFormat::Json => "json",
-                    OutputFormat::Compact => "compact",
-                    OutputFormat::Agent => "agent",
-                    OutputFormat::Human => "human",
-                },
+                output_format,
             },
             load_factor_mutation_spec,
             |objective_mode,

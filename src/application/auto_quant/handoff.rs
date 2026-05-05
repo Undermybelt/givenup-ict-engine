@@ -71,6 +71,7 @@ pub struct AutoQuantFactorResearchCommandInput<'a> {
     pub mutation_spec_path: Option<&'a str>,
     pub strategy_material_root: Option<&'a str>,
     pub state_dir: &'a str,
+    pub output_format: &'a str,
 }
 
 pub struct AutoQuantFactorAutoresearchCommandInput<'a> {
