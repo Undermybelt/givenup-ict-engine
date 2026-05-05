@@ -118,29 +118,63 @@ pub struct StructuralTemporalSummaryArtifact {
 
 pub fn blend_node_posterior_with_duration_prior(
     base_posterior: f64,
-    _duration_prior: Option<&StructuralNodeDurationPrior>,
+    duration_prior: Option<&StructuralNodeDurationPrior>,
     temporal_state: Option<&StructuralNodeTemporalPosteriorState>,
 ) -> f64 {
-    let Some(state) = temporal_state else {
+    let (temporal_support, blend_weight) = if let Some(state) = temporal_state {
+        (state.temporal_posterior_support, state.posterior_blend_weight)
+    } else if let Some(prior) = duration_prior {
+        let temporal_support = if prior.temporal_posterior_support > f64::EPSILON {
+            prior.temporal_posterior_support
+        } else if prior.duration_outcome_support > f64::EPSILON {
+            prior.duration_outcome_support
+        } else {
+            prior.persistence_prior
+        };
+        let blend_weight = if prior.weighted_streak_mass > f64::EPSILON {
+            (prior.weighted_streak_mass / 3.0).min(1.0)
+        } else if prior.streak_count > 0 {
+            (prior.streak_count as f64 / 3.0).min(1.0)
+        } else {
+            0.0
+        };
+        (temporal_support, blend_weight)
+    } else {
         return base_posterior;
     };
-    let temporal_support = state.temporal_posterior_support;
-    let blend_weight = state.posterior_blend_weight;
     ((1.0 - blend_weight) * base_posterior + blend_weight * temporal_support).clamp(0.0, 1.0)
 }
 
 pub fn blend_branch_prior_with_transition_prior(
     base_prior: f64,
-    _transition_prior: Option<&StructuralBranchTransitionPrior>,
+    transition_prior: Option<&StructuralBranchTransitionPrior>,
     temporal_state: Option<&StructuralBranchTemporalPosteriorState>,
 ) -> f64 {
-    let Some(state) = temporal_state else {
+    let (transition_weight, temporal_support) = if let Some(state) = temporal_state {
+        (
+            (state.weighted_observation_mass / 3.0).min(1.0),
+            state.temporal_posterior_support,
+        )
+    } else if let Some(prior) = transition_prior {
+        let transition_weight = if prior.weighted_observation_mass > f64::EPSILON {
+            (prior.weighted_observation_mass / 3.0).min(1.0)
+        } else if prior.observations > 0 {
+            (prior.observations as f64 / 3.0).min(1.0)
+        } else {
+            0.0
+        };
+        let temporal_support = if prior.temporal_posterior_support > f64::EPSILON {
+            prior.temporal_posterior_support
+        } else if prior.transition_outcome_support > f64::EPSILON {
+            prior.transition_outcome_support
+        } else {
+            prior.transition_prior
+        };
+        (transition_weight, temporal_support)
+    } else {
         return base_prior;
     };
-    let transition_weight = (state.weighted_observation_mass / 3.0).min(1.0);
-    ((1.0 - transition_weight) * base_prior
-        + transition_weight * state.temporal_posterior_support)
-        .clamp(0.0, 1.0)
+    ((1.0 - transition_weight) * base_prior + transition_weight * temporal_support).clamp(0.0, 1.0)
 }
 
 pub fn transition_adjusted_branch_posteriors(
@@ -1313,10 +1347,14 @@ fn structural_recursive_node_transition_posteriors(
 #[cfg(test)]
 mod tests {
     use super::{
+        blend_branch_prior_with_transition_prior, blend_node_posterior_with_duration_prior,
         refresh_branch_transition_posteriors, structural_transition_emission_conditioned_support,
         structural_transition_posterior_multiplier,
     };
-    use crate::state::{StructuralBranchTemporalPosteriorState, StructuralBranchTransitionPrior};
+    use crate::state::{
+        StructuralBranchTemporalPosteriorState, StructuralBranchTransitionPrior,
+        StructuralNodeDurationPrior,
+    };
     use std::collections::BTreeMap;
 
     #[test]
@@ -1334,6 +1372,40 @@ mod tests {
         let weaker = structural_transition_posterior_multiplier(0.4, 0.3);
         assert!(stronger > 1.0);
         assert!(weaker < 1.0);
+    }
+
+    #[test]
+    fn blend_node_posterior_uses_duration_prior_when_temporal_state_is_missing() {
+        let prior = StructuralNodeDurationPrior {
+            weighted_streak_mass: 2.4,
+            streak_count: 3,
+            persistence_prior: 0.9,
+            duration_outcome_support: 0.7727272727,
+            temporal_posterior_support: 0.8618181818,
+            ..StructuralNodeDurationPrior::default()
+        };
+
+        let blended = blend_node_posterior_with_duration_prior(0.72, Some(&prior), None);
+
+        assert!(blended > 0.72);
+        assert!((blended - 0.83345454544).abs() < 1e-9);
+    }
+
+    #[test]
+    fn blend_branch_prior_uses_transition_prior_when_temporal_state_is_missing() {
+        let prior = StructuralBranchTransitionPrior {
+            observations: 3,
+            weighted_observation_mass: 2.4,
+            transition_prior: 0.8,
+            transition_outcome_support: 0.56,
+            temporal_posterior_support: 0.728,
+            ..StructuralBranchTransitionPrior::default()
+        };
+
+        let blended = blend_branch_prior_with_transition_prior(0.10, Some(&prior), None);
+
+        assert!(blended > 0.6);
+        assert!((blended - 0.6024).abs() < 1e-9);
     }
 
     #[test]

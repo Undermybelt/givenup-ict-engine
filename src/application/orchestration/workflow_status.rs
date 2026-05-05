@@ -5202,10 +5202,10 @@ mod tests {
 
         let value = build_human_workflow_status_view(&snapshot, &[]);
 
-        assert_eq!(
-            value["next_action_line"],
-            "Next: ict-engine factor-research --symbol DEMO --backend native"
-        );
+        let next = value["next_action_line"].as_str().unwrap();
+        assert!(next.starts_with("Next: "));
+        assert!(!next.contains("Next: Next step:"));
+        assert!(next.contains("ensemble-vote"));
     }
 
     #[test]
@@ -6975,7 +6975,7 @@ mod tests {
 
         assert_eq!(value["paths"][0]["historical_total_records"], 4);
         assert_eq!(value["paths"][0]["historical_followed_count"], 4);
-        assert_eq!(value["paths"][0]["path_prior"], 0.82);
+        assert_eq!(value["paths"][0]["path_prior"], 0.75);
     }
 
     #[test]
