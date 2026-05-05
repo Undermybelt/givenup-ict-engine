@@ -118,43 +118,28 @@ pub struct StructuralTemporalSummaryArtifact {
 
 pub fn blend_node_posterior_with_duration_prior(
     base_posterior: f64,
-    duration_prior: Option<&StructuralNodeDurationPrior>,
+    _duration_prior: Option<&StructuralNodeDurationPrior>,
     temporal_state: Option<&StructuralNodeTemporalPosteriorState>,
 ) -> f64 {
-    let temporal_support = temporal_state
-        .map(|state| state.temporal_posterior_support)
-        .or_else(|| duration_prior.map(|prior| prior.temporal_posterior_support));
-    let blend_weight = temporal_state
-        .map(|state| state.posterior_blend_weight)
-        .or_else(|| {
-            duration_prior.map(|prior| {
-                let observation_weight = (prior.weighted_streak_mass / 3.0).min(1.0);
-                let streak_weight = (prior.streak_count as f64 / 3.0).min(1.0);
-                (observation_weight * streak_weight * 0.5).clamp(0.0, 0.5)
-            })
-        });
-    let (Some(blend_weight), Some(temporal_support)) = (blend_weight, temporal_support) else {
+    let Some(state) = temporal_state else {
         return base_posterior;
     };
+    let temporal_support = state.temporal_posterior_support;
+    let blend_weight = state.posterior_blend_weight;
     ((1.0 - blend_weight) * base_posterior + blend_weight * temporal_support).clamp(0.0, 1.0)
 }
 
 pub fn blend_branch_prior_with_transition_prior(
     base_prior: f64,
-    transition_prior: Option<&StructuralBranchTransitionPrior>,
+    _transition_prior: Option<&StructuralBranchTransitionPrior>,
     temporal_state: Option<&StructuralBranchTemporalPosteriorState>,
 ) -> f64 {
-    if let Some(state) = temporal_state {
-        return ((1.0 - (state.weighted_observation_mass / 3.0).min(1.0)) * base_prior
-            + (state.weighted_observation_mass / 3.0).min(1.0) * state.temporal_posterior_support)
-            .clamp(0.0, 1.0);
-    }
-    let Some(transition_prior) = transition_prior else {
+    let Some(state) = temporal_state else {
         return base_prior;
     };
-    let transition_weight = (transition_prior.weighted_observation_mass / 3.0).min(1.0);
+    let transition_weight = (state.weighted_observation_mass / 3.0).min(1.0);
     ((1.0 - transition_weight) * base_prior
-        + transition_weight * transition_prior.temporal_posterior_support)
+        + transition_weight * state.temporal_posterior_support)
         .clamp(0.0, 1.0)
 }
 
@@ -162,7 +147,7 @@ pub fn transition_adjusted_branch_posteriors(
     node_id: &str,
     regime_probabilities: &[(String, f64)],
     latest_branch_id: Option<&str>,
-    transition_priors: &BTreeMap<String, StructuralBranchTransitionPrior>,
+    _transition_priors: &BTreeMap<String, StructuralBranchTransitionPrior>,
     branch_temporal_posteriors: &BTreeMap<String, StructuralBranchTemporalPosteriorState>,
     branch_label_for_regime: impl Fn(&str) -> &'static str,
 ) -> BTreeMap<String, f64> {
@@ -244,17 +229,9 @@ pub fn transition_adjusted_branch_posteriors(
     for (regime, probability) in regime_probabilities {
         let branch_id = format!("{node_id}:{}", branch_label_for_regime(regime));
         let transition_key = format!("{latest_branch_id}=>{branch_id}");
-        let transition_prior = transition_priors.get(&transition_key);
         let temporal_state = branch_temporal_posteriors.get(&transition_key);
         let transition_weight = temporal_state
             .map(|state| state.posterior_multiplier)
-            .or_else(|| {
-                transition_prior.map(|prior| {
-                    let sample_weight = (prior.weighted_observation_mass / 3.0).min(1.0);
-                    let temporal_bias = (prior.temporal_posterior_support - 0.5) * 2.0;
-                    (1.0 + temporal_bias * sample_weight).clamp(0.05, 2.0)
-                })
-            })
             .unwrap_or(1.0);
         weighted.push((
             branch_id,
