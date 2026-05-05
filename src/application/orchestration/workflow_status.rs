@@ -62,6 +62,13 @@ fn build_structural_validation_summary_value(
             "holdout_observation_coverage": em.em_holdout_observation_coverage,
             "holdout_training_item_count": em.em_holdout_training_item_count,
             "holdout_evaluation_item_count": em.em_holdout_evaluation_item_count,
+            "holdout_reason": structural_validation_reason(
+                em.em_holdout_status.as_deref(),
+                em.em_holdout_training_item_count,
+                em.em_holdout_evaluation_item_count,
+                em.em_holdout_observation_count,
+                em.em_holdout_source_count,
+            ),
             "replay_status": em.em_replay_status,
             "replay_split_strategy": em.em_replay_split_strategy,
             "replay_evaluation_item_count": em.em_replay_evaluation_item_count,
@@ -70,10 +77,24 @@ fn build_structural_validation_summary_value(
             "replay_brier_score": em.em_replay_brier_score,
             "replay_log_loss": em.em_replay_log_loss,
             "replay_observation_coverage": em.em_replay_observation_coverage,
+            "replay_reason": structural_validation_reason(
+                em.em_replay_status.as_deref(),
+                0,
+                em.em_replay_evaluation_item_count,
+                em.em_replay_observation_count,
+                em.em_replay_source_count,
+            ),
         },
         "delayed_reward": replay.map(|replay| {
             serde_json::json!({
                 "status": replay.status,
+                "status_reason": structural_validation_reason(
+                    Some(replay.status.as_str()),
+                    replay.training_record_count,
+                    replay.evaluation_record_count,
+                    replay.resolution_observation_count,
+                    0,
+                ),
                 "training_record_count": replay.training_record_count,
                 "evaluation_record_count": replay.evaluation_record_count,
                 "latest_training_recommended_at": replay.latest_training_recommended_at,
@@ -94,6 +115,10 @@ fn build_structural_validation_summary_value(
             "status": if target_policy_context_count > 0 { "bucket_posterior_live" } else { "bucket_posterior_empty" },
             "context_count": target_policy_context_count,
             "upgrade_path": "learned_contextual_model_not_yet_landed",
+        },
+        "live_regime_truth_rule": {
+            "status": "enforced",
+            "summary": "retrospective zigzag, tiny-leg, or cluster outputs are not sufficient by themselves for live regime truth",
         },
     })
 }
@@ -123,14 +148,35 @@ fn build_structural_validation_line(
         .em_replay_brier_score
         .map(|value| format!("{value:.3}"))
         .unwrap_or_else(|| "n/a".to_string());
+    let holdout_reason = structural_validation_reason(
+        em.em_holdout_status.as_deref(),
+        em.em_holdout_training_item_count,
+        em.em_holdout_evaluation_item_count,
+        em.em_holdout_observation_count,
+        em.em_holdout_source_count,
+    );
+    let replay_reason = structural_validation_reason(
+        em.em_replay_status.as_deref(),
+        0,
+        em.em_replay_evaluation_item_count,
+        em.em_replay_observation_count,
+        em.em_replay_source_count,
+    );
     let replay_summary = replay.map(|replay| {
         format!(
-            "replay={} overall_brier={} eval={} train_until={} eval_range={}..{} obs={} obs_1h={} obs_4h={} obs_24h={}",
+            "replay={} overall_brier={} reason={} eval={} train_until={} eval_range={}..{} obs={} obs_1h={} obs_4h={} obs_24h={}",
             replay.status,
             replay
                 .resolution_brier_score
                 .map(|value| format!("{value:.3}"))
                 .unwrap_or_else(|| "n/a".to_string()),
+            structural_validation_reason(
+                Some(replay.status.as_str()),
+                replay.training_record_count,
+                replay.evaluation_record_count,
+                replay.resolution_observation_count,
+                0,
+            ),
             replay.evaluation_record_count,
             replay
                 .latest_training_recommended_at
@@ -152,7 +198,7 @@ fn build_structural_validation_line(
     });
     let target_policy_context_count = experience_prior_surface.target_policy_contexts.len();
     let mut parts = vec![format!(
-        "Validation: em={} holdout={} split={} holdout_brier={} holdout_cov={} replay={} replay_brier={} replay_cov={} multi_source_items={} target_policy=bucket_posterior contexts={}",
+        "Validation: em={} holdout={} split={} holdout_brier={} holdout_cov={} holdout_reason={} replay={} replay_brier={} replay_cov={} replay_reason={} multi_source_items={} target_policy=bucket_posterior contexts={} live_truth=retrospective_not_sufficient",
         em.status,
         holdout_status,
         holdout_split_strategy,
@@ -160,11 +206,13 @@ fn build_structural_validation_line(
         em.em_holdout_observation_coverage
             .map(|value| format!("{value:.2}"))
             .unwrap_or_else(|| "n/a".to_string()),
+        holdout_reason,
         replay_status,
         replay_brier,
         em.em_replay_observation_coverage
             .map(|value| format!("{value:.2}"))
             .unwrap_or_else(|| "n/a".to_string()),
+        replay_reason,
         em.multi_source_item_count,
         target_policy_context_count
     )];
@@ -172,6 +220,24 @@ fn build_structural_validation_line(
         parts.push(replay_summary);
     }
     Some(parts.join(" | "))
+}
+
+fn structural_validation_reason(
+    status: Option<&str>,
+    training_items: usize,
+    evaluation_items: usize,
+    observations: usize,
+    sources: usize,
+) -> String {
+    let status = status.unwrap_or("unavailable");
+    if status == "ready" {
+        "ready".to_string()
+    } else {
+        format!(
+            "status={} train={} eval={} obs={} sources={}",
+            status, training_items, evaluation_items, observations, sources
+        )
+    }
 }
 
 fn build_path_ranker_summary_value(
@@ -6977,7 +7043,10 @@ mod tests {
         assert!(value["source_reliability"]
             .get("holdout_observation_coverage")
             .is_some());
+        assert!(value["source_reliability"].get("holdout_reason").is_some());
+        assert!(value["source_reliability"].get("replay_reason").is_some());
         assert!(value["delayed_reward"]["status"].as_str().unwrap().len() > 3);
+        assert!(value["delayed_reward"].get("status_reason").is_some());
         assert!(value["delayed_reward"]
             .get("resolution_brier_score")
             .is_some());
@@ -6990,6 +7059,10 @@ mod tests {
         assert!(value["delayed_reward"]
             .get("resolution_24h_observation_count")
             .is_some());
+        assert_eq!(
+            value["live_regime_truth_rule"]["status"].as_str(),
+            Some("enforced")
+        );
     }
 
     #[test]
@@ -8935,11 +9008,19 @@ mod tests {
         assert!(human_value["structural_validation_line"]
             .as_str()
             .unwrap()
+            .contains("holdout_reason="));
+        assert!(human_value["structural_validation_line"]
+            .as_str()
+            .unwrap()
             .contains("replay="));
         assert!(human_value["structural_validation_line"]
             .as_str()
             .unwrap()
             .contains("replay_cov="));
+        assert!(human_value["structural_validation_line"]
+            .as_str()
+            .unwrap()
+            .contains("replay_reason="));
         assert!(human_value["structural_validation_line"]
             .as_str()
             .unwrap()
@@ -8970,9 +9051,19 @@ mod tests {
                 .get("replay_observation_coverage")
                 .is_some()
         );
+        assert!(
+            agent_value["structural_validation_summary"]["source_reliability"]
+                .get("holdout_reason")
+                .is_some()
+        );
         assert_eq!(
             agent_value["structural_validation_summary"]["target_policy"]["current_model"].as_str(),
             Some("symbol:regime:direction_bucket_posterior")
+        );
+        assert_eq!(
+            agent_value["structural_validation_summary"]["live_regime_truth_rule"]["status"]
+                .as_str(),
+            Some("enforced")
         );
         assert!(
             agent_value["structural_validation_summary"]["delayed_reward"]
@@ -8985,6 +9076,11 @@ mod tests {
         assert!(
             agent_value["structural_validation_summary"]["delayed_reward"]
                 .get("resolution_observation_count")
+                .is_some()
+        );
+        assert!(
+            agent_value["structural_validation_summary"]["delayed_reward"]
+                .get("status_reason")
                 .is_some()
         );
     }

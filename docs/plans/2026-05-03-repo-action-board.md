@@ -249,10 +249,16 @@ rg -n 'rebuild_structural_sequence_priors|refresh_node_transition_posteriors|bra
 **Done when:** validation surfaces say not only `ready / not ready`, but also why, how much evidence exists, and what split or panel produced the status.
 
 - [ ] Strengthen source-reliability validation beyond compact holdout / replay summaries into larger-panel or more explicit out-of-sample evaluation.
-- [ ] Keep validation summaries low-token, but always expose panel size, coverage, split boundary, and failure reason.
+- [x] Keep validation summaries low-token, but always expose panel size, coverage, split boundary, and failure reason.
 - [ ] Strengthen delayed-reward validation beyond current horizon-only diagnostics. If full event-time competing-risk is not landed in the slice, leave a clearer intermediate owner and explicit remaining gap here.
-- [ ] Keep the target-policy upgrade path explicit. Do not silently entrench the current `symbol:regime:direction` bucket-posterior model as the final state.
-- [ ] Add an explicit validation rule that retrospective zigzag / tiny-leg / cluster outputs are not sufficient by themselves for live regime truth.
+- [x] Keep the target-policy upgrade path explicit. Do not silently entrench the current `symbol:regime:direction` bucket-posterior model as the final state.
+- [x] Add an explicit validation rule that retrospective zigzag / tiny-leg / cluster outputs are not sufficient by themselves for live regime truth.
+
+Current evidence on this lane:
+
+- `src/application/orchestration/workflow_status.rs` now surfaces low-token validation reasons alongside counts and split boundaries: `holdout_reason`, `replay_reason`, delayed-reward `status_reason`, `holdout_split_strategy`, `replay_split_strategy`, coverage fields, training/evaluation counts, and replay train/eval boundary text in the human line. Verified with `cargo check`, `cargo test --lib workflow_status_phase_structural_validation_summarizes_holdout_and_replay`, and `cargo test --lib agent_and_human_workflow_status_views_expose_experience_prior_surface`.
+- target-policy validation still names the current model as `symbol:regime:direction_bucket_posterior` while keeping `upgrade_path=learned_contextual_model_not_yet_landed` explicit, so the current bucket-posterior lane is not silently treated as final.
+- validation surfaces now carry an explicit `live_regime_truth_rule` enforcing that retrospective zigzag, tiny-leg, or cluster outputs are not sufficient by themselves for live regime truth.
 
 ### Workstream 5: Trial-Driven Layered Regime Intake
 
