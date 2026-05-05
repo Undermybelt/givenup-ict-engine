@@ -73,8 +73,14 @@ pub use crate::belief_core::regime_filter::{
     structural_duration_weighted_streak_mass,
 };
 pub use crate::belief_core::source_reliability::{
-    structural_delayed_reward_replay_validation, structural_experience_prior_runtime_metrics,
-    structural_last_offline_seed_source, structural_panel_derived_smoothed_prior,
+    structural_branch_history_invalidation_rate, structural_branch_history_win_rate,
+    structural_composite_preference_score, structural_delayed_reward_replay_validation,
+    structural_dominant_source_panel, structural_experience_prior_runtime_metrics,
+    structural_history_adjusted_branch_prior, structural_history_adjusted_node_prior,
+    structural_history_adjusted_path_prior, structural_history_adjusted_scenario_prior,
+    structural_history_invalidation_rate, structural_history_win_rate,
+    structural_last_offline_seed_source, structural_node_history_invalidation_rate,
+    structural_node_history_win_rate, structural_panel_derived_smoothed_prior,
     structural_prior_behavior_policy_probability,
     structural_prior_behavior_policy_probability_variance,
     structural_prior_censoring_adjusted_reward_lower_bound,
@@ -125,10 +131,17 @@ pub use crate::belief_core::source_reliability::{
     structural_prior_target_policy_probability_lower_bound,
     structural_prior_target_policy_reward_lower_bound, structural_prior_target_policy_reward_prior,
     structural_prior_target_policy_variance_penalty, structural_prior_unresolved_feedback_count,
-    structural_resolved_smoothed_prior, structural_source_confusion_concentration_multiplier,
-    structural_source_panel_count, structural_source_reliability_em_readiness,
-    structural_source_reliability_multiplier, structural_target_policy_context_surface,
-    structural_target_policy_context_surfaces, StructuralExperiencePriorEntry,
+    structural_resolved_avg_pnl, structural_resolved_branch_invalidation_rate,
+    structural_resolved_branch_win_rate, structural_resolved_followed_count,
+    structural_resolved_node_invalidation_rate, structural_resolved_node_win_rate,
+    structural_resolved_observations, structural_resolved_path_invalidation_rate,
+    structural_resolved_path_win_rate, structural_resolved_scenario_invalidation_rate,
+    structural_resolved_scenario_win_rate, structural_resolved_smoothed_prior,
+    structural_scenario_history_invalidation_rate, structural_scenario_history_win_rate,
+    structural_source_confusion_concentration_multiplier, structural_source_panel_count,
+    structural_source_reliability_em_readiness, structural_source_reliability_multiplier,
+    structural_target_policy_context_surface, structural_target_policy_context_surfaces,
+    StructuralExperiencePriorEntry,
     StructuralExperiencePriorSurfaceArtifact, StructuralSourceReliabilityEmReadiness,
     StructuralTargetPolicyContextSurface,
 };
@@ -148,9 +161,12 @@ use crate::state::{
     recommended_next_command_meta, save_text_state, structural_feedback_learning_outcome,
     structural_feedback_outcome_is_unresolved, FeedbackFactorUsage, FeedbackRecord,
     ModelProbabilitySnapshot, StructuralFeedbackLearningOutcome, StructuralFeedbackRefs,
-    StructuralPriorLearningState, StructuralPriorStats, WorkflowSnapshot,
+    StructuralPriorLearningState, WorkflowSnapshot,
 };
 use crate::types::{Direction, Regime};
+
+#[cfg(test)]
+use crate::state::StructuralPriorStats;
 
 const STRUCTURAL_PLAYBOOK_ARTIFACT_VERSION: &str = "structural-playbook-v1";
 const STRUCTURAL_PATH_RANKING_TARGET_EXPORT_DIR: &str = "policy_training";
@@ -2700,115 +2716,6 @@ fn structural_ranked_paths_with_runtime_context_and_prior_state(
     }
 }
 
-fn structural_resolved_observations(
-    prior_stats: Option<&StructuralPriorStats>,
-    fallback: usize,
-) -> usize {
-    prior_stats
-        .map(|stats| stats.observations)
-        .unwrap_or(fallback)
-}
-
-fn structural_resolved_followed_count(
-    prior_stats: Option<&StructuralPriorStats>,
-    fallback: usize,
-) -> usize {
-    prior_stats
-        .map(|stats| stats.followed_count)
-        .unwrap_or(fallback)
-}
-
-fn structural_prior_stats_win_rate(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
-    let stats = prior_stats?;
-    if stats.followed_count == 0 {
-        None
-    } else {
-        Some(stats.wins as f64 / stats.followed_count as f64)
-    }
-}
-
-fn structural_prior_stats_invalidation_rate(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> Option<f64> {
-    let stats = prior_stats?;
-    if stats.followed_count == 0 {
-        None
-    } else {
-        Some(stats.invalidated as f64 / stats.followed_count as f64)
-    }
-}
-
-fn structural_resolved_avg_pnl(
-    prior_stats: Option<&StructuralPriorStats>,
-    fallback: Option<f64>,
-) -> Option<f64> {
-    prior_stats.map(|stats| stats.avg_pnl).or(fallback)
-}
-
-fn structural_resolved_node_win_rate(
-    prior_stats: Option<&StructuralPriorStats>,
-    historical_summary: Option<&StructuralNodeOutcomeSummary>,
-) -> Option<f64> {
-    structural_prior_stats_win_rate(prior_stats)
-        .or_else(|| structural_node_history_win_rate(historical_summary))
-}
-
-fn structural_resolved_node_invalidation_rate(
-    prior_stats: Option<&StructuralPriorStats>,
-    historical_summary: Option<&StructuralNodeOutcomeSummary>,
-) -> Option<f64> {
-    structural_prior_stats_invalidation_rate(prior_stats)
-        .or_else(|| structural_node_history_invalidation_rate(historical_summary))
-}
-
-fn structural_resolved_branch_win_rate(
-    prior_stats: Option<&StructuralPriorStats>,
-    historical_summary: Option<&StructuralBranchOutcomeSummary>,
-) -> Option<f64> {
-    structural_prior_stats_win_rate(prior_stats)
-        .or_else(|| structural_branch_history_win_rate(historical_summary))
-}
-
-fn structural_resolved_branch_invalidation_rate(
-    prior_stats: Option<&StructuralPriorStats>,
-    historical_summary: Option<&StructuralBranchOutcomeSummary>,
-) -> Option<f64> {
-    structural_prior_stats_invalidation_rate(prior_stats)
-        .or_else(|| structural_branch_history_invalidation_rate(historical_summary))
-}
-
-fn structural_resolved_scenario_win_rate(
-    prior_stats: Option<&StructuralPriorStats>,
-    historical_summary: Option<&StructuralScenarioOutcomeSummary>,
-) -> Option<f64> {
-    structural_prior_stats_win_rate(prior_stats)
-        .or_else(|| structural_scenario_history_win_rate(historical_summary))
-}
-
-fn structural_resolved_scenario_invalidation_rate(
-    prior_stats: Option<&StructuralPriorStats>,
-    historical_summary: Option<&StructuralScenarioOutcomeSummary>,
-) -> Option<f64> {
-    structural_prior_stats_invalidation_rate(prior_stats)
-        .or_else(|| structural_scenario_history_invalidation_rate(historical_summary))
-}
-
-fn structural_resolved_path_win_rate(
-    prior_stats: Option<&StructuralPriorStats>,
-    historical_summary: Option<&StructuralPathOutcomeSummary>,
-) -> Option<f64> {
-    structural_prior_stats_win_rate(prior_stats)
-        .or_else(|| structural_history_win_rate(historical_summary))
-}
-
-fn structural_resolved_path_invalidation_rate(
-    prior_stats: Option<&StructuralPriorStats>,
-    historical_summary: Option<&StructuralPathOutcomeSummary>,
-) -> Option<f64> {
-    structural_prior_stats_invalidation_rate(prior_stats)
-        .or_else(|| structural_history_invalidation_rate(historical_summary))
-}
-
 fn structural_short_rule_summary(items: &[String], fallback: &str) -> String {
     items
         .first()
@@ -2838,22 +2745,6 @@ fn structural_why_this_path_summary(path: &StructuralPathArtifact) -> String {
     )
 }
 
-fn structural_history_adjusted_branch_prior(
-    base_prior: f64,
-    historical_summary: Option<&StructuralBranchOutcomeSummary>,
-) -> f64 {
-    structural_history_adjusted_prior(
-        base_prior,
-        historical_summary
-            .map(|summary| summary.followed_count)
-            .unwrap_or(0),
-        historical_summary.map(|summary| summary.wins).unwrap_or(0),
-        historical_summary
-            .map(|summary| summary.breakevens)
-            .unwrap_or(0),
-    )
-}
-
 fn structural_branch_transition_prior<'a>(
     structural_prior_state: &'a StructuralPriorLearningState,
     from_branch_id: &str,
@@ -2861,189 +2752,6 @@ fn structural_branch_transition_prior<'a>(
 ) -> Option<&'a crate::state::StructuralBranchTransitionPrior> {
     let key = format!("{from_branch_id}=>{to_branch_id}");
     structural_prior_state.branch_transition_priors.get(&key)
-}
-
-fn structural_history_adjusted_node_prior(
-    base_prior: f64,
-    historical_summary: Option<&StructuralNodeOutcomeSummary>,
-) -> f64 {
-    structural_history_adjusted_prior(
-        base_prior,
-        historical_summary
-            .map(|summary| summary.followed_count)
-            .unwrap_or(0),
-        historical_summary.map(|summary| summary.wins).unwrap_or(0),
-        historical_summary
-            .map(|summary| summary.breakevens)
-            .unwrap_or(0),
-    )
-}
-
-fn structural_history_adjusted_scenario_prior(
-    base_prior: f64,
-    historical_summary: Option<&StructuralScenarioOutcomeSummary>,
-) -> f64 {
-    structural_history_adjusted_prior(
-        base_prior,
-        historical_summary
-            .map(|summary| summary.followed_count)
-            .unwrap_or(0),
-        historical_summary.map(|summary| summary.wins).unwrap_or(0),
-        historical_summary
-            .map(|summary| summary.breakevens)
-            .unwrap_or(0),
-    )
-}
-
-fn structural_history_adjusted_prior(
-    base_prior: f64,
-    followed_count: usize,
-    wins: usize,
-    breakevens: usize,
-) -> f64 {
-    if followed_count == 0 {
-        return base_prior;
-    }
-    let empirical_success = (wins as f64 + breakevens as f64 * 0.5) / followed_count as f64;
-    let sample_weight = (followed_count as f64 / 5.0).min(1.0);
-    (base_prior * (1.0 - sample_weight) + empirical_success * sample_weight).clamp(0.0, 1.0)
-}
-
-fn structural_history_win_rate_from_counts(followed_count: usize, wins: usize) -> Option<f64> {
-    if followed_count == 0 {
-        None
-    } else {
-        Some(wins as f64 / followed_count as f64)
-    }
-}
-
-fn structural_history_invalidation_rate_from_counts(
-    followed_count: usize,
-    invalidated: usize,
-) -> Option<f64> {
-    if followed_count == 0 {
-        None
-    } else {
-        Some(invalidated as f64 / followed_count as f64)
-    }
-}
-
-fn structural_node_history_win_rate(
-    historical_summary: Option<&StructuralNodeOutcomeSummary>,
-) -> Option<f64> {
-    structural_history_win_rate_from_counts(
-        historical_summary
-            .map(|summary| summary.followed_count)
-            .unwrap_or(0),
-        historical_summary.map(|summary| summary.wins).unwrap_or(0),
-    )
-}
-
-fn structural_node_history_invalidation_rate(
-    historical_summary: Option<&StructuralNodeOutcomeSummary>,
-) -> Option<f64> {
-    structural_history_invalidation_rate_from_counts(
-        historical_summary
-            .map(|summary| summary.followed_count)
-            .unwrap_or(0),
-        historical_summary
-            .map(|summary| summary.invalidated)
-            .unwrap_or(0),
-    )
-}
-
-fn structural_branch_history_win_rate(
-    historical_summary: Option<&StructuralBranchOutcomeSummary>,
-) -> Option<f64> {
-    structural_history_win_rate_from_counts(
-        historical_summary
-            .map(|summary| summary.followed_count)
-            .unwrap_or(0),
-        historical_summary.map(|summary| summary.wins).unwrap_or(0),
-    )
-}
-
-fn structural_branch_history_invalidation_rate(
-    historical_summary: Option<&StructuralBranchOutcomeSummary>,
-) -> Option<f64> {
-    structural_history_invalidation_rate_from_counts(
-        historical_summary
-            .map(|summary| summary.followed_count)
-            .unwrap_or(0),
-        historical_summary
-            .map(|summary| summary.invalidated)
-            .unwrap_or(0),
-    )
-}
-
-fn structural_scenario_history_win_rate(
-    historical_summary: Option<&StructuralScenarioOutcomeSummary>,
-) -> Option<f64> {
-    structural_history_win_rate_from_counts(
-        historical_summary
-            .map(|summary| summary.followed_count)
-            .unwrap_or(0),
-        historical_summary.map(|summary| summary.wins).unwrap_or(0),
-    )
-}
-
-fn structural_scenario_history_invalidation_rate(
-    historical_summary: Option<&StructuralScenarioOutcomeSummary>,
-) -> Option<f64> {
-    structural_history_invalidation_rate_from_counts(
-        historical_summary
-            .map(|summary| summary.followed_count)
-            .unwrap_or(0),
-        historical_summary
-            .map(|summary| summary.invalidated)
-            .unwrap_or(0),
-    )
-}
-
-fn structural_history_adjusted_path_prior(
-    base_prior: f64,
-    historical_summary: Option<&StructuralPathOutcomeSummary>,
-) -> f64 {
-    let Some(summary) = historical_summary else {
-        return base_prior;
-    };
-    structural_history_adjusted_prior(
-        base_prior,
-        summary.followed_count,
-        summary.wins,
-        summary.breakevens,
-    )
-}
-
-fn structural_composite_preference_score(
-    bbn_support_score: f64,
-    history_adjusted_prior: f64,
-) -> f64 {
-    (bbn_support_score * 0.70 + history_adjusted_prior * 0.30).clamp(0.0, 1.0)
-}
-
-fn structural_history_win_rate(
-    historical_summary: Option<&StructuralPathOutcomeSummary>,
-) -> Option<f64> {
-    structural_history_win_rate_from_counts(
-        historical_summary
-            .map(|summary| summary.followed_count)
-            .unwrap_or(0),
-        historical_summary.map(|summary| summary.wins).unwrap_or(0),
-    )
-}
-
-fn structural_history_invalidation_rate(
-    historical_summary: Option<&StructuralPathOutcomeSummary>,
-) -> Option<f64> {
-    structural_history_invalidation_rate_from_counts(
-        historical_summary
-            .map(|summary| summary.followed_count)
-            .unwrap_or(0),
-        historical_summary
-            .map(|summary| summary.invalidated)
-            .unwrap_or(0),
-    )
 }
 
 fn structural_symbol(snapshot: &WorkflowSnapshot) -> String {
@@ -3296,37 +3004,6 @@ fn structural_selected_entry_quality(snapshot: &WorkflowSnapshot) -> Option<Stri
                 .map(|candidate| candidate.pre_bayes_bridge_selected_entry_quality.clone())
                 .filter(|value| !value.trim().is_empty())
         })
-}
-
-fn structural_dominant_source_panel(
-    prior_stats: Option<&StructuralPriorStats>,
-) -> (Option<String>, Option<f64>, Option<f64>) {
-    let Some(stats) = prior_stats else {
-        return (None, None, None);
-    };
-    let total_mass: f64 = stats
-        .source_panel_summaries
-        .values()
-        .map(|summary| summary.weighted_followed_mass.max(0.0))
-        .sum();
-    let dominant = stats
-        .source_panel_summaries
-        .iter()
-        .max_by(|a, b| {
-            a.1.weighted_followed_mass
-                .partial_cmp(&b.1.weighted_followed_mass)
-                .unwrap_or(std::cmp::Ordering::Equal)
-                .then_with(|| a.0.cmp(b.0))
-        })
-        .map(|(label, summary)| {
-            let share = if total_mass <= f64::EPSILON {
-                None
-            } else {
-                Some((summary.weighted_followed_mass / total_mass).clamp(0.0, 1.0))
-            };
-            (Some(label.clone()), share, Some(summary.smoothed_prior))
-        });
-    dominant.unwrap_or((None, None, None))
 }
 
 fn structural_selected_entry_quality_probability(snapshot: &WorkflowSnapshot) -> Option<f64> {

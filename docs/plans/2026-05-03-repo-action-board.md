@@ -178,7 +178,7 @@ cargo test test_structural_source_reliability_em_holdout_prefers_chronological_s
 
 - [x] Move the remaining delayed-reward aggregate / hazard / censoring / competing-risk owner logic out of `src/state/types.rs` into `src/belief_core/source_reliability.rs`.
 - [x] Move the remaining temporal / duration rebuild ownership out of `src/state/types.rs` into `src/belief_core/{regime_filter, changepoint_gate}.rs`.
-- [ ] Reduce `src/application/orchestration/structural_playbook.rs` to shared-bundle assembly only. Remove remaining duplicated experience-prior and validation math.
+- [x] Reduce `src/application/orchestration/structural_playbook.rs` to shared-bundle assembly only. Remove remaining duplicated experience-prior and validation math.
 - [ ] Reduce `src/application/orchestration/workflow_status.rs` to phase selection and rendering only. No structural math ownership should remain there.
 - [ ] Keep `src/main.rs` on thin dispatch only. Do not add new structural-learning math or new surface-specific structural glue there.
 
@@ -188,6 +188,7 @@ cargo test test_structural_source_reliability_em_holdout_prefers_chronological_s
 - delayed-reward aggregate / hazard / censoring / competing-risk formula ownership now also routes through `src/belief_core/source_reliability.rs`, with `src/state/types.rs` reduced further toward refresh-call consumers instead of formula owners.
 - delayed-reward feedback aggregation now also routes through `src/belief_core/source_reliability.rs`, with `src/state/types.rs` reduced to thin callers for stats/source-summary updates; verified with `cargo check`, `cargo test source_reliability_em_readiness_requires_multi_source_overlap`, `cargo test --lib source_reliability_em_fit_learns_lower_reliability_for_conflicting_source`, `cargo test --lib test_structural_source_reliability_em_holdout_prefers_chronological_split`, and `cargo test --lib test_structural_feedback_records_snips_and_dr_policy_priors`.
 - temporal / duration rebuild ownership now routes through `src/belief_core/changepoint_gate.rs` and `src/belief_core/regime_filter.rs`, with `src/state/types.rs::rebuild_structural_sequence_priors(...)` reduced to a thin shell plus EM refresh; verified with `cargo check`, `cargo test --lib test_structural_node_duration_priors_discount_older_streaks`, and `cargo test --lib test_structural_prior_seed_rebuilds_branch_transition_priors`.
+- experience-prior helper math now routes through `src/belief_core/source_reliability.rs`, with `src/application/orchestration/structural_playbook.rs` reduced to entry assembly plus path-specific replay-data selection; verified with `cargo check`, `cargo test --lib source_reliability_em_readiness_requires_multi_source_overlap`, `cargo test --lib source_reliability_em_fit_learns_lower_reliability_for_conflicting_source`, `cargo test --lib experience_prior_surface_path_includes_delayed_reward_replay_validation`, and `cargo test --lib panel_derived_prior_uses_persisted_source_reliability_em_summary`.
 
 **Read first when working this lane:**
 

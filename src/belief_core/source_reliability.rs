@@ -2,6 +2,10 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 
+use crate::belief_core::structural_state::{
+    StructuralBranchOutcomeSummary, StructuralNodeOutcomeSummary, StructuralPathOutcomeSummary,
+    StructuralScenarioOutcomeSummary,
+};
 use crate::state::{
     structural_feedback_outcome_is_unresolved, structural_source_observed_outcome_likelihood,
     FeedbackRecord, StructuralPriorEvent, StructuralPriorLearningState, StructuralPriorStats,
@@ -1248,6 +1252,317 @@ pub fn structural_resolved_smoothed_prior(
                 .unwrap_or(stats.smoothed_prior)
         })
         .unwrap_or(fallback)
+}
+
+pub fn structural_resolved_observations(
+    prior_stats: Option<&StructuralPriorStats>,
+    fallback: usize,
+) -> usize {
+    prior_stats
+        .map(|stats| stats.observations)
+        .unwrap_or(fallback)
+}
+
+pub fn structural_resolved_followed_count(
+    prior_stats: Option<&StructuralPriorStats>,
+    fallback: usize,
+) -> usize {
+    prior_stats
+        .map(|stats| stats.followed_count)
+        .unwrap_or(fallback)
+}
+
+pub fn structural_prior_stats_win_rate(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
+    let stats = prior_stats?;
+    if stats.followed_count == 0 {
+        None
+    } else {
+        Some(stats.wins as f64 / stats.followed_count as f64)
+    }
+}
+
+pub fn structural_prior_stats_invalidation_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+) -> Option<f64> {
+    let stats = prior_stats?;
+    if stats.followed_count == 0 {
+        None
+    } else {
+        Some(stats.invalidated as f64 / stats.followed_count as f64)
+    }
+}
+
+pub fn structural_resolved_avg_pnl(
+    prior_stats: Option<&StructuralPriorStats>,
+    fallback: Option<f64>,
+) -> Option<f64> {
+    prior_stats.map(|stats| stats.avg_pnl).or(fallback)
+}
+
+pub fn structural_resolved_node_win_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralNodeOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_win_rate(prior_stats)
+        .or_else(|| structural_node_history_win_rate(historical_summary))
+}
+
+pub fn structural_resolved_node_invalidation_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralNodeOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_invalidation_rate(prior_stats)
+        .or_else(|| structural_node_history_invalidation_rate(historical_summary))
+}
+
+pub fn structural_resolved_branch_win_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralBranchOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_win_rate(prior_stats)
+        .or_else(|| structural_branch_history_win_rate(historical_summary))
+}
+
+pub fn structural_resolved_branch_invalidation_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralBranchOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_invalidation_rate(prior_stats)
+        .or_else(|| structural_branch_history_invalidation_rate(historical_summary))
+}
+
+pub fn structural_resolved_scenario_win_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralScenarioOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_win_rate(prior_stats)
+        .or_else(|| structural_scenario_history_win_rate(historical_summary))
+}
+
+pub fn structural_resolved_scenario_invalidation_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralScenarioOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_invalidation_rate(prior_stats)
+        .or_else(|| structural_scenario_history_invalidation_rate(historical_summary))
+}
+
+pub fn structural_resolved_path_win_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralPathOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_win_rate(prior_stats)
+        .or_else(|| structural_history_win_rate(historical_summary))
+}
+
+pub fn structural_resolved_path_invalidation_rate(
+    prior_stats: Option<&StructuralPriorStats>,
+    historical_summary: Option<&StructuralPathOutcomeSummary>,
+) -> Option<f64> {
+    structural_prior_stats_invalidation_rate(prior_stats)
+        .or_else(|| structural_history_invalidation_rate(historical_summary))
+}
+
+pub fn structural_history_adjusted_branch_prior(
+    base_prior: f64,
+    historical_summary: Option<&StructuralBranchOutcomeSummary>,
+) -> f64 {
+    structural_history_adjusted_prior(
+        base_prior,
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
+        historical_summary.map(|summary| summary.wins).unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.breakevens)
+            .unwrap_or(0),
+    )
+}
+
+pub fn structural_history_adjusted_node_prior(
+    base_prior: f64,
+    historical_summary: Option<&StructuralNodeOutcomeSummary>,
+) -> f64 {
+    structural_history_adjusted_prior(
+        base_prior,
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
+        historical_summary.map(|summary| summary.wins).unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.breakevens)
+            .unwrap_or(0),
+    )
+}
+
+pub fn structural_history_adjusted_scenario_prior(
+    base_prior: f64,
+    historical_summary: Option<&StructuralScenarioOutcomeSummary>,
+) -> f64 {
+    structural_history_adjusted_prior(
+        base_prior,
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
+        historical_summary.map(|summary| summary.wins).unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.breakevens)
+            .unwrap_or(0),
+    )
+}
+
+pub fn structural_history_adjusted_prior(
+    base_prior: f64,
+    followed_count: usize,
+    wins: usize,
+    breakevens: usize,
+) -> f64 {
+    if followed_count == 0 {
+        return base_prior;
+    }
+    let empirical_success = (wins as f64 + breakevens as f64 * 0.5) / followed_count as f64;
+    let sample_weight = (followed_count as f64 / 5.0).min(1.0);
+    (base_prior * (1.0 - sample_weight) + empirical_success * sample_weight).clamp(0.0, 1.0)
+}
+
+pub fn structural_history_win_rate_from_counts(
+    followed_count: usize,
+    wins: usize,
+) -> Option<f64> {
+    if followed_count == 0 {
+        None
+    } else {
+        Some(wins as f64 / followed_count as f64)
+    }
+}
+
+pub fn structural_history_invalidation_rate_from_counts(
+    followed_count: usize,
+    invalidated: usize,
+) -> Option<f64> {
+    if followed_count == 0 {
+        None
+    } else {
+        Some(invalidated as f64 / followed_count as f64)
+    }
+}
+
+pub fn structural_node_history_win_rate(
+    historical_summary: Option<&StructuralNodeOutcomeSummary>,
+) -> Option<f64> {
+    structural_history_win_rate_from_counts(
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
+        historical_summary.map(|summary| summary.wins).unwrap_or(0),
+    )
+}
+
+pub fn structural_node_history_invalidation_rate(
+    historical_summary: Option<&StructuralNodeOutcomeSummary>,
+) -> Option<f64> {
+    structural_history_invalidation_rate_from_counts(
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.invalidated)
+            .unwrap_or(0),
+    )
+}
+
+pub fn structural_branch_history_win_rate(
+    historical_summary: Option<&StructuralBranchOutcomeSummary>,
+) -> Option<f64> {
+    structural_history_win_rate_from_counts(
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
+        historical_summary.map(|summary| summary.wins).unwrap_or(0),
+    )
+}
+
+pub fn structural_branch_history_invalidation_rate(
+    historical_summary: Option<&StructuralBranchOutcomeSummary>,
+) -> Option<f64> {
+    structural_history_invalidation_rate_from_counts(
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.invalidated)
+            .unwrap_or(0),
+    )
+}
+
+pub fn structural_scenario_history_win_rate(
+    historical_summary: Option<&StructuralScenarioOutcomeSummary>,
+) -> Option<f64> {
+    structural_history_win_rate_from_counts(
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
+        historical_summary.map(|summary| summary.wins).unwrap_or(0),
+    )
+}
+
+pub fn structural_scenario_history_invalidation_rate(
+    historical_summary: Option<&StructuralScenarioOutcomeSummary>,
+) -> Option<f64> {
+    structural_history_invalidation_rate_from_counts(
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.invalidated)
+            .unwrap_or(0),
+    )
+}
+
+pub fn structural_history_adjusted_path_prior(
+    base_prior: f64,
+    historical_summary: Option<&StructuralPathOutcomeSummary>,
+) -> f64 {
+    let Some(summary) = historical_summary else {
+        return base_prior;
+    };
+    structural_history_adjusted_prior(
+        base_prior,
+        summary.followed_count,
+        summary.wins,
+        summary.breakevens,
+    )
+}
+
+pub fn structural_composite_preference_score(
+    bbn_support_score: f64,
+    history_adjusted_prior: f64,
+) -> f64 {
+    (bbn_support_score * 0.70 + history_adjusted_prior * 0.30).clamp(0.0, 1.0)
+}
+
+pub fn structural_history_win_rate(
+    historical_summary: Option<&StructuralPathOutcomeSummary>,
+) -> Option<f64> {
+    structural_history_win_rate_from_counts(
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
+        historical_summary.map(|summary| summary.wins).unwrap_or(0),
+    )
+}
+
+pub fn structural_history_invalidation_rate(
+    historical_summary: Option<&StructuralPathOutcomeSummary>,
+) -> Option<f64> {
+    structural_history_invalidation_rate_from_counts(
+        historical_summary
+            .map(|summary| summary.followed_count)
+            .unwrap_or(0),
+        historical_summary
+            .map(|summary| summary.invalidated)
+            .unwrap_or(0),
+    )
 }
 
 pub fn structural_panel_derived_smoothed_prior(
