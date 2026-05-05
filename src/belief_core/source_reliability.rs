@@ -5,6 +5,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use crate::state::{
     structural_feedback_outcome_is_unresolved, structural_source_observed_outcome_likelihood,
     FeedbackRecord, StructuralPriorEvent, StructuralPriorLearningState, StructuralPriorStats,
+    StructuralPriorSourceSummary,
     StructuralSourceReliabilityEmCalibrationSummary,
     StructuralSourceReliabilityEmConfusionCell, StructuralSourceReliabilityEmDiagnostics,
     StructuralSourceReliabilityEmFit, StructuralSourceReliabilityEmHoldoutSummary,
@@ -1887,7 +1888,536 @@ pub fn structural_prior_target_policy_reward_lower_bound(
 }
 
 fn structural_matured_feedback_count_value(stats: &StructuralPriorStats) -> usize {
-    stats.wins + stats.losses + stats.breakevens + stats.invalidated + stats.abandoned
+    structural_delayed_reward_matured_feedback_count(
+        stats.wins,
+        stats.losses,
+        stats.breakevens,
+        stats.invalidated,
+        stats.abandoned,
+    )
+}
+
+#[derive(Debug, Clone, Copy, Default)]
+pub(crate) struct StructuralDelayedRewardCompetingRisks {
+    pub(crate) success: f64,
+    pub(crate) failure: f64,
+    pub(crate) invalidation: f64,
+    pub(crate) abandonment: f64,
+    pub(crate) entropy: f64,
+}
+
+#[derive(Debug, Clone, Copy, Default)]
+pub(crate) struct StructuralDelayedRewardElapsedHazards {
+    pub(crate) success: f64,
+    pub(crate) failure: f64,
+    pub(crate) invalidation: f64,
+    pub(crate) abandonment: f64,
+}
+
+pub(crate) fn structural_delayed_reward_matured_feedback_count(
+    wins: usize,
+    losses: usize,
+    breakevens: usize,
+    invalidated: usize,
+    abandoned: usize,
+) -> usize {
+    wins + losses + breakevens + invalidated + abandoned
+}
+
+pub(crate) fn structural_delayed_reward_censoring_rate(
+    followed_count: usize,
+    matured_feedback_count: usize,
+) -> Option<f64> {
+    if followed_count == 0 {
+        None
+    } else {
+        Some(
+            (followed_count.saturating_sub(matured_feedback_count) as f64 / followed_count as f64)
+                .clamp(0.0, 1.0),
+        )
+    }
+}
+
+pub(crate) fn structural_delayed_reward_resolution_probability(
+    followed_count: usize,
+    matured_feedback_count: usize,
+) -> f64 {
+    if followed_count == 0 {
+        return 0.0;
+    }
+    let matured = matured_feedback_count.min(followed_count) as f64;
+    ((1.0 + matured) / (2.0 + followed_count as f64)).clamp(0.0, 1.0)
+}
+
+pub(crate) fn structural_delayed_reward_censoring_probability(
+    followed_count: usize,
+    matured_feedback_count: usize,
+) -> f64 {
+    if followed_count == 0 {
+        return 0.0;
+    }
+    let unresolved = followed_count.saturating_sub(matured_feedback_count) as f64;
+    ((1.0 + unresolved) / (2.0 + followed_count as f64)).clamp(0.0, 1.0)
+}
+
+pub(crate) fn structural_delayed_reward_elapsed_hours(
+    record: &FeedbackRecord,
+    followed_path: bool,
+) -> Option<f64> {
+    if !followed_path
+        || record
+            .realized_outcome
+            .trim()
+            .eq_ignore_ascii_case("not_followed")
+    {
+        return None;
+    }
+    let refs = record.structural_feedback.as_ref()?;
+    let recommended_at = DateTime::parse_from_rfc3339(refs.recommended_at.trim())
+        .ok()?
+        .with_timezone(&Utc);
+    let elapsed_seconds = record
+        .timestamp
+        .signed_duration_since(recommended_at)
+        .num_seconds();
+    (elapsed_seconds >= 0).then_some(elapsed_seconds as f64 / 3600.0)
+}
+
+pub(crate) fn structural_delayed_reward_avg_elapsed_hours(
+    count: usize,
+    elapsed_hours: f64,
+) -> f64 {
+    if count == 0 {
+        0.0
+    } else {
+        (elapsed_hours.max(0.0) / count as f64).max(0.0)
+    }
+}
+
+pub(crate) fn structural_delayed_reward_resolution_hazard_per_hour(
+    matured_feedback_count: usize,
+    elapsed_hours_at_risk: f64,
+) -> f64 {
+    if matured_feedback_count == 0 || elapsed_hours_at_risk <= f64::EPSILON {
+        0.0
+    } else {
+        (matured_feedback_count as f64 / elapsed_hours_at_risk.max(f64::EPSILON)).max(0.0)
+    }
+}
+
+pub(crate) fn structural_delayed_reward_expected_resolution_hours(
+    resolution_hazard_per_hour: f64,
+) -> f64 {
+    if resolution_hazard_per_hour <= f64::EPSILON {
+        0.0
+    } else {
+        (1.0 / resolution_hazard_per_hour).max(0.0)
+    }
+}
+
+pub(crate) fn structural_delayed_reward_survival_probability(
+    resolution_hazard_per_hour: f64,
+    horizon_hours: f64,
+) -> f64 {
+    if resolution_hazard_per_hour <= f64::EPSILON || horizon_hours <= f64::EPSILON {
+        return 0.0;
+    }
+    (-resolution_hazard_per_hour * horizon_hours)
+        .exp()
+        .clamp(0.0, 1.0)
+}
+
+pub(crate) fn structural_delayed_reward_cumulative_incidence(
+    cause_hazard_per_hour: f64,
+    resolution_hazard_per_hour: f64,
+    horizon_hours: f64,
+) -> f64 {
+    if cause_hazard_per_hour <= f64::EPSILON
+        || resolution_hazard_per_hour <= f64::EPSILON
+        || horizon_hours <= f64::EPSILON
+    {
+        return 0.0;
+    }
+    let cause_share =
+        (cause_hazard_per_hour.max(0.0) / resolution_hazard_per_hour.max(f64::EPSILON))
+            .clamp(0.0, 1.0);
+    let event_probability =
+        (1.0 - structural_delayed_reward_survival_probability(
+            resolution_hazard_per_hour,
+            horizon_hours,
+        ))
+        .clamp(0.0, 1.0);
+    (cause_share * event_probability).clamp(0.0, 1.0)
+}
+
+pub(crate) fn structural_delayed_reward_update_resolution_horizon(
+    elapsed_hours: f64,
+    matured: bool,
+    horizon_hours: f64,
+    horizon_count: &mut usize,
+    within_count: &mut usize,
+) {
+    if elapsed_hours >= horizon_hours || matured {
+        *horizon_count += 1;
+        if matured && elapsed_hours <= horizon_hours {
+            *within_count += 1;
+        }
+    }
+}
+
+pub(crate) fn structural_delayed_reward_resolution_horizon_probability(
+    within_count: usize,
+    horizon_count: usize,
+) -> f64 {
+    if horizon_count == 0 {
+        0.0
+    } else {
+        ((1.0 + within_count as f64) / (2.0 + horizon_count as f64)).clamp(0.0, 1.0)
+    }
+}
+
+pub(crate) fn structural_delayed_reward_competing_risks(
+    wins: usize,
+    losses: usize,
+    breakevens: usize,
+    invalidated: usize,
+    abandoned: usize,
+) -> Option<StructuralDelayedRewardCompetingRisks> {
+    if structural_delayed_reward_matured_feedback_count(
+        wins,
+        losses,
+        breakevens,
+        invalidated,
+        abandoned,
+    ) == 0
+    {
+        return None;
+    }
+    let success_mass = wins as f64 + breakevens as f64 * 0.5;
+    let failure_mass = losses as f64 + breakevens as f64 * 0.5;
+    let invalidation_mass = invalidated as f64;
+    let abandonment_mass = abandoned as f64;
+    let denominator = success_mass + failure_mass + invalidation_mass + abandonment_mass + 4.0;
+    if denominator <= f64::EPSILON {
+        return None;
+    }
+    let success = ((1.0 + success_mass) / denominator).clamp(0.0, 1.0);
+    let failure = ((1.0 + failure_mass) / denominator).clamp(0.0, 1.0);
+    let invalidation = ((1.0 + invalidation_mass) / denominator).clamp(0.0, 1.0);
+    let abandonment = ((1.0 + abandonment_mass) / denominator).clamp(0.0, 1.0);
+    let entropy = [success, failure, invalidation, abandonment]
+        .into_iter()
+        .filter(|risk| *risk > f64::EPSILON)
+        .map(|risk| -risk * risk.ln())
+        .sum();
+    Some(StructuralDelayedRewardCompetingRisks {
+        success,
+        failure,
+        invalidation,
+        abandonment,
+        entropy,
+    })
+}
+
+pub(crate) fn structural_delayed_reward_elapsed_hazards(
+    wins: usize,
+    losses: usize,
+    breakevens: usize,
+    invalidated: usize,
+    abandoned: usize,
+    elapsed_hours_at_risk: f64,
+) -> Option<StructuralDelayedRewardElapsedHazards> {
+    if structural_delayed_reward_matured_feedback_count(
+        wins,
+        losses,
+        breakevens,
+        invalidated,
+        abandoned,
+    ) == 0
+        || elapsed_hours_at_risk <= f64::EPSILON
+    {
+        return None;
+    }
+    let denominator = elapsed_hours_at_risk.max(f64::EPSILON);
+    Some(StructuralDelayedRewardElapsedHazards {
+        success: (wins as f64 + breakevens as f64 * 0.5) / denominator,
+        failure: (losses as f64 + breakevens as f64 * 0.5) / denominator,
+        invalidation: invalidated as f64 / denominator,
+        abandonment: abandoned as f64 / denominator,
+    })
+}
+
+pub(crate) fn structural_censoring_adjusted_reward_prior(
+    target_policy_reward_prior: f64,
+    smoothed_prior: f64,
+    delayed_reward_resolution_probability: f64,
+) -> f64 {
+    let resolution = delayed_reward_resolution_probability.clamp(0.0, 1.0);
+    (target_policy_reward_prior.clamp(0.0, 1.0) * resolution
+        + smoothed_prior.clamp(0.0, 1.0) * (1.0 - resolution))
+        .clamp(0.0, 1.0)
+}
+
+pub(crate) fn structural_censoring_adjusted_reward_lower_bound(
+    target_policy_reward_lower_bound: f64,
+    smoothed_prior: f64,
+    delayed_reward_resolution_probability: f64,
+    delayed_reward_censoring_probability: f64,
+) -> f64 {
+    let resolution = delayed_reward_resolution_probability.clamp(0.0, 1.0);
+    let censoring = delayed_reward_censoring_probability.clamp(0.0, 1.0);
+    (target_policy_reward_lower_bound.clamp(0.0, 1.0) * resolution
+        + smoothed_prior.clamp(0.0, 1.0) * 0.5 * censoring)
+        .clamp(0.0, 1.0)
+}
+
+pub(crate) fn refresh_structural_prior_delayed_reward_metrics(
+    stats: &mut StructuralPriorStats,
+) {
+    let matured_feedback_count = structural_delayed_reward_matured_feedback_count(
+        stats.wins,
+        stats.losses,
+        stats.breakevens,
+        stats.invalidated,
+        stats.abandoned,
+    );
+    stats.delayed_reward_resolution_probability = structural_delayed_reward_resolution_probability(
+        stats.followed_count,
+        matured_feedback_count,
+    );
+    stats.delayed_reward_censoring_probability = structural_delayed_reward_censoring_probability(
+        stats.followed_count,
+        matured_feedback_count,
+    );
+    stats.censoring_adjusted_reward_prior = structural_censoring_adjusted_reward_prior(
+        stats.target_policy_reward_prior,
+        stats.smoothed_prior,
+        stats.delayed_reward_resolution_probability,
+    );
+    stats.censoring_adjusted_reward_lower_bound = structural_censoring_adjusted_reward_lower_bound(
+        stats.target_policy_reward_lower_bound,
+        stats.smoothed_prior,
+        stats.delayed_reward_resolution_probability,
+        stats.delayed_reward_censoring_probability,
+    );
+    let competing_risks = structural_delayed_reward_competing_risks(
+        stats.wins,
+        stats.losses,
+        stats.breakevens,
+        stats.invalidated,
+        stats.abandoned,
+    )
+    .unwrap_or_default();
+    stats.delayed_reward_success_competing_risk = competing_risks.success;
+    stats.delayed_reward_failure_competing_risk = competing_risks.failure;
+    stats.delayed_reward_invalidation_competing_risk = competing_risks.invalidation;
+    stats.delayed_reward_abandonment_competing_risk = competing_risks.abandonment;
+    stats.delayed_reward_competing_risk_entropy = competing_risks.entropy;
+    stats.delayed_reward_avg_elapsed_hours = structural_delayed_reward_avg_elapsed_hours(
+        stats.delayed_reward_elapsed_feedback_count,
+        stats.delayed_reward_elapsed_hours_at_risk,
+    );
+    stats.delayed_reward_resolution_hazard_per_hour =
+        structural_delayed_reward_resolution_hazard_per_hour(
+            matured_feedback_count,
+            stats.delayed_reward_elapsed_hours_at_risk,
+        );
+    stats.delayed_reward_expected_resolution_hours =
+        structural_delayed_reward_expected_resolution_hours(
+            stats.delayed_reward_resolution_hazard_per_hour,
+        );
+    stats.delayed_reward_survival_probability_1h = structural_delayed_reward_survival_probability(
+        stats.delayed_reward_resolution_hazard_per_hour,
+        1.0,
+    );
+    stats.delayed_reward_survival_probability_4h = structural_delayed_reward_survival_probability(
+        stats.delayed_reward_resolution_hazard_per_hour,
+        4.0,
+    );
+    stats.delayed_reward_survival_probability_24h =
+        structural_delayed_reward_survival_probability(
+            stats.delayed_reward_resolution_hazard_per_hour,
+            24.0,
+        );
+    let elapsed_hazards = structural_delayed_reward_elapsed_hazards(
+        stats.wins,
+        stats.losses,
+        stats.breakevens,
+        stats.invalidated,
+        stats.abandoned,
+        stats.delayed_reward_elapsed_hours_at_risk,
+    )
+    .unwrap_or_default();
+    stats.delayed_reward_success_hazard_per_hour = elapsed_hazards.success;
+    stats.delayed_reward_failure_hazard_per_hour = elapsed_hazards.failure;
+    stats.delayed_reward_invalidation_hazard_per_hour = elapsed_hazards.invalidation;
+    stats.delayed_reward_abandonment_hazard_per_hour = elapsed_hazards.abandonment;
+    stats.delayed_reward_success_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.success,
+            stats.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    stats.delayed_reward_failure_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.failure,
+            stats.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    stats.delayed_reward_invalidation_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.invalidation,
+            stats.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    stats.delayed_reward_abandonment_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.abandonment,
+            stats.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    stats.delayed_reward_resolution_probability_1h =
+        structural_delayed_reward_resolution_horizon_probability(
+            stats.delayed_reward_resolution_within_1h_count,
+            stats.delayed_reward_resolution_horizon_1h_count,
+        );
+    stats.delayed_reward_resolution_probability_4h =
+        structural_delayed_reward_resolution_horizon_probability(
+            stats.delayed_reward_resolution_within_4h_count,
+            stats.delayed_reward_resolution_horizon_4h_count,
+        );
+    stats.delayed_reward_resolution_probability_24h =
+        structural_delayed_reward_resolution_horizon_probability(
+            stats.delayed_reward_resolution_within_24h_count,
+            stats.delayed_reward_resolution_horizon_24h_count,
+        );
+}
+
+pub(crate) fn refresh_structural_source_summary_delayed_reward_metrics(
+    summary: &mut StructuralPriorSourceSummary,
+) {
+    let matured_feedback_count = structural_delayed_reward_matured_feedback_count(
+        summary.wins,
+        summary.losses,
+        summary.breakevens,
+        summary.invalidated,
+        summary.abandoned,
+    );
+    summary.delayed_reward_resolution_probability =
+        structural_delayed_reward_resolution_probability(
+            summary.followed_count,
+            matured_feedback_count,
+        );
+    summary.delayed_reward_censoring_probability =
+        structural_delayed_reward_censoring_probability(
+            summary.followed_count,
+            matured_feedback_count,
+        );
+    summary.censoring_adjusted_reward_prior = structural_censoring_adjusted_reward_prior(
+        summary.target_policy_reward_prior,
+        summary.smoothed_prior,
+        summary.delayed_reward_resolution_probability,
+    );
+    summary.censoring_adjusted_reward_lower_bound =
+        structural_censoring_adjusted_reward_lower_bound(
+            summary.target_policy_reward_lower_bound,
+            summary.smoothed_prior,
+            summary.delayed_reward_resolution_probability,
+            summary.delayed_reward_censoring_probability,
+        );
+    let competing_risks = structural_delayed_reward_competing_risks(
+        summary.wins,
+        summary.losses,
+        summary.breakevens,
+        summary.invalidated,
+        summary.abandoned,
+    )
+    .unwrap_or_default();
+    summary.delayed_reward_success_competing_risk = competing_risks.success;
+    summary.delayed_reward_failure_competing_risk = competing_risks.failure;
+    summary.delayed_reward_invalidation_competing_risk = competing_risks.invalidation;
+    summary.delayed_reward_abandonment_competing_risk = competing_risks.abandonment;
+    summary.delayed_reward_competing_risk_entropy = competing_risks.entropy;
+    summary.delayed_reward_avg_elapsed_hours = structural_delayed_reward_avg_elapsed_hours(
+        summary.delayed_reward_elapsed_feedback_count,
+        summary.delayed_reward_elapsed_hours_at_risk,
+    );
+    summary.delayed_reward_resolution_hazard_per_hour =
+        structural_delayed_reward_resolution_hazard_per_hour(
+            matured_feedback_count,
+            summary.delayed_reward_elapsed_hours_at_risk,
+        );
+    summary.delayed_reward_expected_resolution_hours =
+        structural_delayed_reward_expected_resolution_hours(
+            summary.delayed_reward_resolution_hazard_per_hour,
+        );
+    summary.delayed_reward_survival_probability_1h =
+        structural_delayed_reward_survival_probability(
+            summary.delayed_reward_resolution_hazard_per_hour,
+            1.0,
+        );
+    summary.delayed_reward_survival_probability_4h =
+        structural_delayed_reward_survival_probability(
+            summary.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    summary.delayed_reward_survival_probability_24h =
+        structural_delayed_reward_survival_probability(
+            summary.delayed_reward_resolution_hazard_per_hour,
+            24.0,
+        );
+    let elapsed_hazards = structural_delayed_reward_elapsed_hazards(
+        summary.wins,
+        summary.losses,
+        summary.breakevens,
+        summary.invalidated,
+        summary.abandoned,
+        summary.delayed_reward_elapsed_hours_at_risk,
+    )
+    .unwrap_or_default();
+    summary.delayed_reward_success_hazard_per_hour = elapsed_hazards.success;
+    summary.delayed_reward_failure_hazard_per_hour = elapsed_hazards.failure;
+    summary.delayed_reward_invalidation_hazard_per_hour = elapsed_hazards.invalidation;
+    summary.delayed_reward_abandonment_hazard_per_hour = elapsed_hazards.abandonment;
+    summary.delayed_reward_success_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.success,
+            summary.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    summary.delayed_reward_failure_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.failure,
+            summary.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    summary.delayed_reward_invalidation_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.invalidation,
+            summary.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    summary.delayed_reward_abandonment_cumulative_incidence_4h =
+        structural_delayed_reward_cumulative_incidence(
+            elapsed_hazards.abandonment,
+            summary.delayed_reward_resolution_hazard_per_hour,
+            4.0,
+        );
+    summary.delayed_reward_resolution_probability_1h =
+        structural_delayed_reward_resolution_horizon_probability(
+            summary.delayed_reward_resolution_within_1h_count,
+            summary.delayed_reward_resolution_horizon_1h_count,
+        );
+    summary.delayed_reward_resolution_probability_4h =
+        structural_delayed_reward_resolution_horizon_probability(
+            summary.delayed_reward_resolution_within_4h_count,
+            summary.delayed_reward_resolution_horizon_4h_count,
+        );
+    summary.delayed_reward_resolution_probability_24h =
+        structural_delayed_reward_resolution_horizon_probability(
+            summary.delayed_reward_resolution_within_24h_count,
+            summary.delayed_reward_resolution_horizon_24h_count,
+        );
 }
 
 pub fn structural_prior_matured_feedback_count(
@@ -1922,38 +2452,30 @@ pub fn structural_prior_maturity_coverage(
 
 pub fn structural_prior_censoring_rate(prior_stats: Option<&StructuralPriorStats>) -> Option<f64> {
     let stats = prior_stats?;
-    if stats.followed_count == 0 {
-        None
-    } else {
-        let unresolved = stats
-            .followed_count
-            .saturating_sub(structural_matured_feedback_count_value(stats));
-        Some((unresolved as f64 / stats.followed_count as f64).clamp(0.0, 1.0))
-    }
+    structural_delayed_reward_censoring_rate(
+        stats.followed_count,
+        structural_matured_feedback_count_value(stats),
+    )
 }
 
 pub fn structural_prior_delayed_reward_resolution_probability(
     prior_stats: Option<&StructuralPriorStats>,
 ) -> Option<f64> {
     let stats = prior_stats?;
-    if stats.followed_count == 0 {
-        return None;
-    }
-    let matured = structural_matured_feedback_count_value(stats).min(stats.followed_count) as f64;
-    Some(((1.0 + matured) / (2.0 + stats.followed_count as f64)).clamp(0.0, 1.0))
+    (stats.followed_count > 0).then_some(structural_delayed_reward_resolution_probability(
+        stats.followed_count,
+        structural_matured_feedback_count_value(stats),
+    ))
 }
 
 pub fn structural_prior_delayed_reward_censoring_probability(
     prior_stats: Option<&StructuralPriorStats>,
 ) -> Option<f64> {
     let stats = prior_stats?;
-    if stats.followed_count == 0 {
-        return None;
-    }
-    let unresolved = stats
-        .followed_count
-        .saturating_sub(structural_matured_feedback_count_value(stats)) as f64;
-    Some(((1.0 + unresolved) / (2.0 + stats.followed_count as f64)).clamp(0.0, 1.0))
+    (stats.followed_count > 0).then_some(structural_delayed_reward_censoring_probability(
+        stats.followed_count,
+        structural_matured_feedback_count_value(stats),
+    ))
 }
 
 pub fn structural_prior_censoring_adjusted_reward_prior(
@@ -1961,11 +2483,11 @@ pub fn structural_prior_censoring_adjusted_reward_prior(
 ) -> Option<f64> {
     let stats = prior_stats?;
     let resolution = structural_prior_delayed_reward_resolution_probability(Some(stats))?;
-    Some(
-        (stats.target_policy_reward_prior.clamp(0.0, 1.0) * resolution
-            + stats.smoothed_prior.clamp(0.0, 1.0) * (1.0 - resolution))
-            .clamp(0.0, 1.0),
-    )
+    Some(structural_censoring_adjusted_reward_prior(
+        stats.target_policy_reward_prior,
+        stats.smoothed_prior,
+        resolution,
+    ))
 }
 
 pub fn structural_prior_censoring_adjusted_reward_lower_bound(
@@ -1974,53 +2496,25 @@ pub fn structural_prior_censoring_adjusted_reward_lower_bound(
     let stats = prior_stats?;
     let resolution = structural_prior_delayed_reward_resolution_probability(Some(stats))?;
     let censoring = structural_prior_delayed_reward_censoring_probability(Some(stats))?;
-    Some(
-        (stats.target_policy_reward_lower_bound.clamp(0.0, 1.0) * resolution
-            + stats.smoothed_prior.clamp(0.0, 1.0) * 0.5 * censoring)
-            .clamp(0.0, 1.0),
-    )
-}
-
-#[derive(Debug, Clone, Copy)]
-struct StructuralPriorCompetingRisks {
-    success: f64,
-    failure: f64,
-    invalidation: f64,
-    abandonment: f64,
-    entropy: f64,
+    Some(structural_censoring_adjusted_reward_lower_bound(
+        stats.target_policy_reward_lower_bound,
+        stats.smoothed_prior,
+        resolution,
+        censoring,
+    ))
 }
 
 fn structural_prior_delayed_reward_competing_risks(
     prior_stats: Option<&StructuralPriorStats>,
-) -> Option<StructuralPriorCompetingRisks> {
+) -> Option<StructuralDelayedRewardCompetingRisks> {
     let stats = prior_stats?;
-    if structural_matured_feedback_count_value(stats) == 0 {
-        return None;
-    }
-    let success_mass = stats.wins as f64 + stats.breakevens as f64 * 0.5;
-    let failure_mass = stats.losses as f64 + stats.breakevens as f64 * 0.5;
-    let invalidation_mass = stats.invalidated as f64;
-    let abandonment_mass = stats.abandoned as f64;
-    let denominator = success_mass + failure_mass + invalidation_mass + abandonment_mass + 4.0;
-    if denominator <= f64::EPSILON {
-        return None;
-    }
-    let success = ((1.0 + success_mass) / denominator).clamp(0.0, 1.0);
-    let failure = ((1.0 + failure_mass) / denominator).clamp(0.0, 1.0);
-    let invalidation = ((1.0 + invalidation_mass) / denominator).clamp(0.0, 1.0);
-    let abandonment = ((1.0 + abandonment_mass) / denominator).clamp(0.0, 1.0);
-    let entropy = [success, failure, invalidation, abandonment]
-        .into_iter()
-        .filter(|risk| *risk > f64::EPSILON)
-        .map(|risk| -risk * risk.ln())
-        .sum();
-    Some(StructuralPriorCompetingRisks {
-        success,
-        failure,
-        invalidation,
-        abandonment,
-        entropy,
-    })
+    structural_delayed_reward_competing_risks(
+        stats.wins,
+        stats.losses,
+        stats.breakevens,
+        stats.invalidated,
+        stats.abandoned,
+    )
 }
 
 pub fn structural_prior_delayed_reward_success_competing_risk(

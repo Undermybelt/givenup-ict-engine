@@ -100,6 +100,7 @@ cargo test test_structural_source_reliability_em_holdout_prefers_chronological_s
 **Latest landed on this lane:**
 
 - `7fadd58` moved source-reliability EM diagnostics / fit / persisted-refresh ownership into `src/belief_core/source_reliability.rs`, with `src/state/types.rs` reduced to thin public wrappers for that lane.
+- delayed-reward aggregate / hazard / censoring / competing-risk formula ownership now also routes through `src/belief_core/source_reliability.rs`, with `src/state/types.rs` reduced further toward refresh-call consumers instead of formula owners.
 
 **Read first when working this lane:**
 
