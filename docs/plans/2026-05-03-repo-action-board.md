@@ -268,11 +268,11 @@ Current evidence on this lane:
 
 **Done when:** the repo has a clear dual-track design where retrospective tiny-leg regime evidence and live current-state evidence both exist, and any layered BBN attempt is mapped onto existing repo concepts before promotion.
 
-- [ ] Normalize contributor wording into existing repo concepts before implementation.
+- [x] Normalize contributor wording into existing repo concepts before implementation.
   - `related-stock relative consistency` -> existing SMT / correlation-consistency lane
   - `tiny-leg zigzag regime` -> retrospective segmentation / clustering lane
-- [ ] Keep any first-pass layered evidence attempt simple and inspectable; do not assume the contributor's exact layering is already correct.
-- [ ] Model six-period evidence as an explicit dimension rather than collapsing it immediately.
+- [x] Keep any first-pass layered evidence attempt simple and inspectable; do not assume the contributor's exact layering is already correct.
+- [x] Model six-period evidence as an explicit dimension rather than collapsing it immediately.
 - [ ] Add a research-only tiny-leg regime discovery lane:
   - small zigzag
   - 5 leg factors
@@ -281,6 +281,12 @@ Current evidence on this lane:
 - [ ] Keep that tiny-leg regime discovery lane out of sole runtime truth until a live now-cast branch exists.
 - [ ] Add or refine a live current-state regime branch that is not delayed purely by pivot confirmation.
 - [ ] Expose layer-by-layer probability contribution to human and agent surfaces instead of only a final blended scalar.
+
+Current evidence on this lane:
+
+- `docs/hybrid-regime-clustering-integration-note.md` now normalizes trial wording into repo concepts: `related-stock relative consistency -> SMT / correlation-consistency` and `tiny-leg zigzag regime -> retrospective segmentation / clustering`.
+- The same note now fixes the first-pass intake contract as small and inspectable, and it explicitly names six-period evaluation as a first-class dimension rather than a hidden blended scalar.
+- `docs/experiments/oracle-regime-probe.md` now records the research-only guardrail for tiny-leg / zigzag intake and keeps retrospective outputs separate from live regime truth.
 
 **Read first when working this lane:**
 
