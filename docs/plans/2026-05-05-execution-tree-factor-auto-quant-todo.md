@@ -1345,6 +1345,106 @@ For cross-market families, add:
 - `Family C` now has both `1h` and `5m` real slices.
 - but the cross-market candidates remain clearly weaker than the stronger existing `NQ` baseline candidates.
 
+### 2026-05-06 Slice 24: No-code plateau diagnostic
+
+**Execution**
+- compared the latest `workflow_snapshot.json` and `execution_tree_trace.json` across several isolated `NQ` states:
+  - baseline `Family A` imported run
+  - `TomacNQ_KillzoneBreakoutDisplacement`
+  - `TomacNQKillzoneBreakout5m`
+  - `TomacNQTrendPersistence`
+- also tested the same stronger displacement candidate against the active analyze label row by applying it to:
+  - `--parent-config 1,1,1`
+  - corresponding to the current live labels:
+    - `entry_quality=medium`
+    - `factor_alignment=mixed`
+    - `factor_uncertainty=high`
+
+**Result**
+- across baseline, displacement, `5m`, and `Family B` re-check states, these runtime fields remained unchanged:
+  - `pre_bayes_gate_status = pass_neutralized`
+  - `pre_bayes_evidence_quality_score = 0.4243112653658687`
+  - `execution_readiness = 0.31868931152176383`
+  - `execution_gate_status = execution_blocked`
+  - `execution_edge_share = 0.33870883441752014`
+  - `prediction_edge_share = 0.6612911655824798`
+  - `family_score_map.structure_ict = 0.4670000000000001`
+  - `family_score_map.options_hedging = 0.1540695195141977`
+  - `family_score_map.cross_market_smt = 0.1225`
+  - `execution_tree_trace.output.branch = transition_guardrail`
+  - `execution_tree_trace.output.execution_bias = guarded`
+  - `execution_tree_trace.output.gate_status = observe`
+  - `execution_tree_trace.output.execution_score = 0.5121931942326463`
+- even when the stronger displacement fork was written to the currently active CPT parent row (`1,1,1`), post-apply analyze still returned:
+  - `quality=0.424`
+  - `gate=pass_neutralized`
+  - `Action: TUNE structure_ict`
+
+**Outcome**
+- current no-code Auto-Quant loops are definitely changing imported `trade_outcome` priors.
+- but in this environment they are **not** changing the upstream evidence surfaces that currently dominate the execution tree:
+  - `factor_alignment`
+  - `factor_uncertainty`
+  - `liquidity_context`
+  - `execution_readiness`
+- therefore the present no-code plateau is real, not just “more loops needed on the same lane”.
+
+### 2026-05-06 Slice 23: Family B NQ trend-persistence probe
+
+**Execution**
+- created a fresh isolated state dir:
+  - `/tmp/ict-engine-family-b-nq-profile`
+- added a dedicated directionality / persistence candidate:
+  - `TomacNQTrendPersistence`
+- completed the same synthetic-profile closure:
+  - `auto-quant-prepare`
+  - `run_tomac.py`
+  - `export_strategy_library.py`
+  - `auto-quant-results-import`
+- then ran a focused prior-init/apply check on an isolated copy:
+  - `/tmp/ict-engine-family-b-nq-check`
+  - `./target/debug/ict-engine auto-quant-prior-init --symbol NQ --state-dir /tmp/ict-engine-family-b-nq-check --force --strategies TomacNQTrendPersistence`
+  - `./target/debug/ict-engine analyze --symbol NQ ... --state-dir /tmp/ict-engine-family-b-nq-check --human`
+
+**Result**
+- Family B strategy metrics:
+  - `TomacAggressiveBE`
+    - `sharpe=-0.2597`
+    - `profit=-4.19%`
+    - `trade_count=19`
+  - `TomacKillzoneBreakout`
+    - `sharpe=0.0315`
+    - `profit=1.31%`
+    - `trade_count=21`
+  - `TomacNQTrendPersistence`
+    - `sharpe=0.0189`
+    - `profit=0.66%`
+    - `trade_count=3`
+    - `win_rate=66.6667%`
+    - `profit_factor=1.2346`
+  - `TomacRRWinRate`
+    - `sharpe=-0.0158`
+    - `profit=-0.4%`
+    - `trade_count=2`
+- import closure succeeded:
+  - `n_ok=4`
+  - `n_meta_invalid=0`
+  - `matched=4`
+  - `library_artifact_id=auto_quant_strategy_library_NQ_20260505T194200.732533000Z`
+- focused prior-init on `TomacNQTrendPersistence` moved the CPT row to:
+  - `final_probs=[0.8054878881118881, 0.0000014586894586894585, 0.19451065319865316]`
+- post-apply analyze still returned:
+  - `quality=0.424`
+  - `gate=pass_neutralized`
+  - `Action: TUNE structure_ict`
+
+**Outcome**
+- `Family B` is now no longer untested.
+- its first real `NQ` slice is materially weaker than the stronger `Family A` candidates.
+- current interpretation:
+  - `Family B` does not deserve priority over the stronger `Family A` line in the current `NQ` environment
+  - if revisited later, it should be because a new directionality-specific hypothesis appears, not because the current persistence fork looks promising
+
 ### 2026-05-06 Slice 10: Family G real-data acquisition attempts
 
 **Execution**
@@ -1398,6 +1498,8 @@ For cross-market families, add:
 - [x] Verify on isolated re-check states that the current `1dRegime` and `5m` NQ forks still do not move execution-tree `quality` or `gate_status`.
 - [x] Produce a stronger `NQ` 1h structure-quality fork (`TomacNQ_KillzoneBreakoutDisplacement`) and verify that it still does not move execution-tree `quality` or `gate_status`.
 - [x] Run the first real `Family C` paired-market auto-quant slices (`1h` and `5m`) using `NQ + ES`.
+- [x] Run the first real `Family B` no-code `NQ` directionality/persistence slice and verify that it still does not move execution-tree `quality` or `gate_status`.
+- [x] Confirm with runtime evidence that current no-code Auto-Quant loops are plateaued at the execution-tree layer even when trade_outcome priors move.
 
 ### Next
 
@@ -1410,6 +1512,8 @@ For cross-market families, add:
 - [ ] Stop spending cycles on `1dRegime`, `15m`, or `1m` NQ forks unless a new hypothesis explains why they should move `quality` rather than just produce a positive backtest.
 - [ ] Decide whether `TomacNQ_KillzoneBreakoutDisplacement` should replace `TomacNQ_KillzoneBreakout` as the default `NQ` Family A candidate for future no-code loops, or whether the extra displacement filter is only a backtest improvement without execution-tree value.
 - [ ] Decide whether `Family C` deserves any more no-code auto-quant forks at all, since both `1h` and `5m` paired-market candidates are positive but clearly weaker than the stronger baseline candidates.
+- [ ] Decide whether `Family B` should be actively deprioritized in the todo board now that its first real slice is weaker than `Family A` and still leaves execution-tree unchanged.
+- [ ] Decide whether the objective should stay in “no-code iteration” mode at all, now that runtime evidence shows prior-init-only loops are not moving the execution-tree inputs.
 - [ ] Use a reachable provider path or existing captured auxiliary evidence to run the first real Family G `options_hedging` / dealer-positioning research slice rather than only proving the input contract.
 - [ ] Run Family B: Directionality / Persistence only after Family A is stable.
 - [ ] Run Family C: Cross-Market Confirmation once paired data exists.
@@ -1430,6 +1534,9 @@ For cross-market families, add:
 - [ ] Family G Options / Dealer Positioning data quality for the chosen market slice
   - blocker: the new public input surface exists, but this environment currently cannot reach the needed live/options providers (`Yahoo 403`, `Binance SSLError`, `Bybit SSLError`) and has no running local live backend
   - acceptable temporary state: keep the new surface active, then treat provider reachability / captured evidence availability as the next gating issue rather than CLI absence
+- [ ] No-code execution-tree plateau
+  - blocker: current no-code Auto-Quant loops can change imported `trade_outcome` priors, but the active `analyze` / execution-tree path is still dominated by unchanged upstream evidence surfaces (`factor_alignment`, `factor_uncertainty`, `liquidity_context`, `execution_readiness`)
+  - acceptable temporary state: stop assuming “more of the same no-code loops” will move the tree, and only continue no-code work when it brings new upstream evidence or new market/timeframe proof
 - [ ] Multi-timeframe coverage beyond the currently proven slices
   - blocker: `1m/5m/15m/1h/4h/1d` data is locally available, and `1m/5m/15m/1h/4h/1d` are now all exercised on at least one `NQ` synthetic-profile lane, but `1w` and `1M` are still not prepared or proven
   - acceptable temporary state: keep logging separately:
