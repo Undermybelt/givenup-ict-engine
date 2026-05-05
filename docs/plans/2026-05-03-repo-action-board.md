@@ -23,11 +23,8 @@
 
 This board now absorbs one concrete contributor trial result:
 
-- A layered Bayesian network is still a valid direction, but the first useful version should stay simple:
-  - layer 1: price / volume
-  - layer 2: technical indicators
-  - layer 3: PDA sequence
-  - layer 4: related-stock relative consistency
+- A layered Bayesian network is still a valid direction, but the trial input here is only a source of constraint and anti-pattern evidence, not an already-approved implementation path.
+- If a future first-pass layer decomposition is attempted, it should stay simple and inspectable rather than jumping straight to a high-complexity regime pipeline.
 - A small-zigzag + tiny-leg pipeline can still be useful, but only as retrospective segmentation and regime summarization.
 - Do **not** let zigzag / delayed pivot confirmation become the only live regime judge.
 - The runtime path must separate:
@@ -55,6 +52,7 @@ Reject:
 - pivot confirmation alone as current-state evidence
 - any pipeline that turns delayed structural confirmation directly into the only regime trigger
 - any design that hides layer-by-layer probability contribution from the operator or agent
+- directly copying a contributor's trial vocabulary into repo truth before mapping it to existing repo concepts
 
 ## Agent Contract
 
@@ -82,26 +80,25 @@ Reject:
 1. Freeze the role of zigzag.
    - zigzag may cut historical legs and stabilize past pivots
    - zigzag may not be the only live regime input
-2. Add or refine a layered evidence packet with exactly four interpretable evidence families:
-   - price / volume
-   - technical indicators
-   - PDA sequence
-   - related-stock relative consistency
-3. Make each layer emit an explicit probability or score contribution.
+2. Normalize outside wording into existing repo concepts before changing code or docs.
+   - `related-stock relative consistency` should be treated as the repo's existing SMT / correlation-consistency family, not copied as a brand-new concept by default
+   - `tiny-leg` / `small zigzag` should be treated as retrospective segmentation candidates, not assumed runtime truth
+3. If a layered evidence packet is attempted later, keep the first version small and interpretable rather than assuming the contributor's exact layering is already correct.
+4. Make each layer emit an explicit probability or score contribution.
    - first version may be hardcoded
    - contributions must be recorded layer by layer
-4. Support multi-period evaluation explicitly.
+5. Support multi-period evaluation explicitly.
    - treat six periods as a valid first-pass scaffold
    - do not bury the period dimension in one blended scalar
-5. Put tiny-leg clustering on the research side first.
+6. Put tiny-leg clustering on the research side first.
    - tiny zigzag
    - 5 leg factors
    - `16` raw clusters
    - merge to `6` higher-level regimes
    - output is retrospective regime evidence, not sole runtime truth
-6. Add a live now-cast regime branch alongside retrospective leg confirmation.
+7. Add a live now-cast regime branch alongside retrospective leg confirmation.
    - runtime belief must have a current-state input not dependent only on delayed pivot confirmation
-7. Verify a negative rule:
+8. Verify a negative rule:
    - no runtime path may determine regime from zigzag-confirmed pivots alone
 
 ### Related Code And Docs For This Trial Input
@@ -124,6 +121,8 @@ Reject:
   - DTW / sequence-aware PDA clustering direction
 - `docs/hybrid-regime-clustering-integration-note.md`
   - current hybrid cluster + HMM integration notes
+- `docs/regime-aware`
+  - existing repo-side GMM / HMM / HSMM clustering notes; use this as the normalization target before importing external wording
 
 ### Default First Slice: Open These First
 
@@ -242,16 +241,14 @@ rg -n 'rebuild_structural_sequence_priors|refresh_node_transition_posteriors|bra
 
 ### Workstream 5: Trial-Driven Layered Regime Intake
 
-**Objective:** convert the contributor trial into repo-compatible constraints and a simple first-pass execution path.
+**Objective:** convert the contributor trial into repo-compatible constraints and a bounded research/implementation intake path, not a copy-through implementation.
 
-**Done when:** the repo has a clear dual-track design where retrospective tiny-leg regime evidence and live current-state evidence both exist, and the layered BBN path is inspectable layer by layer.
+**Done when:** the repo has a clear dual-track design where retrospective tiny-leg regime evidence and live current-state evidence both exist, and any layered BBN attempt is mapped onto existing repo concepts before promotion.
 
-- [ ] Add a typed layered evidence path for:
-  - price / volume
-  - technical indicators
-  - PDA sequence
-  - related-stock relative consistency
-- [ ] Keep the first version simple and inspectable: hardcoded per-layer probabilities are acceptable if recorded explicitly.
+- [ ] Normalize contributor wording into existing repo concepts before implementation.
+  - `related-stock relative consistency` -> existing SMT / correlation-consistency lane
+  - `tiny-leg zigzag regime` -> retrospective segmentation / clustering lane
+- [ ] Keep any first-pass layered evidence attempt simple and inspectable; do not assume the contributor's exact layering is already correct.
 - [ ] Model six-period evidence as an explicit dimension rather than collapsing it immediately.
 - [ ] Add a research-only tiny-leg regime discovery lane:
   - small zigzag
