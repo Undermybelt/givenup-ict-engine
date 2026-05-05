@@ -796,6 +796,36 @@ For cross-market families, add:
   - `TomacNQ_KillzoneBreakout` as an `NQ`-leaning candidate
   - `TomacKillzoneBreakout` as the stronger current `ES` structure/setup candidate
 
+### 2026-05-06 Slice 8b: Family A ES displacement fork
+
+**Execution**
+- added an `ES`-specific structure-quality fork in the same synthetic-profile workspace:
+  - `TomacESKillzoneBreakoutDisplacement`
+- reran the `ES` synthetic-profile closure:
+  - `auto-quant-prepare`
+  - `run_tomac.py`
+  - `export_strategy_library.py`
+  - `auto-quant-results-import`
+
+**Result**
+- `ES` round 3 strategy metrics:
+  - `TomacESKillzoneBreakoutDisplacement`
+    - `sharpe=0.0717`
+    - `profit=1.25%`
+    - `trade_count=88`
+    - `win_rate=50.0%`
+    - `profit_factor=1.1052`
+  - reference baseline:
+    - `TomacKillzoneBreakout`
+      - `sharpe=0.2889`
+      - `profit=16.98%`
+      - `trade_count=40`
+      - `profit_factor=2.1103`
+
+**Outcome**
+- the `ES` displacement fork is weaker than the existing `TomacKillzoneBreakout` baseline.
+- so the current best `ES` structure/setup candidate remains the simpler generic breakout lane, not the tighter displacement variant.
+
 ### 2026-05-06 Slice 9: Family A YM expansion attempt
 
 **Execution**
