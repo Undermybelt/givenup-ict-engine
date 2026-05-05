@@ -149,16 +149,40 @@ These judgments are already made for this workstream. Do not reopen them unless 
     - `cargo test --lib combined_gate_blocks_on_any_subgate_failure -- --nocapture`
     - `cargo test --lib load_or_init_hmm_params_with_numeric_artifact_prefers_artifact_when_valid -- --nocapture`
     - `cargo test --lib load_or_init_hmm_params_with_numeric_artifact_falls_back_to_saved_state_when_artifact_invalid -- --nocapture`
+- [x] Execute `Workstream 2 / Slice 2`: add the first bounded HMM numeric outer-loop trainer harness.
+  - landed `scripts/research/hmm_numeric_trainer.py`
+    - stdlib-only
+    - bounded candidate grid
+    - emits:
+      - `hmm_numeric_trainer_artifact.json`
+      - `candidate_history.jsonl`
+      - `replay_summary.json`
+    - writes only into caller-supplied `/tmp/...` state dirs and output dirs
+    - evaluates candidates through existing `ict-engine analyze` and `mece_recovery_artifact.json`
+  - trainer objective is explicitly composed from repo surfaces:
+    - `accuracy`
+    - `macro_f1`
+    - execution-validity coverage derived from `execution_validity_summary`
+    - rollout segment quality derived from persisted `segments`
+  - real `/tmp` proof completed at:
+    - state root: `/tmp/ict-engine-hmm-trainer`
+    - artifact dir: `/tmp/ict-engine-hmm-trainer-out`
+  - verification:
+    - `python3 -m py_compile scripts/research/hmm_numeric_trainer.py`
+    - `python3 scripts/research/hmm_numeric_trainer.py --symbol DEMO --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-hmm-trainer --out /tmp/ict-engine-hmm-trainer-out/hmm_numeric_trainer_artifact.json --bin ./target/debug/ict-engine`
+    - output artifacts observed:
+      - `/tmp/ict-engine-hmm-trainer-out/hmm_numeric_trainer_artifact.json`
+      - `/tmp/ict-engine-hmm-trainer-out/candidate_history.jsonl`
+      - `/tmp/ict-engine-hmm-trainer-out/replay_summary.json`
 
 ### Next
 
-- [ ] Execute `Workstream 2 / Slice 2`: add the first bounded HMM numeric outer-loop trainer harness.
 - [ ] Decide whether `posterior_temperature` and any gate thresholds should remain schema-only for now or gain a first runtime consumer in the next HMM slice.
+- [ ] Execute `Workstream 3 / Slice 1`: add a BBN structure-learning export contract and candidate artifact schema.
 - [ ] Before opening `Workstream 3`, audit whether `Workstream 1` still needs one small follow-up for explicit artifact calibration/mature-row data quality or whether the remaining gaps are intentionally deferred to better labels/history.
 
 ### Not Yet
 
-- [ ] Execute `Workstream 3 / Slice 1`: add a BBN structure-learning export contract and candidate artifact schema.
 - [ ] Execute `Workstream 3 / Slice 2`: add constrained BBN candidate import/review wiring without turning runtime into an online learner.
 
 ## Workstream 1: Structural Path Ranking Explicit Artifact
@@ -339,17 +363,17 @@ cargo test --lib blocks_below_threshold
 
 ### Slice 2: Offline Trainer Harness
 
-- [ ] Add `scripts/research/hmm_numeric_trainer.py`.
-- [ ] The trainer must:
+- [x] Add `scripts/research/hmm_numeric_trainer.py`.
+- [x] The trainer must:
   - run only on explicit paths and explicit `/tmp/...` state dirs
   - log candidate history separately from the best artifact
   - never write repo-default `state/`
-- [ ] The trainer objective must be composed from existing repo surfaces:
+- [x] The trainer objective must be composed from existing repo surfaces:
   - `accuracy`
   - `macro_f1`
   - `execution_validity_histogram`
   - rollout segment quality
-- [ ] Persist:
+- [x] Persist:
   - `hmm_numeric_trainer_artifact.json`
   - `candidate_history.jsonl`
   - `replay_summary.json`
