@@ -619,6 +619,143 @@ For cross-market families, add:
 - The first post-import re-check did not materially improve execution-tree quality yet.
 - Therefore Family A should remain the active quality-iteration lane rather than being treated as “finished”.
 
+### 2026-05-06 Slice 5: Family A round 2 strategy selection
+
+**Execution**
+- injected an NQ-specific structure candidate into the synthetic-profile managed seed source:
+  - `TomacNQ_KillzoneBreakout`
+- reran the same public synthetic-profile loop:
+  - `./target/debug/ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-family-a-profile`
+  - `cd /tmp/ict-engine-family-a-profile/.deps/auto-quant && uv run --with ta-lib run_tomac.py`
+  - `uv run export_strategy_library.py --strategies-dir user_data/strategies_external --log run_tomac.log --config config.tomac.json --output strategy_library.json`
+  - `./target/debug/ict-engine auto-quant-results-import --symbol NQ --state-dir /tmp/ict-engine-family-a-profile --library /tmp/ict-engine-family-a-profile/.deps/auto-quant/strategy_library.json --log /tmp/ict-engine-family-a-profile/.deps/auto-quant/run_tomac.log`
+
+**Round 2 strategy results**
+- `TomacAggressiveBE`
+  - `sharpe=-0.274`
+  - `profit=-4.37%`
+  - `trade_count=18`
+- `TomacKillzoneBreakout`
+  - `sharpe=-0.0382`
+  - `profit=-1.51%`
+  - `trade_count=2`
+- `TomacNQ_KillzoneBreakout`
+  - `sharpe=0.668`
+  - `profit=11.29%`
+  - `trade_count=19`
+  - `win_rate=89.47%`
+  - `profit_factor=4.3778`
+- `TomacRRWinRate`
+  - `sharpe=-1.9872`
+  - `profit=-3.89%`
+  - `trade_count=2`
+
+**Import result**
+- latest library import improved to:
+  - `n_ok=4`
+  - `n_meta_invalid=0`
+  - `matched=4`
+  - `library_artifact_id=auto_quant_strategy_library_NQ_20260505T174324.219225000Z`
+
+**Focused prior-init re-check**
+- instead of applying all four strategies equally, ran a focused prior-init on the two stronger candidates:
+  - `./target/debug/ict-engine auto-quant-prior-init --symbol NQ --state-dir /tmp/ict-engine-family-a-profile --dry-run --strategies TomacNQ_KillzoneBreakout,TomacAggressiveBE`
+  - then applied with rollback + force:
+    - backup: `bbn_network.before_family_a_round2.json`
+    - `./target/debug/ict-engine auto-quant-prior-init --symbol NQ --state-dir /tmp/ict-engine-family-a-profile --strategies TomacAggressiveBE,TomacNQ_KillzoneBreakout --force`
+- focused prior-init moved the CPT row to:
+  - `final_probs=[0.8575458461538461, 0.0000020056980056980055, 0.14245214814814813]`
+- post-apply re-check:
+  - `./target/debug/ict-engine analyze --symbol NQ --data-htf /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-1d.2023plus.json --data-mtf /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-1h.2023plus.json --data-ltf /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-15m.2023plus.json --state-dir /tmp/ict-engine-family-a-profile --human`
+  - `./target/debug/ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-family-a-profile --human`
+
+**Result**
+- analyze improved only in comparability semantics:
+  - `Decision: Comparable run, but factor backlog remains`
+- but the core execution-tree output still remained:
+  - `Bull bias`
+  - `entry=medium`
+  - `gate=pass_neutralized`
+  - `quality=0.424`
+  - `Action: TUNE structure_ict`
+- workflow still points to the trimmed 15m path as the next research candidate
+
+**Outcome**
+- Family A now has one clearly positive structure/setup candidate on the new public surface: `TomacNQ_KillzoneBreakout`.
+- Even after selecting the stronger subset for prior-init, execution-tree quality did not move yet.
+- So the next Family A work should bias toward:
+  - structure-specific follow-up variants around the NQ killzone / breakout thesis
+  - broader market/timeframe expansion of that family
+  - not more retries of the clearly weak `TomacRRWinRate` branch
+
+### 2026-05-06 Slice 6: Family A NQ daily-bias fork and export-surface hardening
+
+**Execution**
+- forked a tighter structure-confirmation variant from the strongest current candidate:
+  - `TomacNQ_KillzoneBreakoutDailyBias`
+- reran the same synthetic-profile public loop after seeding the new candidate
+
+**Result**
+- round output after the fork:
+  - `TomacNQ_KillzoneBreakoutDailyBias`
+    - `sharpe=0.0`
+    - `profit=0.0%`
+    - `trade_count=0`
+  - interpretation:
+    - the extra daily-bias / ATR gate over-tightened the setup and produced no trades on this NQ slice
+- while running this slice, a real consumer-surface defect appeared:
+  - the synthetic profile’s generated `strategies_external/*.py` files initially placed `AUTO_QUANT_META` into a second top-level docstring, which caused:
+    - FreqTrade import warnings around `from __future__`
+    - then, after the first fix, manifest parse failures because `# END_AUTO_QUANT_META` was not on its own line
+- fixed the generation path so profile-materialized strategies now:
+  - preserve a single module docstring
+  - keep `from __future__` in a valid position
+  - emit a parseable `AUTO_QUANT_META` block
+
+**Verification**
+- reran:
+  - `./target/debug/ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-family-a-profile`
+  - `cd /tmp/ict-engine-family-a-profile/.deps/auto-quant && uv run --with ta-lib run_tomac.py`
+  - `uv run export_strategy_library.py --strategies-dir user_data/strategies_external --log run_tomac.log --config config.tomac.json --output strategy_library.json`
+- final export state after the hardening fix:
+  - `n_ok=5`
+  - `n_validation_errors=0`
+  - no remaining `from __future__ imports must occur` warnings in `run_tomac.log`
+
+**Outcome**
+- the daily-bias fork is currently weaker than the base NQ killzone candidate because it produced no trades.
+- the current best Family A candidate remains `TomacNQ_KillzoneBreakout`.
+- the profile surface itself is now materially more consumer-safe and export-stable.
+
+### 2026-05-06 Slice 7: Family A market-expansion proof on ES
+
+**Execution**
+- ran the same opt-in synthetic profile on a second major index future:
+  - `ICT_ENGINE_AUTO_QUANT_REPO_URL=/Users/thrill3r/Auto-Quant ICT_ENGINE_AUTO_QUANT_BRANCH=autoresearch/apr26 ./target/debug/ict-engine factor-research --symbol ES --data /Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-15m/es.continuous-15m.json --backend auto-quant --auto-quant-profile synthetic_ohlcv --state-dir /tmp/ict-engine-family-a-es-profile --human`
+- then completed the same closure steps:
+  - `./target/debug/ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-family-a-es-profile`
+  - `cd /tmp/ict-engine-family-a-es-profile/.deps/auto-quant && uv run --with ta-lib run_tomac.py`
+  - `uv run export_strategy_library.py --strategies-dir user_data/strategies_external --log run_tomac.log --config config.tomac.json --output strategy_library.json`
+  - `./target/debug/ict-engine auto-quant-results-import --symbol ES --state-dir /tmp/ict-engine-family-a-es-profile --library /tmp/ict-engine-family-a-es-profile/.deps/auto-quant/strategy_library.json --log /tmp/ict-engine-family-a-es-profile/.deps/auto-quant/run_tomac.log`
+
+**Result**
+- the same public synthetic profile successfully materialized:
+  - `ES/USD-1h.feather`
+  - `ES/USD-4h.feather`
+  - `ES/USD-1d.feather`
+- import closure succeeded:
+  - `n_ok=3`
+  - `n_meta_invalid=0`
+  - `matched=3`
+  - `library_artifact_id=auto_quant_strategy_library_ES_20260505T175426.389082000Z`
+
+**Outcome**
+- the synthetic-profile Family A surface is no longer an NQ-only special case.
+- it is now proven on at least two futures-index markets:
+  - `NQ`
+  - `ES`
+- broader market coverage is still incomplete, but the product surface is now demonstrably reusable across major futures-index instruments.
+
 ## Current Todo Board
 
 ### Done
@@ -633,10 +770,14 @@ For cross-market families, add:
 - [x] Expose a dedicated public auxiliary/options research input for Family G.
 - [x] Expose an opt-in additive external runner profile for Family A and obtain the first real importable after-run artifact.
 - [x] Re-check execution tree after the first real Family A imported run.
+- [x] Run a second Family A iteration round and isolate the strongest current structure/setup candidate.
+- [x] Prove the synthetic Family A profile on a second major futures-index market (`ES`).
 
 ### Next
 
 - [ ] Because the first imported Family A re-check still says `TUNE structure_ict`, keep iterating Family A quality on the new public surface until execution-tree development actually moves.
+- [ ] Fork from `TomacNQ_KillzoneBreakout` rather than from the weaker generic branches, and test whether structure-specific variants can move `quality` or `gate_status`.
+- [ ] Expand the proven synthetic-profile market set beyond `NQ` and `ES` to other priority markets, and keep logging which markets still lack a real importable loop.
 - [ ] Use the new Family G auxiliary/options surface to run the first real `options_hedging` / dealer-positioning research slice rather than only proving the input contract.
 - [ ] Run Family B: Directionality / Persistence only after Family A is stable.
 - [ ] Run Family C: Cross-Market Confirmation once paired data exists.

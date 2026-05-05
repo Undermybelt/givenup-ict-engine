@@ -316,9 +316,10 @@ fn write_strategy_with_meta(
             "GC" | "CL" => "futures_commodity",
             _ => "synthetic_ohlcv",
         };
-        format!(
-            "\"\"\"\n# AUTO_QUANT_META v1\nStrategy:        {strategy}\nMutation_id:     synthetic-ohlcv-{strategy}\nBase_factor:     {base_factor}\nHypothesis:      {hypothesis}\nParadigm:        {paradigm}\nExpected_regime: {expected_regime}\nFactors_used:    {base_factor}\nParent:          {parent}\nAsset_class:     {asset_class}\nStatus:          {status}\nCreated:         {created}\n# END_AUTO_QUANT_META\n\"\"\"\n\n{source}"
-        )
+        let meta_block = format!(
+            "# AUTO_QUANT_META v1\nStrategy:        {strategy}\nMutation_id:     synthetic-ohlcv-{strategy}\nBase_factor:     {base_factor}\nHypothesis:      {hypothesis}\nParadigm:        {paradigm}\nExpected_regime: {expected_regime}\nFactors_used:    {base_factor}\nParent:          {parent}\nAsset_class:     {asset_class}\nStatus:          {status}\nCreated:         {created}\n# END_AUTO_QUANT_META"
+        );
+        inject_auto_quant_meta_into_docstring(&source, &meta_block)
     };
     fs::write(target_path, rendered)
         .with_context(|| format!("writing exportable strategy {}", target_path.display()))
@@ -358,4 +359,27 @@ fn sanitize_auto_quant_meta_value(raw: &str) -> String {
         .split_whitespace()
         .collect::<Vec<_>>()
         .join(" ")
+}
+
+fn inject_auto_quant_meta_into_docstring(source: &str, meta_block: &str) -> String {
+    for delimiter in ["\"\"\"", "'''"] {
+        if source.starts_with(delimiter) {
+            let rest = &source[delimiter.len()..];
+            if let Some(end) = rest.find(delimiter) {
+                let doc = &rest[..end];
+                let suffix = &rest[end..];
+                let mut merged = String::new();
+                merged.push_str(delimiter);
+                merged.push_str(doc.trim_end());
+                if !doc.trim_end().is_empty() {
+                    merged.push_str("\n\n");
+                }
+                merged.push_str(meta_block);
+                merged.push('\n');
+                merged.push_str(suffix);
+                return merged;
+            }
+        }
+    }
+    format!("\"\"\"\n{meta_block}\n\"\"\"\n\n{source}")
 }
