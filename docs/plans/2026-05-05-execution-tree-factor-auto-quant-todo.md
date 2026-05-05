@@ -1523,6 +1523,39 @@ For cross-market families, add:
   - an already captured options snapshot / auxiliary evidence file, or
   - a network path that can actually reach the required options providers
 
+### 2026-05-06 Slice 26: Family G historical-state salvage audit
+
+**Execution**
+- audited the existing repo-local historical live states under:
+  - `state/GC`
+  - `state/CL`
+  - `state/YM`
+- inspected:
+  - `workflow_snapshot.json`
+  - `analyze_runs.json`
+  - `artifact_ledger.json`
+  - persisted `analyze_live_*` candle snapshots
+
+**Result**
+- historical live states do show materially higher `options_hedging` family scores than the current `NQ` no-code loop:
+  - `GC`
+    - `family_score_map.options_hedging = 0.5084220010906515`
+  - `CL`
+    - `family_score_map.options_hedging = 0.522982694279153`
+  - `YM`
+    - `family_score_map.options_hedging = 0.2575`
+- however, those historical states do **not** expose a reusable raw `AuxiliaryMarketEvidence` object in a simple persisted JSON surface:
+  - no recoverable `supporting.auxiliary` payload was found in `analyze_runs.json`
+  - no standalone auxiliary artifact was found in `artifact_ledger.json`
+  - the persisted `analyze_live_*` files are candle snapshots (`spot`, `ltf`, `m5`, `m1`, `h4`, `htf`), not the options/auxiliary object needed by the new `--auxiliary-evidence` surface
+
+**Outcome**
+- the repo already contains evidence that `Family G` can matter on markets like `GC` and `CL`.
+- but that evidence is not yet persisted in a format the new public `--auxiliary-evidence` input can directly replay.
+- therefore the current practical blocker is narrower and more precise:
+  - not “no data ever existed”
+  - but “no reusable persisted auxiliary/options artifact is currently available to feed back into factor-research without either a new live fetch or code work”
+
 ## Current Todo Board
 
 ### Done
@@ -1564,7 +1597,7 @@ For cross-market families, add:
 - [x] Decide that `Family C` should be deprioritized for now, since both `1h` and `5m` paired-market candidates are positive but clearly weaker than the stronger baseline candidates.
 - [x] Decide that `Family B` should be actively deprioritized in the todo board now that its first real slice is weaker than `Family A` and still leaves execution-tree unchanged.
 - [ ] Decide whether the objective should stay in “no-code iteration” mode at all, now that runtime evidence shows prior-init-only loops are not moving the execution-tree inputs.
-- [ ] Use a reachable provider path or existing captured auxiliary evidence to run the first real Family G `options_hedging` / dealer-positioning research slice rather than only proving the input contract.
+- [ ] Use a reachable provider path, or a caller-supplied reusable `AuxiliaryMarketEvidence` / `supporting.auxiliary` file, to run the first real Family G `options_hedging` / dealer-positioning research slice rather than only proving the input contract.
 - [ ] Run Family B: Directionality / Persistence only after Family A is stable.
 - [ ] Run Family C: Cross-Market Confirmation once paired data exists.
 - [ ] Run Family D whenever `wait_for_reversion` is the persistent blocker.
@@ -1583,7 +1616,8 @@ For cross-market families, add:
 
 - [ ] Family G Options / Dealer Positioning data quality for the chosen market slice
   - blocker: the new public input surface exists, but this environment currently cannot reach the needed live/options providers (`Yahoo 403`, `Binance SSLError`, `Bybit SSLError`) and has no running local live backend
-  - acceptable temporary state: keep the new surface active, then treat provider reachability / captured evidence availability as the next gating issue rather than CLI absence
+  - blocker: historical repo-local live states show strong `options_hedging` scores, but they do not persist a reusable raw `AuxiliaryMarketEvidence` artifact that can be replayed into `factor-research --auxiliary-evidence`
+  - acceptable temporary state: keep the new surface active, then treat provider reachability / reusable auxiliary artifact availability as the next gating issue rather than CLI absence
 - [ ] No-code execution-tree plateau
   - blocker: current no-code Auto-Quant loops can change imported `trade_outcome` priors, but the active `analyze` / execution-tree path is still dominated by unchanged upstream evidence surfaces (`factor_alignment`, `factor_uncertainty`, `liquidity_context`, `execution_readiness`)
   - acceptable temporary state: stop assuming “more of the same no-code loops” will move the tree, and only continue no-code work when it brings new upstream evidence or new market/timeframe proof
