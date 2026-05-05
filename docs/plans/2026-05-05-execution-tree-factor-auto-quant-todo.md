@@ -1240,6 +1240,111 @@ For cross-market families, add:
   - Auto-Quant has produced better trade candidates
   - yet the missing execution-tree ingredient is still upstream of raw backtest quality, or depends on evidence dimensions not yet covered by these forks
 
+### 2026-05-06 Slice 21: Family C NQ+ES cross-market confirmation at 1h
+
+**Execution**
+- created a fresh isolated state dir:
+  - `/tmp/ict-engine-family-c-nq-es-profile`
+- used the public synthetic profile on `NQ`
+- manually added into the same external workspace:
+  - `ES/USD` `1h/4h/1d` feather files
+  - a new cross-market strategy `TomacNQEsSmtBreakout`
+  - config whitelist updated to include:
+    - `NQ/USD`
+    - `ES/USD`
+- completed closure:
+  - `uv run --with ta-lib run_tomac.py`
+  - `uv run export_strategy_library.py --strategies-dir user_data/strategies_external --log run_tomac_family_c.log --config config.tomac.json --output strategy_library_family_c.json`
+  - `./target/debug/ict-engine auto-quant-results-import --symbol NQ --state-dir /tmp/ict-engine-family-c-nq-es-profile --library /tmp/ict-engine-family-c-nq-es-profile/.deps/auto-quant/strategy_library_family_c.json --log /tmp/ict-engine-family-c-nq-es-profile/.deps/auto-quant/run_tomac_family_c.log`
+
+**Result**
+- Family C `1h` strategy metrics:
+  - `TomacAggressiveBE`
+    - `sharpe=-0.1948`
+    - `profit=-7.64%`
+    - `trade_count=78`
+  - `TomacKillzoneBreakout`
+    - `sharpe=0.1956`
+    - `profit=18.38%`
+    - `trade_count=61`
+    - `win_rate=63.9344%`
+    - `profit_factor=1.4912`
+  - `TomacNQEsSmtBreakout`
+    - `sharpe=0.0665`
+    - `profit=3.77%`
+    - `trade_count=46`
+    - `win_rate=58.6957%`
+    - `profit_factor=1.1772`
+  - `TomacRRWinRate`
+    - `sharpe=0.134`
+    - `profit=8.81%`
+    - `trade_count=28`
+    - `win_rate=67.8571%`
+    - `profit_factor=1.773`
+- import closure succeeded:
+  - `n_ok=4`
+  - `n_meta_invalid=0`
+  - `matched=4`
+  - `library_artifact_id=auto_quant_strategy_library_NQ_20260505T192601.556001000Z`
+- focused prior-init dry-run on `TomacNQEsSmtBreakout`:
+  - `final_probs=[0.6481416296296296, 0.000003259259259259259, 0.3518551111111111]`
+
+**Outcome**
+- this is the first real `Family C` auto-quant slice using paired-market confirmation.
+- the cross-market confirmation candidate is positive, but weaker than the better existing `NQ` candidates on the same horizon.
+
+### 2026-05-06 Slice 22: Family C NQ+ES cross-market confirmation at 5m
+
+**Execution**
+- created a fresh isolated state dir:
+  - `/tmp/ict-engine-family-c-nq-es-5m-profile`
+- used the public synthetic profile on `NQ 5m`
+- then manually added into the same external workspace:
+  - `NQ/USD` `5m/1h/4h/1d`
+  - `ES/USD` `5m/1h/4h/1d`
+  - a new cross-market strategy `TomacNQEsSmtBreakout5m`
+  - config whitelist updated to include:
+    - `NQ/USD`
+    - `ES/USD`
+- completed closure:
+  - `uv run --with ta-lib run_tomac.py`
+  - `uv run export_strategy_library.py --strategies-dir user_data/strategies_external --log run_tomac_family_c_5m.log --config config.tomac.json --output strategy_library_family_c_5m.json`
+  - `./target/debug/ict-engine auto-quant-results-import --symbol NQ --state-dir /tmp/ict-engine-family-c-nq-es-5m-profile --library /tmp/ict-engine-family-c-nq-es-5m-profile/.deps/auto-quant/strategy_library_family_c_5m.json --log /tmp/ict-engine-family-c-nq-es-5m-profile/.deps/auto-quant/run_tomac_family_c_5m.log`
+
+**Result**
+- Family C `5m` strategy metrics:
+  - `TomacAggressiveBE`
+    - `sharpe=-0.1538`
+    - `profit=-4.95%`
+    - `trade_count=216`
+  - `TomacKillzoneBreakout`
+    - `sharpe=0.4211`
+    - `profit=42.18%`
+    - `trade_count=67`
+    - `win_rate=70.1493%`
+    - `profit_factor=2.0301`
+  - `TomacNQEsSmtBreakout5m`
+    - `sharpe=0.0315`
+    - `profit=1.57%`
+    - `trade_count=26`
+    - `win_rate=61.5385%`
+    - `profit_factor=1.1621`
+  - `TomacRRWinRate`
+    - `sharpe=-0.3842`
+    - `profit=-10.83%`
+    - `trade_count=163`
+- import closure succeeded:
+  - `n_ok=4`
+  - `n_meta_invalid=0`
+  - `matched=4`
+  - `library_artifact_id=auto_quant_strategy_library_NQ_20260505T193100.726656000Z`
+- focused prior-init dry-run on `TomacNQEsSmtBreakout5m`:
+  - `final_probs=[0.705872, 0.000005176470588235294, 0.29412282352941177]`
+
+**Outcome**
+- `Family C` now has both `1h` and `5m` real slices.
+- but the cross-market candidates remain clearly weaker than the stronger existing `NQ` baseline candidates.
+
 ### 2026-05-06 Slice 10: Family G real-data acquisition attempts
 
 **Execution**
@@ -1292,6 +1397,7 @@ For cross-market families, add:
 - [x] Prove real `15m` and `1m` synthetic-profile execution slices end-to-end on `NQ`.
 - [x] Verify on isolated re-check states that the current `1dRegime` and `5m` NQ forks still do not move execution-tree `quality` or `gate_status`.
 - [x] Produce a stronger `NQ` 1h structure-quality fork (`TomacNQ_KillzoneBreakoutDisplacement`) and verify that it still does not move execution-tree `quality` or `gate_status`.
+- [x] Run the first real `Family C` paired-market auto-quant slices (`1h` and `5m`) using `NQ + ES`.
 
 ### Next
 
@@ -1303,6 +1409,7 @@ For cross-market families, add:
 - [ ] Decide whether `15m` and `1m` need more Family A forks, or whether current evidence is already enough to deprioritize them behind the stronger `1h` and `5m` NQ lanes.
 - [ ] Stop spending cycles on `1dRegime`, `15m`, or `1m` NQ forks unless a new hypothesis explains why they should move `quality` rather than just produce a positive backtest.
 - [ ] Decide whether `TomacNQ_KillzoneBreakoutDisplacement` should replace `TomacNQ_KillzoneBreakout` as the default `NQ` Family A candidate for future no-code loops, or whether the extra displacement filter is only a backtest improvement without execution-tree value.
+- [ ] Decide whether `Family C` deserves any more no-code auto-quant forks at all, since both `1h` and `5m` paired-market candidates are positive but clearly weaker than the stronger baseline candidates.
 - [ ] Use a reachable provider path or existing captured auxiliary evidence to run the first real Family G `options_hedging` / dealer-positioning research slice rather than only proving the input contract.
 - [ ] Run Family B: Directionality / Persistence only after Family A is stable.
 - [ ] Run Family C: Cross-Market Confirmation once paired data exists.
