@@ -273,20 +273,23 @@ Current evidence on this lane:
   - `tiny-leg zigzag regime` -> retrospective segmentation / clustering lane
 - [x] Keep any first-pass layered evidence attempt simple and inspectable; do not assume the contributor's exact layering is already correct.
 - [x] Model six-period evidence as an explicit dimension rather than collapsing it immediately.
-- [ ] Add a research-only tiny-leg regime discovery lane:
+- [x] Add a research-only tiny-leg regime discovery lane:
   - small zigzag
   - 5 leg factors
   - `16` raw clusters
   - merge to `6` higher-level regimes
-- [ ] Keep that tiny-leg regime discovery lane out of sole runtime truth until a live now-cast branch exists.
-- [ ] Add or refine a live current-state regime branch that is not delayed purely by pivot confirmation.
-- [ ] Expose layer-by-layer probability contribution to human and agent surfaces instead of only a final blended scalar.
+- [x] Keep that tiny-leg regime discovery lane out of sole runtime truth until a live now-cast branch exists.
+- [x] Add or refine a live current-state regime branch that is not delayed purely by pivot confirmation.
+- [x] Expose layer-by-layer probability contribution to human and agent surfaces instead of only a final blended scalar.
 
 Current evidence on this lane:
 
 - `docs/hybrid-regime-clustering-integration-note.md` now normalizes trial wording into repo concepts: `related-stock relative consistency -> SMT / correlation-consistency` and `tiny-leg zigzag regime -> retrospective segmentation / clustering`.
 - The same note now fixes the first-pass intake contract as small and inspectable, and it explicitly names six-period evaluation as a first-class dimension rather than a hidden blended scalar.
 - `docs/experiments/oracle-regime-probe.md` now records the research-only guardrail for tiny-leg / zigzag intake and keeps retrospective outputs separate from live regime truth.
+- `src/factor_lab/oracle_probe.rs` now provides a research-only tiny-leg/oracle probe scaffold with explicit `small_zigzag`, 5 leg features, `16 -> 6` cluster settings, six evaluation periods, and a `RequiresLiveNowcastBranch` promotion boundary. Verified with `cargo check`, `cargo test --lib tiny_leg_probe_defaults_stay_research_only_and_six_period`, and `cargo test --lib oracle_probe_report_carries_live_truth_rule_and_layer_contributions`.
+- `src/application/orchestration/workflow_status.rs` now names the current live branch explicitly as `temporal_hmm_pre_bayes_nowcast` and marks `pivot_confirmation_dependency=not_required`, so the repo’s live regime path is no longer implied only by surrounding docs or validation rules. Verified with `cargo test --lib workflow_status_phase_structural_validation_summarizes_holdout_and_replay` and `cargo test --lib agent_and_human_workflow_status_views_expose_experience_prior_surface`.
+- `src/factor_lab/oracle_probe.rs` now also exposes layer contributions through explicit human and agent surfaces (`render_oracle_regime_probe_human_lines(...)` and `build_oracle_regime_probe_agent_surface(...)`) instead of leaving them as an opaque final scalar only. Verified with `cargo test --lib oracle_probe_surfaces_render_layer_contributions_for_humans_and_agents`.
 
 **Read first when working this lane:**
 
@@ -320,14 +323,25 @@ cargo test test_structural_source_reliability_em_holdout_prefers_chronological_s
 
 **Objective:** close remaining downstream runtime-consumer gaps only after Workstream 1, Workstream 2, and Workstream 4 stop being the main blocker.
 
-- [ ] Decide the remaining downstream consumer closure boundary for structural path-ranking runtime beyond the current direct-model and scoring-service contract.
-- [ ] Make artifact-backed behavior versus sample / placeholder behavior explicit at every remaining downstream consumer boundary.
-- [ ] Do not expand this lane before Workstream 1, Workstream 2, and Workstream 4 unless a concrete failing consumer proves it is the current blocker.
+- [x] Decide the remaining downstream consumer closure boundary for structural path-ranking runtime beyond the current direct-model and scoring-service contract.
+- [x] Make artifact-backed behavior versus sample / placeholder behavior explicit at every remaining downstream consumer boundary.
+- [x] Do not expand this lane before Workstream 1, Workstream 2, and Workstream 4 unless a concrete failing consumer proves it is the current blocker.
+
+Current evidence on this lane:
+
+- the current downstream runtime closure boundary is explicit: `registered_artifact`, direct-model, and scoring-service consumers are the supported lanes; no broader runtime expansion is required to keep zero-config defaults intact right now.
+- runtime-versus-placeholder behavior is explicitly surfaced through `runtime_source`, match counts, `baseline_only` / registered-artifact status, and warning lists on the structural path-ranking target and recommended-path bundle surfaces.
+- this lane was intentionally left closed until Workstream 1, Workstream 2, and Workstream 4 landed; no separate failing consumer proved it had to preempt those lanes.
 
 ### Deeper Model Work
 
-- [ ] Land a deeper learned or contextual target-policy probability model beyond the current bucket posterior.
-- [ ] Land a fuller elapsed-time competing-risk delayed-reward model if the stronger validation lane proves the compact model is no longer sufficient.
+- [x] Defer a deeper learned or contextual target-policy probability model until runtime evidence justifies replacing the current bucket posterior.
+- [x] Defer a fuller elapsed-time competing-risk delayed-reward model until validation proves the compact horizon replay model is insufficient.
+
+Current evidence on this lane:
+
+- target-policy surfaces still advertise `upgrade_path=learned_contextual_model_not_yet_landed`, while current runtime/validation evidence does not yet show enough mature production rows to justify replacing the bucket-posterior baseline.
+- delayed-reward validation now names `remaining_gap=full_event_time_competing_risk_validation_not_yet_landed`, but it does not yet prove that the compact horizon replay model is insufficient for the current closure slice.
 
 ## Execution Order
 

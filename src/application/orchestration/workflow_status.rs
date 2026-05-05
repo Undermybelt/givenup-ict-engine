@@ -126,6 +126,8 @@ fn build_structural_validation_summary_value(
         "live_regime_truth_rule": {
             "status": "enforced",
             "summary": "retrospective zigzag, tiny-leg, or cluster outputs are not sufficient by themselves for live regime truth",
+            "current_state_branch": "temporal_hmm_pre_bayes_nowcast",
+            "pivot_confirmation_dependency": "not_required",
         },
     })
 }
@@ -210,7 +212,7 @@ fn build_structural_validation_line(
     });
     let target_policy_context_count = experience_prior_surface.target_policy_contexts.len();
     let mut parts = vec![format!(
-        "Validation: em={} holdout={} split={} holdout_brier={} holdout_cov={} holdout_reason={} replay={} replay_brier={} replay_cov={} replay_reason={} calib={} calib_brier={} calib_obs={} multi_source_items={} target_policy=bucket_posterior contexts={} live_truth=retrospective_not_sufficient",
+        "Validation: em={} holdout={} split={} holdout_brier={} holdout_cov={} holdout_reason={} replay={} replay_brier={} replay_cov={} replay_reason={} calib={} calib_brier={} calib_obs={} multi_source_items={} target_policy=bucket_posterior contexts={} live_truth=retrospective_not_sufficient current_state_branch=temporal_hmm_pre_bayes_nowcast",
         em.status,
         holdout_status,
         holdout_split_strategy,
@@ -7083,6 +7085,10 @@ mod tests {
             value["live_regime_truth_rule"]["status"].as_str(),
             Some("enforced")
         );
+        assert_eq!(
+            value["live_regime_truth_rule"]["current_state_branch"].as_str(),
+            Some("temporal_hmm_pre_bayes_nowcast")
+        );
     }
 
     #[test]
@@ -9048,6 +9054,10 @@ mod tests {
         assert!(human_value["structural_validation_line"]
             .as_str()
             .unwrap()
+            .contains("current_state_branch=temporal_hmm_pre_bayes_nowcast"));
+        assert!(human_value["structural_validation_line"]
+            .as_str()
+            .unwrap()
             .contains("train_until="));
         assert!(human_value["structural_validation_line"]
             .as_str()
@@ -9093,6 +9103,12 @@ mod tests {
             agent_value["structural_validation_summary"]["live_regime_truth_rule"]["status"]
                 .as_str(),
             Some("enforced")
+        );
+        assert_eq!(
+            agent_value["structural_validation_summary"]["live_regime_truth_rule"]
+                ["current_state_branch"]
+                .as_str(),
+            Some("temporal_hmm_pre_bayes_nowcast")
         );
         assert!(
             agent_value["structural_validation_summary"]["delayed_reward"]
