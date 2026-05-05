@@ -17,7 +17,9 @@ use crate::belief_core::source_reliability::{
 use crate::types::{Direction, FactorIC, Regime, RegimeProbs};
 
 #[cfg(test)]
-use crate::belief_core::changepoint_gate::structural_duration_break_hazard;
+use crate::belief_core::changepoint_gate::{
+    structural_duration_break_hazard, structural_node_bocpd_recursive_run_length_fit,
+};
 
 const STRUCTURAL_IPS_WEIGHT_CLIP: f64 = 5.0;
 const STRUCTURAL_SOURCE_CONFUSION_LAPLACE_ALPHA: f64 = 1.0;
@@ -7660,7 +7662,21 @@ mod tests {
         assert!((trend.bocpd_run_length_observation_mass - 1.85).abs() < 1e-9);
         assert!(trend.bocpd_recursive_reset_probability > trend.bocpd_break_probability);
         assert_eq!(trend.bocpd_recursive_run_length_mode, 0);
-        assert!(trend.bocpd_recursive_run_length_mode_probability > 0.5);
+        let expected_recursive_fit = structural_node_bocpd_recursive_run_length_fit(
+            &trend.duration_distribution,
+            trend.bocpd_evidence_weight,
+            trend.bocpd_break_probability,
+        );
+        assert_eq!(
+            trend.bocpd_recursive_run_length_mode,
+            expected_recursive_fit.run_length_mode
+        );
+        assert!(
+            (trend.bocpd_recursive_run_length_mode_probability
+                - expected_recursive_fit.run_length_mode_probability)
+                .abs()
+                < 1e-9
+        );
         assert!(trend.bocpd_recursive_run_length_expected_value > 0.0);
         assert!(trend.bocpd_recursive_run_length_entropy > 0.0);
         assert!(trend.bocpd_sequence_change_intensity > 0.0);

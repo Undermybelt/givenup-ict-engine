@@ -74,12 +74,19 @@
   - `analyze-live --help` advertises `--human`, and `analyze-live --human` produces a concise summary
   - live historical-data handoff keeps distinct labels (`[ltf]`, `[mtf]`, `[spot]`) after path redaction
   - Auto-Quant handoff/workflow guidance now recommends `ict-engine auto-quant-prepare --state-dir ...`
+- [x] Lib baseline follow-up:
+  - `belief_core::beta_dirichlet_update::tests::weighted_seed_update_matches_structural_outcome_heuristic`
+    - fixed by aligning the test to the current explicit invalidated pseudo-count weight table instead of the stale older expectation
+  - `state::types::tests::test_structural_prior_seed_rebuilds_node_duration_priors`
+    - fixed by aligning the delegating-layer test with the canonical BOCPD helper in `src/belief_core/changepoint_gate.rs` after the owner move
+  - verification:
+    - `cargo test --lib belief_core::beta_dirichlet_update::tests::weighted_seed_update_matches_structural_outcome_heuristic -- --nocapture`
+    - `cargo test --lib state::types::tests::test_structural_prior_seed_rebuilds_node_duration_priors -- --nocapture`
+    - `cargo test --lib`
 
 ### Next
 
-- [ ] Optional follow-up, not part of this UX bug set:
-  - investigate the existing unrelated lib-test baseline failures currently still present in `belief_core::beta_dirichlet_update::tests::weighted_seed_update_matches_structural_outcome_heuristic`
-  - investigate the existing unrelated lib-test baseline failure in `state::types::tests::test_structural_prior_seed_rebuilds_node_duration_priors`
+- [ ] Additional product/runtime work only if a new slice is opened.
 
 ### Not Yet
 

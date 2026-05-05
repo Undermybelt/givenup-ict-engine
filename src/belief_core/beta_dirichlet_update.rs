@@ -128,7 +128,8 @@ pub fn dirichlet_component_mean(component_mass: f64, total_mass: f64) -> f64 {
 #[cfg(test)]
 mod tests {
     use super::{
-        beta_posterior_lower_bound, beta_posterior_mean, dirichlet_component_mean,
+        beta_posterior_lower_bound, beta_posterior_mean, beta_update_factor,
+        dirichlet_component_mean,
         weighted_seed_beta_update, weighted_success_credit_beta_update,
     };
 
@@ -143,9 +144,12 @@ mod tests {
     #[test]
     fn weighted_seed_update_matches_structural_outcome_heuristic() {
         let update = weighted_seed_beta_update(3, 1, 0, 1, 1, 0, 0.75, 0.5, 1.0);
+        let expected_factor = beta_update_factor(0.75, 0.5, 1.0);
+        let expected_success_mass = expected_factor * (1.0 + 0.5);
+        let expected_failure_mass = expected_factor * (0.5 + 1.25);
         assert!((update.observation_mass - 1.125).abs() < 1e-9);
-        assert!((update.success_mass - 0.5625).abs() < 1e-9);
-        assert!((update.failure_mass - 0.9375).abs() < 1e-9);
+        assert!((update.success_mass - expected_success_mass).abs() < 1e-9);
+        assert!((update.failure_mass - expected_failure_mass).abs() < 1e-9);
     }
 
     #[test]
