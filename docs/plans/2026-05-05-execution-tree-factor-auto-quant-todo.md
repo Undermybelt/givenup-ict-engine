@@ -1556,6 +1556,28 @@ For cross-market families, add:
   - not “no data ever existed”
   - but “no reusable persisted auxiliary/options artifact is currently available to feed back into factor-research without either a new live fetch or code work”
 
+### 2026-05-06 Slice 27: Family G current-environment live retry check
+
+**Execution**
+- retried `analyze-live` directly on two markets that already had historical repo-local live state from earlier successful runs:
+  - `./target/debug/ict-engine analyze-live --symbol GC --state-dir /tmp/ict-engine-family-g-gc-live`
+  - `./target/debug/ict-engine analyze-live --symbol CL --state-dir /tmp/ict-engine-family-g-cl-live`
+
+**Result**
+- both retries now fail on the same upstream Yahoo path used by the current zero-config live runtime:
+  - `GC=F`
+    - `HTTP status client error (403 Forbidden)`
+  - `CL=F`
+    - `HTTP status client error (403 Forbidden)`
+
+**Outcome**
+- this confirms the current `Family G` blocker is not just `NQ`-specific.
+- in the present environment, even historically successful `GC` / `CL` zero-config live paths are now unavailable.
+- therefore the remaining no-code path for `Family G` genuinely requires one of:
+  - a caller-supplied reusable auxiliary/options artifact
+  - a working local live backend other than the current zero-config path
+  - restored provider reachability
+
 ## Current Todo Board
 
 ### Done
