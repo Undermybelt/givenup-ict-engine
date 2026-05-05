@@ -973,6 +973,72 @@ For cross-market families, add:
   - preparing or proving `1w`
   - preparing or proving `1M`
 
+### 2026-05-06 Slice 16: Family A NQ 5m synthetic-profile probe
+
+**Execution**
+- created a fresh isolated state dir:
+  - `/tmp/ict-engine-family-a-nq-5m-profile`
+- used the public synthetic profile with the existing cleaned `5m` NQ source:
+  - `./target/debug/ict-engine factor-research --symbol NQ --data /Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-5m/nq.continuous-5m.json --backend auto-quant --auto-quant-profile synthetic_ohlcv --state-dir /tmp/ict-engine-family-a-nq-5m-profile --human`
+- then manually expanded the profile workspace to a real `5m` base:
+  - generated:
+    - `NQ_USD-5m.feather`
+    - `NQ_USD-1h.feather`
+    - `NQ_USD-4h.feather`
+    - `NQ_USD-1d.feather`
+  - set `config.tomac.json` timeframe to `5m`
+  - added a dedicated `TomacNQKillzoneBreakout5m` strategy using:
+    - `5m` base
+    - `1h` informative context
+    - `4h` informative context
+- completed closure:
+  - `uv run --with ta-lib run_tomac.py`
+  - `uv run export_strategy_library.py --strategies-dir user_data/strategies_external --log run_tomac_5m.log --config config.tomac.json --output strategy_library_5m.json`
+  - `./target/debug/ict-engine auto-quant-results-import --symbol NQ --state-dir /tmp/ict-engine-family-a-nq-5m-profile --library /tmp/ict-engine-family-a-nq-5m-profile/.deps/auto-quant/strategy_library_5m.json --log /tmp/ict-engine-family-a-nq-5m-profile/.deps/auto-quant/run_tomac_5m.log`
+
+**Result**
+- 5m-base strategy metrics:
+  - `TomacAggressiveBE`
+    - `sharpe=-0.49`
+    - `profit=-4.95%`
+    - `trade_count=216`
+  - `TomacKillzoneBreakout`
+    - `sharpe=0.4291`
+    - `profit=11.5%`
+    - `trade_count=37`
+    - `win_rate=64.8649%`
+    - `profit_factor=1.5278`
+  - `TomacNQKillzoneBreakout5m`
+    - `sharpe=0.4568`
+    - `profit=7.17%`
+    - `trade_count=30`
+    - `win_rate=76.6667%`
+    - `profit_factor=1.7932`
+  - `TomacRRWinRate`
+    - `sharpe=-0.0344`
+    - `profit=-1.16%`
+    - `trade_count=3`
+- import closure succeeded:
+  - `n_ok=4`
+  - `n_meta_invalid=0`
+  - `matched=4`
+  - `library_artifact_id=auto_quant_strategy_library_NQ_20260505T184132.711258000Z`
+- focused prior-init dry-run on the new 5m candidate:
+  - `./target/debug/ict-engine auto-quant-prior-init --symbol NQ --state-dir /tmp/ict-engine-family-a-nq-5m-profile --dry-run --strategies TomacNQKillzoneBreakout5m`
+  - result:
+    - `final_probs=[0.8157802105263158, 0.000004631578947368421, 0.18421515789473683]`
+
+**Outcome**
+- this is the first real proof that the public synthetic profile can be exercised at `5m` base, not only `1h`.
+- the 5m candidate is positive, but it is still weaker than the current best `1h` NQ candidate:
+  - `TomacNQ_KillzoneBreakout`
+    - `sharpe=0.668`
+    - `profit=11.29%`
+  - `TomacNQKillzoneBreakout5m`
+    - `sharpe=0.4568`
+    - `profit=7.17%`
+- therefore `5m` is now a proven execution lane, but not yet the dominant `NQ` Family A candidate.
+
 ### 2026-05-06 Slice 10: Family G real-data acquisition attempts
 
 **Execution**
@@ -1021,6 +1087,7 @@ For cross-market families, add:
 - [x] Verify that the strongest current `NQ` candidate does not automatically generalize to `ES`.
 - [x] Probe the same synthetic Family A profile on additional non-`NQ` markets and record which ones are positive, flat, or runtime-blocked.
 - [x] Confirm that local cleaned data already exists for `1m/5m/15m/1h/4h/1d` on multiple markets.
+- [x] Prove at least one real `5m` synthetic-profile execution slice end-to-end on `NQ`.
 
 ### Next
 
@@ -1028,6 +1095,7 @@ For cross-market families, add:
 - [ ] Fork from `TomacNQ_KillzoneBreakout` rather than from the weaker generic branches, and test whether structure-specific variants can move `quality` or `gate_status`.
 - [ ] Expand the set of **positive** synthetic-profile markets beyond `NQ` and `ES`; `YM` and `XAU` are now surface-proven but still not quality-proven.
 - [ ] Decide whether `EUR` should stay on the Family A structure lane at all, or whether it should be handed off to another factor family led by the currently stronger `TomacRRWinRate` branch.
+- [ ] Decide whether to keep expanding `5m` Family A on `NQ`, or treat the current `5m` proof as sufficient and focus back on the stronger `1h` structure candidate.
 - [ ] Use a reachable provider path or existing captured auxiliary evidence to run the first real Family G `options_hedging` / dealer-positioning research slice rather than only proving the input contract.
 - [ ] Run Family B: Directionality / Persistence only after Family A is stable.
 - [ ] Run Family C: Cross-Market Confirmation once paired data exists.
@@ -1049,7 +1117,7 @@ For cross-market families, add:
   - blocker: the new public input surface exists, but this environment currently cannot reach the needed live/options providers (`Yahoo 403`, `Binance SSLError`, `Bybit SSLError`) and has no running local live backend
   - acceptable temporary state: keep the new surface active, then treat provider reachability / captured evidence availability as the next gating issue rather than CLI absence
 - [ ] Multi-timeframe coverage beyond the currently proven slices
-  - blocker: `1m/5m/15m/1h/4h/1d` data is locally available, but the current public synthetic profile is still only exercised as `1h/4h/1d`; `1w` and `1M` are not yet prepared or proven
+  - blocker: `1m/5m/15m/1h/4h/1d` data is locally available, and `5m/1h/4h/1d` is now proven on `NQ`, but `1m`, `15m`, `1w`, and `1M` are not yet exercised or prepared end-to-end through the public profile
   - acceptable temporary state: keep logging separately:
     - intervals with local cleaned data available
     - intervals proven through the public profile
