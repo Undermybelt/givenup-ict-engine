@@ -93,11 +93,38 @@ These judgments are already made for this workstream. Do not reopen them unless 
     - `cargo test --lib register_structural_path_ranking_trainer_artifact_writes_ready_artifact -- --nocapture`
     - `cargo test --lib runtime_status_reports_registered_direct_model_when_available -- --nocapture`
     - `cargo test --lib runtime_status_reports_registered_service_when_available -- --nocapture`
+- [x] Execute `Workstream 1 / Slice 2`: add a minimal external rule/tree trainer harness under `scripts/research/` and prove artifact registration works end-to-end on `/tmp/...`.
+  - landed `scripts/research/path_rule_trainer.py`
+    - stdlib-only
+    - consumes exported `structural_path_ranking_target.jsonl` and optional history rows
+    - emits one explicit `corels` / `gosdt` / `ga_mask_tree` compatible artifact
+    - falls back to current candidate proxy labels when mature labels are not yet available, and records that fallback in artifact notes
+  - proved the opt-in end-to-end loop on `/tmp/ict-engine-path-ranker` without adding a new public top-level command:
+    - native `factor-research` to materialize state
+    - `export-structural-path-ranking-target`
+    - `python3 scripts/research/path_rule_trainer.py`
+    - `register-structural-path-ranking-trainer-artifact --model-family corels`
+    - `enable-structural-path-ranking-runtime`
+    - `policy-training-status --human`
+  - verification:
+    - `python3 -m py_compile scripts/research/path_rule_trainer.py`
+    - `cargo test --lib register_structural_path_ranking_trainer_artifact_prefers_history_counts -- --nocapture`
+    - `cargo test --lib clear_structural_path_ranking_trainer_artifact_removes_registered_artifact -- --nocapture`
+    - `cargo test --lib enable_and_disable_structural_path_ranking_runtime_updates_status_surface -- --nocapture`
+    - `cargo test --lib export_structural_path_ranking_target_from_state_dir_uses_persisted_snapshot_and_learning_state -- --nocapture`
+    - real `/tmp` closure:
+      - `./target/debug/ict-engine factor-research --symbol DEMO --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-path-ranker --backend native --human`
+      - `./target/debug/ict-engine export-structural-path-ranking-target --symbol DEMO --state-dir /tmp/ict-engine-path-ranker`
+      - `python3 scripts/research/path_rule_trainer.py --target-jsonl /tmp/ict-engine-path-ranker/DEMO/policy_training/structural_path_ranking_target.jsonl --history-jsonl /tmp/ict-engine-path-ranker/DEMO/policy_training/structural_path_ranking_target_history.jsonl --model-family corels --out /tmp/ict-engine-path-ranker/path-ranker-artifact.json`
+      - `./target/debug/ict-engine register-structural-path-ranking-trainer-artifact --symbol DEMO --state-dir /tmp/ict-engine-path-ranker --artifact-uri /tmp/ict-engine-path-ranker/path-ranker-artifact.json --model-family corels`
+      - `./target/debug/ict-engine enable-structural-path-ranking-runtime --symbol DEMO --state-dir /tmp/ict-engine-path-ranker`
+      - `./target/debug/ict-engine policy-training-status --symbol DEMO --state-dir /tmp/ict-engine-path-ranker --human`
+      - `./target/debug/ict-engine workflow-status --symbol DEMO --state-dir /tmp/ict-engine-path-ranker --agent`
 
 ### Next
 
-- [ ] Execute `Workstream 1 / Slice 2`: add a minimal external rule/tree trainer harness under `scripts/research/` and prove artifact registration works end-to-end on `/tmp/...`.
 - [ ] Execute `Workstream 2 / Slice 1`: define the HMM numeric trainer artifact schema and integrate artifact loading/fallback into the existing MECE recovery / regime persistence lane.
+- [ ] Before opening `Workstream 2`, audit whether `Workstream 1` still needs one small follow-up for explicit artifact calibration/mature-row data quality or whether the remaining gaps are intentionally deferred to better labels/history.
 
 ### Not Yet
 
@@ -175,19 +202,19 @@ cargo test --bin ict-engine render_policy_training_status_low_token_emits_three_
 
 ### Slice 2: External Trainer Harness And End-to-End Registration
 
-- [ ] Add `scripts/research/path_rule_trainer.py`.
-- [ ] Make the script consume:
+- [x] Add `scripts/research/path_rule_trainer.py`.
+- [x] Make the script consume:
   - `structural_path_ranking_target.csv`
   - `structural_path_ranking_target.jsonl`
   - optional history rows
-- [ ] Make the script emit one explicit artifact file compatible with Slice 1.
-- [ ] Add a docs/example snippet showing:
+- [x] Make the script emit one explicit artifact file compatible with Slice 1.
+- [x] Add a docs/example snippet showing:
   - export target rows
   - run trainer on `/tmp/...`
   - register artifact
   - enable runtime
   - inspect `policy-training-status`
-- [ ] Prove the workflow works without adding a new top-level command.
+- [x] Prove the workflow works without adding a new top-level command.
 
 **Suggested command sequence**
 
