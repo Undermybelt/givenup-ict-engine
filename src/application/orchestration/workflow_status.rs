@@ -3,6 +3,7 @@ use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::net::{SocketAddr, TcpStream};
+use std::path::Path;
 use std::time::Duration;
 
 use super::structural_playbook::{
@@ -709,6 +710,58 @@ pub fn humanize_workflow_command(command: &str) -> String {
     format!("Next step: {}", trimmed)
 }
 
+fn human_display_command(command: &str) -> String {
+    let trimmed = command.trim();
+    if trimmed.is_empty() {
+        return String::new();
+    }
+    if trimmed.starts_with("ict-engine workflow-status ")
+        && trimmed.contains(" --phase ")
+        && !trimmed.contains(" --human")
+    {
+        return format!("{trimmed} --human");
+    }
+    if trimmed.starts_with("ict-engine pre-bayes-status ") && !trimmed.contains(" --human") {
+        return format!("{trimmed} --human");
+    }
+    if trimmed.starts_with("ict-engine analyze-live ") && !trimmed.contains(" --human") {
+        return format!("{trimmed} --human");
+    }
+    trimmed.to_string()
+}
+
+fn historical_data_candidate_kind(path: &str) -> String {
+    let file_name = Path::new(path)
+        .file_name()
+        .and_then(|value| value.to_str())
+        .unwrap_or(path);
+    for (suffix, label) in [
+        ("_htf.json", "htf"),
+        ("_mtf.json", "mtf"),
+        ("_ltf.json", "ltf"),
+        ("_spot.json", "spot"),
+        ("_m1.json", "1m"),
+        ("_m5.json", "5m"),
+        ("_h4.json", "4h"),
+    ] {
+        if file_name.ends_with(suffix) {
+            return label.to_string();
+        }
+    }
+    file_name.to_string()
+}
+
+fn historical_data_candidate_display(path: &str) -> String {
+    format!("[{}] {}", historical_data_candidate_kind(path), path)
+}
+
+fn historical_data_candidate_display_list(paths: &[String]) -> String {
+    paths.iter()
+        .map(|path| historical_data_candidate_display(path))
+        .collect::<Vec<_>>()
+        .join(", ")
+}
+
 fn workflow_status_bootstrap_command(symbol: &str, state_dir: Option<&str>) -> String {
     format!(
         "ict-engine workflow-status --symbol {} --state-dir {} --phase bootstrap",
@@ -864,7 +917,9 @@ fn first_run_route_line(guide: &WorkflowFirstRunGuide) -> String {
         .unwrap_or_else(|| "ict-engine factor-research --data <historical-data.json>".to_string());
     format!(
         "Routes: replay={} | factors/backtest={} | live bootstrap={}",
-        replay, factor_loop, guide.bootstrap_command
+        human_display_command(&replay),
+        human_display_command(&factor_loop),
+        human_display_command(&guide.bootstrap_command)
     )
 }
 
@@ -993,9 +1048,9 @@ fn build_evidence_review_guide(
 fn evidence_review_route_line(guide: &WorkflowEvidenceReviewGuide) -> String {
     format!(
         "Evidence: {} | {} | {}",
-        guide.ensemble_vote_command,
-        guide.pre_bayes_status_command,
-        guide.structural_path_command
+        human_display_command(&guide.ensemble_vote_command),
+        human_display_command(&guide.pre_bayes_status_command),
+        human_display_command(&guide.structural_path_command)
     )
 }
 
@@ -1266,7 +1321,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     let historical_data_request_template = if !selected_data_candidates.is_empty() {
         format!(
             "Please choose one historical data path for the next research/backtest run: {}",
-            selected_data_candidates.join(", ")
+            historical_data_candidate_display_list(&selected_data_candidates)
         )
     } else {
         String::new()
@@ -1274,7 +1329,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     let user_path_input_prompt = if !selected_data_candidates.is_empty() {
         format!(
             "Reply with one path from the list, or paste another valid file path. Candidates: {}",
-            selected_data_candidates.join(", ")
+            historical_data_candidate_display_list(&selected_data_candidates)
         )
     } else {
         "Reply with a historical data file path to continue research/backtest.".to_string()
@@ -1291,7 +1346,11 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     } else if let Some(guide) = first_run_guide.as_ref() {
         first_run_next_action(guide)
     } else if let Some(guide) = evidence_review_guide.as_ref() {
-        format!("{} Start with {}.", guide.summary, guide.ensemble_vote_command)
+        format!(
+            "{} Start with {}.",
+            guide.summary,
+            human_display_command(&guide.ensemble_vote_command)
+        )
     } else if user_selection_pending {
         if !historical_data_request_template.is_empty() {
             match deferred_user_selection_command.as_deref() {
@@ -2473,6 +2532,124 @@ pub fn emit_workflow_status_output(
     Ok(())
 }
 
+fn emit_workflow_status_bootstrap_human_output(
+    symbol: &str,
+    state_dir: Option<&str>,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+) {
+    let guide = build_first_run_guide(symbol, state_dir, provider_status_agent);
+    print_human_lines(&[
+        format!("{symbol} | bootstrap | start_here"),
+        format!("Next: {}", first_run_next_action(&guide)),
+        format!(
+            "Provider: {} Check: {}",
+            guide.provider_summary, guide.provider_command
+        ),
+        first_run_route_line(&guide),
+    ]);
+}
+
+fn emit_workflow_status_phase_human_output(
+    snapshot: &WorkflowSnapshot,
+    persisted_scorecards: &[EnsembleExecutorScorecard],
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[crate::state::FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
+    state_dir: Option<&str>,
+    phase_key: &str,
+) -> Result<bool> {
+    match phase_key {
+        "human" | "human-next" | "human-next-action" => {
+            emit_workflow_status_output(
+                snapshot,
+                persisted_scorecards,
+                provider_status_agent,
+                feedback_history,
+                structural_prior_state,
+                state_dir,
+                "human",
+                false,
+            )?;
+            Ok(true)
+        }
+        "agent-bootstrap" | "bootstrap" => {
+            emit_workflow_status_bootstrap_human_output(
+                &snapshot.symbol,
+                state_dir,
+                provider_status_agent,
+            );
+            Ok(true)
+        }
+        "ensemble-vote" => {
+            if let Some(vote) = resolved_latest_ensemble_vote(snapshot) {
+                let surface = build_ensemble_vote_surface(&vote, persisted_scorecards);
+                let comparability = surface.dataset_comparability.comparison_class.as_str();
+                let mut lines = vec![format!(
+                    "{} | ensemble-vote | action={} | confidence={:.3} | comparable={}",
+                    surface.symbol, surface.final_action, surface.confidence, comparability
+                )];
+                if let Some(policy_runtime_line) = surface.policy_runtime_line.as_ref() {
+                    lines.push(policy_runtime_line.clone());
+                }
+                if surface.hard_block.active {
+                    lines.push(format!(
+                        "Block: {}",
+                        surface
+                            .hard_block
+                            .reason
+                            .clone()
+                            .unwrap_or_else(|| "unknown".to_string())
+                    ));
+                }
+                lines.push(format!(
+                    "Next: {}",
+                    humanize_workflow_command(&surface.recommended_command)
+                        .trim_start_matches("Next step: ")
+                ));
+                print_human_lines(&lines);
+                return Ok(true);
+            }
+            Ok(false)
+        }
+        "structural-recommended-path-bundle" | "structural-recommended-path" => {
+            if let Some(bundle) =
+                build_structural_recommended_path_bundle_artifact_with_runtime_context_and_prior_state(
+                    snapshot,
+                    provider_status_agent,
+                    feedback_history,
+                    structural_prior_state,
+                    StructuralPathRankerRuntimeContext { state_dir },
+                )
+            {
+                print_human_lines(&[
+                    format!(
+                        "{} | structural-path | {} | posterior={:.3} | selected_prob={:.3}",
+                        bundle.symbol,
+                        bundle.path_label,
+                        bundle.current_posterior,
+                        bundle.selected_path_probability
+                    ),
+                    format!("Trigger: {}", bundle.trigger_summary),
+                    format!("Stop: {}", bundle.stop_summary),
+                    format!(
+                        "Next: {}",
+                        humanize_workflow_command(
+                            bundle
+                                .recommended_command
+                                .as_deref()
+                                .unwrap_or("recommended_command_unavailable")
+                        )
+                        .trim_start_matches("Next step: ")
+                    ),
+                ]);
+                return Ok(true);
+            }
+            Ok(false)
+        }
+        _ => Ok(false),
+    }
+}
+
 pub fn dispatch_workflow_status(
     snapshot: &WorkflowSnapshot,
     persisted_scorecards: &[EnsembleExecutorScorecard],
@@ -2525,6 +2702,19 @@ pub fn dispatch_workflow_status(
     }
     if let Some(phase) = input.phase {
         let phase_key = phase.trim().to_ascii_lowercase();
+        if input.output_format.eq_ignore_ascii_case("human")
+            && emit_workflow_status_phase_human_output(
+                snapshot,
+                persisted_scorecards,
+                provider_status_agent,
+                feedback_history,
+                structural_prior_state,
+                Some(bootstrap.state_dir),
+                &phase_key,
+            )?
+        {
+            return Ok(());
+        }
         let mut value = match phase_key.as_str() {
             "agent-bootstrap" | "bootstrap" => build_workflow_status_bootstrap_phase_value(
                 bootstrap.symbol,
@@ -2896,6 +3086,15 @@ fn build_ibkr_gateway_summary(
         reachable_candidate_count,
         occupied_judgement,
         recommended_action,
+    }
+}
+
+fn print_human_lines(lines: &[String]) {
+    for line in lines {
+        let trimmed = line.trim();
+        if !trimmed.is_empty() {
+            println!("{}", redact_local_paths_in_human_text(trimmed));
+        }
     }
 }
 
@@ -3740,9 +3939,79 @@ pub fn build_pre_bayes_status_value(
 pub fn emit_pre_bayes_status_output(
     snapshot: &WorkflowSnapshot,
     section: Option<&str>,
+    output_format: &str,
 ) -> Result<()> {
     let value = build_pre_bayes_status_value(snapshot, section)?;
-    print_redacted_json(&value)
+    match output_format.trim().to_ascii_lowercase().as_str() {
+        "json" | "compact" => print_redacted_json(&value),
+        "human" => {
+            let latest_bridge = value
+                .get("latest_bridge")
+                .or_else(|| value.get("bridge"))
+                .unwrap_or(&value);
+            let gate_status = value
+                .get("latest_gate_status")
+                .or_else(|| value.get("status"))
+                .and_then(Value::as_str)
+                .unwrap_or("unavailable");
+            let policy_version = value
+                .get("latest_policy_version")
+                .or_else(|| value.get("policy_version"))
+                .and_then(Value::as_str)
+                .unwrap_or("unavailable");
+            let uses_soft = value
+                .get("latest_uses_soft_evidence")
+                .or_else(|| value.get("uses_soft_evidence"))
+                .and_then(Value::as_bool)
+                .map(|flag| if flag { "yes" } else { "no" })
+                .unwrap_or("unavailable");
+            let selected_entry_quality = latest_bridge
+                .get("selected_entry_quality")
+                .and_then(Value::as_str)
+                .unwrap_or("unavailable");
+            let long_signal_probability = latest_bridge
+                .get("long_signal_probability")
+                .and_then(Value::as_f64)
+                .map(|value| format!("{value:.3}"))
+                .unwrap_or_else(|| "unavailable".to_string());
+            let short_signal_probability = latest_bridge
+                .get("short_signal_probability")
+                .and_then(Value::as_f64)
+                .map(|value| format!("{value:.3}"))
+                .unwrap_or_else(|| "unavailable".to_string());
+            let multi_timeframe_direction_bias = latest_bridge
+                .get("multi_timeframe_direction_bias")
+                .and_then(Value::as_str)
+                .unwrap_or("unavailable");
+            let multi_timeframe_alignment_score = latest_bridge
+                .get("multi_timeframe_alignment_score")
+                .and_then(Value::as_f64)
+                .map(|value| format!("{value:.3}"))
+                .unwrap_or_else(|| "unavailable".to_string());
+            let multi_timeframe_entry_alignment_score = latest_bridge
+                .get("multi_timeframe_entry_alignment_score")
+                .and_then(Value::as_f64)
+                .map(|value| format!("{value:.3}"))
+                .unwrap_or_else(|| "unavailable".to_string());
+            print_human_lines(&[
+                format!(
+                    "Pre-Bayes | gate={} | policy={} | soft_evidence={}",
+                    gate_status, policy_version, uses_soft
+                ),
+                format!(
+                    "Bridge: entry={} | long={} | short={} | mtf={} | align={} | entry_align={}",
+                    selected_entry_quality,
+                    long_signal_probability,
+                    short_signal_probability,
+                    multi_timeframe_direction_bias,
+                    multi_timeframe_alignment_score,
+                    multi_timeframe_entry_alignment_score
+                ),
+            ]);
+            Ok(())
+        }
+        other => anyhow::bail!("unsupported pre-bayes-status output format '{}'", other),
+    }
 }
 
 pub fn build_pre_bayes_diff_value(snapshot: &WorkflowSnapshot) -> Value {
@@ -5172,7 +5441,7 @@ mod tests {
         );
         assert_eq!(
             value["next_action_line"],
-            "Next: Ask the user to choose the historical dataset. Please choose one historical data path for the next research/backtest run: /tmp/a.json, /tmp/b.json Reply with one path from the list, or paste another valid file path. Candidates: /tmp/a.json, /tmp/b.json Then run: ict-engine factor-research --symbol NQ --data /tmp/a.json --state-dir state"
+            "Next: Ask the user to choose the historical dataset. Please choose one historical data path for the next research/backtest run: [a.json] /tmp/a.json, [b.json] /tmp/b.json Reply with one path from the list, or paste another valid file path. Candidates: [a.json] /tmp/a.json, [b.json] /tmp/b.json Then run: ict-engine factor-research --symbol NQ --data /tmp/a.json --state-dir state"
         );
         assert_eq!(
             value["blocking_line"],
@@ -5280,7 +5549,7 @@ mod tests {
         assert!(value["route_line"]
             .as_str()
             .unwrap()
-            .contains("live bootstrap"));
+            .contains("--phase bootstrap --human"));
     }
 
     #[test]
@@ -5337,11 +5606,11 @@ mod tests {
         assert!(human["route_line"]
             .as_str()
             .unwrap()
-            .contains("ict-engine pre-bayes-status --symbol DEMO"));
+            .contains("ict-engine pre-bayes-status --symbol DEMO --state-dir /tmp/state --human"));
         assert!(human["route_line"]
             .as_str()
             .unwrap()
-            .contains("--phase structural-recommended-path-bundle"));
+            .contains("--phase structural-recommended-path-bundle --human"));
 
         let agent = build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
             &snapshot,
@@ -5422,7 +5691,7 @@ mod tests {
         assert!(agent["recommended_next_step"]["deferred_command"]
             .as_str()
             .unwrap()
-            .contains("prepare.py"));
+            .contains("auto-quant-prepare"));
         assert_eq!(agent["first_run_router"], serde_json::Value::Null);
         assert!(agent["auto_quant_handoff"]["review_command"]
             .as_str()

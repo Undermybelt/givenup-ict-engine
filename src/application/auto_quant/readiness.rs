@@ -7,7 +7,7 @@ use crate::application::release_closure::workflow_next_step_view;
 use crate::state::{recommended_next_command_meta, RecommendedNextCommandMeta};
 
 use super::handoff::{
-    auto_quant_active_strategy_count, auto_quant_data_ready, auto_quant_prepare_command,
+    auto_quant_active_strategy_count, auto_quant_data_ready, auto_quant_prepare_cli_command,
     auto_quant_run_command, auto_quant_workspace_config, AutoQuantWorkspaceConfig,
 };
 use super::status::auto_quant_status;
@@ -43,6 +43,17 @@ pub fn auto_quant_readiness_from_status(
 ) -> AutoQuantReadinessSurface {
     let state_dir = Path::new(&dependency_status.managed_dir)
         .parent()
+        .and_then(|path| {
+            if path
+                .file_name()
+                .and_then(|value| value.to_str())
+                .is_some_and(|value| value == ".deps")
+            {
+                path.parent()
+            } else {
+                Some(path)
+            }
+        })
         .map(|path| path.to_string_lossy().to_string())
         .unwrap_or_else(|| "state".to_string());
     auto_quant_readiness_from_status_with_state_dir(dependency_status, &state_dir)
@@ -64,7 +75,6 @@ pub fn auto_quant_readiness_from_status_and_data(
     data_ready: bool,
 ) -> AutoQuantReadinessSurface {
     let active_strategy_count = auto_quant_active_strategy_count(&workspace);
-    let prepare_command = auto_quant_prepare_command(&workspace);
     let run_command = auto_quant_run_command(&workspace);
     let (status, command, blocked_reason) = if dependency_status.bootstrap_needed {
         (
@@ -87,7 +97,7 @@ pub fn auto_quant_readiness_from_status_and_data(
     } else if !data_ready {
         (
             "dependency_ready_data_missing",
-            prepare_command.clone(),
+            auto_quant_prepare_cli_command(state_dir),
             Some("auto_quant_prepare_required"),
         )
     } else if active_strategy_count == 0 {

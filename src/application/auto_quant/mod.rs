@@ -162,7 +162,10 @@ mod tests {
         assert!(!readiness.data_ready);
         assert_eq!(
             readiness.recommended_next_command,
-            format!("uv run --with ta-lib {}/prepare.py", status.managed_dir)
+            format!(
+                "ict-engine auto-quant-prepare --state-dir {}",
+                state.path().to_string_lossy()
+            )
         );
         assert_eq!(
             readiness.next_step["blocked_reason"],

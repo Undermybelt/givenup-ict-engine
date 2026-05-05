@@ -85,8 +85,22 @@ impl<'a> AnalyzeOutputDispatchInput<'a> {
     }
 }
 
-#[derive(Debug, Clone, Copy, Default)]
-pub struct AnalyzeLiveOutputDispatchInput;
+#[derive(Debug, Clone, Copy)]
+pub struct AnalyzeLiveOutputDispatchInput<'a> {
+    pub output_format: &'a str,
+    pub include_pda_sequence_summary: bool,
+    pub redact_paths: bool,
+}
+
+impl Default for AnalyzeLiveOutputDispatchInput<'_> {
+    fn default() -> Self {
+        Self {
+            output_format: "json",
+            include_pda_sequence_summary: true,
+            redact_paths: true,
+        }
+    }
+}
 
 #[derive(Debug, Clone, Copy)]
 pub struct AnalyzeLiveOutputEmitInput {
@@ -572,9 +586,43 @@ pub fn emit_analyze_live_output_with_input(
 
 pub fn dispatch_analyze_live_output(
     report: &AnalyzeReport,
-    _input: AnalyzeLiveOutputDispatchInput,
+    input: AnalyzeLiveOutputDispatchInput<'_>,
 ) -> Result<()> {
-    emit_analyze_live_output(report)
+    let bundle = build_analyze_live_reporting_bundle(
+        report,
+        AnalyzeLiveReportingBundleInput {
+            include_pda_sequence_summary: input.include_pda_sequence_summary,
+        },
+    )?;
+    match input.output_format.trim().to_ascii_lowercase().as_str() {
+        "json" => {
+            let output = build_analyze_live_output_value(AnalyzeLiveOutputValueInput {
+                report,
+                source_snapshot: bundle.source_snapshot,
+                freshness_gate: bundle.freshness_gate,
+                compact_report: bundle.compact_report,
+                agent_report: bundle.agent_report,
+                human_report: &bundle.human_report,
+                belief_shadow_policy: bundle.belief_shadow_policy,
+                pda_sequence_summary: bundle.pda_sequence_summary,
+                redact_paths: input.redact_paths,
+            })?;
+            println!("{}", serde_json::to_string_pretty(&output)?);
+            Ok(())
+        }
+        "compact" => print_redacted_json(&bundle.compact_report),
+        "agent" => print_redacted_json(&bundle.agent_report),
+        "human" => {
+            let rendered = if input.redact_paths {
+                redact_local_paths_in_human_text(&bundle.human_report.render())
+            } else {
+                bundle.human_report.render()
+            };
+            println!("{rendered}");
+            Ok(())
+        }
+        other => anyhow::bail!("unsupported output format '{}'", other),
+    }
 }
 
 fn human_direction_bias_label(direction: Direction) -> &'static str {
@@ -1078,7 +1126,10 @@ mod tests {
 
     #[test]
     fn analyze_live_output_dispatch_input_default_constructs() {
-        let _input = AnalyzeLiveOutputDispatchInput;
+        let input = AnalyzeLiveOutputDispatchInput::default();
+        assert_eq!(input.output_format, "json");
+        assert!(input.include_pda_sequence_summary);
+        assert!(input.redact_paths);
     }
 
     #[test]

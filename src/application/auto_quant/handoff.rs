@@ -133,6 +133,10 @@ pub fn auto_quant_prepare_command(workspace: &AutoQuantWorkspaceConfig) -> Strin
     format!("uv run --with ta-lib {}", workspace.prepare_script)
 }
 
+pub fn auto_quant_prepare_cli_command(state_dir: &str) -> String {
+    format!("ict-engine auto-quant-prepare --state-dir {state_dir}")
+}
+
 pub fn auto_quant_run_command(workspace: &AutoQuantWorkspaceConfig) -> String {
     format!("uv run --with ta-lib {}", workspace.run_script)
 }
@@ -227,6 +231,7 @@ fn format_strategy_material_summary(material: &AutoQuantStrategyMaterialSummary)
 
 pub fn base_suggested_commands(
     workspace: &AutoQuantWorkspaceConfig,
+    state_dir: &str,
     data_ready: bool,
     active_strategy_count: usize,
     strategy_material_root: Option<&str>,
@@ -250,7 +255,7 @@ pub fn base_suggested_commands(
         }
     }
     if !data_ready {
-        commands.push(auto_quant_prepare_command(workspace));
+        commands.push(auto_quant_prepare_cli_command(state_dir));
     } else {
         commands.push(auto_quant_run_command(workspace));
     }
@@ -403,6 +408,7 @@ pub fn build_factor_research_handoff_payload(
     };
     payload.suggested_commands = base_suggested_commands(
         &payload.workspace,
+        &payload.state_dir,
         payload.data_ready,
         active_strategy_count,
         payload.strategy_material_root.as_deref(),
@@ -513,6 +519,7 @@ pub fn build_factor_autoresearch_handoff_payload(
     };
     payload.suggested_commands = base_suggested_commands(
         &payload.workspace,
+        &payload.state_dir,
         payload.data_ready,
         active_strategy_count,
         payload.strategy_material_root.as_deref(),
@@ -702,7 +709,7 @@ mod tests {
     }
 
     #[test]
-    fn handoff_suggested_commands_use_talib_runtime_commands() {
+    fn handoff_suggested_commands_use_repo_prepare_wrapper_for_missing_data() {
         let temp = tempfile::tempdir().unwrap();
         let managed_dir = temp.path().join("managed-auto-quant");
         let strategies_dir = managed_dir.join("user_data/strategies");
@@ -730,7 +737,7 @@ mod tests {
         assert!(missing_data
             .suggested_commands
             .iter()
-            .any(|command| command.contains("uv run --with ta-lib")));
+            .any(|command| command.contains("ict-engine auto-quant-prepare --state-dir")));
 
         let data_dir = managed_dir.join("user_data/data");
         std::fs::create_dir_all(&data_dir).unwrap();

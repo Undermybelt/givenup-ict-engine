@@ -29,6 +29,7 @@ use auto_quant_command::{
     auto_quant_agent_material_batch_shell, auto_quant_agent_material_dispatch_shell,
     auto_quant_agent_material_rank_shell, auto_quant_bootstrap_shell,
     auto_quant_consume_live_signals_shell, auto_quant_ingest_real_trades_shell,
+    auto_quant_prepare_shell,
     auto_quant_pda_unit_batch_shell, auto_quant_pda_unit_dispatch_shell,
     auto_quant_prior_init_shell, auto_quant_promote_canonical_setup_shell,
     auto_quant_results_import_shell, auto_quant_seed_evidence_shell, auto_quant_status_shell,
@@ -86,6 +87,7 @@ use ict_engine::application::{
         auto_quant_consume_live_signals_command, auto_quant_factor_autoresearch_command,
         auto_quant_factor_research_command, auto_quant_ingest_real_trades_command,
         auto_quant_pda_unit_batch_command, auto_quant_pda_unit_dispatch_command,
+        auto_quant_prepare_workspace_command,
         auto_quant_prior_init_command, auto_quant_results_import_command,
         auto_quant_seed_evidence_command, auto_quant_status_command, auto_quant_update_command,
         AutoQuantAgentMaterialBatchCommandInput, AutoQuantAgentMaterialDispatchCommandInput,
@@ -462,7 +464,18 @@ struct UpdateCommandInput<'a> {
 
 #[derive(Parser)]
 #[command(name = "ict-engine")]
-#[command(about = "ICT Expansion Trading Engine", long_about = None, version)]
+#[command(
+    about = "ICT Expansion Trading Engine",
+    long_about = None,
+    version,
+    after_help = "Start here:
+  ict-engine workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --human
+  ict-engine provider-status --compact
+  ict-engine analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human
+
+When you want managed factor iteration:
+  ict-engine auto-quant-status --state-dir /tmp/ict-engine-auto-quant"
+)]
 struct Cli {
     #[command(subcommand)]
     command: Commands,
@@ -576,6 +589,18 @@ enum Commands {
             help = "State directory for model and workflow artifacts"
         )]
         state_dir: String,
+        #[arg(
+            long,
+            default_value = "",
+            help = "Output format: json (default), compact, agent, or human. `--compact`, `--agent`, `--human` are aliases; do not combine them with `--output-format`."
+        )]
+        output_format: String,
+        #[arg(long, help = "Alias for --output-format compact")]
+        compact: bool,
+        #[arg(long, help = "Alias for --output-format agent")]
+        agent: bool,
+        #[arg(long, help = "Alias for --output-format human")]
+        human: bool,
     },
     /// Train HMM model
     Train {
@@ -966,6 +991,16 @@ enum Commands {
         #[arg(long, help = "Explicit Auto-Quant target ref to checkout")]
         target_ref: Option<String>,
     },
+    /// Prepare the managed Auto-Quant workspace data in-place through the repo CLI
+    AutoQuantPrepare {
+        #[arg(
+            long,
+            env = "ICT_ENGINE_STATE_DIR",
+            default_value = "state",
+            help = "State directory holding Auto-Quant dependency metadata"
+        )]
+        state_dir: String,
+    },
     /// Review the latest Auto-Quant handoff candidate as an adoption surface
     AutoQuantAdoptionReview {
         #[arg(long, help = "Instrument identifier supplied by the caller")]
@@ -1318,6 +1353,16 @@ enum Commands {
             help = "Optional Pre-Bayes section to print, e.g. policy or bridge"
         )]
         section: Option<String>,
+        #[arg(
+            long,
+            default_value = "",
+            help = "Output format: json (default), compact, or human. `--compact` and `--human` are aliases; do not combine them with `--output-format`."
+        )]
+        output_format: String,
+        #[arg(long, help = "Alias for --output-format compact")]
+        compact: bool,
+        #[arg(long, help = "Alias for --output-format human")]
+        human: bool,
     },
     /// Show a read-only quality summary for internal policy training tables.
     PolicyTrainingStatus {
@@ -1982,6 +2027,10 @@ fn main() -> Result<()> {
             openalice_base_url,
             nofx_base_url,
             state_dir,
+            output_format,
+            compact,
+            agent,
+            human,
         } => analyze_live_shell(AnalyzeLiveShellInput {
             symbol: &symbol,
             futures_symbol: futures_symbol.as_deref(),
@@ -1994,6 +2043,12 @@ fn main() -> Result<()> {
             openalice_base_url: &openalice_base_url,
             nofx_base_url: &nofx_base_url,
             state_dir: &state_dir,
+            output_format: match resolve_output_format(&output_format, compact, agent, human)? {
+                OutputFormat::Json => "json",
+                OutputFormat::Compact => "compact",
+                OutputFormat::Agent => "agent",
+                OutputFormat::Human => "human",
+            },
         })?,
         Commands::Train {
             symbol,
@@ -2340,6 +2395,7 @@ fn main() -> Result<()> {
             tracked_branch.as_deref(),
             target_ref.as_deref(),
         )?,
+        Commands::AutoQuantPrepare { state_dir } => auto_quant_prepare_shell(&state_dir)?,
         Commands::AutoQuantAdoptionReview {
             symbol,
             state_dir,
@@ -2622,7 +2678,21 @@ fn main() -> Result<()> {
             state_dir,
             refresh,
             section,
-        } => pre_bayes_status_shell(&symbol, &state_dir, refresh, section.as_deref())?,
+            output_format,
+            compact,
+            human,
+        } => pre_bayes_status_shell(
+            &symbol,
+            &state_dir,
+            refresh,
+            section.as_deref(),
+            match resolve_output_format(&output_format, compact, false, human)? {
+                OutputFormat::Json => "json",
+                OutputFormat::Compact => "compact",
+                OutputFormat::Agent => "json",
+                OutputFormat::Human => "human",
+            },
+        )?,
         Commands::PolicyTrainingStatus {
             symbol,
             state_dir,
@@ -5432,12 +5502,14 @@ mod tests {
         state_dir: &str,
         refresh: bool,
         section: Option<&str>,
+        output_format: &str,
     ) -> Result<()> {
         ict_engine::application::orchestration::pre_bayes_status_command(
             symbol,
             state_dir,
             refresh,
             section,
+            output_format,
             refresh_workflow_snapshot,
         )
     }
@@ -8723,8 +8795,14 @@ mod tests {
             },
         )
         .unwrap();
-        pre_bayes_status_command("NQ", temp.path().to_str().unwrap(), false, Some("policy"))
-            .unwrap();
+        pre_bayes_status_command(
+            "NQ",
+            temp.path().to_str().unwrap(),
+            false,
+            Some("policy"),
+            "json",
+        )
+        .unwrap();
     }
 
     #[test]

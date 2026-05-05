@@ -109,6 +109,7 @@ pub fn build_auto_quant_adoption_review(
     };
     let suggested_commands = base_suggested_commands(
         &payload.workspace,
+        &payload.state_dir,
         readiness.data_ready,
         active_strategy_count,
         payload.strategy_material_root.as_deref(),

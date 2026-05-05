@@ -15,6 +15,9 @@ fn public_help_avoids_repo_market_examples() {
     let root_help = Command::new(binary).arg("--help").output().unwrap();
     let root_help = String::from_utf8(root_help.stdout).unwrap();
     assert!(!root_help.contains("NQ, ES, GC"));
+    assert!(root_help.contains("Start here:"));
+    assert!(root_help.contains("workflow-status --symbol DEMO"));
+    assert!(root_help.contains("provider-status --compact"));
 
     let harness_help = Command::new(binary)
         .args(["market-data-harness", "--help"])
@@ -272,6 +275,50 @@ fn workflow_status_human_hides_opt_in_profile_hint_without_selecting_one() {
     assert!(!stdout.contains("Profiles: opt-in only."));
     assert!(stdout.contains("Provider: tradfi free fallback="));
     assert!(stdout.contains("Routes: replay="));
+    assert!(stdout.contains("--phase bootstrap --human"));
+}
+
+#[test]
+fn provider_status_single_provider_compact_surfaces_setup_prompts() {
+    let binary = env!("CARGO_BIN_EXE_ict-engine");
+    let temp_home = TempDir::new().unwrap();
+
+    let output = Command::new(binary)
+        .env("HOME", temp_home.path())
+        .env("XDG_CONFIG_HOME", temp_home.path().join(".config"))
+        .env("XDG_DATA_HOME", temp_home.path().join(".local/share"))
+        .env("XDG_STATE_HOME", temp_home.path().join(".local/state"))
+        .args(["provider-status", "--provider", "ibkr", "--compact"])
+        .output()
+        .unwrap();
+
+    assert!(output.status.success());
+    let stdout = String::from_utf8(output.stdout).unwrap();
+    assert!(stdout.contains("detail: ibkr | access=login_and_local_runtime"));
+    assert!(stdout.contains("setup:"));
+}
+
+#[test]
+fn analyze_live_and_pre_bayes_help_expose_human_output_modes() {
+    let binary = env!("CARGO_BIN_EXE_ict-engine");
+
+    let analyze_live_help = Command::new(binary)
+        .args(["analyze-live", "--help"])
+        .output()
+        .unwrap();
+    assert!(analyze_live_help.status.success());
+    let analyze_live_help = String::from_utf8(analyze_live_help.stdout).unwrap();
+    assert!(analyze_live_help.contains("--human"));
+    assert!(analyze_live_help.contains("--output-format"));
+
+    let pre_bayes_help = Command::new(binary)
+        .args(["pre-bayes-status", "--help"])
+        .output()
+        .unwrap();
+    assert!(pre_bayes_help.status.success());
+    let pre_bayes_help = String::from_utf8(pre_bayes_help.stdout).unwrap();
+    assert!(pre_bayes_help.contains("--human"));
+    assert!(pre_bayes_help.contains("--compact"));
 }
 
 #[test]

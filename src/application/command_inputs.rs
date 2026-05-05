@@ -21,6 +21,7 @@ pub struct AnalyzeLiveCommandInput<'a> {
     pub futures_base_url: &'a str,
     pub aux_base_url: &'a str,
     pub state_dir: &'a str,
+    pub output_format: &'a str,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -44,6 +45,7 @@ pub struct PreBayesStatusCommandInput<'a> {
     pub state_dir: &'a str,
     pub refresh: bool,
     pub section: Option<&'a str>,
+    pub output_format: &'a str,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -175,6 +177,7 @@ mod tests {
             futures_base_url: "http://futures.local",
             aux_base_url: "http://aux.local",
             state_dir: "/tmp/state",
+            output_format: "human",
         };
 
         assert_eq!(input.symbol, "CL");
@@ -212,10 +215,12 @@ mod tests {
             state_dir: "/tmp/state",
             refresh: true,
             section: Some("policy"),
+            output_format: "human",
         };
 
         assert_eq!(input.symbol, "NQ");
         assert_eq!(input.section, Some("policy"));
+        assert_eq!(input.output_format, "human");
         assert!(input.refresh);
     }
 

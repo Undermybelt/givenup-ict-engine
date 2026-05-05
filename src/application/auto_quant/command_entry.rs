@@ -6,7 +6,9 @@ use super::{
     },
     auto_quant_bootstrap, auto_quant_readiness, auto_quant_status, auto_quant_update,
     handoff::{
-        auto_quant_workspace_config, build_factor_autoresearch_handoff_payload,
+        auto_quant_prepare_command as auto_quant_prepare_script_command,
+        auto_quant_workspace_config,
+        build_factor_autoresearch_handoff_payload,
         build_factor_research_handoff_payload, AutoQuantFactorAutoresearchCommandInput,
         AutoQuantFactorResearchCommandInput, BuildFactorAutoresearchHandoffPayloadInput,
         BuildFactorResearchHandoffPayloadInput,
@@ -39,6 +41,7 @@ use super::{
 use anyhow::{anyhow, bail, Context, Result};
 use chrono::Utc;
 use serde_json::json;
+use std::process::Command;
 
 /// Ledger artifact_kind written by `auto-quant-consume-live-signals`.
 pub const ARTIFACT_KIND_LIVE_SIGNALS: &str = "auto_quant_live_signals_ingested";
@@ -228,6 +231,60 @@ pub fn auto_quant_update_command(
 ) -> Result<()> {
     let report = auto_quant_update(state_dir, repo_url, tracked_branch, target_ref)?;
     println!("{}", serde_json::to_string_pretty(&report)?);
+    Ok(())
+}
+
+pub fn auto_quant_prepare_workspace_command(state_dir: &str) -> Result<()> {
+    let readiness_before = auto_quant_readiness(state_dir)?;
+    if readiness_before.bootstrap_needed {
+        bail!(
+            "auto-quant dependency is missing; bootstrap first with ict-engine auto-quant-bootstrap --state-dir {}",
+            state_dir
+        );
+    }
+    if !readiness_before.dependency_healthy {
+        bail!(
+            "auto-quant dependency is unhealthy; repair it first with ict-engine auto-quant-update --state-dir {}",
+            state_dir
+        );
+    }
+    let prepare_command = auto_quant_prepare_script_command(&readiness_before.workspace);
+    let output = Command::new("uv")
+        .args([
+            "run",
+            "--with",
+            "ta-lib",
+            readiness_before.workspace.prepare_script.as_str(),
+        ])
+        .current_dir(&readiness_before.workspace.repo_root)
+        .output()
+        .with_context(|| format!("failed to launch {}", prepare_command))?;
+    if !output.status.success() {
+        bail!(
+            "auto-quant prepare failed with status {} while running {}.\nstdout:\n{}\nstderr:\n{}",
+            output.status,
+            prepare_command,
+            String::from_utf8_lossy(&output.stdout),
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
+    let readiness_after = auto_quant_readiness(state_dir)?;
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&json!({
+            "status": "prepared",
+            "state_dir": state_dir,
+            "prepare_command": "ict-engine auto-quant-prepare",
+            "workspace_repo_root": readiness_before.workspace.repo_root,
+            "dependency_status_before": readiness_before.status,
+            "dependency_status_after": readiness_after.status,
+            "data_ready": readiness_after.data_ready,
+            "next_step": workflow_next_step_view(
+                &format!("ict-engine auto-quant-status --state-dir {}", state_dir),
+                None
+            ),
+        }))?
+    );
     Ok(())
 }
 

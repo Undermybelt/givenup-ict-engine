@@ -57,12 +57,14 @@ pub(crate) fn pre_bayes_status_shell(
     state_dir: &str,
     refresh: bool,
     section: Option<&str>,
+    output_format: &str,
 ) -> Result<()> {
     ict_engine::application::orchestration::pre_bayes_status_command(
         symbol,
         state_dir,
         refresh,
         section,
+        output_format,
         refresh_workflow_snapshot,
     )
 }

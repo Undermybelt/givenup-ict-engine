@@ -23,6 +23,11 @@ pub(crate) fn auto_quant_update_shell(
     auto_quant_update_command(state_dir, repo_url, tracked_branch, target_ref)
 }
 
+pub(crate) fn auto_quant_prepare_shell(state_dir: &str) -> Result<()> {
+    ensure_state_dir_ready(state_dir)?;
+    auto_quant_prepare_workspace_command(state_dir)
+}
+
 pub(crate) fn auto_quant_adoption_review_shell(
     symbol: &str,
     state_dir: &str,

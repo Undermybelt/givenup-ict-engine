@@ -1108,6 +1108,12 @@ fn compact_provider_guide_line(providers: &[ProviderCatalogItem]) -> Option<Stri
 
 fn render_provider_catalog_compact(surface: &ProviderCatalogSurface) -> String {
     let mut lines = Vec::new();
+    let pending_provider_ids = surface
+        .providers
+        .iter()
+        .filter(|provider| !provider.ready && provider.selectable_by_user)
+        .map(|provider| provider.provider_id.clone())
+        .collect::<Vec<_>>();
     lines.push(surface.summary_line.clone());
     if let Some(profile) = surface.selected_profile.as_ref() {
         lines.push(format!(
@@ -1143,6 +1149,30 @@ fn render_provider_catalog_compact(surface: &ProviderCatalogSurface) -> String {
     }
     if let Some(guide) = compact_provider_guide_line(&surface.providers) {
         lines.push(format!("guide: {}", guide));
+    }
+    if surface.providers.len() > 1 && !pending_provider_ids.is_empty() {
+        lines.push(
+            "details: use ict-engine provider-status --provider <id> --compact for provider-specific setup prompts".to_string(),
+        );
+    }
+    if surface.providers.len() == 1 {
+        let provider = &surface.providers[0];
+        lines.push(format!(
+            "detail: {} | access={} | {}",
+            provider.provider_id, provider.user_access, provider.user_summary
+        ));
+        if !provider.install_prompts.is_empty() {
+            lines.push(format!(
+                "setup: {}",
+                provider
+                    .install_prompts
+                    .iter()
+                    .take(2)
+                    .cloned()
+                    .collect::<Vec<_>>()
+                    .join(" | ")
+            ));
+        }
     }
     for domain in &surface.domains {
         lines.push(format!(
@@ -1818,6 +1848,50 @@ mod tests {
         assert!(!compact.contains("opt_in_profiles:"));
         assert!(compact.contains("guide:"));
         assert!(compact.contains("yfinance: access=free_no_login"));
+        assert!(compact.contains(
+            "details: use ict-engine provider-status --provider <id> --compact"
+        ));
+    }
+
+    #[test]
+    fn compact_surface_shows_single_provider_setup_prompts() {
+        let surface = ProviderCatalogSurface {
+            providers: vec![ProviderCatalogItem {
+                provider_id: "ibkr".to_string(),
+                domain: "market_data".to_string(),
+                selectable_by_user: true,
+                adopted_by_default: false,
+                access_mode: "operator_runtime_required".to_string(),
+                user_access: "login_and_local_runtime".to_string(),
+                market_fit: vec!["tradfi".to_string()],
+                fallback_priority: Some(30),
+                user_summary: "Setup-required IBKR market-data path.".to_string(),
+                ready: false,
+                status: "install_required".to_string(),
+                reason: "missing_local_ibkr_consent".to_string(),
+                capabilities: vec!["etf_reference".to_string()],
+                notes: Vec::new(),
+                install_prompts: vec![
+                    "install IBKR TWS or Gateway".to_string(),
+                    "enable the local API".to_string(),
+                ],
+            }],
+            domains: vec![ProviderCatalogDomainSummary {
+                domain: "market_data".to_string(),
+                total: 1,
+                ready: 0,
+                selectable: 1,
+                default_enabled: 0,
+                provider_ids: vec!["ibkr".to_string()],
+            }],
+            summary_line: "market_data:0/1 ready".to_string(),
+            available_opt_in_profiles: Vec::new(),
+            selected_profile: None,
+        };
+
+        let compact = render_provider_catalog_compact(&surface);
+        assert!(compact.contains("detail: ibkr | access=login_and_local_runtime"));
+        assert!(compact.contains("setup: install IBKR TWS or Gateway | enable the local API"));
     }
 
     #[test]

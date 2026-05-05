@@ -155,6 +155,7 @@ pub(crate) struct AnalyzeLiveCommandInput<'a> {
     pub futures_base_url: &'a str,
     pub aux_base_url: &'a str,
     pub state_dir: &'a str,
+    pub output_format: &'a str,
 }
 
 pub(crate) struct AnalyzeLiveShellInput<'a> {
@@ -169,6 +170,7 @@ pub(crate) struct AnalyzeLiveShellInput<'a> {
     pub openalice_base_url: &'a str,
     pub nofx_base_url: &'a str,
     pub state_dir: &'a str,
+    pub output_format: &'a str,
 }
 
 pub(crate) fn analyze_live_shell(input: AnalyzeLiveShellInput<'_>) -> Result<()> {
@@ -184,6 +186,7 @@ pub(crate) fn analyze_live_shell(input: AnalyzeLiveShellInput<'_>) -> Result<()>
         openalice_base_url,
         nofx_base_url,
         state_dir,
+        output_format,
     } = input;
     ensure_state_dir_ready(state_dir)?;
     let futures_base_url = ict_engine::application::data_sources::resolve_live_backend_base_url(
@@ -208,6 +211,7 @@ pub(crate) fn analyze_live_shell(input: AnalyzeLiveShellInput<'_>) -> Result<()>
         futures_base_url: &futures_base_url,
         aux_base_url: &aux_base_url,
         state_dir,
+        output_format,
     })
 }
 
@@ -296,6 +300,7 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         futures_base_url,
         aux_base_url,
         state_dir,
+        output_format,
     } = input;
     let resolved_symbols = resolve_live_symbol_inputs(
         symbol,
@@ -633,9 +638,10 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         &mut report.supporting.rollback_recommendation,
     );
 
-    ict_engine::application::reporting::emit_analyze_live_output_with_input(
+    ict_engine::application::reporting::dispatch_analyze_live_output(
         &report,
-        ict_engine::application::reporting::AnalyzeLiveOutputEmitInput {
+        ict_engine::application::reporting::AnalyzeLiveOutputDispatchInput {
+            output_format,
             include_pda_sequence_summary: false,
             redact_paths: false,
         },

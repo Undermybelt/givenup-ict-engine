@@ -142,6 +142,7 @@ pub fn pre_bayes_status_command<F>(
     state_dir: &str,
     refresh: bool,
     section: Option<&str>,
+    output_format: &str,
     refresh_snapshot: F,
 ) -> Result<()>
 where
@@ -152,7 +153,7 @@ where
     } else {
         load_workflow_snapshot(state_dir, symbol)?
     };
-    emit_pre_bayes_status_output(&snapshot, section)
+    emit_pre_bayes_status_output(&snapshot, section, output_format)
 }
 
 pub fn pre_bayes_diff_command<F>(
