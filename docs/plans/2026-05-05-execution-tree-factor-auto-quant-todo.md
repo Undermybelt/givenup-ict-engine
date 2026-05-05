@@ -902,6 +902,77 @@ For cross-market families, add:
   - a precious-metals proxy market (`XAU`)
 - but only `NQ` and `ES` currently produce positive structure/setup candidates worth continuing immediately.
 
+### 2026-05-06 Slice 14: Family A EUR synthetic-profile probe
+
+**Execution**
+- ran the same `synthetic_ohlcv` public profile on the existing `EUR` cleaned 15m/1h/1d data
+- then completed prepare / run / export / import closure
+- applied a focused prior-init using the strongest current `EUR` candidate:
+  - `TomacRRWinRate`
+- re-checked the imported run with:
+  - `analyze`
+  - `workflow-status --human`
+
+**Result**
+- import closure succeeded:
+  - `n_ok=3`
+  - `n_meta_invalid=0`
+  - `matched=3`
+  - `library_artifact_id=auto_quant_strategy_library_EUR_20260505T182957.067645000Z`
+- strategy metrics:
+  - `TomacAggressiveBE`
+    - `sharpe=-0.3422`
+    - `profit=-1.69%`
+    - `trade_count=13`
+  - `TomacKillzoneBreakout`
+    - `sharpe=-0.0459`
+    - `profit=-0.37%`
+    - `trade_count=6`
+  - `TomacRRWinRate`
+    - `sharpe=0.2273`
+    - `profit=0.94%`
+    - `trade_count=20`
+    - `win_rate=55.0%`
+    - `profit_factor=2.2007`
+- focused prior-init on `TomacRRWinRate` moved the CPT row to:
+  - `final_probs=[0.6785588571428571, 0.000006285714285714286, 0.32143485714285713]`
+- post-apply re-check:
+  - `Bear bias`
+  - `entry=medium`
+  - `gate=pass_neutralized`
+  - `quality=0.553`
+  - `Action: TUNE structure_ict`
+  - `workflow-status` points to the trimmed `eur.continuous-15m.2023plus.json` path
+
+**Outcome**
+- `EUR` is another real importable synthetic-profile proof point.
+- but its strongest current candidate is `TomacRRWinRate`, not the structure/setup lane.
+- this suggests the current Family A structure backlog does not obviously dominate `EUR`; another factor family may be more natural there.
+
+### 2026-05-06 Slice 15: Local multi-timeframe availability audit
+
+**Result**
+- the local cleaned corpus already covers these intervals for at least:
+  - `ES`
+  - `EUR`
+  - `NQ`
+  - `XAU`
+  - `YM`
+- confirmed available now under `~/Downloads/Tomac/ict-cleaned-mtf/`:
+  - `1m`
+  - `5m`
+  - `15m`
+  - `1h`
+  - `4h`
+  - `1d`
+
+**Outcome**
+- the current multi-timeframe blocker is no longer “minute through daily candles do not exist locally”.
+- the remaining gap is narrower:
+  - exercising those intervals through the public Family A surface
+  - preparing or proving `1w`
+  - preparing or proving `1M`
+
 ### 2026-05-06 Slice 10: Family G real-data acquisition attempts
 
 **Execution**
@@ -949,12 +1020,14 @@ For cross-market families, add:
 - [x] Prove the synthetic Family A profile on a second major futures-index market (`ES`).
 - [x] Verify that the strongest current `NQ` candidate does not automatically generalize to `ES`.
 - [x] Probe the same synthetic Family A profile on additional non-`NQ` markets and record which ones are positive, flat, or runtime-blocked.
+- [x] Confirm that local cleaned data already exists for `1m/5m/15m/1h/4h/1d` on multiple markets.
 
 ### Next
 
 - [ ] Because the first imported Family A re-check still says `TUNE structure_ict`, keep iterating Family A quality on the new public surface until execution-tree development actually moves.
 - [ ] Fork from `TomacNQ_KillzoneBreakout` rather than from the weaker generic branches, and test whether structure-specific variants can move `quality` or `gate_status`.
 - [ ] Expand the set of **positive** synthetic-profile markets beyond `NQ` and `ES`; `YM` and `XAU` are now surface-proven but still not quality-proven.
+- [ ] Decide whether `EUR` should stay on the Family A structure lane at all, or whether it should be handed off to another factor family led by the currently stronger `TomacRRWinRate` branch.
 - [ ] Use a reachable provider path or existing captured auxiliary evidence to run the first real Family G `options_hedging` / dealer-positioning research slice rather than only proving the input contract.
 - [ ] Run Family B: Directionality / Persistence only after Family A is stable.
 - [ ] Run Family C: Cross-Market Confirmation once paired data exists.
@@ -976,8 +1049,11 @@ For cross-market families, add:
   - blocker: the new public input surface exists, but this environment currently cannot reach the needed live/options providers (`Yahoo 403`, `Binance SSLError`, `Bybit SSLError`) and has no running local live backend
   - acceptable temporary state: keep the new surface active, then treat provider reachability / captured evidence availability as the next gating issue rather than CLI absence
 - [ ] Multi-timeframe coverage beyond the currently proven slices
-  - blocker: the new Family A synthetic profile is currently proven on `1h/4h/1d`; the broader target ladder `1m`, `5m`, `15m`, `1w`, `1M` still needs profile-aware data preparation and iteration evidence
-  - acceptable temporary state: keep logging which timeframes are proven, which are unsupported, and which still need additive data preparation
+  - blocker: `1m/5m/15m/1h/4h/1d` data is locally available, but the current public synthetic profile is still only exercised as `1h/4h/1d`; `1w` and `1M` are not yet prepared or proven
+  - acceptable temporary state: keep logging separately:
+    - intervals with local cleaned data available
+    - intervals proven through the public profile
+    - intervals still missing (`1w`, `1M`)
 - [ ] YM synthetic-profile runtime stability
   - blocker: the current Family A strategy set hits `UnboundLocalError: cannot access local variable 'price' where it is not associated with a value` on `YM` for at least `TomacAggressiveBE` and `TomacKillzoneBreakout`
   - acceptable temporary state: do not count `YM` as a proven market until a narrower follow-up slice identifies whether the failure is strategy-specific or a broader synthetic futures runtime issue
