@@ -84,6 +84,11 @@ fn build_structural_validation_summary_value(
                 em.em_replay_observation_count,
                 em.em_replay_source_count,
             ),
+            "calibration_status": em.em_calibration_status,
+            "calibration_observation_count": em.em_calibration_observation_count,
+            "calibration_source_count": em.em_calibration_source_count,
+            "calibration_brier_score": em.em_calibration_brier_score,
+            "calibration_log_loss": em.em_calibration_log_loss,
         },
         "delayed_reward": replay.map(|replay| {
             serde_json::json!({
@@ -95,6 +100,8 @@ fn build_structural_validation_summary_value(
                     replay.resolution_observation_count,
                     0,
                 ),
+                "validation_owner": "horizon_replay_validation",
+                "remaining_gap": "full_event_time_competing_risk_validation_not_yet_landed",
                 "training_record_count": replay.training_record_count,
                 "evaluation_record_count": replay.evaluation_record_count,
                 "latest_training_recommended_at": replay.latest_training_recommended_at,
@@ -148,6 +155,11 @@ fn build_structural_validation_line(
         .em_replay_brier_score
         .map(|value| format!("{value:.3}"))
         .unwrap_or_else(|| "n/a".to_string());
+    let calibration_status = em.em_calibration_status.as_deref().unwrap_or("unavailable");
+    let calibration_brier = em
+        .em_calibration_brier_score
+        .map(|value| format!("{value:.3}"))
+        .unwrap_or_else(|| "n/a".to_string());
     let holdout_reason = structural_validation_reason(
         em.em_holdout_status.as_deref(),
         em.em_holdout_training_item_count,
@@ -198,7 +210,7 @@ fn build_structural_validation_line(
     });
     let target_policy_context_count = experience_prior_surface.target_policy_contexts.len();
     let mut parts = vec![format!(
-        "Validation: em={} holdout={} split={} holdout_brier={} holdout_cov={} holdout_reason={} replay={} replay_brier={} replay_cov={} replay_reason={} multi_source_items={} target_policy=bucket_posterior contexts={} live_truth=retrospective_not_sufficient",
+        "Validation: em={} holdout={} split={} holdout_brier={} holdout_cov={} holdout_reason={} replay={} replay_brier={} replay_cov={} replay_reason={} calib={} calib_brier={} calib_obs={} multi_source_items={} target_policy=bucket_posterior contexts={} live_truth=retrospective_not_sufficient",
         em.status,
         holdout_status,
         holdout_split_strategy,
@@ -213,6 +225,9 @@ fn build_structural_validation_line(
             .map(|value| format!("{value:.2}"))
             .unwrap_or_else(|| "n/a".to_string()),
         replay_reason,
+        calibration_status,
+        calibration_brier,
+        em.em_calibration_observation_count,
         em.multi_source_item_count,
         target_policy_context_count
     )];
@@ -7045,8 +7060,13 @@ mod tests {
             .is_some());
         assert!(value["source_reliability"].get("holdout_reason").is_some());
         assert!(value["source_reliability"].get("replay_reason").is_some());
+        assert!(value["source_reliability"].get("calibration_status").is_some());
         assert!(value["delayed_reward"]["status"].as_str().unwrap().len() > 3);
         assert!(value["delayed_reward"].get("status_reason").is_some());
+        assert_eq!(
+            value["delayed_reward"]["validation_owner"].as_str(),
+            Some("horizon_replay_validation")
+        );
         assert!(value["delayed_reward"]
             .get("resolution_brier_score")
             .is_some());
@@ -9024,6 +9044,10 @@ mod tests {
         assert!(human_value["structural_validation_line"]
             .as_str()
             .unwrap()
+            .contains("calib="));
+        assert!(human_value["structural_validation_line"]
+            .as_str()
+            .unwrap()
             .contains("train_until="));
         assert!(human_value["structural_validation_line"]
             .as_str()
@@ -9056,6 +9080,11 @@ mod tests {
                 .get("holdout_reason")
                 .is_some()
         );
+        assert!(
+            agent_value["structural_validation_summary"]["source_reliability"]
+                .get("calibration_status")
+                .is_some()
+        );
         assert_eq!(
             agent_value["structural_validation_summary"]["target_policy"]["current_model"].as_str(),
             Some("symbol:regime:direction_bucket_posterior")
@@ -9082,6 +9111,11 @@ mod tests {
             agent_value["structural_validation_summary"]["delayed_reward"]
                 .get("status_reason")
                 .is_some()
+        );
+        assert_eq!(
+            agent_value["structural_validation_summary"]["delayed_reward"]["validation_owner"]
+                .as_str(),
+            Some("horizon_replay_validation")
         );
     }
 
