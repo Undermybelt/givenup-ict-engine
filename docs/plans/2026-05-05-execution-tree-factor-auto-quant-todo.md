@@ -399,6 +399,69 @@ For cross-market families, add:
 --paired-data <paired.json>
 ```
 
+## Current Execution Slice
+
+### 2026-05-05 Slice 1: baseline + Family A public surface
+
+**Coverage rule**
+- Each factor family should strive for broad multi-market coverage.
+- Do not treat a single-symbol lift as closure unless it later generalizes across a wider market set.
+
+**Execution context**
+- target baseline symbol: `NQ`
+- baseline state dir: `/tmp/ict-engine-exec-tree-aq-20260505-baseline-trimmed`
+- family state dir: `/tmp/ict-engine-exec-tree-aq-20260505-family-a`
+- trimmed multi-timeframe inputs derived into `/tmp/ict-engine-exec-tree-aq-20260505-data/` from:
+  - `/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-15m/nq.continuous-15m.json`
+  - `/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1h/nq.continuous-1h.json`
+  - `/Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-1d/nq.continuous-1d.json`
+
+**Baseline evidence**
+- commands:
+  - `./target/debug/ict-engine analyze --symbol NQ --data-htf /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-1d.2023plus.json --data-mtf /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-1h.2023plus.json --data-ltf /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-15m.2023plus.json --state-dir /tmp/ict-engine-exec-tree-aq-20260505-baseline-trimmed --human`
+  - `./target/debug/ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-exec-tree-aq-20260505-baseline-trimmed --human`
+- result:
+  - analyze returned: `Bull bias`, `entry=medium`, `gate=pass_neutralized`, `quality=0.424`, `Action: TUNE structure_ict`
+  - persisted execution-tree trace resolved to `branch=transition_guardrail`, `execution_bias=guarded`, `gate_status=observe`
+  - lineage still passed through weak `execution_readiness` / `block_crowded` and transition-hazard stress
+  - strongest trace features were `cycle_phase_alignment`, `spectral_entropy`, `pythagorean_overstretch`, and `ising_phase_transition_risk`
+  - baseline `workflow-status` blocked on `user_selected_historical_data_missing` because analyze recorded multiple timeframe paths in one shared state dir; later family slices should therefore keep separate research state dirs
+
+**Family A evidence**
+- commands:
+  - `./target/debug/ict-engine auto-quant-status --state-dir /tmp/ict-engine-exec-tree-aq-20260505-family-a --human`
+  - `./target/debug/ict-engine auto-quant-bootstrap --state-dir /tmp/ict-engine-exec-tree-aq-20260505-family-a --repo-url /Users/thrill3r/Auto-Quant --tracked-branch autoresearch/apr26`
+  - `./target/debug/ict-engine auto-quant-prepare --state-dir /tmp/ict-engine-exec-tree-aq-20260505-family-a`
+  - `./target/debug/ict-engine factor-research --symbol NQ --data /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-15m.2023plus.json --data-15m /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-15m.2023plus.json --data-1h /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-1h.2023plus.json --data-1d /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-1d.2023plus.json --objective expansion_manipulation --strategy-material-root /Users/thrill3r/Downloads/Tomac --state-dir /tmp/ict-engine-exec-tree-aq-20260505-family-a --backend auto-quant --human`
+  - `./target/debug/ict-engine factor-autoresearch --symbol NQ --data /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-15m.2023plus.json --data-15m /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-15m.2023plus.json --data-1h /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-1h.2023plus.json --data-1d /tmp/ict-engine-exec-tree-aq-20260505-data/nq.continuous-1d.2023plus.json --objective expansion_manipulation --strategy-material-root /Users/thrill3r/Downloads/Tomac --state-dir /tmp/ict-engine-exec-tree-aq-20260505-family-a --backend auto-quant --iterations 5`
+  - `./target/debug/ict-engine factor-autoresearch-status --symbol NQ --state-dir /tmp/ict-engine-exec-tree-aq-20260505-family-a --latest-only`
+  - `./target/debug/ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-exec-tree-aq-20260505-family-a --human`
+- result:
+  - managed readiness advanced `missing_dependency -> dependency_ready_data_missing -> dependency_ready_data_ready`
+  - prepare populated only the standard managed crypto universe:
+    - `BTC/USDT`
+    - `ETH/USDT`
+    - `SOL/USDT`
+    - `BNB/USDT`
+    - `AVAX/USDT`
+  - `factor-research --backend auto-quant` still emitted a handoff only
+  - `factor-autoresearch --backend auto-quant` still emitted only `auto-quant-handoff:factor_autoresearch:*`
+  - `factor-autoresearch-status` remained `no_autoresearch_state`
+  - `workflow-status` remained `no_workflow_state`
+  - managed `program.md` still defines Auto-Quant v0.3.0 as a fixed 5-pair crypto portfolio contract, so the recommended `uv run --with ta-lib .../run.py` path is not yet aligned to the `NQ` execution-tree baseline or to the broader market-coverage target
+  - repo-owned additive external tooling exists for wider market routing:
+    - `scripts/auto_quant_external/config.tomac.json` targets `NQ/USD`
+    - local `/Users/thrill3r/Auto-Quant/user_data/data/` already contains wider-market evidence files such as `NQ_USD-*`, `ES_USD-*`, `AAPL_USD-*`, `SPY_USD-*`, `EUR_USD-*`
+  - however, the local wider-market data surface is still uneven:
+    - `NQ/USD` already has `1h`, `4h`, `1d`
+    - `ES/USD`, `AAPL/USD`, `SPY/USD`, `EUR/USD` currently only have `1d`
+  - so even the additive path is not yet ready to claim true broad multi-market coverage for this family without more data preparation
+
+**Stop reason**
+- `surface_blocked`
+  - the public managed Auto-Quant loop reaches readiness, but its actual execution contract still points at the fixed crypto portfolio rather than the target execution-tree market slice or a broader full-market coverage lane
+  - therefore this slice does not yet produce a valid after-run workflow/export artifact for Family A
+
 ## Current Todo Board
 
 ### Done
@@ -408,12 +471,13 @@ For cross-market families, add:
 - [x] Read current factor CLI loop surfaces.
 - [x] Separate “execution-tree needs” from “current in-repo registry names”.
 - [x] Identify which family is blocked by missing public input surface rather than by missing factor logic.
+- [x] Establish the baseline execution-tree snapshot for the target symbol.
+- [x] Run Family A through the current public Auto-Quant surface and record its stop reason.
 
 ### Next
 
-- [ ] Establish the baseline execution-tree snapshot for the target symbol.
-- [ ] Run Family A: Structure / Setup Quality.
-- [ ] Re-check execution tree. If the blocker is still setup quality, keep iterating Family A; otherwise move on.
+- [ ] Re-route Family A into a market-coverage-capable external runner and obtain the first real after-run workflow/export artifact.
+- [ ] Re-check execution tree after the first real Family A run. If the blocker is still setup quality, keep iterating Family A; otherwise move on.
 - [ ] Run Family B: Directionality / Persistence only after Family A is stable.
 - [ ] Run Family C: Cross-Market Confirmation once paired data exists.
 - [ ] Run Family D whenever `wait_for_reversion` is the persistent blocker.
@@ -430,6 +494,10 @@ For cross-market families, add:
 
 ## Blocked
 
+- [ ] Family A Structure / Setup Quality
+  - blocker: the public managed Auto-Quant execution contract is still the fixed 5-pair crypto portfolio (`BTC/ETH/SOL/BNB/AVAX`), so `data_ready=true` does not yet mean “ready for NQ / full-market execution-tree evidence”
+  - blocker: the repo-owned additive route can target `NQ/USD`, but the currently available wider-market non-crypto data is not yet full `1h/4h/1d` across the broader market set
+  - acceptable temporary state: keep the handoff artifacts, then continue through the repo-owned additive external routing path plus wider-market data expansion before claiming any real Family A keep/discard result
 - [ ] Family G Options / Dealer Positioning
   - blocker: public `factor-research` / `factor-autoresearch` does not yet expose a dedicated auxiliary/options input
   - acceptable temporary state: leave blocked and continue the rest of the execution-tree family backlog
@@ -440,3 +508,4 @@ For cross-market families, add:
 - [ ] Every family logs one before/after `workflow-status --human` snapshot.
 - [ ] Every family has an explicit stop reason: `improved`, `plateaued`, `data_blocked`, or `surface_blocked`.
 - [ ] No family is declared “done” from return improvement alone; it must help execution-tree development.
+- [ ] No family is declared “done” from a single-symbol improvement alone; each factor family should strive for broad market coverage and log any remaining coverage gap explicitly.
