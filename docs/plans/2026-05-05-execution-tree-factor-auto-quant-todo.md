@@ -822,6 +822,86 @@ For cross-market families, add:
 - `YM` is now a concrete runtime blocker for the current profile + current strategy set.
 - this is not a surface-availability blocker anymore; it is a strategy/runtime compatibility blocker that needs a narrower follow-up slice.
 
+### 2026-05-06 Slice 11: Family A YM partial salvage
+
+**Execution**
+- injected `TomacNQ_KillzoneBreakout` into the `YM` managed seed source
+- reran the same synthetic-profile loop, but allowed `run_tomac.py` to continue into export/import even if some strategies failed
+
+**Result**
+- imported `YM` library state improved from “no valid closure” to:
+  - `n_ok=1`
+  - `n_error=3`
+  - `n_meta_invalid=0`
+  - `matched=4`
+  - `library_artifact_id=auto_quant_strategy_library_YM_20260505T181911.021030000Z`
+- per-strategy state:
+  - `TomacAggressiveBE`
+    - `status=error`
+    - `UnboundLocalError: cannot access local variable 'price' where it is not associated with a value`
+  - `TomacKillzoneBreakout`
+    - same runtime failure
+  - `TomacNQ_KillzoneBreakout`
+    - same runtime failure
+  - `TomacRRWinRate`
+    - `status=ok`
+    - `trade_count=0`
+    - no usable edge evidence
+- `auto-quant-prior-init --dry-run` for `YM` therefore applied nothing:
+  - every error strategy was skipped as `status=error`
+  - `TomacRRWinRate` was skipped as `trade_count=0`
+
+**Outcome**
+- `YM` is no longer “surface completely unproven”, because import closure now exists.
+- but it is still not a valid Family A market proof point because no positive / nonzero strategy candidate survived the runtime + trade-count filters.
+
+### 2026-05-06 Slice 12: Family A XAU synthetic-profile probe
+
+**Execution**
+- ran the same opt-in `synthetic_ohlcv` profile on the existing `XAU` cleaned 15m/1h/1d data:
+  - `./target/debug/ict-engine factor-research --symbol XAU --data /Users/thrill3r/Downloads/Tomac/ict-cleaned-mtf/cleaned-15m/xau.continuous-15m.json --backend auto-quant --auto-quant-profile synthetic_ohlcv --state-dir /tmp/ict-engine-family-a-xau-profile --human`
+- then completed prepare / run / export / import closure
+
+**Result**
+- import closure succeeded:
+  - `n_ok=3`
+  - `n_meta_invalid=0`
+  - `matched=3`
+  - `library_artifact_id=auto_quant_strategy_library_XAU_20260505T182423.822631000Z`
+- but all three strategies were flat:
+  - `TomacAggressiveBE`
+    - `trade_count=0`
+  - `TomacKillzoneBreakout`
+    - `trade_count=0`
+  - `TomacRRWinRate`
+    - `trade_count=0`
+- `auto-quant-prior-init --dry-run` therefore applied nothing for `XAU`
+
+**Outcome**
+- `XAU` proves the profile surface can materialize/import on a third market family.
+- but it is not yet a useful Family A quality proof point because the current strategy set generates no trades there.
+
+### 2026-05-06 Slice 13: Family A broader market shape after additional probes
+
+**Result summary**
+- currently positive / usable Family A evidence:
+  - `NQ`
+    - strongest candidate: `TomacNQ_KillzoneBreakout`
+  - `ES`
+    - strongest candidate: `TomacKillzoneBreakout`
+- currently unresolved or weak:
+  - `YM`
+    - runtime failures on the structure candidates
+    - remaining `ok` strategy has `trade_count=0`
+  - `XAU`
+    - no runtime failure, but all current strategies `trade_count=0`
+
+**Outcome**
+- Family A is now proven as a reusable synthetic-profile surface across:
+  - index futures (`NQ`, `ES`)
+  - a precious-metals proxy market (`XAU`)
+- but only `NQ` and `ES` currently produce positive structure/setup candidates worth continuing immediately.
+
 ### 2026-05-06 Slice 10: Family G real-data acquisition attempts
 
 **Execution**
@@ -868,12 +948,13 @@ For cross-market families, add:
 - [x] Run a second Family A iteration round and isolate the strongest current structure/setup candidate.
 - [x] Prove the synthetic Family A profile on a second major futures-index market (`ES`).
 - [x] Verify that the strongest current `NQ` candidate does not automatically generalize to `ES`.
+- [x] Probe the same synthetic Family A profile on additional non-`NQ` markets and record which ones are positive, flat, or runtime-blocked.
 
 ### Next
 
 - [ ] Because the first imported Family A re-check still says `TUNE structure_ict`, keep iterating Family A quality on the new public surface until execution-tree development actually moves.
 - [ ] Fork from `TomacNQ_KillzoneBreakout` rather than from the weaker generic branches, and test whether structure-specific variants can move `quality` or `gate_status`.
-- [ ] Expand the proven synthetic-profile market set beyond `NQ` and `ES` to other priority markets, and keep logging which markets still lack a real importable loop.
+- [ ] Expand the set of **positive** synthetic-profile markets beyond `NQ` and `ES`; `YM` and `XAU` are now surface-proven but still not quality-proven.
 - [ ] Use a reachable provider path or existing captured auxiliary evidence to run the first real Family G `options_hedging` / dealer-positioning research slice rather than only proving the input contract.
 - [ ] Run Family B: Directionality / Persistence only after Family A is stable.
 - [ ] Run Family C: Cross-Market Confirmation once paired data exists.
@@ -900,6 +981,9 @@ For cross-market families, add:
 - [ ] YM synthetic-profile runtime stability
   - blocker: the current Family A strategy set hits `UnboundLocalError: cannot access local variable 'price' where it is not associated with a value` on `YM` for at least `TomacAggressiveBE` and `TomacKillzoneBreakout`
   - acceptable temporary state: do not count `YM` as a proven market until a narrower follow-up slice identifies whether the failure is strategy-specific or a broader synthetic futures runtime issue
+- [ ] XAU Family A candidate quality
+  - blocker: the profile surface imports cleanly on `XAU`, but the current strategy set produces `trade_count=0` across the board, so there is no actionable edge evidence yet
+  - acceptable temporary state: count `XAU` as surface-proven but not as a positive quality/profit proof point
 
 ## Verification Checklist
 
