@@ -109,18 +109,25 @@ mod tests {
             duration_outcome_support: 0.20,
             temporal_posterior_support: 0.30,
             posterior_blend_weight: 0.5,
-            summary_line: "duration_mass=2.400 duration_support=0.200 duration_temporal=0.300 blend=0.500".to_string(),
+            summary_line:
+                "duration_mass=2.400 duration_support=0.200 duration_temporal=0.300 blend=0.500"
+                    .to_string(),
             last_recommended_at: None,
             ..StructuralNodeTemporalPosteriorState::default()
         };
 
-        let blended = blend_node_posterior_with_duration_prior(0.60, Some(&duration_prior), Some(&temporal_state));
+        let blended = blend_node_posterior_with_duration_prior(
+            0.60,
+            Some(&duration_prior),
+            Some(&temporal_state),
+        );
 
         assert!((blended - 0.45).abs() < 1e-9);
     }
 
     #[test]
-    fn transition_adjusted_branch_posteriors_prefers_persisted_temporal_state_over_transition_prior() {
+    fn transition_adjusted_branch_posteriors_prefers_persisted_temporal_state_over_transition_prior(
+    ) {
         let mut priors = BTreeMap::new();
         priors.insert(
             "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:trend:transition_confirmation".to_string(),
@@ -163,10 +170,7 @@ mod tests {
 
         let adjusted = transition_adjusted_branch_posteriors(
             "NQ:belief_regime_node:trend",
-            &[
-                ("transition".to_string(), 0.4),
-                ("trend".to_string(), 0.6),
-            ],
+            &[("transition".to_string(), 0.4), ("trend".to_string(), 0.6)],
             Some("NQ:belief_regime_node:trend:trend_follow_through"),
             &priors,
             &temporal_states,
@@ -179,9 +183,7 @@ mod tests {
         assert!(
             (adjusted["NQ:belief_regime_node:trend:transition_confirmation"] - 0.8).abs() < 1e-9
         );
-        assert!(
-            (adjusted["NQ:belief_regime_node:trend:trend_follow_through"] - 0.2).abs() < 1e-9
-        );
+        assert!((adjusted["NQ:belief_regime_node:trend:trend_follow_through"] - 0.2).abs() < 1e-9);
     }
 
     #[test]
@@ -224,10 +226,7 @@ mod tests {
 
         let adjusted = transition_adjusted_branch_posteriors(
             "NQ:belief_regime_node:trend",
-            &[
-                ("transition".to_string(), 0.5),
-                ("trend".to_string(), 0.5),
-            ],
+            &[("transition".to_string(), 0.5), ("trend".to_string(), 0.5)],
             Some("NQ:belief_regime_node:trend:trend_follow_through"),
             &BTreeMap::new(),
             &temporal_states,
@@ -240,9 +239,7 @@ mod tests {
         assert!(
             (adjusted["NQ:belief_regime_node:trend:transition_confirmation"] - 0.8).abs() < 1e-9
         );
-        assert!(
-            (adjusted["NQ:belief_regime_node:trend:trend_follow_through"] - 0.2).abs() < 1e-9
-        );
+        assert!((adjusted["NQ:belief_regime_node:trend:trend_follow_through"] - 0.2).abs() < 1e-9);
     }
 
     #[test]
@@ -284,17 +281,10 @@ mod tests {
         );
 
         assert!(
-            (adjusted["NQ:belief_regime_node:trend:transition_confirmation"] - 0.7).abs()
-                < 1e-9
+            (adjusted["NQ:belief_regime_node:trend:transition_confirmation"] - 0.7).abs() < 1e-9
         );
-        assert!(
-            (adjusted["NQ:belief_regime_node:trend:range_mean_reversion"] - 0.15).abs()
-                < 1e-9
-        );
-        assert!(
-            (adjusted["NQ:belief_regime_node:trend:trend_follow_through"] - 0.15).abs()
-                < 1e-9
-        );
+        assert!((adjusted["NQ:belief_regime_node:trend:range_mean_reversion"] - 0.15).abs() < 1e-9);
+        assert!((adjusted["NQ:belief_regime_node:trend:trend_follow_through"] - 0.15).abs() < 1e-9);
     }
 
     #[test]
@@ -353,15 +343,10 @@ mod tests {
         );
 
         assert!(
-            (adjusted["NQ:belief_regime_node:trend:transition_confirmation"] - 0.7).abs()
-                < 1e-9
+            (adjusted["NQ:belief_regime_node:trend:transition_confirmation"] - 0.7).abs() < 1e-9
         );
-        assert!(
-            (adjusted["NQ:belief_regime_node:trend:range_mean_reversion"] - 0.28).abs() < 1e-9
-        );
-        assert!(
-            (adjusted["NQ:belief_regime_node:trend:trend_follow_through"] - 0.02).abs() < 1e-9
-        );
+        assert!((adjusted["NQ:belief_regime_node:trend:range_mean_reversion"] - 0.28).abs() < 1e-9);
+        assert!((adjusted["NQ:belief_regime_node:trend:trend_follow_through"] - 0.02).abs() < 1e-9);
     }
 
     #[test]
@@ -374,7 +359,8 @@ mod tests {
                 from_node_id: "NQ:belief_regime_node:trend".to_string(),
                 to_node_id: "NQ:belief_regime_node:transition".to_string(),
                 from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
-                to_branch_id: "NQ:belief_regime_node:transition:transition_confirmation".to_string(),
+                to_branch_id: "NQ:belief_regime_node:transition:transition_confirmation"
+                    .to_string(),
                 observations: 3,
                 weighted_observation_mass: 2.1,
                 wins: 2,
@@ -394,7 +380,8 @@ mod tests {
             StructuralBranchTemporalPosteriorState {
                 transition_key: key,
                 from_branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
-                to_branch_id: "NQ:belief_regime_node:transition:transition_confirmation".to_string(),
+                to_branch_id: "NQ:belief_regime_node:transition:transition_confirmation"
+                    .to_string(),
                 observations: 3,
                 weighted_observation_mass: 2.1,
                 transition_prior: 0.7,
@@ -431,8 +418,8 @@ mod tests {
         node_states.insert(
             "NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition".to_string(),
             StructuralNodeTransitionPosteriorState {
-                transition_key:
-                    "NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition".to_string(),
+                transition_key: "NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition"
+                    .to_string(),
                 from_node_id: "NQ:belief_regime_node:trend".to_string(),
                 to_node_id: "NQ:belief_regime_node:transition".to_string(),
                 observations: 3,
@@ -473,8 +460,8 @@ mod tests {
         node_states.insert(
             "NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition".to_string(),
             StructuralNodeTransitionPosteriorState {
-                transition_key:
-                    "NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition".to_string(),
+                transition_key: "NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition"
+                    .to_string(),
                 from_node_id: "NQ:belief_regime_node:trend".to_string(),
                 to_node_id: "NQ:belief_regime_node:transition".to_string(),
                 observations: 3,
@@ -493,8 +480,8 @@ mod tests {
         node_states.insert(
             "NQ:belief_regime_node:transition=>NQ:belief_regime_node:range".to_string(),
             StructuralNodeTransitionPosteriorState {
-                transition_key:
-                    "NQ:belief_regime_node:transition=>NQ:belief_regime_node:range".to_string(),
+                transition_key: "NQ:belief_regime_node:transition=>NQ:belief_regime_node:range"
+                    .to_string(),
                 from_node_id: "NQ:belief_regime_node:transition".to_string(),
                 to_node_id: "NQ:belief_regime_node:range".to_string(),
                 observations: 2,
@@ -535,8 +522,8 @@ mod tests {
         node_states.insert(
             "NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition".to_string(),
             StructuralNodeTransitionPosteriorState {
-                transition_key:
-                    "NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition".to_string(),
+                transition_key: "NQ:belief_regime_node:trend=>NQ:belief_regime_node:transition"
+                    .to_string(),
                 from_node_id: "NQ:belief_regime_node:trend".to_string(),
                 to_node_id: "NQ:belief_regime_node:transition".to_string(),
                 observations: 3,
@@ -555,8 +542,8 @@ mod tests {
         node_states.insert(
             "NQ:belief_regime_node:transition=>NQ:belief_regime_node:range".to_string(),
             StructuralNodeTransitionPosteriorState {
-                transition_key:
-                    "NQ:belief_regime_node:transition=>NQ:belief_regime_node:range".to_string(),
+                transition_key: "NQ:belief_regime_node:transition=>NQ:belief_regime_node:range"
+                    .to_string(),
                 from_node_id: "NQ:belief_regime_node:transition".to_string(),
                 to_node_id: "NQ:belief_regime_node:range".to_string(),
                 observations: 2,
@@ -575,8 +562,8 @@ mod tests {
         node_states.insert(
             "NQ:belief_regime_node:range=>NQ:belief_regime_node:trend".to_string(),
             StructuralNodeTransitionPosteriorState {
-                transition_key:
-                    "NQ:belief_regime_node:range=>NQ:belief_regime_node:trend".to_string(),
+                transition_key: "NQ:belief_regime_node:range=>NQ:belief_regime_node:trend"
+                    .to_string(),
                 from_node_id: "NQ:belief_regime_node:range".to_string(),
                 to_node_id: "NQ:belief_regime_node:trend".to_string(),
                 observations: 2,

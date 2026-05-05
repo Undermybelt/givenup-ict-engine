@@ -73,8 +73,8 @@ pub use crate::belief_core::regime_filter::{
     structural_duration_weighted_streak_mass,
 };
 pub use crate::belief_core::source_reliability::{
-    structural_delayed_reward_replay_validation, structural_last_offline_seed_source,
-    structural_experience_prior_runtime_metrics, structural_panel_derived_smoothed_prior,
+    structural_delayed_reward_replay_validation, structural_experience_prior_runtime_metrics,
+    structural_last_offline_seed_source, structural_panel_derived_smoothed_prior,
     structural_prior_behavior_policy_probability,
     structural_prior_behavior_policy_probability_variance,
     structural_prior_censoring_adjusted_reward_lower_bound,
@@ -629,8 +629,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         historical_total_records: summary.total_records,
                         historical_followed_count: summary.followed_count,
                         historical_win_rate: structural_scenario_history_win_rate(Some(summary)),
-                        historical_invalidation_rate:
-                            structural_scenario_history_invalidation_rate(Some(summary)),
+                        historical_invalidation_rate: structural_scenario_history_invalidation_rate(
+                            Some(summary),
+                        ),
                         historical_avg_pnl: Some(summary.avg_pnl),
                         experience_prior,
                         current_posterior: None,
@@ -702,9 +703,9 @@ pub fn build_structural_experience_prior_surface_artifact_with_prior_state(
                         historical_total_records: summary.total_records,
                         historical_followed_count: summary.followed_count,
                         historical_win_rate: structural_history_win_rate(Some(summary)),
-                        historical_invalidation_rate: structural_history_invalidation_rate(
-                            Some(summary),
-                        ),
+                        historical_invalidation_rate: structural_history_invalidation_rate(Some(
+                            summary,
+                        )),
                         historical_avg_pnl: Some(summary.avg_pnl),
                         experience_prior,
                         current_posterior: None,

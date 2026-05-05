@@ -316,8 +316,7 @@ mod tests {
         let mut artifact = PendingUpdateArtifact::default();
         artifact.template_feedback.realized_outcome = "pending".to_string();
 
-        let feedback =
-            feedback_record_from_artifact(artifact, "not_followed", None, None, None);
+        let feedback = feedback_record_from_artifact(artifact, "not_followed", None, None, None);
 
         assert_eq!(feedback.realized_outcome, "not_followed");
         assert_eq!(feedback.pnl, 0.0);
@@ -340,11 +339,8 @@ mod tests {
 
     #[test]
     fn structural_learning_evidence_line_includes_fractional_semantics() {
-        let line = structural_learning_evidence_line(
-            Some("fractional_abandoned"),
-            Some(0.25),
-            Some(0.75),
-        );
+        let line =
+            structural_learning_evidence_line(Some("fractional_abandoned"), Some(0.25), Some(0.75));
 
         assert_eq!(
             line,

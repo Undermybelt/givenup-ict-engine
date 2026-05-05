@@ -212,7 +212,9 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
             duration_outcome_support: 0.7727272727,
             temporal_posterior_support: 0.8618181818,
             posterior_blend_weight: 0.4,
-            summary_line: "duration_mass=2.400 duration_support=0.773 duration_temporal=0.862 blend=0.400".to_string(),
+            summary_line:
+                "duration_mass=2.400 duration_support=0.773 duration_temporal=0.862 blend=0.400"
+                    .to_string(),
             last_recommended_at: Some("2026-04-30T03:00:00Z".to_string()),
             ..crate::state::StructuralNodeTemporalPosteriorState::default()
         },
@@ -236,16 +238,13 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_duration_prior_for
         report.regime_posterior.probabilities,
     );
     assert!(report.regime_posterior.confidence.unwrap_or_default() > 0.72);
-    assert!(report
-        .regime_posterior
-        .evidence
-        .iter()
-        .any(|line| line.contains("duration_persistence_prior")
-            && line.contains("observations=9")
-            && line.contains("streaks=4")
-            && line.contains("weighted_streak_mass=2.400")
-            && line.contains("duration_outcome_support=0.773")
-            && line.contains("duration_temporal_posterior_support=0.862")));
+    assert!(report.regime_posterior.evidence.iter().any(|line| line
+        .contains("duration_persistence_prior")
+        && line.contains("observations=9")
+        && line.contains("streaks=4")
+        && line.contains("weighted_streak_mass=2.400")
+        && line.contains("duration_outcome_support=0.773")
+        && line.contains("duration_temporal_posterior_support=0.862")));
     assert!(report
         .regime_posterior
         .evidence
@@ -281,19 +280,21 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_branch_transition_
         ..PreBayesEvidenceFilter::default()
     };
     let mut structural_prior_state = StructuralPriorLearningState::default();
-    structural_prior_state.event_ledger.push(StructuralPriorEvent {
-        source_label: "backtest".to_string(),
-        symbol: "NQ".to_string(),
-        recommendation_id: "rec-prev".to_string(),
-        recommended_at: "2026-04-30T01:00:00Z".to_string(),
-        node_id: "NQ:belief_regime_node:trend".to_string(),
-        branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
-        scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through".to_string(),
-        path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
-            .to_string(),
-        followed_path: true,
-        realized_outcome: Some("win".to_string()),
-    });
+    structural_prior_state
+        .event_ledger
+        .push(StructuralPriorEvent {
+            source_label: "backtest".to_string(),
+            symbol: "NQ".to_string(),
+            recommendation_id: "rec-prev".to_string(),
+            recommended_at: "2026-04-30T01:00:00Z".to_string(),
+            node_id: "NQ:belief_regime_node:trend".to_string(),
+            branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+            scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+            path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                .to_string(),
+            followed_path: true,
+            realized_outcome: Some("win".to_string()),
+        });
     structural_prior_state.branch_transition_priors.insert(
         "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:trend:transition_confirmation".to_string(),
         StructuralBranchTransitionPrior {
@@ -366,14 +367,11 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_branch_transition_
         adjusted_transition > baseline_transition,
         "baseline={baseline_transition:?} adjusted={adjusted_transition:?} baseline_report={baseline_report:?} report={report:?}"
     );
-    assert!(report
-        .regime_posterior
-        .evidence
-        .iter()
-        .any(|line| line.contains("branch_transition_prior")
-            && line.contains("weighted_transition_mass=2.400")
-            && line.contains("transition_outcome_support=0.560")
-            && line.contains("transition_temporal_posterior_support=0.728")));
+    assert!(report.regime_posterior.evidence.iter().any(|line| line
+        .contains("branch_transition_prior")
+        && line.contains("weighted_transition_mass=2.400")
+        && line.contains("transition_outcome_support=0.560")
+        && line.contains("transition_temporal_posterior_support=0.728")));
     assert!(report
         .regime_posterior
         .evidence
@@ -399,19 +397,21 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_node_transition_po
         ..PreBayesEvidenceFilter::default()
     };
     let mut structural_prior_state = StructuralPriorLearningState::default();
-    structural_prior_state.event_ledger.push(StructuralPriorEvent {
-        source_label: "backtest".to_string(),
-        symbol: "NQ".to_string(),
-        recommendation_id: "rec-prev".to_string(),
-        recommended_at: "2026-04-30T01:00:00Z".to_string(),
-        node_id: "NQ:belief_regime_node:trend".to_string(),
-        branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
-        scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through".to_string(),
-        path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
-            .to_string(),
-        followed_path: true,
-        realized_outcome: Some("win".to_string()),
-    });
+    structural_prior_state
+        .event_ledger
+        .push(StructuralPriorEvent {
+            source_label: "backtest".to_string(),
+            symbol: "NQ".to_string(),
+            recommendation_id: "rec-prev".to_string(),
+            recommended_at: "2026-04-30T01:00:00Z".to_string(),
+            node_id: "NQ:belief_regime_node:trend".to_string(),
+            branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+            scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+            path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                .to_string(),
+            followed_path: true,
+            realized_outcome: Some("win".to_string()),
+        });
     let transition_key = "NQ:belief_regime_node:trend:trend_follow_through=>NQ:belief_regime_node:transition:transition_confirmation".to_string();
     structural_prior_state.branch_transition_priors.insert(
         transition_key.clone(),
@@ -473,7 +473,9 @@ fn canonical_belief_snapshot_with_structural_prior_state_uses_node_transition_po
         .regime_posterior
         .evidence
         .iter()
-        .any(|line| line.contains("node_transition_posterior_from=NQ:belief_regime_node:trend:trend_follow_through")));
+        .any(|line| line.contains(
+            "node_transition_posterior_from=NQ:belief_regime_node:trend:trend_follow_through"
+        )));
 }
 
 #[test]
@@ -529,12 +531,12 @@ fn canonical_belief_snapshot_with_structural_prior_state_reconciles_gate_and_str
         report.regime_posterior.probabilities
     );
     assert_eq!(report.gate_decision.selected_regime, "trend");
+    assert_eq!(report.strategy_recommendation.direction, "bull");
     assert_eq!(
-        report.strategy_recommendation.direction,
-        "bull"
-    );
-    assert_eq!(
-        report.strategy_recommendation.selected_market_subgraph.as_deref(),
+        report
+            .strategy_recommendation
+            .selected_market_subgraph
+            .as_deref(),
         Some("futures_index_trend_subgraph")
     );
     assert_eq!(

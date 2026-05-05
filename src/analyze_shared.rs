@@ -119,16 +119,11 @@ pub(crate) fn offline_structural_support_hint(input: OfflineStructuralSupportHin
     support
 }
 
-pub(crate) fn structural_baseline_support(
-    score: Option<f64>,
-    fallback: f64,
-) -> f64 {
+pub(crate) fn structural_baseline_support(score: Option<f64>, fallback: f64) -> f64 {
     score.unwrap_or(fallback).clamp(0.0, 1.0)
 }
 
-pub(crate) fn artifact_validation_support_bias(
-    summary: &ArtifactDecisionSummary,
-) -> f64 {
+pub(crate) fn artifact_validation_support_bias(summary: &ArtifactDecisionSummary) -> f64 {
     let mut bias: f64 = match summary.consumed_trend_status.as_str() {
         "validated_positive" | "validated_improving" => 0.08,
         "validated_negative" | "validated_regressing" => -0.10,
@@ -209,7 +204,9 @@ pub(crate) fn structural_support_hint_for_mutation(
         conformal_coverage_1sigma: input.conformal_coverage_1sigma,
         regime_break_penalty: input.regime_break_penalty,
         structural_break_detected: input.structural_break_detected,
-        best_factor_composite_score: Some(input.evaluation.metrics_after.best_factor_composite_score),
+        best_factor_composite_score: Some(
+            input.evaluation.metrics_after.best_factor_composite_score,
+        ),
         quality_delta: Some(input.evaluation.score_delta),
         score_before: Some(input.evaluation.score_before),
         score_after: Some(input.evaluation.score_after),
@@ -219,9 +216,7 @@ pub(crate) fn structural_support_hint_for_mutation(
     })
 }
 
-pub(crate) fn structural_support_hint_for_backtest(
-    input: BacktestStructuralSupportInput,
-) -> f64 {
+pub(crate) fn structural_support_hint_for_backtest(input: BacktestStructuralSupportInput) -> f64 {
     offline_structural_support_hint(OfflineStructuralSupportHintInput {
         baseline_support: structural_baseline_support(input.baseline_composite_score, 0.50),
         aggregate_return: Some(input.aggregate_return),
@@ -353,31 +348,33 @@ pub(crate) fn persist_analyze_run(
         selected_entry_quality: report.supporting.entry_quality.selected_state.clone(),
         decision_hint: report.supporting.decision_hint.clone(),
         regime_probs: Some(report.supporting.model_state.regime_probs),
-        canonical_structural_regime_posterior: Some(ict_engine::state::CanonicalStructuralRegimePosterior {
-            active_regime: report
-                .supporting
-                .canonical_belief_report
-                .regime_posterior
-                .active_regime
-                .clone(),
-            confidence: report
-                .supporting
-                .canonical_belief_report
-                .regime_posterior
-                .confidence,
-            probabilities: report
-                .supporting
-                .canonical_belief_report
-                .regime_posterior
-                .probabilities
-                .clone(),
-            evidence: report
-                .supporting
-                .canonical_belief_report
-                .regime_posterior
-                .evidence
-                .clone(),
-        }),
+        canonical_structural_regime_posterior: Some(
+            ict_engine::state::CanonicalStructuralRegimePosterior {
+                active_regime: report
+                    .supporting
+                    .canonical_belief_report
+                    .regime_posterior
+                    .active_regime
+                    .clone(),
+                confidence: report
+                    .supporting
+                    .canonical_belief_report
+                    .regime_posterior
+                    .confidence,
+                probabilities: report
+                    .supporting
+                    .canonical_belief_report
+                    .regime_posterior
+                    .probabilities
+                    .clone(),
+                evidence: report
+                    .supporting
+                    .canonical_belief_report
+                    .regime_posterior
+                    .evidence
+                    .clone(),
+            },
+        ),
         hybrid_regime_label: report.analysis.regime_bayesian.hybrid_regime_label.clone(),
         hybrid_regime_age_bars: report
             .supporting
@@ -495,7 +492,9 @@ pub(crate) fn persist_analyze_run(
             &report.supporting.recommended_next_command,
         ),
         blocking_truth: report.supporting.workflow_snapshot.blocking_truth.clone(),
-        latest_analyze: Some(workflow_phase_snapshot_from_analyze_run(&analyze_run_record)),
+        latest_analyze: Some(workflow_phase_snapshot_from_analyze_run(
+            &analyze_run_record,
+        )),
         latest_ensemble_vote: Some(analyze_ensemble_record.clone()),
         ..WorkflowSnapshot::default()
     };

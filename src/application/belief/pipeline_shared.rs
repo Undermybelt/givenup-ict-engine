@@ -385,7 +385,11 @@ fn apply_structural_prior_state_to_belief_report(
         }
     }
     if filter.uses_soft_evidence && !filter.soft_market_regime_distribution.is_empty() {
-        let trend = filter.soft_market_regime_distribution.get("bull").copied().unwrap_or(0.0)
+        let trend = filter
+            .soft_market_regime_distribution
+            .get("bull")
+            .copied()
+            .unwrap_or(0.0)
             + filter
                 .soft_market_regime_distribution
                 .get("bear")
@@ -405,14 +409,15 @@ fn apply_structural_prior_state_to_belief_report(
 
     for (regime, probability) in canonical_probabilities.iter_mut() {
         let node_id = format!("{symbol}:belief_regime_node:{regime}");
-        let node_temporal_state = structural_prior_state.node_temporal_posteriors.get(&node_id);
+        let node_temporal_state = structural_prior_state
+            .node_temporal_posteriors
+            .get(&node_id);
         if let Some(duration_prior) = structural_prior_state.node_duration_priors.get(&node_id) {
-            *probability =
-                blend_node_posterior_with_duration_prior(
-                    *probability,
-                    Some(duration_prior),
-                    node_temporal_state,
-                );
+            *probability = blend_node_posterior_with_duration_prior(
+                *probability,
+                Some(duration_prior),
+                node_temporal_state,
+            );
         }
     }
 
@@ -431,10 +436,18 @@ fn apply_structural_prior_state_to_belief_report(
             &structural_prior_state.branch_temporal_posteriors,
             &structural_prior_state.node_transition_posteriors,
         );
-        let node_transition_adjusted = adjusted_node_probabilities.iter().any(|(regime, probability)| {
-            (canonical_probabilities.get(regime).copied().unwrap_or_default() - *probability).abs()
-                > 1e-9
-        });
+        let node_transition_adjusted =
+            adjusted_node_probabilities
+                .iter()
+                .any(|(regime, probability)| {
+                    (canonical_probabilities
+                        .get(regime)
+                        .copied()
+                        .unwrap_or_default()
+                        - *probability)
+                        .abs()
+                        > 1e-9
+                });
         canonical_probabilities = adjusted_node_probabilities;
         if node_transition_adjusted {
             report
@@ -465,8 +478,10 @@ fn apply_structural_prior_state_to_belief_report(
                 structural_branch_label_for_regime,
             );
             for (regime, _) in &regime_probabilities {
-                let branch_id =
-                    format!("{node_id}:{}", structural_branch_label_for_regime(regime.as_str()));
+                let branch_id = format!(
+                    "{node_id}:{}",
+                    structural_branch_label_for_regime(regime.as_str())
+                );
                 if let Some(probability) = adjusted.get(&branch_id) {
                     canonical_probabilities.insert(regime.clone(), *probability);
                 }
@@ -591,7 +606,9 @@ fn apply_structural_prior_state_to_belief_report(
         .map(|(regime, _)| regime.clone());
     if let Some(active) = active_regime.as_ref() {
         let node_id = format!("{symbol}:belief_regime_node:{active}");
-        let node_temporal_state = structural_prior_state.node_temporal_posteriors.get(&node_id);
+        let node_temporal_state = structural_prior_state
+            .node_temporal_posteriors
+            .get(&node_id);
         if let Some(duration_prior) = structural_prior_state.node_duration_priors.get(&node_id) {
             let active_probability = canonical_probabilities.get(active).copied().unwrap_or(0.5);
             let base_confidence = report
@@ -632,14 +649,16 @@ fn apply_structural_prior_state_to_belief_report(
                     .map(|state| state.temporal_posterior_support)
                     .unwrap_or(duration_prior.temporal_posterior_support)
             ));
-            if let Some(blend_weight) = node_temporal_state.map(|state| state.posterior_blend_weight)
+            if let Some(blend_weight) =
+                node_temporal_state.map(|state| state.posterior_blend_weight)
             {
                 report
                     .regime_posterior
                     .evidence
                     .push(format!("duration_posterior_blend_weight={blend_weight:.3}"));
             }
-            if let Some(summary_line) = node_temporal_state.map(|state| state.summary_line.clone()) {
+            if let Some(summary_line) = node_temporal_state.map(|state| state.summary_line.clone())
+            {
                 report
                     .regime_posterior
                     .evidence

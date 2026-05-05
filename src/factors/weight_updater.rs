@@ -87,9 +87,7 @@ impl WeightUpdater {
         let structurally_resolved_feedback = feedback
             .iter()
             .filter(|record| {
-                !crate::state::structural_feedback_outcome_is_unresolved(
-                    &record.realized_outcome,
-                )
+                !crate::state::structural_feedback_outcome_is_unresolved(&record.realized_outcome)
             })
             .cloned()
             .collect::<Vec<_>>();
@@ -371,9 +369,8 @@ mod tests {
                 branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
                 scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
                     .to_string(),
-                path_id:
-                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
-                        .to_string(),
+                path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                    .to_string(),
                 followed_path: true,
                 exit_reason: Some("target_hit".to_string()),
                 notes: None,
@@ -449,9 +446,8 @@ mod tests {
                 branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
                 scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
                     .to_string(),
-                path_id:
-                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
-                        .to_string(),
+                path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                    .to_string(),
                 followed_path: true,
                 exit_reason: None,
                 notes: None,
@@ -522,9 +518,8 @@ mod tests {
                 branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
                 scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
                     .to_string(),
-                path_id:
-                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
-                        .to_string(),
+                path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                    .to_string(),
                 followed_path: false,
                 exit_reason: Some("user_skipped".to_string()),
                 notes: None,
@@ -604,9 +599,8 @@ mod tests {
                 branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
                 scenario_id: "scenario:NQ:belief_regime_node:trend:trend_follow_through"
                     .to_string(),
-                path_id:
-                    "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
-                        .to_string(),
+                path_id: "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary"
+                    .to_string(),
                 followed_path: true,
                 exit_reason: Some("manual_exit".to_string()),
                 notes: None,
