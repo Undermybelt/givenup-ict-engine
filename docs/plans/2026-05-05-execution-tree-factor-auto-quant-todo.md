@@ -4260,6 +4260,45 @@ First independent outcome-label check:
   - the 15m base now hosts 3 candidates: 1 dense, 1 probe, 1 anecdotal
 - the user's `P2 (high Sharpe)` preference now has one promotable execution candidate (`TrendPullbackDense15m`) and a meaningful runner-up (`LiquiditySweepReclaim15m`, PF 1.57 at probe density). Both are in the same trend / sweep family. To get a second orthogonal-source dense candidate, the next slice should port `RegimePersistenceClusterDense` to 15m (1h baseline 33 trades; expected `~130` at 15m, naturally dense) and structurally widen `KillzoneIVProxy15m` or `LiquiditySweepReclaim15m` further.
 
+### 2026-05-07 Slice 85: Second dense candidate plus mean-reversion thin leader
+
+**Execution**
+- followed Slice 84's next-plan: port `RegimePersistenceClusterDense` to 15m base, and structurally widen `LiquiditySweepReclaim15m` from probe density to dense.
+- `TomacNQ_RegimePersistenceClusterDense15m`:
+  - 15m base port of `PersistenceClusterDense` (1h baseline 33 trades / Sharpe 0.11 / PF 1.49)
+  - corrected the 1h parent's accidentally-redundant gate (`(higher_trend | local_stack) & local_stack` simplified to `local_stack`, ignoring the 4h trend signal entirely) into a true `OR`-combined trend gate (`higher_trend_4h | higher_trend_1h | local_stack`) using `1h` and `4h` informative resonance — same pattern that worked for `TrendPullbackDense15m` (Slice 83, 103 trades)
+  - also fixed the 1h parent's unreachable `dataframe["ema55"]` reference in the exit (`ema55` is never computed; the conditional fell through to `ema89`); the 15m port uses `close < ema34` for the `lost_persistence` exit which matches the indicator set
+- `TomacNQ_RegimeLiquiditySweepReclaim15mWide`:
+  - structurally widens Slice 84's 15m port by dropping the `not_already_extended (close < ema21 * 1.008)` gate and softening `body_strength > 0.4` to `body_strength > 0.25`
+  - liquid window slightly expanded to `8-22 UTC` from `12-21 UTC` to capture pre-market and Asia-overlap sweep events
+- ran both via `run_tomac_one.py --timeframe 15m`.
+- saved logs to `/tmp/ict-engine-ibkr-probe/slice_85_persistence15m_run.log` and `/tmp/ict-engine-ibkr-probe/slice_85_sweep15mwide_run.log`.
+- kept `ict-engine` runtime source frozen.
+
+**Outputs**
+- `scripts/auto_quant_external/strategies/TomacNQ_RegimePersistenceClusterDense15m.py`
+- `scripts/auto_quant_external/strategies/TomacNQ_RegimeLiquiditySweepReclaim15mWide.py`
+- corresponding copies in `/Users/thrill3r/Auto-Quant/user_data/strategies_external/`
+
+**Result — current dense / thin candidate roster after Slice 85**
+
+| Candidate | Slice | TF | trade_count | density | Sharpe | Sortino | Calmar | profit_pct | max_dd_pct | win_rate | profit_factor |
+|---|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|
+| `TrendPullbackDense15m` | 83 | 15m | 103 | dense | 0.1211 | 0.2368 | 2.13 | 3.92 | -3.21 | 31.07 | 1.21 |
+| **`PersistenceClusterDense15m`** | 85 | 15m | **146** | **dense** | 0.2112 | 0.3801 | 2.51 | **7.22** | -5.02 | 40.41 | 1.24 |
+| **`LiquiditySweepReclaim15mWide`** | 85 | 15m | 62 | thin | **0.2452** | **0.7164** | **7.87** | **8.67** | **-1.92** | 48.39 | **1.72** |
+| `TrendPullbackDense` (1h, retired) | 80 | 1h | 57 | thin | 0.1855 | 0.3295 | 3.09 | 8.80 | -5.03 | 45.61 | 1.58 |
+| `RegimePersistenceClusterDense` (1h, retired) | 80 | 1h | 33 | thin | 0.1081 | 0.2216 | 2.06 | 6.32 | -5.42 | 60.61 | 1.49 |
+| `LiquiditySweepReclaim15m` | 84 | 15m | 13 | probe | 0.0458 | 0.1201 | 2.98 | 1.74 | -1.02 | 53.85 | 1.57 |
+
+**Interpretation**
+- the pack has now produced **two dense execution candidates from genuinely different shapes** (`TrendPullbackDense15m` and `PersistenceClusterDense15m`) and **one mean-reversion / sweep thin candidate that is the new pack leader by every risk-adjusted metric** (`LiquiditySweepReclaim15mWide`).
+- `LiquiditySweepReclaim15mWide` is the standout this slice: Sharpe `0.2452`, Sortino `0.7164`, Calmar `7.87`, profit `+8.67%`, max drawdown only `-1.92%`. The 4.8x density rise from the unwidened 15m port (`13 -> 62 trades`) preserved enough of the parent 1h candidate's high-PF edge that the candidate sits above every other candidate in both standalone Sharpe and risk-adjusted return shape. It is also from a different source family (mean-reversion / sweep) than the trend-continuation dense candidates, making it the first credible orthogonal-source candidate the post-regime portfolio-diversity scorecard can use.
+- the user's `P2 (high Sharpe)` preference is now meaningfully advanced: best annualized Sharpe estimate is `~0.8` (`0.2452 * sqrt(N_TRADES_PER_YEAR / N_RUN_YEARS)` order, with 62 trades / 3Y), still below the typical `>= 1.0` promotion bar, but a real, legitimate above-noise number from a fully-coded backtest.
+- `PersistenceClusterDense15m` produced the highest absolute Sharpe (`0.2112`) among the dense candidates and the highest dense profit (`+7.22%`), with `146` trades — the largest density observation in the pack. The drawdown is `-5.02%` which is meaningfully larger than `LiquiditySweepReclaim15mWide`'s `-1.92%`, illustrating the trade-off between persistence-cluster (more trades but more drawdown) and sweep-reclaim (fewer trades but tighter drawdown) regime descriptors.
+- the corrected `OR`-combined trend gate in `PersistenceClusterDense15m` is a meaningful upstream finding: the 1h parent's `(higher_trend | local_stack) & local_stack` reduces to `local_stack` and effectively ignores the 4h trend signal. Re-running the 1h parent with the correct OR gate would also lift its trade count, but the dense floor is most cleanly cleared by the 15m TF pivot anyway.
+- with three candidates now at thin-or-better density across two source families (trend continuation + mean reversion), the next slice can begin the post-regime portfolio-diversity scorecard work: pairwise return correlation between the three top candidates, payoff-shape comparison, and incremental portfolio Sharpe under equal-risk weighting. This requires either enabling freqtrade's `--export trades` and post-processing the trade log, or computing equity curves directly from the backtest results.
+
 ## Current Todo Board
 
 ### Done
@@ -4338,6 +4377,7 @@ First independent outcome-label check:
 - [x] Unlocked `NQ/USD` 5m / 15m timeframes by running `prepare_external.py` on the local `NQ_1min_Continuous_Shifted_2836.csv` 1m corpus: `NQ_USD-5m.feather` (1,053,341 bars) and `NQ_USD-15m.feather` (351,288 bars), both `~15Y` span. Authored `TomacNQ_RegimeLiquiditySweepReclaimHyper` as the first structural-widening probe: trade count rose 4 -> 10 (2.5x density), profit factor compressed from 7.53 to 2.54 but stayed strongly positive, Sortino went from invalid `-100` to a real `0.4223`. `FVGRetrace5m` still blocked by a freqtrade base-timeframe-vs-class-attribute config quirk; needs a per-strategy config or wrapper next slice.
 - [x] First candidate clears the `dense (>= 80)` trade-count floor. Authored `run_tomac_one.py` wrapper that accepts an optional timeframe argument so freqtrade applies it before the strategy class is loaded; this unblocks `FVGRetrace5m` (now runs but over-specified at 5m, only 3 trades) and lets the new `TrendPullbackDense15m` port hit `103 trades` / Sharpe `0.12` / Calmar `2.13` / PF `1.21` on `NQ/USD 15m ~3Y`. Density-quality tradeoff is real but bounded; the 15m candidate is the only currently-promotable execution candidate in the pack.
 - [x] Ported `LiquiditySweepReclaim` and `KillzoneIVProxy` to 15m base; results show TF pivot scales `~4x` for `OR`-combined gates (TrendPullback) but does not help narrow `AND`-window gates (Killzone). `LiquiditySweepReclaim15m`: 4 -> 13 trades (probe_only, PF 1.57). `KillzoneIVProxy15m`: 2 -> 1 trade (regression). Lesson: TF pivot needs to be paired with structural widening for narrow-window candidates.
+- [x] Pack now has 2 dense candidates from different shapes plus a mean-reversion thin leader. `PersistenceClusterDense15m` (Slice 85, 15m TF pivot with corrected OR-trend gate): 146 trades / Sharpe 0.21 / +7.22% / DD -5.02% — second dense and current dense Sharpe leader. `LiquiditySweepReclaim15mWide` (Slice 85, structurally widened 15m port): 62 trades / Sharpe 0.25 / Sortino 0.72 / Calmar 7.87 / +8.67% / DD -1.92% / PF 1.72 — now the pack's risk-adjusted leader from a different source family (mean reversion / sweep), eligible to start the post-regime portfolio-diversity scorecard.
 
 ### Next
 
