@@ -3824,6 +3824,49 @@ First independent outcome-label check:
   - start running `factor-research --backend auto-quant` against the `6` Slice 72-74 candidates to collect first trade-density and Sharpe evidence
   - or author `15m` and `4h` companions to the strongest existing 1h shape to extend the timeframe ladder coverage further before any benchmark spend
 
+### 2026-05-07 Slice 75: IBKR vol-regime data acquisition for vol_regime_v2
+
+**Execution**
+- pivoted from candidate-authorship to provider-backed data acquisition. The user's updated guidance was explicit: prefer IBKR (strongest), then TradingView Remix, then yfinance, when going beyond local Tomac NQ data.
+- confirmed runtime state:
+  - `IB Gateway 10.37` healthy on port `4002` (PID `51834`, process tree `JavaApplicationStub`)
+  - `provider-status` reports `ibkr` as `pending(configured_runtime_unhealthy:ibkr_runtime_dependencies_missing_with_gateway_reachable)` from the Rust runtime perspective, but the Python `fetch_external.py ibkr-historical` path through the `ibkr_bridge` package + `ib_async` works directly against the gateway and was the path used for prior `qqq.iv.1d.10y` and `qqq.hv.1d.10y` artifacts
+- fetched five high-value missing vol-regime slices via `fetch_external.py ibkr-historical`:
+  - `VIX9D 1d 10Y` -> `1,978` rows (`2018-06-22` -> `2026-05-06`)
+  - `VVIX 1d 10Y` -> `2,513` rows (`2016-05-09` -> `2026-05-06`)
+  - `VXN 1d 10Y` -> `2,513` rows (`2016-05-09` -> `2026-05-06`)
+  - `SPY HISTORICAL_VOLATILITY 1d 10Y` -> `2,505` rows (`2016-05-09` -> `2026-05-05`)
+  - `SPY OPTION_IMPLIED_VOLATILITY 1d 10Y` -> `2,513` rows (`2016-05-09` -> `2026-05-06`)
+- kept `ict-engine` runtime source frozen.
+- did not modify `regime_factor_benchmark.py` or any other in-flight Python harness; data preparation only.
+
+**Outputs**
+- `/tmp/ict-engine-ibkr-probe/vix9d.1d.10y.csv`
+- `/tmp/ict-engine-ibkr-probe/vvix.1d.10y.csv`
+- `/tmp/ict-engine-ibkr-probe/vxn.1d.10y.csv`
+- `/tmp/ict-engine-ibkr-probe/spy.hv.1d.10y.csv`
+- `/tmp/ict-engine-ibkr-probe/spy.iv.1d.10y.csv`
+
+**Result**
+- the local `/tmp/ict-engine-ibkr-probe/` directory now holds the following ten replayable, time-aligned vol-regime time series, all `1d` `10Y`:
+  - price proxies: `qqq`, `gld`, `spy` (+ existing earlier slices)
+  - implied volatility: `qqq.iv`, `spy.iv`
+  - historical volatility: `qqq.hv`, `spy.hv`
+  - vol indices: `vix9d`, `vvix`, `vxn`
+  - already cached separately: `VIX 1d 10Y`
+- this directly addresses the user's third-priority preference (options Greeks / vol / IV / skew / OI) at the highest-leverage feature category — vol-regime descriptors — and removes the data-acquisition blocker that previously forced `vol_regime_v2` to remain a paper design.
+
+**Interpretation**
+- the vol-regime data corpus is now rich enough to support a properly-shaped `vol_regime_v2` implementation, including:
+  - VIX9D / VIX / VIX3M-equivalent term structure (using VIX9D + VIX as the available short/medium pair until VIX3M is fetched)
+  - VVIX as direct vol-of-vol input rather than a rolling-std proxy
+  - VXN as Nasdaq-specific vol benchmark for cross-validation against NQ
+  - SPY HV/IV as a cross-validation lane against the QQQ HV/IV pair already used in Slice 69
+- the `vol_regime_v2` feature design recorded in Slice 72 can now be implemented with real inputs rather than only ATR-derived proxies. The next loop iteration should either:
+  - implement `vol_regime_v2` in `regime_factor_benchmark.py` (requires touching the user's in-flight benchmark; do only if user confirms they have committed their accumulated edits)
+  - or write a self-contained `vol_regime_v2_features.py` module under `scripts/auto_quant_external/` that defines the new feature columns and an alias `FEATURE_SET_ALIASES["vol_regime_v2"] = VOL_REGIME_V2_VECTOR_FEATURES`, leaving wiring to the user
+- additional high-value fetches still missing: `VIX3M 1d 10Y`, `NDX 1d 10Y`, `^MOVE 1d 10Y` (bond vol), `OVX 1d 10Y` (oil vol), and per-ETF IV/HV mirrors for `IWM`, `DIA`. None are urgent for the immediate `vol_regime_v2` lift but they would extend the breadth lane.
+
 ## Current Todo Board
 
 ### Done
@@ -3892,6 +3935,7 @@ First independent outcome-label check:
 - [x] Recorded a concrete `vol_regime_v2` feature-design proposal for the next regime-benchmark probe so the rejected Slice 69 shape is replaced by percentile-rank, categorical bin, term-structure proxy, vol-of-vol proxy, spike, and long-window mean-reversion features instead of more raw level/spread/trend columns.
 - [x] Authored two more orthogonal external strategy candidates so the pack now exposes structural retrace and session-vol-regime gated geometries: `TomacNQ_RegimeFVGRetrace` (Family A, FVG retest and reject, Layer 1 + Layer 3) and `TomacNQ_RegimeKillzoneIVProxy` (Family H + Layer 4, AM-killzone breakout gated by `ATR(5)/ATR(60)` term-structure proxy plus non-vol-spike `atr_pct_z240` gate); kept `ict-engine` runtime source frozen and did not touch the in-flight `regime_factor_benchmark.py`.
 - [x] Closed the Family E and the 1h-monoculture timeframe gaps with two more candidates: `TomacNQ_RegimeCrowdingExhaustion` (Family E, 3-bar crowded selling near swing low + high-volume bullish absorption, Layer 1 + Layer 4 counter-regime) and `TomacNQ_RegimeFVGRetrace5m` (Family A 5m base with `15m/1h/4h` informative resonance, Layer 1 + Layer 4 timeframe-coverage); pack now has at least one candidate for Families A/B/D/E/F/H and a first multi-TF foothold on `5m`.
+- [x] Acquired five missing IBKR-backed vol-regime slices for `vol_regime_v2`: `VIX9D 1d 10Y` (1,978 rows), `VVIX 1d 10Y` (2,513 rows), `VXN 1d 10Y` (2,513 rows), `SPY HISTORICAL_VOLATILITY 1d 10Y` (2,505 rows), `SPY OPTION_IMPLIED_VOLATILITY 1d 10Y` (2,513 rows); IBKR Gateway 10.37 confirmed healthy on port `4002`; `vol_regime_v2` is no longer paper-only and can now use real VIX-term-structure (VIX9D vs VIX), real VVIX vol-of-vol, and SPY HV/IV cross-validation against the QQQ pair from Slice 69.
 
 ### Next
 
@@ -4071,8 +4115,20 @@ First independent outcome-label check:
   - add `iv_to_iv_252_high_distance`, `iv_to_iv_252_low_distance`
   - add `vrp_state_5bin` categorical regime
   - add `iv_trend_sign × hv_trend_sign × vix_trend_sign` 8-state categorical
-  - add `vix_term_proxy_short_long` (`ATR(5)/ATR(60)`) when VIX9D/VIX1Y is missing
-  - add `vvix_proxy` and `vix_spike_5b` boolean
+  - input data ready as of Slice 75:
+    - `/tmp/ict-engine-ibkr-probe/qqq.iv.1d.10y.csv` (Slice 69)
+    - `/tmp/ict-engine-ibkr-probe/qqq.hv.1d.10y.csv` (Slice 69)
+    - `/tmp/ict-engine-ibkr-probe/spy.iv.1d.10y.csv` (Slice 75)
+    - `/tmp/ict-engine-ibkr-probe/spy.hv.1d.10y.csv` (Slice 75)
+    - `VIX 1d 10Y` (already cached)
+    - `/tmp/ict-engine-ibkr-probe/vix9d.1d.10y.csv` (Slice 75; short-term vol)
+    - `/tmp/ict-engine-ibkr-probe/vvix.1d.10y.csv` (Slice 75; vol-of-vol)
+    - `/tmp/ict-engine-ibkr-probe/vxn.1d.10y.csv` (Slice 75; Nasdaq vol benchmark for NQ cross-validation)
+  - real VIX-term-structure pair: `VIX9D / VIX` ratio replaces the `ATR(5) / ATR(60)` in-asset proxy
+  - real VVIX series replaces the `rolling(VIX, 20).std()` vol-of-vol proxy
+  - add `vix_term_proxy_short_long` (`VIX9D / VIX` real) when both columns present, fall back to ATR proxy otherwise
+  - add `vvix_level_z20`, `vvix_change3`
+  - add `vix_spike_5b` boolean (`VIX > rolling(VIX, 60).max(prior 5 bars)`)
   - add `iv_meanrev_252_z` and `vrp_regime_persistence`
   - promotion floor: `eval_family_f1 >= 0.55` on `NQ 1d` before extending to `4h` / `1h`
 - [ ] Re-rank families only after Family A breadth is logged:
