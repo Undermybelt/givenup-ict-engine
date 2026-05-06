@@ -39,6 +39,8 @@ CANDIDATES: list[tuple[str, str]] = [
     ("TomacNQ_RegimeTrendPullbackDense15m", "trend continuation pullback"),
     ("TomacNQ_RegimePersistenceClusterDense15m", "trend continuation persistence"),
     ("TomacNQ_RegimeLiquiditySweepReclaim15mWide", "mean reversion / sweep"),
+    ("TomacNQ_RegimeSweepLowVIX15m", "mean reversion / sweep + low-VIX gate"),
+    ("TomacNQ_RegimeSweepHighVIX15m", "mean reversion / sweep + high-VIX gate"),
 ]
 
 

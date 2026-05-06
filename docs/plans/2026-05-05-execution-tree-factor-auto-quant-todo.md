@@ -4361,6 +4361,66 @@ Inverse-volatility weights: TrendPullback `0.347`, PersistenceCluster `0.264`, S
 - **The constructive lesson:** the basket needs MORE candidates with Sharpe roughly comparable to `SweepReclaim15mWide` (`~2.5+`) but in DIFFERENT source families. Currently the trend pair sits at Sharpe `1.06-1.54`, which is materially lower; their lower correlation does not compensate. The next slice should aim to widen / port additional mean-reversion or volatility-risk-premium candidates with the goal of producing a SECOND `Sharpe >= 2.0` orthogonal-source candidate, after which the basket diversification benefit can re-emerge.
 - the scorecard methodology has a known caveat: with sparse intraday trading, daily-PnL series have many zero days, which shrinks both numerator and denominator of Sharpe and amplifies the `sqrt(252)` annualization. The relative ranking across candidates and across portfolio weightings is preserved, which is what the diversity scorecard needs. For absolute promotion thresholds the per-trade Sharpe sentinel from the freqtrade backtest is the more conservative lens; we should report both views going forward.
 
+### 2026-05-07 Slice 87: First vol-regime gating probe — VIX absolute-threshold split
+
+**Execution**
+- followed Slice 86's next-plan: hunt for a SECOND high-Sharpe orthogonal candidate by gating `LiquiditySweepReclaim15mWide` (the Sharpe-2.68 standout) on an external vol regime signal.
+- chose VIX absolute threshold split as the first probe because:
+  - the `/tmp/ict-engine-ibkr-probe/vix.1d.10y.csv` (`2018-2026 daily VIX`) artifact already exists from earlier slices
+  - the absolute threshold is the simplest possible gate, easy to interpret if it works or fails
+  - the parent's edge has a clean intraday-sweep semantic that intuitively pairs with vol regime
+- authored two mutually-exclusive children:
+  - `TomacNQ_RegimeSweepLowVIX15m`: same condition stack as parent + `vix_close < 22.0`
+  - `TomacNQ_RegimeSweepHighVIX15m`: same condition stack as parent + `vix_close >= 22.0`
+- both load `/tmp/ict-engine-ibkr-probe/vix.1d.10y.csv` at module load and forward-fill the daily VIX close onto each 15m candle's date in `populate_indicators`. This is the first time an external IBKR data series gates a freqtrade entry without going through `informative_pairs` — precedent for future cross-asset / vol-index gates.
+- ran both with trade export and re-ran `portfolio_diversity_scorecard.py` over a 5-candidate basket (3 prior + 2 new).
+- saved scorecard output to `/tmp/ict-engine-ibkr-probe/slice_87_scorecard.log`.
+- kept `ict-engine` runtime source frozen.
+
+**Outputs**
+- `scripts/auto_quant_external/strategies/TomacNQ_RegimeSweepLowVIX15m.py`
+- `scripts/auto_quant_external/strategies/TomacNQ_RegimeSweepHighVIX15m.py`
+- `scripts/auto_quant_external/portfolio_diversity_scorecard.py` (CANDIDATES list extended)
+- `/tmp/ict-engine-ibkr-probe/trades_sweeplowvix15m.json`
+- `/tmp/ict-engine-ibkr-probe/trades_sweephighvix15m.json`
+- `/tmp/ict-engine-ibkr-probe/slice_87_scorecard.log`
+
+**Result — standalone metrics on `NQ/USD 15m ~3Y`**
+
+| Candidate | trade_count | Sharpe (annualized) | Sortino | Calmar | Max DD | Total return |
+|---|---:|---:|---:|---:|---:|---:|
+| `LiquiditySweepReclaim15mWide` (parent, Slice 85) | 62 | 2.684 | 4.109 | 9.52 | -1.89% | 9.14% |
+| `SweepLowVIX15m` (Slice 87) | 51 | 2.170 | 2.878 | 7.04 | -1.89% | 6.67% |
+| `SweepHighVIX15m` (Slice 87) | 1 | -1.426 | 0.000 | -2.03 | -0.54% | -0.54% |
+
+**Pairwise correlation update (key cells only)**
+
+| | parent SweepReclaim | SweepLowVIX15m | SweepHighVIX15m |
+|---|---:|---:|---:|
+| parent SweepReclaim | 1.000 | **0.906** | 0.131 |
+| SweepLowVIX15m | 0.906 | 1.000 | 0.012 |
+| SweepHighVIX15m | 0.131 | 0.012 | 1.000 |
+
+**Combined-portfolio update**
+
+| Portfolio | Sharpe | Sortino | Max DD | Total return |
+|---|---:|---:|---:|---:|
+| Equal-weight 5-candidate | 2.314 | 3.493 | -1.28% | 5.34% |
+| Inverse-volatility 5-candidate | 1.821 | 2.040 | -0.81% | 1.61% |
+| Best-standalone (parent) | 2.684 | 4.109 | -1.89% | 9.14% |
+
+**Interpretation**
+- the `VIX < 22` threshold is poorly calibrated for the `2023-01 -> 2025-12` backtest window. `51` of the parent's `62` trades happened on days with `VIX < 22`; only `1` trade fell on a day with `VIX >= 22`. The recent VIX regime has been mostly elevated relative to the long-run median but still rarely above `22`, so the threshold ended up too high.
+- the `LowVIX` child Sharpe `2.17` is **lower** than the parent's `2.68`. Removing the `11` high-VIX trades hurt rather than helped — those trades were net-positive contributions, not the noise the gate hypothesis assumed. The hypothesis "calm regime is when sweep works best" is rejected on this evidence.
+- the `LowVIX` child correlation with parent `0.906` is, as expected, very high: a regime-gated child whose entries are a strict subset of parent's days will be near-perfectly correlated with parent on overlap days. **A regime-subset child is structurally not a candidate for portfolio diversification against its parent.**
+- the inverse-volatility weighting got gamed by `SweepHighVIX15m` (only 1 trade, near-zero std), which received `70.4%` of the basket weight. **Methodology fix needed: scorecard should filter inverse-vol weighting to candidates with `>= 10` trades, otherwise sparse candidates dominate by virtue of low std rather than skill.** The equal-weight basket Sharpe `2.314` is still meaningful since it is not gamed.
+- equal-weight 5-candidate basket Sharpe `2.314` is `0.16` above the 3-candidate basket from Slice 86 (`2.155`), because the `LowVIX` child added a Sharpe-2.17 candidate to the mix. But it is still below best-standalone (`2.684`). Diversification benefit is real but small.
+- the constructive lesson: **VIX-gating works best as a percentile-rank or rolling-z gate**, not absolute threshold, because it auto-adjusts to the prevailing regime. The next slice's gate design should be either:
+  - `vix_pct_rank_252 > 0.7` for "elevated relative to past year" (regime-relative, balances trade count)
+  - `vix9d / vix > 1.0` for "term-structure backwardation" (catches stress regimes by structure)
+  - `vix_z20 > 1.5` for "vol spike vs short-term mean" (catches transitions into stress)
+- alternative gate-shape that escapes the strict-subset correlation problem: gate on a feature ORTHOGONAL to the parent's entry (e.g., gate on `vvix_z` instead of `vix` level since VVIX dynamics are decorrelated from VIX level) so the child's entry days are not a subset of the parent's regime overlap.
+
 ## Current Todo Board
 
 ### Done
@@ -4441,6 +4501,7 @@ Inverse-volatility weights: TrendPullback `0.347`, PersistenceCluster `0.264`, S
 - [x] Ported `LiquiditySweepReclaim` and `KillzoneIVProxy` to 15m base; results show TF pivot scales `~4x` for `OR`-combined gates (TrendPullback) but does not help narrow `AND`-window gates (Killzone). `LiquiditySweepReclaim15m`: 4 -> 13 trades (probe_only, PF 1.57). `KillzoneIVProxy15m`: 2 -> 1 trade (regression). Lesson: TF pivot needs to be paired with structural widening for narrow-window candidates.
 - [x] Pack now has 2 dense candidates from different shapes plus a mean-reversion thin leader. `PersistenceClusterDense15m` (Slice 85, 15m TF pivot with corrected OR-trend gate): 146 trades / Sharpe 0.21 / +7.22% / DD -5.02% — second dense and current dense Sharpe leader. `LiquiditySweepReclaim15mWide` (Slice 85, structurally widened 15m port): 62 trades / Sharpe 0.25 / Sortino 0.72 / Calmar 7.87 / +8.67% / DD -1.92% / PF 1.72 — now the pack's risk-adjusted leader from a different source family (mean reversion / sweep), eligible to start the post-regime portfolio-diversity scorecard.
 - [x] Built the first post-regime portfolio-diversity scorecard. Authored `scripts/auto_quant_external/portfolio_diversity_scorecard.py`; on the 3 promotable candidates over `NQ/USD 15m ~3Y`: standalone annualized Sharpes `1.06 / 1.54 / 2.68`, pairwise daily-PnL correlation `0.700` for the trend pair vs `0.245-0.301` for the mean-rev cross-family pair (source separation confirmed). Equal-weight basket Sharpe `2.155`, inverse-vol basket Sharpe `2.257` — both below best-standalone `2.684` because `SweepReclaim15mWide` dominates on standalone too. The basket needs more mean-reversion / orthogonal-source candidates at comparable Sharpe before diversification benefits re-emerge.
+- [x] First vol-regime-gating probe rejected the `VIX < 22` absolute-threshold split. `SweepLowVIX15m` captured 51 of parent's 62 trades (Sharpe 2.17, vs parent 2.68 — gate hurt rather than helped) at `0.906` correlation with parent (essentially a subset, structurally not a diversification candidate). `SweepHighVIX15m` fired only 1 trade because VIX rarely cleared 22 in the 2023-2026 window. Proven the "regime-relative percentile-rank gate" or "term-structure / cross-asset gate" is the right next direction. Also identified scorecard methodology bug: inverse-vol weighting gameable by sparse candidates (HighVIX got 70% weight from 1 trade); needs a `>=10` trade guardrail.
 
 ### Next
 
