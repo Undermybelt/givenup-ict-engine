@@ -4001,6 +4001,54 @@ First independent outcome-label check:
   - or extend strategy breadth into multi-market: prepare ES / SPY / IWM / DIA feather files via `prepare_external.py` so the existing `TomacNQ_Regime*` pack can be backtested on additional markets without rewriting candidate code (the candidates are pair-agnostic in their indicator math)
 - the user's "标的物够多" preference is currently bottlenecked by data preparation, not strategy design. A 5-minute slice could fetch SPY 1m 30D + IWM 1m 30D + DIA 1m 30D via IBKR and run `prepare_external.py` to materialize multi-market feather files, opening the strategy lane to multi-asset backtests.
 
+### 2026-05-07 Slice 79: Multi-market 1h+4h feather readiness for SPY / IWM / DIA / GLD
+
+**Execution**
+- closed the multi-market data-preparation gap that was bottlenecking the user's `标的物够多` preference. Before this slice, the only 1h-resolution pair with feather files was `NQ/USD`; `SPY/USD`, `ES/USD`, `EUR/USD`, `AAPL/USD`, `BTCY/USD` had `1d` feather files only. The existing `TomacNQ_Regime*` pack is pair-agnostic in its indicator math (just EMA, ATR, BB, RSI, FVG-shape detection on whatever feather is loaded), so the only blocker for multi-asset backtests was the absence of 1h+4h feather files for non-NQ markets.
+- IBKR fetch attempt evidence and recovery:
+  - first attempt with `--bar-size "1 hour" --duration "2 Y"` (extended hours included) hit `reqHistoricalData: Timeout` for all four ETFs through the same gateway path; this is a known IBKR pacing limit when the request volume crosses the per-call timeout, not a connectivity failure
+  - retry with `--duration "1 Y" --rth` (regular trading hours only) succeeded cleanly for all four ETFs
+  - retained both empty timeout artifacts and successful `1Y RTH` artifacts under `/tmp/ict-engine-ibkr-probe/` to keep the failure mode visible in case the next iteration wants to push back to 2Y with a different pacing approach
+- fetched and prepared:
+  - `SPY 1h 1Y RTH` -> `1,746` rows (`2025-05-07 13:30 UTC` -> `2026-05-06 17:00 UTC`)
+  - `IWM 1h 1Y RTH` -> `1,746` rows
+  - `DIA 1h 1Y RTH` -> `1,746` rows
+  - `GLD 1h 1Y RTH` -> `1,742` rows (4 rows filtered as jump outliers by the prepare-stage cleaner)
+- ran `prepare_external.py` on each CSV with `--timeframes 1h,4h` and the standard column map; resampled cleanly with no `ohlc_inconsistent`, `nonpositive_price`, `negative_volume`, or `ghost_bar` drops. The 1h sources are clean ETF tape.
+- kept `ict-engine` runtime source frozen.
+- did not modify `prepare_external.py` or any other in-flight Python harness; data only.
+
+**Outputs**
+- `/tmp/ict-engine-ibkr-probe/spy.1h.1y.csv`
+- `/tmp/ict-engine-ibkr-probe/iwm.1h.1y.csv`
+- `/tmp/ict-engine-ibkr-probe/dia.1h.1y.csv`
+- `/tmp/ict-engine-ibkr-probe/gld.1h.1y.csv`
+- `/Users/thrill3r/Auto-Quant/user_data/data/SPY_USD-1h.feather` (1,746 bars)
+- `/Users/thrill3r/Auto-Quant/user_data/data/SPY_USD-4h.feather` (585 bars)
+- `/Users/thrill3r/Auto-Quant/user_data/data/IWM_USD-1h.feather` (1,746 bars)
+- `/Users/thrill3r/Auto-Quant/user_data/data/IWM_USD-4h.feather` (585 bars)
+- `/Users/thrill3r/Auto-Quant/user_data/data/DIA_USD-1h.feather` (1,746 bars)
+- `/Users/thrill3r/Auto-Quant/user_data/data/DIA_USD-4h.feather` (585 bars)
+- `/Users/thrill3r/Auto-Quant/user_data/data/GLD_USD-1h.feather` (1,742 bars)
+- `/Users/thrill3r/Auto-Quant/user_data/data/GLD_USD-4h.feather` (585 bars)
+
+**Result**
+- multi-market 1h+4h feather coverage is now:
+  - `NQ/USD`: `1h`, `4h`, `1d` (pre-existing; long span via Tomac local data)
+  - `SPY/USD`: `1h`, `4h`, `1d` (1d pre-existing; new 1h+4h cover `1Y RTH`)
+  - `IWM/USD`: `1h`, `4h` (new; no `1d` yet)
+  - `DIA/USD`: `1h`, `4h` (new; no `1d` yet)
+  - `GLD/USD`: `1h`, `4h` (new; no `1d` yet)
+  - crypto pairs `BTC/USDT`, `ETH/USDT`, `SOL/USDT`, `BNB/USDT`, `AVAX/USDT`: `1h`, `4h`, `1d` (pre-existing)
+- the existing 19-strategy `TomacNQ_Regime*` pack can now be backtested on any of `SPY/USD`, `IWM/USD`, `DIA/USD`, `GLD/USD` by passing `--pairs SPY/USD` (or equivalent) to the freqtrade backtest CLI without rewriting any candidate code; the pack's indicator math is pair-agnostic.
+
+**Interpretation**
+- `标的物够多` is now meaningfully advanced: `4` new equity / commodity ETF pairs become eligible for the 19-strategy pack at `1h` and `4h` base, against `1Y` of clean RTH 1h data.
+- the next loop iteration should either:
+  - run `factor-research --backend auto-quant` (or the equivalent harness) on the 4 new pairs to surface per-candidate trade density and Sharpe across markets, building the per-market matrix the TODO has demanded since the Coverage Rule was added
+  - or extend the 1h coverage further: `RTY` (Russell front-month future), `QQQ/USD` 1h (Nasdaq ETF), `XLK/USD` (tech sector), `XLE/USD` (energy sector), or fetch `SPY/IWM/DIA/GLD 1m 30D` to enable `5m` and `15m` strategy variants
+  - or pivot back to evidence: author a small standalone runner that loads `NQ_USD-1h.feather` directly and runs the 19-candidate pack through a minimal backtest, surfacing first per-candidate trade-density numbers without depending on any in-flight harness
+
 ## Current Todo Board
 
 ### Done
@@ -4073,6 +4121,7 @@ First independent outcome-label check:
 - [x] Implemented `vol_regime_v2` as a standalone module `scripts/auto_quant_external/vol_regime_v2_features.py` exporting `VOL_REGIME_V2_VECTOR_FEATURES` plus `vol_regime_v2_feature_vectors`, `load_ibkr_probe_series`, `align_paired_to_candles`, `build_vol_regime_v2_for_candles`; smoke-tested on 1000 synthetic daily candles against the real probe artifacts (15/15 columns, 87.1% long-window coverage, 99.5-99.8% short-window coverage, categorical encodings populate). Fetched three more IBKR slices to widen the corpus: `VIX3M 1d 10Y` (2,513 rows), `OVX 1d 10Y` (2,513 rows), `NDX 1d 10Y` (2,513 rows).
 - [x] Acquired eight more IBKR slices for cross-asset vol breadth: `IWM HV/IV 1d 10Y` (2,505 / 2,513 rows; small-cap), `DIA HV/IV 1d 10Y` (2,505 / 2,513 rows; Dow), `GLD HV/IV 1d 10Y` (2,505 / 2,513 rows; gold ETF), `RVX 1d 10Y` (2,513 rows; Russell vol index), `GVZ 1d 10Y` (2,513 rows; gold vol index). Updated `vol_regime_v2_features.py` `_IBKR_FILE_PATTERNS` registry to recognize the new keys. Probe corpus now spans ~19 simultaneous time-aligned vol-regime series across QQQ / SPY / IWM / DIA / GLD plus seven vol indices.
 - [x] Authored `scripts/auto_quant_external/vol_regime_cross_asset_features.py` as a sibling to `vol_regime_v2_features.py`: 10 cross-asset regime columns covering broad-vol concordance / fragmentation, equity-vs-gold vol spread, cross-sectional VRP, vol-index basket z-score, and 3-point VIX term-structure curvature; smoke-tested clean (10/10 cols, 87-99% coverage, sensible sample values). Combined alias `vol_regime_v3` = `v2 + cross_asset` (25 cols total) is documented in the module docstring.
+- [x] Closed the multi-market 1h+4h feather gap. Fetched `SPY/IWM/DIA/GLD 1h 1Y RTH` via IBKR (`2 Y` durations hit the IBKR per-call timeout; `1 Y RTH` succeeded cleanly: 1,746 rows each except GLD at 1,742 after 4 jump outliers cleaned). Ran `prepare_external.py` to materialize `1h`+`4h` feather files for all four pairs into `/Users/thrill3r/Auto-Quant/user_data/data/`. The 19-strategy `TomacNQ_Regime*` pack is pair-agnostic and can now be backtested on `SPY/USD`, `IWM/USD`, `DIA/USD`, `GLD/USD` without rewriting any candidate code.
 
 ### Next
 
