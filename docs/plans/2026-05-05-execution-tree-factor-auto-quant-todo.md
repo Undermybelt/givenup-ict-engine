@@ -4095,6 +4095,59 @@ First independent outcome-label check:
 - the 6 new orthogonal candidates from Slices 72-74 were intentionally designed to be different return-source shapes than the existing trend-continuation pack. Because the existing pack's binding constraint is **density not edge**, the next slice should both (a) sync the 6 new candidates into the Auto-Quant runtime and (b) re-run the full 19-strategy pack to confirm whether the orthogonal shapes (mean-reversion sweep, VRP carry, FVG retrace, killzone vol gate, crowding exhaustion, 5m FVG) deliver materially different density profiles.
 - the user's `P2 (high Sharpe)` preference cannot be satisfied yet — best annualized Sharpe is `~0.6` and even that comes from a thin-density candidate. The user's `P1 (regime classifier)` preference is unaffected by this evidence; it is still the open priority and is best advanced by either running the `vol_regime_v2 + cross_asset` modules through `regime_factor_benchmark.py` (user-side wiring) or authoring a small standalone classifier runner.
 
+### 2026-05-07 Slice 81: Sync Slice 72-74 candidates and re-run all 19 on NQ/USD 1h
+
+**Execution**
+- copied the six new orthogonal candidates from `/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/strategies/` into `/Users/thrill3r/Auto-Quant/user_data/strategies_external/`. Auto-Quant strategies dir is the runtime location used by `run_tomac.py`; before this slice it lagged the ict-engine repo's source by `6` files (`LiquiditySweepReclaim`, `VRPCarry`, `FVGRetrace`, `KillzoneIVProxy`, `CrowdingExhaustion`, `FVGRetrace5m`). After the copy the runtime dir holds all `19` candidates.
+- re-ran `uv run python run_tomac.py` against `pair_whitelist=['NQ/USD']`, `timeframe=1h`, on the same `NQ_USD-1h.feather` (~17,672 1h bars, `2023-01` -> `2026-01`).
+- `FVGRetrace5m` failed with `Informative dataframe for (NQ/USD, 15m, spot) is empty` — `NQ/USD` has only `1h`, `4h`, `1d` feathers, no `5m` or `15m`. Per-strategy isolation in `run_tomac.py` caught it; the other 18 ran clean.
+- saved full backtest log to `/tmp/ict-engine-ibkr-probe/slice_81_backtest_run.log`.
+- kept `ict-engine` runtime source frozen.
+- did not modify `run_tomac.py` or any other in-flight Python harness.
+
+**Outputs**
+- `/tmp/ict-engine-ibkr-probe/slice_81_backtest_run.log`
+- `/Users/thrill3r/Auto-Quant/user_data/strategies_external/TomacNQ_RegimeLiquiditySweepReclaim.py`
+- `/Users/thrill3r/Auto-Quant/user_data/strategies_external/TomacNQ_RegimeVRPCarry.py`
+- `/Users/thrill3r/Auto-Quant/user_data/strategies_external/TomacNQ_RegimeFVGRetrace.py`
+- `/Users/thrill3r/Auto-Quant/user_data/strategies_external/TomacNQ_RegimeKillzoneIVProxy.py`
+- `/Users/thrill3r/Auto-Quant/user_data/strategies_external/TomacNQ_RegimeCrowdingExhaustion.py`
+- `/Users/thrill3r/Auto-Quant/user_data/strategies_external/TomacNQ_RegimeFVGRetrace5m.py`
+
+**Result — Slice 72-74 orthogonal candidates on `NQ/USD 1h ~3Y`**
+
+| Strategy (Slice) | trade_count | density | Sharpe | total_profit_pct | max_dd_pct | win_rate_pct | profit_factor |
+|---|---:|---|---:|---:|---:|---:|---:|
+| `LiquiditySweepReclaim` (72) | 4 | anecdotal | 0.0688 | 2.70 | -0.41 | 75.00 | **7.53** |
+| `VRPCarry` (72) | 0 | invalid | 0.00 | 0.00 | -0.00 | 0.00 | 0.00 |
+| `FVGRetrace` (73) | 1 | anecdotal | -100 | 0.01 | -0.00 | 100.00 | 0.00 |
+| `KillzoneIVProxy` (73) | 2 | anecdotal | 0.0195 | 0.43 | -0.17 | 50.00 | 3.45 |
+| `CrowdingExhaustion` (74) | 0 | invalid | 0.00 | 0.00 | -0.00 | 0.00 | 0.00 |
+| `FVGRetrace5m` (74) | n/a | ERROR | n/a | n/a | n/a | n/a | n/a |
+
+**Combined density distribution across all 19 candidates (18 valid runs)**
+- `dense (>= 80)`: `0` of `18`
+- `thin (30-79)`: `2` of `18` (unchanged from Slice 80)
+- `probe_only (10-29)`: `4` of `18` (unchanged)
+- `anecdotal (1-9)`: `9` of `18` — added `LiquiditySweepReclaim` (4), `FVGRetrace` (1), `KillzoneIVProxy` (2) on top of the previous 6
+- `invalid (0)`: `3` of `18` — added `VRPCarry` and `CrowdingExhaustion` on top of `RegimeTrendPullback`
+- `error`: `1` — `FVGRetrace5m` (missing 15m feather data)
+
+**Interpretation**
+- the orthogonal candidates have the **same density problem as the existing pack, on the lower end**. `2` of the new `5` testable candidates fired zero times in 3 years; another fired once. The most stacked entry conditions (3-bar declining + near swing low + high volume + bullish absorption + rejection close + 4h not collapsing + not already recovered for `CrowdingExhaustion`; compressed realized vol + flat term + value zone + neutral 4h band for `VRPCarry`) are simply too restrictive on `NQ 1h` to fire frequently enough to be evidence.
+- `LiquiditySweepReclaim` is the standout in **payoff quality** but not density: profit factor `7.53`, win rate `75%`, +`2.70%` total over 3 years with only `-0.41%` max drawdown — the asymmetric convex payoff geometry the slice was designed for is showing up in the data. But `4` trades over 3 years is not enough to trust statistically; it is exactly the "narrow high-win-rate factor that does not produce enough trades" pattern the TODO Trade-Density Rule explicitly warns against.
+- `KillzoneIVProxy` likewise has a high profit factor (`3.45`) on `2` trades — same shape, same density problem.
+- the 6 new candidates add `0` to the dense / thin / probe buckets and `4` to the anecdotal / invalid buckets. Cumulative state:
+  - candidates with `>= 30` trades: `2` of `19` (unchanged)
+  - candidates with `>= 10` trades: `6` of `19` (unchanged)
+  - candidates with `>= 1` trade: `15` of `19` (was `11`, added `LiquiditySweepReclaim` (4), `FVGRetrace` (1), `KillzoneIVProxy` (2))
+  - candidates with `0` trades: `3` of `19` (was `1`, added `VRPCarry` and `CrowdingExhaustion`)
+- the binding constraint is the same as Slice 80: **the entire 19-strategy pack is structurally over-specified for `1h` on `NQ`**. The `Dense` / `Wide` thresholding axis is not enough; the candidates need fewer conditions per entry, not just looser ones.
+- two cleanly different paths forward emerge from this evidence:
+  - **Path A (structural widening)**: author `*Hyper` variants of the highest-payoff-quality candidates that drop one or two stacked conditions to roughly `4-10×` the current trade count. Targets in priority order: `LiquiditySweepReclaim` (PF 7.5; widen to expose more sweep events), `KillzoneIVProxy` (PF 3.4; relax the term-ratio band or non-vol-spike gate), `RegimeTrendPullbackDense` (current density leader; tighten timeframe instead of conditions to push past 80 trades).
+  - **Path B (timeframe pivot)**: prepare `NQ_USD-5m.feather` and `NQ_USD-15m.feather` from the local 1m corpus (per Slice 75 reference, derived under `/tmp/ict-engine-regime-longspan-nq/`), then re-author the strongest 1h candidates as 5m or 15m base variants. Density rises naturally `12×` for 5m vs 1h, and the existing `FVGRetrace5m` immediately becomes runnable.
+- both paths are net-additive (no `ict-engine` runtime changes, no in-flight harness changes) and can be done in parallel iterations.
+
 ## Current Todo Board
 
 ### Done
@@ -4169,6 +4222,7 @@ First independent outcome-label check:
 - [x] Authored `scripts/auto_quant_external/vol_regime_cross_asset_features.py` as a sibling to `vol_regime_v2_features.py`: 10 cross-asset regime columns covering broad-vol concordance / fragmentation, equity-vs-gold vol spread, cross-sectional VRP, vol-index basket z-score, and 3-point VIX term-structure curvature; smoke-tested clean (10/10 cols, 87-99% coverage, sensible sample values). Combined alias `vol_regime_v3` = `v2 + cross_asset` (25 cols total) is documented in the module docstring.
 - [x] Closed the multi-market 1h+4h feather gap. Fetched `SPY/IWM/DIA/GLD 1h 1Y RTH` via IBKR (`2 Y` durations hit the IBKR per-call timeout; `1 Y RTH` succeeded cleanly: 1,746 rows each except GLD at 1,742 after 4 jump outliers cleaned). Ran `prepare_external.py` to materialize `1h`+`4h` feather files for all four pairs into `/Users/thrill3r/Auto-Quant/user_data/data/`. The 19-strategy `TomacNQ_Regime*` pack is pair-agnostic and can now be backtested on `SPY/USD`, `IWM/USD`, `DIA/USD`, `GLD/USD` without rewriting any candidate code.
 - [x] Collected first real backtest evidence on `NQ/USD 1h ~3Y` for the existing 13-strategy pack via `run_tomac.py`. None of 13 reach `dense (>= 80)`; only 2 reach `thin (30-79)` — `RegimeTrendPullbackDense` (Sharpe 0.19, profit 8.8%, DD -5.0%, PF 1.58, 57 trades) and `RegimePersistenceClusterDense` (Sharpe 0.11, profit 6.3%, DD -5.4%, PF 1.49, 33 trades). Density not edge is the existing pack's binding constraint; the user's P2 high-Sharpe preference is not satisfiable on this evidence (best annualized Sharpe ~0.6). Full log in `/tmp/ict-engine-ibkr-probe/slice_80_backtest_run.log`.
+- [x] Synced Slice 72-74 candidates into `/Users/thrill3r/Auto-Quant/user_data/strategies_external/` and re-ran all 19 via `run_tomac.py` on `NQ/USD 1h ~3Y`. The 5 testable orthogonal candidates (FVGRetrace5m fails with no 15m feather) confirm the same density problem: `LiquiditySweepReclaim` 4 trades / PF 7.53 / +2.70%, `KillzoneIVProxy` 2 trades / PF 3.45, `FVGRetrace` 1 trade, `VRPCarry` and `CrowdingExhaustion` 0 trades. The best payoff-quality candidate (`LiquiditySweepReclaim`) is exactly the "narrow high-win-rate factor that does not produce enough trades" pattern the Trade-Density Rule warns against; structural widening or a lower-timeframe pivot is the unblock. Full log in `/tmp/ict-engine-ibkr-probe/slice_81_backtest_run.log`.
 
 ### Next
 
