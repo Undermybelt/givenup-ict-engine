@@ -3737,6 +3737,47 @@ First independent outcome-label check:
 - scope: `NQ 1d post_transition_direction` first to compare against the rejected Slice 69 baseline, then `NQ 4h` and `NQ 1h` if the `1d` cell improves materially (`eval_family_f1 >= 0.55` is the floor before promoting; below that, treat as another rejected shape).
 - this is a proposal only; the new feature columns and `vol_regime_v2` ablation alias must be added to `regime_factor_benchmark.py` in the next slice, with QQQ IV/HV + VIX + VVIX (when reachable) data preparation logged.
 
+### 2026-05-07 Slice 73: Family A FVG-retrace and Family H session-vol-regime candidates
+
+**Execution**
+- continued the post-regime portfolio-diversity widening from Slice 72.
+- the existing pack still leaned heavily on breakout / persistence / transition geometry; added two structurally different setups:
+  - `TomacNQ_RegimeFVGRetrace`
+    - paradigm: bullish Fair Value Gap retrace and reject (`high[t-6] < low[t-4]`, current bar low touches into the gap, current bar closes back above the gap's lower bound)
+    - hypothesis: an unfilled imbalance retest under aligned 4h trend produces a tight-stop / asymmetric-target payoff that no current breakout-shaped candidate can expose; supplies Layer 1 setup-quality and Layer 3 evidence-quality material directly
+    - family role: Family A (structure / setup quality) primary, partial Layer 3 evidence enrichment
+  - `TomacNQ_RegimeKillzoneIVProxy`
+    - paradigm: Family H AM-killzone breakout gated by an in-asset volatility-term-structure proxy (`ATR(5) / ATR(60)`) plus a non-vol-spike gate (`atr_pct_z240 < 1.2`)
+    - hypothesis: AM-killzone breakouts are higher quality when the realized-vol term-structure is flat-to-mild-contango, mimicking what a flat or mildly contango VIX9D-VIX1Y term structure would say about regime stability; addresses the user's options/IV preference through an in-asset proxy until real IV data feeds Family G via `vol_regime_v2`
+    - family role: Family H (session / liquidity window) primary, Layer 1 + Layer 4 vol-regime gate
+- kept `ict-engine` runtime source frozen.
+- did not modify the in-flight `scripts/auto_quant_external/regime_factor_benchmark.py`; `vol_regime_v2` remains a documented design proposal awaiting consolidation with the user's accumulated benchmark edits.
+
+**Outputs**
+- `scripts/auto_quant_external/strategies/TomacNQ_RegimeFVGRetrace.py`
+- `scripts/auto_quant_external/strategies/TomacNQ_RegimeKillzoneIVProxy.py`
+
+**Result**
+- not yet benchmarked; this slice is design + candidate authorship, not classifier or trading evidence.
+- after Slice 72 + Slice 73 the active Auto-Quant pack is `17` strategies covering `6` distinct return-source shapes:
+  - trend-continuation breakout (parent and family)
+  - vol-expansion transition (`RegimeVolatilityTransition*`)
+  - rhythm compression release (`RegimeCompressionRelease*`)
+  - persistence cluster (`RegimePersistenceCluster*`)
+  - trend pullback (`RegimeTrendPullback*`, `RegimeTransitionHazard`)
+  - mean-reversion / liquidity sweep (`RegimeLiquiditySweepReclaim`)
+  - vol-risk-premium carry proxy (`RegimeVRPCarry`)
+  - structural FVG retrace (`RegimeFVGRetrace`)
+  - session-vol-regime gated breakout (`RegimeKillzoneIVProxy`)
+- counted differently, the pack now exposes at least four genuinely orthogonal payoff geometries: trend continuation, mean-reversion convex, carry / theta-shape, and structural retrace. The `KillzoneIVProxy` is a same-source-as-parent variant gated by a different regime, not a fully orthogonal new source, but it is the cheapest available proxy for the user's options-data preference until Family G IV/skew/OI data is replay-ready.
+
+**Interpretation**
+- the orthogonality push is now strong enough that the next bottleneck is evidence, not breadth. Running `factor-research --backend auto-quant` (or the equivalent Tomac harness) on the expanded pack will tell us:
+  - per-candidate trade density buckets across `1h` (and ideally `5m`, `15m`)
+  - per-candidate Sharpe and return distribution shape
+  - pairwise return correlation between the new orthogonal candidates and the existing trend-continuation cluster
+- the user has explicitly preferred different-not-just-stronger; the post-regime portfolio-diversity scorecard should accept a lower-standalone Family D / Family F / Family A candidate when it improves the combined regime-level portfolio through low correlation or payoff-shape complementarity, rather than ranking every candidate by standalone Sharpe alone.
+
 ## Current Todo Board
 
 ### Done
@@ -3803,6 +3844,7 @@ First independent outcome-label check:
 - [x] Rejected the first historical-only `hazard_*` family: it neither improves `transition_binary` nor `post_transition_direction`, and the trained trees do not select the new columns.
 - [x] Authored two portfolio-orthogonal external strategy candidates so the active pack covers four distinct return-source shapes instead of only trend-continuation: `TomacNQ_RegimeLiquiditySweepReclaim` (mean-reversion / sweep reclaim, Family D) and `TomacNQ_RegimeVRPCarry` (vol-risk-premium proxy, Family F + Layer 4); kept `ict-engine` runtime source frozen.
 - [x] Recorded a concrete `vol_regime_v2` feature-design proposal for the next regime-benchmark probe so the rejected Slice 69 shape is replaced by percentile-rank, categorical bin, term-structure proxy, vol-of-vol proxy, spike, and long-window mean-reversion features instead of more raw level/spread/trend columns.
+- [x] Authored two more orthogonal external strategy candidates so the pack now exposes structural retrace and session-vol-regime gated geometries: `TomacNQ_RegimeFVGRetrace` (Family A, FVG retest and reject, Layer 1 + Layer 3) and `TomacNQ_RegimeKillzoneIVProxy` (Family H + Layer 4, AM-killzone breakout gated by `ATR(5)/ATR(60)` term-structure proxy plus non-vol-spike `atr_pct_z240` gate); kept `ict-engine` runtime source frozen and did not touch the in-flight `regime_factor_benchmark.py`.
 
 ### Next
 
@@ -3967,11 +4009,14 @@ First independent outcome-label check:
   - `TradingView MCP` requires local `TVREMIX_MCP_API_KEY`
   - `AuxiliaryMarketEvidence` static snapshots are not enough for long-span regime classification
   - accepted evidence should be a time-aligned series or a documented provider fetch artifact
-- [ ] Run `factor-research --backend auto-quant` on the expanded portfolio-orthogonal pack and log per-candidate `trade_count`, density bucket, base-timeframe Sharpe, and pairwise return correlation against the existing trend-continuation candidates so a low-standalone but low-correlation Family D / Family F candidate can survive promotion review:
-  - `TomacNQ_RegimeLiquiditySweepReclaim`
-  - `TomacNQ_RegimeVRPCarry`
+- [ ] Run `factor-research --backend auto-quant` on the expanded portfolio-orthogonal pack and log per-candidate `trade_count`, density bucket, base-timeframe Sharpe, and pairwise return correlation against the existing trend-continuation candidates so a low-standalone but low-correlation Family D / Family F / Family A candidate can survive promotion review:
+  - `TomacNQ_RegimeLiquiditySweepReclaim` (Slice 72)
+  - `TomacNQ_RegimeVRPCarry` (Slice 72)
+  - `TomacNQ_RegimeFVGRetrace` (Slice 73)
+  - `TomacNQ_RegimeKillzoneIVProxy` (Slice 73)
   - prefer cached/local `NQ 1h` data first; if dense enough, repeat on `NQ 5m` and `NQ 15m`
-  - mark each candidate's source-family tag explicitly: trend, mean-reversion / liquidity, volatility-risk-premium, options / dealer pressure, or other
+  - mark each candidate's source-family tag explicitly: trend, mean-reversion / liquidity, volatility-risk-premium, structural retrace, session-vol-regime, options / dealer pressure, or other
+  - require pairwise correlation matrix against the existing trend-continuation cluster before any standalone Sharpe ranking
 - [ ] Implement `vol_regime_v2` as the next regime-benchmark feature alias before re-running `NQ 1d post_transition_direction` against the Slice 69 baseline:
   - replace raw `level_z20` with `level_pct_rank_252`
   - add `iv_to_iv_252_high_distance`, `iv_to_iv_252_low_distance`
