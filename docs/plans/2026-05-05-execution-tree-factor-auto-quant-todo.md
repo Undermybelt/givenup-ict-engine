@@ -4421,6 +4421,71 @@ Inverse-volatility weights: TrendPullback `0.347`, PersistenceCluster `0.264`, S
   - `vix_z20 > 1.5` for "vol spike vs short-term mean" (catches transitions into stress)
 - alternative gate-shape that escapes the strict-subset correlation problem: gate on a feature ORTHOGONAL to the parent's entry (e.g., gate on `vvix_z` instead of `vix` level since VVIX dynamics are decorrelated from VIX level) so the child's entry days are not a subset of the parent's regime overlap.
 
+### 2026-05-07 Slice 88: VIX shock reversal candidate plus scorecard methodology fix
+
+**Execution**
+- followed Slice 87's next-plan: author a candidate with a fundamentally different entry geometry that is **not a subset** of any existing pack member (escaping the 0.906 strict-subset correlation problem from Slice 87), and fix the inverse-vol weighting bug.
+- authored `TomacNQ_RegimeVIXShockReversal15m`:
+  - timeframe `15m`, `4h` informative for trend context
+  - loads `/tmp/ict-engine-ibkr-probe/vix.1d.10y.csv` and computes a daily `vix_z20` (rolling 20-day z-score of VIX close)
+  - entry geometry: `vix_z20 > 1.2` AND `pullback_pct < -0.5%` from rolling 5-day high AND first bullish 15m candle after the shock AND `close > ema89 * 0.97` (regime not collapsing)
+  - exit geometry: `vix_z20 < 0.3` (vol normalized) OR regime break OR `close > ema21 * 1.025` upper target
+  - the entry conditions are entirely orthogonal to the existing pack's price-structural triggers (sweep / pullback / persistence); a vol-shock day is rare and doesn't overlap with sweep-reclaim days by design
+- fixed `portfolio_diversity_scorecard.py` per Slice 87's identified bug:
+  - added `MIN_TRADES_FOR_INVERSE_VOL = 10` constant
+  - inverse-vol weights computed only over candidates with `>= 10` trades; sparse candidates (1-9 trades) get weight `0`
+  - prints excluded candidate names so the methodology limitation is visible
+  - falls back to "any non-zero trade count" if fewer than 2 candidates clear the threshold
+- ran `VIXShockReversal15m` with trade export and re-scored over the now-6-candidate basket.
+- saved scorecard to `/tmp/ict-engine-ibkr-probe/slice_88_scorecard.log`.
+
+**Outputs**
+- `scripts/auto_quant_external/strategies/TomacNQ_RegimeVIXShockReversal15m.py`
+- `scripts/auto_quant_external/portfolio_diversity_scorecard.py` (extended CANDIDATES + min-trades guardrail)
+- `/tmp/ict-engine-ibkr-probe/trades_vixshock15m.json`
+- `/tmp/ict-engine-ibkr-probe/slice_88_scorecard.log`
+
+**Result — `VIXShockReversal15m` standalone**
+
+| Metric | Value |
+|---|---:|
+| trade_count | 7 |
+| Sharpe (annualized) | 1.795 |
+| Sortino | 0.000 (no losing days) |
+| Calmar | 5.57 |
+| Max DD | -1.84% |
+| Total return | +5.09% |
+| Win rate | **85.7%** |
+| Profit factor | **3.72** |
+
+**Pairwise correlation update — VIXShockReversal vs every other candidate**
+
+| Counterpart | Correlation |
+|---|---:|
+| TrendPullbackDense15m | 0.207 |
+| PersistenceClusterDense15m | 0.193 |
+| **LiquiditySweepReclaim15mWide (parent of LowVIX child)** | **0.030** |
+| SweepLowVIX15m | -0.012 |
+| SweepHighVIX15m | 0.010 |
+
+**Combined-portfolio update (6 candidates, with `>=10 trades` inverse-vol guardrail)**
+
+| Portfolio | Sharpe | Sortino | Calmar | Max DD | Total return |
+|---|---:|---:|---:|---:|---:|
+| Equal-weight 6-candidate | **2.585** | 4.132 | 9.96 | -1.07% | 5.32% |
+| Inverse-volatility 6-candidate | 2.452 | 3.657 | 9.42 | -1.45% | 6.87% |
+| Best-standalone | 2.684 | 4.109 | 9.52 | -1.89% | 9.14% |
+
+Inverse-vol weights now distribute across the 4 eligible candidates (TrendPullback `0.243`, PersistenceCluster `0.185`, SweepReclaim `0.273`, LowVIX `0.298`); the 2 sparse candidates (`HighVIX` 1 trade, `VIXShockReversal` 7 trades) are explicitly excluded from inverse-vol weighting, with the exclusion list printed.
+
+**Interpretation**
+- the VIX-shock entry geometry **does** escape the strict-subset correlation problem. Correlation `0.030` with `SweepReclaim15mWide` is essentially zero — the two candidates trade on entirely different days with entirely different conditions. This is what the diversity rule actually wants.
+- the candidate is high-quality on every per-trade metric: PF `3.72`, win rate `85.7%`, Sortino `infinity` (no losing days in 7 trades). This is the strongest "look" of any new entry geometry the loop has produced.
+- but only `7 trades over 3Y` — `2.3 trades/year`, well below the `dense (>= 80)` floor and below the `probe_only (10-29)` floor too. The candidate is currently `anecdotal (1-9)` and not promotable.
+- the equal-weight basket Sharpe rose from `2.155` (Slice 86, 3 candidates) -> `2.314` (Slice 87, 5 candidates) -> `2.585` (Slice 88, 6 candidates). The trajectory is real: each time we add a low-correlation candidate the basket Sharpe ticks up. Best-standalone at `2.684` is the next milestone the basket needs to clear.
+- the **scorecard methodology fix worked**: with the `>=10 trade` guardrail, inverse-vol weighting now distributes across the 4 dense / thin candidates instead of being gamed by the 1-trade sparse candidate. The exclusion list is also printed for transparency.
+- the VIX-shock candidate's structure validates the orthogonal-geometry path: entry on an EXTERNAL vol-regime trigger plus a price-correction validator, exit on vol normalization, produces near-zero correlation with the existing price-structural pack. This direction is right; the next move is to **widen the VIXShockReversal entry to reach `>=30 trades` while preserving most of the edge**, e.g., lower the `vix_z20 > 1.2` threshold to `> 0.8`, lower the `pullback_pct < -0.5%` to `< 0`, drop the "first bullish bar after shock" first-fire requirement.
+
 ## Current Todo Board
 
 ### Done
@@ -4502,6 +4567,7 @@ Inverse-volatility weights: TrendPullback `0.347`, PersistenceCluster `0.264`, S
 - [x] Pack now has 2 dense candidates from different shapes plus a mean-reversion thin leader. `PersistenceClusterDense15m` (Slice 85, 15m TF pivot with corrected OR-trend gate): 146 trades / Sharpe 0.21 / +7.22% / DD -5.02% — second dense and current dense Sharpe leader. `LiquiditySweepReclaim15mWide` (Slice 85, structurally widened 15m port): 62 trades / Sharpe 0.25 / Sortino 0.72 / Calmar 7.87 / +8.67% / DD -1.92% / PF 1.72 — now the pack's risk-adjusted leader from a different source family (mean reversion / sweep), eligible to start the post-regime portfolio-diversity scorecard.
 - [x] Built the first post-regime portfolio-diversity scorecard. Authored `scripts/auto_quant_external/portfolio_diversity_scorecard.py`; on the 3 promotable candidates over `NQ/USD 15m ~3Y`: standalone annualized Sharpes `1.06 / 1.54 / 2.68`, pairwise daily-PnL correlation `0.700` for the trend pair vs `0.245-0.301` for the mean-rev cross-family pair (source separation confirmed). Equal-weight basket Sharpe `2.155`, inverse-vol basket Sharpe `2.257` — both below best-standalone `2.684` because `SweepReclaim15mWide` dominates on standalone too. The basket needs more mean-reversion / orthogonal-source candidates at comparable Sharpe before diversification benefits re-emerge.
 - [x] First vol-regime-gating probe rejected the `VIX < 22` absolute-threshold split. `SweepLowVIX15m` captured 51 of parent's 62 trades (Sharpe 2.17, vs parent 2.68 — gate hurt rather than helped) at `0.906` correlation with parent (essentially a subset, structurally not a diversification candidate). `SweepHighVIX15m` fired only 1 trade because VIX rarely cleared 22 in the 2023-2026 window. Proven the "regime-relative percentile-rank gate" or "term-structure / cross-asset gate" is the right next direction. Also identified scorecard methodology bug: inverse-vol weighting gameable by sparse candidates (HighVIX got 70% weight from 1 trade); needs a `>=10` trade guardrail.
+- [x] Authored `TomacNQ_RegimeVIXShockReversal15m` with a fundamentally different entry geometry (vix_z20 > 1.2 AND NQ correction). Standalone: 7 trades, Sharpe 1.80, Sortino infinity (no losing days), Calmar 5.57, win rate 85.7%, PF 3.72. **Correlation 0.030 with the SweepReclaim15mWide parent** — escapes the strict-subset problem entirely; trades on different days with different conditions. Anecdotal density only (7 trades / 3Y) so not promotable; needs structural widening to reach probe / thin density next slice. Equal-weight 6-candidate basket Sharpe rose to `2.585` from `2.155` (3-candidate basket, Slice 86). Scorecard's inverse-vol guardrail (`>=10` trade min) implemented and prints the exclusion list.
 
 ### Next
 

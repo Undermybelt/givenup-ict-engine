@@ -41,7 +41,9 @@ CANDIDATES: list[tuple[str, str]] = [
     ("TomacNQ_RegimeLiquiditySweepReclaim15mWide", "mean reversion / sweep"),
     ("TomacNQ_RegimeSweepLowVIX15m", "mean reversion / sweep + low-VIX gate"),
     ("TomacNQ_RegimeSweepHighVIX15m", "mean reversion / sweep + high-VIX gate"),
+    ("TomacNQ_RegimeVIXShockReversal15m", "vol-shock mean reversion"),
 ]
+MIN_TRADES_FOR_INVERSE_VOL = 10
 
 
 def find_latest_zip_for_strategy(strategy: str) -> Path | None:
@@ -180,9 +182,18 @@ def emit_scorecard(
     eq_returns = (daily_df * eq_weights).sum(axis=1)
     eq_metrics = metrics(eq_returns)
 
-    vol = daily_df.std()
-    inv_vol_weights = (1.0 / vol).where(vol > 0, 0.0)
-    inv_vol_weights = inv_vol_weights / inv_vol_weights.sum()
+    trade_counts = pd.Series(
+        {col: int((daily_df[col] != 0).sum()) for col in cols}
+    )
+    inv_vol_eligible = trade_counts >= MIN_TRADES_FOR_INVERSE_VOL
+    if inv_vol_eligible.sum() < 2:
+        inv_vol_eligible = trade_counts > 0
+    eligible_cols = [c for c in cols if inv_vol_eligible[c]]
+    excluded_cols = [c for c in cols if not inv_vol_eligible[c]]
+    vol = daily_df[eligible_cols].std()
+    raw = (1.0 / vol).where(vol > 0, 0.0)
+    inv_vol_weights = pd.Series(0.0, index=cols)
+    inv_vol_weights.loc[eligible_cols] = raw / raw.sum()
     iv_returns = (daily_df * inv_vol_weights).sum(axis=1)
     iv_metrics = metrics(iv_returns)
 
@@ -196,9 +207,12 @@ def emit_scorecard(
         f"{iv_metrics['calmar']:>7.2f}{iv_metrics['max_drawdown']:>8.2%}{iv_metrics['total_return']:>8.2%}"
     )
     print()
-    print("Inverse-volatility weights:")
+    print(f"Inverse-volatility weights (eligible: trade_count >= {MIN_TRADES_FOR_INVERSE_VOL}):")
     for col in cols:
-        print(f"  {col:40s}{inv_vol_weights[col]:>7.3f}")
+        flag = "" if inv_vol_eligible[col] else "  (excluded — too few trades)"
+        print(f"  {col:40s}{inv_vol_weights[col]:>7.3f}{flag}")
+    if excluded_cols:
+        print(f"  excluded from inverse-vol: {excluded_cols}")
     print()
 
     best_standalone_sharpe = max(metrics(daily_df[c])["sharpe"] for c, _ in candidates)
