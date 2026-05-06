@@ -3913,6 +3913,53 @@ First independent outcome-label check:
   - run `regime_factor_benchmark.py` against the new feature set once the user confirms wiring (cheapest, biggest information gain)
   - or keep extending breadth: author multi-market strategy variants for ES / SPY / GLD or fetch IWM HV/IV + DIA HV/IV to mirror the QQQ/SPY pair across small-cap and Dow ETFs
 
+### 2026-05-07 Slice 77: Cross-asset HV/IV breadth via IBKR
+
+**Execution**
+- continued the data-acquisition lane in response to the user's standing emphasis on `标的物够多` (more markets) and `期权数据够多` (more options data). All fetches via the same IBKR Gateway 10.37 path on port `4002`, parallelized across `8` distinct client IDs (`31-38`).
+- fetched mid-cap, large-cap, and commodity vol mirrors plus dedicated vol benchmarks:
+  - `IWM HISTORICAL_VOLATILITY 1d 10Y` -> `2,505` rows (small-cap HV mirror)
+  - `IWM OPTION_IMPLIED_VOLATILITY 1d 10Y` -> `2,513` rows (small-cap IV mirror)
+  - `DIA HISTORICAL_VOLATILITY 1d 10Y` -> `2,505` rows (Dow Jones HV mirror)
+  - `DIA OPTION_IMPLIED_VOLATILITY 1d 10Y` -> `2,513` rows (Dow Jones IV mirror)
+  - `GLD HISTORICAL_VOLATILITY 1d 10Y` -> `2,505` rows (gold ETF HV mirror)
+  - `GLD OPTION_IMPLIED_VOLATILITY 1d 10Y` -> `2,513` rows (gold ETF IV mirror)
+  - `RVX 1d 10Y` -> `2,513` rows (CBOE Russell 2000 vol index)
+  - `GVZ 1d 10Y` -> `2,513` rows (CBOE gold ETF vol index)
+- extended `vol_regime_v2_features.py` `_IBKR_FILE_PATTERNS` registry to recognize `iwm_iv`, `iwm_hv`, `dia_iv`, `dia_hv`, `gld_iv`, `gld_hv`, `rvx`, `gvz`. Existing call sites that pass an explicit `series_keys` argument keep working unchanged; callers can opt in to the new series by passing the new keys.
+- kept `ict-engine` runtime source frozen.
+- did not modify `regime_factor_benchmark.py` or any other in-flight Python harness; module / data only.
+
+**Outputs**
+- `/tmp/ict-engine-ibkr-probe/iwm.hv.1d.10y.csv`
+- `/tmp/ict-engine-ibkr-probe/iwm.iv.1d.10y.csv`
+- `/tmp/ict-engine-ibkr-probe/dia.hv.1d.10y.csv`
+- `/tmp/ict-engine-ibkr-probe/dia.iv.1d.10y.csv`
+- `/tmp/ict-engine-ibkr-probe/gld.hv.1d.10y.csv`
+- `/tmp/ict-engine-ibkr-probe/gld.iv.1d.10y.csv`
+- `/tmp/ict-engine-ibkr-probe/rvx.1d.10y.csv`
+- `/tmp/ict-engine-ibkr-probe/gvz.1d.10y.csv`
+- `scripts/auto_quant_external/vol_regime_v2_features.py` (registry update)
+
+**Result**
+- the local probe corpus now covers the following 1d 10Y replayable, time-aligned vol-regime time series:
+  - price proxies: `qqq`, `gld`, `spy`, `ndx`
+  - HV pairs: `qqq.hv`, `spy.hv`, `iwm.hv`, `dia.hv`, `gld.hv`
+  - IV pairs: `qqq.iv`, `spy.iv`, `iwm.iv`, `dia.iv`, `gld.iv`
+  - vol indices: `vix9d`, `vix3m`, `vvix`, `vxn`, `ovx`, `rvx`, `gvz`
+  - already cached separately: `VIX 1d 10Y`
+- this is `~19` simultaneous time-aligned vol-regime series, comfortably enough to express both within-asset regime-state features (current `vol_regime_v2`) and cross-asset regime-concordance / regime-disagreement features (next-slice opportunity).
+
+**Interpretation**
+- the probe corpus is wide enough now that the next regime-feature improvement should be cross-asset, not within-asset:
+  - `cross_asset_vol_concordance`: fraction of `{qqq.hv, spy.hv, iwm.hv, dia.hv, gld.hv}` whose rolling 252-bar percentile rank is above `0.7` (broad-vol regime detector)
+  - `cross_asset_vol_disagreement`: standard deviation of those percentile ranks across the basket (regime-fragmentation detector)
+  - `equity_vs_gold_vol_spread`: average `{qqq.hv, spy.hv, iwm.hv, dia.hv}` percentile rank minus `gld.hv` percentile rank (risk-on / risk-off proxy)
+  - `vol_index_basket_z`: z-score of `mean(vix, vxn, rvx, ovx, gvz)` against its own 252-bar history
+- the next loop iteration should either:
+  - implement `vol_regime_cross_asset.py` as a sibling module to `vol_regime_v2_features.py`, or
+  - run a benchmark slice against `vol_regime_v2` on actual NQ data (requires user-side wiring or a small standalone runner)
+
 ## Current Todo Board
 
 ### Done
@@ -3983,6 +4030,7 @@ First independent outcome-label check:
 - [x] Closed the Family E and the 1h-monoculture timeframe gaps with two more candidates: `TomacNQ_RegimeCrowdingExhaustion` (Family E, 3-bar crowded selling near swing low + high-volume bullish absorption, Layer 1 + Layer 4 counter-regime) and `TomacNQ_RegimeFVGRetrace5m` (Family A 5m base with `15m/1h/4h` informative resonance, Layer 1 + Layer 4 timeframe-coverage); pack now has at least one candidate for Families A/B/D/E/F/H and a first multi-TF foothold on `5m`.
 - [x] Acquired five missing IBKR-backed vol-regime slices for `vol_regime_v2`: `VIX9D 1d 10Y` (1,978 rows), `VVIX 1d 10Y` (2,513 rows), `VXN 1d 10Y` (2,513 rows), `SPY HISTORICAL_VOLATILITY 1d 10Y` (2,505 rows), `SPY OPTION_IMPLIED_VOLATILITY 1d 10Y` (2,513 rows); IBKR Gateway 10.37 confirmed healthy on port `4002`; `vol_regime_v2` is no longer paper-only and can now use real VIX-term-structure (VIX9D vs VIX), real VVIX vol-of-vol, and SPY HV/IV cross-validation against the QQQ pair from Slice 69.
 - [x] Implemented `vol_regime_v2` as a standalone module `scripts/auto_quant_external/vol_regime_v2_features.py` exporting `VOL_REGIME_V2_VECTOR_FEATURES` plus `vol_regime_v2_feature_vectors`, `load_ibkr_probe_series`, `align_paired_to_candles`, `build_vol_regime_v2_for_candles`; smoke-tested on 1000 synthetic daily candles against the real probe artifacts (15/15 columns, 87.1% long-window coverage, 99.5-99.8% short-window coverage, categorical encodings populate). Fetched three more IBKR slices to widen the corpus: `VIX3M 1d 10Y` (2,513 rows), `OVX 1d 10Y` (2,513 rows), `NDX 1d 10Y` (2,513 rows).
+- [x] Acquired eight more IBKR slices for cross-asset vol breadth: `IWM HV/IV 1d 10Y` (2,505 / 2,513 rows; small-cap), `DIA HV/IV 1d 10Y` (2,505 / 2,513 rows; Dow), `GLD HV/IV 1d 10Y` (2,505 / 2,513 rows; gold ETF), `RVX 1d 10Y` (2,513 rows; Russell vol index), `GVZ 1d 10Y` (2,513 rows; gold vol index). Updated `vol_regime_v2_features.py` `_IBKR_FILE_PATTERNS` registry to recognize the new keys. Probe corpus now spans ~19 simultaneous time-aligned vol-regime series across QQQ / SPY / IWM / DIA / GLD plus seven vol indices.
 
 ### Next
 

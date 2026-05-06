@@ -99,8 +99,16 @@ _IBKR_FILE_PATTERNS: dict[str, tuple[str, str]] = {
     "vxn":    ("vxn.1d.10y.csv",      "close"),
     "vix3m":  ("vix3m.1d.10y.csv",    "close"),
     "ovx":    ("ovx.1d.10y.csv",      "close"),
+    "rvx":    ("rvx.1d.10y.csv",      "close"),
+    "gvz":    ("gvz.1d.10y.csv",      "close"),
     "spy_iv": ("spy.iv.1d.10y.csv",   "close"),
     "spy_hv": ("spy.hv.1d.10y.csv",   "close"),
+    "iwm_iv": ("iwm.iv.1d.10y.csv",   "close"),
+    "iwm_hv": ("iwm.hv.1d.10y.csv",   "close"),
+    "dia_iv": ("dia.iv.1d.10y.csv",   "close"),
+    "dia_hv": ("dia.hv.1d.10y.csv",   "close"),
+    "gld_iv": ("gld.iv.1d.10y.csv",   "close"),
+    "gld_hv": ("gld.hv.1d.10y.csv",   "close"),
     "ndx":    ("ndx.1d.10y.csv",      "close"),
 }
 
