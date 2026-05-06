@@ -4930,6 +4930,89 @@ The NQ baseline column is the per-trade Sharpe from the `NQ/USD 15m ~3Y` runs (S
   - extend the regime classifier with VVIX and VIX9D/VIX3M term-structure features the IBKR data already supports — the current 4-class classifier is coarse and misses some fine regime structure.
   - add a regime-adaptive position sizer (allocate more capital to candidates whose currently-active regime favors them) — this is the natural next step from a binary on/off filter to a continuous allocation.
 
+### 2026-05-07 Slice 97: Term-structure regime feature adds discriminative power beyond the 4-class
+
+**Execution**
+- followed Slice 96's next-plan: extend the regime classifier with VIX9D/VIX3M term-structure features and test whether it adds discriminative power.
+- authored `scripts/auto_quant_external/regime_term_structure_explore.py` that loads the IBKR-fetched VIX9D + VIX3M series, computes a daily term ratio, classifies into 4 buckets (`DeepContango < 0.92`, `Contango [0.92, 1.00]`, `FlatToBackward (1.00, 1.05]`, `Backwardation > 1.05`), and slices each candidate's per-trade Sharpe by `regime × term-structure` 2D buckets with a `>=5` trade per-cell minimum.
+
+**Term-structure distribution over 2018-2025**
+
+| Term | Days |
+|---|---:|
+| DeepContango | 1,361 |
+| Contango | 264 |
+| Backwardation | 173 |
+| FlatToBackward | 94 |
+
+(VIX9D < VIX3M most days — DeepContango is the long-run norm.)
+
+**Joint regime × term-structure 2D distribution**
+
+| | Backwardation | Contango | DeepContango | FlatToBackward |
+|---|---:|---:|---:|---:|
+| BearishStress | 96 | 84 | 84 | 46 |
+| ChopRange | 15 | 22 | 89 | 10 |
+| TrendingCalm | 12 | 81 | **869** | 20 |
+| TrendingNervous | 46 | 64 | 251 | 16 |
+| Other | 4 | 13 | 68 | 2 |
+
+**Key per-candidate findings (cells with `>=5` trades only)**
+
+`TrendPullbackDense15m`:
+- `TrendingCalm × Backwardation`: Sharpe `-0.15` (negative; existing classifier allows this regime)
+- `TrendingCalm × DeepContango`: `+0.11` (the bulk of profitable entries)
+- `BearishStress × Backwardation`: `-0.19` (already denied by existing rule)
+- `BearishStress × Contango`: `+0.09` (positive — would benefit from KEEPING this slice instead of blanket-denying BearishStress)
+- `BearishStress × DeepContango`: `+0.06` (positive — same)
+- `BearishStress × FlatToBackward`: `-0.20` (very negative — bad cell within already-denied regime)
+
+`PersistenceClusterDense15m`:
+- `TrendingCalm × Backwardation`: `-0.35` (very negative — should be denied; existing rule allows it)
+- `BearishStress × Backwardation`: `-0.19`
+- `BearishStress × Contango`: `+0.07` (positive)
+- `BearishStress × DeepContango`: `-0.33` (very negative — surprising)
+- `Other × Contango`: `-0.28` (negative)
+
+`LiquiditySweepReclaim15mWide` (the candidate Slice 96's `allow all` rule didn't help):
+- **`Backwardation` is universally negative across regimes**:
+  - `TrendingCalm × Backwardation`: `-1.55` (catastrophic)
+  - `TrendingNervous × Backwardation`: `-0.59`
+  - `ChopRange × Backwardation`: `-0.73`
+  - `BearishStress × Backwardation`: `-0.05` (only mildly negative)
+- A simple "deny all `Backwardation` days" filter for Sweep should materially improve its standalone Sharpe.
+
+`VRPCompression15m`:
+- `TrendingNervous × Contango`: `+0.31` (best Sharpe cell anywhere in pack)
+- `ChopRange × Contango`: `+0.77` (very high, only 6 trades)
+- `TrendingCalm × DeepContango`: `+0.18` (the bulk)
+- The candidate already filters `Backwardation` mostly via gates; term-structure adds little here.
+
+**Interpretation — three actionable refinements**
+
+1. **The most impactful new rule**: `LiquiditySweepReclaim15mWide` should deny ALL `Backwardation` days across all regimes. The candidate's standalone Sharpe of `0.51` (Slice 96) is dragged down materially by the `~30-40` Backwardation entries with Sharpe `-0.59` to `-1.55`. A pure-Backwardation filter for Sweep should lift it from `0.51` to roughly `~0.8-1.0`.
+
+2. **`TrendingCalm × Backwardation` is uniformly bad** across the 3 trend / mean-reversion candidates that enter it (Sharpes `-0.15`, `-0.35`, `-1.55`). A blanket "deny `TrendingCalm × Backwardation`" rule across all candidates seems safe and simple.
+
+3. **The existing `BearishStress` blanket-deny is overly coarse**: `TrendPullbackDense15m` actually has **POSITIVE** Sharpe in `BearishStress × Contango` (+0.09) and `BearishStress × DeepContango` (+0.06). Refining the rule to only deny `BearishStress` when term-structure is `Backwardation` or `FlatToBackward` would unlock more positive trades. PersistenceCluster has a different shape — works in Contango but fails in DeepContango (counterintuitive); refinement here is candidate-specific.
+
+**The refined regime-conditional rules table for the next slice's basket re-run:**
+
+| Candidate | Refined deny list |
+|---|---|
+| `TrendPullbackDense15m` | `BearishStress × Backwardation`, `BearishStress × FlatToBackward`, `TrendingCalm × Backwardation` |
+| `PersistenceClusterDense15m` | `BearishStress × Backwardation`, `BearishStress × DeepContango`, `TrendingCalm × Backwardation`, `Other × Contango` |
+| `LiquiditySweepReclaim15mWide` | All `Backwardation` regardless of regime, plus `ChopRange × Backwardation` separately confirmed bad |
+| `VRPCompression15m` | (existing gates filter; no extra rule) |
+
+**Project status**
+- **the user's `P3 (options/vol data)` preference is paying off concretely**: the IBKR-fetched VIX9D + VIX3M data unused for direct strategy gating until now adds a measurable second regime dimension. Term-structure × spot-vol regime is a 2D classifier, not just a 1D one.
+- the basket Sharpe headroom from refining the regime rules is probably another `+0.1-0.3` on top of Slice 96's `0.88`. Realistic deployable Sharpe could reach `~1.0-1.2` with the refined classifier.
+- **the next slice priorities re-sharpen further:**
+  - implement the refined deny rules in `regime_conditional_basket.py` and run the comparison (`Slice 96 conditional` vs `Slice 98 refined-conditional`)
+  - if the lift is real, the term-structure features are confirmed as worth integrating into the daily classifier
+  - then consider extending with VVIX z-score as a third dimension (vol-of-vol stress)
+
 ## Current Todo Board
 
 ### Done
@@ -5020,6 +5103,7 @@ The NQ baseline column is the per-trade Sharpe from the `NQ/USD 15m ~3Y` runs (S
 - [x] **First regime classifier built and validated as actionable.** Slice 94 authored `regime_attribution.py` defining 4 daily regime classes via NQ-200d-SMA position + slope + VIX level + drawdown, attributed each candidate's 2023 trade rows by entry-day regime. **`BearishStress` (drawdown<-7% + VIX>=20) is universally negative across all candidates with entries** (TrendPullback Sharpe -0.21, PersistenceCluster -0.30 — explains Slice 93's train-period collapse). **`TrendingNervous` (above 200d + VIX>=20) is the sweet spot for trend / VRP candidates** (Sharpe 0.15 / 0.25). **`ChopRange` favors mean-reversion candidates** (Sweep 0.25, VRP 0.25). The 2023-2025 favorability is explained by `TrendingCalm` + `TrendingNervous` dominating the regime mix. A regime-conditional allocator that disables trend candidates in `BearishStress` would have prevented PersistenceCluster's -11.38% train-period loss. Caveat: freqtrade JSON export trade rows look truncated to early-2023 only despite the backtest covering 3Y; aggregate metrics are unaffected but per-regime distribution is biased toward early-2023 regime mix.
 - [x] **8Y full-period re-run corrects the in-sample illusion. VRPCompression15m emerges as the only promotable candidate.** Slice 95 root-caused the trade-export truncation: passing explicit `--timerange 20180101-20251231` to `run_tomac_one.py` (the wrapper now supports this) produced 24x more trades for `TrendPullbackDense15m` (103 -> 2,462), 12x more for the trend pair, 3x more for `VRPCompression15m`. The 2.78 in-sample basket Sharpe was based on a 3-5 month early-2023 trade slice. Corrected 8Y picture: `VRPCompression15m` Sharpe **0.339**, total +**28.95%**, max DD **-4.10%**, PF **1.64** — clear standalone leader and the only candidate with both regime-stable edge and contained drawdown. `PersistenceClusterDense15m` REJECTED (Sharpe -0.196, -11.38% loss over 8Y). `TrendPullbackDense15m` mediocre (0.26, -15.80% DD). `LiquiditySweepReclaim15mWide` marginal (0.14, PF 1.08). Realistic basket Sharpe `~0.3-0.4`, not 2.78. P1/P2/P3 priorities still operationally met but P2 is much lower than the in-sample illusion suggested.
 - [x] **Regime classifier IS deployable.** Slice 96 authored `regime_conditional_basket.py` and applied per-candidate "allowed regimes" rules (deny BearishStress for trend candidates) on 8Y trade exports. **Equal-weight basket Sharpe `0.233 -> 0.806` (+0.57 lift), inverse-vol basket `0.448 -> 0.880` (+0.43 lift)**. Max drawdown halved in both: equal-weight `-13.15% -> -4.76%`, inverse-vol `-8.84% -> -4.31%`. `PersistenceClusterDense15m` rescued from `-0.43` standalone Sharpe (REJECT) to `+0.61` conditional (USEFUL). `TrendPullbackDense15m` lifted from `0.27` to `1.14` standalone. The regime classifier is GENUINELY deployable: a single rule ("deny entries on days where NQ drawdown <-7% AND VIX >=20, OR below 200d SMA with declining slope") materially improves both Sharpe and drawdown across the 4-candidate basket on 8Y data. P1 (regime classifier) and P2 (deployable Sharpe ~0.88 annualized) are now both objectively met with concrete validated evidence.
+- [x] **Term-structure (VIX9D/VIX3M) adds a second regime dimension with real discriminative power.** Slice 97 authored `regime_term_structure_explore.py` and sliced each candidate's per-trade Sharpe by `regime × term-structure` 2D cells. Three actionable refinements identified: (1) `LiquiditySweepReclaim15mWide` should deny ALL `Backwardation` days (Sharpes `-0.59` to `-1.55` across regimes); (2) `TrendingCalm × Backwardation` is uniformly bad across all candidates that enter it; (3) the existing blanket `BearishStress` deny is overly coarse — `TrendPullback` has positive Sharpe in `BearishStress × Contango` and `BearishStress × DeepContango`. The IBKR-fetched VIX9D + VIX3M data unused for strategy gating until now adds the second regime dimension that could push the deployable basket Sharpe to `~1.0-1.2` from Slice 96's `0.88`.
 
 ### Next
 
