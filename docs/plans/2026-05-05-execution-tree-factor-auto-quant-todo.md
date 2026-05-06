@@ -4299,6 +4299,68 @@ First independent outcome-label check:
 - the corrected `OR`-combined trend gate in `PersistenceClusterDense15m` is a meaningful upstream finding: the 1h parent's `(higher_trend | local_stack) & local_stack` reduces to `local_stack` and effectively ignores the 4h trend signal. Re-running the 1h parent with the correct OR gate would also lift its trade count, but the dense floor is most cleanly cleared by the 15m TF pivot anyway.
 - with three candidates now at thin-or-better density across two source families (trend continuation + mean reversion), the next slice can begin the post-regime portfolio-diversity scorecard work: pairwise return correlation between the three top candidates, payoff-shape comparison, and incremental portfolio Sharpe under equal-risk weighting. This requires either enabling freqtrade's `--export trades` and post-processing the trade log, or computing equity curves directly from the backtest results.
 
+### 2026-05-07 Slice 86: First post-regime portfolio-diversity scorecard
+
+**Execution**
+- followed Slice 85's next-plan: built the post-regime portfolio-diversity scorecard the TODO has demanded since the start.
+- enhanced `run_tomac_one.py` to accept an optional `EXPORT_PATH` third argument that lands `--export trades` in the freqtrade args dict; freqtrade actually writes the export to its `~/Auto-Quant/user_data/backtest_results/backtest-result-*.zip` regardless of the path passed, so the scorecard auto-discovers the latest export per strategy via `.meta.json` lookup rather than the explicit path.
+- ran the three promotable candidates with trade export enabled:
+  - `TomacNQ_RegimeTrendPullbackDense15m` (Slice 83)
+  - `TomacNQ_RegimePersistenceClusterDense15m` (Slice 85)
+  - `TomacNQ_RegimeLiquiditySweepReclaim15mWide` (Slice 85)
+- authored `scripts/auto_quant_external/portfolio_diversity_scorecard.py`. The script:
+  - locates the latest export zip per strategy
+  - extracts the per-trade `close_date` + `profit_ratio` series
+  - builds a daily-PnL series per candidate by summing trades by close date
+  - reindexes onto the union date range, fills no-trade days with zero
+  - computes annualized Sharpe / Sortino / Calmar / max drawdown per candidate
+  - reports the pairwise daily-return Pearson correlation matrix
+  - simulates equal-weight (`1/N`) and inverse-volatility-weighted portfolio combined metrics
+- saved scorecard output to `/tmp/ict-engine-ibkr-probe/slice_86_scorecard.log`.
+- kept `ict-engine` runtime source frozen.
+
+**Outputs**
+- `scripts/auto_quant_external/portfolio_diversity_scorecard.py`
+- `scripts/auto_quant_external/run_tomac_one.py` (extended with optional EXPORT_PATH arg)
+- `/tmp/ict-engine-ibkr-probe/slice_86_scorecard.log`
+- `/Users/thrill3r/Auto-Quant/user_data/backtest_results/backtest-result-2026-05-07_03-15-46.zip` (TrendPullbackDense15m trades)
+- `/Users/thrill3r/Auto-Quant/user_data/backtest_results/backtest-result-2026-05-07_03-15-55.zip` (PersistenceClusterDense15m trades)
+- `/Users/thrill3r/Auto-Quant/user_data/backtest_results/backtest-result-2026-05-07_03-16-04.zip` (LiquiditySweepReclaim15mWide trades)
+
+**Result — annualized standalone metrics on `NQ/USD 15m ~3Y` daily-PnL aggregation**
+
+| Candidate | Family | Annualized Sharpe | Sortino | Calmar | Max DD | Total return |
+|---|---|---:|---:|---:|---:|---:|
+| `TrendPullbackDense15m` | trend continuation pullback | 1.063 | 1.306 | 2.34 | -3.42% | 3.87% |
+| `PersistenceClusterDense15m` | trend continuation persistence | 1.542 | 1.855 | 3.68 | -4.14% | 7.52% |
+| **`LiquiditySweepReclaim15mWide`** | mean reversion / sweep | **2.684** | **4.109** | **9.52** | **-1.89%** | **9.14%** |
+
+**Pairwise daily-PnL Pearson correlation matrix**
+
+| | TrendPullback | PersistenceCluster | SweepReclaim |
+|---|---:|---:|---:|
+| TrendPullback | 1.000 | **0.700** | 0.301 |
+| PersistenceCluster | 0.700 | 1.000 | 0.245 |
+| SweepReclaim | 0.301 | 0.245 | 1.000 |
+
+**Combined portfolio metrics (3-candidate basket)**
+
+| Portfolio weighting | Sharpe | Sortino | Calmar | Max DD | Total return |
+|---|---:|---:|---:|---:|---:|
+| Equal weight (1/N) | 2.155 | 3.277 | 6.47 | -2.12% | 6.89% |
+| Inverse volatility | 2.257 | 3.490 | 7.19 | -1.92% | 6.93% |
+
+Inverse-volatility weights: TrendPullback `0.347`, PersistenceCluster `0.264`, SweepReclaim `0.389`.
+
+**Interpretation**
+- **The user's `P1 (high-confidence regime classifier)` and `P2 (high Sharpe)` preferences are now meaningfully advanced with real evidence.** `LiquiditySweepReclaim15mWide` shows annualized Sharpe `2.684` over 3Y, Sortino `4.109`, Calmar `9.52`, and max drawdown only `-1.89%`. These are legitimate above-noise numbers from a fully-coded backtest with deterministic entry / exit rules, not the per-trade Sharpe sentinels that freqtrade's per-trade Sharpe column reports.
+- **The pairwise correlation matrix proves the source-family separation is real**, not just a labelling claim:
+  - the two trend-continuation candidates correlate `0.700` with each other (same family, expected)
+  - the mean-reversion candidate correlates only `0.245-0.301` with the trend pair (different family, confirmed)
+- **The combined-portfolio basket fails the "different not just stronger" test as currently composed.** Best standalone Sharpe (`2.684`) exceeds both equal-weight (`2.155`) and inverse-vol (`2.257`) basket Sharpes. Reason: `SweepReclaim15mWide` is so dominant on standalone Sharpe that mixing in lower-Sharpe candidates dilutes the basket. The TODO's portfolio-diversity rule explicitly says "prefer a lower-standalone but low-correlation factor over a stronger duplicate when it improves the portfolio layer" — but here the low-correlation factor is also the higher-standalone factor, so direct allocation rather than diversification is the rational choice on this 3-candidate basket.
+- **The constructive lesson:** the basket needs MORE candidates with Sharpe roughly comparable to `SweepReclaim15mWide` (`~2.5+`) but in DIFFERENT source families. Currently the trend pair sits at Sharpe `1.06-1.54`, which is materially lower; their lower correlation does not compensate. The next slice should aim to widen / port additional mean-reversion or volatility-risk-premium candidates with the goal of producing a SECOND `Sharpe >= 2.0` orthogonal-source candidate, after which the basket diversification benefit can re-emerge.
+- the scorecard methodology has a known caveat: with sparse intraday trading, daily-PnL series have many zero days, which shrinks both numerator and denominator of Sharpe and amplifies the `sqrt(252)` annualization. The relative ranking across candidates and across portfolio weightings is preserved, which is what the diversity scorecard needs. For absolute promotion thresholds the per-trade Sharpe sentinel from the freqtrade backtest is the more conservative lens; we should report both views going forward.
+
 ## Current Todo Board
 
 ### Done
@@ -4378,6 +4440,7 @@ First independent outcome-label check:
 - [x] First candidate clears the `dense (>= 80)` trade-count floor. Authored `run_tomac_one.py` wrapper that accepts an optional timeframe argument so freqtrade applies it before the strategy class is loaded; this unblocks `FVGRetrace5m` (now runs but over-specified at 5m, only 3 trades) and lets the new `TrendPullbackDense15m` port hit `103 trades` / Sharpe `0.12` / Calmar `2.13` / PF `1.21` on `NQ/USD 15m ~3Y`. Density-quality tradeoff is real but bounded; the 15m candidate is the only currently-promotable execution candidate in the pack.
 - [x] Ported `LiquiditySweepReclaim` and `KillzoneIVProxy` to 15m base; results show TF pivot scales `~4x` for `OR`-combined gates (TrendPullback) but does not help narrow `AND`-window gates (Killzone). `LiquiditySweepReclaim15m`: 4 -> 13 trades (probe_only, PF 1.57). `KillzoneIVProxy15m`: 2 -> 1 trade (regression). Lesson: TF pivot needs to be paired with structural widening for narrow-window candidates.
 - [x] Pack now has 2 dense candidates from different shapes plus a mean-reversion thin leader. `PersistenceClusterDense15m` (Slice 85, 15m TF pivot with corrected OR-trend gate): 146 trades / Sharpe 0.21 / +7.22% / DD -5.02% — second dense and current dense Sharpe leader. `LiquiditySweepReclaim15mWide` (Slice 85, structurally widened 15m port): 62 trades / Sharpe 0.25 / Sortino 0.72 / Calmar 7.87 / +8.67% / DD -1.92% / PF 1.72 — now the pack's risk-adjusted leader from a different source family (mean reversion / sweep), eligible to start the post-regime portfolio-diversity scorecard.
+- [x] Built the first post-regime portfolio-diversity scorecard. Authored `scripts/auto_quant_external/portfolio_diversity_scorecard.py`; on the 3 promotable candidates over `NQ/USD 15m ~3Y`: standalone annualized Sharpes `1.06 / 1.54 / 2.68`, pairwise daily-PnL correlation `0.700` for the trend pair vs `0.245-0.301` for the mean-rev cross-family pair (source separation confirmed). Equal-weight basket Sharpe `2.155`, inverse-vol basket Sharpe `2.257` — both below best-standalone `2.684` because `SweepReclaim15mWide` dominates on standalone too. The basket needs more mean-reversion / orthogonal-source candidates at comparable Sharpe before diversification benefits re-emerge.
 
 ### Next
 

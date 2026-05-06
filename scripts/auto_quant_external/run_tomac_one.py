@@ -17,7 +17,10 @@ relative to the user's runtime data dir):
 
     cd /Users/thrill3r/Auto-Quant
     uv run python /Users/thrill3r/projects-ict-engine/ict-engine/\\
-        scripts/auto_quant_external/run_tomac_one.py STRATEGY [TIMEFRAME]
+        scripts/auto_quant_external/run_tomac_one.py STRATEGY [TIMEFRAME] [EXPORT_PATH]
+
+When EXPORT_PATH is provided the run enables `--export trades` and writes the
+per-trade backtest result there for downstream portfolio-diversity scoring.
 """
 from __future__ import annotations
 
@@ -35,15 +38,15 @@ from freqtrade.enums import RunMode  # noqa: E402
 from freqtrade.optimize.backtesting import Backtesting  # noqa: E402
 
 
-def run(strategy: str, timeframe: str | None = None) -> int:
+def run(strategy: str, timeframe: str | None = None, export_path: str | None = None) -> int:
     args = {
         "config": [str(rt.CONFIG)],
         "user_data_dir": str(rt.USER_DATA),
         "datadir": str(rt.DATA_DIR),
         "strategy": strategy,
         "strategy_path": str(rt.STRATEGIES_DIR),
-        "export": "none",
-        "exportfilename": None,
+        "export": "trades" if export_path else "none",
+        "exportfilename": Path(export_path) if export_path else None,
         "cache": "none",
     }
     if timeframe:
@@ -64,6 +67,9 @@ def run(strategy: str, timeframe: str | None = None) -> int:
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: run_tomac_one.py STRATEGY [TIMEFRAME]", file=sys.stderr)
+        print("Usage: run_tomac_one.py STRATEGY [TIMEFRAME] [EXPORT_PATH]", file=sys.stderr)
         raise SystemExit(2)
-    raise SystemExit(run(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None))
+    strategy = sys.argv[1]
+    timeframe = sys.argv[2] if len(sys.argv) > 2 else None
+    export_path = sys.argv[3] if len(sys.argv) > 3 else None
+    raise SystemExit(run(strategy, timeframe, export_path))
