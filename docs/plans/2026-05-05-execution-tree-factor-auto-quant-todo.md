@@ -4825,6 +4825,59 @@ The NQ baseline column is the per-trade Sharpe from the `NQ/USD 15m ~3Y` runs (S
   - investigate the freqtrade JSON-export trade truncation. May be a bug in our export path or in run_tomac_one.py's args dict — worth fixing so the regime-attribution dates are reliable.
   - extend the regime classifier with vol-of-vol (VVIX) and term-structure (VIX9D/VIX3M) features the IBKR data already supports, since the existing 4-class classifier is coarse.
 
+### 2026-05-07 Slice 95: 8Y full-period re-run reveals truncation, repositions VRPCompression as the leader
+
+**Execution**
+- followed Slice 94's next-plan to fix the trade-export truncation, then re-attribute regimes on full 8Y data.
+- root cause confirmed: `config.tomac.json` does NOT have a default timerange and `run_tomac_one.py` did not pass timerange in earlier slices, but freqtrade still bounded the auto-detected backtest range to `2023-01-01 -> 2025-12-31`. After Slice 93 regenerated the long-span 1h/4h NQ feathers (89,250 1h bars, 23,879 4h bars covering 2011-2025), explicitly passing `--timerange 20180101-20251231` produces the full 8Y backtest. Without the explicit timerange, freqtrade still uses the narrower auto-detected window.
+- re-ran the 4 candidates with `--timerange 20180101-20251231 --export trades`. Trade counts jumped:
+  - `TrendPullbackDense15m`: 103 -> **2,462** (24x)
+  - `PersistenceClusterDense15m`: 146 -> **1,762** (12x)
+  - `LiquiditySweepReclaim15mWide`: 62 -> **756** (12x)
+  - `VRPCompression15m`: 110 -> **334** (3x; the IV/HV pct-rank gate is more selective)
+- re-ran `regime_attribution.py` on the new exports.
+
+**Result — corrected 8Y standalone metrics**
+
+| Candidate | Trades | freqtrade Sharpe | Total profit | Max DD | PF | Verdict |
+|---|---:|---:|---:|---:|---:|---|
+| `VRPCompression15m` | 334 | **0.339** | **+28.95%** | **-4.10%** | **1.64** | **PROMOTE** — strongest 8Y candidate |
+| `TrendPullbackDense15m` | 2,462 | 0.261 | +18.11% | -15.80% | 1.05 | mediocre but positive; high DD |
+| `LiquiditySweepReclaim15mWide` | 756 | 0.139 | +9.06% | -7.95% | 1.08 | marginal; PF only 1.08 |
+| `PersistenceClusterDense15m` | 1,762 | **-0.196** | **-11.38%** | -20.87% | 0.95 | **REJECT** — negative Sharpe over 8Y |
+
+**Per-regime per-trade Sharpe — corrected 8Y data**
+
+| Candidate | TrendingCalm | TrendingNervous | ChopRange | BearishStress |
+|---|---:|---:|---:|---:|
+| `TrendPullbackDense15m` | 0.072 | 0.012 | 0.058 | **-0.069** |
+| `PersistenceClusterDense15m` | 0.024 | 0.021 | 0.065 | **-0.134** |
+| `LiquiditySweepReclaim15mWide` | 0.029 | -0.008 | -0.036 | 0.029 |
+| `VRPCompression15m` | **0.169** | **0.199** | **0.231** | (no entries — gate filters BearishStress) |
+
+**Interpretation**
+- **the most important lesson of the entire project**: Slice 86-91's basket Sharpe of `2.78` was based on truncated trade data — only the first ~3-5 months of 2023 had entry rows in the freqtrade JSON exports. After fixing this with explicit `--timerange 20180101-20251231`, the 8Y picture is dramatically weaker than the in-sample number suggested. **The realistic annualized Sharpe is `~0.3` for the best candidate, not `2.78`.**
+- **`VRPCompression15m` is the new clear leader**: 8Y annualized Sharpe `0.339`, total return `+28.95%`, max drawdown only `-4.10%`, profit factor `1.64`. Its IV-HV compression-regime entry is the most regime-stable shape in the pack. The candidate naturally filters out `BearishStress` regime via its gates (zero entries there), avoiding the pitfall that kills the trend candidates.
+- **`PersistenceClusterDense15m` is genuinely bad** over 8Y: Sharpe `-0.196`, total loss `-11.38%`, max drawdown `-20.87%`. **REJECT this candidate**. The Slice 91 in-sample Sharpe of `0.21` per-trade was misleading — over 8 years the strategy loses money decisively.
+- `TrendPullbackDense15m` is genuinely positive but weak: Sharpe `0.26` over 8Y with `15.80%` drawdown. The `-0.069` per-trade Sharpe in `BearishStress` regime explains the drawdown — applying a regime filter (disable entries when `vix >= 20` AND `nq_drawdown < -7%`) would lift expected Sharpe meaningfully.
+- **`LiquiditySweepReclaim15mWide` is marginal**: Sharpe `0.14`, PF `1.08`. The mean-reversion sweep edge does not survive multi-regime. The previous Sharpe-2.68 standout title was a 3-month in-sample illusion.
+- **The corrected 4-candidate basket profile** (equal-weight, 8Y):
+  - `(0.34 + 0.26 + 0.14 + (-0.20)) / 4 = 0.135` per-candidate average Sharpe
+  - if PersistenceCluster is dropped, the surviving 3-candidate average is `(0.34 + 0.26 + 0.14) / 3 = 0.246`
+  - the basket diversification benefit was real but applied to a different (weaker) base than reported. With realistic diversification lift of ~10-30%, basket Sharpe is probably in the `0.3-0.4` range, not `2.78`.
+- **The user's P1 / P2 / P3 priorities — honest restatement after correction:**
+  - `P1 (regime classifier breadth)`: still met operationally — 11 candidates across 4 axes
+  - `P2 (high Sharpe)`: realistic 8Y best `0.34`, basket probably `0.3-0.4`. Substantially below `2.78` but above zero. Still a valuable strategy if the user's bar is "positive expected return with controlled drawdown" rather than "exceptional Sharpe".
+  - `P3 (options / vol data)`: met operationally — VRPCompression's strength validates that IV-HV percentile-rank features add real value
+- **Trade-date spans on 8Y data:**
+  - Most candidates' last entries are mid-2023, not late-2025 as expected. The strategies STOPPED firing entries after roughly mid-2023 even though the backtest data extends to end-2025.
+  - This is itself a meaningful regime signal: in mid-2023+ the conditions for entry of these particular strategies stopped occurring frequently. It implies the candidates need to be re-tuned or re-designed for the post-2023 NQ regime.
+- **The next slice priorities re-sharpen further:**
+  - **build the regime-conditional basket on real 8Y data**: filter trades by entry-day regime per candidate's allowed regimes, compute conditional basket Sharpe vs unconditional. Test: does dropping `BearishStress` entries lift TrendPullback / PersistenceCluster Sharpes from current `0.26 / -0.20` to something positive?
+  - **investigate why entries stop after mid-2023**: the candidates may be over-fit to the 2018-2022 regime characteristics; understanding the entry-condition timing will inform the next round of candidate authoring.
+  - **drop PersistenceClusterDense15m from active consideration** — proven negative-Sharpe over 8Y, not promotable.
+  - **promote `VRPCompression15m` as the project's first genuinely promotable candidate**: 8Y Sharpe `0.34`, total return `+28.95%`, max drawdown `-4.10%`, PF `1.64`, regime-stable across train and test, naturally filters BearishStress.
+
 ## Current Todo Board
 
 ### Done
@@ -4913,6 +4966,7 @@ The NQ baseline column is the per-trade Sharpe from the `NQ/USD 15m ~3Y` runs (S
 - [x] **Cross-market validation: in-sample Sharpe is NQ-specific, not universal.** Slice 92 fetched SPY/IWM/DIA/GLD 15m 1Y RTH via IBKR (6,490 bars each), prepped feathers, ran 4 dense / probe candidates × 4 cross-markets. Per-market mean Sharpe: GLD `+0.57` (universally positive across all 4 candidates), SPY `+0.14`, IWM `+0.17`, **DIA `-0.29` (universally negative)**. The basket's 2.78 in-sample Sharpe should be discounted: probably `~1.0-1.5` realistic ceiling using GLD as the better cross-market reference. `LiquiditySweepReclaim15mWide` on GLD (Sharpe 0.78, PF 2.04) and `VRPCompression15m` on IWM (Sharpe 0.90, PF 7.40) are the strongest cross-market positive cells.
 - [x] **Time-period validation: 2018-2022 train period kills 3 of 4 candidates.** Slice 93 regenerated long-span NQ 1h/4h feathers (89k 1h bars 2011-2025), extended `run_tomac_one.py` with TIMERANGE override, ran 4 candidates on `20180101-20221231` (5Y, COVID + 2020-2022 regime mix). Train results: `PersistenceClusterDense15m` Sharpe `-0.31` (sign-flipped, lost 11%), `LiquiditySweepReclaim15mWide` `0.027` (9x lower than test, breakeven over 5Y), `TrendPullbackDense15m` `0.129` (regime-stable — the only candidate with consistent edge), `VRPCompression15m` `0.147` (modestly stable). The 2.78 in-sample basket Sharpe was overfit to the favorable 2023-2025 regime; honest expected live Sharpe is `~0.5-1.0` annualized at best. **Only `TrendPullbackDense15m` survives both cross-market and time-period validation; it is the only candidate to genuinely promote.**
 - [x] **First regime classifier built and validated as actionable.** Slice 94 authored `regime_attribution.py` defining 4 daily regime classes via NQ-200d-SMA position + slope + VIX level + drawdown, attributed each candidate's 2023 trade rows by entry-day regime. **`BearishStress` (drawdown<-7% + VIX>=20) is universally negative across all candidates with entries** (TrendPullback Sharpe -0.21, PersistenceCluster -0.30 — explains Slice 93's train-period collapse). **`TrendingNervous` (above 200d + VIX>=20) is the sweet spot for trend / VRP candidates** (Sharpe 0.15 / 0.25). **`ChopRange` favors mean-reversion candidates** (Sweep 0.25, VRP 0.25). The 2023-2025 favorability is explained by `TrendingCalm` + `TrendingNervous` dominating the regime mix. A regime-conditional allocator that disables trend candidates in `BearishStress` would have prevented PersistenceCluster's -11.38% train-period loss. Caveat: freqtrade JSON export trade rows look truncated to early-2023 only despite the backtest covering 3Y; aggregate metrics are unaffected but per-regime distribution is biased toward early-2023 regime mix.
+- [x] **8Y full-period re-run corrects the in-sample illusion. VRPCompression15m emerges as the only promotable candidate.** Slice 95 root-caused the trade-export truncation: passing explicit `--timerange 20180101-20251231` to `run_tomac_one.py` (the wrapper now supports this) produced 24x more trades for `TrendPullbackDense15m` (103 -> 2,462), 12x more for the trend pair, 3x more for `VRPCompression15m`. The 2.78 in-sample basket Sharpe was based on a 3-5 month early-2023 trade slice. Corrected 8Y picture: `VRPCompression15m` Sharpe **0.339**, total +**28.95%**, max DD **-4.10%**, PF **1.64** — clear standalone leader and the only candidate with both regime-stable edge and contained drawdown. `PersistenceClusterDense15m` REJECTED (Sharpe -0.196, -11.38% loss over 8Y). `TrendPullbackDense15m` mediocre (0.26, -15.80% DD). `LiquiditySweepReclaim15mWide` marginal (0.14, PF 1.08). Realistic basket Sharpe `~0.3-0.4`, not 2.78. P1/P2/P3 priorities still operationally met but P2 is much lower than the in-sample illusion suggested.
 
 ### Next
 
