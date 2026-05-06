@@ -17,10 +17,14 @@ relative to the user's runtime data dir):
 
     cd /Users/thrill3r/Auto-Quant
     uv run python /Users/thrill3r/projects-ict-engine/ict-engine/\\
-        scripts/auto_quant_external/run_tomac_one.py STRATEGY [TIMEFRAME] [EXPORT_PATH]
+        scripts/auto_quant_external/run_tomac_one.py STRATEGY [TIMEFRAME] [EXPORT_PATH] [PAIRS]
 
 When EXPORT_PATH is provided the run enables `--export trades` and writes the
 per-trade backtest result there for downstream portfolio-diversity scoring.
+
+When PAIRS (comma-separated, e.g. "SPY/USD,IWM/USD") is provided it overrides
+the config's pair_whitelist for cross-market validation. The synthetic-market
+injection is rebuilt against the new pair list.
 """
 from __future__ import annotations
 
@@ -38,7 +42,12 @@ from freqtrade.enums import RunMode  # noqa: E402
 from freqtrade.optimize.backtesting import Backtesting  # noqa: E402
 
 
-def run(strategy: str, timeframe: str | None = None, export_path: str | None = None) -> int:
+def run(
+    strategy: str,
+    timeframe: str | None = None,
+    export_path: str | None = None,
+    pairs: list[str] | None = None,
+) -> int:
     args = {
         "config": [str(rt.CONFIG)],
         "user_data_dir": str(rt.USER_DATA),
@@ -51,7 +60,11 @@ def run(strategy: str, timeframe: str | None = None, export_path: str | None = N
     }
     if timeframe:
         args["timeframe"] = timeframe
+    if pairs:
+        args["pairs"] = pairs
     config = Configuration(args, RunMode.BACKTEST).get_config()
+    if pairs:
+        config["exchange"]["pair_whitelist"] = pairs
     exchange = rt._build_exchange_with_synthetic_pairs(config)
     bt = Backtesting(config, exchange=exchange)
     bt.start()
@@ -67,9 +80,14 @@ def run(strategy: str, timeframe: str | None = None, export_path: str | None = N
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: run_tomac_one.py STRATEGY [TIMEFRAME] [EXPORT_PATH]", file=sys.stderr)
+        print(
+            "Usage: run_tomac_one.py STRATEGY [TIMEFRAME] [EXPORT_PATH] [PAIRS]",
+            file=sys.stderr,
+        )
         raise SystemExit(2)
     strategy = sys.argv[1]
     timeframe = sys.argv[2] if len(sys.argv) > 2 else None
     export_path = sys.argv[3] if len(sys.argv) > 3 else None
-    raise SystemExit(run(strategy, timeframe, export_path))
+    pairs_arg = sys.argv[4] if len(sys.argv) > 4 else None
+    pairs = [p.strip() for p in pairs_arg.split(",") if p.strip()] if pairs_arg else None
+    raise SystemExit(run(strategy, timeframe, export_path, pairs))

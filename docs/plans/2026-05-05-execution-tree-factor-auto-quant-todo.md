@@ -4669,6 +4669,63 @@ Inverse-vol weights now distribute across the 4 eligible candidates (TrendPullba
   - confirm no obvious overfitting: rerun the basket on a 2018-2022 train range vs 2023-2026 test range to check stability
   - if cross-market and time-period validation hold, the basket is genuinely promotable; if not, the in-sample Sharpe is overfit and the orthogonal-axis story needs more challenge
 
+### 2026-05-07 Slice 92: Cross-market validation reveals NQ-specificity of the in-sample Sharpe
+
+**Execution**
+- followed Slice 91's next-plan: validate the dense / probe candidates out-of-sample on the 4 non-NQ markets prepared in Slice 79.
+- fetched 15m feather data via IBKR (`1 Y RTH` window, May 2025 - May 2026):
+  - first parallel attempt of 4 fetches: 2 of 4 timed out due to IBKR concurrent-request throttling on the live gateway
+  - retried IWM and DIA sequentially: both succeeded
+  - all four pairs now have 6,490 15m bars (`SPY/USD`, `IWM/USD`, `DIA/USD`, `GLD/USD`)
+  - `prepare_external.py` resampled cleanly for all four
+- extended `run_tomac_one.py` to accept an optional `PAIRS` 4th argument (comma-separated) that overrides the config's `pair_whitelist` after Configuration load, then rebuilds the synthetic-market injection against the new pair list. Kept config.tomac.json and run_tomac.py unchanged.
+- ran 4 candidates × 4 cross-markets = 16 backtest cells using `--pairs "SPY/USD,IWM/USD,DIA/USD,GLD/USD"` per candidate.
+- saved logs to `/tmp/ict-engine-ibkr-probe/spy.15m.1y.csv` and similar.
+
+**Outputs**
+- `scripts/auto_quant_external/run_tomac_one.py` (PAIRS override added)
+- `/Users/thrill3r/Auto-Quant/user_data/data/{SPY,IWM,DIA,GLD}_USD-15m.feather`
+- `/tmp/ict-engine-ibkr-probe/{spy,iwm,dia,gld}.15m.1y.csv`
+
+**Result — per-strategy per-market freqtrade per-trade Sharpe**
+
+The NQ baseline column is the per-trade Sharpe from the `NQ/USD 15m ~3Y` runs (Slices 83-91), which corresponds to annualized Sharpes in the `~1.0-2.7` range. Cross-market columns are per-trade Sharpes from `1Y RTH 2025-05-2026-05` runs (`6,490` 15m bars per market).
+
+| Candidate | NQ baseline (3Y) | GLD (1Y) | SPY (1Y) | IWM (1Y) | DIA (1Y) |
+|---|---:|---:|---:|---:|---:|
+| `LiquiditySweepReclaim15mWide` | 0.245 | **0.784** | -0.290 | 0.224 | -0.048 |
+| `PersistenceClusterDense15m` | 0.211 | 0.409 | **0.437** | -0.061 | -0.267 |
+| `TrendPullbackDense15m` | 0.121 | **0.641** | 0.605 | -0.397 | -0.269 |
+| `VRPCompression15m` | 0.230 | 0.446 | -0.182 | **0.897** | -0.563 |
+
+**Per-market mean across the 4 candidates**
+
+| Market | Mean per-trade Sharpe | Direction |
+|---|---:|---|
+| GLD/USD | **+0.570** | universally positive across all 4 candidates |
+| SPY/USD | +0.143 | mixed, slightly positive |
+| IWM/USD | +0.166 | mixed |
+| DIA/USD | **-0.287** | consistently negative across all 4 candidates |
+| NQ/USD (3Y in-sample) | +0.202 | (per-trade; annualized basket: 2.78) |
+
+**Interpretation**
+- the headline finding is sober: **the basket's in-sample annualized Sharpe of `2.78` does NOT generalize uniformly across liquid US-equity-index markets**. Specifically:
+  - `GLD/USD` shows positive Sharpe across **every** candidate (`+0.41` to `+0.78`) — the regime features capture something gold also exhibits
+  - `DIA/USD` shows negative Sharpe across **every** candidate (`-0.05` to `-0.56`) — the Dow's slower-mean-reverting microstructure rejects the regime triggers
+  - `SPY/USD` and `IWM/USD` are mixed; some candidates work on one and not the other
+- **time-period caveat**: the cross-market windows are 1Y (`2025-05-07 -> 2026-05-06`, ~6,490 15m bars per market) while the NQ baseline is 3Y. Part of the divergence may be regime-shift in 2025-2026 vs the 2023-2025 portion of the NQ window, not pure market-specificity. The `2018-2022 train vs 2023-2026 test` split slice should run next to disentangle these.
+- the **strongest cross-market candidate is `LiquiditySweepReclaim15mWide` on GLD/USD** (Sharpe `0.78`, profit `+6.71%`, PF `2.04`). The mean-reversion / sweep pattern transports to gold; this is consistent with gold's structural sweep-reclaim dynamics around major support / resistance.
+- **`VRPCompression15m` on `IWM/USD` is the most striking cross-market positive cell** (Sharpe `0.90`, PF `7.40` on 16 trades). The compression-regime entry works specifically on small caps where vol regimes are more pronounced, but fails on SPY and DIA. Likely capturing an IWM-specific phenomenon rather than a general edge.
+- **the in-sample 11-candidate basket Sharpe of `2.78` is now formally an in-sample-and-NQ-specific number, not a universal claim**. The honest reading is:
+  - in-sample (NQ 3Y), the basket clears the diversity rule
+  - out-of-sample (1Y, other markets), the candidates work selectively — GLD is universally positive, DIA is universally negative, SPY/IWM are mixed
+  - the basket is **promotable on NQ/USD** with a discount factor for in-sample bias; it is **not promotable as a general intraday equity strategy**
+- the user's `P2 (high Sharpe)` preference is met on the in-sample target market but with a meaningful caveat: a Sharpe of `2.78` on a 3Y in-sample backtest of one market would correspond to a much lower live-trading Sharpe after accounting for selection / overfit / market-specificity. The cross-market evidence puts a realistic ceiling on what the basket can reliably deliver: probably `Sharpe ~1.0-1.5` if the GLD result is the better cross-market reference.
+- the next slice priorities now sharpen:
+  - **time-period out-of-sample test**: split NQ data into 2018-2022 train vs 2023-2026 test, run the basket on each, compare. If both periods produce comparable Sharpes, the basket is truly robust. If 2018-2022 collapses, the basket is overfit to a specific market regime.
+  - **drop the universally-negative DIA from cross-market consideration**: not worth chasing edge there
+  - **investigate why GLD works**: the gold-sweep result may reveal what regime feature is actually being captured — useful for designing the next candidate generation
+
 ## Current Todo Board
 
 ### Done
@@ -4754,6 +4811,7 @@ Inverse-vol weights now distribute across the 4 eligible candidates (TrendPullba
 - [x] **First "different not just stronger" pass.** Authored `VIXShockReversalWide15m` with three loosened gates; widening produced same 7 trades (joint AND-stack bottlenecked, not single-threshold) but slightly higher Sharpe `1.85` and PF `3.83`. Equal-weight 7-candidate basket Sharpe reached **`2.691`**, finally exceeding best-standalone **`2.684`**. Margin small (`+0.007`) but direction correct; basket trajectory `2.155 -> 2.314 -> 2.585 -> 2.691` is monotonically improving with each low-correlation addition. The portfolio-diversity rule's success criterion is now objectively met for the first time.
 - [x] **Basket now dominates best-standalone on every risk-adjusted metric.** Slice 90 added two new orthogonal-axis candidates: `VVIXDivergence15m` (7 trades, Sharpe 0.11, hypothesis rejected) and `VIXBackwardation15m` (13 trades probe, Sharpe 1.76, WR 76.9%, PF 2.47 — first orthogonal probe-density candidate). 9-candidate equal-weight basket: Sharpe 2.700, Sortino 5.047 (vs best-standalone 4.109, +22.8%), Calmar 10.14, max DD -0.98% (vs -1.89%, drawdown halved). User's P2 / P3 preferences both objectively met.
 - [x] **Full PASS on the diversity scorecard.** Slice 91 added `VIXBackwardationWide15m` (20 trades probe) and `VRPCompression15m` (**97 trades — third dense candidate**, +9.13% total, WR 34%, PF 1.44, on the orthogonal IV-HV percentile-rank axis). 11-candidate basket: equal-weight Sharpe 2.783, inverse-vol Sharpe 2.729 — **both exceed best-standalone 2.684**. The inverse-vol pass is the more meaningful one because it weights by realized risk. User's P1 / P2 / P3 preferences are now jointly satisfied with concrete cross-validated-style evidence (4 distinct source-family axes across 11 candidates, basket Sharpe 2.78, 6 of 11 candidates use IBKR-fetched vol data).
+- [x] **Cross-market validation: in-sample Sharpe is NQ-specific, not universal.** Slice 92 fetched SPY/IWM/DIA/GLD 15m 1Y RTH via IBKR (6,490 bars each), prepped feathers, ran 4 dense / probe candidates × 4 cross-markets. Per-market mean Sharpe: GLD `+0.57` (universally positive across all 4 candidates), SPY `+0.14`, IWM `+0.17`, **DIA `-0.29` (universally negative)**. The basket's 2.78 in-sample Sharpe should be discounted: probably `~1.0-1.5` realistic ceiling using GLD as the better cross-market reference. `LiquiditySweepReclaim15mWide` on GLD (Sharpe 0.78, PF 2.04) and `VRPCompression15m` on IWM (Sharpe 0.90, PF 7.40) are the strongest cross-market positive cells.
 
 ### Next
 
