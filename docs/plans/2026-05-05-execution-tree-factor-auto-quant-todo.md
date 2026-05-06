@@ -4184,6 +4184,39 @@ First independent outcome-label check:
 - the `FVGRetrace5m` blocker is a freqtrade-config quirk, not a data or strategy issue. Now that 5m / 15m feathers exist for `NQ/USD`, fixing it is a config plumbing question, addressable in the next slice without touching any in-flight harness.
 - the user's `P2 (high Sharpe)` preference is still not satisfied (annualized Sharpe `~0.2-0.6` across the pack), but the trajectory is now visible: density via widening or TF pivot is the lever, and orthogonal-source candidates do show convex payoff edges when they fire.
 
+### 2026-05-07 Slice 83: 5m config wrapper, FVGRetrace5m unblock, first dense candidate via 15m TF pivot
+
+**Execution**
+- closed the `FVGRetrace5m` config-vs-class-attribute conflict from Slice 82 by authoring an additive single-strategy wrapper at `scripts/auto_quant_external/run_tomac_one.py`. The wrapper imports `run_tomac` from `/Users/thrill3r/Auto-Quant/`, reuses its `_build_exchange_with_synthetic_pairs` synthetic-market injection, and accepts an optional `timeframe` argument that lands in the freqtrade args dict before the strategy is loaded. `config.tomac.json` and `run_tomac.py` stay unchanged.
+- ran `FVGRetrace5m` with `--timeframe 5m`. The strategy now loads cleanly and backtests against the new `NQ_USD-5m.feather`, but produces only `3` trades over the freqtrade-selected `2023-01 -> 2025-12` window: the 9-condition entry stack (3-TF resonance plus FVG geometry plus body-strength plus not-extended) is even more over-specified at 5m than it was at 1h. Sharpe `-0.0302`, profit `-0.11%`, drawdown `-0.15%`, profit factor `0.29`.
+- authored `TomacNQ_RegimeTrendPullbackDense15m` per the Slice 82 next-plan: 15m base port of `TrendPullbackDense` (the previous density+quality leader at `57` trades / Sharpe `0.19` / PF `1.58` on 1h) with `1h` and `4h` informative resonance, condition stack identical to the 1h parent.
+- ran the 15m variant via the new wrapper with `--timeframe 15m`.
+- saved logs to `/tmp/ict-engine-ibkr-probe/slice_83_fvg5m_run.log` and `/tmp/ict-engine-ibkr-probe/slice_83_pullback15m_run.log`.
+- kept `ict-engine` runtime source frozen.
+- did not modify `run_tomac.py`, `config.tomac.json`, or any other in-flight harness.
+
+**Outputs**
+- `scripts/auto_quant_external/run_tomac_one.py`
+- `scripts/auto_quant_external/strategies/TomacNQ_RegimeTrendPullbackDense15m.py`
+- `/Users/thrill3r/Auto-Quant/user_data/strategies_external/TomacNQ_RegimeTrendPullbackDense15m.py`
+- `/tmp/ict-engine-ibkr-probe/slice_83_fvg5m_run.log`
+- `/tmp/ict-engine-ibkr-probe/slice_83_pullback15m_run.log`
+
+**Result — first dense candidate plus FVGRetrace5m unblocked baseline**
+
+| Strategy | Base TF | trade_count | density | Sharpe | Sortino | Calmar | total_profit_pct | max_dd_pct | win_rate_pct | profit_factor |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|
+| `TrendPullbackDense` (Slice 80 ref) | 1h | 57 | thin | 0.1855 | 0.3295 | 3.0858 | 8.80 | -5.03 | 45.61 | 1.58 |
+| **`TrendPullbackDense15m` (Slice 83)** | 15m | **103** | **dense** | 0.1211 | 0.2368 | 2.1288 | 3.92 | -3.21 | 31.07 | 1.21 |
+| `FVGRetrace5m` (Slice 74, now unblocked) | 5m | 3 | anecdotal | -0.0302 | -0.0589 | -1.2402 | -0.11 | -0.15 | 33.33 | 0.29 |
+
+**Interpretation**
+- this is the **first candidate in the pack to clear the `dense (>= 80)` trade-count floor**. `TrendPullbackDense15m` produced `103` trades on the same condition stack as its 1h parent, validating Slice 82's hypothesis that the `1h -> 15m` timeframe pivot is the cleanest density unlock for the existing condition geometry.
+- the density-quality tradeoff is real but bounded: profit factor compressed from `1.58` to `1.21`, win rate fell from `45.6%` to `31.1%`, total profit dropped from `8.80%` to `3.92%`. Annualized Sharpe is roughly comparable (`~0.6` for both, since 15m has more independent observations to compute against). The drawdown actually improved from `-5.03%` to `-3.21%`, meaning the candidate is a more steady-state regime-fit detector at 15m than at 1h.
+- this is now the **only candidate that clears the TODO Trade-Density Rule's promotion floor** for a single liquid intraday lane. It is also the first candidate that produces enough trades to have meaningful pairwise-correlation evidence against the rest of the pack (next slice work).
+- `FVGRetrace5m` runs but is too over-specified at 5m: 3-TF informative resonance plus FVG geometry plus 4 additional gates is multiplicatively selective. The same tightening that made the candidate "selective enough to not catch noise" at 5m also kept it from firing at all. This is exactly the "over-specified entry stack" failure mode confirmed across Slice 80-82 evidence; the FVG retrace shape needs structural widening (drop one resonance TF or relax body / not-extended), same as `LiquiditySweepReclaim -> LiquiditySweepReclaimHyper` in Slice 82.
+- the user's `P2 (high Sharpe)` preference is now within reach via the same lever: port the rest of the high-payoff-quality candidates to 15m / 5m base (`LiquiditySweepReclaim`, `KillzoneIVProxy`, `RegimePersistenceClusterDense`) and they should naturally cross the dense floor; once 3-4 candidates are dense, the post-regime portfolio-diversity scorecard becomes runnable.
+
 ## Current Todo Board
 
 ### Done
@@ -4260,6 +4293,7 @@ First independent outcome-label check:
 - [x] Collected first real backtest evidence on `NQ/USD 1h ~3Y` for the existing 13-strategy pack via `run_tomac.py`. None of 13 reach `dense (>= 80)`; only 2 reach `thin (30-79)` — `RegimeTrendPullbackDense` (Sharpe 0.19, profit 8.8%, DD -5.0%, PF 1.58, 57 trades) and `RegimePersistenceClusterDense` (Sharpe 0.11, profit 6.3%, DD -5.4%, PF 1.49, 33 trades). Density not edge is the existing pack's binding constraint; the user's P2 high-Sharpe preference is not satisfiable on this evidence (best annualized Sharpe ~0.6). Full log in `/tmp/ict-engine-ibkr-probe/slice_80_backtest_run.log`.
 - [x] Synced Slice 72-74 candidates into `/Users/thrill3r/Auto-Quant/user_data/strategies_external/` and re-ran all 19 via `run_tomac.py` on `NQ/USD 1h ~3Y`. The 5 testable orthogonal candidates (FVGRetrace5m fails with no 15m feather) confirm the same density problem: `LiquiditySweepReclaim` 4 trades / PF 7.53 / +2.70%, `KillzoneIVProxy` 2 trades / PF 3.45, `FVGRetrace` 1 trade, `VRPCarry` and `CrowdingExhaustion` 0 trades. The best payoff-quality candidate (`LiquiditySweepReclaim`) is exactly the "narrow high-win-rate factor that does not produce enough trades" pattern the Trade-Density Rule warns against; structural widening or a lower-timeframe pivot is the unblock. Full log in `/tmp/ict-engine-ibkr-probe/slice_81_backtest_run.log`.
 - [x] Unlocked `NQ/USD` 5m / 15m timeframes by running `prepare_external.py` on the local `NQ_1min_Continuous_Shifted_2836.csv` 1m corpus: `NQ_USD-5m.feather` (1,053,341 bars) and `NQ_USD-15m.feather` (351,288 bars), both `~15Y` span. Authored `TomacNQ_RegimeLiquiditySweepReclaimHyper` as the first structural-widening probe: trade count rose 4 -> 10 (2.5x density), profit factor compressed from 7.53 to 2.54 but stayed strongly positive, Sortino went from invalid `-100` to a real `0.4223`. `FVGRetrace5m` still blocked by a freqtrade base-timeframe-vs-class-attribute config quirk; needs a per-strategy config or wrapper next slice.
+- [x] First candidate clears the `dense (>= 80)` trade-count floor. Authored `run_tomac_one.py` wrapper that accepts an optional timeframe argument so freqtrade applies it before the strategy class is loaded; this unblocks `FVGRetrace5m` (now runs but over-specified at 5m, only 3 trades) and lets the new `TrendPullbackDense15m` port hit `103 trades` / Sharpe `0.12` / Calmar `2.13` / PF `1.21` on `NQ/USD 15m ~3Y`. Density-quality tradeoff is real but bounded; the 15m candidate is the only currently-promotable execution candidate in the pack.
 
 ### Next
 
