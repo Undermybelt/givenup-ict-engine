@@ -167,8 +167,8 @@ pub(crate) struct AnalyzeLiveShellInput<'a> {
     pub spot_kind: Option<&'a str>,
     pub futures_backend: &'a str,
     pub aux_backend: &'a str,
-    pub openalice_base_url: &'a str,
-    pub nofx_base_url: &'a str,
+    pub external_http_base_url: &'a str,
+    pub crypto_public_base_url: &'a str,
     pub state_dir: &'a str,
     pub output_format: &'a str,
 }
@@ -183,21 +183,21 @@ pub(crate) fn analyze_live_shell(input: AnalyzeLiveShellInput<'_>) -> Result<()>
         spot_kind,
         futures_backend,
         aux_backend,
-        openalice_base_url,
-        nofx_base_url,
+        external_http_base_url,
+        crypto_public_base_url,
         state_dir,
         output_format,
     } = input;
     ensure_state_dir_ready(state_dir)?;
     let futures_base_url = ict_engine::application::data_sources::resolve_live_backend_base_url(
         futures_backend,
-        openalice_base_url,
-        nofx_base_url,
+        external_http_base_url,
+        crypto_public_base_url,
     );
     let aux_base_url = ict_engine::application::data_sources::resolve_live_backend_base_url(
         aux_backend,
-        openalice_base_url,
-        nofx_base_url,
+        external_http_base_url,
+        crypto_public_base_url,
     );
     analyze_live_command(AnalyzeLiveCommandInput {
         symbol,

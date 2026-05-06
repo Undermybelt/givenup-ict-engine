@@ -189,7 +189,7 @@ use ict_engine::data::{
     load_candles,
     realtime::{
         build_live_data_source,
-        openalice::{AuxiliaryMarketEvidence, SpotInstrumentKind},
+        market_support::{AuxiliaryMarketEvidence, SpotInstrumentKind},
         LiveDataBackend,
     },
 };
@@ -557,28 +557,28 @@ enum Commands {
         spot_kind: Option<String>,
         #[arg(
             long,
-            default_value = "openbb",
+            default_value = "yfinance",
             help = "Backend for live futures candles"
         )]
         futures_backend: String,
         #[arg(
             long,
-            default_value = "openbb",
+            default_value = "yfinance",
             help = "Backend for auxiliary spot/options evidence"
         )]
         aux_backend: String,
         #[arg(
             long,
             default_value = "http://127.0.0.1:6901/api/v1",
-            help = "Base URL for OpenAlice-compatible live backend"
+            help = "Base URL for the external HTTP live runtime when that backend is selected"
         )]
-        openalice_base_url: String,
+        external_http_base_url: String,
         #[arg(
             long,
             default_value = "http://127.0.0.1:8080",
-            help = "Base URL for NoFX-compatible live backend"
+            help = "Base URL for the optional crypto-public runtime when that backend is selected"
         )]
-        nofx_base_url: String,
+        crypto_public_base_url: String,
         #[arg(
             long,
             env = "ICT_ENGINE_STATE_DIR",
@@ -2051,8 +2051,8 @@ fn main() -> Result<()> {
             spot_kind,
             futures_backend,
             aux_backend,
-            openalice_base_url,
-            nofx_base_url,
+            external_http_base_url,
+            crypto_public_base_url,
             state_dir,
             output_format,
             compact,
@@ -2067,8 +2067,8 @@ fn main() -> Result<()> {
             spot_kind: spot_kind.as_deref(),
             futures_backend: &futures_backend,
             aux_backend: &aux_backend,
-            openalice_base_url: &openalice_base_url,
-            nofx_base_url: &nofx_base_url,
+            external_http_base_url: &external_http_base_url,
+            crypto_public_base_url: &crypto_public_base_url,
             state_dir: &state_dir,
             output_format: match resolve_output_format(&output_format, compact, agent, human)? {
                 OutputFormat::Json => "json",
@@ -5492,8 +5492,8 @@ fn neutral_auxiliary(symbol: &str) -> AuxiliaryMarketEvidence {
 
 fn neutral_options_summary(
     symbol: &str,
-) -> ict_engine::data::realtime::openalice::OptionsChainSummary {
-    ict_engine::data::realtime::openalice::OptionsChainSummary {
+) -> ict_engine::data::realtime::market_support::OptionsChainSummary {
+    ict_engine::data::realtime::market_support::OptionsChainSummary {
         symbol: symbol.to_string(),
         source: Some("fallback:neutral_options_summary".to_string()),
         underlying_price: None,
@@ -11403,8 +11403,8 @@ mod tests {
             state_dir: "state".to_string(),
             analyze: Some(AnalyzeCommandSource::Live {
                 source: Box::new(LiveDataSourceProvenance {
-                    futures_backend: "openbb".to_string(),
-                    aux_backend: "openalice".to_string(),
+                    futures_backend: "yfinance".to_string(),
+                    aux_backend: "external_http_runtime".to_string(),
                     futures_base_url: "http://127.0.0.1:8080".to_string(),
                     aux_base_url: "http://127.0.0.1:6901/api/v1".to_string(),
                     futures_symbol: "NQ".to_string(),

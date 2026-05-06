@@ -21,6 +21,15 @@
 - Keep consumer surfaces ontology-light and token-friendly.
 - Human, compact, and agent outputs must remain contract-consistent across native and Auto-Quant paths.
 - Prefer extraction and reuse of existing repo surfaces over adding new one-off wrappers.
+- For the current Auto-Quant/provider closure scope, treat the target provider set as:
+  - `ibkr`
+  - `tradingview_mcp`
+  - `yfinance`
+  - public crypto providers (`binance_public`, `bybit_public`, `kraken_public`, related crypto runtime helpers)
+  - prediction-market providers (`polymarket_public`)
+- Treat `openbb`, `openalice`, and `nofx` as reference-only historical baselines from earlier comparison work, not as the current target provider set for this repo.
+- Do not treat built-in `entry_model` registry members as providers.
+  - If `provider-status` still exposes an `entry_model` domain, treat that as terminology residue to remove, not as a legitimate provider category.
 
 ## Current Diagnosis
 
@@ -150,13 +159,152 @@ Reason:
     - `./target/debug/ict-engine analyze-live --symbol NQ --state-dir /tmp/ict-engine-live-ws4`
     - `./target/debug/ict-engine backtest --symbol DEMO --data examples/demo/demo-15m.json --state-dir /tmp/ict-engine-backtest-ws4 --human`
     - `./target/debug/ict-engine workflow-status --symbol DEMO --state-dir /tmp/ict-engine-ws5-native --human`
+- [x] Completion audit rerun against the real provider call matrix and provider→Auto-Quant bridge.
+  - audit scope:
+    - external/provider-runtime call surfaces only
+    - `entry_model` domain treated as a naming bug/residue, not as a legitimate provider transport category
+    - current target provider set only:
+      - `ibkr`
+      - `tradingview_mcp`
+      - `yfinance`
+      - public crypto / prediction-market providers
+    - `openbb`, `openalice`, and `nofx` are not treated as current target providers for closure
+  - internal-registry boundary confirmed with:
+    - `./target/debug/ict-engine provider-status --domain entry_model --agent`
+    - result:
+      - `breaker_rb_long_v1` and `cisd_rb_long_v1` are `access_mode=internal_model_registry`
+      - `selectable_by_user=false`
+      - conclusion:
+        - this is evidence of terminology drift in `provider-status`, not evidence of an extra provider family
+  - market-data real-call evidence:
+    - `./target/debug/ict-engine market-data-harness --action fetch --market NQ --interval 1d --role etf_reference --provider etf_reference=yfinance --symbol-spec etf_reference=QQQ`
+      - passed
+      - returned real `QQQ` daily candles
+    - `./target/debug/ict-engine market-data-harness --action fetch --market NQ --interval 1d --role options_underlying --provider options_underlying=yfinance --symbol-spec options_underlying=QQQ`
+      - failed
+      - `yahoo crumb endpoint returned error`
+    - `./target/debug/ict-engine market-data-harness --action fetch --market NQ --interval 1d --role options_underlying --provider options_underlying=tradingview_mcp --symbol-spec options_underlying=NASDAQ:QQQ`
+      - failed as expected
+      - `ICT_ENGINE_TVREMIX_MCP_API_KEY must be set for tradingview_mcp`
+    - `printf '%s' '{"market_key":"NQ","interval":"1d","related_roles":["etf_reference"],"provider_preferences":{"etf_reference":"ibkr"},"symbol_overrides":{"etf_reference":{"display_symbol":"QQQ","ibkr":{"symbol":"QQQ","sec_type":"STK","exchange":"SMART","currency":"USD"}}}}' | ./target/debug/ict-engine market-data-harness --action fetch --request-stdin`
+      - explicit `ibkr` `QQQ` contract
+      - failed after reaching the real fetcher
+      - `ibkr-historical requires the ibkr_bridge package`
+      - underlying dependency gap: `No module named 'redis'`
+  - public crypto / prediction-market external-fetch evidence:
+    - `python3 scripts/auto_quant_external/fetch_external.py binance-kline --symbol BTCUSDT --interval 1h --start 2026-05-01 --end 2026-05-03 --output /tmp/ict-engine-provider-binance.csv`
+      - passed
+      - `49` rows
+    - `python3 scripts/auto_quant_external/fetch_external.py bybit-kline --category linear --symbol BTCUSDT --interval 1h --start 2026-05-01 --end 2026-05-03 --output /tmp/ict-engine-provider-bybit.csv`
+      - passed
+      - `49` rows
+    - `python3 scripts/auto_quant_external/fetch_external.py kraken-kline --market spot --pair XBTUSD --interval 1h --output /tmp/ict-engine-provider-kraken.csv`
+      - passed
+      - `721` rows
+    - `python3 scripts/auto_quant_external/fetch_external.py polymarket-markets --limit 3 --format json --output /tmp/ict-engine-provider-polymarket.json`
+      - passed
+      - `3` rows
+  - local-runtime real-call evidence:
+    - `python3 -m scripts.ibkr_bridge.setup status`
+      - callable
+      - consent present
+      - selected candidate: `IB Gateway paper (127.0.0.1:4002)`
+      - still blocked by missing python `redis` package
+    - `kraken auth show -o json`
+      - passed
+      - returned masked configured credentials
+  - reference-only baseline note:
+    - a one-off `openbb` bridge sanity check was run during the first draft of this audit
+    - after user correction, that evidence is explicitly excluded from current target-provider closure because `openbb/openalice/nofx` are not the intended provider set for this repo
+- [x] Neutralized legacy live-runtime naming without deleting the useful capability layer.
+  - landed provider-neutral/shared market support in:
+    - `src/data/realtime/market_support.rs`
+  - live runtime surfaces now prefer:
+    - `yfinance`
+    - `external_http_runtime`
+    - `crypto_public_runtime`
+  - public `analyze-live --help` no longer defaults to `openbb`; it now defaults to `yfinance`
+  - provider/workflow public summaries now stop treating `openbb/openalice/nofx` as the preferred visible names
+  - compatibility note:
+    - parser aliases for `openbb/openalice/nofx` still exist inside code for transition safety
+    - physical source filenames still remain as a temporary implementation detail
+  - fresh verification evidence:
+    - `cargo check`
+    - `cargo test provider_catalog --lib -- --nocapture`
+    - `cargo test resolve_live_backend_base_url_uses_expected_sources --lib -- --nocapture`
+    - `cargo test analyze_live_command_input_carries_backend_and_symbols --lib -- --nocapture`
+    - `cargo run --quiet -- analyze-live --help`
+    - `cargo run --quiet -- provider-status --compact`
+    - `cargo run --quiet -- provider-status --provider yfinance --compact`
+
+### Completion Audit 2026-05-06
+
+- Verified-good external/provider-runtime calls in this environment:
+  - `yfinance` candle fetch
+  - `binance_public`
+  - `bybit_public`
+  - `kraken_public`
+  - `polymarket_public`
+  - `kraken_cli`
+- Verified-real but currently blocked/degraded calls:
+  - `yfinance` options summary
+  - `tradingview_mcp`
+  - `ibkr`
+  - `ibkr_bridge`
+- Unverified by design in this pass:
+  - `entry_model` registry members as external providers
+  - they are internal registry items, and the fact that they appear under `provider-status` should be treated as naming debt rather than provider coverage
+  - `openbb`, `openalice`, `nofx`
+  - they are reference-only historical baselines, not the current target provider set for this repo
+- Deletion feasibility audit:
+  - `openbb`, `openalice`, and `nofx` are **not** safe for one-shot deletion yet
+  - hard blockers found in the current source tree:
+    - `analyze-live` CLI still defaults to `openbb` and still parses `openalice` / `nofx` as backend ids
+    - `provider-status` / `workflow-status` still expose them as `live_runtime` choices
+    - `provider_fetch` still uses `OpenBBProvider` as the current implementation for `yfinance` candle/options fetch
+    - shared DTOs such as `AuxiliaryMarketEvidence`, `OptionsChainSummary`, `SpotInstrumentKind`, and `Quote` still live under `openalice` and are imported across analysis/runtime code
+  - therefore the correct removal order is:
+    - first rename/extract provider-neutral modules and types
+    - then remove branded backend names from CLI/catalog/workflow surfaces
+    - only then delete the old implementation shells
 
 ### Next
 
-- [ ] Completion audit against the closure standard and user-facing regression list.
-  - rerun the named commands against the new behavior set
-  - confirm no requirement is only covered by unit tests or proxy signals
-  - record any residual gaps directly in this board instead of opening a parallel note
+- [ ] Remove `entry_model` from provider terminology.
+  - preferred outcome:
+    - built-in model registry stops appearing as a `provider-status` domain
+  - minimum acceptable fallback:
+    - if temporary compatibility requires it to remain exposed, label it as internal registry residue instead of provider truth
+- [ ] Remove the remaining compatibility residue for `openbb/openalice/nofx` after downstream surfaces stabilize.
+  - remove parser aliases once no first-party surface emits them
+  - rename physical source filenames so internal grep no longer suggests the upstream project names
+- [ ] Replace `openbb` / `openalice` / `nofx` branding with provider-neutral naming before any deletion attempt.
+  - target outcome:
+    - consumer/user-facing surfaces expose capability/provider names such as `yfinance`, `ibkr`, `tradingview_mcp`, crypto public providers, and prediction-market providers
+    - internal adapter/module names no longer leak upstream project branding
+- [ ] Extract provider-neutral shared market-evidence types out of `openalice`.
+  - minimum extraction set:
+    - `AuxiliaryMarketEvidence`
+    - `OptionsChainSummary`
+    - `SpotInstrumentKind`
+    - `Quote`
+- [ ] Replace the current `OpenBBProvider`-backed `yfinance` implementation with a provider-neutral `yfinance` adapter boundary.
+  - only after that is in place should `openbb` stop existing as a visible backend name
+- [ ] Remove or explicitly demote reference-only baseline providers from the current provider closure language and future audit scope.
+  - `openbb`
+  - `openalice`
+  - `nofx`
+- [ ] Split provider readiness by capability, not only by provider id.
+  - `yfinance` candle fetch is proven here
+  - `yfinance` options summary still fails on Yahoo crumb
+  - the first-run surface should not imply those two capabilities are equally ready
+- [ ] Close the `ibkr` / `ibkr_bridge` dependency gap.
+  - current real blockers:
+    - missing python `redis`
+    - local runtime only partially available even though gateway paper `127.0.0.1:4002` is reachable
+- [ ] Re-run `tradingview_mcp` after a real `ICT_ENGINE_TVREMIX_MCP_API_KEY` is supplied.
+  - current result only proves the guard/error path
+- [ ] Decide whether `kraken_cli` belongs in this first-run provider→Auto-Quant closure scope or should remain documented as a later wallet/runtime lane.
 
 ### Not Yet
 
@@ -275,4 +423,41 @@ This board is not done until all of the following are true:
 
 ## Blocked
 
-- None currently. If implementation reveals a narrower blocker, log it here with exact file / function / failing command evidence instead of opening a parallel note.
+- `entry_model` terminology drift
+  - current user correction: `entry_model` should not be called a provider
+  - current repo evidence:
+    - `./target/debug/ict-engine provider-status --domain entry_model --agent`
+    - returned `breaker_rb_long_v1` and `cisd_rb_long_v1` under provider-shaped output even though both are built-in registry members
+  - acceptable temporary state:
+    - keep the audit scope excluding them from provider closure
+    - but treat the naming itself as remediation debt, not as settled semantics
+- Target-provider scope drift
+  - current user correction: `openbb`, `openalice`, and `nofx` were earlier reference/baseline backends, not the intended provider set for this repo's current Auto-Quant closure
+  - acceptable temporary state: keep historical mentions as implementation residue only, but do not count them in provider closure claims or future audit success/failure summaries
+- Direct deletion of `openbb` / `openalice` / `nofx`
+  - current repo evidence:
+    - `src/main.rs` still defaults `analyze-live` to `openbb`
+    - `src/data/realtime/live_data.rs` still parses all three backend ids
+    - `src/application/provider_catalog.rs` and `src/application/orchestration/workflow_status.rs` still publish them as live-runtime choices
+    - `src/application/data_sources/provider_fetch.rs` still routes `yfinance` through `OpenBBProvider`
+    - shared DTOs used by analysis/runtime code still live in `src/data/realtime/openalice.rs`
+  - acceptable temporary state:
+    - do not delete them yet
+    - first rename/extract to provider-neutral adapters and DTO modules, then remove the branded shells
+- `yfinance` options-capability parity
+  - failing command:
+    - `./target/debug/ict-engine market-data-harness --action fetch --market NQ --interval 1d --role options_underlying --provider options_underlying=yfinance --symbol-spec options_underlying=QQQ`
+  - failing evidence:
+    - `yahoo crumb endpoint returned error`
+- `tradingview_mcp` real invocation
+  - failing command:
+    - `./target/debug/ict-engine market-data-harness --action fetch --market NQ --interval 1d --role options_underlying --provider options_underlying=tradingview_mcp --symbol-spec options_underlying=NASDAQ:QQQ`
+  - failing evidence:
+    - `ICT_ENGINE_TVREMIX_MCP_API_KEY must be set for tradingview_mcp`
+- `ibkr` / `ibkr_bridge` real fetch/runtime closure
+  - failing commands:
+    - `printf '%s' '{"market_key":"NQ","interval":"1d","related_roles":["etf_reference"],"provider_preferences":{"etf_reference":"ibkr"},"symbol_overrides":{"etf_reference":{"display_symbol":"QQQ","ibkr":{"symbol":"QQQ","sec_type":"STK","exchange":"SMART","currency":"USD"}}}}' | ./target/debug/ict-engine market-data-harness --action fetch --request-stdin`
+    - `python3 -m scripts.ibkr_bridge.setup status`
+  - failing evidence:
+    - `No module named 'redis'`
+    - `ibkr historical fetch failed for 'QQQ'`

@@ -4420,7 +4420,7 @@ mod tests {
             )]),
             providers: vec![
                 ProviderCatalogAgentItem {
-                    provider_id: "openbb".to_string(),
+                    provider_id: "yfinance".to_string(),
                     domain: "live_runtime".to_string(),
                     selectable_by_user: true,
                     adopted_by_default: true,
@@ -4430,12 +4430,12 @@ mod tests {
                     market_fit: vec!["tradfi".to_string(), "crypto".to_string()],
                     fallback_priority: Some(1),
                     status: "ready".to_string(),
-                    reason: "native_openbb_backend_available".to_string(),
+                    reason: "native_yfinance_backend_available".to_string(),
                     summary: "Zero-config live runtime.".to_string(),
                     install_prompts: Vec::new(),
                 },
                 ProviderCatalogAgentItem {
-                    provider_id: "openalice".to_string(),
+                    provider_id: "external_http_runtime".to_string(),
                     domain: "live_runtime".to_string(),
                     selectable_by_user: true,
                     adopted_by_default: false,
@@ -4446,13 +4446,13 @@ mod tests {
                     fallback_priority: Some(20),
                     status: "operator_runtime_required".to_string(),
                     reason: "base_url_and_service_required".to_string(),
-                    summary: "Optional OpenAlice runtime.".to_string(),
+                    summary: "Optional external HTTP runtime.".to_string(),
                     install_prompts: vec![
-                        "Ask whether the user wants zero-config openbb or openalice.".to_string(),
+                        "Ask whether the user wants zero-config yfinance or external_http_runtime.".to_string(),
                     ],
                 },
                 ProviderCatalogAgentItem {
-                    provider_id: "nofx".to_string(),
+                    provider_id: "crypto_public_runtime".to_string(),
                     domain: "live_runtime".to_string(),
                     selectable_by_user: true,
                     adopted_by_default: false,
@@ -4463,44 +4463,44 @@ mod tests {
                     fallback_priority: Some(21),
                     status: "operator_runtime_required".to_string(),
                     reason: "base_url_and_service_required".to_string(),
-                    summary: "Optional NoFX runtime.".to_string(),
+                    summary: "Optional crypto-public runtime.".to_string(),
                     install_prompts: vec![
-                        "Ask whether the user wants zero-config openbb or nofx.".to_string(),
+                        "Ask whether the user wants zero-config yfinance or crypto_public_runtime.".to_string(),
                     ],
                 },
             ],
-            ready_providers: vec!["openbb".to_string()],
+            ready_providers: vec!["yfinance".to_string()],
             pending_providers: vec![
-                "openalice@live_runtime:operator_runtime_required:base_url_and_service_required"
+                "external_http_runtime@live_runtime:operator_runtime_required:base_url_and_service_required"
                     .to_string(),
-                "nofx@live_runtime:operator_runtime_required:base_url_and_service_required"
+                "crypto_public_runtime@live_runtime:operator_runtime_required:base_url_and_service_required"
                     .to_string(),
             ],
             pending_provider_details: vec![
                 ProviderCatalogPendingAgentItem {
-                    provider_id: "openalice".to_string(),
+                    provider_id: "external_http_runtime".to_string(),
                     domain: "live_runtime".to_string(),
                     status: "operator_runtime_required".to_string(),
                     reason: "base_url_and_service_required".to_string(),
                     install_prompts: vec![
-                        "Ask whether the user wants zero-config openbb or openalice.".to_string(),
+                        "Ask whether the user wants zero-config yfinance or external_http_runtime.".to_string(),
                     ],
                 },
                 ProviderCatalogPendingAgentItem {
-                    provider_id: "nofx".to_string(),
+                    provider_id: "crypto_public_runtime".to_string(),
                     domain: "live_runtime".to_string(),
                     status: "operator_runtime_required".to_string(),
                     reason: "base_url_and_service_required".to_string(),
                     install_prompts: vec![
-                        "Ask whether the user wants zero-config openbb or nofx.".to_string()
+                        "Ask whether the user wants zero-config yfinance or crypto_public_runtime.".to_string()
                     ],
                 },
             ],
-            selectable_providers: vec!["openalice".to_string(), "nofx".to_string()],
-            default_enabled_providers: vec!["openbb".to_string()],
+            selectable_providers: vec!["external_http_runtime".to_string(), "crypto_public_runtime".to_string()],
+            default_enabled_providers: vec!["yfinance".to_string()],
             install_prompts: vec![
-                "Ask whether the user wants zero-config openbb or openalice.".to_string(),
-                "Ask whether the user wants zero-config openbb or nofx.".to_string(),
+                "Ask whether the user wants zero-config yfinance or external_http_runtime.".to_string(),
+                "Ask whether the user wants zero-config yfinance or crypto_public_runtime.".to_string(),
                 "Ask the user for a TradingViewRemix MCP API key before attempting TradingViewRemix-backed live or options workflows. Search keywords: TradingViewRemix MCP API key.".to_string(),
                 "Ask the user to install IBKR TWS or IB Gateway and enable the local API before attempting IBKR-backed live workflows. Search keywords: Interactive Brokers TWS download, IB Gateway download.".to_string(),
             ],
@@ -4589,7 +4589,7 @@ mod tests {
                     mode: "any_of".to_string(),
                     activation_hints: vec!["research".to_string(), "backtest".to_string()],
                     status: "ready".to_string(),
-                    ready_provider_ids: vec!["openbb".to_string()],
+                    ready_provider_ids: vec!["yfinance".to_string()],
                     pending_provider_ids: Vec::new(),
                     install_prompts: Vec::new(),
                     notes: Vec::new(),
@@ -4608,10 +4608,10 @@ mod tests {
                 },
             ],
             track_statuses: vec![
-                "research_zero_config:ready:openbb,yfinance".to_string(),
+                "research_zero_config:ready:yfinance,yfinance".to_string(),
                 "options_enriched:pending:tradingview_mcp".to_string(),
             ],
-            ready_provider_ids: vec!["openbb".to_string()],
+            ready_provider_ids: vec!["yfinance".to_string()],
             pending_provider_ids: vec!["tradingview_mcp".to_string()],
             install_prompts: vec!["Ask for TradingViewRemix MCP API key.".to_string()],
         };
@@ -5716,7 +5716,7 @@ mod tests {
             blocking_truth: crate::state::WorkflowBlockingTruth {
                 status: "blocked".to_string(),
                 reason: "provider_runtime_required".to_string(),
-                next_command: "ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --futures-backend openalice --aux-backend nofx".to_string(),
+                next_command: "ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --futures-backend external_http_runtime --aux-backend crypto_public_runtime".to_string(),
                 ..crate::state::WorkflowBlockingTruth::default()
             },
             latest_analyze: Some(crate::state::WorkflowPhaseSnapshot {
@@ -5736,12 +5736,12 @@ mod tests {
 
         assert_eq!(value["provider_support"]["active"], true);
         assert_eq!(value["provider_support"]["profile_id"], "workflow_auto");
-        assert_eq!(value["provider_support"]["pending_providers"][0], "nofx");
+        assert_eq!(value["provider_support"]["pending_providers"][0], "crypto_public_runtime");
         assert!(value["provider_support"]["install_prompts"]
             .as_array()
             .unwrap()
             .iter()
-            .any(|item| item.as_str().unwrap().contains("zero-config openbb")));
+            .any(|item| item.as_str().unwrap().contains("zero-config yfinance")));
         assert!(value["available_opt_in_profiles"]
             .as_array()
             .unwrap()
@@ -5754,7 +5754,7 @@ mod tests {
             symbol: "NQ".to_string(),
             current_focus_phase: "analyze_live".to_string(),
             current_focus_reason: "provider_runtime_required".to_string(),
-            recommended_next_command: "ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --futures-backend openalice --aux-backend nofx".to_string(),
+            recommended_next_command: "ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --futures-backend external_http_runtime --aux-backend crypto_public_runtime".to_string(),
             latest_analyze: Some(crate::state::WorkflowPhaseSnapshot {
                 phase: "analyze_live".to_string(),
                 phase_summary: "live_provider_runtime_pending".to_string(),
@@ -5773,12 +5773,12 @@ mod tests {
         assert!(value["provider_line"]
             .as_str()
             .unwrap()
-            .contains("openalice"));
-        assert!(value["provider_line"].as_str().unwrap().contains("nofx"));
+            .contains("external_http_runtime"));
+        assert!(value["provider_line"].as_str().unwrap().contains("crypto_public_runtime"));
         assert!(value["provider_line"]
             .as_str()
             .unwrap()
-            .contains("zero-config openbb"));
+            .contains("zero-config yfinance"));
         assert_eq!(
             value["provider_support"]["workflow_support"]["active"],
             true
@@ -5801,7 +5801,7 @@ mod tests {
             symbol: "NQ".to_string(),
             current_focus_phase: "analyze_live".to_string(),
             current_focus_reason: "provider_runtime_required".to_string(),
-            recommended_next_command: "ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --futures-backend openalice --aux-backend nofx".to_string(),
+            recommended_next_command: "ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --futures-backend external_http_runtime --aux-backend crypto_public_runtime".to_string(),
             latest_analyze: Some(crate::state::WorkflowPhaseSnapshot {
                 phase: "analyze_live".to_string(),
                 phase_summary: "live_provider_runtime_pending".to_string(),
@@ -5943,7 +5943,7 @@ mod tests {
             blocking_truth: crate::state::WorkflowBlockingTruth {
                 status: "blocked".to_string(),
                 reason: "provider_runtime_required".to_string(),
-                next_command: "ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --futures-backend openalice --aux-backend nofx".to_string(),
+                next_command: "ict-engine analyze-live --symbol NQ --futures-symbol NQ=F --spot-symbol QQQ --options-symbol QQQ --futures-backend external_http_runtime --aux-backend crypto_public_runtime".to_string(),
                 ..crate::state::WorkflowBlockingTruth::default()
             },
             latest_analyze: Some(crate::state::WorkflowPhaseSnapshot {

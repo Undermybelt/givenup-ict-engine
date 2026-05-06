@@ -8,8 +8,8 @@ use super::control_matrix_providers::{
     TVREMIX_MCP_API_KEY_ENV, TVREMIX_MCP_DEFAULT_URL, TVREMIX_MCP_URL_ENV,
 };
 use super::harness::{MarketDataHarnessIbkrSpec, MarketDataHarnessTask, ProviderExecutionRequest};
-use crate::data::realtime::openalice::{OptionsChainSummary, SpotInstrumentKind};
-use crate::data::realtime::openbb::OpenBBProvider;
+use crate::data::realtime::market_support::{OptionsChainSummary, SpotInstrumentKind};
+use crate::data::realtime::yfinance_runtime::YahooFinanceProvider;
 use crate::types::Candle;
 
 pub(crate) const CONTROL_MATRIX_IBKR_FETCH_SCRIPT_ENV: &str = "ICT_ENGINE_IBKR_FETCH_SCRIPT";
@@ -43,7 +43,7 @@ pub(crate) fn fetch_options_summary_for_task(
                 Ok(summary) => Ok(summary),
                 Err(primary_error) => {
                     if let Some(proxy_symbol) = task.fallback_options_proxy_symbol.as_deref() {
-                        OpenBBProvider::new("native://openbb")
+                        YahooFinanceProvider::new("native://yfinance")
                             .fetch_options_volatility_proxy_summary(proxy_symbol, symbol)
                     } else {
                         Err(primary_error)
@@ -66,7 +66,7 @@ fn fetch_yahoo_candles(
     start: DateTime<Utc>,
     end: DateTime<Utc>,
 ) -> Result<Vec<Candle>> {
-    let provider = OpenBBProvider::new("native://openbb");
+    let provider = YahooFinanceProvider::new("native://yfinance");
     let spot_kind = if symbol.starts_with('^') {
         SpotInstrumentKind::Index
     } else {
@@ -76,7 +76,7 @@ fn fetch_yahoo_candles(
 }
 
 fn fetch_yahoo_options_summary(symbol: &str) -> Result<OptionsChainSummary> {
-    let provider = OpenBBProvider::new("native://openbb");
+    let provider = YahooFinanceProvider::new("native://yfinance");
     provider.fetch_options_chain_summary(symbol)
 }
 

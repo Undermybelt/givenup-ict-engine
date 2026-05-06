@@ -13,14 +13,18 @@ pub struct AnalyzeLiveSymbolDefaults {
 
 pub fn resolve_live_backend_base_url(
     backend: &str,
-    openalice_base_url: &str,
-    nofx_base_url: &str,
+    external_http_base_url: &str,
+    crypto_public_base_url: &str,
 ) -> String {
     match backend.trim().to_ascii_lowercase().as_str() {
-        "openbb" => "native://openbb".to_string(),
-        "openalice" => openalice_base_url.to_string(),
-        "nofx" => nofx_base_url.to_string(),
-        _ => "native://openbb".to_string(),
+        "yfinance" | "openbb" => "native://yfinance".to_string(),
+        "external_http" | "external_http_runtime" | "openalice" => {
+            external_http_base_url.to_string()
+        }
+        "crypto_public" | "crypto_public_runtime" | "nofx" => {
+            crypto_public_base_url.to_string()
+        }
+        _ => "native://yfinance".to_string(),
     }
 }
 
@@ -72,20 +76,20 @@ mod tests {
     #[test]
     fn resolve_live_backend_base_url_uses_expected_sources() {
         assert_eq!(
-            resolve_live_backend_base_url("openbb", "http://oa", "http://nofx"),
-            "native://openbb"
+            resolve_live_backend_base_url("yfinance", "http://ext", "http://crypto"),
+            "native://yfinance"
         );
         assert_eq!(
-            resolve_live_backend_base_url("openalice", "http://oa", "http://nofx"),
-            "http://oa"
+            resolve_live_backend_base_url("external_http_runtime", "http://ext", "http://crypto"),
+            "http://ext"
         );
         assert_eq!(
-            resolve_live_backend_base_url("nofx", "http://oa", "http://nofx"),
-            "http://nofx"
+            resolve_live_backend_base_url("crypto_public_runtime", "http://ext", "http://crypto"),
+            "http://crypto"
         );
         assert_eq!(
-            resolve_live_backend_base_url("unknown", "http://oa", "http://nofx"),
-            "native://openbb"
+            resolve_live_backend_base_url("unknown", "http://ext", "http://crypto"),
+            "native://yfinance"
         );
     }
 
@@ -112,11 +116,14 @@ mod tests {
 
     #[test]
     fn parse_live_backend_accepts_supported_values() {
-        assert_eq!(parse_live_backend("openbb").unwrap().as_str(), "openbb");
+        assert_eq!(parse_live_backend("yfinance").unwrap().as_str(), "yfinance");
         assert_eq!(
-            parse_live_backend("openalice").unwrap().as_str(),
-            "openalice"
+            parse_live_backend("external_http_runtime").unwrap().as_str(),
+            "external_http_runtime"
         );
-        assert_eq!(parse_live_backend("nofx").unwrap().as_str(), "nofx");
+        assert_eq!(
+            parse_live_backend("crypto_public_runtime").unwrap().as_str(),
+            "crypto_public_runtime"
+        );
     }
 }

@@ -2,7 +2,7 @@ use anyhow::Result;
 use serde::Serialize;
 
 use super::series::{aligned_close_series, close_to_returns};
-use crate::data::realtime::openalice::AuxiliaryMarketEvidence;
+use crate::data::realtime::market_support::AuxiliaryMarketEvidence;
 use crate::smt::{Cointegration, Correlation, Divergence};
 use crate::types::Candle;
 

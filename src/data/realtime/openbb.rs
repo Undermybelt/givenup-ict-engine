@@ -11,17 +11,18 @@ use crate::types::{Candle, Timeframe};
 
 use super::{
     browser_bridge,
-    openalice::{
-        AuxiliaryMarketEvidence, OpenAliceProvider, OptionsChainSummary, Quote, SpotInstrumentKind,
+    market_support::{
+        apply_auxiliary_evidence_to_outcome, build_auxiliary_evidence,
+        AuxiliaryMarketEvidence, OptionsChainSummary, Quote, SpotInstrumentKind,
     },
     provider::RealtimeDataProvider,
 };
 
-pub struct OpenBBProvider {
+pub struct YahooFinanceProvider {
     client: Client,
 }
 
-impl OpenBBProvider {
+impl YahooFinanceProvider {
     pub fn new(_base_url: impl Into<String>) -> Self {
         Self {
             client: Client::builder()
@@ -143,7 +144,7 @@ impl OpenBBProvider {
 
                 OptionsChainSummary {
                     symbol: symbol_key,
-                    source: Some("openbb:yahoo_finance".to_string()),
+                    source: Some("yfinance:chart_and_options".to_string()),
                     underlying_price,
                     call_open_interest,
                     put_open_interest,
@@ -201,7 +202,7 @@ impl OpenBBProvider {
         spot_candles: &[Candle],
         options_summary: &OptionsChainSummary,
     ) -> AuxiliaryMarketEvidence {
-        OpenAliceProvider::new("internal://openbb", None).build_auxiliary_evidence(
+        build_auxiliary_evidence(
             spot_kind,
             spot_symbol,
             options_symbol,
@@ -217,7 +218,7 @@ impl OpenBBProvider {
         directional_bias: f64,
         uncertainty_penalty: f64,
     ) -> Vec<f64> {
-        OpenAliceProvider::new("internal://openbb", None).apply_auxiliary_evidence_to_outcome(
+        apply_auxiliary_evidence_to_outcome(
             base_distribution,
             directional_bias,
             uncertainty_penalty,
@@ -565,7 +566,7 @@ impl OpenBBProvider {
 
         Ok(OptionsChainSummary {
             symbol: underlying_symbol.to_string(),
-            source: Some(format!("openbb:volatility_proxy:{proxy_symbol}")),
+            source: Some(format!("yfinance:volatility_proxy:{proxy_symbol}")),
             underlying_price: None,
             call_open_interest: 0.0,
             put_open_interest: 0.0,
@@ -770,7 +771,7 @@ impl OpenBBProvider {
 }
 
 #[async_trait::async_trait]
-impl RealtimeDataProvider for OpenBBProvider {
+impl RealtimeDataProvider for YahooFinanceProvider {
     async fn fetch_candles(
         &self,
         symbol: &str,

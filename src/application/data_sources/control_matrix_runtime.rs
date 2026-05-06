@@ -6,8 +6,9 @@ use crate::application::data_sources::{
     TVREMIX_MCP_API_KEY_ENV,
 };
 use crate::data::load_candles;
-use crate::data::realtime::openalice::{
-    AuxiliaryMarketEvidence, OpenAliceProvider, OptionsChainSummary, SpotInstrumentKind,
+use crate::data::realtime::external_http_runtime::ExternalHttpRuntimeProvider;
+use crate::data::realtime::market_support::{
+    AuxiliaryMarketEvidence, OptionsChainSummary, SpotInstrumentKind,
 };
 use crate::types::Candle;
 
@@ -154,7 +155,7 @@ pub fn build_control_matrix_runtime_overrides(
         } else {
             SpotInstrumentKind::Equity
         };
-        let builder = OpenAliceProvider::new("internal://market-data-harness", None);
+        let builder = ExternalHttpRuntimeProvider::new("internal://market-data-harness", None);
         let mut auxiliary = builder.build_auxiliary_evidence(
             spot_kind,
             spot_symbol,

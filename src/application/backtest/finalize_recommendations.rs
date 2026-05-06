@@ -129,7 +129,7 @@ pub fn command_recommendations(context: &CommandContext) -> CommandRecommendatio
         ),
         Some(AnalyzeCommandSource::Live { source }) => recommended_command(
             format!(
-                "ict-engine analyze-live --symbol {} --futures-symbol {} --spot-symbol {} --options-symbol {} --spot-kind {} --futures-backend {} --aux-backend {} --openalice-base-url {} --nofx-base-url {} --state-dir {}",
+                "ict-engine analyze-live --symbol {} --futures-symbol {} --spot-symbol {} --options-symbol {} --spot-kind {} --futures-backend {} --aux-backend {} --external-http-base-url {} --crypto-public-base-url {} --state-dir {}",
                 shell_quote(&context.symbol),
                 shell_quote(&source.futures_symbol),
                 shell_quote(&source.spot_symbol),

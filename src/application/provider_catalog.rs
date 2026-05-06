@@ -13,8 +13,7 @@ use crate::application::entry_models::{entry_model_providers, ConsumerDefaultMod
 use crate::config::shell_quote;
 
 const PROVIDER_STATUS_AGENT_COMMAND: &str = "ict-engine provider-status --agent";
-const OPENALICE_DEFAULT_URL: &str = "http://127.0.0.1:6901/api/v1";
-const NOFX_DEFAULT_URL: &str = "http://127.0.0.1:8080";
+const EXTERNAL_HTTP_DEFAULT_URL: &str = "http://127.0.0.1:6901/api/v1";
 const PROVIDER_PROFILE_SCHEMA_VERSION: &str = "provider-profile/v1";
 const REPO_PROVIDER_PROFILE_DIR: &str = "examples/provider_profiles";
 const KRAKEN_API_KEY_ENV: &str = "KRAKEN_API_KEY";
@@ -472,30 +471,30 @@ impl ProviderCatalogSource for LiveRuntimeProviderCatalogSource {
     fn collect_items(&self) -> Result<Vec<ProviderCatalogItem>> {
         Ok(vec![
             ProviderCatalogItem {
-                provider_id: "openbb".to_string(),
+                provider_id: "yfinance".to_string(),
                 domain: self.domain().as_str().to_string(),
                 selectable_by_user: true,
                 adopted_by_default: true,
                 access_mode: "local_library".to_string(),
-                user_access: "zero_config_local".to_string(),
-                market_fit: vec!["tradfi".to_string(), "crypto".to_string()],
+                user_access: "free_no_login".to_string(),
+                market_fit: vec!["tradfi".to_string()],
                 fallback_priority: Some(1),
                 user_summary:
-                    "Zero-config live runtime for data-only or paper-style live observation."
+                    "Zero-config live runtime backed by yfinance-compatible fetches for observation and replay-adjacent workflows."
                         .to_string(),
                 ready: true,
                 status: "ready".to_string(),
-                reason: "native_openbb_backend_available".to_string(),
+                reason: "native_yfinance_runtime_available".to_string(),
                 capabilities: vec![
                     "futures_candles".to_string(),
                     "spot_candles".to_string(),
                     "options_summary".to_string(),
                 ],
-                notes: vec!["yfinance alias routes through openbb".to_string()],
+                notes: vec!["zero_config_first_run_fallback".to_string()],
                 install_prompts: Vec::new(),
             },
             ProviderCatalogItem {
-                provider_id: "openalice".to_string(),
+                provider_id: "external_http_runtime".to_string(),
                 domain: self.domain().as_str().to_string(),
                 selectable_by_user: true,
                 adopted_by_default: false,
@@ -504,7 +503,7 @@ impl ProviderCatalogSource for LiveRuntimeProviderCatalogSource {
                 market_fit: vec!["tradfi".to_string(), "crypto".to_string()],
                 fallback_priority: Some(20),
                 user_summary:
-                    "Optional external live runtime when the user already has an OpenAlice-compatible service."
+                    "Optional external HTTP runtime when the user already has a compatible market-data service."
                         .to_string(),
                 ready: false,
                 status: "operator_runtime_required".to_string(),
@@ -516,42 +515,36 @@ impl ProviderCatalogSource for LiveRuntimeProviderCatalogSource {
                 ],
                 notes: vec!["usable when operator supplies running service".to_string()],
                 install_prompts: vec![
-                    "Consumer agent request: ask whether the user wants zero-config openbb or an OpenAlice-compatible live runtime."
+                    "Consumer agent request: ask whether the user wants zero-config yfinance or a generic external HTTP runtime."
                         .to_string(),
                     format!(
-                        "Consumer agent follow-up: if the user chooses OpenAlice, keep the openalice backend and pass --openalice-base-url <url> (default {}).",
-                        OPENALICE_DEFAULT_URL
+                        "Consumer agent follow-up: if the user chooses the external HTTP runtime, keep the external_http_runtime backend and pass --external-http-base-url <url> (default {}).",
+                        EXTERNAL_HTTP_DEFAULT_URL
                     ),
                 ],
             },
             ProviderCatalogItem {
-                provider_id: "nofx".to_string(),
+                provider_id: "crypto_public_runtime".to_string(),
                 domain: self.domain().as_str().to_string(),
                 selectable_by_user: true,
                 adopted_by_default: false,
-                access_mode: "external_http_runtime".to_string(),
+                access_mode: "public_runtime_bundle".to_string(),
                 user_access: "operator_runtime_optional".to_string(),
-                market_fit: vec!["tradfi".to_string(), "crypto".to_string()],
+                market_fit: vec!["crypto".to_string()],
                 fallback_priority: Some(21),
                 user_summary:
-                    "Optional external live runtime when the user already has a NoFX-compatible service."
+                    "Optional crypto-public runtime bundle for CoinAnk/Hyperliquid-style futures observation when the user explicitly wants that lane."
                         .to_string(),
                 ready: false,
                 status: "operator_runtime_required".to_string(),
-                reason: "base_url_and_service_required".to_string(),
+                reason: "explicit_opt_in_required".to_string(),
                 capabilities: vec![
                     "futures_candles".to_string(),
-                    "spot_candles".to_string(),
-                    "options_summary".to_string(),
                 ],
-                notes: vec!["usable when operator supplies running service".to_string()],
+                notes: vec!["public-crypto helper lane, not a tradfi default".to_string()],
                 install_prompts: vec![
-                    "Consumer agent request: ask whether the user wants zero-config openbb or a NoFX-compatible live runtime."
+                    "Consumer agent request: ask whether the user wants zero-config yfinance or the optional crypto_public_runtime lane."
                         .to_string(),
-                    format!(
-                        "Consumer agent follow-up: if the user chooses NoFX, keep the nofx backend and pass --nofx-base-url <url> (default {}).",
-                        NOFX_DEFAULT_URL
-                    ),
                 ],
             },
         ])
@@ -978,6 +971,22 @@ fn apply_provider_user_semantics(item: &mut ProviderCatalogItem) {
             item.notes
                 .push("zero_config_first_run_fallback".to_string());
         }
+        "external_http_runtime" => {
+            item.user_access = "operator_runtime_optional".to_string();
+            item.market_fit = vec!["tradfi".to_string(), "crypto".to_string()];
+            item.fallback_priority = Some(20);
+            item.user_summary =
+                "Optional generic external HTTP runtime when the operator already has a compatible service."
+                    .to_string();
+        }
+        "crypto_public_runtime" => {
+            item.user_access = "operator_runtime_optional".to_string();
+            item.market_fit = vec!["crypto".to_string()];
+            item.fallback_priority = Some(21);
+            item.user_summary =
+                "Optional crypto-public runtime bundle for explicit live crypto observation."
+                    .to_string();
+        }
         "ibkr" => {
             item.user_access = "login_and_local_runtime".to_string();
             item.market_fit = vec!["tradfi".to_string()];
@@ -1062,7 +1071,11 @@ fn compact_provider_guide_line(providers: &[ProviderCatalogItem]) -> Option<Stri
         .unwrap_or_else(|| "none".to_string());
     let live_zero_config = providers
         .iter()
-        .filter(|provider| provider.ready && provider.user_access == "zero_config_local")
+        .filter(|provider| {
+            provider.ready
+                && provider.domain == "live_runtime"
+                && provider.adopted_by_default
+        })
         .map(|provider| provider.provider_id.clone())
         .collect::<Vec<_>>();
     let crypto = providers
@@ -1424,17 +1437,23 @@ fn workflow_relevant_provider_ids(
     );
     let mut ids = std::collections::BTreeSet::new();
 
-    if haystack.contains("--futures-backend openalice")
-        || haystack.contains("--aux-backend openalice")
-        || haystack.contains("openalice_base_url")
+    if haystack.contains("--futures-backend external_http_runtime")
+        || haystack.contains("--aux-backend external_http_runtime")
+        || haystack.contains("--futures-backend external_http_runtime")
+        || haystack.contains("--aux-backend external_http_runtime")
+        || haystack.contains("external_http_base_url")
+        || haystack.contains("external_http_runtime_base_url")
     {
-        ids.insert("openalice");
+        ids.insert("external_http_runtime");
     }
-    if haystack.contains("--futures-backend nofx")
-        || haystack.contains("--aux-backend nofx")
-        || haystack.contains("nofx_base_url")
+    if haystack.contains("--futures-backend crypto_public_runtime")
+        || haystack.contains("--aux-backend crypto_public_runtime")
+        || haystack.contains("--futures-backend crypto_public_runtime")
+        || haystack.contains("--aux-backend crypto_public_runtime")
+        || haystack.contains("crypto_public_base_url")
+        || haystack.contains("crypto_public_runtime_base_url")
     {
-        ids.insert("nofx");
+        ids.insert("crypto_public_runtime");
     }
     if haystack.contains("tradingview") {
         ids.insert("tradingview_mcp");
@@ -1450,8 +1469,8 @@ fn workflow_relevant_provider_ids(
         && haystack.contains("provider_runtime_required")
         && haystack.contains("analyze-live")
     {
-        ids.insert("openalice");
-        ids.insert("nofx");
+        ids.insert("external_http_runtime");
+        ids.insert("crypto_public_runtime");
     }
 
     ids
@@ -1839,7 +1858,7 @@ mod tests {
         assert!(compact.contains("data_contracts:"));
         assert!(compact.contains("Tomac cleaned multi-timeframe futures root"));
         assert!(compact.contains("tracks:"));
-        assert!(compact.contains("live_zero_config:pending:openbb"));
+        assert!(compact.contains("live_zero_config:ready:yfinance"));
     }
 
     #[test]
@@ -1944,33 +1963,33 @@ mod tests {
                     ("local_runtime".to_string(), "0/2".to_string()),
                 ]),
                 providers: Vec::new(),
-                ready_providers: vec!["openbb".to_string()],
+                ready_providers: vec!["yfinance".to_string()],
                 pending_providers: vec![
-                    "openalice@live_runtime:operator_runtime_required:base_url_and_service_required"
+                    "external_http_runtime@live_runtime:operator_runtime_required:base_url_and_service_required"
                         .to_string(),
-                    "nofx@live_runtime:operator_runtime_required:base_url_and_service_required"
+                    "crypto_public_runtime@live_runtime:operator_runtime_required:base_url_and_service_required"
                         .to_string(),
                     "ibkr_bridge@local_runtime:configured_runtime_unhealthy:ibkr_bridge_config_present_but_runtime_probe_failed"
                         .to_string(),
                 ],
                 pending_provider_details: vec![
                     ProviderCatalogPendingAgentItem {
-                        provider_id: "openalice".to_string(),
+                        provider_id: "external_http_runtime".to_string(),
                         domain: "live_runtime".to_string(),
                         status: "operator_runtime_required".to_string(),
                         reason: "base_url_and_service_required".to_string(),
                         install_prompts: vec![
-                            "ask whether the user wants zero-config openbb or openalice"
+                            "ask whether the user wants zero-config yfinance or external_http_runtime"
                                 .to_string(),
                         ],
                     },
                     ProviderCatalogPendingAgentItem {
-                        provider_id: "nofx".to_string(),
+                        provider_id: "crypto_public_runtime".to_string(),
                         domain: "live_runtime".to_string(),
                         status: "operator_runtime_required".to_string(),
                         reason: "base_url_and_service_required".to_string(),
                         install_prompts: vec![
-                            "ask whether the user wants zero-config openbb or nofx"
+                            "ask whether the user wants zero-config yfinance or crypto_public_runtime"
                                 .to_string(),
                         ],
                     },
@@ -1982,14 +2001,14 @@ mod tests {
                         install_prompts: vec!["start ibkr bridge".to_string()],
                     },
                 ],
-                selectable_providers: vec!["openalice".to_string(), "nofx".to_string()],
-                default_enabled_providers: vec!["openbb".to_string()],
+                selectable_providers: vec!["external_http_runtime".to_string(), "crypto_public_runtime".to_string()],
+                default_enabled_providers: vec!["yfinance".to_string()],
                 install_prompts: vec![],
                 available_opt_in_profiles: Vec::new(),
                 selected_profile: None,
                 selected_profile_full: None,
             },
-            "ict-engine analyze-live --symbol NQ --futures-backend openalice --aux-backend nofx",
+            "ict-engine analyze-live --symbol NQ --futures-backend external_http_runtime --aux-backend crypto_public_runtime",
             Some("provider_runtime_required"),
         );
 
@@ -1999,11 +2018,11 @@ mod tests {
         assert!(support
             .pending_providers
             .iter()
-            .all(|item| item.contains("openalice") || item.contains("nofx")));
+            .all(|item| item.contains("external_http_runtime") || item.contains("crypto_public_runtime")));
         assert!(support
             .install_prompts
             .iter()
-            .any(|prompt| prompt.contains("zero-config openbb")));
+            .any(|prompt| prompt.contains("zero-config yfinance")));
         assert!(!support
             .pending_providers
             .iter()

@@ -7,8 +7,9 @@ use serde::Deserialize;
 use crate::types::{Candle, Timeframe};
 
 use super::{
-    openalice::{
-        AuxiliaryMarketEvidence, OpenAliceProvider, OptionsChainSummary, Quote, SpotInstrumentKind,
+    market_support::{
+        apply_auxiliary_evidence_to_outcome, build_auxiliary_evidence,
+        AuxiliaryMarketEvidence, OptionsChainSummary, Quote, SpotInstrumentKind,
     },
     provider::RealtimeDataProvider,
 };
@@ -16,11 +17,11 @@ use super::{
 const COINANK_API_URL: &str = "https://api.coinank.com/api/kline/list/open";
 const HYPERLIQUID_API_URL: &str = "https://api.hyperliquid.xyz/info";
 
-pub struct NofxProvider {
+pub struct CryptoPublicRuntimeProvider {
     client: Client,
 }
 
-impl NofxProvider {
+impl CryptoPublicRuntimeProvider {
     pub fn new(_base_url: impl Into<String>) -> Self {
         Self {
             client: Client::builder()
@@ -38,9 +39,9 @@ impl NofxProvider {
         _start: DateTime<Utc>,
         _end: DateTime<Utc>,
     ) -> Result<Vec<Candle>> {
-        match parse_nofx_source(symbol) {
-            NofxSource::Hyperliquid { coin } => self.fetch_hyperliquid_candles(&coin, interval),
-            NofxSource::Coinank { exchange, symbol } => {
+        match parse_crypto_public_source(symbol) {
+            CryptoPublicSource::Hyperliquid { coin } => self.fetch_hyperliquid_candles(&coin, interval),
+            CryptoPublicSource::Coinank { exchange, symbol } => {
                 self.fetch_coinank_candles(&symbol, &exchange, interval)
             }
         }
@@ -54,11 +55,11 @@ impl NofxProvider {
         _start: DateTime<Utc>,
         _end: DateTime<Utc>,
     ) -> Result<Vec<Candle>> {
-        bail!("nofx backend does not provide spot auxiliary data")
+        bail!("crypto_public runtime does not provide spot auxiliary data")
     }
 
     pub fn fetch_options_chain_summary(&self, _symbol: &str) -> Result<OptionsChainSummary> {
-        bail!("nofx backend does not provide options chain data")
+        bail!("crypto_public runtime does not provide options chain data")
     }
 
     pub fn build_auxiliary_evidence(
@@ -70,7 +71,7 @@ impl NofxProvider {
         spot_candles: &[Candle],
         options_summary: &OptionsChainSummary,
     ) -> AuxiliaryMarketEvidence {
-        OpenAliceProvider::new("internal://nofx", None).build_auxiliary_evidence(
+        build_auxiliary_evidence(
             spot_kind,
             spot_symbol,
             options_symbol,
@@ -86,7 +87,7 @@ impl NofxProvider {
         directional_bias: f64,
         uncertainty_penalty: f64,
     ) -> Vec<f64> {
-        OpenAliceProvider::new("internal://nofx", None).apply_auxiliary_evidence_to_outcome(
+        apply_auxiliary_evidence_to_outcome(
             base_distribution,
             directional_bias,
             uncertainty_penalty,
@@ -204,7 +205,7 @@ impl NofxProvider {
 }
 
 #[async_trait::async_trait]
-impl RealtimeDataProvider for NofxProvider {
+impl RealtimeDataProvider for CryptoPublicRuntimeProvider {
     async fn fetch_candles(
         &self,
         symbol: &str,
@@ -232,7 +233,7 @@ impl RealtimeDataProvider for NofxProvider {
         )?;
         let last = candles
             .last()
-            .ok_or_else(|| anyhow!("nofx returned no quoteable candles"))?;
+            .ok_or_else(|| anyhow!("crypto_public runtime returned no quoteable candles"))?;
         Ok(Quote {
             symbol: symbol.to_string(),
             bid: last.close,
@@ -273,31 +274,31 @@ struct HyperliquidCandle {
     volume: String,
 }
 
-enum NofxSource {
+enum CryptoPublicSource {
     Hyperliquid { coin: String },
     Coinank { exchange: String, symbol: String },
 }
 
-fn parse_nofx_source(symbol: &str) -> NofxSource {
+fn parse_crypto_public_source(symbol: &str) -> CryptoPublicSource {
     let raw = symbol.trim();
     if let Some(rest) = raw.strip_prefix("hyperliquid:") {
-        return NofxSource::Hyperliquid {
+        return CryptoPublicSource::Hyperliquid {
             coin: rest.to_string(),
         };
     }
     if raw.starts_with("xyz:") {
-        return NofxSource::Hyperliquid {
+        return CryptoPublicSource::Hyperliquid {
             coin: raw.to_string(),
         };
     }
     if let Some((exchange, base_symbol)) = raw.split_once(':') {
-        return NofxSource::Coinank {
+        return CryptoPublicSource::Coinank {
             exchange: normalize_coinank_exchange(exchange),
             symbol: base_symbol.to_uppercase(),
         };
     }
 
-    NofxSource::Coinank {
+    CryptoPublicSource::Coinank {
         exchange: "Binance".to_string(),
         symbol: raw.to_uppercase(),
     }
