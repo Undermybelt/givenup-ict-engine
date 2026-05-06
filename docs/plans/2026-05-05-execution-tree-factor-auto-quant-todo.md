@@ -4148,6 +4148,42 @@ First independent outcome-label check:
   - **Path B (timeframe pivot)**: prepare `NQ_USD-5m.feather` and `NQ_USD-15m.feather` from the local 1m corpus (per Slice 75 reference, derived under `/tmp/ict-engine-regime-longspan-nq/`), then re-author the strongest 1h candidates as 5m or 15m base variants. Density rises naturally `12×` for 5m vs 1h, and the existing `FVGRetrace5m` immediately becomes runnable.
 - both paths are net-additive (no `ict-engine` runtime changes, no in-flight harness changes) and can be done in parallel iterations.
 
+### 2026-05-07 Slice 82: NQ 5m/15m feather unlock and first density-widening probe
+
+**Execution**
+- closed the missing-timeframe blocker for `NQ/USD`. Located the local 1m source `/Users/thrill3r/Downloads/Tomac/nq future 2021-2025/NQ_1min_Continuous_Shifted_2836.csv` (5,302,713 raw rows, `2011-01-02` -> `2025-12-31`, continuous-shifted; the longer `glbx-mdp3-20100606-20260403.ohlcv-1m.csv` covering 2010-2026 also exists but is per-instrument GLBX raw, not the continuous shape `prepare_external.py` expects without extra wrangling).
+- ran `prepare_external.py` with `--timeframes "5m,15m" --column-map ts_event:date,open_adj:open,high_adj:high,low_adj:low,close_adj:close,volume:volume`. Cleaning dropped `96,811` ghost-bar rows (volume=0 with non-zero body, normal for OTC sessions), kept `5,205,902` clean 1m rows. Resampled output:
+  - `NQ_USD-5m.feather` -> `1,053,341` 5m bars (`~15Y`)
+  - `NQ_USD-15m.feather` -> `351,288` 15m bars (`~15Y`)
+- re-ran the full 20-strategy pack (`19` from Slice 81 plus this slice's new `LiquiditySweepReclaimHyper`).
+- `FVGRetrace5m` still fails. The error message changed from Slice 81's "Informative dataframe is empty" to "Tried to merge a faster timeframe to a slower timeframe. This would create new rows, and can throw off your regular indicators." Root cause: `config.tomac.json` declares `timeframe: "1h"` and freqtrade's data-loading uses that as the base timeframe before the strategy's class-level `timeframe = "5m"` is applied; the `@informative("15m")` then looks shorter than 1h, triggering the faster→slower guard. Fix path is per-strategy (a 5m-specific config or a small wrapper that overrides the base timeframe per-strategy); deferred to next slice rather than risk modifying `run_tomac.py` or `config.tomac.json`.
+- authored `TomacNQ_RegimeLiquiditySweepReclaimHyper` per the Slice 81 next-plan: drops `body_strength > 0.4` and `not_already_extended` from the entry stack, softens sweep depth (12h-low -> 8h-low), widens liquid window from `12-21 UTC` to `12-22 UTC`. The intent is `~4-10x` density gain with the asymmetric-payoff geometry intact.
+- copied the Hyper variant into `/Users/thrill3r/Auto-Quant/user_data/strategies_external/`, re-ran via `run_tomac.py`.
+- saved full backtest log to `/tmp/ict-engine-ibkr-probe/slice_82_hyper_run.log`.
+- kept `ict-engine` runtime source frozen.
+- did not modify `run_tomac.py`, `config.tomac.json`, or any other in-flight harness.
+
+**Outputs**
+- `/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-5m.feather` (1,053,341 bars)
+- `/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-15m.feather` (351,288 bars)
+- `scripts/auto_quant_external/strategies/TomacNQ_RegimeLiquiditySweepReclaimHyper.py`
+- `/Users/thrill3r/Auto-Quant/user_data/strategies_external/TomacNQ_RegimeLiquiditySweepReclaimHyper.py`
+- `/tmp/ict-engine-ibkr-probe/slice_82_hyper_run.log`
+
+**Result — `LiquiditySweepReclaim` baseline vs `LiquiditySweepReclaimHyper` density-widening probe**
+
+| Strategy | trade_count | density | Sharpe | Sortino | Calmar | total_profit_pct | max_dd_pct | win_rate_pct | profit_factor |
+|---|---:|---|---:|---:|---:|---:|---:|---:|---:|
+| `LiquiditySweepReclaim` (Slice 72) | 4 | anecdotal | 0.0688 | -100 | 11.53 | 2.70 | -0.41 | 75.00 | 7.53 |
+| `LiquiditySweepReclaimHyper` (Slice 82) | 10 | probe_only | 0.0641 | 0.4223 | **4.08** | 2.33 | -1.01 | 60.00 | **2.54** |
+
+**Interpretation**
+- structural widening worked as intended. Trade count rose `2.5x` (4 -> 10), and the widened variant still produces a positive convex payoff: profit factor `2.54`, win rate `60%`, Calmar `4.08`. Total profit `2.33%` is `~14%` lower than the narrow original's `2.70%` despite `2.5x` more trades, but the absolute drawdown only widened from `-0.41%` to `-1.01%`.
+- Sortino went from the `-100` invalid sentinel to a real `0.4223` because the Hyper variant produced enough downside observations to compute a meaningful denominator. This is a side-benefit of density beyond the headline metrics.
+- the simple linear extrapolation (multiply density by reducing condition count) underestimates the work needed: from `10` trades a further `~8x` widening would be required to clear `dense (>= 80)`, and at some point the per-trade edge collapses. The cleaner path to dense is the timeframe pivot (Path B), where 1h -> 5m gives a `~12x` natural density rise on the same condition stack.
+- the `FVGRetrace5m` blocker is a freqtrade-config quirk, not a data or strategy issue. Now that 5m / 15m feathers exist for `NQ/USD`, fixing it is a config plumbing question, addressable in the next slice without touching any in-flight harness.
+- the user's `P2 (high Sharpe)` preference is still not satisfied (annualized Sharpe `~0.2-0.6` across the pack), but the trajectory is now visible: density via widening or TF pivot is the lever, and orthogonal-source candidates do show convex payoff edges when they fire.
+
 ## Current Todo Board
 
 ### Done
@@ -4223,6 +4259,7 @@ First independent outcome-label check:
 - [x] Closed the multi-market 1h+4h feather gap. Fetched `SPY/IWM/DIA/GLD 1h 1Y RTH` via IBKR (`2 Y` durations hit the IBKR per-call timeout; `1 Y RTH` succeeded cleanly: 1,746 rows each except GLD at 1,742 after 4 jump outliers cleaned). Ran `prepare_external.py` to materialize `1h`+`4h` feather files for all four pairs into `/Users/thrill3r/Auto-Quant/user_data/data/`. The 19-strategy `TomacNQ_Regime*` pack is pair-agnostic and can now be backtested on `SPY/USD`, `IWM/USD`, `DIA/USD`, `GLD/USD` without rewriting any candidate code.
 - [x] Collected first real backtest evidence on `NQ/USD 1h ~3Y` for the existing 13-strategy pack via `run_tomac.py`. None of 13 reach `dense (>= 80)`; only 2 reach `thin (30-79)` — `RegimeTrendPullbackDense` (Sharpe 0.19, profit 8.8%, DD -5.0%, PF 1.58, 57 trades) and `RegimePersistenceClusterDense` (Sharpe 0.11, profit 6.3%, DD -5.4%, PF 1.49, 33 trades). Density not edge is the existing pack's binding constraint; the user's P2 high-Sharpe preference is not satisfiable on this evidence (best annualized Sharpe ~0.6). Full log in `/tmp/ict-engine-ibkr-probe/slice_80_backtest_run.log`.
 - [x] Synced Slice 72-74 candidates into `/Users/thrill3r/Auto-Quant/user_data/strategies_external/` and re-ran all 19 via `run_tomac.py` on `NQ/USD 1h ~3Y`. The 5 testable orthogonal candidates (FVGRetrace5m fails with no 15m feather) confirm the same density problem: `LiquiditySweepReclaim` 4 trades / PF 7.53 / +2.70%, `KillzoneIVProxy` 2 trades / PF 3.45, `FVGRetrace` 1 trade, `VRPCarry` and `CrowdingExhaustion` 0 trades. The best payoff-quality candidate (`LiquiditySweepReclaim`) is exactly the "narrow high-win-rate factor that does not produce enough trades" pattern the Trade-Density Rule warns against; structural widening or a lower-timeframe pivot is the unblock. Full log in `/tmp/ict-engine-ibkr-probe/slice_81_backtest_run.log`.
+- [x] Unlocked `NQ/USD` 5m / 15m timeframes by running `prepare_external.py` on the local `NQ_1min_Continuous_Shifted_2836.csv` 1m corpus: `NQ_USD-5m.feather` (1,053,341 bars) and `NQ_USD-15m.feather` (351,288 bars), both `~15Y` span. Authored `TomacNQ_RegimeLiquiditySweepReclaimHyper` as the first structural-widening probe: trade count rose 4 -> 10 (2.5x density), profit factor compressed from 7.53 to 2.54 but stayed strongly positive, Sortino went from invalid `-100` to a real `0.4223`. `FVGRetrace5m` still blocked by a freqtrade base-timeframe-vs-class-attribute config quirk; needs a per-strategy config or wrapper next slice.
 
 ### Next
 
