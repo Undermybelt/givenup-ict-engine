@@ -3867,6 +3867,52 @@ First independent outcome-label check:
   - or write a self-contained `vol_regime_v2_features.py` module under `scripts/auto_quant_external/` that defines the new feature columns and an alias `FEATURE_SET_ALIASES["vol_regime_v2"] = VOL_REGIME_V2_VECTOR_FEATURES`, leaving wiring to the user
 - additional high-value fetches still missing: `VIX3M 1d 10Y`, `NDX 1d 10Y`, `^MOVE 1d 10Y` (bond vol), `OVX 1d 10Y` (oil vol), and per-ETF IV/HV mirrors for `IWM`, `DIA`. None are urgent for the immediate `vol_regime_v2` lift but they would extend the breadth lane.
 
+### 2026-05-07 Slice 76: vol_regime_v2 standalone module and three more IBKR vol slices
+
+**Execution**
+- implemented `vol_regime_v2` as a self-contained external module so the design recorded in Slices 72/75 stops being paper-only without me modifying the user's in-flight `regime_factor_benchmark.py`. The module exports:
+  - `VOL_REGIME_V2_VECTOR_FEATURES` (15-column list)
+  - `vol_regime_v2_feature_vectors(candles, paired_candle_context)` — matches the v1 calling shape so the existing dispatch can plug it in
+  - `load_ibkr_probe_series(keys, probe_dir)` — pandas Series loader for the `/tmp/ict-engine-ibkr-probe/` CSVs
+  - `align_paired_to_candles(candles, series_map)` — forward-fill alignment to candle index
+  - `build_vol_regime_v2_for_candles(candles)` — one-shot end-to-end helper
+- v2 column set:
+  - `v2_iv_level_pct_rank_252`, `v2_hv_level_pct_rank_252`, `v2_vix_level_pct_rank_252`, `v2_vvix_level_pct_rank_252` (long-window percentile rank; replaces 20-bar z)
+  - `v2_iv_to_iv_252_high_distance`, `v2_iv_to_iv_252_low_distance` (regime-extreme proxies)
+  - `v2_vrp_spread`, `v2_vrp_state_5bin`, `v2_vrp_regime_persistence` (categorical regime + persistence counter)
+  - `v2_trend_sign_joint_8state` (8-state IV/HV/VIX trend-sign joint)
+  - `v2_vix_term_short_long` (real VIX9D / VIX; replaces ATR(5)/ATR(60) proxy)
+  - `v2_vvix_level_z20`, `v2_vvix_change3` (real VVIX; replaces rolling-std proxy)
+  - `v2_vix_spike_5b` (asymmetric vol-spike boolean: VIX > rolling 60-bar max in prior 5 bars)
+  - `v2_iv_meanrev_252_z` (long-window IV mean-reversion z-score)
+- smoke-tested the module on 1000 synthetic NQ-shaped daily bars against the real `/tmp/ict-engine-ibkr-probe/` artifacts: 15/15 columns, all length 1000, post-warmup coverage `87.1%` on long-window (252-bar) features and `99.5-99.8%` on short-window features, categorical encodings populate (`v2_vrp_state_5bin=1.0`, `v2_trend_sign_joint_8state=3.0`), real ratios reasonable (`v2_vix_term_short_long=0.9538`).
+- fetched three more IBKR slices in parallel for breadth:
+  - `VIX3M 1d 10Y` -> `2,513` rows (`2016-05-09` -> `2026-05-06`); when paired with VIX9D + VIX, three-point term-structure curvature becomes available
+  - `OVX 1d 10Y` -> `2,513` rows; oil-sector vol benchmark
+  - `NDX 1d 10Y` -> `2,513` rows; Nasdaq-100 cash index for paired-context with NQ
+- kept `ict-engine` runtime source frozen.
+- did not modify `regime_factor_benchmark.py`. Wiring is documented in the module docstring so the user can land it in a single 3-line patch when they consolidate their accumulated benchmark edits.
+
+**Outputs**
+- `scripts/auto_quant_external/vol_regime_v2_features.py`
+- `/tmp/ict-engine-ibkr-probe/vix3m.1d.10y.csv`
+- `/tmp/ict-engine-ibkr-probe/ovx.1d.10y.csv`
+- `/tmp/ict-engine-ibkr-probe/ndx.1d.10y.csv`
+
+**Result**
+- the data corpus under `/tmp/ict-engine-ibkr-probe/` now covers 11 1d-10Y replayable, time-aligned vol-regime time series:
+  - price proxies: `qqq`, `gld`, `spy`, `ndx`
+  - implied volatility: `qqq.iv`, `spy.iv`
+  - historical volatility: `qqq.hv`, `spy.hv`
+  - vol indices: `vix9d`, `vix3m`, `vvix`, `vxn`, `ovx`
+- the `vol_regime_v2` module is ready to consume any subset of these via the `series_keys` argument; missing columns degrade gracefully to NaN rather than crashing the build.
+
+**Interpretation**
+- `vol_regime_v2` is now a runnable artifact rather than a design proposal. The remaining work to actually score it against the Slice 69 baseline is wiring (`FEATURE_SET_ALIASES["vol_regime_v2"] = VOL_REGIME_V2_VECTOR_FEATURES` plus a dispatch line in `regime_factor_benchmark.py`'s extra-vector path) and a single benchmark run; nothing in the new code blocks that.
+- the next loop iteration should either:
+  - run `regime_factor_benchmark.py` against the new feature set once the user confirms wiring (cheapest, biggest information gain)
+  - or keep extending breadth: author multi-market strategy variants for ES / SPY / GLD or fetch IWM HV/IV + DIA HV/IV to mirror the QQQ/SPY pair across small-cap and Dow ETFs
+
 ## Current Todo Board
 
 ### Done
@@ -3936,6 +3982,7 @@ First independent outcome-label check:
 - [x] Authored two more orthogonal external strategy candidates so the pack now exposes structural retrace and session-vol-regime gated geometries: `TomacNQ_RegimeFVGRetrace` (Family A, FVG retest and reject, Layer 1 + Layer 3) and `TomacNQ_RegimeKillzoneIVProxy` (Family H + Layer 4, AM-killzone breakout gated by `ATR(5)/ATR(60)` term-structure proxy plus non-vol-spike `atr_pct_z240` gate); kept `ict-engine` runtime source frozen and did not touch the in-flight `regime_factor_benchmark.py`.
 - [x] Closed the Family E and the 1h-monoculture timeframe gaps with two more candidates: `TomacNQ_RegimeCrowdingExhaustion` (Family E, 3-bar crowded selling near swing low + high-volume bullish absorption, Layer 1 + Layer 4 counter-regime) and `TomacNQ_RegimeFVGRetrace5m` (Family A 5m base with `15m/1h/4h` informative resonance, Layer 1 + Layer 4 timeframe-coverage); pack now has at least one candidate for Families A/B/D/E/F/H and a first multi-TF foothold on `5m`.
 - [x] Acquired five missing IBKR-backed vol-regime slices for `vol_regime_v2`: `VIX9D 1d 10Y` (1,978 rows), `VVIX 1d 10Y` (2,513 rows), `VXN 1d 10Y` (2,513 rows), `SPY HISTORICAL_VOLATILITY 1d 10Y` (2,505 rows), `SPY OPTION_IMPLIED_VOLATILITY 1d 10Y` (2,513 rows); IBKR Gateway 10.37 confirmed healthy on port `4002`; `vol_regime_v2` is no longer paper-only and can now use real VIX-term-structure (VIX9D vs VIX), real VVIX vol-of-vol, and SPY HV/IV cross-validation against the QQQ pair from Slice 69.
+- [x] Implemented `vol_regime_v2` as a standalone module `scripts/auto_quant_external/vol_regime_v2_features.py` exporting `VOL_REGIME_V2_VECTOR_FEATURES` plus `vol_regime_v2_feature_vectors`, `load_ibkr_probe_series`, `align_paired_to_candles`, `build_vol_regime_v2_for_candles`; smoke-tested on 1000 synthetic daily candles against the real probe artifacts (15/15 columns, 87.1% long-window coverage, 99.5-99.8% short-window coverage, categorical encodings populate). Fetched three more IBKR slices to widen the corpus: `VIX3M 1d 10Y` (2,513 rows), `OVX 1d 10Y` (2,513 rows), `NDX 1d 10Y` (2,513 rows).
 
 ### Next
 
