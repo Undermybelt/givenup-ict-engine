@@ -3778,6 +3778,52 @@ First independent outcome-label check:
   - pairwise return correlation between the new orthogonal candidates and the existing trend-continuation cluster
 - the user has explicitly preferred different-not-just-stronger; the post-regime portfolio-diversity scorecard should accept a lower-standalone Family D / Family F / Family A candidate when it improves the combined regime-level portfolio through low correlation or payoff-shape complementarity, rather than ranking every candidate by standalone Sharpe alone.
 
+### 2026-05-07 Slice 74: Family E crowding exhaustion and 5m FVG retrace timeframe variant
+
+**Execution**
+- closed two coverage gaps from prior slices:
+  - Family E (crowding / herding execution risk) had no candidate in the active pack despite being a Required Factor Family
+  - the entire pack was 1h-base, leaving the timeframe ladder (`1m`, `5m`, `15m`, then `4h`, `1d`, `1w`, `1M`) effectively un-covered for any candidate
+- authored:
+  - `TomacNQ_RegimeCrowdingExhaustion`
+    - paradigm: 3-bar crowded selling near a 50-bar swing low + high-volume bullish absorption + rejection close above prior bar's high
+    - hypothesis: counter-regime exhaustion-and-absorption signature; the herd has been forced out and a counter-side participant has stepped in, supplying Layer 1 crowding-pressure relief and Layer 4 exhaustion-regime detector with a payoff geometry no breakout / persistence / transition / FVG / sweep candidate already in the pack can produce
+    - family role: Family E (crowding / herding) primary, Layer 1 + Layer 4 dual feed
+    - intentionally counter-regime: 4h trend may still be down (only blocks `ema_fast_4h < ema_slow_4h * 0.95` deep collapse); we are buying exhaustion at a level rather than continuation
+  - `TomacNQ_RegimeFVGRetrace5m`
+    - paradigm: 5m base with `15m` + `1h` + `4h` informative resonance gating the Family A FVG-retest geometry
+    - hypothesis: the same FVG-retest geometry as the 1h base candidate becomes more selective and supplies denser intraday trade evidence when run on a 5m base with a three-informative resonance stack; matches the TODO's mandated minimum 5m-base resonance stack of `15m, 1h, 4h, 1d` directly through informatives (1d resonance is omitted to keep backtest cost reasonable; can be added in a `_d` variant if needed)
+    - family role: Family A primary, Layer 1 + Layer 4 timeframe-coverage and resonance enrichment
+- kept `ict-engine` runtime source frozen.
+- did not touch the in-flight `regime_factor_benchmark.py` or `prepare_external.py`.
+
+**Outputs**
+- `scripts/auto_quant_external/strategies/TomacNQ_RegimeCrowdingExhaustion.py`
+- `scripts/auto_quant_external/strategies/TomacNQ_RegimeFVGRetrace5m.py`
+
+**Result**
+- not yet benchmarked; this slice is design + candidate authorship.
+- after Slice 72 + 73 + 74, the active Auto-Quant pack is `19` strategies, mapped to Required Factor Families as follows:
+  - Family A: KillzoneBreakout, FVGRetrace, FVGRetrace5m
+  - Family B: PersistenceCluster + Dense + Wide
+  - Family C: `0` candidates; cross-market pair-context features live in `regime_factor_benchmark.py`, not in the freqtrade strategy framework
+  - Family D: LiquiditySweepReclaim
+  - Family E: CrowdingExhaustion
+  - Family F: CompressionRelease + Dense + Wide, VolatilityTransition + Wide, VRPCarry, TransitionHazard, TrendPullback + Dense + Wide
+  - Family G: `0` candidates; blocked on replayable IV / skew / OI data acquisition
+  - Family H: KillzoneIVProxy
+- timeframe coverage: `1h` for `18` candidates, `5m` for `1` candidate; full ladder still mostly uncovered, but the first multi-TF foothold now exists.
+
+**Interpretation**
+- the remaining structural gaps for the candidate-authorship lane are:
+  - Family G options / dealer evidence, blocked on replayable IV / skew / OI data acquisition (not solvable through more freqtrade strategies; requires `vol_regime_v2` or richer auxiliary inputs)
+  - Family C cross-market work, which belongs in `regime_factor_benchmark.py` paired-context features rather than freqtrade strategies
+  - higher-timeframe (`4h`, `1d`) candidate variants, useful as regime / resonance overlays even when execution density is lower
+  - lower-timeframe (`1m`, `15m`) variants of the strongest 1h shapes, useful as denser execution-evidence lanes
+- the next loop iteration should either:
+  - start running `factor-research --backend auto-quant` against the `6` Slice 72-74 candidates to collect first trade-density and Sharpe evidence
+  - or author `15m` and `4h` companions to the strongest existing 1h shape to extend the timeframe ladder coverage further before any benchmark spend
+
 ## Current Todo Board
 
 ### Done
@@ -3845,6 +3891,7 @@ First independent outcome-label check:
 - [x] Authored two portfolio-orthogonal external strategy candidates so the active pack covers four distinct return-source shapes instead of only trend-continuation: `TomacNQ_RegimeLiquiditySweepReclaim` (mean-reversion / sweep reclaim, Family D) and `TomacNQ_RegimeVRPCarry` (vol-risk-premium proxy, Family F + Layer 4); kept `ict-engine` runtime source frozen.
 - [x] Recorded a concrete `vol_regime_v2` feature-design proposal for the next regime-benchmark probe so the rejected Slice 69 shape is replaced by percentile-rank, categorical bin, term-structure proxy, vol-of-vol proxy, spike, and long-window mean-reversion features instead of more raw level/spread/trend columns.
 - [x] Authored two more orthogonal external strategy candidates so the pack now exposes structural retrace and session-vol-regime gated geometries: `TomacNQ_RegimeFVGRetrace` (Family A, FVG retest and reject, Layer 1 + Layer 3) and `TomacNQ_RegimeKillzoneIVProxy` (Family H + Layer 4, AM-killzone breakout gated by `ATR(5)/ATR(60)` term-structure proxy plus non-vol-spike `atr_pct_z240` gate); kept `ict-engine` runtime source frozen and did not touch the in-flight `regime_factor_benchmark.py`.
+- [x] Closed the Family E and the 1h-monoculture timeframe gaps with two more candidates: `TomacNQ_RegimeCrowdingExhaustion` (Family E, 3-bar crowded selling near swing low + high-volume bullish absorption, Layer 1 + Layer 4 counter-regime) and `TomacNQ_RegimeFVGRetrace5m` (Family A 5m base with `15m/1h/4h` informative resonance, Layer 1 + Layer 4 timeframe-coverage); pack now has at least one candidate for Families A/B/D/E/F/H and a first multi-TF foothold on `5m`.
 
 ### Next
 
@@ -4014,8 +4061,10 @@ First independent outcome-label check:
   - `TomacNQ_RegimeVRPCarry` (Slice 72)
   - `TomacNQ_RegimeFVGRetrace` (Slice 73)
   - `TomacNQ_RegimeKillzoneIVProxy` (Slice 73)
+  - `TomacNQ_RegimeCrowdingExhaustion` (Slice 74)
+  - `TomacNQ_RegimeFVGRetrace5m` (Slice 74; needs `5m` feather data prepared via `prepare_external.py` if not yet present)
   - prefer cached/local `NQ 1h` data first; if dense enough, repeat on `NQ 5m` and `NQ 15m`
-  - mark each candidate's source-family tag explicitly: trend, mean-reversion / liquidity, volatility-risk-premium, structural retrace, session-vol-regime, options / dealer pressure, or other
+  - mark each candidate's source-family tag explicitly: trend, mean-reversion / liquidity, volatility-risk-premium, structural retrace, session-vol-regime, crowding-exhaustion, options / dealer pressure, or other
   - require pairwise correlation matrix against the existing trend-continuation cluster before any standalone Sharpe ranking
 - [ ] Implement `vol_regime_v2` as the next regime-benchmark feature alias before re-running `NQ 1d post_transition_direction` against the Slice 69 baseline:
   - replace raw `level_z20` with `level_pct_rank_252`
