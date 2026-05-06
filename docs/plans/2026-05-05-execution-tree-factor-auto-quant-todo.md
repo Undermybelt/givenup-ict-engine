@@ -4049,6 +4049,52 @@ First independent outcome-label check:
   - or extend the 1h coverage further: `RTY` (Russell front-month future), `QQQ/USD` 1h (Nasdaq ETF), `XLK/USD` (tech sector), `XLE/USD` (energy sector), or fetch `SPY/IWM/DIA/GLD 1m 30D` to enable `5m` and `15m` strategy variants
   - or pivot back to evidence: author a small standalone runner that loads `NQ_USD-1h.feather` directly and runs the 19-candidate pack through a minimal backtest, surfacing first per-candidate trade-density numbers without depending on any in-flight harness
 
+### 2026-05-07 Slice 80: First real backtest evidence on the existing 13-strategy NQ/USD 1h pack
+
+**Execution**
+- after 8 consecutive authorship + data-acquisition slices, pivoted to actual evidence collection. Used the user's existing `run_tomac.py` harness from `/Users/thrill3r/Auto-Quant/run_tomac.py` rather than authoring a new runner; the harness already handles the synthetic-market injection that freqtrade's exchange validation requires for `NQ/USD`-style pseudo-pairs.
+- ran `uv run python run_tomac.py` against `pair_whitelist=['NQ/USD']`, `timeframe=1h`, on the local `NQ_USD-1h.feather` covering `~17,672 1h bars` (`2023-01-02` -> `2026-01-12`, ~3 years, freqtrade `cache=none` so the run was cold).
+- the harness auto-discovered the `13` strategies currently in `/Users/thrill3r/Auto-Quant/user_data/strategies_external/`. The `6` new candidates from Slices 72-74 (`LiquiditySweepReclaim`, `VRPCarry`, `FVGRetrace`, `KillzoneIVProxy`, `CrowdingExhaustion`, `FVGRetrace5m`) are in the ict-engine repo's `scripts/auto_quant_external/strategies/` but not yet synced into the Auto-Quant runtime location, so they were not part of this run; their backtests are deferred to the next slice that can copy them across without disturbing the user's parallel repo.
+- saved full backtest log to `/tmp/ict-engine-ibkr-probe/slice_80_backtest_run.log`.
+- kept `ict-engine` runtime source frozen.
+- did not modify `run_tomac.py` or any other in-flight Python harness.
+
+**Outputs**
+- `/tmp/ict-engine-ibkr-probe/slice_80_backtest_run.log`
+
+**Result — per-candidate metrics on `NQ/USD 1h ~3Y`**
+
+| Strategy | trade_count | density | Sharpe | total_profit_pct | max_dd_pct | win_rate_pct | profit_factor |
+|---|---:|---|---:|---:|---:|---:|---:|
+| `KillzoneBreakout` | 3 | anecdotal | 0.0052 | 0.25 | -1.10 | 66.67 | 1.22 |
+| `RegimeCompressionRelease` | 13 | probe_only | 0.0225 | 1.14 | -3.48 | 53.85 | 1.27 |
+| `RegimeCompressionReleaseDense` | 12 | probe_only | 0.0281 | 1.18 | -1.80 | 58.33 | 1.36 |
+| `RegimeCompressionReleaseWide` | 5 | anecdotal | 0.0045 | 0.18 | -1.03 | 60.00 | 1.12 |
+| `RegimePersistenceCluster` | 9 | anecdotal | 0.0367 | 1.25 | -0.96 | 44.44 | 1.65 |
+| **`RegimePersistenceClusterDense`** | **33** | **thin** | 0.1081 | 6.32 | -5.42 | 60.61 | 1.49 |
+| `RegimePersistenceClusterWide` | 18 | probe_only | 0.0160 | 0.79 | -4.63 | 44.44 | 1.12 |
+| `RegimeTransitionHazard` | 1 | anecdotal | -100 | 1.01 | -0.00 | 100.00 | 0.00 |
+| `RegimeTrendPullback` | 0 | invalid | 0.00 | 0.00 | -0.00 | 0.00 | 0.00 |
+| **`RegimeTrendPullbackDense`** | **57** | **thin** | **0.1855** | **8.80** | -5.03 | 45.61 | 1.58 |
+| `RegimeTrendPullbackWide` | 22 | probe_only | 0.0878 | 4.54 | -1.93 | 54.55 | **1.67** |
+| `RegimeVolatilityTransition` | 1 | anecdotal | -100 | -0.61 | -0.61 | 0.00 | 0.00 |
+| `RegimeVolatilityTransitionWide` | 7 | anecdotal | 0.0168 | 0.90 | -1.10 | 57.14 | 1.35 |
+
+**Density distribution (per the TODO Trade-Density Rule)**
+- `dense (>= 80)`: `0` of `13`
+- `thin (30-79)`: `2` of `13` — `RegimeTrendPullbackDense` (57), `RegimePersistenceClusterDense` (33)
+- `probe_only (10-29)`: `4` of `13` — `RegimeCompressionRelease` (13), `RegimeCompressionReleaseDense` (12), `RegimePersistenceClusterWide` (18), `RegimeTrendPullbackWide` (22)
+- `anecdotal (1-9)`: `6` of `13` — `KillzoneBreakout` (3), `RegimeCompressionReleaseWide` (5), `RegimePersistenceCluster` (9), `RegimeTransitionHazard` (1), `RegimeVolatilityTransition` (1), `RegimeVolatilityTransitionWide` (7)
+- `invalid (0)`: `1` of `13` — `RegimeTrendPullback`
+
+**Interpretation**
+- this is the first hard evidence directly validating the TODO's standing complaint: the existing pack under-trades on liquid intraday markets. **No candidate clears the `dense (>= 80)` floor**. The TODO's promotion rule says `30-79 can continue but cannot close the family alone`, so even the two thin candidates are not promotable without further breadth.
+- the `Dense` and `Wide` thresholding variants are the correct direction but still do not produce enough trades; the next round of factor-iteration on this lane needs **structurally widened** entry conditions, not just looser thresholds, or a switch to a denser timeframe (`5m` / `15m`) where trade count naturally rises.
+- best Sharpe / payoff combination on the existing pack is `RegimeTrendPullbackDense` (Sharpe `0.19`, profit `+8.8%`, drawdown `-5.0%`, win rate `45.6%`, PF `1.58`, 57 trades over 3 years). Annualized it is roughly `Sharpe 0.6` — useful but below typical promotion thresholds.
+- two strategies have `trade_count = 1` and `trade_count = 0`, dragging Sharpe to `-100` (the metric's invalid-data sentinel). They are not "bad" — they simply did not fire often enough to evaluate.
+- the 6 new orthogonal candidates from Slices 72-74 were intentionally designed to be different return-source shapes than the existing trend-continuation pack. Because the existing pack's binding constraint is **density not edge**, the next slice should both (a) sync the 6 new candidates into the Auto-Quant runtime and (b) re-run the full 19-strategy pack to confirm whether the orthogonal shapes (mean-reversion sweep, VRP carry, FVG retrace, killzone vol gate, crowding exhaustion, 5m FVG) deliver materially different density profiles.
+- the user's `P2 (high Sharpe)` preference cannot be satisfied yet — best annualized Sharpe is `~0.6` and even that comes from a thin-density candidate. The user's `P1 (regime classifier)` preference is unaffected by this evidence; it is still the open priority and is best advanced by either running the `vol_regime_v2 + cross_asset` modules through `regime_factor_benchmark.py` (user-side wiring) or authoring a small standalone classifier runner.
+
 ## Current Todo Board
 
 ### Done
@@ -4122,6 +4168,7 @@ First independent outcome-label check:
 - [x] Acquired eight more IBKR slices for cross-asset vol breadth: `IWM HV/IV 1d 10Y` (2,505 / 2,513 rows; small-cap), `DIA HV/IV 1d 10Y` (2,505 / 2,513 rows; Dow), `GLD HV/IV 1d 10Y` (2,505 / 2,513 rows; gold ETF), `RVX 1d 10Y` (2,513 rows; Russell vol index), `GVZ 1d 10Y` (2,513 rows; gold vol index). Updated `vol_regime_v2_features.py` `_IBKR_FILE_PATTERNS` registry to recognize the new keys. Probe corpus now spans ~19 simultaneous time-aligned vol-regime series across QQQ / SPY / IWM / DIA / GLD plus seven vol indices.
 - [x] Authored `scripts/auto_quant_external/vol_regime_cross_asset_features.py` as a sibling to `vol_regime_v2_features.py`: 10 cross-asset regime columns covering broad-vol concordance / fragmentation, equity-vs-gold vol spread, cross-sectional VRP, vol-index basket z-score, and 3-point VIX term-structure curvature; smoke-tested clean (10/10 cols, 87-99% coverage, sensible sample values). Combined alias `vol_regime_v3` = `v2 + cross_asset` (25 cols total) is documented in the module docstring.
 - [x] Closed the multi-market 1h+4h feather gap. Fetched `SPY/IWM/DIA/GLD 1h 1Y RTH` via IBKR (`2 Y` durations hit the IBKR per-call timeout; `1 Y RTH` succeeded cleanly: 1,746 rows each except GLD at 1,742 after 4 jump outliers cleaned). Ran `prepare_external.py` to materialize `1h`+`4h` feather files for all four pairs into `/Users/thrill3r/Auto-Quant/user_data/data/`. The 19-strategy `TomacNQ_Regime*` pack is pair-agnostic and can now be backtested on `SPY/USD`, `IWM/USD`, `DIA/USD`, `GLD/USD` without rewriting any candidate code.
+- [x] Collected first real backtest evidence on `NQ/USD 1h ~3Y` for the existing 13-strategy pack via `run_tomac.py`. None of 13 reach `dense (>= 80)`; only 2 reach `thin (30-79)` — `RegimeTrendPullbackDense` (Sharpe 0.19, profit 8.8%, DD -5.0%, PF 1.58, 57 trades) and `RegimePersistenceClusterDense` (Sharpe 0.11, profit 6.3%, DD -5.4%, PF 1.49, 33 trades). Density not edge is the existing pack's binding constraint; the user's P2 high-Sharpe preference is not satisfiable on this evidence (best annualized Sharpe ~0.6). Full log in `/tmp/ict-engine-ibkr-probe/slice_80_backtest_run.log`.
 
 ### Next
 
