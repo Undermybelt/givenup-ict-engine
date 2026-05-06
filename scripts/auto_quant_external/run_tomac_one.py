@@ -17,7 +17,7 @@ relative to the user's runtime data dir):
 
     cd /Users/thrill3r/Auto-Quant
     uv run python /Users/thrill3r/projects-ict-engine/ict-engine/\\
-        scripts/auto_quant_external/run_tomac_one.py STRATEGY [TIMEFRAME] [EXPORT_PATH] [PAIRS]
+        scripts/auto_quant_external/run_tomac_one.py STRATEGY [TIMEFRAME] [EXPORT_PATH] [PAIRS] [TIMERANGE]
 
 When EXPORT_PATH is provided the run enables `--export trades` and writes the
 per-trade backtest result there for downstream portfolio-diversity scoring.
@@ -25,6 +25,9 @@ per-trade backtest result there for downstream portfolio-diversity scoring.
 When PAIRS (comma-separated, e.g. "SPY/USD,IWM/USD") is provided it overrides
 the config's pair_whitelist for cross-market validation. The synthetic-market
 injection is rebuilt against the new pair list.
+
+When TIMERANGE (freqtrade format "YYYYMMDD-YYYYMMDD") is provided it limits
+the backtest window — used for train/test split validation.
 """
 from __future__ import annotations
 
@@ -47,6 +50,7 @@ def run(
     timeframe: str | None = None,
     export_path: str | None = None,
     pairs: list[str] | None = None,
+    timerange: str | None = None,
 ) -> int:
     args = {
         "config": [str(rt.CONFIG)],
@@ -62,6 +66,8 @@ def run(
         args["timeframe"] = timeframe
     if pairs:
         args["pairs"] = pairs
+    if timerange:
+        args["timerange"] = timerange
     config = Configuration(args, RunMode.BACKTEST).get_config()
     if pairs:
         config["exchange"]["pair_whitelist"] = pairs
@@ -81,7 +87,7 @@ def run(
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print(
-            "Usage: run_tomac_one.py STRATEGY [TIMEFRAME] [EXPORT_PATH] [PAIRS]",
+            "Usage: run_tomac_one.py STRATEGY [TIMEFRAME] [EXPORT_PATH] [PAIRS] [TIMERANGE]",
             file=sys.stderr,
         )
         raise SystemExit(2)
@@ -90,4 +96,5 @@ if __name__ == "__main__":
     export_path = sys.argv[3] if len(sys.argv) > 3 else None
     pairs_arg = sys.argv[4] if len(sys.argv) > 4 else None
     pairs = [p.strip() for p in pairs_arg.split(",") if p.strip()] if pairs_arg else None
-    raise SystemExit(run(strategy, timeframe, export_path, pairs))
+    timerange = sys.argv[5] if len(sys.argv) > 5 else None
+    raise SystemExit(run(strategy, timeframe, export_path, pairs, timerange))

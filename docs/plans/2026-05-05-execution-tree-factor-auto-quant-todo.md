@@ -4726,6 +4726,48 @@ The NQ baseline column is the per-trade Sharpe from the `NQ/USD 15m ~3Y` runs (S
   - **drop the universally-negative DIA from cross-market consideration**: not worth chasing edge there
   - **investigate why GLD works**: the gold-sweep result may reveal what regime feature is actually being captured — useful for designing the next candidate generation
 
+### 2026-05-07 Slice 93: Train/test split — 2023-2025 in-sample Sharpe is regime-favorable, not robust
+
+**Execution**
+- followed Slice 92's next-plan: time-period train/test split on NQ to disentangle the in-sample-period overfit from cross-market specificity.
+- regenerated `NQ_USD-1h.feather` and `NQ_USD-4h.feather` from the long-span `NQ_1min_Continuous_Shifted_2836.csv` 1m corpus so the train period (2018-2022) has 1h/4h informative coverage. Previous 1h feather only spanned 2023-2026 — the regenerated one spans 2011-2025 with 89,250 1h bars and 23,879 4h bars.
+- extended `run_tomac_one.py` with optional `TIMERANGE` 5th argument (freqtrade `YYYYMMDD-YYYYMMDD` format) so any candidate can be backtested on a specified window.
+- ran 4 candidates on train (`20180101-20221231`, 5Y) and compared to the existing test results from Slice 86 (`20230101-20251231`, 3Y; same dataset since the 1m source is shared).
+- saved logs to standard locations.
+
+**Outputs**
+- `scripts/auto_quant_external/run_tomac_one.py` (TIMERANGE override added)
+- `/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-{1h,4h,1d}.feather` (long-span re-prep)
+
+**Result — train (2018-2022, 5Y) vs test (2023-2025, 3Y) per-trade Sharpe**
+
+| Candidate | Train Sharpe | Train trades | Train profit | Train DD | Test Sharpe | Test trades | Test profit | Test DD | Stability ratio |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `LiquiditySweepReclaim15mWide` | **0.027** | 681 | +1.04% | -7.95% | 0.245 | 62 | +8.67% | -1.92% | 9.1× test/train |
+| `TrendPullbackDense15m` | **0.129** | 2,214 | +5.44% | -15.80% | 0.121 | 103 | +3.92% | -3.21% | **0.94× (stable)** |
+| `PersistenceClusterDense15m` | **-0.313** | 1,762 | -11.38% | -20.87% | 0.211 | 146 | +7.22% | -5.02% | sign flip |
+| `VRPCompression15m` | **0.147** | 150 | +3.88% | -2.27% | 0.230 | 97 | +9.13% | -3.52% | 1.6× modest |
+
+**Interpretation**
+- **The 2023-2025 in-sample basket Sharpe of `2.78` was regime-specific overfit.** On the 5-year 2018-2022 train period — which includes the COVID crash, the 2020 recovery, the 2022 bear market, and a wider regime mix — the four top candidates produce dramatically different profiles:
+  - **`PersistenceClusterDense15m` actually LOSES MONEY** on 2018-2022: `Sharpe -0.31`, total return `-11.38%`, max drawdown `-20.87%` over 1,762 trades. Sign-flipped from test period. Confirms the candidate is fragile to regime shifts.
+  - **`LiquiditySweepReclaim15mWide` is essentially breakeven** on train: `Sharpe 0.027` (`9x` lower than test), `+1.04%` over 681 trades, but `-7.95%` drawdown. The high test-period Sharpe was the 2023-2025 regime, not a stable edge.
+  - **`TrendPullbackDense15m` is the only regime-stable candidate**: `Sharpe 0.129` train vs `0.121` test — within `5%` of each other across very different regime windows. This is the genuine edge.
+  - **`VRPCompression15m` is modestly stable**: train `0.147`, test `0.230` — `1.6x` improvement on test but train edge holds positive. The IV-HV compression regime feature does carry some signal across periods.
+- **Trade-count stability is informative too**: TrendPullback fired 2,214 trades on train (5Y) and 103 on test (3Y) — pro-rata `~440/yr` on train and `~34/yr` on test. The strategy fires far less often in the recent regime, suggesting either fewer setups OR data-related differences. Per-trade quality is regime-stable but the absolute number of opportunities is not.
+- **The basket's diversification benefit is also overfit**: with PersistenceCluster sign-flipping and SweepReclaim collapsing, the equal-weight basket on 2018-2022 train would be roughly `(0.027 + 0.129 - 0.313 + 0.147) / 4 = -0.0025` per-trade — essentially zero, possibly negative. The diversification argument that worked in 2023-2025 doesn't hold up when the candidates' edges all change sign / magnitude.
+- **The honest project status:**
+  - the user's `P1` (regime classifier breadth) is met — 11 candidates across 4 axes
+  - the user's `P2` (high Sharpe) is met **only on a regime-favorable test window**; on a longer multi-regime sample the candidates are mostly breakeven to negative
+  - the user's `P3` (options/vol data) is met operationally
+  - the in-sample / regime-specific basket Sharpe of `2.78` should be discounted by `~10-20x` for live-trading expectations. Realistic expected Sharpe on a multi-regime sample: probably `0.1-0.3` per-trade, `0.5-1.0` annualized at best
+- **The most actionable finding**: `TrendPullbackDense15m` is the only candidate that survives both the cross-market and time-period validation tests. It produces regime-stable trade-quality (`Sharpe ~0.12` per-trade across both 2018-2022 and 2023-2025) and works on GLD (`Sharpe 0.64`) and SPY (`Sharpe 0.60`) cross-market with only marginal trades on IWM/DIA. **This is the only candidate to genuinely promote.**
+- **The next slice priorities now sharpen further:**
+  - investigate WHY 2023-2025 was so favorable to the rejected candidates: probably a combination of low VIX, persistent uptrend in NQ, and few sharp drawdowns. The basket exploits regime-favorable conditions but doesn't survive regime change.
+  - consider a regime-conditional allocator: run only the candidates that work in the current regime. But this requires a regime detector, which is what the entire project was supposed to be building from the start.
+  - build a proper **walk-forward validation** instead of single train/test split — fit candidates on rolling 2Y windows and measure forward 6M Sharpe across the corpus. This gives a much honest estimate of expected live performance.
+  - the user's original P1 priority (high-confidence regime classifier) is now the binding constraint: without a working regime classifier, the candidate pack cannot be conditionally deployed and the multi-regime Sharpe is bounded near zero.
+
 ## Current Todo Board
 
 ### Done
@@ -4812,6 +4854,7 @@ The NQ baseline column is the per-trade Sharpe from the `NQ/USD 15m ~3Y` runs (S
 - [x] **Basket now dominates best-standalone on every risk-adjusted metric.** Slice 90 added two new orthogonal-axis candidates: `VVIXDivergence15m` (7 trades, Sharpe 0.11, hypothesis rejected) and `VIXBackwardation15m` (13 trades probe, Sharpe 1.76, WR 76.9%, PF 2.47 — first orthogonal probe-density candidate). 9-candidate equal-weight basket: Sharpe 2.700, Sortino 5.047 (vs best-standalone 4.109, +22.8%), Calmar 10.14, max DD -0.98% (vs -1.89%, drawdown halved). User's P2 / P3 preferences both objectively met.
 - [x] **Full PASS on the diversity scorecard.** Slice 91 added `VIXBackwardationWide15m` (20 trades probe) and `VRPCompression15m` (**97 trades — third dense candidate**, +9.13% total, WR 34%, PF 1.44, on the orthogonal IV-HV percentile-rank axis). 11-candidate basket: equal-weight Sharpe 2.783, inverse-vol Sharpe 2.729 — **both exceed best-standalone 2.684**. The inverse-vol pass is the more meaningful one because it weights by realized risk. User's P1 / P2 / P3 preferences are now jointly satisfied with concrete cross-validated-style evidence (4 distinct source-family axes across 11 candidates, basket Sharpe 2.78, 6 of 11 candidates use IBKR-fetched vol data).
 - [x] **Cross-market validation: in-sample Sharpe is NQ-specific, not universal.** Slice 92 fetched SPY/IWM/DIA/GLD 15m 1Y RTH via IBKR (6,490 bars each), prepped feathers, ran 4 dense / probe candidates × 4 cross-markets. Per-market mean Sharpe: GLD `+0.57` (universally positive across all 4 candidates), SPY `+0.14`, IWM `+0.17`, **DIA `-0.29` (universally negative)**. The basket's 2.78 in-sample Sharpe should be discounted: probably `~1.0-1.5` realistic ceiling using GLD as the better cross-market reference. `LiquiditySweepReclaim15mWide` on GLD (Sharpe 0.78, PF 2.04) and `VRPCompression15m` on IWM (Sharpe 0.90, PF 7.40) are the strongest cross-market positive cells.
+- [x] **Time-period validation: 2018-2022 train period kills 3 of 4 candidates.** Slice 93 regenerated long-span NQ 1h/4h feathers (89k 1h bars 2011-2025), extended `run_tomac_one.py` with TIMERANGE override, ran 4 candidates on `20180101-20221231` (5Y, COVID + 2020-2022 regime mix). Train results: `PersistenceClusterDense15m` Sharpe `-0.31` (sign-flipped, lost 11%), `LiquiditySweepReclaim15mWide` `0.027` (9x lower than test, breakeven over 5Y), `TrendPullbackDense15m` `0.129` (regime-stable — the only candidate with consistent edge), `VRPCompression15m` `0.147` (modestly stable). The 2.78 in-sample basket Sharpe was overfit to the favorable 2023-2025 regime; honest expected live Sharpe is `~0.5-1.0` annualized at best. **Only `TrendPullbackDense15m` survives both cross-market and time-period validation; it is the only candidate to genuinely promote.**
 
 ### Next
 
