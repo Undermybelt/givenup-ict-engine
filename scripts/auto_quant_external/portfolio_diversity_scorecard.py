@@ -42,6 +42,7 @@ CANDIDATES: list[tuple[str, str]] = [
     ("TomacNQ_RegimeSweepLowVIX15m", "mean reversion / sweep + low-VIX gate"),
     ("TomacNQ_RegimeSweepHighVIX15m", "mean reversion / sweep + high-VIX gate"),
     ("TomacNQ_RegimeVIXShockReversal15m", "vol-shock mean reversion"),
+    ("TomacNQ_RegimeVIXShockReversalWide15m", "vol-shock mean reversion (widened)"),
 ]
 MIN_TRADES_FOR_INVERSE_VOL = 10
 
