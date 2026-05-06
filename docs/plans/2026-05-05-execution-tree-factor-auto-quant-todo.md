@@ -3960,6 +3960,47 @@ First independent outcome-label check:
   - implement `vol_regime_cross_asset.py` as a sibling module to `vol_regime_v2_features.py`, or
   - run a benchmark slice against `vol_regime_v2` on actual NQ data (requires user-side wiring or a small standalone runner)
 
+### 2026-05-07 Slice 78: vol_regime_cross_asset_features standalone module
+
+**Execution**
+- authored `scripts/auto_quant_external/vol_regime_cross_asset_features.py` as a sibling module to `vol_regime_v2_features.py`. The two modules are deliberately split so callers can wire them independently:
+  - `vol_regime_v2`: within-asset features (one asset's IV / HV / VIX / VVIX / VIX9D regime)
+  - `vol_regime_cross_asset`: cross-asset features that need multiple assets' IV / HV simultaneously plus the multi-vol-index basket
+- exported `VOL_REGIME_CROSS_ASSET_VECTOR_FEATURES` (10 columns) plus `vol_regime_cross_asset_feature_vectors`, `build_vol_regime_cross_asset_for_candles`. The latter reuses `load_ibkr_probe_series` and `align_paired_to_candles` from the v2 module so the file-pattern registry stays single-sourced.
+- v2 module's `_IBKR_FILE_PATTERNS` extended with `qqq_iv` / `qqq_hv` aliases (same files as `iv` / `hv`) so the cross-asset basket lookup works without surprising the v2 callers.
+- feature catalog (`xa_` prefix):
+  - `xa_hv_pct_rank_concordance`: fraction of `{qqq, spy, iwm, dia}` HV with 252-bar percentile rank `> 0.7` (broad-vol regime detector)
+  - `xa_iv_pct_rank_concordance`: same for IV
+  - `xa_hv_pct_rank_disagreement`: std-dev of the 4-asset HV pct ranks (regime-fragmentation detector)
+  - `xa_iv_pct_rank_disagreement`: same for IV
+  - `xa_equity_vs_gold_hv_spread`: mean equity HV pct rank minus GLD HV pct rank (risk-on / risk-off proxy)
+  - `xa_equity_vs_gold_iv_spread`: same for IV
+  - `xa_basket_iv_minus_hv_spread`: mean(equity IV pct rank) - mean(equity HV pct rank) (cross-sectional VRP)
+  - `xa_vol_index_basket_z`: z-score of mean(VIX, VXN, RVX, OVX, GVZ) against own 252-bar history
+  - `xa_term_curvature_3pt`: `(VIX9D / VIX) - (VIX / VIX3M)`; positive = contango, negative = backwardation
+  - `xa_vix9d_vix3m_ratio`: `VIX9D / VIX3M` extreme term-structure ratio
+- smoke-tested on 1000 synthetic NQ-shaped daily candles against the real `/tmp/ict-engine-ibkr-probe/` corpus: 10/10 columns, all length 1000, post-warmup coverage `87.1%` on 252-bar features and `99.8%` on term-structure ratios; example output values are sensible (`xa_hv_pct_rank_concordance=0.75`, `xa_basket_iv_minus_hv_spread=-0.22` indicating IV-below-HV cross-sectionally, `xa_term_curvature_3pt=+0.12` mild contango).
+- kept `ict-engine` runtime source frozen.
+- did not modify `regime_factor_benchmark.py` or any other in-flight Python harness; module additions only.
+
+**Outputs**
+- `scripts/auto_quant_external/vol_regime_cross_asset_features.py`
+- `scripts/auto_quant_external/vol_regime_v2_features.py` (registry alias addition)
+
+**Result**
+- the regime feature backlog now has three levels of granularity to choose from in the next benchmark probe:
+  - `vol_regime` (v1, currently in `regime_factor_benchmark.py`): the rejected Slice 69 shape, kept as a baseline comparator
+  - `vol_regime_v2`: 15 within-asset columns; replaces v1 with regime-state-friendly shapes
+  - `vol_regime_cross_asset`: 10 cross-asset columns; orthogonal supplement to v2
+  - the natural combined alias is `vol_regime_v3` = `v2` + `cross_asset` columns; documented in the cross-asset module's docstring as a 1-line `FEATURE_SET_ALIASES` patch the user can land at consolidation time
+- combined column budget for `vol_regime_v3` would be `25` columns per candidate row, well below the existing `base+pda` baseline's tree-budget; no runtime concern.
+
+**Interpretation**
+- the data + module layer is now mature enough that the next iteration's binding constraint is benchmark execution, not feature design or data acquisition. The natural next moves are:
+  - run `regime_factor_benchmark.py` against `vol_regime_v3` on `NQ 1d post_transition_direction` (requires user-side wiring or a small standalone runner that I can author without touching the in-flight benchmark)
+  - or extend strategy breadth into multi-market: prepare ES / SPY / IWM / DIA feather files via `prepare_external.py` so the existing `TomacNQ_Regime*` pack can be backtested on additional markets without rewriting candidate code (the candidates are pair-agnostic in their indicator math)
+- the user's "标的物够多" preference is currently bottlenecked by data preparation, not strategy design. A 5-minute slice could fetch SPY 1m 30D + IWM 1m 30D + DIA 1m 30D via IBKR and run `prepare_external.py` to materialize multi-market feather files, opening the strategy lane to multi-asset backtests.
+
 ## Current Todo Board
 
 ### Done
@@ -4031,6 +4072,7 @@ First independent outcome-label check:
 - [x] Acquired five missing IBKR-backed vol-regime slices for `vol_regime_v2`: `VIX9D 1d 10Y` (1,978 rows), `VVIX 1d 10Y` (2,513 rows), `VXN 1d 10Y` (2,513 rows), `SPY HISTORICAL_VOLATILITY 1d 10Y` (2,505 rows), `SPY OPTION_IMPLIED_VOLATILITY 1d 10Y` (2,513 rows); IBKR Gateway 10.37 confirmed healthy on port `4002`; `vol_regime_v2` is no longer paper-only and can now use real VIX-term-structure (VIX9D vs VIX), real VVIX vol-of-vol, and SPY HV/IV cross-validation against the QQQ pair from Slice 69.
 - [x] Implemented `vol_regime_v2` as a standalone module `scripts/auto_quant_external/vol_regime_v2_features.py` exporting `VOL_REGIME_V2_VECTOR_FEATURES` plus `vol_regime_v2_feature_vectors`, `load_ibkr_probe_series`, `align_paired_to_candles`, `build_vol_regime_v2_for_candles`; smoke-tested on 1000 synthetic daily candles against the real probe artifacts (15/15 columns, 87.1% long-window coverage, 99.5-99.8% short-window coverage, categorical encodings populate). Fetched three more IBKR slices to widen the corpus: `VIX3M 1d 10Y` (2,513 rows), `OVX 1d 10Y` (2,513 rows), `NDX 1d 10Y` (2,513 rows).
 - [x] Acquired eight more IBKR slices for cross-asset vol breadth: `IWM HV/IV 1d 10Y` (2,505 / 2,513 rows; small-cap), `DIA HV/IV 1d 10Y` (2,505 / 2,513 rows; Dow), `GLD HV/IV 1d 10Y` (2,505 / 2,513 rows; gold ETF), `RVX 1d 10Y` (2,513 rows; Russell vol index), `GVZ 1d 10Y` (2,513 rows; gold vol index). Updated `vol_regime_v2_features.py` `_IBKR_FILE_PATTERNS` registry to recognize the new keys. Probe corpus now spans ~19 simultaneous time-aligned vol-regime series across QQQ / SPY / IWM / DIA / GLD plus seven vol indices.
+- [x] Authored `scripts/auto_quant_external/vol_regime_cross_asset_features.py` as a sibling to `vol_regime_v2_features.py`: 10 cross-asset regime columns covering broad-vol concordance / fragmentation, equity-vs-gold vol spread, cross-sectional VRP, vol-index basket z-score, and 3-point VIX term-structure curvature; smoke-tested clean (10/10 cols, 87-99% coverage, sensible sample values). Combined alias `vol_regime_v3` = `v2 + cross_asset` (25 cols total) is documented in the module docstring.
 
 ### Next
 

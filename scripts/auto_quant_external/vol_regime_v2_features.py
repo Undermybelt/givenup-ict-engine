@@ -93,6 +93,8 @@ _DEFAULT_IBKR_PROBE_DIR = Path("/tmp/ict-engine-ibkr-probe")
 _IBKR_FILE_PATTERNS: dict[str, tuple[str, str]] = {
     "iv":     ("qqq.iv.1d.10y.csv",   "close"),
     "hv":     ("qqq.hv.1d.10y.csv",   "close"),
+    "qqq_iv": ("qqq.iv.1d.10y.csv",   "close"),
+    "qqq_hv": ("qqq.hv.1d.10y.csv",   "close"),
     "vix":    ("vix.1d.10y.csv",      "close"),
     "vix9d":  ("vix9d.1d.10y.csv",    "close"),
     "vvix":   ("vvix.1d.10y.csv",     "close"),
