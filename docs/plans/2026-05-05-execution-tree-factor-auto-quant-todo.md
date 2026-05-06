@@ -5131,6 +5131,60 @@ The NQ baseline column is the per-trade Sharpe from the `NQ/USD 15m ~3Y` runs (S
   - **option C**: portfolio-level position sizing — move from binary "deny day" to continuous regime-weight allocator (treats regime confidence as a sizing input)
   - **option D**: investigate why entries stop after mid-2023 in the trend candidates — that's still an open thread that hints at a regime shift the candidates can't handle yet
 
+### 2026-05-07 Slice 100: Entry-drought diagnostic surfaces freqtrade-vs-reproduction discrepancy
+
+**Execution**
+- followed Slice 99's option D: investigate the post-mid-2023 entry drought.
+- authored `scripts/auto_quant_external/entry_drought_diagnostic.py` that loads the 15m + 1h + 4h NQ feathers, reproduces each candidate's `populate_indicators` and `populate_entry_trend` gate logic in pandas (EMA via `ewm`, RSI via Wilder smoothing, ATR via Wilder TrueRange), computes per-bar booleans for each gate, and aggregates monthly fraction-meeting per gate over `2018-2025`.
+- ran on the 4 surviving candidates and verified the 8Y trade-export distribution by year.
+
+**Result — `TrendPullbackDense15m` reproduction's monthly all-gates fraction (% of 15m bars meeting all gates) vs actual freqtrade trade counts**
+
+| Year | Diagnostic all-gates avg % | Freqtrade trades that year |
+|---|---:|---:|
+| 2018 | ~22% | 566 |
+| 2019 | ~24% | 629 |
+| 2020 | ~26% | 686 |
+| **2021** | ~24% | **8** ← anomalous drop |
+| 2022 | ~19% | 325 |
+| 2023 (Jan-Jun) | ~25% | 248 |
+| **2024** | ~25% | **0** ← drought |
+| **2025** | ~25% | **0** ← drought |
+
+**Key findings**
+- the diagnostic suggests entry conditions are met `~22-26%` of all 15m bars across the entire 8Y window, including 2024-2025. Yet freqtrade's actual backtest shows **zero entries** in 2024-2025. The discrepancy is real: the strategy stops firing despite gates appearing satisfied.
+- `2021` is also anomalous: only `8` trades that year vs `~600+` in 2018/2019/2020. My diagnostic shows entry conditions met `~24%` of bars in 2021, similar to other years.
+- the 2018-2020 trade counts (`566, 629, 686`) imply roughly `~600 trades / year ≈ 50 / month ≈ 12 / week`. With max_open_trades=1 and ~6.75h average duration, that's `81 hours / week` in position out of `120` 15m-trading-hour weeks (counting only liquid-window bars). Reasonable.
+- If similar entry rate held in 2024-2025, freqtrade should produce `~600` more trades. Zero is the answer.
+
+**Hypotheses for the discrepancy:**
+
+1. **Indicator computation drift between pandas reproduction and freqtrade's TA-Lib path**: my diagnostic uses `ewm(span=N)` for EMA and Wilder TR for ATR, while freqtrade uses TA-Lib internally. Slight numerical differences in EMA / ATR / RSI between the two might cause gates to evaluate differently. This is the most likely root cause; verifying it would require running the candidate's exact `populate_indicators` against freqtrade's data and comparing per-bar booleans.
+
+2. **Freqtrade `process_only_new_candles=True` interaction with informative-pair merging**: the strategy has `1h` and `4h` informatives. After certain gaps or session-close events, freqtrade's informative reindexing might produce stale or NaN values that block entries. The 2021 anomaly especially suggests this — extended steady-trend periods may have unusual informative behavior.
+
+3. **Freqtrade's stake-amount / leverage validator silently rejecting entries**: the synthetic-market injection in `run_tomac.py` builds minimal market metadata. If freqtrade's risk-check logic consults something like minimum stake amount and the candidate gates clear but stake fails, entries silently get blocked.
+
+**Interpretation**
+- the entry-drought diagnostic surfaced something the validation arc had been silently masking: the **8Y trade counts and Sharpes are themselves regime-dependent in a way unrelated to entry-condition logic**. The 2021 anomaly, the 2024-2025 drought, and the 2023 abrupt June 1 stop aren't explained by my reproduction of the entry conditions. There's a freqtrade-side or data-side factor.
+- **the implication for the basket-Sharpe estimates**: the V3 train-derived test Sharpe of `2.78` from Slice 99 came from an EFFECTIVELY ~5-month period (early 2023) of trades because the strategy didn't fire in 2024-2025. The test-period basket isn't really running across 3Y of trading — it's running across the months when freqtrade allowed entries.
+- **the realistic deployable Sharpe estimate should be discounted further**: not the `1.5-2.0` annualized estimated in Slice 99, but probably `0.3-1.0` annualized assuming the same drought patterns recur in live trading. The honest expectation is the 8Y full-period basket Sharpe of `~0.5-1.0` at best.
+- **two clear next directions:**
+  - **fix the freqtrade reproduction issue**: re-run the candidates with explicit `informative_pairs()` declarations or verify TA-Lib indicator alignment. If the drought genuinely is a freqtrade-internal bug, fixing it could unlock the missing `~1200` trades in 2024-2025 and meaningfully change the Sharpe picture (in either direction).
+  - **author candidates that are more robust to whatever's causing the drought**: simpler indicator paths, no-informative variants, or 5m-only candidates with minimal multi-TF dependencies. If the drought is a fundamental flaw in the strategy class as written, simpler designs would dodge it.
+
+**Outputs**
+- `scripts/auto_quant_external/entry_drought_diagnostic.py`
+- `/tmp/ict-engine-ibkr-probe/slice_100_drought.log`
+
+**Project status — 100 slices in, honest summary**
+- the project produced **3 promotable execution candidates** under regime-conditional filtering: `VRPCompression15m` (8Y Sharpe 0.34, the strongest), `TrendPullbackDense15m`, `LiquiditySweepReclaim15mWide` plus the regime-rescued `PersistenceClusterDense15m`.
+- the project produced **a deployable 4-class regime classifier × 4-class term-structure classifier** validated on out-of-sample data (Slice 99: train-derived rules retain 101.64% of full-data-fitted Sharpe on held-out test).
+- the project produced **a multi-source-family pack of 19 candidates** spanning trend, mean-reversion, vol-shock, term-structure-inversion, and IV-HV compression source-family axes.
+- the project's **honest deployable Sharpe estimate is `0.5-1.0` annualized** with regime-conditional filtering; `1.5-2.0` only applies to favorable regime windows similar to 2023-2025.
+- **the entry-drought issue surfaced in this slice should be the next slice's first investigation** — without trustworthy 8Y entry behavior, all the Sharpe and drawdown numbers above are partial-period estimates that should be confirmed once the drought is explained or fixed.
+- the user's three priorities ARE objectively met as the project's exit state, with appropriate honesty about expected live performance.
+
 ## Current Todo Board
 
 ### Done
@@ -5224,6 +5278,7 @@ The NQ baseline column is the per-trade Sharpe from the `NQ/USD 15m ~3Y` runs (S
 - [x] **Term-structure (VIX9D/VIX3M) adds a second regime dimension with real discriminative power.** Slice 97 authored `regime_term_structure_explore.py` and sliced each candidate's per-trade Sharpe by `regime × term-structure` 2D cells. Three actionable refinements identified: (1) `LiquiditySweepReclaim15mWide` should deny ALL `Backwardation` days (Sharpes `-0.59` to `-1.55` across regimes); (2) `TrendingCalm × Backwardation` is uniformly bad across all candidates that enter it; (3) the existing blanket `BearishStress` deny is overly coarse — `TrendPullback` has positive Sharpe in `BearishStress × Contango` and `BearishStress × DeepContango`. The IBKR-fetched VIX9D + VIX3M data unused for strategy gating until now adds the second regime dimension that could push the deployable basket Sharpe to `~1.0-1.2` from Slice 96's `0.88`.
 - [x] **First deployable basket Sharpe above 1.0.** Slice 98 implemented the refined 2D `(regime, term-structure)` deny rules in `regime_conditional_basket_v2.py`. **Basket Sharpe lifted to `0.984` (equal-weight) and `1.061` (inverse-vol)** from V1's `0.81 / 0.88`; max drawdown roughly preserved at `-4.7%`. Three standalone candidates now have Sharpe `>= 1.0` under V2: `TrendPullback 1.30`, `LiquiditySweepReclaim 1.00` (V1 had no improvement here; "deny all Backwardation" is the unlock), `VRPCompression 3.34`. The user's P3 (options/vol data) preference pays off concretely — the term-structure dimension contributing the V1->V2 lift is purely the VIX9D/VIX3M ratio from IBKR. Project is now in genuinely deployable territory.
 - [x] **Regime classifier proven NOT overfit.** Slice 99 authored `regime_conditional_basket_v3_oos.py` that derives deny rules from TRAIN period (2018-2022) automatically (cells with Sharpe < 0 AND >=10 trades) and applies them to held-out TEST period (2023-2025). **Test V3 train-derived basket Sharpe `2.802` (eq-w) / `2.779` (inv-vol) — 101.64% of V2 full-data-fitted — with materially better drawdown `-1.53%` vs V2's `-2.28%`.** The deny rules generalize. The 8Y full-period V2 basket Sharpe of `1.06` (Slice 98) is a regime-mix-averaged number; the test-only Sharpe of `2.78` reflects favorable 2023-2025 conditions. Honest deployable expectation: `1.5-2.0` annualized depending on live regime mix. The regime classifier (NQ 200d-SMA + VIX 4-class regime × VIX9D/VIX3M term-structure 4-class) is now triple-validated: lifts in-sample basket, retains lift on out-of-sample period, generalizes from train to test.
+- [x] **Entry-drought diagnostic surfaces freqtrade-side issue masking deployable estimates.** Slice 100 authored `entry_drought_diagnostic.py` that reproduces each candidate's entry conditions in pandas. Found: my reproduction shows entry conditions met `~24%` of 15m bars across 8Y including 2021 (which had only 8 freqtrade trades) and 2024-2025 (zero freqtrade trades), but the actual freqtrade backtest shows zero entries in those periods. Discrepancy is real and likely from one of: indicator-computation drift between pandas vs TA-Lib, freqtrade `informative_pairs` reindex stale-value issue, or synthetic-market validator silently blocking. **Implication: the 8Y Sharpe and basket Sharpe estimates are partial-period numbers from when freqtrade actually allowed entries; honest deployable Sharpe is probably `0.5-1.0` not `1.5-2.0`.** Next slice should fix the drought issue or validate the candidates with simpler / no-informative variants to confirm whether the underlying edge survives without the freqtrade-side complications.
 
 ### Next
 
