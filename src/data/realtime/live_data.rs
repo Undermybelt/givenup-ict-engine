@@ -6,9 +6,7 @@ use crate::types::Candle;
 use super::{
     crypto_public_runtime::CryptoPublicRuntimeProvider,
     external_http_runtime::ExternalHttpRuntimeProvider,
-    market_support::{
-        AuxiliaryMarketEvidence, OptionsChainSummary, SpotInstrumentKind,
-    },
+    market_support::{AuxiliaryMarketEvidence, OptionsChainSummary, SpotInstrumentKind},
     provider::RealtimeDataProvider,
     yfinance_runtime::YahooFinanceProvider,
 };
@@ -23,9 +21,9 @@ pub enum LiveDataBackend {
 impl LiveDataBackend {
     pub fn parse(input: &str) -> Result<Self> {
         match input.trim().to_ascii_lowercase().as_str() {
-            "external_http" | "external_http_runtime" | "openalice" => Ok(Self::ExternalHttp),
-            "yfinance" | "openbb" => Ok(Self::Yfinance),
-            "crypto_public" | "crypto_public_runtime" | "nofx" => Ok(Self::CryptoPublic),
+            "external_http" | "external_http_runtime" => Ok(Self::ExternalHttp),
+            "yfinance" => Ok(Self::Yfinance),
+            "crypto_public" | "crypto_public_runtime" => Ok(Self::CryptoPublic),
             other => bail!("unsupported live data backend '{}'", other),
         }
     }

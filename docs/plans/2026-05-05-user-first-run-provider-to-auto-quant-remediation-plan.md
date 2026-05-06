@@ -226,8 +226,7 @@ Reason:
   - public `analyze-live --help` no longer defaults to `openbb`; it now defaults to `yfinance`
   - provider/workflow public summaries now stop treating `openbb/openalice/nofx` as the preferred visible names
   - compatibility note:
-    - parser aliases for `openbb/openalice/nofx` still exist inside code for transition safety
-    - physical source filenames still remain as a temporary implementation detail
+    - superseded by the 2026-05-06 follow-up below
   - fresh verification evidence:
     - `cargo check`
     - `cargo test provider_catalog --lib -- --nocapture`
@@ -236,6 +235,18 @@ Reason:
     - `cargo run --quiet -- analyze-live --help`
     - `cargo run --quiet -- provider-status --compact`
     - `cargo run --quiet -- provider-status --provider yfinance --compact`
+- [x] Cleared remaining live-runtime legacy aliases and physical filename shells.
+  - removed legacy backend parser aliases from:
+    - `src/data/realtime/live_data.rs`
+    - `src/application/data_sources/live_defaults.rs`
+  - renamed physical runtime source files to match current capability names:
+    - `src/data/realtime/yfinance_runtime.rs`
+    - `src/data/realtime/external_http_runtime.rs`
+    - `src/data/realtime/crypto_public_runtime.rs`
+  - removed `#[path = "..."]` shims from `src/data/realtime/mod.rs`
+  - source-surface grep evidence:
+    - `rg -n "openbb|openalice|nofx|OpenAlice|OpenBB|Nofx" src tests examples`
+    - result: no hits
 
 ### Completion Audit 2026-05-06
 
@@ -257,16 +268,16 @@ Reason:
   - `openbb`, `openalice`, `nofx`
   - they are reference-only historical baselines, not the current target provider set for this repo
 - Deletion feasibility audit:
-  - `openbb`, `openalice`, and `nofx` are **not** safe for one-shot deletion yet
-  - hard blockers found in the current source tree:
-    - `analyze-live` CLI still defaults to `openbb` and still parses `openalice` / `nofx` as backend ids
-    - `provider-status` / `workflow-status` still expose them as `live_runtime` choices
-    - `provider_fetch` still uses `OpenBBProvider` as the current implementation for `yfinance` candle/options fetch
-    - shared DTOs such as `AuxiliaryMarketEvidence`, `OptionsChainSummary`, `SpotInstrumentKind`, and `Quote` still live under `openalice` and are imported across analysis/runtime code
-  - therefore the correct removal order is:
-    - first rename/extract provider-neutral modules and types
-    - then remove branded backend names from CLI/catalog/workflow surfaces
-    - only then delete the old implementation shells
+  - the earlier one-shot deletion blocker has been reduced to historical-doc residue, not runtime source residue
+  - current runtime source uses:
+    - `YahooFinanceProvider`
+    - `ExternalHttpRuntimeProvider`
+    - `CryptoPublicRuntimeProvider`
+  - current runtime parser inputs are:
+    - `yfinance`
+    - `external_http` / `external_http_runtime`
+    - `crypto_public` / `crypto_public_runtime`
+  - old upstream project names remain only in historical docs/plans/audits that explain prior baselines and corrections
 
 ### Next
 
@@ -275,22 +286,22 @@ Reason:
     - built-in model registry stops appearing as a `provider-status` domain
   - minimum acceptable fallback:
     - if temporary compatibility requires it to remain exposed, label it as internal registry residue instead of provider truth
-- [ ] Remove the remaining compatibility residue for `openbb/openalice/nofx` after downstream surfaces stabilize.
+- [x] Remove the remaining compatibility residue for `openbb/openalice/nofx` after downstream surfaces stabilize.
   - remove parser aliases once no first-party surface emits them
   - rename physical source filenames so internal grep no longer suggests the upstream project names
-- [ ] Replace `openbb` / `openalice` / `nofx` branding with provider-neutral naming before any deletion attempt.
+- [x] Replace `openbb` / `openalice` / `nofx` branding with provider-neutral naming before any deletion attempt.
   - target outcome:
     - consumer/user-facing surfaces expose capability/provider names such as `yfinance`, `ibkr`, `tradingview_mcp`, crypto public providers, and prediction-market providers
     - internal adapter/module names no longer leak upstream project branding
-- [ ] Extract provider-neutral shared market-evidence types out of `openalice`.
+- [x] Extract provider-neutral shared market-evidence types out of `openalice`.
   - minimum extraction set:
     - `AuxiliaryMarketEvidence`
     - `OptionsChainSummary`
     - `SpotInstrumentKind`
     - `Quote`
-- [ ] Replace the current `OpenBBProvider`-backed `yfinance` implementation with a provider-neutral `yfinance` adapter boundary.
+- [x] Replace the current `OpenBBProvider`-backed `yfinance` implementation with a provider-neutral `yfinance` adapter boundary.
   - only after that is in place should `openbb` stop existing as a visible backend name
-- [ ] Remove or explicitly demote reference-only baseline providers from the current provider closure language and future audit scope.
+- [x] Remove or explicitly demote reference-only baseline providers from the current provider closure language and future audit scope.
   - `openbb`
   - `openalice`
   - `nofx`
@@ -434,16 +445,6 @@ This board is not done until all of the following are true:
 - Target-provider scope drift
   - current user correction: `openbb`, `openalice`, and `nofx` were earlier reference/baseline backends, not the intended provider set for this repo's current Auto-Quant closure
   - acceptable temporary state: keep historical mentions as implementation residue only, but do not count them in provider closure claims or future audit success/failure summaries
-- Direct deletion of `openbb` / `openalice` / `nofx`
-  - current repo evidence:
-    - `src/main.rs` still defaults `analyze-live` to `openbb`
-    - `src/data/realtime/live_data.rs` still parses all three backend ids
-    - `src/application/provider_catalog.rs` and `src/application/orchestration/workflow_status.rs` still publish them as live-runtime choices
-    - `src/application/data_sources/provider_fetch.rs` still routes `yfinance` through `OpenBBProvider`
-    - shared DTOs used by analysis/runtime code still live in `src/data/realtime/openalice.rs`
-  - acceptable temporary state:
-    - do not delete them yet
-    - first rename/extract to provider-neutral adapters and DTO modules, then remove the branded shells
 - `yfinance` options-capability parity
   - failing command:
     - `./target/debug/ict-engine market-data-harness --action fetch --market NQ --interval 1d --role options_underlying --provider options_underlying=yfinance --symbol-spec options_underlying=QQQ`

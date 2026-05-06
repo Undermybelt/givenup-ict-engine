@@ -17,13 +17,9 @@ pub fn resolve_live_backend_base_url(
     crypto_public_base_url: &str,
 ) -> String {
     match backend.trim().to_ascii_lowercase().as_str() {
-        "yfinance" | "openbb" => "native://yfinance".to_string(),
-        "external_http" | "external_http_runtime" | "openalice" => {
-            external_http_base_url.to_string()
-        }
-        "crypto_public" | "crypto_public_runtime" | "nofx" => {
-            crypto_public_base_url.to_string()
-        }
+        "yfinance" => "native://yfinance".to_string(),
+        "external_http" | "external_http_runtime" => external_http_base_url.to_string(),
+        "crypto_public" | "crypto_public_runtime" => crypto_public_base_url.to_string(),
         _ => "native://yfinance".to_string(),
     }
 }
@@ -118,11 +114,15 @@ mod tests {
     fn parse_live_backend_accepts_supported_values() {
         assert_eq!(parse_live_backend("yfinance").unwrap().as_str(), "yfinance");
         assert_eq!(
-            parse_live_backend("external_http_runtime").unwrap().as_str(),
+            parse_live_backend("external_http_runtime")
+                .unwrap()
+                .as_str(),
             "external_http_runtime"
         );
         assert_eq!(
-            parse_live_backend("crypto_public_runtime").unwrap().as_str(),
+            parse_live_backend("crypto_public_runtime")
+                .unwrap()
+                .as_str(),
             "crypto_public_runtime"
         );
     }

@@ -8,8 +8,8 @@ use crate::types::{Candle, Timeframe};
 
 use super::{
     market_support::{
-        apply_auxiliary_evidence_to_outcome, build_auxiliary_evidence,
-        AuxiliaryMarketEvidence, OptionsChainSummary, Quote, SpotInstrumentKind,
+        apply_auxiliary_evidence_to_outcome, build_auxiliary_evidence, AuxiliaryMarketEvidence,
+        OptionsChainSummary, Quote, SpotInstrumentKind,
     },
     provider::RealtimeDataProvider,
 };
@@ -247,8 +247,12 @@ impl ExternalHttpRuntimeProvider {
             );
         }
 
-        serde_json::from_str(&body)
-            .with_context(|| format!("failed to parse external runtime JSON for '{}': {}", path, body))
+        serde_json::from_str(&body).with_context(|| {
+            format!(
+                "failed to parse external runtime JSON for '{}': {}",
+                path, body
+            )
+        })
     }
 }
 

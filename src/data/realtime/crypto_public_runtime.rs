@@ -8,8 +8,8 @@ use crate::types::{Candle, Timeframe};
 
 use super::{
     market_support::{
-        apply_auxiliary_evidence_to_outcome, build_auxiliary_evidence,
-        AuxiliaryMarketEvidence, OptionsChainSummary, Quote, SpotInstrumentKind,
+        apply_auxiliary_evidence_to_outcome, build_auxiliary_evidence, AuxiliaryMarketEvidence,
+        OptionsChainSummary, Quote, SpotInstrumentKind,
     },
     provider::RealtimeDataProvider,
 };
@@ -40,7 +40,9 @@ impl CryptoPublicRuntimeProvider {
         _end: DateTime<Utc>,
     ) -> Result<Vec<Candle>> {
         match parse_crypto_public_source(symbol) {
-            CryptoPublicSource::Hyperliquid { coin } => self.fetch_hyperliquid_candles(&coin, interval),
+            CryptoPublicSource::Hyperliquid { coin } => {
+                self.fetch_hyperliquid_candles(&coin, interval)
+            }
             CryptoPublicSource::Coinank { exchange, symbol } => {
                 self.fetch_coinank_candles(&symbol, &exchange, interval)
             }

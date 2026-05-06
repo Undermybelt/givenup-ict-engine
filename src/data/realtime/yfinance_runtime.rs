@@ -12,8 +12,8 @@ use crate::types::{Candle, Timeframe};
 use super::{
     browser_bridge,
     market_support::{
-        apply_auxiliary_evidence_to_outcome, build_auxiliary_evidence,
-        AuxiliaryMarketEvidence, OptionsChainSummary, Quote, SpotInstrumentKind,
+        apply_auxiliary_evidence_to_outcome, build_auxiliary_evidence, AuxiliaryMarketEvidence,
+        OptionsChainSummary, Quote, SpotInstrumentKind,
     },
     provider::RealtimeDataProvider,
 };
