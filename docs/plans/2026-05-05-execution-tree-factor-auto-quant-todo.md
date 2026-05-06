@@ -4217,6 +4217,49 @@ First independent outcome-label check:
 - `FVGRetrace5m` runs but is too over-specified at 5m: 3-TF informative resonance plus FVG geometry plus 4 additional gates is multiplicatively selective. The same tightening that made the candidate "selective enough to not catch noise" at 5m also kept it from firing at all. This is exactly the "over-specified entry stack" failure mode confirmed across Slice 80-82 evidence; the FVG retrace shape needs structural widening (drop one resonance TF or relax body / not-extended), same as `LiquiditySweepReclaim -> LiquiditySweepReclaimHyper` in Slice 82.
 - the user's `P2 (high Sharpe)` preference is now within reach via the same lever: port the rest of the high-payoff-quality candidates to 15m / 5m base (`LiquiditySweepReclaim`, `KillzoneIVProxy`, `RegimePersistenceClusterDense`) and they should naturally cross the dense floor; once 3-4 candidates are dense, the post-regime portfolio-diversity scorecard becomes runnable.
 
+### 2026-05-07 Slice 84: 15m ports of LiquiditySweepReclaim and KillzoneIVProxy
+
+**Execution**
+- continued the 15m TF-pivot density push from Slice 83 by porting the two highest-payoff-quality 1h candidates: `LiquiditySweepReclaim` (PF `7.53` on 4 trades) and `KillzoneIVProxy` (PF `3.45` on 2 trades).
+- both 15m ports keep the parent's condition geometry, with `1h` and `4h` informative resonance via `OR` (any one of the two higher TF trends agreeing is sufficient, matching the Slice 83 `TrendPullbackDense15m` resonance pattern that already produced `103` trades).
+- `LiquiditySweepReclaim15m`:
+  - sweep window translated `12h-low (1h)` -> `12-bar-low (3h on 15m)`, deliberately shifted to intraday-sweep semantics
+  - kept `body_strength > 0.4` and `not_already_extended (close < ema21 * 1.008)` from the 1h parent
+  - tightened stoploss `-0.022 -> -0.018` and trailing offsets to match the 15m volatility scale
+- `KillzoneIVProxy15m`:
+  - breakout window `24h (1h base)` -> `96-bar (24h equivalent on 15m)`
+  - kept the `ATR(5)/ATR(60)` term-structure proxy band `[0.55, 0.95]` and the `atr_pct_z240 < 1.2` non-vol-spike gate
+  - kept the AM-killzone `13-15 UTC` window
+- ran both via `run_tomac_one.py --timeframe 15m`.
+- saved logs to `/tmp/ict-engine-ibkr-probe/slice_84_sweep15m_run.log` and `/tmp/ict-engine-ibkr-probe/slice_84_killzone15m_run.log`.
+- kept `ict-engine` runtime source frozen.
+
+**Outputs**
+- `scripts/auto_quant_external/strategies/TomacNQ_RegimeLiquiditySweepReclaim15m.py`
+- `scripts/auto_quant_external/strategies/TomacNQ_RegimeKillzoneIVProxy15m.py`
+- `/Users/thrill3r/Auto-Quant/user_data/strategies_external/TomacNQ_RegimeLiquiditySweepReclaim15m.py`
+- `/Users/thrill3r/Auto-Quant/user_data/strategies_external/TomacNQ_RegimeKillzoneIVProxy15m.py`
+
+**Result — 1h parent vs 15m port**
+
+| Candidate | TF | trade_count | density | Sharpe | Sortino | Calmar | total_profit_pct | max_dd_pct | win_rate_pct | profit_factor |
+|---|---|---:|---|---:|---:|---:|---:|---:|---:|---:|
+| `LiquiditySweepReclaim` | 1h | 4 | anecdotal | 0.0688 | -100 | 11.53 | 2.70 | -0.41 | 75.00 | 7.53 |
+| `LiquiditySweepReclaim15m` | 15m | 13 | probe_only | 0.0458 | 0.1201 | 2.98 | 1.74 | -1.02 | 53.85 | **1.57** |
+| `KillzoneIVProxy` | 1h | 2 | anecdotal | 0.0195 | -100 | 4.36 | 0.43 | -0.17 | 50.00 | 3.45 |
+| `KillzoneIVProxy15m` | 15m | 1 | anecdotal | -100 | -100 | -1.74 | -1.49 | -1.49 | 0.00 | 0.00 |
+
+**Interpretation**
+- the 15m TF pivot is **not always sufficient** by itself. `LiquiditySweepReclaim15m` did rise from 4 -> 13 trades (3.25x, in the expected `~4x` range) and kept a useful PF of `1.57`, but stopped short of the `dense (>= 80)` floor. The 12-bar (3h) intraday-sweep window is selective enough that a 4x density gain leaves it at `probe_only`; further densification needs structural widening on top of the TF pivot, e.g. drop the `not_already_extended` gate or relax the `body_strength` threshold.
+- `KillzoneIVProxy15m` actually went the wrong direction: 2 trades -> 1 trade. The cause is the multiplicative selectivity of `(13-15 UTC) AND (close > prior 96-bar high) AND (term_ratio in [0.55, 0.95]) AND (atr_pct_z240 < 1.2) AND (close > ema89) AND (4h or 1h trend up)` — six gates compounding. On 1h base each gate is evaluated 24x/day; on 15m base each is evaluated 96x/day, but the joint probability of all six firing in the same 13-15 UTC window is still rare. The TF pivot does not help when the ENTRY window is narrow.
+- contrast with `TrendPullbackDense15m` (Slice 83, 103 trades): its entry stack uses an `OR`-combined trend gate (`higher_trend_4h | higher_trend_1h | local_trend`) and a wide `8-23 UTC` window. That's why it crossed dense on the same TF pivot lever. **The lesson for the rest of the pack: TF pivot scales density by `~4x`; structural widening of `AND`-stacked gates is still required for narrow-window candidates.**
+- updated dense / thin / probe distribution after Slice 84 (NQ/USD only, latest TF per candidate):
+  - `dense (>= 80)`: 1 — `TrendPullbackDense15m` (103)
+  - `thin (30-79)`: 2 — `RegimePersistenceClusterDense` (33), `TrendPullbackDense` (57, 1h, will retire after a 15m port)
+  - `probe_only (10-29)`: 5 — `LiquiditySweepReclaim15m` (13, new), `LiquiditySweepReclaimHyper` (10), `RegimeCompressionRelease` (13), `RegimeCompressionReleaseDense` (12), `RegimePersistenceClusterWide` (18), `RegimeTrendPullbackWide` (22) — count 6, kept as a sample
+  - the 15m base now hosts 3 candidates: 1 dense, 1 probe, 1 anecdotal
+- the user's `P2 (high Sharpe)` preference now has one promotable execution candidate (`TrendPullbackDense15m`) and a meaningful runner-up (`LiquiditySweepReclaim15m`, PF 1.57 at probe density). Both are in the same trend / sweep family. To get a second orthogonal-source dense candidate, the next slice should port `RegimePersistenceClusterDense` to 15m (1h baseline 33 trades; expected `~130` at 15m, naturally dense) and structurally widen `KillzoneIVProxy15m` or `LiquiditySweepReclaim15m` further.
+
 ## Current Todo Board
 
 ### Done
@@ -4294,6 +4337,7 @@ First independent outcome-label check:
 - [x] Synced Slice 72-74 candidates into `/Users/thrill3r/Auto-Quant/user_data/strategies_external/` and re-ran all 19 via `run_tomac.py` on `NQ/USD 1h ~3Y`. The 5 testable orthogonal candidates (FVGRetrace5m fails with no 15m feather) confirm the same density problem: `LiquiditySweepReclaim` 4 trades / PF 7.53 / +2.70%, `KillzoneIVProxy` 2 trades / PF 3.45, `FVGRetrace` 1 trade, `VRPCarry` and `CrowdingExhaustion` 0 trades. The best payoff-quality candidate (`LiquiditySweepReclaim`) is exactly the "narrow high-win-rate factor that does not produce enough trades" pattern the Trade-Density Rule warns against; structural widening or a lower-timeframe pivot is the unblock. Full log in `/tmp/ict-engine-ibkr-probe/slice_81_backtest_run.log`.
 - [x] Unlocked `NQ/USD` 5m / 15m timeframes by running `prepare_external.py` on the local `NQ_1min_Continuous_Shifted_2836.csv` 1m corpus: `NQ_USD-5m.feather` (1,053,341 bars) and `NQ_USD-15m.feather` (351,288 bars), both `~15Y` span. Authored `TomacNQ_RegimeLiquiditySweepReclaimHyper` as the first structural-widening probe: trade count rose 4 -> 10 (2.5x density), profit factor compressed from 7.53 to 2.54 but stayed strongly positive, Sortino went from invalid `-100` to a real `0.4223`. `FVGRetrace5m` still blocked by a freqtrade base-timeframe-vs-class-attribute config quirk; needs a per-strategy config or wrapper next slice.
 - [x] First candidate clears the `dense (>= 80)` trade-count floor. Authored `run_tomac_one.py` wrapper that accepts an optional timeframe argument so freqtrade applies it before the strategy class is loaded; this unblocks `FVGRetrace5m` (now runs but over-specified at 5m, only 3 trades) and lets the new `TrendPullbackDense15m` port hit `103 trades` / Sharpe `0.12` / Calmar `2.13` / PF `1.21` on `NQ/USD 15m ~3Y`. Density-quality tradeoff is real but bounded; the 15m candidate is the only currently-promotable execution candidate in the pack.
+- [x] Ported `LiquiditySweepReclaim` and `KillzoneIVProxy` to 15m base; results show TF pivot scales `~4x` for `OR`-combined gates (TrendPullback) but does not help narrow `AND`-window gates (Killzone). `LiquiditySweepReclaim15m`: 4 -> 13 trades (probe_only, PF 1.57). `KillzoneIVProxy15m`: 2 -> 1 trade (regression). Lesson: TF pivot needs to be paired with structural widening for narrow-window candidates.
 
 ### Next
 
