@@ -45,6 +45,8 @@ CANDIDATES: list[tuple[str, str]] = [
     ("TomacNQ_RegimeVIXShockReversalWide15m", "vol-shock mean reversion (widened)"),
     ("TomacNQ_RegimeVVIXDivergence15m", "vol-of-vol divergence"),
     ("TomacNQ_RegimeVIXBackwardation15m", "vix term-structure inversion"),
+    ("TomacNQ_RegimeVIXBackwardationWide15m", "vix term-structure inversion (widened)"),
+    ("TomacNQ_RegimeVRPCompression15m", "iv-hv compression regime"),
 ]
 MIN_TRADES_FOR_INVERSE_VOL = 10
 
