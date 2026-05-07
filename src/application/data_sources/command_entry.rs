@@ -1,6 +1,6 @@
 use anyhow::Result;
 use serde::Serialize;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::io::Read;
 
 use crate::application::data_sources::{
@@ -158,6 +158,12 @@ pub fn market_data_harness_fetch_command(input: MarketDataHarnessCommandInput<'_
 fn collect_harness_failures(
     bundle: &crate::application::data_sources::MarketDataHarnessBundle,
 ) -> Vec<String> {
+    let failed_providers = bundle
+        .results
+        .iter()
+        .filter(|result| !result.ok)
+        .map(|result| result.provider.clone())
+        .collect::<BTreeSet<_>>();
     let mut failures = bundle
         .plan
         .missing_roles
@@ -185,11 +191,28 @@ fn collect_harness_failures(
             }),
     );
     if !failures.is_empty() {
-        failures.extend(
+        let relevant_prompts = if failed_providers.is_empty() {
             bundle
                 .plan
                 .provider_summary
                 .actionable_install_prompts
+                .iter()
+                .cloned()
+                .collect::<Vec<_>>()
+        } else {
+            bundle
+                .plan
+                .provider_summary
+                .provider_statuses
+                .iter()
+                .filter(|status| failed_providers.contains(&status.provider))
+                .flat_map(|status| status.install_prompts.iter().cloned())
+                .collect::<BTreeSet<_>>()
+                .into_iter()
+                .collect::<Vec<_>>()
+        };
+        failures.extend(
+            relevant_prompts
                 .iter()
                 .map(|item| format!("install_prompt={item}")),
         );

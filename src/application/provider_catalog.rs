@@ -9,6 +9,7 @@ use crate::application::data_sources::{
     build_provider_summary_for_requirements, ControlMatrixDataRequirement,
     IBKR_CAPABILITIES_RELATIVE_PATH, IBKR_CONSENT_RELATIVE_PATH,
 };
+use crate::application::data_sources::control_matrix_providers::ibkr_runtime_probe_details;
 use crate::application::entry_models::{entry_model_providers, ConsumerDefaultMode};
 use crate::config::shell_quote;
 
@@ -160,6 +161,7 @@ pub struct WorkflowProviderSupportSurface {
     pub pending_providers: Vec<String>,
     pub pending_provider_details: Vec<ProviderCatalogPendingAgentItem>,
     pub install_prompts: Vec<String>,
+    pub ask_user_prompts: Vec<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub selected_profile: Option<ProviderProfileAgentSelectionSurface>,
     #[serde(skip)]
@@ -770,7 +772,17 @@ fn probe_ibkr_bridge() -> LocalRuntimeProbe {
         .as_ref()
         .map(|root| root.join(IBKR_CAPABILITIES_RELATIVE_PATH).exists())
         .unwrap_or(false);
-    let runtime_ready = ibkr_bridge_runtime_ready();
+    let runtime_probe = ibkr_runtime_probe_details();
+    let reachable_candidates = runtime_probe
+        .gateway_candidates
+        .iter()
+        .filter(|candidate| candidate.reachable)
+        .collect::<Vec<_>>();
+    let preferred_gateway_port = runtime_probe
+        .gateway_candidates
+        .iter()
+        .find(|candidate| candidate.recommended)
+        .map(|candidate| candidate.port);
     let (ready, status, reason) = if !script_present || !python3_exists() {
         (
             false,
@@ -783,11 +795,23 @@ fn probe_ibkr_bridge() -> LocalRuntimeProbe {
             "installed_unconfigured".to_string(),
             "ibkr_bridge_installed_but_consent_missing".to_string(),
         )
-    } else if !runtime_ready {
+    } else if !runtime_probe.ready && !runtime_probe.missing_modules.is_empty() && !reachable_candidates.is_empty() {
+        (
+            false,
+            "configured_runtime_unhealthy".to_string(),
+            "ibkr_bridge_runtime_dependencies_missing_with_gateway_reachable".to_string(),
+        )
+    } else if !runtime_probe.ready {
         (
             false,
             "configured_runtime_unhealthy".to_string(),
             "ibkr_bridge_config_present_but_runtime_probe_failed".to_string(),
+        )
+    } else if reachable_candidates.is_empty() {
+        (
+            false,
+            "configured_runtime_unhealthy".to_string(),
+            "ibkr_bridge_gateway_unreachable".to_string(),
         )
     } else {
         (
@@ -796,6 +820,37 @@ fn probe_ibkr_bridge() -> LocalRuntimeProbe {
             "local_ibkr_bridge_ready".to_string(),
         )
     };
+    let mut install_prompts = Vec::new();
+    if !ready {
+        if !consent_present && !capabilities_present {
+            install_prompts.push(
+                "Install and enable the local IBKR bridge if you want IBKR-backed workflows."
+                    .to_string(),
+            );
+        }
+        if !runtime_probe.missing_modules.is_empty() {
+            install_prompts.push(
+                "Make sure the runtime that executes provider-status and provider fetches can import redis and ib_async."
+                    .to_string(),
+            );
+        }
+        if reachable_candidates.is_empty() {
+            install_prompts.push(
+                "Launch TWS or IB Gateway and enable the local API; probe 7497, 7496, 4002, and 4001 before treating IBKR as unavailable."
+                    .to_string(),
+            );
+        } else if reachable_candidates.len() > 1 {
+            install_prompts.push(format!(
+                "Multiple local IBKR API ports are reachable; ask the user which runtime to use and prefer --gateway-port {} or the chosen alternative explicitly.",
+                preferred_gateway_port.unwrap_or_default()
+            ));
+        } else {
+            install_prompts.push(format!(
+                "A local IBKR API is reachable on port {}; reuse it unless the user says otherwise.",
+                preferred_gateway_port.unwrap_or_default()
+            ));
+        }
+    }
     LocalRuntimeProbe {
         ready,
         status,
@@ -804,30 +859,29 @@ fn probe_ibkr_bridge() -> LocalRuntimeProbe {
             "reused by ibkr market-data provider".to_string(),
             format!("consent_present={}", consent_present),
             format!("capabilities_present={}", capabilities_present),
+            format!(
+                "reachable_gateway_ports={}",
+                if reachable_candidates.is_empty() {
+                    "<none>".to_string()
+                } else {
+                    reachable_candidates
+                        .iter()
+                        .map(|candidate| format!("{}:{}", candidate.label, candidate.port))
+                        .collect::<Vec<_>>()
+                        .join("|")
+                }
+            ),
+            format!(
+                "runtime_missing_modules={}",
+                if runtime_probe.missing_modules.is_empty() {
+                    "<none>".to_string()
+                } else {
+                    runtime_probe.missing_modules.join(",")
+                }
+            ),
         ],
-        install_prompts: if ready {
-            Vec::new()
-        } else {
-            vec![
-                "Install and enable the local IBKR bridge if you want IBKR-backed workflows."
-                    .to_string(),
-            ]
-        },
+        install_prompts: install_prompts,
     }
-}
-
-fn ibkr_bridge_runtime_ready() -> bool {
-    let scripts_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("scripts");
-    let probe = format!(
-        "import sys; sys.path.insert(0, {:?}); import redis; import ibkr_bridge",
-        scripts_dir.display().to_string()
-    );
-    std::process::Command::new("python3")
-        .arg("-c")
-        .arg(probe)
-        .output()
-        .map(|output| output.status.success())
-        .unwrap_or(false)
 }
 
 fn probe_kraken_cli() -> LocalRuntimeProbe {
@@ -1402,10 +1456,17 @@ pub fn build_workflow_provider_support(
         .collect::<std::collections::BTreeSet<_>>()
         .into_iter()
         .collect::<Vec<_>>();
+    let ask_user_prompts = pending_provider_details
+        .iter()
+        .flat_map(provider_ask_user_prompts)
+        .collect::<std::collections::BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
     support.active = true;
     support.pending_providers = pending_providers;
     support.pending_provider_details = pending_provider_details;
     support.install_prompts = install_prompts;
+    support.ask_user_prompts = ask_user_prompts;
     support
 }
 
@@ -1474,6 +1535,23 @@ fn workflow_relevant_provider_ids(
     }
 
     ids
+}
+
+fn provider_ask_user_prompts(
+    provider: &ProviderCatalogPendingAgentItem,
+) -> Vec<String> {
+    match provider.provider_id.as_str() {
+        "tradingview_mcp" => vec![
+            "Ask the user for the TradingViewRemix MCP API key for this run and set ICT_ENGINE_TVREMIX_MCP_API_KEY before retrying TradingView-backed fetches.".to_string(),
+        ],
+        "kraken_cli" => vec![
+            format!(
+                "Ask the user for Kraken credentials for this run and set {} plus {} before retrying Kraken-authenticated workflows.",
+                KRAKEN_API_KEY_ENV, KRAKEN_API_SECRET_ENV
+            ),
+        ],
+        _ => Vec::new(),
+    }
 }
 
 fn render_provider_catalog_jsonl(surface: &ProviderCatalogSurface) -> Result<String> {
@@ -2023,6 +2101,7 @@ mod tests {
             .install_prompts
             .iter()
             .any(|prompt| prompt.contains("zero-config yfinance")));
+        assert!(support.ask_user_prompts.is_empty());
         assert!(!support
             .pending_providers
             .iter()
@@ -2062,6 +2141,61 @@ mod tests {
         assert!(!support.active);
         assert!(support.pending_providers.is_empty());
         assert!(support.install_prompts.is_empty());
+        assert!(support.ask_user_prompts.is_empty());
+    }
+
+    #[test]
+    fn workflow_provider_support_generates_explicit_credential_asks() {
+        let support = build_workflow_provider_support(
+            &ProviderCatalogAgentSurface {
+                summary_line: "market_data:0/2 ready | local_runtime:0/1 ready".to_string(),
+                ready_by_domain: BTreeMap::new(),
+                providers: Vec::new(),
+                ready_providers: Vec::new(),
+                pending_providers: vec![
+                    "tradingview_mcp@market_data:install_required:missing_tradingview_mcp_api_key".to_string(),
+                    "kraken_cli@local_runtime:installed_unconfigured:kraken_cli_installed_but_config_missing".to_string(),
+                ],
+                pending_provider_details: vec![
+                    ProviderCatalogPendingAgentItem {
+                        provider_id: "tradingview_mcp".to_string(),
+                        domain: "market_data".to_string(),
+                        status: "install_required".to_string(),
+                        reason: "missing_tradingview_mcp_api_key".to_string(),
+                        install_prompts: vec!["ask for tradingview key".to_string()],
+                    },
+                    ProviderCatalogPendingAgentItem {
+                        provider_id: "kraken_cli".to_string(),
+                        domain: "local_runtime".to_string(),
+                        status: "installed_unconfigured".to_string(),
+                        reason: "kraken_cli_installed_but_config_missing".to_string(),
+                        install_prompts: vec!["ask for kraken credentials".to_string()],
+                    },
+                ],
+                selectable_providers: vec!["tradingview_mcp".to_string()],
+                default_enabled_providers: vec![],
+                install_prompts: vec![],
+                available_opt_in_profiles: Vec::new(),
+                selected_profile: None,
+                selected_profile_full: None,
+            },
+            "ict-engine analyze-live --symbol BTCUSD --aux-backend kraken --options-provider tradingview_mcp",
+            Some("provider_runtime_required"),
+        );
+
+        assert!(support.active);
+        assert!(support
+            .ask_user_prompts
+            .iter()
+            .any(|item| item.contains("ICT_ENGINE_TVREMIX_MCP_API_KEY")));
+        assert!(support
+            .ask_user_prompts
+            .iter()
+            .any(|item| item.contains("KRAKEN_API_KEY")));
+        assert!(support
+            .ask_user_prompts
+            .iter()
+            .any(|item| item.contains("KRAKEN_API_SECRET")));
     }
 
     #[test]

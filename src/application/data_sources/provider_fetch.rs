@@ -295,6 +295,7 @@ fn call_tradingview_tool(name: &str, arguments: Value) -> Result<Value> {
         .context("failed to build tradingview MCP client")?;
     let response: Value = client
         .post(url)
+        .header(reqwest::header::ACCEPT, "application/json, text/event-stream")
         .bearer_auth(key)
         .json(&serde_json::json!({
             "jsonrpc": "2.0",
@@ -323,6 +324,22 @@ fn call_tradingview_tool(name: &str, arguments: Value) -> Result<Value> {
                 .pointer("/result/content/0/text")
                 .and_then(Value::as_str)
                 .unwrap_or("unknown error")
+        );
+    }
+    if let Some(error_text) = response
+        .pointer("/result/structuredContent/error")
+        .and_then(Value::as_str)
+    {
+        bail!("tradingview MCP tool '{}' error: {}", name, error_text);
+    }
+    if response
+        .pointer("/result/structuredContent/success")
+        .and_then(Value::as_bool)
+        == Some(false)
+    {
+        bail!(
+            "tradingview MCP tool '{}' reported unsuccessful result",
+            name
         );
     }
     response

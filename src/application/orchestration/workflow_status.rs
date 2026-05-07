@@ -21,6 +21,7 @@ use crate::application::auto_quant::AutoQuantResearchHandoffPayload;
 use crate::application::belief::{
     jump_calibration_gate_workflow_summary, jump_model_workflow_summary,
 };
+use crate::application::data_sources::control_matrix_providers::IBKR_GATEWAY_PORT_CANDIDATES;
 use crate::application::output_foundation::{
     print_redacted_json, redact_local_paths_in_human_text, redact_local_paths_in_value,
     short_workflow_phase_summary,
@@ -1440,9 +1441,17 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
         .unwrap_or_default();
     let opt_in_profile_line = None::<String>;
     let human_next_action = if provider_support.active {
+        let ask_summary = provider_support
+            .ask_user_prompts
+            .first()
+            .cloned()
+            .unwrap_or_else(|| format!(
+                "Resolve provider prerequisites for {}.",
+                provider_support.pending_providers.join(", ")
+            ));
         format!(
-            "Resolve provider prerequisites for {} before continuing. {}",
-            provider_support.pending_providers.join(", "),
+            "{} {}",
+            ask_summary,
             base_human_next_action
         )
     } else {
@@ -1455,12 +1464,23 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
         ))
     } else if provider_support.active {
         let prompt_summary = provider_support
-            .install_prompts
+            .ask_user_prompts
             .iter()
             .take(2)
             .cloned()
             .collect::<Vec<_>>()
             .join(" ");
+        let prompt_summary = if prompt_summary.is_empty() {
+            provider_support
+                .install_prompts
+                .iter()
+                .take(2)
+                .cloned()
+                .collect::<Vec<_>>()
+                .join(" ")
+        } else {
+            prompt_summary
+        };
         Some(format!(
             "Provider: {} pending. {} Check: {}",
             provider_support.pending_providers.join(", "),
@@ -1902,6 +1922,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
                     "profile_id": provider_support.profile_id,
                     "provider_status_command": provider_support.provider_status_command,
                     "pending_providers": provider_support.pending_providers,
+                    "ask_user_prompts": provider_support.ask_user_prompts,
                     "install_prompts": provider_support.install_prompts,
                 },
             }),
@@ -3037,17 +3058,11 @@ fn build_ibkr_gateway_candidates_with_probe<F>(
 where
     F: Fn(&str, u16) -> bool,
 {
-    let specs = [
-        ("TWS paper", 7497u16),
-        ("TWS live", 7496u16),
-        ("IB Gateway paper", 4002u16),
-        ("IB Gateway live", 4001u16),
-    ];
-    let recommended_port = specs
+    let recommended_port = IBKR_GATEWAY_PORT_CANDIDATES
         .iter()
         .map(|(_, port)| *port)
         .find(|port| probe(host, *port));
-    specs
+    IBKR_GATEWAY_PORT_CANDIDATES
         .into_iter()
         .map(|(label, port)| AgentBootstrapIbkrGatewayCandidate {
             label: label.to_string(),
@@ -5737,6 +5752,10 @@ mod tests {
         assert_eq!(value["provider_support"]["active"], true);
         assert_eq!(value["provider_support"]["profile_id"], "workflow_auto");
         assert_eq!(value["provider_support"]["pending_providers"][0], "crypto_public_runtime");
+        assert!(value["provider_support"]["ask_user_prompts"]
+            .as_array()
+            .unwrap()
+            .is_empty());
         assert!(value["provider_support"]["install_prompts"]
             .as_array()
             .unwrap()
