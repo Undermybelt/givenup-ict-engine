@@ -813,3 +813,221 @@ if struct == Trending && struct_conf > 0.65
 **更新时间**：2026-05-08 00:30
 **更新人**：Claude (Hermes Agent)
 **状态**：增强聚合器已完成，等待回测验证
+
+---
+
+## 进度更新 — 2026-05-08 凌晨（续）
+
+### 新增模块：验证工具 ✅
+
+#### 5. 市场状态分类验证工具（Validation Tool）
+- **文件**：`src/market_state/validation_tool.rs`
+- **目标**：用真实历史数据验证市场状态分类准确率
+- **核心功能**：
+  1. **滑动窗口验证**：
+     - 加载历史 OHLCV 数据
+     - 滑动窗口分类（默认 100 根 K 线，步长 1）
+     - 支持自定义窗口大小和步长
+  
+  2. **统计分布**：
+     - 主大类分布（4 个主大类）
+     - 次小类分布（16 个次小类）
+     - 置信度分布（High/Medium/Low/VeryLow）
+  
+  3. **质量评估**：
+     - 高置信占比（>= 0.75）
+     - 可交易占比（>= 0.55）
+     - 平均置信度
+  
+  4. **自动报告**：
+     - 生成可读性强的验证报告
+     - 质量评估（EXCELLENT / GOOD / NEEDS IMPROVEMENT）
+     - 支持导出 JSON 格式
+
+- **质量标准**：
+  ```
+  EXCELLENT:
+  - 高置信占比 > 50%
+  - 可交易占比 > 60%
+  - 平均置信度 > 65%
+  
+  GOOD:
+  - 高置信占比 30-50%
+  - 可交易占比 40-60%
+  - 平均置信度 50-65%
+  
+  NEEDS IMPROVEMENT:
+  - 高置信占比 < 30%
+  - 可交易占比 < 40%
+  - 平均置信度 < 50%
+  ```
+
+- **使用示例**：
+  ```rust
+  use ict_engine::market_state::{MarketStateValidator, ValidationConfig};
+  
+  // 零配置验证
+  let validator = MarketStateValidator::new();
+  let result = validator.validate(&candles);
+  let report = validator.generate_report(&result);
+  println!("{}", report);
+  
+  // 自定义配置
+  let config = ValidationConfig {
+      min_window_size: 200,  // 更大窗口
+      step_size: 10,         // 更大步长（更快）
+      verbose: true,         // 详细日志
+  };
+  let validator = MarketStateValidator::with_config(config);
+  
+  // 使用自定义分类器
+  let classifier = MarketStateClassifier::new()
+      .with_enhanced_aggregation(true);
+  let validator = MarketStateValidator::with_classifier(classifier, config);
+  ```
+
+- **报告示例**：
+  ```
+  === Market State Classification Validation Report ===
+  
+  Total Samples: 1000
+  Average Confidence: 68.50%
+  High Confidence Ratio: 52.30%
+  Tradeable Ratio: 71.20%
+  
+  --- Primary Regime Distribution ---
+    TrendExpansion            450 ( 45.0%)
+    RangeConsolidation        320 ( 32.0%)
+    ReversalBrewing           180 ( 18.0%)
+    ExtremeStress              50 (  5.0%)
+  
+  --- Secondary Regime Distribution ---
+    BullTrendAcceleration     280 ( 28.0%)
+    TightRange                200 ( 20.0%)
+    BullTrendExhaustion       170 ( 17.0%)
+    TrendFatigue              120 ( 12.0%)
+    WideRange                 120 ( 12.0%)
+    ... and 11 more
+  
+  --- Confidence Distribution ---
+    High    (≥0.75):    523 ( 52.3%)
+    Medium  (≥0.55):    189 ( 18.9%)
+    Low     (≥0.35):    218 ( 21.8%)
+    VeryLow (<0.35):     70 (  7.0%)
+  
+  --- Quality Assessment ---
+    ✅ High confidence ratio > 50% (EXCELLENT)
+    ✅ Tradeable ratio > 60% (EXCELLENT)
+    ✅ Average confidence > 65% (EXCELLENT)
+  
+  === End of Report ===
+  ```
+
+### 下一步行动（更新）
+
+#### 立即执行（今晚）
+1. **真实数据验证**：
+   - 使用 NQ 历史数据（1 年，1h 周期）
+   - 运行验证工具
+   - 生成验证报告
+   - 确认是否达到 EXCELLENT 标准
+
+2. **参数调优**（如果未达标）：
+   - 根据报告调整阈值
+   - 调整价格方向窗口
+   - 调整一致性权重
+   - 重新验证
+
+#### 短期（本周）
+1. **多品种验证**：
+   - NQ, ES, YM, RTY（指数期货）
+   - SPY, QQQ（ETF）
+   - BTC, ETH（加密）
+   - 对比各品种准确率
+
+2. **多周期验证**：
+   - 1m, 5m, 15m, 1h, 4h, 1d
+   - 验证不同周期下的表现
+   - 找出最佳周期
+
+3. **对比测试**：
+   - 基础聚合器 vs 增强聚合器
+   - 量化准确率提升幅度
+   - 验证设计假设
+
+#### 中期（本月）
+1. **持续优化**：
+   - 根据验证结果迭代改进
+   - 调整分类逻辑
+   - 优化阈值参数
+
+2. **集成到因子迭代**：
+   - 将验证工具集成到因子迭代流程
+   - 每次因子迭代后自动验证
+   - 生成对比报告
+
+### 当前完整能力
+
+**市场状态分类模块**（完整）：
+```
+输入：OHLCV 历史数据
+  ↓
+4 维度分类器（波动率/流动性/结构/行为）
+  ↓
+增强聚合器（价格方向 + 多维度一致性）
+  ↓
+输出：主大类 + 次小类 + 置信度
+  ↓
+置信度验证（历史回测 + 自适应校准）
+  ↓
+验证工具（统计分布 + 质量评估 + 报告）
+```
+
+**零配置使用**：
+```rust
+// 1. 分类
+let classifier = MarketStateClassifier::new();
+let snapshot = classifier.classify(&candles);
+
+// 2. 验证
+let validator = MarketStateValidator::new();
+let result = validator.validate(&candles);
+let report = validator.generate_report(&result);
+```
+
+**热插拔配置**：
+```rust
+// 自定义分类器
+let classifier = MarketStateClassifier::new()
+    .with_enhanced_aggregation(true);
+
+// 自定义验证器
+let config = ValidationConfig {
+    min_window_size: 200,
+    step_size: 10,
+    verbose: true,
+};
+let validator = MarketStateValidator::with_config(config);
+```
+
+### Git 提交记录
+
+- `1a48922`: 置信度验证模块
+- `ea8f7e8`: 增强聚合器
+- `ced5455`: 增强聚合器文档
+- `b114cf7`: 验证工具
+
+### 技术债务（更新）
+
+- [ ] 真实数据验证（NQ 1 年 1h）
+- [ ] 多品种验证（至少 3 个市场类别）
+- [ ] 多周期验证（至少 3 个周期）
+- [ ] 对比测试（基础 vs 增强）
+- [ ] cargo 编译超时问题排查
+- [ ] 性能基准测试
+
+---
+
+**更新时间**：2026-05-08 01:00
+**更新人**：Claude (Hermes Agent)
+**状态**：验证工具已完成，等待真实数据验证
