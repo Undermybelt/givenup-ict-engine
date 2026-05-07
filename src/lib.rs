@@ -22,6 +22,7 @@ pub mod ict;
 pub mod indicators;
 pub mod kalman;
 pub mod market_catalog;
+pub mod market_state;
 pub mod math;
 pub mod mcmc;
 pub mod pda_sequence;

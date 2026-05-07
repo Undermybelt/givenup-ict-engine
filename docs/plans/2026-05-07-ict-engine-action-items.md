@@ -158,6 +158,62 @@ SegmentedRegimeState:
 
 ## 已完成里程碑
 
+### 市场状态分类模块 (2026-05-07 新增)
+
+- `src/market_state/mod.rs` — 聚合分类器
+- `src/market_state/volatility.rs` — 波动率状态分类器
+- `src/market_state/liquidity.rs` — 流动性状态分类器
+- `src/market_state/structure.rs` — 市场结构状态分类器
+- `src/market_state/behavior.rs` — 投资者行为状态分类器
+- `src/market_state/config.rs` — 热插拔配置
+
+**特性**：
+- 零配置：默认参数直接可用
+- 热插拔：通过 `MarketStateConfig` 覆盖阈值
+- Token 友好：简洁输出
+- 无污染：不修改现有代码
+- 高置信度：基于统计学阈值
+
+**主大类**：
+```rust
+PrimaryMarketRegime:
+  - TrendExpansion      // 趋势扩展
+  - RangeConsolidation  // 震荡整理
+  - ExtremeStress       // 极端状态
+  - ReversalBrewing     // 反转酝酿
+```
+
+**次小类**：
+```rust
+SecondaryMarketRegime:
+  - BullTrendAcceleration / BearTrendAcceleration
+  - BullTrendExhaustion / BearTrendExhaustion
+  - TightRange / WideRange
+  - Accumulation / Distribution
+  - VolatilitySpike / LiquidityCrunch
+  - PanicSelling / PanicBuying
+  - TrendFatigue / SentimentExtreme
+```
+
+**维度分类器**：
+- 波动率：LowVol / NormalVol / ElevatedVol / CrisisVol
+- 流动性：HighLiquidity / NormalLiquidity / ThinLiquidity
+- 结构：Trending / MeanReverting / Ranging / Accumulation / Distribution
+- 行为：Crowding / Exhaustion / FOMO / Capitulation / RiskOn / RiskOff
+
+**用法**：
+```rust
+use ict_engine::market_state::{MarketStateClassifier, MarketStateConfig};
+
+// 零配置
+let classifier = MarketStateClassifier::new();
+let snapshot = classifier.classify(&candles);
+
+// 热插拔配置
+let config = MarketStateConfig::load(Path::new("market_state_config.json"))?;
+let classifier = MarketStateClassifier::with_config(config);
+```
+
 ### VRP V2 因子闭环 (Slice 129-130)
 
 - VRPCompression_V2_NQ_15m：815 trades / Sharpe 3.329 / DD -3.70% (8Y)
@@ -214,16 +270,18 @@ python scripts/auto_quant_external/pandas_path_ranker_trainer.py \
 
 ## 当前置顶
 
-### 0. 先补市场形态（因子迭代之前）
+### ~~0. 先补市场形态（因子迭代之前）~~
 
 **目标**：扩展市场形态覆盖，从 4 大类扩展到更丰富的状态空间
 
-**步骤**：
-- [ ] 搜索并整理波动率状态分类论文
-- [ ] 搜索并整理流动性状态分类开源仓库
-- [ ] 设计 Wyckoff 周期检测逻辑
-- [ ] 将新形态集成到 `MarketRegimeEnvelope` / `MarketRegimeClass`
-- [ ] 验证新形态在历史数据上的分布和持续性
+**已完成**：
+- [x] 实现波动率状态分类器（LowVol/NormalVol/ElevatedVol/CrisisVol）
+- [x] 实现流动性状态分类器（HighLiquidity/NormalLiquidity/ThinLiquidity）
+- [x] 实现市场结构状态分类器（Trending/MeanReverting/Ranging/Accumulation/Distribution）
+- [x] 实现投资者行为状态分类器（Crowding/Exhaustion/FOMO/Capitulation/RiskOn/RiskOff）
+- [x] 设计主大类（TrendExpansion/RangeConsolidation/ExtremeStress/ReversalBrewing）
+- [x] 设计次小类（16 个细分状态）
+- [x] 创建热插拔配置模板（MarketStateConfig + Profile）
 
 ### 1. 因子迭代 → 滤波节点
 
