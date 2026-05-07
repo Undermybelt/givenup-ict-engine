@@ -59,6 +59,30 @@ REGIME_FAMILY_MAP = {
     "recovery": "transition",
 }
 
+# V2: 8-state granular mapping for factor runtime
+REGIME_FAMILY_MAP_V2 = {
+    0: {"label": "TrendUpStrong", "family": "trend"},
+    1: {"label": "TrendUpWeak", "family": "trend"},
+    2: {"label": "TrendDownStrong", "family": "trend"},
+    3: {"label": "TrendDownWeak", "family": "trend"},
+    4: {"label": "RangeQuiet", "family": "range"},
+    5: {"label": "RangeVolatile", "family": "range"},
+    6: {"label": "Transition", "family": "transition"},
+    7: {"label": "CrashRecovery", "family": "transition"},
+}
+
+# State ID to V2 label for 8-state model
+STATE_TO_V2_LABEL = {
+    0: "trend_up_strong",
+    1: "trend_up_weak",
+    2: "trend_down_strong",
+    3: "trend_down_weak",
+    4: "range_quiet",
+    5: "range_volatile",
+    6: "transition",
+    7: "crash_recovery",
+}
+
 
 def load_candles(path: Path) -> pd.DataFrame:
     """Load OHLCV from feather or CSV."""
@@ -109,13 +133,19 @@ def compute_features(df: pd.DataFrame) -> pd.DataFrame:
 
 def prepare_hmm_inputs(df: pd.DataFrame) -> np.ndarray:
     """Prepare feature matrix for HMM."""
+    # Alternative: use features closer to classifier logic
+    df["return_20d"] = df["close"].pct_change(20)
+    df["return_60d"] = df["close"].pct_change(60)
+    df["volatility_20d"] = df["close"].pct_change().rolling(20).std()
+    df["above_sma200_proxy"] = (df["return_60d"] > 0).astype(float)
+    
+    # Use returns + vol instead of range/body features
     feature_cols = [
         "log_ret",
-        "range_atr",
-        "body_frac",
-        "close_vs_high",
-        "ret_mean_20",
-        "ret_std_20",
+        "return_20d",
+        "return_60d", 
+        "volatility_20d",
+        "above_sma200_proxy",
         "vol_ratio",
         "trend_eff",
     ]
@@ -157,15 +187,63 @@ def interpret_states(
     results = {}
     family_labels = []
     
+    # Sort states by sharpe to assign meaningful labels
+    state_sharpes = []
+    for state_id in range(n_states):
+        mask = df["hmm_state"] == state_id
+        state_df = df[mask]
+        if len(state_df) > 0:
+            mean_ret = state_df["log_ret"].mean() * 100
+            std_ret = state_df["log_ret"].std() * 100
+            sharpe = mean_ret / (std_ret + 1e-9)
+            state_sharpes.append((state_id, sharpe, len(state_df)))
+    
+    # Sort by sharpe descending
+    state_sharpes.sort(key=lambda x: x[1], reverse=True)
+    
+    # Assign labels based on sharpe ranking for 8-state model
+    if n_states == 8:
+        # Top 2 sharpe -> TrendUpStrong/Weak
+        # Bottom 2 sharpe -> TrendDownStrong/Weak
+        # Middle by vol -> RangeQuiet/Volatile/Transition/CrashRecovery
+        state_to_label = {}
+        for i, (state_id, sharpe, count) in enumerate(state_sharpes):
+            if i == 0:
+                label = "trend_up_strong"
+            elif i == 1:
+                label = "trend_up_weak"
+            elif i == 6:
+                label = "trend_down_weak"
+            elif i == 7:
+                label = "trend_down_strong"
+            elif i == 2:
+                label = "range_quiet"
+            elif i == 3:
+                label = "range_volatile"
+            elif i == 4:
+                label = "transition"
+            else:  # i == 5
+                label = "crash_recovery"
+            state_to_label[state_id] = label
+    else:
+        # Fallback for non-8 states
+        state_to_label = {}
+        for state_id, sharpe, count in state_sharpes:
+            if sharpe > 0.1:
+                state_to_label[state_id] = "trend_up"
+            elif sharpe < -0.1:
+                state_to_label[state_id] = "trend_down"
+            else:
+                state_to_label[state_id] = "range"
+    
     for state_id in range(n_states):
         mask = df["hmm_state"] == state_id
         state_df = df[mask]
         count = len(state_df)
         pct = count / len(df) * 100
         
-        # Stats
-        mean_ret = state_df["log_ret"].mean() * 252 * 24 * 4  # annualize 15m
-        std_ret = state_df["log_ret"].std() * np.sqrt(252 * 24 * 4)
+        mean_ret = state_df["log_ret"].mean() * 100
+        std_ret = state_df["log_ret"].std() * 100
         sharpe_proxy = mean_ret / (std_ret + 1e-9)
         
         # Duration (run length)
@@ -180,26 +258,18 @@ def interpret_states(
             durations.append(end - start)
         duration_bars = np.mean(durations) if durations else 0
         
-        # Classify family
-        abs_mean_ret = abs(mean_ret)
-        if mean_ret > 0.1 and std_ret < 0.3:
-            family = "trend_up"
-        elif mean_ret < -0.1 and std_ret < 0.3:
-            family = "trend_down"
-        elif abs_mean_ret < 0.1 and std_ret > 0.3:
-            family = "range_volatile"
-        elif abs_mean_ret < 0.1 and std_ret <= 0.3:
-            family = "range_quiet"
-        elif mean_ret < -0.2:
-            family = "crash"
-        elif mean_ret > 0.2 and std_ret > 0.4:
-            family = "recovery"
+        family = state_to_label.get(state_id, "range")
+        # Extract family (trend/range/transition)
+        if "trend" in family:
+            family_label = "trend"
+        elif "range" in family:
+            family_label = "range"
         else:
-            family = "transition"
+            family_label = "transition"
         
         results[state_id] = HMMRegimeResult(
             state_id=state_id,
-            family_label=family,
+            family_label=family,  # Granular label
             count=count,
             pct=pct,
             mean_ret=mean_ret,
@@ -266,7 +336,7 @@ def evaluate_against_existing_labels(
 def main():
     parser = argparse.ArgumentParser(description="HMM/Viterbi regime labels")
     parser.add_argument("--candle-path", required=True, help="Path to OHLCV feather/CSV")
-    parser.add_argument("--n-states", type=int, default=4, choices=[3, 4, 5, 6])
+    parser.add_argument("--n-states", type=int, default=4, choices=[3, 4, 5, 6, 7, 8])
     parser.add_argument("--train-ratio", type=float, default=0.7)
     parser.add_argument("--output-dir", default="/tmp/hmm_regime_output")
     parser.add_argument("--existing-labels-path", default=None, help="Path to existing labels for comparison")

@@ -17,7 +17,7 @@ use crate::pda_timeline::{
     build_pda_timeline, match_all_setups_extended, PdaEvent, SetupContext, SetupMatch,
 };
 use crate::smt::{Correlation, Divergence};
-use crate::types::{Candle, Direction, Regime};
+use crate::types::{Candle, Direction, Regime, RegimeProbsV2, RegimeV2};
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 pub enum FactorCategory {
@@ -106,14 +106,22 @@ impl FactorUsagePhase {
     }
 }
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, Serialize)]
 pub struct FactorContext<'a> {
     pub paired_candles: Option<&'a [Candle]>,
     pub h4_events: Option<&'a [PdaEvent]>,
     pub d1_events: Option<&'a [PdaEvent]>,
     pub w1_events: Option<&'a [PdaEvent]>,
     pub auxiliary: Option<&'a AuxiliaryMarketEvidence>,
+    /// Legacy 3-state regime (deprecated, use regime_v2)
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub regime: Option<Regime>,
+    /// Granular 8-state regime for strategy parameter switching
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub regime_v2: Option<RegimeV2>,
+    /// Full probability distribution over 8 regime states
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub regime_probs_v2: Option<RegimeProbsV2>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]

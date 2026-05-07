@@ -1,5 +1,49 @@
 use super::*;
 use ict_engine::application::backtest::parse_duration_sizing_scale;
+use ict_engine::types::{RegimeV2, RegimeProbsV2};
+use std::path::Path;
+
+/// Load regime V2 labels from feather file alongside candle data
+fn load_regime_v2_labels(data_path: &str) -> Vec<RegimeV2Label> {
+    // Try to find regime_v2_labels.feather alongside the candle data
+    let data_dir = Path::new(data_path).parent().unwrap_or(Path::new("."));
+    let regime_path = data_dir.join("regime_v2_labels.feather");
+    
+    if regime_path.exists() {
+        match polars::prelude::IpcReader::from_path(&regime_path) {
+            Ok(reader) => {
+                let df = reader.finish().ok()?;
+                // Parse into RegimeV2Label structs
+                // TODO: implement full parsing
+                return vec![];
+            }
+            Err(_) => return vec![],
+        }
+    }
+    vec![]
+}
+
+/// Parse regime family string into RegimeV2 enum
+fn parse_regime_v2(family: &str) -> Option<RegimeV2> {
+    match family {
+        "trend_up_strong" => Some(RegimeV2::TrendUpStrong),
+        "trend_up_weak" => Some(RegimeV2::TrendUpWeak),
+        "trend_down_strong" => Some(RegimeV2::TrendDownStrong),
+        "trend_down_weak" => Some(RegimeV2::TrendDownWeak),
+        "range_quiet" => Some(RegimeV2::RangeQuiet),
+        "range_volatile" => Some(RegimeV2::RangeVolatile),
+        "transition" => Some(RegimeV2::Transition),
+        "crash_recovery" => Some(RegimeV2::CrashRecovery),
+        _ => None,
+    }
+}
+
+#[derive(Debug, Clone)]
+struct RegimeV2Label {
+    ts: chrono::DateTime<chrono::Utc>,
+    state: u8,
+    family: String,
+}
 
 pub(crate) fn run_factor_backtest(
     symbol: &str,
@@ -27,6 +71,10 @@ pub(crate) fn run_factor_backtest(
         .map(LearningState::feedback_key)
         .collect::<std::collections::BTreeSet<_>>();
     let lab = FactorLab::new(FactorRegistry::default());
+    
+    // Load regime V2 labels if available
+    let regime_v2_labels = load_regime_v2_labels(data);
+    
     let research = lab.run_research(
         symbol,
         &candles,
@@ -37,6 +85,8 @@ pub(crate) fn run_factor_backtest(
             w1_events: structure_ict_context.w1_events.as_deref(),
             auxiliary: None,
             regime: None,
+            regime_v2: regime_v2_labels.first().and_then(|r| parse_regime_v2(&r.family)),
+            regime_probs_v2: None,
         },
         Some(&mut learning_state),
         &FactorBacktestConfig::default(),
