@@ -97,50 +97,36 @@
 - [x] Split board ownership:
   - factor / regime search remains on `2026-05-05-execution-tree-factor-auto-quant-todo.md`
   - post-factor runtime closure moves here
+- [x] **2026-05-07 Slice 1: VRP V2 pandas candidate import and prior-init closure.**
+  - created `strategy_library.json` for VRPCompression_V2_NQ_15m (pandas script, not FreqTrade)
+  - validation metrics: 815 trades / Sharpe 3.329 / max DD -3.70% over 8Y (2019-2025)
+  - `auto-quant-results-import`: succeeded, `n_ok=1`, `library_artifact_id=auto_quant_strategy_library_NQ_20260507T095702.840788000Z`
+  - `auto-quant-prior-init --dry-run`: showed CPT diff `[win=277, loss=538, be=0]` → `final_probs=[0.346, 0.000, 0.654]`
+  - `auto-quant-prior-init`: applied, `prior_init_artifact_id=auto_quant_prior_init_NQ_20260507T095722.161320000Z`
+  - `workflow-status`: phase=analyze, gate=pass_neutralized, entry=medium, direction=Bull
+  - `execution_tree_trace.json`: branch=transition_guardrail, bias=guarded, gate=observe, execution_score=0.58
+  - `pre-bayes-status`: gate=pass_neutralized, soft_evidence=yes, long=0.551
+  - `policy-training-status`: structural path ranking target export missing (expected — no external ranker yet)
+  - state dir: `/tmp/vrp-v2-runtime-closure/`
 
 ### Next
 
-- [ ] Define one canonical **candidate adoption package** for post-factor closure:
-  - selected strategy-library artifact
-  - selected regime / filter evidence summary
-  - expected BBN parent-config / regime-bucket assumptions
-  - optional auxiliary evidence refs
-  - exact before-state snapshot paths
-- [ ] Run a **no-code prior-init closure trial** on at least one current promotable candidate pack using only existing public commands:
-  - `auto-quant-results-import`
-  - `auto-quant-prior-init --dry-run`
-  - `auto-quant-prior-init`
-  - `workflow-status --human`
-  - `analyze`
-- [ ] Verify whether the imported/prior-initialized state changes:
-  - BBN row summaries
-  - workflow-status surfaces
-  - execution-tree recommendation support
-  - artifact lineage
-- [ ] Run or explicitly block the **real-trade posterior closure** on the same candidate pack:
-  - if a realized-trades JSONL artifact exists, use `auto-quant-ingest-real-trades`
-  - if it does not exist, write an exact blocker describing which exporter/artifact is missing
-- [ ] Export structural path-ranking targets from the same post-prior/post-feedback state and audit readiness:
+- [ ] Run analyze with real NQ data and capture execution-tree before/after:
+  - current blocker: full 15m dataset times out; need smaller slice or optimized run
+  - fallback: use existing `/tmp/ict-engine-family-a-profile/NQ/` which has prior analyze artifacts
+- [ ] Export structural path-ranking targets from the post-prior state:
   - `export-structural-path-ranking-target`
   - `policy-training-status`
-  - raw-scored mature-row sufficiency
-  - calibration readiness
-  - production-validation readiness
-- [ ] If a real external ranker artifact and score file exist, run the path-ranking closure using public commands:
-  - `register-structural-path-ranking-trainer-artifact`
-  - `apply-structural-path-ranking-external-scores`
-  - `policy-training-status`
-  - `workflow-status`
-- [ ] If a real external ranker artifact does **not** exist, record the exact blocker instead of pretending the path-ranking lane is closed.
-- [ ] Run exact **before/after** evidence on the same state directory:
-  - `workflow_snapshot.json`
-  - `execution_tree_trace.json`
-  - `workflow-status --human`
-  - `analyze --human`
-- [ ] If the no-code closure trial proves a real repo gap, open the smallest code workstream needed and keep ownership explicit:
-  - Auto-Quant handoff / lineage: `src/application/auto_quant/command_entry.rs`, `src/auto_quant_command.rs`
-  - path-ranking export / apply / status: `src/application/orchestration/structural_playbook.rs`, `src/policy_training_command.rs`
-  - execution-tree / workflow diff surfaces: `src/application/orchestration/execution_tree.rs`, `src/analyze_command.rs`, workflow snapshot owner surfaces
+- [ ] Document exact blocker for external ranker artifact:
+  - current state: no trained CatBoost/XGBoost model on structural path ranking
+  - raw-scored mature rows = 0
+  - calibration not possible without external trainer
+- [ ] Decide whether to:
+  - accept VRP V2 as deployable based on pandas evidence alone (recommended per factor todo)
+  - or invest in CatBoost policy surface training for Layer 2 enrichment
+- [ ] If accepting VRP V2 as deployable:
+  - close this post-factor board with explicit verdict
+  - hand off to production/monitoring phase
 
 ### Not Yet
 
