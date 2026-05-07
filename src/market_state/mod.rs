@@ -16,6 +16,8 @@ mod config;
 pub mod filter;
 pub mod mtf_resonance;
 pub mod evidence_mapping;
+pub mod execution_integration;
+pub mod confidence_validation;
 
 pub use volatility::{VolatilityRegime, VolatilityClassifier};
 pub use liquidity::{LiquidityRegime, LiquidityClassifier, SessionState};
@@ -33,6 +35,15 @@ pub use evidence_mapping::{
     MarketStateEvidenceMapper, EvidenceMappingConfig, EvidenceSummary,
     MarketStateNodeId, PrimaryRegimeStateIndex, VolatilityStateIndex,
     LiquidityStateIndex, ResonanceStateIndex,
+};
+pub use execution_integration::{
+    ExecutionPermission, ExecutionTreeConfig, ExecutionTreePipeline,
+    MarketStateExecutionDecision, MarketStateExecutionIntegrator, PipelineResult,
+    RegimeSummary, ResonanceImpact,
+};
+pub use confidence_validation::{
+    ConfidenceValidator, ConfidenceValidationConfig, ValidationResult,
+    ConfidenceLevel, HistorySample, RegimeStats, RollingAccuracyTracker,
 };
 
 use serde::{Deserialize, Serialize};

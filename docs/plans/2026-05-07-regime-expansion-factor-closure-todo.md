@@ -50,10 +50,11 @@
 - [x] 保持向后兼容（legacy `regime` 字段保留 deprecated 标记）
 
 ### 数据加载
-- [x] `load_regime_v2_labels()` 函数框架
+- [x] `load_regime_v2_labels()` 从 JSON 加载（改用 JSON 替代 feather）
+- [x] 支持项目数据目录 + `/tmp/hmm_regime_*` fallback
 - [x] `parse_regime_v2()` 字符串→枚举映射
-- [ ] 完整 feather 解析实现（需 polars 依赖检查）
-- [ ] 时间戳对齐逻辑（bar → regime lookup）
+- [x] 时间戳 → RegimeV2 HashMap 已完成
+- [ ] per-bar regime lookup（当前取 first，需改为按时间戳匹配）
 
 ### 下一步
 - [ ] 验证 cargo build 是否通过

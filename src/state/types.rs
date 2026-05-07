@@ -6039,6 +6039,20 @@ pub fn regime_key(regime: Regime) -> &'static str {
     }
 }
 
+/// RegimeV2 key for extended 8-state regime system
+pub fn regime_v2_key(regime: crate::types::RegimeV2) -> &'static str {
+    match regime {
+        crate::types::RegimeV2::TrendUpStrong => "trend_up_strong",
+        crate::types::RegimeV2::TrendUpWeak => "trend_up_weak",
+        crate::types::RegimeV2::RangeVolatile => "range_volatile",
+        crate::types::RegimeV2::RangeQuiet => "range_quiet",
+        crate::types::RegimeV2::TrendDownWeak => "trend_down_weak",
+        crate::types::RegimeV2::TrendDownStrong => "trend_down_strong",
+        crate::types::RegimeV2::Transition => "transition",
+        crate::types::RegimeV2::CrashRecovery => "crash_recovery",
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -2,25 +2,50 @@ use super::*;
 use ict_engine::application::backtest::parse_duration_sizing_scale;
 use ict_engine::types::{RegimeV2, RegimeProbsV2};
 use std::path::Path;
+use std::collections::HashMap;
 
-/// Load regime V2 labels from feather file alongside candle data
-fn load_regime_v2_labels(data_path: &str) -> Vec<RegimeV2Label> {
-    // Try to find regime_v2_labels.feather alongside the candle data
+/// Regime label entry from HMM output
+#[derive(Debug, Clone, serde::Deserialize)]
+struct RegimeLabelJson {
+    ts: String,
+    state: u8,
+    family: String,
+}
+
+/// Load regime V2 labels from JSON file alongside candle data
+fn load_regime_v2_labels(data_path: &str) -> HashMap<String, RegimeV2> {
+    // Try to find regime_v2_labels.json alongside the candle data
     let data_dir = Path::new(data_path).parent().unwrap_or(Path::new("."));
-    let regime_path = data_dir.join("regime_v2_labels.feather");
+    let regime_path = data_dir.join("regime_v2_labels.json");
     
-    if regime_path.exists() {
-        match polars::prelude::IpcReader::from_path(&regime_path) {
-            Ok(reader) => {
-                let df = reader.finish().ok()?;
-                // Parse into RegimeV2Label structs
-                // TODO: implement full parsing
-                return vec![];
-            }
-            Err(_) => return vec![],
+    if !regime_path.exists() {
+        // Try /tmp as fallback for HMM output
+        let tmp_path = Path::new("/tmp/hmm_regime_nq_15m_v8/regime_v2_labels.json");
+        if tmp_path.exists() {
+            return load_regime_v2_from_path(tmp_path);
         }
+        return HashMap::new();
     }
-    vec![]
+    
+    load_regime_v2_from_path(&regime_path)
+}
+
+fn load_regime_v2_from_path(path: &Path) -> HashMap<String, RegimeV2> {
+    let content = match std::fs::read_to_string(path) {
+        Ok(c) => c,
+        Err(_) => return HashMap::new(),
+    };
+    
+    let labels: Vec<RegimeLabelJson> = match serde_json::from_str(&content) {
+        Ok(l) => l,
+        Err(_) => return HashMap::new(),
+    };
+    
+    labels.into_iter()
+        .filter_map(|l| {
+            parse_regime_v2(&l.family).map(|r| (l.ts, r))
+        })
+        .collect()
 }
 
 /// Parse regime family string into RegimeV2 enum
@@ -85,8 +110,7 @@ pub(crate) fn run_factor_backtest(
             w1_events: structure_ict_context.w1_events.as_deref(),
             auxiliary: None,
             regime: None,
-            regime_v2: regime_v2_labels.first().and_then(|r| parse_regime_v2(&r.family)),
-            regime_probs_v2: None,
+            regime_v2_labels: Some(&regime_v2_labels),
         },
         Some(&mut learning_state),
         &FactorBacktestConfig::default(),
