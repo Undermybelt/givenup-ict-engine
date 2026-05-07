@@ -167,6 +167,36 @@ SegmentedRegimeState:
 - 执行树：branch=transition_guardrail, execution_score=0.580
 - 状态：**已接受为可部署候选**
 
+### CatBoost 外部训练器实现 (2026-05-07)
+
+- `scripts/auto_quant_external/pandas_path_ranker_trainer.py` — 核心训练器
+- `scripts/auto_quant_external/path_ranker_integration.py` — 一键集成脚本
+- `scripts/auto_quant_external/user_weights_template.json` — 热插拔权重模板
+
+**特性**：
+- 零配置：默认行为可直接运行
+- 热插拔：用户可通过 `user_weights.json` 自定义权重
+- Token 友好：输出简洁
+- 无污染：不修改仓库代码
+- 用户特定数据：VRP V2 相关特征（qqq_hv/nq_vs_200d/vix3m/vvix_over_vix 等）
+- 回退机制：当 VRP V2 特征缺失时，使用 `structural_baseline_score` 或 `current_posterior`
+
+**已验证流程**：
+```bash
+# 生成 scores.csv
+python scripts/auto_quant_external/pandas_path_ranker_trainer.py \
+  --apply --target-csv <target.csv> --output-scores scores.csv
+
+# 应用到运行时
+./target/debug/ict-engine apply-structural-path-ranking-external-scores \
+  --symbol NQ --state-dir <dir> --scores-file scores.csv
+
+# 注册训练器
+./target/debug/ict-engine register-structural-path-ranking-trainer-artifact \
+  --symbol NQ --state-dir <dir> --artifact-uri file://model.json \
+  --model-family catboost --score-column raw_path_score
+```
+
 ### VRP V2.5 BBN 条件过滤 (Slice 121-128)
 
 - BBN 分类器：OOS macro_F1 ~0.20（方向）至 0.25（波动率状态）
