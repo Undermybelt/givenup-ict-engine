@@ -13,12 +13,17 @@ mod liquidity;
 mod structure;
 mod behavior;
 mod config;
+pub mod filter;
 
 pub use volatility::{VolatilityRegime, VolatilityClassifier};
-pub use liquidity::{LiquidityRegime, LiquidityClassifier};
+pub use liquidity::{LiquidityRegime, LiquidityClassifier, SessionState};
 pub use structure::{MarketStructureRegime, MarketStructureClassifier};
 pub use behavior::{InvestorBehaviorRegime, InvestorBehaviorClassifier};
 pub use config::{MarketStateConfig, MarketStateProfile};
+pub use filter::{
+    MarketStateFilter, MarketStateFilterConfig, MarketStateFilterResult,
+    FactorFilterDeclaration, StateChange, StateChangeDimension,
+};
 
 use serde::{Deserialize, Serialize};
 

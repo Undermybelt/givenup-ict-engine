@@ -166,6 +166,7 @@ SegmentedRegimeState:
 - `src/market_state/structure.rs` — 市场结构状态分类器
 - `src/market_state/behavior.rs` — 投资者行为状态分类器
 - `src/market_state/config.rs` — 热插拔配置
+- `src/market_state/filter.rs` — 市场状态滤波器（2026-05-07 新增）
 
 **特性**：
 - 零配置：默认参数直接可用
@@ -201,9 +202,16 @@ SecondaryMarketRegime:
 - 结构：Trending / MeanReverting / Ranging / Accumulation / Distribution
 - 行为：Crowding / Exhaustion / FOMO / Capitulation / RiskOn / RiskOff
 
+**滤波器特性**：
+- `MarketStateFilter`：基于市场状态的交易许可判断
+- `FactorFilterDeclaration`：因子声明允许进入的滤波状态
+- 自动阻断：危机波动率 / 流动性枯竭 / 投资者投降 / 极端状态
+- 仓位调整：FOMO 降仓 30%，高波动降仓 15%
+- 状态变更检测：主大类 / 波动率 / 流动性变更事件
+
 **用法**：
 ```rust
-use ict_engine::market_state::{MarketStateClassifier, MarketStateConfig};
+use ict_engine::market_state::{MarketStateClassifier, MarketStateConfig, MarketStateFilter};
 
 // 零配置
 let classifier = MarketStateClassifier::new();
@@ -212,6 +220,17 @@ let snapshot = classifier.classify(&candles);
 // 热插拔配置
 let config = MarketStateConfig::load(Path::new("market_state_config.json"))?;
 let classifier = MarketStateClassifier::with_config(config);
+
+// 滤波器
+let mut filter = MarketStateFilter::new();
+let result = filter.filter(&candles);
+if !result.allowed {
+    println!("Blocked: {:?}", result.block_reason);
+}
+
+// 因子滤波声明
+let trend_decl = FactorFilterDeclaration::trend_factor("my_trend_factor");
+let is_allowed = trend_decl.is_allowed(&result);
 ```
 
 ### VRP V2 因子闭环 (Slice 129-130)
@@ -287,15 +306,23 @@ python scripts/auto_quant_external/pandas_path_ranker_trainer.py \
 
 **目标**：迭代因子后，必须通过滤波层
 
+**当前状态**：
+- [x] 创建 MarketStateFilter 滤波器
+- [x] 创建 FactorFilterDeclaration 因子滤波声明
+- [x] 实现波动率状态滤波：LowVol / ElevatedVol / CrisisVol
+- [x] 实现流动性状态滤波：Killzone / Off-hours
+- [x] 实现行为状态滤波：Capitulation 阻断 / FOMO 仓位调整
+- [x] 实现主大类状态滤波：ExtremeStress 强制平仓
+
 **滤波类型**：
-- [ ] regime_filter.rs：当前 HMM/波动率状态过滤
-- [ ] 波动率状态滤波：LowVol / ElevatedVol / CrisisVol
-- [ ] 流动性状态滤波：Killzone / Off-hours
+- [x] regime_filter.rs：当前 HMM/波动率状态过滤
+- [x] 波动率状态滤波：LowVol / ElevatedVol / CrisisVol
+- [x] 流动性状态滤波：Killzone / Off-hours
 - [ ] 多周期共振滤波：低周期与高周期一致/矛盾
 
 **验收标准**：
-- [ ] 每个因子必须声明"允许进入的滤波状态"
-- [ ] 滤波状态变更必须触发因子启用/禁用
+- [x] 每个因子必须声明"允许进入的滤波状态"（FactorFilterDeclaration）
+- [x] 滤波状态变更必须触发因子启用/禁用（MarketStateFilter.filter()）
 
 ### 2. 滤波 → BBN 证据节点
 
@@ -398,10 +425,11 @@ python scripts/auto_quant_external/path_ranker_integration.py \
 
 ## 阻塞项
 
-### 市场形态覆盖不足
+### ~~市场形态覆盖不足~~
 
-- 阻塞：当前仅 4 大类，缺少波动率/流动性/结构状态
-- 解决：搜索论文/开源仓库补充
+- ~~阻塞：当前仅 4 大类，缺少波动率/流动性/结构状态~~
+- ~~解决：搜索论文/开源仓库补充~~
+- **已解决**（2026-05-07）：市场状态分类模块已实现，包含 4 主大类 + 16 次小类
 
 ### ~~CatBoost 外部训练器缺失~~
 
