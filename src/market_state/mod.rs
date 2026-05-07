@@ -19,6 +19,7 @@ pub mod evidence_mapping;
 pub mod execution_integration;
 pub mod confidence_validation;
 pub mod enhanced_aggregation;
+pub mod validation_tool;
 
 pub use volatility::{VolatilityRegime, VolatilityClassifier};
 pub use liquidity::{LiquidityRegime, LiquidityClassifier, SessionState};
@@ -48,6 +49,10 @@ pub use confidence_validation::{
 };
 pub use enhanced_aggregation::{
     EnhancedAggregator, EnhancedAggregationConfig, PriceDirection,
+};
+pub use validation_tool::{
+    MarketStateValidator, ValidationConfig, ValidationResult,
+    ConfidenceDistribution,
 };
 
 use serde::{Deserialize, Serialize};
