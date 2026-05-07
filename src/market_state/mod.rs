@@ -14,6 +14,7 @@ mod structure;
 mod behavior;
 mod config;
 pub mod filter;
+pub mod mtf_resonance;
 
 pub use volatility::{VolatilityRegime, VolatilityClassifier};
 pub use liquidity::{LiquidityRegime, LiquidityClassifier, SessionState};
@@ -23,6 +24,9 @@ pub use config::{MarketStateConfig, MarketStateProfile};
 pub use filter::{
     MarketStateFilter, MarketStateFilterConfig, MarketStateFilterResult,
     FactorFilterDeclaration, StateChange, StateChangeDimension,
+};
+pub use mtf_resonance::{
+    TimeframeResonanceConfig, TimeframeResonanceFilter, TimeframeResonanceResult, ResonanceResult,
 };
 
 use serde::{Deserialize, Serialize};

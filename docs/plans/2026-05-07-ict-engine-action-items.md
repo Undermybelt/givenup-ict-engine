@@ -318,7 +318,7 @@ python scripts/auto_quant_external/pandas_path_ranker_trainer.py \
 - [x] regime_filter.rs：当前 HMM/波动率状态过滤
 - [x] 波动率状态滤波：LowVol / ElevatedVol / CrisisVol
 - [x] 流动性状态滤波：Killzone / Off-hours
-- [ ] 多周期共振滤波：低周期与高周期一致/矛盾
+- [x] 多周期共振滤波：低周期与高周期一致/矛盾（TimeframeResonanceFilter）
 
 **验收标准**：
 - [x] 每个因子必须声明"允许进入的滤波状态"（FactorFilterDeclaration）
