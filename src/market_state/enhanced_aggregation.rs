@@ -1,0 +1,456 @@
+//! Enhanced Market State Aggregation
+//!
+//! 增强版市场状态聚合：提高主大类/次小类分类准确率
+//!
+//! 改进点：
+//! 1. 价格方向判断：区分 Bull/Bear 趋势
+//! 2. 置信度惩罚：多维度冲突时降低置信度
+//! 3. 严格阈值：提高分类门槛
+//! 4. 多维度交叉验证：要求多个维度一致
+
+use serde::{Deserialize, Serialize};
+
+use crate::market_state::{
+    VolatilityRegime, LiquidityRegime, MarketStructureRegime, InvestorBehaviorRegime,
+    PrimaryMarketRegime, SecondaryMarketRegime,
+};
+use crate::types::Candle;
+
+/// 增强聚合配置
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct EnhancedAggregationConfig {
+    /// 极端状态最低置信度阈值
+    pub extreme_min_confidence: f64,
+    /// 趋势扩展最低置信度阈值
+    pub trend_min_confidence: f64,
+    /// 反转酝酿最低置信度阈值
+    pub reversal_min_confidence: f64,
+    /// 多维度一致性权重
+    pub consistency_weight: f64,
+    /// 价格方向窗口（用于判断 Bull/Bear）
+    pub price_direction_window: usize,
+    /// 价格方向阈值（涨跌幅 %）
+    pub price_direction_threshold: f64,
+}
+
+impl Default for EnhancedAggregationConfig {
+    fn default() -> Self {
+        Self {
+            extreme_min_confidence: 0.75,      // 极端状态要求高置信
+            trend_min_confidence: 0.65,        // 趋势扩展要求中高置信
+            reversal_min_confidence: 0.60,     // 反转酝酿要求中等置信
+            consistency_weight: 0.2,           // 一致性贡献 20%
+            price_direction_window: 20,        // 20 根 K 线判断方向
+            price_direction_threshold: 2.0,    // 2% 涨跌幅阈值
+        }
+    }
+}
+
+/// 价格方向
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PriceDirection {
+    Bullish,
+    Bearish,
+    Neutral,
+}
+
+/// 增强聚合器
+pub struct EnhancedAggregator {
+    config: EnhancedAggregationConfig,
+}
+
+impl EnhancedAggregator {
+    pub fn new() -> Self {
+        Self::with_config(EnhancedAggregationConfig::default())
+    }
+    
+    pub fn with_config(config: EnhancedAggregationConfig) -> Self {
+        Self { config }
+    }
+    
+    /// 聚合各维度状态到主大类/次小类
+    pub fn aggregate(
+        &self,
+        vol: &VolatilityRegime, vol_conf: f64,
+        liq: &LiquidityRegime, liq_conf: f64,
+        struct_regime: &MarketStructureRegime, struct_conf: f64,
+        behav: &InvestorBehaviorRegime, behav_conf: f64,
+        candles: &[Candle],
+    ) -> (PrimaryMarketRegime, SecondaryMarketRegime, f64) {
+        // 1. 计算价格方向
+        let price_dir = self.calculate_price_direction(candles);
+        
+        // 2. 计算多维度一致性
+        let consistency = self.calculate_consistency(
+            vol, liq, struct_regime, behav, &price_dir
+        );
+        
+        // 3. 基础加权置信度
+        let base_conf = (vol_conf * 0.25 + liq_conf * 0.20 + struct_conf * 0.35 + behav_conf * 0.20);
+        
+        // 4. 应用一致性加成
+        let overall_conf = (base_conf * (1.0 - self.config.consistency_weight) 
+            + consistency * self.config.consistency_weight).clamp(0.0, 1.0);
+        
+        // 5. 按优先级聚合（严格阈值）
+        
+        // 极端状态：要求高置信 + 明确信号
+        if self.is_extreme_stress(vol, vol_conf, liq, liq_conf, behav, behav_conf) {
+            let secondary = self.classify_extreme_secondary(vol, liq, behav, &price_dir);
+            return (PrimaryMarketRegime::ExtremeStress, secondary, overall_conf);
+        }
+        
+        // 反转酝酿：要求行为极端 + 结构弱化 + 中等置信
+        if self.is_reversal_brewing(behav, behav_conf, struct_regime, struct_conf, &price_dir) {
+            let secondary = self.classify_reversal_secondary(behav, struct_regime, &price_dir);
+            return (PrimaryMarketRegime::ReversalBrewing, secondary, overall_conf);
+        }
+        
+        // 趋势扩展：要求结构强 + 流动性好 + 中高置信
+        if self.is_trend_expansion(struct_regime, struct_conf, liq, liq_conf, vol, vol_conf) {
+            let secondary = self.classify_trend_secondary(vol, behav, &price_dir);
+            return (PrimaryMarketRegime::TrendExpansion, secondary, overall_conf);
+        }
+        
+        // Wyckoff 阶段
+        if matches!(struct_regime, MarketStructureRegime::Accumulation) && struct_conf > 0.6 {
+            return (PrimaryMarketRegime::RangeConsolidation, SecondaryMarketRegime::Accumulation, overall_conf);
+        }
+        if matches!(struct_regime, MarketStructureRegime::Distribution) && struct_conf > 0.6 {
+            return (PrimaryMarketRegime::RangeConsolidation, SecondaryMarketRegime::Distribution, overall_conf);
+        }
+        
+        // 默认：震荡整理
+        let secondary = if matches!(vol, VolatilityRegime::LowVol) {
+            SecondaryMarketRegime::TightRange
+        } else {
+            SecondaryMarketRegime::WideRange
+        };
+        (PrimaryMarketRegime::RangeConsolidation, secondary, overall_conf)
+    }
+    
+    /// 计算价格方向
+    fn calculate_price_direction(&self, candles: &[Candle]) -> PriceDirection {
+        if candles.len() < self.config.price_direction_window {
+            return PriceDirection::Neutral;
+        }
+        
+        let window = &candles[candles.len() - self.config.price_direction_window..];
+        let start_price = window[0].close;
+        let end_price = window[window.len() - 1].close;
+        let change_pct = ((end_price - start_price) / start_price) * 100.0;
+        
+        if change_pct > self.config.price_direction_threshold {
+            PriceDirection::Bullish
+        } else if change_pct < -self.config.price_direction_threshold {
+            PriceDirection::Bearish
+        } else {
+            PriceDirection::Neutral
+        }
+    }
+    
+    /// 计算多维度一致性（0.0-1.0）
+    fn calculate_consistency(
+        &self,
+        vol: &VolatilityRegime,
+        liq: &LiquidityRegime,
+        struct_regime: &MarketStructureRegime,
+        behav: &InvestorBehaviorRegime,
+        price_dir: &PriceDirection,
+    ) -> f64 {
+        let mut consistency_score = 0.0;
+        let mut checks = 0;
+        
+        // 检查 1：趋势结构 + 高流动性 = 一致
+        if matches!(struct_regime, MarketStructureRegime::Trending)
+            && matches!(liq, LiquidityRegime::HighLiquidity | LiquidityRegime::NormalLiquidity)
+        {
+            consistency_score += 1.0;
+        }
+        checks += 1;
+        
+        // 检查 2：高波动 + 趋势结构 = 一致（加速）
+        if matches!(vol, VolatilityRegime::ElevatedVol | VolatilityRegime::HighVol)
+            && matches!(struct_regime, MarketStructureRegime::Trending)
+        {
+            consistency_score += 1.0;
+        }
+        checks += 1;
+        
+        // 检查 3：低波动 + 震荡结构 = 一致
+        if matches!(vol, VolatilityRegime::LowVol)
+            && matches!(struct_regime, MarketStructureRegime::Ranging | MarketStructureRegime::MeanReverting)
+        {
+            consistency_score += 1.0;
+        }
+        checks += 1;
+        
+        // 检查 4：行为极端 + 价格方向 = 一致
+        match (behav, price_dir) {
+            (InvestorBehaviorRegime::FOMO, PriceDirection::Bullish) => consistency_score += 1.0,
+            (InvestorBehaviorRegime::Capitulation, PriceDirection::Bearish) => consistency_score += 1.0,
+            _ => {}
+        }
+        checks += 1;
+        
+        // 检查 5：流动性枯竭 + 极端波动 = 一致（危机）
+        if matches!(liq, LiquidityRegime::ThinLiquidity)
+            && matches!(vol, VolatilityRegime::CrisisVol | VolatilityRegime::HighVol)
+        {
+            consistency_score += 1.0;
+        }
+        checks += 1;
+        
+        consistency_score / checks as f64
+    }
+    
+    /// 判断是否为极端状态
+    fn is_extreme_stress(
+        &self,
+        vol: &VolatilityRegime, vol_conf: f64,
+        liq: &LiquidityRegime, liq_conf: f64,
+        behav: &InvestorBehaviorRegime, behav_conf: f64,
+    ) -> bool {
+        // 危机波动 + 高置信
+        if matches!(vol, VolatilityRegime::CrisisVol) && vol_conf > self.config.extreme_min_confidence {
+            return true;
+        }
+        
+        // 流动性枯竭 + 高置信
+        if matches!(liq, LiquidityRegime::ThinLiquidity) && liq_conf > self.config.extreme_min_confidence {
+            return true;
+        }
+        
+        // 行为恐慌 + 高波动 + 中高置信
+        if matches!(behav, InvestorBehaviorRegime::Capitulation | InvestorBehaviorRegime::FOMO)
+            && matches!(vol, VolatilityRegime::HighVol | VolatilityRegime::CrisisVol)
+            && behav_conf > 0.65 && vol_conf > 0.65
+        {
+            return true;
+        }
+        
+        false
+    }
+    
+    /// 判断是否为反转酝酿
+    fn is_reversal_brewing(
+        &self,
+        behav: &InvestorBehaviorRegime, behav_conf: f64,
+        struct_regime: &MarketStructureRegime, struct_conf: f64,
+        _price_dir: &PriceDirection,
+    ) -> bool {
+        // 行为极端 + 结构弱化 + 中等置信
+        matches!(behav, InvestorBehaviorRegime::Exhaustion | InvestorBehaviorRegime::Crowding)
+            && behav_conf > self.config.reversal_min_confidence
+            && matches!(struct_regime, MarketStructureRegime::MeanReverting | MarketStructureRegime::Ranging)
+            && struct_conf > 0.5
+    }
+    
+    /// 判断是否为趋势扩展
+    fn is_trend_expansion(
+        &self,
+        struct_regime: &MarketStructureRegime, struct_conf: f64,
+        liq: &LiquidityRegime, liq_conf: f64,
+        _vol: &VolatilityRegime, _vol_conf: f64,
+    ) -> bool {
+        // 趋势结构 + 高流动性 + 中高置信
+        matches!(struct_regime, MarketStructureRegime::Trending)
+            && struct_conf > self.config.trend_min_confidence
+            && matches!(liq, LiquidityRegime::HighLiquidity | LiquidityRegime::NormalLiquidity)
+            && liq_conf > 0.55
+    }
+    
+    /// 分类极端状态次小类
+    fn classify_extreme_secondary(
+        &self,
+        vol: &VolatilityRegime,
+        liq: &LiquidityRegime,
+        behav: &InvestorBehaviorRegime,
+        price_dir: &PriceDirection,
+    ) -> SecondaryMarketRegime {
+        // 恐慌性抛售：Capitulation + Bearish
+        if matches!(behav, InvestorBehaviorRegime::Capitulation) 
+            && matches!(price_dir, PriceDirection::Bearish)
+        {
+            return SecondaryMarketRegime::PanicSelling;
+        }
+        
+        // 恐慌性买入：FOMO + Bullish
+        if matches!(behav, InvestorBehaviorRegime::FOMO)
+            && matches!(price_dir, PriceDirection::Bullish)
+        {
+            return SecondaryMarketRegime::PanicBuying;
+        }
+        
+        // 流动性危机
+        if matches!(liq, LiquidityRegime::ThinLiquidity) {
+            return SecondaryMarketRegime::LiquidityCrunch;
+        }
+        
+        // 波动率飙升
+        if matches!(vol, VolatilityRegime::CrisisVol | VolatilityRegime::HighVol) {
+            return SecondaryMarketRegime::VolatilitySpike;
+        }
+        
+        SecondaryMarketRegime::VolatilitySpike
+    }
+    
+    /// 分类反转酝酿次小类
+    fn classify_reversal_secondary(
+        &self,
+        behav: &InvestorBehaviorRegime,
+        struct_regime: &MarketStructureRegime,
+        _price_dir: &PriceDirection,
+    ) -> SecondaryMarketRegime {
+        if matches!(behav, InvestorBehaviorRegime::Exhaustion) {
+            SecondaryMarketRegime::TrendFatigue
+        } else if matches!(behav, InvestorBehaviorRegime::Crowding) {
+            SecondaryMarketRegime::SentimentExtreme
+        } else if matches!(struct_regime, MarketStructureRegime::MeanReverting) {
+            SecondaryMarketRegime::StructureBreakdown
+        } else {
+            SecondaryMarketRegime::TrendFatigue
+        }
+    }
+    
+    /// 分类趋势扩展次小类
+    fn classify_trend_secondary(
+        &self,
+        vol: &VolatilityRegime,
+        behav: &InvestorBehaviorRegime,
+        price_dir: &PriceDirection,
+    ) -> SecondaryMarketRegime {
+        // 高波动 + 趋势 = 加速
+        let is_acceleration = matches!(vol, VolatilityRegime::ElevatedVol | VolatilityRegime::HighVol)
+            || matches!(behav, InvestorBehaviorRegime::FOMO);
+        
+        // 低波动 + 趋势 = 疲劳
+        let is_exhaustion = matches!(vol, VolatilityRegime::LowVol)
+            || matches!(behav, InvestorBehaviorRegime::Exhaustion);
+        
+        match price_dir {
+            PriceDirection::Bullish => {
+                if is_acceleration {
+                    SecondaryMarketRegime::BullTrendAcceleration
+                } else if is_exhaustion {
+                    SecondaryMarketRegime::BullTrendExhaustion
+                } else {
+                    SecondaryMarketRegime::BullTrendAcceleration
+                }
+            }
+            PriceDirection::Bearish => {
+                if is_acceleration {
+                    SecondaryMarketRegime::BearTrendAcceleration
+                } else if is_exhaustion {
+                    SecondaryMarketRegime::BearTrendExhaustion
+                } else {
+                    SecondaryMarketRegime::BearTrendAcceleration
+                }
+            }
+            PriceDirection::Neutral => {
+                // 中性方向默认用 Bull（保守）
+                if is_exhaustion {
+                    SecondaryMarketRegime::BullTrendExhaustion
+                } else {
+                    SecondaryMarketRegime::BullTrendAcceleration
+                }
+            }
+        }
+    }
+}
+
+impl Default for EnhancedAggregator {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    fn mock_candles_bullish() -> Vec<Candle> {
+        (0..30).map(|i| Candle {
+            timestamp: 1700000000 + i * 60,
+            open: 100.0 + i as f64,
+            high: 101.0 + i as f64,
+            low: 99.0 + i as f64,
+            close: 100.5 + i as f64,
+            volume: 1000.0,
+        }).collect()
+    }
+    
+    fn mock_candles_bearish() -> Vec<Candle> {
+        (0..30).map(|i| Candle {
+            timestamp: 1700000000 + i * 60,
+            open: 130.0 - i as f64,
+            high: 131.0 - i as f64,
+            low: 129.0 - i as f64,
+            close: 130.5 - i as f64,
+            volume: 1000.0,
+        }).collect()
+    }
+    
+    #[test]
+    fn price_direction_detection() {
+        let agg = EnhancedAggregator::new();
+        
+        let bullish = mock_candles_bullish();
+        assert_eq!(agg.calculate_price_direction(&bullish), PriceDirection::Bullish);
+        
+        let bearish = mock_candles_bearish();
+        assert_eq!(agg.calculate_price_direction(&bearish), PriceDirection::Bearish);
+    }
+    
+    #[test]
+    fn extreme_stress_detection() {
+        let agg = EnhancedAggregator::new();
+        
+        // 危机波动 + 高置信 → ExtremeStress
+        assert!(agg.is_extreme_stress(
+            &VolatilityRegime::CrisisVol, 0.8,
+            &LiquidityRegime::NormalLiquidity, 0.5,
+            &InvestorBehaviorRegime::Neutral, 0.5,
+        ));
+        
+        // 流动性枯竭 + 高置信 → ExtremeStress
+        assert!(agg.is_extreme_stress(
+            &VolatilityRegime::NormalVol, 0.5,
+            &LiquidityRegime::ThinLiquidity, 0.8,
+            &InvestorBehaviorRegime::Neutral, 0.5,
+        ));
+    }
+    
+    #[test]
+    fn trend_expansion_with_direction() {
+        let agg = EnhancedAggregator::new();
+        let candles = mock_candles_bullish();
+        
+        let (primary, secondary, _conf) = agg.aggregate(
+            &VolatilityRegime::ElevatedVol, 0.7,
+            &LiquidityRegime::HighLiquidity, 0.8,
+            &MarketStructureRegime::Trending, 0.75,
+            &InvestorBehaviorRegime::Neutral, 0.5,
+            &candles,
+        );
+        
+        assert_eq!(primary, PrimaryMarketRegime::TrendExpansion);
+        assert_eq!(secondary, SecondaryMarketRegime::BullTrendAcceleration);
+    }
+    
+    #[test]
+    fn consistency_boosts_confidence() {
+        let agg = EnhancedAggregator::new();
+        
+        // 高一致性：趋势 + 高流动性 + 高波动
+        let consistency = agg.calculate_consistency(
+            &VolatilityRegime::ElevatedVol,
+            &LiquidityRegime::HighLiquidity,
+            &MarketStructureRegime::Trending,
+            &InvestorBehaviorRegime::Neutral,
+            &PriceDirection::Bullish,
+        );
+        
+        assert!(consistency > 0.5, "一致性应 > 0.5，实际 {}", consistency);
+    }
+}

@@ -18,6 +18,7 @@ pub mod mtf_resonance;
 pub mod evidence_mapping;
 pub mod execution_integration;
 pub mod confidence_validation;
+pub mod enhanced_aggregation;
 
 pub use volatility::{VolatilityRegime, VolatilityClassifier};
 pub use liquidity::{LiquidityRegime, LiquidityClassifier, SessionState};
@@ -44,6 +45,9 @@ pub use execution_integration::{
 pub use confidence_validation::{
     ConfidenceValidator, ConfidenceValidationConfig, ValidationResult,
     ConfidenceLevel, HistorySample, RegimeStats, RollingAccuracyTracker,
+};
+pub use enhanced_aggregation::{
+    EnhancedAggregator, EnhancedAggregationConfig, PriceDirection,
 };
 
 use serde::{Deserialize, Serialize};
@@ -130,6 +134,8 @@ pub struct MarketStateClassifier {
     structure: MarketStructureClassifier,
     behavior: InvestorBehaviorClassifier,
     config: MarketStateConfig,
+    /// 增强聚合器（可选，提高置信度）
+    enhanced_aggregator: Option<crate::market_state::enhanced_aggregation::EnhancedAggregator>,
 }
 
 impl MarketStateClassifier {
@@ -146,7 +152,18 @@ impl MarketStateClassifier {
             structure: MarketStructureClassifier::with_thresholds(config.structure.clone()),
             behavior: InvestorBehaviorClassifier::with_thresholds(config.behavior.clone()),
             config,
+            enhanced_aggregator: Some(crate::market_state::enhanced_aggregation::EnhancedAggregator::new()),
         }
+    }
+    
+    /// 启用增强聚合器（提高置信度）
+    pub fn with_enhanced_aggregation(mut self, enabled: bool) -> Self {
+        if enabled {
+            self.enhanced_aggregator = Some(crate::market_state::enhanced_aggregation::EnhancedAggregator::new());
+        } else {
+            self.enhanced_aggregator = None;
+        }
+        self
     }
     
     /// 分类：输入 OHLCV 数据，输出市场状态快照
@@ -178,12 +195,24 @@ impl MarketStateClassifier {
         }
         
         // 5. 聚合主大类和次小类
-        let (primary, secondary, overall_conf) = self.aggregate_regimes(
-            &vol, vol_conf,
-            &liq, liq_conf,
-            &struct_regime, struct_conf,
-            &behav, behav_conf,
-        );
+        let (primary, secondary, overall_conf) = if let Some(ref enhanced) = self.enhanced_aggregator {
+            // 使用增强聚合器（提高置信度）
+            enhanced.aggregate(
+                &vol, vol_conf,
+                &liq, liq_conf,
+                &struct_regime, struct_conf,
+                &behav, behav_conf,
+                candles,
+            )
+        } else {
+            // 使用基础聚合器
+            self.aggregate_regimes(
+                &vol, vol_conf,
+                &liq, liq_conf,
+                &struct_regime, struct_conf,
+                &behav, behav_conf,
+            )
+        };
         rationale.push(format!("primary={:?} secondary={:?} overall={:.2}", primary, secondary, overall_conf));
         
         MarketStateSnapshot {
