@@ -328,7 +328,20 @@ python scripts/auto_quant_external/pandas_path_ranker_trainer.py \
 
 **目标**：滤波后的因子信号成为 BBN 的证据节点
 
-**BBN 节点**：
+**市场状态证据映射** ✅ (2026-05-07 新增)：
+- [x] `src/market_state/evidence_mapping.rs`：市场状态 → BBN 证据
+- [x] `market_primary_regime`：主大类证据（TrendExpansion/RangeConsolidation/ReversalBrewing/CrisisVolatility）
+- [x] `market_volatility_regime`：波动率状态证据
+- [x] `market_liquidity_regime`：流动性状态证据
+- [x] `market_structure_regime`：结构状态证据
+- [x] `market_behavior_regime`：投资者行为证据
+- [x] `market_timeframe_resonance`：多周期共振证据
+
+**证据类型**：
+- [x] 硬证据（Hard）：置信度 ≥ 0.85 时
+- [x] 软证据（Soft）：置信度 < 0.85 时，概率分布基于置信度计算
+
+**因子信号证据映射**（原有需求）：
 - [ ] `qqq_hv_level`：QQQ 历史波动率水平
 - [ ] `nq_vs_200d_pct`：NQ 相对 200 日均线位置
 - [ ] `vix3m_level`：VIX3M 水平
@@ -336,6 +349,8 @@ python scripts/auto_quant_external/pandas_path_ranker_trainer.py \
 - [ ] `vvix_over_vix`：VVIX/VIX 比率
 
 **验收标准**：
+- [x] 市场状态分类结果映射到 BBN 证据节点
+- [x] 支持软/硬证据自动切换
 - [ ] 每个因子必须映射到至少 1 个 BBN 证据节点
 - [ ] BBN 后验概率更新必须可追溯
 

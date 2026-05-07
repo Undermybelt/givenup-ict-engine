@@ -15,6 +15,7 @@ mod behavior;
 mod config;
 pub mod filter;
 pub mod mtf_resonance;
+pub mod evidence_mapping;
 
 pub use volatility::{VolatilityRegime, VolatilityClassifier};
 pub use liquidity::{LiquidityRegime, LiquidityClassifier, SessionState};
@@ -27,6 +28,11 @@ pub use filter::{
 };
 pub use mtf_resonance::{
     TimeframeResonanceConfig, TimeframeResonanceFilter, TimeframeResonanceResult, ResonanceResult,
+};
+pub use evidence_mapping::{
+    MarketStateEvidenceMapper, EvidenceMappingConfig, EvidenceSummary,
+    MarketStateNodeId, PrimaryRegimeStateIndex, VolatilityStateIndex,
+    LiquidityStateIndex, ResonanceStateIndex,
 };
 
 use serde::{Deserialize, Serialize};
