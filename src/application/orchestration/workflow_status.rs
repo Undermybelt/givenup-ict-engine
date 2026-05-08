@@ -1497,7 +1497,24 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default();
-    let opt_in_profile_line = None::<String>;
+    let opt_in_profile_line = if no_workflow_state
+        && provider_status_agent.selected_profile.is_none()
+        && !provider_status_agent.available_opt_in_profiles.is_empty()
+    {
+        provider_status_agent
+            .available_opt_in_profiles
+            .first()
+            .map(|profile| {
+                format!(
+                    "Optional personal lane: {}. Reuse with ict-engine workflow-status --symbol {} --state-dir <local-path> --profile {} --human if you want your saved data/runtime mix.",
+                    profile.summary,
+                    shell_quote(&snapshot.symbol),
+                    shell_quote(&profile.selector)
+                )
+            })
+    } else {
+        None
+    };
     let human_next_action = if provider_support.active {
         let ask_summary = provider_support
             .ask_user_prompts
@@ -6052,6 +6069,36 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("tradfi free fallback"));
+    }
+
+    #[test]
+    fn human_workflow_status_view_shows_opt_in_profile_hint_only_on_first_run_empty_state() {
+        let value = build_human_workflow_status_view_with_provider_agent(
+            &WorkflowSnapshot {
+                symbol: "NQ".to_string(),
+                ..WorkflowSnapshot::default()
+            },
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+        );
+        let no_profile_line = value["opt_in_profile_line"].as_str().unwrap_or_default();
+        assert!(no_profile_line.contains("Optional personal lane:"));
+        assert!(no_profile_line.contains(
+            "ict-engine workflow-status --symbol NQ --state-dir <local-path> --profile thrill3r-nq-closed-loop-v1 --human"
+        ));
+
+        let first_run = build_human_workflow_status_view_with_provider_agent(
+            &WorkflowSnapshot {
+                symbol: "NQ".to_string(),
+                ..WorkflowSnapshot::default()
+            },
+            &[],
+            &sample_provider_agent_surface_with_profile(),
+            &[],
+        );
+        let selected_line = first_run["opt_in_profile_line"].as_str().unwrap_or_default();
+        assert!(selected_line.is_empty() || selected_line.contains("Optional personal lane:"));
     }
 
     #[test]

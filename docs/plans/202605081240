@@ -90,16 +90,26 @@
   - `cargo test --quiet --lib selected_profile_promotes_generic_workflow_status_next_command -- --nocapture`
   - `cargo test --quiet --lib selected_profile_promotes_generic_blocking_truth_workflow_status_command -- --nocapture`
 
+- [x] Added a token-light human first-run hint for the optional personal lane.
+  Files:
+  - `src/application/orchestration/workflow_status.rs`
+  Verified:
+  - Generic empty-state `workflow-status --human` now shows one optional personal-lane hint with the exact opt-in command.
+  - Selected-profile `workflow-status --human --profile thrill3r-nq-closed-loop-v1` keeps the selected lane and does not duplicate the hint.
+  Evidence:
+  - `cargo run --quiet -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-node01 --human`
+  - `cargo run --quiet -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-node01 --human --profile thrill3r-nq-closed-loop-v1`
+  - `cargo test --quiet --lib human_workflow_status_view_shows_opt_in_profile_hint_only_on_first_run_empty_state -- --nocapture`
+
 ## Next
 
-- [ ] Decide whether to commit the follow-on helper-route and central-promotion closure after worktree review.
+- [ ] Decide whether to commit the human first-run hint follow-up after worktree review.
   Gate:
   - Only commit if the new diff stays narrow and verified.
   - Direct CLI verification is complete for the previously committed slice.
 
 ## Not Yet
 
-- [ ] Expose a compact, token-safe human hint for optional personal profile reuse only when it materially helps and only when it does not pollute the default public path.
 - [ ] Run a broader repo-wide search for any remaining profile-less `workflow-status` helper strings outside the provider/workflow lane if this line is resumed again.
 - [ ] Only if future evidence requires it, introduce persisted selected-profile context into workflow snapshot / run artifacts instead of relying on central promotion at render time.
 - [ ] Broaden this lane into data-contract-aware workflow routing only after the current profile discoverability and command-propagation closure is fully verified.
