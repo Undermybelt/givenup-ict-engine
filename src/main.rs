@@ -619,6 +619,8 @@ enum Commands {
         step_size: usize,
         #[arg(long, help = "Print periodic per-window classification samples")]
         verbose: bool,
+        #[arg(long, help = "Print a compact human-readable summary")]
+        compact: bool,
         #[arg(
             long,
             help = "Disable enhanced aggregation and use the basic aggregator fallback"
@@ -2118,6 +2120,7 @@ fn main() -> Result<()> {
             window_size,
             step_size,
             verbose,
+            compact,
             no_enhanced,
             config,
             profile,
@@ -2126,6 +2129,7 @@ fn main() -> Result<()> {
             window_size,
             step_size,
             verbose,
+            compact,
             enhanced: !no_enhanced,
             config_path: config,
             profile,
@@ -14501,6 +14505,7 @@ mod tests {
                 window_size,
                 step_size,
                 verbose,
+                compact,
                 no_enhanced,
                 config,
                 profile,
@@ -14509,10 +14514,28 @@ mod tests {
                 assert_eq!(window_size, 100);
                 assert_eq!(step_size, 1);
                 assert!(!verbose);
+                assert!(!compact);
                 assert!(!no_enhanced);
                 assert!(config.is_none());
                 assert!(profile.is_none());
             }
+            other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
+        }
+    }
+
+    #[test]
+    fn test_cli_validate_market_state_accepts_compact_flag() {
+        let cli = parse_cli_from([
+            "ict-engine",
+            "validate-market-state",
+            "--data",
+            "candles.json",
+            "--compact",
+        ])
+        .unwrap();
+
+        match cli.command {
+            Commands::ValidateMarketState { compact, .. } => assert!(compact),
             other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
         }
     }

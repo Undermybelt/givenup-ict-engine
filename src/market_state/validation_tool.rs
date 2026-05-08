@@ -291,6 +291,31 @@ impl MarketStateValidator {
 
         report
     }
+
+    pub fn generate_compact_report(&self, result: &ValidationResult) -> String {
+        let primary_top = top_distribution_entry(&result.primary_distribution);
+        let secondary_top = top_distribution_entry(&result.secondary_distribution);
+
+        format!(
+            "samples={} avg_confidence={:.2}% high_confidence={:.2}% tradeable={:.2}% primary_top={} secondary_top={}",
+            result.total_samples,
+            result.avg_confidence * 100.0,
+            result.high_confidence_ratio * 100.0,
+            result.tradeable_ratio * 100.0,
+            primary_top,
+            secondary_top
+        )
+    }
+}
+
+fn top_distribution_entry(distribution: &HashMap<String, usize>) -> String {
+    let Some((label, count)) = distribution.iter().max_by(|a, b| {
+        a.1.cmp(b.1)
+            .then_with(|| a.0.cmp(b.0).reverse())
+    }) else {
+        return "none".to_string();
+    };
+    format!("{}:{}", label, count)
 }
 
 impl Default for MarketStateValidator {
@@ -340,6 +365,23 @@ mod tests {
         assert!(report.contains("Total Samples"));
         assert!(report.contains("Primary Regime Distribution"));
         assert!(report.contains("Confidence Distribution"));
+    }
+
+    #[test]
+    fn compact_report_generation() {
+        let validator = MarketStateValidator::new();
+        let candles = mock_candles(500);
+        let result = validator.validate(&candles);
+
+        let report = validator.generate_compact_report(&result);
+
+        assert!(report.contains("samples="));
+        assert!(report.contains("avg_confidence="));
+        assert!(report.contains("high_confidence="));
+        assert!(report.contains("tradeable="));
+        assert!(report.contains("primary_top="));
+        assert!(report.contains("secondary_top="));
+        assert!(!report.contains("Primary Regime Distribution"));
     }
 
     #[test]
