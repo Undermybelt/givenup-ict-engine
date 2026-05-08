@@ -1292,13 +1292,13 @@ impl FactorDefinition {
                 let bull_sweep_displacement = recent_bull_sweep
                     .map(|sweep| {
                         ((candle.close - sweep.pool_price) / sweep.pool_price.abs().max(1.0))
-                            .max(0.0)
+                            .clamp(0.0, f64::MAX)
                     })
                     .unwrap_or(0.0);
                 let bear_sweep_displacement = recent_bear_sweep
                     .map(|sweep| {
                         ((sweep.pool_price - candle.close) / sweep.pool_price.abs().max(1.0))
-                            .max(0.0)
+                            .clamp(0.0, f64::MAX)
                     })
                     .unwrap_or(0.0);
                 let bull_manipulation_confirmed = recent_bull_sweep.is_some()
@@ -1325,11 +1325,11 @@ impl FactorDefinition {
                 }
                 if bull_manipulation_confirmed && recent_bear_sweep.is_some() && !bear_manipulation_confirmed
                 {
-                    bear_score = (bear_score - opposing_sweep_penalty).max(0.0);
+                    bear_score = (bear_score - opposing_sweep_penalty).clamp(0.0, f64::MAX);
                 }
                 if bear_manipulation_confirmed && recent_bull_sweep.is_some() && !bull_manipulation_confirmed
                 {
-                    bull_score = (bull_score - opposing_sweep_penalty).max(0.0);
+                    bull_score = (bull_score - opposing_sweep_penalty).clamp(0.0, f64::MAX);
                 }
                 bull_score += (bull_fvg.min(3.0) + bull_ob.min(3.0)) * 0.05;
                 bear_score += (bear_fvg.min(3.0) + bear_ob.min(3.0)) * 0.05;
@@ -1837,6 +1837,285 @@ fn normalize_signed(value: f64, cap: f64) -> f64 {
     }
 }
 
+// --- Hot-plug compute stubs for Families E, F, H ---
+
+impl FactorDefinition {
+    /// Family E: Crowding / Herding Execution Risk
+    fn evaluate_crowding_herding(&self, candles: &[Candle]) -> Vec<FactorSignal> {
+        let lookback = self.parameter("lookback", 20.0) as usize;
+        let volume_spike_ratio = self.parameter("volume_spike_ratio", 2.0);
+        let pc_weight = self.parameter("participation_concentration_weight", 0.40);
+        let sp_weight = self.parameter("same_side_pressure_weight", 0.35);
+        let cr_weight = self.parameter("crowding_relief_weight", 0.25);
+
+        let volumes: Vec<f64> = candles.iter().map(|c| c.volume).collect();
+
+        candles
+            .iter()
+            .enumerate()
+            .map(|(index, candle)| {
+                let start = index.saturating_sub(lookback);
+                let window_vol = &volumes[start..=index];
+
+                // Participation concentration: current volume vs rolling median
+                let median_vol = {
+                    let mut sorted = window_vol.to_vec();
+                    sorted.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+                    let mid = sorted.len() / 2;
+                    if sorted.len().is_multiple_of(2) && sorted.len() > 1 {
+                        (sorted[mid - 1] + sorted[mid]) / 2.0
+                    } else {
+                        sorted[mid]
+                    }
+                };
+                let participation_concentration = if median_vol > f64::EPSILON {
+                    (candle.volume / median_vol / volume_spike_ratio)
+                        .clamp(0.0, 1.0)
+                } else {
+                    0.0
+                };
+
+                // Same-side pressure: volume-weighted close direction over window
+                let same_side_pressure = {
+                    let mut bull_vol = 0.0f64;
+                    let mut bear_vol = 0.0f64;
+                    for (i, v) in window_vol.iter().enumerate() {
+                        let c = &candles[start + i];
+                        if c.close >= c.open {
+                            bull_vol += v;
+                        } else {
+                            bear_vol += v;
+                        }
+                    }
+                    let total = bull_vol + bear_vol;
+                    if total > f64::EPSILON {
+                        ((bull_vol - bear_vol) / total).clamp(-1.0, 1.0)
+                    } else {
+                        0.0
+                    }
+                };
+
+                // Crowding relief: volume decay after spike (3-bar lookback)
+                let crowding_relief = if index >= 3 && volumes[index] > f64::EPSILON {
+                    let prev3_avg = (volumes[index - 3] + volumes[index - 2] + volumes[index - 1]) / 3.0;
+                    if prev3_avg > f64::EPSILON {
+                        (1.0 - (candle.volume / prev3_avg)/ 2.0).clamp(0.0, f64::MAX)
+                    } else {
+                        0.5
+                    }
+                } else {
+                    0.5
+                };
+
+                let direction_score = same_side_pressure;
+                let value = normalize_signed(
+                    pc_weight * participation_concentration * direction_score.signum()
+                        + sp_weight * same_side_pressure
+                        - cr_weight * crowding_relief * direction_score.signum(),
+                    1.0,
+                );
+                let confidence = (participation_concentration * pc_weight
+                    + same_side_pressure.abs() * sp_weight
+                    + crowding_relief * cr_weight)
+                    .clamp(0.0, 1.0);
+
+                build_signal(
+                    &self.name,
+                    self.category,
+                    candle.timestamp,
+                    value,
+                    confidence,
+                    format!(
+                        "pc={:.3};sp={:.3};cr={:.3};vol_ratio={:.2}",
+                        participation_concentration,
+                        same_side_pressure,
+                        crowding_relief,
+                        if median_vol > f64::EPSILON { candle.volume / median_vol } else { 0.0 }
+                    ),
+                )
+            })
+            .collect()
+    }
+
+    /// Family F: Spectral Rhythm / Chaos
+    fn evaluate_spectral_rhythm(&self, candles: &[Candle]) -> Vec<FactorSignal> {
+        let lookback = self.parameter("lookback", 64.0) as usize;
+        let se_weight = self.parameter("spectral_entropy_weight", 0.45);
+        let ce_weight = self.parameter("cycle_energy_weight", 0.35);
+        let rs_weight = self.parameter("rhythm_stability_weight", 0.20);
+
+        let closes: Vec<f64> = candles.iter().map(|c| c.close).collect();
+
+        candles
+            .iter()
+            .enumerate()
+            .map(|(index, candle)| {
+                let start = index.saturating_sub(lookback);
+                let window = &closes[start..=index];
+
+                // Spectral entropy: normalized log-variance of returns
+                let spectral_entropy = {
+                    let returns: Vec<f64> = window.windows(2).map(|w| w[1] - w[0]).collect();
+                    if returns.len() < 4 {
+                        0.5
+                    } else {
+                        let mean = returns.iter().sum::<f64>() / returns.len() as f64;
+                        let variance = returns.iter().map(|r| (r - mean).powi(2)).sum::<f64>()
+                            / returns.len() as f64;
+                        if variance > f64::EPSILON {
+                            (1.0 + variance.ln() / 10.0).clamp(0.0, 1.0)
+                        } else {
+                            0.0
+                        }
+                    }
+                };
+
+                // Dominant cycle energy: longest same-direction run / lookback
+                let cycle_energy = {
+                    let returns: Vec<f64> = window.windows(2).map(|w| w[1] - w[0]).collect();
+                    if returns.is_empty() {
+                        0.0
+                    } else {
+                        let mut max_run = 1usize;
+                        let mut current_run = 1usize;
+                        for i in 1..returns.len() {
+                            if returns[i].signum() == returns[i - 1].signum()
+                                && returns[i].abs() > f64::EPSILON
+                            {
+                                current_run += 1;
+                                max_run = max_run.max(current_run);
+                            } else {
+                                current_run = 1;
+                            }
+                        }
+                        (max_run as f64 / lookback as f64).min(1.0)
+                    }
+                };
+
+                // Rhythm stability: autocorrelation lag-1 of returns
+                let rhythm_stability = {
+                    let returns: Vec<f64> = window.windows(2).map(|w| w[1] - w[0]).collect();
+                    if returns.len() < 4 {
+                        0.5
+                    } else {
+                        let mean = returns.iter().sum::<f64>() / returns.len() as f64;
+                        let var = returns.iter().map(|r| (r - mean).powi(2)).sum::<f64>();
+                        if var < f64::EPSILON {
+                            0.5
+                        } else {
+                            let cov: f64 = returns[..returns.len() - 1]
+                                .iter()
+                                .zip(&returns[1..])
+                                .map(|(a, b)| (a - mean) * (b - mean))
+                                .sum();
+                            (cov / var).clamp(-1.0, 1.0).abs()
+                        }
+                    }
+                };
+
+                // High entropy = chaotic = negative for execution readiness
+                let value = normalize_signed(
+                    -se_weight * spectral_entropy
+                        + ce_weight * cycle_energy
+                            * if candle.close >= candle.open { 1.0 } else { -1.0 }
+                        + rs_weight * rhythm_stability
+                            * if candle.close >= candle.open { 1.0 } else { -1.0 },
+                    1.0,
+                );
+                let confidence = (se_weight * spectral_entropy
+                    + ce_weight * cycle_energy
+                    + rs_weight * rhythm_stability)
+                    .clamp(0.0, 1.0);
+
+                build_signal(
+                    &self.name,
+                    self.category,
+                    candle.timestamp,
+                    value,
+                    confidence,
+                    format!(
+                        "se={:.3};ce={:.3};rs={:.3}",
+                        spectral_entropy, cycle_energy, rhythm_stability
+                    ),
+                )
+            })
+            .collect()
+    }
+
+    /// Family H: Session / Liquidity Window Quality
+    fn evaluate_session_liquidity(&self, candles: &[Candle]) -> Vec<FactorSignal> {
+        let sq_weight = self.parameter("session_quality_weight", 0.40);
+        let kz_weight = self.parameter("kill_zone_weight", 0.35);
+        let tr_weight = self.parameter("transition_risk_weight", 0.25);
+        let lookback = self.parameter("lookback", 20.0) as usize;
+
+        let volumes: Vec<f64> = candles.iter().map(|c| c.volume).collect();
+
+        candles
+            .iter()
+            .enumerate()
+            .map(|(index, candle)| {
+                // Session participation quality: current volume relative to rolling average
+                let session_quality = {
+                    let start = index.saturating_sub(lookback);
+                    let window_vol = &volumes[start..=index];
+                    let avg = window_vol.iter().sum::<f64>() / window_vol.len() as f64;
+                    if avg > f64::EPSILON {
+                        (candle.volume / avg)/ 3.0
+                    } else {
+                        0.0
+                    }
+                };
+
+                // Kill-zone alignment: hour-of-day proxy (UTC)
+                // US RTH kill zones ~14-15, 19-20 UTC; London ~7-8, 12-13 UTC
+                let kill_zone_alignment = {
+                    let hour = candle.timestamp.format("%H").to_string().parse::<u32>().unwrap_or(12);
+                    match hour {
+                        7 | 8 | 12 | 13 | 14 | 15 | 19 | 20 => 0.9,
+                        9..=11 | 16..=18 => 0.6,
+                        _ => 0.3,
+                    }
+                };
+
+                // Session transition risk: near session boundaries
+                let session_transition_risk = {
+                    let hour = candle.timestamp.format("%H").to_string().parse::<u32>().unwrap_or(12);
+                    match hour {
+                        7 | 8 | 13 | 14 | 19 | 20 => 0.7,
+                        _ => 0.2,
+                    }
+                };
+
+                let value = normalize_signed(
+                    sq_weight * session_quality
+                        * if candle.close >= candle.open { 1.0 } else { -1.0 }
+                        + kz_weight * kill_zone_alignment
+                            * if candle.close >= candle.open { 1.0 } else { -1.0 }
+                        - tr_weight * session_transition_risk,
+                    1.0,
+                );
+                let confidence = (sq_weight * session_quality
+                    + kz_weight * kill_zone_alignment
+                    + tr_weight * session_transition_risk)
+                    .clamp(0.0, 1.0);
+
+                build_signal(
+                    &self.name,
+                    self.category,
+                    candle.timestamp,
+                    value,
+                    confidence,
+                    format!(
+                        "sq={:.3};kz={:.3};tr={:.3}",
+                        session_quality, kill_zone_alignment, session_transition_risk
+                    ),
+                )
+            })
+            .collect()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -2078,285 +2357,5 @@ mod tests {
         assert!(matches
             .iter()
             .any(|item| item.kind == CanonicalSetupKind::WeeklyOpenSweepDailyMss));
-    }
-}
-
-// --- Hot-plug compute stubs for Families E, F, H ---
-
-impl FactorDefinition {
-    /// Family E: Crowding / Herding Execution Risk
-    fn evaluate_crowding_herding(&self, candles: &[Candle]) -> Vec<FactorSignal> {
-        let lookback = self.parameter("lookback", 20.0) as usize;
-        let volume_spike_ratio = self.parameter("volume_spike_ratio", 2.0);
-        let pc_weight = self.parameter("participation_concentration_weight", 0.40);
-        let sp_weight = self.parameter("same_side_pressure_weight", 0.35);
-        let cr_weight = self.parameter("crowding_relief_weight", 0.25);
-
-        let volumes: Vec<f64> = candles.iter().map(|c| c.volume as f64).collect();
-
-        candles
-            .iter()
-            .enumerate()
-            .map(|(index, candle)| {
-                let start = index.saturating_sub(lookback);
-                let window_vol = &volumes[start..=index];
-
-                // Participation concentration: current volume vs rolling median
-                let median_vol = {
-                    let mut sorted = window_vol.to_vec();
-                    sorted.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
-                    let mid = sorted.len() / 2;
-                    if sorted.len() % 2 == 0 && sorted.len() > 1 {
-                        (sorted[mid - 1] + sorted[mid]) / 2.0
-                    } else {
-                        sorted[mid]
-                    }
-                };
-                let participation_concentration = if median_vol > f64::EPSILON {
-                    (candle.volume as f64 / median_vol / volume_spike_ratio)
-                        .min(1.0)
-                        .max(0.0)
-                } else {
-                    0.0
-                };
-
-                // Same-side pressure: volume-weighted close direction over window
-                let same_side_pressure = {
-                    let mut bull_vol = 0.0f64;
-                    let mut bear_vol = 0.0f64;
-                    for (i, v) in window_vol.iter().enumerate() {
-                        let c = &candles[start + i];
-                        if c.close >= c.open {
-                            bull_vol += v;
-                        } else {
-                            bear_vol += v;
-                        }
-                    }
-                    let total = bull_vol + bear_vol;
-                    if total > f64::EPSILON {
-                        ((bull_vol - bear_vol) / total).clamp(-1.0, 1.0)
-                    } else {
-                        0.0
-                    }
-                };
-
-                // Crowding relief: volume decay after spike (3-bar lookback)
-                let crowding_relief = if index >= 3 && volumes[index] > f64::EPSILON {
-                    let prev3_avg = (volumes[index - 3] + volumes[index - 2] + volumes[index - 1]) / 3.0;
-                    if prev3_avg > f64::EPSILON {
-                        (1.0 - (candle.volume as f64 / prev3_avg).min(2.0) / 2.0).max(0.0)
-                    } else {
-                        0.5
-                    }
-                } else {
-                    0.5
-                };
-
-                let direction_score = same_side_pressure;
-                let value = normalize_signed(
-                    pc_weight * participation_concentration * direction_score.signum()
-                        + sp_weight * same_side_pressure
-                        - cr_weight * crowding_relief * direction_score.signum(),
-                    1.0,
-                );
-                let confidence = (participation_concentration * pc_weight
-                    + same_side_pressure.abs() * sp_weight
-                    + crowding_relief * cr_weight)
-                    .clamp(0.0, 1.0);
-
-                build_signal(
-                    &self.name,
-                    self.category,
-                    candle.timestamp,
-                    value,
-                    confidence,
-                    format!(
-                        "pc={:.3};sp={:.3};cr={:.3};vol_ratio={:.2}",
-                        participation_concentration,
-                        same_side_pressure,
-                        crowding_relief,
-                        if median_vol > f64::EPSILON { candle.volume as f64 / median_vol } else { 0.0 }
-                    ),
-                )
-            })
-            .collect()
-    }
-
-    /// Family F: Spectral Rhythm / Chaos
-    fn evaluate_spectral_rhythm(&self, candles: &[Candle]) -> Vec<FactorSignal> {
-        let lookback = self.parameter("lookback", 64.0) as usize;
-        let se_weight = self.parameter("spectral_entropy_weight", 0.45);
-        let ce_weight = self.parameter("cycle_energy_weight", 0.35);
-        let rs_weight = self.parameter("rhythm_stability_weight", 0.20);
-
-        let closes: Vec<f64> = candles.iter().map(|c| c.close).collect();
-
-        candles
-            .iter()
-            .enumerate()
-            .map(|(index, candle)| {
-                let start = index.saturating_sub(lookback);
-                let window = &closes[start..=index];
-
-                // Spectral entropy: normalized log-variance of returns
-                let spectral_entropy = {
-                    let returns: Vec<f64> = window.windows(2).map(|w| w[1] - w[0]).collect();
-                    if returns.len() < 4 {
-                        0.5
-                    } else {
-                        let mean = returns.iter().sum::<f64>() / returns.len() as f64;
-                        let variance = returns.iter().map(|r| (r - mean).powi(2)).sum::<f64>()
-                            / returns.len() as f64;
-                        if variance > f64::EPSILON {
-                            (1.0 + variance.ln() / 10.0).clamp(0.0, 1.0)
-                        } else {
-                            0.0
-                        }
-                    }
-                };
-
-                // Dominant cycle energy: longest same-direction run / lookback
-                let cycle_energy = {
-                    let returns: Vec<f64> = window.windows(2).map(|w| w[1] - w[0]).collect();
-                    if returns.is_empty() {
-                        0.0
-                    } else {
-                        let mut max_run = 1usize;
-                        let mut current_run = 1usize;
-                        for i in 1..returns.len() {
-                            if returns[i].signum() == returns[i - 1].signum()
-                                && returns[i].abs() > f64::EPSILON
-                            {
-                                current_run += 1;
-                                max_run = max_run.max(current_run);
-                            } else {
-                                current_run = 1;
-                            }
-                        }
-                        (max_run as f64 / lookback as f64).min(1.0)
-                    }
-                };
-
-                // Rhythm stability: autocorrelation lag-1 of returns
-                let rhythm_stability = {
-                    let returns: Vec<f64> = window.windows(2).map(|w| w[1] - w[0]).collect();
-                    if returns.len() < 4 {
-                        0.5
-                    } else {
-                        let mean = returns.iter().sum::<f64>() / returns.len() as f64;
-                        let var = returns.iter().map(|r| (r - mean).powi(2)).sum::<f64>();
-                        if var < f64::EPSILON {
-                            0.5
-                        } else {
-                            let cov: f64 = returns[..returns.len() - 1]
-                                .iter()
-                                .zip(&returns[1..])
-                                .map(|(a, b)| (a - mean) * (b - mean))
-                                .sum();
-                            (cov / var).clamp(-1.0, 1.0).abs()
-                        }
-                    }
-                };
-
-                // High entropy = chaotic = negative for execution readiness
-                let value = normalize_signed(
-                    -se_weight * spectral_entropy
-                        + ce_weight * cycle_energy
-                            * if candle.close >= candle.open { 1.0 } else { -1.0 }
-                        + rs_weight * rhythm_stability
-                            * if candle.close >= candle.open { 1.0 } else { -1.0 },
-                    1.0,
-                );
-                let confidence = (se_weight * spectral_entropy
-                    + ce_weight * cycle_energy
-                    + rs_weight * rhythm_stability)
-                    .clamp(0.0, 1.0);
-
-                build_signal(
-                    &self.name,
-                    self.category,
-                    candle.timestamp,
-                    value,
-                    confidence,
-                    format!(
-                        "se={:.3};ce={:.3};rs={:.3}",
-                        spectral_entropy, cycle_energy, rhythm_stability
-                    ),
-                )
-            })
-            .collect()
-    }
-
-    /// Family H: Session / Liquidity Window Quality
-    fn evaluate_session_liquidity(&self, candles: &[Candle]) -> Vec<FactorSignal> {
-        let sq_weight = self.parameter("session_quality_weight", 0.40);
-        let kz_weight = self.parameter("kill_zone_weight", 0.35);
-        let tr_weight = self.parameter("transition_risk_weight", 0.25);
-        let lookback = self.parameter("lookback", 20.0) as usize;
-
-        let volumes: Vec<f64> = candles.iter().map(|c| c.volume as f64).collect();
-
-        candles
-            .iter()
-            .enumerate()
-            .map(|(index, candle)| {
-                // Session participation quality: current volume relative to rolling average
-                let session_quality = {
-                    let start = index.saturating_sub(lookback);
-                    let window_vol = &volumes[start..=index];
-                    let avg = window_vol.iter().sum::<f64>() / window_vol.len() as f64;
-                    if avg > f64::EPSILON {
-                        (candle.volume as f64 / avg).min(3.0) / 3.0
-                    } else {
-                        0.0
-                    }
-                };
-
-                // Kill-zone alignment: hour-of-day proxy (UTC)
-                // US RTH kill zones ~14-15, 19-20 UTC; London ~7-8, 12-13 UTC
-                let kill_zone_alignment = {
-                    let hour = candle.timestamp.format("%H").to_string().parse::<u32>().unwrap_or(12);
-                    match hour {
-                        7 | 8 | 12 | 13 | 14 | 15 | 19 | 20 => 0.9,
-                        9..=11 | 16..=18 => 0.6,
-                        _ => 0.3,
-                    }
-                };
-
-                // Session transition risk: near session boundaries
-                let session_transition_risk = {
-                    let hour = candle.timestamp.format("%H").to_string().parse::<u32>().unwrap_or(12);
-                    match hour {
-                        7 | 8 | 13 | 14 | 19 | 20 => 0.7,
-                        _ => 0.2,
-                    }
-                };
-
-                let value = normalize_signed(
-                    sq_weight * session_quality
-                        * if candle.close >= candle.open { 1.0 } else { -1.0 }
-                        + kz_weight * kill_zone_alignment
-                            * if candle.close >= candle.open { 1.0 } else { -1.0 }
-                        - tr_weight * session_transition_risk,
-                    1.0,
-                );
-                let confidence = (sq_weight * session_quality
-                    + kz_weight * kill_zone_alignment
-                    + tr_weight * session_transition_risk)
-                    .clamp(0.0, 1.0);
-
-                build_signal(
-                    &self.name,
-                    self.category,
-                    candle.timestamp,
-                    value,
-                    confidence,
-                    format!(
-                        "sq={:.3};kz={:.3};tr={:.3}",
-                        session_quality, kill_zone_alignment, session_transition_risk
-                    ),
-                )
-            })
-            .collect()
     }
 }
