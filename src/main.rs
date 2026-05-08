@@ -6705,8 +6705,24 @@ mod tests {
             Some("futures_index")
         );
         assert_eq!(
+            ict_engine::application::belief::market_category_for_symbol("SPY"),
+            Some("futures_index")
+        );
+        assert_eq!(
+            ict_engine::application::belief::market_category_for_symbol("QQQ"),
+            Some("futures_index")
+        );
+        assert_eq!(
             ict_engine::application::belief::market_category_for_symbol("GC"),
             Some("metals")
+        );
+        assert_eq!(
+            ict_engine::application::belief::market_category_for_symbol("GLD"),
+            Some("metals")
+        );
+        assert_eq!(
+            ict_engine::application::belief::market_category_for_symbol("USO"),
+            Some("energy")
         );
         assert_eq!(
             ict_engine::application::belief::market_category_for_symbol("BTCUSD"),

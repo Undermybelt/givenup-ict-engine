@@ -1343,6 +1343,7 @@ target/debug/ict-engine validate-market-state \
 - 通过 `analyze-live --futures-backend yfinance --aux-backend yfinance --futures-symbol EURUSD=X` 可以在 `/tmp` 下生成真实 EURUSD 样本
 - opt-in profile 在 FX 样本上同样能把高置信比例稳定抬到 30% 以上
 - 已补齐：仓库里的 `market_category_for_symbol()` / `market_behavior_profile_for_family()` 现在会把 `EURUSD` / `EURUSD=X` 等符号路由为 `fx`
+- ETF 代理符号 `SPY / QQQ / IWM / DIA / GLD / USO` 也已并入既有 `futures_index / metals / energy` family 路由，避免后续 profile/factor 生命周期继续落到 generic
 
 **Multi-market opt-in 结论**：
 - NQ / YM / GC / CL / BTCUSD / EURUSD 的 opt-in profile 都能把高置信比例抬到 30% 以上
@@ -1361,6 +1362,6 @@ target/debug/ict-engine validate-market-state \
 
 ---
 
-**更新时间**：2026-05-08 15:02
+**更新时间**：2026-05-08 15:11
 **更新人**：Codex
 **状态**：市场状态分类模块已完成编译/测试/CLI 烟测，并补充 NQ + YM + GC + CL + BTCUSD + EURUSD 真实验证；热插拔 CLI 已落地，默认路径保守可用，opt-in profile 已证明跨市场高置信提升

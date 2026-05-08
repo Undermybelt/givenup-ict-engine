@@ -4,9 +4,11 @@ pub fn market_category_for_symbol(symbol: &str) -> Option<&'static str> {
     let inferred = infer_market_from_symbol(symbol);
     let compact = inferred.replace('/', "").replace('=', "");
     match compact.as_str() {
-        "ES" | "NQ" | "RTY" | "YM" => Some("futures_index"),
-        "GC" | "SI" | "HG" => Some("metals"),
-        "CL" | "NG" | "RB" => Some("energy"),
+        "ES" | "NQ" | "RTY" | "YM" | "SPY" | "QQQ" | "IWM" | "DIA" => {
+            Some("futures_index")
+        }
+        "GC" | "SI" | "HG" | "GLD" | "SLV" | "CPER" => Some("metals"),
+        "CL" | "NG" | "RB" | "USO" | "UNG" | "BNO" => Some("energy"),
         "BTC" | "BTCUSD" | "BTCUSDT" | "ETH" | "ETHUSD" | "ETHUSDT" | "SOL" | "SOLUSD"
         | "SOLUSDT" | "BNB" | "BNBUSD" | "BNBUSDT" | "AVAX" | "AVAXUSD" | "AVAXUSDT" => {
             Some("crypto")
