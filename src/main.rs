@@ -624,6 +624,16 @@ enum Commands {
             help = "Disable enhanced aggregation and use the basic aggregator fallback"
         )]
         no_enhanced: bool,
+        #[arg(
+            long,
+            help = "Optional market-state JSON config path for hot-pluggable tuning"
+        )]
+        config: Option<String>,
+        #[arg(
+            long,
+            help = "Optional profile name: default, trend_trading, volatility_trading, reversal_trading, or risk_control"
+        )]
+        profile: Option<String>,
     },
     /// Train HMM model
     Train {
@@ -2109,12 +2119,16 @@ fn main() -> Result<()> {
             step_size,
             verbose,
             no_enhanced,
+            config,
+            profile,
         } => validate_market_state_shell(ValidateMarketStateInput {
             data_path: data,
             window_size,
             step_size,
             verbose,
             enhanced: !no_enhanced,
+            config_path: config,
+            profile,
         })?,
         Commands::Train {
             symbol,
@@ -14488,12 +14502,16 @@ mod tests {
                 step_size,
                 verbose,
                 no_enhanced,
+                config,
+                profile,
             } => {
                 assert_eq!(data, "candles.json");
                 assert_eq!(window_size, 100);
                 assert_eq!(step_size, 1);
                 assert!(!verbose);
                 assert!(!no_enhanced);
+                assert!(config.is_none());
+                assert!(profile.is_none());
             }
             other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
         }

@@ -1185,15 +1185,90 @@ target/debug/ict-engine validate-market-state \
 # Average Confidence: 79.46%
 # High Confidence Ratio: 85.71%
 # Tradeable Ratio: 100.00%
+
+target/debug/ict-engine validate-market-state \
+  --data examples/demo/demo-15m.json \
+  --window-size 20 \
+  --step-size 5 \
+  --profile risk_control
+# passed; profile selector loads
+
+target/debug/ict-engine validate-market-state \
+  --data examples/demo/demo-15m.json \
+  --window-size 20 \
+  --step-size 5 \
+  --config /tmp/ict-engine-market-state-config-check.json
+# passed with temporary external JSON config; temp file removed after smoke
 ```
+
+**真实 NQ 验证补充**：
+```bash
+target/debug/ict-engine validate-market-state \
+  --data /tmp/ict-engine-user-first-run-closed-loop-live/NQ/analyze_live_20260505T132510_m1.json \
+  --window-size 200 \
+  --step-size 200
+# Total Samples: 32
+# Average Confidence: 59.62%
+# High Confidence Ratio: 3.12%
+# Tradeable Ratio: 71.88%
+
+target/debug/ict-engine validate-market-state \
+  --data /tmp/ict-engine-user-first-run-closed-loop-live/NQ/analyze_live_20260505T132510_m5.json \
+  --window-size 200 \
+  --step-size 200
+# Total Samples: 20
+# Average Confidence: 57.99%
+# High Confidence Ratio: 0.00%
+# Tradeable Ratio: 70.00%
+
+target/debug/ict-engine validate-market-state \
+  --data /tmp/ict-engine-user-first-run-closed-loop-live/NQ/analyze_live_20260505T132510_mtf.json \
+  --window-size 200 \
+  --step-size 100
+# Total Samples: 17
+# Average Confidence: 59.28%
+# High Confidence Ratio: 11.76%
+# Tradeable Ratio: 64.71%
+
+target/debug/ict-engine validate-market-state \
+  --data /tmp/ict-engine-provider-openbb/NQ/analyze_live_20260506T020901_htf.json \
+  --window-size 100 \
+  --step-size 20
+# Total Samples: 10
+# Average Confidence: 62.24%
+# High Confidence Ratio: 20.00%
+# Tradeable Ratio: 80.00%
+```
+
+**CLI 热插拔补充（2026-05-08）**：
+- `validate-market-state --profile <name>`：支持 `default` / `trend_trading` / `volatility_trading` / `reversal_trading` / `risk_control`
+- `validate-market-state --config <json>`：支持用户自定义 `MarketStateConfig`
+- `validate-market-state --no-enhanced`：保留基础聚合器回退
+- 默认不传任何配置仍然零配置可跑
+
+**NQ 1m profile sweep（窗口 200 / 步长 200）**：
+| Profile | 平均置信度 | 高置信比例 | 可交易比例 | 主大类变化 |
+| --- | ---: | ---: | ---: | --- |
+| default | 59.62% | 3.12% | 71.88% | TrendExpansion 20 / RangeConsolidation 12 |
+| trend_trading | 59.62% | 3.12% | 71.88% | 同 default |
+| volatility_trading | 59.62% | 3.12% | 71.88% | 同 default |
+| reversal_trading | 59.70% | 3.12% | 71.88% | 同 default |
+| risk_control | 59.23% | 0.00% | 71.88% | TrendExpansion 18 / RangeConsolidation 13 / ExtremeStress 1 |
+
+**Profile sweep 结论**：
+- 预设 profile 热插拔可用
+- 现有预设不会自然解决高置信比例不足
+- 高置信提升需要真实数据校准或用户自定义 config，而不是继续切预设
 
 **当前结论**：
 - 零配置 CLI 验证路径可用，消费者可以直接用 cleaned JSON/CSV candles 跑主大类/次小类置信度报告。
 - demo 数据验证达到 EXCELLENT，但样本只有 52 根 K 线、7 个滑窗，只能证明命令链路与报告格式，不等同于真实市场准确率。
-- 下一个真正的质量门槛仍是 NQ/ES/crypto 等真实历史数据的多品种、多周期验证。
+- 真实 NQ 本地数据平均置信度约 58-62%，可交易比例约 65-80%，说明默认路径可用。
+- 高置信比例仍低于 30% 目标，不能宣称市场状态分类最终达标。
+- 下一个真正的质量门槛是多市场/多周期真实数据校准：优先用 `--profile` / `--config` 做可复现调参，不继续凭空抬高置信度。
 
 ---
 
-**更新时间**：2026-05-08 10:55
+**更新时间**：2026-05-08 11:35
 **更新人**：Codex
-**状态**：市场状态分类模块已完成编译/测试/CLI 烟测，等待真实数据多市场验证
+**状态**：市场状态分类模块已完成编译/测试/CLI 烟测，并补充真实 NQ 验证；热插拔 CLI 已落地，高置信比例仍待真实数据校准
