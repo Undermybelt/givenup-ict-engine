@@ -1042,7 +1042,12 @@ fn timeframe_to_interval(timeframe: Timeframe) -> &'static str {
 
 fn resolve_futures_symbol(symbol: &str) -> String {
     let upper = symbol.trim().to_uppercase();
-    if upper.contains("=F") {
+    if upper.contains("=F")
+        || upper.contains("=X")
+        || upper.starts_with('^')
+        || upper.contains("-USD")
+        || upper.contains("-USDT")
+    {
         upper
     } else {
         format!("{upper}=F")
@@ -1170,6 +1175,19 @@ fn should_sleep_before_retry(attempt: usize, max_attempts: usize) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn resolve_futures_symbol_preserves_explicit_yahoo_symbols() {
+        assert_eq!(resolve_futures_symbol("BTC-USD"), "BTC-USD");
+        assert_eq!(resolve_futures_symbol("EURUSD=X"), "EURUSD=X");
+        assert_eq!(resolve_futures_symbol("^GSPC"), "^GSPC");
+    }
+
+    #[test]
+    fn resolve_futures_symbol_still_normalizes_futures_contracts() {
+        assert_eq!(resolve_futures_symbol("NQ"), "NQ=F");
+        assert_eq!(resolve_futures_symbol("GC=F"), "GC=F");
+    }
 
     #[test]
     fn yahoo_chart_retry_policy_only_retries_retryable_statuses() {

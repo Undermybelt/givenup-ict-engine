@@ -1043,8 +1043,7 @@ let validator = MarketStateValidator::with_config(config);
 ./target/debug/ict-engine validate-market-state \
   --data /path/to/candles.json \
   --window-size 100 \
-  --step-size 10 \
-  --enhanced
+  --step-size 10
 ```
 
 **功能**：
@@ -1170,7 +1169,7 @@ let validator = MarketStateValidator::with_config(config);
 **已验证命令**：
 ```bash
 cargo test market_state --lib
-# 36 passed; 0 failed
+# 41 passed; 0 failed
 
 cargo build --bin ict-engine
 # passed
@@ -1182,8 +1181,9 @@ target/debug/ict-engine validate-market-state \
   --data examples/demo/demo-15m.json \
   --window-size 20 \
   --step-size 5
-# Average Confidence: 79.46%
-# High Confidence Ratio: 85.71%
+# Total Samples: 8
+# Average Confidence: 79.70%
+# High Confidence Ratio: 87.50%
 # Tradeable Ratio: 100.00%
 
 target/debug/ict-engine validate-market-state \
@@ -1191,7 +1191,10 @@ target/debug/ict-engine validate-market-state \
   --window-size 20 \
   --step-size 5 \
   --profile risk_control
-# passed; profile selector loads
+# Total Samples: 8
+# Average Confidence: 67.79%
+# High Confidence Ratio: 0.00%
+# Tradeable Ratio: 100.00%
 
 target/debug/ict-engine validate-market-state \
   --data examples/demo/demo-15m.json \
@@ -1207,37 +1210,37 @@ target/debug/ict-engine validate-market-state \
   --data /tmp/ict-engine-user-first-run-closed-loop-live/NQ/analyze_live_20260505T132510_m1.json \
   --window-size 200 \
   --step-size 200
-# Total Samples: 32
-# Average Confidence: 59.62%
-# High Confidence Ratio: 3.12%
-# Tradeable Ratio: 71.88%
+# Total Samples: 33
+# Average Confidence: 59.59%
+# High Confidence Ratio: 3.03%
+# Tradeable Ratio: 72.73%
 
 target/debug/ict-engine validate-market-state \
   --data /tmp/ict-engine-user-first-run-closed-loop-live/NQ/analyze_live_20260505T132510_m5.json \
   --window-size 200 \
   --step-size 200
-# Total Samples: 20
-# Average Confidence: 57.99%
+# Total Samples: 21
+# Average Confidence: 58.21%
 # High Confidence Ratio: 0.00%
-# Tradeable Ratio: 70.00%
+# Tradeable Ratio: 71.43%
 
 target/debug/ict-engine validate-market-state \
   --data /tmp/ict-engine-user-first-run-closed-loop-live/NQ/analyze_live_20260505T132510_mtf.json \
   --window-size 200 \
   --step-size 100
-# Total Samples: 17
-# Average Confidence: 59.28%
-# High Confidence Ratio: 11.76%
-# Tradeable Ratio: 64.71%
+# Total Samples: 18
+# Average Confidence: 59.34%
+# High Confidence Ratio: 11.11%
+# Tradeable Ratio: 66.67%
 
 target/debug/ict-engine validate-market-state \
   --data /tmp/ict-engine-provider-openbb/NQ/analyze_live_20260506T020901_htf.json \
   --window-size 100 \
   --step-size 20
-# Total Samples: 10
-# Average Confidence: 62.24%
-# High Confidence Ratio: 20.00%
-# Tradeable Ratio: 80.00%
+# Total Samples: 11
+# Average Confidence: 63.09%
+# High Confidence Ratio: 18.18%
+# Tradeable Ratio: 81.82%
 ```
 
 **CLI 热插拔补充（2026-05-08）**：
@@ -1250,39 +1253,18 @@ target/debug/ict-engine validate-market-state \
 **NQ 1m profile sweep（窗口 200 / 步长 200）**：
 | Profile | 平均置信度 | 高置信比例 | 可交易比例 | 主大类变化 |
 | --- | ---: | ---: | ---: | --- |
-| default | 59.62% | 3.12% | 71.88% | TrendExpansion 20 / RangeConsolidation 12 |
-| trend_trading | 59.62% | 3.12% | 71.88% | 同 default |
-| volatility_trading | 59.62% | 3.12% | 71.88% | 同 default |
-| reversal_trading | 59.70% | 3.12% | 71.88% | 同 default |
-| risk_control | 59.23% | 0.00% | 71.88% | TrendExpansion 18 / RangeConsolidation 13 / ExtremeStress 1 |
+| default | 59.59% | 3.03% | 72.73% | TrendExpansion 21 / RangeConsolidation 12 |
+| trend_trading | 59.16% | 0.00% | 72.73% | 同 default |
+| volatility_trading | 58.53% | 0.00% | 66.67% | 同 default |
+| reversal_trading | 59.05% | 0.00% | 72.73% | 同 default |
+| risk_control | 58.04% | 0.00% | 66.67% | TrendExpansion 19 / RangeConsolidation 13 / ExtremeStress 1 |
 
 **Profile sweep 结论**：
 - 预设 profile 热插拔可用
 - 现有预设不会自然解决高置信比例不足
-- 高置信提升需要真实数据校准或用户自定义 config，而不是继续切预设
-
-**NQ config probe（临时 JSON）**：
-| Scope | 平均置信度 | 高置信比例 | 可交易比例 | 备注 |
-| --- | ---: | ---: | ---: | --- |
-| m1 | 60.76% | 3.12% | 78.12% | 高置信未改善，tradeable 上升 |
-| m5 | 59.06% | 0.00% | 75.00% | 比默认更宽但仍偏低 |
-| mtf | 60.50% | 11.76% | 64.71% | 略有提升 |
-| htf | 64.33% | 20.00% | 80.00% | 真实提升最明显 |
-
-**Config probe 结论**：
-- `--config` 的确能驱动增强聚合器
-- 但单一 NQ 片段下并不能稳定把高置信拉到 30%+
-- 接下来应该做分市场/分周期的 calibrated config，而不是继续推全局默认
-
-**Aggressive config probe（临时 JSON）**：
-| Scope | 平均置信度 | 高置信比例 | 可交易比例 | 备注 |
-| --- | ---: | ---: | ---: | --- |
-| m1 | 60.67% | 0.00% | 78.12% | 高置信反而掉到 0 |
-
-**Aggressive probe 结论**：
-- 盲目抬高 base confidence / consistency weight 会伤害高置信分布
-- 这条线不该继续做全局默认调高
-- 下一步应是按市场/周期分离 calibrated config，而不是统一阈值再拉高
+- 高置信提升仍然需要真实数据校准或用户自定义 config，而不是继续切预设
+- 早期临时 JSON probe / aggressive probe 使用的 `/tmp` 配置文件没有保留，不再作为当前可复现证据
+- 当前 authoritative 证据以保留在 repo 的 opt-in profile JSON 和下方 rebuilt-binary 验证表为准
 
 **Opt-in NQ confidence profile（2026-05-08）**：
 - 文件：`docs/examples/market-state-nq-confidence-profile.json`
@@ -1344,6 +1326,7 @@ target/debug/ict-engine validate-market-state \
 
 **Crypto probe 结论**：
 - 通过 `analyze-live --futures-backend crypto_public_runtime --aux-backend yfinance` 可以在 `/tmp` 下生成真实 BTCUSD 样本
+- `yfinance` 直连路径现在也支持显式 `BTC-USD` / `EURUSD=X` 这类 provider-native futures symbols，不再被错误追加成 `=F`
 - opt-in profile 在 crypto 样本上同样能把高置信比例抬到 60%+，说明当前主大类 / 次小类聚合逻辑并不只对 tradfi 有效
 - 已补齐：仓库里的 `market_category_for_symbol()` / `market_behavior_profile_for_family()` 现在会把 `BTCUSD` / `BTC-USD` 等符号路由为 `crypto`
 
@@ -1363,6 +1346,6 @@ target/debug/ict-engine validate-market-state \
 
 ---
 
-**更新时间**：2026-05-08 14:27
+**更新时间**：2026-05-08 14:44
 **更新人**：Codex
 **状态**：市场状态分类模块已完成编译/测试/CLI 烟测，并补充 NQ + YM + GC + CL 真实验证；热插拔 CLI 已落地，默认路径保守可用，opt-in profile 已证明跨市场高置信提升
