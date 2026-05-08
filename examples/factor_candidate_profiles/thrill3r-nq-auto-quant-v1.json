@@ -242,6 +242,26 @@
       "evidence_window": "freqtrade 8Y NQ 5m: 2018-01-03 -> 2025-12-31"
     },
     {
+      "candidate_id": "family_a_killzone_breakout_15m_v1",
+      "artifact_source": {
+        "strategy_library_json": "/tmp/ict-engine-family-a-nq-15m-profile/.deps/auto-quant/strategy_library_15m.json"
+      },
+      "target_market_hypothesis": [
+        "NQ/USD"
+      ],
+      "evidence_window": "historical 15m profile export captured at /tmp/ict-engine-family-a-nq-15m-profile"
+    },
+    {
+      "candidate_id": "family_a_killzone_breakout_1d_regime_v1",
+      "artifact_source": {
+        "strategy_library_json": "/tmp/ict-engine-family-a-profile-1dregime-check/.deps/auto-quant/strategy_library_round3.json"
+      },
+      "target_market_hypothesis": [
+        "NQ/USD"
+      ],
+      "evidence_window": "historical 1d-regime profile export captured at /tmp/ict-engine-family-a-profile-1dregime-check"
+    },
+    {
       "candidate_id": "regime_primary_gate_pending_v1",
       "pack_readiness_reason": null,
       "artifact_source": {

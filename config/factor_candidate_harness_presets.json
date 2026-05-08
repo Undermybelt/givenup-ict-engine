@@ -439,6 +439,132 @@
       }
     },
     {
+      "candidate_id": "family_a_killzone_breakout_15m_v1",
+      "display_name": "Killzone Breakout 15m",
+      "family": "Family A",
+      "status": "active",
+      "promotion_state": "candidate_only",
+      "strategy_name": "TomacNQKillzoneBreakout15m",
+      "strategy_source": "/tmp/ict-engine-family-a-nq-15m-profile/.deps/auto-quant/user_data/strategies_external/TomacNQKillzoneBreakout15m.py",
+      "artifact_source": {},
+      "expression_text": "15m killzone breakout with 1h/4h trend context, intended as Family A timeframe-coverage evidence rather than a stronger replacement of the 1h base",
+      "operator_set": [
+        "am_killzone",
+        "high_24h",
+        "ema_fast_1h",
+        "ema_slow_1h",
+        "ema_fast_4h",
+        "ema_slow_4h"
+      ],
+      "complexity": 6,
+      "paradigm": "session breakout timeframe pivot",
+      "target_market_hypothesis": [
+        "NQ/USD"
+      ],
+      "base_timeframe": "15m",
+      "context_timeframes": [
+        "1h",
+        "4h"
+      ],
+      "evidence_window": "profile-selected historical 15m strategy-library lane",
+      "regime_role": "execution_only",
+      "pre_bayes_targets": [
+        "session_breakout_gate",
+        "trend_alignment_gate"
+      ],
+      "belief_targets": [
+        "entry_quality",
+        "session_quality"
+      ],
+      "path_ranking_targets": [
+        "recommended_path_bundle",
+        "structural_path_confidence"
+      ],
+      "execution_tree_targets": [
+        "execution_readiness",
+        "prediction_vote_score"
+      ],
+      "execution_tree_blockers_intended": [
+        "thin_density",
+        "weaker_than_1h_parent"
+      ],
+      "structural_feedback_required": true,
+      "resonance_summary": {
+        "base_timeframe": "15m",
+        "context_stack": [
+          "1h",
+          "4h"
+        ],
+        "resonance_by_timeframe": {
+          "1h": "trend_vote",
+          "4h": "trend_vote"
+        }
+      }
+    },
+    {
+      "candidate_id": "family_a_killzone_breakout_1d_regime_v1",
+      "display_name": "Killzone Breakout 1d Regime",
+      "family": "Family A",
+      "status": "active",
+      "promotion_state": "candidate_only",
+      "strategy_name": "TomacNQ_KillzoneBreakout1dRegime",
+      "strategy_source": "/tmp/ict-engine-family-a-profile-1dregime-check/.deps/auto-quant/user_data/strategies_external/TomacNQ_KillzoneBreakout1dRegime.py",
+      "artifact_source": {},
+      "expression_text": "NQ killzone breakout gated by daily-bias regime logic, intended to test whether a stronger 1d context filter improves Family A quality",
+      "operator_set": [
+        "am_killzone",
+        "high_24h",
+        "daily_bias_gate",
+        "ema_fast_4h",
+        "ema_slow_4h"
+      ],
+      "complexity": 5,
+      "paradigm": "session breakout with daily regime filter",
+      "target_market_hypothesis": [
+        "NQ/USD"
+      ],
+      "base_timeframe": "1h",
+      "context_timeframes": [
+        "4h",
+        "1d"
+      ],
+      "evidence_window": "profile-selected historical 1d-regime strategy-library lane",
+      "regime_role": "execution_only",
+      "pre_bayes_targets": [
+        "session_breakout_gate",
+        "daily_regime_alignment"
+      ],
+      "belief_targets": [
+        "entry_quality",
+        "session_quality",
+        "daily_bias_evidence"
+      ],
+      "path_ranking_targets": [
+        "recommended_path_bundle",
+        "structural_path_confidence"
+      ],
+      "execution_tree_targets": [
+        "execution_readiness",
+        "prediction_vote_score"
+      ],
+      "execution_tree_blockers_intended": [
+        "anecdotal_density",
+        "needs_cross_market_followup"
+      ],
+      "structural_feedback_required": true,
+      "resonance_summary": {
+        "base_timeframe": "1h",
+        "context_stack": [
+          "4h",
+          "1d"
+        ],
+        "resonance_by_timeframe": {
+          "4h": "trend_vote",
+          "1d": "regime_vote"
+        }
+      }
+    },
+    {
       "candidate_id": "regime_primary_gate_pending_v1",
       "display_name": "Primary Regime Classifier Gate",
       "family": "Regime Gate",

@@ -227,6 +227,31 @@ A candidate may only move to the post-factor runtime-closure board after all of 
     - quality remains negative: `sharpe=-0.0199`, `profit_factor=0.8399`, `total_profit_pct=-0.47`, `max_drawdown_pct=1.716`
     - transfer layer remains `single_market_only`
     - therefore the 5m lane successfully closes the timeframe-coverage evidence gap, but it does not close the Family A quality gate
+- [x] Extended the hot-pluggable reusable-input layer beyond `freqtrade_backtest_zip` so old explicit Family A evidence can still be consumed without rerunning the whole historical workspace:
+  - `scripts/research/factor_candidate_resolver.py` now accepts `strategy_library_json` as another additive reusable input kind
+  - this keeps the generic surface zero-config while letting an opt-in profile point at old explicit strategy-library artifacts when those are the only durable evidence left
+  - regression coverage added in `scripts/research/tests/test_factor_candidate_resolver.py` for:
+    - registry mode recognizes `strategy_library_json` as `artifact_kind=strategy_library_json`
+    - pack-build mode converts it into the normal `factor_expression.json` / `factor_eval_grid_summary.json` / `transfer_score.json` outputs
+- [x] Continued the Family A breadth lane with the historical 15m strategy-library lane:
+  - added `family_a_killzone_breakout_15m_v1` to the generic registry
+  - injected the reusable evidence only through the opt-in profile:
+    - `strategy_library_json=/tmp/ict-engine-family-a-nq-15m-profile/.deps/auto-quant/strategy_library_15m.json`
+  - verified the current profile build now reaches `candidate_count=10`, `buildable_count=10`, `built_pack_count=10`
+  - current evidence is explicit but still weak:
+    - `trade_count=22`, `aggregate_label=probe_only`
+    - `sharpe=0.0746`, `profit_factor=1.1272`, `total_profit_pct=1.18`
+    - `transfer_status=single_market_only`
+  - therefore the 15m lane is now explicit coverage evidence, not a promotable Family A replacement
+- [x] Continued the Family A breadth lane with the historical 1d-regime strategy-library lane:
+  - added `family_a_killzone_breakout_1d_regime_v1` to the generic registry
+  - injected the reusable evidence only through the opt-in profile:
+    - `strategy_library_json=/tmp/ict-engine-family-a-profile-1dregime-check/.deps/auto-quant/strategy_library_round3.json`
+  - current evidence is explicit but too thin to count:
+    - `trade_count=2`, `aggregate_label=anecdotal`
+    - `sharpe=0.4468`, `total_profit_pct=2.26`
+    - `transfer_status=single_market_only`
+  - therefore the 1d-regime lane is now recorded as a real explicit failure-to-scale rather than an unmaterialized idea
 
 ### Next
 

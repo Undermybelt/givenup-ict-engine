@@ -32,6 +32,7 @@
   - [x] Make corrupted `freqtrade` reusable inputs fail closed instead of crashing the build flow.
   - [x] Continue the Family A breadth lane with one more real explicit candidate pack.
   - [x] Continue the Family A breadth lane with the first 5m timeframe-coverage pack.
+  - [x] Continue the Family A breadth lane with the historical 15m and 1d-regime lanes.
   - [ ] Continue the Family A breadth lane with the next still-missing variant.
 - Active slice:
   - regime bundle slice complete; next live slice is Family A breadth continuation
@@ -46,8 +47,10 @@
   - zip integrity now gates `artifact_ready` for `freqtrade_backtest_zip`
   - `family_a_fvg_retrace_1h_v1` is now a real profile-backed candidate pack, not a board-only idea
   - `family_a_fvg_retrace_5m_v1` is now a real profile-backed candidate pack, not a board-only idea
+  - `strategy_library_json` is now a supported reusable input kind for old explicit evidence
+  - `family_a_killzone_breakout_15m_v1` and `family_a_killzone_breakout_1d_regime_v1` are now real profile-backed candidate packs, not board-only notes
 - Next step:
-  - generate fresh reusable evidence for the next Family A breadth variant (`15m` or `1dRegime` lane), then reuse the same resolver flow for another explicit candidate pack
+  - choose the next still-missing Family A breadth variant that is not yet explicit in the registry, then either recover its historical artifact or generate fresh reusable evidence
 
 ## EvidenceBundleDraft
 
@@ -106,6 +109,16 @@
       - result: `82` trades, `aggregate_label=preferred_density`, `sharpe=-0.0199`, `profit_factor=0.8399`, `total_profit_pct=-0.47`
       - reusable zip: `backtest-result-2026-05-08_23-55-11.zip`
     - registry/profile were updated and resolver now emits `family_a_fvg_retrace_5m_v1`
+  - Historical Family A strategy-library artifacts recovered this turn:
+    - `strategy_library_json` reusable-input support added to resolver
+    - `TomacNQKillzoneBreakout15m`
+      - source artifact: `/tmp/ict-engine-family-a-nq-15m-profile/.deps/auto-quant/strategy_library_15m.json`
+      - result: `22` trades, `aggregate_label=probe_only`, `sharpe=0.0746`, `profit_factor=1.1272`
+      - registry/profile now emit `family_a_killzone_breakout_15m_v1`
+    - `TomacNQ_KillzoneBreakout1dRegime`
+      - source artifact: `/tmp/ict-engine-family-a-profile-1dregime-check/.deps/auto-quant/strategy_library_round3.json`
+      - result: `2` trades, `aggregate_label=anecdotal`, `sharpe=0.4468`, `total_profit_pct=2.26`
+      - registry/profile now emit `family_a_killzone_breakout_1d_regime_v1`
 
 ## DriftCheckDraft
 
@@ -133,3 +146,4 @@
 - If starting the next slice, begin from Family A breadth evidence generation rather than reopening the regime lane unless new shared benchmark artifacts appear.
 - `family_a_fvg_retrace_1h_v1` already exists now; do not regenerate the same pack unless the underlying reusable zips are replaced.
 - `family_a_fvg_retrace_5m_v1` already exists now; do not regenerate the same pack unless the underlying reusable zip is replaced.
+- `family_a_killzone_breakout_15m_v1` and `family_a_killzone_breakout_1d_regime_v1` now exist; prefer fresh cross-market evidence or another missing variant instead of re-ingesting the same historical manifests again.

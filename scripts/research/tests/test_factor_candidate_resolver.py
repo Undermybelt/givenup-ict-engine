@@ -52,7 +52,7 @@ class FactorCandidateResolverTests(unittest.TestCase):
         bundle = resolver.build_candidate_registry(repo_root=REPO_ROOT)
 
         self.assertEqual(bundle["summary"]["selection_mode"], "generic_zero_config")
-        self.assertEqual(bundle["summary"]["candidate_count"], 8)
+        self.assertEqual(bundle["summary"]["candidate_count"], 10)
         self.assertEqual(bundle["summary"]["buildable_count"], 0)
         self.assertEqual(
             bundle["summary"]["naming_contract_version"],
@@ -128,6 +128,20 @@ class FactorCandidateResolverTests(unittest.TestCase):
         )
         self.assertTrue(fvg_retrace_5m["artifact_ready"])
         self.assertEqual(fvg_retrace_5m["base_timeframe"], "5m")
+        killzone_15m = next(
+            item
+            for item in bundle["candidates"]
+            if item["candidate_id"] == "family_a_killzone_breakout_15m_v1"
+        )
+        self.assertTrue(killzone_15m["artifact_ready"])
+        self.assertEqual(killzone_15m["artifact_kind"], "strategy_library_json")
+        one_day_regime = next(
+            item
+            for item in bundle["candidates"]
+            if item["candidate_id"] == "family_a_killzone_breakout_1d_regime_v1"
+        )
+        self.assertTrue(one_day_regime["artifact_ready"])
+        self.assertEqual(one_day_regime["artifact_kind"], "strategy_library_json")
         regime = next(
             item
             for item in bundle["candidates"]
@@ -267,6 +281,32 @@ class FactorCandidateResolverTests(unittest.TestCase):
                     fvg_5m_summary["trade_density_summary"]["aggregate_label"],
                     "preferred_density",
                 )
+            if "family_a_killzone_breakout_15m_v1" in built:
+                killzone_15m_expression = json.loads(
+                    (
+                        output_dir
+                        / "packs"
+                        / "family_a_killzone_breakout_15m_v1"
+                        / "factor_expression.json"
+                    ).read_text(encoding="utf-8")
+                )
+                self.assertEqual(
+                    killzone_15m_expression["strategy_name"],
+                    "TomacNQKillzoneBreakout15m",
+                )
+            if "family_a_killzone_breakout_1d_regime_v1" in built:
+                one_day_regime_expression = json.loads(
+                    (
+                        output_dir
+                        / "packs"
+                        / "family_a_killzone_breakout_1d_regime_v1"
+                        / "factor_expression.json"
+                    ).read_text(encoding="utf-8")
+                )
+                self.assertEqual(
+                    one_day_regime_expression["strategy_name"],
+                    "TomacNQ_KillzoneBreakout1dRegime",
+                )
             if "regime_primary_gate_pending_v1" in built:
                 classifier_summary = json.loads(
                     (
@@ -390,6 +430,142 @@ class FactorCandidateResolverTests(unittest.TestCase):
                 pack_index["skipped_candidates"][0]["reason"].startswith(
                     "invalid_artifact:"
                 )
+            )
+
+    def test_build_candidate_registry_marks_strategy_library_json_buildable(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            repo_root = Path(tmpdir)
+            (repo_root / "config").mkdir(parents=True, exist_ok=True)
+            strategy_library = repo_root / "strategy_library.json"
+            strategy_library.write_text(
+                json.dumps(
+                    {
+                        "manifest_version": "1.0",
+                        "timeframe": "15m",
+                        "strategies": [
+                            {
+                                "name": "TomacNQKillzoneBreakout15m",
+                                "status": "ok",
+                                "metadata": {"hypothesis": "15m breakout lane"},
+                                "validation_metrics": {
+                                    "sharpe": 0.0746,
+                                    "trade_count": 22,
+                                    "profit_factor": 1.1272,
+                                    "total_profit_pct": 1.18,
+                                },
+                                "per_pair_metrics": {
+                                    "NQ/USD": {
+                                        "sharpe": 0.0746,
+                                        "trade_count": 22,
+                                        "profit_factor": 1.1272,
+                                        "total_profit_pct": 1.18,
+                                    }
+                                },
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (repo_root / "config" / "factor_candidate_harness_presets.json").write_text(
+                json.dumps(
+                    {
+                        "schema_version": "factor-candidate-harness-presets/v1",
+                        "candidates": [
+                            {
+                                "candidate_id": "strategy_library_candidate",
+                                "display_name": "Strategy Library Candidate",
+                                "artifact_source": {
+                                    "strategy_library_json": str(strategy_library)
+                                },
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            bundle = resolver.build_candidate_registry(repo_root=repo_root)
+
+            candidate = bundle["candidates"][0]
+            self.assertTrue(candidate["artifact_ready"])
+            self.assertEqual(candidate["evidence_status"], "buildable")
+            self.assertEqual(candidate["artifact_kind"], "strategy_library_json")
+            self.assertEqual(
+                candidate["pack_build_reason"],
+                "buildable_from_reusable_artifact",
+            )
+
+    def test_build_candidate_packs_supports_strategy_library_json(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            strategy_library = root / "strategy_library.json"
+            strategy_library.write_text(
+                json.dumps(
+                    {
+                        "manifest_version": "1.0",
+                        "timeframe": "15m",
+                        "strategies": [
+                            {
+                                "name": "TomacNQKillzoneBreakout15m",
+                                "status": "ok",
+                                "metadata": {"hypothesis": "15m breakout lane"},
+                                "validation_metrics": {
+                                    "sharpe": 0.0746,
+                                    "trade_count": 22,
+                                    "profit_factor": 1.1272,
+                                    "total_profit_pct": 1.18,
+                                },
+                                "per_pair_metrics": {
+                                    "NQ/USD": {
+                                        "sharpe": 0.0746,
+                                        "trade_count": 22,
+                                        "profit_factor": 1.1272,
+                                        "total_profit_pct": 1.18,
+                                    }
+                                },
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            output_dir = root / "out"
+
+            pack_index = resolver.build_candidate_packs(
+                repo_root=root,
+                output_dir=output_dir,
+                candidates=[
+                    {
+                        "candidate_id": "strategy_library_candidate",
+                        "display_name": "Strategy Library Candidate",
+                        "strategy_name": "TomacNQKillzoneBreakout15m",
+                        "artifact_source": {
+                            "strategy_library_json": str(strategy_library)
+                        },
+                        "base_timeframe": "15m",
+                        "context_timeframes": ["1h", "4h"],
+                        "pre_bayes_targets": ["session_breakout_gate"],
+                        "belief_targets": ["entry_quality"],
+                        "path_ranking_targets": ["recommended_path_bundle"],
+                        "execution_tree_targets": ["execution_readiness"],
+                    }
+                ],
+            )
+
+            self.assertEqual(pack_index["summary"]["built_count"], 1)
+            self.assertEqual(pack_index["summary"]["skipped_count"], 0)
+            expression = json.loads(
+                (
+                    output_dir
+                    / "packs"
+                    / "strategy_library_candidate"
+                    / "factor_expression.json"
+                ).read_text(encoding="utf-8")
+            )
+            self.assertEqual(
+                expression["strategy_name"],
+                "TomacNQKillzoneBreakout15m",
             )
 
 
