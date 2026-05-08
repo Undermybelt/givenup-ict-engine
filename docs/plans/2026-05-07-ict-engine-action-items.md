@@ -395,6 +395,11 @@ python3 scripts/auto_quant_external/path_ranker_integration.py \
   --apply-only --target-csv <target.csv> --model-dir <model_dir> \
   --user-weights <user_weights.json> --output-scores scores.csv
 
+# 显式 opt-in：训练后直接注册并启用 runtime reuse
+python3 scripts/auto_quant_external/path_ranker_integration.py \
+  --state-dir /tmp/vrp-v2-runtime-closure --symbol NQ \
+  --train-only --register-runtime-artifact --reuse-mode candidate_set_only
+
 # 训练后应用到运行时
 ./target/debug/ict-engine apply-structural-path-ranking-external-scores \
   --symbol NQ --state-dir /tmp/vrp-v2-runtime-closure \
@@ -412,6 +417,10 @@ python3 scripts/auto_quant_external/path_ranker_integration.py \
   - 训练器即使在 `catboost` 不可用时，仍会生成 direct-model artifact
   - `register-structural-path-ranking-trainer-artifact` + `enable-structural-path-ranking-runtime` + `policy-training-status --human`
   - 状态为 `runtime_source=registered_model_artifact`
+- [x] integration 脚本现在可显式完成上面的 register + enable：
+  - `--register-runtime-artifact`
+  - `--reuse-mode candidate_set_only|prefer_history`
+  - 默认不传时，仍保持仅 train/apply，不隐式改 runtime
 - [ ] 这仍然只证明外部训练/应用边界可热插拔，不代表 `CatBoost -> execution_tree` 运行时影响已经闭环
 
 ### 4. CatBoost → 执行树节点

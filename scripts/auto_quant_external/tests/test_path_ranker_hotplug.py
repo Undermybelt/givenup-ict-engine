@@ -75,6 +75,43 @@ class ReuseModelFlowTests(unittest.TestCase):
                 None,
             )
 
+    def test_register_runtime_artifact_triggers_repo_cli_opt_in(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            state_dir = Path(tmpdir) / "state"
+            policy_dir = state_dir / "NQ" / "policy_training"
+            policy_dir.mkdir(parents=True)
+            target_csv = policy_dir / "structural_path_ranking_target.csv"
+            target_csv.write_text("candidate_set_id,path_id\nset1,path1\n", encoding="utf-8")
+            output_dir = policy_dir / "path_ranker_model"
+            output_dir.mkdir()
+            (output_dir / "path_ranker_direct_model.json").write_text("{}", encoding="utf-8")
+
+            with mock.patch.object(integration, "run_trainer") as run_trainer, mock.patch.object(
+                integration, "run_apply"
+            ) as run_apply, mock.patch.object(
+                integration, "register_runtime_artifact"
+            ) as register_runtime_artifact:
+                argv = [
+                    "path_ranker_integration.py",
+                    "--state-dir",
+                    str(state_dir),
+                    "--symbol",
+                    "NQ",
+                    "--register-runtime-artifact",
+                ]
+                with mock.patch.object(sys, "argv", argv):
+                    integration.main()
+
+            run_trainer.assert_called_once()
+            run_apply.assert_called_once()
+            register_runtime_artifact.assert_called_once_with(
+                state_dir=str(state_dir),
+                symbol="NQ",
+                model_dir=str(output_dir),
+                score_column="raw_path_score",
+                reuse_mode="candidate_set_only",
+            )
+
 
 class DirectModelArtifactTests(unittest.TestCase):
     def test_create_direct_model_artifact_emits_repo_runtime_contract(self) -> None:

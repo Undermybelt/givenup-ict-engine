@@ -144,6 +144,23 @@
       - `./target/debug/ict-engine policy-training-status --symbol NQ --state-dir <temp state> --human`
     - observed status: `runtime_selection=enabled_registered_model_ready`, `runtime_source=registered_model_artifact`, `runtime_matches=2`
   - boundary kept explicit: this proves the user can now carry forward a repo-native external model artifact without reopening runtime code, but it still does **not** prove production-quality ranker validation (`raw_scored_mature=0/30`) or downstream execution-tree behavior change
+- [x] **2026-05-08 Slice 5: integration script can now opt in to register + enable runtime reuse directly.**
+  - `scripts/auto_quant_external/path_ranker_integration.py` now accepts:
+    - `--register-runtime-artifact`
+    - `--reuse-mode candidate_set_only|prefer_history`
+  - default behavior remains unchanged:
+    - without `--register-runtime-artifact`, the script still only trains/applies external scores
+    - runtime reuse stays explicit and opt-in
+  - when opt-in is requested, the script now calls existing repo CLI surfaces only:
+    - `register-structural-path-ranking-trainer-artifact`
+    - `enable-structural-path-ranking-runtime`
+  - regression evidence:
+    - `python3 -m unittest scripts.auto_quant_external.tests.test_path_ranker_hotplug`
+    - temp-state smoke:
+      - `python3 scripts/auto_quant_external/path_ranker_integration.py --state-dir <temp state> --symbol NQ --train-only --register-runtime-artifact --reuse-mode candidate_set_only`
+      - `./target/debug/ict-engine policy-training-status --symbol NQ --state-dir <temp state> --human`
+    - observed status: `runtime_selection=enabled_registered_model_ready`, `runtime_source=registered_model_artifact`, `runtime_matches=2`
+  - boundary kept explicit: this closes the consumer-facing opt-in wiring for persisted external model reuse, but still does **not** prove non-demo mature-row validation or execution-tree output change
 
 ### Next
 
@@ -158,6 +175,7 @@
   - user-supplied fallback weights are actually consumed
   - existing model directories can be reused without retraining
 - [x] Verify an external model directory can be promoted into a repo-native runtime-consumable registered model artifact without requiring CatBoost to be installed locally
+- [x] Verify the integration script can optionally perform repo-side register + enable runtime reuse while leaving the zero-config default path untouched
 
 ### Next Slice
 

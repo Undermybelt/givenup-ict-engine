@@ -26,6 +26,8 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).parent
 TRAINER_SCRIPT = SCRIPT_DIR / "pandas_path_ranker_trainer.py"
+REPO_ROOT = SCRIPT_DIR.parents[1]
+ICT_ENGINE_BIN = REPO_ROOT / "target" / "debug" / "ict-engine"
 
 
 def find_target_csv(state_dir: str, symbol: str) -> Path:
@@ -92,6 +94,48 @@ def run_apply(
     return result
 
 
+def register_runtime_artifact(
+    state_dir: str,
+    symbol: str,
+    model_dir: str,
+    score_column: str = "raw_path_score",
+    reuse_mode: str = "candidate_set_only",
+):
+    """Opt in to repo-side runtime reuse using the emitted direct-model artifact."""
+    artifact_path = Path(model_dir) / "path_ranker_direct_model.json"
+    register_cmd = [
+        str(ICT_ENGINE_BIN),
+        "register-structural-path-ranking-trainer-artifact",
+        "--symbol",
+        symbol,
+        "--state-dir",
+        state_dir,
+        "--artifact-uri",
+        str(artifact_path),
+        "--model-family",
+        "weighted_feature_sum_v1",
+        "--score-column",
+        score_column,
+    ]
+    enable_cmd = [
+        str(ICT_ENGINE_BIN),
+        "enable-structural-path-ranking-runtime",
+        "--symbol",
+        symbol,
+        "--state-dir",
+        state_dir,
+        "--reuse-mode",
+        reuse_mode,
+    ]
+    for cmd in (register_cmd, enable_cmd):
+        print(f"[run] {' '.join(cmd)}")
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"[error] {result.stderr}")
+            raise RuntimeError("Runtime artifact registration failed")
+        print(result.stdout)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Path Ranker Integration")
     parser.add_argument("--state-dir", required=False, help="State directory")
@@ -110,6 +154,16 @@ def main():
     parser.add_argument(
         "--user-weights",
         help="Optional user_weights.json used when fallback scoring is needed",
+    )
+    parser.add_argument(
+        "--register-runtime-artifact",
+        action="store_true",
+        help="Opt in to register the emitted direct-model artifact and enable repo runtime reuse",
+    )
+    parser.add_argument(
+        "--reuse-mode",
+        default="candidate_set_only",
+        help="Runtime reuse mode used with --register-runtime-artifact",
     )
     
     args = parser.parse_args()
@@ -150,6 +204,18 @@ def main():
         if not args.train_only:
             # 应用
             run_apply(output_dir, target_csv, output_scores, args.user_weights)
+
+    if args.register_runtime_artifact:
+        if not args.state_dir:
+            print("ERROR: --register-runtime-artifact requires --state-dir")
+            sys.exit(1)
+        register_runtime_artifact(
+            state_dir=args.state_dir,
+            symbol=args.symbol,
+            model_dir=output_dir,
+            score_column="raw_path_score",
+            reuse_mode=args.reuse_mode,
+        )
     
     print(f"\n[done] Model: {output_dir}")
     print(f"[done] Scores: {output_scores}")
