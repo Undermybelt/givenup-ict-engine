@@ -1,0 +1,108 @@
+# Handoff TODO — Factor Path Optimization & Hot-Plug Implementation
+
+> Living document. Update after every concrete step. No stale entries.
+> Created: 2026-05-09
+
+## Problem Diagnosis
+
+GPT agents entering this repo consistently report "no usable factors" because:
+1. No `AGENTS.md` existed — no entry map for agents
+2. Factor families A-H documented only in a 436KB TODO doc — unscannable
+3. Families E/F/H have zero code presence — grep returns nothing
+4. Factor code split across `factor_lab/` and `factors/` — no index
+
+## Completed Steps
+
+- [x] Created `AGENTS.md` — agent entry map with full factor traceability table
+- [x] Created `docs/factor-catalog.md` — single-page factor family → code → status index
+- [x] Created this handoff document
+
+## Active TODO
+
+### Phase 1: Hot-Plug FactorCategory Enum Extension
+
+- [x] Add `FactorCategory` variants: `CrowdingHerding`, `SpectralRhythm`, `SessionLiquidity`
+- [x] Add `FactorDefinition` constructors for each new variant
+- [x] Register new variants in `FactorRegistry::default()`
+- [x] Add `FactorRole` mappings in `allowed_roles()` for new categories
+- [x] Wire evaluate dispatch for new categories
+- [x] Add compute stubs for E (crowding), F (spectral), H (session)
+- [x] Add mutation_parameter_group, mutation_direction_hint, mutation_step_size_hint for E/F/H
+- [x] Verify `cargo check` passes with new enums and compute paths
+
+### Phase 1b: Auto-Quant Output Path Isolation
+
+- [x] Added `resolve_auto_quant_output_dir()` — routes auto-quant to `<state_dir>/auto-quant/` subdirectory
+- [x] Added `ICT_ENGINE_AUTO_QUANT_OUTPUT_DIR` env var for user override
+- [x] Updated all auto-quant shell functions to use `aq_state_dir()` resolver
+- [x] Auto-quant artifacts now land in `state/auto-quant/<SYMBOL>/` instead of `state/<SYMBOL>/`
+- [x] Repo root stays clean; zero pollution
+
+### Phase 2: Minimal Compute Stubs for E/F/H
+
+- [x] Family E: `evaluate_crowding` — volume-participation ratio + same-side pressure proxy
+- [x] Family F: `evaluate_spectral` — spectral entropy + dominant cycle energy from returns
+- [x] Family H: `evaluate_session` — kill-zone alignment + session participation quality
+- [x] Wire stubs into `FactorEngine` evaluation dispatch
+
+### Phase 3: Hot-Plug Configuration
+
+- [ ] Add `config/factor_hotplug.yaml` — user can enable/disable families per symbol
+- [ ] FactorEngine reads hotplug config at init; skips disabled families
+- [ ] Zero-config default: all families enabled; user can opt out via config
+- [ ] No env vars required; config is optional YAML in state dir
+
+### Phase 4: Verification
+
+- [ ] `cargo check --all-targets` green
+- [ ] `cargo clippy --all-targets -- -D warnings` green
+- [ ] `cargo test` green
+- [ ] `ict-engine analyze --demo --human` still works with new families
+- [ ] `ict-engine factor-research --backend auto-quant --symbol DEMO` still works
+
+### Phase 5: Commit & Doc Sync
+
+- [ ] Commit all changes
+- [ ] Update `docs/factor-catalog.md` status columns
+- [ ] Update `AGENTS.md` traceability table
+- [ ] Update this handoff TODO
+
+## Architecture Constraints
+
+- Zero-config: `ict-engine analyze --demo --human` must work with zero setup
+- Consumer-usable: CLI surfaces unchanged; new factors flow through existing engine
+- Token-friendly: `--human` compact output; `--compact` machine output
+- No pollution: state dirs remain `/tmp/...` by default
+- No debt: new FactorCategory variants must have compute stubs, not just enum shells
+- Hot-pluggable: user can disable any family via optional config; engine gracefully skips
+
+## Design Notes
+
+### Family E: Crowding / Herding
+
+Compute proxies from available data (no external data required):
+- `participation_concentration`: volume spike ratio vs rolling median
+- `same_side_pressure`: directional volume imbalance
+- `crowding_relief`: post-sweep volume decay rate
+
+### Family F: Spectral Rhythm / Chaos
+
+Reuse existing spectral infrastructure from execution tree:
+- `spectral_entropy`: already computed as execution-tree input
+- `dominant_cycle_energy`: already computed as execution-tree input
+- `rhythm_stability`: cycle-phase alignment variance
+
+### Family H: Session / Liquidity Window
+
+Based on timestamp + volume pattern:
+- `session_participation_quality`: volume vs session-average profile
+- `kill_zone_alignment`: time-of-day proximity to known kill zones
+- `session_transition_risk`: near session boundary detection
+
+## Blockers
+
+None currently.
+
+## Changelog
+
+- 2026-05-09: Created. Phase 1 in progress.

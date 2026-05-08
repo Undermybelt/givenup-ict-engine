@@ -482,6 +482,8 @@ struct Cli {
 
 const DEFAULT_STATE_DIR: &str = "state";
 const STATE_DIR_ENV_VAR: &str = "ICT_ENGINE_STATE_DIR";
+const AUTO_QUANT_OUTPUT_DIR_ENV_VAR: &str = "ICT_ENGINE_AUTO_QUANT_OUTPUT_DIR";
+const DEFAULT_AUTO_QUANT_SUBDIR: &str = "auto-quant";
 const AUTO_QUANT_REPO_URL_ENV_VAR: &str = "ICT_ENGINE_AUTO_QUANT_REPO_URL";
 const AUTO_QUANT_BRANCH_ENV_VAR: &str = "ICT_ENGINE_AUTO_QUANT_BRANCH";
 const AUTO_QUANT_DIR_ENV_VAR: &str = "ICT_ENGINE_AUTO_QUANT_DIR";
@@ -3046,6 +3048,18 @@ fn ensure_state_dir_ready(state_dir: &str) -> Result<()> {
     Ok(())
 }
 
+/// Resolve Auto-Quant output directory.
+/// Priority: ICT_ENGINE_AUTO_QUANT_OUTPUT_DIR env var > <state_dir>/auto-quant/ subdir.
+/// This ensures Auto-Quant artifacts never pollute the repo root.
+fn resolve_auto_quant_output_dir(state_dir: &str) -> String {
+    if let Ok(custom) = std::env::var(AUTO_QUANT_OUTPUT_DIR_ENV_VAR) {
+        if !custom.trim().is_empty() {
+            return custom;
+        }
+    }
+    format!("{}/{}", state_dir, DEFAULT_AUTO_QUANT_SUBDIR)
+}
+
 fn build_env_report() -> Value {
     let variables = [
         (
@@ -3067,6 +3081,10 @@ fn build_env_report() -> Value {
         (
             "ICT_ENGINE_TOMAC_ROOT",
             "set the TOMAC root for futures cleaning commands",
+        ),
+        (
+            "ICT_ENGINE_AUTO_QUANT_OUTPUT_DIR",
+            "override auto-quant output dir (default: <state-dir>/auto-quant/)",
         ),
         (
             AUTO_QUANT_REPO_URL_ENV_VAR,
