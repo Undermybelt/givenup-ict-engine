@@ -41,7 +41,7 @@ pub fn validate_market_state_shell(input: ValidateMarketStateInput) -> Result<()
         );
     }
 
-        let config = if let Some(ref profile_name_or_path) = input.config_path {
+    let config = if let Some(ref profile_name_or_path) = input.config_path {
         let path = std::path::Path::new(profile_name_or_path);
         let loaded = MarketStateConfig::load(path).with_context(|| {
             format!("failed to load market-state config from {}", path.display())
@@ -50,19 +50,14 @@ pub fn validate_market_state_shell(input: ValidateMarketStateInput) -> Result<()
             .validate()
             .with_context(|| format!("invalid market-state config at {}", path.display()))?;
         loaded
-        } else if let Some(ref profile_name) = input.profile {
-            let profile = match profile_name.as_str() {
-                "default" => MarketStateProfile::default_profile(),
-                "trend_trading" => MarketStateProfile::trend_trading_profile(),
-                "volatility_trading" => MarketStateProfile::volatility_trading_profile(),
-                "reversal_trading" => MarketStateProfile::reversal_trading_profile(),
-                "risk_control" => MarketStateProfile::risk_control_profile(),
-                "high_confidence" => MarketStateProfile::high_confidence_profile(),
-                other => anyhow::bail!(
-                "unknown market-state profile: {} (use default, trend_trading, volatility_trading, reversal_trading, risk_control, or high_confidence)",
-                other
-            ),
-        };
+    } else if let Some(ref profile_name) = input.profile {
+        let profile = MarketStateProfile::from_name(profile_name).ok_or_else(|| {
+            anyhow::anyhow!(
+                "unknown market-state profile: {} (use {})",
+                profile_name,
+                MarketStateProfile::supported_names().join(", ")
+            )
+        })?;
         let config = MarketStateConfig::from_profile(&profile);
         config.validate().context("invalid market-state profile config")?;
         config

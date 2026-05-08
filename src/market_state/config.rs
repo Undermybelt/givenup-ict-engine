@@ -242,6 +242,29 @@ impl MarketStateProfile {
             },
         }
     }
+
+    pub fn from_name(name: &str) -> Option<Self> {
+        match name {
+            "default" => Some(Self::default_profile()),
+            "trend_trading" => Some(Self::trend_trading_profile()),
+            "volatility_trading" => Some(Self::volatility_trading_profile()),
+            "reversal_trading" => Some(Self::reversal_trading_profile()),
+            "risk_control" => Some(Self::risk_control_profile()),
+            "high_confidence" => Some(Self::high_confidence_profile()),
+            _ => None,
+        }
+    }
+
+    pub fn supported_names() -> &'static [&'static str] {
+        &[
+            "default",
+            "trend_trading",
+            "volatility_trading",
+            "reversal_trading",
+            "risk_control",
+            "high_confidence",
+        ]
+    }
 }
 
 /// 配置加载/保存
