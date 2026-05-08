@@ -132,14 +132,15 @@
 
 ## Next
 
-- [ ] Decide whether to keep iterating this lane or park it and return to broader runtime closure / validation hardening.
-  Current status:
-  - Three landed commits plus one verified uncommitted slice now close the selected-profile discoverability and propagation path across provider/workflow, auto-quant handoff, and deferred research follow-ups:
-    - `7e5ef99 fix: preserve opt-in profile routing in workflow surfaces`
-    - `a9a5984 fix: keep selected profile on workflow followups`
-    - `9bcf5fe fix: surface optional personal lane in human workflow status`
-    - current worktree: factor-research / factor-autoresearch `--profile` entry + auto-quant/deferred follow-up propagation
-  Gate:
+- [x] Park this lane and return to broader runtime closure / validation hardening only if a new concrete consumer-surface leak appears.
+  Decision:
+  - Direct CLI verification plus focused route tests now cover provider/workflow first-run routes, auto-quant handoff routes, and deferred factor-research follow-ups under the selected personal lane.
+  Landed path:
+  - `7e5ef99 fix: preserve opt-in profile routing in workflow surfaces`
+  - `a9a5984 fix: keep selected profile on workflow followups`
+  - `9bcf5fe fix: surface optional personal lane in human workflow status`
+  - `a6cb19d fix: preserve selected profile across factor handoff routes`
+  Reopen gate:
   - Only reopen if a new concrete consumer-surface leak is found under direct CLI verification or if the broader persisted-profile design becomes necessary.
 
 ## Not Yet
