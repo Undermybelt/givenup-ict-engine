@@ -52,7 +52,7 @@ class FactorCandidateResolverTests(unittest.TestCase):
         bundle = resolver.build_candidate_registry(repo_root=REPO_ROOT)
 
         self.assertEqual(bundle["summary"]["selection_mode"], "generic_zero_config")
-        self.assertEqual(bundle["summary"]["candidate_count"], 12)
+        self.assertEqual(bundle["summary"]["candidate_count"], 13)
         self.assertEqual(bundle["summary"]["buildable_count"], 0)
         self.assertEqual(
             bundle["summary"]["naming_contract_version"],
@@ -80,6 +80,7 @@ class FactorCandidateResolverTests(unittest.TestCase):
             "family_a_killzone_breakout_1d_regime_v1",
             "family_a_killzone_breakout_1m_v1",
             "family_a_es_killzone_breakout_1h_v1",
+            "family_a_eur_killzone_breakout_1h_v1",
         ]:
             candidate = next(item for item in bundle["candidates"] if item["candidate_id"] == cid)
             self.assertNotIn("/tmp/", candidate["strategy_source"])
@@ -165,6 +166,13 @@ class FactorCandidateResolverTests(unittest.TestCase):
         )
         self.assertTrue(es_breakout["artifact_ready"])
         self.assertEqual(es_breakout["artifact_kind"], "strategy_library_json")
+        eur_breakout = next(
+            item
+            for item in bundle["candidates"]
+            if item["candidate_id"] == "family_a_eur_killzone_breakout_1h_v1"
+        )
+        self.assertTrue(eur_breakout["artifact_ready"])
+        self.assertEqual(eur_breakout["artifact_kind"], "strategy_library_json")
         regime = next(
             item
             for item in bundle["candidates"]
@@ -354,6 +362,19 @@ class FactorCandidateResolverTests(unittest.TestCase):
                 )
                 self.assertEqual(
                     es_expression["strategy_name"],
+                    "TomacKillzoneBreakout",
+                )
+            if "family_a_eur_killzone_breakout_1h_v1" in built:
+                eur_expression = json.loads(
+                    (
+                        output_dir
+                        / "packs"
+                        / "family_a_eur_killzone_breakout_1h_v1"
+                        / "factor_expression.json"
+                    ).read_text(encoding="utf-8")
+                )
+                self.assertEqual(
+                    eur_expression["strategy_name"],
                     "TomacKillzoneBreakout",
                 )
             if "regime_primary_gate_pending_v1" in built:

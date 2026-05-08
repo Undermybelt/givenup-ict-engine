@@ -695,6 +695,67 @@
       }
     },
     {
+      "candidate_id": "family_a_eur_killzone_breakout_1h_v1",
+      "display_name": "EUR Killzone Breakout 1h",
+      "family": "Family A",
+      "status": "active",
+      "promotion_state": "candidate_only",
+      "strategy_name": "TomacKillzoneBreakout",
+      "strategy_source": "scripts/auto_quant_external/strategies/TomacKillzoneBreakout.py",
+      "artifact_source": {},
+      "expression_text": "EUR killzone breakout with the generic breakout logic, used as a low-density cross-market proof of the shared profile surface",
+      "operator_set": [
+        "am_killzone",
+        "high_24h",
+        "ema_fast_4h",
+        "ema_slow_4h"
+      ],
+      "complexity": 4,
+      "paradigm": "session breakout market expansion",
+      "target_market_hypothesis": [
+        "EUR/USD"
+      ],
+      "base_timeframe": "1h",
+      "context_timeframes": [
+        "4h",
+        "1d"
+      ],
+      "evidence_window": "profile-selected historical EUR strategy-library lane",
+      "regime_role": "execution_only",
+      "pre_bayes_targets": [
+        "session_breakout_gate",
+        "structure_setup_gate"
+      ],
+      "belief_targets": [
+        "entry_quality",
+        "session_quality"
+      ],
+      "path_ranking_targets": [
+        "recommended_path_bundle",
+        "structural_path_confidence"
+      ],
+      "execution_tree_targets": [
+        "execution_readiness",
+        "prediction_vote_score"
+      ],
+      "execution_tree_blockers_intended": [
+        "cross_market_generalization_check",
+        "weak_eur_quality"
+      ],
+      "structural_feedback_required": true,
+      "resonance_summary": {
+        "base_timeframe": "1h",
+        "context_stack": [
+          "4h",
+          "1d"
+        ],
+        "resonance_by_timeframe": {
+          "4h": "trend_vote",
+          "1d": "session-context"
+        }
+      }
+    },
+    {
       "candidate_id": "regime_primary_gate_pending_v1",
       "display_name": "Primary Regime Classifier Gate",
       "family": "Regime Gate",

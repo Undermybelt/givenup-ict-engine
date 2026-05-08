@@ -272,6 +272,16 @@ A candidate may only move to the post-factor runtime-closure board after all of 
     - `sharpe=0.2889`, `profit_factor=2.1103`, `total_profit_pct=16.98`
     - `transfer_status=single_market_only`
   - therefore the ES lane is now explicit market-coverage evidence for Family A, not a generalization proof
+- [x] Continued the Family A breadth lane with the historical EUR strategy-library lane:
+  - added `family_a_eur_killzone_breakout_1h_v1` to the generic registry
+  - injected the reusable evidence only through the opt-in profile:
+    - `strategy_library_json=/tmp/ict-engine-family-a-eur-profile/EUR/auto_quant_strategy_library.json`
+  - verified the current profile build now reaches `candidate_count=13`, `buildable_count=13`, `built_pack_count=13`
+  - current evidence is explicit but weak:
+    - `trade_count=6`, `aggregate_label=anecdotal`
+    - `sharpe=-0.0459`, `profit_factor=0.6891`, `total_profit_pct=-0.37`
+    - `transfer_status=single_market_only`
+  - therefore the EUR lane is now explicit negative market-coverage evidence, not a Family A quality proof point
 
 ### Next
 

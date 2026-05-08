@@ -282,6 +282,16 @@
       "evidence_window": "historical ES profile export captured at /tmp/ict-engine-family-a-es-profile"
     },
     {
+      "candidate_id": "family_a_eur_killzone_breakout_1h_v1",
+      "artifact_source": {
+        "strategy_library_json": "/tmp/ict-engine-family-a-eur-profile/EUR/auto_quant_strategy_library.json"
+      },
+      "target_market_hypothesis": [
+        "EUR/USD"
+      ],
+      "evidence_window": "historical EUR profile export captured at /tmp/ict-engine-family-a-eur-profile"
+    },
+    {
       "candidate_id": "regime_primary_gate_pending_v1",
       "pack_readiness_reason": null,
       "artifact_source": {
