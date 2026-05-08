@@ -34,6 +34,7 @@
   - [x] Continue the Family A breadth lane with the first 5m timeframe-coverage pack.
   - [x] Continue the Family A breadth lane with the historical 15m and 1d-regime lanes.
   - [x] Continue the Family A breadth lane with the historical 1m lane.
+  - [x] Continue the Family A breadth lane with the historical ES lane.
   - [ ] Continue the Family A breadth lane with the next still-missing variant.
 - Active slice:
   - regime bundle slice complete; next live slice is Family A breadth continuation
@@ -51,8 +52,9 @@
   - `strategy_library_json` is now a supported reusable input kind for old explicit evidence
   - `family_a_killzone_breakout_15m_v1` and `family_a_killzone_breakout_1d_regime_v1` are now real profile-backed candidate packs, not board-only notes
   - `family_a_killzone_breakout_1m_v1` is now a real profile-backed candidate pack, not a board-only note
+  - `family_a_es_killzone_breakout_1h_v1` is now a real profile-backed candidate pack, not a board-only note
 - Next step:
-  - choose the next still-missing Family A breadth variant that is not yet explicit in the registry, then either recover its historical artifact or generate fresh reusable evidence; current explicit Family A timeframe coverage is now `1m`, `5m`, `15m`, `1h`, plus a `1d` regime-filter lane
+  - choose the next still-missing Family A breadth variant that is not yet explicit in the registry, then either recover its historical artifact or generate fresh reusable evidence; current explicit Family A coverage now includes `NQ` and `ES` plus `1m`, `5m`, `15m`, `1h`, and a `1d` regime-filter lane
 
 ## EvidenceBundleDraft
 
@@ -125,6 +127,10 @@
       - source artifact: `/tmp/ict-engine-family-a-nq-1m-profile/.deps/auto-quant/strategy_library_1m.json`
       - result: `56` trades, `aggregate_label=thin`, `sharpe=-0.3518`, `profit_factor=0.6742`, `total_profit_pct=-8.2`
       - registry/profile now emit `family_a_killzone_breakout_1m_v1`
+    - `TomacKillzoneBreakout` on `ES`
+      - source artifact: `/tmp/ict-engine-family-a-es-profile/ES/auto_quant_strategy_library.json`
+      - result: `40` trades, `aggregate_label=thin`, `sharpe=0.2889`, `profit_factor=2.1103`, `total_profit_pct=16.98`
+      - registry/profile now emit `family_a_es_killzone_breakout_1h_v1`
 
 ## DriftCheckDraft
 
@@ -154,3 +160,4 @@
 - `family_a_fvg_retrace_5m_v1` already exists now; do not regenerate the same pack unless the underlying reusable zip is replaced.
 - `family_a_killzone_breakout_15m_v1` and `family_a_killzone_breakout_1d_regime_v1` now exist; prefer fresh cross-market evidence or another missing variant instead of re-ingesting the same historical manifests again.
 - `family_a_killzone_breakout_1m_v1` now exists; prefer another missing Family A variant over re-ingesting the same historical manifest again.
+- `family_a_es_killzone_breakout_1h_v1` now exists; prefer another missing Family A variant over re-ingesting the same historical manifest again.

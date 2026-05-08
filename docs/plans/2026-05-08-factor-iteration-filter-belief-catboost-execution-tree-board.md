@@ -262,6 +262,16 @@ A candidate may only move to the post-factor runtime-closure board after all of 
     - `sharpe=-0.3518`, `profit_factor=0.6742`, `total_profit_pct=-8.2`, `max_drawdown_pct=-12.4045`
     - `transfer_status=single_market_only`
   - therefore the 1m lane is now explicit negative evidence, not a viable Family A promotion path
+- [x] Continued the Family A breadth lane with the historical ES strategy-library lane:
+  - added `family_a_es_killzone_breakout_1h_v1` to the generic registry
+  - injected the reusable evidence only through the opt-in profile:
+    - `strategy_library_json=/tmp/ict-engine-family-a-es-profile/ES/auto_quant_strategy_library.json`
+  - verified the current profile build now reaches `candidate_count=12`, `buildable_count=12`, `built_pack_count=12`
+  - current evidence is explicit positive coverage, but still not a cross-market winner:
+    - `trade_count=40`, `aggregate_label=thin`
+    - `sharpe=0.2889`, `profit_factor=2.1103`, `total_profit_pct=16.98`
+    - `transfer_status=single_market_only`
+  - therefore the ES lane is now explicit market-coverage evidence for Family A, not a generalization proof
 
 ### Next
 
