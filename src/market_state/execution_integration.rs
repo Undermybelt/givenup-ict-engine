@@ -9,18 +9,13 @@
 //! - Token 友好：简洁输出
 //! - 高置信度：基于统计学阈值
 
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-
-use crate::market_state::{
-    MarketStateSnapshot, PrimaryMarketRegime,
-    MarketStateEvidenceMapper, EvidenceMappingConfig, MarketStateNodeId,
-};
-use crate::market_state::mtf_resonance::TimeframeResonanceResult;
-use crate::application::orchestration::{
-    PolicyFeatureVector, PolicyDecisionArtifact, ExecutionTreeOutput,
-};
+use crate::application::orchestration::PolicyFeatureVector;
 use crate::bbn::Evidence;
+use crate::market_state::mtf_resonance::TimeframeResonanceResult;
+use crate::market_state::{
+    EvidenceMappingConfig, MarketStateEvidenceMapper, MarketStateSnapshot, PrimaryMarketRegime,
+};
+use serde::{Deserialize, Serialize};
 
 /// 执行树配置
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -104,9 +99,12 @@ pub struct MarketStateExecutionIntegrator {
 
 impl MarketStateExecutionIntegrator {
     pub fn new() -> Self {
-        Self::with_configs(ExecutionTreeConfig::default(), EvidenceMappingConfig::default())
+        Self::with_configs(
+            ExecutionTreeConfig::default(),
+            EvidenceMappingConfig::default(),
+        )
     }
-    
+
     pub fn with_configs(
         execution_config: ExecutionTreeConfig,
         evidence_config: EvidenceMappingConfig,
@@ -116,12 +114,12 @@ impl MarketStateExecutionIntegrator {
             evidence_mapper: MarketStateEvidenceMapper::with_config(evidence_config),
         }
     }
-    
+
     /// 评估市场状态并生成执行决策
     pub fn evaluate(&self, snapshot: &MarketStateSnapshot) -> MarketStateExecutionDecision {
         self.evaluate_with_resonance(snapshot, None)
     }
-    
+
     /// 评估市场状态 + 多周期共振
     pub fn evaluate_with_resonance(
         &self,
@@ -138,20 +136,25 @@ impl MarketStateExecutionIntegrator {
                 resonance_impact: None,
             };
         }
-        
+
         // 2. 计算基础置信度
         let mut adjusted_confidence = snapshot.overall_confidence;
-        
+
         // 3. 应用共振影响
-        let resonance_impact = resonance.map(|r| self.apply_resonance_impact(r, &mut adjusted_confidence));
-        
+        let resonance_impact =
+            resonance.map(|r| self.apply_resonance_impact(r, &mut adjusted_confidence));
+
         // 4. 决定执行许可
-        let (permission, veto_reason) = if adjusted_confidence < self.config.low_confidence_threshold {
-            (ExecutionPermission::ObserveOnly, Some("low_confidence".to_string()))
-        } else {
-            (ExecutionPermission::Allow, None)
-        };
-        
+        let (permission, veto_reason) =
+            if adjusted_confidence < self.config.low_confidence_threshold {
+                (
+                    ExecutionPermission::ObserveOnly,
+                    Some("low_confidence".to_string()),
+                )
+            } else {
+                (ExecutionPermission::Allow, None)
+            };
+
         MarketStateExecutionDecision {
             permission,
             regime_summary: self.build_regime_summary(snapshot),
@@ -160,17 +163,17 @@ impl MarketStateExecutionIntegrator {
             resonance_impact,
         }
     }
-    
+
     /// 映射市场状态到 BBN 证据
     pub fn map_to_evidence(&self, snapshot: &MarketStateSnapshot) -> Evidence {
         self.evidence_mapper.map_to_evidence(snapshot)
     }
-    
+
     /// 映射共振结果到 BBN 证据
     pub fn map_resonance_to_evidence(&self, resonance: &TimeframeResonanceResult) -> Evidence {
         self.evidence_mapper.map_resonance_to_evidence(resonance)
     }
-    
+
     /// 增强 PolicyFeatureVector
     pub fn enhance_feature_vector(
         &self,
@@ -189,13 +192,13 @@ impl MarketStateExecutionIntegrator {
                 features.gating_status = "observe_only".to_string();
             }
         }
-        
+
         // 根据主大类设置 factor_alignment
         features.factor_alignment = decision.regime_summary.primary.clone();
-        
+
         // 应用调整后的置信度
         features.evidence_quality_score = decision.adjusted_confidence;
-        
+
         // 应用共振影响
         if let Some(ref impact) = decision.resonance_impact {
             if impact.resonance_type == "contradicted" {
@@ -205,12 +208,12 @@ impl MarketStateExecutionIntegrator {
             }
         }
     }
-    
+
     /// 检查是否为危机状态
     fn is_crisis_state(&self, regime: &PrimaryMarketRegime) -> bool {
-        matches!(regime, PrimaryMarketRegime::CrisisVolatility)
+        matches!(regime, PrimaryMarketRegime::ExtremeStress)
     }
-    
+
     /// 应用共振影响
     fn apply_resonance_impact(
         &self,
@@ -218,31 +221,26 @@ impl MarketStateExecutionIntegrator {
         confidence: &mut f64,
     ) -> ResonanceImpact {
         use crate::market_state::mtf_resonance::ResonanceResult;
-        
+
         let (resonance_type, adjustment) = match resonance.primary_regime_resonance {
-            ResonanceResult::Aligned => {
-                ("aligned".to_string(), self.config.resonance_weight)
-            }
-            ResonanceResult::Contradicted => {
-                ("contradicted".to_string(), -self.config.contradiction_penalty)
-            }
-            ResonanceResult::Neutral => {
-                ("neutral".to_string(), 0.0)
-            }
-            ResonanceResult::Missing => {
-                ("missing".to_string(), 0.0)
-            }
+            ResonanceResult::Aligned => ("aligned".to_string(), self.config.resonance_weight),
+            ResonanceResult::Contradicted => (
+                "contradicted".to_string(),
+                -self.config.contradiction_penalty,
+            ),
+            ResonanceResult::Neutral => ("neutral".to_string(), 0.0),
+            ResonanceResult::Missing => ("missing".to_string(), 0.0),
         };
-        
+
         *confidence = (*confidence + adjustment).clamp(0.0, 1.0);
-        
+
         ResonanceImpact {
             resonance_type,
             score: resonance.overall_resonance_score,
             confidence_adjustment: adjustment,
         }
     }
-    
+
     /// 构建市场状态摘要
     fn build_regime_summary(&self, snapshot: &MarketStateSnapshot) -> RegimeSummary {
         RegimeSummary {
@@ -269,7 +267,7 @@ impl ExecutionTreePipeline {
     pub fn new() -> Self {
         Self::with_config(ExecutionTreeConfig::default())
     }
-    
+
     pub fn with_config(config: ExecutionTreeConfig) -> Self {
         Self {
             integrator: MarketStateExecutionIntegrator::with_configs(
@@ -278,7 +276,7 @@ impl ExecutionTreePipeline {
             ),
         }
     }
-    
+
     /// 完整流水线执行
     pub fn execute(
         &self,
@@ -287,17 +285,18 @@ impl ExecutionTreePipeline {
     ) -> PipelineResult {
         // 1. 评估执行决策
         let decision = self.integrator.evaluate_with_resonance(snapshot, resonance);
-        
+
         // 2. 映射 BBN 证据
         let evidence = match resonance {
             Some(r) => self.integrator.map_resonance_to_evidence(r),
             None => self.integrator.map_to_evidence(snapshot),
         };
-        
+
         // 3. 创建增强后的特征向量
         let mut features = PolicyFeatureVector::default();
-        self.integrator.enhance_feature_vector(&mut features, &decision);
-        
+        self.integrator
+            .enhance_feature_vector(&mut features, &decision);
+
         PipelineResult {
             decision,
             evidence,
@@ -328,12 +327,12 @@ impl PipelineResult {
     pub fn is_allowed(&self) -> bool {
         self.decision.permission == ExecutionPermission::Allow
     }
-    
+
     /// 是否被阻断
     pub fn is_vetoed(&self) -> bool {
         self.decision.permission == ExecutionPermission::Veto
     }
-    
+
     /// 获取调整后置信度
     pub fn confidence(&self) -> f64 {
         self.decision.adjusted_confidence
@@ -346,7 +345,7 @@ mod tests {
     use crate::market_state::MarketStateClassifier;
     use crate::types::Candle;
     use chrono::{TimeZone, Utc};
-    
+
     fn sample_candles(count: usize) -> Vec<Candle> {
         (0..count)
             .map(|i| {
@@ -362,57 +361,57 @@ mod tests {
             })
             .collect()
     }
-    
+
     #[test]
     fn integrator_evaluates_normal_state() {
         let classifier = MarketStateClassifier::new();
         let integrator = MarketStateExecutionIntegrator::new();
-        
+
         let candles = sample_candles(100);
         let snapshot = classifier.classify(&candles);
         let decision = integrator.evaluate(&snapshot);
-        
+
         // 正常状态不应被阻断
         assert_ne!(decision.permission, ExecutionPermission::Veto);
         assert!(decision.adjusted_confidence >= 0.0);
     }
-    
+
     #[test]
     fn pipeline_produces_complete_result() {
         let classifier = MarketStateClassifier::new();
         let pipeline = ExecutionTreePipeline::new();
-        
+
         let candles = sample_candles(100);
         let snapshot = classifier.classify(&candles);
         let result = pipeline.execute(&snapshot, None);
-        
+
         // 结果完整
         assert!(result.evidence.len() >= 5);
         assert!(result.enhanced_features.gating_status.len() > 0);
     }
-    
+
     #[test]
     fn crisis_state_triggers_veto() {
         let mut snapshot = MarketStateSnapshot::default();
-        snapshot.primary_regime = PrimaryMarketRegime::CrisisVolatility;
+        snapshot.primary_regime = PrimaryMarketRegime::ExtremeStress;
         snapshot.overall_confidence = 0.8;
-        
+
         let integrator = MarketStateExecutionIntegrator::new();
         let decision = integrator.evaluate(&snapshot);
-        
+
         assert_eq!(decision.permission, ExecutionPermission::Veto);
         assert!(decision.veto_reason.is_some());
     }
-    
+
     #[test]
     fn low_confidence_triggers_observe_only() {
         let mut snapshot = MarketStateSnapshot::default();
         snapshot.primary_regime = PrimaryMarketRegime::RangeConsolidation;
         snapshot.overall_confidence = 0.3; // 低于阈值
-        
+
         let integrator = MarketStateExecutionIntegrator::new();
         let decision = integrator.evaluate(&snapshot);
-        
+
         assert_eq!(decision.permission, ExecutionPermission::ObserveOnly);
     }
 }

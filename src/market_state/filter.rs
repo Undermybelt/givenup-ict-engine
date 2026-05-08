@@ -7,9 +7,9 @@
 //! - 高置信度：仅在高置信状态变更时触发
 
 use crate::market_state::{
-    MarketStateClassifier, MarketStateSnapshot, MarketStateConfig,
-    PrimaryMarketRegime, SecondaryMarketRegime,
-    VolatilityRegime, LiquidityRegime, MarketStructureRegime, InvestorBehaviorRegime,
+    InvestorBehaviorRegime, LiquidityRegime, MarketStateClassifier, MarketStateConfig,
+    MarketStateSnapshot, MarketStructureRegime, PrimaryMarketRegime, SecondaryMarketRegime,
+    VolatilityRegime,
 };
 use crate::types::Candle;
 use serde::{Deserialize, Serialize};
@@ -181,43 +181,49 @@ pub struct MarketStateFilter {
 impl MarketStateFilter {
     /// 创建默认配置的滤波器
     pub fn new() -> Self {
-        Self::with_config(MarketStateFilterConfig::default(), MarketStateConfig::default())
+        Self::with_config(
+            MarketStateFilterConfig::default(),
+            MarketStateConfig::default(),
+        )
     }
-    
+
     /// 创建自定义配置的滤波器
-    pub fn with_config(filter_config: MarketStateFilterConfig, state_config: MarketStateConfig) -> Self {
+    pub fn with_config(
+        filter_config: MarketStateFilterConfig,
+        state_config: MarketStateConfig,
+    ) -> Self {
         Self {
             classifier: MarketStateClassifier::with_config(state_config),
             config: filter_config,
             last_snapshot: None,
         }
     }
-    
+
     /// 执行滤波：返回是否允许交易及原因
     pub fn filter(&mut self, candles: &[Candle]) -> MarketStateFilterResult {
         let mut filter_details = Vec::new();
-        
+
         // 1. 分类当前市场状态
         let snapshot = self.classifier.classify(candles);
-        
+        let overall_confidence = snapshot.overall_confidence;
+
         // 2. 检查置信度是否足够
         if snapshot.overall_confidence < self.config.min_confidence_threshold {
             filter_details.push(format!(
                 "confidence {:.2} below threshold {:.2}",
-                snapshot.overall_confidence,
-                self.config.min_confidence_threshold
+                snapshot.overall_confidence, self.config.min_confidence_threshold
             ));
             // 置信度不足时，保持保守（不阻断但降低仓位）
             return MarketStateFilterResult {
                 allowed: true,
                 block_reason: None,
                 snapshot,
-                position_adjustment: snapshot.overall_confidence,
-                confidence_weighted: snapshot.overall_confidence,
+                position_adjustment: overall_confidence,
+                confidence_weighted: overall_confidence,
                 filter_details,
             };
         }
-        
+
         // 3. 检查波动率状态
         if self.config.volatility_filter.block_on_crisis
             && matches!(snapshot.volatility, VolatilityRegime::CrisisVol)
@@ -229,18 +235,23 @@ impl MarketStateFilter {
                 block_reason: Some("crisis_volatility".to_string()),
                 snapshot,
                 position_adjustment: 0.0,
-                confidence_weighted: snapshot.overall_confidence,
+                confidence_weighted: overall_confidence,
                 filter_details,
             };
         }
-        
-        if !self.config.volatility_filter.allowed_regimes.contains(&snapshot.volatility) {
+
+        if !self
+            .config
+            .volatility_filter
+            .allowed_regimes
+            .contains(&snapshot.volatility)
+        {
             filter_details.push(format!(
                 "volatility {:?} not in allowed list",
                 snapshot.volatility
             ));
         }
-        
+
         // 4. 检查流动性状态
         if self.config.liquidity_filter.block_on_thin
             && matches!(snapshot.liquidity, LiquidityRegime::ThinLiquidity)
@@ -252,11 +263,11 @@ impl MarketStateFilter {
                 block_reason: Some("thin_liquidity".to_string()),
                 snapshot,
                 position_adjustment: 0.0,
-                confidence_weighted: snapshot.overall_confidence,
+                confidence_weighted: overall_confidence,
                 filter_details,
             };
         }
-        
+
         // 5. 检查行为状态
         if self.config.behavior_filter.pause_on_capitulation
             && matches!(snapshot.behavior, InvestorBehaviorRegime::Capitulation)
@@ -268,13 +279,18 @@ impl MarketStateFilter {
                 block_reason: Some("capitulation".to_string()),
                 snapshot,
                 position_adjustment: 0.0,
-                confidence_weighted: snapshot.overall_confidence,
+                confidence_weighted: overall_confidence,
                 filter_details,
             };
         }
-        
+
         // 6. 检查主大类状态
-        if !self.config.primary_regime_filter.allowed_regimes.contains(&snapshot.primary_regime) {
+        if !self
+            .config
+            .primary_regime_filter
+            .allowed_regimes
+            .contains(&snapshot.primary_regime)
+        {
             filter_details.push(format!(
                 "primary_regime {:?} not allowed",
                 snapshot.primary_regime
@@ -287,15 +303,15 @@ impl MarketStateFilter {
                     block_reason: Some("extreme_stress".to_string()),
                     snapshot,
                     position_adjustment: 0.0,
-                    confidence_weighted: snapshot.overall_confidence,
+                    confidence_weighted: overall_confidence,
                     filter_details,
                 };
             }
         }
-        
+
         // 7. 计算仓位调整因子
         let mut position_adjustment = 1.0;
-        
+
         // FOMO 状态降低仓位
         if self.config.behavior_filter.reduce_on_fomo
             && matches!(snapshot.behavior, InvestorBehaviorRegime::FOMO)
@@ -303,19 +319,19 @@ impl MarketStateFilter {
             position_adjustment *= 0.7;
             filter_details.push("position reduced: FOMO detected".to_string());
         }
-        
+
         // 高波动状态降低仓位
         if matches!(snapshot.volatility, VolatilityRegime::ElevatedVol) {
             position_adjustment *= 0.85;
             filter_details.push("position reduced: elevated volatility".to_string());
         }
-        
+
         // 8. 计算置信度加权
-        let confidence_weighted = snapshot.overall_confidence * position_adjustment;
-        
+        let confidence_weighted = overall_confidence * position_adjustment;
+
         // 9. 更新上一次快照
         self.last_snapshot = Some(snapshot.clone());
-        
+
         MarketStateFilterResult {
             allowed: true,
             block_reason: None,
@@ -325,17 +341,17 @@ impl MarketStateFilter {
             filter_details,
         }
     }
-    
+
     /// 获取上次状态快照
     pub fn last_snapshot(&self) -> Option<&MarketStateSnapshot> {
         self.last_snapshot.as_ref()
     }
-    
+
     /// 检测状态变更
     pub fn detect_state_change(&self, candles: &[Candle]) -> Option<StateChange> {
         let current = self.classifier.classify(candles);
         let last = self.last_snapshot.as_ref()?;
-        
+
         // 检查主大类变更
         if current.primary_regime != last.primary_regime {
             return Some(StateChange {
@@ -345,7 +361,7 @@ impl MarketStateFilter {
                 confidence: current.overall_confidence,
             });
         }
-        
+
         // 检查波动率变更
         if current.volatility != last.volatility {
             return Some(StateChange {
@@ -355,7 +371,7 @@ impl MarketStateFilter {
                 confidence: current.volatility_confidence,
             });
         }
-        
+
         // 检查流动性变更
         if current.liquidity != last.liquidity {
             return Some(StateChange {
@@ -365,7 +381,7 @@ impl MarketStateFilter {
                 confidence: current.liquidity_confidence,
             });
         }
-        
+
         None
     }
 }
@@ -442,15 +458,12 @@ impl FactorFilterDeclaration {
             disable_on_extreme: true,
         }
     }
-    
+
     /// 创建趋势因子声明
     pub fn trend_factor(factor_name: &str) -> Self {
         Self {
             factor_name: factor_name.to_string(),
-            allowed_volatility: vec![
-                VolatilityRegime::NormalVol,
-                VolatilityRegime::ElevatedVol,
-            ],
+            allowed_volatility: vec![VolatilityRegime::NormalVol, VolatilityRegime::ElevatedVol],
             allowed_liquidity: vec![
                 LiquidityRegime::HighLiquidity,
                 LiquidityRegime::NormalLiquidity,
@@ -460,15 +473,12 @@ impl FactorFilterDeclaration {
             disable_on_extreme: true,
         }
     }
-    
+
     /// 创建均值回归因子声明
     pub fn mean_reversion_factor(factor_name: &str) -> Self {
         Self {
             factor_name: factor_name.to_string(),
-            allowed_volatility: vec![
-                VolatilityRegime::LowVol,
-                VolatilityRegime::NormalVol,
-            ],
+            allowed_volatility: vec![VolatilityRegime::LowVol, VolatilityRegime::NormalVol],
             allowed_liquidity: vec![
                 LiquidityRegime::HighLiquidity,
                 LiquidityRegime::NormalLiquidity,
@@ -484,40 +494,49 @@ impl FactorFilterDeclaration {
             disable_on_extreme: true,
         }
     }
-    
+
     /// 检查因子是否允许在当前状态下运行
     pub fn is_allowed(&self, result: &MarketStateFilterResult) -> bool {
         if !result.allowed {
             return false;
         }
-        
+
         // 检查波动率
-        if !self.allowed_volatility.contains(&result.snapshot.volatility) {
+        if !self
+            .allowed_volatility
+            .contains(&result.snapshot.volatility)
+        {
             return false;
         }
-        
+
         // 检查流动性
         if !self.allowed_liquidity.contains(&result.snapshot.liquidity) {
             return false;
         }
-        
+
         // 检查结构
         if !self.allowed_structure.contains(&result.snapshot.structure) {
             return false;
         }
-        
+
         // 检查主大类
-        if !self.allowed_primary_regimes.contains(&result.snapshot.primary_regime) {
-            return false;
-        }
-        
-        // 检查极端状态
-        if self.disable_on_extreme
-            && matches!(result.snapshot.primary_regime, PrimaryMarketRegime::ExtremeStress)
+        if !self
+            .allowed_primary_regimes
+            .contains(&result.snapshot.primary_regime)
         {
             return false;
         }
-        
+
+        // 检查极端状态
+        if self.disable_on_extreme
+            && matches!(
+                result.snapshot.primary_regime,
+                PrimaryMarketRegime::ExtremeStress
+            )
+        {
+            return false;
+        }
+
         true
     }
 }
@@ -526,7 +545,7 @@ impl FactorFilterDeclaration {
 mod tests {
     use super::*;
     use chrono::{TimeZone, Utc};
-    
+
     fn sample_candles(count: usize) -> Vec<Candle> {
         (0..count)
             .map(|i| {
@@ -542,32 +561,40 @@ mod tests {
             })
             .collect()
     }
-    
+
     #[test]
     fn default_filter_allows_normal_market() {
         let candles = sample_candles(100);
         let mut filter = MarketStateFilter::new();
         let result = filter.filter(&candles);
-        
+
         // 正常市场状态应允许交易
         assert!(result.allowed || !result.filter_details.is_empty());
     }
-    
+
     #[test]
     fn factor_declaration_trend_factor_restricts_range() {
         let decl = FactorFilterDeclaration::trend_factor("test_trend");
-        
+
         // 趋势因子不允许 Ranging 状态
-        assert!(!decl.allowed_structure.contains(&MarketStructureRegime::Ranging));
-        assert!(decl.allowed_structure.contains(&MarketStructureRegime::Trending));
+        assert!(!decl
+            .allowed_structure
+            .contains(&MarketStructureRegime::Ranging));
+        assert!(decl
+            .allowed_structure
+            .contains(&MarketStructureRegime::Trending));
     }
-    
+
     #[test]
     fn factor_declaration_mean_reversion_restricts_trending() {
         let decl = FactorFilterDeclaration::mean_reversion_factor("test_mr");
-        
+
         // 均值回归因子不允许 Trending 状态
-        assert!(!decl.allowed_structure.contains(&MarketStructureRegime::Trending));
-        assert!(decl.allowed_structure.contains(&MarketStructureRegime::Ranging));
+        assert!(!decl
+            .allowed_structure
+            .contains(&MarketStructureRegime::Trending));
+        assert!(decl
+            .allowed_structure
+            .contains(&MarketStructureRegime::Ranging));
     }
 }

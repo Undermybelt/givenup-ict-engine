@@ -8,57 +8,52 @@
 //! - 无污染：不修改现有代码
 //! - 高置信度：基于统计学阈值
 
-mod volatility;
-mod liquidity;
-mod structure;
 mod behavior;
+pub mod confidence_validation;
 mod config;
-pub mod filter;
-pub mod mtf_resonance;
+pub mod enhanced_aggregation;
 pub mod evidence_mapping;
 pub mod execution_integration;
-pub mod confidence_validation;
-pub mod enhanced_aggregation;
+pub mod filter;
+mod liquidity;
+pub mod mtf_resonance;
+mod structure;
 pub mod validation_tool;
+mod volatility;
 
-pub use volatility::{VolatilityRegime, VolatilityClassifier};
-pub use liquidity::{LiquidityRegime, LiquidityClassifier, SessionState};
-pub use structure::{MarketStructureRegime, MarketStructureClassifier};
-pub use behavior::{InvestorBehaviorRegime, InvestorBehaviorClassifier};
+pub use behavior::{InvestorBehaviorClassifier, InvestorBehaviorRegime};
+pub use confidence_validation::{
+    ConfidenceLevel, ConfidenceValidationConfig, ConfidenceValidator, HistorySample, RegimeStats,
+    RollingAccuracyTracker, ValidationResult as ConfidenceValidationResult,
+};
 pub use config::{MarketStateConfig, MarketStateProfile};
-pub use filter::{
-    MarketStateFilter, MarketStateFilterConfig, MarketStateFilterResult,
-    FactorFilterDeclaration, StateChange, StateChangeDimension,
-};
-pub use mtf_resonance::{
-    TimeframeResonanceConfig, TimeframeResonanceFilter, TimeframeResonanceResult, ResonanceResult,
-};
+pub use enhanced_aggregation::{EnhancedAggregationConfig, EnhancedAggregator, PriceDirection};
 pub use evidence_mapping::{
-    MarketStateEvidenceMapper, EvidenceMappingConfig, EvidenceSummary,
-    MarketStateNodeId, PrimaryRegimeStateIndex, VolatilityStateIndex,
-    LiquidityStateIndex, ResonanceStateIndex,
+    EvidenceMappingConfig, EvidenceSummary, LiquidityStateIndex, MarketStateEvidenceMapper,
+    MarketStateNodeId, PrimaryRegimeStateIndex, ResonanceStateIndex, VolatilityStateIndex,
 };
 pub use execution_integration::{
-    ExecutionPermission, ExecutionTreeConfig, ExecutionTreePipeline,
-    MarketStateExecutionDecision, MarketStateExecutionIntegrator, PipelineResult,
-    RegimeSummary, ResonanceImpact,
+    ExecutionPermission, ExecutionTreeConfig, ExecutionTreePipeline, MarketStateExecutionDecision,
+    MarketStateExecutionIntegrator, PipelineResult, RegimeSummary, ResonanceImpact,
 };
-pub use confidence_validation::{
-    ConfidenceValidator, ConfidenceValidationConfig, ValidationResult,
-    ConfidenceLevel, HistorySample, RegimeStats, RollingAccuracyTracker,
+pub use filter::{
+    FactorFilterDeclaration, MarketStateFilter, MarketStateFilterConfig, MarketStateFilterResult,
+    StateChange, StateChangeDimension,
 };
-pub use enhanced_aggregation::{
-    EnhancedAggregator, EnhancedAggregationConfig, PriceDirection,
+pub use liquidity::{LiquidityClassifier, LiquidityRegime, SessionState};
+pub use mtf_resonance::{
+    ResonanceResult, TimeframeResonanceConfig, TimeframeResonanceFilter, TimeframeResonanceResult,
 };
+pub use structure::{MarketStructureClassifier, MarketStructureRegime};
 pub use validation_tool::{
-    MarketStateValidator, ValidationConfig, ValidationResult,
-    ConfidenceDistribution,
+    ConfidenceDistribution, MarketStateValidator, ValidationConfig, ValidationResult,
 };
+pub use volatility::{VolatilityClassifier, VolatilityRegime};
 
 use serde::{Deserialize, Serialize};
 
 /// 市场状态总览：聚合所有维度分类结果
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct MarketStateSnapshot {
     /// 波动率状态
     pub volatility: VolatilityRegime,
@@ -110,24 +105,24 @@ pub enum SecondaryMarketRegime {
     BearTrendAcceleration,
     BullTrendExhaustion,
     BearTrendExhaustion,
-    
+
     // 震荡整理细分
     TightRange,
     WideRange,
     Accumulation,
     Distribution,
-    
+
     // 极端状态细分
     VolatilitySpike,
     LiquidityCrunch,
     PanicSelling,
     PanicBuying,
-    
+
     // 反转酝酿细分
     TrendFatigue,
     SentimentExtreme,
     StructureBreakdown,
-    
+
     #[default]
     Unknown,
 }
@@ -148,7 +143,7 @@ impl MarketStateClassifier {
     pub fn new() -> Self {
         Self::with_config(MarketStateConfig::default())
     }
-    
+
     /// 创建自定义配置的分类器（热插拔）
     pub fn with_config(config: MarketStateConfig) -> Self {
         Self {
@@ -157,69 +152,87 @@ impl MarketStateClassifier {
             structure: MarketStructureClassifier::with_thresholds(config.structure.clone()),
             behavior: InvestorBehaviorClassifier::with_thresholds(config.behavior.clone()),
             config,
-            enhanced_aggregator: Some(crate::market_state::enhanced_aggregation::EnhancedAggregator::new()),
+            enhanced_aggregator: Some(
+                crate::market_state::enhanced_aggregation::EnhancedAggregator::new(),
+            ),
         }
     }
-    
+
     /// 启用增强聚合器（提高置信度）
     pub fn with_enhanced_aggregation(mut self, enabled: bool) -> Self {
         if enabled {
-            self.enhanced_aggregator = Some(crate::market_state::enhanced_aggregation::EnhancedAggregator::new());
+            self.enhanced_aggregator =
+                Some(crate::market_state::enhanced_aggregation::EnhancedAggregator::new());
         } else {
             self.enhanced_aggregator = None;
         }
         self
     }
-    
+
     /// 分类：输入 OHLCV 数据，输出市场状态快照
     pub fn classify(&self, candles: &[crate::types::Candle]) -> MarketStateSnapshot {
         let mut rationale = Vec::new();
-        
+
         // 1. 波动率分类
         let (vol, vol_conf) = self.volatility.classify(candles);
         if vol_conf > 0.5 {
             rationale.push(format!("volatility={:?} conf={:.2}", vol, vol_conf));
         }
-        
+
         // 2. 流动性分类（基于成交量 + 价格范围）
         let (liq, liq_conf) = self.liquidity.classify(candles);
         if liq_conf > 0.5 {
             rationale.push(format!("liquidity={:?} conf={:.2}", liq, liq_conf));
         }
-        
+
         // 3. 结构分类
         let (struct_regime, struct_conf) = self.structure.classify(candles);
         if struct_conf > 0.5 {
-            rationale.push(format!("structure={:?} conf={:.2}", struct_regime, struct_conf));
+            rationale.push(format!(
+                "structure={:?} conf={:.2}",
+                struct_regime, struct_conf
+            ));
         }
-        
+
         // 4. 行为分类
         let (behav, behav_conf) = self.behavior.classify(candles);
         if behav_conf > 0.5 {
             rationale.push(format!("behavior={:?} conf={:.2}", behav, behav_conf));
         }
-        
+
         // 5. 聚合主大类和次小类
-        let (primary, secondary, overall_conf) = if let Some(ref enhanced) = self.enhanced_aggregator {
-            // 使用增强聚合器（提高置信度）
-            enhanced.aggregate(
-                &vol, vol_conf,
-                &liq, liq_conf,
-                &struct_regime, struct_conf,
-                &behav, behav_conf,
-                candles,
-            )
-        } else {
-            // 使用基础聚合器
-            self.aggregate_regimes(
-                &vol, vol_conf,
-                &liq, liq_conf,
-                &struct_regime, struct_conf,
-                &behav, behav_conf,
-            )
-        };
-        rationale.push(format!("primary={:?} secondary={:?} overall={:.2}", primary, secondary, overall_conf));
-        
+        let (primary, secondary, overall_conf) =
+            if let Some(ref enhanced) = self.enhanced_aggregator {
+                // 使用增强聚合器（提高置信度）
+                enhanced.aggregate(
+                    &vol,
+                    vol_conf,
+                    &liq,
+                    liq_conf,
+                    &struct_regime,
+                    struct_conf,
+                    &behav,
+                    behav_conf,
+                    candles,
+                )
+            } else {
+                // 使用基础聚合器
+                self.aggregate_regimes(
+                    &vol,
+                    vol_conf,
+                    &liq,
+                    liq_conf,
+                    &struct_regime,
+                    struct_conf,
+                    &behav,
+                    behav_conf,
+                )
+            };
+        rationale.push(format!(
+            "primary={:?} secondary={:?} overall={:.2}",
+            primary, secondary, overall_conf
+        ));
+
         MarketStateSnapshot {
             volatility: vol,
             volatility_confidence: vol_conf,
@@ -235,23 +248,26 @@ impl MarketStateClassifier {
             rationale,
         }
     }
-    
+
     /// 聚合各维度状态到主大类/次小类
     fn aggregate_regimes(
         &self,
-        vol: &VolatilityRegime, vol_conf: f64,
-        liq: &LiquidityRegime, liq_conf: f64,
-        struct_regime: &MarketStructureRegime, struct_conf: f64,
-        behav: &InvestorBehaviorRegime, behav_conf: f64,
+        vol: &VolatilityRegime,
+        vol_conf: f64,
+        liq: &LiquidityRegime,
+        liq_conf: f64,
+        struct_regime: &MarketStructureRegime,
+        struct_conf: f64,
+        behav: &InvestorBehaviorRegime,
+        behav_conf: f64,
     ) -> (PrimaryMarketRegime, SecondaryMarketRegime, f64) {
         // 计算加权平均置信度
         let weights = &self.config.aggregate_weights;
-        let overall_conf = 
-            vol_conf * weights.volatility +
-            liq_conf * weights.liquidity +
-            struct_conf * weights.structure +
-            behav_conf * weights.behavior;
-        
+        let overall_conf = vol_conf * weights.volatility
+            + liq_conf * weights.liquidity
+            + struct_conf * weights.structure
+            + behav_conf * weights.behavior;
+
         // 聚合逻辑：优先级 决定主大类
         // 1. 极端波动 → ExtremeStress
         if matches!(vol, VolatilityRegime::CrisisVol) && vol_conf > 0.6 {
@@ -264,29 +280,45 @@ impl MarketStateClassifier {
             };
             return (PrimaryMarketRegime::ExtremeStress, secondary, overall_conf);
         }
-        
+
         // 2. 流动性枯竭 → ExtremeStress
         if matches!(liq, LiquidityRegime::ThinLiquidity) && liq_conf > 0.6 {
-            return (PrimaryMarketRegime::ExtremeStress, SecondaryMarketRegime::LiquidityCrunch, overall_conf);
+            return (
+                PrimaryMarketRegime::ExtremeStress,
+                SecondaryMarketRegime::LiquidityCrunch,
+                overall_conf,
+            );
         }
-        
+
         // 3. 行为极端 + 结构弱化 → ReversalBrewing
-        if matches!(behav, InvestorBehaviorRegime::Exhaustion | InvestorBehaviorRegime::Crowding) 
-            && behav_conf > 0.5
-            && matches!(struct_regime, MarketStructureRegime::MeanReverting | MarketStructureRegime::Ranging)
+        if matches!(
+            behav,
+            InvestorBehaviorRegime::Exhaustion | InvestorBehaviorRegime::Crowding
+        ) && behav_conf > 0.5
+            && matches!(
+                struct_regime,
+                MarketStructureRegime::MeanReverting | MarketStructureRegime::Ranging
+            )
         {
             let secondary = if matches!(behav, InvestorBehaviorRegime::Exhaustion) {
                 SecondaryMarketRegime::TrendFatigue
             } else {
                 SecondaryMarketRegime::SentimentExtreme
             };
-            return (PrimaryMarketRegime::ReversalBrewing, secondary, overall_conf);
+            return (
+                PrimaryMarketRegime::ReversalBrewing,
+                secondary,
+                overall_conf,
+            );
         }
-        
+
         // 4. 趋势结构 + 高流动性 → TrendExpansion
         if matches!(struct_regime, MarketStructureRegime::Trending)
             && struct_conf > 0.5
-            && matches!(liq, LiquidityRegime::HighLiquidity | LiquidityRegime::NormalLiquidity)
+            && matches!(
+                liq,
+                LiquidityRegime::HighLiquidity | LiquidityRegime::NormalLiquidity
+            )
         {
             // 根据波动率判断是加速还是疲劳
             let secondary = if matches!(vol, VolatilityRegime::ElevatedVol) {
@@ -298,24 +330,36 @@ impl MarketStateClassifier {
             };
             return (PrimaryMarketRegime::TrendExpansion, secondary, overall_conf);
         }
-        
+
         // 5. Wyckoff 阶段
         if matches!(struct_regime, MarketStructureRegime::Accumulation) && struct_conf > 0.5 {
-            return (PrimaryMarketRegime::RangeConsolidation, SecondaryMarketRegime::Accumulation, overall_conf);
+            return (
+                PrimaryMarketRegime::RangeConsolidation,
+                SecondaryMarketRegime::Accumulation,
+                overall_conf,
+            );
         }
         if matches!(struct_regime, MarketStructureRegime::Distribution) && struct_conf > 0.5 {
-            return (PrimaryMarketRegime::RangeConsolidation, SecondaryMarketRegime::Distribution, overall_conf);
+            return (
+                PrimaryMarketRegime::RangeConsolidation,
+                SecondaryMarketRegime::Distribution,
+                overall_conf,
+            );
         }
-        
+
         // 6. 默认：RangeConsolidation
         let secondary = if matches!(vol, VolatilityRegime::LowVol) {
             SecondaryMarketRegime::TightRange
         } else {
             SecondaryMarketRegime::WideRange
         };
-        (PrimaryMarketRegime::RangeConsolidation, secondary, overall_conf)
+        (
+            PrimaryMarketRegime::RangeConsolidation,
+            secondary,
+            overall_conf,
+        )
     }
-    
+
     /// 获取配置（用于序列化/热插拔）
     pub fn config(&self) -> &MarketStateConfig {
         &self.config

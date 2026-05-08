@@ -1,8 +1,8 @@
 use super::*;
 use ict_engine::application::backtest::parse_duration_sizing_scale;
-use ict_engine::types::{RegimeV2, RegimeProbsV2};
-use std::path::Path;
+use ict_engine::types::{RegimeProbsV2, RegimeV2};
 use std::collections::HashMap;
+use std::path::Path;
 
 /// Regime label entry from HMM output
 #[derive(Debug, Clone, serde::Deserialize)]
@@ -17,7 +17,7 @@ fn load_regime_v2_labels(data_path: &str) -> HashMap<String, RegimeV2> {
     // Try to find regime_v2_labels.json alongside the candle data
     let data_dir = Path::new(data_path).parent().unwrap_or(Path::new("."));
     let regime_path = data_dir.join("regime_v2_labels.json");
-    
+
     if !regime_path.exists() {
         // Try /tmp as fallback for HMM output
         let tmp_path = Path::new("/tmp/hmm_regime_nq_15m_v8/regime_v2_labels.json");
@@ -26,7 +26,7 @@ fn load_regime_v2_labels(data_path: &str) -> HashMap<String, RegimeV2> {
         }
         return HashMap::new();
     }
-    
+
     load_regime_v2_from_path(&regime_path)
 }
 
@@ -35,16 +35,15 @@ fn load_regime_v2_from_path(path: &Path) -> HashMap<String, RegimeV2> {
         Ok(c) => c,
         Err(_) => return HashMap::new(),
     };
-    
+
     let labels: Vec<RegimeLabelJson> = match serde_json::from_str(&content) {
         Ok(l) => l,
         Err(_) => return HashMap::new(),
     };
-    
-    labels.into_iter()
-        .filter_map(|l| {
-            parse_regime_v2(&l.family).map(|r| (l.ts, r))
-        })
+
+    labels
+        .into_iter()
+        .filter_map(|l| parse_regime_v2(&l.family).map(|r| (l.ts, r)))
         .collect()
 }
 
@@ -96,10 +95,10 @@ pub(crate) fn run_factor_backtest(
         .map(LearningState::feedback_key)
         .collect::<std::collections::BTreeSet<_>>();
     let lab = FactorLab::new(FactorRegistry::default());
-    
+
     // Load regime V2 labels if available
     let regime_v2_labels = load_regime_v2_labels(data);
-    
+
     let research = lab.run_research(
         symbol,
         &candles,

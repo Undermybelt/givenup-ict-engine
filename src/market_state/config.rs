@@ -6,10 +6,10 @@
 use serde::{Deserialize, Serialize};
 use std::path::Path;
 
-use super::volatility::VolatilityThresholds;
+use super::behavior::BehaviorThresholds;
 use super::liquidity::LiquidityThresholds;
 use super::structure::StructureThresholds;
-use super::behavior::BehaviorThresholds;
+use super::volatility::VolatilityThresholds;
 
 /// 市场状态分类器总配置
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -105,7 +105,7 @@ impl MarketStateProfile {
             config: MarketStateConfig::default(),
         }
     }
-    
+
     /// 趋势交易配置：强调结构和行为
     pub fn trend_trading_profile() -> Self {
         Self {
@@ -122,7 +122,7 @@ impl MarketStateProfile {
             },
         }
     }
-    
+
     /// 波动率交易配置：强调波动率和流动性
     pub fn volatility_trading_profile() -> Self {
         Self {
@@ -139,7 +139,7 @@ impl MarketStateProfile {
             },
         }
     }
-    
+
     /// 反转交易配置：强调行为极端
     pub fn reversal_trading_profile() -> Self {
         Self {
@@ -153,14 +153,14 @@ impl MarketStateProfile {
                     behavior: 0.30,
                 },
                 behavior: BehaviorThresholds {
-                    rsi_extreme_threshold: 70.0,  // 更宽松的极端阈值
+                    rsi_extreme_threshold: 70.0, // 更宽松的极端阈值
                     ..BehaviorThresholds::default()
                 },
                 ..MarketStateConfig::default()
             },
         }
     }
-    
+
     /// 风险控制配置：强调极端状态检测
     pub fn risk_control_profile() -> Self {
         Self {
@@ -168,12 +168,12 @@ impl MarketStateProfile {
             description: "风险控制：快速响应极端状态".to_string(),
             config: MarketStateConfig {
                 volatility: VolatilityThresholds {
-                    elevated_threshold: 0.85,  // 更早触发高波动警告
+                    elevated_threshold: 0.85, // 更早触发高波动警告
                     crisis_threshold: 0.92,
                     ..VolatilityThresholds::default()
                 },
                 liquidity: LiquidityThresholds {
-                    low_threshold: 0.35,  // 更早触发流动性警告
+                    low_threshold: 0.35, // 更早触发流动性警告
                     ..LiquidityThresholds::default()
                 },
                 aggregate_weights: AggregateWeights {
@@ -196,19 +196,19 @@ impl MarketStateConfig {
         let config: MarketStateConfig = serde_json::from_str(&content)?;
         Ok(config)
     }
-    
+
     /// 保存到 JSON 文件
     pub fn save(&self, path: &Path) -> anyhow::Result<()> {
         let content = serde_json::to_string_pretty(self)?;
         std::fs::write(path, content)?;
         Ok(())
     }
-    
+
     /// 从 Profile 创建
     pub fn from_profile(profile: &MarketStateProfile) -> Self {
         profile.config.clone()
     }
-    
+
     /// 验证配置有效性
     pub fn validate(&self) -> anyhow::Result<()> {
         // 验证权重和为 1
@@ -216,16 +216,16 @@ impl MarketStateConfig {
             + self.aggregate_weights.liquidity
             + self.aggregate_weights.structure
             + self.aggregate_weights.behavior;
-        
+
         if (weight_sum - 1.0).abs() > 0.01 {
             anyhow::bail!("聚合权重和必须为 1.0，当前为 {}", weight_sum);
         }
-        
+
         // 验证阈值范围
         if self.volatility.low_threshold >= self.volatility.normal_threshold {
             anyhow::bail!("波动率低阈值必须小于正常阈值");
         }
-        
+
         Ok(())
     }
 }
@@ -267,7 +267,7 @@ impl UserWeightsTemplate {
             override_behavior: None,
         }
     }
-    
+
     /// 应用到现有配置
     pub fn apply_to(&self, config: &mut MarketStateConfig) {
         config.aggregate_weights = self.aggregate_weights.clone();
@@ -289,27 +289,31 @@ impl UserWeightsTemplate {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn default_config_is_valid() {
         let config = MarketStateConfig::default();
         assert!(config.validate().is_ok());
     }
-    
+
     #[test]
     fn profile_configs_are_valid() {
         for profile in available_profiles() {
-            assert!(profile.config.validate().is_ok(), "Profile {} is invalid", profile.name);
+            assert!(
+                profile.config.validate().is_ok(),
+                "Profile {} is invalid",
+                profile.name
+            );
         }
     }
-    
+
     #[test]
     fn weight_sum_is_one() {
         let weights = AggregateWeights::default();
         let sum = weights.volatility + weights.liquidity + weights.structure + weights.behavior;
         assert!((sum - 1.0).abs() < 0.001);
     }
-    
+
     #[test]
     fn user_template_apply() {
         let mut config = MarketStateConfig::default();

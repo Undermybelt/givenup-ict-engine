@@ -14,6 +14,7 @@ mod status_command;
 mod training_command;
 mod update_command;
 mod update_output;
+mod validate_market_state_command;
 mod workflow_snapshot_runtime;
 use chrono::{Duration, Utc};
 use clap::{Parser, Subcommand};
@@ -243,6 +244,7 @@ use update_output::{
     feedback_record_from_artifact, latest_execution_candidate_for_source_run,
     load_canonical_executor_scorecards, persist_ensemble_vote_record,
 };
+use validate_market_state_command::{validate_market_state_shell, ValidateMarketStateInput};
 #[cfg(test)]
 use workflow_snapshot_runtime::{
     build_workflow_snapshot, workflow_disagreements, workflow_field_diffs,
@@ -598,6 +600,30 @@ enum Commands {
         agent: bool,
         #[arg(long, help = "Alias for --output-format human")]
         human: bool,
+    },
+    /// Validate market-state main/sub-regime confidence on OHLCV candles
+    ValidateMarketState {
+        #[arg(long, help = "Cleaned candle JSON or CSV path")]
+        data: String,
+        #[arg(
+            long,
+            default_value_t = 100,
+            help = "Sliding window size used for each market-state classification"
+        )]
+        window_size: usize,
+        #[arg(
+            long,
+            default_value_t = 1,
+            help = "Sliding window step size; increase for faster broad checks"
+        )]
+        step_size: usize,
+        #[arg(long, help = "Print periodic per-window classification samples")]
+        verbose: bool,
+        #[arg(
+            long,
+            help = "Disable enhanced aggregation and use the basic aggregator fallback"
+        )]
+        no_enhanced: bool,
     },
     /// Train HMM model
     Train {
@@ -2076,6 +2102,19 @@ fn main() -> Result<()> {
                 OutputFormat::Agent => "agent",
                 OutputFormat::Human => "human",
             },
+        })?,
+        Commands::ValidateMarketState {
+            data,
+            window_size,
+            step_size,
+            verbose,
+            no_enhanced,
+        } => validate_market_state_shell(ValidateMarketStateInput {
+            data_path: data,
+            window_size,
+            step_size,
+            verbose,
+            enhanced: !no_enhanced,
         })?,
         Commands::Train {
             symbol,
@@ -14427,6 +14466,34 @@ mod tests {
         let cli = parse_cli_from(["ict-engine", "env"]).unwrap();
         match cli.command {
             Commands::Env => {}
+            other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
+        }
+    }
+
+    #[test]
+    fn test_cli_validate_market_state_accepts_zero_config_defaults() {
+        let cli = parse_cli_from([
+            "ict-engine",
+            "validate-market-state",
+            "--data",
+            "candles.json",
+        ])
+        .unwrap();
+
+        match cli.command {
+            Commands::ValidateMarketState {
+                data,
+                window_size,
+                step_size,
+                verbose,
+                no_enhanced,
+            } => {
+                assert_eq!(data, "candles.json");
+                assert_eq!(window_size, 100);
+                assert_eq!(step_size, 1);
+                assert!(!verbose);
+                assert!(!no_enhanced);
+            }
             other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
         }
     }

@@ -4,6 +4,7 @@
 //! 基于成交量 + 价格范围 + 买卖价差代理
 
 use crate::types::Candle;
+use chrono::Timelike;
 use serde::{Deserialize, Serialize};
 
 /// 流动性状态
@@ -65,7 +66,7 @@ impl Default for LiquidityThresholds {
         Self {
             high_threshold: 0.70,
             low_threshold: 0.30,
-            range_high_liq_threshold: 0.40,  // 价格范围处于低位 = 流动性好
+            range_high_liq_threshold: 0.40, // 价格范围处于低位 = 流动性好
             volume_lookback: 20,
             range_lookback: 20,
         }
@@ -81,32 +82,34 @@ impl LiquidityClassifier {
     pub fn new() -> Self {
         Self::with_thresholds(LiquidityThresholds::default())
     }
-    
+
     pub fn with_thresholds(thresholds: LiquidityThresholds) -> Self {
         Self { thresholds }
     }
-    
+
     /// 分类流动性状态，返回 (状态, 置信度)
     pub fn classify(&self, candles: &[Candle]) -> (LiquidityRegime, f64) {
         if candles.len() < self.thresholds.volume_lookback + 1 {
             return (LiquidityRegime::NormalLiquidity, 0.0);
         }
-        
+
         // 1. 计算成交量百分位
         let volumes: Vec<f64> = candles.iter().map(|c| c.volume).collect();
         let current_vol = *volumes.last().unwrap();
-        let vol_percentile = self.compute_percentile(&volumes, current_vol);
-        
+        let vol_percentile =
+            self.compute_percentile(&volumes, current_vol, self.thresholds.volume_lookback);
+
         // 2. 计算价格范围（代理买卖价差）
         let ranges: Vec<f64> = candles.iter().map(|c| c.high - c.low).collect();
         let current_range = *ranges.last().unwrap();
-        let range_percentile = self.compute_percentile(&ranges, current_range);
-        
+        let range_percentile =
+            self.compute_percentile(&ranges, current_range, self.thresholds.range_lookback);
+
         // 3. 计算流动性综合分数
         // 高成交量 + 低范围 = 高流动性
         // 低成交量 + 高范围 = 低流动性
         let liq_score = vol_percentile * 0.6 + (1.0 - range_percentile) * 0.4;
-        
+
         // 4. 分类
         let regime = if liq_score >= self.thresholds.high_threshold {
             LiquidityRegime::HighLiquidity
@@ -115,17 +118,21 @@ impl LiquidityClassifier {
         } else {
             LiquidityRegime::NormalLiquidity
         };
-        
+
         // 5. 置信度：偏离中间值的程度
         let confidence = (liq_score - 0.5).abs() * 2.0;
-        
+
         (regime, confidence)
     }
-    
+
     /// 带会话状态的流动性分类
-    pub fn classify_with_session(&self, candles: &[Candle], session: SessionState) -> (LiquidityRegime, f64) {
+    pub fn classify_with_session(
+        &self,
+        candles: &[Candle],
+        session: SessionState,
+    ) -> (LiquidityRegime, f64) {
         let (base_regime, base_conf) = self.classify(candles);
-        
+
         // 会话叠加调整
         match session {
             SessionState::Killzone => {
@@ -152,17 +159,20 @@ impl LiquidityClassifier {
             }
         }
     }
-    
-    fn compute_percentile(&self, series: &[f64], current: f64) -> f64 {
-        let lookback = self.thresholds.volume_lookback.min(series.len());
+
+    fn compute_percentile(&self, series: &[f64], current: f64, lookback: usize) -> f64 {
+        let lookback = lookback.min(series.len());
         if lookback == 0 {
             return 0.5;
         }
-        
+
         let slice = &series[series.len() - lookback..];
         let count_below = slice.iter().filter(|&&x| x < current).count();
-        let count_equal = slice.iter().filter(|&&x| (x - current).abs() < 1e-10).count();
-        
+        let count_equal = slice
+            .iter()
+            .filter(|&&x| (x - current).abs() < 1e-10)
+            .count();
+
         (count_below as f64 + count_equal as f64 * 0.5) / slice.len() as f64
     }
 }
@@ -178,15 +188,15 @@ pub fn detect_session(candles: &[Candle]) -> SessionState {
     if candles.is_empty() {
         return SessionState::Unknown;
     }
-    
+
     let last = candles.last().unwrap();
     let hour = last.timestamp.hour();
-    
+
     // 美东时间（简化：假设时间戳已经是美东）
     match hour {
-        9..=12 => SessionState::Killzone,      // 09:30-12:00 最活跃
-        13..=15 => SessionState::Killzone,     // 13:00-16:00 活跃
-        8 | 16 => SessionState::Transition,    // 开盘前/收盘后
+        9..=12 => SessionState::Killzone,   // 09:30-12:00 最活跃
+        13..=15 => SessionState::Killzone,  // 13:00-16:00 活跃
+        8 | 16 => SessionState::Transition, // 开盘前/收盘后
         _ => SessionState::OffHours,
     }
 }
@@ -195,7 +205,7 @@ pub fn detect_session(candles: &[Candle]) -> SessionState {
 mod tests {
     use super::*;
     use chrono::{TimeZone, Utc};
-    
+
     fn sample_candles(count: usize, avg_volume: f64, avg_range: f64) -> Vec<Candle> {
         (0..count)
             .map(|i| {
@@ -211,22 +221,25 @@ mod tests {
             })
             .collect()
     }
-    
+
     #[test]
     fn high_liquidity_detection() {
-        let candles = sample_candles(50, 10000.0, 0.5);  // 高成交量，低范围
+        let candles = sample_candles(50, 10000.0, 0.5); // 高成交量，低范围
         let classifier = LiquidityClassifier::new();
         let (regime, conf) = classifier.classify(&candles);
-        
-        assert!(matches!(regime, LiquidityRegime::HighLiquidity | LiquidityRegime::NormalLiquidity));
+
+        assert!(matches!(
+            regime,
+            LiquidityRegime::HighLiquidity | LiquidityRegime::NormalLiquidity
+        ));
     }
-    
+
     #[test]
     fn thin_liquidity_detection() {
-        let candles = sample_candles(50, 100.0, 5.0);  // 低成交量，高范围
+        let candles = sample_candles(50, 100.0, 5.0); // 低成交量，高范围
         let classifier = LiquidityClassifier::new();
         let (regime, conf) = classifier.classify(&candles);
-        
+
         // 由于使用百分位，单一数据点的分类可能不稳定
         assert!(conf >= 0.0 && conf <= 1.0);
     }

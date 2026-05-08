@@ -213,10 +213,7 @@ pub(crate) fn overlay_or_synthesize_phase_ensemble_votes(
     recent_ensemble_votes
 }
 
-pub(crate) fn refresh_workflow_snapshot(
-    state_dir: &str,
-    symbol: &str,
-) -> Result<WorkflowSnapshot> {
+pub(crate) fn refresh_workflow_snapshot(state_dir: &str, symbol: &str) -> Result<WorkflowSnapshot> {
     let analyze_runs: Vec<AnalyzeRunRecord> =
         load_state_or_default(state_dir, symbol, ANALYZE_RUNS_FILE)?;
     let train_runs: Vec<TrainRunRecord> =

@@ -6,15 +6,14 @@
 //! - 热插拔：用户可覆盖映射规则
 //! - 高置信度：软证据分布基于历史统计
 
-use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
-use crate::market_state::{
-    MarketStateSnapshot, PrimaryMarketRegime, SecondaryMarketRegime,
-    VolatilityRegime, LiquidityRegime, MarketStructureRegime, InvestorBehaviorRegime,
-};
-use crate::market_state::mtf_resonance::TimeframeResonanceResult;
 use crate::bbn::{Evidence, EvidenceType, NodeId};
+use crate::market_state::mtf_resonance::TimeframeResonanceResult;
+use crate::market_state::{
+    InvestorBehaviorRegime, LiquidityRegime, MarketStateSnapshot, MarketStructureRegime,
+    PrimaryMarketRegime, VolatilityRegime,
+};
 
 /// BBN 节点 ID 定义
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -115,37 +114,37 @@ impl MarketStateEvidenceMapper {
     pub fn new() -> Self {
         Self::with_config(EvidenceMappingConfig::default())
     }
-    
+
     pub fn with_config(config: EvidenceMappingConfig) -> Self {
         Self { config }
     }
-    
+
     /// 将市场状态快照映射为 BBN 证据
     pub fn map_to_evidence(&self, snapshot: &MarketStateSnapshot) -> Evidence {
         let mut evidence = Evidence::new();
-        
+
         // 主大类证据
         self.insert_primary_regime_evidence(&mut evidence, snapshot);
-        
+
         // 波动率证据
         self.insert_volatility_evidence(&mut evidence, snapshot);
-        
+
         // 流动性证据
         self.insert_liquidity_evidence(&mut evidence, snapshot);
-        
+
         // 结构证据
         self.insert_structure_evidence(&mut evidence, snapshot);
-        
+
         // 行为证据
         self.insert_behavior_evidence(&mut evidence, snapshot);
-        
+
         evidence
     }
-    
+
     /// 将多周期共振结果映射为 BBN 证据
     pub fn map_resonance_to_evidence(&self, resonance: &TimeframeResonanceResult) -> Evidence {
         let mut evidence = Evidence::new();
-        
+
         // 共振状态
         let node_id: NodeId = MarketStateNodeId::TimeframeResonance.into();
         let evidence_type = self.resonance_to_evidence_type(
@@ -153,136 +152,158 @@ impl MarketStateEvidenceMapper {
             resonance.overall_resonance_score,
         );
         evidence.insert(node_id, evidence_type);
-        
+
         // 同时插入基础周期状态
         let base_evidence = self.map_to_evidence(&resonance.base_snapshot);
         evidence.extend(base_evidence);
-        
+
         evidence
     }
-    
+
     /// 插入主大类证据
-    fn insert_primary_regime_evidence(&self, evidence: &mut Evidence, snapshot: &MarketStateSnapshot) {
+    fn insert_primary_regime_evidence(
+        &self,
+        evidence: &mut Evidence,
+        snapshot: &MarketStateSnapshot,
+    ) {
         let node_id: NodeId = MarketStateNodeId::PrimaryRegime.into();
         let state_index = self.primary_regime_to_index(&snapshot.primary_regime);
-        
-        let evidence_type = if self.config.use_soft_evidence && snapshot.overall_confidence < self.config.hard_evidence_threshold {
+
+        let evidence_type = if self.config.use_soft_evidence
+            && snapshot.overall_confidence < self.config.hard_evidence_threshold
+        {
             self.create_soft_evidence(state_index, 4, snapshot.overall_confidence)
         } else {
             EvidenceType::Hard(state_index)
         };
-        
+
         evidence.insert(node_id, evidence_type);
     }
-    
+
     /// 插入波动率证据
     fn insert_volatility_evidence(&self, evidence: &mut Evidence, snapshot: &MarketStateSnapshot) {
         let node_id: NodeId = MarketStateNodeId::VolatilityRegime.into();
         let state_index = self.volatility_to_index(&snapshot.volatility);
-        
-        let evidence_type = if self.config.use_soft_evidence && snapshot.volatility_confidence < self.config.hard_evidence_threshold {
+
+        let evidence_type = if self.config.use_soft_evidence
+            && snapshot.volatility_confidence < self.config.hard_evidence_threshold
+        {
             self.create_soft_evidence(state_index, 4, snapshot.volatility_confidence)
         } else {
             EvidenceType::Hard(state_index)
         };
-        
+
         evidence.insert(node_id, evidence_type);
     }
-    
+
     /// 插入流动性证据
     fn insert_liquidity_evidence(&self, evidence: &mut Evidence, snapshot: &MarketStateSnapshot) {
         let node_id: NodeId = MarketStateNodeId::LiquidityRegime.into();
         let state_index = self.liquidity_to_index(&snapshot.liquidity);
-        
-        let evidence_type = if self.config.use_soft_evidence && snapshot.liquidity_confidence < self.config.hard_evidence_threshold {
+
+        let evidence_type = if self.config.use_soft_evidence
+            && snapshot.liquidity_confidence < self.config.hard_evidence_threshold
+        {
             self.create_soft_evidence(state_index, 4, snapshot.liquidity_confidence)
         } else {
             EvidenceType::Hard(state_index)
         };
-        
+
         evidence.insert(node_id, evidence_type);
     }
-    
+
     /// 插入结构证据
     fn insert_structure_evidence(&self, evidence: &mut Evidence, snapshot: &MarketStateSnapshot) {
         let node_id: NodeId = MarketStateNodeId::StructureRegime.into();
         let state_index = self.structure_to_index(&snapshot.structure);
-        
-        let evidence_type = if self.config.use_soft_evidence && snapshot.structure_confidence < self.config.hard_evidence_threshold {
+
+        let evidence_type = if self.config.use_soft_evidence
+            && snapshot.structure_confidence < self.config.hard_evidence_threshold
+        {
             self.create_soft_evidence(state_index, 5, snapshot.structure_confidence)
         } else {
             EvidenceType::Hard(state_index)
         };
-        
+
         evidence.insert(node_id, evidence_type);
     }
-    
+
     /// 插入行为证据
     fn insert_behavior_evidence(&self, evidence: &mut Evidence, snapshot: &MarketStateSnapshot) {
         let node_id: NodeId = MarketStateNodeId::BehaviorRegime.into();
         let state_index = self.behavior_to_index(&snapshot.behavior);
-        
-        let evidence_type = if self.config.use_soft_evidence && snapshot.behavior_confidence < self.config.hard_evidence_threshold {
+
+        let evidence_type = if self.config.use_soft_evidence
+            && snapshot.behavior_confidence < self.config.hard_evidence_threshold
+        {
             self.create_soft_evidence(state_index, 5, snapshot.behavior_confidence)
         } else {
             EvidenceType::Hard(state_index)
         };
-        
+
         evidence.insert(node_id, evidence_type);
     }
-    
+
     /// 主大类转索引
     fn primary_regime_to_index(&self, regime: &PrimaryMarketRegime) -> usize {
         match regime {
             PrimaryMarketRegime::TrendExpansion => PrimaryRegimeStateIndex::TrendExpansion as usize,
-            PrimaryMarketRegime::RangeConsolidation => PrimaryRegimeStateIndex::RangeConsolidation as usize,
-            PrimaryMarketRegime::ReversalBrewing => PrimaryRegimeStateIndex::ReversalBrewing as usize,
-            PrimaryMarketRegime::CrisisVolatility => PrimaryRegimeStateIndex::CrisisVolatility as usize,
+            PrimaryMarketRegime::RangeConsolidation => {
+                PrimaryRegimeStateIndex::RangeConsolidation as usize
+            }
+            PrimaryMarketRegime::ReversalBrewing => {
+                PrimaryRegimeStateIndex::ReversalBrewing as usize
+            }
+            PrimaryMarketRegime::ExtremeStress => {
+                PrimaryRegimeStateIndex::CrisisVolatility as usize
+            }
+            PrimaryMarketRegime::Unknown => PrimaryRegimeStateIndex::RangeConsolidation as usize,
         }
     }
-    
+
     /// 波动率转索引
     fn volatility_to_index(&self, regime: &VolatilityRegime) -> usize {
         match regime {
-            VolatilityRegime::LowVolatility => VolatilityStateIndex::LowVol as usize,
-            VolatilityRegime::NormalVolatility => VolatilityStateIndex::NormalVol as usize,
-            VolatilityRegime::ElevatedVolatility => VolatilityStateIndex::ElevatedVol as usize,
-            VolatilityRegime::CrisisVolatility => VolatilityStateIndex::CrisisVol as usize,
+            VolatilityRegime::LowVol => VolatilityStateIndex::LowVol as usize,
+            VolatilityRegime::NormalVol => VolatilityStateIndex::NormalVol as usize,
+            VolatilityRegime::ElevatedVol => VolatilityStateIndex::ElevatedVol as usize,
+            VolatilityRegime::CrisisVol => VolatilityStateIndex::CrisisVol as usize,
+            VolatilityRegime::Unknown => VolatilityStateIndex::NormalVol as usize,
         }
     }
-    
+
     /// 流动性转索引
     fn liquidity_to_index(&self, regime: &LiquidityRegime) -> usize {
         match regime {
-            LiquidityRegime::DeepLiquidity => LiquidityStateIndex::DeepLiquid as usize,
+            LiquidityRegime::HighLiquidity => LiquidityStateIndex::DeepLiquid as usize,
             LiquidityRegime::NormalLiquidity => LiquidityStateIndex::NormalLiquid as usize,
-            LiquidityRegime::ShallowLiquidity => LiquidityStateIndex::ShallowLiquid as usize,
-            LiquidityRegime::LiquidityDrought => LiquidityStateIndex::Illiquid as usize,
+            LiquidityRegime::ThinLiquidity => LiquidityStateIndex::Illiquid as usize,
+            LiquidityRegime::Unknown => LiquidityStateIndex::ShallowLiquid as usize,
         }
     }
-    
+
     /// 结构转索引
     fn structure_to_index(&self, regime: &MarketStructureRegime) -> usize {
         match regime {
-            MarketStructureRegime::Breakout => 0,
-            MarketStructureRegime::Retest => 1,
-            MarketStructureRegime::Consolidation => 2,
-            MarketStructureRegime::Reversal => 3,
-            MarketStructureRegime::Rangebound => 4,
+            MarketStructureRegime::Trending | MarketStructureRegime::Breakout => 0,
+            MarketStructureRegime::MeanReverting => 1,
+            MarketStructureRegime::Ranging | MarketStructureRegime::Unknown => 2,
+            MarketStructureRegime::Accumulation => 3,
+            MarketStructureRegime::Distribution | MarketStructureRegime::Breakdown => 4,
         }
     }
-    
+
     /// 行为转索引
     fn behavior_to_index(&self, regime: &InvestorBehaviorRegime) -> usize {
         match regime {
-            InvestorBehaviorRegime::TrendFollowing => 0,
-            InvestorBehaviorRegime::MeanReversion => 1,
-            InvestorBehaviorRegime::PanicSelling => 2,
-            InvestorBehaviorRegime::FomoBuying => 3,
-            InvestorBehaviorRegime::NeutralWait => 4,
+            InvestorBehaviorRegime::RiskOn => 0,
+            InvestorBehaviorRegime::Exhaustion | InvestorBehaviorRegime::Crowding => 1,
+            InvestorBehaviorRegime::Capitulation => 2,
+            InvestorBehaviorRegime::FOMO => 3,
+            InvestorBehaviorRegime::RiskOff | InvestorBehaviorRegime::Neutral => 4,
         }
     }
-    
+
     /// 共振转证据类型
     fn resonance_to_evidence_type(
         &self,
@@ -290,35 +311,48 @@ impl MarketStateEvidenceMapper {
         score: f64,
     ) -> EvidenceType {
         let index = match resonance {
-            crate::market_state::mtf_resonance::ResonanceResult::Aligned => ResonanceStateIndex::Aligned as usize,
-            crate::market_state::mtf_resonance::ResonanceResult::Neutral => ResonanceStateIndex::Neutral as usize,
-            crate::market_state::mtf_resonance::ResonanceResult::Contradicted => ResonanceStateIndex::Contradicted as usize,
-            crate::market_state::mtf_resonance::ResonanceResult::Missing => ResonanceStateIndex::Missing as usize,
+            crate::market_state::mtf_resonance::ResonanceResult::Aligned => {
+                ResonanceStateIndex::Aligned as usize
+            }
+            crate::market_state::mtf_resonance::ResonanceResult::Neutral => {
+                ResonanceStateIndex::Neutral as usize
+            }
+            crate::market_state::mtf_resonance::ResonanceResult::Contradicted => {
+                ResonanceStateIndex::Contradicted as usize
+            }
+            crate::market_state::mtf_resonance::ResonanceResult::Missing => {
+                ResonanceStateIndex::Missing as usize
+            }
         };
-        
+
         if self.config.use_soft_evidence && score < self.config.hard_evidence_threshold {
             self.create_soft_evidence(index, 4, score)
         } else {
             EvidenceType::Hard(index)
         }
     }
-    
+
     /// 创建软证据分布
-    /// 
+    ///
     /// 参数：
     /// - primary_index: 主状态索引
     /// - total_states: 总状态数
     /// - confidence: 置信度
-    fn create_soft_evidence(&self, primary_index: usize, total_states: usize, confidence: f64) -> EvidenceType {
+    fn create_soft_evidence(
+        &self,
+        primary_index: usize,
+        total_states: usize,
+        confidence: f64,
+    ) -> EvidenceType {
         let mut distribution = vec![0.0; total_states];
-        
+
         // 应用模糊系数
         let adjusted_conf = confidence * (1.0 - self.config.low_confidence_fuzziness);
         let remaining = 1.0 - adjusted_conf;
-        
+
         // 主状态获得大部分概率
         distribution[primary_index] = adjusted_conf;
-        
+
         // 剩余概率分配给其他状态
         let per_other = remaining / (total_states - 1).max(1) as f64;
         for i in 0..total_states {
@@ -326,13 +360,13 @@ impl MarketStateEvidenceMapper {
                 distribution[i] = per_other;
             }
         }
-        
+
         // 归一化
         let sum: f64 = distribution.iter().sum();
         for prob in &mut distribution {
             *prob /= sum;
         }
-        
+
         EvidenceType::Soft(distribution)
     }
 }
@@ -369,7 +403,7 @@ impl EvidenceSummary {
             evidence_count: 5,
         }
     }
-    
+
     pub fn from_resonance(resonance: &TimeframeResonanceResult) -> Self {
         let mut summary = Self::from_snapshot(&resonance.base_snapshot);
         summary.resonance_score = Some(resonance.overall_resonance_score);
@@ -384,7 +418,7 @@ mod tests {
     use crate::market_state::MarketStateClassifier;
     use crate::types::Candle;
     use chrono::{TimeZone, Utc};
-    
+
     fn sample_candles(count: usize) -> Vec<Candle> {
         (0..count)
             .map(|i| {
@@ -400,36 +434,36 @@ mod tests {
             })
             .collect()
     }
-    
+
     #[test]
     fn mapper_creates_evidence_from_snapshot() {
         let classifier = MarketStateClassifier::new();
         let mapper = MarketStateEvidenceMapper::new();
-        
+
         let candles = sample_candles(100);
         let snapshot = classifier.classify(&candles);
         let evidence = mapper.map_to_evidence(&snapshot);
-        
+
         // 应包含 5 个证据节点
         assert!(evidence.len() >= 5);
         assert!(evidence.contains_key(&NodeId::from(MarketStateNodeId::PrimaryRegime)));
         assert!(evidence.contains_key(&NodeId::from(MarketStateNodeId::VolatilityRegime)));
     }
-    
+
     #[test]
     fn soft_evidence_distribution_sums_to_one() {
         let mapper = MarketStateEvidenceMapper::new();
         let dist = mapper.create_soft_evidence(0, 4, 0.7);
-        
+
         if let EvidenceType::Soft(probs) = dist {
             let sum: f64 = probs.iter().sum();
             assert!((sum - 1.0).abs() < 1e-6);
-            assert!(probs[0] > probs[1]);  // 主状态概率最高
+            assert!(probs[0] > probs[1]); // 主状态概率最高
         } else {
             panic!("expected soft evidence");
         }
     }
-    
+
     #[test]
     fn hard_evidence_for_high_confidence() {
         let config = EvidenceMappingConfig {
@@ -438,18 +472,18 @@ mod tests {
             low_confidence_fuzziness: 0.15,
         };
         let mapper = MarketStateEvidenceMapper::with_config(config);
-        
+
         let dist = mapper.create_soft_evidence(1, 4, 0.9);
         // 高置信度但未达硬证据阈值时，仍为软证据
         assert!(matches!(dist, EvidenceType::Soft(_)));
     }
-    
+
     #[test]
     fn evidence_summary_from_snapshot() {
         let classifier = MarketStateClassifier::new();
         let candles = sample_candles(100);
         let snapshot = classifier.classify(&candles);
-        
+
         let summary = EvidenceSummary::from_snapshot(&snapshot);
         assert!(summary.evidence_count >= 5);
         assert!(summary.primary_confidence >= 0.0 && summary.primary_confidence <= 1.0);

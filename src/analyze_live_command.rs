@@ -230,9 +230,9 @@ fn resolve_live_symbol_inputs(
     options_symbol: Option<&str>,
     spot_kind: Option<&str>,
 ) -> Result<ResolvedLiveSymbolInputs> {
-    let inferred = ict_engine::market_catalog::load_market_catalog(std::path::Path::new(
-        env!("CARGO_MANIFEST_DIR"),
-    ))
+    let inferred = ict_engine::market_catalog::load_market_catalog(std::path::Path::new(env!(
+        "CARGO_MANIFEST_DIR"
+    )))
     .ok()
     .and_then(|catalog| {
         ict_engine::application::data_sources::analyze_live_inferred_symbols(&catalog, symbol)

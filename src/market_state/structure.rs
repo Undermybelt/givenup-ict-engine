@@ -62,7 +62,7 @@ pub struct StructureThresholds {
 impl Default for StructureThresholds {
     fn default() -> Self {
         Self {
-            trend_threshold: 25.0,      // ADX > 25 为趋势
+            trend_threshold: 25.0,       // ADX > 25 为趋势
             mean_revert_threshold: 0.02, // 价格偏离 2% 触发均值回归
             range_ratio_threshold: 0.6,  // 区间占比 > 60% 为震荡
             adx_period: 14,
@@ -81,37 +81,37 @@ impl MarketStructureClassifier {
     pub fn new() -> Self {
         Self::with_thresholds(StructureThresholds::default())
     }
-    
+
     pub fn with_thresholds(thresholds: StructureThresholds) -> Self {
         Self { thresholds }
     }
-    
+
     /// 分类市场结构状态，返回 (状态, 置信度)
     pub fn classify(&self, candles: &[Candle]) -> (MarketStructureRegime, f64) {
         if candles.len() < self.thresholds.adx_period + 1 {
             return (MarketStructureRegime::Unknown, 0.0);
         }
-        
+
         // 1. 计算 ADX（趋势强度）
         let adx = self.compute_adx(candles);
         let current_adx = *adx.last().unwrap_or(&20.0);
-        
+
         // 2. 计算价格相对于均值的偏离
         let closes: Vec<f64> = candles.iter().map(|c| c.close).collect();
         let ma = self.compute_ma(&closes);
         let last_close = closes.last().copied().unwrap_or(0.0);
         let deviation = (last_close - ma).abs() / ma.max(1e-10);
-        
+
         // 3. 计算区间特征
         let range_score = self.compute_range_score(&closes);
-        
+
         // 4. 检测 Wyckoff 阶段
         let wyckoff_score = self.detect_wyckoff_phase(candles);
-        
+
         // 5. 综合分类
         let (regime, confidence) = if current_adx >= self.thresholds.trend_threshold {
             // 强趋势
-            let conf = (current_adx / 50.0).min(1.0);  // ADX 50 = 最高置信
+            let conf = (current_adx / 50.0).min(1.0); // ADX 50 = 最高置信
             (MarketStructureRegime::Trending, conf)
         } else if wyckoff_score.0 > 0.6 {
             // Wyckoff 阶段检测
@@ -126,49 +126,69 @@ impl MarketStructureClassifier {
         } else {
             (MarketStructureRegime::Unknown, 0.3)
         };
-        
+
         (regime, confidence)
     }
-    
+
     /// 计算 ADX（Average Directional Index）
     fn compute_adx(&self, candles: &[Candle]) -> Vec<f64> {
         let period = self.thresholds.adx_period;
         if candles.len() < period + 1 {
-            return vec![20.0];  // 默认中等趋势
+            return vec![20.0]; // 默认中等趋势
         }
-        
+
         // 计算 +DM 和 -DM
         let mut plus_dm = vec![0.0];
         let mut minus_dm = vec![0.0];
         let mut tr = vec![0.0];
-        
+
         for i in 1..candles.len() {
             let up_move = candles[i].high - candles[i - 1].high;
             let down_move = candles[i - 1].low - candles[i].low;
-            
-            let plus = if up_move > down_move && up_move > 0.0 { up_move } else { 0.0 };
-            let minus = if down_move > up_move && down_move > 0.0 { down_move } else { 0.0 };
-            
+
+            let plus = if up_move > down_move && up_move > 0.0 {
+                up_move
+            } else {
+                0.0
+            };
+            let minus = if down_move > up_move && down_move > 0.0 {
+                down_move
+            } else {
+                0.0
+            };
+
             plus_dm.push(plus);
             minus_dm.push(minus);
-            
+
             let true_range = (candles[i].high - candles[i].low)
                 .max((candles[i].high - candles[i - 1].close).abs())
                 .max((candles[i].low - candles[i - 1].close).abs());
             tr.push(true_range);
         }
-        
+
         // 平滑处理
         let smooth_plus = self.ema(&plus_dm, period);
         let smooth_minus = self.ema(&minus_dm, period);
         let smooth_tr = self.ema(&tr, period);
-        
+
         // 计算 +DI 和 -DI
         let mut adx = Vec::new();
-        for i in 0..smooth_plus.len().min(smooth_minus.len()).min(smooth_tr.len()) {
-            let plus_di = if smooth_tr[i] > 0.0 { 100.0 * smooth_plus[i] / smooth_tr[i] } else { 0.0 };
-            let minus_di = if smooth_tr[i] > 0.0 { 100.0 * smooth_minus[i] / smooth_tr[i] } else { 0.0 };
-            
+        for i in 0..smooth_plus
+            .len()
+            .min(smooth_minus.len())
+            .min(smooth_tr.len())
+        {
+            let plus_di = if smooth_tr[i] > 0.0 {
+                100.0 * smooth_plus[i] / smooth_tr[i]
+            } else {
+                0.0
+            };
+            let minus_di = if smooth_tr[i] > 0.0 {
+                100.0 * smooth_minus[i] / smooth_tr[i]
+            } else {
+                0.0
+            };
+
             let dx = if plus_di + minus_di > 0.0 {
                 100.0 * (plus_di - minus_di).abs() / (plus_di + minus_di)
             } else {
@@ -176,55 +196,55 @@ impl MarketStructureClassifier {
             };
             adx.push(dx);
         }
-        
+
         // 再次平滑得到 ADX
         self.ema(&adx, period)
     }
-    
+
     /// EMA 平滑
     fn ema(&self, data: &[f64], period: usize) -> Vec<f64> {
         if data.is_empty() {
             return Vec::new();
         }
-        
+
         let multiplier = 2.0 / (period as f64 + 1.0);
         let mut result = vec![data[0]];
-        
+
         for i in 1..data.len() {
             let ema_val = data[i] * multiplier + result[i - 1] * (1.0 - multiplier);
             result.push(ema_val);
         }
-        
+
         result
     }
-    
+
     /// 计算简单移动平均
     fn compute_ma(&self, closes: &[f64]) -> f64 {
         let period = self.thresholds.ma_period.min(closes.len());
         if period == 0 {
             return closes.last().copied().unwrap_or(0.0);
         }
-        
+
         let slice = &closes[closes.len() - period..];
         slice.iter().sum::<f64>() / period as f64
     }
-    
+
     /// 计算区间震荡分数
     fn compute_range_score(&self, closes: &[f64]) -> f64 {
         let lookback = self.thresholds.range_lookback.min(closes.len());
         if lookback < 2 {
             return 0.0;
         }
-        
+
         let slice = &closes[closes.len() - lookback..];
         let high = slice.iter().cloned().fold(f64::NEG_INFINITY, f64::max);
         let low = slice.iter().cloned().fold(f64::INFINITY, f64::min);
         let range = high - low;
-        
+
         if range < 1e-10 {
             return 0.0;
         }
-        
+
         // 计算价格穿越中值的次数
         let mid = (high + low) / 2.0;
         let mut crosses = 0;
@@ -233,40 +253,40 @@ impl MarketStructureClassifier {
                 crosses += 1;
             }
         }
-        
+
         // 穿越次数越多，区间特征越明显
         crosses as f64 / (lookback as f64 / 2.0)
     }
-    
+
     /// 检测 Wyckoff 阶段（简化版）
     fn detect_wyckoff_phase(&self, candles: &[Candle]) -> (f64, MarketStructureRegime) {
         if candles.len() < 100 {
             return (0.0, MarketStructureRegime::Unknown);
         }
-        
+
         let closes: Vec<f64> = candles.iter().map(|c| c.close).collect();
         let volumes: Vec<f64> = candles.iter().map(|c| c.volume).collect();
-        
+
         let lookback = 50.min(closes.len());
         let recent = &closes[closes.len() - lookback..];
         let recent_vol = &volumes[volumes.len() - lookback..];
-        
+
         let high = recent.iter().cloned().fold(f64::NEG_INFINITY, f64::max);
         let low = recent.iter().cloned().fold(f64::INFINITY, f64::min);
         let mid = (high + low) / 2.0;
-        
+
         // 低位缩量震荡 + 突破放量 = Accumulation
         // 高位放量震荡 + 破位缩量 = Distribution
-        
+
         let avg_vol = recent_vol.iter().sum::<f64>() / recent_vol.len() as f64;
         let last_vol = *recent_vol.last().unwrap_or(&avg_vol);
         let last_close = *recent.last().unwrap_or(&mid);
-        
+
         // 价格在低位区间 + 成交量萎缩
         let is_accumulation = last_close < mid && last_vol < avg_vol * 0.8;
         // 价格在高位区间 + 成交量放大
         let is_distribution = last_close > mid && last_vol > avg_vol * 1.2;
-        
+
         if is_accumulation {
             (0.65, MarketStructureRegime::Accumulation)
         } else if is_distribution {
@@ -287,7 +307,7 @@ impl Default for MarketStructureClassifier {
 mod tests {
     use super::*;
     use chrono::{TimeZone, Utc};
-    
+
     fn trend_candles(count: usize, direction: f64) -> Vec<Candle> {
         (0..count)
             .map(|i| {
@@ -303,11 +323,11 @@ mod tests {
             })
             .collect()
     }
-    
+
     fn range_candles(count: usize) -> Vec<Candle> {
         (0..count)
             .map(|i| {
-                let base = 100.0 + (i as f64 % 10.0 - 5.0) * 2.0;  // 震荡
+                let base = 100.0 + (i as f64 % 10.0 - 5.0) * 2.0; // 震荡
                 Candle {
                     timestamp: Utc.timestamp_opt(1_700_000_000 + i as i64 * 60, 0).unwrap(),
                     open: base,
@@ -319,22 +339,30 @@ mod tests {
             })
             .collect()
     }
-    
+
     #[test]
     fn trending_detection() {
-        let candles = trend_candles(100, 0.5);  // 上涨趋势
+        let candles = trend_candles(100, 0.5); // 上涨趋势
         let classifier = MarketStructureClassifier::new();
         let (regime, conf) = classifier.classify(&candles);
-        
-        assert!(matches!(regime, MarketStructureRegime::Trending | MarketStructureRegime::Unknown));
+
+        assert!(matches!(
+            regime,
+            MarketStructureRegime::Trending | MarketStructureRegime::Unknown
+        ));
     }
-    
+
     #[test]
     fn ranging_detection() {
-        let candles = range_candles(100);  // 震荡
+        let candles = range_candles(100); // 震荡
         let classifier = MarketStructureClassifier::new();
         let (regime, conf) = classifier.classify(&candles);
-        
-        assert!(matches!(regime, MarketStructureRegime::Ranging | MarketStructureRegime::MeanReverting | MarketStructureRegime::Unknown));
+
+        assert!(matches!(
+            regime,
+            MarketStructureRegime::Ranging
+                | MarketStructureRegime::MeanReverting
+                | MarketStructureRegime::Unknown
+        ));
     }
 }

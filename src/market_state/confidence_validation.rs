@@ -15,7 +15,6 @@ use serde::{Deserialize, Serialize};
 use std::collections::VecDeque;
 
 use crate::market_state::{MarketStateSnapshot, PrimaryMarketRegime};
-use crate::types::Candle;
 
 /// 置信度验证配置
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -39,8 +38,8 @@ pub struct ConfidenceValidationConfig {
 impl Default for ConfidenceValidationConfig {
     fn default() -> Self {
         Self {
-            history_window: 252,       // 一年交易日
-            min_samples: 30,            // 最小样本
+            history_window: 252, // 一年交易日
+            min_samples: 30,     // 最小样本
             high_confidence_threshold: 0.75,
             medium_confidence_threshold: 0.55,
             low_confidence_threshold: 0.35,
@@ -82,7 +81,7 @@ impl RegimeStats {
     pub fn new() -> Self {
         Self::default()
     }
-    
+
     /// 更新统计
     pub fn update(&mut self, sample: &HistorySample) {
         self.samples += 1;
@@ -90,17 +89,18 @@ impl RegimeStats {
             self.successes += 1;
         }
         self.avg_raw_confidence = (self.avg_raw_confidence * (self.samples - 1) as f64
-            + sample.raw_confidence) / self.samples as f64;
+            + sample.raw_confidence)
+            / self.samples as f64;
         self.actual_success_rate = self.successes as f64 / self.samples as f64;
         // 校准偏移：实际成功率 - 平均原始置信度
         self.calibration_offset = self.actual_success_rate - self.avg_raw_confidence;
     }
-    
+
     /// 是否有足够样本
     pub fn has_sufficient_samples(&self, min_samples: usize) -> bool {
         self.samples >= min_samples
     }
-    
+
     /// 获取校准后置信度
     pub fn calibrated_confidence(&self, raw: f64, factor: f64) -> f64 {
         (raw + self.calibration_offset * factor).clamp(0.0, 1.0)
@@ -120,7 +120,7 @@ impl ConfidenceValidator {
     pub fn new() -> Self {
         Self::with_config(ConfidenceValidationConfig::default())
     }
-    
+
     pub fn with_config(config: ConfidenceValidationConfig) -> Self {
         Self {
             config,
@@ -128,34 +128,51 @@ impl ConfidenceValidator {
             regime_stats: std::collections::HashMap::new(),
         }
     }
-    
+
     /// 验证并校准置信度
     pub fn validate(&mut self, snapshot: &MarketStateSnapshot) -> ValidationResult {
         let regime_key = format!("{:?}", snapshot.primary_regime);
-        let stats = self.regime_stats.entry(regime_key).or_insert_with(RegimeStats::new);
-        
-        let calibrated = if stats.has_sufficient_samples(self.config.min_samples) {
-            stats.calibrated_confidence(snapshot.overall_confidence, self.config.calibration_factor)
-        } else {
-            snapshot.overall_confidence
+        let (calibrated, samples_available, calibration_applied, regime_accuracy) = {
+            let stats = self
+                .regime_stats
+                .entry(regime_key)
+                .or_insert_with(RegimeStats::new);
+
+            let calibration_applied = stats.has_sufficient_samples(self.config.min_samples);
+            let calibrated = if calibration_applied {
+                stats.calibrated_confidence(
+                    snapshot.overall_confidence,
+                    self.config.calibration_factor,
+                )
+            } else {
+                snapshot.overall_confidence
+            };
+            let regime_accuracy = if calibration_applied {
+                Some(stats.actual_success_rate)
+            } else {
+                None
+            };
+
+            (
+                calibrated,
+                stats.samples,
+                calibration_applied,
+                regime_accuracy,
+            )
         };
-        
+
         let confidence_level = self.classify_confidence(calibrated);
-        
+
         ValidationResult {
             raw_confidence: snapshot.overall_confidence,
             calibrated_confidence: calibrated,
             confidence_level,
-            samples_available: stats.samples,
-            calibration_applied: stats.has_sufficient_samples(self.config.min_samples),
-            regime_accuracy: if stats.has_sufficient_samples(self.config.min_samples) {
-                Some(stats.actual_success_rate)
-            } else {
-                None
-            },
+            samples_available,
+            calibration_applied,
+            regime_accuracy,
         }
     }
-    
+
     /// 记录结果（用于后续验证）
     pub fn record_outcome(
         &mut self,
@@ -169,7 +186,7 @@ impl ConfidenceValidator {
             outcome,
             timestamp,
         };
-        
+
         // 更新滚动窗口
         if self.history.len() >= self.config.history_window {
             let old = self.history.pop_front();
@@ -179,13 +196,16 @@ impl ConfidenceValidator {
             }
         }
         self.history.push_back(sample.clone());
-        
+
         // 更新状态统计
         let regime_key = format!("{:?}", sample.regime);
-        let stats = self.regime_stats.entry(regime_key).or_insert_with(RegimeStats::new);
+        let stats = self
+            .regime_stats
+            .entry(regime_key)
+            .or_insert_with(RegimeStats::new);
         stats.update(&sample);
     }
-    
+
     /// 减少统计（移除旧样本）
     fn decrement_stats(&mut self, sample: &HistorySample) {
         let regime_key = format!("{:?}", sample.regime);
@@ -202,7 +222,7 @@ impl ConfidenceValidator {
             }
         }
     }
-    
+
     /// 分类置信度级别
     fn classify_confidence(&self, confidence: f64) -> ConfidenceLevel {
         if confidence >= self.config.high_confidence_threshold {
@@ -215,12 +235,12 @@ impl ConfidenceValidator {
             ConfidenceLevel::VeryLow
         }
     }
-    
+
     /// 获取所有状态统计
     pub fn get_all_stats(&self) -> &std::collections::HashMap<String, RegimeStats> {
         &self.regime_stats
     }
-    
+
     /// 获取特定状态统计
     pub fn get_regime_stats(&self, regime: &PrimaryMarketRegime) -> Option<&RegimeStats> {
         let key = format!("{:?}", regime);
@@ -256,7 +276,7 @@ impl ConfidenceLevel {
             Self::VeryLow => "very_low",
         }
     }
-    
+
     pub fn is_tradeable(&self) -> bool {
         matches!(self, Self::High | Self::Medium)
     }
@@ -284,7 +304,7 @@ impl ValidationResult {
     pub fn is_tradeable(&self) -> bool {
         self.confidence_level.is_tradeable()
     }
-    
+
     /// 置信度摘要
     pub fn summary(&self) -> String {
         format!(
@@ -319,7 +339,7 @@ impl RollingAccuracyTracker {
             results: VecDeque::with_capacity(window),
         }
     }
-    
+
     /// 记录结果
     pub fn record(&mut self, success: bool) {
         if self.results.len() >= self.window {
@@ -336,7 +356,7 @@ impl RollingAccuracyTracker {
         }
         self.total_count += 1;
     }
-    
+
     /// 获取当前准确率
     pub fn accuracy(&self) -> f64 {
         if self.total_count == 0 {
@@ -345,12 +365,12 @@ impl RollingAccuracyTracker {
             self.success_count as f64 / self.total_count as f64
         }
     }
-    
+
     /// 获取样本数
     pub fn sample_count(&self) -> usize {
         self.total_count
     }
-    
+
     /// 是否有足够样本
     pub fn has_sufficient_samples(&self, min: usize) -> bool {
         self.total_count >= min
@@ -366,50 +386,50 @@ impl Default for RollingAccuracyTracker {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn validator_classifies_confidence_levels() {
         let mut validator = ConfidenceValidator::new();
         let mut snapshot = MarketStateSnapshot::default();
-        
+
         snapshot.overall_confidence = 0.85;
         let result = validator.validate(&snapshot);
         assert_eq!(result.confidence_level, ConfidenceLevel::High);
-        
+
         snapshot.overall_confidence = 0.65;
         let result = validator.validate(&snapshot);
         assert_eq!(result.confidence_level, ConfidenceLevel::Medium);
-        
+
         snapshot.overall_confidence = 0.45;
         let result = validator.validate(&snapshot);
         assert_eq!(result.confidence_level, ConfidenceLevel::Low);
-        
+
         snapshot.overall_confidence = 0.25;
         let result = validator.validate(&snapshot);
         assert_eq!(result.confidence_level, ConfidenceLevel::VeryLow);
     }
-    
+
     #[test]
     fn calibration_adjusts_confidence() {
         let mut validator = ConfidenceValidator::with_config(ConfidenceValidationConfig {
             min_samples: 3,
             ..Default::default()
         });
-        
+
         let mut snapshot = MarketStateSnapshot::default();
         snapshot.overall_confidence = 0.7;
-        
+
         // 记录样本：70% 置信度但只有 40% 成功率
         for i in 0..5 {
             snapshot.overall_confidence = 0.7;
             let outcome = i < 2; // 40% 成功
             validator.record_outcome(&snapshot, outcome, 1700000000 + i as i64);
         }
-        
+
         // 验证新的 70% 置信度样本
         snapshot.overall_confidence = 0.7;
         let result = validator.validate(&snapshot);
-        
+
         // 校准后应该低于原始（因为实际成功率低于置信度）
         assert!(result.calibration_applied);
         // 历史准确率约 40%
@@ -417,27 +437,27 @@ mod tests {
             assert!((accuracy - 0.4).abs() < 0.1);
         }
     }
-    
+
     #[test]
     fn rolling_accuracy_tracker_works() {
         let mut tracker = RollingAccuracyTracker::new(5);
-        
+
         tracker.record(true);
         tracker.record(true);
         tracker.record(false);
-        
+
         assert!((tracker.accuracy() - 0.666).abs() < 0.01);
         assert_eq!(tracker.sample_count(), 3);
-        
+
         // 超过窗口
         tracker.record(true);
         tracker.record(false);
         tracker.record(true);
-        
+
         // 窗口内：true, false, true, false, true = 3/5
         assert!((tracker.accuracy() - 0.6).abs() < 0.01);
     }
-    
+
     #[test]
     fn confidence_level_tradeability() {
         assert!(ConfidenceLevel::High.is_tradeable());
