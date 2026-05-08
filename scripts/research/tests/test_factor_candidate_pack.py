@@ -54,6 +54,11 @@ class FactorCandidatePackTests(unittest.TestCase):
             "target_market_hypothesis": ["NQ", "SPY", "GLD"],
             "base_timeframe": "15m",
             "context_timeframes": ["1h", "4h"],
+            "pre_bayes_targets": ["filtered_resonance_label", "factor_uncertainty"],
+            "belief_targets": ["entry_quality", "multi_timeframe_resonance"],
+            "path_ranking_targets": ["experience_prior", "current_posterior"],
+            "execution_tree_targets": ["execution_readiness", "prediction_vote_score"],
+            "structural_feedback_required": True,
             "resonance_summary": {
                 "base_timeframe": "15m",
                 "context_stack": ["1h", "4h"],
@@ -85,6 +90,17 @@ class FactorCandidatePackTests(unittest.TestCase):
         self.assertEqual(
             bundle["factor_expression"]["expression_text"],
             "ema_fast > ema_slow and pullback_zone <= 0.4",
+        )
+        self.assertEqual(
+            bundle["factor_expression"]["filter_belief_execution_mapping"]["pre_bayes_targets"],
+            ["filtered_resonance_label", "factor_uncertainty"],
+        )
+        self.assertEqual(
+            bundle["factor_expression"]["filter_belief_execution_mapping"]["execution_tree_targets"],
+            ["execution_readiness", "prediction_vote_score"],
+        )
+        self.assertTrue(
+            bundle["factor_expression"]["filter_belief_execution_mapping"]["structural_feedback_required"]
         )
         self.assertEqual(
             bundle["factor_eval_grid_summary"]["trade_density_summary"]["aggregate_label"],
@@ -140,6 +156,13 @@ class FactorCandidatePackTests(unittest.TestCase):
         self.assertEqual(
             bundle["factor_expression"]["operator_set"],
             ["rv_zscore", "value_zone"],
+        )
+        self.assertEqual(
+            bundle["factor_expression"]["filter_belief_execution_mapping"]["pre_bayes_targets"],
+            [],
+        )
+        self.assertFalse(
+            bundle["factor_expression"]["filter_belief_execution_mapping"]["structural_feedback_required"]
         )
         self.assertEqual(
             bundle["factor_eval_grid_summary"]["trade_density_summary"]["aggregate_label"],

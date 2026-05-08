@@ -64,6 +64,15 @@ def _candidate_expression(
         "base_timeframe": candidate_spec.get("base_timeframe", manifest.get("timeframe")),
         "context_timeframes": candidate_spec.get("context_timeframes", []),
         "regime_role": candidate_spec.get("regime_role", "mixed"),
+        "filter_belief_execution_mapping": {
+            "pre_bayes_targets": candidate_spec.get("pre_bayes_targets", []),
+            "belief_targets": candidate_spec.get("belief_targets", []),
+            "path_ranking_targets": candidate_spec.get("path_ranking_targets", []),
+            "execution_tree_targets": candidate_spec.get("execution_tree_targets", []),
+            "structural_feedback_required": candidate_spec.get(
+                "structural_feedback_required", False
+            ),
+        },
     }
 
 
