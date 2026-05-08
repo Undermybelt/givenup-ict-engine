@@ -1335,8 +1335,20 @@ target/debug/ict-engine validate-market-state \
 | GC mtf | 5.56% | 50.00% | 55.76% | 73.78% | 50.00% | 100.00% |
 | CL mtf | 11.11% | 66.67% | 62.71% | 77.75% | 83.33% | 100.00% |
 
+**Crypto probe（2026-05-08, `/tmp/ict-engine-market-state-btc-live`）**：
+| 数据 | 默认高置信 | Opt-in 高置信 | 默认平均置信 | Opt-in 平均置信 | 默认可交易 | Opt-in 可交易 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| BTCUSD 1m | 16.67% | 66.67% | 64.34% | 79.84% | 66.67% | 100.00% |
+| BTCUSD mtf | 0.00% | 90.00% | 61.74% | 79.03% | 90.00% | 100.00% |
+| BTCUSD htf | 16.67% | 66.67% | 62.43% | 78.36% | 66.67% | 100.00% |
+
+**Crypto probe 结论**：
+- 通过 `analyze-live --futures-backend crypto_public_runtime --aux-backend yfinance` 可以在 `/tmp` 下生成真实 BTCUSD 样本
+- opt-in profile 在 crypto 样本上同样能把高置信比例抬到 60%+，说明当前主大类 / 次小类聚合逻辑并不只对 tradfi 有效
+- 已补齐：仓库里的 `market_category_for_symbol()` / `market_behavior_profile_for_family()` 现在会把 `BTCUSD` / `BTC-USD` 等符号路由为 `crypto`
+
 **Multi-market opt-in 结论**：
-- NQ / YM / GC / CL 的 opt-in profile 都能把高置信比例抬到 30% 以上
+- NQ / YM / GC / CL / BTCUSD 的 opt-in profile 都能把高置信比例抬到 30% 以上
 - 该结论在 1m / mtf / htf 三类样本上都成立
 - 这说明主大类 / 次小类的热插拔高置信配置可以跨市场复用
 - 默认路径仍然保守，适合消费者零配置直接用；opt-in profile 继续保留为可选配置
@@ -1345,12 +1357,12 @@ target/debug/ict-engine validate-market-state \
 - 零配置 CLI 验证路径可用，消费者可以直接用 cleaned JSON/CSV candles 跑主大类/次小类置信度报告。
 - `validate-market-state --compact` 现在提供单行摘要，适合 consumer / agent / token 友好场景。
 - demo 数据验证达到 EXCELLENT，但仍只说明命令链路与报告格式，不等同于真实市场准确率。
-- 真实 NQ / YM / GC / CL 本地数据在默认路径下平均置信度大多落在 55-60%，但 GC htf 已经自然达到更高置信区间，说明默认路径并非一刀切。
-- opt-in profile 证明了高置信比例可以跨 NQ / YM / GC / CL，在 1m / mtf / htf 样本上稳定抬升到 40%+。
-- 下一个真正的质量门槛是扩展更多市场类别和多周期样本，继续用 `--profile` / `--config` 做可复现调参。
+- 真实 NQ / YM / GC / CL / BTCUSD 数据在默认路径下平均置信度多落在 55-64%，说明默认路径保守可用但不激进。
+- opt-in profile 证明了高置信比例可以跨 index / metals / energy / crypto，在 1m / mtf / htf 样本上稳定抬升到 40%+。
+- 下一个真正的质量门槛是继续把 FX / ETF 等更多家族正式纳入 `market_category_for_symbol()` / behavior profile 路由，并补更多真实样本。
 
 ---
 
-**更新时间**：2026-05-08 14:08
+**更新时间**：2026-05-08 14:27
 **更新人**：Codex
 **状态**：市场状态分类模块已完成编译/测试/CLI 烟测，并补充 NQ + YM + GC + CL 真实验证；热插拔 CLI 已落地，默认路径保守可用，opt-in profile 已证明跨市场高置信提升

@@ -6709,8 +6709,20 @@ mod tests {
             Some("metals")
         );
         assert_eq!(
+            ict_engine::application::belief::market_category_for_symbol("BTCUSD"),
+            Some("crypto")
+        );
+        assert_eq!(
+            ict_engine::application::belief::market_category_for_symbol("BTC-USD"),
+            Some("crypto")
+        );
+        assert_eq!(
             ict_engine::application::belief::market_behavior_profile_for_family("energy"),
             "energy_volatility_shock_sensitive"
+        );
+        assert_eq!(
+            ict_engine::application::belief::market_behavior_profile_for_family("crypto"),
+            "crypto_trend_volatility_sensitive"
         );
     }
 
