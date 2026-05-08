@@ -90,14 +90,23 @@ impl EnhancedAggregator {
         // 3. 基础加权置信度
         // 提高结构权重，降低波动率权重（因为结构对趋势识别更重要）
         // 添加基础置信度，避免过低的综合置信度
-        let base_confidence = 0.20; // 提高到 0.20
+        let base_confidence = 0.25; // 提高到 0.25
         let weighted_conf =
             vol_conf * 0.15 + liq_conf * 0.10 + struct_conf * 0.50 + behav_conf * 0.25;
-        let base_conf = base_confidence + weighted_conf * 0.80;
+        let base_conf = base_confidence + weighted_conf * 0.75;
 
         // 4. 应用一致性加成
+        // 一致性高时额外加成
+        let consistency_bonus = if consistency > 0.8 {
+            0.05 // 高一致性额外加成
+        } else if consistency > 0.6 {
+            0.03
+        } else {
+            0.0
+        };
         let overall_conf = (base_conf * (1.0 - self.config.consistency_weight)
-            + consistency * self.config.consistency_weight)
+            + consistency * self.config.consistency_weight
+            + consistency_bonus)
             .clamp(0.0, 1.0);
 
         // 5. 按优先级聚合（严格阈值）
