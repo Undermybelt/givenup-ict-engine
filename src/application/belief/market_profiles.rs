@@ -11,6 +11,8 @@ pub fn market_category_for_symbol(symbol: &str) -> Option<&'static str> {
         | "SOLUSDT" | "BNB" | "BNBUSD" | "BNBUSDT" | "AVAX" | "AVAXUSD" | "AVAXUSDT" => {
             Some("crypto")
         }
+        "EURUSD" | "EURUSDX" | "GBPUSD" | "GBPUSDX" | "USDJPY" | "USDJPYX" | "EURJPY"
+        | "EURJPYX" | "AUDUSD" | "AUDUSDX" => Some("fx"),
         _ => None,
     }
 }
@@ -21,6 +23,7 @@ pub fn market_behavior_profile_for_family(category: &str) -> &'static str {
         "metals" => "metals_defensive_liquidity_sensitive",
         "energy" => "energy_volatility_shock_sensitive",
         "crypto" => "crypto_trend_volatility_sensitive",
+        "fx" => "fx_macro_trend_liquidity_sensitive",
         _ => "generic",
     }
 }

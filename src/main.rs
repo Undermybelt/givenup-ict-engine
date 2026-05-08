@@ -6717,12 +6717,24 @@ mod tests {
             Some("crypto")
         );
         assert_eq!(
+            ict_engine::application::belief::market_category_for_symbol("EURUSD"),
+            Some("fx")
+        );
+        assert_eq!(
+            ict_engine::application::belief::market_category_for_symbol("EURUSD=X"),
+            Some("fx")
+        );
+        assert_eq!(
             ict_engine::application::belief::market_behavior_profile_for_family("energy"),
             "energy_volatility_shock_sensitive"
         );
         assert_eq!(
             ict_engine::application::belief::market_behavior_profile_for_family("crypto"),
             "crypto_trend_volatility_sensitive"
+        );
+        assert_eq!(
+            ict_engine::application::belief::market_behavior_profile_for_family("fx"),
+            "fx_macro_trend_liquidity_sensitive"
         );
     }
 
