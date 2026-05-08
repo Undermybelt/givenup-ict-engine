@@ -372,10 +372,12 @@ python scripts/auto_quant_external/pandas_path_ranker_trainer.py \
 - 零配置：默认行为可直接运行
 - 热插拔：用户可通过 `user_weights.json` 自定义权重
 - 热插拔：用户可通过 `--reuse-model-dir` 选择沿用既有模型目录，跳过重训
+- 热插拔：训练后会额外生成 repo 可直接 runtime 复用的 `path_ranker_direct_model.json`
 - Token 友好：输出简洁
 - 无污染：不修改仓库代码
 - 用户特定数据：VRP V2 相关特征（qqq_hv/nq_vs_200d/vix3m/vvix_over_vix 等）
 - 回退路径：无可用 CatBoost/XGBoost 模型时，优先读取显式 `--user-weights`，否则读取 `<model_dir>/user_weights.json`，再退回内建默认权重
+- Runtime 契约：`trainer_artifact.json` 现在优先指向 direct-model artifact，因此用户可以通过 repo 现有 `register-structural-path-ranking-trainer-artifact` + `enable-structural-path-ranking-runtime` 显式沿用
 
 **用法**：
 ```bash
@@ -403,8 +405,13 @@ python3 scripts/auto_quant_external/path_ranker_integration.py \
 - [x] `scripts/auto_quant_external/tests/test_path_ranker_hotplug.py` 新增：
   - `weighted_sum_fallback()` 会真实读取 `user_weights.json`，不是只生成模板
   - `path_ranker_integration.py --reuse-model-dir ...` 会跳过训练，只做应用
+  - `pandas_path_ranker_trainer.py` 会生成 repo runtime 可读取的 `path_ranker_direct_model.json`
 - [x] `python3 -m unittest scripts.auto_quant_external.tests.test_next_slice_helpers scripts.auto_quant_external.tests.test_path_ranker_hotplug`
 - [x] `python3 scripts/auto_quant_external/path_ranker_integration.py --help` 已显示 `--reuse-model-dir` / `--user-weights`
+- [x] temp-state CLI smoke 已验证：
+  - 训练器即使在 `catboost` 不可用时，仍会生成 direct-model artifact
+  - `register-structural-path-ranking-trainer-artifact` + `enable-structural-path-ranking-runtime` + `policy-training-status --human`
+  - 状态为 `runtime_source=registered_model_artifact`
 - [ ] 这仍然只证明外部训练/应用边界可热插拔，不代表 `CatBoost -> execution_tree` 运行时影响已经闭环
 
 ### 4. CatBoost → 执行树节点

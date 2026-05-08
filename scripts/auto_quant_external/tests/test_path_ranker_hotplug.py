@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import sys
 import tempfile
 import unittest
@@ -73,6 +74,55 @@ class ReuseModelFlowTests(unittest.TestCase):
                 str(policy_dir / "scores.csv"),
                 None,
             )
+
+
+class DirectModelArtifactTests(unittest.TestCase):
+    def test_create_direct_model_artifact_emits_repo_runtime_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            output_dir = Path(tmpdir)
+            trainer.create_direct_model_artifact(
+                output_dir=output_dir,
+                features=["rank", "current_posterior"],
+                trained_rows=12,
+                output_transform="sigmoid",
+            )
+
+            artifact = json.loads((output_dir / "path_ranker_direct_model.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(artifact["protocol_version"], "structural-path-ranking-direct-model-v1")
+        self.assertEqual(artifact["model_family"], "weighted_feature_sum_v1")
+        self.assertEqual(
+            artifact["feature_schema_version"],
+            "structural-path-ranking-trainer-manifest-v1",
+        )
+        self.assertEqual(artifact["output_transform"], "sigmoid")
+        self.assertIn("current_posterior", artifact["numerical_feature_weights"])
+        self.assertIn("rank", artifact["numerical_feature_weights"])
+
+    def test_build_registered_artifact_prefers_direct_model_family_when_file_exists(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            output_dir = Path(tmpdir)
+            trainer.create_direct_model_artifact(
+                output_dir=output_dir,
+                features=["rank"],
+                trained_rows=7,
+            )
+
+            metadata = trainer.build_registered_artifact_metadata(
+                output_dir=output_dir,
+                trained_rows=7,
+                history_rows=9,
+                calibration_rows=3,
+                selected_features=["rank"],
+            )
+
+        self.assertEqual(metadata["protocol_version"], "structural-path-ranking-trainer-artifact-v1")
+        self.assertEqual(metadata["model_family"], "weighted_feature_sum_v1")
+        self.assertEqual(metadata["score_column"], "raw_path_score")
+        self.assertEqual(metadata["trained_rows"], 7)
+        self.assertEqual(metadata["history_rows"], 9)
+        self.assertEqual(metadata["calibration_rows"], 3)
+        self.assertTrue(str(metadata["artifact_uri"]).endswith("path_ranker_direct_model.json"))
 
 
 if __name__ == "__main__":

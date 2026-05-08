@@ -127,6 +127,23 @@
     - `python3 scripts/auto_quant_external/path_ranker_integration.py --help`
     - manual smoke: `--apply-only` with an empty model dir plus explicit `--user-weights` produced `scores.csv` through the integration script, proving the consumer-facing hot-plug path works without editing repo runtime code
   - boundary kept explicit: this proves the external trainer/apply layer is zero-config by default and opt-in reusable when the user wants to carry forward prior weights/models; it does **not** prove execution-tree behavior changed yet
+- [x] **2026-05-08 Slice 4: external model dir can now become a repo-native runtime-consumable registered model artifact.**
+  - root cause from Slice 3 follow-up: the pandas trainer emitted a registerable metadata file, but not a repo-native direct-model artifact that runtime could score locally
+  - `scripts/auto_quant_external/pandas_path_ranker_trainer.py` now emits:
+    - `path_ranker_direct_model.json` using repo-supported family `weighted_feature_sum_v1`
+    - `trainer_artifact.json` whose `artifact_uri` points at that direct-model file instead of a generic model directory
+  - zero-config default preserved:
+    - if `catboost` / `xgboost` are unavailable, the script still succeeds and emits the direct-model artifact
+    - user opt-in reuse remains explicit through `register-structural-path-ranking-trainer-artifact` + `enable-structural-path-ranking-runtime`
+  - regression evidence:
+    - `python3 -m unittest scripts.auto_quant_external.tests.test_path_ranker_hotplug`
+    - temp-state CLI smoke:
+      - `python3 scripts/auto_quant_external/pandas_path_ranker_trainer.py --target-csv <temp target> --output-dir <temp model>`
+      - `./target/debug/ict-engine register-structural-path-ranking-trainer-artifact --symbol NQ --state-dir <temp state> --artifact-uri <temp model>/path_ranker_direct_model.json --model-family weighted_feature_sum_v1 --trained-rows 2 --calibration-rows 2`
+      - `./target/debug/ict-engine enable-structural-path-ranking-runtime --symbol NQ --state-dir <temp state> --reuse-mode candidate_set_only`
+      - `./target/debug/ict-engine policy-training-status --symbol NQ --state-dir <temp state> --human`
+    - observed status: `runtime_selection=enabled_registered_model_ready`, `runtime_source=registered_model_artifact`, `runtime_matches=2`
+  - boundary kept explicit: this proves the user can now carry forward a repo-native external model artifact without reopening runtime code, but it still does **not** prove production-quality ranker validation (`raw_scored_mature=0/30`) or downstream execution-tree behavior change
 
 ### Next
 
@@ -140,12 +157,13 @@
 - [x] Verify the external trainer boundary is genuinely hot-pluggable and reusable for a consumer:
   - user-supplied fallback weights are actually consumed
   - existing model directories can be reused without retraining
+- [x] Verify an external model directory can be promoted into a repo-native runtime-consumable registered model artifact without requiring CatBoost to be installed locally
 
 ### Next Slice
 
 - [ ] Produce one real reusable external ranker artifact from a non-demo target export once mature rows exist
-- [ ] Register that artifact through `register-structural-path-ranking-trainer-artifact`
-- [ ] Apply real external scores back into the same `/tmp/...` runtime state
+- [ ] Register that artifact through `register-structural-path-ranking-trainer-artifact` with non-demo row counts
+- [ ] Apply real external scores back into the same `/tmp/...` runtime state when mature rows exist or when a scored artifact is produced
 - [ ] Capture whether `workflow-status` / `analyze` / `execution_tree_trace.json` actually change after real external scores land
 
 ### Decision
