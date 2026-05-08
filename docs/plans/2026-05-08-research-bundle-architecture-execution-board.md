@@ -139,11 +139,22 @@ This section exists so the searched document's named resources are all normalize
   - Added `scripts/research/tests/test_factor_candidate_pack.py`.
   - The helper emits `factor_expression.json`, `factor_eval_grid_summary.json`, and `transfer_score.json` from existing Auto-Quant manifest evidence plus an optional candidate-spec JSON.
   - Verified the candidate pack can be built from current strategy-library evidence without reopening `ict-engine` runtime code.
+- [x] Workstream 1 / Slice 2 completed as a minimal runtime readback:
+  - `workflow-status --agent` now surfaces `dataset_resolution_line` from existing selected-profile state or from the generic zero-config lane.
+  - The richer dataset contract stays on the agent/JSON surface; the human surface remains shorter and token-friendly.
+  - No runtime dependency on `scripts/research/market_data_resolver.py` was introduced.
+- [x] Workstream 2 / Slice 2 decision locked:
+  - no new runtime trainer or extra CLI surface is needed for this lane right now
+  - the minimal runtime readback set is:
+    - `policy-training-status`
+    - `workflow-status --phase structural-validation-summary`
+    - `workflow-status --phase structural-temporal-summary`
+    - `workflow-status --phase structural-recommended-path-bundle`
+  - any later reopening should be a compact reader/summarizer on these owners, not a parallel calibration surface
 
 ### Next
 
-- [ ] Workstream 2 / Slice 2: decide which Bundle B surfaces need minimal runtime readback after the artifact contract is proven externally.
-- [ ] Workstream 1 / Slice 2: decide whether dataset resolver artifacts should remain external-only or surface one generic readiness hint through `workflow-status`.
+- [x] No additional active slice remains on this board. If Bundle B later needs runtime reopening, keep it to a compact reader/summarizer on the existing owners instead of adding a new training surface.
 
 ### Not Yet
 
@@ -208,6 +219,10 @@ This section exists so the searched document's named resources are all normalize
 - The helper also supports a hot-pluggable personal lane:
   - `--profile thrill3r_nq_closed_loop_v1` reuses the existing personal provider-profile contract
   - no default CLI/runtime surface changes are required for consumers who do not opt into the personal lane
+- `workflow-status` now provides one generic runtime readback for the lane:
+  - profile-aware agent output exposes `dataset_resolution_line`
+  - profile-less output keeps the zero-config default plus optional personal-lane discovery
+  - human output stays shorter and continues to surface the optional personal lane instead of a longer artifact contract dump
 
 **Verification floor**
 
@@ -216,6 +231,8 @@ This section exists so the searched document's named resources are all normalize
 - `cargo run -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-bundle-a --human`
 - `cargo test provider_catalog --lib -- --nocapture`
 - helper-script compile/smoke check once the external helper exists
+- `cargo test --lib agent_and_human_workflow_status_views_expose_dataset_resolution_line -- --nocapture`
+- `cargo test --lib generic_workflow_status_views_expose_zero_config_dataset_resolution_line -- --nocapture`
 
 **Latest evidence**
 
@@ -225,6 +242,10 @@ This section exists so the searched document's named resources are all normalize
 - `./target/debug/ict-engine provider-status --compact`
 - `./target/debug/ict-engine provider-status --agent`
 - `./target/debug/ict-engine workflow-status --symbol DEMO --state-dir /tmp/ict-engine-bundle-a-workflow --human`
+- `cargo test --lib agent_and_human_workflow_status_views_expose_dataset_resolution_line -- --nocapture`
+- `cargo test --lib generic_workflow_status_views_expose_zero_config_dataset_resolution_line -- --nocapture`
+- `cargo test --lib human_workflow_status_view_exposes_dataset_resolution_line -- --nocapture`
+- `./target/debug/ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-bundle-a-workflow --profile thrill3r-nq-closed-loop-v1 --output-format agent`
 
 ## Workstream 2: Bundle B Calibration / Delayed-Truth Reports
 
@@ -287,6 +308,13 @@ This section exists so the searched document's named resources are all normalize
 - This keeps the current runtime boundary intact:
   - existing Rust surfaces stay authoritative
   - the new review artifacts are external packaging, not a second trainer or a duplicate runtime status path
+- Minimal runtime readback is now explicitly locked to current owners:
+  - `policy-training-status` remains the top-level compact readiness/validation summary
+  - `workflow-status` structural phases remain the canonical low-token readback for:
+    - validation / OPE summary
+    - temporal / hazard summary
+    - recommended-path / confidence context
+  - do not add a second calibration CLI surface unless these owners prove insufficient on a real downstream consumer slice
 
 **Current implementation**
 

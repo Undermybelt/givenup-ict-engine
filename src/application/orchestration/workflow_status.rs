@@ -243,6 +243,37 @@ fn build_structural_validation_line(
     Some(parts.join(" | "))
 }
 
+fn build_dataset_resolution_line(provider_status_agent: &ProviderCatalogAgentSurface) -> Option<String> {
+    let Some(profile) = provider_status_agent.selected_profile.as_ref() else {
+        if provider_status_agent.available_opt_in_profiles.is_empty() {
+            return None;
+        }
+        let profile = provider_status_agent
+            .available_opt_in_profiles
+            .iter()
+            .find(|profile| profile.opt_in_only)
+            .or_else(|| provider_status_agent.available_opt_in_profiles.first())?;
+        return Some(format!(
+            "Dataset resolver: generic_zero_config | optional_opt_in={} | reuse_with_profile={}",
+            profile.summary, profile.selector
+        ));
+    };
+    let data_contracts = if profile.data_contract_labels.is_empty() {
+        "none".to_string()
+    } else {
+        profile.data_contract_labels.iter().take(3).cloned().collect::<Vec<_>>().join(", ")
+    };
+    let track_statuses = if profile.track_statuses.is_empty() {
+        "none".to_string()
+    } else {
+        profile.track_statuses.iter().take(3).cloned().collect::<Vec<_>>().join(" | ")
+    };
+    Some(format!(
+        "Dataset resolver: profile_opt_in={} | contracts={} | tracks={}",
+        profile.summary, data_contracts, track_statuses
+    ))
+}
+
 fn structural_validation_reason(
     status: Option<&str>,
     training_items: usize,
@@ -613,6 +644,8 @@ pub struct AgentBootstrapLiveInput {
     pub selected_profile_data_contracts: Vec<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub selected_profile_track_statuses: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub dataset_resolution_line: Option<String>,
     pub provider_access_requests: Vec<String>,
     pub provider_status_agent: ProviderCatalogAgentSurface,
     pub provider_status_command: String,
@@ -1508,6 +1541,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default();
+    let dataset_resolution_line = build_dataset_resolution_line(provider_status_agent);
     let opt_in_profile_line = if no_workflow_state
         && provider_status_agent.selected_profile.is_none()
         && !provider_status_agent.available_opt_in_profiles.is_empty()
@@ -2064,6 +2098,10 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
             "selected_profile_track_statuses".to_string(),
             serde_json::to_value(selected_profile_track_statuses).unwrap_or_default(),
         );
+        map.insert(
+            "dataset_resolution_line".to_string(),
+            serde_json::to_value(dataset_resolution_line).unwrap_or_default(),
+        );
         map.insert("recommended_next_step".to_string(), recommended_next_step);
     }
     value
@@ -2344,6 +2382,7 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default();
+    let dataset_resolution_line = build_dataset_resolution_line(provider_status_agent);
     let execution_contract_active =
         !no_workflow_state && !hard_block_active && !provider_support.active;
     let latest_structural_feedback = snapshot
@@ -2503,6 +2542,10 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
             serde_json::to_value(selected_profile_track_statuses).unwrap_or_default(),
         );
         map.insert(
+            "dataset_resolution_line".to_string(),
+            serde_json::to_value(dataset_resolution_line).unwrap_or_default(),
+        );
+        map.insert(
             "structural_validation_summary".to_string(),
             build_structural_validation_summary_value(&experience_prior_surface),
         );
@@ -2630,6 +2673,12 @@ pub fn emit_workflow_status_output(input: WorkflowStatusOutputInput<'_>) -> Resu
             }
             if let Some(profile) = value.get("opt_in_profile_line").and_then(Value::as_str) {
                 println!("{}", redact_local_paths_in_human_text(profile));
+            }
+            if let Some(dataset_resolution) = value
+                .get("dataset_resolution_line")
+                .and_then(Value::as_str)
+            {
+                println!("{}", redact_local_paths_in_human_text(dataset_resolution));
             }
             if let Some(feedback) = value
                 .get("structural_feedback_line")
@@ -2995,6 +3044,7 @@ fn build_agent_bootstrap_view_with_candidates(
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default();
+    let dataset_resolution_line = build_dataset_resolution_line(provider_status_agent);
     let provider_access_requests = provider_status_agent
         .selected_profile
         .as_ref()
@@ -3054,6 +3104,7 @@ fn build_agent_bootstrap_view_with_candidates(
                 selected_profile_summary,
                 selected_profile_data_contracts,
                 selected_profile_track_statuses,
+                dataset_resolution_line,
                 provider_access_requests,
                 provider_status_agent: provider_status_agent.clone(),
                 provider_status_command: provider_status_command.clone(),
@@ -6352,6 +6403,76 @@ mod tests {
                 .as_str()
                 .unwrap()
                 .contains("options_enriched:pending:tradingview_mcp")));
+    }
+
+    #[test]
+    fn agent_and_human_workflow_status_views_expose_dataset_resolution_line() {
+        let snapshot = sample_human_workflow_snapshot();
+        let agent_value = build_agent_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface_with_profile(),
+            &[],
+        );
+        let human_value = build_human_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface_with_profile(),
+            &[],
+        );
+
+        assert!(agent_value["dataset_resolution_line"]
+            .as_str()
+            .unwrap()
+            .contains("profile_opt_in"));
+        assert!(agent_value["dataset_resolution_line"]
+            .as_str()
+            .unwrap()
+            .contains("Tomac cleaned multi-timeframe futures root"));
+        assert_eq!(
+            agent_value["dataset_resolution_line"],
+            human_value["dataset_resolution_line"]
+        );
+    }
+
+    #[test]
+    fn generic_workflow_status_views_expose_zero_config_dataset_resolution_line() {
+        let snapshot = sample_human_workflow_snapshot();
+        let agent_value = build_agent_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+        );
+
+        assert!(agent_value["dataset_resolution_line"]
+            .as_str()
+            .unwrap()
+            .contains("generic_zero_config"));
+        assert!(agent_value["dataset_resolution_line"]
+            .as_str()
+            .unwrap()
+            .contains("opt_in"));
+    }
+
+    #[test]
+    fn human_workflow_status_view_exposes_dataset_resolution_line() {
+        let snapshot = sample_human_workflow_snapshot();
+        let value = build_human_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface_with_profile(),
+            &[],
+        );
+
+        assert!(value["dataset_resolution_line"]
+            .as_str()
+            .unwrap()
+            .contains("profile_opt_in"));
+        assert!(value["dataset_resolution_line"]
+            .as_str()
+            .unwrap()
+            .contains("Tomac cleaned multi-timeframe futures root"));
     }
 
     #[test]
