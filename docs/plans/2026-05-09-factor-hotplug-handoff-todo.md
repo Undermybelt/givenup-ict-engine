@@ -47,10 +47,13 @@ GPT agents entering this repo consistently report "no usable factors" because:
 
 ### Phase 3: Hot-Plug Configuration
 
-- [ ] Add `config/factor_hotplug.yaml` — user can enable/disable families per symbol
-- [ ] FactorEngine reads hotplug config at init; skips disabled families
-- [ ] Zero-config default: all families enabled; user can opt out via config
-- [ ] No env vars required; config is optional YAML in state dir
+- [x] Add `config/factor_hotplug.yaml` — user can enable/disable families per symbol
+- [x] FactorHotplugConfig Rust module: load, parse, apply to FactorRegistry
+- [x] FactorEngine reads hotplug config at init; skips disabled families
+- [x] Zero-config default: all families enabled; user can opt out via YAML or env var
+- [x] ICT_ENGINE_FACTOR_HOTPLUG_CONFIG env var for custom config path override
+- [x] serde_yaml dependency added for YAML parsing
+- [x] 3 unit tests passing (default all-enabled, custom disable, apply-to-registry)
 
 ### Phase 4: Verification
 
@@ -106,3 +109,5 @@ None currently.
 ## Changelog
 
 - 2026-05-09: Created. Phase 1 in progress.
+- 2026-05-09: Phase 1/1b/2 completed. Commit f36e468.
+- 2026-05-09: Phase 3 completed. FactorHotplugConfig + YAML hot-plug + serde_yaml.

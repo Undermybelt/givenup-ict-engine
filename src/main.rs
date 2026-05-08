@@ -4011,6 +4011,7 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         pda_sequence_summary.as_ref(),
     )?;
     let mut factor_registry = FactorRegistry::default();
+    ict_engine::factors::hotplug::FactorHotplugConfig::apply_to_registry_if_present(state_dir, &mut factor_registry);
     factor_registry.apply_learning_state(build_context.learning_state);
     let factor_engine = FactorEngine::new(factor_registry);
     let factor_output = factor_engine.run(

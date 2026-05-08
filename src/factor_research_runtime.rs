@@ -46,6 +46,7 @@ pub(crate) fn run_factor_research(
         .map(LearningState::feedback_key)
         .collect::<std::collections::BTreeSet<_>>();
     let mut registry = FactorRegistry::default();
+    ict_engine::factors::FactorHotplugConfig::apply_to_registry_if_present(state_dir, &mut registry);
     let baseline_multi_timeframe_summary = multi_timeframe_summary
         .iter()
         .chain(multi_timeframe_signal.summary.iter())
