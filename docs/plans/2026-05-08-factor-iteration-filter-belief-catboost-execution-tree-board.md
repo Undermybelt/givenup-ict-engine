@@ -252,6 +252,16 @@ A candidate may only move to the post-factor runtime-closure board after all of 
     - `sharpe=0.4468`, `total_profit_pct=2.26`
     - `transfer_status=single_market_only`
   - therefore the 1d-regime lane is now recorded as a real explicit failure-to-scale rather than an unmaterialized idea
+- [x] Continued the Family A breadth lane with the historical 1m strategy-library lane:
+  - added `family_a_killzone_breakout_1m_v1` to the generic registry
+  - injected the reusable evidence only through the opt-in profile:
+    - `strategy_library_json=/tmp/ict-engine-family-a-nq-1m-profile/.deps/auto-quant/strategy_library_1m.json`
+  - verified the current profile build now reaches `candidate_count=11`, `buildable_count=11`, `built_pack_count=11`
+  - current evidence closes another timeframe-coverage gap but remains a rejection candidate:
+    - `trade_count=56`, `aggregate_label=thin`
+    - `sharpe=-0.3518`, `profit_factor=0.6742`, `total_profit_pct=-8.2`, `max_drawdown_pct=-12.4045`
+    - `transfer_status=single_market_only`
+  - therefore the 1m lane is now explicit negative evidence, not a viable Family A promotion path
 
 ### Next
 

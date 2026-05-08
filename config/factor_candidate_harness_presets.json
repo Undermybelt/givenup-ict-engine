@@ -565,6 +565,75 @@
       }
     },
     {
+      "candidate_id": "family_a_killzone_breakout_1m_v1",
+      "display_name": "Killzone Breakout 1m",
+      "family": "Family A",
+      "status": "active",
+      "promotion_state": "candidate_only",
+      "strategy_name": "TomacNQKillzoneBreakout1m",
+      "strategy_source": "/tmp/ict-engine-family-a-nq-1m-profile/.deps/auto-quant/user_data/strategies_external/TomacNQKillzoneBreakout1m.py",
+      "artifact_source": {},
+      "expression_text": "1m killzone breakout with 15m/1h/4h resonance, intended to close the low-timeframe Family A coverage lane and test whether ultra-short execution improves or degrades quality",
+      "operator_set": [
+        "am_killzone",
+        "high_24h",
+        "ema_fast_15m",
+        "ema_slow_15m",
+        "ema_fast_1h",
+        "ema_slow_1h",
+        "ema_fast_4h",
+        "ema_slow_4h"
+      ],
+      "complexity": 8,
+      "paradigm": "session breakout micro-timeframe pivot",
+      "target_market_hypothesis": [
+        "NQ/USD"
+      ],
+      "base_timeframe": "1m",
+      "context_timeframes": [
+        "15m",
+        "1h",
+        "4h"
+      ],
+      "evidence_window": "profile-selected historical 1m strategy-library lane",
+      "regime_role": "execution_only",
+      "pre_bayes_targets": [
+        "session_breakout_gate",
+        "micro_timeframe_resonance_gate"
+      ],
+      "belief_targets": [
+        "entry_quality",
+        "session_quality",
+        "micro_timeframe_resonance"
+      ],
+      "path_ranking_targets": [
+        "recommended_path_bundle",
+        "structural_path_confidence"
+      ],
+      "execution_tree_targets": [
+        "execution_readiness",
+        "prediction_vote_score"
+      ],
+      "execution_tree_blockers_intended": [
+        "negative_quality_despite_coverage",
+        "weaker_than_generic_1m_breakout"
+      ],
+      "structural_feedback_required": true,
+      "resonance_summary": {
+        "base_timeframe": "1m",
+        "context_stack": [
+          "15m",
+          "1h",
+          "4h"
+        ],
+        "resonance_by_timeframe": {
+          "15m": "trend_vote",
+          "1h": "trend_vote",
+          "4h": "macro_trend_vote"
+        }
+      }
+    },
+    {
       "candidate_id": "regime_primary_gate_pending_v1",
       "display_name": "Primary Regime Classifier Gate",
       "family": "Regime Gate",

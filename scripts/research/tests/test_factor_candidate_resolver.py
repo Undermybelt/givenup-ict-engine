@@ -52,7 +52,7 @@ class FactorCandidateResolverTests(unittest.TestCase):
         bundle = resolver.build_candidate_registry(repo_root=REPO_ROOT)
 
         self.assertEqual(bundle["summary"]["selection_mode"], "generic_zero_config")
-        self.assertEqual(bundle["summary"]["candidate_count"], 10)
+        self.assertEqual(bundle["summary"]["candidate_count"], 11)
         self.assertEqual(bundle["summary"]["buildable_count"], 0)
         self.assertEqual(
             bundle["summary"]["naming_contract_version"],
@@ -142,6 +142,13 @@ class FactorCandidateResolverTests(unittest.TestCase):
         )
         self.assertTrue(one_day_regime["artifact_ready"])
         self.assertEqual(one_day_regime["artifact_kind"], "strategy_library_json")
+        one_minute = next(
+            item
+            for item in bundle["candidates"]
+            if item["candidate_id"] == "family_a_killzone_breakout_1m_v1"
+        )
+        self.assertTrue(one_minute["artifact_ready"])
+        self.assertEqual(one_minute["base_timeframe"], "1m")
         regime = next(
             item
             for item in bundle["candidates"]
@@ -306,6 +313,19 @@ class FactorCandidateResolverTests(unittest.TestCase):
                 self.assertEqual(
                     one_day_regime_expression["strategy_name"],
                     "TomacNQ_KillzoneBreakout1dRegime",
+                )
+            if "family_a_killzone_breakout_1m_v1" in built:
+                one_minute_expression = json.loads(
+                    (
+                        output_dir
+                        / "packs"
+                        / "family_a_killzone_breakout_1m_v1"
+                        / "factor_expression.json"
+                    ).read_text(encoding="utf-8")
+                )
+                self.assertEqual(
+                    one_minute_expression["strategy_name"],
+                    "TomacNQKillzoneBreakout1m",
                 )
             if "regime_primary_gate_pending_v1" in built:
                 classifier_summary = json.loads(
