@@ -5570,8 +5570,9 @@ mod tests {
     use ict_engine::application::multi_timeframe_inputs::MULTI_TIMEFRAME_INTERVALS;
     use ict_engine::bbn::trading::topology::build_trading_network;
     use ict_engine::config::build_frame_features_for_market;
+    use ict_engine::hmm::init_hmm_params;
     use ict_engine::state::{
-        BacktestRunRecord, FactorAutoresearchAttempt, FactorAutoresearchDecision,
+        load_state, BacktestRunRecord, FactorAutoresearchAttempt, FactorAutoresearchDecision,
         FactorAutoresearchLiveSnapshot, FactorPipelineLabelSource, ResearchRunRecord,
     };
 

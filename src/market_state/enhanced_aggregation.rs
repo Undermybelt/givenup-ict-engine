@@ -282,9 +282,7 @@ impl EnhancedAggregator {
 
         // 流动性枯竭 + 极高置信（提高阈值到 0.80）
         // 因为流动性基础置信度已提高，需要更严格条件
-        if matches!(liq, LiquidityRegime::ThinLiquidity)
-            && liq_conf > 0.80
-        {
+        if matches!(liq, LiquidityRegime::ThinLiquidity) && liq_conf >= 0.80 {
             return true;
         }
 

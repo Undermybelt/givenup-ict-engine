@@ -1118,20 +1118,21 @@ let validator = MarketStateValidator::with_config(config);
 | v3 | 56.10% | 0% | 62.50% | 流动性基础置信度 |
 | v4 | 54.36% | 0% | 58.33% | 结构权重优化 |
 | v5 | 60.06% | 4.17% | 75% | 基础置信度 0.15 |
-| **v6** | **61.26%** | **4.17%** | **79.17%** | 极端状态阈值收紧 |
+| v6 | 61.26% | 4.17% | 79.17% | 极端状态阈值收紧 |
+| **v7** | **62.71%** | **4.17%** | **79.17%** | 基础置信度 0.25 + 一致性加成 |
 
-**当前状态（v6）**：
-- ✅ 平均置信度 61%（GOOD）
-- ⚠️ 高置信比例 4.17%（目标 30%）
+**当前状态（v7）**：
+- ✅ 平均置信度 63%（GOOD）
+- ⚠️ 高置信比例 4.17%（目标 30%，待提升）
 - ✅ 可交易比例 79%（EXCELLENT）
 - ✅ VeryLow 比例 0%
 
-**主大类分布**：
-- TrendExpansion: 41.7%
+**主大类分布均衡**：
 - RangeConsolidation: 41.7%
-- ExtremeStress: 16.7%（误判显著减少）
+- TrendExpansion: 41.7%
+- ExtremeStress: 16.7%
 
-**次小类分布**：
+**次小类分布丰富**：
 - WideRange: 25%
 - BullTrendExhaustion: 16.7%
 - BullTrendAcceleration: 16.7%
@@ -1140,18 +1141,59 @@ let validator = MarketStateValidator::with_config(config);
 - 其他：共 16 种次小类
 
 **关键调优点**：
-1. 基础置信度 0.20（避免过低综合置信度）
+1. 基础置信度 0.25（避免过低综合置信度）
 2. 结构权重 50%（趋势识别核心）
-3. 极端状态阈值收紧（波动 0.75 + 流动性 0.80）
-4. 一致性部分匹配得分（避免全有全无）
+3. 极端状态阈值收紧（波动 0.75 + 流动性 >= 0.80）
+4. 一致性高置信加成（>0.8 加 5%，>0.6 加 3%）
+
+**模块完成度**：
+- ✅ 4维度分类器（波动率/流动性/结构/行为）
+- ✅ 增强聚合器（价格方向 + 一致性检查）
+- ✅ BBN证据映射
+- ✅ 执行树集成
+- ✅ 置信度验证
+- ✅ 多周期共振滤波
+- ✅ CLI验证命令
+- ✅ 热插拔配置
 
 **下一步**：
 1. 真实数据验证（NQ/ES 等历史数据）
-2. 多品种验证
-3. 高置信比例提升至 30%+
+2. 多品种验证（至少 3 个市场类别）
+3. 高置信比例提升至 30%+（需真实数据反馈）
+
+### 2026-05-08 验证闭环（Codex）
+
+**代码修正**：
+- `EnhancedAggregator::is_extreme_stress`：`ThinLiquidity` 在 `liq_conf == 0.80` 时应触发极端状态，边界从 `> 0.80` 改为 `>= 0.80`。
+- `main.rs` 测试模块补回 `init_hmm_params` / `load_state` imports，解除 bin 测试目标的既有编译阻断。
+
+**已验证命令**：
+```bash
+cargo test market_state --lib
+# 36 passed; 0 failed
+
+cargo build --bin ict-engine
+# passed
+
+cargo test test_cli_validate_market_state_accepts_zero_config_defaults --bin ict-engine
+# 1 passed; 0 failed
+
+target/debug/ict-engine validate-market-state \
+  --data examples/demo/demo-15m.json \
+  --window-size 20 \
+  --step-size 5
+# Average Confidence: 79.46%
+# High Confidence Ratio: 85.71%
+# Tradeable Ratio: 100.00%
+```
+
+**当前结论**：
+- 零配置 CLI 验证路径可用，消费者可以直接用 cleaned JSON/CSV candles 跑主大类/次小类置信度报告。
+- demo 数据验证达到 EXCELLENT，但样本只有 52 根 K 线、7 个滑窗，只能证明命令链路与报告格式，不等同于真实市场准确率。
+- 下一个真正的质量门槛仍是 NQ/ES/crypto 等真实历史数据的多品种、多周期验证。
 
 ---
 
-**更新时间**：2026-05-08 10:15
-**更新人**：Claude (Hermes Agent)
-**状态**：阶段性调优完成，主大类分布均衡，等待真实数据验证
+**更新时间**：2026-05-08 10:55
+**更新人**：Codex
+**状态**：市场状态分类模块已完成编译/测试/CLI 烟测，等待真实数据多市场验证
