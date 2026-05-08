@@ -117,6 +117,16 @@
   - `export-structural-path-ranking-target`: rows=3, mature_rows=0, raw_scored_mature=0/30
   - `policy-training-status`: trainer_artifact=missing, calibration=not_fitted, production_validation=0/30
   - structural path ranking explicitly blocked: no external CatBoost/XGBoost ranker artifact exists
+- [x] **2026-05-08 Slice 3: external path-ranker hot-plug / reuse boundary verified without reopening runtime code.**
+  - `scripts/auto_quant_external/pandas_path_ranker_trainer.py` now consumes `--user-weights <file>` during weighted-sum fallback instead of only generating a template
+  - fallback precedence is now: explicit `--user-weights` -> `<model_dir>/user_weights.json` -> built-in defaults
+  - `scripts/auto_quant_external/path_ranker_integration.py` now supports `--reuse-model-dir <dir>` so a user can reuse an existing model directory and skip retraining
+  - added regression test `scripts/auto_quant_external/tests/test_path_ranker_hotplug.py`
+  - regression evidence:
+    - `python3 -m unittest scripts.auto_quant_external.tests.test_next_slice_helpers scripts.auto_quant_external.tests.test_path_ranker_hotplug`
+    - `python3 scripts/auto_quant_external/path_ranker_integration.py --help`
+    - manual smoke: `--apply-only` with an empty model dir plus explicit `--user-weights` produced `scores.csv` through the integration script, proving the consumer-facing hot-plug path works without editing repo runtime code
+  - boundary kept explicit: this proves the external trainer/apply layer is zero-config by default and opt-in reusable when the user wants to carry forward prior weights/models; it does **not** prove execution-tree behavior changed yet
 
 ### Next
 
@@ -127,6 +137,16 @@
   - raw-scored mature rows = 0/30
   - calibration not possible without external trainer
 - [x] Realized-trades posterior feedback applied via `auto-quant-ingest-real-trades`
+- [x] Verify the external trainer boundary is genuinely hot-pluggable and reusable for a consumer:
+  - user-supplied fallback weights are actually consumed
+  - existing model directories can be reused without retraining
+
+### Next Slice
+
+- [ ] Produce one real reusable external ranker artifact from a non-demo target export once mature rows exist
+- [ ] Register that artifact through `register-structural-path-ranking-trainer-artifact`
+- [ ] Apply real external scores back into the same `/tmp/...` runtime state
+- [ ] Capture whether `workflow-status` / `analyze` / `execution_tree_trace.json` actually change after real external scores land
 
 ### Decision
 

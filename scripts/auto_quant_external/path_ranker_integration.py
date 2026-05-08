@@ -20,7 +20,6 @@ Path Ranker 一键集成脚本
 """
 
 import argparse
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -64,7 +63,12 @@ def run_trainer(target_csv: str, output_dir: str, model_family: str = "catboost"
     return result
 
 
-def run_apply(model_dir: str, target_csv: str, output_scores: str):
+def run_apply(
+    model_dir: str,
+    target_csv: str,
+    output_scores: str,
+    user_weights: str | None = None,
+):
     """运行应用"""
     cmd = [
         sys.executable,
@@ -74,6 +78,8 @@ def run_apply(model_dir: str, target_csv: str, output_scores: str):
         "--target-csv", target_csv,
         "--output-scores", output_scores,
     ]
+    if user_weights:
+        cmd.extend(["--user-weights", user_weights])
     
     print(f"[run] {' '.join(cmd)}")
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -97,6 +103,14 @@ def main():
     parser.add_argument("--model-family", default="catboost", choices=["catboost", "xgboost", "both"])
     parser.add_argument("--train-only", action="store_true", help="Only train, skip apply")
     parser.add_argument("--apply-only", action="store_true", help="Only apply, skip train")
+    parser.add_argument(
+        "--reuse-model-dir",
+        help="Reuse an existing model directory and skip training",
+    )
+    parser.add_argument(
+        "--user-weights",
+        help="Optional user_weights.json used when fallback scoring is needed",
+    )
     
     args = parser.parse_args()
     
@@ -126,14 +140,16 @@ def main():
     # 执行
     if args.apply_only:
         model_dir = args.model_dir or output_dir
-        run_apply(model_dir, target_csv, output_scores)
+        run_apply(model_dir, target_csv, output_scores, args.user_weights)
+    elif args.reuse_model_dir:
+        run_apply(args.reuse_model_dir, target_csv, output_scores, args.user_weights)
     else:
         # 训练
         run_trainer(target_csv, output_dir, args.model_family)
         
         if not args.train_only:
             # 应用
-            run_apply(output_dir, target_csv, output_scores)
+            run_apply(output_dir, target_csv, output_scores, args.user_weights)
     
     print(f"\n[done] Model: {output_dir}")
     print(f"[done] Scores: {output_scores}")

@@ -35,7 +35,6 @@ Structural Path Ranking External Trainer
 
 import argparse
 import json
-import os
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -293,7 +292,12 @@ def train_xgboost(X, y, weights, output_dir: Path):
     return model
 
 
-def apply_model(model_dir: Path, target_csv: str, output_scores: str):
+def apply_model(
+    model_dir: Path,
+    target_csv: str,
+    output_scores: str,
+    user_weights_path: Path | None = None,
+):
     """应用预训练模型生成 scores.csv"""
     # 加载 target
     df = load_target_csv(target_csv)
@@ -320,7 +324,8 @@ def apply_model(model_dir: Path, target_csv: str, output_scores: str):
     else:
         # 回退到简单加权
         print("[apply] No trained model found, using weighted sum fallback")
-        scores = weighted_sum_fallback(X)
+        weights_path = user_weights_path or (model_dir / "user_weights.json")
+        scores = weighted_sum_fallback(X, weights_path=weights_path)
     
     # 输出 scores.csv
     scores_df = pd.DataFrame({
@@ -334,7 +339,32 @@ def apply_model(model_dir: Path, target_csv: str, output_scores: str):
     return scores_df
 
 
-def weighted_sum_fallback(X: pd.DataFrame) -> np.ndarray:
+def load_user_weights(weights_path: Path | None) -> dict[str, float]:
+    """加载用户自定义权重；缺失或无效时返回空覆盖。"""
+    if weights_path is None or not weights_path.exists():
+        return {}
+
+    try:
+        with open(weights_path, "r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+    except (json.JSONDecodeError, OSError) as exc:
+        print(f"[fallback] WARNING: failed to read user weights from {weights_path}: {exc}")
+        return {}
+
+    user_weights: dict[str, float] = {}
+    for key, value in payload.items():
+        if key.startswith("_"):
+            continue
+        try:
+            user_weights[key] = float(value)
+        except (TypeError, ValueError):
+            print(f"[fallback] WARNING: ignore non-numeric weight {key}={value!r}")
+    if user_weights:
+        print(f"[fallback] Loaded {len(user_weights)} user weight overrides from {weights_path}")
+    return user_weights
+
+
+def weighted_sum_fallback(X: pd.DataFrame, weights_path: Path | None = None) -> np.ndarray:
     """
     无训练模型时的回退：简单加权求和。
     用户可配置权重文件。
@@ -360,6 +390,7 @@ def weighted_sum_fallback(X: pd.DataFrame) -> np.ndarray:
         "fvgs_open": -0.05,  # 更多未填补缺口 = 风险
         "atr_consumption_ratio": -0.10,  # 高 ATR 消耗 = 风险
     }
+    weights.update(load_user_weights(weights_path))
     
     score = np.zeros(len(X))
     for feat, w in weights.items():
@@ -413,6 +444,10 @@ def main():
     parser.add_argument("--output-scores", default="./scores.csv", help="Output scores CSV (for --apply)")
     parser.add_argument("--model-family", default="catboost", choices=["catboost", "xgboost", "both"])
     parser.add_argument("--create-template", action="store_true", help="Create user weights template")
+    parser.add_argument(
+        "--user-weights",
+        help="Optional user_weights.json override for weighted-sum fallback",
+    )
     
     args = parser.parse_args()
     
@@ -425,7 +460,12 @@ def main():
     
     if args.apply:
         model_dir = Path(args.model_dir) if args.model_dir else output_dir
-        apply_model(model_dir, args.target_csv, args.output_scores)
+        apply_model(
+            model_dir,
+            args.target_csv,
+            args.output_scores,
+            Path(args.user_weights) if args.user_weights else None,
+        )
         return
     
     # 训练模式

@@ -371,21 +371,41 @@ python scripts/auto_quant_external/pandas_path_ranker_trainer.py \
 **特性**：
 - 零配置：默认行为可直接运行
 - 热插拔：用户可通过 `user_weights.json` 自定义权重
+- 热插拔：用户可通过 `--reuse-model-dir` 选择沿用既有模型目录，跳过重训
 - Token 友好：输出简洁
 - 无污染：不修改仓库代码
 - 用户特定数据：VRP V2 相关特征（qqq_hv/nq_vs_200d/vix3m/vvix_over_vix 等）
+- 回退路径：无可用 CatBoost/XGBoost 模型时，优先读取显式 `--user-weights`，否则读取 `<model_dir>/user_weights.json`，再退回内建默认权重
 
 **用法**：
 ```bash
 # 完整流程：导出 target → 训练 → 应用
-python scripts/auto_quant_external/path_ranker_integration.py \
+python3 scripts/auto_quant_external/path_ranker_integration.py \
   --state-dir /tmp/vrp-v2-runtime-closure --symbol NQ
+
+# 沿用已有模型目录，不重训
+python3 scripts/auto_quant_external/path_ranker_integration.py \
+  --state-dir /tmp/vrp-v2-runtime-closure --symbol NQ \
+  --reuse-model-dir /tmp/existing_path_ranker_model
+
+# 仅应用时显式指定用户权重覆盖 fallback
+python3 scripts/auto_quant_external/path_ranker_integration.py \
+  --apply-only --target-csv <target.csv> --model-dir <model_dir> \
+  --user-weights <user_weights.json> --output-scores scores.csv
 
 # 训练后应用到运行时
 ./target/debug/ict-engine apply-structural-path-ranking-external-scores \
   --symbol NQ --state-dir /tmp/vrp-v2-runtime-closure \
   --scores-file /tmp/vrp-v2-runtime-closure/NQ/policy_training/scores.csv
 ```
+
+**2026-05-08 验证补充**：
+- [x] `scripts/auto_quant_external/tests/test_path_ranker_hotplug.py` 新增：
+  - `weighted_sum_fallback()` 会真实读取 `user_weights.json`，不是只生成模板
+  - `path_ranker_integration.py --reuse-model-dir ...` 会跳过训练，只做应用
+- [x] `python3 -m unittest scripts.auto_quant_external.tests.test_next_slice_helpers scripts.auto_quant_external.tests.test_path_ranker_hotplug`
+- [x] `python3 scripts/auto_quant_external/path_ranker_integration.py --help` 已显示 `--reuse-model-dir` / `--user-weights`
+- [ ] 这仍然只证明外部训练/应用边界可热插拔，不代表 `CatBoost -> execution_tree` 运行时影响已经闭环
 
 ### 4. CatBoost → 执行树节点
 
