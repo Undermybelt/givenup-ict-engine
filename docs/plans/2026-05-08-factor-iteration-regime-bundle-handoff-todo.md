@@ -36,6 +36,7 @@
   - [x] Continue the Family A breadth lane with the historical 1m lane.
   - [x] Continue the Family A breadth lane with the historical ES lane.
   - [x] Continue the Family A breadth lane with the historical EUR lane.
+  - [x] Record the broader-market failure boundaries for YM and XAU.
   - [ ] Continue the Family A breadth lane with the next still-missing variant.
 - Active slice:
   - regime bundle slice complete; next live slice is Family A breadth continuation
@@ -55,6 +56,7 @@
   - `family_a_killzone_breakout_1m_v1` is now a real profile-backed candidate pack, not a board-only note
   - `family_a_es_killzone_breakout_1h_v1` is now a real profile-backed candidate pack, not a board-only note
   - `family_a_eur_killzone_breakout_1h_v1` is now a real profile-backed candidate pack, not a board-only note
+  - `YM` and `XAU` are explicitly marked as non-promotable family boundaries on this board
 - Next step:
   - choose the next still-missing Family A breadth variant that is not yet explicit in the registry, then either recover its historical artifact or generate fresh reusable evidence; current explicit Family A coverage now includes `NQ`, `ES`, `EUR` plus `1m`, `5m`, `15m`, `1h`, and a `1d` regime-filter lane
 
@@ -168,3 +170,4 @@
 - `family_a_killzone_breakout_1m_v1` now exists; prefer another missing Family A variant over re-ingesting the same historical manifest again.
 - `family_a_es_killzone_breakout_1h_v1` now exists; prefer another missing Family A variant over re-ingesting the same historical manifest again.
 - `family_a_eur_killzone_breakout_1h_v1` now exists; prefer another missing Family A variant over re-ingesting the same historical manifest again.
+- `YM` and `XAU` are now explicit dead-ends on this board; do not spend more Family A breadth budget there unless new reusable evidence appears outside the current profile material.

@@ -282,6 +282,14 @@ A candidate may only move to the post-factor runtime-closure board after all of 
     - `sharpe=-0.0459`, `profit_factor=0.6891`, `total_profit_pct=-0.37`
     - `transfer_status=single_market_only`
   - therefore the EUR lane is now explicit negative market-coverage evidence, not a Family A quality proof point
+- [x] Closed the remaining historically accessible but non-promotable broader market probes for this board:
+  - `YM`
+    - current profile materializes, but all structure candidates remain absent or zero-trade
+    - current `auto_quant_strategy_library.json` has no positive Family A lane to recover
+    - therefore `YM` remains an explicit failure/coverage boundary, not a recoverable candidate on this board
+  - `XAU`
+    - current profile materializes, but all structure candidates remain zero-trade
+    - therefore `XAU` remains an explicit failure/coverage boundary, not a recoverable candidate on this board
 
 ### Next
 
