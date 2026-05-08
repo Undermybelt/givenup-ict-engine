@@ -161,6 +161,18 @@
       - `./target/debug/ict-engine policy-training-status --symbol NQ --state-dir <temp state> --human`
     - observed status: `runtime_selection=enabled_registered_model_ready`, `runtime_source=registered_model_artifact`, `runtime_matches=2`
   - boundary kept explicit: this closes the consumer-facing opt-in wiring for persisted external model reuse, but still does **not** prove non-demo mature-row validation or execution-tree output change
+- [x] **2026-05-08 Slice 6: legacy reuse-model-dir flow now backfills a direct-model artifact before registration.**
+  - root cause from real VRP V2 replay: older `path_ranker_model/` directories did not yet contain `path_ranker_direct_model.json`, so `--reuse-model-dir + --register-runtime-artifact` could flip runtime source to `registered_model_artifact` but still leave status `enabled_registered_model_invalid`
+  - `scripts/auto_quant_external/path_ranker_integration.py` now runs `ensure_runtime_artifact(...)`:
+    - if the reused model dir already has `path_ranker_direct_model.json`, reuse it directly
+    - if it is a legacy dir, rebuild the direct-model artifact from the current target CSV before registration
+  - regression evidence:
+    - `python3 -m unittest scripts.auto_quant_external.tests.test_path_ranker_hotplug`
+    - real replay on copied VRP V2 state:
+      - before: `runtime_selection=enabled_candidate_set_ready`, `runtime_source=candidate_set`
+      - command: `python3 scripts/auto_quant_external/path_ranker_integration.py --state-dir <replay state> --symbol NQ --reuse-model-dir <replay state>/NQ/policy_training/path_ranker_model --register-runtime-artifact --reuse-mode candidate_set_only`
+      - after: `runtime_selection=enabled_registered_model_ready`, `runtime_source=registered_model_artifact`, `runtime_matches=3`
+  - boundary kept explicit: this proves the opt-in persisted-model reuse path now works on both fresh and legacy model dirs; it still does **not** prove execution-tree recommendation change or mature-row sufficiency
 
 ### Next
 
@@ -176,6 +188,7 @@
   - existing model directories can be reused without retraining
 - [x] Verify an external model directory can be promoted into a repo-native runtime-consumable registered model artifact without requiring CatBoost to be installed locally
 - [x] Verify the integration script can optionally perform repo-side register + enable runtime reuse while leaving the zero-config default path untouched
+- [x] Verify the legacy `--reuse-model-dir` path no longer degrades into `enabled_registered_model_invalid` on the real VRP V2 replay state
 
 ### Next Slice
 

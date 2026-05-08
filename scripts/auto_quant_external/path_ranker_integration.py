@@ -20,6 +20,7 @@ Path Ranker 一键集成脚本
 """
 
 import argparse
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -28,6 +29,9 @@ SCRIPT_DIR = Path(__file__).parent
 TRAINER_SCRIPT = SCRIPT_DIR / "pandas_path_ranker_trainer.py"
 REPO_ROOT = SCRIPT_DIR.parents[1]
 ICT_ENGINE_BIN = REPO_ROOT / "target" / "debug" / "ict-engine"
+
+sys.path.insert(0, str(SCRIPT_DIR))
+import pandas_path_ranker_trainer as trainer  # noqa: E402
 
 
 def find_target_csv(state_dir: str, symbol: str) -> Path:
@@ -94,15 +98,33 @@ def run_apply(
     return result
 
 
+def ensure_runtime_artifact(model_dir: str, target_csv: str) -> str:
+    """Backfill a direct-model artifact for legacy model dirs before repo registration."""
+    model_path = Path(model_dir)
+    artifact_path = model_path / "path_ranker_direct_model.json"
+    if artifact_path.exists():
+        return str(artifact_path)
+
+    df = trainer.load_target_csv(target_csv)
+    _, _, _, features = trainer.prepare_features(df)
+    trainer.create_direct_model_artifact(
+        output_dir=model_path,
+        features=features,
+        trained_rows=len(df),
+    )
+    return str(artifact_path)
+
+
 def register_runtime_artifact(
     state_dir: str,
     symbol: str,
     model_dir: str,
+    target_csv: str,
     score_column: str = "raw_path_score",
     reuse_mode: str = "candidate_set_only",
 ):
     """Opt in to repo-side runtime reuse using the emitted direct-model artifact."""
-    artifact_path = Path(model_dir) / "path_ranker_direct_model.json"
+    artifact_path = ensure_runtime_artifact(model_dir=model_dir, target_csv=target_csv)
     register_cmd = [
         str(ICT_ENGINE_BIN),
         "register-structural-path-ranking-trainer-artifact",
@@ -213,6 +235,7 @@ def main():
             state_dir=args.state_dir,
             symbol=args.symbol,
             model_dir=output_dir,
+            target_csv=target_csv,
             score_column="raw_path_score",
             reuse_mode=args.reuse_mode,
         )

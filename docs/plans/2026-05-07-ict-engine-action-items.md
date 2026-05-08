@@ -421,6 +421,10 @@ python3 scripts/auto_quant_external/path_ranker_integration.py \
   - `--register-runtime-artifact`
   - `--reuse-mode candidate_set_only|prefer_history`
   - 默认不传时，仍保持仅 train/apply，不隐式改 runtime
+- [x] legacy `--reuse-model-dir` 现在也会自动补齐 `path_ranker_direct_model.json` 再注册：
+  - 真实 VRP V2 replay 前：`runtime_source=candidate_set`
+  - 真实 VRP V2 replay 后：`runtime_source=registered_model_artifact`
+  - 避免旧模型目录落成 `enabled_registered_model_invalid`
 - [ ] 这仍然只证明外部训练/应用边界可热插拔，不代表 `CatBoost -> execution_tree` 运行时影响已经闭环
 
 ### 4. CatBoost → 执行树节点

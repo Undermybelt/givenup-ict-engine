@@ -108,9 +108,29 @@ class ReuseModelFlowTests(unittest.TestCase):
                 state_dir=str(state_dir),
                 symbol="NQ",
                 model_dir=str(output_dir),
+                target_csv=str(target_csv),
                 score_column="raw_path_score",
                 reuse_mode="candidate_set_only",
             )
+
+    def test_register_runtime_artifact_backfills_direct_model_for_legacy_model_dir(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            model_dir = Path(tmpdir) / "legacy_model"
+            model_dir.mkdir()
+            target_csv = Path(tmpdir) / "target.csv"
+            target_csv.write_text(
+                "candidate_set_id,path_id,rank,current_posterior,structural_baseline_score,maturity_mask,calibrated_label,training_weight\n"
+                "set1,path1,1,0.7,0.8,true,1.0,1.0\n"
+                "set1,path2,2,0.2,0.4,true,0.0,1.0\n",
+                encoding="utf-8",
+            )
+
+            integration.ensure_runtime_artifact(model_dir=str(model_dir), target_csv=str(target_csv))
+
+            artifact_path = model_dir / "path_ranker_direct_model.json"
+            self.assertTrue(artifact_path.exists())
+            artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+            self.assertEqual(artifact["model_family"], "weighted_feature_sum_v1")
 
 
 class DirectModelArtifactTests(unittest.TestCase):
