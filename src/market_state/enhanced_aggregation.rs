@@ -90,9 +90,10 @@ impl EnhancedAggregator {
         // 3. 基础加权置信度
         // 提高结构权重，降低波动率权重（因为结构对趋势识别更重要）
         // 添加基础置信度，避免过低的综合置信度
-        let base_confidence = 0.15;
-        let weighted_conf = vol_conf * 0.15 + liq_conf * 0.10 + struct_conf * 0.50 + behav_conf * 0.25;
-        let base_conf = base_confidence + weighted_conf * 0.85;
+        let base_confidence = 0.20; // 提高到 0.20
+        let weighted_conf =
+            vol_conf * 0.15 + liq_conf * 0.10 + struct_conf * 0.50 + behav_conf * 0.25;
+        let base_conf = base_confidence + weighted_conf * 0.80;
 
         // 4. 应用一致性加成
         let overall_conf = (base_conf * (1.0 - self.config.consistency_weight)
@@ -263,29 +264,28 @@ impl EnhancedAggregator {
         behav: &InvestorBehaviorRegime,
         behav_conf: f64,
     ) -> bool {
-        // 危机波动 + 高置信
+        // 危机波动 + 高置信（提高阈值到 0.75）
         if matches!(vol, VolatilityRegime::CrisisVol)
-            && vol_conf > self.config.extreme_min_confidence
+            && vol_conf > 0.75
         {
             return true;
         }
 
-        // 流动性枯竭 + 高置信
+        // 流动性枯竭 + 极高置信（提高阈值到 0.80）
+        // 因为流动性基础置信度已提高，需要更严格条件
         if matches!(liq, LiquidityRegime::ThinLiquidity)
-            && liq_conf > self.config.extreme_min_confidence
+            && liq_conf > 0.80
         {
             return true;
         }
 
-        // 行为恐慌 + 高波动 + 中高置信
+        // 行为恐慌 + 危机波动 + 高置信
         if matches!(
             behav,
             InvestorBehaviorRegime::Capitulation | InvestorBehaviorRegime::FOMO
-        ) && matches!(
-            vol,
-            VolatilityRegime::ElevatedVol | VolatilityRegime::CrisisVol
-        ) && behav_conf > 0.65
-            && vol_conf > 0.65
+        ) && matches!(vol, VolatilityRegime::CrisisVol)
+            && behav_conf > 0.70
+            && vol_conf > 0.70
         {
             return true;
         }
