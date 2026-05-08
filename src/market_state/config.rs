@@ -237,7 +237,7 @@ impl MarketStateProfile {
                     medium_consistency_bonus: 0.02,
                     ..EnhancedAggregationConfig::default()
                 },
-                user_label: Some("high_confidence_profile".to_string()),
+                user_label: Some("nq_confidence_profile".to_string()),
                 ..MarketStateConfig::default()
             },
         }
@@ -364,6 +364,7 @@ impl UserWeightsTemplate {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::path::PathBuf;
 
     #[test]
     fn default_config_is_valid() {
@@ -415,6 +416,19 @@ mod tests {
         );
         assert!(
             (profile.config.enhanced_aggregation.structure_weight - 0.20).abs() < 0.001
+        );
+    }
+
+    #[test]
+    fn high_confidence_profile_matches_repo_example() {
+        let profile = MarketStateProfile::high_confidence_profile();
+        let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+            .join("docs/examples/market-state-nq-confidence-profile.json");
+        let config = MarketStateConfig::load(&path).expect("load repo example profile");
+
+        assert_eq!(
+            serde_json::to_value(&profile.config).unwrap(),
+            serde_json::to_value(&config).unwrap()
         );
     }
 }
