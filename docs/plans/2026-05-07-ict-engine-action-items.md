@@ -1245,6 +1245,7 @@ target/debug/ict-engine validate-market-state \
 
 **CLI 热插拔补充（2026-05-08）**：
 - `validate-market-state --profile <name>`：支持 `default` / `trend_trading` / `volatility_trading` / `reversal_trading` / `risk_control`
+- `validate-market-state --profile high_confidence`：内建 opt-in 高置信模板，不必记住 repo JSON 路径
 - `validate-market-state --config <json>`：支持用户自定义 `MarketStateConfig`
 - `validate-market-state --compact`：输出单行摘要，适合 token 友好场景
 - `validate-market-state --no-enhanced`：保留基础聚合器回退
@@ -1268,6 +1269,7 @@ target/debug/ict-engine validate-market-state \
 
 **Opt-in NQ confidence profile（2026-05-08）**：
 - 文件：`docs/examples/market-state-nq-confidence-profile.json`
+- 同等内建入口：`validate-market-state --profile high_confidence`
 - 用法：
   ```bash
   target/debug/ict-engine validate-market-state \
@@ -1288,7 +1290,7 @@ target/debug/ict-engine validate-market-state \
 **Opt-in profile 结论**：
 - NQ 1m / 5m / mtf / htf 全部超过 30% 高置信目标
 - 该 profile 通过保留 10% consistency weight、提高 base confidence 到 0.50、提高 structure weight 到 0.55 达成
-- 因为证据只覆盖 NQ 局部样本，所以保留为 consumer 可选 config，不改全局默认
+- 因为证据只覆盖 NQ 局部样本，所以保留为 consumer 可选 profile/config，不改全局默认
 
 **Validator 修正（2026-05-08）**：
 - `src/market_state/validation_tool.rs` 现在会把最后一个完整窗口纳入验证
@@ -1350,6 +1352,7 @@ target/debug/ict-engine validate-market-state \
 
 **当前结论**：
 - 零配置 CLI 验证路径可用，消费者可以直接用 cleaned JSON/CSV candles 跑主大类/次小类置信度报告。
+- 对需要更激进高置信输出的消费者，现在可以直接用 `--profile high_confidence`，无需手工提供 JSON 配置文件。
 - `validate-market-state --compact` 现在提供单行摘要，适合 consumer / agent / token 友好场景。
 - demo 数据验证达到 EXCELLENT，但仍只说明命令链路与报告格式，不等同于真实市场准确率。
 - 真实 NQ / YM / GC / CL / BTCUSD / EURUSD 数据在默认路径下平均置信度多落在 53-64%，说明默认路径保守可用但不激进。
@@ -1358,6 +1361,6 @@ target/debug/ict-engine validate-market-state \
 
 ---
 
-**更新时间**：2026-05-08 14:53
+**更新时间**：2026-05-08 15:02
 **更新人**：Codex
 **状态**：市场状态分类模块已完成编译/测试/CLI 烟测，并补充 NQ + YM + GC + CL + BTCUSD + EURUSD 真实验证；热插拔 CLI 已落地，默认路径保守可用，opt-in profile 已证明跨市场高置信提升

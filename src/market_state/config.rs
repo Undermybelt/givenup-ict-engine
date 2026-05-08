@@ -219,6 +219,29 @@ impl MarketStateProfile {
             },
         }
     }
+
+    /// 高置信配置：在保持零配置默认不变的前提下，提供 opt-in 高置信热插拔模板
+    pub fn high_confidence_profile() -> Self {
+        Self {
+            name: "high_confidence".to_string(),
+            description: "高置信 opt-in：提高基础置信度并强化结构权重".to_string(),
+            config: MarketStateConfig {
+                enhanced_aggregation: EnhancedAggregationConfig {
+                    base_confidence: 0.50,
+                    consistency_weight: 0.10,
+                    volatility_weight: 0.12,
+                    liquidity_weight: 0.08,
+                    structure_weight: 0.55,
+                    behavior_weight: 0.25,
+                    high_consistency_bonus: 0.05,
+                    medium_consistency_bonus: 0.02,
+                    ..EnhancedAggregationConfig::default()
+                },
+                user_label: Some("high_confidence_profile".to_string()),
+                ..MarketStateConfig::default()
+            },
+        }
+    }
 }
 
 /// 配置加载/保存
@@ -283,6 +306,7 @@ pub fn available_profiles() -> Vec<MarketStateProfile> {
         MarketStateProfile::volatility_trading_profile(),
         MarketStateProfile::reversal_trading_profile(),
         MarketStateProfile::risk_control_profile(),
+        MarketStateProfile::high_confidence_profile(),
     ]
 }
 

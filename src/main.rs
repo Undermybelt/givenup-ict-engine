@@ -633,7 +633,7 @@ enum Commands {
         config: Option<String>,
         #[arg(
             long,
-            help = "Optional profile name: default, trend_trading, volatility_trading, reversal_trading, or risk_control"
+            help = "Optional profile name: default, trend_trading, volatility_trading, reversal_trading, risk_control, or high_confidence"
         )]
         profile: Option<String>,
     },
@@ -14560,6 +14560,26 @@ mod tests {
 
         match cli.command {
             Commands::ValidateMarketState { compact, .. } => assert!(compact),
+            other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
+        }
+    }
+
+    #[test]
+    fn test_cli_validate_market_state_accepts_high_confidence_profile() {
+        let cli = parse_cli_from([
+            "ict-engine",
+            "validate-market-state",
+            "--data",
+            "candles.json",
+            "--profile",
+            "high_confidence",
+        ])
+        .unwrap();
+
+        match cli.command {
+            Commands::ValidateMarketState { profile, .. } => {
+                assert_eq!(profile.as_deref(), Some("high_confidence"));
+            }
             other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
         }
     }
