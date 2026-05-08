@@ -445,7 +445,7 @@
       "status": "active",
       "promotion_state": "candidate_only",
       "strategy_name": "TomacNQKillzoneBreakout15m",
-      "strategy_source": "/tmp/ict-engine-family-a-nq-15m-profile/.deps/auto-quant/user_data/strategies_external/TomacNQKillzoneBreakout15m.py",
+      "strategy_source": "docs/plans/2026-05-05-execution-tree-factor-auto-quant-todo.md",
       "artifact_source": {},
       "expression_text": "15m killzone breakout with 1h/4h trend context, intended as Family A timeframe-coverage evidence rather than a stronger replacement of the 1h base",
       "operator_set": [
@@ -508,7 +508,7 @@
       "status": "active",
       "promotion_state": "candidate_only",
       "strategy_name": "TomacNQ_KillzoneBreakout1dRegime",
-      "strategy_source": "/tmp/ict-engine-family-a-profile-1dregime-check/.deps/auto-quant/user_data/strategies_external/TomacNQ_KillzoneBreakout1dRegime.py",
+      "strategy_source": "docs/plans/2026-05-05-execution-tree-factor-auto-quant-todo.md",
       "artifact_source": {},
       "expression_text": "NQ killzone breakout gated by daily-bias regime logic, intended to test whether a stronger 1d context filter improves Family A quality",
       "operator_set": [
@@ -571,7 +571,7 @@
       "status": "active",
       "promotion_state": "candidate_only",
       "strategy_name": "TomacNQKillzoneBreakout1m",
-      "strategy_source": "/tmp/ict-engine-family-a-nq-1m-profile/.deps/auto-quant/user_data/strategies_external/TomacNQKillzoneBreakout1m.py",
+      "strategy_source": "docs/plans/2026-05-05-execution-tree-factor-auto-quant-todo.md",
       "artifact_source": {},
       "expression_text": "1m killzone breakout with 15m/1h/4h resonance, intended to close the low-timeframe Family A coverage lane and test whether ultra-short execution improves or degrades quality",
       "operator_set": [

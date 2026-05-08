@@ -75,6 +75,14 @@ class FactorCandidateResolverTests(unittest.TestCase):
         self.assertEqual(deferred["artifact_kind"], "regime_benchmark_json")
         self.assertEqual(deferred["board_evidence_status"], "board_recorded")
         self.assertIn("2026-05-05-execution-tree-factor-auto-quant-todo.md", deferred["board_ref"])
+        for cid in [
+            "family_a_killzone_breakout_15m_v1",
+            "family_a_killzone_breakout_1d_regime_v1",
+            "family_a_killzone_breakout_1m_v1",
+        ]:
+            candidate = next(item for item in bundle["candidates"] if item["candidate_id"] == cid)
+            self.assertNotIn("/tmp/", candidate["strategy_source"])
+            self.assertTrue(all("/tmp/" not in ref for ref in candidate["reusable_input_refs"]))
 
     def test_build_candidate_registry_with_profile_marks_reusable_artifacts(self) -> None:
         bundle = resolver.build_candidate_registry(
