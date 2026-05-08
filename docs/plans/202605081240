@@ -1,0 +1,105 @@
+# 2026-05-08 Personal Provider Lane Execution Board
+
+## Decision Lock
+
+- Public default stays zero-config, generic, consumer-usable, and token-friendly.
+- Personal data/runtime requirements must remain opt-in and hot-pluggable.
+- Personal profile reuse is allowed only through explicit profile selection or machine-readable discovery, never by silently changing the default lane.
+- Same-file execution discipline: update this board in place while implementing.
+- No pollution, no debt: narrow edits, focused tests, no new runtime dependency introduced for this slice.
+
+## Hard Constraints
+
+- `provider-status` and `workflow-status` must preserve the generic default path when no profile is selected.
+- Agent/machine surfaces must still be able to discover optional personal profile lanes before selection.
+- Once a profile is selected, downstream bootstrap/status commands must continue carrying that profile instead of dropping back to generic commands.
+- Human-facing unselected output should stay quiet; do not spam personal hints into default human summaries.
+
+## Scope For This Slice
+
+- Close the profile discoverability gap in low-token machine-readable provider/workflow surfaces.
+- Close the command propagation gap where bootstrap output dropped selected profiles on the next command hop.
+- Rewrite this file into an executable board that reflects verified repo state instead of free-form suggestion text.
+
+## Done
+
+- [x] Audited current provider-profile and workflow-status surfaces against the zero-config plus opt-in contract.
+  Evidence:
+  - `examples/provider_profiles/thrill3r-nq-closed-loop-v1.json` already models the personal lane as `opt_in_only: true` with `yfinance` zero-config first plus optional external/local tracks.
+  - `src/application/provider_catalog.rs` and `src/application/orchestration/workflow_status.rs` already carried selected-profile summaries/data contracts/tracks once a profile was chosen.
+
+- [x] Fixed machine-surface profile discoverability so unselected agent consumers can see optional opt-in profile choices.
+  Files:
+  - `src/application/provider_catalog.rs`
+  - `src/application/orchestration/workflow_status.rs`
+  Change:
+  - `ProviderCatalogAgentSurface.available_opt_in_profiles` now preserves repo opt-in profile references even when no profile is currently selected.
+  Why:
+  - Without this, a consumer agent could not intentionally offer or choose the personal hot-plug lane before an explicit opt-in had already happened.
+  Guardrail:
+  - Human/compact default output remains quiet; only machine-readable agent/JSON paths get the discoverability surface.
+
+- [x] Fixed selected-profile command propagation in bootstrap output.
+  Files:
+  - `src/application/orchestration/workflow_status.rs`
+  Change:
+  - `AgentBootstrapCommands.provider_status` now reuses the already profile-aware provider-status command.
+  - `AgentBootstrapCommands.workflow_status` now carries `--profile <selector>` when a profile is selected.
+  Why:
+  - Before this patch, selected-profile bootstrap payloads internally knew the profile but exported generic next commands, which broke the hot-plug reuse contract on the next hop.
+
+- [x] Found and fixed the matching first-run router propagation leak during direct CLI verification.
+  Files:
+  - `src/application/orchestration/workflow_status.rs`
+  Change:
+  - `workflow_status_bootstrap_command(...)` is now profile-aware, so selected `workflow-status --agent --profile ...` no longer points the bootstrap route back to a generic profile-less command.
+  Why:
+  - Direct CLI verification showed `first_run_router.provider_command` was profile-aware but `first_run_router.bootstrap_command` still dropped the selected profile.
+
+- [x] Verified the runtime contract with real CLI output.
+  Commands run:
+  - `cargo run --quiet -- provider-status --agent`
+  - `cargo run --quiet -- provider-status --agent --profile thrill3r-nq-closed-loop-v1`
+  - `cargo run --quiet -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-node01 --agent`
+  - `cargo run --quiet -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-node01 --agent --profile thrill3r-nq-closed-loop-v1`
+  Verified:
+  - Unselected machine output exposes `available_opt_in_profiles`.
+  - Selected provider output surfaces the personal summary, data-contract labels, and track statuses.
+  - Selected workflow output now keeps `--profile thrill3r-nq-closed-loop-v1` on both `first_run_router.provider_command` and `first_run_router.bootstrap_command`.
+  - Default no-profile workflow output remains generic and keeps `selected_profile_*` fields empty.
+
+## Next
+
+- [ ] Decide whether to commit this slice after verification and worktree review.
+  Gate:
+  - Only commit if the diff is narrow, verified, and does not drag unrelated churn.
+  - Direct CLI verification is now complete.
+
+- [ ] Audit whether other exported follow-up commands besides bootstrap still drop `--profile` after selection.
+  Current status:
+  - `provider-status`, `workflow-status`, `first_run_router.provider_command`, `first_run_router.bootstrap_command`, and bootstrap command exports are now verified.
+  - No further leak is yet verified, but the broader audit has not been exhausted.
+
+## Not Yet
+
+- [ ] Expose a compact, token-safe human hint for optional personal profile reuse only when it materially helps and only when it does not pollute the default public path.
+- [ ] Broaden this lane into data-contract-aware workflow routing only after the current profile discoverability and command-propagation closure is fully verified.
+- [ ] Return to the larger evidence-registry / replay-contract / anti-overfitting board only after the provider/profile consumer contract is stable.
+
+## Evidence Notes
+
+- Existing selected-profile surfaces were already materially present:
+  - selected profile summary, data contract labels, and track statuses in workflow agent views
+  - selected profile-aware provider command in provider support
+  - profile-aware bootstrap inputs
+- The concrete bugs closed in this slice were:
+  - unselected machine surfaces hid opt-in profile discovery entirely
+  - selected bootstrap commands degraded back to generic `provider-status` / `workflow-status`
+  - selected first-run bootstrap routing degraded back to profile-less `workflow-status --phase bootstrap`
+
+## Success Standard For This Board
+
+- Zero-config public default remains the default.
+- Personal lane remains opt-in and hot-pluggable.
+- Machine consumers can discover the optional personal lane without already being inside it.
+- Once inside that lane, follow-up commands keep carrying the profile automatically.

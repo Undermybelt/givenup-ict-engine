@@ -1364,11 +1364,7 @@ fn build_provider_catalog_agent_surface(
         selectable_providers,
         default_enabled_providers,
         install_prompts,
-        available_opt_in_profiles: if surface.selected_profile.is_some() {
-            surface.available_opt_in_profiles.clone()
-        } else {
-            Vec::new()
-        },
+        available_opt_in_profiles: surface.available_opt_in_profiles.clone(),
         selected_profile: surface
             .selected_profile
             .as_ref()
@@ -1882,7 +1878,11 @@ mod tests {
             .pending_providers
             .iter()
             .any(|item| item.contains("ibkr@market_data")));
-        assert!(agent.available_opt_in_profiles.is_empty());
+        assert_eq!(agent.available_opt_in_profiles.len(), 1);
+        assert_eq!(
+            agent.available_opt_in_profiles[0].selector,
+            "thrill3r-nq-closed-loop-v1"
+        );
         assert_eq!(agent.providers[0].provider_id, "yfinance");
         assert_eq!(agent.providers[0].user_access, "free_no_login");
         assert_eq!(agent.providers[0].summary, "Free historical tradfi fallback.");

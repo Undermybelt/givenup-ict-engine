@@ -764,11 +764,20 @@ fn historical_data_candidate_display_list(paths: &[String]) -> String {
         .join(", ")
 }
 
-fn workflow_status_bootstrap_command(symbol: &str, state_dir: Option<&str>) -> String {
+fn workflow_status_bootstrap_command(
+    symbol: &str,
+    state_dir: Option<&str>,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+) -> String {
     format!(
-        "ict-engine workflow-status --symbol {} --state-dir {} --phase bootstrap",
+        "ict-engine workflow-status --symbol {} --state-dir {}{} --phase bootstrap",
         shell_quote(symbol),
-        shell_quote(state_dir.unwrap_or("<state-dir>"))
+        shell_quote(state_dir.unwrap_or("<state-dir>")),
+        provider_status_agent
+            .selected_profile
+            .as_ref()
+            .map(|profile| format!(" --profile {}", shell_quote(&profile.selector)))
+            .unwrap_or_default()
     )
 }
 
@@ -849,7 +858,8 @@ fn build_first_run_guide(
     state_dir: Option<&str>,
     provider_status_agent: &ProviderCatalogAgentSurface,
 ) -> WorkflowFirstRunGuide {
-    let bootstrap_command = workflow_status_bootstrap_command(symbol, state_dir);
+    let bootstrap_command =
+        workflow_status_bootstrap_command(symbol, state_dir, provider_status_agent);
     let state_dir = shell_quote(state_dir.unwrap_or("<state-dir>"));
     let symbol = shell_quote(symbol);
     WorkflowFirstRunGuide {
@@ -2955,7 +2965,7 @@ fn build_agent_bootstrap_view_with_candidates(
                 selected_profile_track_statuses,
                 provider_access_requests,
                 provider_status_agent: provider_status_agent.clone(),
-                provider_status_command,
+                provider_status_command: provider_status_command.clone(),
                 ibkr_gateway_summary,
                 ibkr_gateway_candidates,
             },
@@ -2983,11 +2993,16 @@ fn build_agent_bootstrap_view_with_candidates(
                 )
             ),
             workflow_status: format!(
-                "ict-engine workflow-status --symbol {} --state-dir {}",
+                "ict-engine workflow-status --symbol {} --state-dir {}{}",
                 shell_quote(symbol),
-                shell_quote(state_dir)
+                shell_quote(state_dir),
+                provider_status_agent
+                    .selected_profile
+                    .as_ref()
+                    .map(|profile| format!(" --profile {}", shell_quote(&profile.selector)))
+                    .unwrap_or_default()
             ),
-            provider_status: "ict-engine provider-status --agent".to_string(),
+            provider_status: provider_status_command.clone(),
             recommended_next_command: snapshot.recommended_next_command.clone(),
         },
         latest_snapshot: AgentBootstrapSnapshot {
@@ -4519,7 +4534,15 @@ mod tests {
                 "Ask the user for a TradingViewRemix MCP API key before attempting TradingViewRemix-backed live or options workflows. Search keywords: TradingViewRemix MCP API key.".to_string(),
                 "Ask the user to install IBKR TWS or IB Gateway and enable the local API before attempting IBKR-backed live workflows. Search keywords: Interactive Brokers TWS download, IB Gateway download.".to_string(),
             ],
-            available_opt_in_profiles: Vec::new(),
+            available_opt_in_profiles: vec![
+                crate::application::provider_catalog::ProviderProfileReferenceSurface {
+                    profile_id: "thrill3r_nq_closed_loop_v1".to_string(),
+                    display_name: "Thrill3r NQ Closed Loop v1".to_string(),
+                    selector: "thrill3r-nq-closed-loop-v1".to_string(),
+                    opt_in_only: true,
+                    summary: "Personal NQ workflow".to_string(),
+                },
+            ],
             selected_profile: None,
             selected_profile_full: None,
         }
@@ -5761,10 +5784,42 @@ mod tests {
             .unwrap()
             .iter()
             .any(|item| item.as_str().unwrap().contains("zero-config yfinance")));
-        assert!(value["available_opt_in_profiles"]
-            .as_array()
-            .unwrap()
-            .is_empty());
+        assert_eq!(
+            value["available_opt_in_profiles"]
+                .as_array()
+                .unwrap()
+                .first()
+                .and_then(|item| item.get("selector"))
+                .and_then(serde_json::Value::as_str),
+            Some("thrill3r-nq-closed-loop-v1")
+        );
+    }
+
+    #[test]
+    fn selected_profile_first_run_router_keeps_profile_on_provider_and_bootstrap_commands() {
+        let agent = build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+            &WorkflowSnapshot {
+                symbol: "NQ".to_string(),
+                ..WorkflowSnapshot::default()
+            },
+            &[],
+            &sample_provider_agent_surface_with_profile(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some("/tmp/state"),
+        );
+
+        assert_eq!(agent["next_command_source"], "first_run_router");
+        assert_eq!(
+            agent["first_run_router"]["provider_command"].as_str(),
+            Some("ict-engine provider-status --compact --profile thrill3r-nq-closed-loop-v1")
+        );
+        assert_eq!(
+            agent["first_run_router"]["bootstrap_command"].as_str(),
+            Some(
+                "ict-engine workflow-status --symbol NQ --state-dir /tmp/state --profile thrill3r-nq-closed-loop-v1 --phase bootstrap"
+            )
+        );
     }
 
     #[test]
@@ -5894,6 +5949,14 @@ mod tests {
         assert_eq!(
             view.input_acquisition.live.provider_access_requests,
             vec!["Ask for TradingViewRemix MCP API key.".to_string()]
+        );
+        assert_eq!(
+            view.commands.provider_status,
+            "ict-engine provider-status --agent --profile thrill3r-nq-closed-loop-v1"
+        );
+        assert_eq!(
+            view.commands.workflow_status,
+            "ict-engine workflow-status --symbol NQ --state-dir /tmp/state --profile thrill3r-nq-closed-loop-v1"
         );
     }
 
