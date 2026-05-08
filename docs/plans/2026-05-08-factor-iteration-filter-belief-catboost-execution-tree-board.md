@@ -18,6 +18,12 @@
 - Do not promote a factor family from one market or one thin trade cell alone.
 - Do not treat regime F1, path-ranking readiness, or execution-tree movement as interchangeable; each layer needs its own evidence.
 - Keep all promotion evidence explicit, reviewable, and `/tmp/...` isolated.
+- Use `docs/factor-artifact-naming-contract.md` as the canonical interpretation layer for:
+  - `board_record`
+  - `reusable_input`
+  - `candidate_pack`
+  - `temp_state_dir`
+  so board evidence is never conflated with current reusable input again.
 
 **Layer Contract**
 
@@ -82,16 +88,138 @@ A candidate may only move to the post-factor runtime-closure board after all of 
 - [x] Added regression coverage in `scripts/research/tests/test_factor_candidate_pack.py` for:
   - populated middle-layer mapping
   - empty/default middle-layer mapping
+- [x] Extended `scripts/research/factor_candidate_pack.py` so the helper can now build a candidate pack directly from reusable `Freqtrade` backtest zip evidence instead of requiring a hand-authored `strategy_library.json` first.
+- [x] Added regression coverage in `scripts/research/tests/test_factor_candidate_pack.py` for:
+  - manifest extraction from a `Freqtrade` backtest zip
+  - `--freqtrade-backtest-zip` CLI input
+  - cross-market evidence merged through candidate-spec JSON
+- [x] Added a generic zero-config candidate-spec registry at `config/factor_candidate_harness_presets.json`.
+- [x] Added an opt-in personal evidence profile lane at `examples/factor_candidate_profiles/thrill3r-nq-auto-quant-v1.json`.
+- [x] Added `scripts/research/factor_candidate_resolver.py` plus `scripts/research/tests/test_factor_candidate_resolver.py` so the board now has one additive helper that:
+  - resolves generic candidate presets without personal path assumptions
+  - optionally reuses local Auto-Quant backtest evidence when a profile is explicitly selected
+  - emits repo-reviewable `candidate_registry.json`, `candidate_spec_index.json`, and `candidate_pack_index.json`
+- [x] Added a canonical naming / evidence-interpretation layer at `docs/factor-artifact-naming-contract.md`.
+- [x] Extended resolver output so every registry entry now distinguishes:
+  - `evidence_status`
+  - `artifact_kind`
+  - `board_evidence_status`
+  - `pack_build_reason`
+  instead of overloading `state` / `profile` / historical board references.
+- [x] Extended resolver output with machine-readable cross-layer lookup fields:
+  - `board_ref`
+  - `reusable_input_refs`
+  - `summary.naming_contract_version`
+  so a later agent can answer “is this only board evidence, or can I rebuild it right now?” without re-deriving that distinction from prose.
+- [x] Built explicit candidate packs from real local evidence under `/tmp/ict-engine-factor-candidate-registry-20260508` for:
+  - `family_f_vrp_compression_15m_v1`
+  - `family_f_trend_pullback_dense_15m_v1`
+  - `family_d_liquidity_sweep_reclaim_15m_wide_v1`
+- [x] Extended the registry coverage beyond the first three execution candidates:
+  - built one real Family A baseline pack from fresh local evidence:
+    - `family_a_killzone_breakout_1h_v1`
+  - built one real Family A displacement pack from fresh local evidence:
+    - `family_a_killzone_displacement_pending_v1`
+  - recorded one remaining explicit skipped-but-active lane with a machine-readable reason:
+    - `regime_primary_gate_pending_v1` -> `regime_only_waiting_for_classifier`
+- [x] Upgraded the Family A baseline pack from `single_market_only` to a real cross-market candidate using fresh local `Freqtrade` evidence on:
+  - `NQ/USD` 8Y baseline
+  - `SPY/USD` 1h local feather window
+  - `IWM/USD` 1h local feather window
+  - `GLD/USD` 1h local feather window
+- [x] Converted the Family A displacement lane from board-only history into a real local candidate pack using:
+  - repo strategy source
+  - local Auto-Quant runtime strategy copy
+  - fresh `NQ/USD` 8Y backtest zip
+- [x] Upgraded the Family A displacement pack to real `IBKR`-backed cross-market evidence on:
+  - `NQ/USD` 8Y baseline
+  - `SPY/USD` 1h local feather window
+  - `IWM/USD` 1h local feather window
+  - `GLD/USD` 1h local feather window
+- [x] Verified the Family A displacement pack is now a real `cross_market_candidate` with mixed-but-positive off-NQ breadth:
+  - `aggregate_trade_count=147`
+  - `aggregate_label=preferred_density`
+  - `transfer_score.status=cross_market_candidate`
+  - `covered_markets=NQ/USD,SPY/USD,IWM/USD,GLD/USD`
+  - `SPY/USD`: `sharpe=0.23`, `profit_factor=1.34`, `trade_count=22`
+  - `IWM/USD`: `sharpe=0.17`, `profit_factor=1.18`, `trade_count=27`
+  - `GLD/USD`: `sharpe=0.61`, `profit_factor=2.15`, `trade_count=24`
+  - but `NQ/USD` 8Y aggregate remains weak (`sharpe=-0.01`, `profit_factor=0.97`, `max_drawdown_pct=17.81`)
+  - therefore the lane is no longer blocked by missing artifact plumbing or by missing cross-market breadth; it is now blocked by mixed regime stability / market-quality asymmetry
+- [x] Verified the Family A baseline remains explicit candidate material rather than a winner-by-default:
+  - `transfer_score.status=cross_market_candidate`
+  - but market quality is mixed:
+    - `NQ/USD`: `sharpe=-0.01`, `profit_factor=0.98`
+    - `SPY/USD`: `sharpe=-0.17`, `profit_factor=0.85`
+    - `IWM/USD`: `sharpe=0.14`, `profit_factor=1.09`
+    - `GLD/USD`: `sharpe=0.44`, `profit_factor=1.42`
+  - so the Family A baseline is now breadth-explicit, yet still not strong enough to skip deeper Family A breadth work
+- [x] Verified those three real candidate packs all now carry:
+  - explicit five-layer mapping
+  - explicit resonance context
+  - `structural_feedback_required=true`
+  - `transfer_score.status=cross_market_candidate`
+  - `trade_density_summary.aggregate_label=preferred_density`
+- [x] Verified the fresh Family A baseline pack truthfully fails the current promotion gate:
+  - `aggregate_trade_count=157` so density is no longer the blocker
+  - cross-market breadth is now explicit instead of missing
+  - but aggregate quality remains weak (`sharpe=-0.01`, `profit_factor=0.98`, `max_drawdown_pct=16.98`)
+  - therefore it stays explicit candidate material, not a promotable pack
+- [x] Converted the regime-only placeholder into a real hot-pluggable artifact lane without polluting the generic surface:
+  - generic `config/factor_candidate_harness_presets.json` now keeps `regime_primary_gate_pending_v1` zero-config by default
+  - the lane declares `reusable_input_kind=regime_benchmark_json` rather than embedding personal `/tmp/...` paths
+  - `examples/factor_candidate_profiles/thrill3r-nq-auto-quant-v1.json` now opt-in injects the concrete local benchmark JSON bundle
+  - `scripts/research/factor_candidate_resolver.py` now builds either:
+    - execution candidate packs from `freqtrade_backtest_zip`
+    - or regime artifact bundles from `regime_benchmark_jsons`
+  - `scripts/research/regime_artifact_bundle.py` now serves as the additive classifier / transition / resonance artifact emitter
+  - verified generic mode stays clean:
+    - `python3 scripts/research/factor_candidate_resolver.py --repo-root . --output-dir /tmp/ict-engine-factor-candidate-registry-generic-20260508`
+    - result: `selection_mode=generic_zero_config`, `buildable_count=0`, `built_pack_count=0`
+    - `regime_primary_gate_pending_v1` stays `artifact_kind=regime_benchmark_json`, `artifact_ready=false`, `pack_build_reason=opt_in_regime_benchmark_profile_required`
+  - verified opt-in profile mode builds the real regime bundle:
+    - `python3 scripts/research/factor_candidate_resolver.py --repo-root . --profile thrill3r_nq_auto_quant_v1 --build-packs --output-dir /tmp/ict-engine-factor-candidate-registry-profile-20260508`
+    - result: `selection_mode=profile_opt_in`, `buildable_count=6`, `built_pack_count=6`
+    - `packs/regime_primary_gate_pending_v1/` now contains:
+      - `regime_classifier_summary.json`
+      - `transition_summary.json`
+      - `resonance_summary.json`
+      - `cross_market_summary.json`
+    - current profile-backed regime summary:
+      - `covered_markets=NQ,SPY,QQQ,GLD`
+    - `best_market=GLD`
+    - `best_eval_macro_f1=0.478629`
+    - `average_eval_macro_f1=0.448097`
+    - `best_transition_f1=0.074074`
+- [x] Tightened reusable-input validation so hot-pluggable evidence is consumer-safe rather than path-only:
+  - `scripts/research/factor_candidate_resolver.py` now validates `freqtrade_backtest_zip` readability with zip integrity checks before marking a lane `artifact_ready=true`
+  - a broken zip now surfaces `pack_build_reason=invalid_artifact:...` and is skipped instead of crashing the whole `--build-packs` run
+  - regression coverage added in `scripts/research/tests/test_factor_candidate_resolver.py` for:
+    - invalid zip stays unbuildable in registry mode
+    - invalid zip is skipped cleanly in pack-build mode
+- [x] Continued the Family A breadth lane with one more real explicit candidate pack:
+  - added `family_a_fvg_retrace_1h_v1` to the generic registry as a zero-config Family A structural-retrace lane
+  - injected the real local reusable evidence only through the opt-in profile:
+    - base `NQ/USD` 8Y zip: `backtest-result-2026-05-08_23-46-20.zip`
+    - cross-market `SPY/USD,IWM/USD,GLD/USD` 1Y zip: `backtest-result-2026-05-08_23-47-45.zip`
+  - verified `python3 scripts/research/factor_candidate_resolver.py --repo-root . --profile thrill3r_nq_auto_quant_v1 --build-packs --output-dir /tmp/ict-engine-factor-candidate-registry-profile-20260508-v3`
+    now builds `candidate_count=7`, `buildable_count=7`, `built_pack_count=7`
+  - verified `packs/family_a_fvg_retrace_1h_v1/` carries the required five-layer mapping and explicit breadth stats
+  - current evidence is honest but not promotable:
+    - aggregate `NQ/USD` base window: `trade_count=12`, `aggregate_label=probe_only`, `sharpe=0.015`, `profit_factor=1.92`
+    - transfer layer: `status=cross_market_candidate`, `covered_markets=NQ/USD,SPY/USD,IWM/USD,GLD/USD`, `overall_transfer_score=0.365891`
+    - cross-market cells are mixed:
+      - `SPY/USD`: `11` trades, `sharpe=0.377`, `profit_factor=2.68`
+      - `IWM/USD`: `2` trades, `anecdotal`
+      - `GLD/USD`: `10` trades, `sharpe=-0.195`, `profit_factor=0.58`
+    - therefore this lane is now breadth-explicit candidate material, but still blocked by thin density and mixed market quality
 
 ### Next
 
-- [ ] For each active factor family, write or refresh one candidate-spec JSON that explicitly fills:
-  - `pre_bayes_targets`
-  - `belief_targets`
-  - `path_ranking_targets`
-  - `execution_tree_targets`
-  - `structural_feedback_required`
-- [ ] For each active factor family, rebuild its candidate pack through `scripts/research/factor_candidate_pack.py`.
+- [ ] Continue the same registry flow for the remaining still-active Family A breadth items:
+  - add the next Family A breadth variants named on the source board
+  - compare Family A baseline vs displacement explicitly before authoring more same-shape forks
+  - prefer lanes with a credible path to stronger `NQ` multi-regime quality, not just positive short-window cross-market cells
 - [ ] Reject any candidate whose pack still lacks middle-layer mapping even if backtest metrics look good.
 - [ ] For regime-only candidates:
   - require classifier / transition / resonance evidence first
@@ -121,11 +249,13 @@ A candidate may only move to the post-factor runtime-closure board after all of 
    - `mixed`
 3. Write or update a candidate-spec JSON that includes explicit `filter_belief_execution_mapping`.
 4. Build the candidate pack with:
-   - `python3 scripts/research/factor_candidate_pack.py --manifest-json <strategy_library.json> --strategy-name <strategy> --candidate-spec-json <candidate_spec.json> --autoresearch-status-json <autoresearch_status.json> --output-dir /tmp/<candidate-pack>`
+  - `python3 scripts/research/factor_candidate_pack.py --manifest-json <strategy_library.json> --strategy-name <strategy> --candidate-spec-json <candidate_spec.json> --autoresearch-status-json <autoresearch_status.json> --output-dir /tmp/<candidate-pack>`
+  - or `python3 scripts/research/factor_candidate_pack.py --freqtrade-backtest-zip <backtest.zip> --strategy-name <strategy> --candidate-spec-json <candidate_spec.json> --output-dir /tmp/<candidate-pack>`
+  - or `python3 scripts/research/factor_candidate_resolver.py --repo-root . [--profile <opt-in-profile>] --build-packs --output-dir /tmp/<candidate-pack-root>`
 5. Inspect:
-   - `factor_expression.json`
-   - `factor_eval_grid_summary.json`
-   - `transfer_score.json`
+  - `factor_expression.json`
+  - `factor_eval_grid_summary.json`
+  - `transfer_score.json`
 6. Reject immediately if:
    - mapping is incomplete
    - density is anecdotal/invalid
