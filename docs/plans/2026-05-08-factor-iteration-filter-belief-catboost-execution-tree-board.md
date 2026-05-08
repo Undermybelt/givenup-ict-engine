@@ -211,8 +211,22 @@ A candidate may only move to the post-factor runtime-closure board after all of 
     - cross-market cells are mixed:
       - `SPY/USD`: `11` trades, `sharpe=0.377`, `profit_factor=2.68`
       - `IWM/USD`: `2` trades, `anecdotal`
-      - `GLD/USD`: `10` trades, `sharpe=-0.195`, `profit_factor=0.58`
+    - `GLD/USD`: `10` trades, `sharpe=-0.195`, `profit_factor=0.58`
     - therefore this lane is now breadth-explicit candidate material, but still blocked by thin density and mixed market quality
+- [x] Continued the Family A breadth lane with the first explicit 5m timeframe-coverage pack:
+  - added `family_a_fvg_retrace_5m_v1` to the generic registry as the 5m resonance-heavy Family A retrace lane
+  - injected the real local reusable evidence through the opt-in profile:
+    - base `NQ/USD` 8Y 5m zip: `backtest-result-2026-05-08_23-55-11.zip`
+  - verified `python3 scripts/research/factor_candidate_resolver.py --repo-root . --profile thrill3r_nq_auto_quant_v1 --build-packs --output-dir /private/tmp/ict-engine-factor-candidate-registry-profile-20260508-v5`
+    now builds `candidate_count=8`, `buildable_count=8`, `built_pack_count=8`
+  - verified `packs/family_a_fvg_retrace_5m_v1/` carries the required five-layer mapping and explicit timeframe context:
+    - `base_timeframe=5m`
+    - `context_timeframes=15m,1h,4h`
+  - current evidence is explicit and useful, but still a rejection candidate rather than a winner:
+    - aggregate `NQ/USD` base window: `trade_count=82`, `aggregate_label=preferred_density`
+    - quality remains negative: `sharpe=-0.0199`, `profit_factor=0.8399`, `total_profit_pct=-0.47`, `max_drawdown_pct=1.716`
+    - transfer layer remains `single_market_only`
+    - therefore the 5m lane successfully closes the timeframe-coverage evidence gap, but it does not close the Family A quality gate
 
 ### Next
 

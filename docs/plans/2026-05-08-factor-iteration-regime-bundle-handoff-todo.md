@@ -31,6 +31,7 @@
   - [x] Update the authoritative board with verified regime-lane status.
   - [x] Make corrupted `freqtrade` reusable inputs fail closed instead of crashing the build flow.
   - [x] Continue the Family A breadth lane with one more real explicit candidate pack.
+  - [x] Continue the Family A breadth lane with the first 5m timeframe-coverage pack.
   - [ ] Continue the Family A breadth lane with the next still-missing variant.
 - Active slice:
   - regime bundle slice complete; next live slice is Family A breadth continuation
@@ -44,8 +45,9 @@
   - board writeback complete
   - zip integrity now gates `artifact_ready` for `freqtrade_backtest_zip`
   - `family_a_fvg_retrace_1h_v1` is now a real profile-backed candidate pack, not a board-only idea
+  - `family_a_fvg_retrace_5m_v1` is now a real profile-backed candidate pack, not a board-only idea
 - Next step:
-  - generate fresh reusable evidence for the next Family A breadth variant (`5m`, `15m`, or `1dRegime` lane), then reuse the same resolver flow for another explicit candidate pack
+  - generate fresh reusable evidence for the next Family A breadth variant (`15m` or `1dRegime` lane), then reuse the same resolver flow for another explicit candidate pack
 
 ## EvidenceBundleDraft
 
@@ -99,6 +101,11 @@
         - `GLD/USD`: `10` trades, `sharpe=-0.195`, `profit_factor=0.58`
       - reusable zip: `backtest-result-2026-05-08_23-47-45.zip`
     - registry/profile were updated and resolver now emits `family_a_fvg_retrace_1h_v1`
+    - `TomacNQ_RegimeFVGRetrace5m` base `NQ/USD` 8Y run:
+      - command: `uv run --with ta-lib python .../run_tomac_one.py TomacNQ_RegimeFVGRetrace5m 5m /tmp/ict-engine-family-a-fvg-retrace-5m-nq-export.json NQ/USD 20180101-20251231`
+      - result: `82` trades, `aggregate_label=preferred_density`, `sharpe=-0.0199`, `profit_factor=0.8399`, `total_profit_pct=-0.47`
+      - reusable zip: `backtest-result-2026-05-08_23-55-11.zip`
+    - registry/profile were updated and resolver now emits `family_a_fvg_retrace_5m_v1`
 
 ## DriftCheckDraft
 
@@ -125,3 +132,4 @@
   construction.
 - If starting the next slice, begin from Family A breadth evidence generation rather than reopening the regime lane unless new shared benchmark artifacts appear.
 - `family_a_fvg_retrace_1h_v1` already exists now; do not regenerate the same pack unless the underlying reusable zips are replaced.
+- `family_a_fvg_retrace_5m_v1` already exists now; do not regenerate the same pack unless the underlying reusable zip is replaced.

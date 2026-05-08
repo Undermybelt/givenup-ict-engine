@@ -52,7 +52,7 @@ class FactorCandidateResolverTests(unittest.TestCase):
         bundle = resolver.build_candidate_registry(repo_root=REPO_ROOT)
 
         self.assertEqual(bundle["summary"]["selection_mode"], "generic_zero_config")
-        self.assertEqual(bundle["summary"]["candidate_count"], 7)
+        self.assertEqual(bundle["summary"]["candidate_count"], 8)
         self.assertEqual(bundle["summary"]["buildable_count"], 0)
         self.assertEqual(
             bundle["summary"]["naming_contract_version"],
@@ -121,6 +121,13 @@ class FactorCandidateResolverTests(unittest.TestCase):
         self.assertTrue(fvg_retrace["artifact_ready"])
         self.assertEqual(fvg_retrace["family"], "Family A")
         self.assertIn("GLD/USD", fvg_retrace["cross_market_metrics"])
+        fvg_retrace_5m = next(
+            item
+            for item in bundle["candidates"]
+            if item["candidate_id"] == "family_a_fvg_retrace_5m_v1"
+        )
+        self.assertTrue(fvg_retrace_5m["artifact_ready"])
+        self.assertEqual(fvg_retrace_5m["base_timeframe"], "5m")
         regime = next(
             item
             for item in bundle["candidates"]
@@ -235,6 +242,31 @@ class FactorCandidateResolverTests(unittest.TestCase):
                     ).read_text(encoding="utf-8")
                 )
                 self.assertEqual(fvg_transfer["status"], "cross_market_candidate")
+            if "family_a_fvg_retrace_5m_v1" in built:
+                fvg_5m_expression = json.loads(
+                    (
+                        output_dir
+                        / "packs"
+                        / "family_a_fvg_retrace_5m_v1"
+                        / "factor_expression.json"
+                    ).read_text(encoding="utf-8")
+                )
+                self.assertEqual(
+                    fvg_5m_expression["strategy_name"],
+                    "TomacNQ_RegimeFVGRetrace5m",
+                )
+                fvg_5m_summary = json.loads(
+                    (
+                        output_dir
+                        / "packs"
+                        / "family_a_fvg_retrace_5m_v1"
+                        / "factor_eval_grid_summary.json"
+                    ).read_text(encoding="utf-8")
+                )
+                self.assertEqual(
+                    fvg_5m_summary["trade_density_summary"]["aggregate_label"],
+                    "preferred_density",
+                )
             if "regime_primary_gate_pending_v1" in built:
                 classifier_summary = json.loads(
                     (
