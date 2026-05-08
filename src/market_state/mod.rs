@@ -146,6 +146,7 @@ impl MarketStateClassifier {
 
     /// 创建自定义配置的分类器（热插拔）
     pub fn with_config(config: MarketStateConfig) -> Self {
+        let enhanced_config = config.enhanced_aggregation.clone();
         Self {
             volatility: VolatilityClassifier::with_thresholds(config.volatility.clone()),
             liquidity: LiquidityClassifier::with_thresholds(config.liquidity.clone()),
@@ -153,7 +154,9 @@ impl MarketStateClassifier {
             behavior: InvestorBehaviorClassifier::with_thresholds(config.behavior.clone()),
             config,
             enhanced_aggregator: Some(
-                crate::market_state::enhanced_aggregation::EnhancedAggregator::new(),
+                crate::market_state::enhanced_aggregation::EnhancedAggregator::with_config(
+                    enhanced_config,
+                ),
             ),
         }
     }
@@ -161,8 +164,11 @@ impl MarketStateClassifier {
     /// 启用增强聚合器（提高置信度）
     pub fn with_enhanced_aggregation(mut self, enabled: bool) -> Self {
         if enabled {
-            self.enhanced_aggregator =
-                Some(crate::market_state::enhanced_aggregation::EnhancedAggregator::new());
+            self.enhanced_aggregator = Some(
+                crate::market_state::enhanced_aggregation::EnhancedAggregator::with_config(
+                    self.config.enhanced_aggregation.clone(),
+                ),
+            );
         } else {
             self.enhanced_aggregator = None;
         }

@@ -46,9 +46,13 @@ pub fn validate_market_state_shell(input: ValidateMarketStateInput) -> Result<()
 
     let config = if let Some(ref profile_name_or_path) = input.config_path {
         let path = std::path::Path::new(profile_name_or_path);
-        MarketStateConfig::load(path).with_context(|| {
+        let loaded = MarketStateConfig::load(path).with_context(|| {
             format!("failed to load market-state config from {}", path.display())
-        })?
+        })?;
+        loaded
+            .validate()
+            .with_context(|| format!("invalid market-state config at {}", path.display()))?;
+        loaded
     } else if let Some(ref profile_name) = input.profile {
         let profile = match profile_name.as_str() {
             "default" => MarketStateProfile::default_profile(),
@@ -61,9 +65,13 @@ pub fn validate_market_state_shell(input: ValidateMarketStateInput) -> Result<()
                 other
             ),
         };
-        MarketStateConfig::from_profile(&profile)
+        let config = MarketStateConfig::from_profile(&profile);
+        config.validate().context("invalid market-state profile config")?;
+        config
     } else {
-        MarketStateConfig::default()
+        let config = MarketStateConfig::default();
+        config.validate().context("invalid default market-state config")?;
+        config
     };
 
     let classifier =

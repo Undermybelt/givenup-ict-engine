@@ -27,6 +27,20 @@ pub struct EnhancedAggregationConfig {
     pub reversal_min_confidence: f64,
     /// 多维度一致性权重
     pub consistency_weight: f64,
+    /// 基础置信度，避免冷启动窗口置信度过低
+    pub base_confidence: f64,
+    /// 波动率维度权重
+    pub volatility_weight: f64,
+    /// 流动性维度权重
+    pub liquidity_weight: f64,
+    /// 市场结构维度权重
+    pub structure_weight: f64,
+    /// 投资者行为维度权重
+    pub behavior_weight: f64,
+    /// 高一致性额外加成
+    pub high_consistency_bonus: f64,
+    /// 中等一致性额外加成
+    pub medium_consistency_bonus: f64,
     /// 价格方向窗口（用于判断 Bull/Bear）
     pub price_direction_window: usize,
     /// 价格方向阈值（涨跌幅 %）
@@ -40,6 +54,13 @@ impl Default for EnhancedAggregationConfig {
             trend_min_confidence: 0.50,     // 趋势扩展要求中等置信
             reversal_min_confidence: 0.50,  // 反转酝酿要求中等置信
             consistency_weight: 0.30,       // 一致性贡献30%
+            base_confidence: 0.25,
+            volatility_weight: 0.15,
+            liquidity_weight: 0.10,
+            structure_weight: 0.50,
+            behavior_weight: 0.25,
+            high_consistency_bonus: 0.05,
+            medium_consistency_bonus: 0.03,
             price_direction_window: 20,     // 20 根 K 线判断方向
             price_direction_threshold: 2.0, // 2% 涨跌幅阈值
         }
@@ -68,6 +89,10 @@ impl EnhancedAggregator {
         Self { config }
     }
 
+    pub fn config(&self) -> &EnhancedAggregationConfig {
+        &self.config
+    }
+
     /// 聚合各维度状态到主大类/次小类
     pub fn aggregate(
         &self,
@@ -90,17 +115,19 @@ impl EnhancedAggregator {
         // 3. 基础加权置信度
         // 提高结构权重，降低波动率权重（因为结构对趋势识别更重要）
         // 添加基础置信度，避免过低的综合置信度
-        let base_confidence = 0.25; // 提高到 0.25
-        let weighted_conf =
-            vol_conf * 0.15 + liq_conf * 0.10 + struct_conf * 0.50 + behav_conf * 0.25;
-        let base_conf = base_confidence + weighted_conf * 0.75;
+        let weighted_conf = vol_conf * self.config.volatility_weight
+            + liq_conf * self.config.liquidity_weight
+            + struct_conf * self.config.structure_weight
+            + behav_conf * self.config.behavior_weight;
+        let base_conf =
+            self.config.base_confidence + weighted_conf * (1.0 - self.config.base_confidence);
 
         // 4. 应用一致性加成
         // 一致性高时额外加成
         let consistency_bonus = if consistency > 0.8 {
-            0.05 // 高一致性额外加成
+            self.config.high_consistency_bonus
         } else if consistency > 0.6 {
-            0.03
+            self.config.medium_consistency_bonus
         } else {
             0.0
         };
@@ -558,5 +585,45 @@ mod tests {
         );
 
         assert!(consistency > 0.5, "一致性应 > 0.5，实际 {}", consistency);
+    }
+
+    #[test]
+    fn custom_config_changes_confidence_without_changing_regime() {
+        let base = EnhancedAggregator::new();
+        let tuned = EnhancedAggregator::with_config(EnhancedAggregationConfig {
+            base_confidence: 0.40,
+            consistency_weight: 0.40,
+            high_consistency_bonus: 0.08,
+            medium_consistency_bonus: 0.04,
+            ..EnhancedAggregationConfig::default()
+        });
+        let candles = mock_candles_bullish();
+
+        let (base_primary, base_secondary, base_conf) = base.aggregate(
+            &VolatilityRegime::ElevatedVol,
+            0.7,
+            &LiquidityRegime::HighLiquidity,
+            0.8,
+            &MarketStructureRegime::Trending,
+            0.75,
+            &InvestorBehaviorRegime::Neutral,
+            0.5,
+            &candles,
+        );
+        let (tuned_primary, tuned_secondary, tuned_conf) = tuned.aggregate(
+            &VolatilityRegime::ElevatedVol,
+            0.7,
+            &LiquidityRegime::HighLiquidity,
+            0.8,
+            &MarketStructureRegime::Trending,
+            0.75,
+            &InvestorBehaviorRegime::Neutral,
+            0.5,
+            &candles,
+        );
+
+        assert_eq!(base_primary, tuned_primary);
+        assert_eq!(base_secondary, tuned_secondary);
+        assert!(tuned_conf > base_conf);
     }
 }

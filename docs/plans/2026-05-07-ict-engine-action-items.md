@@ -1260,6 +1260,51 @@ target/debug/ict-engine validate-market-state \
 - 现有预设不会自然解决高置信比例不足
 - 高置信提升需要真实数据校准或用户自定义 config，而不是继续切预设
 
+**NQ config probe（临时 JSON）**：
+| Scope | 平均置信度 | 高置信比例 | 可交易比例 | 备注 |
+| --- | ---: | ---: | ---: | --- |
+| m1 | 60.76% | 3.12% | 78.12% | 高置信未改善，tradeable 上升 |
+| m5 | 59.06% | 0.00% | 75.00% | 比默认更宽但仍偏低 |
+| mtf | 60.50% | 11.76% | 64.71% | 略有提升 |
+| htf | 64.33% | 20.00% | 80.00% | 真实提升最明显 |
+
+**Config probe 结论**：
+- `--config` 的确能驱动增强聚合器
+- 但单一 NQ 片段下并不能稳定把高置信拉到 30%+
+- 接下来应该做分市场/分周期的 calibrated config，而不是继续推全局默认
+
+**Aggressive config probe（临时 JSON）**：
+| Scope | 平均置信度 | 高置信比例 | 可交易比例 | 备注 |
+| --- | ---: | ---: | ---: | --- |
+| m1 | 60.67% | 0.00% | 78.12% | 高置信反而掉到 0 |
+
+**Aggressive probe 结论**：
+- 盲目抬高 base confidence / consistency weight 会伤害高置信分布
+- 这条线不该继续做全局默认调高
+- 下一步应是按市场/周期分离 calibrated config，而不是统一阈值再拉高
+
+**Opt-in NQ confidence profile（2026-05-08）**：
+- 文件：`docs/examples/market-state-nq-confidence-profile.json`
+- 用法：
+  ```bash
+  target/debug/ict-engine validate-market-state \
+    --data <candles.json> \
+    --window-size 200 \
+    --step-size 200 \
+    --config docs/examples/market-state-nq-confidence-profile.json
+  ```
+- 作用范围：NQ 本地样本上的置信度提升试验，不作为全局默认
+
+| 数据 | 默认高置信 | Opt-in 高置信 | 默认平均置信 | Opt-in 平均置信 | 默认可交易 | Opt-in 可交易 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| NQ 1m | 3.12% | 21.88% | 59.62% | 68.20% | 71.88% | 84.38% |
+| NQ htf | 20.00% | 40.00% | 62.24% | 70.38% | 80.00% | 90.00% |
+
+**Opt-in profile 结论**：
+- NQ 1m 高置信显著提升，但仍未达到 30% 目标
+- NQ htf 已超过 30% 高置信目标
+- 因为证据只覆盖 NQ 局部样本，所以保留为 consumer 可选 config，不改全局默认
+
 **当前结论**：
 - 零配置 CLI 验证路径可用，消费者可以直接用 cleaned JSON/CSV candles 跑主大类/次小类置信度报告。
 - demo 数据验证达到 EXCELLENT，但样本只有 52 根 K 线、7 个滑窗，只能证明命令链路与报告格式，不等同于真实市场准确率。

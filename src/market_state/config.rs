@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 use std::path::Path;
 
 use super::behavior::BehaviorThresholds;
+use super::enhanced_aggregation::EnhancedAggregationConfig;
 use super::liquidity::LiquidityThresholds;
 use super::structure::StructureThresholds;
 use super::volatility::VolatilityThresholds;
@@ -24,6 +25,9 @@ pub struct MarketStateConfig {
     pub behavior: BehaviorThresholds,
     /// 聚合权重
     pub aggregate_weights: AggregateWeights,
+    /// 增强聚合器配置
+    #[serde(default)]
+    pub enhanced_aggregation: EnhancedAggregationConfig,
     /// 是否启用各分类器
     pub enabled: EnabledClassifiers,
     /// 用户自定义标签（可选）
@@ -38,6 +42,7 @@ impl Default for MarketStateConfig {
             structure: StructureThresholds::default(),
             behavior: BehaviorThresholds::default(),
             aggregate_weights: AggregateWeights::default(),
+            enhanced_aggregation: EnhancedAggregationConfig::default(),
             enabled: EnabledClassifiers::default(),
             user_label: None,
         }
@@ -118,6 +123,13 @@ impl MarketStateProfile {
                     structure: 0.40,
                     behavior: 0.25,
                 },
+                enhanced_aggregation: EnhancedAggregationConfig {
+                    volatility_weight: 0.20,
+                    liquidity_weight: 0.15,
+                    structure_weight: 0.40,
+                    behavior_weight: 0.25,
+                    ..EnhancedAggregationConfig::default()
+                },
                 ..MarketStateConfig::default()
             },
         }
@@ -135,6 +147,13 @@ impl MarketStateProfile {
                     structure: 0.15,
                     behavior: 0.15,
                 },
+                enhanced_aggregation: EnhancedAggregationConfig {
+                    volatility_weight: 0.40,
+                    liquidity_weight: 0.30,
+                    structure_weight: 0.15,
+                    behavior_weight: 0.15,
+                    ..EnhancedAggregationConfig::default()
+                },
                 ..MarketStateConfig::default()
             },
         }
@@ -151,6 +170,13 @@ impl MarketStateProfile {
                     liquidity: 0.15,
                     structure: 0.30,
                     behavior: 0.30,
+                },
+                enhanced_aggregation: EnhancedAggregationConfig {
+                    volatility_weight: 0.25,
+                    liquidity_weight: 0.15,
+                    structure_weight: 0.30,
+                    behavior_weight: 0.30,
+                    ..EnhancedAggregationConfig::default()
                 },
                 behavior: BehaviorThresholds {
                     rsi_extreme_threshold: 70.0, // 更宽松的极端阈值
@@ -181,6 +207,13 @@ impl MarketStateProfile {
                     liquidity: 0.30,
                     structure: 0.20,
                     behavior: 0.15,
+                },
+                enhanced_aggregation: EnhancedAggregationConfig {
+                    volatility_weight: 0.35,
+                    liquidity_weight: 0.30,
+                    structure_weight: 0.20,
+                    behavior_weight: 0.15,
+                    ..EnhancedAggregationConfig::default()
                 },
                 ..MarketStateConfig::default()
             },
@@ -226,6 +259,18 @@ impl MarketStateConfig {
             anyhow::bail!("波动率低阈值必须小于正常阈值");
         }
 
+        let enhanced_weight_sum = self.enhanced_aggregation.volatility_weight
+            + self.enhanced_aggregation.liquidity_weight
+            + self.enhanced_aggregation.structure_weight
+            + self.enhanced_aggregation.behavior_weight;
+
+        if (enhanced_weight_sum - 1.0).abs() > 0.01 {
+            anyhow::bail!(
+                "增强聚合权重和必须为 1.0，当前为 {}",
+                enhanced_weight_sum
+            );
+        }
+
         Ok(())
     }
 }
@@ -246,6 +291,8 @@ pub fn available_profiles() -> Vec<MarketStateProfile> {
 pub struct UserWeightsTemplate {
     /// 聚合权重
     pub aggregate_weights: AggregateWeights,
+    /// 增强聚合权重（可选）
+    pub enhanced_aggregation: Option<EnhancedAggregationConfig>,
     /// 是否覆盖波动率阈值
     pub override_volatility: Option<VolatilityThresholds>,
     /// 是否覆盖流动性阈值
@@ -261,6 +308,7 @@ impl UserWeightsTemplate {
     pub fn template() -> Self {
         Self {
             aggregate_weights: AggregateWeights::default(),
+            enhanced_aggregation: None,
             override_volatility: None,
             override_liquidity: None,
             override_structure: None,
@@ -271,6 +319,9 @@ impl UserWeightsTemplate {
     /// 应用到现有配置
     pub fn apply_to(&self, config: &mut MarketStateConfig) {
         config.aggregate_weights = self.aggregate_weights.clone();
+        if let Some(ref enhanced) = self.enhanced_aggregation {
+            config.enhanced_aggregation = enhanced.clone();
+        }
         if let Some(ref vol) = self.override_volatility {
             config.volatility = vol.clone();
         }
@@ -328,5 +379,18 @@ mod tests {
         };
         template.apply_to(&mut config);
         assert!((config.aggregate_weights.volatility - 0.5).abs() < 0.001);
+    }
+
+    #[test]
+    fn profiles_tune_enhanced_aggregation_weights() {
+        let profile = MarketStateProfile::risk_control_profile();
+
+        assert!((profile.config.aggregate_weights.volatility - 0.35).abs() < 0.001);
+        assert!(
+            (profile.config.enhanced_aggregation.volatility_weight - 0.35).abs() < 0.001
+        );
+        assert!(
+            (profile.config.enhanced_aggregation.structure_weight - 0.20).abs() < 0.001
+        );
     }
 }
