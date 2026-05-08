@@ -39,7 +39,7 @@ impl Default for EnhancedAggregationConfig {
             extreme_min_confidence: 0.65,   // 极端状态要求高置信
             trend_min_confidence: 0.50,     // 趋势扩展要求中等置信
             reversal_min_confidence: 0.50,  // 反转酝酿要求中等置信
-            consistency_weight: 0.30,       // 一致性贡献提高到30%
+            consistency_weight: 0.30,       // 一致性贡献30%
             price_direction_window: 20,     // 20 根 K 线判断方向
             price_direction_threshold: 2.0, // 2% 涨跌幅阈值
         }
