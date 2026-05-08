@@ -48,6 +48,8 @@ pub struct RealTradeRecord {
     pub factors_used: Vec<RealTradeFactorUsage>,
     #[serde(default)]
     pub model_probabilities_before_trade: Option<RealTradeProbabilitySnapshot>,
+    #[serde(default)]
+    pub structural_feedback: Option<RealTradeStructuralFeedbackRefs>,
 }
 
 /// Per-factor diagnostic captured at trade entry. Mirrors the
@@ -74,6 +76,22 @@ pub struct RealTradeProbabilitySnapshot {
     pub win_prob_long: f64,
     pub win_prob_short: f64,
     pub uncertainty: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct RealTradeStructuralFeedbackRefs {
+    pub protocol_version: String,
+    pub recommendation_id: String,
+    pub recommended_at: String,
+    pub node_id: String,
+    pub branch_id: String,
+    pub scenario_id: String,
+    pub path_id: String,
+    pub followed_path: bool,
+    #[serde(default)]
+    pub exit_reason: Option<String>,
+    #[serde(default)]
+    pub notes: Option<String>,
 }
 
 impl RealTradeRecord {
@@ -110,6 +128,9 @@ impl RealTradeRecord {
         }
         if let Some(snap) = &self.model_probabilities_before_trade {
             snap.validate()?;
+        }
+        if let Some(structural_feedback) = &self.structural_feedback {
+            structural_feedback.validate()?;
         }
         Ok(())
     }
@@ -161,7 +182,9 @@ impl RealTradeRecord {
             realized_outcome,
             pnl: self.pnl,
             regime_at_entry,
-            structural_feedback: None,
+            structural_feedback: self
+                .structural_feedback
+                .map(|refs| refs.into_structural_feedback_refs()),
             reflection_mismatch_tags: Vec::new(),
         }
     }
@@ -254,6 +277,40 @@ impl RealTradeProbabilitySnapshot {
     }
 }
 
+impl RealTradeStructuralFeedbackRefs {
+    fn validate(&self) -> Result<()> {
+        for (label, value) in [
+            ("protocol_version", self.protocol_version.as_str()),
+            ("recommendation_id", self.recommendation_id.as_str()),
+            ("recommended_at", self.recommended_at.as_str()),
+            ("node_id", self.node_id.as_str()),
+            ("branch_id", self.branch_id.as_str()),
+            ("scenario_id", self.scenario_id.as_str()),
+            ("path_id", self.path_id.as_str()),
+        ] {
+            if value.trim().is_empty() {
+                bail!("structural_feedback.{label} must not be empty");
+            }
+        }
+        Ok(())
+    }
+
+    fn into_structural_feedback_refs(self) -> crate::state::StructuralFeedbackRefs {
+        crate::state::StructuralFeedbackRefs {
+            protocol_version: self.protocol_version,
+            recommendation_id: self.recommendation_id,
+            recommended_at: self.recommended_at,
+            node_id: self.node_id,
+            branch_id: self.branch_id,
+            scenario_id: self.scenario_id,
+            path_id: self.path_id,
+            followed_path: self.followed_path,
+            exit_reason: self.exit_reason,
+            notes: self.notes,
+        }
+    }
+}
+
 fn ms_to_utc(ms: i64) -> chrono::DateTime<Utc> {
     Utc.timestamp_millis_opt(ms)
         .single()
@@ -297,6 +354,7 @@ mod tests {
                 win_prob_short: 0.42,
                 uncertainty: 0.18,
             }),
+            structural_feedback: None,
         }
     }
 
@@ -376,5 +434,27 @@ mod tests {
             fr.model_probabilities_before_trade.selected_probability,
             0.0
         );
+    }
+
+    #[test]
+    fn into_feedback_record_preserves_structural_feedback_refs_when_present() {
+        let mut r = good_record();
+        r.structural_feedback = Some(RealTradeStructuralFeedbackRefs {
+            protocol_version: "structural-feedback-v1".into(),
+            recommendation_id: "structural-feedback:NQ:node:path".into(),
+            recommended_at: "2026-05-07T09:56:50Z".into(),
+            node_id: "node-1".into(),
+            branch_id: "branch-1".into(),
+            scenario_id: "scenario-1".into(),
+            path_id: "path-1".into(),
+            followed_path: true,
+            exit_reason: Some("target_hit".into()),
+            notes: Some("matched from helper".into()),
+        });
+        let fr = r.into_feedback_record("test");
+        let refs = fr.structural_feedback.expect("structural refs");
+        assert_eq!(refs.path_id, "path-1");
+        assert!(refs.followed_path);
+        assert_eq!(refs.exit_reason.as_deref(), Some("target_hit"));
     }
 }

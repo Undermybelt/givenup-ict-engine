@@ -425,6 +425,14 @@ python3 scripts/auto_quant_external/path_ranker_integration.py \
   - 真实 VRP V2 replay 前：`runtime_source=candidate_set`
   - 真实 VRP V2 replay 后：`runtime_source=registered_model_artifact`
   - 避免旧模型目录落成 `enabled_registered_model_invalid`
+- [x] 新发现的真实 blocker 已缩窄：
+  - `raw_scored_mature=0/30` 当前不是 ranker 热插拔链路的问题
+  - 是因为现有 VRP V2 real trades 815 条虽然已 ingest，但 `structural_feedback = 0`
+  - 同时 `pending_update_history.json` 的 `template_feedback.structural_feedback` 也是 `null`
+  - 这意味着当前这条 state 根本没有 path/scenario lineage，可供 structural path-ranking 合法晋升 mature rows
+- [x] 为后续真正闭环预留了 additive 能力：
+  - `auto_quant_real_trades` wire 可选承载 `structural_feedback` refs
+  - `scripts/auto_quant_external/structural_feedback_trade_enricher.py` 可把带结构模板的 trade 源转成 ingest-ready JSONL
 - [ ] 这仍然只证明外部训练/应用边界可热插拔，不代表 `CatBoost -> execution_tree` 运行时影响已经闭环
 
 ### 4. CatBoost → 执行树节点

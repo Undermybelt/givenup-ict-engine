@@ -173,6 +173,25 @@
       - command: `python3 scripts/auto_quant_external/path_ranker_integration.py --state-dir <replay state> --symbol NQ --reuse-model-dir <replay state>/NQ/policy_training/path_ranker_model --register-runtime-artifact --reuse-mode candidate_set_only`
       - after: `runtime_selection=enabled_registered_model_ready`, `runtime_source=registered_model_artifact`, `runtime_matches=3`
   - boundary kept explicit: this proves the opt-in persisted-model reuse path now works on both fresh and legacy model dirs; it still does **not** prove execution-tree recommendation change or mature-row sufficiency
+- [x] **2026-05-08 Slice 7: narrowed the non-demo validation blocker from “ranker not ready” to “missing structural lineage source”.**
+  - additive capability landed:
+    - `auto_quant_real_trades` wire now accepts optional `structural_feedback` refs and preserves them into `FeedbackRecord.structural_feedback`
+    - `scripts/auto_quant_external/structural_feedback_trade_enricher.py` can turn a structural-feedback-carrying template stream plus realized trades into an ingest-ready JSONL
+  - real-state audit result on the live VRP V2 closure state:
+    - `learning_state.feedback_history` contains 815 records from `auto_quant_real_trades`
+    - `with structural_feedback = 0`
+    - `pending_update_history.json` currently contains template feedback, but `template_feedback.structural_feedback` is still `null`
+    - therefore the helper cannot enrich those 815 trades into path-level lineage, and the state cannot legitimately produce structural path mature rows from that source
+  - practical conclusion:
+    - the immediate blocker is **not** “external ranker wiring still missing”
+    - the blocker is that the current VRP V2 lane never emitted structural-feedback-traced recommendations in the first place, so there is no honest path/scenario lineage to attach to the historical trades
+  - verification evidence:
+    - Python: `python3 -m unittest scripts.auto_quant_external.tests.test_next_slice_helpers`
+    - real-state inspection:
+      - `learning_state.feedback_history` -> `with structural_feedback = 0`
+      - `pending_update_history.json` -> `template_feedback.structural_feedback = null`
+      - helper run against `/tmp/vrp_v2_realized_trades.jsonl` fails fast with `pending template missing template_feedback.structural_feedback`
+  - boundary kept explicit: this slice adds the contract/tooling needed for future structural-traced real-trade ingestion, but it does **not** fabricate mature rows or claim non-demo ranker validation from a lineage-free VRP V2 state
 
 ### Next
 
@@ -189,10 +208,14 @@
 - [x] Verify an external model directory can be promoted into a repo-native runtime-consumable registered model artifact without requiring CatBoost to be installed locally
 - [x] Verify the integration script can optionally perform repo-side register + enable runtime reuse while leaving the zero-config default path untouched
 - [x] Verify the legacy `--reuse-model-dir` path no longer degrades into `enabled_registered_model_invalid` on the real VRP V2 replay state
+- [x] Identify whether `raw_scored_mature=0/30` is caused by ranker/export wiring or by missing structural lineage in the real-trade source itself
 
 ### Next Slice
 
-- [ ] Produce one real reusable external ranker artifact from a non-demo target export once mature rows exist
+- [ ] Produce one structural-traced real-trade source (or structural feedback submission stream) so non-demo feedback rows carry `path_id` / `scenario_id` / `candidate_set_id` lineage
+- [ ] Re-ingest that structural-traced source into a fresh `/tmp/...` state and verify `feedback_rows_with_structural_feedback > 0`
+- [ ] Re-export structural path-ranking targets from that state and verify mature rows now come from real structural lineage rather than synthetic/temp smoke data
+- [ ] Produce one real reusable external ranker artifact from that non-demo structural-traced target export
 - [ ] Register that artifact through `register-structural-path-ranking-trainer-artifact` with non-demo row counts
 - [ ] Apply real external scores back into the same `/tmp/...` runtime state when mature rows exist or when a scored artifact is produced
 - [ ] Capture whether `workflow-status` / `analyze` / `execution_tree_trace.json` actually change after real external scores land
