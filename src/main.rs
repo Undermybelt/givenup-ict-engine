@@ -12524,18 +12524,21 @@ mod tests {
     #[test]
     fn test_factor_backtest_output_payload_includes_human_compare_summary() {
         let payload = ict_engine::application::reporting::build_factor_backtest_output_payload(
-            &FactorBacktestRunResult::default(),
-            &serde_json::json!({"compact": true}),
-            Some(sample_compare_report("scaled_down")),
-            serde_json::json!({"credibility": true}),
-            None,
-            "ict-engine update --symbol NQ --outcome <win|loss|breakeven> --state-dir state",
-            Some(
-                "Ranker runtime: runtime enabled=true ready=true source=registered_artifact status=enabled_registered_artifact_ready mode=candidate_set_only matches=2",
-            ),
-            Some(
-                "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 ready=true",
-            ),
+            ict_engine::application::reporting::FactorBacktestOutputPayloadInput {
+                report: &FactorBacktestRunResult::default(),
+                compact_backtest_report: &serde_json::json!({"compact": true}),
+                compare: Some(sample_compare_report("scaled_down")),
+                credibility_summary: serde_json::json!({"credibility": true}),
+                ensemble_surface: None,
+                suggested_update_command:
+                    "ict-engine update --symbol NQ --outcome <win|loss|breakeven> --state-dir state",
+                structural_path_ranking_runtime_summary: Some(
+                    "Ranker runtime: runtime enabled=true ready=true source=registered_artifact status=enabled_registered_artifact_ready mode=candidate_set_only matches=2",
+                ),
+                structural_path_ranking_validation_summary: Some(
+                    "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 ready=true",
+                ),
+            },
         );
 
         assert_eq!(
@@ -12568,14 +12571,16 @@ mod tests {
         let expected =
             "ict-engine update --symbol NQ --outcome <win|loss|breakeven> --state-dir state";
         let payload = ict_engine::application::reporting::build_factor_backtest_output_payload(
-            &FactorBacktestRunResult::default(),
-            &serde_json::json!({"compact": true}),
-            None,
-            serde_json::json!({"credibility": true}),
-            None,
-            expected,
-            None,
-            None,
+            ict_engine::application::reporting::FactorBacktestOutputPayloadInput {
+                report: &FactorBacktestRunResult::default(),
+                compact_backtest_report: &serde_json::json!({"compact": true}),
+                compare: None,
+                credibility_summary: serde_json::json!({"credibility": true}),
+                ensemble_surface: None,
+                suggested_update_command: expected,
+                structural_path_ranking_runtime_summary: None,
+                structural_path_ranking_validation_summary: None,
+            },
         );
 
         assert_eq!(

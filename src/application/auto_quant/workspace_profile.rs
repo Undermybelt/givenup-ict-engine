@@ -363,8 +363,7 @@ fn sanitize_auto_quant_meta_value(raw: &str) -> String {
 
 fn inject_auto_quant_meta_into_docstring(source: &str, meta_block: &str) -> String {
     for delimiter in ["\"\"\"", "'''"] {
-        if source.starts_with(delimiter) {
-            let rest = &source[delimiter.len()..];
+        if let Some(rest) = source.strip_prefix(delimiter) {
             if let Some(end) = rest.find(delimiter) {
                 let doc = &rest[..end];
                 let suffix = &rest[end..];

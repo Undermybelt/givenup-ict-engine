@@ -231,16 +231,30 @@ pub fn render_backtest_human_output(
     lines.join("\n")
 }
 
-pub fn build_factor_backtest_output_payload(
-    report: &FactorBacktestRunResult,
-    compact_backtest_report: &impl Serialize,
-    compare: Option<BacktestCompareReport>,
-    credibility_summary: Value,
-    ensemble_surface: Option<Value>,
-    suggested_update_command: &str,
-    structural_path_ranking_runtime_summary: Option<&str>,
-    structural_path_ranking_validation_summary: Option<&str>,
+pub struct FactorBacktestOutputPayloadInput<'a, T: Serialize + ?Sized> {
+    pub report: &'a FactorBacktestRunResult,
+    pub compact_backtest_report: &'a T,
+    pub compare: Option<BacktestCompareReport>,
+    pub credibility_summary: Value,
+    pub ensemble_surface: Option<Value>,
+    pub suggested_update_command: &'a str,
+    pub structural_path_ranking_runtime_summary: Option<&'a str>,
+    pub structural_path_ranking_validation_summary: Option<&'a str>,
+}
+
+pub fn build_factor_backtest_output_payload<T: Serialize + ?Sized>(
+    input: FactorBacktestOutputPayloadInput<'_, T>,
 ) -> Value {
+    let FactorBacktestOutputPayloadInput {
+        report,
+        compact_backtest_report,
+        compare,
+        credibility_summary,
+        ensemble_surface,
+        suggested_update_command,
+        structural_path_ranking_runtime_summary,
+        structural_path_ranking_validation_summary,
+    } = input;
     let compact_compare_report = build_compact_compare_report(compare.as_ref());
     let human_backtest_compare_summary = human_backtest_compare_summary(compare.as_ref());
     let human_output = render_factor_backtest_human_output(report, compare.as_ref());

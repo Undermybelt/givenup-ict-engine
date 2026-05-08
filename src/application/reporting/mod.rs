@@ -22,6 +22,7 @@ pub use backtest_output::{
     build_backtest_output_payload, build_compact_compare_report,
     build_control_matrix_research_output_payload, build_factor_backtest_output_payload,
     build_factor_research_output_payload, emit_structured_output_payload,
+    FactorBacktestOutputPayloadInput,
     human_backtest_compare_summary, human_compare_summary, human_research_compare_summary,
     render_backtest_human_output, render_control_matrix_research_human_output,
     render_factor_backtest_human_output, render_factor_research_human_output,

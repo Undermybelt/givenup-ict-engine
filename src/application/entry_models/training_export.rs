@@ -2928,8 +2928,10 @@ mod tests {
             serde_json::to_string_pretty(&summary).unwrap(),
         )
         .unwrap();
-        let mut pending_artifact = crate::state::PendingUpdateArtifact::default();
-        pending_artifact.symbol = "NQ".to_string();
+        let mut pending_artifact = crate::state::PendingUpdateArtifact {
+            symbol: "NQ".to_string(),
+            ..crate::state::PendingUpdateArtifact::default()
+        };
         pending_artifact.template_feedback.structural_feedback =
             Some(crate::state::StructuralFeedbackRefs {
                 protocol_version: "structural-feedback-v1".to_string(),

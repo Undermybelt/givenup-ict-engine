@@ -650,7 +650,8 @@ pub fn build_phase_snapshot_surfaces(snapshot: &WorkflowSnapshot) -> WorkflowPha
 
 pub fn factor_autoresearch_status_value_for_empty_state(symbol: &str, state_dir: &str) -> Value {
     let recommended_next_step = format!(
-        "ict-engine factor-autoresearch --symbol {} --state-dir {}",
+        "ask-user: Provide a historical data file path before starting factor-autoresearch for {} | blocked until user_selected_historical_data | then ict-engine factor-autoresearch --symbol {} --data <historical-data.json> --state-dir {}",
+        shell_quote(symbol),
         shell_quote(symbol),
         shell_quote(state_dir)
     );
@@ -676,6 +677,20 @@ fn workflow_status_empty_state(snapshot: &WorkflowSnapshot) -> bool {
         && snapshot.latest_analyze.is_none()
         && snapshot.latest_backtest.is_none()
         && snapshot.latest_train.is_none()
+}
+
+fn profile_matches_symbol(
+    profile: &crate::application::provider_catalog::ProviderProfileReferenceSurface,
+    symbol: &str,
+) -> bool {
+    let Ok(document) =
+        crate::application::provider_catalog::load_provider_profile(&profile.selector)
+    else {
+        return false;
+    };
+    document.data_contracts.iter().any(|contract| {
+        contract.symbols.is_empty() || contract.symbols.iter().any(|item| item == symbol)
+    })
 }
 
 fn workflow_status_focus_phase(snapshot: &WorkflowSnapshot) -> String {
@@ -1499,7 +1514,8 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     {
         provider_status_agent
             .available_opt_in_profiles
-            .first()
+            .iter()
+            .find(|profile| profile_matches_symbol(profile, &snapshot.symbol))
             .map(|profile| {
                 format!(
                     "Optional personal lane: {}. Reuse with ict-engine workflow-status --symbol {} --state-dir <local-path> --profile {} --human if you want your saved data/runtime mix.",
@@ -2529,16 +2545,28 @@ fn normalize_workflow_status_value_for_stability(value: &mut Value) {
     }
 }
 
-pub fn emit_workflow_status_output(
-    snapshot: &WorkflowSnapshot,
-    persisted_scorecards: &[EnsembleExecutorScorecard],
-    provider_status_agent: &ProviderCatalogAgentSurface,
-    feedback_history: &[crate::state::FeedbackRecord],
-    structural_prior_state: &StructuralPriorLearningState,
-    state_dir: Option<&str>,
-    output_format: &str,
-    stable: bool,
-) -> Result<()> {
+pub struct WorkflowStatusOutputInput<'a> {
+    pub snapshot: &'a WorkflowSnapshot,
+    pub persisted_scorecards: &'a [EnsembleExecutorScorecard],
+    pub provider_status_agent: &'a ProviderCatalogAgentSurface,
+    pub feedback_history: &'a [crate::state::FeedbackRecord],
+    pub structural_prior_state: &'a StructuralPriorLearningState,
+    pub state_dir: Option<&'a str>,
+    pub output_format: &'a str,
+    pub stable: bool,
+}
+
+pub fn emit_workflow_status_output(input: WorkflowStatusOutputInput<'_>) -> Result<()> {
+    let WorkflowStatusOutputInput {
+        snapshot,
+        persisted_scorecards,
+        provider_status_agent,
+        feedback_history,
+        structural_prior_state,
+        state_dir,
+        output_format,
+        stable,
+    } = input;
     match output_format.trim().to_ascii_lowercase().as_str() {
         "json" => {
             let mut value = serde_json::to_value(snapshot)?;
@@ -2658,16 +2686,16 @@ fn emit_workflow_status_phase_human_output(
 ) -> Result<bool> {
     match phase_key {
         "human" | "human-next" | "human-next-action" => {
-            emit_workflow_status_output(
+            emit_workflow_status_output(WorkflowStatusOutputInput {
                 snapshot,
                 persisted_scorecards,
                 provider_status_agent,
                 feedback_history,
                 structural_prior_state,
                 state_dir,
-                "human",
-                false,
-            )?;
+                output_format: "human",
+                stable: false,
+            })?;
             Ok(true)
         }
         "agent-bootstrap" | "bootstrap" => {
@@ -2841,16 +2869,16 @@ pub fn dispatch_workflow_status(
         }
         println!("{}", serde_json::to_string_pretty(&value)?);
     } else {
-        emit_workflow_status_output(
+        emit_workflow_status_output(WorkflowStatusOutputInput {
             snapshot,
             persisted_scorecards,
             provider_status_agent,
             feedback_history,
             structural_prior_state,
-            Some(bootstrap.state_dir),
-            input.output_format,
-            input.stable,
-        )?;
+            state_dir: Some(bootstrap.state_dir),
+            output_format: input.output_format,
+            stable: input.stable,
+        })?;
     }
     Ok(())
 }
@@ -7941,7 +7969,7 @@ mod tests {
                 max_streak_length: 2,
                 last_streak_length: 1,
                 persistence_prior: 0.6,
-                duration_distribution_entropy: 0.6931471806,
+                duration_distribution_entropy: std::f64::consts::LN_2,
                 empirical_duration_survival: 1.0,
                 empirical_duration_completion_hazard: 0.5405405405,
                 bocpd_duration_surprise: 0.0,
@@ -8778,7 +8806,7 @@ mod tests {
                 max_streak_length: 2,
                 last_streak_length: 1,
                 persistence_prior: 0.6,
-                duration_distribution_entropy: 0.6931471806,
+                duration_distribution_entropy: std::f64::consts::LN_2,
                 empirical_duration_survival: 1.0,
                 empirical_duration_completion_hazard: 0.5405405405,
                 bocpd_duration_surprise: 0.0,
@@ -8896,7 +8924,7 @@ mod tests {
         assert_eq!(value["duration_remaining_dwell_steps"], 0.7);
         assert_eq!(value["duration_break_hazard"], 0.37);
         assert_eq!(value["duration_sticky_self_transition_strength"], 0.63);
-        assert_eq!(value["duration_distribution_entropy"], 0.6931471806);
+        assert_eq!(value["duration_distribution_entropy"], std::f64::consts::LN_2);
         assert_eq!(value["empirical_duration_survival"], 1.0);
         assert_eq!(value["empirical_duration_completion_hazard"], 0.5405405405);
         assert_eq!(value["bocpd_evidence_weight"], 0.62);
@@ -11350,6 +11378,24 @@ mod tests {
         assert!(value["recommended_next_step"]
             .as_str()
             .unwrap()
-            .contains("ict-engine factor-autoresearch"));
+            .contains("ask-user: Provide a historical data file path"));
+        assert!(value["recommended_next_step"]
+            .as_str()
+            .unwrap()
+            .contains("then ict-engine factor-autoresearch --symbol DEMO --data <historical-data.json> --state-dir state"));
+    }
+
+    #[test]
+    fn human_workflow_status_hides_unrelated_personal_lane_for_non_matching_symbol() {
+        let value = build_human_workflow_status_view_with_provider_agent(
+            &WorkflowSnapshot {
+                symbol: "NEWSYM".to_string(),
+                ..WorkflowSnapshot::default()
+            },
+            &[],
+            &sample_provider_agent_surface(),
+            &[],
+        );
+        assert!(value["opt_in_profile_line"].is_null());
     }
 }

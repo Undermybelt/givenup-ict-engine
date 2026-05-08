@@ -2,7 +2,7 @@ use crate::application::belief::infer_market_from_symbol;
 
 pub fn market_category_for_symbol(symbol: &str) -> Option<&'static str> {
     let inferred = infer_market_from_symbol(symbol);
-    let compact = inferred.replace('/', "").replace('=', "");
+    let compact = inferred.replace(['/', '='], "");
     match compact.as_str() {
         "ES" | "NQ" | "RTY" | "YM" | "SPY" | "QQQ" | "IWM" | "DIA" => {
             Some("futures_index")

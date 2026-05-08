@@ -2380,23 +2380,42 @@ pub(crate) fn structural_delayed_reward_update_resolution_horizon(
     }
 }
 
+struct StructuralDelayedRewardCounters<'a> {
+    wins: &'a mut usize,
+    losses: &'a mut usize,
+    breakevens: &'a mut usize,
+    invalidated: &'a mut usize,
+    abandoned: &'a mut usize,
+    delayed_reward_elapsed_feedback_count: &'a mut usize,
+    delayed_reward_elapsed_hours_at_risk: &'a mut f64,
+    delayed_reward_resolution_horizon_1h_count: &'a mut usize,
+    delayed_reward_resolution_within_1h_count: &'a mut usize,
+    delayed_reward_resolution_horizon_4h_count: &'a mut usize,
+    delayed_reward_resolution_within_4h_count: &'a mut usize,
+    delayed_reward_resolution_horizon_24h_count: &'a mut usize,
+    delayed_reward_resolution_within_24h_count: &'a mut usize,
+}
+
 fn apply_structural_delayed_reward_feedback(
-    wins: &mut usize,
-    losses: &mut usize,
-    breakevens: &mut usize,
-    invalidated: &mut usize,
-    abandoned: &mut usize,
-    delayed_reward_elapsed_feedback_count: &mut usize,
-    delayed_reward_elapsed_hours_at_risk: &mut f64,
-    delayed_reward_resolution_horizon_1h_count: &mut usize,
-    delayed_reward_resolution_within_1h_count: &mut usize,
-    delayed_reward_resolution_horizon_4h_count: &mut usize,
-    delayed_reward_resolution_within_4h_count: &mut usize,
-    delayed_reward_resolution_horizon_24h_count: &mut usize,
-    delayed_reward_resolution_within_24h_count: &mut usize,
+    counters: StructuralDelayedRewardCounters<'_>,
     record: &FeedbackRecord,
     followed_path: bool,
 ) {
+    let StructuralDelayedRewardCounters {
+        wins,
+        losses,
+        breakevens,
+        invalidated,
+        abandoned,
+        delayed_reward_elapsed_feedback_count,
+        delayed_reward_elapsed_hours_at_risk,
+        delayed_reward_resolution_horizon_1h_count,
+        delayed_reward_resolution_within_1h_count,
+        delayed_reward_resolution_horizon_4h_count,
+        delayed_reward_resolution_within_4h_count,
+        delayed_reward_resolution_horizon_24h_count,
+        delayed_reward_resolution_within_24h_count,
+    } = counters;
     let counter_outcome = crate::state::structural_feedback_counter_outcome(record);
     match counter_outcome {
         Some("win") => {
@@ -2450,19 +2469,21 @@ pub(crate) fn accumulate_structural_prior_stats_delayed_reward_observation(
     followed_path: bool,
 ) {
     apply_structural_delayed_reward_feedback(
-        &mut stats.wins,
-        &mut stats.losses,
-        &mut stats.breakevens,
-        &mut stats.invalidated,
-        &mut stats.abandoned,
-        &mut stats.delayed_reward_elapsed_feedback_count,
-        &mut stats.delayed_reward_elapsed_hours_at_risk,
-        &mut stats.delayed_reward_resolution_horizon_1h_count,
-        &mut stats.delayed_reward_resolution_within_1h_count,
-        &mut stats.delayed_reward_resolution_horizon_4h_count,
-        &mut stats.delayed_reward_resolution_within_4h_count,
-        &mut stats.delayed_reward_resolution_horizon_24h_count,
-        &mut stats.delayed_reward_resolution_within_24h_count,
+        StructuralDelayedRewardCounters {
+            wins: &mut stats.wins,
+            losses: &mut stats.losses,
+            breakevens: &mut stats.breakevens,
+            invalidated: &mut stats.invalidated,
+            abandoned: &mut stats.abandoned,
+            delayed_reward_elapsed_feedback_count: &mut stats.delayed_reward_elapsed_feedback_count,
+            delayed_reward_elapsed_hours_at_risk: &mut stats.delayed_reward_elapsed_hours_at_risk,
+            delayed_reward_resolution_horizon_1h_count: &mut stats.delayed_reward_resolution_horizon_1h_count,
+            delayed_reward_resolution_within_1h_count: &mut stats.delayed_reward_resolution_within_1h_count,
+            delayed_reward_resolution_horizon_4h_count: &mut stats.delayed_reward_resolution_horizon_4h_count,
+            delayed_reward_resolution_within_4h_count: &mut stats.delayed_reward_resolution_within_4h_count,
+            delayed_reward_resolution_horizon_24h_count: &mut stats.delayed_reward_resolution_horizon_24h_count,
+            delayed_reward_resolution_within_24h_count: &mut stats.delayed_reward_resolution_within_24h_count,
+        },
         record,
         followed_path,
     );
@@ -2474,19 +2495,21 @@ pub(crate) fn accumulate_structural_prior_source_summary_delayed_reward_observat
     followed_path: bool,
 ) {
     apply_structural_delayed_reward_feedback(
-        &mut summary.wins,
-        &mut summary.losses,
-        &mut summary.breakevens,
-        &mut summary.invalidated,
-        &mut summary.abandoned,
-        &mut summary.delayed_reward_elapsed_feedback_count,
-        &mut summary.delayed_reward_elapsed_hours_at_risk,
-        &mut summary.delayed_reward_resolution_horizon_1h_count,
-        &mut summary.delayed_reward_resolution_within_1h_count,
-        &mut summary.delayed_reward_resolution_horizon_4h_count,
-        &mut summary.delayed_reward_resolution_within_4h_count,
-        &mut summary.delayed_reward_resolution_horizon_24h_count,
-        &mut summary.delayed_reward_resolution_within_24h_count,
+        StructuralDelayedRewardCounters {
+            wins: &mut summary.wins,
+            losses: &mut summary.losses,
+            breakevens: &mut summary.breakevens,
+            invalidated: &mut summary.invalidated,
+            abandoned: &mut summary.abandoned,
+            delayed_reward_elapsed_feedback_count: &mut summary.delayed_reward_elapsed_feedback_count,
+            delayed_reward_elapsed_hours_at_risk: &mut summary.delayed_reward_elapsed_hours_at_risk,
+            delayed_reward_resolution_horizon_1h_count: &mut summary.delayed_reward_resolution_horizon_1h_count,
+            delayed_reward_resolution_within_1h_count: &mut summary.delayed_reward_resolution_within_1h_count,
+            delayed_reward_resolution_horizon_4h_count: &mut summary.delayed_reward_resolution_horizon_4h_count,
+            delayed_reward_resolution_within_4h_count: &mut summary.delayed_reward_resolution_within_4h_count,
+            delayed_reward_resolution_horizon_24h_count: &mut summary.delayed_reward_resolution_horizon_24h_count,
+            delayed_reward_resolution_within_24h_count: &mut summary.delayed_reward_resolution_within_24h_count,
+        },
         record,
         followed_path,
     );
@@ -3383,7 +3406,7 @@ mod tests {
     #[test]
     fn delayed_reward_replay_validation_scores_future_resolution_horizons() {
         let path_id = "path:scenario:NQ:test:primary";
-        let records = vec![
+        let records = [
             replay_record(
                 "rec-1",
                 "2026-04-30T00:00:00Z",

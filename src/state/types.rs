@@ -4,6 +4,7 @@ use std::collections::BTreeMap;
 
 use crate::belief_core::beta_dirichlet_update::{
     beta_posterior_mean, beta_update_factor, weighted_seed_beta_update,
+    WeightedSeedBetaUpdateInput,
     weighted_success_credit_beta_update,
 };
 use crate::belief_core::changepoint_gate::rebuild_node_duration_priors_from_events;
@@ -4609,15 +4610,20 @@ fn update_structural_prior_stats(
             structural_policy_correction_contribution(record, pseudo_counts, weighted_observation)
         {
             update_structural_policy_correction_stats(
-                &mut stats.policy_weighted_observation_mass,
-                &mut stats.behavior_policy_probability,
-                &mut stats.behavior_policy_probability_squared_mass,
-                &mut stats.target_policy_probability_brier_score_mass,
-                &mut stats.target_policy_probability_calibration_error_mass,
-                &mut stats.snips_weight_mass,
-                &mut stats.snips_weight_squared_mass,
-                &mut stats.snips_reward_mass,
-                &mut stats.doubly_robust_reward_mass,
+                StructuralPolicyCorrectionStatsAccumulator {
+                    policy_weighted_observation_mass: &mut stats.policy_weighted_observation_mass,
+                    behavior_policy_probability: &mut stats.behavior_policy_probability,
+                    behavior_policy_probability_squared_mass: &mut stats
+                        .behavior_policy_probability_squared_mass,
+                    target_policy_probability_brier_score_mass: &mut stats
+                        .target_policy_probability_brier_score_mass,
+                    target_policy_probability_calibration_error_mass: &mut stats
+                        .target_policy_probability_calibration_error_mass,
+                    snips_weight_mass: &mut stats.snips_weight_mass,
+                    snips_weight_squared_mass: &mut stats.snips_weight_squared_mass,
+                    snips_reward_mass: &mut stats.snips_reward_mass,
+                    doubly_robust_reward_mass: &mut stats.doubly_robust_reward_mass,
+                },
                 contribution,
             );
         }
@@ -4655,17 +4661,17 @@ fn apply_structural_prior_seed_to_stats(
     stats.invalidated += seed.invalidated;
     stats.abandoned += seed.abandoned;
     stats.not_followed += seed.not_followed;
-    let mass_update = weighted_seed_beta_update(
-        seed.followed_count,
-        seed.wins,
-        seed.losses,
-        seed.breakevens,
-        seed.invalidated,
-        seed.abandoned,
+    let mass_update = weighted_seed_beta_update(WeightedSeedBetaUpdateInput {
+        followed_observation_count: seed.followed_count,
+        wins: seed.wins,
+        losses: seed.losses,
+        breakevens: seed.breakevens,
+        invalidated: seed.invalidated,
+        abandoned: seed.abandoned,
         source_weight,
-        1.0,
-        1.0,
-    );
+        quality_weight: 1.0,
+        recency_weight: 1.0,
+    });
     mass_update.apply_to(
         &mut stats.weighted_followed_mass,
         &mut stats.weighted_success_mass,
@@ -4733,17 +4739,17 @@ fn structural_power_prior_contribution_with_entity_scale(
     let tempering_coefficient = structural_prior_seed_tempering_coefficient(seed);
     let effective_tau =
         beta_update_factor(base_source_weight, tempering_coefficient, entity_mass_scale);
-    let mass_update = weighted_seed_beta_update(
-        seed.followed_count,
-        seed.wins,
-        seed.losses,
-        seed.breakevens,
-        seed.invalidated,
-        seed.abandoned,
-        base_source_weight,
-        tempering_coefficient,
-        entity_mass_scale,
-    );
+    let mass_update = weighted_seed_beta_update(WeightedSeedBetaUpdateInput {
+        followed_observation_count: seed.followed_count,
+        wins: seed.wins,
+        losses: seed.losses,
+        breakevens: seed.breakevens,
+        invalidated: seed.invalidated,
+        abandoned: seed.abandoned,
+        source_weight: base_source_weight,
+        quality_weight: tempering_coefficient,
+        recency_weight: entity_mass_scale,
+    });
     StructuralPowerPriorContribution {
         source_label: seed.source_label.clone(),
         base_source_weight,
@@ -4907,18 +4913,33 @@ fn structural_policy_correction_contribution(
     })
 }
 
+struct StructuralPolicyCorrectionStatsAccumulator<'a> {
+    policy_weighted_observation_mass: &'a mut f64,
+    behavior_policy_probability: &'a mut f64,
+    behavior_policy_probability_squared_mass: &'a mut f64,
+    target_policy_probability_brier_score_mass: &'a mut f64,
+    target_policy_probability_calibration_error_mass: &'a mut f64,
+    snips_weight_mass: &'a mut f64,
+    snips_weight_squared_mass: &'a mut f64,
+    snips_reward_mass: &'a mut f64,
+    doubly_robust_reward_mass: &'a mut f64,
+}
+
 fn update_structural_policy_correction_stats(
-    policy_weighted_observation_mass: &mut f64,
-    behavior_policy_probability: &mut f64,
-    behavior_policy_probability_squared_mass: &mut f64,
-    target_policy_probability_brier_score_mass: &mut f64,
-    target_policy_probability_calibration_error_mass: &mut f64,
-    snips_weight_mass: &mut f64,
-    snips_weight_squared_mass: &mut f64,
-    snips_reward_mass: &mut f64,
-    doubly_robust_reward_mass: &mut f64,
+    stats: StructuralPolicyCorrectionStatsAccumulator<'_>,
     contribution: StructuralPolicyCorrectionContribution,
 ) {
+    let StructuralPolicyCorrectionStatsAccumulator {
+        policy_weighted_observation_mass,
+        behavior_policy_probability,
+        behavior_policy_probability_squared_mass,
+        target_policy_probability_brier_score_mass,
+        target_policy_probability_calibration_error_mass,
+        snips_weight_mass,
+        snips_weight_squared_mass,
+        snips_reward_mass,
+        doubly_robust_reward_mass,
+    } = stats;
     let previous_mass = (*policy_weighted_observation_mass).max(0.0);
     let next_mass = previous_mass + contribution.weighted_observation;
     if next_mass > f64::EPSILON {
@@ -5372,15 +5393,20 @@ fn update_structural_prior_source_summary_from_feedback(
             structural_policy_correction_contribution(record, pseudo_counts, weighted_observation)
         {
             update_structural_policy_correction_stats(
-                &mut summary.policy_weighted_observation_mass,
-                &mut summary.behavior_policy_probability,
-                &mut summary.behavior_policy_probability_squared_mass,
-                &mut summary.target_policy_probability_brier_score_mass,
-                &mut summary.target_policy_probability_calibration_error_mass,
-                &mut summary.snips_weight_mass,
-                &mut summary.snips_weight_squared_mass,
-                &mut summary.snips_reward_mass,
-                &mut summary.doubly_robust_reward_mass,
+                StructuralPolicyCorrectionStatsAccumulator {
+                    policy_weighted_observation_mass: &mut summary.policy_weighted_observation_mass,
+                    behavior_policy_probability: &mut summary.behavior_policy_probability,
+                    behavior_policy_probability_squared_mass: &mut summary
+                        .behavior_policy_probability_squared_mass,
+                    target_policy_probability_brier_score_mass: &mut summary
+                        .target_policy_probability_brier_score_mass,
+                    target_policy_probability_calibration_error_mass: &mut summary
+                        .target_policy_probability_calibration_error_mass,
+                    snips_weight_mass: &mut summary.snips_weight_mass,
+                    snips_weight_squared_mass: &mut summary.snips_weight_squared_mass,
+                    snips_reward_mass: &mut summary.snips_reward_mass,
+                    doubly_robust_reward_mass: &mut summary.doubly_robust_reward_mass,
+                },
                 contribution,
             );
         }
@@ -5415,17 +5441,17 @@ fn apply_structural_prior_seed_to_source_summary(
     summary.invalidated += seed.invalidated;
     summary.abandoned += seed.abandoned;
     summary.not_followed += seed.not_followed;
-    let mass_update = weighted_seed_beta_update(
-        seed.followed_count,
-        seed.wins,
-        seed.losses,
-        seed.breakevens,
-        seed.invalidated,
-        seed.abandoned,
+    let mass_update = weighted_seed_beta_update(WeightedSeedBetaUpdateInput {
+        followed_observation_count: seed.followed_count,
+        wins: seed.wins,
+        losses: seed.losses,
+        breakevens: seed.breakevens,
+        invalidated: seed.invalidated,
+        abandoned: seed.abandoned,
         source_weight,
-        1.0,
-        1.0,
-    );
+        quality_weight: 1.0,
+        recency_weight: 1.0,
+    });
     mass_update.apply_to(
         &mut summary.weighted_followed_mass,
         &mut summary.weighted_success_mass,
@@ -5603,17 +5629,17 @@ fn apply_structural_prior_seed_to_source_reliability(
             ..StructuralSourceReliabilityPosterior::default()
         });
     posterior.observations += seed.observations;
-    let mass_update = weighted_seed_beta_update(
-        seed.followed_count,
-        seed.wins,
-        seed.losses,
-        seed.breakevens,
-        seed.invalidated,
-        seed.abandoned,
+    let mass_update = weighted_seed_beta_update(WeightedSeedBetaUpdateInput {
+        followed_observation_count: seed.followed_count,
+        wins: seed.wins,
+        losses: seed.losses,
+        breakevens: seed.breakevens,
+        invalidated: seed.invalidated,
+        abandoned: seed.abandoned,
         source_weight,
-        1.0,
-        1.0,
-    );
+        quality_weight: 1.0,
+        recency_weight: 1.0,
+    });
     mass_update.apply_to(
         &mut posterior.weighted_observation_mass,
         &mut posterior.weighted_success_mass,

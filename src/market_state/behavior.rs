@@ -229,9 +229,8 @@ impl InvestorBehaviorClassifier {
         };
 
         PriceExtremeResult {
-            is_extreme: position > 0.9 || position < 0.1,
+            is_extreme: !(0.1..=0.9).contains(&position),
             is_bullish: position > 0.5,
-            position,
         }
     }
 
@@ -254,11 +253,6 @@ impl InvestorBehaviorClassifier {
 
         MomentumFadeResult {
             is_fading: recent_momentum < early_momentum * 0.5 && early_momentum > 1e-10,
-            fade_ratio: if early_momentum > 1e-10 {
-                recent_momentum / early_momentum
-            } else {
-                1.0
-            },
         }
     }
 
@@ -287,13 +281,11 @@ struct VolumeSpikeResult {
 struct PriceExtremeResult {
     is_extreme: bool,
     is_bullish: bool,
-    position: f64,
 }
 
 #[derive(Default)]
 struct MomentumFadeResult {
     is_fading: bool,
-    fade_ratio: f64,
 }
 
 impl Default for InvestorBehaviorClassifier {
@@ -344,7 +336,7 @@ mod tests {
     fn fomo_detection() {
         let candles = fomo_candles(50);
         let classifier = InvestorBehaviorClassifier::new();
-        let (regime, conf) = classifier.classify(&candles);
+        let (regime, _conf) = classifier.classify(&candles);
 
         // 强势上涨 + 放量可能触发 FOMO 或 RiskOn
         assert!(matches!(
@@ -360,7 +352,7 @@ mod tests {
     fn neutral_detection() {
         let candles = neutral_candles(50);
         let classifier = InvestorBehaviorClassifier::new();
-        let (regime, conf) = classifier.classify(&candles);
+        let (regime, _conf) = classifier.classify(&candles);
 
         // 震荡市场的行为状态可能因价格极端位置而变化
         // 价格在区间边界时可能触发 FOMO/RiskOn，在区间中部时可能 Neutral/Exhaustion

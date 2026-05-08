@@ -42,26 +42,6 @@ pub(crate) fn policy_training_status_shell(
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn render_policy_training_status_low_token_emits_three_summary_lines() {
-        let surface = PolicyTrainingStatusSurface {
-            summary_line: "top-level".to_string(),
-            structural_path_ranking_runtime_summary: "runtime-line".to_string(),
-            structural_path_ranking_validation_summary: "validation-line".to_string(),
-            ..PolicyTrainingStatusSurface::default()
-        };
-
-        let rendered = render_policy_training_status_low_token(&surface);
-        let lines = rendered.lines().collect::<Vec<_>>();
-
-        assert_eq!(lines, vec!["top-level", "runtime-line", "validation-line"]);
-    }
-}
-
 pub(crate) fn register_structural_path_ranking_trainer_artifact_shell(
     symbol: &str,
     state_dir: &str,
@@ -123,4 +103,24 @@ pub(crate) fn apply_structural_path_ranking_external_scores_shell(
 ) -> Result<()> {
     ensure_state_dir_ready(state_dir)?;
     apply_structural_path_ranking_external_scores_command(state_dir, symbol, scores_file)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn render_policy_training_status_low_token_emits_three_summary_lines() {
+        let surface = PolicyTrainingStatusSurface {
+            summary_line: "top-level".to_string(),
+            structural_path_ranking_runtime_summary: "runtime-line".to_string(),
+            structural_path_ranking_validation_summary: "validation-line".to_string(),
+            ..PolicyTrainingStatusSurface::default()
+        };
+
+        let rendered = render_policy_training_status_low_token(&surface);
+        let lines = rendered.lines().collect::<Vec<_>>();
+
+        assert_eq!(lines, vec!["top-level", "runtime-line", "validation-line"]);
+    }
 }

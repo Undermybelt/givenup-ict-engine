@@ -56,23 +56,12 @@ pub struct ValidationResult {
 }
 
 /// 置信度分布
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ConfidenceDistribution {
     pub high: usize,     // >= 0.75
     pub medium: usize,   // >= 0.55
     pub low: usize,      // >= 0.35
     pub very_low: usize, // < 0.35
-}
-
-impl Default for ConfidenceDistribution {
-    fn default() -> Self {
-        Self {
-            high: 0,
-            medium: 0,
-            low: 0,
-            very_low: 0,
-        }
-    }
 }
 
 /// 验证器
@@ -220,7 +209,7 @@ impl MarketStateValidator {
             let pct = (*count as f64 / result.total_samples as f64) * 100.0;
             report.push_str(&format!("  {:<25} {:>6} ({:>5.1}%)\n", regime, count, pct));
         }
-        report.push_str("\n");
+        report.push('\n');
 
         // 次小类分布
         report.push_str("--- Secondary Regime Distribution ---\n");
@@ -233,7 +222,7 @@ impl MarketStateValidator {
         if secondary_sorted.len() > 10 {
             report.push_str(&format!("  ... and {} more\n", secondary_sorted.len() - 10));
         }
-        report.push_str("\n");
+        report.push('\n');
 
         // 置信度分布
         report.push_str("--- Confidence Distribution ---\n");
@@ -259,7 +248,7 @@ impl MarketStateValidator {
             "  VeryLow (<0.35): {:>6} ({:>5.1}%)\n",
             dist.very_low, very_low_pct
         ));
-        report.push_str("\n");
+        report.push('\n');
 
         // 质量评估
         report.push_str("--- Quality Assessment ---\n");

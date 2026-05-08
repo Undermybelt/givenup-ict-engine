@@ -26,7 +26,7 @@ pub use confidence_validation::{
     ConfidenceLevel, ConfidenceValidationConfig, ConfidenceValidator, HistorySample, RegimeStats,
     RollingAccuracyTracker, ValidationResult as ConfidenceValidationResult,
 };
-pub use config::{MarketStateConfig, MarketStateProfile};
+pub use config::{available_profiles, MarketStateConfig, MarketStateProfile, UserWeightsTemplate};
 pub use enhanced_aggregation::{EnhancedAggregationConfig, EnhancedAggregator, PriceDirection};
 pub use evidence_mapping::{
     EvidenceMappingConfig, EvidenceSummary, LiquidityStateIndex, MarketStateEvidenceMapper,
@@ -40,7 +40,7 @@ pub use filter::{
     FactorFilterDeclaration, MarketStateFilter, MarketStateFilterConfig, MarketStateFilterResult,
     StateChange, StateChangeDimension,
 };
-pub use liquidity::{LiquidityClassifier, LiquidityRegime, SessionState};
+pub use liquidity::{detect_session, LiquidityClassifier, LiquidityRegime, SessionState};
 pub use mtf_resonance::{
     ResonanceResult, TimeframeResonanceConfig, TimeframeResonanceFilter, TimeframeResonanceResult,
 };
@@ -79,6 +79,18 @@ pub struct MarketStateSnapshot {
     pub overall_confidence: f64,
     /// 分类理由（可追溯）
     pub rationale: Vec<String>,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct MarketStateAggregationInputs<'a> {
+    pub volatility: &'a VolatilityRegime,
+    pub volatility_confidence: f64,
+    pub liquidity: &'a LiquidityRegime,
+    pub liquidity_confidence: f64,
+    pub structure: &'a MarketStructureRegime,
+    pub structure_confidence: f64,
+    pub behavior: &'a InvestorBehaviorRegime,
+    pub behavior_confidence: f64,
 }
 
 /// 主大类：综合各维度后的顶层状态
@@ -211,28 +223,30 @@ impl MarketStateClassifier {
             if let Some(ref enhanced) = self.enhanced_aggregator {
                 // 使用增强聚合器（提高置信度）
                 enhanced.aggregate(
-                    &vol,
-                    vol_conf,
-                    &liq,
-                    liq_conf,
-                    &struct_regime,
-                    struct_conf,
-                    &behav,
-                    behav_conf,
+                    MarketStateAggregationInputs {
+                        volatility: &vol,
+                        volatility_confidence: vol_conf,
+                        liquidity: &liq,
+                        liquidity_confidence: liq_conf,
+                        structure: &struct_regime,
+                        structure_confidence: struct_conf,
+                        behavior: &behav,
+                        behavior_confidence: behav_conf,
+                    },
                     candles,
                 )
             } else {
                 // 使用基础聚合器
-                self.aggregate_regimes(
-                    &vol,
-                    vol_conf,
-                    &liq,
-                    liq_conf,
-                    &struct_regime,
-                    struct_conf,
-                    &behav,
-                    behav_conf,
-                )
+                self.aggregate_regimes(MarketStateAggregationInputs {
+                    volatility: &vol,
+                    volatility_confidence: vol_conf,
+                    liquidity: &liq,
+                    liquidity_confidence: liq_conf,
+                    structure: &struct_regime,
+                    structure_confidence: struct_conf,
+                    behavior: &behav,
+                    behavior_confidence: behav_conf,
+                })
             };
         rationale.push(format!(
             "primary={:?} secondary={:?} overall={:.2}",
@@ -258,15 +272,18 @@ impl MarketStateClassifier {
     /// 聚合各维度状态到主大类/次小类
     fn aggregate_regimes(
         &self,
-        vol: &VolatilityRegime,
-        vol_conf: f64,
-        liq: &LiquidityRegime,
-        liq_conf: f64,
-        struct_regime: &MarketStructureRegime,
-        struct_conf: f64,
-        behav: &InvestorBehaviorRegime,
-        behav_conf: f64,
+        inputs: MarketStateAggregationInputs<'_>,
     ) -> (PrimaryMarketRegime, SecondaryMarketRegime, f64) {
+        let MarketStateAggregationInputs {
+            volatility: vol,
+            volatility_confidence: vol_conf,
+            liquidity: liq,
+            liquidity_confidence: liq_conf,
+            structure: struct_regime,
+            structure_confidence: struct_conf,
+            behavior: behav,
+            behavior_confidence: behav_conf,
+        } = inputs;
         // 计算加权平均置信度
         let weights = &self.config.aggregate_weights;
         let overall_conf = vol_conf * weights.volatility

@@ -11,8 +11,8 @@
 use serde::{Deserialize, Serialize};
 
 use crate::market_state::{
-    InvestorBehaviorRegime, LiquidityRegime, MarketStructureRegime, PrimaryMarketRegime,
-    SecondaryMarketRegime, VolatilityRegime,
+    InvestorBehaviorRegime, LiquidityRegime, MarketStateAggregationInputs,
+    MarketStructureRegime, PrimaryMarketRegime, SecondaryMarketRegime, VolatilityRegime,
 };
 use crate::types::Candle;
 
@@ -96,16 +96,19 @@ impl EnhancedAggregator {
     /// 聚合各维度状态到主大类/次小类
     pub fn aggregate(
         &self,
-        vol: &VolatilityRegime,
-        vol_conf: f64,
-        liq: &LiquidityRegime,
-        liq_conf: f64,
-        struct_regime: &MarketStructureRegime,
-        struct_conf: f64,
-        behav: &InvestorBehaviorRegime,
-        behav_conf: f64,
+        inputs: MarketStateAggregationInputs<'_>,
         candles: &[Candle],
     ) -> (PrimaryMarketRegime, SecondaryMarketRegime, f64) {
+        let MarketStateAggregationInputs {
+            volatility: vol,
+            volatility_confidence: vol_conf,
+            liquidity: liq,
+            liquidity_confidence: liq_conf,
+            structure: struct_regime,
+            structure_confidence: struct_conf,
+            behavior: behav,
+            behavior_confidence: behav_conf,
+        } = inputs;
         // 1. 计算价格方向
         let price_dir = self.calculate_price_direction(candles);
 
@@ -556,14 +559,16 @@ mod tests {
         let candles = mock_candles_bullish();
 
         let (primary, secondary, _conf) = agg.aggregate(
-            &VolatilityRegime::ElevatedVol,
-            0.7,
-            &LiquidityRegime::HighLiquidity,
-            0.8,
-            &MarketStructureRegime::Trending,
-            0.75,
-            &InvestorBehaviorRegime::Neutral,
-            0.5,
+            MarketStateAggregationInputs {
+                volatility: &VolatilityRegime::ElevatedVol,
+                volatility_confidence: 0.7,
+                liquidity: &LiquidityRegime::HighLiquidity,
+                liquidity_confidence: 0.8,
+                structure: &MarketStructureRegime::Trending,
+                structure_confidence: 0.75,
+                behavior: &InvestorBehaviorRegime::Neutral,
+                behavior_confidence: 0.5,
+            },
             &candles,
         );
 
@@ -600,25 +605,29 @@ mod tests {
         let candles = mock_candles_bullish();
 
         let (base_primary, base_secondary, base_conf) = base.aggregate(
-            &VolatilityRegime::ElevatedVol,
-            0.7,
-            &LiquidityRegime::HighLiquidity,
-            0.8,
-            &MarketStructureRegime::Trending,
-            0.75,
-            &InvestorBehaviorRegime::Neutral,
-            0.5,
+            MarketStateAggregationInputs {
+                volatility: &VolatilityRegime::ElevatedVol,
+                volatility_confidence: 0.7,
+                liquidity: &LiquidityRegime::HighLiquidity,
+                liquidity_confidence: 0.8,
+                structure: &MarketStructureRegime::Trending,
+                structure_confidence: 0.75,
+                behavior: &InvestorBehaviorRegime::Neutral,
+                behavior_confidence: 0.5,
+            },
             &candles,
         );
         let (tuned_primary, tuned_secondary, tuned_conf) = tuned.aggregate(
-            &VolatilityRegime::ElevatedVol,
-            0.7,
-            &LiquidityRegime::HighLiquidity,
-            0.8,
-            &MarketStructureRegime::Trending,
-            0.75,
-            &InvestorBehaviorRegime::Neutral,
-            0.5,
+            MarketStateAggregationInputs {
+                volatility: &VolatilityRegime::ElevatedVol,
+                volatility_confidence: 0.7,
+                liquidity: &LiquidityRegime::HighLiquidity,
+                liquidity_confidence: 0.8,
+                structure: &MarketStructureRegime::Trending,
+                structure_confidence: 0.75,
+                behavior: &InvestorBehaviorRegime::Neutral,
+                behavior_confidence: 0.5,
+            },
             &candles,
         );
 

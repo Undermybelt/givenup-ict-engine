@@ -1,6 +1,6 @@
 use super::*;
 use ict_engine::application::backtest::parse_duration_sizing_scale;
-use ict_engine::types::{RegimeProbsV2, RegimeV2};
+use ict_engine::types::RegimeV2;
 use std::collections::HashMap;
 use std::path::Path;
 
@@ -8,7 +8,6 @@ use std::path::Path;
 #[derive(Debug, Clone, serde::Deserialize)]
 struct RegimeLabelJson {
     ts: String,
-    state: u8,
     family: String,
 }
 
@@ -60,13 +59,6 @@ fn parse_regime_v2(family: &str) -> Option<RegimeV2> {
         "crash_recovery" => Some(RegimeV2::CrashRecovery),
         _ => None,
     }
-}
-
-#[derive(Debug, Clone)]
-struct RegimeV2Label {
-    ts: chrono::DateTime<chrono::Utc>,
-    state: u8,
-    family: String,
 }
 
 pub(crate) fn run_factor_backtest(

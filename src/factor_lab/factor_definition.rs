@@ -18,8 +18,6 @@ use crate::pda_timeline::{
 };
 use crate::smt::{Correlation, Divergence};
 use crate::types::{Candle, Direction, Regime, RegimeV2};
-use std::collections::HashMap;
-
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 pub enum FactorCategory {
     TrendMomentum,

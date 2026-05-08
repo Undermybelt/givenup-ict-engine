@@ -258,7 +258,7 @@ mod tests {
             regime,
             VolatilityRegime::LowVol | VolatilityRegime::NormalVol
         ));
-        assert!(conf >= 0.0 && conf <= 1.0);
+        assert!((0.0..=1.0).contains(&conf));
     }
 
     #[test]
@@ -273,6 +273,6 @@ mod tests {
                 | VolatilityRegime::CrisisVol
                 | VolatilityRegime::NormalVol
         ));
-        assert!(conf >= 0.0 && conf <= 1.0);
+        assert!((0.0..=1.0).contains(&conf));
     }
 }

@@ -880,7 +880,7 @@ fn probe_ibkr_bridge() -> LocalRuntimeProbe {
                 }
             ),
         ],
-        install_prompts: install_prompts,
+        install_prompts,
     }
 }
 

@@ -81,16 +81,19 @@ pub fn weighted_success_credit_beta_update(
 }
 
 pub fn weighted_seed_beta_update(
-    followed_observation_count: usize,
-    wins: usize,
-    losses: usize,
-    breakevens: usize,
-    invalidated: usize,
-    abandoned: usize,
-    source_weight: f64,
-    quality_weight: f64,
-    recency_weight: f64,
+    input: WeightedSeedBetaUpdateInput,
 ) -> WeightedBetaMassUpdate {
+    let WeightedSeedBetaUpdateInput {
+        followed_observation_count,
+        wins,
+        losses,
+        breakevens,
+        invalidated,
+        abandoned,
+        source_weight,
+        quality_weight,
+        recency_weight,
+    } = input;
     weighted_beta_observation_update(
         followed_observation_count as f64,
         wins as f64 + breakevens as f64 * 0.5,
@@ -102,6 +105,19 @@ pub fn weighted_seed_beta_update(
         quality_weight,
         recency_weight,
     )
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
+pub struct WeightedSeedBetaUpdateInput {
+    pub followed_observation_count: usize,
+    pub wins: usize,
+    pub losses: usize,
+    pub breakevens: usize,
+    pub invalidated: usize,
+    pub abandoned: usize,
+    pub source_weight: f64,
+    pub quality_weight: f64,
+    pub recency_weight: f64,
 }
 
 pub fn beta_posterior_mean(success_mass: f64, failure_mass: f64) -> f64 {
@@ -131,6 +147,7 @@ mod tests {
         beta_posterior_lower_bound, beta_posterior_mean, beta_update_factor,
         dirichlet_component_mean,
         weighted_seed_beta_update, weighted_success_credit_beta_update,
+        WeightedSeedBetaUpdateInput,
     };
 
     #[test]
@@ -143,7 +160,17 @@ mod tests {
 
     #[test]
     fn weighted_seed_update_matches_structural_outcome_heuristic() {
-        let update = weighted_seed_beta_update(3, 1, 0, 1, 1, 0, 0.75, 0.5, 1.0);
+        let update = weighted_seed_beta_update(WeightedSeedBetaUpdateInput {
+            followed_observation_count: 3,
+            wins: 1,
+            losses: 0,
+            breakevens: 1,
+            invalidated: 1,
+            abandoned: 0,
+            source_weight: 0.75,
+            quality_weight: 0.5,
+            recency_weight: 1.0,
+        });
         let expected_factor = beta_update_factor(0.75, 0.5, 1.0);
         let expected_success_mass = expected_factor * (1.0 + 0.5);
         let expected_failure_mass = expected_factor * (0.5 + 1.25);

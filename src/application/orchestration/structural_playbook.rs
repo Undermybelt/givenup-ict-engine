@@ -32,6 +32,7 @@ pub use crate::belief_core::ranking_label::{
     structural_path_ranking_propensity_estimate,
     structural_path_ranking_propensity_evaluation_weight, structural_path_ranking_reward_label,
     structural_path_ranking_runtime_selection_path, structural_path_ranking_target_export_summary,
+    StructuralPathRankingTargetExportSummaryInput,
     structural_path_ranking_target_row_history_key, structural_path_ranking_trainer_manifest,
     structural_path_ranking_training_weight, upsert_structural_path_ranking_target_history,
     StructuralPathProbabilityCalibrationBin, StructuralPathProbabilityCalibrationEvaluationBin,
@@ -45,6 +46,7 @@ pub use crate::belief_core::ranking_label::{
     STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_FILE,
     STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION,
 };
+use crate::belief_core::regime_filter::StructuralTemporalSummaryArtifactInput;
 pub use crate::belief_core::regime_filter::StructuralTemporalSummaryArtifact;
 pub use crate::belief_core::regime_filter::{
     build_structural_temporal_summary_artifact, structural_duration_avg_streak_length,
@@ -375,14 +377,16 @@ pub(crate) fn build_structural_playbook_bundle_with_runtime_context_and_prior_st
         structural_prior_state,
     );
     let path_plan = build_structural_path_plan_artifact_with_runtime_context_and_prior_state(
-        snapshot,
-        provider_status_agent,
-        &provider_support,
-        &scenario_playbook,
-        feedback_history,
-        &path_history,
-        structural_prior_state,
-        runtime_context.clone(),
+        StructuralPathPlanArtifactInput {
+            snapshot,
+            provider_status_agent,
+            provider_support: &provider_support,
+            scenarios: &scenario_playbook,
+            feedback_history,
+            path_history: &path_history,
+            structural_prior_state,
+            runtime_context: runtime_context.clone(),
+        },
     );
     let feedback_template = build_structural_feedback_template_artifact(
         snapshot,
@@ -865,17 +869,17 @@ pub fn build_structural_temporal_summary_artifact_with_prior_state(
             structural_branch_transition_prior(structural_prior_state, &refs.branch_id, branch_id)
         })
     });
-    build_structural_temporal_summary_artifact(
-        structural_symbol(snapshot),
-        node.node_id,
-        latest_feedback.as_ref().map(|refs| refs.branch_id.clone()),
+    build_structural_temporal_summary_artifact(StructuralTemporalSummaryArtifactInput {
+        symbol: structural_symbol(snapshot),
+        node_id: node.node_id,
+        from_branch_id: latest_feedback.as_ref().map(|refs| refs.branch_id.clone()),
         to_branch_id,
         node_duration_prior,
         node_temporal_state,
         branch_temporal_state,
         node_transition_state,
         transition_prior,
-    )
+    })
 }
 
 pub fn build_structural_top_path_candidates_artifact(
@@ -1241,15 +1245,17 @@ pub fn export_structural_path_ranking_target(
     );
     let history_jsonl = render_structural_path_ranking_target_rows_jsonl(&history_artifact.rows)?;
     let summary = structural_path_ranking_target_export_summary(
-        state_dir,
-        symbol,
-        &current_artifact,
-        &csv_name,
-        &jsonl_name,
-        &history_csv_name,
-        &history_jsonl_name,
-        &history_artifact.rows,
-        &summary_name,
+        StructuralPathRankingTargetExportSummaryInput {
+            state_dir,
+            symbol,
+            artifact: &current_artifact,
+            csv_name: &csv_name,
+            jsonl_name: &jsonl_name,
+            history_csv_name: &history_csv_name,
+            history_jsonl_name: &history_jsonl_name,
+            history_rows: &history_artifact.rows,
+            summary_name: &summary_name,
+        },
     );
     let summary_json = serde_json::to_string_pretty(&summary)?;
     let csv = render_structural_path_ranking_target_csv(&current_artifact);
@@ -1354,15 +1360,17 @@ pub fn apply_structural_path_ranking_external_scores(
     );
     let history_jsonl = render_structural_path_ranking_target_rows_jsonl(&history_artifact.rows)?;
     let updated_summary = structural_path_ranking_target_export_summary(
-        state_dir,
-        symbol,
-        &current_artifact,
-        &csv_name,
-        &jsonl_name,
-        &history_csv_name,
-        &history_jsonl_name,
-        &history_artifact.rows,
-        &summary_name,
+        StructuralPathRankingTargetExportSummaryInput {
+            state_dir,
+            symbol,
+            artifact: &current_artifact,
+            csv_name: &csv_name,
+            jsonl_name: &jsonl_name,
+            history_csv_name: &history_csv_name,
+            history_jsonl_name: &history_jsonl_name,
+            history_rows: &history_artifact.rows,
+            summary_name: &summary_name,
+        },
     );
     let summary_json = serde_json::to_string_pretty(&updated_summary)?;
     save_text_state(state_dir, symbol, &csv_name, &current_csv)?;
@@ -1423,12 +1431,8 @@ fn resolve_structural_path_ranker_runtime(
     current_candidate_rows: &[StructuralPathRankingTargetRow],
     candidate_paths: &mut [StructuralPathArtifact],
 ) -> Option<StructuralPathRankerRuntimeSurface> {
-    let Some(state_dir) = state_dir else {
-        return None;
-    };
-    let Some(selection) = load_structural_path_ranking_runtime_selection(state_dir, symbol) else {
-        return None;
-    };
+    let state_dir = state_dir?;
+    let selection = load_structural_path_ranking_runtime_selection(state_dir, symbol)?;
     let reuse_mode = selection.reuse_mode.clone();
     if !selection.enabled {
         return Some(StructuralPathRankerRuntimeSurface {
@@ -2480,6 +2484,34 @@ pub fn build_structural_path_plan_artifact_with_prior_state(
     structural_prior_state: &StructuralPriorLearningState,
 ) -> StructuralPathPlanArtifact {
     build_structural_path_plan_artifact_with_runtime_context_and_prior_state(
+        StructuralPathPlanArtifactInput {
+            snapshot,
+            provider_status_agent,
+            provider_support,
+            scenarios,
+            feedback_history,
+            path_history,
+            structural_prior_state,
+            runtime_context: StructuralPathRankerRuntimeContext::default(),
+        },
+    )
+}
+
+pub(crate) struct StructuralPathPlanArtifactInput<'a> {
+    pub snapshot: &'a WorkflowSnapshot,
+    pub provider_status_agent: &'a ProviderCatalogAgentSurface,
+    pub provider_support: &'a crate::application::provider_catalog::WorkflowProviderSupportSurface,
+    pub scenarios: &'a StructuralScenarioPlaybookArtifact,
+    pub feedback_history: &'a [FeedbackRecord],
+    pub path_history: &'a StructuralPathHistoryArtifact,
+    pub structural_prior_state: &'a StructuralPriorLearningState,
+    pub runtime_context: StructuralPathRankerRuntimeContext<'a>,
+}
+
+pub(crate) fn build_structural_path_plan_artifact_with_runtime_context_and_prior_state(
+    input: StructuralPathPlanArtifactInput<'_>,
+) -> StructuralPathPlanArtifact {
+    let StructuralPathPlanArtifactInput {
         snapshot,
         provider_status_agent,
         provider_support,
@@ -2487,20 +2519,8 @@ pub fn build_structural_path_plan_artifact_with_prior_state(
         feedback_history,
         path_history,
         structural_prior_state,
-        StructuralPathRankerRuntimeContext::default(),
-    )
-}
-
-pub(crate) fn build_structural_path_plan_artifact_with_runtime_context_and_prior_state(
-    snapshot: &WorkflowSnapshot,
-    provider_status_agent: &ProviderCatalogAgentSurface,
-    provider_support: &crate::application::provider_catalog::WorkflowProviderSupportSurface,
-    scenarios: &StructuralScenarioPlaybookArtifact,
-    feedback_history: &[FeedbackRecord],
-    path_history: &StructuralPathHistoryArtifact,
-    structural_prior_state: &StructuralPriorLearningState,
-    runtime_context: StructuralPathRankerRuntimeContext<'_>,
-) -> StructuralPathPlanArtifact {
+        runtime_context,
+    } = input;
     let command = top_level_command(snapshot);
     let next_meta = recommended_next_command_meta(&command);
     let symbol = structural_symbol(snapshot);
@@ -2721,14 +2741,16 @@ fn structural_ranked_paths_with_runtime_context_and_prior_state(
         structural_prior_state,
     );
     let path_plan = build_structural_path_plan_artifact_with_runtime_context_and_prior_state(
-        snapshot,
-        provider_status_agent,
-        &provider_support,
-        &scenario_playbook,
-        feedback_history,
-        &path_history,
-        structural_prior_state,
-        runtime_context,
+        StructuralPathPlanArtifactInput {
+            snapshot,
+            provider_status_agent,
+            provider_support: &provider_support,
+            scenarios: &scenario_playbook,
+            feedback_history,
+            path_history: &path_history,
+            structural_prior_state,
+            runtime_context,
+        },
     );
     let symbol = structural_symbol(snapshot);
     let candidate_set_id = structural_candidate_set_id(

@@ -445,17 +445,32 @@ pub fn transition_adjusted_node_posteriors(
         .collect()
 }
 
+pub struct StructuralTemporalSummaryArtifactInput<'a> {
+    pub symbol: String,
+    pub node_id: String,
+    pub from_branch_id: Option<String>,
+    pub to_branch_id: Option<String>,
+    pub node_duration_prior: Option<&'a StructuralNodeDurationPrior>,
+    pub node_temporal_state: Option<&'a StructuralNodeTemporalPosteriorState>,
+    pub branch_temporal_state: Option<&'a StructuralBranchTemporalPosteriorState>,
+    pub node_transition_state: Option<&'a StructuralNodeTransitionPosteriorState>,
+    pub transition_prior: Option<&'a StructuralBranchTransitionPrior>,
+}
+
 pub fn build_structural_temporal_summary_artifact(
-    symbol: String,
-    node_id: String,
-    from_branch_id: Option<String>,
-    to_branch_id: Option<String>,
-    node_duration_prior: Option<&StructuralNodeDurationPrior>,
-    node_temporal_state: Option<&StructuralNodeTemporalPosteriorState>,
-    branch_temporal_state: Option<&StructuralBranchTemporalPosteriorState>,
-    node_transition_state: Option<&StructuralNodeTransitionPosteriorState>,
-    transition_prior: Option<&StructuralBranchTransitionPrior>,
+    input: StructuralTemporalSummaryArtifactInput<'_>,
 ) -> StructuralTemporalSummaryArtifact {
+    let StructuralTemporalSummaryArtifactInput {
+        symbol,
+        node_id,
+        from_branch_id,
+        to_branch_id,
+        node_duration_prior,
+        node_temporal_state,
+        branch_temporal_state,
+        node_transition_state,
+        transition_prior,
+    } = input;
     let duration_summary = node_temporal_state
         .map(|state| state.summary_line.clone())
         .unwrap_or_else(|| {

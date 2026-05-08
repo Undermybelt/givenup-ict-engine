@@ -196,9 +196,7 @@ fn collect_harness_failures(
                 .plan
                 .provider_summary
                 .actionable_install_prompts
-                .iter()
-                .cloned()
-                .collect::<Vec<_>>()
+                .to_vec()
         } else {
             bundle
                 .plan

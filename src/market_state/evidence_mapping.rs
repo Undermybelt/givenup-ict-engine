@@ -355,9 +355,9 @@ impl MarketStateEvidenceMapper {
 
         // 剩余概率分配给其他状态
         let per_other = remaining / (total_states - 1).max(1) as f64;
-        for i in 0..total_states {
+        for (i, prob) in distribution.iter_mut().enumerate().take(total_states) {
             if i != primary_index {
-                distribution[i] = per_other;
+                *prob = per_other;
             }
         }
 

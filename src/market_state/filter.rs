@@ -8,8 +8,7 @@
 
 use crate::market_state::{
     InvestorBehaviorRegime, LiquidityRegime, MarketStateClassifier, MarketStateConfig,
-    MarketStateSnapshot, MarketStructureRegime, PrimaryMarketRegime, SecondaryMarketRegime,
-    VolatilityRegime,
+    MarketStateSnapshot, MarketStructureRegime, PrimaryMarketRegime, VolatilityRegime,
 };
 use crate::types::Candle;
 use serde::{Deserialize, Serialize};

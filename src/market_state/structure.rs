@@ -344,7 +344,7 @@ mod tests {
     fn trending_detection() {
         let candles = trend_candles(100, 0.5); // 上涨趋势
         let classifier = MarketStructureClassifier::new();
-        let (regime, conf) = classifier.classify(&candles);
+        let (regime, _conf) = classifier.classify(&candles);
 
         assert!(matches!(
             regime,
@@ -356,7 +356,7 @@ mod tests {
     fn ranging_detection() {
         let candles = range_candles(100); // 震荡
         let classifier = MarketStructureClassifier::new();
-        let (regime, conf) = classifier.classify(&candles);
+        let (regime, _conf) = classifier.classify(&candles);
 
         assert!(matches!(
             regime,

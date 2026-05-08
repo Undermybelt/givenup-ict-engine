@@ -402,14 +402,20 @@ where
     let policy_training_status =
         crate::application::entry_models::policy_training_status(state_dir, symbol, None)?;
     let payload = crate::application::reporting::build_factor_backtest_output_payload(
-        &report,
-        &compact_report,
-        backtest_compare_report,
-        credibility_summary,
-        ensemble_surface,
-        &suggested_update_command,
-        Some(&policy_training_status.structural_path_ranking_runtime_summary),
-        Some(&policy_training_status.structural_path_ranking_validation_summary),
+        crate::application::reporting::FactorBacktestOutputPayloadInput {
+            report: &report,
+            compact_backtest_report: &compact_report,
+            compare: backtest_compare_report,
+            credibility_summary,
+            ensemble_surface,
+            suggested_update_command: &suggested_update_command,
+            structural_path_ranking_runtime_summary: Some(
+                &policy_training_status.structural_path_ranking_runtime_summary,
+            ),
+            structural_path_ranking_validation_summary: Some(
+                &policy_training_status.structural_path_ranking_validation_summary,
+            ),
+        },
     );
     crate::application::reporting::emit_structured_output_payload(
         output_format,

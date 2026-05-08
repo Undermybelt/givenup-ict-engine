@@ -13,7 +13,7 @@ use super::structure::StructureThresholds;
 use super::volatility::VolatilityThresholds;
 
 /// 市场状态分类器总配置
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct MarketStateConfig {
     /// 波动率分类器阈值
     pub volatility: VolatilityThresholds,
@@ -32,21 +32,6 @@ pub struct MarketStateConfig {
     pub enabled: EnabledClassifiers,
     /// 用户自定义标签（可选）
     pub user_label: Option<String>,
-}
-
-impl Default for MarketStateConfig {
-    fn default() -> Self {
-        Self {
-            volatility: VolatilityThresholds::default(),
-            liquidity: LiquidityThresholds::default(),
-            structure: StructureThresholds::default(),
-            behavior: BehaviorThresholds::default(),
-            aggregate_weights: AggregateWeights::default(),
-            enhanced_aggregation: EnhancedAggregationConfig::default(),
-            enabled: EnabledClassifiers::default(),
-            user_label: None,
-        }
-    }
 }
 
 /// 聚合权重：各维度对最终分类的贡献

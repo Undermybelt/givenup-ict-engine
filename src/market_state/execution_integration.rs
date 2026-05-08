@@ -387,14 +387,16 @@ mod tests {
 
         // 结果完整
         assert!(result.evidence.len() >= 5);
-        assert!(result.enhanced_features.gating_status.len() > 0);
+        assert!(!result.enhanced_features.gating_status.is_empty());
     }
 
     #[test]
     fn crisis_state_triggers_veto() {
-        let mut snapshot = MarketStateSnapshot::default();
-        snapshot.primary_regime = PrimaryMarketRegime::ExtremeStress;
-        snapshot.overall_confidence = 0.8;
+        let snapshot = MarketStateSnapshot {
+            primary_regime: PrimaryMarketRegime::ExtremeStress,
+            overall_confidence: 0.8,
+            ..MarketStateSnapshot::default()
+        };
 
         let integrator = MarketStateExecutionIntegrator::new();
         let decision = integrator.evaluate(&snapshot);
@@ -405,9 +407,11 @@ mod tests {
 
     #[test]
     fn low_confidence_triggers_observe_only() {
-        let mut snapshot = MarketStateSnapshot::default();
-        snapshot.primary_regime = PrimaryMarketRegime::RangeConsolidation;
-        snapshot.overall_confidence = 0.3; // 低于阈值
+        let snapshot = MarketStateSnapshot {
+            primary_regime: PrimaryMarketRegime::RangeConsolidation,
+            overall_confidence: 0.3, // 低于阈值
+            ..MarketStateSnapshot::default()
+        };
 
         let integrator = MarketStateExecutionIntegrator::new();
         let decision = integrator.evaluate(&snapshot);

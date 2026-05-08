@@ -229,7 +229,7 @@ mod tests {
     fn high_liquidity_detection() {
         let candles = sample_candles(50, 10000.0, 0.5); // 高成交量，低范围
         let classifier = LiquidityClassifier::new();
-        let (regime, conf) = classifier.classify(&candles);
+        let (regime, _conf) = classifier.classify(&candles);
 
         assert!(matches!(
             regime,
@@ -241,9 +241,9 @@ mod tests {
     fn thin_liquidity_detection() {
         let candles = sample_candles(50, 100.0, 5.0); // 低成交量，高范围
         let classifier = LiquidityClassifier::new();
-        let (regime, conf) = classifier.classify(&candles);
+        let (_regime, conf) = classifier.classify(&candles);
 
         // 由于使用百分位，单一数据点的分类可能不稳定
-        assert!(conf >= 0.0 && conf <= 1.0);
+        assert!((0.0..=1.0).contains(&conf));
     }
 }

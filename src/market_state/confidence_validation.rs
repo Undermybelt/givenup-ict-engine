@@ -136,7 +136,7 @@ impl ConfidenceValidator {
             let stats = self
                 .regime_stats
                 .entry(regime_key)
-                .or_insert_with(RegimeStats::new);
+                .or_default();
 
             let calibration_applied = stats.has_sufficient_samples(self.config.min_samples);
             let calibrated = if calibration_applied {
@@ -181,7 +181,7 @@ impl ConfidenceValidator {
         timestamp: i64,
     ) {
         let sample = HistorySample {
-            regime: snapshot.primary_regime.clone(),
+            regime: snapshot.primary_regime,
             raw_confidence: snapshot.overall_confidence,
             outcome,
             timestamp,
@@ -202,7 +202,7 @@ impl ConfidenceValidator {
         let stats = self
             .regime_stats
             .entry(regime_key)
-            .or_insert_with(RegimeStats::new);
+            .or_default();
         stats.update(&sample);
     }
 
@@ -390,9 +390,11 @@ mod tests {
     #[test]
     fn validator_classifies_confidence_levels() {
         let mut validator = ConfidenceValidator::new();
-        let mut snapshot = MarketStateSnapshot::default();
+        let mut snapshot = MarketStateSnapshot {
+            overall_confidence: 0.85,
+            ..MarketStateSnapshot::default()
+        };
 
-        snapshot.overall_confidence = 0.85;
         let result = validator.validate(&snapshot);
         assert_eq!(result.confidence_level, ConfidenceLevel::High);
 
@@ -416,8 +418,10 @@ mod tests {
             ..Default::default()
         });
 
-        let mut snapshot = MarketStateSnapshot::default();
-        snapshot.overall_confidence = 0.7;
+        let mut snapshot = MarketStateSnapshot {
+            overall_confidence: 0.7,
+            ..MarketStateSnapshot::default()
+        };
 
         // 记录样本：70% 置信度但只有 40% 成功率
         for i in 0..5 {

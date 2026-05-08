@@ -1480,17 +1480,32 @@ pub fn structural_path_ranking_trainer_manifest() -> StructuralPathRankingTraine
     }
 }
 
+pub struct StructuralPathRankingTargetExportSummaryInput<'a> {
+    pub state_dir: &'a str,
+    pub symbol: &'a str,
+    pub artifact: &'a StructuralPathRankingTargetArtifact,
+    pub csv_name: &'a str,
+    pub jsonl_name: &'a str,
+    pub history_csv_name: &'a str,
+    pub history_jsonl_name: &'a str,
+    pub history_rows: &'a [StructuralPathRankingTargetRow],
+    pub summary_name: &'a str,
+}
+
 pub fn structural_path_ranking_target_export_summary(
-    state_dir: &str,
-    symbol: &str,
-    artifact: &StructuralPathRankingTargetArtifact,
-    csv_name: &str,
-    jsonl_name: &str,
-    history_csv_name: &str,
-    history_jsonl_name: &str,
-    history_rows: &[StructuralPathRankingTargetRow],
-    summary_name: &str,
+    input: StructuralPathRankingTargetExportSummaryInput<'_>,
 ) -> StructuralPathRankingTargetExportSummary {
+    let StructuralPathRankingTargetExportSummaryInput {
+        state_dir,
+        symbol,
+        artifact,
+        csv_name,
+        jsonl_name,
+        history_csv_name,
+        history_jsonl_name,
+        history_rows,
+        summary_name,
+    } = input;
     let mut pending_reward_states = BTreeMap::new();
     for row in &artifact.rows {
         *pending_reward_states
