@@ -711,6 +711,34 @@ pub fn humanize_workflow_command(command: &str) -> String {
     format!("Next step: {}", trimmed)
 }
 
+fn apply_selected_profile_to_workflow_command(
+    command: &str,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+) -> String {
+    let Some(profile) = provider_status_agent.selected_profile.as_ref() else {
+        return command.to_string();
+    };
+    let trimmed = command.trim();
+    if trimmed.is_empty() || trimmed.contains(" --profile ") {
+        return command.to_string();
+    }
+    if trimmed.starts_with("ict-engine workflow-status ") {
+        return format!(
+            "{} --profile {}",
+            trimmed,
+            shell_quote(&profile.selector)
+        );
+    }
+    if trimmed.starts_with("ict-engine provider-status ") {
+        return format!(
+            "{} --profile {}",
+            trimmed,
+            shell_quote(&profile.selector)
+        );
+    }
+    command.to_string()
+}
+
 fn human_display_command(command: &str) -> String {
     let trimmed = command.trim();
     if trimmed.is_empty() {
@@ -764,13 +792,13 @@ fn historical_data_candidate_display_list(paths: &[String]) -> String {
         .join(", ")
 }
 
-fn workflow_status_bootstrap_command(
+fn workflow_status_base_command(
     symbol: &str,
     state_dir: Option<&str>,
     provider_status_agent: &ProviderCatalogAgentSurface,
 ) -> String {
     format!(
-        "ict-engine workflow-status --symbol {} --state-dir {}{} --phase bootstrap",
+        "ict-engine workflow-status --symbol {} --state-dir {}{}",
         shell_quote(symbol),
         shell_quote(state_dir.unwrap_or("<state-dir>")),
         provider_status_agent
@@ -778,6 +806,17 @@ fn workflow_status_bootstrap_command(
             .as_ref()
             .map(|profile| format!(" --profile {}", shell_quote(&profile.selector)))
             .unwrap_or_default()
+    )
+}
+
+fn workflow_status_bootstrap_command(
+    symbol: &str,
+    state_dir: Option<&str>,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+) -> String {
+    format!(
+        "{} --phase bootstrap",
+        workflow_status_base_command(symbol, state_dir, provider_status_agent)
     )
 }
 
@@ -960,6 +999,7 @@ fn load_auto_quant_handoff_payload(
 
 fn build_auto_quant_handoff_guide(
     snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
 ) -> Option<WorkflowAutoQuantHandoffGuide> {
     let entry = latest_auto_quant_handoff_entry(snapshot)?;
     let payload = load_auto_quant_handoff_payload(entry)?;
@@ -983,8 +1023,12 @@ fn build_auto_quant_handoff_guide(
             payload.symbol, payload.state_dir, payload.artifact_id
         ),
         workflow_status_command: format!(
-            "ict-engine workflow-status --symbol {} --state-dir {} --human",
-            payload.symbol, payload.state_dir
+            "{} --human",
+            workflow_status_base_command(
+                &payload.symbol,
+                Some(&payload.state_dir),
+                provider_status_agent
+            )
         ),
         recommended_next_command,
         suggested_next_steps: payload.suggested_next_steps.clone(),
@@ -1022,6 +1066,7 @@ fn auto_quant_handoff_next_action(guide: &WorkflowAutoQuantHandoffGuide) -> Stri
 fn build_evidence_review_guide(
     snapshot: &WorkflowSnapshot,
     state_dir: Option<&str>,
+    provider_status_agent: &ProviderCatalogAgentSurface,
 ) -> Option<WorkflowEvidenceReviewGuide> {
     let latest_phase = latest_workflow_phase(snapshot)?;
     if !matches!(
@@ -1030,19 +1075,20 @@ fn build_evidence_review_guide(
     ) {
         return None;
     }
-    let state_dir = shell_quote(state_dir.unwrap_or("<state-dir>"));
+    let raw_state_dir = state_dir;
+    let state_dir = shell_quote(raw_state_dir.unwrap_or("<state-dir>"));
     let symbol = shell_quote(&snapshot.symbol);
     let ensemble_vote_command = format!(
-        "ict-engine workflow-status --symbol {} --state-dir {} --phase ensemble-vote",
-        symbol, state_dir
+        "{} --phase ensemble-vote",
+        workflow_status_base_command(&snapshot.symbol, raw_state_dir, provider_status_agent)
     );
     let pre_bayes_status_command = format!(
         "ict-engine pre-bayes-status --symbol {} --state-dir {}",
         symbol, state_dir
     );
     let structural_path_command = format!(
-        "ict-engine workflow-status --symbol {} --state-dir {} --phase structural-recommended-path-bundle",
-        symbol, state_dir
+        "{} --phase structural-recommended-path-bundle",
+        workflow_status_base_command(&snapshot.symbol, raw_state_dir, provider_status_agent)
     );
     Some(WorkflowEvidenceReviewGuide {
         active: true,
@@ -1278,9 +1324,11 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     } else {
         snapshot.recommended_next_command.clone()
     };
+    let raw_top_level_command =
+        apply_selected_profile_to_workflow_command(&raw_top_level_command, provider_status_agent);
     let provider_status_command = provider_status_agent_command_for_surface(provider_status_agent);
     let auto_quant_handoff_guide = if no_workflow_state && raw_top_level_command.trim().is_empty() {
-        build_auto_quant_handoff_guide(snapshot)
+        build_auto_quant_handoff_guide(snapshot, provider_status_agent)
     } else {
         None
     };
@@ -1299,7 +1347,7 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
     let evidence_review_guide = if no_workflow_state || hard_block_active {
         None
     } else {
-        build_evidence_review_guide(snapshot, state_dir)
+        build_evidence_review_guide(snapshot, state_dir, provider_status_agent)
     };
     let top_level_command = auto_quant_handoff_guide
         .as_ref()
@@ -2126,8 +2174,10 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
     } else {
         snapshot.recommended_next_command.clone()
     };
+    let raw_next_command =
+        apply_selected_profile_to_workflow_command(&raw_next_command, provider_status_agent);
     let auto_quant_handoff_guide = if no_workflow_state && raw_next_command.trim().is_empty() {
-        build_auto_quant_handoff_guide(snapshot)
+        build_auto_quant_handoff_guide(snapshot, provider_status_agent)
     } else {
         None
     };
@@ -2146,7 +2196,7 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
     let evidence_review_guide = if no_workflow_state || hard_block_active {
         None
     } else {
-        build_evidence_review_guide(snapshot, state_dir)
+        build_evidence_review_guide(snapshot, state_dir, provider_status_agent)
     };
     let next_command = auto_quant_handoff_guide
         .as_ref()
@@ -5675,6 +5725,41 @@ mod tests {
     }
 
     #[test]
+    fn evidence_review_router_keeps_selected_profile_on_workflow_status_followups() {
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            current_focus_phase: "research".to_string(),
+            current_focus_reason: "no_previous_run".to_string(),
+            recommended_next_command: "ict-engine factor-research --symbol NQ --data /tmp/demo.json --state-dir /tmp/state --backend native --objective expansion_manipulation".to_string(),
+            latest_research: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "research".to_string(),
+                phase_summary: "research_summary".to_string(),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let agent = build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface_with_profile(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some("/tmp/state"),
+        );
+
+        assert_eq!(agent["next_command_source"], "evidence_review_router");
+        assert_eq!(
+            agent["next_command"].as_str(),
+            Some("ict-engine workflow-status --symbol NQ --state-dir /tmp/state --profile thrill3r-nq-closed-loop-v1 --phase ensemble-vote")
+        );
+        assert_eq!(
+            agent["evidence_review"]["structural_path_command"].as_str(),
+            Some("ict-engine workflow-status --symbol NQ --state-dir /tmp/state --profile thrill3r-nq-closed-loop-v1 --phase structural-recommended-path-bundle")
+        );
+    }
+
+    #[test]
     fn agent_workflow_status_empty_state_uses_explicit_no_state_contract() {
         let value = build_agent_workflow_status_view(&WorkflowSnapshot::default(), &[]);
         assert_eq!(value["status"], "no_workflow_state");
@@ -5743,6 +5828,34 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("auto-quant-adoption-review"));
+    }
+
+    #[test]
+    fn auto_quant_handoff_router_keeps_selected_profile_on_workflow_status_followup() {
+        let temp = tempfile::tempdir().unwrap();
+        let handoff = persist_sample_auto_quant_handoff(&temp);
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            actionable_artifacts: vec![handoff],
+            ..WorkflowSnapshot::default()
+        };
+
+        let agent = build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface_with_profile(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some(temp.path().to_str().unwrap()),
+        );
+
+        assert_eq!(agent["next_command_source"], "auto_quant_handoff_candidate");
+        let command = agent["auto_quant_handoff"]["workflow_status_command"]
+            .as_str()
+            .unwrap_or_default();
+        assert!(command.contains("ict-engine workflow-status --symbol DEMO"));
+        assert!(command.contains("--profile thrill3r-nq-closed-loop-v1"));
+        assert!(command.ends_with(" --human"));
     }
 
     #[test]
@@ -5818,6 +5931,78 @@ mod tests {
             agent["first_run_router"]["bootstrap_command"].as_str(),
             Some(
                 "ict-engine workflow-status --symbol NQ --state-dir /tmp/state --profile thrill3r-nq-closed-loop-v1 --phase bootstrap"
+            )
+        );
+    }
+
+    #[test]
+    fn selected_profile_promotes_generic_workflow_status_next_command() {
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            recommended_next_command:
+                "ict-engine workflow-status --symbol NQ --state-dir /tmp/state --phase human-next"
+                    .to_string(),
+            latest_update: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "update".to_string(),
+                phase_summary: "update_summary".to_string(),
+                recommended_next_command:
+                    "ict-engine workflow-status --symbol NQ --state-dir /tmp/state --phase human-next"
+                        .to_string(),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let agent = build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface_with_profile(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some("/tmp/state"),
+        );
+
+        assert_eq!(
+            agent["next_command"].as_str(),
+            Some(
+                "ict-engine workflow-status --symbol NQ --state-dir /tmp/state --phase human-next --profile thrill3r-nq-closed-loop-v1"
+            )
+        );
+    }
+
+    #[test]
+    fn selected_profile_promotes_generic_blocking_truth_workflow_status_command() {
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            blocking_truth: crate::state::WorkflowBlockingTruth {
+                status: "blocked".to_string(),
+                reason: "credibility_gate_blocked".to_string(),
+                next_command:
+                    "ict-engine workflow-status --symbol NQ --state-dir /tmp/state --phase artifact-consumed-gate"
+                        .to_string(),
+                ..crate::state::WorkflowBlockingTruth::default()
+            },
+            latest_update: Some(crate::state::WorkflowPhaseSnapshot {
+                phase: "update".to_string(),
+                phase_summary: "update_summary".to_string(),
+                ..crate::state::WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+
+        let agent = build_agent_workflow_status_view_with_provider_agent_and_structural_prior_state_and_state_dir(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface_with_profile(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            Some("/tmp/state"),
+        );
+
+        assert_eq!(
+            agent["next_command"].as_str(),
+            Some(
+                "ict-engine workflow-status --symbol NQ --state-dir /tmp/state --phase artifact-consumed-gate --profile thrill3r-nq-closed-loop-v1"
             )
         );
     }

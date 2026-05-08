@@ -68,21 +68,40 @@
   - Selected workflow output now keeps `--profile thrill3r-nq-closed-loop-v1` on both `first_run_router.provider_command` and `first_run_router.bootstrap_command`.
   - Default no-profile workflow output remains generic and keeps `selected_profile_*` fields empty.
 
+- [x] Extended the selected-profile propagation audit beyond bootstrap-only paths.
+  Files:
+  - `src/application/orchestration/workflow_status.rs`
+  Verified:
+  - Evidence-review helper routes now keep `--profile` on `ensemble_vote_command` and `structural_path_command`.
+  - Auto-Quant handoff helper routes now keep `--profile` on `workflow_status_command`.
+  Focused tests:
+  - `cargo test --quiet --lib evidence_review_router_keeps_selected_profile_on_workflow_status_followups -- --nocapture`
+  - `cargo test --quiet --lib auto_quant_handoff_router_keeps_selected_profile_on_workflow_status_followup -- --nocapture`
+  - `cargo test --quiet --lib workflow_status_routes_research_users_into_evidence_review_before_rerun -- --nocapture`
+
+- [x] Added central selected-profile promotion for generic workflow/provider follow-up commands inside `workflow-status`.
+  Files:
+  - `src/application/orchestration/workflow_status.rs`
+  Change:
+  - Generic `ict-engine workflow-status ...` and `ict-engine provider-status ...` follow-ups now get upgraded into the selected profile lane before agent/human workflow surfaces present them.
+  Why:
+  - Several deeper modules emit generic workflow follow-up strings without carrying provider-profile context. Central promotion closes that class without widening snapshot persistence yet.
+  Focused tests:
+  - `cargo test --quiet --lib selected_profile_promotes_generic_workflow_status_next_command -- --nocapture`
+  - `cargo test --quiet --lib selected_profile_promotes_generic_blocking_truth_workflow_status_command -- --nocapture`
+
 ## Next
 
-- [ ] Decide whether to commit this slice after verification and worktree review.
+- [ ] Decide whether to commit the follow-on helper-route and central-promotion closure after worktree review.
   Gate:
-  - Only commit if the diff is narrow, verified, and does not drag unrelated churn.
-  - Direct CLI verification is now complete.
-
-- [ ] Audit whether other exported follow-up commands besides bootstrap still drop `--profile` after selection.
-  Current status:
-  - `provider-status`, `workflow-status`, `first_run_router.provider_command`, `first_run_router.bootstrap_command`, and bootstrap command exports are now verified.
-  - No further leak is yet verified, but the broader audit has not been exhausted.
+  - Only commit if the new diff stays narrow and verified.
+  - Direct CLI verification is complete for the previously committed slice.
 
 ## Not Yet
 
 - [ ] Expose a compact, token-safe human hint for optional personal profile reuse only when it materially helps and only when it does not pollute the default public path.
+- [ ] Run a broader repo-wide search for any remaining profile-less `workflow-status` helper strings outside the provider/workflow lane if this line is resumed again.
+- [ ] Only if future evidence requires it, introduce persisted selected-profile context into workflow snapshot / run artifacts instead of relying on central promotion at render time.
 - [ ] Broaden this lane into data-contract-aware workflow routing only after the current profile discoverability and command-propagation closure is fully verified.
 - [ ] Return to the larger evidence-registry / replay-contract / anti-overfitting board only after the provider/profile consumer contract is stable.
 
@@ -96,6 +115,8 @@
   - unselected machine surfaces hid opt-in profile discovery entirely
   - selected bootstrap commands degraded back to generic `provider-status` / `workflow-status`
   - selected first-run bootstrap routing degraded back to profile-less `workflow-status --phase bootstrap`
+  - selected evidence-review and auto-quant helper routes degraded back to profile-less `workflow-status` follow-ups
+  - generic downstream `workflow-status` / `provider-status` follow-up strings could stay profile-less unless upgraded at the central workflow surface
 
 ## Success Standard For This Board
 
