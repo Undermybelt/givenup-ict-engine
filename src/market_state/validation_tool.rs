@@ -111,7 +111,16 @@ impl MarketStateValidator {
         let window_size = self.config.min_window_size;
         let step = self.config.step_size;
 
-        for i in (0..candles.len().saturating_sub(window_size)).step_by(step) {
+        let last_start = candles.len() - window_size;
+        let mut start_indices = Vec::new();
+        let mut i = 0;
+        while i < last_start {
+            start_indices.push(i);
+            i = i.saturating_add(step);
+        }
+        start_indices.push(last_start);
+
+        for i in start_indices {
             let window = &candles[i..i + window_size];
             let snapshot = self.classifier.classify(window);
 
@@ -331,5 +340,33 @@ mod tests {
         assert!(report.contains("Total Samples"));
         assert!(report.contains("Primary Regime Distribution"));
         assert!(report.contains("Confidence Distribution"));
+    }
+
+    #[test]
+    fn validator_counts_exact_window() {
+        let validator = MarketStateValidator::with_config(ValidationConfig {
+            min_window_size: 100,
+            step_size: 1,
+            verbose: false,
+        });
+        let candles = mock_candles(100);
+
+        let result = validator.validate(&candles);
+
+        assert_eq!(result.total_samples, 1);
+    }
+
+    #[test]
+    fn validator_includes_trailing_full_window() {
+        let validator = MarketStateValidator::with_config(ValidationConfig {
+            min_window_size: 100,
+            step_size: 200,
+            verbose: false,
+        });
+        let candles = mock_candles(250);
+
+        let result = validator.validate(&candles);
+
+        assert_eq!(result.total_samples, 2);
     }
 }
