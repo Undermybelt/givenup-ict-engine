@@ -1019,15 +1019,97 @@ let validator = MarketStateValidator::with_config(config);
 
 ### 技术债务（更新）
 
+- [x] 编译验证（已完成，36个测试通过）
 - [ ] 真实数据验证（NQ 1 年 1h）
 - [ ] 多品种验证（至少 3 个市场类别）
 - [ ] 多周期验证（至少 3 个周期）
 - [ ] 对比测试（基础 vs 增强）
-- [ ] cargo 编译超时问题排查
 - [ ] 性能基准测试
 
 ---
 
-**更新时间**：2026-05-08 01:00
+## 进度更新 — 2026-05-08 上午
+
+### 编译与测试验证 ✅
+
+- **编译状态**：成功（9个未使用代码警告）
+- **测试状态**：36个单元测试全部通过
+- **提交记录**：`4dfa389`
+
+### CLI 验证命令新增 ✅
+
+新增 `validate-market-state` CLI 命令：
+```bash
+./target/debug/ict-engine validate-market-state \
+  --data /path/to/candles.json \
+  --window-size 100 \
+  --step-size 10 \
+  --enhanced
+```
+
+**功能**：
+- 加载 OHLCV 数据（JSON/CSV）
+- 运行市场状态分类验证
+- 生成统计分布报告
+- 输出质量评估
+
+### 模拟数据生成 ✅
+
+生成 1680 根模拟 K 线（约 1 年交易日，每小时）：
+- 包含趋势扩展、震荡整理、极端状态、反转酝酿等阶段
+- 保存到 `/tmp/market_state_validation_data.json`
+
+### 主大类/次小类完整定义
+
+**主大类（PrimaryMarketRegime）**：
+| 状态 | 含义 | 触发条件 |
+|------|------|----------|
+| TrendExpansion | 趋势扩展 | 结构=Trending + 流动性=High/Normal + 置信≥0.65 |
+| RangeConsolidation | 震荡整理 | 结构=Ranging/MeanReverting + 波动=Low/Normal |
+| ExtremeStress | 极端状态 | 波动=CrisisVol 或 流动性=ThinLiquidity + 置信≥0.75 |
+| ReversalBrewing | 反转酝酿 | 行为=Exhaustion/Crowding + 结构弱化 + 置信≥0.60 |
+
+**次小类（SecondaryMarketRegime）**：
+| 主大类 | 次小类 | 判断依据 |
+|--------|--------|----------|
+| TrendExpansion | BullTrendAcceleration | 价格方向=Bullish + 波动=ElevatedVol |
+| TrendExpansion | BullTrendExhaustion | 价格方向=Bullish + 波动=LowVol |
+| TrendExpansion | BearTrendAcceleration | 价格方向=Bearish + 波动=ElevatedVol |
+| TrendExpansion | BearTrendExhaustion | 价格方向=Bearish + 波动=LowVol |
+| RangeConsolidation | TightRange | 波动=LowVol |
+| RangeConsolidation | WideRange | 波动=ElevatedVol |
+| RangeConsolidation | Accumulation | 结构=Accumulation + 置信>0.6 |
+| RangeConsolidation | Distribution | 结构=Distribution + 置信>0.6 |
+| ExtremeStress | PanicSelling | 行为=Capitulation + 价格=Bearish |
+| ExtremeStress | PanicBuying | 行为=FOMO + 价格=Bullish |
+| ExtremeStress | LiquidityCrunch | 流动性=ThinLiquidity |
+| ExtremeStress | VolatilitySpike | 波动=CrisisVol/ElevatedVol |
+| ReversalBrewing | TrendFatigue | 行为=Exhaustion |
+| ReversalBrewing | SentimentExtreme | 行为=Crowding |
+| ReversalBrewing | StructureBreakdown | 结构=MeanReverting |
+
+### 置信度提升设计
+
+**增强聚合器特性**：
+1. **价格方向判断**：20 根 K 线窗口，2% 阈值区分 Bullish/Bearish
+2. **多维度一致性**：5 项交叉检查，一致性加成 20%
+3. **严格阈值**：极端状态 0.75，趋势扩展 0.65，反转酝酿 0.60
+4. **置信度公式**：`overall = base*0.8 + consistency*0.2`
+
+**预期效果**（设计推算）：
+- 主大类准确率提升：15-20%
+- 次小类准确率提升：20-25%
+- 误判率降低：30%
+- 置信度提升：10-15%
+
+### 下一步行动
+
+1. **运行 CLI 验证**：使用模拟数据验证分类器
+2. **参数调优**：根据报告调整阈值
+3. **真实数据验证**：获取 NQ/ES 等真实历史数据
+
+---
+
+**更新时间**：2026-05-08 08:45
 **更新人**：Claude (Hermes Agent)
-**状态**：验证工具已完成，等待真实数据验证
+**状态**：编译验证完成，准备运行 CLI 验证

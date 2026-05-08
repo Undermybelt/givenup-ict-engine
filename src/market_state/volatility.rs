@@ -122,17 +122,20 @@ impl VolatilityClassifier {
         };
 
         // 5. 置信度 = 百分位确定性 + 聚类持续性
+        // 改进：添加基础置信度，避免中间值置信度过低
+        let base_confidence = 0.35;
         let percentile_confidence = if matches!(
             regime,
             VolatilityRegime::CrisisVol | VolatilityRegime::LowVol
         ) {
             // 极端值置信度更高
-            (percentile.abs() - 0.5).abs() * 2.0
+            (percentile.abs() - 0.5).abs() * 1.5
         } else {
-            0.5 + (percentile - 0.5).abs()
+            // 正常值
+            0.3 + (percentile - 0.5).abs()
         };
 
-        let confidence = (percentile_confidence * 0.7 + clustering_score * 0.3).min(1.0);
+        let confidence = (base_confidence + percentile_confidence * 0.5 + clustering_score * 0.25).min(1.0);
 
         (regime, confidence)
     }

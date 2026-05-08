@@ -86,6 +86,7 @@ pub(crate) fn run_factor_research(
             w1_events: structure_ict_context.w1_events.as_deref(),
             auxiliary: auxiliary_override.as_ref(),
             regime: None,
+            regime_v2_labels: None,
         },
         Some(&mut learning_state),
         &FactorBacktestConfig::default(),

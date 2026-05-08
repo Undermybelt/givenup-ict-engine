@@ -120,7 +120,10 @@ impl LiquidityClassifier {
         };
 
         // 5. 置信度：偏离中间值的程度
-        let confidence = (liq_score - 0.5).abs() * 2.0;
+        // 改进：添加基础置信度，避免中间值置信度过低
+        let base_confidence = 0.3; // 基础置信度
+        let deviation_confidence = (liq_score - 0.5).abs() * 1.4; // 偏离置信度
+        let confidence = (base_confidence + deviation_confidence).min(1.0);
 
         (regime, confidence)
     }

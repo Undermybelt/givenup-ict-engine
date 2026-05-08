@@ -36,10 +36,10 @@ pub struct EnhancedAggregationConfig {
 impl Default for EnhancedAggregationConfig {
     fn default() -> Self {
         Self {
-            extreme_min_confidence: 0.75,   // 极端状态要求高置信
-            trend_min_confidence: 0.65,     // 趋势扩展要求中高置信
-            reversal_min_confidence: 0.60,  // 反转酝酿要求中等置信
-            consistency_weight: 0.2,        // 一致性贡献 20%
+            extreme_min_confidence: 0.65,   // 极端状态要求高置信
+            trend_min_confidence: 0.50,     // 趋势扩展要求中等置信
+            reversal_min_confidence: 0.50,  // 反转酝酿要求中等置信
+            consistency_weight: 0.30,       // 一致性贡献提高到30%
             price_direction_window: 20,     // 20 根 K 线判断方向
             price_direction_threshold: 2.0, // 2% 涨跌幅阈值
         }
@@ -88,8 +88,8 @@ impl EnhancedAggregator {
         let consistency = self.calculate_consistency(vol, liq, struct_regime, behav, &price_dir);
 
         // 3. 基础加权置信度
-        let base_conf =
-            (vol_conf * 0.25 + liq_conf * 0.20 + struct_conf * 0.35 + behav_conf * 0.20);
+        // 提高结构权重，降低波动率权重（因为结构对趋势识别更重要）
+        let base_conf = vol_conf * 0.20 + liq_conf * 0.15 + struct_conf * 0.45 + behav_conf * 0.20;
 
         // 4. 应用一致性加成
         let overall_conf = (base_conf * (1.0 - self.config.consistency_weight)
@@ -309,13 +309,14 @@ impl EnhancedAggregator {
         _vol_conf: f64,
     ) -> bool {
         // 趋势结构 + 高流动性 + 中高置信
+        // 降低流动性置信度要求（原 0.55 → 0.35），因为流动性置信度对中间值很敏感
         matches!(struct_regime, MarketStructureRegime::Trending)
             && struct_conf > self.config.trend_min_confidence
             && matches!(
                 liq,
                 LiquidityRegime::HighLiquidity | LiquidityRegime::NormalLiquidity
             )
-            && liq_conf > 0.55
+            && liq_conf > 0.35 // 降低要求
     }
 
     /// 分类极端状态次小类
