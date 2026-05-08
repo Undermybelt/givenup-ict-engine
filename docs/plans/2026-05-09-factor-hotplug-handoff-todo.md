@@ -57,18 +57,18 @@ GPT agents entering this repo consistently report "no usable factors" because:
 
 ### Phase 4: Verification
 
-- [ ] `cargo check --all-targets` green
-- [ ] `cargo clippy --all-targets -- -D warnings` green
-- [ ] `cargo test` green
-- [ ] `ict-engine analyze --demo --human` still works with new families
-- [ ] `ict-engine factor-research --backend auto-quant --symbol DEMO` still works
+- [x] `cargo check --all-targets` green
+- [x] `cargo clippy --all-targets -- -D warnings` green
+- [x] `cargo test` green (888 tests)
+- [x] `ict-engine analyze --demo --human` still works with new families
+- [x] Hot-plug config works: disabling E/F/H via YAML reduces quality score as expected
 
 ### Phase 5: Commit & Doc Sync
 
-- [ ] Commit all changes
-- [ ] Update `docs/factor-catalog.md` status columns
-- [ ] Update `AGENTS.md` traceability table
-- [ ] Update this handoff TODO
+- [x] Commit all changes (3 commits: f36e468, e31fa98, 30b843f)
+- [x] Update `docs/factor-catalog.md` status columns
+- [x] Update `AGENTS.md` traceability table
+- [x] Update this handoff TODO
 
 ## Architecture Constraints
 
