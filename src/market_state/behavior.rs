@@ -135,7 +135,7 @@ impl InvestorBehaviorClassifier {
             // 风险规避
             (InvestorBehaviorRegime::RiskOff, 0.55)
         } else {
-            (InvestorBehaviorRegime::Neutral, 0.3)
+            (InvestorBehaviorRegime::Neutral, 0.45) // 提升中性状态置信度
         };
 
         (regime, confidence)

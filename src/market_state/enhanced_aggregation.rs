@@ -89,7 +89,10 @@ impl EnhancedAggregator {
 
         // 3. 基础加权置信度
         // 提高结构权重，降低波动率权重（因为结构对趋势识别更重要）
-        let base_conf = vol_conf * 0.20 + liq_conf * 0.15 + struct_conf * 0.45 + behav_conf * 0.20;
+        // 添加基础置信度，避免过低的综合置信度
+        let base_confidence = 0.15;
+        let weighted_conf = vol_conf * 0.15 + liq_conf * 0.10 + struct_conf * 0.50 + behav_conf * 0.25;
+        let base_conf = base_confidence + weighted_conf * 0.85;
 
         // 4. 应用一致性加成
         let overall_conf = (base_conf * (1.0 - self.config.consistency_weight)
@@ -219,7 +222,13 @@ impl EnhancedAggregator {
             | (_, PriceDirection::Bearish, MarketStructureRegime::Trending) => {
                 consistency_score += 1.0;
             }
-            _ => {}
+            // 部分匹配：价格有方向
+            (_, PriceDirection::Bullish | PriceDirection::Bearish, _) => {
+                consistency_score += 0.5;
+            }
+            _ => {
+                consistency_score += 0.2; // 默认部分得分
+            }
         }
         checks += 1;
 
@@ -231,6 +240,13 @@ impl EnhancedAggregator {
             )
         {
             consistency_score += 1.0;
+        } else if matches!(liq, LiquidityRegime::ThinLiquidity)
+            || matches!(
+                vol,
+                VolatilityRegime::CrisisVol | VolatilityRegime::ElevatedVol
+            )
+        {
+            consistency_score += 0.4; // 部分得分
         }
         checks += 1;
 
