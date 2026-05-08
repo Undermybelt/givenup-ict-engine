@@ -4,6 +4,35 @@ use std::path::{Path, PathBuf};
 
 use crate::config::shell_quote;
 
+pub(crate) fn apply_provider_profile_to_command(
+    command: &str,
+    provider_profile_selector: Option<&str>,
+) -> String {
+    let Some(profile) = provider_profile_selector.filter(|value| !value.trim().is_empty()) else {
+        return command.to_string();
+    };
+    let trimmed = command.trim();
+    if trimmed.is_empty() || trimmed.contains(" --profile ") {
+        return command.to_string();
+    }
+    if let Some(rest) = trimmed.strip_prefix("ask-user: ") {
+        if let Some((prefix, deferred)) = rest.split_once("| then ") {
+            let rewritten_deferred =
+                apply_provider_profile_to_command(deferred.trim(), Some(profile));
+            return format!("ask-user: {}| then {}", prefix, rewritten_deferred);
+        }
+        return command.to_string();
+    }
+    if trimmed.starts_with("ict-engine workflow-status ")
+        || trimmed.starts_with("ict-engine provider-status ")
+        || trimmed.starts_with("ict-engine factor-research ")
+        || trimmed.starts_with("ict-engine factor-autoresearch ")
+    {
+        return format!("{} --profile {}", trimmed, shell_quote(profile));
+    }
+    command.to_string()
+}
+
 use super::readiness::{auto_quant_readiness_from_status_and_data, AutoQuantReadinessSurface};
 use super::strategy_materials::{discover_strategy_materials, AutoQuantStrategyMaterialSummary};
 use super::types::AutoQuantDependencyStatus;
@@ -45,6 +74,8 @@ pub struct AutoQuantResearchHandoffPayload {
     pub handoff_kind: String,
     pub symbol: String,
     pub state_dir: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub provider_profile_selector: Option<String>,
     pub objective: String,
     pub backend: String,
     pub data_path: String,
@@ -76,6 +107,7 @@ pub struct AutoQuantFactorResearchCommandInput<'a> {
     pub symbol: &'a str,
     pub data: &'a str,
     pub objective: &'a str,
+    pub provider_profile_selector: Option<&'a str>,
     pub paired_data: Option<&'a str>,
     pub auto_quant_profile: Option<&'a str>,
     pub auxiliary_evidence_path: Option<&'a str>,
@@ -89,6 +121,7 @@ pub struct AutoQuantFactorAutoresearchCommandInput<'a> {
     pub symbol: &'a str,
     pub data: &'a str,
     pub objective: &'a str,
+    pub provider_profile_selector: Option<&'a str>,
     pub paired_data: Option<&'a str>,
     pub auto_quant_profile: Option<&'a str>,
     pub auxiliary_evidence_path: Option<&'a str>,
@@ -103,6 +136,7 @@ pub struct BuildFactorResearchHandoffPayloadInput<'a> {
     pub symbol: &'a str,
     pub data: &'a str,
     pub objective: &'a str,
+    pub provider_profile_selector: Option<&'a str>,
     pub paired_data: Option<&'a str>,
     pub auxiliary_evidence_path: Option<&'a str>,
     pub mutation_spec_path: Option<&'a str>,
@@ -115,6 +149,7 @@ pub struct BuildFactorAutoresearchHandoffPayloadInput<'a> {
     pub symbol: &'a str,
     pub data: &'a str,
     pub objective: &'a str,
+    pub provider_profile_selector: Option<&'a str>,
     pub paired_data: Option<&'a str>,
     pub auxiliary_evidence_path: Option<&'a str>,
     pub mutation_spec_path: Option<&'a str>,
@@ -435,6 +470,7 @@ pub fn build_factor_research_handoff_payload(
         symbol,
         data,
         objective,
+        provider_profile_selector,
         paired_data,
         auxiliary_evidence_path,
         mutation_spec_path,
@@ -462,6 +498,7 @@ pub fn build_factor_research_handoff_payload(
         handoff_kind: "factor_research".to_string(),
         symbol: symbol.to_string(),
         state_dir: state_dir.to_string(),
+        provider_profile_selector: provider_profile_selector.map(str::to_string),
         objective: objective.to_string(),
         backend: "auto-quant".to_string(),
         data_path: data.to_string(),
@@ -554,6 +591,7 @@ pub fn build_factor_autoresearch_handoff_payload(
         symbol,
         data,
         objective,
+        provider_profile_selector,
         paired_data,
         auxiliary_evidence_path,
         mutation_spec_path,
@@ -583,6 +621,7 @@ pub fn build_factor_autoresearch_handoff_payload(
         handoff_kind: "factor_autoresearch".to_string(),
         symbol: symbol.to_string(),
         state_dir: state_dir.to_string(),
+        provider_profile_selector: provider_profile_selector.map(str::to_string),
         objective: objective.to_string(),
         backend: "auto-quant".to_string(),
         data_path: data.to_string(),
@@ -731,6 +770,7 @@ mod tests {
                 symbol: "NQ",
                 data: "demo.json",
                 objective: "expansion_manipulation",
+                provider_profile_selector: None,
                 paired_data: None,
                 auxiliary_evidence_path: None,
                 mutation_spec_path: None,
@@ -785,6 +825,7 @@ mod tests {
                 symbol: "NQ",
                 data: "demo.json",
                 objective: "expansion_manipulation",
+                provider_profile_selector: None,
                 paired_data: None,
                 auxiliary_evidence_path: None,
                 mutation_spec_path: Some("mutation.json"),
@@ -824,6 +865,7 @@ mod tests {
                 symbol: "NQ",
                 data: "demo.json",
                 objective: "generic",
+                provider_profile_selector: None,
                 paired_data: None,
                 auxiliary_evidence_path: None,
                 mutation_spec_path: None,
@@ -847,6 +889,7 @@ mod tests {
             symbol: "NQ",
             data: "demo.json",
             objective: "generic",
+            provider_profile_selector: None,
             paired_data: None,
             auxiliary_evidence_path: None,
             mutation_spec_path: None,
@@ -880,6 +923,7 @@ mod tests {
                 symbol: "NQ",
                 data: "demo.json",
                 objective: "expansion_manipulation",
+                provider_profile_selector: None,
                 paired_data: None,
                 auxiliary_evidence_path: None,
                 mutation_spec_path: None,
@@ -934,6 +978,7 @@ mod tests {
                 symbol: "NQ",
                 data: "demo.json",
                 objective: "generic",
+                provider_profile_selector: None,
                 paired_data: None,
                 auxiliary_evidence_path: Some(auxiliary_path.to_str().unwrap()),
                 mutation_spec_path: None,

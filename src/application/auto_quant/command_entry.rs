@@ -180,11 +180,15 @@ fn render_auto_quant_readiness_human_output(
 fn auto_quant_handoff_recommended_next_command(
     payload: &super::handoff::AutoQuantResearchHandoffPayload,
 ) -> String {
-    payload
-        .readiness
-        .as_ref()
-        .map(|readiness| readiness.recommended_next_command.clone())
-        .unwrap_or_default()
+    super::handoff::apply_provider_profile_to_command(
+        payload
+            .readiness
+            .as_ref()
+            .map(|readiness| readiness.recommended_next_command.clone())
+            .unwrap_or_default()
+            .as_str(),
+        payload.provider_profile_selector.as_deref(),
+    )
 }
 
 fn auto_quant_handoff_review_command(
@@ -200,8 +204,14 @@ fn auto_quant_handoff_workflow_status_command(
     payload: &super::handoff::AutoQuantResearchHandoffPayload,
 ) -> String {
     format!(
-        "ict-engine workflow-status --symbol {} --state-dir {} --human",
-        payload.symbol, payload.state_dir
+        "{} --human",
+        super::handoff::apply_provider_profile_to_command(
+            &format!(
+                "ict-engine workflow-status --symbol {} --state-dir {}",
+                payload.symbol, payload.state_dir
+            ),
+            payload.provider_profile_selector.as_deref(),
+        )
     )
 }
 
@@ -642,6 +652,7 @@ pub fn auto_quant_factor_research_command(
         symbol,
         data,
         objective,
+        provider_profile_selector,
         paired_data,
         auto_quant_profile,
         auxiliary_evidence_path,
@@ -677,6 +688,7 @@ pub fn auto_quant_factor_research_command(
             symbol,
             data,
             objective,
+            provider_profile_selector,
             paired_data,
             auxiliary_evidence_path,
             mutation_spec_path,
@@ -702,6 +714,7 @@ pub fn auto_quant_factor_autoresearch_command(
         symbol,
         data,
         objective,
+        provider_profile_selector,
         paired_data,
         auto_quant_profile,
         auxiliary_evidence_path,
@@ -738,6 +751,7 @@ pub fn auto_quant_factor_autoresearch_command(
             symbol,
             data,
             objective,
+            provider_profile_selector,
             paired_data,
             auxiliary_evidence_path,
             mutation_spec_path,
@@ -1279,6 +1293,7 @@ mod tests {
                 symbol: "DEMO",
                 data: "examples/demo/demo-15m.json",
                 objective: "expansion_manipulation",
+                provider_profile_selector: None,
                 paired_data: None,
                 auxiliary_evidence_path: None,
                 mutation_spec_path: None,
@@ -1301,6 +1316,40 @@ mod tests {
         assert_eq!(
             output["recommended_next_step"]["action_type"],
             "run_command"
+        );
+    }
+
+    #[test]
+    fn auto_quant_handoff_output_keeps_provider_profile_on_workflow_status_followup() {
+        let temp = tempfile::tempdir().unwrap();
+        let payload =
+            build_factor_research_handoff_payload(BuildFactorResearchHandoffPayloadInput {
+                symbol: "DEMO",
+                data: "examples/demo/demo-15m.json",
+                objective: "expansion_manipulation",
+                provider_profile_selector: Some("thrill3r-nq-closed-loop-v1"),
+                paired_data: None,
+                auxiliary_evidence_path: None,
+                mutation_spec_path: None,
+                strategy_material_root: None,
+                state_dir: temp.path().to_str().unwrap(),
+                dependency_status: healthy_dependency_status(
+                    temp.path()
+                        .join(".deps/auto-quant")
+                        .to_string_lossy()
+                        .into_owned(),
+                ),
+            });
+
+        let output = build_auto_quant_handoff_output_payload(&payload);
+        let expected_state_dir = temp.path().to_string_lossy().to_string();
+        assert_eq!(
+            output["workflow_status_command"].as_str(),
+            Some(format!(
+                "ict-engine workflow-status --symbol DEMO --state-dir {} --profile thrill3r-nq-closed-loop-v1 --human",
+                expected_state_dir
+            ))
+            .as_deref()
         );
     }
 

@@ -241,6 +241,7 @@ mod tests {
                 symbol: "NQ",
                 data: "/tmp/nq.json",
                 objective: "generic",
+                provider_profile_selector: None,
                 paired_data: None,
                 auxiliary_evidence_path: None,
                 mutation_spec_path: None,

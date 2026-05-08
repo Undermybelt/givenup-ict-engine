@@ -18,6 +18,7 @@ use super::structural_playbook::{
     StructuralPathRankerRuntimeContext, StructuralRecommendedPathBundleArtifact,
 };
 use crate::application::auto_quant::AutoQuantResearchHandoffPayload;
+use crate::application::auto_quant::handoff::apply_provider_profile_to_command;
 use crate::application::belief::{
     jump_calibration_gate_workflow_summary, jump_model_workflow_summary,
 };
@@ -718,25 +719,7 @@ fn apply_selected_profile_to_workflow_command(
     let Some(profile) = provider_status_agent.selected_profile.as_ref() else {
         return command.to_string();
     };
-    let trimmed = command.trim();
-    if trimmed.is_empty() || trimmed.contains(" --profile ") {
-        return command.to_string();
-    }
-    if trimmed.starts_with("ict-engine workflow-status ") {
-        return format!(
-            "{} --profile {}",
-            trimmed,
-            shell_quote(&profile.selector)
-        );
-    }
-    if trimmed.starts_with("ict-engine provider-status ") {
-        return format!(
-            "{} --profile {}",
-            trimmed,
-            shell_quote(&profile.selector)
-        );
-    }
-    command.to_string()
+    apply_provider_profile_to_command(command, Some(&profile.selector))
 }
 
 fn human_display_command(command: &str) -> String {
@@ -928,13 +911,19 @@ fn build_first_run_guide(
                 summary:
                     "Use historical data to clarify strategy and iterate factors or backtests."
                         .to_string(),
-                command: format!(
-                    "ict-engine factor-research --symbol {} --data <historical-data.json> --state-dir {} --human",
-                    symbol, state_dir
+                command: apply_selected_profile_to_workflow_command(
+                    &format!(
+                        "ict-engine factor-research --symbol {} --data <historical-data.json> --state-dir {} --human",
+                        symbol, state_dir
+                    ),
+                    provider_status_agent,
                 ),
-                follow_up_command: Some(format!(
-                    "ict-engine factor-backtest --symbol {} --data <historical-data.json> --state-dir {} --human",
-                    symbol, state_dir
+                follow_up_command: Some(apply_selected_profile_to_workflow_command(
+                    &format!(
+                        "ict-engine factor-backtest --symbol {} --data <historical-data.json> --state-dir {} --human",
+                        symbol, state_dir
+                    ),
+                    provider_status_agent,
                 )),
             },
             WorkflowFirstRunRoute {
@@ -1112,7 +1101,10 @@ fn evidence_review_route_line(guide: &WorkflowEvidenceReviewGuide) -> String {
     )
 }
 
-fn workflow_human_deferred_command(command: &str) -> Option<String> {
+fn workflow_human_deferred_command(
+    command: &str,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+) -> Option<String> {
     let trimmed = command.trim();
     if trimmed.is_empty()
         || trimmed == "recommended_command_unavailable"
@@ -1129,12 +1121,15 @@ fn workflow_human_deferred_command(command: &str) -> Option<String> {
                 !value.is_empty()
                     && *value != "choose historical dataset with user before running command"
             })
-            .map(str::to_string);
+            .map(|value| apply_selected_profile_to_workflow_command(value, provider_status_agent));
     }
     if trimmed.starts_with("blocked:") {
         return None;
     }
-    Some(trimmed.to_string())
+    Some(apply_selected_profile_to_workflow_command(
+        trimmed,
+        provider_status_agent,
+    ))
 }
 
 pub fn executor_scorecard_surface(
@@ -1400,7 +1395,8 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
             .blocking_truth
             .reason
             .contains("user_selected_historical_data_missing");
-    let deferred_user_selection_command = workflow_human_deferred_command(&top_level_command);
+    let deferred_user_selection_command =
+        workflow_human_deferred_command(&top_level_command, provider_status_agent);
     let base_human_next_action = if let Some(guide) = auto_quant_handoff_guide.as_ref() {
         auto_quant_handoff_next_action(guide)
     } else if let Some(guide) = first_run_guide.as_ref() {
@@ -4767,6 +4763,7 @@ mod tests {
                 symbol: "DEMO",
                 data: "examples/demo/demo-15m.json",
                 objective: "expansion_manipulation",
+                provider_profile_selector: None,
                 paired_data: None,
                 auxiliary_evidence_path: None,
                 mutation_spec_path: None,
@@ -5566,6 +5563,31 @@ mod tests {
     }
 
     #[test]
+    fn human_workflow_status_deferred_command_keeps_selected_profile_on_factor_research() {
+        let snapshot = sample_human_workflow_snapshot();
+        let value = build_human_workflow_status_view_with_provider_agent(
+            &snapshot,
+            &[],
+            &sample_provider_agent_surface_with_profile(),
+            &[],
+        );
+        assert_eq!(
+            value["recommended_next_step"]["blocked_reason"].as_str(),
+            Some("user_selected_historical_data_missing")
+        );
+        assert_eq!(
+            value["recommended_next_step"]["deferred_command"].as_str(),
+            Some(
+                "ict-engine factor-research --symbol NQ --data /tmp/a.json --state-dir state --profile thrill3r-nq-closed-loop-v1"
+            )
+        );
+        assert!(value["next_action_line"]
+            .as_str()
+            .unwrap_or_default()
+            .contains("--profile thrill3r-nq-closed-loop-v1"));
+    }
+
+    #[test]
     fn human_workflow_status_next_line_does_not_duplicate_next_prefix() {
         let mut snapshot = WorkflowSnapshot::default();
         snapshot.symbol = "DEMO".to_string();
@@ -5948,6 +5970,12 @@ mod tests {
             agent["first_run_router"]["bootstrap_command"].as_str(),
             Some(
                 "ict-engine workflow-status --symbol NQ --state-dir /tmp/state --profile thrill3r-nq-closed-loop-v1 --phase bootstrap"
+            )
+        );
+        assert_eq!(
+            agent["first_run_router"]["routes"][1]["command"].as_str(),
+            Some(
+                "ict-engine factor-research --symbol NQ --data <historical-data.json> --state-dir /tmp/state --human --profile thrill3r-nq-closed-loop-v1"
             )
         );
     }

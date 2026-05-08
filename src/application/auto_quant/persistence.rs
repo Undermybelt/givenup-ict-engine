@@ -73,6 +73,7 @@ mod tests {
                 symbol: "NQ",
                 data: "demo.json",
                 objective: "expansion_manipulation",
+                provider_profile_selector: None,
                 paired_data: None,
                 auxiliary_evidence_path: None,
                 mutation_spec_path: None,

@@ -776,6 +776,8 @@ enum Commands {
         data_1d: Option<String>,
         #[arg(long, help = "Optional paired-market candle JSON path")]
         paired_data: Option<String>,
+        #[arg(long, help = "Optional opt-in provider profile id or JSON path")]
+        profile: Option<String>,
         #[arg(
             long,
             help = "Optional managed Auto-Quant workspace profile. `synthetic_ohlcv` deploys the additive external runner against the provided primary candle JSON; `managed` clears any saved profile for this state dir."
@@ -939,6 +941,8 @@ enum Commands {
         data_1d: Option<String>,
         #[arg(long, help = "Optional paired-market candle JSON path")]
         paired_data: Option<String>,
+        #[arg(long, help = "Optional opt-in provider profile id or JSON path")]
+        profile: Option<String>,
         #[arg(
             long,
             help = "Optional managed Auto-Quant workspace profile. `synthetic_ohlcv` deploys the additive external runner against the provided primary candle JSON; `managed` clears any saved profile for this state dir."
@@ -2304,6 +2308,7 @@ fn main() -> Result<()> {
             data_4h,
             data_1d,
             paired_data,
+            profile,
             auto_quant_profile,
             auxiliary_evidence,
             mutation_spec,
@@ -2328,6 +2333,7 @@ fn main() -> Result<()> {
             data_4h: data_4h.as_deref(),
             data_1d: data_1d.as_deref(),
             paired_data: paired_data.as_deref(),
+            provider_profile: profile.as_deref(),
             auto_quant_profile: auto_quant_profile.as_deref(),
             auxiliary_evidence: auxiliary_evidence.as_deref(),
             mutation_spec: mutation_spec.as_deref(),
@@ -2391,6 +2397,7 @@ fn main() -> Result<()> {
             data_4h,
             data_1d,
             paired_data,
+            profile,
             auto_quant_profile,
             auxiliary_evidence,
             strategy_material_root,
@@ -2413,6 +2420,7 @@ fn main() -> Result<()> {
             data_4h: data_4h.as_deref(),
             data_1d: data_1d.as_deref(),
             paired_data: paired_data.as_deref(),
+            provider_profile: profile.as_deref(),
             auto_quant_profile: auto_quant_profile.as_deref(),
             auxiliary_evidence: auxiliary_evidence.as_deref(),
             strategy_material_root: strategy_material_root.as_deref(),
@@ -14515,6 +14523,48 @@ mod tests {
         match cli.command {
             Commands::FactorResearch { output_format, .. } => {
                 assert_eq!(output_format, "compact");
+            }
+            other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
+        }
+    }
+
+    #[test]
+    fn test_cli_factor_research_accepts_provider_profile() {
+        let cli = parse_cli_from([
+            "ict-engine",
+            "factor-research",
+            "--symbol",
+            "NQ",
+            "--data",
+            "candles.json",
+            "--profile",
+            "thrill3r-nq-closed-loop-v1",
+        ])
+        .unwrap();
+        match cli.command {
+            Commands::FactorResearch { profile, .. } => {
+                assert_eq!(profile.as_deref(), Some("thrill3r-nq-closed-loop-v1"));
+            }
+            other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
+        }
+    }
+
+    #[test]
+    fn test_cli_factor_autoresearch_accepts_provider_profile() {
+        let cli = parse_cli_from([
+            "ict-engine",
+            "factor-autoresearch",
+            "--symbol",
+            "NQ",
+            "--data",
+            "candles.json",
+            "--profile",
+            "thrill3r-nq-closed-loop-v1",
+        ])
+        .unwrap();
+        match cli.command {
+            Commands::FactorAutoresearch { profile, .. } => {
+                assert_eq!(profile.as_deref(), Some("thrill3r-nq-closed-loop-v1"));
             }
             other => panic!("unexpected command: {:?}", std::mem::discriminant(&other)),
         }

@@ -100,13 +100,47 @@
   - `cargo run --quiet -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-node01 --human`
   - `cargo run --quiet -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-node01 --human --profile thrill3r-nq-closed-loop-v1`
   - `cargo test --quiet --lib human_workflow_status_view_shows_opt_in_profile_hint_only_on_first_run_empty_state -- --nocapture`
+  Commit:
+  - `9bcf5fe fix: surface optional personal lane in human workflow status`
+
+- [x] Closed the remaining selected-profile propagation leaks in factor-research / factor-autoresearch entry and deferred follow-up surfaces.
+  Files:
+  - `src/main.rs`
+  - `src/factor_research_command.rs`
+  - `src/application/auto_quant/handoff.rs`
+  - `src/application/auto_quant/command_entry.rs`
+  - `src/application/orchestration/workflow_status.rs`
+  Change:
+  - `factor-research` and `factor-autoresearch` now accept `--profile` and thread that selector into the Auto-Quant handoff path.
+  - Auto-Quant handoff output now preserves `--profile` on both `recommended_next_command` and `workflow_status_command` when the selected personal lane is active.
+  - Human deferred `ask-user ... | then ict-engine factor-research ...` routes now preserve `--profile` on the follow-up command.
+  Why:
+  - Before this patch, a user could intentionally opt into the personal provider lane, enter factor-research / auto-quant guidance, and then silently fall back to the generic lane on the next command hop.
+  Focused tests:
+  - `cargo test --quiet --lib auto_quant_handoff_output_keeps_provider_profile_on_workflow_status_followup`
+  - `cargo test --quiet --lib auto_quant_handoff_router_keeps_selected_profile_on_workflow_status_followup`
+  - `cargo test --quiet --lib human_workflow_status_deferred_command_keeps_selected_profile_on_factor_research`
+  - `cargo test --quiet --bin ict-engine test_cli_factor_research_accepts_provider_profile`
+  - `cargo test --quiet --bin ict-engine test_cli_factor_autoresearch_accepts_provider_profile`
+  CLI evidence:
+  - `cargo run --quiet -- workflow-status --symbol NQ --state-dir /tmp/ict-engine-node01 --human --profile thrill3r-nq-closed-loop-v1`
+  Verified:
+  - Selected-profile first-run human output keeps `provider-status --compact --profile thrill3r-nq-closed-loop-v1`.
+  - Selected-profile first-run human output keeps `factors/backtest=ict-engine factor-research ... --profile thrill3r-nq-closed-loop-v1`.
+  - Selected-profile first-run human output keeps `workflow-status --phase bootstrap --profile thrill3r-nq-closed-loop-v1`.
+  - Selected-profile deferred research follow-up now keeps `--profile thrill3r-nq-closed-loop-v1`.
 
 ## Next
 
-- [ ] Decide whether to commit the human first-run hint follow-up after worktree review.
+- [ ] Decide whether to keep iterating this lane or park it and return to broader runtime closure / validation hardening.
+  Current status:
+  - Three landed commits plus one verified uncommitted slice now close the selected-profile discoverability and propagation path across provider/workflow, auto-quant handoff, and deferred research follow-ups:
+    - `7e5ef99 fix: preserve opt-in profile routing in workflow surfaces`
+    - `a9a5984 fix: keep selected profile on workflow followups`
+    - `9bcf5fe fix: surface optional personal lane in human workflow status`
+    - current worktree: factor-research / factor-autoresearch `--profile` entry + auto-quant/deferred follow-up propagation
   Gate:
-  - Only commit if the new diff stays narrow and verified.
-  - Direct CLI verification is complete for the previously committed slice.
+  - Only reopen if a new concrete consumer-surface leak is found under direct CLI verification or if the broader persisted-profile design becomes necessary.
 
 ## Not Yet
 
@@ -127,6 +161,9 @@
   - selected first-run bootstrap routing degraded back to profile-less `workflow-status --phase bootstrap`
   - selected evidence-review and auto-quant helper routes degraded back to profile-less `workflow-status` follow-ups
   - generic downstream `workflow-status` / `provider-status` follow-up strings could stay profile-less unless upgraded at the central workflow surface
+  - factor-research / factor-autoresearch entry into the Auto-Quant handoff path had no provider-profile selector to carry forward
+  - selected first-run `factors/backtest=` route still degraded back to a profile-less `factor-research` command until direct CLI verification caught it
+  - selected human deferred `ask-user -> then factor-research` follow-ups could still degrade back to a profile-less command
 
 ## Success Standard For This Board
 
