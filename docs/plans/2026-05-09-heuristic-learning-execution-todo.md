@@ -37,26 +37,15 @@
   - Commit: `5f2e79f feat: add regime confidence report`
   - Files: `regime_confidence_report.py`, handoff, tests
 - [x] Slice 8: Transition evidence aggregator
-  - Commit: pending this slice
+  - Commit: `e048f0a feat: add transition evidence aggregator`
   - Files: `transition_evidence_aggregator.py`, handoff, tests
   - Tests: `42 OK`
+- [x] Slice 9: BBN evidence value report
+  - Commit: pending this slice
+  - Files: `bbn_evidence_value_report.py`, handoff, tests
+  - Tests: target 3 OK; full research 45 OK
 
 ## Next Implementation Order
-
-### Slice 9: BBN evidence value report
-
-**Objective:** only add BBN evidence nodes/edges if they improve entropy/log-loss/contradiction lift.
-
-**Create:**
-- `scripts/research/bbn_evidence_value_report.py`
-- tests + handoff
-
-**Outputs:**
-- `posterior_entropy_delta`
-- `logloss_delta`
-- `contradiction_lift`
-- `accepted_edges`
-- `rejected_edges`
 
 ### Slice 10: Risk-adjusted path utility
 
@@ -100,11 +89,11 @@
 
 ## Current Slice Status
 
-Active: Slice 7 `regime_confidence_report.py`.
+Active: Slice 9 `bbn_evidence_value_report.py`.
 
-- [ ] Write failing tests
-- [ ] Implement minimal script
-- [ ] Add handoff doc
-- [ ] Run target tests
-- [ ] Run full research tests
+- [x] Write failing tests
+- [x] Implement minimal script
+- [x] Add handoff doc
+- [x] Run target tests
+- [x] Run full research tests
 - [ ] Commit slice
