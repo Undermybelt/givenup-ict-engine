@@ -14,7 +14,7 @@ use std::path::Path;
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 
-use super::manifest::StrategyLibraryValidationMetrics;
+use super::manifest::{StrategyLibraryEntry, StrategyLibraryValidationMetrics};
 
 /// One `---` block lifted from a `run_ibkr.log`.
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -263,6 +263,74 @@ impl ManifestLogCrossCheck {
 
 const METRIC_F64_TOLERANCE: f64 = 1.0e-6;
 
+fn block_has_cross_check_metrics(block: &RunIbkrLogBlock) -> bool {
+    let metrics = &block.aggregate;
+    metrics.trade_count > 0
+        || metrics.win_rate_pct.abs() > METRIC_F64_TOLERANCE
+        || metrics.sharpe.abs() > METRIC_F64_TOLERANCE
+        || metrics.sortino.abs() > METRIC_F64_TOLERANCE
+        || metrics.calmar.abs() > METRIC_F64_TOLERANCE
+        || metrics.profit_factor.abs() > METRIC_F64_TOLERANCE
+        || metrics.max_drawdown_pct.abs() > METRIC_F64_TOLERANCE
+        || metrics.total_profit_pct.abs() > METRIC_F64_TOLERANCE
+}
+
+fn metric_selection_score(
+    manifest: &StrategyLibraryValidationMetrics,
+    block: &RunIbkrLogBlock,
+) -> f64 {
+    let mut score = 0.0;
+    if manifest.trade_count != block.aggregate.trade_count {
+        score += 10_000.0
+            + (i64::from(manifest.trade_count) - i64::from(block.aggregate.trade_count)).abs()
+                as f64;
+    }
+    for (manifest_value, log_value) in [
+        (manifest.win_rate_pct, block.aggregate.win_rate_pct),
+        (manifest.sharpe, block.aggregate.sharpe),
+        (manifest.sortino, block.aggregate.sortino),
+        (manifest.calmar, block.aggregate.calmar),
+        (manifest.profit_factor, block.aggregate.profit_factor),
+        (manifest.max_drawdown_pct, block.aggregate.max_drawdown_pct),
+        (manifest.total_profit_pct, block.aggregate.total_profit_pct),
+    ] {
+        let delta = (manifest_value - log_value).abs();
+        if delta > METRIC_F64_TOLERANCE {
+            score += 1_000.0 + delta;
+        }
+    }
+    score
+}
+
+fn log_block_selection_score(entry: &StrategyLibraryEntry, block: &RunIbkrLogBlock) -> f64 {
+    let mut score = 0.0;
+    if !entry.status.is_empty() && entry.status != block.status {
+        score += 1_000_000.0;
+    }
+    if !entry.timerange.is_empty() && entry.timerange != block.timerange {
+        score += if block.timerange.is_empty() {
+            50_000.0
+        } else {
+            100_000.0
+        };
+    }
+    if let Some(metrics) = &entry.validation_metrics {
+        score += metric_selection_score(metrics, block);
+    } else if !block_has_cross_check_metrics(block) {
+        score += 1_000.0;
+    }
+    score
+}
+
+fn select_log_block_for_entry<'a>(
+    entry: &StrategyLibraryEntry,
+    candidates: &[&'a RunIbkrLogBlock],
+) -> Option<&'a RunIbkrLogBlock> {
+    candidates.iter().copied().min_by(|a, b| {
+        log_block_selection_score(entry, a).total_cmp(&log_block_selection_score(entry, b))
+    })
+}
+
 /// Cross-check a `StrategyLibraryManifest` against a list of log blocks
 /// parsed from `run_ibkr.log`. Compares strategy presence, status, and
 /// the headline numeric metrics that drive prior init
@@ -282,15 +350,22 @@ pub fn cross_check_manifest_against_log(
         ..ManifestLogCrossCheck::default()
     };
 
-    let mut log_index: BTreeMap<&str, &RunIbkrLogBlock> = BTreeMap::new();
+    let mut log_index: BTreeMap<&str, Vec<&RunIbkrLogBlock>> = BTreeMap::new();
     for block in blocks {
-        log_index.insert(block.strategy.as_str(), block);
+        log_index
+            .entry(block.strategy.as_str())
+            .or_default()
+            .push(block);
     }
     let mut manifest_names: BTreeMap<&str, ()> = BTreeMap::new();
 
     for entry in &manifest.strategies {
         manifest_names.insert(entry.name.as_str(), ());
-        let Some(block) = log_index.get(entry.name.as_str()) else {
+        let Some(candidates) = log_index.get(entry.name.as_str()) else {
+            report.manifest_only.push(entry.name.clone());
+            continue;
+        };
+        let Some(block) = select_log_block_for_entry(entry, candidates) else {
             report.manifest_only.push(entry.name.clone());
             continue;
         };
@@ -413,6 +488,57 @@ error_msg:        boom\n\
 traceback:\n\
   File \"x\", line 1\n";
 
+    const DUPLICATE_SUMMARY_LOG: &str = "---\n\
+strategy:         GoodStrat\n\
+timerange_label:  full\n\
+commit:           abc1234\n\
+timerange:        20240101-20240201\n\
+sharpe:           1.4200\n\
+sortino:          2.1300\n\
+calmar:           4.5000\n\
+total_profit_pct: 12.3000\n\
+max_drawdown_pct: -3.2000\n\
+trade_count:      87\n\
+win_rate_pct:     54.5000\n\
+profit_factor:    1.8500\n\
+\n\
+---\n\
+strategy:         GoodStrat\n\
+timerange_label:  SUMMARY\n\
+commit:           abc1234\n\
+robust_sharpe:    1.4200   # min across declared timeranges\n";
+
+    const DUPLICATE_TIMERANGE_LOG: &str = "---\n\
+strategy:         RegimeAdaptiveBNB\n\
+timerange_label:  bull_2021\n\
+timerange:        20210101-20211231\n\
+sharpe:           0.3226\n\
+sortino:          0.3771\n\
+calmar:           10.6619\n\
+total_profit_pct: 8.1100\n\
+max_drawdown_pct: -4.1163\n\
+trade_count:      16\n\
+win_rate_pct:     81.2500\n\
+profit_factor:    2.4178\n\
+\n\
+---\n\
+strategy:         RegimeAdaptiveBNB\n\
+timerange_label:  full_5y\n\
+timerange:        20210101-20251231\n\
+sharpe:           0.1380\n\
+sortino:          0.1543\n\
+calmar:           3.6967\n\
+total_profit_pct: 16.4100\n\
+max_drawdown_pct: -4.6742\n\
+trade_count:      115\n\
+win_rate_pct:     69.5652\n\
+profit_factor:    1.4262\n\
+\n\
+---\n\
+strategy:         RegimeAdaptiveBNB\n\
+timerange_label:  SUMMARY\n\
+robust_sharpe:    0.0967   # min across declared timeranges\n";
+
     #[test]
     fn parses_two_blocks_with_status_split() {
         let blocks = parse_run_ibkr_log_text(SAMPLE_LOG);
@@ -484,6 +610,31 @@ traceback:\n\
         }
     }
 
+    fn manifest_entry_mirroring_regime_full_block() -> StrategyLibraryEntry {
+        StrategyLibraryEntry {
+            name: "RegimeAdaptiveBNB".to_string(),
+            file_path: "user_data/strategies_ibkr/RegimeAdaptiveBNB.py".to_string(),
+            metadata: StrategyLibraryMetadata {
+                strategy: "RegimeAdaptiveBNB".to_string(),
+                mutation_id: "real-auto-quant-RegimeAdaptiveBNB".to_string(),
+                ..Default::default()
+            },
+            status: "ok".to_string(),
+            validation_metrics: Some(StrategyLibraryValidationMetrics {
+                sharpe: 0.138,
+                sortino: 0.1543,
+                calmar: 3.6967,
+                total_profit_pct: 16.41,
+                max_drawdown_pct: -4.6742,
+                trade_count: 115,
+                win_rate_pct: 69.5652,
+                profit_factor: 1.4262,
+            }),
+            timerange: "20210101-20251231".to_string(),
+            ..Default::default()
+        }
+    }
+
     #[test]
     fn cross_check_is_clean_when_manifest_mirrors_log() {
         let blocks = parse_run_ibkr_log_text(SAMPLE_LOG);
@@ -530,6 +681,36 @@ traceback:\n\
         // BrokenStrat is in the log but absent from the manifest: log_only.
         assert_eq!(report.log_only, vec!["BrokenStrat".to_string()]);
         assert_eq!(report.matched, 0);
+    }
+
+    #[test]
+    fn cross_check_prefers_metric_block_when_summary_reuses_strategy_name() {
+        let blocks = parse_run_ibkr_log_text(DUPLICATE_SUMMARY_LOG);
+        let manifest = StrategyLibraryManifest {
+            manifest_version: "1.0".to_string(),
+            strategies: vec![manifest_entry_mirroring_good_block()],
+            ..Default::default()
+        };
+
+        let report = cross_check_manifest_against_log(&manifest, &blocks);
+
+        assert!(report.is_clean(), "{:?}", report);
+        assert_eq!(report.matched, 1);
+    }
+
+    #[test]
+    fn cross_check_prefers_manifest_matching_timerange_block() {
+        let blocks = parse_run_ibkr_log_text(DUPLICATE_TIMERANGE_LOG);
+        let manifest = StrategyLibraryManifest {
+            manifest_version: "1.0".to_string(),
+            strategies: vec![manifest_entry_mirroring_regime_full_block()],
+            ..Default::default()
+        };
+
+        let report = cross_check_manifest_against_log(&manifest, &blocks);
+
+        assert!(report.is_clean(), "{:?}", report);
+        assert_eq!(report.matched, 1);
     }
 
     #[test]

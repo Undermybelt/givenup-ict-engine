@@ -193,13 +193,61 @@ RegimeAdaptiveBNB=115 trades, sharpe 0.1380, win_rate 69.5652, profit 16.41%, ma
 
 Important: earlier manifest parse attempts v1/v2 produced `n_ok=0` and `strategies_applied=[]`; those are rejected evidence. v3 is the accepted run.
 
+Observed live closure slice after user correction:
+
+```text
+run_root=/tmp/ict-high-sharpe-live-20260510-000946
+
+provider matrix:
+  yfinance provider-status: live_runtime 1/1 ready, market_data 1/1 ready
+  yfinance actual fetch: QQQ 1h, 190 rows, success after one HTTP 429 retry
+  kraken_public provider-status: market_data 1/1 ready
+  kraken_public actual fetch: XBTUSD 1h, 721 rows, success
+  ibkr provider-status: configured_runtime_unhealthy in default runtime because redis/ib_async missing, gateway reachable on port 4002
+  ibkr actual fetch: QQQ 1h 30d, 480 rows via uv run --with redis --with ib_async --with pandas and gateway port 4002
+  tradingview_mcp provider-status: install_required, missing ICT_ENGINE_TVREMIX_MCP_API_KEY
+  tradingview_mcp actual fetch: attempted NASDAQ:QQQ, blocked by missing key; no TradingView data was used
+
+Auto-Quant bootstrap:
+  source=/Users/thrill3r/Auto-Quant
+  managed_copy=/tmp/ict-high-sharpe-live-20260510-000946/auto-quant/auto-quant/.deps/auto-quant
+  pinned_ref=34ba6b6ee6aa69813a50a72158d4c089d97afb96
+  prepare=data_ready true
+  run_exit=0
+  run_log=/tmp/ict-high-sharpe-live-20260510-000946/logs/12_auto_quant_run.log
+  manifest=/tmp/ict-high-sharpe-live-20260510-000946/strategy_library_from_live_run.json
+
+Auto-Quant results:
+  MomentumMTFConfluence full: 854 trades, sharpe 0.3993, win_rate 34.7775, profit 53.2400, max_dd -23.1801, pf 1.1682
+  RegimeAdaptiveBNB full_5y: 115 trades, sharpe 0.1380, win_rate 69.5652, profit 16.4100, max_dd -4.6742, pf 1.4262
+  RegimeAdaptiveBNB bull_2021: 16 trades, sharpe 0.3226
+  RegimeAdaptiveBNB winter_2022: 25 trades, sharpe 0.2359
+  RegimeAdaptiveBNB recovery_23_25: 72 trades, sharpe 0.0967
+
+ict-engine filter/analyze:
+  analyze_live_yfinance=TrendExpansion/BullTrendExhaustion; execution observe/transition_guardrail/guarded; gate pass_neutralized; quality 0.561
+  analyze_demo_filter=TrendExpansion/BullTrendAcceleration; execution observe/transition_guardrail/guarded; gate pass_neutralized; quality 0.582
+  persisted_paths=analyze_live htf/mtf/ltf/m1/m5/h4/spot JSONs under run_root/repo-state/NQ
+
+BBN prior init:
+  import_artifact=auto_quant_strategy_library_NQ_20260509T161635.677766000Z
+  import_n_ok=2
+  prior_artifact=auto_quant_prior_init_NQ_20260509T161711.472076000Z
+  prior_initial=[0.999956,0.000022,0.000022]
+  prior_final=[0.6734197006771924,0.000000013279761567917304,0.326580286043046]
+  strategies_applied=MomentumMTFConfluence,RegimeAdaptiveBNB
+  effects=854 trades -> 297 win/557 loss; 115 trades -> 80 win/35 loss
+```
+
 ### R27: path-ranker / execution-tree closure
 
 - [x] Export target rows for promoted/probe candidates.
 - [x] Apply external ranker scores and make contribution visible.
 - [x] Enable registered ranker runtime artifact explicitly.
 - [x] Require `workflow-status --human` to explain practical recommendation delta.
-- [ ] Replace fallback ranker with actual CatBoost once dependency is installed and mature rows exist.
+- [x] Train and apply actual CatBoost package against exported structural path target rows.
+- [x] Feed CatBoost-produced raw scores back into ict-engine candidate-set runtime and verify `workflow-status --human` readback.
+- [ ] Add a supported registered CatBoost runtime artifact path; current registry rejects binary `.cbm` and rejects the JSON companion as `weighted_feature_sum_v1`.
 - [ ] Collect enough mature scored rows for production validation (`raw_scored_mature >= 30`).
 
 Observed real closure slice:
@@ -225,6 +273,55 @@ execution=observe/transition_guardrail/guarded
 
 Boundary: this is a real command-level closure through Auto-Quant, filter/analyze, BBN, ranker registration, and execution tree. It is not a production high-confidence claim: CatBoost was unavailable, ranker used weighted fallback, and mature rows remain 0/30.
 
+Observed live CatBoost / execution-tree slice after dependency install:
+
+```text
+run_root=/tmp/ict-high-sharpe-live-20260510-000946
+export_target=/tmp/ict-high-sharpe-live-20260510-000946/repo-state/NQ/policy_training/structural_path_ranking_target.csv
+target_rows=3
+mature_rows=0
+catboost_train=success
+catboost_model=/tmp/ict-high-sharpe-live-20260510-000946/path_ranker_catboost/catboost_model.cbm
+catboost_scores=/tmp/ict-high-sharpe-live-20260510-000946/path_scores_catboost.csv
+features_used=structural_baseline_score fallback only
+labels=pseudo-labels from structural_baseline_score because mature labels are unavailable
+apply_scores=rows_with_raw_path_score 3
+register_directory=failed Is a directory
+register_cbm=failed stream did not contain valid UTF-8
+register_json_companion_as_catboost=failed family mismatch source=weighted_feature_sum_v1
+runtime_selection=enabled_candidate_set_ready
+runtime_mode=candidate_set_only
+runtime_source=candidate_set
+runtime_matches=3
+policy_status=raw_scored_mature 0/30; production_validation 0/30; observation_validation 0/30; calibration not_fitted
+analyze_after=execution observe/transition_guardrail/guarded
+workflow_ranker=status using_candidate_set_scores source candidate_set applied=3 artifact=0 candidate=3 raw=0.751 gate=n/a
+```
+
+Boundary correction: the 2026-05-10 slice did use the CatBoost dependency for training and scoring, but it did not produce a registered CatBoost runtime artifact. Runtime currently consumes candidate-set scores derived from CatBoost output.
+
+### R28: Auto-Quant log cross-check parser hardening
+
+- [x] Reproduce false drift from the live run where `SUMMARY` blocks reused strategy names and overwrote metric-bearing blocks.
+- [x] Add RED regression for `SUMMARY` duplicate strategy names.
+- [x] Add RED regression for same-strategy multi-timerange blocks where the manifest points at the full-window block.
+- [x] Fix cross-check matching to choose the block that best matches the manifest status, timerange, and metrics.
+- [x] Re-run parser tests.
+- [x] Re-run live `auto-quant-results-import` against the same manifest and log in an isolated parser-check state dir.
+
+Observed parser closure:
+
+```text
+original_import_log=/tmp/ict-high-sharpe-live-20260510-000946/logs/15_auto_quant_results_import.log
+original_cross_check=matched 0, mismatches 4, false zero metrics from SUMMARY blocks
+first_regression=SUMMARY duplicate selected log metrics 0 instead of full metrics
+second_regression=RegimeAdaptiveBNB bull_2021 selected instead of manifest full_5y
+test=cargo test --lib log_parser -- --nocapture
+test_result=10 passed
+live_recheck_state=/tmp/ict-high-sharpe-live-20260510-000946/repo-state-parser-check-2
+live_recheck=matched 2, mismatches [], manifest_only [], log_only []
+```
+
 ---
 
 ## Verification floor
@@ -244,6 +341,7 @@ cargo check
 
 Stage only:
 
+- `src/application/auto_quant/results/log_parser.rs`
 - `docs/plans/2026-05-09-high-sharpe-factor-harvest-and-infinite-iteration.md`
 - `docs/plans/2026-05-09-high-sharpe-factor-harvest-handoff-todo.md`
 
