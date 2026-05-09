@@ -1290,7 +1290,7 @@ pub(crate) fn structural_event_outcome_pseudo_counts(
     }
 }
 
-pub(crate) fn structural_feedback_counter_outcome(record: &FeedbackRecord) -> Option<&'static str> {
+pub fn structural_feedback_counter_outcome(record: &FeedbackRecord) -> Option<&'static str> {
     match record.realized_outcome.trim().to_ascii_lowercase().as_str() {
         "win" | "profit" | "tp" | "take_profit" => Some("win"),
         "loss" | "lose" | "sl" | "stop" | "stop_loss" => Some("loss"),

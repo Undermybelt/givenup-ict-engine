@@ -32,9 +32,9 @@ use crate::belief_core::ranking_label::{
 };
 use crate::state::{
     load_learning_state, load_pending_update_history, load_state_or_default,
-    load_workflow_snapshot, save_text_state, structural_feedback_outcome_is_unresolved,
-    AnalyzeRunRecord, UpdateRunRecord, ANALYZE_RUNS_FILE, PENDING_UPDATE_ARTIFACT_FILE,
-    UPDATE_RUNS_FILE,
+    load_workflow_snapshot, save_text_state, structural_feedback_counter_outcome,
+    structural_feedback_outcome_is_unresolved, AnalyzeRunRecord, UpdateRunRecord,
+    ANALYZE_RUNS_FILE, PENDING_UPDATE_ARTIFACT_FILE, UPDATE_RUNS_FILE,
 };
 use crate::types::RegimeProbs;
 
@@ -281,6 +281,31 @@ pub struct StructuralPathRankingRuntimeSummarySurface {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankingTargetRowValidationSurface {
+    pub raw_scored_mature_rows: usize,
+    pub raw_scored_mature_min_rows: usize,
+    pub raw_scored_mature_shortfall_rows: usize,
+    pub production_validation_ready: bool,
+    pub production_validation_rows: usize,
+    pub production_validation_min_rows: usize,
+    pub production_validation_shortfall_rows: usize,
+    pub summary_line: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
+pub struct StructuralPathRankingFeedbackObservationValidationSurface {
+    pub ready: bool,
+    pub mature_observations: usize,
+    pub min_observations: usize,
+    pub shortfall_observations: usize,
+    pub pending_observations: usize,
+    pub total_observations: usize,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub outcome_distribution: BTreeMap<String, usize>,
+    pub summary_line: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
 pub struct StructuralPathRankingValidationSummarySurface {
     pub calibration_ready: bool,
     pub calibration_quality_ready: bool,
@@ -292,6 +317,19 @@ pub struct StructuralPathRankingValidationSummarySurface {
     pub production_validation_rows: usize,
     pub production_validation_min_rows: usize,
     pub production_validation_shortfall_rows: usize,
+    #[serde(default)]
+    pub observation_validation_ready: bool,
+    #[serde(default)]
+    pub observation_validation_rows: usize,
+    #[serde(default)]
+    pub observation_validation_min_rows: usize,
+    #[serde(default)]
+    pub observation_validation_shortfall_rows: usize,
+    #[serde(default)]
+    pub target_row_validation: StructuralPathRankingTargetRowValidationSurface,
+    #[serde(default)]
+    pub feedback_observation_validation:
+        StructuralPathRankingFeedbackObservationValidationSurface,
     pub summary_line: String,
 }
 
@@ -430,6 +468,18 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub production_validation_min_rows: usize,
     #[serde(default)]
     pub production_validation_shortfall_rows: usize,
+    #[serde(default)]
+    pub observation_validation_ready: bool,
+    #[serde(default)]
+    pub observation_validation_rows: usize,
+    #[serde(default)]
+    pub observation_validation_min_rows: usize,
+    #[serde(default)]
+    pub observation_validation_shortfall_rows: usize,
+    #[serde(default)]
+    pub target_row_validation: StructuralPathRankingTargetRowValidationSurface,
+    #[serde(default)]
+    pub feedback_observation_validation: StructuralPathRankingFeedbackObservationValidationSurface,
     pub summary_path: String,
     pub csv_path: Option<String>,
     pub jsonl_path: Option<String>,
@@ -856,15 +906,19 @@ pub fn policy_training_status(
         "Ranker runtime: {}",
         structural_path_ranking_target.summary_line
     );
+    let structural_path_ranking_ready = structural_path_ranking_target.production_validation_ready
+        || structural_path_ranking_target.observation_validation_ready;
     let structural_path_ranking_validation_summary = format!(
-        "Ranker validation: calibration={} quality_ready={} raw_scored_mature={}/{} production_validation={}/{} ready={}",
+        "Ranker validation: calibration={} quality_ready={} raw_scored_mature={}/{} production_validation={}/{} observation_validation={}/{} ready={}",
         structural_path_ranking_target.calibration_ready,
         structural_path_ranking_target.calibration_quality_ready,
         structural_path_ranking_target.raw_scored_mature_rows,
         structural_path_ranking_target.raw_scored_mature_min_rows,
         structural_path_ranking_target.production_validation_rows,
         structural_path_ranking_target.production_validation_min_rows,
-        structural_path_ranking_target.production_validation_ready
+        structural_path_ranking_target.observation_validation_rows,
+        structural_path_ranking_target.observation_validation_min_rows,
+        structural_path_ranking_ready
     );
     Ok(PolicyTrainingStatusSurface {
         symbol: symbol.to_string(),
@@ -915,6 +969,16 @@ pub fn policy_training_status(
                 .production_validation_min_rows,
             production_validation_shortfall_rows: structural_path_ranking_target
                 .production_validation_shortfall_rows,
+            observation_validation_ready: structural_path_ranking_target.observation_validation_ready,
+            observation_validation_rows: structural_path_ranking_target.observation_validation_rows,
+            observation_validation_min_rows: structural_path_ranking_target
+                .observation_validation_min_rows,
+            observation_validation_shortfall_rows: structural_path_ranking_target
+                .observation_validation_shortfall_rows,
+            target_row_validation: structural_path_ranking_target.target_row_validation.clone(),
+            feedback_observation_validation: structural_path_ranking_target
+                .feedback_observation_validation
+                .clone(),
             summary_line: structural_path_ranking_validation_summary.clone(),
         },
         structural_path_ranking_runtime_summary,
@@ -990,22 +1054,26 @@ pub fn structural_path_ranking_target_training_status(
         .max_by(|left, right| left.1.cmp(right.1).then_with(|| left.0.cmp(right.0)))
         .map(|(source, count)| (Some(source.clone()), *count))
         .unwrap_or((None, 0));
-    let feedback_rows_pending = learning_state
+    let structural_feedback_records = learning_state
         .feedback_history
         .iter()
-        .filter(|record| {
-            record.structural_feedback.is_some()
-                && structural_feedback_outcome_is_unresolved(&record.realized_outcome)
-        })
-        .count();
-    let feedback_rows_matured = learning_state
-        .feedback_history
+        .filter(|record| record.structural_feedback.is_some())
+        .collect::<Vec<_>>();
+    let feedback_rows_pending = structural_feedback_records
         .iter()
-        .filter(|record| {
-            record.structural_feedback.is_some()
-                && !structural_feedback_outcome_is_unresolved(&record.realized_outcome)
-        })
+        .filter(|record| structural_feedback_outcome_is_unresolved(&record.realized_outcome))
         .count();
+    let feedback_rows_matured = structural_feedback_records
+        .iter()
+        .filter(|record| !structural_feedback_outcome_is_unresolved(&record.realized_outcome))
+        .count();
+    let feedback_observation_outcome_distribution = structural_feedback_records
+        .iter()
+        .filter_map(|record| structural_feedback_counter_outcome(record))
+        .fold(BTreeMap::<String, usize>::new(), |mut acc, outcome| {
+            *acc.entry(outcome.to_string()).or_insert(0) += 1;
+            acc
+        });
     let history_rows = load_structural_path_ranking_target_rows_from_jsonl(evaluation_jsonl_path)?;
     let history_row_count = history_rows.len().max(summary.history_rows);
     let history_mature_rows = history_rows
@@ -1207,6 +1275,48 @@ pub fn structural_path_ranking_target_training_status(
         production_validation_min_rows.saturating_sub(production_validation_rows);
     let production_validation_ready =
         calibration_quality_ready && production_validation_rows >= production_validation_min_rows;
+    let target_row_validation_summary = format!(
+        "target_rows raw_scored_mature={}/{} production_validation={}/{} ready={}",
+        raw_scored_mature_rows,
+        raw_scored_mature_min_rows,
+        production_validation_rows,
+        production_validation_min_rows,
+        production_validation_ready
+    );
+    let observation_validation_rows = feedback_rows_matured;
+    let observation_validation_min_rows = STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS;
+    let observation_validation_shortfall_rows =
+        observation_validation_min_rows.saturating_sub(observation_validation_rows);
+    let observation_validation_ready = observation_validation_rows >= observation_validation_min_rows;
+    let feedback_observation_validation_summary = format!(
+        "observations mature={}/{} pending={} total={} ready={}",
+        observation_validation_rows,
+        observation_validation_min_rows,
+        feedback_rows_pending,
+        feedback_rows_with_structural_feedback,
+        observation_validation_ready
+    );
+    let target_row_validation = StructuralPathRankingTargetRowValidationSurface {
+        raw_scored_mature_rows,
+        raw_scored_mature_min_rows,
+        raw_scored_mature_shortfall_rows,
+        production_validation_ready,
+        production_validation_rows,
+        production_validation_min_rows,
+        production_validation_shortfall_rows,
+        summary_line: target_row_validation_summary,
+    };
+    let feedback_observation_validation =
+        StructuralPathRankingFeedbackObservationValidationSurface {
+            ready: observation_validation_ready,
+            mature_observations: observation_validation_rows,
+            min_observations: observation_validation_min_rows,
+            shortfall_observations: observation_validation_shortfall_rows,
+            pending_observations: feedback_rows_pending,
+            total_observations: feedback_rows_with_structural_feedback,
+            outcome_distribution: feedback_observation_outcome_distribution,
+            summary_line: feedback_observation_validation_summary,
+        };
     let mut warnings = Vec::new();
     if summary.rows == 0 {
         warnings.push("structural_path_ranking_target_rows_empty".to_string());
@@ -1270,6 +1380,12 @@ pub fn structural_path_ranking_target_training_status(
         warnings.push(format!(
             "structural_path_ranking_target_production_validation_insufficient_rows:min={} observed={}",
             production_validation_min_rows, production_validation_rows
+        ));
+    }
+    if !observation_validation_ready {
+        warnings.push(format!(
+            "structural_path_ranking_observation_validation_insufficient_rows:min={} observed={}",
+            observation_validation_min_rows, observation_validation_rows
         ));
     }
     let calibration_status = if !calibration_ready {
@@ -1355,7 +1471,7 @@ pub fn structural_path_ranking_target_training_status(
         runtime_history_match_count,
     );
     let summary_line = format!(
-        "structural_path_ranking_target rows={} history_rows={} mature_rows={} history_mature_rows={} raw_scored_mature={}/{} production_validation={}/{} calibration={} trainer_artifact={} trainer_status={} runtime_selection={} runtime_mode={} runtime_source={} runtime_matches={}",
+        "structural_path_ranking_target rows={} history_rows={} mature_rows={} history_mature_rows={} raw_scored_mature={}/{} production_validation={}/{} observation_validation={}/{} calibration={} trainer_artifact={} trainer_status={} runtime_selection={} runtime_mode={} runtime_source={} runtime_matches={}",
         summary.rows,
         summary.history_rows,
         summary.mature_rows,
@@ -1364,6 +1480,8 @@ pub fn structural_path_ranking_target_training_status(
         raw_scored_mature_min_rows,
         production_validation_rows,
         production_validation_min_rows,
+        observation_validation_rows,
+        observation_validation_min_rows,
         calibration_status,
         trainer_status,
         trainer_artifact_status,
@@ -1467,6 +1585,12 @@ pub fn structural_path_ranking_target_training_status(
         production_validation_rows,
         production_validation_min_rows,
         production_validation_shortfall_rows,
+        observation_validation_ready,
+        observation_validation_rows,
+        observation_validation_min_rows,
+        observation_validation_shortfall_rows,
+        target_row_validation,
+        feedback_observation_validation,
         summary_path: summary.summary_path,
         csv_path: Some(summary.csv_path),
         jsonl_path: Some(summary.jsonl_path),
@@ -2594,7 +2718,10 @@ mod tests {
     use crate::application::entry_models::{
         insert_entry_model_packet, EntryModelPacketStore, CISD_RB_SETUP_MODEL_ID,
     };
-    use crate::state::{save_state, AnalyzeRunRecord, UpdateRunRecord};
+    use crate::state::{
+        save_learning_state, save_state, AnalyzeRunRecord, FeedbackRecord, LearningState,
+        ModelProbabilitySnapshot, StructuralFeedbackRefs, UpdateRunRecord,
+    };
     use std::io::{Read, Write};
     use std::net::TcpListener;
     use std::thread;
@@ -3032,6 +3159,22 @@ mod tests {
         assert_eq!(status.rows_with_propensity_estimate, 2);
         assert!(status.summary_line.contains("raw_scored_mature=0/30"));
         assert!(status.summary_line.contains("production_validation=0/30"));
+        assert!(status.summary_line.contains("observation_validation=0/30"));
+        assert_eq!(status.observation_validation_rows, 0);
+        assert_eq!(status.observation_validation_min_rows, 30);
+        assert!(!status.observation_validation_ready);
+        assert_eq!(status.feedback_observation_validation.mature_observations, 0);
+        assert_eq!(status.feedback_observation_validation.total_observations, 0);
+        assert_eq!(status.feedback_observation_validation.pending_observations, 0);
+        assert_eq!(status.feedback_observation_validation.outcome_distribution.len(), 0);
+        assert!(status
+            .target_row_validation
+            .summary_line
+            .contains("target_rows raw_scored_mature=0/30 production_validation=0/30 ready=false"));
+        assert!(status
+            .feedback_observation_validation
+            .summary_line
+            .contains("observations mature=0/30 pending=0 total=0 ready=false"));
         assert!(status.summary_line.contains("calibration=not_fitted"));
         assert!(status.summary_line.contains("trainer_artifact=missing"));
         assert!(status.history_csv_path.is_none());
@@ -3070,6 +3213,167 @@ mod tests {
             .any(|warning| warning.contains(
                 "structural_path_ranking_target_feedback_rows_missing_structural_refs:dominant_source=legacy_feedback count=1"
             )));
+    }
+
+    fn structural_feedback_record_for_status(
+        outcome: &str,
+        pnl: f64,
+        followed_path: bool,
+    ) -> FeedbackRecord {
+        FeedbackRecord {
+            timestamp: chrono::Utc::now(),
+            symbol: "NQ".to_string(),
+            source: "structural_feedback_replay".to_string(),
+            run_id: None,
+            trade_id: None,
+            prompt_version: None,
+            factor_version: None,
+            data_fingerprint: None,
+            factors_used: Vec::new(),
+            model_probabilities_before_trade: ModelProbabilitySnapshot {
+                selected_direction: crate::types::Direction::Neutral,
+                selected_probability: 0.0,
+                long_score: 0.0,
+                short_score: 0.0,
+                win_prob_long: 0.0,
+                win_prob_short: 0.0,
+                uncertainty: 0.0,
+            },
+            realized_outcome: outcome.to_string(),
+            pnl,
+            regime_at_entry: crate::types::Regime::ManipulationExpansion,
+            structural_feedback: Some(StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: "rec-test".to_string(),
+                recommended_at: chrono::Utc::now().to_rfc3339(),
+                node_id: "node-test".to_string(),
+                branch_id: "branch-test".to_string(),
+                scenario_id: "scenario-test".to_string(),
+                path_id: "path-test".to_string(),
+                followed_path,
+                exit_reason: None,
+                notes: None,
+            }),
+            reflection_mismatch_tags: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn structural_path_ranking_status_splits_target_rows_from_feedback_observations() {
+        let temp = tempfile::tempdir().unwrap();
+        let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let history_jsonl_path = summary_dir.join("structural_path_ranking_target_history.jsonl");
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: "NQ".to_string(),
+            rows: 2,
+            history_rows: 2,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 2,
+            mature_rows: 2,
+            history_mature_rows: 2,
+            rows_with_propensity_estimate: 2,
+            rows_with_calibrated_path_prob: 2,
+            rows_with_path_prob_lower_bound: 2,
+            rows_with_training_weight: 2,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            history_jsonl_path: history_jsonl_path.to_string_lossy().to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            trainer_manifest: structural_path_ranking_trainer_manifest_for_test(),
+            summary_line: "structural_path_ranking_target rows=2 history_rows=2".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        let jsonl = [
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-win",
+                0.8,
+                "matured_success",
+            ))
+            .unwrap(),
+            serde_json::to_string(&structural_path_ranking_row(
+                "path-loss",
+                0.2,
+                "matured_failure",
+            ))
+            .unwrap(),
+        ]
+        .join("\n");
+        std::fs::write(&jsonl_path, format!("{jsonl}\n")).unwrap();
+        std::fs::write(&history_jsonl_path, format!("{jsonl}\n")).unwrap();
+        let mut feedback_history = Vec::new();
+        for index in 0..STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS {
+            let (outcome, pnl) = match index % 3 {
+                0 => ("win", 1.0),
+                1 => ("loss", -1.0),
+                _ => ("breakeven", 0.0),
+            };
+            feedback_history.push(structural_feedback_record_for_status(outcome, pnl, true));
+        }
+        feedback_history.push(structural_feedback_record_for_status("pending", 0.0, true));
+        save_learning_state(
+            temp.path(),
+            "NQ",
+            &LearningState {
+                feedback_history,
+                ..LearningState::default()
+            },
+        )
+        .unwrap();
+
+        let status =
+            structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
+                .unwrap();
+        let full_status = policy_training_status(temp.path().to_str().unwrap(), "NQ", None).unwrap();
+
+        assert_eq!(status.raw_scored_mature_rows, 2);
+        assert_eq!(status.production_validation_rows, 2);
+        assert!(!status.production_validation_ready);
+        assert_eq!(status.observation_validation_rows, 30);
+        assert!(status.observation_validation_ready);
+        assert_eq!(status.feedback_observation_validation.mature_observations, 30);
+        assert_eq!(status.feedback_observation_validation.pending_observations, 1);
+        assert_eq!(status.feedback_observation_validation.total_observations, 31);
+        assert_eq!(
+            status
+                .feedback_observation_validation
+                .outcome_distribution
+                .get("win"),
+            Some(&10)
+        );
+        assert_eq!(
+            status
+                .feedback_observation_validation
+                .outcome_distribution
+                .get("loss"),
+            Some(&10)
+        );
+        assert_eq!(
+            status
+                .feedback_observation_validation
+                .outcome_distribution
+                .get("breakeven"),
+            Some(&10)
+        );
+        assert!(status.summary_line.contains("raw_scored_mature=2/30"));
+        assert!(status.summary_line.contains("production_validation=2/30"));
+        assert!(status.summary_line.contains("observation_validation=30/30"));
+        assert!(full_status
+            .structural_path_ranking_validation_summary
+            .contains("observation_validation=30/30"));
+        assert!(full_status.structural_path_ranking_validation.feedback_observation_validation.ready);
     }
 
     #[test]
@@ -3242,6 +3546,12 @@ mod tests {
         assert!(status.summary_line.contains("raw_scored_mature=2/30"));
         assert!(status.summary_line.contains("history_rows=2"));
         assert!(status.summary_line.contains("production_validation=2/30"));
+        assert!(status.summary_line.contains("observation_validation=0/30"));
+        assert_eq!(status.target_row_validation.raw_scored_mature_rows, 2);
+        assert_eq!(status.target_row_validation.production_validation_rows, 2);
+        assert!(!status.target_row_validation.production_validation_ready);
+        assert_eq!(status.feedback_observation_validation.mature_observations, 0);
+        assert_eq!(status.feedback_observation_validation.total_observations, 0);
         assert!(status.summary_line.contains("calibration=evaluated"));
         assert!(status.summary_line.contains("trainer_artifact=ready"));
         assert!(!status

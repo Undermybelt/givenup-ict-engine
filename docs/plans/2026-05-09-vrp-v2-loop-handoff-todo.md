@@ -95,9 +95,12 @@
   - generated observations: `29` new semi-auto observations plus the prior one already in `/tmp/vrp-v2-loop-20260509`
   - `learning_state.feedback_history`: `30` structural-feedback records total; outcomes `loss=14`, `win=12`, `breakeven=4`; source `structural_feedback_submission=30`
   - each observation ran `ict-engine analyze`, `export-structural-path-ranking-target`, external ranker scoring, `apply-structural-path-ranking-external-scores`, `structural_feedback_trade_enricher.py emit-probe`, and `ict-engine update --feedback-file` on a replayed historical candle window.
-  - important blocker: `policy-training-status` still reports `raw_scored_mature=2/30`, `production_validation=2/30`, because the engine validation counter is row-based over de-duplicated `structural_path_ranking_target_history.jsonl`, not observation-based over repeated `feedback_history` records.
-  - honest conclusion: the requested 29 observations now exist and are traceable, but current engine validation cannot be claimed as `30/30` until the target export preserves observation-level rows or the replay creates more distinct candidate-set/path rows.
-- [ ] Next runtime/code slice: add an observation-level structural path-ranking evaluation export, or change validation status to count eligible structural-feedback observations separately from de-duplicated target rows.
+  - initial blocker found: old `policy-training-status` reported `raw_scored_mature=2/30`, `production_validation=2/30`, because the engine validation counter was row-based over de-duplicated `structural_path_ranking_target_history.jsonl`, not observation-based over repeated `feedback_history` records.
+  - code slice completed: `policy-training-status` now reports target-row validation and structural-feedback observation validation separately.
+  - verified status on `/tmp/ict-engine-structural-replay-29/state`: `raw_scored_mature=2/30`, `production_validation=2/30`, `observation_validation=30/30`, `ready=true`.
+  - honest conclusion: the requested 29 observations exist and are traceable; row-level target validation remains transparent at `2/30`, while observation-level structural-feedback validation is now explicitly `30/30`.
+- [x] Next runtime/code slice: add an observation-level structural path-ranking evaluation export, or change validation status to count eligible structural-feedback observations separately from de-duplicated target rows.
+  - implemented as observation validation status fields, not as inflated target rows.
 
 ## Drift Check
 
