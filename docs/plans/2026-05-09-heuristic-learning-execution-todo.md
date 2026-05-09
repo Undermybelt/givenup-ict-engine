@@ -56,6 +56,10 @@
   - Commit: `11ac3c6 feat: add paper2code adapter reports`
   - Files: `paper2code_adapters.py`, handoff, tests
   - Tests: target 3 OK; full research 52 OK
+- [x] Closure audit fix: orchestrate sidecars from payoff pipeline
+  - Commit: pending audit fix
+  - Files: `heuristic_payoff_pipeline.py`, tests
+  - Tests: target 3 OK; full research 53 OK
 
 ## Next Implementation Order
 
@@ -69,7 +73,7 @@
 
 ## Current Slice Status
 
-Active: Slice 12 `paper2code_adapters.py`.
+Active: Closure audit fix `heuristic_payoff_pipeline.py`.
 
 - [x] Write failing tests
 - [x] Implement minimal script

@@ -6,8 +6,11 @@ import json
 from pathlib import Path
 from typing import Any
 
+import bbn_evidence_value_report as bbn_value
 import factor_payoff_shape_report as payoff
+import factor_formula_library as formula_library
 import labeling_triple_barrier as labeling
+import paper2code_adapters as paper2code
 import payoff_to_path_ranker_target as path_target
 import purged_cv_backtest_guard as purged_cv
 
@@ -24,6 +27,8 @@ DEFAULT_PROFILE: dict[str, Any] = {
     "purged_cv_enabled": True,
     "embargo_bars": 1,
     "fold_count": 4,
+    "formula_families": [],
+    "bbn_evidence_rows_jsonl": "",
     "auxiliary_fields": [
         "qqq_hv_level",
         "nq_vs_200d_pct",
@@ -56,6 +61,14 @@ def _load_profile(path: Path | None) -> dict[str, Any]:
 def _read_csv(path: Path) -> list[dict[str, Any]]:
     with path.open(newline="", encoding="utf-8") as handle:
         return list(csv.DictReader(handle))
+
+
+def _load_jsonl(path: Path) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            rows.append(json.loads(line))
+    return rows
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -142,6 +155,31 @@ def run_pipeline(
         symbol=symbol,
         auxiliary_fields=list(profile.get("auxiliary_fields", [])),
     )
+    formula_library_payload = formula_library.build_formula_library(families=list(profile.get("formula_families", [])))
+    formula_library_path = output_dir / "factor_formula_library.json"
+    _write_json(formula_library_path, formula_library_payload)
+    paper2code_report = paper2code.build_adapter_report(rows=rows, candidate_id=candidate_id)
+    paper2code_path = output_dir / "paper2code_adapter_report.json"
+    _write_json(paper2code_path, paper2code_report)
+    sidecar_closure = {
+        "schema_version": "heuristic-sidecar-closure/v1",
+        "formula_library": formula_library_payload,
+        "paper2code_adapter_report": paper2code_report,
+        "artifact_paths": {
+            "factor_formula_library": str(formula_library_path),
+            "paper2code_adapter_report": str(paper2code_path),
+        },
+    }
+    bbn_rows_path = str(profile.get("bbn_evidence_rows_jsonl", "")).strip()
+    if bbn_rows_path:
+        bbn_report = bbn_value.build_evidence_value_report(
+            rows=_load_jsonl(Path(bbn_rows_path)),
+            candidate_id=candidate_id,
+        )
+        bbn_report_path = output_dir / "bbn_evidence_value_report.json"
+        _write_json(bbn_report_path, bbn_report)
+        sidecar_closure["bbn_evidence_value_report"] = bbn_report
+        sidecar_closure["artifact_paths"]["bbn_evidence_value_report"] = str(bbn_report_path)
 
     result = {
         "ok": True,
@@ -162,6 +200,7 @@ def run_pipeline(
         "failure_tags": report["failure_tags"],
         "purged_cv_guard": purged_cv_guard,
         "path_ranker_handoff": path_ranker_handoff,
+        "sidecar_closure": sidecar_closure,
         "next_recommended_layer": "regime_bbn_path_ranker" if report["promotion_gate"] != "reject" else "rewrite_factor_or_data",
     }
     _write_json(summary_path, result)
