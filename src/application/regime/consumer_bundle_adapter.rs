@@ -165,6 +165,34 @@ impl RegimeConsumerBundleAdapter {
             .filter(|value| !value.is_null())
     }
 
+    pub fn trace_entries(&self, path: Option<&Path>) -> Vec<String> {
+        let mut entries = vec![format!("regime_bundle_status={}", self.status.as_trace_value())];
+        if let Some(path) = path {
+            entries.push(format!("regime_bundle_path={}", path.display()));
+        }
+        if let Some(error) = self.error.as_ref() {
+            entries.push(format!("regime_bundle_error={}", compact_trace_value(error)));
+        }
+        if let Some(decision) = self.latest_decision.as_ref() {
+            entries.push(format!(
+                "regime_decision_state={}",
+                compact_trace_value(&decision.decision_state)
+            ));
+            entries.push(format!("regime_trade_usable={}", decision.trade_usable));
+            if !decision.final_label.is_empty() {
+                entries.push(format!(
+                    "regime_final_label={}",
+                    compact_trace_value(&decision.final_label)
+                ));
+            }
+        }
+        entries.push(format!(
+            "regime_execution_tree_hint={}",
+            self.execution_tree_hint().as_trace_value()
+        ));
+        entries
+    }
+
     fn neutral(status: BundleStatus, error: String) -> Self {
         Self {
             status,
@@ -173,4 +201,29 @@ impl RegimeConsumerBundleAdapter {
             error: Some(error),
         }
     }
+}
+
+impl BundleStatus {
+    fn as_trace_value(&self) -> &'static str {
+        match self {
+            BundleStatus::Disabled => "disabled",
+            BundleStatus::Loaded => "loaded",
+            BundleStatus::Missing => "missing",
+            BundleStatus::Invalid => "invalid",
+        }
+    }
+}
+
+impl ExecutionTreeHint {
+    fn as_trace_value(&self) -> &'static str {
+        match self {
+            ExecutionTreeHint::AcceptRegime => "accept_regime",
+            ExecutionTreeHint::TransitionGuardrail => "transition_guardrail",
+            ExecutionTreeHint::UnknownAbstain => "unknown_abstain",
+        }
+    }
+}
+
+fn compact_trace_value(value: &str) -> String {
+    value.split_whitespace().collect::<Vec<_>>().join("_")
 }

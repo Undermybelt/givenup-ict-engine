@@ -96,3 +96,47 @@ fn invalid_schema_strict_errors() {
 
     assert!(err.to_string().contains("schema"));
 }
+
+#[test]
+fn loaded_adapter_emits_compact_read_only_trace_entries() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("regime_consumer_bundle.json");
+    fs::write(
+        &path,
+        json!({
+            "schema_version": "regime-consumer-bundle/v1",
+            "latest_decision": {
+                "decision_state": "single_label_95",
+                "trade_usable": true,
+                "final_label": "primary::TrendExpansion",
+                "label_set": ["primary::TrendExpansion"],
+                "abstain_reasons": []
+            },
+            "consumer_hints": {"execution_tree_hint": "accept_regime"}
+        })
+        .to_string(),
+    )
+    .unwrap();
+
+    let adapter = RegimeConsumerBundleAdapter::load_optional(Some(&path), false).unwrap();
+    let trace = adapter.trace_entries(Some(&path));
+
+    assert!(trace.contains(&"regime_bundle_status=loaded".to_string()));
+    assert!(trace.iter().any(|line| line.starts_with("regime_bundle_path=")));
+    assert!(trace.contains(&"regime_decision_state=single_label_95".to_string()));
+    assert!(trace.contains(&"regime_trade_usable=true".to_string()));
+    assert!(trace.contains(&"regime_execution_tree_hint=accept_regime".to_string()));
+}
+
+#[test]
+fn missing_adapter_emits_neutral_trace_entries() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("missing.json");
+
+    let adapter = RegimeConsumerBundleAdapter::load_optional(Some(&path), false).unwrap();
+    let trace = adapter.trace_entries(Some(&path));
+
+    assert!(trace.contains(&"regime_bundle_status=missing".to_string()));
+    assert!(trace.iter().any(|line| line.starts_with("regime_bundle_error=")));
+    assert!(trace.contains(&"regime_execution_tree_hint=unknown_abstain".to_string()));
+}
