@@ -161,16 +161,69 @@ bbn_targets=dealer_pressure,factor_uncertainty,crash_risk
 - [ ] Emit `ofi_book_pressure_v1`.
 - [ ] Add OHLCV proxy mode with low confidence if L2 missing.
 
+Status: paused after user correction. Do not continue sidecar-only work before proving the current candidates through Auto-Quant -> filter/analyze -> BBN -> ranker -> execution tree.
+
 ### R26: BBN evidence value gate
 
+- [x] Run managed Auto-Quant workspace, not just synthetic sidecar JSON.
+- [x] Import a real Auto-Quant run manifest through `auto-quant-results-import`.
+- [x] Apply strategy evidence through `auto-quant-prior-init` and verify `strategies_applied` is non-empty.
 - [ ] Admit factor evidence only if entropy/log-loss/contradiction lift improves.
 - [ ] Persist `bbn_entropy_reduction` and `bbn_log_loss_delta`.
 
+Observed real closure slice:
+
+```text
+run_root=/tmp/ict-high-sharpe-real-20260509-234554
+provider_status=market_data ready 5/7; yfinance+kraken_public ready; ibkr/tradingview_mcp pending
+analyze_before=market_state TrendExpansion/BullTrendAcceleration; execution observe/transition_guardrail/guarded
+Auto-Quant bootstrap=healthy pinned_ref=34ba6b6ee6aa69813a50a72158d4c089d97afb96
+Auto-Quant prepare=data_ready true
+Auto-Quant run log=/tmp/ict-high-sharpe-real-20260509-234554/logs/11_auto_quant_run.log
+strategy_library=/tmp/ict-high-sharpe-real-20260509-234554/strategy_library_after_real_auto_quant_run_v3.json
+import_artifact=auto_quant_strategy_library_NQ_20260509T155207.539452000Z
+import_n_ok=2
+prior_artifact=auto_quant_prior_init_NQ_20260509T155207.769438000Z
+prior_initial=[0.999956,0.000022,0.000022]
+prior_final=[0.6734197006771924,0.000000013279761567917304,0.326580286043046]
+strategies_applied=MomentumMTFConfluence,RegimeAdaptiveBNB
+MomentumMTFConfluence=854 trades, sharpe 0.3993, win_rate 34.7775, profit 53.24%, max_dd -23.1801%, pf 1.1682
+RegimeAdaptiveBNB=115 trades, sharpe 0.1380, win_rate 69.5652, profit 16.41%, max_dd -4.6742%, pf 1.4262
+```
+
+Important: earlier manifest parse attempts v1/v2 produced `n_ok=0` and `strategies_applied=[]`; those are rejected evidence. v3 is the accepted run.
+
 ### R27: path-ranker / execution-tree closure
 
-- [ ] Export target rows for promoted/probe candidates.
-- [ ] Require path-ranker score contribution visible.
-- [ ] Require `workflow-status --human` to explain practical recommendation delta.
+- [x] Export target rows for promoted/probe candidates.
+- [x] Apply external ranker scores and make contribution visible.
+- [x] Enable registered ranker runtime artifact explicitly.
+- [x] Require `workflow-status --human` to explain practical recommendation delta.
+- [ ] Replace fallback ranker with actual CatBoost once dependency is installed and mature rows exist.
+- [ ] Collect enough mature scored rows for production validation (`raw_scored_mature >= 30`).
+
+Observed real closure slice:
+
+```text
+export_target=/tmp/ict-high-sharpe-real-20260509-234554/repo-state-v3/NQ/policy_training/structural_path_ranking_target.csv
+rows=3
+mature_rows=0
+raw_scored_mature_before=0/30
+trainer=/tmp/ict-high-sharpe-real-20260509-234554/path_ranker/trainer_artifact.json
+catboost=not_installed
+actual_model_family=weighted_feature_sum_v1
+scores=/tmp/ict-high-sharpe-real-20260509-234554/path_scores.csv
+rows_with_raw_path_score_after=3
+runtime_selection=enabled_registered_model_ready
+runtime_source=registered_model_artifact
+runtime_matches=3
+analyze_after=ranker registered_model_artifact/weighted_feature_sum_v1/not_ready
+workflow_structural=trend_follow_through posterior=0.452 selected_prob=0.369
+workflow_final_ranker=status using_registered_model_artifact source registered_model_artifact applied=3 artifact=3 lb=0.489 gate=observe
+execution=observe/transition_guardrail/guarded
+```
+
+Boundary: this is a real command-level closure through Auto-Quant, filter/analyze, BBN, ranker registration, and execution tree. It is not a production high-confidence claim: CatBoost was unavailable, ranker used weighted fallback, and mature rows remain 0/30.
 
 ---
 
