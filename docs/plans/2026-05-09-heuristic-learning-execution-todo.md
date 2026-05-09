@@ -33,56 +33,15 @@
   - Commit: `ca6200b feat: add purged cv payoff guard`
   - Files: `purged_cv_backtest_guard.py`, handoff, tests
 
+- [x] Slice 7: Regime confidence report
+  - Commit: `5f2e79f feat: add regime confidence report`
+  - Files: `regime_confidence_report.py`, handoff, tests
+- [x] Slice 8: Transition evidence aggregator
+  - Commit: pending this slice
+  - Files: `transition_evidence_aggregator.py`, handoff, tests
+  - Tests: `42 OK`
+
 ## Next Implementation Order
-
-### Slice 7: Regime confidence report
-
-**Objective:** define real `confidence_95` for regime use.
-
-**Create:**
-- `scripts/research/regime_confidence_report.py` — DONE
-- `scripts/research/tests/test_regime_confidence_report.py` — DONE
-- `docs/plans/2026-05-09-regime-confidence-handoff-todo.md` — DONE
-
-**Inputs:** regime benchmark JSON or rows with model posterior / truth labels.
-
-**Outputs:**
-- `regime_confidence_report.json`
-- fields:
-  - `confidence_95`
-  - `conformal_set_size`
-  - `rolling_coverage`
-  - `calibration_ece`
-  - `bootstrap_ci_width`
-  - `transition_prob`
-  - `flip_rate`
-  - `regime_confidence_gate`
-
-**Zero config defaults:**
-- `alpha=0.05`
-- `max_calibration_ece=0.05`
-- `min_rolling_coverage=0.93`
-- `max_transition_prob=0.2`
-- `max_flip_rate=0.2`
-
-**Hot-plug profile fields:**
-- thresholds above optional via JSON / CLI.
-
-**Status:** implemented; tests `39 OK`; pending commit.
-
-### Slice 8: Transition evidence aggregator
-
-**Objective:** produce transition guardrail evidence from regime confidence + drift/changepoint rows.
-
-**Create:**
-- `scripts/research/transition_evidence_aggregator.py`
-- tests + handoff
-
-**Outputs:**
-- `transition_alert_95`
-- `transition_hazard`
-- `drift_flags`
-- `execution_tree_block_hint`
 
 ### Slice 9: BBN evidence value report
 
