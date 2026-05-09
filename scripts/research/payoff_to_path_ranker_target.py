@@ -25,6 +25,11 @@ TARGET_FIELDS = [
     "mfe",
     "mae",
     "time_to_hit",
+    "risk_adjusted_path_utility",
+    "mae_penalty",
+    "time_penalty",
+    "regime_confidence_bonus",
+    "slippage_penalty",
     "meta_label",
     "calibrated_label",
     "pending_reward_state",
@@ -74,6 +79,29 @@ def _pending_reward_state(label: dict[str, Any]) -> str:
     return "matured_success" if int(label.get("meta_label", 0)) == 1 else "matured_failure"
 
 
+def _float(row: dict[str, Any], key: str, default: float = 0.0) -> float:
+    try:
+        return float(row.get(key, default))
+    except (TypeError, ValueError):
+        return default
+
+
+def _risk_adjusted_utility(label: dict[str, Any]) -> dict[str, float]:
+    realized_r = _float(label, "realized_R")
+    mae_penalty = abs(min(0.0, _float(label, "mae")))
+    time_penalty = max(0.0, _float(label, "time_to_hit")) * 0.01
+    regime_confidence_bonus = max(0.0, min(1.0, _float(label, "regime_confidence"))) * 0.10
+    slippage_penalty = abs(_float(label, "slippage_R"))
+    utility = realized_r - mae_penalty - time_penalty + regime_confidence_bonus - slippage_penalty
+    return {
+        "risk_adjusted_path_utility": round(utility, 6),
+        "mae_penalty": round(mae_penalty, 6),
+        "time_penalty": round(time_penalty, 6),
+        "regime_confidence_bonus": round(regime_confidence_bonus, 6),
+        "slippage_penalty": round(slippage_penalty, 6),
+    }
+
+
 def _target_row(
     *,
     label: dict[str, Any],
@@ -92,6 +120,7 @@ def _target_row(
         "mfe": label.get("mfe", 0.0),
         "mae": label.get("mae", 0.0),
         "time_to_hit": label.get("time_to_hit", ""),
+        **_risk_adjusted_utility(label),
         "meta_label": label.get("meta_label", 0),
         "calibrated_label": max(0.0, min(1.0, float(label.get("meta_label", 0)))),
         "pending_reward_state": _pending_reward_state(label),
@@ -105,6 +134,10 @@ def _target_row(
     for field in auxiliary_fields:
         row[field] = label.get(field, "")
     return row
+
+
+def build_target_row_for_test(label: dict[str, Any], report: dict[str, Any], symbol: str) -> dict[str, Any]:
+    return _target_row(label=label, report=report, symbol=symbol, auxiliary_fields=DEFAULT_AUXILIARY_FIELDS)
 
 
 def _bbn_gate(report: dict[str, Any]) -> dict[str, Any]:

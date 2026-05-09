@@ -70,8 +70,32 @@ class PayoffToPathRankerTargetTests(unittest.TestCase):
             self.assertEqual(target_rows[0]["pending_reward_state"], "matured_success")
             self.assertEqual(target_rows[0]["payoff_gate"], "probe")
             self.assertEqual(target_rows[0]["qqq_hv_level"], "0.22")
+            self.assertEqual(target_rows[0]["mae_penalty"], "0.004")
+            self.assertEqual(target_rows[0]["time_penalty"], "0.03")
+            self.assertEqual(target_rows[0]["regime_confidence_bonus"], "0.0")
+            self.assertEqual(target_rows[0]["slippage_penalty"], "0.0")
+            self.assertAlmostEqual(float(target_rows[0]["risk_adjusted_path_utility"]), 1.766)
             self.assertTrue((out / "bbn_gate.json").is_file())
             self.assertTrue((out / "path_ranker_target.jsonl").is_file())
+
+    def test_risk_adjusted_utility_rewards_regime_confidence_and_penalizes_slippage(self) -> None:
+        label = {
+            "realized_R": 1.2,
+            "mae": -0.25,
+            "time_to_hit": 8,
+            "meta_label": 1,
+            "regime_confidence": 0.95,
+            "slippage_R": 0.12,
+        }
+        report = {"candidate_id": "utility-factor", "promotion_gate": "promote", "payoff_shape": "right_tail"}
+
+        row = exporter.build_target_row_for_test(label=label, report=report, symbol="NQ")
+
+        self.assertEqual(row["mae_penalty"], 0.25)
+        self.assertEqual(row["time_penalty"], 0.08)
+        self.assertEqual(row["regime_confidence_bonus"], 0.095)
+        self.assertEqual(row["slippage_penalty"], 0.12)
+        self.assertAlmostEqual(row["risk_adjusted_path_utility"], 0.845)
 
     def test_reject_payoff_writes_only_failure_memory(self) -> None:
         with TemporaryDirectory() as tmpdir:

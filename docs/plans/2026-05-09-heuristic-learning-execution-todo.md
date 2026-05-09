@@ -44,23 +44,12 @@
   - Commit: `029800c feat: add bbn evidence value report`
   - Files: `bbn_evidence_value_report.py`, handoff, tests
   - Tests: target 3 OK; full research 45 OK
+- [x] Slice 10: Risk-adjusted path utility
+  - Commit: pending this slice
+  - Files: `payoff_to_path_ranker_target.py`, handoff, tests
+  - Tests: target 3 OK; full research 46 OK
 
 ## Next Implementation Order
-
-### Slice 10: Risk-adjusted path utility
-
-**Objective:** make path-ranker target model trade utility, not raw PnL.
-
-**Modify:**
-- `scripts/research/payoff_to_path_ranker_target.py`
-- maybe `scripts/auto_quant_external/pandas_path_ranker_trainer.py`
-
-**Add fields:**
-- `risk_adjusted_path_utility`
-- `mae_penalty`
-- `time_penalty`
-- `regime_confidence_bonus`
-- `slippage_penalty`
 
 ### Slice 11: Formula seed library
 
@@ -89,7 +78,7 @@
 
 ## Current Slice Status
 
-Active: Slice 9 `bbn_evidence_value_report.py`.
+Active: Slice 10 `payoff_to_path_ranker_target.py`.
 
 - [x] Write failing tests
 - [x] Implement minimal script
