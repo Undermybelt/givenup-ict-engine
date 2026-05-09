@@ -328,6 +328,9 @@ pub(crate) fn run_factor_backtest(
         .collect();
     report
         .multi_timeframe_summary
+        .extend(build_market_state_summary_for_candles(&candles));
+    report
+        .multi_timeframe_summary
         .push(structure_ict_pda_context_summary(&structure_ict_context));
     report.agent_context_bundle.multi_timeframe_summary = report.multi_timeframe_summary.clone();
     report.agent_context_bundle_minimal =

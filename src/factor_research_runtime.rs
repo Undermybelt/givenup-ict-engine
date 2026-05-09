@@ -299,6 +299,9 @@ pub(crate) fn run_factor_research(
         .collect();
     report
         .multi_timeframe_summary
+        .extend(build_market_state_summary_for_candles(&candles));
+    report
+        .multi_timeframe_summary
         .push(structure_ict_pda_context_summary(&structure_ict_context));
     report.multi_timeframe_summary.extend(runtime_notes);
     report.agent_prompts.prompts.push(research_diff_prompt(

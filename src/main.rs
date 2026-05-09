@@ -3442,6 +3442,35 @@ fn structure_ict_pda_context_summary(context: &StructureIctContextEvents) -> Str
     )
 }
 
+fn build_market_state_summary_for_candles(candles: &[Candle]) -> Vec<String> {
+    let snapshot = ict_engine::market_state::MarketStateClassifier::new().classify(candles);
+    let mut summary = vec![
+        format!("market_state_primary_regime={:?}", snapshot.primary_regime),
+        format!(
+            "market_state_secondary_regime={:?}",
+            snapshot.secondary_regime
+        ),
+        format!(
+            "market_state_overall_confidence={:.3}",
+            snapshot.overall_confidence
+        ),
+    ];
+    summary.push(format!(
+        "market_state_bbn_market_regime={}",
+        market_state_to_bbn_regime_label(&snapshot).unwrap_or("passthrough")
+    ));
+    summary.push(format!(
+        "market_state_bbn_liquidity_context={}",
+        market_state_to_bbn_liquidity_label(&snapshot).unwrap_or("passthrough")
+    ));
+    summary.extend(
+        market_state_evidence_lines(&snapshot)
+            .into_iter()
+            .map(|line| format!("market_state_evidence={line}")),
+    );
+    summary
+}
+
 fn build_structure_ict_context_events_from_native_frames(
     native_frames: AnalyzeNativeFrames<'_>,
 ) -> StructureIctContextEvents {
@@ -13029,6 +13058,24 @@ mod tests {
         assert!(rendered.starts_with("Factor research |"));
         assert!(rendered.contains("Research compare:"));
         assert!(rendered.contains("next=inspect_duration_constraints"));
+    }
+
+    #[test]
+    fn test_market_state_summary_threads_primary_secondary_regime() {
+        let summary = build_market_state_summary_for_candles(&sample_candles(80));
+
+        assert!(summary
+            .iter()
+            .any(|item| item.starts_with("market_state_primary_regime=")));
+        assert!(summary
+            .iter()
+            .any(|item| item.starts_with("market_state_secondary_regime=")));
+        assert!(summary
+            .iter()
+            .any(|item| item.starts_with("market_state_bbn_market_regime=")));
+        assert!(summary
+            .iter()
+            .any(|item| item.starts_with("market_state_bbn_liquidity_context=")));
     }
 
     #[test]
