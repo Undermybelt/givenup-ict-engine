@@ -91,6 +91,26 @@ pub struct AutoQuantPriorInitStrategyEffect {
     pub before_probs: Vec<f64>,
     pub after_probs: Vec<f64>,
     pub diff: Vec<f64>,
+    #[serde(default)]
+    pub bbn_entropy_before: f64,
+    #[serde(default)]
+    pub bbn_entropy_after: f64,
+    #[serde(default)]
+    pub bbn_entropy_reduction: f64,
+    #[serde(default)]
+    pub bbn_log_loss_before: f64,
+    #[serde(default)]
+    pub bbn_log_loss_after: f64,
+    #[serde(default)]
+    pub bbn_log_loss_delta: f64,
+    #[serde(default)]
+    pub bbn_contradiction_before: f64,
+    #[serde(default)]
+    pub bbn_contradiction_after: f64,
+    #[serde(default)]
+    pub bbn_contradiction_lift: f64,
+    #[serde(default)]
+    pub evidence_value_gate_passed: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -102,6 +122,14 @@ pub struct AutoQuantPriorInitOutcome {
     pub strategies_skipped: Vec<(String, String)>,
     pub temper: f64,
     pub prior_strength: f64,
+    #[serde(default)]
+    pub bbn_entropy_reduction: f64,
+    #[serde(default)]
+    pub bbn_log_loss_delta: f64,
+    #[serde(default)]
+    pub bbn_contradiction_lift: f64,
+    #[serde(default)]
+    pub evidence_value_gate_passed: bool,
 }
 
 /// Apply the manifest's validated strategies as Dirichlet pseudo-counts
@@ -140,6 +168,18 @@ pub fn apply_strategy_library_prior_init(
             EntryClassification::Apply(metrics) => {
                 let effect =
                     compute_effect(entry, metrics, &current, input.temper, input.prior_strength)?;
+                if !effect.evidence_value_gate_passed {
+                    skipped.push((
+                        entry.name.clone(),
+                        format!(
+                            "evidence_value_gate_failed: entropy_reduction={:.6} log_loss_delta={:.6} contradiction_lift={:.6}",
+                            effect.bbn_entropy_reduction,
+                            effect.bbn_log_loss_delta,
+                            effect.bbn_contradiction_lift
+                        ),
+                    ));
+                    continue;
+                }
                 if effect.after_probs.len() != states_len {
                     bail!(
                         "internal: strategy '{}' produced effect with wrong arity {} (expected {})",
@@ -160,6 +200,18 @@ pub fn apply_strategy_library_prior_init(
     if !applied.is_empty() {
         write_cpt_row(network, &input.parent_config, current.clone())?;
     }
+    let bbn_entropy_reduction = applied
+        .iter()
+        .map(|effect| effect.bbn_entropy_reduction.max(0.0))
+        .sum();
+    let bbn_log_loss_delta = applied
+        .iter()
+        .map(|effect| effect.bbn_log_loss_delta.max(0.0))
+        .sum();
+    let bbn_contradiction_lift = applied
+        .iter()
+        .map(|effect| effect.bbn_contradiction_lift.max(0.0))
+        .sum();
 
     Ok(AutoQuantPriorInitOutcome {
         parent_config: input.parent_config,
@@ -169,6 +221,12 @@ pub fn apply_strategy_library_prior_init(
         strategies_skipped: skipped,
         temper: input.temper,
         prior_strength: input.prior_strength,
+        bbn_entropy_reduction,
+        bbn_log_loss_delta,
+        bbn_contradiction_lift,
+        evidence_value_gate_passed: bbn_entropy_reduction > 0.0
+            || bbn_log_loss_delta > 0.0
+            || bbn_contradiction_lift > 0.0,
     })
 }
 
@@ -224,6 +282,7 @@ fn compute_effect(
     let n_win = n_win.clamp(0, n as i64) as u32;
     let n_loss = n.saturating_sub(n_win);
     let n_breakeven: u32 = 0;
+    let empirical = empirical_distribution(n_win, n_breakeven, n_loss)?;
 
     let alpha_w = before[0] * prior_strength + temper * (n_win as f64);
     let alpha_be = before[1] * prior_strength + temper * (n_breakeven as f64);
@@ -244,6 +303,17 @@ fn compute_effect(
         .zip(after.iter())
         .map(|(b, a)| a - b)
         .collect();
+    let bbn_entropy_before = shannon_entropy(before);
+    let bbn_entropy_after = shannon_entropy(&after);
+    let bbn_entropy_reduction = (bbn_entropy_before - bbn_entropy_after).max(0.0);
+    let bbn_log_loss_before = cross_entropy_loss(&empirical, before)?;
+    let bbn_log_loss_after = cross_entropy_loss(&empirical, &after)?;
+    let bbn_log_loss_delta = (bbn_log_loss_before - bbn_log_loss_after).max(0.0);
+    let bbn_contradiction_before = contradiction_score(&empirical, before);
+    let bbn_contradiction_after = contradiction_score(&empirical, &after);
+    let bbn_contradiction_lift = (bbn_contradiction_before - bbn_contradiction_after).max(0.0);
+    let evidence_value_gate_passed =
+        bbn_entropy_reduction > 0.0 || bbn_log_loss_delta > 0.0 || bbn_contradiction_lift > 0.0;
 
     Ok(AutoQuantPriorInitStrategyEffect {
         strategy_name: entry.name.clone(),
@@ -256,7 +326,63 @@ fn compute_effect(
         before_probs: before.to_vec(),
         after_probs: after,
         diff,
+        bbn_entropy_before,
+        bbn_entropy_after,
+        bbn_entropy_reduction,
+        bbn_log_loss_before,
+        bbn_log_loss_after,
+        bbn_log_loss_delta,
+        bbn_contradiction_before,
+        bbn_contradiction_after,
+        bbn_contradiction_lift,
+        evidence_value_gate_passed,
     })
+}
+
+fn empirical_distribution(n_win: u32, n_breakeven: u32, n_loss: u32) -> Result<Vec<f64>> {
+    let total = n_win as f64 + n_breakeven as f64 + n_loss as f64;
+    if total <= 0.0 {
+        bail!("cannot build empirical distribution from zero outcomes");
+    }
+    Ok(vec![
+        n_win as f64 / total,
+        n_breakeven as f64 / total,
+        n_loss as f64 / total,
+    ])
+}
+
+fn shannon_entropy(probs: &[f64]) -> f64 {
+    probs
+        .iter()
+        .copied()
+        .filter(|p| *p > 0.0)
+        .map(|p| -p * p.ln())
+        .sum()
+}
+
+fn cross_entropy_loss(empirical: &[f64], predicted: &[f64]) -> Result<f64> {
+    if empirical.len() != predicted.len() {
+        bail!(
+            "empirical distribution arity {} does not match predicted arity {}",
+            empirical.len(),
+            predicted.len()
+        );
+    }
+    const EPS: f64 = 1.0e-12;
+    Ok(empirical
+        .iter()
+        .zip(predicted.iter())
+        .filter(|(target, _)| **target > 0.0)
+        .map(|(target, predicted)| -target * predicted.clamp(EPS, 1.0).ln())
+        .sum())
+}
+
+fn contradiction_score(empirical: &[f64], predicted: &[f64]) -> f64 {
+    empirical
+        .iter()
+        .zip(predicted.iter())
+        .map(|(target, predicted)| (target - predicted).abs())
+        .sum()
 }
 
 fn read_cpt_row(network: &BayesianNetwork, parent_config: &[usize]) -> Result<Vec<f64>> {
@@ -440,6 +566,67 @@ mod tests {
         assert_eq!(eff.trade_count, 100);
         assert_eq!(eff.n_win, 80);
         assert_eq!(eff.n_loss, 20);
+    }
+
+    #[test]
+    fn applied_strategy_records_positive_bbn_evidence_value() {
+        let parent_config = DEFAULT_DEFAULT_PARENT_CONFIG.to_vec();
+        let baseline = vec![1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0];
+        let mut net = net_with_baseline_row(&parent_config, baseline);
+        let m = manifest_with(vec![entry("Strong", 100, 80.0, "ok")]);
+
+        let outcome = apply_strategy_library_prior_init(
+            &mut net,
+            AutoQuantPriorInitInput {
+                manifest: &m,
+                strategy_filter: None,
+                parent_config,
+                temper: DEFAULT_TEMPER,
+                prior_strength: DEFAULT_PRIOR_STRENGTH,
+            },
+        )
+        .unwrap();
+
+        assert!(outcome.bbn_entropy_reduction > 0.0, "{:?}", outcome);
+        assert!(outcome.bbn_log_loss_delta > 0.0, "{:?}", outcome);
+        assert!(outcome.bbn_contradiction_lift > 0.0, "{:?}", outcome);
+        assert!(outcome.evidence_value_gate_passed);
+
+        let effect = &outcome.strategies_applied[0];
+        assert!(effect.evidence_value_gate_passed);
+        assert!(effect.bbn_entropy_reduction > 0.0, "{:?}", effect);
+        assert!(effect.bbn_log_loss_delta > 0.0, "{:?}", effect);
+        assert!(effect.bbn_contradiction_lift > 0.0, "{:?}", effect);
+    }
+
+    #[test]
+    fn evidence_value_gate_skips_non_improving_strategy() {
+        let parent_config = DEFAULT_DEFAULT_PARENT_CONFIG.to_vec();
+        let mut net = net_with_baseline_row(&parent_config, vec![0.8, 0.0, 0.2]);
+        let m = manifest_with(vec![entry("AlreadyPriced", 100, 80.0, "ok")]);
+
+        let outcome = apply_strategy_library_prior_init(
+            &mut net,
+            AutoQuantPriorInitInput {
+                manifest: &m,
+                strategy_filter: None,
+                parent_config,
+                temper: DEFAULT_TEMPER,
+                prior_strength: DEFAULT_PRIOR_STRENGTH,
+            },
+        )
+        .unwrap();
+
+        assert!(outcome.strategies_applied.is_empty());
+        assert_eq!(outcome.initial_probs, outcome.final_probs);
+        assert_eq!(outcome.bbn_entropy_reduction, 0.0);
+        assert_eq!(outcome.bbn_log_loss_delta, 0.0);
+        assert_eq!(outcome.bbn_contradiction_lift, 0.0);
+        assert!(!outcome.evidence_value_gate_passed);
+        assert_eq!(outcome.strategies_skipped.len(), 1);
+        assert!(outcome.strategies_skipped[0]
+            .1
+            .contains("evidence_value_gate_failed"));
     }
 
     #[test]

@@ -168,8 +168,8 @@ Status: paused after user correction. Do not continue sidecar-only work before p
 - [x] Run managed Auto-Quant workspace, not just synthetic sidecar JSON.
 - [x] Import a real Auto-Quant run manifest through `auto-quant-results-import`.
 - [x] Apply strategy evidence through `auto-quant-prior-init` and verify `strategies_applied` is non-empty.
-- [ ] Admit factor evidence only if entropy/log-loss/contradiction lift improves.
-- [ ] Persist `bbn_entropy_reduction` and `bbn_log_loss_delta`.
+- [x] Admit factor evidence only if entropy/log-loss/contradiction lift improves.
+- [x] Persist `bbn_entropy_reduction` and `bbn_log_loss_delta`.
 
 Observed real closure slice:
 
@@ -238,6 +238,45 @@ BBN prior init:
   strategies_applied=MomentumMTFConfluence,RegimeAdaptiveBNB
   effects=854 trades -> 297 win/557 loss; 115 trades -> 80 win/35 loss
 ```
+
+Observed R26 value-gate implementation slice:
+
+```text
+state_dir=/tmp/ict-r26-bbn-value-gate-20260510
+source_manifest=/tmp/ict-high-sharpe-live-20260510-000946/strategy_library_from_live_run.json
+source_log=/tmp/ict-high-sharpe-live-20260510-000946/logs/12_auto_quant_run.log
+import_summary=/tmp/ict-r26-bbn-value-gate-20260510/import.json
+import_n_ok=2
+import_log_cross_check=matched 2, mismatches [], manifest_only [], log_only []
+prior_summary=/tmp/ict-r26-bbn-value-gate-20260510/prior_init.json
+prior_artifact=auto_quant_prior_init_NQ_20260509T171431.268234000Z
+prior_state=/tmp/ict-r26-bbn-value-gate-20260510/auto-quant/NQ/auto_quant_prior_init_NQ_20260509T171431.268234000Z.json
+prior_history=/tmp/ict-r26-bbn-value-gate-20260510/auto-quant/NQ/auto_quant_prior_init_history.json
+evidence_value_gate_passed=true
+bbn_entropy_reduction=0.018056766371967514
+bbn_log_loss_delta=6.588649375209126
+bbn_contradiction_lift=1.931483401354385
+strategies_applied=MomentumMTFConfluence,RegimeAdaptiveBNB
+strategies_skipped=[]
+MomentumMTFConfluence gate=true entropy_reduction=0.0 log_loss_delta=6.348640598279494 contradiction_lift=1.292299795823666
+RegimeAdaptiveBNB gate=true entropy_reduction=0.018056766371967514 log_loss_delta=0.24000877692963196 contradiction_lift=0.639183605530719
+```
+
+Implementation evidence:
+
+```text
+code=src/application/auto_quant/results/prior_init.rs
+persistence=src/application/auto_quant/results/persistence.rs
+summary_surface=src/application/auto_quant/command_entry.rs
+test=cargo test --lib prior_init -- --nocapture
+test_result=14 passed
+test=cargo test --lib persistence -- --nocapture
+test_result=46 passed
+real_import=cargo run --quiet -- auto-quant-results-import --symbol NQ --state-dir /tmp/ict-r26-bbn-value-gate-20260510 --library /tmp/ict-high-sharpe-live-20260510-000946/strategy_library_from_live_run.json --log /tmp/ict-high-sharpe-live-20260510-000946/logs/12_auto_quant_run.log
+real_prior_init=cargo run --quiet -- auto-quant-prior-init --symbol NQ --state-dir /tmp/ict-r26-bbn-value-gate-20260510
+```
+
+Boundary: this closes the BBN evidence-value admission/persistence gap for the current Auto-Quant strategy-library prior-init path. It does not promote the strategies to production; R27 still needs registered CatBoost runtime artifact support and mature scored rows.
 
 ### R27: path-ranker / execution-tree closure
 

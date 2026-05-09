@@ -40,8 +40,8 @@ use super::{
 use anyhow::{anyhow, bail, Context, Result};
 use chrono::Utc;
 use serde_json::json;
-use std::process::Command;
 use std::path::PathBuf;
+use std::process::Command;
 
 /// Ledger artifact_kind written by `auto-quant-consume-live-signals`.
 pub const ARTIFACT_KIND_LIVE_SIGNALS: &str = "auto_quant_live_signals_ingested";
@@ -365,9 +365,10 @@ pub fn auto_quant_prepare_workspace_command(state_dir: &str) -> Result<()> {
         );
     }
     let prepare_command = auto_quant_prepare_script_command(&readiness_before.workspace);
-    let output = if let Some(profile) =
-        super::workspace_profile::materialize_workspace_profile(state_dir, &readiness_before.workspace)?
-    {
+    let output = if let Some(profile) = super::workspace_profile::materialize_workspace_profile(
+        state_dir,
+        &readiness_before.workspace,
+    )? {
         let workspace_root = PathBuf::from(&readiness_before.workspace.repo_root);
         let csv_path = workspace_root.join("profile_source.csv");
         let timeframes = std::iter::once(profile.base_timeframe.clone())
@@ -981,6 +982,10 @@ pub fn auto_quant_prior_init_command(input: AutoQuantPriorInitCommandInput<'_>) 
         "parent_config": outcome.parent_config,
         "initial_probs": outcome.initial_probs,
         "final_probs": outcome.final_probs,
+        "bbn_entropy_reduction": outcome.bbn_entropy_reduction,
+        "bbn_log_loss_delta": outcome.bbn_log_loss_delta,
+        "bbn_contradiction_lift": outcome.bbn_contradiction_lift,
+        "evidence_value_gate_passed": outcome.evidence_value_gate_passed,
         "strategies_applied": outcome.strategies_applied,
         "strategies_skipped": outcome.strategies_skipped,
     });

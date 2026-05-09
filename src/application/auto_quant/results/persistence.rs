@@ -427,6 +427,11 @@ mod tests {
             strategies_skipped: vec![("Gamma".into(), "status=error".into())],
             temper: 0.5,
             prior_strength: 4.0,
+            bbn_entropy_reduction: 0.125,
+            bbn_log_loss_delta: 0.75,
+            bbn_contradiction_lift: 0.5,
+            evidence_value_gate_passed: true,
+            ..Default::default()
         };
 
         let pi = persist_prior_init_outcome(
@@ -443,6 +448,16 @@ mod tests {
         assert!(!pi.dry_run);
         assert!(std::path::Path::new(&pi.state_path).exists());
         assert!(std::path::Path::new(&pi.history_path).exists());
+        let persisted: AutoQuantPriorInitOutcome =
+            serde_json::from_str(&std::fs::read_to_string(&pi.state_path).unwrap()).unwrap();
+        assert_eq!(persisted.bbn_entropy_reduction, 0.125);
+        assert_eq!(persisted.bbn_log_loss_delta, 0.75);
+        assert_eq!(persisted.bbn_contradiction_lift, 0.5);
+        assert!(persisted.evidence_value_gate_passed);
+        let history: Vec<PriorInitHistoryEntry> =
+            serde_json::from_str(&std::fs::read_to_string(&pi.history_path).unwrap()).unwrap();
+        assert_eq!(history[0].outcome.bbn_entropy_reduction, 0.125);
+        assert_eq!(history[0].outcome.bbn_log_loss_delta, 0.75);
 
         let ledger =
             std::fs::read_to_string(temp.path().join("NQ").join(ARTIFACT_LEDGER_FILE)).unwrap();
@@ -475,6 +490,7 @@ mod tests {
             strategies_skipped: vec![],
             temper: 0.5,
             prior_strength: 4.0,
+            ..Default::default()
         };
 
         let pi = persist_prior_init_outcome(
@@ -574,6 +590,7 @@ mod tests {
             strategies_skipped: vec![],
             temper: 0.5,
             prior_strength: 4.0,
+            ..Default::default()
         };
         persist_prior_init_outcome(
             state_dir,
@@ -600,6 +617,7 @@ mod tests {
             strategies_skipped: vec![],
             temper: 0.5,
             prior_strength: 4.0,
+            ..Default::default()
         };
         let applied = persist_prior_init_outcome(
             state_dir,
@@ -630,6 +648,7 @@ mod tests {
             strategies_skipped: vec![],
             temper: 0.5,
             prior_strength: 4.0,
+            ..Default::default()
         };
         let v1_apply = persist_prior_init_outcome(
             state_dir,
