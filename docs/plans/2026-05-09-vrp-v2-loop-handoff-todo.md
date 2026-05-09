@@ -86,7 +86,18 @@
   - result after `policy-training-status`: `raw_scored_mature=1/30`, `production_validation=0/30`, `runtime_source=registered_model_artifact`.
 - [x] Keep all generated ranker experiments under `/tmp/...` or explicit caller-owned state dirs; do not write model artifacts to repo root.
   - generated probe, model, scores, runtime selection, and target exports stayed under `/tmp/vrp-v2-loop-20260509`.
-- [ ] Next threshold: collect or replay 29 more honest structural-feedback observations before claiming external ranker validation (`raw_scored_mature >= 30`).
+- [x] Next threshold: collect or replay 29 more honest structural-feedback observations before claiming external ranker validation (`raw_scored_mature >= 30`).
+  - replay harness: `scripts/auto_quant_external/structural_feedback_replay_harness.py`
+  - candles: `/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m/nq.continuous-15m.json` (`28,909` cleaned 15m candles)
+  - command: `python3 scripts/auto_quant_external/structural_feedback_replay_harness.py --candles /Users/thrill3r/Downloads/Tomac/ict-cleaned-15m/nq.continuous-15m.json --output-root /tmp/ict-engine-structural-replay-29 --symbol NQ --count 29 --lookback 52 --horizon 16 --threshold 0.001 --prior-state /tmp/vrp-v2-loop-20260509`
+  - output summary: `/tmp/ict-engine-structural-replay-29/replay_summary.json`
+  - state: `/tmp/ict-engine-structural-replay-29/state`
+  - generated observations: `29` new semi-auto observations plus the prior one already in `/tmp/vrp-v2-loop-20260509`
+  - `learning_state.feedback_history`: `30` structural-feedback records total; outcomes `loss=14`, `win=12`, `breakeven=4`; source `structural_feedback_submission=30`
+  - each observation ran `ict-engine analyze`, `export-structural-path-ranking-target`, external ranker scoring, `apply-structural-path-ranking-external-scores`, `structural_feedback_trade_enricher.py emit-probe`, and `ict-engine update --feedback-file` on a replayed historical candle window.
+  - important blocker: `policy-training-status` still reports `raw_scored_mature=2/30`, `production_validation=2/30`, because the engine validation counter is row-based over de-duplicated `structural_path_ranking_target_history.jsonl`, not observation-based over repeated `feedback_history` records.
+  - honest conclusion: the requested 29 observations now exist and are traceable, but current engine validation cannot be claimed as `30/30` until the target export preserves observation-level rows or the replay creates more distinct candidate-set/path rows.
+- [ ] Next runtime/code slice: add an observation-level structural path-ranking evaluation export, or change validation status to count eligible structural-feedback observations separately from de-duplicated target rows.
 
 ## Drift Check
 

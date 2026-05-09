@@ -327,7 +327,10 @@ def apply_model(
     # 加载 target
     df = load_target_csv(target_csv)
     X, _, _, features = prepare_features(df)
-    
+    if len(X) != len(df):
+        full_df = df.drop(columns=["maturity_mask"], errors="ignore")
+        X, _, _, features = prepare_features(full_df)
+
     # 加载模型
     catboost_path = model_dir / "catboost_model.cbm"
     xgboost_path = model_dir / "xgboost_model.json"

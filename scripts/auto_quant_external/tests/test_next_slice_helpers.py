@@ -13,6 +13,7 @@ sys.path.insert(0, str(SCRIPT_ROOT))
 import entry_drought_diagnostic_v2 as drought  # noqa: E402
 import external_regime_changepoint_labels as changepoint  # noqa: E402
 import structural_feedback_trade_enricher as enricher  # noqa: E402
+import structural_feedback_replay_harness as replay  # noqa: E402
 
 
 class ChangePointHelperTests(unittest.TestCase):
@@ -162,6 +163,39 @@ class StructuralFeedbackEnricherTests(unittest.TestCase):
             self.assertEqual(payload["candidate_set_id"], "set-1")
             self.assertEqual(payload["realized_outcome"], "win")
             self.assertEqual(payload["model_probabilities_before_trade"]["selected_probability"], 0.37)
+
+
+class StructuralFeedbackReplayHarnessTests(unittest.TestCase):
+    def test_outcome_from_forward_window_labels_directional_move(self) -> None:
+        candles = [
+            {"close": 100.0, "high": 100.0, "low": 100.0},
+            {"close": 100.1, "high": 100.4, "low": 99.9},
+            {"close": 100.4, "high": 100.5, "low": 100.0},
+        ]
+
+        outcome, pnl, exit_close = replay.outcome_from_forward_window(
+            candles,
+            entry_index=0,
+            horizon=2,
+            threshold=0.001,
+        )
+
+        self.assertEqual(outcome, "win")
+        self.assertAlmostEqual(pnl, 0.004)
+        self.assertEqual(exit_close, 100.4)
+
+    def test_load_candles_accepts_wrapped_payload(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "candles.json"
+            path.write_text(
+                '{"symbol":"NQ","candles":[{"timestamp":"t","open":1,"high":1,"low":1,"close":1,"volume":1}]}',
+                encoding="utf-8",
+            )
+
+            candles = replay.load_candles(path)
+
+        self.assertEqual(len(candles), 1)
+        self.assertEqual(candles[0]["timestamp"], "t")
 
 
 if __name__ == "__main__":
