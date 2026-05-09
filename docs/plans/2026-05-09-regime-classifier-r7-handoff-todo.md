@@ -95,32 +95,33 @@ python3 scripts/research/regime_distributional_agreement_report.py \
 
 ---
 
-## Immediate Next Slice: R8 Transition Governor
+## Next Slice Completed: R8 Transition Governor
 
 ### Create
 
-- [ ] `scripts/research/regime_transition_governor.py`
-- [ ] `scripts/research/tests/test_regime_transition_governor.py`
+- [x] `scripts/research/regime_transition_governor.py`
+- [x] `scripts/research/tests/test_regime_transition_governor.py`
 
 ### Inputs
 
-- [ ] `regime_expert_scores.jsonl`.
-- [ ] `regime_conformal_calibration_report.json`.
-- [ ] `regime_distributional_agreement_report.json`.
-- [ ] Optional HMM transition/discovery report.
-- [ ] Optional drift/change-point rows.
+- [x] `regime_expert_scores.jsonl`.
+- [x] `regime_conformal_calibration_report.json`.
+- [x] `regime_distributional_agreement_report.json`.
+- [x] Optional HMM transition/discovery report.
+- [x] Optional drift/change-point rows.
 
 ### Outputs
 
-- [ ] `regime_transition_governor_report.json`.
+- [x] `regime_transition_governor_report.json`.
 
 ### Acceptance
 
-- [ ] Enforces minimum duration / hysteresis.
-- [ ] Emits transition hazard.
-- [ ] Emits guardrail reasons.
-- [ ] Emits execution-tree compatible hint: `transition_guardrail` / `accept_regime` / `unknown_abstain`.
-- [ ] Keeps broad/noisy states non-trade-usable until confidence + distributional gates agree.
+- [x] Enforces minimum duration / hysteresis.
+- [x] Emits transition hazard.
+- [x] Emits guardrail reasons.
+- [x] Emits execution-tree compatible hint: `transition_guardrail` / `accept_regime` / `unknown_abstain`.
+- [x] Keeps broad/noisy states non-trade-usable until confidence + distributional gates agree.
+- [x] Target tests: `python3 -m unittest scripts/research/tests/test_regime_transition_governor.py -v` -> 4 OK.
 
 ---
 

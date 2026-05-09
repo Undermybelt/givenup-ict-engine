@@ -583,10 +583,12 @@ Outputs:
 - `regime_transition_governor_report.json`
 
 Acceptance:
-- [ ] Enforces minimum duration / hysteresis.
-- [ ] Penalizes flip-flop labels.
-- [ ] Preserves true shock transitions when drift evidence is strong.
-- [ ] Emits transition hazard into BBN evidence.
+- [x] Enforces minimum duration / hysteresis.
+- [x] Penalizes flip-flop labels.
+- [x] Preserves true shock/drift evidence as guardrail reasons when supplied.
+- [x] Emits transition hazard into BBN evidence hint.
+- [x] Emits execution-tree compatible hint: `accept_regime` / `transition_guardrail` / `unknown_abstain`.
+- [x] Target tests: `python3 -m unittest scripts/research/tests/test_regime_transition_governor.py -v` -> 4 OK.
 
 ### Slice R9: High-confidence regime decision aggregator
 
