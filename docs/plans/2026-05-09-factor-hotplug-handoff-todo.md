@@ -16,6 +16,10 @@ GPT agents entering this repo consistently report "no usable factors" because:
 - [x] Created `AGENTS.md` — agent entry map with full factor traceability table
 - [x] Created `docs/factor-catalog.md` — single-page factor family → code → status index
 - [x] Created this handoff document
+- [x] Phase 1-5: factor hotplug, auto-quant isolation, config, verification, doc sync
+- [x] Phase 6: sweep remaining FactorRegistry::default() call sites with hotplug (sop_reports.rs)
+- [x] Phase 6: consolidate 23 experiment state_* dirs into state_experiments/ — repo root clean
+- [x] Phase 6: .gitignore updated — state_experiments/ excluded
 
 ## Active TODO
 
