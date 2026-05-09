@@ -17,8 +17,8 @@ use super::structural_playbook::{
     resolved_ensemble_vote_for_snapshot, resolved_latest_ensemble_vote,
     StructuralPathRankerRuntimeContext, StructuralRecommendedPathBundleArtifact,
 };
-use crate::application::auto_quant::AutoQuantResearchHandoffPayload;
 use crate::application::auto_quant::handoff::apply_provider_profile_to_command;
+use crate::application::auto_quant::AutoQuantResearchHandoffPayload;
 use crate::application::belief::{
     jump_calibration_gate_workflow_summary, jump_model_workflow_summary,
 };
@@ -243,7 +243,9 @@ fn build_structural_validation_line(
     Some(parts.join(" | "))
 }
 
-fn build_dataset_resolution_line(provider_status_agent: &ProviderCatalogAgentSurface) -> Option<String> {
+fn build_dataset_resolution_line(
+    provider_status_agent: &ProviderCatalogAgentSurface,
+) -> Option<String> {
     let Some(profile) = provider_status_agent.selected_profile.as_ref() else {
         if provider_status_agent.available_opt_in_profiles.is_empty() {
             return None;
@@ -261,12 +263,24 @@ fn build_dataset_resolution_line(provider_status_agent: &ProviderCatalogAgentSur
     let data_contracts = if profile.data_contract_labels.is_empty() {
         "none".to_string()
     } else {
-        profile.data_contract_labels.iter().take(3).cloned().collect::<Vec<_>>().join(", ")
+        profile
+            .data_contract_labels
+            .iter()
+            .take(3)
+            .cloned()
+            .collect::<Vec<_>>()
+            .join(", ")
     };
     let track_statuses = if profile.track_statuses.is_empty() {
         "none".to_string()
     } else {
-        profile.track_statuses.iter().take(3).cloned().collect::<Vec<_>>().join(" | ")
+        profile
+            .track_statuses
+            .iter()
+            .take(3)
+            .cloned()
+            .collect::<Vec<_>>()
+            .join(" | ")
     };
     Some(format!(
         "Dataset resolver: profile_opt_in={} | contracts={} | tracks={}",
@@ -1566,15 +1580,13 @@ fn build_human_workflow_status_view_with_provider_agent_and_structural_prior_sta
             .ask_user_prompts
             .first()
             .cloned()
-            .unwrap_or_else(|| format!(
-                "Resolve provider prerequisites for {}.",
-                provider_support.pending_providers.join(", ")
-            ));
-        format!(
-            "{} {}",
-            ask_summary,
-            base_human_next_action
-        )
+            .unwrap_or_else(|| {
+                format!(
+                    "Resolve provider prerequisites for {}.",
+                    provider_support.pending_providers.join(", ")
+                )
+            });
+        format!("{} {}", ask_summary, base_human_next_action)
     } else {
         base_human_next_action
     };
@@ -2674,9 +2686,8 @@ pub fn emit_workflow_status_output(input: WorkflowStatusOutputInput<'_>) -> Resu
             if let Some(profile) = value.get("opt_in_profile_line").and_then(Value::as_str) {
                 println!("{}", redact_local_paths_in_human_text(profile));
             }
-            if let Some(dataset_resolution) = value
-                .get("dataset_resolution_line")
-                .and_then(Value::as_str)
+            if let Some(dataset_resolution) =
+                value.get("dataset_resolution_line").and_then(Value::as_str)
             {
                 println!("{}", redact_local_paths_in_human_text(dataset_resolution));
             }
@@ -3292,6 +3303,17 @@ fn short_human_phase_summary(phase: &crate::state::WorkflowPhaseSnapshot) -> Str
             "quality={:.3}",
             phase.pre_bayes_evidence_quality_score
         ));
+    }
+    if let Some(status) = phase
+        .pre_bayes_filtered_assignments
+        .get("regime_bundle_bbn_application_status")
+    {
+        if let Some(regime) = phase
+            .pre_bayes_filtered_assignments
+            .get("regime_bundle_bbn_market_regime")
+        {
+            parts.push(format!("regime_bundle_bbn={status}:{regime}"));
+        }
     }
     if parts.is_empty() {
         compact_human_phase_summary(phase).unwrap_or_else(|| phase.phase_summary.clone())
@@ -4582,6 +4604,29 @@ mod tests {
     use std::io::{Read, Write};
     use std::net::TcpListener;
     use std::thread;
+
+    #[test]
+    fn short_human_phase_summary_includes_applied_regime_bundle_bbn() {
+        let summary = short_human_phase_summary(&crate::state::WorkflowPhaseSnapshot {
+            selected_direction: Some("Bull".to_string()),
+            selected_entry_quality: Some("medium".to_string()),
+            pre_bayes_gate_status: "pass_hard".to_string(),
+            pre_bayes_evidence_quality_score: 0.62,
+            pre_bayes_filtered_assignments: std::collections::BTreeMap::from([
+                (
+                    "regime_bundle_bbn_application_status".to_string(),
+                    "applied".to_string(),
+                ),
+                (
+                    "regime_bundle_bbn_market_regime".to_string(),
+                    "bull".to_string(),
+                ),
+            ]),
+            ..crate::state::WorkflowPhaseSnapshot::default()
+        });
+
+        assert!(summary.contains("regime_bundle_bbn=applied:bull"));
+    }
 
     fn sample_provider_agent_surface() -> ProviderCatalogAgentSurface {
         ProviderCatalogAgentSurface {
@@ -6005,7 +6050,10 @@ mod tests {
 
         assert_eq!(value["provider_support"]["active"], true);
         assert_eq!(value["provider_support"]["profile_id"], "workflow_auto");
-        assert_eq!(value["provider_support"]["pending_providers"][0], "crypto_public_runtime");
+        assert_eq!(
+            value["provider_support"]["pending_providers"][0],
+            "crypto_public_runtime"
+        );
         assert!(value["provider_support"]["ask_user_prompts"]
             .as_array()
             .unwrap()
@@ -6157,7 +6205,10 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("external_http_runtime"));
-        assert!(value["provider_line"].as_str().unwrap().contains("crypto_public_runtime"));
+        assert!(value["provider_line"]
+            .as_str()
+            .unwrap()
+            .contains("crypto_public_runtime"));
         assert!(value["provider_line"]
             .as_str()
             .unwrap()
@@ -6204,7 +6255,9 @@ mod tests {
             &sample_provider_agent_surface_with_profile(),
             &[],
         );
-        let selected_line = first_run["opt_in_profile_line"].as_str().unwrap_or_default();
+        let selected_line = first_run["opt_in_profile_line"]
+            .as_str()
+            .unwrap_or_default();
         assert!(selected_line.is_empty() || selected_line.contains("Optional personal lane:"));
     }
 
@@ -9045,7 +9098,10 @@ mod tests {
         assert_eq!(value["duration_remaining_dwell_steps"], 0.7);
         assert_eq!(value["duration_break_hazard"], 0.37);
         assert_eq!(value["duration_sticky_self_transition_strength"], 0.63);
-        assert_eq!(value["duration_distribution_entropy"], std::f64::consts::LN_2);
+        assert_eq!(
+            value["duration_distribution_entropy"],
+            std::f64::consts::LN_2
+        );
         assert_eq!(value["empirical_duration_survival"], 1.0);
         assert_eq!(value["empirical_duration_completion_hazard"], 0.5405405405);
         assert_eq!(value["bocpd_evidence_weight"], 0.62);

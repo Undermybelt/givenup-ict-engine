@@ -522,15 +522,23 @@ pub(crate) fn workflow_phase_snapshot_from_analyze_run(
         run.pre_bayes_evidence_filter.policy.version.clone(),
     );
     if let Some(canonical) = run.canonical_structural_regime_posterior.as_ref() {
-        let regime_label = canonical.active_regime.clone().or_else(|| {
-            canonical
-                .probabilities
-                .iter()
-                .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
-                .map(|(label, _)| label.clone())
-        });
-        if let Some(regime_label) = regime_label {
-            filtered_assignments.insert("market_regime".to_string(), regime_label);
+        let regime_bundle_applied = run
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .get("regime_bundle_bbn_application_status")
+            .map(|status| status == "applied")
+            .unwrap_or(false);
+        if !regime_bundle_applied {
+            let regime_label = canonical.active_regime.clone().or_else(|| {
+                canonical
+                    .probabilities
+                    .iter()
+                    .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
+                    .map(|(label, _)| label.clone())
+            });
+            if let Some(regime_label) = regime_label {
+                filtered_assignments.insert("market_regime".to_string(), regime_label);
+            }
         }
     }
     let mut pre_bayes_soft_evidence = BTreeMap::from([
@@ -566,11 +574,28 @@ pub(crate) fn workflow_phase_snapshot_from_analyze_run(
         ),
     ]);
     if let Some(canonical) = run.canonical_structural_regime_posterior.as_ref() {
-        if !canonical.probabilities.is_empty() {
+        let regime_bundle_applied = run
+            .pre_bayes_evidence_filter
+            .evidence_assignments
+            .get("regime_bundle_bbn_application_status")
+            .map(|status| status == "applied")
+            .unwrap_or(false);
+        if !regime_bundle_applied && !canonical.probabilities.is_empty() {
             pre_bayes_soft_evidence
                 .insert("market_regime".to_string(), canonical.probabilities.clone());
         }
     }
+    let regime_bundle_fragment = run
+        .pre_bayes_evidence_filter
+        .evidence_assignments
+        .get("regime_bundle_bbn_application_status")
+        .zip(
+            run.pre_bayes_evidence_filter
+                .evidence_assignments
+                .get("regime_bundle_bbn_market_regime"),
+        )
+        .map(|(status, regime)| format!(" regime_bundle_bbn={status}:{regime}"))
+        .unwrap_or_default();
     let duration_fragment = if let (Some(model), Some(remaining)) = (
         run.hybrid_duration_model.as_deref(),
         run.hybrid_remaining_expected_bars,
@@ -604,13 +629,14 @@ pub(crate) fn workflow_phase_snapshot_from_analyze_run(
             ),
         ),
         phase_summary: format!(
-            "selected_direction={:?} selected_entry_quality={} pre_bayes_status={} pre_bayes_quality={:.3} decision_hint={}{} {}",
+            "selected_direction={:?} selected_entry_quality={} pre_bayes_status={} pre_bayes_quality={:.3} decision_hint={}{}{} {}",
             run.selected_direction,
             run.selected_entry_quality,
             run.pre_bayes_evidence_filter.gating_status,
             run.pre_bayes_evidence_filter.evidence_quality_score,
             run.decision_hint,
             duration_fragment,
+            regime_bundle_fragment,
             multi_timeframe_phase_hint(&run.multi_timeframe_summary)
         ),
         top_actions: workflow_top_actions(&run.agent_action_plan),
@@ -2292,5 +2318,69 @@ fn workflow_numeric_factor_evidence(
             format!("composite_score_delta={:.4}", right_score - left_score),
         ],
         _ => Vec::new(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::BTreeMap;
+
+    #[test]
+    fn analyze_snapshot_keeps_applied_regime_bundle_bbn_evidence_visible() {
+        let snapshot = workflow_phase_snapshot_from_analyze_run(&AnalyzeRunRecord {
+            run_id: "analyze:regime-bundle".to_string(),
+            source_command: "analyze --regime-consumer-bundle bundle.json --apply-regime-bundle-bbn-soft-evidence".to_string(),
+            pre_bayes_evidence_filter: PreBayesEvidenceFilter {
+                uses_soft_evidence: true,
+                gating_status: "pass_hard".to_string(),
+                evidence_assignments: BTreeMap::from([
+                    ("market_regime".to_string(), "bull".to_string()),
+                    (
+                        "regime_bundle_bbn_application_status".to_string(),
+                        "applied".to_string(),
+                    ),
+                    (
+                        "regime_bundle_bbn_market_regime".to_string(),
+                        "bull".to_string(),
+                    ),
+                ]),
+                soft_market_regime_distribution: BTreeMap::from([
+                    ("bull".to_string(), 0.9),
+                    ("bear".to_string(), 0.05),
+                    ("range".to_string(), 0.05),
+                ]),
+                ..PreBayesEvidenceFilter::default()
+            },
+            canonical_structural_regime_posterior: Some(
+                ict_engine::state::CanonicalStructuralRegimePosterior {
+                    active_regime: Some("trend".to_string()),
+                    confidence: Some(0.78),
+                    probabilities: BTreeMap::from([
+                        ("trend".to_string(), 0.78),
+                        ("range".to_string(), 0.14),
+                        ("transition".to_string(), 0.08),
+                    ]),
+                    evidence: vec!["duration_persistence_prior=0.900".to_string()],
+                },
+            ),
+            ..AnalyzeRunRecord::default()
+        });
+
+        assert_eq!(
+            snapshot.pre_bayes_filtered_assignments["market_regime"],
+            "bull"
+        );
+        assert_eq!(
+            snapshot.pre_bayes_filtered_assignments["regime_bundle_bbn_application_status"],
+            "applied"
+        );
+        assert_eq!(
+            snapshot.pre_bayes_soft_evidence["market_regime"]["bull"],
+            0.9
+        );
+        assert!(snapshot
+            .phase_summary
+            .contains("regime_bundle_bbn=applied:bull"));
     }
 }
