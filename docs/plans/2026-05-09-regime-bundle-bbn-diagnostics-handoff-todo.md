@@ -26,38 +26,50 @@ Hard constraints:
 
 ## Current slice
 
-Goal: feed existing `RegimeReadOnlyBbnSoftEvidence` into analyze/analyze-live diagnostics without mutating posterior math.
+Goal: close regime-consumer-bundle BBN path in two modes:
+- default read-only diagnostics: safe, zero behavior change
+- opt-in soft-evidence application: `--apply-regime-bundle-bbn-soft-evidence`
 
-Implemented so far:
-- Added `RegimeConsumerBundleAdapter::bbn_soft_evidence_trace_entries()`.
-- Emits compact fields:
-  - `regime_bbn_soft_evidence_strength=strong|moderate|neutral`
-  - `regime_bbn_soft_evidence_weight=0.900|0.650|0.000`
-  - `regime_bbn_decision_state=<state>`
-  - `regime_bbn_trade_usable=<bool>`
-  - `regime_bbn_label=<label>`
-  - `regime_bbn_label_set=<comma-list>`
-  - `regime_bbn_transition_hazard=<float>`
-  - `regime_bbn_reasons=<comma-list>`
-- `analyze` and `analyze-live` now append those fields to:
-  - `report.supporting.artifact_action_summary`
-  - `report.supporting.pre_bayes_evidence_filter.rationale` as `read_only_<entry>`
-  - `report.supporting.pre_bayes_evidence_filter.evidence_assignments` as `read_only_<key>=<value>`
-- Added adapter test for compact BBN soft evidence trace entries.
+Implemented:
+- `RegimeConsumerBundleAdapter::bbn_soft_evidence_trace_entries()` keeps compact trace fields.
+- `RegimeConsumerBundleAdapter::append_read_only_bbn_diagnostics()` centralizes analyze/analyze-live diagnostic wiring, removing duplicated logic.
+- `RegimeConsumerBundleAdapter::apply_bbn_soft_evidence_to_pre_bayes_filter()` applies strong/moderate bundle evidence into the Pre-Bayes filter only when explicitly opted in.
+- Legacy accepted bundle labels such as `RangeConsolidation/WideRange` map to moderate `range` evidence, preserving current user fixture compatibility.
+- `analyze` / `analyze-live` support `--apply-regime-bundle-bbn-soft-evidence`; without it, bundle stays read-only.
+- BBN application status is visible at `pre_bayes_evidence_filter.evidence_assignments.regime_bundle_bbn_application_status`.
+- Added adapter tests for:
+  - compact BBN diagnostics
+  - opt-in strong application
+  - no-opt/neutral skip
+  - legacy accepted bundle application
+
+Compact fields:
+- `regime_bbn_soft_evidence_strength=strong|moderate|neutral`
+- `regime_bbn_soft_evidence_weight=0.900|0.650|0.000`
+- `regime_bbn_decision_state=<state>`
+- `regime_bbn_trade_usable=<bool>`
+- `regime_bbn_label=<label>`
+- `regime_bbn_label_set=<comma-list>`
+- `regime_bbn_transition_hazard=<float>`
+- `regime_bbn_reasons=<comma-list>`
 
 Validation done:
-- `cargo test --test regime_consumer_bundle_adapter -- --nocapture` -> 12/12 pass
+- `cargo test --test regime_consumer_bundle_adapter -- --nocapture` -> 15/15 pass
 - `cargo check` -> pass
 - `cargo build --bin ict-engine` -> pass
-- real CLI smoke wrote `/tmp/ict-mainline-regime-audit/analyze-regime-bundle-bbn.json`
-- smoke assertion result: `ok neutral 0.000`
-- implementation commit already present: `58c17b6 feat: surface regime bundle bbn trace`
+- read-only CLI smoke wrote `/tmp/ict-mainline-regime-audit/analyze-regime-bundle-bbn-readonly.json`
+- opt-in applied CLI smoke wrote `/tmp/ict-mainline-regime-audit/analyze-regime-bundle-bbn-applied.json`
+- smoke assertion result: `ok readonly= moderate applied= range`
+- previous diagnostic commit: `58c17b6 feat: surface regime bundle bbn trace`
+- previous doc commit: `c41cd7a docs: add regime bundle bbn diagnostics handoff`
 
 ## Files touched this slice
 
 - `src/application/regime/consumer_bundle_adapter.rs`
 - `src/analyze_command.rs`
 - `src/analyze_live_command.rs`
+- `src/main.rs`
+- `src/probabilistic_backtest_runtime.rs`
 - `tests/regime_consumer_bundle_adapter.rs`
 - `docs/plans/2026-05-09-regime-bundle-bbn-diagnostics-handoff-todo.md`
 
@@ -68,11 +80,14 @@ Validation done:
 - [x] Run focused adapter test.
 - [x] Run `cargo check`.
 - [x] Run `cargo build --bin ict-engine`.
-- [x] Run real `analyze` smoke with `/tmp/ict-mainline-regime-audit/regime-consumer-bundle-sample.json`.
+- [x] Run read-only `analyze` smoke with `/tmp/ict-mainline-regime-audit/regime-consumer-bundle-sample.json`.
+- [x] Run opt-in applied `analyze` smoke with `--apply-regime-bundle-bbn-soft-evidence`.
 - [x] Confirm JSON fields in:
   - `report.supporting.artifact_action_summary`
   - `report.supporting.pre_bayes_evidence_filter.rationale`
   - `report.supporting.pre_bayes_evidence_filter.evidence_assignments.read_only_regime_bbn_soft_evidence_strength`
+  - `report.supporting.pre_bayes_evidence_filter.evidence_assignments.regime_bundle_bbn_application_status`
+  - `report.supporting.pre_bayes_evidence_filter.soft_market_regime_distribution`
 
 ### P1 - Runtime smoke command
 
@@ -112,4 +127,11 @@ PY
 
 ## Open design boundary
 
-This slice intentionally does not change posterior math. It is diagnostic-only and read-only. Promotion to actual BBN posterior influence should be a later feature gate with explicit field names and separate tests.
+Closed for current scope:
+- bundle trace -> Pre-Bayes diagnostics -> optional Pre-Bayes soft evidence -> BBN inference input is wired and runtime-smoked.
+- Default remains read-only, so existing consumers keep zero behavior change unless they opt in.
+
+Still intentionally out of scope:
+- No native CatBoost inference added.
+- No automatic promotion of user VRP/NQ fields into core defaults; those remain hot-plug bundle payloads.
+- No forced posterior override; only soft market-regime evidence when user passes the opt-in flag.

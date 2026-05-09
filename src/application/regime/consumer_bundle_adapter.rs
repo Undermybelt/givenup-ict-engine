@@ -264,7 +264,9 @@ impl RegimeConsumerBundleAdapter {
             .unwrap_or_default();
         let (strength, weight) = match (self.is_loaded(), decision_state.as_str(), trade_usable) {
             (true, "single_label_99", Some(true)) => (RegimeBbnEvidenceStrength::Strong, 0.9),
-            (true, "single_label_95", Some(true)) => (RegimeBbnEvidenceStrength::Moderate, 0.65),
+            (true, "single_label_95", Some(true)) | (true, "accepted", Some(true)) => {
+                (RegimeBbnEvidenceStrength::Moderate, 0.65)
+            }
             _ => (RegimeBbnEvidenceStrength::Neutral, 0.0),
         };
 
@@ -490,11 +492,12 @@ impl RegimeReadOnlyBbnSoftEvidence {
 }
 
 fn regime_bundle_label_to_bbn_market_regime(label: &str) -> Option<&'static str> {
-    match label {
-        "primary::TrendExpansion" => Some("bull"),
-        "primary::RangeConsolidation" => Some("range"),
-        "primary::ExtremeStress" => Some("range"),
-        "primary::ReversalBrewing" => Some("range"),
+    let primary = label.split('/').next().unwrap_or(label);
+    match primary {
+        "primary::TrendExpansion" | "TrendExpansion" => Some("bull"),
+        "primary::RangeConsolidation" | "RangeConsolidation" => Some("range"),
+        "primary::ExtremeStress" | "ExtremeStress" => Some("range"),
+        "primary::ReversalBrewing" | "ReversalBrewing" => Some("range"),
         _ => None,
     }
 }

@@ -6794,6 +6794,8 @@ mod tests {
                 multi_timeframe_summary: &[],
                 native_frames: AnalyzeNativeFrames::default(),
             },
+            regime_bundle_adapter: None,
+            apply_regime_bundle_bbn_soft_evidence: false,
             execution_focus: true,
         })
         .unwrap();
@@ -6837,6 +6839,8 @@ mod tests {
                 multi_timeframe_summary: &[],
                 native_frames: AnalyzeNativeFrames::default(),
             },
+            regime_bundle_adapter: None,
+            apply_regime_bundle_bbn_soft_evidence: false,
             execution_focus: true,
         })
         .unwrap();
@@ -7295,6 +7299,8 @@ mod tests {
                 multi_timeframe_summary: &[],
                 native_frames: AnalyzeNativeFrames::default(),
             },
+            regime_bundle_adapter: None,
+            apply_regime_bundle_bbn_soft_evidence: false,
             execution_focus: true,
         })
         .unwrap();
@@ -7795,6 +7801,7 @@ mod tests {
             false,
             true,
             None,
+            false,
             false,
         )
         .unwrap();
@@ -8425,6 +8432,7 @@ mod tests {
             true,
             None,
             false,
+            false,
         )
         .unwrap();
 
@@ -8489,6 +8497,8 @@ mod tests {
                 multi_timeframe_summary: &[],
                 native_frames: AnalyzeNativeFrames::default(),
             },
+            regime_bundle_adapter: None,
+            apply_regime_bundle_bbn_soft_evidence: false,
             execution_focus: true,
         })
         .unwrap();
@@ -8595,6 +8605,7 @@ mod tests {
             true,
             None,
             false,
+            false,
         )
         .unwrap();
 
@@ -8644,6 +8655,7 @@ mod tests {
             true,
             None,
             false,
+            false,
         )
         .unwrap();
         analyze_command(
@@ -8656,6 +8668,7 @@ mod tests {
             false,
             true,
             None,
+            false,
             false,
         )
         .unwrap();
@@ -8697,6 +8710,7 @@ mod tests {
             false,
             true,
             None,
+            false,
             false,
         )
         .unwrap();
@@ -10480,6 +10494,7 @@ mod tests {
             false,
             true,
             None,
+            false,
             false,
         )
         .unwrap();

@@ -390,6 +390,52 @@ fn absent_opt_in_or_neutral_bundle_skips_pre_bayes_mutation() {
 }
 
 #[test]
+fn accepted_legacy_bundle_applies_as_moderate_range_when_opted_in() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("regime_consumer_bundle.json");
+    fs::write(
+        &path,
+        json!({
+            "schema_version": "regime-consumer-bundle/v1",
+            "latest_decision": {
+                "decision_state": "accepted",
+                "trade_usable": true,
+                "final_label": "RangeConsolidation/WideRange",
+                "label_set": ["RangeConsolidation", "WideRange"],
+                "abstain_reasons": []
+            },
+            "consumer_hints": {
+                "execution_tree_hint": "accept_regime",
+                "bbn_evidence_hint": {
+                    "market_regime": "range",
+                    "liquidity_context": "favorable"
+                }
+            }
+        })
+        .to_string(),
+    )
+    .unwrap();
+    let adapter = RegimeConsumerBundleAdapter::load_optional(Some(&path), false).unwrap();
+    let mut filter = PreBayesEvidenceFilter {
+        filtered_market_regime_label: "bull".to_string(),
+        soft_market_regime_distribution: BTreeMap::from([
+            ("bull".to_string(), 0.6),
+            ("bear".to_string(), 0.2),
+            ("range".to_string(), 0.2),
+        ]),
+        ..PreBayesEvidenceFilter::default()
+    };
+
+    let evidence = adapter.to_read_only_bbn_soft_evidence();
+    let status = adapter.apply_bbn_soft_evidence_to_pre_bayes_filter(&mut filter, true);
+
+    assert_eq!(evidence.strength, RegimeBbnEvidenceStrength::Moderate);
+    assert_eq!(status, RegimeBbnEvidenceApplicationStatus::Applied);
+    assert_eq!(filter.filtered_market_regime_label, "range");
+    assert_eq!(filter.soft_market_regime_distribution["range"], 0.65);
+}
+
+#[test]
 fn abstain_or_missing_bundle_maps_to_neutral_bbn_soft_evidence() {
     let missing = RegimeConsumerBundleAdapter::load_optional(None, false).unwrap();
     let missing_evidence = missing.to_read_only_bbn_soft_evidence();
