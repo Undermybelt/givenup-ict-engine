@@ -47,6 +47,36 @@ def _sharpe(values: list[float], periods_per_year: int) -> float:
     return mean(values) / sigma * math.sqrt(periods_per_year)
 
 
+def _normal_cdf(value: float) -> float:
+    return 0.5 * (1.0 + math.erf(value / math.sqrt(2.0)))
+
+
+def _probabilistic_sharpe_ratio(
+    sharpe: float,
+    benchmark: float,
+    sample_count: int,
+    skew: float,
+    kurtosis: float,
+) -> float:
+    if sample_count < 2:
+        return 0.0
+    denominator = math.sqrt(
+        max(1e-12, 1.0 - skew * sharpe + ((kurtosis - 1.0) / 4.0) * sharpe * sharpe)
+    )
+    statistic = (sharpe - benchmark) * math.sqrt(sample_count - 1.0) / denominator
+    return min(1.0, max(0.0, _normal_cdf(statistic)))
+
+
+def _deflated_sharpe_benchmark(values: list[float], nb_trials: int, periods_per_year: int) -> float:
+    if len(values) < 2 or nb_trials <= 1:
+        return 0.0
+    if pstdev(values) == 0.0:
+        return 0.0
+    sharpe_std = math.sqrt(periods_per_year / max(1, len(values) - 1))
+    trial_penalty = math.sqrt(2.0 * math.log(max(2, nb_trials)))
+    return sharpe_std * trial_penalty
+
+
 def _max_drawdown(cumulative: list[float]) -> float:
     peak = 0.0
     worst = 0.0
@@ -105,6 +135,11 @@ def build_payoff_shape_report(
     sharpe = _sharpe(values, periods_per_year)
     skew = _sample_skew(values)
     kurtosis = _sample_kurtosis(values)
+    effective_trials = max(1, int(nb_trials))
+    effective_sample_size = trade_count
+    deflated_benchmark = _deflated_sharpe_benchmark(values, effective_trials, periods_per_year)
+    psr = _probabilistic_sharpe_ratio(sharpe, 0.0, effective_sample_size, skew, kurtosis)
+    dsr = _probabilistic_sharpe_ratio(sharpe, deflated_benchmark, effective_sample_size, skew, kurtosis)
     failure_tags: list[str] = []
 
     if trade_count == 0:
@@ -129,6 +164,11 @@ def build_payoff_shape_report(
         "avg_loss": avg_loss,
         "win_loss_ratio": avg_win / abs(avg_loss) if avg_loss else 0.0,
         "sharpe": sharpe,
+        "psr": psr,
+        "dsr": dsr,
+        "deflated_sharpe_benchmark": deflated_benchmark,
+        "effective_trials": effective_trials,
+        "effective_sample_size": effective_sample_size,
         "max_drawdown_R": _max_drawdown(cumulative),
         "skew": skew,
         "kurtosis": kurtosis,

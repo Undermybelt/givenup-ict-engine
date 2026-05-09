@@ -34,6 +34,12 @@
   - `qqq_hv_pct_rank_252`
   - `vvix_over_vix`
 - [x] User can opt into overrides via `--profile-json`
+- [x] Added PSR/DSR fields to payoff report after RED test:
+  - `psr`
+  - `dsr`
+  - `deflated_sharpe_benchmark`
+  - `effective_trials`
+  - `effective_sample_size`
 
 ### Next
 

@@ -81,5 +81,23 @@ class FactorPayoffShapeReportTests(unittest.TestCase):
             self.assertIn('"candidate_id": "cli-candidate"', output_json.read_text())
 
 
+    def test_report_includes_probabilistic_and_deflated_sharpe(self) -> None:
+        trades = [{"realized_R": value} for value in [1.0, 1.2, 0.8, -0.2, 1.1, 0.9]]
+
+        report = payoff.build_payoff_shape_report(
+            candidate_id="dsr-demo",
+            trades=trades,
+            nb_trials=25,
+            periods_per_year=252,
+        )
+
+        self.assertGreaterEqual(report["psr"], 0.0)
+        self.assertLessEqual(report["psr"], 1.0)
+        self.assertGreaterEqual(report["dsr"], 0.0)
+        self.assertLessEqual(report["dsr"], 1.0)
+        self.assertGreater(report["deflated_sharpe_benchmark"], 0.0)
+        self.assertEqual(report["effective_trials"], 25)
+
+
 if __name__ == "__main__":
     unittest.main()
