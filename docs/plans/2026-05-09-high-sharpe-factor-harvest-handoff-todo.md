@@ -98,7 +98,7 @@ vrp_optional_ok=True
 
 ### R23: payoff gate expansion
 
-- [ ] Ensure payoff report exposes:
+- [x] Ensure payoff report exposes:
   - Sharpe / Sortino / Calmar
   - max drawdown
   - CVaR / tail ratio
@@ -108,7 +108,28 @@ vrp_optional_ok=True
   - OOS Sharpe LCB
   - DSR / PBO
   - effective sample size
-- [ ] Add failure tags for `high_pbo`, `low_dsr`, `tail_risk_hidden`.
+- [x] Add failure tags for `high_pbo`, `low_dsr`, `tail_risk_hidden`.
+- [x] Add regression test: `test_report_exposes_r23_payoff_gate_fields_and_failure_tags`.
+- [x] Validate CLI JSON output.
+
+Observed artifact:
+
+```text
+/tmp/ict-hl/r23_payoff_report.json
+sharpe=-2.5303377710824577
+sortino=-2.5561399172110284
+calmar=-0.48333333333333334
+cvar_95=-3.0
+tail_ratio=0.09999999999999999
+profit_factor=0.532258064516129
+avg_rr=0.152073732718894
+oos_sharpe_lcb=-3.183671104415791
+dsr=0.0
+pbo=1.0
+effective_sample_size=9
+failure_tags=['thin_density', 'negative_edge', 'low_dsr', 'high_pbo', 'tail_risk_hidden']
+promotion_gate=reject
+```
 
 ### R24: QQQ/NQ VRP sidecar
 

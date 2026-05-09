@@ -47,6 +47,42 @@ def _sharpe(values: list[float], periods_per_year: int) -> float:
     return mean(values) / sigma * math.sqrt(periods_per_year)
 
 
+def _sortino(values: list[float], periods_per_year: int) -> float:
+    if len(values) < 2:
+        return 0.0
+    downside = [min(0.0, value) for value in values]
+    downside_sigma = math.sqrt(sum(value * value for value in downside) / len(downside))
+    if downside_sigma == 0.0:
+        return 0.0
+    return mean(values) / downside_sigma * math.sqrt(periods_per_year)
+
+
+def _tail_loss(values: list[float], percentile: float) -> float:
+    if not values:
+        return 0.0
+    ordered = sorted(values)
+    index = max(0, min(len(ordered) - 1, int(percentile * len(ordered)) - 1))
+    return ordered[index]
+
+
+def _cvar(values: list[float], percentile: float = 0.05) -> float:
+    if not values:
+        return 0.0
+    cutoff = _tail_loss(values, percentile)
+    tail = [value for value in values if value <= cutoff]
+    return mean(tail) if tail else cutoff
+
+
+def _tail_ratio(values: list[float]) -> float:
+    if not values:
+        return 0.0
+    upper = abs(_tail_loss(values, 0.95))
+    lower = abs(_tail_loss(values, 0.05))
+    if lower == 0.0:
+        return 0.0
+    return upper / lower
+
+
 def _normal_cdf(value: float) -> float:
     return 0.5 * (1.0 + math.erf(value / math.sqrt(2.0)))
 
@@ -100,13 +136,33 @@ def _payoff_shape(values: list[float], hit_rate: float, avg_win: float, avg_loss
     return "mixed"
 
 
-def _promotion_gate(trade_count: int, net_return: float, sharpe: float, failure_tags: list[str]) -> str:
-    hard_failures = {"under_trades", "cost_blind_negative_edge", "negative_edge"}
+def _promotion_gate(
+    trade_count: int,
+    net_return: float,
+    sharpe: float,
+    oos_sharpe_lcb: float,
+    dsr: float,
+    pbo: float,
+    failure_tags: list[str],
+) -> str:
+    hard_failures = {"under_trades", "cost_blind_negative_edge", "negative_edge", "tail_risk_hidden"}
     if hard_failures.intersection(failure_tags) or net_return <= 0.0:
         return "reject"
-    if trade_count >= 80 and sharpe > 0.0:
+    if trade_count >= 80 and sharpe > 0.0 and oos_sharpe_lcb > 0.0 and dsr >= 0.8 and pbo <= 0.1:
         return "promote"
     return "probe"
+
+
+def _oos_sharpe_lcb(sharpe: float, sample_count: int) -> float:
+    if sample_count <= 1:
+        return 0.0
+    return sharpe - 1.96 / math.sqrt(sample_count)
+
+
+def _pbo_proxy(dsr: float, trade_count: int, nb_trials: int) -> float:
+    trial_pressure = min(1.0, math.log(max(2, nb_trials)) / 10.0)
+    density_relief = min(0.5, trade_count / 160.0)
+    return min(1.0, max(0.0, (1.0 - dsr) * 0.7 + trial_pressure - density_relief))
 
 
 def build_payoff_shape_report(
@@ -133,6 +189,7 @@ def build_payoff_shape_report(
     avg_win = _safe_mean(wins)
     avg_loss = _safe_mean(losses)
     sharpe = _sharpe(values, periods_per_year)
+    sortino = _sortino(values, periods_per_year)
     skew = _sample_skew(values)
     kurtosis = _sample_kurtosis(values)
     effective_trials = max(1, int(nb_trials))
@@ -140,6 +197,15 @@ def build_payoff_shape_report(
     deflated_benchmark = _deflated_sharpe_benchmark(values, effective_trials, periods_per_year)
     psr = _probabilistic_sharpe_ratio(sharpe, 0.0, effective_sample_size, skew, kurtosis)
     dsr = _probabilistic_sharpe_ratio(sharpe, deflated_benchmark, effective_sample_size, skew, kurtosis)
+    oos_sharpe_lcb = _oos_sharpe_lcb(sharpe, effective_sample_size)
+    pbo = _pbo_proxy(dsr, trade_count, effective_trials)
+    max_drawdown = _max_drawdown(cumulative)
+    cvar_95 = _cvar(values, 0.05)
+    tail_loss_p95 = _tail_loss(values, 0.05)
+    tail_ratio = _tail_ratio(values)
+    profit_factor = sum(wins) / abs(sum(losses)) if losses else 0.0
+    avg_rr = avg_win / abs(avg_loss) if avg_loss else 0.0
+    calmar = net_return / abs(max_drawdown) if max_drawdown else 0.0
     failure_tags: list[str] = []
 
     if trade_count == 0:
@@ -150,6 +216,12 @@ def build_payoff_shape_report(
         failure_tags.append("cost_blind_negative_edge")
     if net_return <= 0.0 and "cost_blind_negative_edge" not in failure_tags:
         failure_tags.append("negative_edge")
+    if dsr < 0.8:
+        failure_tags.append("low_dsr")
+    if pbo > 0.1:
+        failure_tags.append("high_pbo")
+    if tail_ratio < 0.5 and cvar_95 < -1.0:
+        failure_tags.append("tail_risk_hidden")
 
     return {
         "schema_version": "factor-payoff-shape/v1",
@@ -162,20 +234,36 @@ def build_payoff_shape_report(
         "hit_rate": hit_rate,
         "avg_win": avg_win,
         "avg_loss": avg_loss,
-        "win_loss_ratio": avg_win / abs(avg_loss) if avg_loss else 0.0,
+        "win_loss_ratio": avg_rr,
+        "avg_rr": avg_rr,
+        "profit_factor": profit_factor,
         "sharpe": sharpe,
+        "sortino": sortino,
+        "calmar": calmar,
+        "oos_sharpe_lcb": oos_sharpe_lcb,
         "psr": psr,
         "dsr": dsr,
+        "pbo": pbo,
         "deflated_sharpe_benchmark": deflated_benchmark,
         "effective_trials": effective_trials,
         "effective_sample_size": effective_sample_size,
-        "max_drawdown_R": _max_drawdown(cumulative),
+        "max_drawdown_R": max_drawdown,
+        "cvar_95": cvar_95,
         "skew": skew,
         "kurtosis": kurtosis,
-        "tail_loss_p95": sorted(values)[max(0, int(0.05 * trade_count) - 1)] if values else 0.0,
+        "tail_loss_p95": tail_loss_p95,
+        "tail_ratio": tail_ratio,
         "payoff_shape": _payoff_shape(values, hit_rate, avg_win, avg_loss),
         "failure_tags": failure_tags,
-        "promotion_gate": _promotion_gate(trade_count, net_return, sharpe, failure_tags),
+        "promotion_gate": _promotion_gate(
+            trade_count,
+            net_return,
+            sharpe,
+            oos_sharpe_lcb,
+            dsr,
+            pbo,
+            failure_tags,
+        ),
     }
 
 

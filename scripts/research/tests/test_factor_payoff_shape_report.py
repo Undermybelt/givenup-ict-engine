@@ -98,6 +98,45 @@ class FactorPayoffShapeReportTests(unittest.TestCase):
         self.assertGreater(report["deflated_sharpe_benchmark"], 0.0)
         self.assertEqual(report["effective_trials"], 25)
 
+    def test_report_exposes_r23_payoff_gate_fields_and_failure_tags(self) -> None:
+        trades = [
+            {"realized_R": value}
+            for value in [
+                0.30,
+                0.20,
+                0.25,
+                0.15,
+                0.35,
+                -0.10,
+                0.22,
+                0.18,
+                -3.0,
+            ]
+        ]
+
+        report = payoff.build_payoff_shape_report(
+            candidate_id="tail-risk-candidate",
+            trades=trades,
+            nb_trials=200,
+            periods_per_year=252,
+        )
+
+        for key in [
+            "sortino",
+            "calmar",
+            "cvar_95",
+            "tail_ratio",
+            "profit_factor",
+            "avg_rr",
+            "oos_sharpe_lcb",
+            "pbo",
+            "effective_sample_size",
+        ]:
+            self.assertIn(key, report)
+        self.assertIn("high_pbo", report["failure_tags"])
+        self.assertIn("low_dsr", report["failure_tags"])
+        self.assertIn("tail_risk_hidden", report["failure_tags"])
+
 
 if __name__ == "__main__":
     unittest.main()
