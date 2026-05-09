@@ -618,6 +618,17 @@ enum Commands {
         agent: bool,
         #[arg(long, help = "Alias for --output-format human")]
         human: bool,
+        #[arg(
+            long,
+            help = "Optional regime_consumer_bundle.json path for read-only trace/report context"
+        )]
+        regime_consumer_bundle: Option<String>,
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Fail analyze-live if --regime-consumer-bundle is missing or invalid"
+        )]
+        regime_consumer_bundle_strict: bool,
     },
     /// Validate market-state main/sub-regime confidence on OHLCV candles
     ValidateMarketState {
@@ -2135,6 +2146,8 @@ fn main() -> Result<()> {
             compact,
             agent,
             human,
+            regime_consumer_bundle,
+            regime_consumer_bundle_strict,
         } => analyze_live_shell(AnalyzeLiveShellInput {
             symbol: &symbol,
             futures_symbol: futures_symbol.as_deref(),
@@ -2153,6 +2166,8 @@ fn main() -> Result<()> {
                 OutputFormat::Agent => "agent",
                 OutputFormat::Human => "human",
             },
+            regime_consumer_bundle: regime_consumer_bundle.as_deref(),
+            regime_consumer_bundle_strict,
         })?,
         Commands::ValidateMarketState {
             data,
@@ -7747,6 +7762,8 @@ mod tests {
             OutputFormat::Json,
             false,
             true,
+            None,
+            false,
         )
         .unwrap();
 
@@ -8374,6 +8391,8 @@ mod tests {
             OutputFormat::Json,
             false,
             true,
+            None,
+            false,
         )
         .unwrap();
 
@@ -8542,6 +8561,8 @@ mod tests {
             OutputFormat::Json,
             false,
             true,
+            None,
+            false,
         )
         .unwrap();
 
@@ -8589,6 +8610,8 @@ mod tests {
             OutputFormat::Json,
             false,
             true,
+            None,
+            false,
         )
         .unwrap();
         analyze_command(
@@ -8600,6 +8623,8 @@ mod tests {
             OutputFormat::Json,
             false,
             true,
+            None,
+            false,
         )
         .unwrap();
 
@@ -8639,6 +8664,8 @@ mod tests {
             OutputFormat::Json,
             false,
             true,
+            None,
+            false,
         )
         .unwrap();
 
@@ -10420,6 +10447,8 @@ mod tests {
             OutputFormat::Json,
             false,
             true,
+            None,
+            false,
         )
         .unwrap();
         crate::update_command::update_command(UpdateCommandInput {

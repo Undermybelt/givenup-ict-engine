@@ -1,4 +1,6 @@
 use super::*;
+use ict_engine::application::regime::consumer_bundle_adapter::RegimeConsumerBundleAdapter;
+use std::path::Path;
 
 #[derive(Debug, Serialize)]
 struct PersistedCandlesFile {
@@ -156,6 +158,8 @@ pub(crate) struct AnalyzeLiveCommandInput<'a> {
     pub aux_base_url: &'a str,
     pub state_dir: &'a str,
     pub output_format: &'a str,
+    pub regime_consumer_bundle: Option<&'a str>,
+    pub regime_consumer_bundle_strict: bool,
 }
 
 pub(crate) struct AnalyzeLiveShellInput<'a> {
@@ -171,6 +175,8 @@ pub(crate) struct AnalyzeLiveShellInput<'a> {
     pub crypto_public_base_url: &'a str,
     pub state_dir: &'a str,
     pub output_format: &'a str,
+    pub regime_consumer_bundle: Option<&'a str>,
+    pub regime_consumer_bundle_strict: bool,
 }
 
 pub(crate) fn analyze_live_shell(input: AnalyzeLiveShellInput<'_>) -> Result<()> {
@@ -187,6 +193,8 @@ pub(crate) fn analyze_live_shell(input: AnalyzeLiveShellInput<'_>) -> Result<()>
         crypto_public_base_url,
         state_dir,
         output_format,
+        regime_consumer_bundle,
+        regime_consumer_bundle_strict,
     } = input;
     ensure_state_dir_ready(state_dir)?;
     let futures_base_url = ict_engine::application::data_sources::resolve_live_backend_base_url(
@@ -212,6 +220,8 @@ pub(crate) fn analyze_live_shell(input: AnalyzeLiveShellInput<'_>) -> Result<()>
         aux_base_url: &aux_base_url,
         state_dir,
         output_format,
+        regime_consumer_bundle,
+        regime_consumer_bundle_strict,
     })
 }
 
@@ -301,7 +311,17 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         aux_base_url,
         state_dir,
         output_format,
+        regime_consumer_bundle,
+        regime_consumer_bundle_strict,
     } = input;
+    let regime_bundle_adapter = regime_consumer_bundle
+        .map(|bundle_path| {
+            RegimeConsumerBundleAdapter::load_optional(
+                Some(Path::new(bundle_path)),
+                regime_consumer_bundle_strict,
+            )
+        })
+        .transpose()?;
     let resolved_symbols = resolve_live_symbol_inputs(
         symbol,
         futures_symbol,
@@ -587,6 +607,19 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         &artifact_family_trends,
         &artifact_consumed_impact_summary,
     );
+    if let Some(bundle_path) = regime_consumer_bundle {
+        if let Some(adapter) = regime_bundle_adapter.as_ref() {
+            let trace_entries = adapter.trace_entries(Some(Path::new(bundle_path)));
+            report
+                .supporting
+                .artifact_action_summary
+                .push(format!("regime_bundle_trace:{}", trace_entries.join("|")));
+            report
+                .supporting
+                .artifact_action_summary
+                .extend(trace_entries);
+        }
+    }
     report.supporting.artifact_decision_summary =
         artifact_decision_summary_for_symbol(state_dir, symbol)?;
     report.supporting.artifact_decision_section = artifact_decision_section_from_parts(
