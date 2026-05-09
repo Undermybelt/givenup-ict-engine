@@ -36,7 +36,8 @@
 - [x] Run full research tests
   - `python3 -m unittest discover -s scripts/research/tests -p 'test_*.py'` -> 45 OK
 - [x] Update master TODO
-- [ ] Commit only this slice
+- [x] Commit only this slice
+  - `029800c feat: add bbn evidence value report`
 
 ## Input Contract
 

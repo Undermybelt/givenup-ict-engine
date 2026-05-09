@@ -41,7 +41,7 @@
   - Files: `transition_evidence_aggregator.py`, handoff, tests
   - Tests: `42 OK`
 - [x] Slice 9: BBN evidence value report
-  - Commit: pending this slice
+  - Commit: `029800c feat: add bbn evidence value report`
   - Files: `bbn_evidence_value_report.py`, handoff, tests
   - Tests: target 3 OK; full research 45 OK
 
@@ -96,4 +96,4 @@ Active: Slice 9 `bbn_evidence_value_report.py`.
 - [x] Add handoff doc
 - [x] Run target tests
 - [x] Run full research tests
-- [ ] Commit slice
+- [x] Commit slice
