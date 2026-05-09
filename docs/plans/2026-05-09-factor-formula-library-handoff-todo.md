@@ -39,7 +39,8 @@
 - [x] Run full research tests
   - `python3 -m unittest discover -s scripts/research/tests -p 'test_*.py'` -> 49 OK
 - [x] Update master TODO
-- [ ] Commit only this slice
+- [x] Commit only this slice
+  - `2672288 feat: add factor formula seed library`
 
 ## Output Contract
 

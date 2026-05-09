@@ -49,7 +49,7 @@
   - Files: `payoff_to_path_ranker_target.py`, handoff, tests
   - Tests: target 3 OK; full research 46 OK
 - [x] Slice 11: Formula seed library
-  - Commit: pending this slice
+  - Commit: `2672288 feat: add factor formula seed library`
   - Files: `factor_formula_library.py`, handoff, tests
   - Tests: target 3 OK; full research 49 OK
 
@@ -76,4 +76,4 @@ Active: Slice 11 `factor_formula_library.py`.
 - [x] Add handoff doc
 - [x] Run target tests
 - [x] Run full research tests
-- [ ] Commit slice
+- [x] Commit slice
