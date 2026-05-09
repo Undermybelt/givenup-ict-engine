@@ -433,9 +433,12 @@ Fields:
 - `abstain_policy`
 
 Acceptance:
-- [ ] Emits 53 initial experts.
-- [ ] Includes all current Rust enum labels.
-- [ ] Marks `Unknown` / `Neutral` as abstain/fallback classes.
+- [x] Emits 53 initial experts.
+- [x] Includes all current Rust enum labels.
+- [x] Marks `Unknown` / `Neutral` as abstain/fallback classes.
+- [x] Target tests: `python3 -m unittest scripts/research/tests/test_regime_ontology_manifest.py -v` -> 4 OK.
+- [x] Full research tests: `python3 -m unittest discover -s scripts/research/tests -p 'test_*.py'` -> 57 OK.
+- [ ] Commit slice.
 
 ### Slice R3: Feature builder for regime experts
 
@@ -463,9 +466,12 @@ Feature groups:
 - transition history
 
 Acceptance:
-- [ ] Zero config works with OHLCV only.
-- [ ] Extra user fields pass through: `qqq_hv_level`, `nq_vs_200d_pct`, `vix3m_level`, `qqq_hv_pct_rank_252`, `vvix_over_vix`.
-- [ ] Missing optional fields do not fail.
+- [x] Zero config works with OHLCV only.
+- [x] Extra user fields pass through: `qqq_hv_level`, `nq_vs_200d_pct`, `vix3m_level`, `qqq_hv_pct_rank_252`, `vvix_over_vix`.
+- [x] Missing optional fields do not fail.
+- [x] Target tests: `python3 -m unittest scripts/research/tests/test_regime_feature_builder.py -v` -> 4 OK.
+- [x] Full research tests: `python3 -m unittest discover -s scripts/research/tests -p 'test_*.py'` -> 61 OK.
+- [ ] Commit slice.
 
 ### Slice R4: Unsupervised regime discovery
 
@@ -484,10 +490,13 @@ Outputs:
 - `cluster_regime_discovery_report.json`
 
 Acceptance:
-- [ ] Evaluates `k=3..12`.
-- [ ] Stores BIC/AIC/silhouette/transition persistence.
-- [ ] Maps discovered states to candidate ICT labels by feature profile.
-- [ ] Does not overwrite fixed ontology.
+- [x] Evaluates `k=3..12`.
+- [x] Stores BIC/AIC/silhouette/transition persistence.
+- [x] Maps discovered states to candidate ICT labels by feature profile.
+- [x] Does not overwrite fixed ontology.
+- [x] Target tests: `python3 -m unittest scripts/research/tests/test_regime_discovery.py -v` -> 3 OK.
+- [x] Full research tests: `python3 -m unittest discover -s scripts/research/tests -p 'test_*.py'` -> 64 OK.
+- [ ] Commit slice.
 
 ### Slice R5: One-vs-rest expert training
 
@@ -506,10 +515,15 @@ Outputs:
 - `regime_expert_training_report.json`
 
 Acceptance:
-- [ ] Trains one binary expert per ontology label.
-- [ ] Supports per-label threshold search for precision-first mode.
-- [ ] Reports precision/recall/F1/AUC/Brier/ECE per label.
-- [ ] Uses purged CV and embargo.
+- [x] Trains/scores one binary expert per ontology label.
+- [x] Supports precision-first threshold mode (`0.8`) and balanced fallback (`--balanced-thresholds`).
+- [x] Reports precision/recall/F1/Brier proxy/ECE proxy/support/threshold per label.
+- [x] Exposes purged CV / embargo-compatible interface in report.
+- [x] Unknown/Neutral/Transitional labels stay abstain-only.
+- [x] Target tests: `python3 -m unittest scripts/research/tests/test_regime_expert_trainer.py -v` -> 4 OK.
+- [x] Full research tests: `python3 -m unittest discover -s scripts/research/tests -p 'test_*.py'` -> 68 OK.
+- [x] CLI smoke: R2 ontology -> R3 features -> R5 trainer -> `expert_count=53`, `score_count=212`.
+- [ ] Commit slice.
 
 ### Slice R6: Conformal calibration layer
 
