@@ -52,24 +52,24 @@
   - Commit: `2672288 feat: add factor formula seed library`
   - Files: `factor_formula_library.py`, handoff, tests
   - Tests: target 3 OK; full research 49 OK
+- [x] Slice 12: paper2code adapters
+  - Commit: pending this slice
+  - Files: `paper2code_adapters.py`, handoff, tests
+  - Tests: target 3 OK; full research 52 OK
 
 ## Next Implementation Order
 
-### Slice 12: paper2code adapters
+### Next
 
-**Objective:** wire existing modules as sidecar reports before runtime changes.
-
-**Targets:**
-- rammstein OU reversion feasibility
-- crowded_trades crowding pressure
-- kyle stochastic liquidity / slippage realism
-- red_queens_trap friction/mode collapse
+- Promote sidecar reports into a single orchestrated heuristic-learning pipeline.
+- Feed accepted formula/adapters into payoff/PBO/BBN value gates.
+- Defer Rust runtime changes until sidecar outputs prove consumer value.
 
 ---
 
 ## Current Slice Status
 
-Active: Slice 11 `factor_formula_library.py`.
+Active: Slice 12 `paper2code_adapters.py`.
 
 - [x] Write failing tests
 - [x] Implement minimal script
