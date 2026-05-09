@@ -191,6 +191,33 @@ pub(crate) fn analyze_command(
                 .supporting
                 .artifact_action_summary
                 .extend(trace_entries);
+            let bbn_trace_entries = adapter.bbn_soft_evidence_trace_entries();
+            report.supporting.artifact_action_summary.push(format!(
+                "regime_bbn_soft_evidence_trace:{}",
+                bbn_trace_entries.join("|")
+            ));
+            report
+                .supporting
+                .artifact_action_summary
+                .extend(bbn_trace_entries.iter().cloned());
+            report
+                .supporting
+                .pre_bayes_evidence_filter
+                .rationale
+                .extend(
+                    bbn_trace_entries
+                        .iter()
+                        .map(|entry| format!("read_only_{entry}")),
+                );
+            for entry in bbn_trace_entries {
+                if let Some((key, value)) = entry.split_once('=') {
+                    report
+                        .supporting
+                        .pre_bayes_evidence_filter
+                        .evidence_assignments
+                        .insert(format!("read_only_{key}"), value.to_string());
+                }
+            }
         }
     }
     if let Ok(artifact) = ict_engine::pda_sequence::load_pda_sequence_analysis(state_dir, symbol) {

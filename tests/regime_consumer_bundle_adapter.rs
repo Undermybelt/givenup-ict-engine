@@ -240,6 +240,46 @@ fn single_label_95_maps_to_moderate_read_only_bbn_soft_evidence() {
 }
 
 #[test]
+fn loaded_adapter_emits_compact_bbn_soft_evidence_trace_entries() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("regime_consumer_bundle.json");
+    fs::write(
+        &path,
+        json!({
+            "schema_version": "regime-consumer-bundle/v1",
+            "latest_decision": {
+                "decision_state": "single_label_99",
+                "trade_usable": true,
+                "final_label": "primary::TrendExpansion",
+                "label_set": ["primary::TrendExpansion"],
+                "abstain_reasons": []
+            },
+            "consumer_hints": {
+                "execution_tree_hint": "accept_regime",
+                "bbn_evidence_hint": {
+                    "regime_decision_state": "single_label_99",
+                    "regime_trade_usable": true,
+                    "regime_label": "primary::TrendExpansion",
+                    "regime_transition_hazard": 0.03,
+                    "regime_decision_reasons": []
+                }
+            }
+        })
+        .to_string(),
+    )
+    .unwrap();
+
+    let adapter = RegimeConsumerBundleAdapter::load_optional(Some(&path), false).unwrap();
+    let trace = adapter.bbn_soft_evidence_trace_entries();
+
+    assert!(trace.contains(&"regime_bbn_soft_evidence_strength=strong".to_string()));
+    assert!(trace.contains(&"regime_bbn_soft_evidence_weight=0.900".to_string()));
+    assert!(trace.contains(&"regime_bbn_decision_state=single_label_99".to_string()));
+    assert!(trace.contains(&"regime_bbn_label=primary::TrendExpansion".to_string()));
+    assert!(trace.contains(&"regime_bbn_transition_hazard=0.030".to_string()));
+}
+
+#[test]
 fn abstain_or_missing_bundle_maps_to_neutral_bbn_soft_evidence() {
     let missing = RegimeConsumerBundleAdapter::load_optional(None, false).unwrap();
     let missing_evidence = missing.to_read_only_bbn_soft_evidence();

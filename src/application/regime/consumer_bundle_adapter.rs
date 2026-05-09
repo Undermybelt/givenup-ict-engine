@@ -306,6 +306,55 @@ impl RegimeConsumerBundleAdapter {
         entries
     }
 
+    pub fn bbn_soft_evidence_trace_entries(&self) -> Vec<String> {
+        let evidence = self.to_read_only_bbn_soft_evidence();
+        let mut entries = vec![
+            format!(
+                "regime_bbn_soft_evidence_strength={}",
+                evidence.strength.as_trace_value()
+            ),
+            format!("regime_bbn_soft_evidence_weight={:.3}", evidence.weight),
+            format!(
+                "regime_bbn_decision_state={}",
+                compact_trace_value(&evidence.decision_state)
+            ),
+        ];
+        if let Some(trade_usable) = evidence.trade_usable {
+            entries.push(format!("regime_bbn_trade_usable={trade_usable}"));
+        }
+        if let Some(label) = evidence.label.as_ref() {
+            entries.push(format!("regime_bbn_label={}", compact_trace_value(label)));
+        }
+        if !evidence.label_set.is_empty() {
+            entries.push(format!(
+                "regime_bbn_label_set={}",
+                evidence
+                    .label_set
+                    .iter()
+                    .map(|label| compact_trace_value(label))
+                    .collect::<Vec<_>>()
+                    .join(",")
+            ));
+        }
+        if let Some(transition_hazard) = evidence.transition_hazard {
+            entries.push(format!(
+                "regime_bbn_transition_hazard={transition_hazard:.3}"
+            ));
+        }
+        if !evidence.reasons.is_empty() {
+            entries.push(format!(
+                "regime_bbn_reasons={}",
+                evidence
+                    .reasons
+                    .iter()
+                    .map(|reason| compact_trace_value(reason))
+                    .collect::<Vec<_>>()
+                    .join(",")
+            ));
+        }
+        entries
+    }
+
     fn neutral(status: BundleStatus, error: String) -> Self {
         Self {
             status,
@@ -333,6 +382,16 @@ impl ExecutionTreeHint {
             ExecutionTreeHint::AcceptRegime => "accept_regime",
             ExecutionTreeHint::TransitionGuardrail => "transition_guardrail",
             ExecutionTreeHint::UnknownAbstain => "unknown_abstain",
+        }
+    }
+}
+
+impl RegimeBbnEvidenceStrength {
+    fn as_trace_value(&self) -> &'static str {
+        match self {
+            RegimeBbnEvidenceStrength::Strong => "strong",
+            RegimeBbnEvidenceStrength::Moderate => "moderate",
+            RegimeBbnEvidenceStrength::Neutral => "neutral",
         }
     }
 }
