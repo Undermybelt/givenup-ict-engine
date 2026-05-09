@@ -5,6 +5,7 @@ import sys
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
+import zipfile
 
 SCRIPT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPT_ROOT))
@@ -13,6 +14,86 @@ import factor_candidate_pack as pack  # noqa: E402
 
 
 class FactorCandidatePackTests(unittest.TestCase):
+    def test_build_manifest_from_freqtrade_backtest_zip_extracts_strategy_metrics(self) -> None:
+        backtest_payload = {
+            "strategy": {
+                "TomacNQ_RegimeTrendPullbackDense15m": {
+                    "strategy_name": "TomacNQ_RegimeTrendPullbackDense15m",
+                    "results_per_pair": [
+                        {
+                            "key": "NQ/USD",
+                            "trades": 103,
+                            "winrate": 0.31,
+                            "sharpe": 0.1211,
+                            "profit_factor": 1.21,
+                            "profit_total_pct": 3.92,
+                            "max_drawdown_account": 0.0321,
+                        },
+                        {
+                            "key": "TOTAL",
+                            "trades": 103,
+                            "winrate": 0.31,
+                            "sharpe": 0.1211,
+                            "profit_factor": 1.21,
+                            "profit_total_pct": 3.92,
+                            "max_drawdown_account": 0.0321,
+                        },
+                    ],
+                    "total_trades": 103,
+                    "wins": 32,
+                    "losses": 71,
+                    "draws": 0,
+                    "sharpe": 0.1211,
+                    "profit_factor": 1.21,
+                    "profit_total": 0.0392,
+                    "max_drawdown_account": 0.0321,
+                    "backtest_start": "2023-01-01 00:00:00",
+                    "backtest_end": "2025-12-31 00:00:00",
+                    "timeframe": "15m",
+                }
+            }
+        }
+        config_payload = {"timeframe": "15m", "exchange": {"pair_whitelist": ["NQ/USD"]}}
+        strategy_source = '''"""
+Paradigm: regime-cluster trend pullback
+Hypothesis: 15m pullback density unlock with 1h/4h resonance
+Parent: TomacNQ_RegimeTrendPullbackDense
+Status: density-via-timeframe probe
+Uses MTF: yes
+"""
+'''
+
+        with TemporaryDirectory() as tmpdir:
+            zip_path = Path(tmpdir) / "backtest.zip"
+            with zipfile.ZipFile(zip_path, "w") as archive:
+                archive.writestr("backtest-result.json", json.dumps(backtest_payload))
+                archive.writestr(
+                    "backtest-result_config.json", json.dumps(config_payload)
+                )
+                archive.writestr(
+                    "backtest-result_TomacNQ_RegimeTrendPullbackDense15m.py",
+                    strategy_source,
+                )
+
+            manifest = pack.build_manifest_from_freqtrade_backtest_zip(zip_path)
+
+        self.assertEqual(manifest["timeframe"], "15m")
+        self.assertEqual(len(manifest["strategies"]), 1)
+        strategy = manifest["strategies"][0]
+        self.assertEqual(strategy["name"], "TomacNQ_RegimeTrendPullbackDense15m")
+        self.assertEqual(strategy["metadata"]["paradigm"], "regime-cluster trend pullback")
+        self.assertEqual(
+            strategy["metadata"]["parent_strategy"],
+            "TomacNQ_RegimeTrendPullbackDense",
+        )
+        self.assertTrue(strategy["metadata"]["uses_mtf"])
+        self.assertEqual(strategy["validation_metrics"]["trade_count"], 103)
+        self.assertEqual(strategy["validation_metrics"]["win_rate_pct"], 31.067961)
+        self.assertEqual(
+            strategy["per_pair_metrics"]["NQ/USD"]["max_drawdown_pct"],
+            3.21,
+        )
+
     def test_build_candidate_pack_uses_candidate_spec_and_cross_market_metrics(self) -> None:
         manifest = {
             "manifest_version": "1.0",
@@ -65,6 +146,26 @@ class FactorCandidatePackTests(unittest.TestCase):
                 "resonance_by_timeframe": {"1h": "aligned", "4h": "aligned"},
             },
             "regime_role": "mixed",
+            "cross_market_metrics": {
+                "GLD/USD": {
+                    "sharpe": 0.641,
+                    "trade_count": 140,
+                    "win_rate_pct": 54.0,
+                    "profit_factor": 1.44,
+                    "total_profit_pct": 6.7,
+                    "max_drawdown_pct": 5.2,
+                    "window": "2025-05-07->2026-05-06",
+                },
+                "SPY/USD": {
+                    "sharpe": 0.605,
+                    "trade_count": None,
+                    "win_rate_pct": None,
+                    "profit_factor": None,
+                    "total_profit_pct": None,
+                    "max_drawdown_pct": None,
+                    "window": "2025-05-07->2026-05-06",
+                },
+            },
         }
         autoresearch_status = {
             "effective_status": "completed",
@@ -111,10 +212,20 @@ class FactorCandidatePackTests(unittest.TestCase):
             "covered",
         )
         self.assertEqual(
+            bundle["factor_eval_grid_summary"]["breadth_matrix"]["GLD/USD"]["status"],
+            "covered",
+        )
+        self.assertEqual(
+            bundle["factor_eval_grid_summary"]["breadth_matrix"]["SPY/USD"]["status"],
+            "covered",
+        )
+        self.assertEqual(
             bundle["transfer_score"]["status"],
             "cross_market_candidate",
         )
         self.assertGreater(bundle["transfer_score"]["overall_transfer_score"], 0.5)
+        self.assertIn("GLD/USD", bundle["transfer_score"]["covered_markets"])
+        self.assertEqual(bundle["transfer_score"]["markets_without_trade_counts"], [])
 
     def test_build_candidate_pack_falls_back_to_manifest_hypothesis(self) -> None:
         manifest = {
@@ -244,6 +355,109 @@ class FactorCandidatePackTests(unittest.TestCase):
             self.assertEqual(expression["strategy_name"], "SweepReclaimWide")
             self.assertEqual(grid["selected_strategy"], "SweepReclaimWide")
             self.assertEqual(transfer["covered_market_count"], 2)
+
+    def test_main_accepts_freqtrade_backtest_zip(self) -> None:
+        backtest_payload = {
+            "strategy": {
+                "TomacNQ_RegimeVRPCompression15m": {
+                    "strategy_name": "TomacNQ_RegimeVRPCompression15m",
+                    "results_per_pair": [
+                        {
+                            "key": "NQ/USD",
+                            "trades": 334,
+                            "winrate": 0.34,
+                            "sharpe": 0.339,
+                            "profit_factor": 1.64,
+                            "profit_total_pct": 28.95,
+                            "max_drawdown_account": 0.041,
+                        },
+                        {
+                            "key": "TOTAL",
+                            "trades": 334,
+                            "winrate": 0.34,
+                            "sharpe": 0.339,
+                            "profit_factor": 1.64,
+                            "profit_total_pct": 28.95,
+                            "max_drawdown_account": 0.041,
+                        },
+                    ],
+                    "total_trades": 334,
+                    "wins": 114,
+                    "losses": 220,
+                    "draws": 0,
+                    "sharpe": 0.339,
+                    "profit_factor": 1.64,
+                    "profit_total": 0.2895,
+                    "max_drawdown_account": 0.041,
+                    "backtest_start": "2018-01-01 00:00:00",
+                    "backtest_end": "2025-12-31 00:00:00",
+                    "timeframe": "15m",
+                }
+            }
+        }
+        candidate_spec = {
+            "candidate_id": "family_f_vrp_compression_v1",
+            "display_name": "VRP Compression 15m",
+            "family": "Family F",
+            "status": "active",
+            "promotion_state": "promotable",
+            "expression_text": "iv_pct_rank_252 < 0.30 and hv_pct_rank_252 < 0.30",
+            "operator_set": ["iv_pct_rank_252", "hv_pct_rank_252", "ema89", "ema_fast_4h"],
+            "base_timeframe": "15m",
+            "context_timeframes": ["4h", "1d"],
+            "regime_role": "mixed",
+            "pre_bayes_targets": ["volatility_compression_gate"],
+            "belief_targets": ["bbn_vol_regime_evidence"],
+            "path_ranking_targets": ["structural_path_confidence"],
+            "execution_tree_targets": ["transition_guardrail", "observe_gate"],
+            "structural_feedback_required": True,
+        }
+
+        with TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            zip_path = root / "backtest.zip"
+            spec_path = root / "candidate_spec.json"
+            output_dir = root / "out"
+            with zipfile.ZipFile(zip_path, "w") as archive:
+                archive.writestr("backtest-result.json", json.dumps(backtest_payload))
+                archive.writestr(
+                    "backtest-result_config.json", json.dumps({"timeframe": "15m"})
+                )
+                archive.writestr(
+                    "backtest-result_TomacNQ_RegimeVRPCompression15m.py",
+                    '"""\nParadigm: vol regime compression\nHypothesis: compressed IV/HV regime expansion\nUses MTF: yes\n"""',
+                )
+            spec_path.write_text(json.dumps(candidate_spec), encoding="utf-8")
+
+            exit_code = pack.main(
+                [
+                    "--freqtrade-backtest-zip",
+                    str(zip_path),
+                    "--strategy-name",
+                    "TomacNQ_RegimeVRPCompression15m",
+                    "--candidate-spec-json",
+                    str(spec_path),
+                    "--output-dir",
+                    str(output_dir),
+                ]
+            )
+
+            self.assertEqual(exit_code, 0)
+            expression = json.loads(
+                (output_dir / "factor_expression.json").read_text(encoding="utf-8")
+            )
+            grid = json.loads(
+                (output_dir / "factor_eval_grid_summary.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+
+            self.assertEqual(expression["candidate_id"], "family_f_vrp_compression_v1")
+            self.assertEqual(grid["trade_density_summary"]["aggregate_trade_count"], 334)
+            self.assertEqual(
+                grid["aggregate_metrics"]["max_drawdown_pct"],
+                4.1,
+            )
 
 
 if __name__ == "__main__":
