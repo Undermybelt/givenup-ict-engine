@@ -13,6 +13,8 @@
 
 **Compatibility Boundary:** preserve zero-config public CLI behavior, consumer-usable status surfaces, token-friendly human/compact summaries, and low-pollution execution through explicit `/tmp/...` state dirs. Do not reopen factor-family search here unless a runtime closure blocker proves the candidate package itself is not importable. Do not rely on manual JSON surgery in `state/` or `policy_training/` as the canonical workflow.
 
+**Bridge Rule:** this board starts only after the factor board has emitted an explicit candidate pack or regime bundle, and `docs/plans/2026-05-09-factor-iteration-pre-bayes-bbn-catboost-execution-tree-todo.md` has been used to identify the exact next stopping layer to test (`pre-bayes`, `BBN`, `path ranking`, or `execution tree`).
+
 ---
 
 ## Decision Lock
@@ -253,8 +255,10 @@ VRP V2 is **accepted as deployable** based on:
    - `./target/debug/ict-engine workflow-status --symbol <SYMBOL> --state-dir /tmp/<state> --human`
    - `./target/debug/ict-engine analyze --symbol <SYMBOL> --data-root <DATA_ROOT> --state-dir /tmp/<state> --human`
 4. Run:
-   - `./target/debug/ict-engine auto-quant-results-import --symbol <SYMBOL> --state-dir /tmp/<state> --library <strategy_library.json> --dry-run`
-   - then the same command without `--dry-run` if the manifest is correct
+   - on current `green-baseline`, there is no `auto-quant-results-import --dry-run`
+   - therefore rehearse import by copying the `/tmp/...` state dir first, then run:
+     - `./target/debug/ict-engine auto-quant-results-import --symbol <SYMBOL> --state-dir /tmp/<copied-state> --library <strategy_library.json>`
+   - only after the copied-state rehearsal looks correct should the real isolated runtime-closure state be mutated
 5. Run:
    - `./target/debug/ict-engine auto-quant-prior-init --symbol <SYMBOL> --state-dir /tmp/<state> --dry-run`
    - then the same command without `--dry-run` once the CPT diff and ledger intent are understood

@@ -102,6 +102,15 @@ A candidate may only move to the post-factor runtime-closure board after all of 
 - [ ] For any candidate expected to influence runtime recommendation support later:
   - set `structural_feedback_required=true`
   - explicitly note that non-demo runtime validation cannot be honest until structural lineage exists in the downstream real-trade source
+- [ ] Hand off to `docs/plans/2026-05-07-auto-quant-post-factor-runtime-closure-todo.md` only after a candidate pack is explicit enough to answer all of the following from artifacts, not chat:
+  - what this candidate expects the `pre-bayes / filter gate` to do
+  - what BBN evidence/prior it expects to strengthen or weaken
+  - what structural path-ranking surface it expects to move
+  - what execution-tree blocker / branch / gate it is trying to affect
+- [ ] Use `docs/plans/2026-05-09-factor-iteration-pre-bayes-bbn-catboost-execution-tree-todo.md` as the sequencing bridge once a candidate leaves pure factor iteration:
+  - factor board owns candidate generation and pack truth
+  - bridge board owns chain-level diagnosis and stopping-layer labeling
+  - post-factor board owns runtime mutation and before/after evidence
 
 ### Not Yet
 
@@ -146,3 +155,4 @@ This board is successful only if all of the following are true:
   - execution tree
 - Every candidate pack states whether structural feedback lineage is required for honest downstream validation.
 - Promotion out of factor iteration is blocked by explicit artifact gates, not by chat-only judgment.
+- Any downstream closure attempt can start from the emitted pack alone, without needing to reconstruct intent from older board prose.
