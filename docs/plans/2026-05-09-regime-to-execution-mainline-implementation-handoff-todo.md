@@ -136,8 +136,28 @@ Need separate mature-state proof:
 - [ ] Confirm target-row vs observation-row validation floor.
 - [ ] Record whether registered model changes recommendation vs candidate-set fallback.
 
+## Latest update
+
+### Consumer reason field
+
+Implemented in `src/application/orchestration/execution_tree.rs`:
+- `ExecutionTriage.consumer_reason`
+- Format:
+  - `market_state=<primary>/<secondary> | execution=<gate>/<branch>/<bias> | ranker=<source>/<model>/<ready|not_ready>`
+- Example:
+  - `market_state=TrendExpansion/BullTrendExhaustion | execution=ready/fill_viable/aggressive | ranker=registered_artifact/catboost/ready`
+
+TDD evidence:
+- RED verified: `cargo test --lib triage_consumer_reason_merges_market_execution_and_ranker -- --nocapture` failed because `ExecutionTriage.consumer_reason` was missing.
+- GREEN verified: same test passed after implementation.
+
+Regression checks:
+- `cargo test --lib path_ranker -- --nocapture` PASS
+- `cargo test --lib triage_reason_summary -- --nocapture` PASS
+- `cargo check` PASS
+
 ## Current verdict
 
 - P1 from old audit closed and committed: factor-research/backtest now report market_state primary/secondary.
-- P2/P3 partially closed in working tree: execution tree trace has explicit path-ranker machine fields and triage reason summary.
-- Remaining gap: practical recommendation reason text needs a cleaner consumer-facing surface, not only trace/triage.
+- P2/P3 closed: execution tree trace has explicit path-ranker machine fields; triage has short reason summary and clean `consumer_reason`.
+- Remaining optional gap: runtime smoke on `/tmp/ict-mainline-regime-audit` to prove JSON/human surfaces show the new field in a full analyze run.

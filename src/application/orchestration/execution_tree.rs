@@ -219,6 +219,7 @@ pub struct ExecutionTriage {
     pub branch_probability: f64,
     pub posterior_uncertainty: f64,
     pub one_line: String,
+    pub consumer_reason: String,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub reason_summary: Vec<String>,
 }
@@ -245,6 +246,7 @@ pub fn build_execution_triage(output: &ExecutionTreeOutput) -> ExecutionTriage {
         .take(5)
         .cloned()
         .collect();
+    let consumer_reason = build_consumer_reason(output);
     ExecutionTriage {
         gate_status: output.gate_status.clone(),
         branch: output.branch.clone(),
@@ -254,14 +256,50 @@ pub fn build_execution_triage(output: &ExecutionTreeOutput) -> ExecutionTriage {
         branch_probability: output.branch_probability,
         posterior_uncertainty: output.posterior_uncertainty,
         one_line,
+        consumer_reason,
         reason_summary,
     }
+}
+
+fn build_consumer_reason(output: &ExecutionTreeOutput) -> String {
+    let (primary, secondary) = market_state_primary_secondary(output)
+        .unwrap_or_else(|| ("unknown".to_string(), "unknown".to_string()));
+    let ranker_source = output
+        .path_ranker_runtime_source
+        .as_deref()
+        .unwrap_or("none");
+    let ranker_model = output.path_ranker_model_family.as_deref().unwrap_or("none");
+    let ranker_ready = if output.ranker_validation_ready {
+        "ready"
+    } else {
+        "not_ready"
+    };
+    format!(
+        "market_state={primary}/{secondary} | execution={}/{}/{} | ranker={ranker_source}/{ranker_model}/{ranker_ready}",
+        output.gate_status, output.branch, output.execution_bias
+    )
+}
+
+fn market_state_primary_secondary(output: &ExecutionTreeOutput) -> Option<(String, String)> {
+    output
+        .split_reason_lineage
+        .iter()
+        .find(|line| line.contains("market_state=") && line.contains("primary_regime="))
+        .map(|line| {
+            (
+                lineage_value(line, "primary_regime").unwrap_or_else(|| "unknown".to_string()),
+                lineage_value(line, "secondary_regime").unwrap_or_else(|| "unknown".to_string()),
+            )
+        })
 }
 
 fn lineage_value(line: &str, key: &str) -> Option<String> {
     let needle = format!("{key}=");
     line.split_whitespace()
-        .find_map(|part| part.strip_prefix(&needle))
+        .find_map(|part| {
+            part.find(&needle)
+                .map(|index| &part[index + needle.len()..])
+        })
         .map(|value| value.trim_matches(|ch| ch == ',' || ch == ';').to_string())
         .filter(|value| !value.is_empty())
 }
@@ -835,6 +873,28 @@ mod tests {
         );
         assert_eq!(output.path_ranker_model_family.as_deref(), Some("catboost"));
         assert!(output.ranker_validation_ready);
+    }
+
+    #[test]
+    fn triage_consumer_reason_merges_market_execution_and_ranker() {
+        let output = ExecutionTreeOutput {
+            gate_status: "ready".to_string(),
+            branch: "fill_viable".to_string(),
+            execution_bias: "aggressive".to_string(),
+            split_reason_lineage: vec![
+                "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.553".to_string(),
+            ],
+            path_ranker_runtime_source: Some("registered_artifact".to_string()),
+            path_ranker_model_family: Some("catboost".to_string()),
+            ranker_validation_ready: true,
+            ..ExecutionTreeOutput::default()
+        };
+        let triage = build_execution_triage(&output);
+
+        assert_eq!(
+            triage.consumer_reason,
+            "market_state=TrendExpansion/BullTrendExhaustion | execution=ready/fill_viable/aggressive | ranker=registered_artifact/catboost/ready"
+        );
     }
 
     #[test]
