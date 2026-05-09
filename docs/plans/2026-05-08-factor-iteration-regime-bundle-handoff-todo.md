@@ -18,8 +18,9 @@
 
 ## ImpactStatementDraft
 
-- The remaining gap is not factor-pack plumbing for execution candidates.
-- The remaining gap is the regime-only lane: it needs a real artifact path that can reuse personal benchmark JSONs when explicitly selected, while the generic registry stays clean and reusable.
+- The remaining gap is no longer factor-pack plumbing or regime-bundle wiring.
+- The merged baseline line now contains the zero-config registry path, the opt-in personal evidence lane, the regime-only bundle helper, and the recovered Family A breadth packs together.
+- If this lane reopens, it should reopen for fresh factor evidence generation or a newly selected family / market / timeframe cell, not for more registry plumbing.
 
 ## TodoCheckpointDraft
 
@@ -37,9 +38,9 @@
   - [x] Continue the Family A breadth lane with the historical ES lane.
   - [x] Continue the Family A breadth lane with the historical EUR lane.
   - [x] Record the broader-market failure boundaries for YM and XAU.
-  - [ ] Continue the Family A breadth lane with the next still-missing variant.
+  - [x] Re-verify the full candidate-registry slice on the newer hot-plug baseline line after integration.
 - Active slice:
-  - regime bundle slice complete; next live slice is Family A breadth continuation
+  - merged integration audit complete; no remaining registry / hot-plug slice is active
 - Completed todos:
   - routing complete
   - isolated worktree selected
@@ -57,8 +58,9 @@
   - `family_a_es_killzone_breakout_1h_v1` is now a real profile-backed candidate pack, not a board-only note
   - `family_a_eur_killzone_breakout_1h_v1` is now a real profile-backed candidate pack, not a board-only note
   - `YM` and `XAU` are explicitly marked as non-promotable family boundaries on this board
+  - the full factor-candidate registry slice now replays cleanly on the newer hot-plug baseline worktree
 - Next step:
-  - choose the next still-missing Family A breadth variant that is not yet explicit in the registry, then either recover its historical artifact or generate fresh reusable evidence; current explicit Family A coverage now includes `NQ`, `ES`, `EUR` plus `1m`, `5m`, `15m`, `1h`, and a `1d` regime-filter lane
+  - if a future slice reopens this lane, begin from new factor evidence generation or a newly chosen family / market / timeframe cell; do not reopen candidate-registry or regime-bundle infrastructure unless a genuinely new artifact kind is introduced
 
 ## EvidenceBundleDraft
 
@@ -139,6 +141,34 @@
       - source artifact: `/tmp/ict-engine-family-a-eur-profile/EUR/auto_quant_strategy_library.json`
       - result: `6` trades, `aggregate_label=anecdotal`, `sharpe=-0.0459`, `profit_factor=0.6891`, `total_profit_pct=-0.37`
       - registry/profile now emit `family_a_eur_killzone_breakout_1h_v1`
+  - Merged-line completion audit on the newer hot-plug baseline worktree:
+    - worktree:
+      - `/Users/thrill3r/.config/aegis/worktrees/ict-engine/feature-factor-iteration-pack-20260509`
+    - verification:
+      - `python3 -m unittest scripts.research.tests.test_factor_candidate_pack scripts.research.tests.test_factor_candidate_resolver scripts.research.tests.test_regime_artifact_bundle`
+      - result: `15` tests, `OK`
+    - generic merged resolver run:
+      - `python3 scripts/research/factor_candidate_resolver.py --repo-root . --output-dir /tmp/ict-engine-factor-candidate-registry-generic-20260509-merged2`
+      - result: `selection_mode=generic_zero_config`, `candidate_count=13`, `buildable_count=0`, `built_pack_count=0`
+    - opt-in merged resolver run:
+      - `python3 scripts/research/factor_candidate_resolver.py --repo-root . --profile thrill3r_nq_auto_quant_v1 --build-packs --output-dir /private/tmp/ict-engine-factor-candidate-registry-profile-20260509-merged`
+      - result: `selection_mode=profile_opt_in`, `candidate_count=13`, `buildable_count=13`, `built_pack_count=13`
+    - merged candidate-pack audit:
+      - all `12` execution entries emit:
+        - `factor_expression.json`
+        - `factor_eval_grid_summary.json`
+        - `transfer_score.json`
+      - every emitted execution pack carries the required mapping keys:
+        - `pre_bayes_targets`
+        - `belief_targets`
+        - `path_ranking_targets`
+        - `execution_tree_targets`
+        - `structural_feedback_required`
+      - `regime_primary_gate_pending_v1` emits the full regime-only bundle:
+        - `regime_classifier_summary.json`
+        - `transition_summary.json`
+        - `resonance_summary.json`
+        - `cross_market_summary.json`
 
 ## DriftCheckDraft
 
@@ -150,8 +180,8 @@
 - Retirement:
   - no new runtime fallback or compatibility alias introduced
 - Decision:
-  - continue
-  - next safe action is still factor-iteration only; runtime closure remains out of scope
+  - pause-for-user
+  - current registry / hot-plug slice is complete; reopen only for new factor evidence generation or a newly chosen family cell
 
 ## ResumeStateHint
 
@@ -163,7 +193,7 @@
 - If a future profile selects a broken backtest zip, the lane must stay
   `artifact_ready=false`; do not "fix" this by catching the crash later in pack
   construction.
-- If starting the next slice, begin from Family A breadth evidence generation rather than reopening the regime lane unless new shared benchmark artifacts appear.
+- If starting the next slice, begin from new factor evidence generation rather than reopening the regime lane unless new shared benchmark artifacts appear.
 - `family_a_fvg_retrace_1h_v1` already exists now; do not regenerate the same pack unless the underlying reusable zips are replaced.
 - `family_a_fvg_retrace_5m_v1` already exists now; do not regenerate the same pack unless the underlying reusable zip is replaced.
 - `family_a_killzone_breakout_15m_v1` and `family_a_killzone_breakout_1d_regime_v1` now exist; prefer fresh cross-market evidence or another missing variant instead of re-ingesting the same historical manifests again.

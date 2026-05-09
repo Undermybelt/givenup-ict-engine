@@ -293,20 +293,33 @@ A candidate may only move to the post-factor runtime-closure board after all of 
 
 ### Next
 
-- [ ] Continue the same registry flow for the remaining still-active Family A breadth items:
-  - add the next Family A breadth variants named on the source board
-  - compare Family A baseline vs displacement explicitly before authoring more same-shape forks
-  - prefer lanes with a credible path to stronger `NQ` multi-regime quality, not just positive short-window cross-market cells
-- [ ] Reject any candidate whose pack still lacks middle-layer mapping even if backtest metrics look good.
-- [ ] For regime-only candidates:
-  - require classifier / transition / resonance evidence first
-  - do not force execution trade density as the primary gate
-- [ ] For execution candidates:
-  - require trade density, resonance, and cross-market evidence
-  - require the candidate pack to state which execution-tree blockers it intends to move
-- [ ] For any candidate expected to influence runtime recommendation support later:
-  - set `structural_feedback_required=true`
-  - explicitly note that non-demo runtime validation cannot be honest until structural lineage exists in the downstream real-trade source
+- [x] Re-verified the merged baseline line after integrating the factor-candidate registry slice on top of the newer hot-plug baseline:
+  - `python3 -m unittest scripts.research.tests.test_factor_candidate_pack scripts.research.tests.test_factor_candidate_resolver scripts.research.tests.test_regime_artifact_bundle`
+  - result: `15` tests, `OK`
+  - generic merged audit:
+    - `python3 scripts/research/factor_candidate_resolver.py --repo-root . --output-dir /tmp/ict-engine-factor-candidate-registry-generic-20260509-merged2`
+    - result: `selection_mode=generic_zero_config`, `candidate_count=13`, `buildable_count=0`, `built_pack_count=0`
+  - opt-in merged audit:
+    - `python3 scripts/research/factor_candidate_resolver.py --repo-root . --profile thrill3r_nq_auto_quant_v1 --build-packs --output-dir /private/tmp/ict-engine-factor-candidate-registry-profile-20260509-merged`
+    - result: `selection_mode=profile_opt_in`, `candidate_count=13`, `buildable_count=13`, `built_pack_count=13`
+- [x] Verified every currently active registry entry on the merged line emits an explicit reviewable artifact family:
+  - `12` execution entries emit:
+    - `factor_expression.json`
+    - `factor_eval_grid_summary.json`
+    - `transfer_score.json`
+  - every execution pack still carries the required five-layer mapping:
+    - `pre_bayes_targets`
+    - `belief_targets`
+    - `path_ranking_targets`
+    - `execution_tree_targets`
+    - `structural_feedback_required`
+  - `regime_primary_gate_pending_v1` emits the full regime-only bundle:
+    - `regime_classifier_summary.json`
+    - `transition_summary.json`
+    - `resonance_summary.json`
+    - `cross_market_summary.json`
+- [x] No additional candidate-registry or hot-pluggable artifact-plumbing slice remains active on this board.
+- [x] If this board is reopened later, start from new factor evidence generation or a newly nominated family lane rather than reworking the registry / bundle infrastructure again.
 
 ### Not Yet
 
