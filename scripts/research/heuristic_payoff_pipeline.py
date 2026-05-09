@@ -8,6 +8,7 @@ from typing import Any
 
 import factor_payoff_shape_report as payoff
 import labeling_triple_barrier as labeling
+import payoff_to_path_ranker_target as path_target
 
 
 DEFAULT_PROFILE: dict[str, Any] = {
@@ -108,6 +109,13 @@ def run_pipeline(
     summary_path = output_dir / artifact_names["handoff_summary"]
     _write_jsonl(labels_path, labels)
     _write_json(report_path, report)
+    path_ranker_handoff = path_target.export_targets(
+        labels_jsonl=labels_path,
+        payoff_report_json=report_path,
+        output_dir=output_dir,
+        symbol=symbol,
+        auxiliary_fields=list(profile.get("auxiliary_fields", [])),
+    )
 
     result = {
         "ok": True,
@@ -125,6 +133,7 @@ def run_pipeline(
         "label_count": len(labels),
         "payoff_gate": report["promotion_gate"],
         "failure_tags": report["failure_tags"],
+        "path_ranker_handoff": path_ranker_handoff,
         "next_recommended_layer": "regime_bbn_path_ranker" if report["promotion_gate"] != "reject" else "rewrite_factor_or_data",
     }
     _write_json(summary_path, result)
