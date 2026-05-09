@@ -1,3 +1,4 @@
+pub mod consumer_bundle_adapter;
 pub mod multi_timeframe_training;
 pub mod native_frame_aggregation;
 pub mod native_frame_analysis;
