@@ -281,6 +281,92 @@ Uses MTF: yes
         )
         self.assertEqual(bundle["transfer_score"]["status"], "single_market_only")
 
+    def test_build_strategy_library_manifest_from_freqtrade_backtest_zip(self) -> None:
+        backtest_payload = {
+            "strategy": {
+                "TomacNQ_RegimeFVGRetrace": {
+                    "strategy_name": "TomacNQ_RegimeFVGRetrace",
+                    "results_per_pair": [
+                        {
+                            "key": "NQ/USD",
+                            "trades": 12,
+                            "winrate": 0.58333333,
+                            "sharpe": 0.014993373176821853,
+                            "profit_factor": 1.92,
+                            "profit_total_pct": 0.57,
+                            "max_drawdown_account": 0.00548,
+                        },
+                        {
+                            "key": "TOTAL",
+                            "trades": 12,
+                            "winrate": 0.58333333,
+                            "sharpe": 0.014993373176821853,
+                            "profit_factor": 1.92,
+                            "profit_total_pct": 0.57,
+                            "max_drawdown_account": 0.00548,
+                        },
+                    ],
+                    "total_trades": 12,
+                    "wins": 7,
+                    "losses": 5,
+                    "draws": 0,
+                    "sharpe": 0.014993373176821853,
+                    "profit_factor": 1.92,
+                    "profit_total": 0.0057,
+                    "max_drawdown_account": 0.00548,
+                    "backtest_start": "2018-01-01 00:00:00",
+                    "backtest_end": "2025-12-31 00:00:00",
+                    "timeframe": "1h",
+                }
+            }
+        }
+        config_payload = {"timeframe": "1h", "exchange": {"pair_whitelist": ["NQ/USD"]}}
+        strategy_source = '''"""
+Paradigm: structural retrace imbalance retest
+Hypothesis: bullish fair-value-gap exists, later retraces into the gap, rejects back above the lower bound, and fires only when 4h trend remains aligned
+Parent: TomacNQ_KillzoneBreakout
+Status: active
+External Data: no
+Uses MTF: yes
+"""
+'''
+
+        with TemporaryDirectory() as tmpdir:
+            zip_path = Path(tmpdir) / "backtest.zip"
+            with zipfile.ZipFile(zip_path, "w") as archive:
+                archive.writestr("backtest-result.json", json.dumps(backtest_payload))
+                archive.writestr(
+                    "backtest-result_config.json", json.dumps(config_payload)
+                )
+                archive.writestr(
+                    "backtest-result_TomacNQ_RegimeFVGRetrace.py",
+                    strategy_source,
+                )
+
+            manifest = pack.build_strategy_library_manifest_from_freqtrade_backtest_zip(
+                zip_path,
+                repo_url="local-auto-quant",
+                pinned_ref="abc123",
+                config_path="config.tomac.json",
+                log_path="run_tomac_fvg.log",
+            )
+
+        self.assertEqual(manifest["manifest_version"], "1.0")
+        self.assertEqual(manifest["timeframe"], "1h")
+        self.assertEqual(manifest["auto_quant_repo_url"], "local-auto-quant")
+        self.assertEqual(manifest["auto_quant_pinned_ref"], "abc123")
+        self.assertEqual(manifest["config_path"], "config.tomac.json")
+        self.assertEqual(manifest["log_path"], "run_tomac_fvg.log")
+        self.assertEqual(manifest["validation_errors"], [])
+        self.assertEqual(len(manifest["strategies"]), 1)
+        strategy = manifest["strategies"][0]
+        self.assertEqual(strategy["name"], "TomacNQ_RegimeFVGRetrace")
+        self.assertEqual(strategy["status"], "ok")
+        self.assertEqual(strategy["metadata"]["parent"], "TomacNQ_KillzoneBreakout")
+        self.assertEqual(strategy["validation_metrics"]["trade_count"], 12)
+        self.assertEqual(strategy["per_pair_metrics"]["NQ/USD"]["trade_count"], 12)
+        self.assertEqual(strategy["pairs"], ["NQ/USD"])
+
     def test_main_writes_artifacts(self) -> None:
         manifest = {
             "manifest_version": "1.0",
@@ -458,6 +544,85 @@ Uses MTF: yes
                 grid["aggregate_metrics"]["max_drawdown_pct"],
                 4.1,
             )
+
+    def test_main_can_emit_strategy_library_manifest_from_freqtrade_backtest_zip(self) -> None:
+        backtest_payload = {
+            "strategy": {
+                "TomacNQ_RegimeFVGRetrace": {
+                    "strategy_name": "TomacNQ_RegimeFVGRetrace",
+                    "results_per_pair": [
+                        {
+                            "key": "NQ/USD",
+                            "trades": 12,
+                            "winrate": 0.58333333,
+                            "sharpe": 0.014993373176821853,
+                            "profit_factor": 1.92,
+                            "profit_total_pct": 0.57,
+                            "max_drawdown_account": 0.00548,
+                        },
+                        {
+                            "key": "TOTAL",
+                            "trades": 12,
+                            "winrate": 0.58333333,
+                            "sharpe": 0.014993373176821853,
+                            "profit_factor": 1.92,
+                            "profit_total_pct": 0.57,
+                            "max_drawdown_account": 0.00548,
+                        },
+                    ],
+                    "total_trades": 12,
+                    "wins": 7,
+                    "losses": 5,
+                    "draws": 0,
+                    "sharpe": 0.014993373176821853,
+                    "profit_factor": 1.92,
+                    "profit_total": 0.0057,
+                    "max_drawdown_account": 0.00548,
+                    "backtest_start": "2018-01-01 00:00:00",
+                    "backtest_end": "2025-12-31 00:00:00",
+                    "timeframe": "1h",
+                }
+            }
+        }
+
+        with TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            zip_path = root / "backtest.zip"
+            output_manifest = root / "strategy_library.json"
+            with zipfile.ZipFile(zip_path, "w") as archive:
+                archive.writestr("backtest-result.json", json.dumps(backtest_payload))
+                archive.writestr(
+                    "backtest-result_config.json", json.dumps({"timeframe": "1h"})
+                )
+                archive.writestr(
+                    "backtest-result_TomacNQ_RegimeFVGRetrace.py",
+                    '"""\nParadigm: structural retrace imbalance retest\nHypothesis: bullish fair-value-gap retest\nParent: TomacNQ_KillzoneBreakout\nStatus: active\nUses MTF: yes\n"""',
+                )
+
+            exit_code = pack.main(
+                [
+                    "--freqtrade-backtest-zip",
+                    str(zip_path),
+                    "--emit-strategy-library-json",
+                    str(output_manifest),
+                    "--repo-url",
+                    "local-auto-quant",
+                    "--pinned-ref",
+                    "abc123",
+                    "--config-path",
+                    "config.tomac.json",
+                    "--log-path",
+                    "run_tomac_fvg.log",
+                    "--output-dir",
+                    str(root / "candidate-pack"),
+                ]
+            )
+
+            self.assertEqual(exit_code, 0)
+            manifest = json.loads(output_manifest.read_text(encoding="utf-8"))
+            self.assertEqual(manifest["manifest_version"], "1.0")
+            self.assertEqual(manifest["auto_quant_repo_url"], "local-auto-quant")
+            self.assertEqual(manifest["strategies"][0]["name"], "TomacNQ_RegimeFVGRetrace")
 
 
 if __name__ == "__main__":

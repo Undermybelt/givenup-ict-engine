@@ -207,6 +207,62 @@ def build_manifest_from_freqtrade_backtest_zip(zip_path: Path) -> dict[str, Any]
     }
 
 
+def build_strategy_library_manifest_from_freqtrade_backtest_zip(
+    zip_path: Path,
+    *,
+    repo_url: str = "",
+    pinned_ref: str = "",
+    config_path: str = "",
+    log_path: str = "",
+    exported_at: str | None = None,
+) -> dict[str, Any]:
+    manifest = build_manifest_from_freqtrade_backtest_zip(zip_path)
+    strategies: list[dict[str, Any]] = []
+    for strategy in manifest.get("strategies", []):
+        metadata = strategy.get("metadata", {})
+        strategy_name = strategy.get("name", "")
+        per_pair_metrics = strategy.get("per_pair_metrics") or {}
+        strategies.append(
+            {
+                "name": strategy_name,
+                "file_path": metadata.get("strategy_source_name", ""),
+                "metadata": {
+                    "strategy": metadata.get("strategy", strategy_name),
+                    "mutation_id": metadata.get("mutation_id", ""),
+                    "base_factor": metadata.get("base_factor", ""),
+                    "hypothesis": metadata.get("hypothesis", ""),
+                    "paradigm": metadata.get("paradigm", ""),
+                    "expected_regime": metadata.get("expected_regime", ""),
+                    "factors_used": metadata.get("factors_used", []),
+                    "parent": metadata.get("parent_strategy", ""),
+                    "asset_class": metadata.get("asset_class", ""),
+                    "status": metadata.get("status_hint", "active"),
+                    "created": metadata.get("created", ""),
+                },
+                "status": strategy.get("status", "ok"),
+                "validation_metrics": strategy.get("validation_metrics"),
+                "per_pair_metrics": per_pair_metrics,
+                "pairs": list(per_pair_metrics.keys()),
+                "timerange": (
+                    f"{strategy.get('validation_metrics', {}).get('backtest_start', '')}"
+                ),
+                "commit": pinned_ref,
+                "error": None,
+            }
+        )
+    return {
+        "manifest_version": "1.0",
+        "exported_at": exported_at or "",
+        "auto_quant_repo_url": repo_url,
+        "auto_quant_pinned_ref": pinned_ref,
+        "config_path": config_path,
+        "timeframe": manifest.get("timeframe", ""),
+        "log_path": log_path,
+        "strategies": strategies,
+        "validation_errors": [],
+    }
+
+
 def _select_strategy(
     manifest: dict[str, Any],
     strategy_name: str | None,
@@ -463,6 +519,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--strategy-name")
     parser.add_argument("--candidate-spec-json")
     parser.add_argument("--autoresearch-status-json")
+    parser.add_argument("--emit-strategy-library-json")
+    parser.add_argument("--repo-url", default="")
+    parser.add_argument("--pinned-ref", default="")
+    parser.add_argument("--config-path", default="")
+    parser.add_argument("--log-path", default="")
     parser.add_argument("--output-dir", required=True)
     return parser.parse_args(argv)
 
@@ -494,6 +555,17 @@ def main(argv: list[str] | None = None) -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
     for name, payload in bundle.items():
         _write_json(output_dir / f"{name}.json", payload)
+    if args.emit_strategy_library_json:
+        if not args.freqtrade_backtest_zip:
+            raise ValueError("--emit-strategy-library-json requires --freqtrade-backtest-zip")
+        strategy_manifest = build_strategy_library_manifest_from_freqtrade_backtest_zip(
+            Path(args.freqtrade_backtest_zip),
+            repo_url=args.repo_url,
+            pinned_ref=args.pinned_ref,
+            config_path=args.config_path,
+            log_path=args.log_path,
+        )
+        _write_json(Path(args.emit_strategy_library_json).resolve(), strategy_manifest)
     print(
         json.dumps(
             {
