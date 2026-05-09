@@ -3,12 +3,22 @@ use super::*;
 pub(crate) fn factor_backtest_shell(
     symbol: &str,
     data: &str,
+    data_1m: Option<&str>,
+    data_5m: Option<&str>,
+    data_15m: Option<&str>,
+    data_1h: Option<&str>,
+    data_4h: Option<&str>,
+    data_1d: Option<&str>,
     paired_data: Option<&str>,
+    auxiliary_evidence: Option<&str>,
     ensemble: bool,
     state_dir: &str,
     output_format: &str,
 ) -> Result<()> {
     ensure_state_dir_ready(state_dir)?;
+    let auxiliary_override = auxiliary_evidence
+        .map(load_auxiliary_evidence_from_path)
+        .transpose()?;
     ict_engine::application::backtest::factor_backtest_command(
         symbol,
         data,
@@ -16,8 +26,44 @@ pub(crate) fn factor_backtest_shell(
         ensemble,
         state_dir,
         output_format,
-        run_factor_backtest,
+        |symbol, data, paired_data, state_dir| {
+            run_factor_backtest(
+                symbol,
+                data,
+                data_1m,
+                data_5m,
+                data_15m,
+                data_1h,
+                data_4h,
+                data_1d,
+                paired_data,
+                auxiliary_override.as_ref(),
+                state_dir,
+            )
+        },
     )
+}
+
+fn load_auxiliary_evidence_from_path(
+    path: &str,
+) -> Result<ict_engine::data::realtime::market_support::AuxiliaryMarketEvidence> {
+    let raw = std::fs::read_to_string(path)
+        .with_context(|| format!("reading auxiliary/options evidence from {}", path))?;
+    if let Ok(auxiliary) = serde_json::from_str(&raw) {
+        return Ok(auxiliary);
+    }
+    let value: serde_json::Value = serde_json::from_str(&raw)
+        .with_context(|| format!("parsing auxiliary/options evidence JSON from {}", path))?;
+    let nested = value
+        .get("supporting")
+        .and_then(|supporting| supporting.get("auxiliary"))
+        .cloned()
+        .or_else(|| value.get("auxiliary").cloned())
+        .context(
+            "expected AuxiliaryMarketEvidence JSON or an object at supporting.auxiliary / auxiliary",
+        )?;
+    serde_json::from_value(nested)
+        .with_context(|| format!("deserializing AuxiliaryMarketEvidence from {}", path))
 }
 
 pub(crate) fn factor_pipeline_debug_shell(

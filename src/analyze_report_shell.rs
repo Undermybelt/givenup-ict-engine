@@ -48,6 +48,8 @@ pub struct AnalyzeSupporting {
     pub trade_outcome: AnalyzeTradeOutcomeSummary,
     pub factor_diagnostics: crate::factor_lab::FactorDiagnostics,
     pub pre_bayes_evidence_filter: crate::state::PreBayesEvidenceFilter,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub market_state_evidence: Vec<String>,
     pub pre_bayes_entry_quality_bridge: crate::state::PreBayesEntryQualityBridge,
     pub objective_jump_weight: Option<f64>,
     pub canonical_belief_report: crate::reporting::belief::BeliefReportPacket,

@@ -30,6 +30,8 @@ pub struct ExecutionTreeInput<'a> {
     pub hmm_posterior: &'a RegimeProbs,
     pub mece_recovery_confidence: Option<f64>,
     pub prediction_vote_score: f64,
+    pub market_state_lineage: Option<&'a [String]>,
+    pub path_ranker_lineage: Option<&'a [String]>,
     /// Axial pooling trace over the MTF tensor. When `force_observe` is true
     /// the scorer downgrades an `aggressive` bias to `passive` because no
     /// timeframe is meaningfully dominant. Optional so legacy callers that
@@ -339,6 +341,16 @@ impl ExecutionTreeScorer for DefaultExecutionTreeScorer {
         if let Some(confidence) = input.mece_recovery_confidence {
             lineage.push(format!("mece_recovery_confidence={:.4}", confidence));
         }
+        if let Some(market_state_lineage) = input.market_state_lineage {
+            for line in market_state_lineage.iter().take(8) {
+                lineage.push(format!("market_state={}", line));
+            }
+        }
+        if let Some(path_ranker_lineage) = input.path_ranker_lineage {
+            for line in path_ranker_lineage.iter().take(8) {
+                lineage.push(format!("path_ranker={}", line));
+            }
+        }
         lineage.push(format!(
             "hmm_posterior=(acc={:.3}, manip={:.3}, dist={:.3})",
             input.hmm_posterior.accumulation,
@@ -556,6 +568,8 @@ mod tests {
             hmm_posterior: &posterior,
             mece_recovery_confidence: Some(0.97),
             prediction_vote_score: 0.7,
+            market_state_lineage: None,
+            path_ranker_lineage: None,
             axial_trace: None,
         };
         let output = DefaultExecutionTreeScorer.score(&input).unwrap();
@@ -579,6 +593,8 @@ mod tests {
             hmm_posterior: &posterior,
             mece_recovery_confidence: None,
             prediction_vote_score: 0.7,
+            market_state_lineage: None,
+            path_ranker_lineage: None,
             axial_trace: None,
         };
         let output = DefaultExecutionTreeScorer.score(&input).unwrap();
@@ -599,6 +615,8 @@ mod tests {
             hmm_posterior: &posterior,
             mece_recovery_confidence: None,
             prediction_vote_score: 0.7,
+            market_state_lineage: None,
+            path_ranker_lineage: None,
             axial_trace: None,
         };
         let output = DefaultExecutionTreeScorer.score(&input).unwrap();
@@ -616,6 +634,8 @@ mod tests {
             hmm_posterior: &posterior,
             mece_recovery_confidence: Some(0.97),
             prediction_vote_score: 0.95,
+            market_state_lineage: None,
+            path_ranker_lineage: None,
             axial_trace: None,
         };
         let output = DefaultExecutionTreeScorer.score(&input).unwrap();
@@ -639,6 +659,8 @@ mod tests {
                 hmm_posterior: &posterior,
                 mece_recovery_confidence: Some(0.97),
                 prediction_vote_score: 0.7,
+                market_state_lineage: None,
+                path_ranker_lineage: None,
                 axial_trace: None,
             })
             .unwrap();
@@ -679,6 +701,8 @@ mod tests {
             hmm_posterior: &posterior,
             mece_recovery_confidence: Some(0.97),
             prediction_vote_score: 0.72,
+            market_state_lineage: None,
+            path_ranker_lineage: None,
             axial_trace: None,
         };
         let output = DefaultExecutionTreeScorer.score(&input).unwrap();

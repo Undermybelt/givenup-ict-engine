@@ -348,6 +348,7 @@ pub(crate) fn persist_analyze_run(
         selected_entry_quality: report.supporting.entry_quality.selected_state.clone(),
         decision_hint: report.supporting.decision_hint.clone(),
         regime_probs: Some(report.supporting.model_state.regime_probs),
+        market_state_evidence: report.supporting.market_state_evidence.clone(),
         canonical_structural_regime_posterior: Some(
             ict_engine::state::CanonicalStructuralRegimePosterior {
                 active_regime: report

@@ -64,13 +64,21 @@ fn parse_regime_v2(family: &str) -> Option<RegimeV2> {
 pub(crate) fn run_factor_backtest(
     symbol: &str,
     data: &str,
+    data_1m: Option<&str>,
+    data_5m: Option<&str>,
+    data_15m: Option<&str>,
+    data_1h: Option<&str>,
+    data_4h: Option<&str>,
+    data_1d: Option<&str>,
     paired_data: Option<&str>,
+    auxiliary_override: Option<&ict_engine::data::realtime::market_support::AuxiliaryMarketEvidence>,
     state_dir: &str,
 ) -> Result<ict_engine::factor_lab::BacktestResult> {
     let candles = load_candles(data)?;
     let paired_candles = paired_data.map(load_candles).transpose()?;
-    let resolved_multi_timeframe_inputs =
-        resolve_multi_timeframe_inputs(data, None, None, None, None, None, None);
+    let resolved_multi_timeframe_inputs = resolve_multi_timeframe_inputs(
+        data, data_1m, data_5m, data_15m, data_1h, data_4h, data_1d,
+    );
     let multi_timeframe_summary =
         build_multi_timeframe_summary(data, &resolved_multi_timeframe_inputs)?;
     let multi_timeframe_signal =
@@ -86,7 +94,9 @@ pub(crate) fn run_factor_backtest(
         .iter()
         .map(LearningState::feedback_key)
         .collect::<std::collections::BTreeSet<_>>();
-    let lab = FactorLab::new(FactorRegistry::default());
+    let mut registry = FactorRegistry::default();
+    ict_engine::factors::FactorHotplugConfig::apply_to_registry_if_present(state_dir, &mut registry);
+    let lab = FactorLab::new(registry);
 
     // Load regime V2 labels if available
     let regime_v2_labels = load_regime_v2_labels(data);
@@ -99,7 +109,7 @@ pub(crate) fn run_factor_backtest(
             h4_events: structure_ict_context.h4_events.as_deref(),
             d1_events: structure_ict_context.d1_events.as_deref(),
             w1_events: structure_ict_context.w1_events.as_deref(),
-            auxiliary: None,
+            auxiliary: auxiliary_override,
             regime: None,
             regime_v2_labels: Some(&regime_v2_labels),
         },

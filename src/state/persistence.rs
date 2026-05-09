@@ -899,6 +899,7 @@ mod tests {
             hybrid_regime_age_bars: None,
             hybrid_duration_model: None,
             hybrid_remaining_expected_bars: None,
+            market_state_evidence: Vec::new(),
             pre_bayes_evidence_filter: crate::state::PreBayesEvidenceFilter::default(),
             canonical_structural_regime_posterior: None,
             pre_bayes_entry_quality_bridge: crate::state::PreBayesEntryQualityBridge::default(),

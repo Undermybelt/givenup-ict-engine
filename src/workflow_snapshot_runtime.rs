@@ -636,6 +636,7 @@ pub(crate) fn workflow_phase_snapshot_from_analyze_run(
         pre_bayes_conflict_flags: run.pre_bayes_evidence_filter.conflict_flags.clone(),
         pre_bayes_filtered_assignments: filtered_assignments,
         pre_bayes_soft_evidence,
+        market_state_evidence: run.market_state_evidence.clone(),
         canonical_structural_active_regime: None,
         canonical_structural_confidence: None,
         canonical_structural_probabilities: BTreeMap::new(),
@@ -760,6 +761,7 @@ pub(crate) fn workflow_phase_snapshot_from_train_run(
         pre_bayes_conflict_flags: Vec::new(),
         pre_bayes_filtered_assignments: BTreeMap::new(),
         pre_bayes_soft_evidence: BTreeMap::new(),
+        market_state_evidence: Vec::new(),
         canonical_structural_active_regime: None,
         canonical_structural_confidence: None,
         canonical_structural_probabilities: BTreeMap::new(),
@@ -852,6 +854,7 @@ pub(crate) fn workflow_phase_snapshot_from_research_run(
         pre_bayes_conflict_flags: Vec::new(),
         pre_bayes_filtered_assignments: BTreeMap::new(),
         pre_bayes_soft_evidence: BTreeMap::new(),
+        market_state_evidence: Vec::new(),
         canonical_structural_active_regime: run
             .canonical_structural_regime_posterior
             .as_ref()
@@ -984,6 +987,7 @@ pub(crate) fn workflow_phase_snapshot_from_backtest_run(
         pre_bayes_conflict_flags: Vec::new(),
         pre_bayes_filtered_assignments: BTreeMap::new(),
         pre_bayes_soft_evidence: BTreeMap::new(),
+        market_state_evidence: Vec::new(),
         canonical_structural_active_regime: run
             .canonical_structural_regime_posterior
             .as_ref()
@@ -1182,6 +1186,7 @@ pub(crate) fn workflow_phase_snapshot_from_update_run(
             .unwrap_or_default(),
         pre_bayes_filtered_assignments,
         pre_bayes_soft_evidence,
+        market_state_evidence: Vec::new(),
         canonical_structural_active_regime: run
             .consumed_canonical_structural_regime_posterior
             .as_ref()

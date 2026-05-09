@@ -261,6 +261,7 @@ pub struct PolicyTrainingStatusSurface {
     pub structural_path_ranking_target: StructuralPathRankingTargetTrainingStatusSurface,
     pub structural_path_ranking_runtime_summary: String,
     pub structural_path_ranking_validation_summary: String,
+    pub factor_hotplug_summary: String,
     pub summary_line: String,
 }
 
@@ -920,6 +921,23 @@ pub fn policy_training_status(
         structural_path_ranking_target.observation_validation_min_rows,
         structural_path_ranking_ready
     );
+    let factor_hotplug_summary = crate::factors::hotplug::FactorHotplugConfig::load(state_dir)
+        .map(|config| match config {
+            Some(config) => {
+                let disabled = config
+                    .families
+                    .iter()
+                    .filter_map(|(name, enabled)| (!enabled).then_some(name.as_str()))
+                    .collect::<Vec<_>>();
+                if disabled.is_empty() {
+                    "Factor hotplug: config=present disabled=[]".to_string()
+                } else {
+                    format!("Factor hotplug: config=present disabled=[{}]", disabled.join(","))
+                }
+            }
+            None => "Factor hotplug: config=absent all_default_enabled".to_string(),
+        })
+        .unwrap_or_else(|err| format!("Factor hotplug: config=invalid error={}", err));
     Ok(PolicyTrainingStatusSurface {
         symbol: symbol.to_string(),
         analyze_runs: cisd_rb.analyze_runs,
@@ -983,6 +1001,7 @@ pub fn policy_training_status(
         },
         structural_path_ranking_runtime_summary,
         structural_path_ranking_validation_summary,
+        factor_hotplug_summary,
         structural_path_ranking_target,
         summary_line,
     })

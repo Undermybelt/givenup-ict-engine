@@ -1181,6 +1181,11 @@ enum Commands {
         paired_data: Option<String>,
         #[arg(
             long,
+            help = "Optional path to AuxiliaryMarketEvidence JSON, or a full analyze-report JSON containing supporting.auxiliary"
+        )]
+        auxiliary_evidence: Option<String>,
+        #[arg(
+            long,
             default_value_t = false,
             help = "Also emit ensemble vote artifacts"
         )]
@@ -2456,18 +2461,31 @@ fn main() -> Result<()> {
         Commands::FactorBacktest {
             symbol,
             data,
+            data_1m,
+            data_5m,
+            data_15m,
+            data_1h,
+            data_4h,
+            data_1d,
             paired_data,
+            auxiliary_evidence,
             ensemble,
             state_dir,
             output_format,
             compact,
             agent,
             human,
-            ..
         } => factor_backtest_shell(
             &symbol,
             &data,
+            data_1m.as_deref(),
+            data_5m.as_deref(),
+            data_15m.as_deref(),
+            data_1h.as_deref(),
+            data_4h.as_deref(),
+            data_1d.as_deref(),
             paired_data.as_deref(),
+            auxiliary_evidence.as_deref(),
             ensemble,
             &state_dir,
             match resolve_output_format(&output_format, compact, agent, human)? {
@@ -3359,6 +3377,26 @@ fn build_structure_ict_context_events(
     })
 }
 
+fn build_structure_ict_context_events_from_native_frames(
+    native_frames: AnalyzeNativeFrames<'_>,
+) -> StructureIctContextEvents {
+    let h4_events = native_frames
+        .h4
+        .map(|candles| build_pda_timeline(candles, &compute_atr(candles, 14)));
+    let d1_events = native_frames
+        .d1
+        .map(|candles| build_pda_timeline(candles, &compute_atr(candles, 14)));
+    let w1_events = native_frames.d1.map(|candles| {
+        let weekly = aggregate_daily_candles_to_weekly(candles);
+        build_pda_timeline(&weekly, &compute_atr(&weekly, 14))
+    });
+    StructureIctContextEvents {
+        h4_events,
+        d1_events,
+        w1_events,
+    }
+}
+
 fn aggregate_daily_candles_to_weekly(candles: &[Candle]) -> Vec<Candle> {
     use chrono::Datelike;
 
@@ -3962,6 +4000,16 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
     let pre_bayes_policy = pre_bayes_evidence_policy();
     let multi_timeframe_evidence =
         parse_multi_timeframe_evidence(build_context.multi_timeframe_summary);
+    let market_state_snapshot = ict_engine::market_state::MarketStateClassifier::new().classify(native_ltf);
+    let market_state_evidence = market_state_evidence_lines(&market_state_snapshot);
+    let structure_ict_context =
+        build_structure_ict_context_events_from_native_frames(build_context.native_frames);
+    let pre_bayes_regime_label = market_state_to_bbn_regime_label(&market_state_snapshot)
+        .unwrap_or_else(|| regime_label.as_str())
+        .to_string();
+    let pre_bayes_liquidity_label = market_state_to_bbn_liquidity_label(&market_state_snapshot)
+        .unwrap_or_else(|| liquidity_label.as_str())
+        .to_string();
     let market = infer_market_from_symbol(build_context.symbol);
     let pda_sequence_artifact =
         ict_engine::pda_sequence::load_pda_sequence_analysis(state_dir, symbol).ok();
@@ -4019,19 +4067,35 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         &FactorContext {
             paired_candles: build_context.paired_candles,
             auxiliary: build_context.auxiliary,
+            h4_events: structure_ict_context.h4_events.as_deref(),
+            d1_events: structure_ict_context.d1_events.as_deref(),
+            w1_events: structure_ict_context.w1_events.as_deref(),
             regime: Some(regime_probs.dominant()),
             ..FactorContext::default()
         },
         Some(build_context.learning_state),
     )?;
-    let pre_bayes_evidence_filter = build_pre_bayes_evidence_filter(
+    let mut pre_bayes_evidence_filter = build_pre_bayes_evidence_filter(
         &pre_bayes_policy,
-        &regime_label,
-        &liquidity_label,
+        &pre_bayes_regime_label,
+        &pre_bayes_liquidity_label,
         &factor_output.diagnostics,
         &multi_timeframe_evidence,
         Some(&market),
         pda_sequence_summary.as_ref(),
+    );
+    for line in &market_state_evidence {
+        pre_bayes_evidence_filter
+            .rationale
+            .push(format!("market_state_source={line}"));
+    }
+    pre_bayes_evidence_filter.evidence_assignments.insert(
+        "market_state_primary_regime".to_string(),
+        format!("{:?}", market_state_snapshot.primary_regime),
+    );
+    pre_bayes_evidence_filter.evidence_assignments.insert(
+        "market_state_secondary_regime".to_string(),
+        format!("{:?}", market_state_snapshot.secondary_regime),
     );
 
     let evidence = trade_evidence_from_pre_bayes_filter(network, &pre_bayes_evidence_filter)?;
@@ -4467,12 +4531,29 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         persist_mece_recovery_artifact(state_dir, &mece_artifact, "analyze", None, &decision_hint)?;
     }
 
+    let path_ranker_lineage = ict_engine::application::entry_models::policy_training_status(
+        state_dir,
+        symbol,
+        None,
+    )
+    .ok()
+    .map(|surface| {
+        vec![
+            surface.structural_path_ranking_runtime_summary,
+            surface.structural_path_ranking_validation_summary,
+            format!("factor_hotplug_summary={}", surface.factor_hotplug_summary),
+        ]
+    })
+    .unwrap_or_else(|| vec!["policy_training_status=unavailable".to_string()]);
+
     let execution_tree_input = ExecutionTreeInput {
         execution_features: &execution_artifact.features,
         physics_overlay: &physics_overlay,
         hmm_posterior: &regime_probs,
         mece_recovery_confidence,
         prediction_vote_score: decision.selected_win_probability,
+        market_state_lineage: Some(&market_state_evidence),
+        path_ranker_lineage: Some(&path_ranker_lineage),
         axial_trace: None,
     };
     let execution_tree_output = DefaultExecutionTreeScorer.score(&execution_tree_input)?;
@@ -4618,6 +4699,7 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
             },
             factor_diagnostics: factor_output.diagnostics,
             pre_bayes_evidence_filter: pre_bayes_evidence_filter.clone(),
+            market_state_evidence,
             pre_bayes_entry_quality_bridge: pre_bayes_entry_quality_bridge.clone(),
             objective_jump_weight: canonical_belief_report.gate_decision.jump_weight,
             canonical_belief_report: canonical_belief_report.clone(),
@@ -4981,6 +5063,53 @@ fn distribution_from_map(states: &[String], probabilities: &BTreeMap<String, f64
         .iter()
         .map(|state| probabilities.get(state).copied().unwrap_or(0.0))
         .collect()
+}
+
+fn market_state_to_bbn_regime_label(
+    snapshot: &ict_engine::market_state::MarketStateSnapshot,
+) -> Option<&'static str> {
+    match snapshot.primary_regime {
+        ict_engine::market_state::PrimaryMarketRegime::TrendExpansion => None,
+        ict_engine::market_state::PrimaryMarketRegime::RangeConsolidation => Some("range"),
+        ict_engine::market_state::PrimaryMarketRegime::ExtremeStress => Some("range"),
+        ict_engine::market_state::PrimaryMarketRegime::ReversalBrewing => Some("range"),
+        ict_engine::market_state::PrimaryMarketRegime::Unknown => None,
+    }
+}
+
+fn market_state_to_bbn_liquidity_label(
+    snapshot: &ict_engine::market_state::MarketStateSnapshot,
+) -> Option<&'static str> {
+    match snapshot.liquidity {
+        ict_engine::market_state::LiquidityRegime::HighLiquidity => Some("favorable"),
+        ict_engine::market_state::LiquidityRegime::NormalLiquidity => Some("neutral"),
+        ict_engine::market_state::LiquidityRegime::ThinLiquidity => Some("hostile"),
+        ict_engine::market_state::LiquidityRegime::Unknown => None,
+    }
+}
+
+fn market_state_evidence_lines(
+    snapshot: &ict_engine::market_state::MarketStateSnapshot,
+) -> Vec<String> {
+    let mut lines = vec![
+        format!(
+            "primary_regime={:?} secondary_regime={:?} overall_confidence={:.3}",
+            snapshot.primary_regime, snapshot.secondary_regime, snapshot.overall_confidence
+        ),
+        format!(
+            "volatility={:?}:{:.3} liquidity={:?}:{:.3} structure={:?}:{:.3} behavior={:?}:{:.3}",
+            snapshot.volatility,
+            snapshot.volatility_confidence,
+            snapshot.liquidity,
+            snapshot.liquidity_confidence,
+            snapshot.structure,
+            snapshot.structure_confidence,
+            snapshot.behavior,
+            snapshot.behavior_confidence
+        ),
+    ];
+    lines.extend(snapshot.rationale.iter().map(|line| format!("rationale={line}")));
+    lines
 }
 
 struct BuildAnalyzeAgentPromptsInput<'a> {
@@ -7377,6 +7506,13 @@ mod tests {
             "NQ",
             data.to_str().unwrap(),
             None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
             temp.path().to_str().unwrap(),
         )
         .unwrap();
@@ -7504,6 +7640,13 @@ mod tests {
             "NQ",
             research_data.to_str().unwrap(),
             None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
             temp.path().to_str().unwrap(),
         )
         .unwrap();
@@ -7563,12 +7706,26 @@ mod tests {
             "NQ",
             data.to_str().unwrap(),
             None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
             temp.path().to_str().unwrap(),
         )
         .unwrap();
         run_factor_backtest(
             "NQ",
             data.to_str().unwrap(),
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
+            None,
             None,
             temp.path().to_str().unwrap(),
         )

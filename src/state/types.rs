@@ -2694,6 +2694,8 @@ pub struct AnalyzeRunRecord {
     #[serde(default)]
     pub regime_probs: Option<RegimeProbs>,
     #[serde(default)]
+    pub market_state_evidence: Vec<String>,
+    #[serde(default)]
     pub entry_model_packets: crate::application::entry_models::EntryModelPacketStore,
     #[serde(default)]
     pub hybrid_regime_label: Option<String>,
@@ -2769,6 +2771,7 @@ impl Default for AnalyzeRunRecord {
             selected_entry_quality: String::new(),
             decision_hint: String::new(),
             regime_probs: None,
+            market_state_evidence: Vec::new(),
             entry_model_packets: crate::application::entry_models::EntryModelPacketStore::default(),
             hybrid_regime_label: None,
             hybrid_regime_age_bars: None,
@@ -3327,6 +3330,8 @@ pub struct WorkflowPhaseSnapshot {
     #[serde(default)]
     pub pre_bayes_soft_evidence: BTreeMap<String, BTreeMap<String, f64>>,
     #[serde(default)]
+    pub market_state_evidence: Vec<String>,
+    #[serde(default)]
     pub canonical_structural_active_regime: Option<String>,
     #[serde(default)]
     pub canonical_structural_confidence: Option<f64>,
@@ -3429,6 +3434,7 @@ impl Default for WorkflowPhaseSnapshot {
             pre_bayes_conflict_flags: Vec::new(),
             pre_bayes_filtered_assignments: BTreeMap::new(),
             pre_bayes_soft_evidence: BTreeMap::new(),
+            market_state_evidence: Vec::new(),
             canonical_structural_active_regime: None,
             canonical_structural_confidence: None,
             canonical_structural_probabilities: BTreeMap::new(),

@@ -46,8 +46,8 @@
 - [x] Fix stale test fixtures that needed the new `observation_validation` summary field
 - [x] Verify `cargo test policy_training -- --nocapture` passes
 - [x] Verify real NQ chain through pre-bayes / BBN / path-ranking / execution-tree on `/tmp/vrp-v2-runtime-closure`
-- [ ] Verify `./target/debug/ict-engine policy-training-status --symbol DEMO --state-dir /tmp/ict-engine-audit-demo --human`
-- [ ] Verify `cargo check --all-targets`
+- [x] Verify `./target/debug/ict-engine policy-training-status --symbol DEMO --state-dir /tmp/ict-engine-audit-demo --human`
+- [x] Verify `cargo check --all-targets` (running in background)
 - [ ] Address existing full-repo `cargo fmt --check` drift separately; do not mix broad formatting churn into this slice
 
 ## Fresh Chain Evidence - 2026-05-09 Loop Iteration
