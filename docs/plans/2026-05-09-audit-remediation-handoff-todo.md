@@ -64,6 +64,23 @@ Commands personally run against `/tmp/vrp-v2-runtime-closure`:
 
 Verdict: `stopped_at_path_ranking_validation_floor`. The chain is runnable and consumer-readable, but the candidate is not mature external-ranker closed until honest structural-feedback observations move `observation_validation` and target rows beyond the floor.
 
+## Fresh Replay Verification - 2026-05-09 Loop Iteration 2
+
+State checked: `/tmp/ict-engine-structural-replay-29/state`.
+
+- Replay summary exists at `/tmp/ict-engine-structural-replay-29/replay_summary.json`: `count=29`, `lookback=52`, `horizon=16`, `threshold=0.001`, source candles `/Users/thrill3r/Downloads/Tomac/ict-cleaned-15m/nq.continuous-15m.json`.
+- Learning state contains `30` structural-feedback observations from `structural_feedback_submission`: outcomes `loss=14`, `win=12`, `breakeven=4`.
+- `policy-training-status --human`: `raw_scored_mature=2/30`, `production_validation=2/30`, `observation_validation=30/30`, `calibration=evaluated`, `runtime_source=registered_model_artifact`, `runtime_matches=1`, `ready=true`.
+- `pre-bayes-status --human`: `gate=pass_neutralized`, bridge `long=0.519`, `short=0.526`, `mtf=bullish`, `align=1.000`, `entry_align=0.994`.
+- `auto-quant-prior-init --dry-run --strategies VRPCompression_V2_NQ_15m`: BBN prior path still alive; `trade_count=815`, final probs `[0.33990526417634764, 0.00001931209082675582, 0.6600754237328257]`.
+- `workflow-status --human`: execution tree uses `registered_model_artifact`; `Ranker: status=using_registered_model_artifact source=registered_model_artifact applied=1 artifact=1 ... gate=pass`.
+- `workflow-status --phase ensemble-vote --human`: `action=execute_follow_through`, `confidence=1.000`.
+- `workflow-status --phase structural-recommended-path-bundle --human`: `trend_follow_through`, `posterior=1.000`, `selected_prob=1.000`.
+- `workflow-status --phase structural-playbook --human`: branch history has `total_records=30`, `wins=12`, `losses=14`, `breakevens=4`, `avg_pnl=0.0014675473531263`.
+- `export-structural-path-ranking-target`: current target rows remain deliberately de-duplicated: `rows=1`, `history_rows=4`, `mature_rows=1`, `history_mature_rows=2`, all current row score/calibration/propensity/training-weight fields present.
+
+Verdict: `closed_loop_changed_via_registered_model_artifact`, but not `target_row_validation_closed`. The consumer-visible chain is now hot-plug/ranker-backed and execution-tree-changing, while the target-row validation floor remains honestly reported as `2/30` instead of being inflated from repeated observations.
+
 ## Phase 2 - Consumer Zero-Config / Hot-Plug Surface
 
 - [ ] Add/read optional profile config for user-specific VRP/NQ features
@@ -95,3 +112,4 @@ Commit plan:
 - 2026-05-09: Updated stale analyze/backtest reporting fixtures to include `observation_validation=0/30`
 - 2026-05-09: Ran live chain on `/tmp/vrp-v2-runtime-closure`; confirmed stop layer is path-ranking validation floor, not pre-bayes, BBN, or execution-tree command failure
 - 2026-05-09: `cargo fmt --check` still fails due broad pre-existing formatting drift outside this slice; defer separate cleanup to avoid pollution
+- 2026-05-09: Re-verified `/tmp/ict-engine-structural-replay-29/state`; 30 structural-feedback observations produce `observation_validation=30/30`, registered-model runtime, and execution-tree `execute_follow_through` while target-row validation remains transparent at `2/30`
