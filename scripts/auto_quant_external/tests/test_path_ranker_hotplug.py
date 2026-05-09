@@ -156,7 +156,7 @@ class DirectModelArtifactTests(unittest.TestCase):
         self.assertIn("current_posterior", artifact["numerical_feature_weights"])
         self.assertIn("rank", artifact["numerical_feature_weights"])
 
-    def test_build_registered_artifact_prefers_direct_model_family_when_file_exists(self) -> None:
+    def test_build_registered_artifact_prefers_direct_model_family_when_only_direct_model_exists(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             output_dir = Path(tmpdir)
             trainer.create_direct_model_artifact(
@@ -180,6 +180,27 @@ class DirectModelArtifactTests(unittest.TestCase):
         self.assertEqual(metadata["history_rows"], 9)
         self.assertEqual(metadata["calibration_rows"], 3)
         self.assertTrue(str(metadata["artifact_uri"]).endswith("path_ranker_direct_model.json"))
+
+    def test_build_registered_artifact_prefers_catboost_when_cbm_exists(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            output_dir = Path(tmpdir)
+            trainer.create_direct_model_artifact(
+                output_dir=output_dir,
+                features=["rank"],
+                trained_rows=7,
+            )
+            (output_dir / "catboost_model.cbm").write_text("model", encoding="utf-8")
+
+            metadata = trainer.build_registered_artifact_metadata(
+                output_dir=output_dir,
+                trained_rows=7,
+                history_rows=9,
+                calibration_rows=3,
+                selected_features=["rank"],
+            )
+
+        self.assertEqual(metadata["model_family"], "catboost")
+        self.assertEqual(metadata["artifact_uri"], str(output_dir))
 
 
 if __name__ == "__main__":

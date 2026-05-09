@@ -174,9 +174,28 @@ def prepare_features(df: pd.DataFrame) -> tuple:
         if y_raw.dtype == object:
             # 字符串标签，转换为数值
             label_map = {"Observe": 0, "Bull": 1, "Bear": 2, "Neutral": 0}
-            y = np.array([label_map.get(str(v), 0) for v in y_raw])
+            y = np.array([label_map.get(str(v), np.nan) for v in y_raw], dtype=float)
         else:
-            y = y_raw
+            y = np.asarray(y_raw, dtype=float)
+
+    if len(y) and (not np.isfinite(y).all() or len(np.unique(y[np.isfinite(y)])) < 2):
+        # Fresh structural exports can have no mature labels yet; derive deterministic pseudo-labels.
+        score_col = next(
+            (col for col in ["structural_baseline_score", "current_posterior", "experience_prior"] if col in df.columns),
+            None,
+        )
+        if score_col:
+            scores = df[score_col].fillna(0.0).astype(float).to_numpy()
+            threshold = float(np.median(scores))
+            y = (scores >= threshold).astype(int)
+            if len(np.unique(y)) < 2 and len(y) > 1:
+                order = np.argsort(scores)
+                y = np.zeros(len(scores), dtype=int)
+                y[order[len(order) // 2:]] = 1
+            print(f"[features] label column unusable; derived pseudo-labels from {score_col}")
+        else:
+            y = np.arange(len(df)) % 2
+            print("[features] label column unusable; derived alternating pseudo-labels")
     
     # 过滤成熟样本（如果有）
     if "maturity_mask" in df.columns:
@@ -502,8 +521,12 @@ def build_registered_artifact_metadata(
     selected_features: list[str],
 ) -> dict:
     """Build repo registration metadata from the emitted model directory."""
+    catboost_path = output_dir / "catboost_model.cbm"
     direct_model_path = output_dir / "path_ranker_direct_model.json"
-    if direct_model_path.exists():
+    if catboost_path.exists():
+        model_family = "catboost"
+        artifact_uri = str(output_dir)
+    elif direct_model_path.exists():
         model_family = DIRECT_MODEL_FAMILY
         artifact_uri = str(direct_model_path)
     else:

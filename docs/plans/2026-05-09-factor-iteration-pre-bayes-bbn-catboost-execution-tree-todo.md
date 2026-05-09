@@ -117,7 +117,7 @@ and make every handoff explicit, reviewable, and `/tmp/...` isolated.
 ### Done
 
 - [x] Normalized user shorthand into repo terms:
-  - `绿波` -> `pre-bayes / filter gate`
+  - `濾波` -> `pre-bayes / filter gate`
   - `信念网络` -> `BBN prior/posterior evidence`
   - `cat boost` -> `structural path ranking / external ranker surface`
   - `执行树` -> `workflow-status` + `execution_tree_trace.json`
@@ -130,26 +130,31 @@ and make every handoff explicit, reviewable, and `/tmp/...` isolated.
 
 ### Next Slice
 
-- [ ] Run the next candidate through the chain in this order, without skipping layers:
+- [x] Run the next candidate through the chain in this order, without skipping layers:
   - build/refresh explicit factor candidate artifact
   - check pre-bayes / bridge state from the same `/tmp/...` state
   - apply or inspect BBN prior-init effect
   - inspect whether structural path-ranking target rows grew in a meaningful way
   - inspect whether execution-tree / workflow output changed
-- [ ] Do not call a factor “closed” just because its standalone backtest is good.
-- [ ] Do not hand off to runtime closure until the candidate artifact explicitly states:
+  - evidence: `docs/plans/2026-05-09-vrp-v2-loop-handoff-todo.md`
+- [x] Do not call a factor “closed” just because its standalone backtest is good.
+  - Slice result: `VRPCompression_V2_NQ_15m` is chain-readable, but not mature external-ranker closed.
+- [x] Do not hand off to runtime closure until the candidate artifact explicitly states:
   - `pre_bayes_targets`
   - `belief_targets`
   - `path_ranking_targets`
   - `execution_tree_targets`
   - `structural_feedback_required`
-- [ ] For each next candidate, write one explicit chain-level judgment:
+  - evidence: `/tmp/vrp-v2-loop-20260509-candidate-pack/factor_expression.json`
+- [x] For each next candidate, write one explicit chain-level judgment:
   - `stopped_at_factor_iteration`
   - `stopped_at_pre_bayes`
   - `stopped_at_bbn`
   - `stopped_at_path_ranking`
   - `stopped_at_execution_tree`
   - `closed_loop_changed`
+  - Slice verdict: `stopped_at_path_ranking` because `mature_rows=0`, `raw_scored_mature=0/30`, `production_validation=0/30`, while workflow still uses `candidate_set_only` scores.
+- [ ] Next practical slice: generate or import structural feedback rows / hot-plug ranker evidence so path-ranking can move beyond candidate-set scoring without breaking zero-config fallback.
 
 ### Not Yet
 
@@ -214,7 +219,7 @@ python3 scripts/research/factor_candidate_pack.py \
   --output-dir /tmp/<candidate-pack>
 ```
 
-### Pre-Bayes / 绿波
+### Pre-Bayes / 濾波
 
 ```bash
 ./target/debug/ict-engine pre-bayes-status \
