@@ -26,10 +26,10 @@ It maps the factor landscape so agents cannot claim "no usable factors exist."
 | B | Directionality / Persistence | `TrendMomentum` | Family B | code covers EMA+RSI+ADX; no continuation-failure/exhaustion subfactors |
 | C | Cross-Market Confirmation | `CrossMarketSmt` | Family C | code covers SMT; no leader-laggard/correlation-consistency subfactors |
 | D | Stretch / Reversion Feasibility | `VolatilityMeanReversion` | Family D | code covers Bollinger+ATR; no OU-reversion/exhaustion subfactors |
-| E | Crowding / Herding Execution Risk | **MISSING** | Family E | no FactorCategory enum variant; no compute path |
-| F | Spectral Rhythm / Chaos | **MISSING** | Family F | partial: spectral_entropy exists in execution tree inputs but no FactorCategory |
+| E | Crowding / Herding Execution Risk | `CrowdingHerding` | Family E | compute stub exists; no subfactors beyond stub |
+| F | Spectral Rhythm / Chaos | `SpectralRhythm` | Family F | compute stub exists; spectral_entropy in execution tree inputs but stub only |
 | G | Options / Dealer Positioning | `OptionsHedging` | Family G | compute path exists but requires `--auxiliary-evidence` data |
-| H | Session / Liquidity Window Quality | **MISSING** | Family H | no FactorCategory enum variant; no compute path |
+| H | Session / Liquidity Window Quality | `SessionLiquidity` | Family H | compute stub exists; no subfactors beyond stub |
 
 ### Key Source Paths
 
@@ -51,7 +51,7 @@ All state dirs are `/tmp/...` by default via `--state-dir` flag. Zero-config: `.
 
 1. No AGENTS.md existed before this file — agents had no entry map
 2. Factor families A-H are documented only in `docs/plans/2026-05-05-execution-tree-factor-auto-quant-todo.md` (5590 lines) — agents cannot scan a 436KB doc efficiently
-3. Families E, F, H have no `FactorCategory` enum variant — code grep returns nothing
+3. Families E, F, H now have `FactorCategory` enum variants and compute stubs — previously missing
 4. Factor compute paths are split across `factor_lab/` and `factors/` — grep for "factor" hits 20+ files with no index
 
 ## Hot-Plug Convention

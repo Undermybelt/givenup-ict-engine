@@ -1145,7 +1145,7 @@ mod tests {
                 "workflow_snapshot": {
                     "policy_training_status": {
                         "structural_path_ranking_runtime_summary": "Ranker runtime: runtime enabled=false ready=false source=none status=disabled mode=none matches=0",
-                        "structural_path_ranking_validation_summary": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 ready=true"
+                        "structural_path_ranking_validation_summary": "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 observation_validation=0/30 ready=true"
                     }
                 }
             }

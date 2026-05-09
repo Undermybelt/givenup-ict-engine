@@ -12555,7 +12555,7 @@ mod tests {
                     "Ranker runtime: runtime enabled=true ready=true source=registered_artifact status=enabled_registered_artifact_ready mode=candidate_set_only matches=2",
                 ),
                 structural_path_ranking_validation_summary: Some(
-                    "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 ready=true",
+                    "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 observation_validation=0/30 ready=true",
                 ),
             },
         );
@@ -12577,7 +12577,7 @@ mod tests {
         assert_eq!(
             payload["structural_path_ranking_validation_summary"],
             serde_json::json!(
-                "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 ready=true"
+                "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 observation_validation=0/30 ready=true"
             )
         );
         let human_output = payload["human_output"].as_str().unwrap_or_default();
