@@ -4657,6 +4657,26 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
                 vec![
                     surface.structural_path_ranking_runtime_summary,
                     surface.structural_path_ranking_validation_summary,
+                    format!(
+                        "ranker_machine=source={} model_family={} validation_ready={} active_match_count={}",
+                        surface
+                            .structural_path_ranking_runtime
+                            .source_kind
+                            .as_deref()
+                            .unwrap_or("unknown"),
+                        surface
+                            .structural_path_ranking_runtime
+                            .model_family
+                            .as_deref()
+                            .unwrap_or("unknown"),
+                        surface
+                            .structural_path_ranking_validation
+                            .production_validation_ready
+                            || surface
+                                .structural_path_ranking_validation
+                                .observation_validation_ready,
+                        surface.structural_path_ranking_runtime.active_match_count
+                    ),
                     format!("factor_hotplug_summary={}", surface.factor_hotplug_summary),
                 ]
             })

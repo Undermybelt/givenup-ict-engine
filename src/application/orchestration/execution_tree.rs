@@ -53,6 +53,14 @@ pub struct ExecutionTreeOutput {
     /// trace artifact. Empty when no axial trace was provided to the scorer.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub axial_attention_trace: Vec<(String, f64)>,
+    #[serde(default)]
+    pub path_ranker_score_used_by_execution_tree: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub path_ranker_model_family: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub path_ranker_runtime_source: Option<String>,
+    #[serde(default)]
+    pub ranker_validation_ready: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -211,6 +219,8 @@ pub struct ExecutionTriage {
     pub branch_probability: f64,
     pub posterior_uncertainty: f64,
     pub one_line: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub reason_summary: Vec<String>,
 }
 
 pub fn build_execution_triage(output: &ExecutionTreeOutput) -> ExecutionTriage {
@@ -223,6 +233,18 @@ pub fn build_execution_triage(output: &ExecutionTreeOutput) -> ExecutionTriage {
         output.branch_probability,
         output.decision_hint,
     );
+    let reason_summary = output
+        .split_reason_lineage
+        .iter()
+        .filter(|line| {
+            line.contains("market_state=")
+                || line.contains("path_ranker=")
+                || line.contains("branch=")
+                || line.contains("hybrid_transition_hazard=")
+        })
+        .take(5)
+        .cloned()
+        .collect();
     ExecutionTriage {
         gate_status: output.gate_status.clone(),
         branch: output.branch.clone(),
@@ -232,7 +254,59 @@ pub fn build_execution_triage(output: &ExecutionTreeOutput) -> ExecutionTriage {
         branch_probability: output.branch_probability,
         posterior_uncertainty: output.posterior_uncertainty,
         one_line,
+        reason_summary,
     }
+}
+
+fn lineage_value(line: &str, key: &str) -> Option<String> {
+    let needle = format!("{key}=");
+    line.split_whitespace()
+        .find_map(|part| part.strip_prefix(&needle))
+        .map(|value| value.trim_matches(|ch| ch == ',' || ch == ';').to_string())
+        .filter(|value| !value.is_empty())
+}
+
+fn path_ranker_machine_fields(
+    path_ranker_lineage: Option<&[String]>,
+) -> (bool, Option<String>, Option<String>, bool) {
+    let Some(lines) = path_ranker_lineage else {
+        return (false, None, None, false);
+    };
+    let runtime_line = lines.iter().find(|line| line.contains("Ranker runtime:"));
+    let validation_line = lines
+        .iter()
+        .find(|line| line.contains("Ranker validation:"));
+    let used = runtime_line
+        .map(|line| {
+            line.contains("enabled=true")
+                && line.contains("ready=true")
+                && !line.contains("source=none")
+        })
+        .unwrap_or(false);
+    let model_family = runtime_line
+        .and_then(|line| lineage_value(line, "model_family"))
+        .or_else(|| {
+            lines
+                .iter()
+                .find(|line| line.contains("ranker_machine="))
+                .and_then(|line| lineage_value(line, "model_family"))
+        });
+    let runtime_source = runtime_line
+        .and_then(|line| lineage_value(line, "source"))
+        .or_else(|| {
+            lines
+                .iter()
+                .find(|line| line.contains("ranker_machine="))
+                .and_then(|line| lineage_value(line, "source"))
+        });
+    let validation_ready = validation_line
+        .map(|line| line.contains("ready=true"))
+        .unwrap_or_else(|| {
+            lines.iter().any(|line| {
+                line.contains("ranker_machine=") && line.contains("validation_ready=true")
+            })
+        });
+    (used, model_family, runtime_source, validation_ready)
 }
 
 pub trait ExecutionTreeScorer {
@@ -358,6 +432,13 @@ impl ExecutionTreeScorer for DefaultExecutionTreeScorer {
             input.hmm_posterior.distribution
         ));
 
+        let (
+            path_ranker_score_used_by_execution_tree,
+            path_ranker_model_family,
+            path_ranker_runtime_source,
+            ranker_validation_ready,
+        ) = path_ranker_machine_fields(input.path_ranker_lineage);
+
         Ok(ExecutionTreeOutput {
             execution_score: input.execution_features.execution_score,
             branch,
@@ -368,6 +449,10 @@ impl ExecutionTreeScorer for DefaultExecutionTreeScorer {
             split_reason_lineage: lineage,
             decision_hint: decision_hint.to_string(),
             axial_attention_trace,
+            path_ranker_score_used_by_execution_tree,
+            path_ranker_model_family,
+            path_ranker_runtime_source,
+            ranker_validation_ready,
         })
     }
 }
@@ -721,6 +806,66 @@ mod tests {
     }
 
     #[test]
+    fn execution_tree_surfaces_path_ranker_machine_fields() {
+        let features = baseline_features(0.80);
+        let overlay = flat_overlay();
+        let posterior = neutral_posterior();
+        let lineage = vec![
+            "Ranker runtime: runtime enabled=true ready=true source=registered_artifact status=enabled_registered_artifact_ready mode=prefer_history matches=3".to_string(),
+            "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 observation_validation=0/30 ready=true".to_string(),
+            "ranker_machine=source=registered_artifact model_family=catboost validation_ready=true active_match_count=3".to_string(),
+        ];
+        let output = DefaultExecutionTreeScorer
+            .score(&ExecutionTreeInput {
+                execution_features: &features,
+                physics_overlay: &overlay,
+                hmm_posterior: &posterior,
+                mece_recovery_confidence: Some(0.97),
+                prediction_vote_score: 0.7,
+                market_state_lineage: None,
+                path_ranker_lineage: Some(&lineage),
+                axial_trace: None,
+            })
+            .unwrap();
+
+        assert!(output.path_ranker_score_used_by_execution_tree);
+        assert_eq!(
+            output.path_ranker_runtime_source.as_deref(),
+            Some("registered_artifact")
+        );
+        assert_eq!(output.path_ranker_model_family.as_deref(), Some("catboost"));
+        assert!(output.ranker_validation_ready);
+    }
+
+    #[test]
+    fn triage_reason_summary_includes_regime_and_ranker_context() {
+        let output = ExecutionTreeOutput {
+            gate_status: "ready".to_string(),
+            branch: "fill_viable".to_string(),
+            execution_bias: "aggressive".to_string(),
+            decision_hint: "execution_first_fill".to_string(),
+            split_reason_lineage: vec![
+                "market_state=primary_regime=TrendExpansion secondary_regime=BullTrendExhaustion overall_confidence=0.553".to_string(),
+                "path_ranker=Ranker runtime: runtime enabled=true ready=true source=registered_artifact status=enabled_registered_artifact_ready mode=prefer_history matches=3".to_string(),
+            ],
+            path_ranker_score_used_by_execution_tree: true,
+            path_ranker_runtime_source: Some("registered_artifact".to_string()),
+            ranker_validation_ready: true,
+            ..ExecutionTreeOutput::default()
+        };
+        let triage = build_execution_triage(&output);
+
+        assert!(triage
+            .reason_summary
+            .iter()
+            .any(|line| line.contains("TrendExpansion")));
+        assert!(triage
+            .reason_summary
+            .iter()
+            .any(|line| line.contains("registered_artifact")));
+    }
+
+    #[test]
     fn triage_one_line_covers_core_fields() {
         let output = ExecutionTreeOutput {
             execution_score: 0.82,
@@ -732,6 +877,7 @@ mod tests {
             split_reason_lineage: vec![],
             decision_hint: "execution_first_fill".to_string(),
             axial_attention_trace: Vec::new(),
+            ..ExecutionTreeOutput::default()
         };
         let triage = build_execution_triage(&output);
         assert!(triage.one_line.contains("ready"));

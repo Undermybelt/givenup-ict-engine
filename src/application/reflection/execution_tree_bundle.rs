@@ -49,6 +49,7 @@ mod tests {
             split_reason_lineage: vec!["ready".to_string()],
             decision_hint: "execution_first_fill".to_string(),
             axial_attention_trace: Vec::new(),
+            ..ExecutionTreeOutput::default()
         }
     }
 
