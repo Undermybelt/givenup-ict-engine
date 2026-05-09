@@ -364,7 +364,7 @@ pub fn dispatch_analyze_output(
     report: &AnalyzeReport,
     input: AnalyzeOutputDispatchInput<'_>,
 ) -> Result<()> {
-    let (compact_report, agent_report, human_report) =
+    let (mut compact_report, mut agent_report, mut human_report) =
         build_analyze_reporting_bundle(AnalyzeReportingBundleInput {
             input: AnalyzeHumanInput {
                 symbol: &report.symbol,
@@ -407,6 +407,11 @@ pub fn dispatch_analyze_output(
             gate_status: &report.supporting.pre_bayes_evidence_filter.gating_status,
             recommended_next_command: &report.supporting.recommended_next_command,
         });
+    if let Some(triage) = report.supporting.execution_triage.as_ref() {
+        human_report.execution_triage_line = Some(triage.consumer_reason.clone());
+        compact_report.execution_triage = Some(triage.clone());
+        agent_report.execution_triage = Some(triage.clone());
+    }
     let (belief_shadow_policy, belief_policy_lineage) = build_analyze_policy_outputs(report)?;
     let ensemble_vote = crate::application::orchestration::build_stub_ensemble_vote_from_input(
         &crate::application::orchestration::AnalyzeEnsembleVoteInput {
@@ -526,7 +531,7 @@ pub fn build_analyze_live_reporting_bundle(
             recommended_next_command: &report.supporting.recommended_next_command,
         });
     if let Some(triage) = report.supporting.execution_triage.as_ref() {
-        human_report.execution_triage_line = Some(triage.one_line.clone());
+        human_report.execution_triage_line = Some(triage.consumer_reason.clone());
         compact_report.execution_triage = Some(triage.clone());
         agent_report.execution_triage = Some(triage.clone());
     }

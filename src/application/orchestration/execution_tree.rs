@@ -49,6 +49,8 @@ pub struct ExecutionTreeOutput {
     pub posterior_uncertainty: f64,
     pub split_reason_lineage: Vec<String>,
     pub decision_hint: String,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub consumer_reason: String,
     /// Top axial attention weights (feature_name, weight) carried into the
     /// trace artifact. Empty when no axial trace was provided to the scorer.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -246,7 +248,7 @@ pub fn build_execution_triage(output: &ExecutionTreeOutput) -> ExecutionTriage {
         .take(5)
         .cloned()
         .collect();
-    let consumer_reason = build_consumer_reason(output);
+    let consumer_reason = execution_consumer_reason(output);
     ExecutionTriage {
         gate_status: output.gate_status.clone(),
         branch: output.branch.clone(),
@@ -258,6 +260,19 @@ pub fn build_execution_triage(output: &ExecutionTreeOutput) -> ExecutionTriage {
         one_line,
         consumer_reason,
         reason_summary,
+    }
+}
+
+pub fn refresh_consumer_reason(mut output: ExecutionTreeOutput) -> ExecutionTreeOutput {
+    output.consumer_reason = build_consumer_reason(&output);
+    output
+}
+
+fn execution_consumer_reason(output: &ExecutionTreeOutput) -> String {
+    if output.consumer_reason.is_empty() {
+        build_consumer_reason(output)
+    } else {
+        output.consumer_reason.clone()
     }
 }
 
@@ -477,7 +492,7 @@ impl ExecutionTreeScorer for DefaultExecutionTreeScorer {
             ranker_validation_ready,
         ) = path_ranker_machine_fields(input.path_ranker_lineage);
 
-        Ok(ExecutionTreeOutput {
+        Ok(refresh_consumer_reason(ExecutionTreeOutput {
             execution_score: input.execution_features.execution_score,
             branch,
             execution_bias: execution_bias.to_string(),
@@ -486,12 +501,13 @@ impl ExecutionTreeScorer for DefaultExecutionTreeScorer {
             posterior_uncertainty: (1.0 - branch_probability).clamp(0.0, 1.0),
             split_reason_lineage: lineage,
             decision_hint: decision_hint.to_string(),
+            consumer_reason: String::new(),
             axial_attention_trace,
             path_ranker_score_used_by_execution_tree,
             path_ranker_model_family,
             path_ranker_runtime_source,
             ranker_validation_ready,
-        })
+        }))
     }
 }
 

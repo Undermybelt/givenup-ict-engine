@@ -158,12 +158,12 @@ use ict_engine::application::{
     },
     orchestration::{
         build_execution_tree_artifact, build_execution_triage, build_stub_ensemble_vote_from_input,
-        build_stub_ensemble_vote_from_research, persist_execution_tree_artifact, run_stage_plan,
-        staged_orchestration_enabled, AnalyzeEnsembleVoteInput, CatBoostCompatiblePolicyEngine,
-        DefaultExecutionTreeScorer, ExecutionShapProvider, ExecutionTreeArtifact,
-        ExecutionTreeInput, ExecutionTreeScorer, FinalOutputAdapter, FinalSurfaceAdapter,
-        PipelineState, StagePlan, StagedArtifactsInput, StructuralExecutionShap,
-        EXECUTION_TREE_TRACE_FILE,
+        build_stub_ensemble_vote_from_research, persist_execution_tree_artifact,
+        refresh_consumer_reason, run_stage_plan, staged_orchestration_enabled,
+        AnalyzeEnsembleVoteInput, CatBoostCompatiblePolicyEngine, DefaultExecutionTreeScorer,
+        ExecutionShapProvider, ExecutionTreeArtifact, ExecutionTreeInput, ExecutionTreeScorer,
+        FinalOutputAdapter, FinalSurfaceAdapter, PipelineState, StagePlan, StagedArtifactsInput,
+        StructuralExecutionShap, EXECUTION_TREE_TRACE_FILE,
     },
     provider_catalog::provider_status_command,
     reflection::{build_reflection_bundle, ReflectionBundleInput},
@@ -4693,8 +4693,10 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         axial_trace: None,
     };
     let execution_tree_output = DefaultExecutionTreeScorer.score(&execution_tree_input)?;
-    let execution_tree_output =
-        apply_regime_execution_guardrail(execution_tree_output, &hybrid_regime_packet);
+    let execution_tree_output = refresh_consumer_reason(apply_regime_execution_guardrail(
+        execution_tree_output,
+        &hybrid_regime_packet,
+    ));
     if hybrid_regime_packet.transition_hazard.unwrap_or_default() >= 0.60 {
         trade_plan.uncertainties.push(format!(
             "hybrid_transition_hazard={:.3}",
