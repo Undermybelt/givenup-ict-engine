@@ -82,6 +82,11 @@ pub fn render_factor_backtest_human_output(
         "Factor backtest | best={} | return={:+.2}% | trades={}",
         best, aggregate_return_pct, total_trades
     )];
+    if let Some(line) =
+        market_state_summary_line(&serde_json::to_value(report).unwrap_or(Value::Null))
+    {
+        lines.push(line);
+    }
     let mut credibility_parts = vec![
         format!("conformal_coverage_1sigma={top_coverage:.3}"),
         format!("regime_break_penalty={top_regime_penalty:.3}"),
@@ -127,6 +132,9 @@ pub fn render_factor_research_human_output(
         "Factor research | objective={} | best={} | return={:+.2}%",
         objective, best_factor, aggregate_return
     )];
+    if let Some(line) = market_state_summary_line(&report_value) {
+        lines.push(line);
+    }
 
     let feedback_generated = report_value
         .get("feedback_records_generated")
@@ -191,6 +199,29 @@ pub fn render_factor_research_human_output(
         lines.push(compare_summary);
     }
     redact_local_paths_in_human_text(&lines.join("\n"))
+}
+
+fn market_state_summary_line(report_value: &Value) -> Option<String> {
+    let summary = report_value
+        .get("multi_timeframe_summary")
+        .and_then(Value::as_array)?;
+    let value_for = |prefix: &str| -> Option<String> {
+        summary.iter().filter_map(Value::as_str).find_map(|line| {
+            line.strip_prefix(prefix)
+                .map(str::trim)
+                .filter(|value| !value.is_empty())
+                .map(str::to_string)
+        })
+    };
+    let primary = value_for("market_state_primary_regime=")?;
+    let secondary = value_for("market_state_secondary_regime=")?;
+    let regime =
+        value_for("market_state_bbn_market_regime=").unwrap_or_else(|| "passthrough".to_string());
+    let liquidity = value_for("market_state_bbn_liquidity_context=")
+        .unwrap_or_else(|| "passthrough".to_string());
+    Some(format!(
+        "Market State: {primary}/{secondary} | bbn_regime={regime} | liquidity={liquidity}"
+    ))
 }
 
 pub fn build_backtest_output_payload(
@@ -474,6 +505,12 @@ mod tests {
             feedback_records_generated: 8,
             feedback_records_applied: 5,
             recommended_next_command: "ict-engine factor-research --symbol DEMO --data /tmp/demo.json --state-dir /tmp/state --backend native".to_string(),
+            multi_timeframe_summary: vec![
+                "market_state_primary_regime=RangeConsolidation".to_string(),
+                "market_state_secondary_regime=WideRange".to_string(),
+                "market_state_bbn_market_regime=range".to_string(),
+                "market_state_bbn_liquidity_context=favorable".to_string(),
+            ],
             ..ResearchReport::default()
         };
         report.backtest.scorecards = vec![
@@ -503,6 +540,9 @@ mod tests {
             "Factor research | objective=expansion_manipulation | best=trend_momentum | return=+1.23%"
         ));
         assert!(rendered.contains("Evidence: feedback=8/5"));
+        assert!(rendered.contains(
+            "Market State: RangeConsolidation/WideRange | bbn_regime=range | liquidity=favorable"
+        ));
         assert!(rendered.contains(
             "Action: review top factors: trend_momentum=0.820 keep B; structure_ict=0.490 observe D"
         ));
