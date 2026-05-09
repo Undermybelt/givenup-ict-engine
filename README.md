@@ -1,295 +1,403 @@
-# ICT Engine - ICT Expansion Trading Engine (•̀ᴗ•́)و
+# ICT Engine - ICT Expansion Trading Engine
+
+Agent-first Rust CLI for ICT-style market analysis, probabilistic trade reasoning, factor research, feedback learning, and workflow tracking.
 
 English first. 中文在后。
 
-A probability-driven Rust CLI for ICT-style market analysis, research, feedback learning, and workflow tracking.
-
 ## Quick start
 
-Default direction today is absorb/learn the command surface first, then install optional extras only if needed.
-
 ```bash
-cargo run -- --help
-cargo run -- analyze --help
-cargo run -- factor-research --help
+cargo check
+cargo build
+./target/debug/ict-engine --help
+./target/debug/ict-engine analyze --help
+./target/debug/ict-engine factor-research --help
 ```
 
-If you only want the core CLI, Rust is enough:
+If you only want the core CLI, Rust is enough. For a first run that stays Rust-only, use the native research backend shown below. Python scripts and Auto-Quant are optional research helpers.
+
+## Contributor baseline
+
+Before sending a PR, please run locally:
+
+- `cargo check --all-targets`
+- `cargo clippy --all-targets -- -D warnings`
+- `cargo test`
+
+All three must be green. CI (`.github/workflows/ci.yml`) runs these on every push.
+
+## Common workflows
+
+### Manage Auto-Quant dependency
+
+```bash
+cargo run -- auto-quant-status --state-dir /tmp/ict-engine-auto-quant
+cargo run -- auto-quant-bootstrap --state-dir /tmp/ict-engine-auto-quant
+cargo run -- auto-quant-update --state-dir /tmp/ict-engine-auto-quant
+```
+
+These commands manage the local, pinned Auto-Quant checkout used by the integration work.
+
+For the Auto-Quant review loop:
+
+```bash
+cargo run -- factor-research --symbol DEMO --data examples/demo/demo-15m.json --backend auto-quant --state-dir /tmp/ict-engine-auto-quant
+cargo run -- auto-quant-adoption-review --symbol DEMO --state-dir /tmp/ict-engine-auto-quant
+cargo run -- auto-quant-adoption-decision --symbol DEMO --state-dir /tmp/ict-engine-auto-quant --decision adopt --rationale "approved for next bridge step"
+```
+
+### Analyze market data
+
+```bash
+cargo run -- analyze \
+  --symbol <SYM> \
+  --data-htf <1d.json> \
+  --data-mtf <1h.json> \
+  --data-ltf <15m.json> \
+  --state-dir /tmp/ict-engine-analyze \
+  --human
+```
+
+Human output starts with a trading-desk style summary:
+
+```text
+<SYM> | Bull bias | Entry: medium | Gate: observe_only | Quality: 0.244
+Action: TUNE structure_ict
+Next: ict-engine factor-research --symbol <SYM> --data <15m.json> --state-dir /tmp/ict-engine-analyze
+```
+
+### Demo smoke run
+
+```bash
+cargo run -- analyze \
+  --symbol DEMO \
+  --demo \
+  --state-dir /tmp/ict-engine-first-run-native \
+  --human
+
+cargo run -- factor-pipeline-debug \
+  --symbol DEMO \
+  --data examples/demo/demo-15m.json \
+  --factor structure_ict \
+  --objective expansion_manipulation
+
+cargo run -- factor-research \
+  --symbol DEMO \
+  --data examples/demo/demo-15m.json \
+  --state-dir /tmp/ict-engine-first-run-native \
+  --backend native \
+  --human
+```
+
+Equivalent explicit-path form:
+
+```bash
+cargo run -- analyze \
+  --symbol DEMO \
+  --data-htf examples/demo/demo-15m.json \
+  --data-mtf examples/demo/demo-15m.json \
+  --data-ltf examples/demo/demo-15m.json \
+  --state-dir /tmp/ict-engine-first-run-native \
+  --human
+```
+
+If you omit `--state-dir`, the CLI defaults to repo-local `state/`.
+
+This synthetic dataset is for first-run CLI verification only.
+It ships with about 52 candles, so it is intentionally too small for `backtest`, which needs at least 71.
+
+### Diagnose why a factor or gate did not pass
+
+```bash
+cargo run -- factor-pipeline-debug \
+  --symbol <SYM> \
+  --data <cleaned-15m.json> \
+  --factor structure_ict \
+  --objective expansion_manipulation
+```
+
+Read the key fields first:
+- `evidence_quality_score`
+- `gating_status`
+- `bridge_gap`
+- `paired_market_quality_report`
+- `frame_physics_trace`
+- `recommended_actions`
+
+### Run factor research
+
+Rust-only first run:
+
+Use this path when you want the no-pollution in-process Rust path and do not want to bootstrap Auto-Quant on first run.
+
+```bash
+cargo run -- factor-research \
+  --symbol <SYM> \
+  --data <cleaned-15m.json> \
+  --objective expansion_manipulation \
+  --state-dir /tmp/ict-engine-first-run-native \
+  --backend native \
+  --human
+```
+
+Auto-Quant path:
+
+```bash
+cargo run -- factor-research \
+  --symbol <SYM> \
+  --data <cleaned-15m.json> \
+  --objective expansion_manipulation \
+  --state-dir /tmp/ict-engine-auto-quant \
+  --backend auto-quant
+```
+
+### Market-data harness
+
+The public `market-data-harness` path is provider-neutral by default. It no longer fills gaps from repo-owned market presets.
+
+Preferred usage is an explicit request document:
+
+```bash
+cargo run -- market-data-harness \
+  --action plan \
+  --request-json examples/provider_requests/explicit-yfinance-request.json
+```
+
+Lightweight CLI shorthand is available for simple providers:
+
+```bash
+cargo run -- market-data-harness \
+  --action plan \
+  --market caller-request \
+  --role etf_reference \
+  --provider etf_reference=yfinance \
+  --symbol-spec etf_reference=SPY
+```
+
+For `ibkr` contracts or multi-role requests, use `--request-json` or `--request-stdin`.
+
+Auto-Quant notes:
+- first run may bootstrap a pinned dependency checkout under your chosen `--state-dir`
+- `uv` is required for the helper scripts
+- `prepare.py` may require `TA-Lib` (`brew install ta-lib`) unless you use the documented container fallback
+
+### Read current research truth
+
+```bash
+cargo run -- factor-autoresearch-status --symbol <SYM> --state-dir <dir> --latest-only
+python3 scripts/research_verdict.py <state-or-result-dir>
+```
+
+Auto-Quant integration note:
+- `factor-research` and `factor-autoresearch` now default to `--backend auto-quant`
+- pass `--backend native` if you explicitly want the Rust-only in-process path
+
+## Output modes
+
+`analyze`, `backtest`, `factor-backtest`, `factor-research`, and `workflow-status` support four output surfaces:
+
+```bash
+cargo run -- analyze --symbol <SYM> --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --output-format json
+cargo run -- analyze --symbol <SYM> --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --compact
+cargo run -- analyze --symbol <SYM> --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --agent
+cargo run -- analyze --symbol <SYM> --data-htf <1d.json> --data-mtf <1h.json> --data-ltf <15m.json> --state-dir /tmp/ict-engine-output-modes --human
+
+cargo run -- workflow-status --symbol <SYM> --state-dir /tmp/ict-engine-output-modes --output-format json
+cargo run -- workflow-status --symbol <SYM> --state-dir /tmp/ict-engine-output-modes --compact
+cargo run -- workflow-status --symbol <SYM> --state-dir /tmp/ict-engine-output-modes --agent
+cargo run -- workflow-status --symbol <SYM> --state-dir /tmp/ict-engine-output-modes --human
+```
+
+Use:
+- `json` for full archival/debug output (default when no flag is passed)
+- `compact` for low-token summary
+- `agent` for next-step automation surface
+- `human` for release-style readable summary
+
+Notes:
+- `--compact`, `--agent`, and `--human` are sugar for `--output-format <mode>`. Do not combine them with `--output-format`.
+- There is no `--json` alias; JSON is the default, so `workflow-status --output-format json` is the explicit form and plain `workflow-status` already prints JSON.
+- For no-pollution trials, prefer an explicit `--state-dir /tmp/...` instead of relying on the default repo-local `state/`.
+- `backtest` requires roughly 70+ candles (warmup + hold bars). The bundled `examples/demo/demo-15m.json` (~52 candles) is sized for `analyze`/`factor-backtest` and will error out from `backtest`. Point `--data` at a larger cleaned dataset when running `backtest`.
+
+Agent consumers should prefer:
+- `decision_summary` over `decision_hint_raw`
+- `next_step` for routing and gating
+- `next_command` only as a display/backward-compatibility string
+
+`analyze --agent` keeps: direction, entry state, pre-Bayes gate, next command, machine `decision_hint_raw`, human `decision_summary`, structured `next_step`, top evidence, top risks, and top next actions.
+
+`workflow-status --agent` is thinner than `--compact`. It keeps: focus, block state, next command, top disagreement, top actionable artifact, and ensemble headline.
+
+`workflow-status --human` prints concise terminal lines, for example:
+
+```text
+<SYM> | analyze | action_blocked
+Block: user_selected_historical_data_missing
+Latest: analyze | direction=Bull entry=medium gate=observe_only quality=0.244
+Next: Ask the user to choose the historical dataset...
+```
+
+## Public script families
+
+| Script | Use when | Backend |
+|---|---|---|
+| `scripts/search_local.py` | isolated local parameter search | `scripts/archive/factor_local_search_v2d.py` |
+| `scripts/search_cluster.py` | cluster jump exploration | `scripts/archive/factor_cluster_jump_v2.py` |
+| `scripts/evaluate_bottleneck.py` | evidence/gate/shrink/bridge bottleneck experiments | `scripts/archive/pre_bayes_policy_tuning.py` |
+| `scripts/research_verdict.py` | summarize existing state/result dirs | existing artifacts |
+
+Rules:
+- default = print help only
+- `--run` = execute backend
+- `--target` = show backend path
+- `--backend-help` = show non-executing backend summary
+- `--show-config` = print resolved repo/data/bin paths and `cleaned_data_ready`
+- wrappers refuse `--run` when the resolved cleaned-data root is not ready
+
+Important:
+- public wrappers must not assume the maintainer's local Tomac cleaned-data layout exists on another machine
+- inspect `--show-config` first
+- pass `--data-root /path/to/ict-cleaned-mtf` explicitly when you want real execution outside the author's workstation
+
+## State truth
+
+Research state usually lives under:
+
+```text
+<state_dir>/<SYMBOL>/
+```
+
+Important files:
+- `factor_autoresearch_attempts.json`
+- `factor_autoresearch_sessions.json`
+- `factor_autoresearch_live.json`
+- `factor_autoresearch_final.json`
+- `factor_mutation_runs.json`
+- `research_runs.json`
+- `workflow_snapshot.json`
+- `artifact_ledger.json`
+
+Derived autoresearch surfaces:
+- `experiments.tsv` — grep/diff-friendly ledger derived from autoresearch attempts
+- `factor_autoresearch_retrospective.md` — human-readable recap derived from autoresearch status/canonical state
+
+Trust rule:
+- if a derived surface disagrees with canonical JSON, canonical JSON wins
+- `docs/autoresearch-derived-surfaces-contract.md` defines the boundary in detail
+
+Runtime state directories are ignored by git via `state*/`.
+
+Query the ledger via `ict-engine artifact-status`. Filter flags have the following semantics:
+- `--latest-only` keeps the latest row **per `artifact_kind`** (one entry per kind, chosen by `generated_at` then `version`), not a single global latest row. Combine with `--kind <name>` to reduce to one row for a specific kind.
+- `--recent-n <N>` keeps the N most recent rows across all kinds.
+- `--actionable-only` / `--rule-break-only` / `--consumed-only` are additive filters.
+
+State precedence:
+- `--state-dir` overrides `ICT_ENGINE_STATE_DIR`
+- if neither is set, `ict-engine` uses `./state`
+- shared state is for intentional cumulative loops only; use isolated state for fair comparison
+
+Trust rule:
+- if a derived surface disagrees with canonical JSON, canonical JSON wins
+- `factor-autoresearch-status` is the preferred read surface for autoresearch session truth
+- `experiments.tsv` and retrospective markdown are convenience surfaces only
+
+State defaults and environment knobs:
+- `ICT_ENGINE_STATE_DIR` overrides the default `./state` location
+- `ict-engine env` prints the currently effective ICT-related environment settings
+- `docs/environment-variables.md` documents supported variables
+- `docs/state-directory-lifecycle.md` documents cleanup and lifecycle guidance
+
+## Historical data reuse rule
+
+If an agent wants to reuse historical data for `factor-research` or `factor-backtest`, it must ask the user which dataset to use, even when the system has recorded previous paths.
+
+The workflow gate may surface:
+- `action_blocked`
+- `user_selected_historical_data_missing`
+- candidate historical data paths
+
+## FAQ
+
+### Which command should I trust before giving a conclusion?
+
+Use:
+
+```bash
+cargo run -- factor-autoresearch-status --symbol <SYM> --state-dir <dir> --latest-only
+```
+
+Then inspect the corresponding JSON artifacts.
+
+### Why do the Python scripts not expose a full public CLI?
+
+They are public wrappers over archived experiment backends. The wrappers are stable; the archived backends are still research-grade.
+
+### Can I assume the wrappers will find usable data on a fresh machine?
+
+No.
+Wrappers now expose `--show-config` and require explicit cleaned-data readiness before `--run`.
+If `cleaned_data_ready=false`, treat that as a setup error and pass `--data-root` explicitly.
+
+### Can `--backend-help` show every backend argument?
+
+No. It shows a non-executing summary. Archived backends do not yet expose a stable public argparse surface.
+
+### Where do long-run outputs go?
+
+Usually into repo-local state dirs such as `state_*` or `<state_dir>/<SYMBOL>/`, depending on the command/backend.
+
+### What is the most common user mistake?
+
+Using the wrong input surface:
+- raw CSV instead of cleaned JSON candles
+- `factor_mutation_runs.json` as `--mutation-spec`
+- shared state dirs for fair comparison experiments
+
+## Public docs
+
+- `docs/ict-engine-docs-catalog-2026-04-25.md` — trust map for canonical, historical, and retained negative-example docs
+- `docs/first-run.md`
+- `docs/research-system-map.md`
+- `docs/autoresearch-derived-surfaces-contract.md`
+- `docs/autoresearch-state-transitions.md`
+- `docs/objective-scoring-map.md`
+- `docs/smoke-acceptance.md`
+
+## Internal release/agent docs
+
+- `docs/agent-first-runbook.md`
+- `docs/auto-quant-ictengine-integration-guide.md`
+- `docs/release-notes-draft.md`
+- `docs/release-mirror-runbook.md` — **authoritative release procedure**
+- `docs/external/external-patterns-synthesis-2026-04-23.md` — consolidated external pattern absorb/reject matrix
+
+### Publishing policy (post-v0.0.1)
+
+- The source-repo oversized-history blocker has been cleared; normal source-repo pushes are available again.
+- The private release mirror `Undermybelt/ict-engine-release` remains the preferred clean tree-state release transport.
+- Treat the source repo as development truth and the mirror repo as the curated release surface.
+- See `docs/release-mirror-runbook.md` for the full flow and version-bump rules.
+
+## 中文简介
+
+`ict-engine` 是面向 ICT 市场结构、概率交易证据、因子研究、回灌学习、agent 可读状态的 Rust CLI 研究系统。
+
+首跑先看 help，不要直接长跑：
 
 ```bash
 cargo check
 cargo run -- --help
-```
-
-TimesFM is optional and only needed for the Python bridge / forecasting path.
-
-## Overview
-
-This repository is a Rust implementation of an ICT-oriented trading analysis engine. It combines:
-
-- **ICT structure analysis** - market structure, liquidity, imbalance, expansion context
-- **Probabilistic decision layers** - HMM, Bayesian fusion, gated trade reasoning
-- **Research / feedback workflow** - factor research, update feedback, artifact tracking
-- **Workflow visibility** - workflow snapshots, agent prompts, next-command guidance
-
----
-
-# 中文简介 (✿◠‿◠)
-
-基于 ICT (Inner Circle Trader) 思路的概率交易分析引擎，核心是：分析、研究、反馈回灌、工作流追踪。
-
-## 项目概述
-
-本项目是一个 Rust CLI 交易研究引擎，结合了：
-
-- **ICT 结构分析** - 市场结构、流动性、失衡、扩张上下文
-- **概率决策层** - HMM、贝叶斯融合、带门控的交易推断
-- **研究 / 反馈工作流** - 因子研究、结果回灌、artifact 追踪
-- **工作流可见性** - workflow snapshot、agent prompts、下一步命令建议
-
-## 目录结构
-
-```
-src/
-├── main.rs                 # CLI入口
-├── lib.rs
-├── types.rs                # 全局共享类型
-│
-├── data/                   # 数据加载
-│   ├── candle.rs          # OHLCV结构体
-│   └── loader.rs          # JSON/CSV加载
-│
-├── indicators/             # 技术指标
-│   ├── atr.rs             # ATR (Wilder)
-│   ├── rsi.rs             # RSI (Wilder)
-│   ├── adx.rs             # ADX
-│   ├── ema.rs             # EMA
-│   ├── bollinger.rs       # 布林带
-│   └── macd.rs            # MACD
-│
-├── ict/                    # ICT结构检测
-│   ├── swing.rs           # Swing Point检测
-│   ├── pda.rs             # PDA连续序列
-│   ├── liquidity.rs       # 流动性池 + 清扫
-│   ├── fvg.rs             # Fair Value Gap
-│   ├── ob.rs              # Order Block
-│   ├── cisd.rs            # CISD
-│   ├── rb.rs              # RB/Pinbar
-│   ├── bos_choch.rs       # BOS / CHoCH
-│   └── expansion.rs       # 扩张综合确认
-│
-├── kalman/                 # 卡尔曼滤波
-│   ├── filter.rs          # 标准卡尔曼滤波
-│   └── smoother.rs        # RTS平滑器
-│
-├── sv/                     # 随机波动率
-│   ├── model.rs           # SV模型
-│   └── particle_filter.rs # 粒子滤波估计器
-│
-├── hmm/                    # 隐马尔可夫模型
-│   ├── forward_backward.rs # 前向-后向算法
-│   ├── baum_welch.rs       # EM训练
-│   ├── viterbi.rs          # 最优状态路径
-│   └── observation.rs      # 观测向量构建
-│
-├── gp/                     # 高斯过程
-│   ├── kernels.rs         # 核函数
-│   └── regression.rs      # 高斯过程回归
-│
-├── hawkes/                 # Hawkes过程
-│   ├── process.rs         # Hawkes过程拟合
-│   └── sweep_detector.rs  # 基于Hawkes的清扫检测
-│
-├── bvar/                   # 贝叶斯VAR
-│   └── model.rs           # 贝叶斯VAR模型
-│
-├── bayesian/               # 贝叶斯决策
-│   ├── cascade.rs         # 7层级联决策树
-│   ├── fusion.rs          # 多信号贝叶斯融合
-│   ├── beta_learner.rs    # Beta在线学习
-│   └── premium_discount.rs # Premium/Discount判定
-│
-├── mcmc/                   # MCMC采样
-│   ├── metropolis_hastings.rs # MH采样器
-│   └── calibration.rs     # LR校准
-│
-├── smt/                    # SMT分析
-│   ├── cointegration.rs   # 协整检验
-│   ├── divergence.rs      # 跨品种背离
-│   └── correlation.rs     # 滚动相关性
-│
-├── factors/                # 因子系统
-│   ├── registry.rs        # 因子注册表
-│   ├── ic_calculator.rs   # IC/IR计算
-│   ├── regime_conditional.rs # Regime条件评估
-│   └── weight_updater.rs  # 权重更新
-│
-├── planner/                # 交易计划
-│   ├── kelly.rs           # 凯利公式
-│   ├── risk.rs            # ATR止损止盈
-│   ├── ote.rs             # Optimal Trade Entry
-│   └── trade_plan.rs      # 交易计划生成
-│
-├── state/                  # 状态持久化
-│   ├── persistence.rs     # JSON读写
-│   └── db.rs              # SQLite (可选)
-│
-├── backtest/               # 回测引擎
-│   ├── engine.rs          # 回测引擎
-│   ├── metrics.rs         # Sharpe/MaxDD/WinRate
-│   └── regime_split.rs    # Regime条件回测
-│
-└── python_bridge/          # Python集成
-    └── timesfm.rs         # TimesFM调用桥接
-```
-
-## Build
-
-```bash
-cargo build --release
-```
-
-## Usage
-
-### 查看命令面
-
-```bash
-cargo run -- --help
 cargo run -- analyze --help
 ```
 
-### 分析市场
+若要读最新研究真相，优先：
 
 ```bash
-ict-engine analyze \
-  --symbol NQ \
-  --data-htf data/NQ_4h.json \
-  --data-mtf data/NQ_1h.json \
-  --data-ltf data/NQ_15m.json
+cargo run -- factor-autoresearch-status --symbol <SYM> --state-dir <dir> --latest-only
 ```
 
-当前 analyze 输出除 `report` 外，还会包含：
-- `compact_report`
-- `agent_report`
-- `human_report`
-- `belief_shadow_policy`
-- `belief_policy_lineage`
+## License
 
-### 训练HMM
-
-```bash
-ict-engine train \
-  --symbol NQ \
-  --data data/NQ_1h_historical.json \
-  --epochs 200
-```
-
-### 因子研究
-
-```bash
-ict-engine factor-research \
-  --symbol NQ \
-  --data data/NQ_1h_historical.json \
-  --objective generic
-```
-
-当前 factor-research 输出会包含：
-- `report`
-- `reflection_bundle`
-- `factor_lifecycle`
-
-### 结果回灌
-
-```bash
-ict-engine update \
-  --symbol NQ \
-  --outcome win \
-  --entry-signal medium
-```
-
-当前 update 输出会包含：
-- `report`
-- `reflection_bundle`
-
-### 工作流状态
-
-```bash
-ict-engine workflow-status \
-  --symbol NQ
-```
-
-### 历史数据复用规则
-
-当前工作流已改为：
-- 若 agent 要复用历史数据去跑 `factor-research` 或 `factor-backtest`
-- 即使系统已记录路径，也必须先问用户“这次用哪份数据”
-- 因此推荐命令会进入硬门禁：
-  - `ready = false`
-  - `missing_inputs` 包含 `user_selected_historical_data`
-  - `recorded_data_paths` 会列出已知候选路径
-
-详细 smoke / acceptance 流见：
-- `docs/smoke-acceptance.md`
-
-## 核心功能
-
-1. **ICT结构检测**
-   - Swing Point检测
-   - PDA连续序列
-   - 流动性池和清扫
-   - Fair Value Gap
-   - Order Block
-   - CISD (Change in State of Delivery)
-   - Rejection Block/Pinbar
-   - BOS/CHoCH
-
-2. **统计模型**
-   - 卡尔曼滤波 (价格去噪)
-   - 随机波动率 + 粒子滤波
-   - HMM regime检测
-   - 高斯过程回归
-   - Hawkes过程 (事件聚类)
-   - 贝叶斯VAR (多品种联动)
-
-3. **贝叶斯决策**
-   - 7层级联决策树
-   - 多信号融合
-   - Beta在线学习
-   - Premium/Discount判定
-
-4. **风险管理**
-   - 凯利公式仓位计算
-   - ATR动态止损止盈
-   - OTE区域定位
-
-5. **TimesFM集成**
-   - 通过Python桥接调用TimesFM预测
-   - 零样本时间序列预测
-   - 分位数预测区间
-
-## 数据源
-
-支持从market-analysis技能获取数据：
-- Tradecat API
-- Yahoo Finance
-- CCXT (加密货币)
-- OpenBB
-
-## 输出格式
-
-JSON格式输出，包含：
-- Regime概率
-- Cascade决策树结果
-- ICT结构统计
-- 交易计划 (如有信号)
-- TimesFM预测 (可选)
-
-## 依赖
-
-- Rust 1.76+
-- Python 3.10+ (用于TimesFM)
-- TimesFM包 (`pip install timesfm[torch]`)
-
-## 许可证
-
-MIT License
+MIT. See `LICENSE`.

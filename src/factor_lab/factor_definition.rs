@@ -3,7 +3,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
-use crate::data::realtime::openalice::AuxiliaryMarketEvidence;
+use crate::data::realtime::market_support::AuxiliaryMarketEvidence;
 use crate::ict::{
     check_bear_expansion_exists, check_bull_expansion_exists, detect_cisd, detect_liquidity_pools,
     detect_liquidity_sweep, detect_order_blocks, detect_structure_breaks, find_swing_highs,
@@ -13,9 +13,11 @@ use crate::indicators::{
     atr_percent, compute_adx, compute_atr, compute_bollinger, compute_ema, compute_rsi,
     BollingerBands,
 };
+use crate::pda_timeline::{
+    build_pda_timeline, match_all_setups_extended, PdaEvent, SetupContext, SetupMatch,
+};
 use crate::smt::{Correlation, Divergence};
-use crate::types::{Candle, Direction, Regime};
-
+use crate::types::{Candle, Direction, Regime, RegimeV2};
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 pub enum FactorCategory {
     TrendMomentum,
@@ -23,6 +25,12 @@ pub enum FactorCategory {
     StructureIct,
     CrossMarketSmt,
     OptionsHedging,
+    /// Family E: crowding/herding execution-risk factors
+    CrowdingHerding,
+    /// Family F: spectral rhythm / chaos execution filters
+    SpectralRhythm,
+    /// Family H: session / liquidity-window quality factors
+    SessionLiquidity,
 }
 
 impl FactorCategory {
@@ -33,13 +41,21 @@ impl FactorCategory {
             Self::StructureIct => "structure_ict",
             Self::CrossMarketSmt => "cross_market_smt",
             Self::OptionsHedging => "options_hedging",
+            Self::CrowdingHerding => "crowding_herding",
+            Self::SpectralRhythm => "spectral_rhythm",
+            Self::SessionLiquidity => "session_liquidity",
         }
     }
 
     pub fn is_footprint_context_only(self) -> bool {
         matches!(
             self,
-            Self::StructureIct | Self::CrossMarketSmt | Self::OptionsHedging
+            Self::StructureIct
+                | Self::CrossMarketSmt
+                | Self::OptionsHedging
+                | Self::CrowdingHerding
+                | Self::SpectralRhythm
+                | Self::SessionLiquidity
         )
     }
 
@@ -50,6 +66,21 @@ impl FactorCategory {
             Self::StructureIct | Self::CrossMarketSmt | Self::OptionsHedging => &[
                 FactorRole::PriorAdjuster,
                 FactorRole::StateTransition,
+                FactorRole::SetupClassifier,
+                FactorRole::OutcomeValidator,
+            ],
+            Self::CrowdingHerding => &[
+                FactorRole::PriorAdjuster,
+                FactorRole::SetupClassifier,
+                FactorRole::OutcomeValidator,
+            ],
+            Self::SpectralRhythm => &[
+                FactorRole::PriorAdjuster,
+                FactorRole::StateTransition,
+                FactorRole::SetupClassifier,
+            ],
+            Self::SessionLiquidity => &[
+                FactorRole::PriorAdjuster,
                 FactorRole::SetupClassifier,
                 FactorRole::OutcomeValidator,
             ],
@@ -103,11 +134,168 @@ impl FactorUsagePhase {
     }
 }
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, Serialize)]
 pub struct FactorContext<'a> {
     pub paired_candles: Option<&'a [Candle]>,
+    pub h4_events: Option<&'a [PdaEvent]>,
+    pub d1_events: Option<&'a [PdaEvent]>,
+    pub w1_events: Option<&'a [PdaEvent]>,
     pub auxiliary: Option<&'a AuxiliaryMarketEvidence>,
+    /// Legacy 3-state regime (deprecated, use regime_v2_labels)
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub regime: Option<Regime>,
+    /// Regime V2 labels map: timestamp string -> RegimeV2
+    /// Used for per-bar regime lookup during backtest
+    #[serde(skip)]
+    pub regime_v2_labels: Option<&'a std::collections::HashMap<String, RegimeV2>>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct PairedMarketQualityReport {
+    pub paired_market_quality: String,
+    pub aligned_length: usize,
+    pub primary_length: usize,
+    pub paired_length: usize,
+    pub overlap_ratio: f64,
+    pub safe_lookback: usize,
+    pub status: String,
+    pub reason: String,
+}
+
+fn paired_market_quality_report(
+    primary_length: usize,
+    paired_length: usize,
+    requested_lookback: usize,
+    primary_closes: Option<&[f64]>,
+    pair_closes: Option<&[f64]>,
+) -> PairedMarketQualityReport {
+    let aligned_length = primary_length.min(paired_length);
+    let overlap_ratio = if primary_length == 0 {
+        0.0
+    } else {
+        aligned_length as f64 / primary_length as f64
+    };
+    let safe_lookback = requested_lookback.min(aligned_length.saturating_sub(1));
+
+    let mut status = "valid".to_string();
+    let mut paired_market_quality = "strong".to_string();
+    let mut reason = "pair_quality_ok".to_string();
+
+    if aligned_length < 32 || overlap_ratio < 0.60 {
+        status = "invalid_due_to_pair_quality".to_string();
+        paired_market_quality = "poor".to_string();
+        reason = if aligned_length < 32 {
+            "insufficient_aligned_history".to_string()
+        } else {
+            "overlap_ratio_below_threshold".to_string()
+        };
+    } else if aligned_length < 64 || overlap_ratio < 0.80 {
+        paired_market_quality = "medium".to_string();
+        reason = "limited_pair_overlap".to_string();
+    }
+
+    if status == "valid" {
+        if let (Some(primary_closes), Some(pair_closes)) = (primary_closes, pair_closes) {
+            let primary_returns = close_returns(primary_closes);
+            let pair_returns = close_returns(pair_closes);
+            let primary_flat = primary_returns.iter().all(|ret| ret.abs() <= 1e-9);
+            let pair_flat = pair_returns.iter().all(|ret| ret.abs() <= 1e-9);
+            if primary_flat || pair_flat {
+                status = "valid_but_flat".to_string();
+                paired_market_quality = "flat".to_string();
+                reason = if pair_flat {
+                    "paired_returns_flat".to_string()
+                } else {
+                    "primary_returns_flat".to_string()
+                };
+            }
+        }
+    }
+
+    PairedMarketQualityReport {
+        paired_market_quality,
+        aligned_length,
+        primary_length,
+        paired_length,
+        overlap_ratio,
+        safe_lookback,
+        status,
+        reason,
+    }
+}
+
+fn paired_market_window_quality_report(
+    primary_length: usize,
+    paired_length: usize,
+    primary_closes: &[f64],
+    pair_closes: &[f64],
+    requested_lookback: usize,
+) -> PairedMarketQualityReport {
+    let aligned_length = primary_closes.len().min(pair_closes.len());
+    let primary_closes = &primary_closes[..aligned_length];
+    let pair_closes = &pair_closes[..aligned_length];
+    let overlap_ratio = if primary_length == 0 {
+        0.0
+    } else {
+        aligned_length as f64 / primary_length as f64
+    };
+    let safe_lookback = requested_lookback.min(aligned_length.saturating_sub(1));
+
+    let mut status = "valid".to_string();
+    let mut paired_market_quality = "strong".to_string();
+    let mut reason = "pair_quality_ok".to_string();
+
+    if aligned_length < 32 || overlap_ratio < 0.60 {
+        status = "invalid_due_to_pair_quality".to_string();
+        paired_market_quality = "poor".to_string();
+        reason = if aligned_length < 32 {
+            "insufficient_aligned_history".to_string()
+        } else {
+            "overlap_ratio_below_threshold".to_string()
+        };
+    } else if aligned_length < 64 || overlap_ratio < 0.80 {
+        paired_market_quality = "medium".to_string();
+        reason = "limited_pair_overlap".to_string();
+    }
+
+    let primary_returns = close_returns(primary_closes);
+    let pair_returns = close_returns(pair_closes);
+    let primary_flat = primary_returns.iter().all(|ret| ret.abs() <= 1e-9);
+    let pair_flat = pair_returns.iter().all(|ret| ret.abs() <= 1e-9);
+    if status == "valid" && (primary_flat || pair_flat) {
+        status = "valid_but_flat".to_string();
+        paired_market_quality = "flat".to_string();
+        reason = if pair_flat {
+            "paired_returns_flat".to_string()
+        } else {
+            "primary_returns_flat".to_string()
+        };
+    }
+
+    PairedMarketQualityReport {
+        paired_market_quality,
+        aligned_length,
+        primary_length,
+        paired_length,
+        overlap_ratio,
+        safe_lookback,
+        status,
+        reason,
+    }
+}
+
+fn paired_market_quality_explanation(report: &PairedMarketQualityReport) -> String {
+    format!(
+        "status={};quality_tier={};reason={};aligned_length={};primary_length={};paired_length={};overlap_ratio={:.4};safe_lookback={}",
+        report.status,
+        report.paired_market_quality,
+        report.reason,
+        report.aligned_length,
+        report.primary_length,
+        report.paired_length,
+        report.overlap_ratio,
+        report.safe_lookback
+    )
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -120,6 +308,7 @@ pub struct FactorSignal {
     pub direction: Direction,
     pub confidence: f64,
     pub explanation: String,
+    pub paired_market_quality_report: Option<PairedMarketQualityReport>,
     pub weight: f64,
     pub posterior_reliability: f64,
     pub regime_multiplier: f64,
@@ -137,6 +326,7 @@ impl Default for FactorSignal {
             direction: Direction::Neutral,
             confidence: 0.0,
             explanation: String::new(),
+            paired_market_quality_report: None,
             weight: 0.0,
             posterior_reliability: 0.5,
             regime_multiplier: 1.0,
@@ -249,6 +439,9 @@ impl FactorDefinition {
                 ("unconfirmed_sweep_weight".to_string(), 0.04),
                 ("opposing_sweep_penalty".to_string(), 0.10),
                 ("post_sweep_displacement_weight".to_string(), 0.12),
+                ("setup_weight".to_string(), 0.06),
+                ("setup_recency_bars".to_string(), 4.0),
+                ("setup_horizon_bars".to_string(), 30.0),
             ]),
         }
     }
@@ -271,6 +464,55 @@ impl FactorDefinition {
             category: FactorCategory::OptionsHedging,
             enabled: true,
             parameters: BTreeMap::from([("atr_period".to_string(), 14.0)]),
+        }
+    }
+
+    /// Family E: crowding / herding execution-risk factors
+    pub fn crowding_herding() -> Self {
+        Self {
+            name: "crowding_herding".to_string(),
+            description: "Volume participation concentration and same-side herding pressure as execution-risk evidence".to_string(),
+            category: FactorCategory::CrowdingHerding,
+            enabled: true,
+            parameters: BTreeMap::from([
+                ("lookback".to_string(), 20.0),
+                ("volume_spike_ratio".to_string(), 2.0),
+                ("participation_concentration_weight".to_string(), 0.40),
+                ("same_side_pressure_weight".to_string(), 0.35),
+                ("crowding_relief_weight".to_string(), 0.25),
+            ]),
+        }
+    }
+
+    /// Family F: spectral rhythm / chaos execution filters
+    pub fn spectral_rhythm() -> Self {
+        Self {
+            name: "spectral_rhythm".to_string(),
+            description: "Spectral entropy, dominant cycle energy, and rhythm stability as execution-readiness filters".to_string(),
+            category: FactorCategory::SpectralRhythm,
+            enabled: true,
+            parameters: BTreeMap::from([
+                ("lookback".to_string(), 64.0),
+                ("spectral_entropy_weight".to_string(), 0.45),
+                ("cycle_energy_weight".to_string(), 0.35),
+                ("rhythm_stability_weight".to_string(), 0.20),
+            ]),
+        }
+    }
+
+    /// Family H: session / liquidity-window quality factors
+    pub fn session_liquidity() -> Self {
+        Self {
+            name: "session_liquidity".to_string(),
+            description: "Session participation quality, kill-zone alignment, and session transition risk as execution-readiness multipliers".to_string(),
+            category: FactorCategory::SessionLiquidity,
+            enabled: true,
+            parameters: BTreeMap::from([
+                ("lookback".to_string(), 20.0),
+                ("session_quality_weight".to_string(), 0.40),
+                ("kill_zone_weight".to_string(), 0.35),
+                ("transition_risk_weight".to_string(), 0.25),
+            ]),
         }
     }
 
@@ -386,6 +628,72 @@ impl FactorDefinition {
                 | "pre_bayes_gate_regressed"
                 | "pre_bayes_gate_observe_only"
                 | "pre_bayes_gate_neutralized" => vec!["atr_period".to_string()],
+                _ => Vec::new(),
+            },
+            FactorCategory::CrowdingHerding => match reason {
+                "balanced_accuracy_regressed"
+                | "bull_bear_separation_regressed"
+                | "bull_bear_separation_weak"
+                | "worst_market_separation_weak" => vec![
+                    "lookback".to_string(),
+                    "volume_spike_ratio".to_string(),
+                ],
+                "bridge_gap_regressed"
+                | "bridge_gap_too_small"
+                | "worst_market_bridge_gap_too_small" => vec![
+                    "participation_concentration_weight".to_string(),
+                    "same_side_pressure_weight".to_string(),
+                ],
+                "pre_bayes_gate_regressed"
+                | "pre_bayes_gate_observe_only"
+                | "pre_bayes_gate_neutralized" => vec![
+                    "lookback".to_string(),
+                    "volume_spike_ratio".to_string(),
+                ],
+                _ => Vec::new(),
+            },
+            FactorCategory::SpectralRhythm => match reason {
+                "balanced_accuracy_regressed"
+                | "bull_bear_separation_regressed"
+                | "bull_bear_separation_weak"
+                | "worst_market_separation_weak" => vec![
+                    "lookback".to_string(),
+                    "spectral_entropy_weight".to_string(),
+                ],
+                "bridge_gap_regressed"
+                | "bridge_gap_too_small"
+                | "worst_market_bridge_gap_too_small" => vec![
+                    "cycle_energy_weight".to_string(),
+                    "rhythm_stability_weight".to_string(),
+                ],
+                "pre_bayes_gate_regressed"
+                | "pre_bayes_gate_observe_only"
+                | "pre_bayes_gate_neutralized" => vec![
+                    "lookback".to_string(),
+                    "spectral_entropy_weight".to_string(),
+                ],
+                _ => Vec::new(),
+            },
+            FactorCategory::SessionLiquidity => match reason {
+                "balanced_accuracy_regressed"
+                | "bull_bear_separation_regressed"
+                | "bull_bear_separation_weak"
+                | "worst_market_separation_weak" => vec![
+                    "lookback".to_string(),
+                    "session_quality_weight".to_string(),
+                ],
+                "bridge_gap_regressed"
+                | "bridge_gap_too_small"
+                | "worst_market_bridge_gap_too_small" => vec![
+                    "kill_zone_weight".to_string(),
+                    "transition_risk_weight".to_string(),
+                ],
+                "pre_bayes_gate_regressed"
+                | "pre_bayes_gate_observe_only"
+                | "pre_bayes_gate_neutralized" => vec![
+                    "lookback".to_string(),
+                    "session_quality_weight".to_string(),
+                ],
                 _ => Vec::new(),
             },
         }
@@ -520,6 +828,66 @@ impl FactorDefinition {
                 }
                 _ => BTreeMap::new(),
             },
+            FactorCategory::CrowdingHerding => match reason {
+                "balanced_accuracy_regressed"
+                | "bull_bear_separation_regressed"
+                | "bull_bear_separation_weak"
+                | "worst_market_separation_weak" => BTreeMap::from([
+                    ("lookback".to_string(), "increase".to_string()),
+                    ("volume_spike_ratio".to_string(), "decrease".to_string()),
+                ]),
+                "bridge_gap_regressed"
+                | "bridge_gap_too_small"
+                | "worst_market_bridge_gap_too_small" => BTreeMap::from([
+                    ("participation_concentration_weight".to_string(), "increase".to_string()),
+                ]),
+                "pre_bayes_gate_regressed"
+                | "pre_bayes_gate_observe_only"
+                | "pre_bayes_gate_neutralized" => BTreeMap::from([
+                    ("lookback".to_string(), "increase".to_string()),
+                ]),
+                _ => BTreeMap::new(),
+            },
+            FactorCategory::SpectralRhythm => match reason {
+                "balanced_accuracy_regressed"
+                | "bull_bear_separation_regressed"
+                | "bull_bear_separation_weak"
+                | "worst_market_separation_weak" => BTreeMap::from([
+                    ("lookback".to_string(), "increase".to_string()),
+                    ("spectral_entropy_weight".to_string(), "decrease".to_string()),
+                ]),
+                "bridge_gap_regressed"
+                | "bridge_gap_too_small"
+                | "worst_market_bridge_gap_too_small" => BTreeMap::from([
+                    ("cycle_energy_weight".to_string(), "increase".to_string()),
+                ]),
+                "pre_bayes_gate_regressed"
+                | "pre_bayes_gate_observe_only"
+                | "pre_bayes_gate_neutralized" => BTreeMap::from([
+                    ("lookback".to_string(), "increase".to_string()),
+                ]),
+                _ => BTreeMap::new(),
+            },
+            FactorCategory::SessionLiquidity => match reason {
+                "balanced_accuracy_regressed"
+                | "bull_bear_separation_regressed"
+                | "bull_bear_separation_weak"
+                | "worst_market_separation_weak" => BTreeMap::from([
+                    ("lookback".to_string(), "increase".to_string()),
+                    ("session_quality_weight".to_string(), "increase".to_string()),
+                ]),
+                "bridge_gap_regressed"
+                | "bridge_gap_too_small"
+                | "worst_market_bridge_gap_too_small" => BTreeMap::from([
+                    ("kill_zone_weight".to_string(), "increase".to_string()),
+                ]),
+                "pre_bayes_gate_regressed"
+                | "pre_bayes_gate_observe_only"
+                | "pre_bayes_gate_neutralized" => BTreeMap::from([
+                    ("lookback".to_string(), "increase".to_string()),
+                ]),
+                _ => BTreeMap::new(),
+            },
         }
     }
 
@@ -630,6 +998,66 @@ impl FactorDefinition {
                 }
                 _ => BTreeMap::new(),
             },
+            FactorCategory::CrowdingHerding => match reason {
+                "balanced_accuracy_regressed"
+                | "bull_bear_separation_regressed"
+                | "bull_bear_separation_weak"
+                | "worst_market_separation_weak" => BTreeMap::from([
+                    ("lookback".to_string(), 0.10),
+                    ("volume_spike_ratio".to_string(), 0.08),
+                ]),
+                "bridge_gap_regressed"
+                | "bridge_gap_too_small"
+                | "worst_market_bridge_gap_too_small" => BTreeMap::from([
+                    ("participation_concentration_weight".to_string(), 0.12),
+                ]),
+                "pre_bayes_gate_regressed"
+                | "pre_bayes_gate_observe_only"
+                | "pre_bayes_gate_neutralized" => BTreeMap::from([
+                    ("lookback".to_string(), 0.10),
+                ]),
+                _ => BTreeMap::new(),
+            },
+            FactorCategory::SpectralRhythm => match reason {
+                "balanced_accuracy_regressed"
+                | "bull_bear_separation_regressed"
+                | "bull_bear_separation_weak"
+                | "worst_market_separation_weak" => BTreeMap::from([
+                    ("lookback".to_string(), 0.10),
+                    ("spectral_entropy_weight".to_string(), 0.08),
+                ]),
+                "bridge_gap_regressed"
+                | "bridge_gap_too_small"
+                | "worst_market_bridge_gap_too_small" => BTreeMap::from([
+                    ("cycle_energy_weight".to_string(), 0.12),
+                ]),
+                "pre_bayes_gate_regressed"
+                | "pre_bayes_gate_observe_only"
+                | "pre_bayes_gate_neutralized" => BTreeMap::from([
+                    ("lookback".to_string(), 0.10),
+                ]),
+                _ => BTreeMap::new(),
+            },
+            FactorCategory::SessionLiquidity => match reason {
+                "balanced_accuracy_regressed"
+                | "bull_bear_separation_regressed"
+                | "bull_bear_separation_weak"
+                | "worst_market_separation_weak" => BTreeMap::from([
+                    ("lookback".to_string(), 0.10),
+                    ("session_quality_weight".to_string(), 0.12),
+                ]),
+                "bridge_gap_regressed"
+                | "bridge_gap_too_small"
+                | "worst_market_bridge_gap_too_small" => BTreeMap::from([
+                    ("kill_zone_weight".to_string(), 0.12),
+                ]),
+                "pre_bayes_gate_regressed"
+                | "pre_bayes_gate_observe_only"
+                | "pre_bayes_gate_neutralized" => BTreeMap::from([
+                    ("lookback".to_string(), 0.10),
+                ]),
+                _ => BTreeMap::new(),
+            },
         }
     }
 
@@ -643,9 +1071,12 @@ impl FactorDefinition {
             FactorCategory::VolatilityMeanReversion => {
                 self.evaluate_volatility_mean_reversion(candles)
             }
-            FactorCategory::StructureIct => self.evaluate_structure_ict(candles),
+            FactorCategory::StructureIct => self.evaluate_structure_ict(candles, context),
             FactorCategory::CrossMarketSmt => self.evaluate_cross_market_smt(candles, context),
             FactorCategory::OptionsHedging => self.evaluate_options_hedging(candles, context),
+            FactorCategory::CrowdingHerding => self.evaluate_crowding_herding(candles),
+            FactorCategory::SpectralRhythm => self.evaluate_spectral_rhythm(candles),
+            FactorCategory::SessionLiquidity => self.evaluate_session_liquidity(candles),
         };
 
         Ok(FactorSeries {
@@ -744,7 +1175,11 @@ impl FactorDefinition {
             .collect()
     }
 
-    fn evaluate_structure_ict(&self, candles: &[Candle]) -> Vec<FactorSignal> {
+    fn evaluate_structure_ict<'a>(
+        &self,
+        candles: &[Candle],
+        context: &FactorContext<'a>,
+    ) -> Vec<FactorSignal> {
         let lookback = self.parameter("lookback", 20.0) as usize;
         let expansion_threshold = self.parameter("expansion_threshold", 1.5);
         let sweep_atr_multiplier = self.parameter("sweep_atr_multiplier", 0.45);
@@ -754,7 +1189,21 @@ impl FactorDefinition {
         let unconfirmed_sweep_weight = self.parameter("unconfirmed_sweep_weight", 0.04);
         let opposing_sweep_penalty = self.parameter("opposing_sweep_penalty", 0.10);
         let post_sweep_displacement_weight = self.parameter("post_sweep_displacement_weight", 0.12);
+        let setup_weight = self.parameter("setup_weight", 0.06);
+        let setup_recency_bars = self.parameter("setup_recency_bars", 4.0) as usize;
         let atr = pad_indicator(compute_atr(candles, lookback.max(14)), candles.len(), 0.0);
+
+        // Canonical-setup matches over the unified PDA timeline.
+        // Built once for the whole series; per-bar lookups filter by
+        // `confirm_bar <= index` (forward-only) and recency window.
+        // Using the *extended* dispatcher activates the 5 session-
+        // aware setups (FVG inside silver-bullet windows, etc.) and
+        // the 3 OTE confluence setups, since `primary_candles` is
+        // available here. Cross-TF and SMT setups stay dormant from
+        // this entry point because `htf_events` / `paired_candles`
+        // are not part of this factor's input contract; external
+        // callers can supply them via `match_all_setups_extended`.
+        let setup_matches = self.structure_ict_setup_matches_with_context(candles, context);
 
         candles
             .iter()
@@ -843,13 +1292,13 @@ impl FactorDefinition {
                 let bull_sweep_displacement = recent_bull_sweep
                     .map(|sweep| {
                         ((candle.close - sweep.pool_price) / sweep.pool_price.abs().max(1.0))
-                            .max(0.0)
+                            .clamp(0.0, f64::MAX)
                     })
                     .unwrap_or(0.0);
                 let bear_sweep_displacement = recent_bear_sweep
                     .map(|sweep| {
                         ((sweep.pool_price - candle.close) / sweep.pool_price.abs().max(1.0))
-                            .max(0.0)
+                            .clamp(0.0, f64::MAX)
                     })
                     .unwrap_or(0.0);
                 let bull_manipulation_confirmed = recent_bull_sweep.is_some()
@@ -876,14 +1325,36 @@ impl FactorDefinition {
                 }
                 if bull_manipulation_confirmed && recent_bear_sweep.is_some() && !bear_manipulation_confirmed
                 {
-                    bear_score = (bear_score - opposing_sweep_penalty).max(0.0);
+                    bear_score = (bear_score - opposing_sweep_penalty).clamp(0.0, f64::MAX);
                 }
                 if bear_manipulation_confirmed && recent_bull_sweep.is_some() && !bull_manipulation_confirmed
                 {
-                    bull_score = (bull_score - opposing_sweep_penalty).max(0.0);
+                    bull_score = (bull_score - opposing_sweep_penalty).clamp(0.0, f64::MAX);
                 }
                 bull_score += (bull_fvg.min(3.0) + bull_ob.min(3.0)) * 0.05;
                 bear_score += (bear_fvg.min(3.0) + bear_ob.min(3.0)) * 0.05;
+
+                // Canonical-setup contributions: count matches whose
+                // confirm_bar falls within [index - recency, index].
+                let recency_lo = index.saturating_sub(setup_recency_bars);
+                let active_setups = setup_matches
+                    .iter()
+                    .filter(|m| m.confirm_bar >= recency_lo && m.confirm_bar <= index);
+                let mut bull_setup_hits = 0usize;
+                let mut bear_setup_hits = 0usize;
+                for m in active_setups {
+                    match m.direction {
+                        Direction::Bull => {
+                            bull_score += setup_weight;
+                            bull_setup_hits += 1;
+                        }
+                        Direction::Bear => {
+                            bear_score += setup_weight;
+                            bear_setup_hits += 1;
+                        }
+                        Direction::Neutral => {}
+                    }
+                }
 
                 let value = (bull_score - bear_score).clamp(-1.0, 1.0);
                 let confidence = bull_score.max(bear_score).clamp(0.0, 1.0);
@@ -895,7 +1366,7 @@ impl FactorDefinition {
                     value,
                     confidence,
                     format!(
-                        "bull_expansion={};bear_expansion={};bull_sweep={};bear_sweep={};bull_manipulation_confirmed={};bear_manipulation_confirmed={};bull_sweep_displacement={:.4};bear_sweep_displacement={:.4};bull_score={:.2};bear_score={:.2}",
+                        "bull_expansion={};bear_expansion={};bull_sweep={};bear_sweep={};bull_manipulation_confirmed={};bear_manipulation_confirmed={};bull_sweep_displacement={:.4};bear_sweep_displacement={:.4};bull_setup_hits={};bear_setup_hits={};bull_score={:.2};bear_score={:.2}",
                         bull_expansion,
                         bear_expansion,
                         recent_bull_sweep.is_some(),
@@ -904,12 +1375,43 @@ impl FactorDefinition {
                         bear_manipulation_confirmed,
                         bull_sweep_displacement,
                         bear_sweep_displacement,
+                        bull_setup_hits,
+                        bear_setup_hits,
                         bull_score,
                         bear_score
                     ),
                 )
             })
             .collect()
+    }
+
+    /// Returns the canonical-setup matches that this `structure_ict`
+    /// factor would consume for the given candle slice. Exposed for
+    /// the analyze report shell and factor_research diagnostics so
+    /// they can render setup tallies without re-running the
+    /// detection pipeline.
+    pub fn structure_ict_setup_matches(&self, candles: &[Candle]) -> Vec<SetupMatch> {
+        self.structure_ict_setup_matches_with_context(candles, &FactorContext::default())
+    }
+
+    pub fn structure_ict_setup_matches_with_context<'a>(
+        &self,
+        candles: &[Candle],
+        context: &FactorContext<'a>,
+    ) -> Vec<SetupMatch> {
+        let lookback = self.parameter("lookback", 20.0) as usize;
+        let setup_horizon_bars = self.parameter("setup_horizon_bars", 30.0) as usize;
+        let atr = pad_indicator(compute_atr(candles, lookback.max(14)), candles.len(), 0.0);
+        let timeline = build_pda_timeline(candles, &atr);
+        collect_structure_ict_setup_matches(
+            &timeline,
+            candles,
+            context.paired_candles,
+            context.h4_events,
+            context.d1_events,
+            context.w1_events,
+            setup_horizon_bars,
+        )
     }
 
     fn evaluate_cross_market_smt<'a>(
@@ -938,6 +1440,9 @@ impl FactorDefinition {
         let start = candles.len().saturating_sub(aligned);
         let primary = &candles[start..];
         let pair = &paired[paired.len().saturating_sub(aligned)..];
+        let pair_quality =
+            paired_market_quality_report(candles.len(), paired.len(), lookback, None, None);
+        let pair_quality_explanation = paired_market_quality_explanation(&pair_quality);
 
         candles
             .iter()
@@ -955,6 +1460,16 @@ impl FactorDefinition {
                 }
 
                 let aligned_index = index - start;
+                if pair_quality.status == "invalid_due_to_pair_quality" {
+                    return build_signal(
+                        &self.name,
+                        self.category,
+                        candle.timestamp,
+                        0.0,
+                        0.0,
+                        pair_quality_explanation.clone(),
+                    );
+                }
                 if aligned_index < lookback {
                     return build_signal(
                         &self.name,
@@ -962,7 +1477,10 @@ impl FactorDefinition {
                         candle.timestamp,
                         0.0,
                         0.10,
-                        "insufficient_cross_market_lookback".to_string(),
+                        format!(
+                            "insufficient_cross_market_lookback;{}",
+                            pair_quality_explanation
+                        ),
                     );
                 }
 
@@ -976,17 +1494,79 @@ impl FactorDefinition {
                     .iter()
                     .map(|item| item.close)
                     .collect::<Vec<_>>();
-                let primary_returns = close_returns(&primary_closes);
-                let pair_returns = close_returns(&pair_closes);
-                let correlation = Correlation::pearson(&primary_returns, &pair_returns);
-                let divergence = Divergence::detect(
-                    &primary_closes,
-                    &pair_closes,
-                    lookback.min(primary_closes.len().saturating_sub(1)),
-                )
-                .last()
-                .copied()
-                .unwrap_or(false);
+                let aligned_len = primary_closes.len().min(pair_closes.len());
+                if aligned_len < 3 {
+                    return build_signal(
+                        &self.name,
+                        self.category,
+                        candle.timestamp,
+                        0.0,
+                        0.05,
+                        format!(
+                            "insufficient_aligned_cross_market_samples;{}",
+                            pair_quality_explanation
+                        ),
+                    );
+                }
+                let primary_closes = &primary_closes[..aligned_len];
+                let pair_closes = &pair_closes[..aligned_len];
+                let window_quality = paired_market_window_quality_report(
+                    primary_window.len(),
+                    pair_window.len(),
+                    primary_closes,
+                    pair_closes,
+                    lookback,
+                );
+                let window_quality_explanation = paired_market_quality_explanation(&window_quality);
+                if window_quality.status == "invalid_due_to_pair_quality" {
+                    return build_signal_with_pair_quality(
+                        &self.name,
+                        self.category,
+                        candle.timestamp,
+                        0.0,
+                        0.0,
+                        window_quality_explanation,
+                        Some(window_quality),
+                    );
+                }
+                if window_quality.status == "valid_but_flat" {
+                    return build_signal_with_pair_quality(
+                        &self.name,
+                        self.category,
+                        candle.timestamp,
+                        0.0,
+                        0.05,
+                        window_quality_explanation,
+                        Some(window_quality),
+                    );
+                }
+                let primary_returns = close_returns(primary_closes);
+                let pair_returns = close_returns(pair_closes);
+                let return_len = primary_returns.len().min(pair_returns.len());
+                if return_len < 2 {
+                    return build_signal(
+                        &self.name,
+                        self.category,
+                        candle.timestamp,
+                        0.0,
+                        0.05,
+                        format!(
+                            "insufficient_aligned_cross_market_returns;{}",
+                            window_quality_explanation
+                        ),
+                    );
+                }
+                let primary_returns = &primary_returns[..return_len];
+                let pair_returns = &pair_returns[..return_len];
+                let correlation = Correlation::pearson(primary_returns, pair_returns);
+                let divergence = if window_quality.safe_lookback < 2 {
+                    false
+                } else {
+                    Divergence::detect(primary_closes, pair_closes, window_quality.safe_lookback)
+                        .last()
+                        .copied()
+                        .unwrap_or(false)
+                };
                 let primary_ret = total_return(primary_window);
                 let pair_ret = total_return(pair_window);
                 let relative_strength = primary_ret - pair_ret;
@@ -997,16 +1577,17 @@ impl FactorDefinition {
                 let confidence =
                     (correlation.abs() * if divergence { 0.45 } else { 0.85 }).clamp(0.0, 1.0);
 
-                build_signal(
+                build_signal_with_pair_quality(
                     &self.name,
                     self.category,
                     candle.timestamp,
                     value,
                     confidence,
                     format!(
-                        "corr={:.4};divergence={};relative_strength={:.4}",
-                        correlation, divergence, relative_strength
+                        "corr={:.4};divergence={};relative_strength={:.4};{}",
+                        correlation, divergence, relative_strength, window_quality_explanation
                     ),
+                    Some(window_quality),
                 )
             })
             .collect()
@@ -1085,6 +1666,85 @@ fn pad_indicator(values: Vec<f64>, target_len: usize, fill: f64) -> Vec<f64> {
     padded
 }
 
+fn collect_structure_ict_setup_matches(
+    timeline: &[PdaEvent],
+    primary_candles: &[Candle],
+    paired_candles: Option<&[Candle]>,
+    h4_events: Option<&[PdaEvent]>,
+    d1_events: Option<&[PdaEvent]>,
+    w1_events: Option<&[PdaEvent]>,
+    setup_horizon_bars: usize,
+) -> Vec<SetupMatch> {
+    let mut all_matches = Vec::new();
+
+    let base_context = SetupContext {
+        primary_candles: Some(primary_candles),
+        paired_candles,
+        ..SetupContext::default()
+    };
+    all_matches.extend(match_all_setups_extended(
+        timeline,
+        &base_context,
+        setup_horizon_bars,
+    ));
+
+    if let Some(h4) = h4_events {
+        let context = SetupContext {
+            primary_candles: Some(primary_candles),
+            paired_candles,
+            htf_events: Some(h4),
+            ..SetupContext::default()
+        };
+        all_matches.extend(match_all_setups_extended(
+            timeline,
+            &context,
+            setup_horizon_bars,
+        ));
+    }
+    if let Some(d1) = d1_events {
+        let context = SetupContext {
+            primary_candles: Some(primary_candles),
+            paired_candles,
+            htf_events: Some(d1),
+            ..SetupContext::default()
+        };
+        all_matches.extend(match_all_setups_extended(
+            timeline,
+            &context,
+            setup_horizon_bars,
+        ));
+    }
+    if let (Some(w1), Some(d1)) = (w1_events, d1_events) {
+        let context = SetupContext {
+            primary_candles: Some(primary_candles),
+            paired_candles,
+            htf_events: Some(w1),
+            mtf_events: Some(d1),
+        };
+        all_matches.extend(match_all_setups_extended(
+            timeline,
+            &context,
+            setup_horizon_bars,
+        ));
+    }
+
+    let mut seen = std::collections::BTreeSet::new();
+    let mut deduped = Vec::new();
+    for item in all_matches {
+        let key = format!(
+            "{}::{:?}::{:?}",
+            item.label(),
+            item.direction,
+            item.event_bars
+        );
+        if seen.insert(key) {
+            deduped.push(item);
+        }
+    }
+    deduped.sort_by_key(|item| (item.confirm_bar, item.label().to_string()));
+    deduped
+}
+
 fn pad_bollinger(bands: BollingerBands, target_len: usize) -> BollingerBands {
     BollingerBands {
         upper: pad_indicator(bands.upper, target_len, 0.0),
@@ -1101,6 +1761,26 @@ fn build_signal(
     confidence: f64,
     explanation: String,
 ) -> FactorSignal {
+    build_signal_with_pair_quality(
+        factor_name,
+        category,
+        timestamp,
+        value,
+        confidence,
+        explanation,
+        None,
+    )
+}
+
+fn build_signal_with_pair_quality(
+    factor_name: &str,
+    category: FactorCategory,
+    timestamp: DateTime<Utc>,
+    value: f64,
+    confidence: f64,
+    explanation: String,
+    paired_market_quality_report: Option<PairedMarketQualityReport>,
+) -> FactorSignal {
     FactorSignal {
         factor_name: factor_name.to_string(),
         category,
@@ -1109,6 +1789,7 @@ fn build_signal(
         direction: direction_from_value(value, confidence),
         confidence,
         explanation,
+        paired_market_quality_report,
         ..FactorSignal::default()
     }
 }
@@ -1139,10 +1820,13 @@ fn close_returns(closes: &[f64]) -> Vec<f64> {
 }
 
 fn total_return(candles: &[Candle]) -> f64 {
-    if candles.len() < 2 || candles[0].close.abs() <= f64::EPSILON {
+    let (Some(first), Some(last)) = (candles.first(), candles.last()) else {
+        return 0.0;
+    };
+    if candles.len() < 2 || first.close.abs() <= f64::EPSILON {
         return 0.0;
     }
-    (candles.last().unwrap().close - candles[0].close) / candles[0].close
+    (last.close - first.close) / first.close
 }
 
 fn normalize_signed(value: f64, cap: f64) -> f64 {
@@ -1153,9 +1837,289 @@ fn normalize_signed(value: f64, cap: f64) -> f64 {
     }
 }
 
+// --- Hot-plug compute stubs for Families E, F, H ---
+
+impl FactorDefinition {
+    /// Family E: Crowding / Herding Execution Risk
+    fn evaluate_crowding_herding(&self, candles: &[Candle]) -> Vec<FactorSignal> {
+        let lookback = self.parameter("lookback", 20.0) as usize;
+        let volume_spike_ratio = self.parameter("volume_spike_ratio", 2.0);
+        let pc_weight = self.parameter("participation_concentration_weight", 0.40);
+        let sp_weight = self.parameter("same_side_pressure_weight", 0.35);
+        let cr_weight = self.parameter("crowding_relief_weight", 0.25);
+
+        let volumes: Vec<f64> = candles.iter().map(|c| c.volume).collect();
+
+        candles
+            .iter()
+            .enumerate()
+            .map(|(index, candle)| {
+                let start = index.saturating_sub(lookback);
+                let window_vol = &volumes[start..=index];
+
+                // Participation concentration: current volume vs rolling median
+                let median_vol = {
+                    let mut sorted = window_vol.to_vec();
+                    sorted.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+                    let mid = sorted.len() / 2;
+                    if sorted.len().is_multiple_of(2) && sorted.len() > 1 {
+                        (sorted[mid - 1] + sorted[mid]) / 2.0
+                    } else {
+                        sorted[mid]
+                    }
+                };
+                let participation_concentration = if median_vol > f64::EPSILON {
+                    (candle.volume / median_vol / volume_spike_ratio)
+                        .clamp(0.0, 1.0)
+                } else {
+                    0.0
+                };
+
+                // Same-side pressure: volume-weighted close direction over window
+                let same_side_pressure = {
+                    let mut bull_vol = 0.0f64;
+                    let mut bear_vol = 0.0f64;
+                    for (i, v) in window_vol.iter().enumerate() {
+                        let c = &candles[start + i];
+                        if c.close >= c.open {
+                            bull_vol += v;
+                        } else {
+                            bear_vol += v;
+                        }
+                    }
+                    let total = bull_vol + bear_vol;
+                    if total > f64::EPSILON {
+                        ((bull_vol - bear_vol) / total).clamp(-1.0, 1.0)
+                    } else {
+                        0.0
+                    }
+                };
+
+                // Crowding relief: volume decay after spike (3-bar lookback)
+                let crowding_relief = if index >= 3 && volumes[index] > f64::EPSILON {
+                    let prev3_avg = (volumes[index - 3] + volumes[index - 2] + volumes[index - 1]) / 3.0;
+                    if prev3_avg > f64::EPSILON {
+                        (1.0 - (candle.volume / prev3_avg)/ 2.0).clamp(0.0, f64::MAX)
+                    } else {
+                        0.5
+                    }
+                } else {
+                    0.5
+                };
+
+                let direction_score = same_side_pressure;
+                let value = normalize_signed(
+                    pc_weight * participation_concentration * direction_score.signum()
+                        + sp_weight * same_side_pressure
+                        - cr_weight * crowding_relief * direction_score.signum(),
+                    1.0,
+                );
+                let confidence = (participation_concentration * pc_weight
+                    + same_side_pressure.abs() * sp_weight
+                    + crowding_relief * cr_weight)
+                    .clamp(0.0, 1.0);
+
+                build_signal(
+                    &self.name,
+                    self.category,
+                    candle.timestamp,
+                    value,
+                    confidence,
+                    format!(
+                        "pc={:.3};sp={:.3};cr={:.3};vol_ratio={:.2}",
+                        participation_concentration,
+                        same_side_pressure,
+                        crowding_relief,
+                        if median_vol > f64::EPSILON { candle.volume / median_vol } else { 0.0 }
+                    ),
+                )
+            })
+            .collect()
+    }
+
+    /// Family F: Spectral Rhythm / Chaos
+    fn evaluate_spectral_rhythm(&self, candles: &[Candle]) -> Vec<FactorSignal> {
+        let lookback = self.parameter("lookback", 64.0) as usize;
+        let se_weight = self.parameter("spectral_entropy_weight", 0.45);
+        let ce_weight = self.parameter("cycle_energy_weight", 0.35);
+        let rs_weight = self.parameter("rhythm_stability_weight", 0.20);
+
+        let closes: Vec<f64> = candles.iter().map(|c| c.close).collect();
+
+        candles
+            .iter()
+            .enumerate()
+            .map(|(index, candle)| {
+                let start = index.saturating_sub(lookback);
+                let window = &closes[start..=index];
+
+                // Spectral entropy: normalized log-variance of returns
+                let spectral_entropy = {
+                    let returns: Vec<f64> = window.windows(2).map(|w| w[1] - w[0]).collect();
+                    if returns.len() < 4 {
+                        0.5
+                    } else {
+                        let mean = returns.iter().sum::<f64>() / returns.len() as f64;
+                        let variance = returns.iter().map(|r| (r - mean).powi(2)).sum::<f64>()
+                            / returns.len() as f64;
+                        if variance > f64::EPSILON {
+                            (1.0 + variance.ln() / 10.0).clamp(0.0, 1.0)
+                        } else {
+                            0.0
+                        }
+                    }
+                };
+
+                // Dominant cycle energy: longest same-direction run / lookback
+                let cycle_energy = {
+                    let returns: Vec<f64> = window.windows(2).map(|w| w[1] - w[0]).collect();
+                    if returns.is_empty() {
+                        0.0
+                    } else {
+                        let mut max_run = 1usize;
+                        let mut current_run = 1usize;
+                        for i in 1..returns.len() {
+                            if returns[i].signum() == returns[i - 1].signum()
+                                && returns[i].abs() > f64::EPSILON
+                            {
+                                current_run += 1;
+                                max_run = max_run.max(current_run);
+                            } else {
+                                current_run = 1;
+                            }
+                        }
+                        (max_run as f64 / lookback as f64).min(1.0)
+                    }
+                };
+
+                // Rhythm stability: autocorrelation lag-1 of returns
+                let rhythm_stability = {
+                    let returns: Vec<f64> = window.windows(2).map(|w| w[1] - w[0]).collect();
+                    if returns.len() < 4 {
+                        0.5
+                    } else {
+                        let mean = returns.iter().sum::<f64>() / returns.len() as f64;
+                        let var = returns.iter().map(|r| (r - mean).powi(2)).sum::<f64>();
+                        if var < f64::EPSILON {
+                            0.5
+                        } else {
+                            let cov: f64 = returns[..returns.len() - 1]
+                                .iter()
+                                .zip(&returns[1..])
+                                .map(|(a, b)| (a - mean) * (b - mean))
+                                .sum();
+                            (cov / var).clamp(-1.0, 1.0).abs()
+                        }
+                    }
+                };
+
+                // High entropy = chaotic = negative for execution readiness
+                let value = normalize_signed(
+                    -se_weight * spectral_entropy
+                        + ce_weight * cycle_energy
+                            * if candle.close >= candle.open { 1.0 } else { -1.0 }
+                        + rs_weight * rhythm_stability
+                            * if candle.close >= candle.open { 1.0 } else { -1.0 },
+                    1.0,
+                );
+                let confidence = (se_weight * spectral_entropy
+                    + ce_weight * cycle_energy
+                    + rs_weight * rhythm_stability)
+                    .clamp(0.0, 1.0);
+
+                build_signal(
+                    &self.name,
+                    self.category,
+                    candle.timestamp,
+                    value,
+                    confidence,
+                    format!(
+                        "se={:.3};ce={:.3};rs={:.3}",
+                        spectral_entropy, cycle_energy, rhythm_stability
+                    ),
+                )
+            })
+            .collect()
+    }
+
+    /// Family H: Session / Liquidity Window Quality
+    fn evaluate_session_liquidity(&self, candles: &[Candle]) -> Vec<FactorSignal> {
+        let sq_weight = self.parameter("session_quality_weight", 0.40);
+        let kz_weight = self.parameter("kill_zone_weight", 0.35);
+        let tr_weight = self.parameter("transition_risk_weight", 0.25);
+        let lookback = self.parameter("lookback", 20.0) as usize;
+
+        let volumes: Vec<f64> = candles.iter().map(|c| c.volume).collect();
+
+        candles
+            .iter()
+            .enumerate()
+            .map(|(index, candle)| {
+                // Session participation quality: current volume relative to rolling average
+                let session_quality = {
+                    let start = index.saturating_sub(lookback);
+                    let window_vol = &volumes[start..=index];
+                    let avg = window_vol.iter().sum::<f64>() / window_vol.len() as f64;
+                    if avg > f64::EPSILON {
+                        (candle.volume / avg)/ 3.0
+                    } else {
+                        0.0
+                    }
+                };
+
+                // Kill-zone alignment: hour-of-day proxy (UTC)
+                // US RTH kill zones ~14-15, 19-20 UTC; London ~7-8, 12-13 UTC
+                let kill_zone_alignment = {
+                    let hour = candle.timestamp.format("%H").to_string().parse::<u32>().unwrap_or(12);
+                    match hour {
+                        7 | 8 | 12 | 13 | 14 | 15 | 19 | 20 => 0.9,
+                        9..=11 | 16..=18 => 0.6,
+                        _ => 0.3,
+                    }
+                };
+
+                // Session transition risk: near session boundaries
+                let session_transition_risk = {
+                    let hour = candle.timestamp.format("%H").to_string().parse::<u32>().unwrap_or(12);
+                    match hour {
+                        7 | 8 | 13 | 14 | 19 | 20 => 0.7,
+                        _ => 0.2,
+                    }
+                };
+
+                let value = normalize_signed(
+                    sq_weight * session_quality
+                        * if candle.close >= candle.open { 1.0 } else { -1.0 }
+                        + kz_weight * kill_zone_alignment
+                            * if candle.close >= candle.open { 1.0 } else { -1.0 }
+                        - tr_weight * session_transition_risk,
+                    1.0,
+                );
+                let confidence = (sq_weight * session_quality
+                    + kz_weight * kill_zone_alignment
+                    + tr_weight * session_transition_risk)
+                    .clamp(0.0, 1.0);
+
+                build_signal(
+                    &self.name,
+                    self.category,
+                    candle.timestamp,
+                    value,
+                    confidence,
+                    format!(
+                        "sq={:.3};kz={:.3};tr={:.3}",
+                        session_quality, kill_zone_alignment, session_transition_risk
+                    ),
+                )
+            })
+            .collect()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::pda_timeline::{CanonicalSetupKind, PdaEventKind};
     use chrono::{Duration, TimeZone};
 
     fn candles(count: usize) -> Vec<Candle> {
@@ -1175,6 +2139,20 @@ mod tests {
             .collect()
     }
 
+    fn flat_candles(count: usize, level: f64) -> Vec<Candle> {
+        let start = Utc.with_ymd_and_hms(2024, 1, 1, 0, 0, 0).unwrap();
+        (0..count)
+            .map(|index| Candle {
+                timestamp: start + Duration::minutes(index as i64),
+                open: level,
+                high: level,
+                low: level,
+                close: level,
+                volume: 1_000.0 + index as f64,
+            })
+            .collect()
+    }
+
     #[test]
     fn test_factor_definition_emits_series_direction_and_confidence() {
         let factor = FactorDefinition::trend_momentum();
@@ -1190,5 +2168,194 @@ mod tests {
             last.direction,
             Direction::Bull | Direction::Bear | Direction::Neutral
         ));
+    }
+
+    #[test]
+    fn test_cross_market_smt_handles_short_aligned_series_without_panic() {
+        let definition = FactorDefinition::cross_market_smt();
+        let candles = candles(25);
+        let paired = (0..19)
+            .map(|index| {
+                let base = 200.0 + index as f64 * 0.25;
+                Candle {
+                    timestamp: Utc.with_ymd_and_hms(2024, 1, 1, 0, 0, 0).unwrap()
+                        + Duration::minutes(index as i64),
+                    open: base,
+                    high: base + 0.4,
+                    low: base - 0.3,
+                    close: base + 0.2,
+                    volume: 1000.0,
+                }
+            })
+            .collect::<Vec<_>>();
+        let context = FactorContext {
+            paired_candles: Some(&paired),
+            ..FactorContext::default()
+        };
+
+        let series = definition.evaluate(&candles, &context).unwrap();
+
+        assert_eq!(series.signals.len(), candles.len());
+        assert!(series.signals.iter().all(|signal| signal.confidence >= 0.0));
+    }
+
+    #[test]
+    fn test_cross_market_smt_marks_low_overlap_pair_quality_invalid() {
+        let definition = FactorDefinition::cross_market_smt();
+        let primary = candles(100);
+        let paired = candles(30);
+        let context = FactorContext {
+            paired_candles: Some(&paired),
+            ..FactorContext::default()
+        };
+
+        let series = definition.evaluate(&primary, &context).unwrap();
+        let latest = series.latest_signal().unwrap();
+
+        assert_eq!(latest.value, 0.0);
+        assert_eq!(latest.confidence, 0.0);
+        assert!(latest
+            .explanation
+            .contains("status=invalid_due_to_pair_quality"));
+        assert!(latest.explanation.contains("quality_tier=poor"));
+        assert!(latest.explanation.contains("aligned_length=30"));
+        assert!(latest.explanation.contains("overlap_ratio=0.3000"));
+    }
+
+    #[test]
+    fn test_cross_market_smt_marks_flat_pair_valid_but_flat() {
+        let definition = FactorDefinition::cross_market_smt();
+        let primary_window = candles(21)
+            .into_iter()
+            .map(|candle| candle.close)
+            .collect::<Vec<_>>();
+        let pair_window = flat_candles(21, 200.0)
+            .into_iter()
+            .map(|candle| candle.close)
+            .collect::<Vec<_>>();
+
+        let report = paired_market_window_quality_report(80, 80, &primary_window, &pair_window, 20);
+        let explanation = paired_market_quality_explanation(&report);
+
+        assert_eq!(definition.category, FactorCategory::CrossMarketSmt);
+        assert_eq!(report.status, "invalid_due_to_pair_quality");
+        assert_eq!(report.paired_market_quality, "poor");
+        assert_eq!(report.reason, "insufficient_aligned_history");
+        assert_eq!(report.aligned_length, 21);
+        assert_eq!(report.primary_length, 80);
+        assert_eq!(report.paired_length, 80);
+        assert!(explanation.contains("status=invalid_due_to_pair_quality"));
+        assert!(explanation.contains("quality_tier=poor"));
+        assert!(explanation.contains("reason=insufficient_aligned_history"));
+        assert!(explanation.contains("aligned_length=21"));
+    }
+
+    #[test]
+    fn test_cross_market_smt_invalid_window_pair_quality_stays_invalid_even_if_flat() {
+        let definition = FactorDefinition::cross_market_smt();
+        let candles = candles(80);
+        let paired = flat_candles(80, 200.0);
+        let context = FactorContext {
+            paired_candles: Some(&paired),
+            ..FactorContext::default()
+        };
+
+        let series = definition.evaluate(&candles, &context).unwrap();
+        let target = &series.signals[52];
+
+        assert_eq!(target.value, 0.0);
+        assert_eq!(target.confidence, 0.0);
+        assert!(target
+            .explanation
+            .contains("status=invalid_due_to_pair_quality"));
+        assert!(target.explanation.contains("quality_tier=poor"));
+        assert!(target.explanation.contains("aligned_length=21"));
+    }
+
+    #[test]
+    fn test_structure_ict_explanation_includes_setup_hits_fields() {
+        // P1b-2: every structure_ict signal must surface the new
+        // canonical-setup tally so analyze / factor_research can
+        // render it without re-running detection.
+        let factor = FactorDefinition::structure_ict();
+        let candles = candles(80);
+        let series = factor
+            .evaluate(&candles, &FactorContext::default())
+            .unwrap();
+        assert_eq!(series.signals.len(), candles.len());
+        for signal in &series.signals {
+            assert!(
+                signal.explanation.contains("bull_setup_hits="),
+                "structure_ict explanation missing bull_setup_hits: {}",
+                signal.explanation
+            );
+            assert!(
+                signal.explanation.contains("bear_setup_hits="),
+                "structure_ict explanation missing bear_setup_hits: {}",
+                signal.explanation
+            );
+        }
+    }
+
+    #[test]
+    fn test_structure_ict_setup_matches_helper_is_deterministic() {
+        // The convenience helper must agree across calls and never
+        // return a match whose confirm_bar exceeds the candle count.
+        let factor = FactorDefinition::structure_ict();
+        let candles = candles(80);
+        let a = factor.structure_ict_setup_matches(&candles);
+        let b = factor.structure_ict_setup_matches(&candles);
+        assert_eq!(a, b);
+        for m in &a {
+            assert!(m.confirm_bar < candles.len());
+            assert!(m.anchor_bar <= m.confirm_bar);
+        }
+    }
+
+    #[test]
+    fn test_structure_ict_setup_matches_with_context_activates_cross_tf_and_smt_paths() {
+        let series_candles = candles(80);
+        let paired = candles(80);
+        let base_ts = series_candles[10].timestamp;
+        let h4_events = vec![
+            PdaEvent::new(PdaEventKind::MarketStructureShift, 3, Direction::Bull)
+                .with_timestamp(base_ts),
+        ];
+        let d1_events = vec![
+            PdaEvent::new(PdaEventKind::LiquiditySweep, 2, Direction::Bull)
+                .with_timestamp(base_ts - Duration::hours(1)),
+            PdaEvent::new(PdaEventKind::MarketStructureShift, 3, Direction::Bear)
+                .with_timestamp(base_ts + Duration::minutes(30)),
+        ];
+        let w1_events = vec![
+            PdaEvent::new(PdaEventKind::LiquiditySweep, 1, Direction::Bull)
+                .with_timestamp(base_ts - Duration::hours(2)),
+        ];
+        let ltf_context_events = vec![
+            PdaEvent::new(PdaEventKind::FairValueGap, 12, Direction::Bull).with_timestamp(base_ts),
+            PdaEvent::new(PdaEventKind::MarketStructureShift, 15, Direction::Bear)
+                .with_timestamp(base_ts + Duration::hours(1)),
+            PdaEvent::new(PdaEventKind::FairValueGap, 16, Direction::Bear)
+                .with_timestamp(base_ts + Duration::hours(2)),
+        ];
+        let matches = collect_structure_ict_setup_matches(
+            &ltf_context_events,
+            &series_candles,
+            Some(&paired),
+            Some(&h4_events),
+            Some(&d1_events),
+            Some(&w1_events),
+            30,
+        );
+
+        assert!(matches
+            .iter()
+            .any(|item| item.kind == CanonicalSetupKind::HtfMssLtfFvg));
+        assert!(matches
+            .iter()
+            .any(|item| item.kind == CanonicalSetupKind::DailyHighSweepLtfMssFvg));
+        assert!(matches
+            .iter()
+            .any(|item| item.kind == CanonicalSetupKind::WeeklyOpenSweepDailyMss));
     }
 }

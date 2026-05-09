@@ -5,15 +5,26 @@ use std::path::Path;
 
 use crate::state::types::{
     AnalyzeRunRecord, ArtifactLedgerEntry, BacktestRunRecord, EnsembleExecutorScorecard,
-    EnsembleVoteRecord, ExecutionCandidateArtifact, FactorMutationRunRecord, LearningState,
-    PendingUpdateArtifact, PreBayesPolicyRecord, ResearchRunRecord, TrainRunRecord,
+    EnsembleVoteRecord, ExecutionCandidateArtifact, FactorAutoresearchAttempt,
+    FactorAutoresearchLiveSnapshot, FactorAutoresearchSession, FactorMutationRunRecord,
+    LearningState, PendingUpdateArtifact, PreBayesPolicyRecord, ResearchRunRecord, TrainRunRecord,
     UpdateRunRecord, ANALYZE_RUNS_FILE, ARTIFACT_LEDGER_FILE, BACKTEST_RUNS_FILE,
     ENSEMBLE_EXECUTOR_SCORECARDS_FILE, ENSEMBLE_VOTE_FILE, ENSEMBLE_VOTE_HISTORY_FILE,
-    EXECUTION_CANDIDATE_FILE, EXECUTION_CANDIDATE_HISTORY_FILE, FACTOR_MUTATION_RUNS_FILE,
-    LEARNING_STATE_FILE, PENDING_UPDATE_ARTIFACT_FILE, PENDING_UPDATE_HISTORY_FILE,
-    PRE_BAYES_POLICY_HISTORY_FILE, RESEARCH_RUNS_FILE, TRADE_HISTORY_FILE, TRAIN_RUNS_FILE,
-    UPDATE_RUNS_FILE, WORKFLOW_SNAPSHOT_FILE,
+    EXECUTION_CANDIDATE_FILE, EXECUTION_CANDIDATE_HISTORY_FILE, FACTOR_AUTORESEARCH_ATTEMPTS_FILE,
+    FACTOR_AUTORESEARCH_FINAL_FILE, FACTOR_AUTORESEARCH_LIVE_FILE,
+    FACTOR_AUTORESEARCH_SESSIONS_FILE, FACTOR_MUTATION_RUNS_FILE, LEARNING_STATE_FILE,
+    PENDING_UPDATE_ARTIFACT_FILE, PENDING_UPDATE_HISTORY_FILE, PRE_BAYES_POLICY_HISTORY_FILE,
+    RESEARCH_RUNS_FILE, TRADE_HISTORY_FILE, TRAIN_RUNS_FILE, UPDATE_RUNS_FILE,
+    WORKFLOW_SNAPSHOT_FILE,
 };
+
+pub fn artifact_state_path<P: AsRef<Path>>(dir: P, symbol: &str, filename: &str) -> String {
+    dir.as_ref()
+        .join(symbol)
+        .join(filename)
+        .to_string_lossy()
+        .to_string()
+}
 
 /// Load state from JSON file
 pub fn load_state<T: DeserializeOwned, P: AsRef<Path>>(
@@ -41,7 +52,7 @@ where
 }
 
 /// Save state to JSON file
-pub fn save_state<T: Serialize, P: AsRef<Path>>(
+pub fn save_state<T: Serialize + ?Sized, P: AsRef<Path>>(
     dir: P,
     symbol: &str,
     filename: &str,
@@ -54,6 +65,23 @@ pub fn save_state<T: Serialize, P: AsRef<Path>>(
     let path = dir_path.join(filename);
     let json = serde_json::to_string_pretty(data).context("Failed to serialize state")?;
     std::fs::write(&path, json)
+        .with_context(|| format!("Failed to write state file: {:?}", path))?;
+
+    Ok(())
+}
+
+pub fn save_text_state<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+    filename: &str,
+    content: &str,
+) -> Result<()> {
+    let dir_path = dir.as_ref().join(symbol);
+    std::fs::create_dir_all(&dir_path)
+        .with_context(|| format!("Failed to create directory: {:?}", dir_path))?;
+
+    let path = dir_path.join(filename);
+    std::fs::write(&path, content)
         .with_context(|| format!("Failed to write state file: {:?}", path))?;
 
     Ok(())
@@ -140,6 +168,63 @@ pub fn append_factor_mutation_run<P: AsRef<Path>>(
     history.push(record);
     save_state(&dir, symbol, FACTOR_MUTATION_RUNS_FILE, &history)?;
     Ok(history)
+}
+
+pub fn load_factor_autoresearch_sessions<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+) -> Result<Vec<FactorAutoresearchSession>> {
+    load_state_or_default(dir, symbol, FACTOR_AUTORESEARCH_SESSIONS_FILE)
+}
+
+pub fn save_factor_autoresearch_sessions<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+    sessions: &[FactorAutoresearchSession],
+) -> Result<()> {
+    save_state(dir, symbol, FACTOR_AUTORESEARCH_SESSIONS_FILE, sessions)
+}
+
+pub fn append_factor_autoresearch_attempt<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+    attempt: FactorAutoresearchAttempt,
+) -> Result<Vec<FactorAutoresearchAttempt>> {
+    let mut history: Vec<FactorAutoresearchAttempt> =
+        load_state_or_default(&dir, symbol, FACTOR_AUTORESEARCH_ATTEMPTS_FILE)?;
+    history.push(attempt);
+    save_state(&dir, symbol, FACTOR_AUTORESEARCH_ATTEMPTS_FILE, &history)?;
+    Ok(history)
+}
+
+pub fn load_factor_autoresearch_attempts<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+) -> Result<Vec<FactorAutoresearchAttempt>> {
+    load_state_or_default(dir, symbol, FACTOR_AUTORESEARCH_ATTEMPTS_FILE)
+}
+
+pub fn load_factor_autoresearch_live_snapshot<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+) -> Result<FactorAutoresearchLiveSnapshot> {
+    load_state_or_default(dir, symbol, FACTOR_AUTORESEARCH_LIVE_FILE)
+}
+
+pub fn save_factor_autoresearch_live_snapshot<P: AsRef<Path>>(
+    dir: P,
+    symbol: &str,
+    snapshot: &FactorAutoresearchLiveSnapshot,
+) -> Result<()> {
+    save_state(dir, symbol, FACTOR_AUTORESEARCH_LIVE_FILE, snapshot)
+}
+
+pub fn save_factor_autoresearch_final_summary<P: AsRef<Path>, T: Serialize + ?Sized>(
+    dir: P,
+    symbol: &str,
+    summary: &T,
+) -> Result<()> {
+    save_state(dir, symbol, FACTOR_AUTORESEARCH_FINAL_FILE, summary)
 }
 
 pub fn append_analyze_run<P: AsRef<Path>>(
@@ -461,7 +546,8 @@ mod tests {
             final_action: "observe".to_string(),
             recommended_command: "ict-engine workflow-status --symbol NQ --phase human-next"
                 .to_string(),
-            human_next_triage: "ensemble_action=observe".to_string(),
+            human_next_triage: "hard_blocked=false ensemble_action=observe".to_string(),
+            hard_block: crate::application::orchestration::EnsembleHardBlockArtifact::default(),
             confidence: 0.5,
             consensus_strength: 0.5,
             disagreement_flags: Vec::new(),
@@ -535,6 +621,8 @@ mod tests {
             realized_outcome: "win".to_string(),
             pnl: 0.02,
             regime_at_entry: Regime::ManipulationExpansion,
+            structural_feedback: None,
+            reflection_mismatch_tags: Vec::new(),
         };
 
         let learning_state = append_learning_feedback(temp.path(), "NQ", feedback).unwrap();
@@ -641,11 +729,25 @@ mod tests {
             agent_action_plan: crate::state::AgentActionPlan::default(),
             recommended_commands: crate::state::CommandRecommendations::default(),
             recommended_next_command: String::new(),
+            recommended_next_command_meta: crate::state::types::recommended_next_command_meta(""),
             agent_context_bundle: crate::state::AgentContextBundle::default(),
             agent_context_bundle_minimal: crate::state::AgentContextBundleMinimal::default(),
             feedback_history_summary: crate::state::FeedbackHistorySummary::default(),
             multi_timeframe_summary: Vec::new(),
+            execution_artifact_id: None,
+            execution_edge_share: None,
+            prediction_edge_share: None,
+            execution_readiness: None,
+            execution_gate_status: None,
+            pda_cluster_label: None,
+            control_matrix_plan: None,
             artifact_action_summary: Vec::new(),
+            duration_sizing_scale: None,
+            hybrid_duration_model: None,
+            hybrid_remaining_expected_bars: None,
+            backtest_conformal_coverage_1sigma: 0.0,
+            backtest_trade_count: 0,
+            canonical_structural_regime_posterior: None,
             artifact_decision_summary: crate::state::ArtifactDecisionSummary::default(),
             artifact_decision_section: crate::state::ArtifactDecisionSection::default(),
             agent_prompts: crate::agent::AgentPromptPack::default(),
@@ -678,6 +780,7 @@ mod tests {
             agent_action_plan: crate::state::AgentActionPlan::default(),
             recommended_commands: crate::state::CommandRecommendations::default(),
             recommended_next_command: String::new(),
+            recommended_next_command_meta: crate::state::types::recommended_next_command_meta(""),
             agent_context_bundle: crate::state::AgentContextBundle::default(),
             agent_context_bundle_minimal: crate::state::AgentContextBundleMinimal::default(),
             agent_prompts: crate::agent::AgentPromptPack::default(),
@@ -740,12 +843,22 @@ mod tests {
             agent_action_plan: crate::state::AgentActionPlan::default(),
             recommended_commands: crate::state::CommandRecommendations::default(),
             recommended_next_command: String::new(),
+            recommended_next_command_meta: crate::state::types::recommended_next_command_meta(""),
             agent_context_bundle: crate::state::AgentContextBundle::default(),
             agent_context_bundle_minimal: crate::state::AgentContextBundleMinimal::default(),
             feedback_history_summary: crate::state::FeedbackHistorySummary::default(),
             multi_timeframe_summary: Vec::new(),
             objective_market_credibility_shrink: None,
+            canonical_structural_regime_posterior: None,
             artifact_action_summary: Vec::new(),
+            duration_sizing_scale: None,
+            hybrid_duration_model: None,
+            hybrid_remaining_expected_bars: None,
+            execution_artifact_id: None,
+            execution_edge_share: None,
+            prediction_edge_share: None,
+            execution_readiness: None,
+            execution_gate_status: None,
             artifact_decision_summary: crate::state::ArtifactDecisionSummary::default(),
             artifact_decision_section: crate::state::ArtifactDecisionSection::default(),
             agent_prompts: crate::agent::AgentPromptPack::default(),
@@ -780,7 +893,14 @@ mod tests {
             selected_direction: crate::types::Direction::Bull,
             selected_entry_quality: "high".to_string(),
             decision_hint: "observe".to_string(),
+            regime_probs: None,
+            entry_model_packets: crate::application::entry_models::EntryModelPacketStore::default(),
+            hybrid_regime_label: None,
+            hybrid_regime_age_bars: None,
+            hybrid_duration_model: None,
+            hybrid_remaining_expected_bars: None,
             pre_bayes_evidence_filter: crate::state::PreBayesEvidenceFilter::default(),
+            canonical_structural_regime_posterior: None,
             pre_bayes_entry_quality_bridge: crate::state::PreBayesEntryQualityBridge::default(),
             factor_family_decisions: Vec::new(),
             factor_family_outcomes: Vec::new(),
@@ -791,10 +911,16 @@ mod tests {
             agent_action_plan: crate::state::AgentActionPlan::default(),
             recommended_commands: crate::state::CommandRecommendations::default(),
             recommended_next_command: String::new(),
+            recommended_next_command_meta: crate::state::types::recommended_next_command_meta(""),
             agent_context_bundle: crate::state::AgentContextBundle::default(),
             agent_context_bundle_minimal: crate::state::AgentContextBundleMinimal::default(),
             feedback_history_summary: crate::state::FeedbackHistorySummary::default(),
             multi_timeframe_summary: Vec::new(),
+            execution_artifact_id: None,
+            execution_edge_share: None,
+            prediction_edge_share: None,
+            execution_readiness: None,
+            execution_gate_status: None,
             artifact_action_summary: Vec::new(),
             artifact_decision_summary: crate::state::ArtifactDecisionSummary::default(),
             artifact_decision_section: crate::state::ArtifactDecisionSection::default(),

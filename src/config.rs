@@ -9,17 +9,20 @@ use crate::analyze::multi_timeframe_parse::{
 };
 use crate::data::candles_to_prices;
 use crate::factor_lab::FactorDiagnostics;
-use crate::hmm::build_observations;
+use crate::hmm::{build_observations, ObservationInput};
 use crate::ict::{detect_fvg, detect_liquidity_pools, detect_liquidity_sweep};
+use crate::ict::{measure_pythagorean_extension, PythagoreanExtensionMetrics};
 use crate::indicators::{atr_percent, compute_adx, compute_atr, compute_rsi};
 use crate::kalman::KalmanFilter;
+use crate::math::geometry::Point2;
+use crate::pda_sequence::PdaSequenceArtifactSummary;
 use crate::state::{
     FactorPipelineLabelSource, PreBayesEvidenceFilter, PreBayesEvidencePolicy,
     PreBayesMarketPolicyOverride,
 };
 use crate::types::{Candle, Direction};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct FrameFeatures {
     pub observations: Vec<Vec<f64>>,
     pub regime_label: String,
@@ -27,6 +30,23 @@ pub struct FrameFeatures {
     pub market: Option<String>,
     pub sweep_count: usize,
     pub fvg_count: usize,
+    pub normalized_distance_to_range_mid_bps: f64,
+    pub normalized_distance_to_projected_trend_bps: f64,
+    pub ou_half_life_bars: f64,
+    pub ou_reversion_speed_per_bar: f64,
+    pub ou_pullback_expectation_zscore: f64,
+    /// Pythagorean speed: sqrt(distance_bps² + time_bars²) normalized
+    pub pythagorean_speed_bps_per_bar: f64,
+    /// Pythagorean distance to last liquidity sweep (combined price+time)
+    pub pythagorean_distance_to_last_sweep: f64,
+    /// Pythagorean distance to last FVG (combined price+time)
+    pub pythagorean_distance_to_last_fvg: f64,
+    /// Normalized orthogonal displacement vs. projected trendline
+    pub pythagorean_overstretch: Option<f64>,
+    /// OU mean reversion target in bps from current price
+    pub ou_mean_reversion_target_bps: f64,
+    /// OU expected pullback magnitude in bps
+    pub ou_expected_pullback_bps: f64,
 }
 
 pub const INDICATOR_PERIOD: usize = 14;
@@ -61,18 +81,186 @@ pub fn build_frame_features(candles: &[Candle]) -> anyhow::Result<FrameFeatures>
         .iter()
         .filter(|sweep| sweep.sweep_bar >= candles.len().saturating_sub(10))
         .count();
+    let latest_close = candles
+        .last()
+        .map(|candle| candle.close)
+        .unwrap_or_default();
+    let range_high = candles
+        .iter()
+        .map(|candle| candle.high)
+        .fold(f64::NEG_INFINITY, f64::max);
+    let range_low = candles
+        .iter()
+        .map(|candle| candle.low)
+        .fold(f64::INFINITY, f64::min);
+    let range_mid = if range_high.is_finite() && range_low.is_finite() {
+        (range_high + range_low) * 0.5
+    } else {
+        latest_close
+    };
+    let range_span = (range_high - range_low).abs().max(f64::EPSILON);
+    let normalized_distance_to_range_mid_bps =
+        (((latest_close - range_mid) / range_span).clamp(-1.0, 1.0)) * 10_000.0;
+    let start_close = candles
+        .first()
+        .map(|candle| candle.close)
+        .unwrap_or(latest_close);
+    let projected_trend = if candles.len() >= 2 {
+        let slope = (latest_close - start_close) / (candles.len() as f64 - 1.0);
+        start_close + slope * (candles.len() as f64 - 1.0)
+    } else {
+        latest_close
+    };
+    let normalized_distance_to_projected_trend_bps =
+        (((latest_close - projected_trend) / range_span).clamp(-1.0, 1.0)) * 10_000.0;
+    let pythagorean_extension = if candles.len() >= 2 {
+        Some(measure_pythagorean_extension(
+            Point2 {
+                x: 0.0,
+                y: start_close,
+            },
+            Point2 {
+                x: (candles.len() - 1) as f64,
+                y: projected_trend,
+            },
+            Point2 {
+                x: (candles.len() - 1) as f64,
+                y: latest_close,
+            },
+        ))
+    } else {
+        None
+    };
+    let closes = candles
+        .iter()
+        .map(|candle| candle.close)
+        .collect::<Vec<_>>();
+    let returns = closes
+        .windows(2)
+        .filter_map(|window| {
+            let prev = window[0];
+            let next = window[1];
+            if prev.abs() <= f64::EPSILON {
+                None
+            } else {
+                Some((next - prev) / prev)
+            }
+        })
+        .collect::<Vec<_>>();
+    let mean_return = if returns.is_empty() {
+        0.0
+    } else {
+        returns.iter().sum::<f64>() / returns.len() as f64
+    };
+    let variance = if returns.len() < 2 {
+        0.0
+    } else {
+        returns
+            .iter()
+            .map(|value| {
+                let diff = value - mean_return;
+                diff * diff
+            })
+            .sum::<f64>()
+            / returns.len() as f64
+    };
+    let stddev = variance.sqrt();
+    let ou_reversion_speed_per_bar = if candles.len() < 3 || variance <= f64::EPSILON {
+        0.0
+    } else {
+        let mut cov = 0.0;
+        let mut var = 0.0;
+        for window in closes.windows(2) {
+            let x_prev = window[0] - range_mid;
+            let x_next = window[1] - range_mid;
+            cov += x_prev * x_next;
+            var += x_prev * x_prev;
+        }
+        if var <= f64::EPSILON {
+            0.0
+        } else {
+            let phi = (cov / var).clamp(1e-6, 0.999999);
+            (-phi.ln()).max(0.0)
+        }
+    };
+    let ou_half_life_bars = if ou_reversion_speed_per_bar <= f64::EPSILON {
+        9_999.0
+    } else {
+        (std::f64::consts::LN_2 / ou_reversion_speed_per_bar).clamp(0.0, 9_999.0)
+    };
+    let ou_pullback_expectation_zscore = if stddev <= f64::EPSILON {
+        0.0
+    } else {
+        ((range_mid - latest_close) / (stddev * latest_close.abs().max(1.0))).clamp(-5.0, 5.0)
+    };
 
-    let observations = build_observations(
+    // Pythagorean distance features: combine price displacement (dx) and time displacement (dy)
+    // dx = normalized distance in bps, dy = bar count normalized to [0,1] per 100 bars
+    let dx_range_mid = normalized_distance_to_range_mid_bps.abs();
+    let dy_time = (candles.len() as f64 / 100.0).clamp(0.0, 1.0) * 10_000.0; // normalize time to bps scale
+    let pythagorean_speed_bps_per_bar = if candles.len() < 2 {
+        0.0
+    } else {
+        (dx_range_mid.powi(2) + dy_time.powi(2)).sqrt() / candles.len() as f64
+    };
+
+    // Distance to last liquidity sweep (Pythagorean: price delta + time delta)
+    let pythagorean_distance_to_last_sweep = if let Some(last_sweep) = sweeps.last() {
+        let sweep_bar_idx = last_sweep.sweep_bar;
+        let bars_since = candles.len().saturating_sub(sweep_bar_idx) as f64;
+        let sweep_price = last_sweep.pool_price;
+        let price_delta_bps = if latest_close.abs() > f64::EPSILON {
+            ((latest_close - sweep_price) / latest_close * 10_000.0).abs()
+        } else {
+            0.0
+        };
+        (price_delta_bps.powi(2) + bars_since.powi(2)).sqrt()
+    } else {
+        f64::NAN
+    };
+
+    // Distance to last FVG (Pythagorean: price delta + time delta)
+    let pythagorean_distance_to_last_fvg = if let Some(last_fvg) = fvgs.last() {
+        let fvg_bar_idx = last_fvg.start_bar;
+        let bars_since = candles.len().saturating_sub(fvg_bar_idx) as f64;
+        let fvg_mid = (last_fvg.top + last_fvg.bottom) * 0.5;
+        let price_delta_bps = if latest_close.abs() > f64::EPSILON {
+            ((latest_close - fvg_mid) / latest_close * 10_000.0).abs()
+        } else {
+            0.0
+        };
+        (price_delta_bps.powi(2) + bars_since.powi(2)).sqrt()
+    } else {
+        f64::NAN
+    };
+
+    // OU mean reversion target in bps from current price
+    let ou_mean_reversion_target_bps = if range_span > f64::EPSILON {
+        ((range_mid - latest_close) / range_span * 10_000.0).clamp(-10_000.0, 10_000.0)
+    } else {
+        0.0
+    };
+
+    // OU expected pullback magnitude in bps
+    let ou_expected_pullback_bps = if latest_close.abs() > f64::EPSILON && stddev > f64::EPSILON {
+        (ou_pullback_expectation_zscore * stddev * latest_close / latest_close * 10_000.0)
+            .abs()
+            .clamp(0.0, 10_000.0)
+    } else {
+        0.0
+    };
+
+    let observations = build_observations(ObservationInput {
         candles,
-        candles,
-        &implied_vol,
-        &smoothed_prices,
-        &atr,
-        &rsi,
-        &adx,
-        &fvgs,
-        &sweeps,
-    );
+        ltf_candles: candles,
+        implied_vol: &implied_vol,
+        smoothed_prices: &smoothed_prices,
+        atr: &atr,
+        rsi: &rsi,
+        adx: &adx,
+        fvgs: &fvgs,
+        sweeps: &sweeps,
+    });
     if observations.is_empty() {
         anyhow::bail!(
             "failed to build HMM observations from {} candles",
@@ -106,6 +294,22 @@ pub fn build_frame_features(candles: &[Candle]) -> anyhow::Result<FrameFeatures>
         market: None,
         sweep_count: sweeps.len(),
         fvg_count: fvgs.len(),
+        normalized_distance_to_range_mid_bps,
+        normalized_distance_to_projected_trend_bps,
+        ou_half_life_bars,
+        ou_reversion_speed_per_bar,
+        ou_pullback_expectation_zscore,
+        pythagorean_speed_bps_per_bar,
+        pythagorean_distance_to_last_sweep,
+        pythagorean_distance_to_last_fvg,
+        pythagorean_overstretch: pythagorean_extension.map(
+            |PythagoreanExtensionMetrics {
+                 normalized_overstretch,
+                 ..
+             }| normalized_overstretch,
+        ),
+        ou_mean_reversion_target_bps,
+        ou_expected_pullback_bps,
     })
 }
 
@@ -171,6 +375,26 @@ pub fn build_frame_features_for_market(
     Ok(frame)
 }
 
+pub fn regime_feature_vector(frame: &FrameFeatures) -> Vec<f64> {
+    let total_structural_events = frame.fvg_count as f64 + frame.sweep_count as f64;
+    let fvg_share = if total_structural_events > 0.0 {
+        frame.fvg_count as f64 / total_structural_events
+    } else {
+        0.5
+    };
+    let sweep_share = if total_structural_events > 0.0 {
+        frame.sweep_count as f64 / total_structural_events
+    } else {
+        0.5
+    };
+    vec![
+        (frame.normalized_distance_to_projected_trend_bps.abs() / 10_000.0).clamp(0.0, 1.0),
+        (frame.ou_pullback_expectation_zscore.abs() / 5.0).clamp(0.0, 1.0),
+        fvg_share.clamp(0.0, 1.0),
+        sweep_share.clamp(0.0, 1.0),
+    ]
+}
+
 pub fn raw_market_regime_trace(
     regime_label: &str,
     frame: &FrameFeatures,
@@ -180,8 +404,50 @@ pub fn raw_market_regime_trace(
         derivation: "build_frame_features.regime_label".to_string(),
         evidence: vec![
             format!("frame_regime_label={}", frame.regime_label),
-            format!("sweep_count={}", frame.sweep_count),
-            format!("fvg_count={}", frame.fvg_count),
+            format!("frame_market={}", frame.market.as_deref().unwrap_or("none")),
+            format!("frame_sweep_count={}", frame.sweep_count),
+            format!("frame_fvg_count={}", frame.fvg_count),
+            format!(
+                "distance_to_range_mid_bps={:.4}",
+                frame.normalized_distance_to_range_mid_bps
+            ),
+            format!(
+                "distance_to_projected_trend_bps={:.4}",
+                frame.normalized_distance_to_projected_trend_bps
+            ),
+            format!("ou_half_life_bars={:.4}", frame.ou_half_life_bars),
+            format!(
+                "ou_reversion_speed_per_bar={:.4}",
+                frame.ou_reversion_speed_per_bar
+            ),
+            format!(
+                "ou_pullback_expectation_zscore={:.4}",
+                frame.ou_pullback_expectation_zscore
+            ),
+            format!(
+                "pythagorean_speed_bps_per_bar={:.4}",
+                frame.pythagorean_speed_bps_per_bar
+            ),
+            format!(
+                "pythagorean_distance_to_last_sweep={:.4}",
+                frame.pythagorean_distance_to_last_sweep
+            ),
+            format!(
+                "pythagorean_distance_to_last_fvg={:.4}",
+                frame.pythagorean_distance_to_last_fvg
+            ),
+            format!(
+                "pythagorean_overstretch={:.4}",
+                frame.pythagorean_overstretch.unwrap_or_default()
+            ),
+            format!(
+                "ou_mean_reversion_target_bps={:.4}",
+                frame.ou_mean_reversion_target_bps
+            ),
+            format!(
+                "ou_expected_pullback_bps={:.4}",
+                frame.ou_expected_pullback_bps
+            ),
         ],
     }
 }
@@ -197,6 +463,47 @@ pub fn raw_liquidity_context_trace(
             format!("frame_liquidity_label={}", frame.liquidity_label),
             format!("sweep_count={}", frame.sweep_count),
             format!("fvg_count={}", frame.fvg_count),
+            format!(
+                "distance_to_range_mid_bps={:.4}",
+                frame.normalized_distance_to_range_mid_bps
+            ),
+            format!(
+                "distance_to_projected_trend_bps={:.4}",
+                frame.normalized_distance_to_projected_trend_bps
+            ),
+            format!("ou_half_life_bars={:.4}", frame.ou_half_life_bars),
+            format!(
+                "ou_reversion_speed_per_bar={:.4}",
+                frame.ou_reversion_speed_per_bar
+            ),
+            format!(
+                "ou_pullback_expectation_zscore={:.4}",
+                frame.ou_pullback_expectation_zscore
+            ),
+            format!(
+                "pythagorean_speed_bps_per_bar={:.4}",
+                frame.pythagorean_speed_bps_per_bar
+            ),
+            format!(
+                "pythagorean_distance_to_last_sweep={:.4}",
+                frame.pythagorean_distance_to_last_sweep
+            ),
+            format!(
+                "pythagorean_distance_to_last_fvg={:.4}",
+                frame.pythagorean_distance_to_last_fvg
+            ),
+            format!(
+                "pythagorean_overstretch={:.4}",
+                frame.pythagorean_overstretch.unwrap_or_default()
+            ),
+            format!(
+                "ou_mean_reversion_target_bps={:.4}",
+                frame.ou_mean_reversion_target_bps
+            ),
+            format!(
+                "ou_expected_pullback_bps={:.4}",
+                frame.ou_expected_pullback_bps
+            ),
         ],
     }
 }
@@ -280,9 +587,7 @@ pub fn multi_timeframe_entry_quality_bias(
         }
     } else {
         let uniform = 1.0 / bias.len() as f64;
-        for value in &mut bias {
-            *value = uniform;
-        }
+        bias.fill(uniform);
     }
     bias
 }
@@ -349,6 +654,7 @@ pub fn build_pre_bayes_evidence_filter(
     factor_diagnostics: &FactorDiagnostics,
     multi_timeframe_evidence: &ParsedMultiTimeframeEvidence,
     market: Option<&str>,
+    pda_sequence_summary: Option<&PdaSequenceArtifactSummary>,
 ) -> PreBayesEvidenceFilter {
     let market_policy = pre_bayes_market_policy_override(market, &policy.market_overrides);
     let hostile_liquidity_penalty = market_policy
@@ -392,6 +698,22 @@ pub fn build_pre_bayes_evidence_filter(
         raw_multi_timeframe_alignment_score.unwrap_or_default(),
         raw_multi_timeframe_entry_alignment_score.unwrap_or_default()
     ));
+    if let Some(summary) = pda_sequence_summary {
+        rationale.push(format!(
+            "pda_sequence_primary_cluster={} pda_family={} pda_confidence={:.3} pda_consistency={:.3} pda_ensemble_mean_confidence={:.3}",
+            summary
+                .primary_cluster_label
+                .as_deref()
+                .unwrap_or("unknown"),
+            summary
+                .primary_cluster_family
+                .as_deref()
+                .unwrap_or("unknown"),
+            summary.primary_cluster_confidence.unwrap_or_default(),
+            summary.consistency_ratio,
+            summary.ensemble_mean_confidence
+        ));
+    }
     let directional_conflict = matches!(
         (regime_label, raw_factor_alignment.as_str()),
         ("bull", "bearish") | ("bear", "bullish")
@@ -484,6 +806,73 @@ pub fn build_pre_bayes_evidence_filter(
                 .to_string(),
         );
     }
+    if let Some(summary) = pda_sequence_summary {
+        let weak_confidence = summary.primary_cluster_confidence.unwrap_or_default() < 0.55;
+        let weak_consistency = summary.consistency_ratio < 0.60;
+        let sparse_sessions = summary.valid_sessions < 4;
+        let regime_family = match regime_label {
+            "bull" | "bear" => Some("trend"),
+            "range" => Some("range"),
+            _ => None,
+        };
+        let family_disagreement = regime_family
+            .zip(summary.primary_cluster_family.as_deref())
+            .map(|(left, right)| left != right && right != "transition")
+            .unwrap_or(false);
+        let strong_cluster = summary.primary_cluster_confidence.unwrap_or_default() >= 0.80
+            && summary.consistency_ratio >= 0.70
+            && summary.ensemble_mean_confidence >= 0.70;
+        if family_disagreement {
+            conflict_flags.push("pda_regime_family_disagreement".to_string());
+            rationale.push(format!(
+                "PDA cluster family '{}' disagrees with regime family '{}'",
+                summary
+                    .primary_cluster_family
+                    .as_deref()
+                    .unwrap_or("unknown"),
+                regime_family.unwrap_or("unknown")
+            ));
+        }
+        if weak_confidence || weak_consistency || sparse_sessions {
+            conflict_flags.push("pda_sequence_cluster_weak".to_string());
+            if weak_confidence {
+                conflict_flags.push("pda_sequence_low_confidence".to_string());
+            }
+            if weak_consistency {
+                conflict_flags.push("pda_sequence_low_consistency".to_string());
+            }
+            if sparse_sessions {
+                conflict_flags.push("pda_sequence_sparse_sessions".to_string());
+            }
+            rationale.push(
+                "PDA sequence cluster signal is weak, so evidence confidence is downweighted"
+                    .to_string(),
+            );
+            if weak_confidence {
+                rationale.push(format!(
+                    "PDA cluster confidence {:.3} is below the reinforcement floor",
+                    summary.primary_cluster_confidence.unwrap_or_default()
+                ));
+            }
+            if weak_consistency {
+                rationale.push(format!(
+                    "PDA DTW/HMM consistency {:.3} is below the stability floor",
+                    summary.consistency_ratio
+                ));
+            }
+            if sparse_sessions {
+                rationale.push(format!(
+                    "PDA valid_sessions {} is too small for stable reinforcement",
+                    summary.valid_sessions
+                ));
+            }
+        } else if strong_cluster {
+            rationale.push(
+                "PDA sequence cluster signal is strong enough to reinforce evidence quality"
+                    .to_string(),
+            );
+        }
+    }
 
     let mut evidence_quality_score =
         0.55 + support_gap.min(0.5) * 0.50 - factor_diagnostics.uncertainty * 0.35;
@@ -523,9 +912,37 @@ pub fn build_pre_bayes_evidence_filter(
     } else if filtered_liquidity_context_label == "favorable" {
         evidence_quality_score += favorable_liquidity_bonus;
     }
+    if let Some(summary) = pda_sequence_summary {
+        if conflict_flags
+            .iter()
+            .any(|flag| flag == "pda_sequence_cluster_weak")
+        {
+            evidence_quality_score -= 0.08;
+        } else if conflict_flags
+            .iter()
+            .any(|flag| flag == "pda_regime_family_disagreement")
+        {
+            evidence_quality_score -= 0.06;
+        } else if summary.primary_cluster_confidence.unwrap_or_default() >= 0.80
+            && summary.consistency_ratio >= 0.70
+            && summary.ensemble_mean_confidence >= 0.70
+        {
+            evidence_quality_score += 0.06;
+        }
+    }
     evidence_quality_score = evidence_quality_score.clamp(0.0, 1.0);
 
-    let gating_status = if evidence_quality_score >= policy.hard_pass_quality_threshold
+    let pda_sparse_sessions = conflict_flags
+        .iter()
+        .any(|flag| flag == "pda_sequence_sparse_sessions");
+    let pda_low_consistency = conflict_flags
+        .iter()
+        .any(|flag| flag == "pda_sequence_low_consistency");
+    let pda_low_confidence = conflict_flags
+        .iter()
+        .any(|flag| flag == "pda_sequence_low_confidence");
+
+    let mut gating_status = if evidence_quality_score >= policy.hard_pass_quality_threshold
         && conflict_flags.is_empty()
     {
         "pass_hard".to_string()
@@ -544,6 +961,32 @@ pub fn build_pre_bayes_evidence_filter(
         filtered_multi_timeframe_resonance_label = "mixed".to_string();
         "observe_only".to_string()
     };
+    if pda_sparse_sessions {
+        gating_status = "observe_only".to_string();
+        filtered_market_regime_label = "range".to_string();
+        filtered_liquidity_context_label = "neutral".to_string();
+        filtered_factor_alignment = "mixed".to_string();
+        filtered_factor_uncertainty = "high".to_string();
+        rationale.push(
+            "PDA sequence coverage is too sparse, so gating is forced to observe_only".to_string(),
+        );
+    } else if gating_status == "pass_hard" && (pda_low_consistency || pda_low_confidence) {
+        gating_status = "pass_neutralized".to_string();
+        rationale.push(
+            "PDA sequence weakness prevents a hard pass, so gating is capped at pass_neutralized"
+                .to_string(),
+        );
+    } else if gating_status == "pass_hard"
+        && conflict_flags
+            .iter()
+            .any(|flag| flag == "pda_regime_family_disagreement")
+    {
+        gating_status = "pass_neutralized".to_string();
+        rationale.push(
+            "PDA/regime family disagreement prevents a hard pass, so gating is capped at pass_neutralized"
+                .to_string(),
+        );
+    }
 
     let evidence_assignments = BTreeMap::from([
         (
@@ -687,4 +1130,170 @@ pub fn left_pad(values: Vec<f64>, target_len: usize, fill: f64) -> Vec<f64> {
     let mut padded = vec![fill; target_len - values.len()];
     padded.extend(values);
     padded
+}
+
+pub fn env_f64_with_source(name: &str, default: f64) -> (f64, String) {
+    match env::var(name)
+        .ok()
+        .and_then(|value| value.parse::<f64>().ok().map(|parsed| (parsed, value)))
+    {
+        Some((parsed, raw)) => (parsed, format!("env:{}={}", name, raw)),
+        None => (default, "default".to_string()),
+    }
+}
+
+pub fn env_bool_with_source(name: &str, default: bool) -> (bool, String) {
+    match env::var(name).ok() {
+        Some(raw) => match raw.trim().to_ascii_lowercase().as_str() {
+            "1" | "true" | "yes" | "on" => (true, format!("env:{}={}", name, raw)),
+            "0" | "false" | "no" | "off" => (false, format!("env:{}={}", name, raw)),
+            _ => (default, "default".to_string()),
+        },
+        None => (default, "default".to_string()),
+    }
+}
+
+pub fn family_history_window() -> usize {
+    env::var("ICT_ENGINE_FAMILY_HISTORY_WINDOW")
+        .ok()
+        .and_then(|value| value.parse::<usize>().ok())
+        .map(|value| value.clamp(1, 20))
+        .unwrap_or(5)
+}
+
+pub fn trend_label_f64(values: &[f64]) -> String {
+    match (values.first(), values.last()) {
+        (Some(first), Some(last)) if last - first > 0.05 => "improving".to_string(),
+        (Some(first), Some(last)) if first - last > 0.05 => "deteriorating".to_string(),
+        (Some(_), Some(_)) => "stable".to_string(),
+        _ => "insufficient_history".to_string(),
+    }
+}
+
+pub fn trend_label_usize(values: &[usize]) -> String {
+    match (values.first(), values.last()) {
+        (Some(first), Some(last)) if last > first => "worsening".to_string(),
+        (Some(first), Some(last)) if last < first => "improving".to_string(),
+        (Some(_), Some(_)) => "stable".to_string(),
+        _ => "insufficient_history".to_string(),
+    }
+}
+
+pub fn parse_interval_minutes(interval: &str) -> anyhow::Result<i64> {
+    let normalized = interval.trim().to_ascii_lowercase();
+    match normalized.as_str() {
+        "1m" => Ok(1),
+        "5m" => Ok(5),
+        "15m" => Ok(15),
+        "30m" => Ok(30),
+        "1h" => Ok(60),
+        "4h" => Ok(240),
+        "1d" => Ok(1440),
+        _ => anyhow::bail!("unsupported interval '{}'", interval),
+    }
+}
+
+pub fn shell_quote(value: &str) -> String {
+    if value.is_empty() {
+        "''".to_string()
+    } else if value
+        .chars()
+        .all(|ch| ch.is_ascii_alphanumeric() || matches!(ch, '/' | ':' | '.' | '_' | '-'))
+    {
+        value.to_string()
+    } else {
+        format!("'{}'", value.replace('\'', "'\"'\"'"))
+    }
+}
+
+#[cfg(test)]
+mod frame_feature_tests {
+    use super::*;
+    use chrono::{Duration, TimeZone, Utc};
+
+    fn sample_candles(count: usize, slope: f64) -> Vec<Candle> {
+        let start = Utc.with_ymd_and_hms(2024, 1, 1, 0, 0, 0).unwrap();
+        (0..count)
+            .map(|index| {
+                let base = 100.0 + index as f64 * slope;
+                Candle {
+                    timestamp: start + Duration::minutes(index as i64),
+                    open: base,
+                    high: base + 0.6,
+                    low: base - 0.5,
+                    close: base + 0.3,
+                    volume: 1000.0 + index as f64,
+                }
+            })
+            .collect()
+    }
+
+    #[test]
+    fn test_build_frame_features_emits_finite_physics_features() {
+        let candles = sample_candles(80, 0.4);
+        let frame = build_frame_features(&candles).unwrap();
+
+        assert!(frame.normalized_distance_to_range_mid_bps.is_finite());
+        assert!(frame.normalized_distance_to_projected_trend_bps.is_finite());
+        assert!(frame.ou_reversion_speed_per_bar.is_finite());
+        assert!(frame.ou_pullback_expectation_zscore.is_finite());
+        assert!(frame.ou_half_life_bars.is_finite());
+        assert!(frame.pythagorean_speed_bps_per_bar.is_finite());
+        assert!(frame
+            .pythagorean_overstretch
+            .unwrap_or_default()
+            .is_finite());
+        assert!(
+            frame.pythagorean_distance_to_last_sweep.is_nan()
+                || frame.pythagorean_distance_to_last_sweep.is_finite()
+        );
+        assert!(
+            frame.pythagorean_distance_to_last_fvg.is_nan()
+                || frame.pythagorean_distance_to_last_fvg.is_finite()
+        );
+        assert!(frame.ou_mean_reversion_target_bps.is_finite());
+        assert!(frame.ou_expected_pullback_bps.is_finite());
+    }
+
+    #[test]
+    fn test_build_frame_features_projected_distance_changes_with_trend_shape() {
+        let flat = sample_candles(80, 0.05);
+        let trend = sample_candles(80, 0.8);
+        let flat_frame = build_frame_features(&flat).unwrap();
+        let trend_frame = build_frame_features(&trend).unwrap();
+
+        assert!(trend_frame.ou_reversion_speed_per_bar >= 0.0);
+        assert!(flat_frame.ou_reversion_speed_per_bar >= 0.0);
+        assert!(
+            (trend_frame.normalized_distance_to_projected_trend_bps
+                - flat_frame.normalized_distance_to_projected_trend_bps)
+                .abs()
+                >= 0.0
+        );
+    }
+
+    #[test]
+    fn test_pythagorean_and_ou_features_computed() {
+        let candles = sample_candles(100, 0.5);
+        let frame = build_frame_features(&candles).unwrap();
+
+        // Pythagorean speed should be non-negative
+        assert!(frame.pythagorean_speed_bps_per_bar >= 0.0);
+        assert!(frame.pythagorean_overstretch.unwrap_or_default() >= 0.0);
+
+        // OU mean reversion target should be finite and within bounds
+        assert!(frame.ou_mean_reversion_target_bps.is_finite());
+        assert!(frame.ou_mean_reversion_target_bps >= -10_000.0);
+        assert!(frame.ou_mean_reversion_target_bps <= 10_000.0);
+
+        // OU expected pullback should be non-negative and bounded
+        assert!(frame.ou_expected_pullback_bps >= 0.0);
+        assert!(frame.ou_expected_pullback_bps <= 10_000.0);
+
+        // Pythagorean speed should equal sqrt(dx^2 + dy^2) / n_bars
+        let dx = frame.normalized_distance_to_range_mid_bps.abs();
+        let dy = (candles.len() as f64 / 100.0).clamp(0.0, 1.0) * 10_000.0;
+        let expected_speed = (dx.powi(2) + dy.powi(2)).sqrt() / candles.len() as f64;
+        assert!((frame.pythagorean_speed_bps_per_bar - expected_speed).abs() < 1e-6);
+    }
 }

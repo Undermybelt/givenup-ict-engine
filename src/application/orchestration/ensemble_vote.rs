@@ -30,6 +30,8 @@ pub struct AnalyzeEnsembleVoteInput {
     #[serde(default)]
     pub pre_bayes_filter: Option<PreBayesEvidenceFilter>,
     pub belief: BeliefReportPacket,
+    #[serde(default)]
+    pub ict_structure: Option<crate::types::ICTStructureSummary>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -38,6 +40,7 @@ pub struct EnsembleExecutorDecision {
     pub action: String,
     pub confidence: f64,
     pub recommended_command: Option<String>,
+    pub policy_runtime_source: Option<String>,
     pub split_explanations: Vec<String>,
 }
 
@@ -100,8 +103,14 @@ fn fallback_command(symbol: &str, action: &str) -> String {
 
 fn summarize_executor(decision: &EnsembleExecutorDecision) -> String {
     format!(
-        "executor={} action={} confidence={:.3}",
-        decision.executor, decision.action, decision.confidence
+        "executor={} action={} confidence={:.3} policy_source={}",
+        decision.executor,
+        decision.action,
+        decision.confidence,
+        decision
+            .policy_runtime_source
+            .as_deref()
+            .unwrap_or("unknown")
     )
 }
 
@@ -345,6 +354,12 @@ fn map_timed_pda_label_to_setup_family(label: &str) -> String {
     .to_string()
 }
 
+fn label_contains(label: &str, needle: &str) -> bool {
+    label
+        .to_ascii_lowercase()
+        .contains(&needle.to_ascii_lowercase())
+}
+
 fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeatureVector {
     let gate = input
         .belief
@@ -360,7 +375,7 @@ fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeature
         "Observe".to_string()
     };
     let pre_bayes = input.pre_bayes_filter.as_ref();
-    PolicyFeatureVector {
+    let features = PolicyFeatureVector {
         factor_alignment: input
             .belief
             .regime_posterior
@@ -418,8 +433,8 @@ fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeature
         discount_premium_correct: pre_bayes.map(|filter| filter.active_pda_count).unwrap_or(0) > 0,
         liquidity_swept: pre_bayes
             .map(|filter| {
-                filter.raw_liquidity_context_label.contains("sweep")
-                    || filter.filtered_liquidity_context_label.contains("sweep")
+                label_contains(&filter.raw_liquidity_context_label, "sweep")
+                    || label_contains(&filter.filtered_liquidity_context_label, "sweep")
             })
             .unwrap_or(false),
         signal_bar_present: pre_bayes.map(|filter| filter.active_pda_count).unwrap_or(0) > 0,
@@ -444,7 +459,162 @@ fn policy_features_from_input(input: &AnalyzeEnsembleVoteInput) -> PolicyFeature
         entry_price_offset_bps: 0.0,
         sl_distance_bps: 0.0,
         tp_rr_ratio: 2.0,
-    }
+
+        // ── Flowtree-derived ICT features ──────────────────────────
+        atr_consumption_ratio: 0.0,
+        htf_dol_distance_ratio: 1.0,
+        htf_eqx_swept: pre_bayes
+            .map(|f| {
+                label_contains(&f.raw_liquidity_context_label, "sweep")
+                    || label_contains(&f.filtered_liquidity_context_label, "sweep")
+            })
+            .unwrap_or(false),
+        htf_rb_type: if pre_bayes.map(|f| f.active_pda_count).unwrap_or(0) > 0 {
+            "strong".to_string()
+        } else {
+            "none".to_string()
+        },
+        event_b_consecutive_count: {
+            let stale = pre_bayes.map(|f| f.stale_pda_count).unwrap_or(0);
+            let inversed = pre_bayes.map(|f| f.inversed_pda_count).unwrap_or(0);
+            (stale + inversed).min(255) as u8
+        },
+        event_a_sequence_stage: {
+            let ict = input.ict_structure.as_ref();
+            let has_cisd = ict.map(|s| s.cisd_ltf_confirmed).unwrap_or(false);
+            let has_fvg = ict.map(|s| s.fvgs_open > 0).unwrap_or(false);
+            let has_mss = pre_bayes
+                .map(|f| label_contains(&f.filtered_liquidity_context_label, "mss"))
+                .unwrap_or(false);
+            if has_cisd && has_fvg && has_mss {
+                3
+            } else if has_cisd && has_fvg {
+                2
+            } else if has_cisd {
+                1
+            } else {
+                0
+            }
+        },
+        ltf_path_label: {
+            let ict = input.ict_structure.as_ref();
+            let sweeps = ict.map(|s| s.liquidity_sweeps).unwrap_or(0);
+            let cisd = ict.map(|s| s.cisd_ltf_confirmed).unwrap_or(false);
+            let rb = ict.map(|s| s.rb_pinbar_detected).unwrap_or(false);
+            if sweeps >= 2 && cisd {
+                "classic_double_sweep".to_string()
+            } else if sweeps >= 1 && !cisd && rb {
+                "v_reversal".to_string()
+            } else if cisd && !rb {
+                "smt_washout".to_string()
+            } else {
+                "none".to_string()
+            }
+        },
+        ote_0705_offset: 0.0,
+        structure_break_count: 0,
+        latest_break_type: "none".to_string(),
+        fractal_sync_confirmed: {
+            let ict = input.ict_structure.as_ref();
+            let htf_cisd = ict.map(|s| s.cisd_htf_confirmed).unwrap_or(false);
+            let ltf_cisd = ict.map(|s| s.cisd_ltf_confirmed).unwrap_or(false);
+            htf_cisd && ltf_cisd
+        },
+        killswitch_completion: {
+            let ict = input.ict_structure.as_ref();
+            let mut count: u8 = 0;
+            if ict.map(|s| s.rb_pinbar_detected).unwrap_or(false) {
+                count += 1;
+            }
+            if ict.map(|s| s.cisd_htf_confirmed).unwrap_or(false) {
+                count += 1;
+            }
+            if ict.map(|s| s.fvgs_open > 0).unwrap_or(false) {
+                count += 1;
+            }
+            if pre_bayes
+                .map(|f| label_contains(&f.filtered_liquidity_context_label, "mss"))
+                .unwrap_or(false)
+            {
+                count += 1;
+            }
+            count
+        },
+        fvgs_open: input
+            .ict_structure
+            .as_ref()
+            .map(|s| s.fvgs_open.min(255) as u8)
+            .unwrap_or(0),
+        order_blocks_nearby: input
+            .ict_structure
+            .as_ref()
+            .map(|s| s.order_blocks_nearby.min(255) as u8)
+            .unwrap_or(0),
+        cisd_ltf_confirmed: input
+            .ict_structure
+            .as_ref()
+            .map(|s| s.cisd_ltf_confirmed)
+            .unwrap_or(false),
+        cisd_htf_confirmed: input
+            .ict_structure
+            .as_ref()
+            .map(|s| s.cisd_htf_confirmed)
+            .unwrap_or(false),
+        rb_pinbar_detected: input
+            .ict_structure
+            .as_ref()
+            .map(|s| s.rb_pinbar_detected)
+            .unwrap_or(false),
+        pda_bull_count: input
+            .ict_structure
+            .as_ref()
+            .map(|s| s.pda_bull_count.min(255) as u8)
+            .unwrap_or(0),
+        liquidity_sweep_count: input
+            .ict_structure
+            .as_ref()
+            .map(|s| s.liquidity_sweeps.min(255) as u8)
+            .unwrap_or(0),
+        red_alert_active: {
+            let eb = pre_bayes
+                .map(|f| f.stale_pda_count + f.inversed_pda_count)
+                .unwrap_or(0);
+            eb >= 3
+        },
+        recovery_event_a_streak: 0,
+        pda_survival_regime: {
+            let regime = pre_bayes
+                .map(|f| f.filtered_market_regime_label.as_str())
+                .unwrap_or("unknown");
+            let regime_lower = regime.to_ascii_lowercase();
+            match regime_lower.as_str() {
+                r if r.contains("bear") || r.contains("distribution") => "bear".to_string(),
+                r if r.contains("chop") || r.contains("range") => "chop".to_string(),
+                r if r.contains("bull")
+                    || r.contains("accumulation")
+                    || r.contains("expansion") =>
+                {
+                    "bull_continuation".to_string()
+                }
+                _ => "unknown".to_string(),
+            }
+        },
+        setup_model_id: String::new(),
+        setup_progress_state: String::new(),
+        cisd_run_length_observed: 0.0,
+        cisd_impulse_atr: 0.0,
+        cisd_body_ratio_mean: 0.0,
+        rb_wick_body_ratio: 0.0,
+        rb_close_location_ratio: 0.0,
+        bars_between_cisd_and_rb: 0.0,
+        seq_window_hit: false,
+        ema19_distance_bps: 0.0,
+        realized_vol_zscore: 0.0,
+        hmm_accumulation_prob: 0.0,
+        hmm_manipulation_expansion_prob: 0.0,
+        hmm_distribution_prob: 0.0,
+    };
+    features
 }
 
 fn load_named_policy_or_placeholder(filename: &str) -> CatBoostCompatiblePolicyEngine {
@@ -457,6 +627,7 @@ fn load_named_policy_or_placeholder(filename: &str) -> CatBoostCompatiblePolicyE
 
 fn policy_decision_to_executor(
     name: &str,
+    policy_runtime_source: String,
     decision: super::PolicyDecisionArtifact,
 ) -> EnsembleExecutorDecision {
     let confidence = match decision.confidence_band.as_str() {
@@ -469,7 +640,19 @@ fn policy_decision_to_executor(
         action: decision.action,
         confidence,
         recommended_command: Some(decision.recommended_command),
+        policy_runtime_source: Some(policy_runtime_source),
         split_explanations: decision.split_trace,
+    }
+}
+
+fn policy_runtime_source(name: &str, engine: &CatBoostCompatiblePolicyEngine) -> String {
+    let artifact_version = engine.artifact_version().to_ascii_lowercase();
+    if artifact_version.contains("placeholder") {
+        format!("{name}:placeholder")
+    } else if artifact_version.contains("sample") {
+        format!("{name}:sample_file")
+    } else {
+        format!("{name}:artifact")
     }
 }
 
@@ -533,10 +716,10 @@ fn historical_executor_weights_from_scorecards(
         let quality_bias = (scorecard.cumulative_quality_score.max(0) as f64 / 1000.0).max(0.0);
         let score =
             (activity_bias + quality_bias + scorecard.latest_weight_hint.unwrap_or(0.0)).max(0.05);
-        if scorecard.executor.contains("catboost") {
+        if label_contains(&scorecard.executor, "catboost") {
             catboost_score += score;
         }
-        if scorecard.executor.contains("xgboost") {
+        if label_contains(&scorecard.executor, "xgboost") {
             xgboost_score += score;
         }
     }
@@ -620,11 +803,21 @@ pub fn build_stub_ensemble_vote_from_input(
 
     let catboost_engine = CatBoostCompatiblePolicyEngine::load_default_or_placeholder();
     let xgboost_engine = load_named_policy_or_placeholder("xgboost_policy.sample.json");
+    let policy_runtime_sources = vec![
+        policy_runtime_source("catboost_file", &catboost_engine),
+        policy_runtime_source("xgboost_file", &xgboost_engine),
+    ];
 
-    let mut catboost_like =
-        policy_decision_to_executor("catboost_file", catboost_engine.infer(&features));
-    let mut xgboost_like =
-        policy_decision_to_executor("xgboost_file", xgboost_engine.infer(&features));
+    let mut catboost_like = policy_decision_to_executor(
+        "catboost_file",
+        policy_runtime_sources[0].clone(),
+        catboost_engine.infer(&features),
+    );
+    let mut xgboost_like = policy_decision_to_executor(
+        "xgboost_file",
+        policy_runtime_sources[1].clone(),
+        xgboost_engine.infer(&features),
+    );
 
     if catboost_like.action.eq_ignore_ascii_case("observe") && dominant >= 0.55 {
         catboost_like.action = decide_action(&active_regime, dominant);
@@ -654,6 +847,7 @@ pub fn build_stub_ensemble_vote_from_input(
 
     EnsembleVoteArtifact {
         ensemble_version: "ensemble-audit-v2-weighted".to_string(),
+        policy_runtime_sources,
         posterior,
         final_action: decision.final_action,
         recommended_command: decision.recommended_command,
@@ -714,6 +908,7 @@ pub fn build_stub_ensemble_vote_from_research(report: &ResearchReport) -> Ensemb
                 confidence: Some(0.5),
                 credible_intervals: BTreeMap::new(),
                 evidence: report.multi_timeframe_summary.clone(),
+                regime_validation: None,
             },
             regime_companion: crate::domain::belief::RegimeCompanionPacket {
                 jump_model: Some(crate::domain::regime::JumpModelRegimeSummary {
@@ -750,6 +945,7 @@ pub fn build_stub_ensemble_vote_from_research(report: &ResearchReport) -> Ensemb
             },
             ..BeliefReportPacket::default()
         },
+        ict_structure: None,
     })
 }
 
@@ -798,11 +994,17 @@ mod tests {
             },
             pre_bayes_filter: None,
             belief,
+            ict_structure: None,
         });
         assert_eq!(artifact.posterior.normalization_status, "normalized");
         assert!(!artifact.final_action.is_empty());
         assert_eq!(artifact.ensemble_version, "ensemble-audit-v2-weighted");
+        assert_eq!(artifact.policy_runtime_sources.len(), 2);
         assert_eq!(artifact.executor_summaries.len(), 2);
+        assert!(artifact
+            .executor_summaries
+            .iter()
+            .all(|line| line.contains("policy_source=")));
         assert!(!artifact.hard_block.active);
     }
 
@@ -853,8 +1055,18 @@ mod tests {
             dataset_comparability: DatasetComparability::default(),
             pre_bayes_filter: None,
             belief,
+            ict_structure: None,
         });
         assert_eq!(artifact.executor_summaries.len(), 2);
+        assert_eq!(artifact.policy_runtime_sources.len(), 2);
+        assert!(artifact
+            .policy_runtime_sources
+            .iter()
+            .all(|item| item.contains("placeholder") || item.contains("sample_file")));
+        assert!(artifact
+            .executor_summaries
+            .iter()
+            .any(|line| line.contains("policy_source=catboost_file:sample_file")));
     }
 
     #[test]
@@ -873,6 +1085,7 @@ mod tests {
             dataset_comparability: DatasetComparability::default(),
             pre_bayes_filter: None,
             belief: BeliefReportPacket::default(),
+            ict_structure: None,
         });
         assert!(artifact.hard_block.active);
         assert_eq!(artifact.hard_block.stage.as_deref(), Some("analyze"));

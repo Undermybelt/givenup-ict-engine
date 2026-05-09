@@ -92,18 +92,35 @@ fn bps_distance(anchor: f64, target: f64) -> f64 {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct StagedArtifactsInput<'a> {
+    pub diagnostics: &'a FactorDiagnostics,
+    pub decision_hint: &'a str,
+    pub filter: &'a PreBayesEvidenceFilter,
+    pub multi_timeframe_summary: &'a [String],
+    pub selected_entry_quality: &'a str,
+    pub direction: Direction,
+    pub risk_reward: f64,
+    pub kelly_fraction: f64,
+    pub recommended_command: &'a str,
+}
+
 pub fn build_staged_artifacts(
-    diagnostics: &FactorDiagnostics,
-    decision_hint: &str,
-    filter: &PreBayesEvidenceFilter,
-    multi_timeframe_summary: &[String],
-    selected_entry_quality: &str,
-    direction: Direction,
-    risk_reward: f64,
-    kelly_fraction: f64,
-    recommended_command: &str,
+    input: StagedArtifactsInput<'_>,
     policy_engine: &dyn PolicyEngine,
 ) -> StagedArtifacts {
+    let StagedArtifactsInput {
+        diagnostics,
+        decision_hint,
+        filter,
+        multi_timeframe_summary,
+        selected_entry_quality,
+        direction,
+        risk_reward,
+        kelly_fraction,
+        recommended_command,
+    } = input;
+
     let plan_status = if matches!(direction, Direction::Neutral) {
         "plan_blocked"
     } else {
@@ -240,6 +257,45 @@ pub fn build_staged_artifacts(
         entry_price_offset_bps,
         sl_distance_bps,
         tp_rr_ratio: risk_reward,
+        // Flowtree features: defaults in trace_builder (populated via ensemble path)
+        atr_consumption_ratio: 0.0,
+        htf_dol_distance_ratio: 1.0,
+        htf_eqx_swept: filter.raw_liquidity_context_label.contains("sweep")
+            || filter.filtered_liquidity_context_label.contains("sweep"),
+        htf_rb_type: "none".to_string(),
+        event_b_consecutive_count: (filter.stale_pda_count + filter.inversed_pda_count).min(255)
+            as u8,
+        event_a_sequence_stage: 0,
+        ltf_path_label: "none".to_string(),
+        ote_0705_offset: 0.0,
+        structure_break_count: 0,
+        latest_break_type: "none".to_string(),
+        fractal_sync_confirmed: false,
+        killswitch_completion: 0,
+        fvgs_open: 0,
+        order_blocks_nearby: 0,
+        cisd_ltf_confirmed: false,
+        cisd_htf_confirmed: false,
+        rb_pinbar_detected: false,
+        pda_bull_count: 0,
+        liquidity_sweep_count: 0,
+        red_alert_active: (filter.stale_pda_count + filter.inversed_pda_count) >= 3,
+        recovery_event_a_streak: 0,
+        pda_survival_regime: "unknown".to_string(),
+        setup_model_id: String::new(),
+        setup_progress_state: String::new(),
+        cisd_run_length_observed: 0.0,
+        cisd_impulse_atr: 0.0,
+        cisd_body_ratio_mean: 0.0,
+        rb_wick_body_ratio: 0.0,
+        rb_close_location_ratio: 0.0,
+        bars_between_cisd_and_rb: 0.0,
+        seq_window_hit: false,
+        ema19_distance_bps: 0.0,
+        realized_vol_zscore: 0.0,
+        hmm_accumulation_prob: 0.0,
+        hmm_manipulation_expansion_prob: 0.0,
+        hmm_distribution_prob: 0.0,
     };
     let policy_decision = policy_engine.infer(&features);
 

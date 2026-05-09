@@ -40,6 +40,33 @@ pub fn compute_bollinger(candles: &[Candle], period: usize, num_std: f64) -> Bol
     }
 }
 
+/// Get the latest Bollinger Bands values
+pub fn latest_bollinger(
+    candles: &[Candle],
+    period: usize,
+    num_std: f64,
+) -> Option<(f64, f64, f64)> {
+    let bands = compute_bollinger(candles, period, num_std);
+    Some((
+        *bands.upper.last()?,
+        *bands.middle.last()?,
+        *bands.lower.last()?,
+    ))
+}
+
+/// Check if price is squeezing (bands are narrow)
+pub fn is_squeeze(candles: &[Candle], period: usize, num_std: f64, threshold: f64) -> bool {
+    let bands = compute_bollinger(candles, period, num_std);
+    let (Some(last_upper), Some(last_lower), Some(last_middle)) =
+        (bands.upper.last(), bands.lower.last(), bands.middle.last())
+    else {
+        return false;
+    };
+    let band_width = (last_upper - last_lower) / last_middle;
+
+    band_width < threshold
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -65,36 +92,4 @@ mod tests {
         assert_eq!(bands.upper.len(), 31);
         assert_eq!(bands.lower.len(), 31);
     }
-}
-
-/// Get the latest Bollinger Bands values
-pub fn latest_bollinger(
-    candles: &[Candle],
-    period: usize,
-    num_std: f64,
-) -> Option<(f64, f64, f64)> {
-    let bands = compute_bollinger(candles, period, num_std);
-    if bands.upper.is_empty() {
-        None
-    } else {
-        Some((
-            *bands.upper.last().unwrap(),
-            *bands.middle.last().unwrap(),
-            *bands.lower.last().unwrap(),
-        ))
-    }
-}
-
-/// Check if price is squeezing (bands are narrow)
-pub fn is_squeeze(candles: &[Candle], period: usize, num_std: f64, threshold: f64) -> bool {
-    let bands = compute_bollinger(candles, period, num_std);
-    if bands.upper.is_empty() {
-        return false;
-    }
-
-    let last_upper = bands.upper.last().unwrap();
-    let last_lower = bands.lower.last().unwrap();
-    let band_width = (last_upper - last_lower) / bands.middle.last().unwrap();
-
-    band_width < threshold
 }

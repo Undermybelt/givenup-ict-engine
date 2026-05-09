@@ -108,8 +108,10 @@ impl FactorLab {
             prompt_queue = state.iteration_queue();
             prompt_feedback_summary = state.summary();
         }
-        let mut decision_state = LearningState::default();
-        decision_state.factor_rankings = prompt_rankings.clone();
+        let decision_state = LearningState {
+            factor_rankings: prompt_rankings.clone(),
+            ..LearningState::default()
+        };
         let factor_family_decisions = decision_state.family_decisions();
 
         let agent_prompts = factor_iteration_prompt_pack(
@@ -247,6 +249,8 @@ fn backtest_feedback_records(symbol: &str, result: &BacktestResult) -> Vec<Feedb
                     },
                     pnl: trade.pnl,
                     regime_at_entry: trade.regime_at_entry,
+                    structural_feedback: None,
+                    reflection_mismatch_tags: Vec::new(),
                 }
             })
         })

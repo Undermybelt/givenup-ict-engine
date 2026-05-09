@@ -1,9 +1,16 @@
+use crate::application::execution::{
+    apply_execution_artifact_to_reflection_bundle, build_execution_artifact,
+};
 use crate::application::orchestration::build_stub_ensemble_vote_from_research;
 use crate::factor_lab::research::ResearchReport;
 
-use super::{build_reflection_bundle, ReflectionBundle};
+use super::{build_reflection_bundle, ReflectionBundle, ReflectionBundleInput};
 
-pub fn build_research_reflection_bundle(symbol: &str, report: &ResearchReport) -> ReflectionBundle {
+pub fn build_research_reflection_bundle(
+    symbol: &str,
+    report: &ResearchReport,
+    compare_summary: Option<&str>,
+) -> ReflectionBundle {
     let next_candidates = if report.recommended_next_command.is_empty() {
         vec![format!(
             "research={}",
@@ -13,22 +20,37 @@ pub fn build_research_reflection_bundle(symbol: &str, report: &ResearchReport) -
         vec![report.recommended_next_command.clone()]
     };
 
-    let mut bundle = build_reflection_bundle(
-        symbol,
-        report.provenance.data_fingerprint.clone(),
-        report.research_objective.clone(),
-        report
+    let mut bundle = build_reflection_bundle(ReflectionBundleInput {
+        symbol: symbol.to_string(),
+        timestamp: report.provenance.data_fingerprint.clone(),
+        objective: report.research_objective.clone(),
+        expected_regime: report
             .artifact_decision_summary
             .consumed_trend_status
             .clone(),
-        report
+        expected_direction: report
             .best_factor
             .clone()
             .unwrap_or_else(|| "unknown".to_string()),
-        "research_completed",
-        &report.multi_timeframe_summary,
-        &next_candidates,
-    );
+        realized_outcome: "research_completed".to_string(),
+        evidence: report.multi_timeframe_summary.clone(),
+        next_candidates: next_candidates.clone(),
+    });
+    if let Some(compare_summary) = compare_summary {
+        bundle.compare_summary = Some(compare_summary.to_string());
+        bundle
+            .prior
+            .expected_key_evidence
+            .push(compare_summary.to_string());
+        bundle
+            .postmortem
+            .evidence_drift
+            .push(compare_summary.to_string());
+        bundle
+            .postmortem
+            .what_worked
+            .push(compare_summary.to_string());
+    }
     let ensemble_vote = build_stub_ensemble_vote_from_research(report);
     bundle.ensemble_vote_summary = Some(ensemble_vote.human_next_triage.clone());
     bundle.ensemble_vote_artifact_id = Some(format!(
@@ -38,6 +60,38 @@ pub fn build_research_reflection_bundle(symbol: &str, report: &ResearchReport) -
     if !ensemble_vote.disagreement_flags.is_empty() {
         bundle.ensemble_disagreement_summary = Some(ensemble_vote.disagreement_flags.join(","));
     }
+    let execution_artifact = build_execution_artifact(
+        symbol,
+        0.0,
+        if report.recommended_commands.research.ready {
+            0.8
+        } else {
+            0.35
+        },
+        if report.promotion_decision.approved {
+            0.75
+        } else {
+            0.35
+        },
+        0.5,
+        report.best_factor.as_ref().map(|_| 0.55).unwrap_or(0.25),
+        None,
+        None,
+        None,
+        None,
+        None,
+        None, // physics_overlay
+        &report.provenance,
+    );
+    apply_execution_artifact_to_reflection_bundle(&mut bundle, &execution_artifact);
+    bundle.prediction_summary = Some(format!(
+        "prediction_edge={:.3}; best_factor={}",
+        execution_artifact.features.prediction_edge_share,
+        report
+            .best_factor
+            .clone()
+            .unwrap_or_else(|| "unknown".to_string())
+    ));
     let setup_family = report
         .pre_bayes_evidence_filter
         .nearest_active_pda
@@ -109,10 +163,23 @@ mod tests {
             ],
             ..ResearchReport::default()
         };
-        let bundle = build_research_reflection_bundle("NQ", &report);
+        let bundle = build_research_reflection_bundle(
+            "NQ",
+            &report,
+            Some("Research compare: duration_sizing_direction=scaled_up"),
+        );
         assert_eq!(bundle.prior.symbol, "NQ");
         assert_eq!(bundle.postmortem.realized_outcome, "research_completed");
         assert!(bundle.ensemble_vote_summary.is_some());
+        assert_eq!(
+            bundle.compare_summary.as_deref(),
+            Some("Research compare: duration_sizing_direction=scaled_up")
+        );
+        assert!(bundle
+            .prior
+            .expected_key_evidence
+            .iter()
+            .any(|line| line.contains("Research compare:")));
         assert!(bundle.execution_setup_summary.is_some());
         assert!(bundle
             .execution_setup_summary

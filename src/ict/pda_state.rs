@@ -149,8 +149,7 @@ pub fn update_timed_pda_state(state: &mut TimedPdaState, candles: &[Candle]) {
         return;
     }
 
-    for idx in (state.last_updated_bar + 1)..candles.len() {
-        let candle = &candles[idx];
+    for (idx, candle) in candles.iter().enumerate().skip(state.last_updated_bar + 1) {
         if idx.saturating_sub(state.anchor_bar) > state.validity_bars {
             push_transition(
                 state,

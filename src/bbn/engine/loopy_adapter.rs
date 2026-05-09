@@ -11,6 +11,7 @@ pub fn loopy_adapter_ready() -> bool {
 
 pub fn infer_with_loopy_adapter(
     assignments: &BTreeMap<String, String>,
+    market_behavior_profile: Option<&str>,
 ) -> Result<Vec<BeliefNodePosteriorSnapshot>> {
     let mut net = BayesNet::new();
     let market_regime = net.add_node_from_probabilities(
@@ -86,7 +87,7 @@ pub fn infer_with_loopy_adapter(
             .iter()
             .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
             .map(|(state, prob)| (state.clone(), *prob))
-            .unwrap_or_else(|| ("unknown".to_string(), 0.0));
+            .unwrap_or_else(|| ("state_unavailable".to_string(), 0.0));
         let entropy = probabilities
             .values()
             .filter(|p| **p > 0.0)
@@ -101,7 +102,7 @@ pub fn infer_with_loopy_adapter(
         }
     };
 
-    Ok(vec![
+    let mut snapshots = vec![
         decode(
             "market_regime",
             &["bull", "bear", "range", "transition"],
@@ -147,5 +148,17 @@ pub fn infer_with_loopy_adapter(
                 .map(|v| *v as f64)
                 .collect(),
         ),
-    ])
+    ];
+
+    if let Some(profile) = market_behavior_profile {
+        snapshots.push(BeliefNodePosteriorSnapshot {
+            node_id: "market_behavior_profile".to_string(),
+            top_state: profile.to_string(),
+            top_probability: 1.0,
+            entropy: 0.0,
+            probabilities: BTreeMap::from([(profile.to_string(), 1.0)]),
+        });
+    }
+
+    Ok(snapshots)
 }

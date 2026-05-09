@@ -2,11 +2,11 @@ use anyhow::{anyhow, bail, Context, Result};
 use chrono::Utc;
 use reqwest::blocking::Client;
 use serde_json::{json, Value};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process::Command;
 use std::sync::atomic::{AtomicU64, Ordering};
 
-use super::openalice::{OptionsChainSummary, Quote};
+use super::market_support::{OptionsChainSummary, Quote};
 
 const OPENCLI_DAEMON_URL: &str = "http://127.0.0.1:19825";
 static COMMAND_COUNTER: AtomicU64 = AtomicU64::new(1);
@@ -221,7 +221,10 @@ pub fn yahoo_finance_options_summary(symbol: &str) -> Result<OptionsChainSummary
         ),
     )?;
 
-    serde_json::from_value(value).context("failed to decode browser options summary")
+    let mut summary: OptionsChainSummary =
+        serde_json::from_value(value).context("failed to decode browser options summary")?;
+    summary.source = Some("browser_bridge:yahoo_finance".to_string());
+    Ok(summary)
 }
 
 fn daemon_client() -> Result<Client> {
@@ -307,31 +310,26 @@ fn send_command(client: &Client, body: Value) -> Result<Value> {
         );
     }
 
-    Ok(response
+    response
         .get("data")
         .cloned()
-        .ok_or_else(|| anyhow!("opencli daemon response missing data"))?)
+        .ok_or_else(|| anyhow!("opencli daemon response missing data"))
 }
 
 fn find_executable(name: &str) -> Option<PathBuf> {
-    let candidates = vec![
-        PathBuf::from(name),
-        PathBuf::from(format!("/Users/thrill3r/.npm-global/bin/{name}")),
-        PathBuf::from(format!("/opt/homebrew/bin/{name}")),
-        PathBuf::from(format!("/usr/local/bin/{name}")),
-    ];
+    let path_lookup = std::env::var_os("PATH").and_then(|paths| {
+        std::env::split_paths(&paths)
+            .map(|dir| dir.join(name))
+            .find(|candidate| candidate.exists())
+    });
+    if path_lookup.is_some() {
+        return path_lookup;
+    }
 
-    candidates.into_iter().find(|path| {
-        if path.components().count() == 1 {
-            Command::new("command")
-                .args(["-v", name])
-                .output()
-                .map(|output| output.status.success())
-                .unwrap_or(false)
-        } else {
-            Path::new(path).exists()
-        }
-    })
+    ["/opt/homebrew/bin", "/usr/local/bin"]
+        .into_iter()
+        .map(|dir| PathBuf::from(dir).join(name))
+        .find(|candidate| candidate.exists())
 }
 
 fn find_number(map: &serde_json::Map<String, Value>, keys: &[&str]) -> Option<f64> {

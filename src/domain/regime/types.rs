@@ -21,6 +21,48 @@ impl RegimeKey {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct RegimeSegmentationPacket {
+    pub method: String,
+    pub segmentation_version: String,
+    pub active_regime_cluster: Option<String>,
+    pub transition_hazard: Option<f64>,
+    pub duration_elapsed_bars: Option<usize>,
+    pub duration_model: Option<String>,
+    pub duration_remaining_expected_bars: Option<f64>,
+    pub regime_membership: BTreeMap<String, f64>,
+    pub feature_attribution: BTreeMap<String, f64>,
+    pub evidence: Vec<String>,
+    pub wasserstein_label: Option<String>,
+    pub wasserstein_distance: Option<f64>,
+    pub governor_confidence: Option<f64>,
+    pub governor_entropy: Option<f64>,
+    pub governor_min_hold_active: Option<bool>,
+    pub timeframe_alignment: Option<bool>,
+    pub timeframe_alignment_score: Option<f64>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct StructuralBreakPacket {
+    pub method: String,
+    pub break_family: String,
+    pub detected: bool,
+    pub break_score: Option<f64>,
+    pub break_index: Option<usize>,
+    pub lookback_window: Option<usize>,
+    pub affected_features: Vec<String>,
+    pub rationale: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct RegimeValidationPacket {
+    pub validation_scope: String,
+    pub segmentation_consistency: Option<f64>,
+    pub hindsight_risk_flags: Vec<String>,
+    pub abstain_recommended: bool,
+    pub notes: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct RegimeFeatures {
     pub market_regime_label: Option<String>,
     pub volatility_regime_label: Option<String>,
@@ -28,6 +70,8 @@ pub struct RegimeFeatures {
     pub stress_score: Option<f64>,
     pub transition_score: Option<f64>,
     pub evidence: Vec<String>,
+    pub segmentation_context: Option<RegimeSegmentationPacket>,
+    pub structural_break_context: Option<StructuralBreakPacket>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -40,6 +84,7 @@ pub struct RegimePosterior {
     pub confidence: Option<f64>,
     pub credible_intervals: BTreeMap<String, super::super::belief::CredibleInterval>,
     pub evidence: Vec<String>,
+    pub regime_validation: Option<RegimeValidationPacket>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]

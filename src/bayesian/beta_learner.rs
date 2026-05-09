@@ -44,10 +44,8 @@ impl CascadeBetaLearner {
         };
 
         for (i, &satisfied) in layer_results.iter().enumerate() {
-            if i < params.len() {
-                if satisfied {
-                    params[i].update(success);
-                }
+            if i < params.len() && satisfied {
+                params[i].update(success);
             }
         }
     }

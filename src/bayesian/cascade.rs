@@ -259,7 +259,7 @@ pub fn cascade_bear(
 
 fn update_posterior(prior: f64, lr: f64) -> f64 {
     let posterior = prior * lr / (prior * lr + (1.0 - prior));
-    posterior.min(0.999).max(0.001)
+    posterior.clamp(0.001, 0.999)
 }
 
 // Layer check functions (simplified implementations)
@@ -399,7 +399,9 @@ fn check_entry_trigger_bull(ltf: &[Candle], atr: &[f64]) -> bool {
         return false;
     }
     let curr = &ltf[ltf.len() - 1];
-    let atr_val = atr.last().unwrap();
+    let Some(atr_val) = atr.last() else {
+        return false;
+    };
 
     // Check for bullish pinbar
     curr.body() < curr.lower_wick() && curr.range() > atr_val * 1.5
@@ -410,7 +412,9 @@ fn check_entry_trigger_bear(ltf: &[Candle], atr: &[f64]) -> bool {
         return false;
     }
     let curr = &ltf[ltf.len() - 1];
-    let atr_val = atr.last().unwrap();
+    let Some(atr_val) = atr.last() else {
+        return false;
+    };
 
     // Check for bearish pinbar
     curr.body() < curr.upper_wick() && curr.range() > atr_val * 1.5

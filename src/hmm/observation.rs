@@ -1,17 +1,31 @@
 use crate::types::{Candle, FairValueGap, LiquiditySweep, OBS_DIM};
 
+#[derive(Debug, Clone)]
+pub struct ObservationInput<'a> {
+    pub candles: &'a [Candle],
+    pub ltf_candles: &'a [Candle],
+    pub implied_vol: &'a [f64],
+    pub smoothed_prices: &'a [(f64, f64, f64)],
+    pub atr: &'a [f64],
+    pub rsi: &'a [f64],
+    pub adx: &'a [f64],
+    pub fvgs: &'a [FairValueGap],
+    pub sweeps: &'a [LiquiditySweep],
+}
+
 /// Build observation vectors for HMM
-pub fn build_observations(
-    candles: &[Candle],
-    _ltf_candles: &[Candle],
-    implied_vol: &[f64],
-    smoothed_prices: &[(f64, f64, f64)],
-    atr: &[f64],
-    rsi: &[f64],
-    adx: &[f64],
-    fvgs: &[FairValueGap],
-    sweeps: &[LiquiditySweep],
-) -> Vec<Vec<f64>> {
+pub fn build_observations(input: ObservationInput<'_>) -> Vec<Vec<f64>> {
+    let ObservationInput {
+        candles,
+        ltf_candles: _ltf_candles,
+        implied_vol,
+        smoothed_prices,
+        atr,
+        rsi,
+        adx,
+        fvgs,
+        sweeps,
+    } = input;
     let mut observations = Vec::new();
     let min_len = candles.len().min(atr.len()).min(rsi.len()).min(adx.len());
 
@@ -103,8 +117,54 @@ pub fn build_observations(
             obs.push(0.0);
         }
 
+        // Keep observation width aligned with the configured HMM emission width.
+        while obs.len() < OBS_DIM {
+            obs.push(0.0);
+        }
+
         observations.push(obs);
     }
 
     observations
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use chrono::{Duration, TimeZone, Utc};
+
+    fn candle(idx: i64, open: f64, high: f64, low: f64, close: f64) -> Candle {
+        Candle {
+            timestamp: Utc.with_ymd_and_hms(2026, 1, 1, 0, 0, 0).unwrap() + Duration::minutes(idx),
+            open,
+            high,
+            low,
+            close,
+            volume: 1_000.0 + idx as f64,
+        }
+    }
+
+    #[test]
+    fn build_observations_pads_vectors_to_obs_dim() {
+        let candles = (0..30)
+            .map(|idx| {
+                let base = 100.0 + idx as f64 * 0.2;
+                candle(idx as i64, base, base + 0.4, base - 0.3, base + 0.1)
+            })
+            .collect::<Vec<_>>();
+        let observations = build_observations(ObservationInput {
+            candles: &candles,
+            ltf_candles: &candles,
+            implied_vol: &vec![0.2; candles.len()],
+            smoothed_prices: &vec![(0.0, 0.1, 0.0); candles.len()],
+            atr: &vec![1.0; candles.len()],
+            rsi: &vec![55.0; candles.len()],
+            adx: &vec![25.0; candles.len()],
+            fvgs: &[],
+            sweeps: &[],
+        });
+
+        assert!(!observations.is_empty());
+        assert!(observations.iter().all(|row| row.len() == OBS_DIM));
+    }
 }

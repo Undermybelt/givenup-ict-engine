@@ -81,9 +81,9 @@ pub fn compute_adx(candles: &[Candle], period: usize) -> Vec<f64> {
     adx_values.push(first_adx);
 
     // Subsequent ADX values use Wilder's smoothing
-    for i in period..dx_values.len() {
-        let prev_adx = adx_values.last().unwrap();
-        let adx = (prev_adx * (period - 1) as f64 + dx_values[i]) / period as f64;
+    for value in dx_values.iter().skip(period) {
+        let prev_adx = adx_values.last().copied().unwrap_or(first_adx);
+        let adx = (prev_adx * (period - 1) as f64 + *value) / period as f64;
         adx_values.push(adx);
     }
 

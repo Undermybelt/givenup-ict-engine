@@ -47,6 +47,12 @@ pub struct BacktestEngine {
     pub trades: Vec<TradeRecord>,
 }
 
+impl Default for BacktestEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl BacktestEngine {
     pub fn new() -> Self {
         Self { trades: Vec::new() }
@@ -98,9 +104,12 @@ impl BacktestEngine {
             apply_entry_execution_adjustments(plan.entry, plan.direction, realism);
 
         let exit_end = (raw_entry_index + hold_bars).min(candles.len().saturating_sub(1));
-        for exit_index in raw_entry_index..=exit_end {
-            let candle = &candles[exit_index];
-
+        for (exit_index, candle) in candles
+            .iter()
+            .enumerate()
+            .take(exit_end + 1)
+            .skip(raw_entry_index)
+        {
             match plan.direction {
                 Direction::Bull => {
                     let stop_hit = candle.low <= plan.stop_loss;

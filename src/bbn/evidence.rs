@@ -338,6 +338,7 @@ mod tests {
             direction: Direction::Bull,
             confidence: 0.8,
             explanation: "x".to_string(),
+            paired_market_quality_report: None,
             weight: 1.0,
             posterior_reliability: 1.0,
             regime_multiplier: 1.0,

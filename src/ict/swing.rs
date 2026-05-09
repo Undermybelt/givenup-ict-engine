@@ -13,8 +13,8 @@ pub fn find_swing_highs(candles: &[Candle], lookback: usize) -> Vec<SwingPoint> 
         let mut is_swing = true;
 
         // Check left side
-        for j in i - lookback..i {
-            if candles[j].high >= current {
+        for candle in candles.iter().take(i).skip(i - lookback) {
+            if candle.high >= current {
                 is_swing = false;
                 break;
             }
@@ -22,8 +22,8 @@ pub fn find_swing_highs(candles: &[Candle], lookback: usize) -> Vec<SwingPoint> 
 
         // Check right side
         if is_swing {
-            for j in i + 1..=i + lookback {
-                if candles[j].high >= current {
+            for candle in candles.iter().skip(i + 1).take(lookback) {
+                if candle.high >= current {
                     is_swing = false;
                     break;
                 }
@@ -55,8 +55,8 @@ pub fn find_swing_lows(candles: &[Candle], lookback: usize) -> Vec<SwingPoint> {
         let mut is_swing = true;
 
         // Check left side
-        for j in i - lookback..i {
-            if candles[j].low <= current {
+        for candle in candles.iter().take(i).skip(i - lookback) {
+            if candle.low <= current {
                 is_swing = false;
                 break;
             }
@@ -64,8 +64,8 @@ pub fn find_swing_lows(candles: &[Candle], lookback: usize) -> Vec<SwingPoint> {
 
         // Check right side
         if is_swing {
-            for j in i + 1..=i + lookback {
-                if candles[j].low <= current {
+            for candle in candles.iter().skip(i + 1).take(lookback) {
+                if candle.low <= current {
                     is_swing = false;
                     break;
                 }

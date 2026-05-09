@@ -27,9 +27,9 @@ impl MetropolisHastings {
         for i in 0..self.n_samples + self.burn_in {
             // Propose: random walk
             let mut candidate = current.clone();
-            for d in 0..dim {
+            for value in candidate.iter_mut().take(dim) {
                 let noise: f64 = rand::random::<f64>() * 2.0 - 1.0;
-                candidate[d] += self.step_size * noise;
+                *value += self.step_size * noise;
             }
 
             let candidate_ll = log_target(&candidate);

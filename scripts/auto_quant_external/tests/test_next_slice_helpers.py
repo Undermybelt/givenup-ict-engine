@@ -1,0 +1,141 @@
+from __future__ import annotations
+
+import sys
+import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
+import pandas as pd
+
+SCRIPT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(SCRIPT_ROOT))
+
+import entry_drought_diagnostic_v2 as drought  # noqa: E402
+import external_regime_changepoint_labels as changepoint  # noqa: E402
+import structural_feedback_trade_enricher as enricher  # noqa: E402
+
+
+class ChangePointHelperTests(unittest.TestCase):
+    def test_cluster_breakpoints_merges_nearby_votes(self) -> None:
+        clusters = changepoint.cluster_breakpoints(
+            {
+                "pelt": [10, 30, 60],
+                "binseg": [11, 29, 61],
+                "window": [30, 89],
+            },
+            tolerance=2,
+        )
+
+        self.assertEqual([item["bar_index"] for item in clusters], [10, 30, 60, 89])
+        self.assertEqual(clusters[0]["vote_count"], 2)
+        self.assertEqual(clusters[1]["vote_count"], 3)
+
+    def test_transition_proximity_peaks_around_breakpoints(self) -> None:
+        index = pd.date_range("2025-01-01", periods=8, freq="h", tz="UTC")
+        proximity = changepoint.build_transition_proximity(index, [3], window=2)
+
+        self.assertEqual(proximity.iloc[3], 1.0)
+        self.assertEqual(proximity.iloc[1], 0.0)
+        self.assertGreater(proximity.iloc[2], 0.0)
+        self.assertGreater(proximity.iloc[4], 0.0)
+
+
+class EntryDroughtHelperTests(unittest.TestCase):
+    def test_gate_ablations_flag_density_bottleneck(self) -> None:
+        gate_df = pd.DataFrame(
+            {
+                "session": [True] * 8,
+                "trend": [True] * 8,
+                "strict_gate": [True, True, True, True, False, False, False, False],
+            },
+            index=pd.date_range("2025-01-01", periods=8, freq="D", tz="UTC"),
+        )
+
+        ablations = drought.analyze_gate_ablations(gate_df)
+        suspect_gates = [item["gate"] for item in drought.find_suspect_gates(ablations)]
+
+        self.assertEqual(ablations[0]["gate"], "strict_gate")
+        self.assertIn("strict_gate", suspect_gates)
+        self.assertEqual(drought.classify_density_issue(gate_df, ablations), "over_gating_issue")
+
+
+class StructuralFeedbackEnricherTests(unittest.TestCase):
+    def test_attach_structural_feedback_maps_trade_to_template(self) -> None:
+        trade = {
+            "trade_id": "t-1",
+            "symbol": "NQ",
+            "realized_outcome": "win",
+            "pnl": 0.02,
+            "close_ts_ms": 1_745_427_900_000,
+        }
+        template = {
+            "template_feedback": {
+                "structural_feedback": {
+                    "protocol_version": "structural-feedback-v1",
+                    "recommendation_id": "structural-feedback:NQ:node:path",
+                    "recommended_at": "2026-05-07T09:56:50Z",
+                    "node_id": "node-1",
+                    "branch_id": "branch-1",
+                    "scenario_id": "scenario-1",
+                    "path_id": "path-1",
+                    "followed_path": True,
+                },
+                "model_probabilities_before_trade": {
+                    "selected_direction": "Bull",
+                    "selected_probability": 0.62,
+                    "long_score": 0.62,
+                    "short_score": 0.38,
+                    "win_prob_long": 0.62,
+                    "win_prob_short": 0.38,
+                    "uncertainty": 0.10,
+                },
+            }
+        }
+
+        enriched = enricher.attach_structural_feedback(trade, template)
+
+        self.assertEqual(enriched["structural_feedback"]["path_id"], "path-1")
+        self.assertEqual(
+            enriched["model_probabilities_before_trade"]["selected_probability"],
+            0.62,
+        )
+        self.assertEqual(enriched["realized_outcome"], "win")
+
+    def test_enrich_jsonl_round_trip_writes_only_matched_records(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            trades_path = tmp / "trades.jsonl"
+            pending_path = tmp / "pending_update_history.json"
+            output_path = tmp / "enriched.jsonl"
+
+            trades_path.write_text(
+                "\n".join(
+                    [
+                        '{"trade_id":"t-1","symbol":"NQ","realized_outcome":"win","pnl":0.02,"close_ts_ms":1745427900000}',
+                        '{"trade_id":"t-2","symbol":"NQ","realized_outcome":"loss","pnl":-0.01,"close_ts_ms":1745427901000}',
+                    ]
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            pending_path.write_text(
+                '[{"template_feedback":{"structural_feedback":{"protocol_version":"structural-feedback-v1","recommendation_id":"rec-1","recommended_at":"2026-05-07T09:56:50Z","node_id":"node-1","branch_id":"branch-1","scenario_id":"scenario-1","path_id":"path-1","followed_path":true},"model_probabilities_before_trade":{"selected_direction":"Bull","selected_probability":0.62,"long_score":0.62,"short_score":0.38,"win_prob_long":0.62,"win_prob_short":0.38,"uncertainty":0.1}}}]',
+                encoding="utf-8",
+            )
+
+            summary = enricher.enrich_real_trades_jsonl(
+                trades_path=trades_path,
+                pending_update_history_path=pending_path,
+                output_path=output_path,
+            )
+
+            self.assertEqual(summary["matched"], 1)
+            self.assertEqual(summary["unmatched"], 1)
+            lines = [line for line in output_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+            self.assertEqual(len(lines), 1)
+            payload = pd.Series([lines[0]]).apply(lambda x: __import__("json").loads(x)).iloc[0]
+            self.assertEqual(payload["structural_feedback"]["path_id"], "path-1")
+
+
+if __name__ == "__main__":
+    unittest.main()

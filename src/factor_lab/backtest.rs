@@ -755,8 +755,12 @@ fn find_exit(
     take_profit: f64,
     slippage_rate: f64,
 ) -> (usize, f64) {
-    for index in entry_index..=exit_limit {
-        let candle = &candles[index];
+    for (index, candle) in candles
+        .iter()
+        .enumerate()
+        .skip(entry_index)
+        .take(exit_limit - entry_index + 1)
+    {
         match direction {
             Direction::Bull => {
                 if candle.low <= stop_loss {
@@ -813,9 +817,7 @@ fn forward_returns(candles: &[Candle], horizon: usize) -> Vec<f64> {
         .collect()
 }
 
-fn summarize_conformal_metrics(
-    windows: &[WalkForwardWindow],
-) -> (
+type ConformalMetricsSummary = (
     f64,
     f64,
     f64,
@@ -833,7 +835,9 @@ fn summarize_conformal_metrics(
     f64,
     Option<usize>,
     bool,
-) {
+);
+
+fn summarize_conformal_metrics(windows: &[WalkForwardWindow]) -> ConformalMetricsSummary {
     if windows.is_empty() {
         return (
             0.0, 0.0, 0.0, 0.0, 0.0, 0.0, None, false, 0.0, None, false, 0.0, None, false, 0.0,
@@ -1070,11 +1074,13 @@ fn best_regime(regime_scores: &HashMap<String, f64>) -> Regime {
 fn infer_regime(candles: &[Candle], index: usize, _config: &BacktestConfig) -> Regime {
     let start = index.saturating_sub(20);
     let window = &candles[start..=index];
-    let total_move = if window.first().unwrap().close.abs() <= f64::EPSILON {
+    let (Some(first), Some(last)) = (window.first(), window.last()) else {
+        return Regime::ManipulationExpansion;
+    };
+    let total_move = if first.close.abs() <= f64::EPSILON {
         0.0
     } else {
-        (window.last().unwrap().close - window.first().unwrap().close)
-            / window.first().unwrap().close
+        (last.close - first.close) / first.close
     };
     let avg_range = window
         .iter()

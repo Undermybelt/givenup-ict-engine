@@ -9,9 +9,7 @@ pub fn detect_structure_breaks(
     let mut breaks = Vec::new();
     let mut last_trend = Direction::Neutral;
 
-    for i in 0..candles.len() {
-        let candle = &candles[i];
-
+    for (i, candle) in candles.iter().enumerate() {
         // Check for bullish break (breaking above last swing high)
         if let Some(last_high) = swing_highs
             .iter()

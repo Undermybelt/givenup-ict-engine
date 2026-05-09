@@ -36,6 +36,118 @@ pub struct PolicyFeatureVector {
     pub entry_price_offset_bps: f64,
     pub sl_distance_bps: f64,
     pub tp_rr_ratio: f64,
+
+    // ── Flowtree-derived ICT features ──────────────────────────────
+    // Phase 0: macro context
+    /// ATR consumption ratio (current move / daily ATR). >0.8 = veto zone.
+    #[serde(default)]
+    pub atr_consumption_ratio: f64,
+    /// Distance to HTF draw-on-liquidity target, normalised 0-1 (0 = at target).
+    #[serde(default)]
+    pub htf_dol_distance_ratio: f64,
+
+    // Phase 1: HTF sweep & RB classification
+    /// HTF EQX sweep detected (buy-side or sell-side liquidity taken).
+    #[serde(default)]
+    pub htf_eqx_swept: bool,
+    /// HTF rejection-block type after sweep: "strong" / "chop" / "weak" / "none".
+    #[serde(default)]
+    pub htf_rb_type: String,
+
+    // Phase 2: LTF event sequence tracking
+    /// Consecutive bearish event-B count (看跌 FVG/CISD). ≥3 = three-strikes.
+    #[serde(default)]
+    pub event_b_consecutive_count: u8,
+    /// Bullish event-A sequence completion: 0=none, 1=CISD, 2=+iFVG, 3=+MSS.
+    #[serde(default)]
+    pub event_a_sequence_stage: u8,
+    /// LTF path classification: "classic_double_sweep" / "smt_washout" /
+    /// "v_reversal" / "trend_continuation_fail" / "none".
+    #[serde(default)]
+    pub ltf_path_label: String,
+
+    // Phase 2 detail: OTE & structure
+    /// Close position relative to 0.705 OTE level: >0 = above, <0 = below.
+    #[serde(default)]
+    pub ote_0705_offset: f64,
+    /// Recent BOS/CHoCH count within lookback window.
+    #[serde(default)]
+    pub structure_break_count: u8,
+    /// Latest structure break type: "bos" / "choch" / "none".
+    #[serde(default)]
+    pub latest_break_type: String,
+
+    // Phase 3: multi-TF fractal sync
+    /// LTF MSS driving HTF CISD (fractal sync confirmed).
+    #[serde(default)]
+    pub fractal_sync_confirmed: bool,
+    /// Kill-switch: high-level RB+CISD+FVG+MSS completion (0-4).
+    #[serde(default)]
+    pub killswitch_completion: u8,
+
+    // ICT structure counts (from ICTStructureSummary)
+    /// Open (unfilled) FVG count.
+    #[serde(default)]
+    pub fvgs_open: u8,
+    /// Nearby untested order-block count.
+    #[serde(default)]
+    pub order_blocks_nearby: u8,
+    /// LTF CISD confirmed.
+    #[serde(default)]
+    pub cisd_ltf_confirmed: bool,
+    /// HTF CISD confirmed.
+    #[serde(default)]
+    pub cisd_htf_confirmed: bool,
+    /// Rejection-block / pinbar detected on current bar.
+    #[serde(default)]
+    pub rb_pinbar_detected: bool,
+    /// Bull-side PDA count.
+    #[serde(default)]
+    pub pda_bull_count: u8,
+    /// Liquidity sweep count in recent window.
+    #[serde(default)]
+    pub liquidity_sweep_count: u8,
+
+    // Regime transition signal (flowtree3)
+    /// Red-alert state: order-flow broken, pending confirmation.
+    #[serde(default)]
+    pub red_alert_active: bool,
+    /// Bull recovery event-A streak during red-alert (≥3 = alert cleared).
+    #[serde(default)]
+    pub recovery_event_a_streak: u8,
+    /// PDA survival regime: "bear" / "chop" / "bull_continuation" / "unknown".
+    #[serde(default)]
+    pub pda_survival_regime: String,
+
+    // CisdRb entry-model packet bridge
+    #[serde(default)]
+    pub setup_model_id: String,
+    #[serde(default)]
+    pub setup_progress_state: String,
+    #[serde(default)]
+    pub cisd_run_length_observed: f64,
+    #[serde(default)]
+    pub cisd_impulse_atr: f64,
+    #[serde(default)]
+    pub cisd_body_ratio_mean: f64,
+    #[serde(default)]
+    pub rb_wick_body_ratio: f64,
+    #[serde(default)]
+    pub rb_close_location_ratio: f64,
+    #[serde(default)]
+    pub bars_between_cisd_and_rb: f64,
+    #[serde(default)]
+    pub seq_window_hit: bool,
+    #[serde(default)]
+    pub ema19_distance_bps: f64,
+    #[serde(default)]
+    pub realized_vol_zscore: f64,
+    #[serde(default)]
+    pub hmm_accumulation_prob: f64,
+    #[serde(default)]
+    pub hmm_manipulation_expansion_prob: f64,
+    #[serde(default)]
+    pub hmm_distribution_prob: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
@@ -121,6 +233,12 @@ impl CatBoostCompatiblePolicyEngine {
                     "setup_quality".to_string(),
                     "signal_bar_pattern".to_string(),
                     "session_model".to_string(),
+                    "htf_rb_type".to_string(),
+                    "ltf_path_label".to_string(),
+                    "latest_break_type".to_string(),
+                    "pda_survival_regime".to_string(),
+                    "setup_model_id".to_string(),
+                    "setup_progress_state".to_string(),
                 ],
                 numerical_features: vec![
                     "evidence_quality_score".to_string(),
@@ -134,6 +252,29 @@ impl CatBoostCompatiblePolicyEngine {
                     "entry_price_offset_bps".to_string(),
                     "sl_distance_bps".to_string(),
                     "tp_rr_ratio".to_string(),
+                    "atr_consumption_ratio".to_string(),
+                    "htf_dol_distance_ratio".to_string(),
+                    "ote_0705_offset".to_string(),
+                    "event_b_consecutive_count".to_string(),
+                    "event_a_sequence_stage".to_string(),
+                    "structure_break_count".to_string(),
+                    "killswitch_completion".to_string(),
+                    "fvgs_open".to_string(),
+                    "order_blocks_nearby".to_string(),
+                    "pda_bull_count".to_string(),
+                    "liquidity_sweep_count".to_string(),
+                    "recovery_event_a_streak".to_string(),
+                    "cisd_run_length_observed".to_string(),
+                    "cisd_impulse_atr".to_string(),
+                    "cisd_body_ratio_mean".to_string(),
+                    "rb_wick_body_ratio".to_string(),
+                    "rb_close_location_ratio".to_string(),
+                    "bars_between_cisd_and_rb".to_string(),
+                    "ema19_distance_bps".to_string(),
+                    "realized_vol_zscore".to_string(),
+                    "hmm_accumulation_prob".to_string(),
+                    "hmm_manipulation_expansion_prob".to_string(),
+                    "hmm_distribution_prob".to_string(),
                 ],
                 target_label_space: vec![
                     "Observe".to_string(),

@@ -23,6 +23,50 @@ impl Default for ProbabilisticPlanConfig {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct TradePlanInput<'a> {
+    pub mtf: &'a [Candle],
+    pub ltf: &'a [Candle],
+    pub fvgs: &'a [crate::types::FairValueGap],
+    pub obs: &'a [crate::types::OrderBlock],
+    pub cascade: &'a CascadeResult,
+    pub direction: Direction,
+    pub atr_ltf: &'a [f64],
+    pub posterior: f64,
+    pub symbol: &'a str,
+}
+
+#[derive(Debug, Clone)]
+pub struct ProbabilisticTradePlanInput<'a> {
+    pub mtf: &'a [Candle],
+    pub ltf: &'a [Candle],
+    pub fvgs: &'a [crate::types::FairValueGap],
+    pub obs: &'a [crate::types::OrderBlock],
+    pub symbol: &'a str,
+    pub regime_probs: RegimeProbs,
+    pub cascade_bull: &'a CascadeResult,
+    pub cascade_bear: &'a CascadeResult,
+    pub bull_trade_outcome: &'a [f64],
+    pub bear_trade_outcome: &'a [f64],
+    pub config: &'a ProbabilisticPlanConfig,
+}
+
+#[derive(Debug, Clone)]
+struct BuildTradePlanInput<'a> {
+    mtf: &'a [Candle],
+    ltf: &'a [Candle],
+    fvgs: &'a [crate::types::FairValueGap],
+    obs: &'a [crate::types::OrderBlock],
+    cascade_bull: &'a CascadeResult,
+    cascade_bear: &'a CascadeResult,
+    direction: Direction,
+    posterior: f64,
+    win_probability: f64,
+    symbol: &'a str,
+    uncertainties: Vec<String>,
+    max_kelly_fraction: f64,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProbabilisticDecisionSnapshot {
     pub long_score: f64,
@@ -38,59 +82,37 @@ pub struct ProbabilisticDecisionSnapshot {
 }
 
 /// Generate trade plan
-pub fn generate_trade_plan(
-    mtf: &[Candle],
-    ltf: &[Candle],
-    fvgs: &[crate::types::FairValueGap],
-    obs: &[crate::types::OrderBlock],
-    cascade: &CascadeResult,
-    direction: Direction,
-    _atr_ltf: &[f64],
-    posterior: f64,
-    symbol: &str,
-) -> Option<TradePlan> {
-    build_trade_plan(
-        mtf,
-        ltf,
-        fvgs,
-        obs,
-        cascade,
-        cascade,
-        direction,
-        posterior,
-        posterior,
-        symbol,
-        Vec::new(),
-        1.0,
-    )
+pub fn generate_trade_plan(input: TradePlanInput<'_>) -> Option<TradePlan> {
+    build_trade_plan(BuildTradePlanInput {
+        mtf: input.mtf,
+        ltf: input.ltf,
+        fvgs: input.fvgs,
+        obs: input.obs,
+        cascade_bull: input.cascade,
+        cascade_bear: input.cascade,
+        direction: input.direction,
+        posterior: input.posterior,
+        win_probability: input.posterior,
+        symbol: input.symbol,
+        uncertainties: Vec::new(),
+        max_kelly_fraction: 1.0,
+    })
 }
 
-pub fn generate_probabilistic_trade_plan(
-    mtf: &[Candle],
-    ltf: &[Candle],
-    fvgs: &[crate::types::FairValueGap],
-    obs: &[crate::types::OrderBlock],
-    symbol: &str,
-    regime_probs: RegimeProbs,
-    cascade_bull: &CascadeResult,
-    cascade_bear: &CascadeResult,
-    bull_trade_outcome: &[f64],
-    bear_trade_outcome: &[f64],
-    config: &ProbabilisticPlanConfig,
-) -> TradePlan {
+pub fn generate_probabilistic_trade_plan(input: ProbabilisticTradePlanInput<'_>) -> TradePlan {
     let snapshot = probabilistic_decision_snapshot(
-        &regime_probs,
-        cascade_bull,
-        cascade_bear,
-        bull_trade_outcome,
-        bear_trade_outcome,
+        &input.regime_probs,
+        input.cascade_bull,
+        input.cascade_bear,
+        input.bull_trade_outcome,
+        input.bear_trade_outcome,
     );
     let diagnostics = snapshot_diagnostics(&snapshot);
 
     let direction_allowed = match BayesianFusion::should_trade(
         snapshot.long_score,
         snapshot.short_score,
-        config.min_decision_score,
+        input.config.min_decision_score,
     ) {
         Some(Direction::Bull) => snapshot.selected_direction == Direction::Bull,
         Some(Direction::Bear) => snapshot.selected_direction == Direction::Bear,
@@ -101,52 +123,52 @@ pub fn generate_probabilistic_trade_plan(
         let mut uncertainties = diagnostics;
         uncertainties.push(format!(
             "decision_score_below_threshold={:.3}",
-            config.min_decision_score
+            input.config.min_decision_score
         ));
         return no_trade_with_uncertainties(
-            symbol,
-            cascade_bull,
-            cascade_bear,
-            regime_probs,
+            input.symbol,
+            input.cascade_bull,
+            input.cascade_bear,
+            input.regime_probs,
             uncertainties,
         );
     }
 
-    if snapshot.selected_win_probability < config.min_win_probability {
+    if snapshot.selected_win_probability < input.config.min_win_probability {
         let mut uncertainties = diagnostics;
         uncertainties.push(format!(
             "win_probability_below_threshold={:.3}",
-            config.min_win_probability
+            input.config.min_win_probability
         ));
         return no_trade_with_uncertainties(
-            symbol,
-            cascade_bull,
-            cascade_bear,
-            regime_probs,
+            input.symbol,
+            input.cascade_bull,
+            input.cascade_bear,
+            input.regime_probs,
             uncertainties,
         );
     }
 
-    build_trade_plan(
-        mtf,
-        ltf,
-        fvgs,
-        obs,
-        cascade_bull,
-        cascade_bear,
-        snapshot.selected_direction,
-        snapshot.selected_score,
-        snapshot.selected_win_probability,
-        symbol,
-        diagnostics,
-        config.max_kelly_fraction,
-    )
+    build_trade_plan(BuildTradePlanInput {
+        mtf: input.mtf,
+        ltf: input.ltf,
+        fvgs: input.fvgs,
+        obs: input.obs,
+        cascade_bull: input.cascade_bull,
+        cascade_bear: input.cascade_bear,
+        direction: snapshot.selected_direction,
+        posterior: snapshot.selected_score,
+        win_probability: snapshot.selected_win_probability,
+        symbol: input.symbol,
+        uncertainties: diagnostics,
+        max_kelly_fraction: input.config.max_kelly_fraction,
+    })
     .unwrap_or_else(|| {
         no_trade_with_uncertainties(
-            symbol,
-            cascade_bull,
-            cascade_bear,
-            regime_probs,
+            input.symbol,
+            input.cascade_bull,
+            input.cascade_bear,
+            input.regime_probs,
             vec!["No valid OTE zone from current FVG/OB structures".to_string()],
         )
     })
@@ -185,20 +207,21 @@ pub fn probabilistic_decision_snapshot(
     }
 }
 
-fn build_trade_plan(
-    mtf: &[Candle],
-    ltf: &[Candle],
-    fvgs: &[crate::types::FairValueGap],
-    obs: &[crate::types::OrderBlock],
-    cascade_bull: &CascadeResult,
-    cascade_bear: &CascadeResult,
-    direction: Direction,
-    posterior: f64,
-    win_probability: f64,
-    symbol: &str,
-    uncertainties: Vec<String>,
-    max_kelly_fraction: f64,
-) -> Option<TradePlan> {
+fn build_trade_plan(input: BuildTradePlanInput<'_>) -> Option<TradePlan> {
+    let BuildTradePlanInput {
+        mtf,
+        ltf,
+        fvgs,
+        obs,
+        cascade_bull,
+        cascade_bear,
+        direction,
+        posterior,
+        win_probability,
+        symbol,
+        uncertainties,
+        max_kelly_fraction,
+    } = input;
     let atr = latest_atr(ltf, 14);
     if atr <= 0.0 {
         return None;
@@ -375,23 +398,23 @@ mod tests {
             start_bar: 10,
             filled: false,
         }];
-        let plan = generate_probabilistic_trade_plan(
-            &candles,
-            &candles,
-            &fvgs,
-            &[],
-            "NQ",
-            RegimeProbs {
+        let plan = generate_probabilistic_trade_plan(ProbabilisticTradePlanInput {
+            mtf: &candles,
+            ltf: &candles,
+            fvgs: &fvgs,
+            obs: &[],
+            symbol: "NQ",
+            regime_probs: RegimeProbs {
                 accumulation: 0.2,
                 manipulation_expansion: 0.6,
                 distribution: 0.2,
             },
-            &cascade(Direction::Bull, 0.8),
-            &cascade(Direction::Bear, 0.2),
-            &[0.65, 0.20, 0.15],
-            &[0.20, 0.20, 0.60],
-            &ProbabilisticPlanConfig::default(),
-        );
+            cascade_bull: &cascade(Direction::Bull, 0.8),
+            cascade_bear: &cascade(Direction::Bear, 0.2),
+            bull_trade_outcome: &[0.65, 0.20, 0.15],
+            bear_trade_outcome: &[0.20, 0.20, 0.60],
+            config: &ProbabilisticPlanConfig::default(),
+        });
 
         assert_eq!(plan.direction, Direction::Bull);
         assert!(plan.posterior > 0.0);
@@ -421,23 +444,23 @@ mod tests {
     #[test]
     fn test_generate_probabilistic_trade_plan_can_return_no_trade() {
         let candles = sample_candles();
-        let plan = generate_probabilistic_trade_plan(
-            &candles,
-            &candles,
-            &[],
-            &[],
-            "NQ",
-            RegimeProbs {
+        let plan = generate_probabilistic_trade_plan(ProbabilisticTradePlanInput {
+            mtf: &candles,
+            ltf: &candles,
+            fvgs: &[],
+            obs: &[],
+            symbol: "NQ",
+            regime_probs: RegimeProbs {
                 accumulation: 0.4,
                 manipulation_expansion: 0.2,
                 distribution: 0.4,
             },
-            &cascade(Direction::Bull, 0.2),
-            &cascade(Direction::Bear, 0.2),
-            &[0.30, 0.20, 0.50],
-            &[0.30, 0.20, 0.50],
-            &ProbabilisticPlanConfig::default(),
-        );
+            cascade_bull: &cascade(Direction::Bull, 0.2),
+            cascade_bear: &cascade(Direction::Bear, 0.2),
+            bull_trade_outcome: &[0.30, 0.20, 0.50],
+            bear_trade_outcome: &[0.30, 0.20, 0.50],
+            config: &ProbabilisticPlanConfig::default(),
+        });
 
         assert_eq!(plan.direction, Direction::Neutral);
         assert!(plan
