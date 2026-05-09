@@ -104,31 +104,32 @@ python3 scripts/research/regime_expert_trainer.py \
 
 ---
 
-## Immediate Next Slice: R6 Conformal Calibration
+## Next Slice Completed: R6 Conformal Calibration
 
 ### Create
 
-- [ ] `scripts/research/regime_conformal_calibration_report.py`
-- [ ] `scripts/research/tests/test_regime_conformal_calibration_report.py`
+- [x] `scripts/research/regime_conformal_calibration_report.py`
+- [x] `scripts/research/tests/test_regime_conformal_calibration_report.py`
 
 ### Inputs
 
-- [ ] `regime_expert_scores.jsonl`
-- [ ] `regime_expert_training_report.json`
-- [ ] Optional truth labels.
+- [x] `regime_expert_scores.jsonl`
+- [x] `regime_expert_training_report.json`
+- [x] Optional truth labels.
 
 ### Outputs
 
-- [ ] `regime_conformal_calibration_report.json`
+- [x] `regime_conformal_calibration_report.json`
 
 ### Acceptance
 
-- [ ] Supports target coverage `0.95` and `0.99`.
-- [ ] Emits class-conditional coverage.
-- [ ] Emits singleton rate.
-- [ ] Emits conformal set size.
-- [ ] Emits `confidence_95` / `confidence_99` only when coverage gates pass.
-- [ ] Unknown/abstain labels remain non-trade-usable.
+- [x] Supports target coverage `0.95` and `0.99`.
+- [x] Emits class-conditional coverage.
+- [x] Emits singleton rate.
+- [x] Emits conformal set size.
+- [x] Emits `confidence_95` / `confidence_99` only when coverage gates pass.
+- [x] Unknown/abstain labels remain non-trade-usable.
+- [x] Target tests: `python3 -m unittest scripts/research/tests/test_regime_conformal_calibration_report.py -v` -> 4 OK.
 
 ---
 

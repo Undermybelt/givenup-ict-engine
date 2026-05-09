@@ -540,10 +540,12 @@ Outputs:
 - `regime_conformal_report.json`
 
 Acceptance:
-- [ ] Reports coverage per label.
-- [ ] Reports singleton rate and average set size.
-- [ ] Supports target coverage `0.95` and `0.99`.
-- [ ] Emits `confidence_95` / `confidence_99` only when coverage criteria pass.
+- [x] Reports coverage per label.
+- [x] Reports singleton rate and average set size.
+- [x] Supports target coverage `0.95` and `0.99`.
+- [x] Emits `confidence_95` / `confidence_99` only when coverage criteria pass.
+- [x] Keeps Unknown/Neutral/Transitional labels non-trade-usable.
+- [x] Target tests: `python3 -m unittest scripts/research/tests/test_regime_conformal_calibration_report.py -v` -> 4 OK.
 
 ### Slice R7: Distributional agreement layer
 
