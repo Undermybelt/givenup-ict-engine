@@ -34,7 +34,8 @@
 - [x] Run full research tests
   - `python3 -m unittest discover -s scripts/research/tests -p 'test_*.py'` -> 46 OK
 - [x] Update master TODO
-- [ ] Commit only this slice
+- [x] Commit only this slice
+  - `b41f850 feat: add risk adjusted path utility`
 
 ## Added Target Fields
 

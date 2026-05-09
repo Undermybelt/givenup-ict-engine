@@ -45,7 +45,7 @@
   - Files: `bbn_evidence_value_report.py`, handoff, tests
   - Tests: target 3 OK; full research 45 OK
 - [x] Slice 10: Risk-adjusted path utility
-  - Commit: pending this slice
+  - Commit: `b41f850 feat: add risk adjusted path utility`
   - Files: `payoff_to_path_ranker_target.py`, handoff, tests
   - Tests: target 3 OK; full research 46 OK
 
