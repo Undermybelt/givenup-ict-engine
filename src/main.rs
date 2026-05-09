@@ -546,6 +546,17 @@ enum Commands {
             help = "Disable the leading Execution Triage section / envelope field (default: on)"
         )]
         no_execution_focus: bool,
+        #[arg(
+            long,
+            help = "Optional regime_consumer_bundle.json path for read-only trace/report context"
+        )]
+        regime_consumer_bundle: Option<String>,
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Fail analyze if --regime-consumer-bundle is missing or invalid"
+        )]
+        regime_consumer_bundle_strict: bool,
     },
     /// Analyze live futures with integrated backends and spot/options auxiliary evidence
     AnalyzeLive {
@@ -2082,6 +2093,8 @@ fn main() -> Result<()> {
             human,
             inline_ledger,
             no_execution_focus,
+            regime_consumer_bundle,
+            regime_consumer_bundle_strict,
         } => {
             ensure_state_dir_ready(&state_dir)?;
             let (data_htf, data_mtf, data_ltf) = resolve_analyze_cli_inputs(
@@ -2102,6 +2115,8 @@ fn main() -> Result<()> {
                 output_format,
                 inline_ledger,
                 !no_execution_focus,
+                regime_consumer_bundle.as_deref(),
+                regime_consumer_bundle_strict,
             )?
         }
         Commands::AnalyzeLive {

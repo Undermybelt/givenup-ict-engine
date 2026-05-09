@@ -1,4 +1,6 @@
 use super::*;
+use ict_engine::application::regime::consumer_bundle_adapter::RegimeConsumerBundleAdapter;
+use std::path::Path;
 
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn analyze_command(
@@ -10,6 +12,8 @@ pub(crate) fn analyze_command(
     output_format: OutputFormat,
     inline_ledger: bool,
     execution_focus: bool,
+    regime_consumer_bundle: Option<&str>,
+    regime_consumer_bundle_strict: bool,
 ) -> Result<()> {
     let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
     let htf = load_candles(data_htf)?;
@@ -168,6 +172,21 @@ pub(crate) fn analyze_command(
         &artifact_family_trends,
         &artifact_consumed_impact_summary,
     );
+    if let Some(bundle_path) = regime_consumer_bundle {
+        let adapter = RegimeConsumerBundleAdapter::load_optional(
+            Some(Path::new(bundle_path)),
+            regime_consumer_bundle_strict,
+        )?;
+        let trace_entries = adapter.trace_entries(Some(Path::new(bundle_path)));
+        report
+            .supporting
+            .artifact_action_summary
+            .push(format!("regime_bundle_trace:{}", trace_entries.join("|")));
+        report
+            .supporting
+            .artifact_action_summary
+            .extend(trace_entries);
+    }
     if let Ok(artifact) = ict_engine::pda_sequence::load_pda_sequence_analysis(state_dir, symbol) {
         let summary = ict_engine::pda_sequence::summarize_pda_sequence_artifact(&artifact);
         report.supporting.artifact_action_summary.push(format!(
