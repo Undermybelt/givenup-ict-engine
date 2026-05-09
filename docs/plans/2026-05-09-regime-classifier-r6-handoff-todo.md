@@ -89,36 +89,36 @@ python3 scripts/research/regime_conformal_calibration_report.py \
 
 ---
 
-## Immediate Next Slice: R7 Distributional Agreement
+## Next Slice Completed: R7 Distributional Agreement
 
 ### Create
 
-- [ ] `scripts/research/regime_distributional_agreement_report.py`
-- [ ] `scripts/research/tests/test_regime_distributional_agreement_report.py`
+- [x] `scripts/research/regime_distributional_agreement_report.py`
+- [x] `scripts/research/tests/test_regime_distributional_agreement_report.py`
 
 ### Inputs
 
-- [ ] `regime_features.csv` or JSONL.
-- [ ] `regime_expert_scores.jsonl`.
-- [ ] `regime_conformal_calibration_report.json`.
+- [x] `regime_features.csv` or JSONL.
+- [x] `regime_expert_scores.jsonl`.
+- [x] `regime_conformal_calibration_report.json`.
 
 ### Outputs
 
-- [ ] `regime_distributional_agreement_report.json`.
+- [x] `regime_distributional_agreement_report.json`.
 
 ### Acceptance
 
-- [ ] Compares current feature window to each label archetype.
-- [ ] Uses scipy Wasserstein if available.
-- [ ] Falls back to quantile / energy-distance proxy.
-- [ ] Emits agreement/disagreement with classifier top label.
-- [ ] Emits `transitional_flag` for high-distance or mixed archetype cases.
-- [ ] User VRP/NQ fields remain visible in feature group summaries when present:
+- [x] Compares current feature window to each label archetype.
+- [x] Uses pure-Python quantile/energy-distance proxy fallback.
+- [x] Emits agreement/disagreement with classifier top label.
+- [x] Emits `transitional_flag` for high-distance or mixed archetype cases.
+- [x] User VRP/NQ fields remain visible in feature group summaries when present:
   - `qqq_hv_level`
   - `nq_vs_200d_pct`
   - `vix3m_level`
   - `qqq_hv_pct_rank_252`
   - `vvix_over_vix`
+- [x] Target tests: `python3 -m unittest scripts/research/tests/test_regime_distributional_agreement_report.py -v` -> 3 OK.
 
 ---
 

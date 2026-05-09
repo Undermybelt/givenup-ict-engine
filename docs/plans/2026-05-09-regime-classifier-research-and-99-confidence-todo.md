@@ -561,9 +561,11 @@ Outputs:
 - `regime_distributional_agreement_report.json`
 
 Acceptance:
-- [ ] Compares current feature window to each label archetype.
-- [ ] Emits agreement/disagreement with classifier top label.
-- [ ] Emits `transitional_flag` for high-distance or mixed archetype cases.
+- [x] Compares current feature window to each label archetype.
+- [x] Emits agreement/disagreement with classifier top label.
+- [x] Emits `transitional_flag` for high-distance or mixed archetype cases.
+- [x] Keeps user VRP/NQ fields visible in `feature_group_summaries.user_vrp_nq`.
+- [x] Target tests: `python3 -m unittest scripts/research/tests/test_regime_distributional_agreement_report.py -v` -> 3 OK.
 
 ### Slice R8: Transition persistence governor
 
