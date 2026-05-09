@@ -389,6 +389,144 @@ live_recheck_state=/tmp/ict-high-sharpe-live-20260510-000946/repo-state-parser-c
 live_recheck=matched 2, mismatches [], manifest_only [], log_only []
 ```
 
+### R29: fresh end-to-end no-imagination chain rerun
+
+- [x] Re-run provider status and actual provider fetches in a fresh `/tmp` root.
+- [x] Re-bootstrap and prepare the managed Auto-Quant workspace from `/Users/thrill3r/Auto-Quant`.
+- [x] Seed the managed workspace with archived Auto-Quant strategy files from its own versioned strategy folders.
+- [x] Run Auto-Quant backtests, not a synthetic sidecar-only report.
+- [x] Import the fresh strategy library through `auto-quant-results-import` with log cross-check.
+- [x] Apply BBN prior initialization through `auto-quant-prior-init`.
+- [x] Run `analyze-live` and `analyze --demo` to force the filter/analyze and execution-tree surfaces.
+- [x] Export structural path target rows.
+- [x] Train CatBoost from local `uv` cache, apply scores, register the CatBoost companion artifact, and enable runtime reuse.
+- [x] Re-run analyze/workflow/policy status and inspect persisted `execution_tree_trace.json`.
+
+Observed fresh chain:
+
+```text
+run_root=/tmp/ict-aq-filter-bbn-catboost-exectree-20260510022525
+
+provider matrix:
+  yfinance provider-status: live_runtime 1/1 ready, market_data 1/1 ready
+  yfinance actual fetch: QQQ 1h, 210 rows -> provider-data/yf_QQQ_1h.csv
+  kraken_public provider-status: market_data 1/1 ready
+  kraken_public actual fetch: XBTUSD 1h, 721 rows -> provider-data/kraken_XBTUSD_1h.csv
+  ibkr provider-status: configured_runtime_unhealthy in default runtime because redis/ib_async missing, gateway reachable on port 4002
+  ibkr actual fetch: QQQ 1h 30d, 210 rows via uv run --with ib_async --with pandas --with redis, gateway port 4002 -> provider-data/ibkr_QQQ_1h_30d.csv
+  tradingviewremix provider-status: install_required, missing ICT_ENGINE_TVREMIX_MCP_API_KEY
+  tradingviewremix actual fetch: attempted NASDAQ:QQQ, blocked by missing key; no TradingViewRemix data was used
+
+Auto-Quant bootstrap:
+  source=/Users/thrill3r/Auto-Quant
+  managed_copy=/tmp/ict-aq-filter-bbn-catboost-exectree-20260510022525/auto-quant/auto-quant/.deps/auto-quant
+  pinned_ref=34ba6b6ee6aa69813a50a72158d4c089d97afb96
+  prepare=data_ready true
+  seed_source=managed versions/0.4.0/strategies/MomentumMTFConfluence.py and versions/0.4.1/strategies/RegimeAdaptiveBNB.py
+  run_log=/tmp/ict-aq-filter-bbn-catboost-exectree-20260510022525/logs/06_auto_quant_run.log
+  run_result=5 backtests succeeded, 0 failed
+
+Auto-Quant results:
+  MomentumMTFConfluence full: 854 trades, sharpe 0.3993, sortino 1.0760, calmar 2.4190, profit 53.2400%, max_dd -23.1801%, pf 1.1682
+  RegimeAdaptiveBNB bull_2021: 16 trades, sharpe 0.3226, pf 2.4178
+  RegimeAdaptiveBNB winter_2022: 25 trades, sharpe 0.2359, pf 1.7511
+  RegimeAdaptiveBNB recovery_23_25: 72 trades, sharpe 0.0967, pf 1.2912
+  RegimeAdaptiveBNB full_5y: 115 trades, sharpe 0.1380, profit 16.4100%, max_dd -4.6742%, pf 1.4262
+
+Import and BBN:
+  manifest=/tmp/ict-aq-filter-bbn-catboost-exectree-20260510022525/strategy_library_from_fresh_run.json
+  import_artifact=auto_quant_strategy_library_NQ_20260509T183007.447791000Z
+  import_n_ok=2
+  log_cross_check=matched 2, mismatches [], manifest_only [], log_only []
+  prior_artifact=auto_quant_prior_init_NQ_20260509T183007.498689000Z
+  evidence_value_gate_passed=true
+  prior_initial=[0.999956,0.000022,0.000022]
+  prior_final=[0.6734197006771924,0.000000013279761567917304,0.326580286043046]
+  bbn_entropy_reduction=0.018056766371967514
+  bbn_log_loss_delta=6.588649375209126
+  bbn_contradiction_lift=1.931483401354385
+  strategies_applied=MomentumMTFConfluence,RegimeAdaptiveBNB
+  strategies_skipped=[]
+
+Filter/analyze and execution tree before ranker:
+  analyze_live_yfinance=TrendExpansion/BullTrendExhaustion; execution observe/transition_guardrail/guarded; gate pass_neutralized; quality 0.568
+  analyze_demo_filter=TrendExpansion/BullTrendAcceleration; execution observe/transition_guardrail/guarded; gate pass_neutralized; quality 0.582
+  pre_bayes=gate pass_neutralized; soft_evidence=yes; long 0.554 short 0.534
+  structural_target=3 rows, mature_rows 0, rows_with_raw_path_score 0
+
+CatBoost and execution tree after ranker:
+  first_catboost_attempt=failed PyPI TLS fetch; not accepted as evidence
+  catboost_train=success using local uv offline cache
+  catboost_model=/tmp/ict-aq-filter-bbn-catboost-exectree-20260510022525/path_ranker_catboost/catboost_model.cbm
+  catboost_scores=/tmp/ict-aq-filter-bbn-catboost-exectree-20260510022525/path_scores_catboost.csv
+  score_rows=3
+  top_score=trend_follow_through raw_path_score 0.7506586567765241
+  apply_scores=rows_with_raw_path_score 3, history_rows_with_raw_path_score 3
+  register_runtime=enabled_registered_artifact_ready
+  runtime_source=registered_artifact
+  runtime_matches=3
+  policy_status=raw_scored_mature 0/30; production_validation 0/30; observation_validation 0/30; calibration not_fitted
+  analyze_after=market_state TrendExpansion/BullTrendAcceleration; execution observe/transition_guardrail/guarded; ranker registered_artifact/catboost/not_ready
+  execution_tree_trace=path_ranker_model_family catboost, path_ranker_runtime_source registered_artifact, ranker_validation_ready false
+```
+
+Boundary: this proves the current candidate chain was actually driven through provider probing, Auto-Quant, filter/analyze, BBN prior initialization, CatBoost score production, registered ranker runtime, and execution-tree readback. It does not promote either strategy to production: TradingViewRemix is still key-blocked, NQ structural rows are immature, CatBoost labels are pseudo-label/fallback-only, and execution remains `observe/transition_guardrail/guarded`.
+
+### R30: R27 mature-row harvest attempt and blocker
+
+- [x] Re-use the fresh provider matrix in a new `/tmp` root instead of assuming data availability.
+- [x] Fetch/attempt every requested provider lane: IBKR, TradingViewRemix, YF/yfinance, and Kraken.
+- [x] Replay IBKR candles through the real structural feedback harness.
+- [x] Seed a second replay from the IBKR state and replay YF candles through the same harness.
+- [x] Train CatBoost from the mature target history, apply CatBoost scores, register the CatBoost companion artifact, and re-read runtime/policy status.
+- [ ] Unblock target-row production validation: either add a real observation/run identity to structural path-ranking target history, widen candidate/path generation enough to produce `raw_scored_mature >= 30`, or do both with tests.
+
+Observed mature-row harvest:
+
+```text
+run_root=/tmp/ict-r27-mature-row-harvest-20260510023136
+
+provider matrix:
+  yfinance actual fetch: QQQ 1h, 344 rows after one HTTP 429 retry -> provider-data/yf_QQQ_1h.csv
+  kraken_public actual fetch: XBTUSD 1h, 721 rows -> provider-data/kraken_XBTUSD_1h.csv
+  ibkr actual fetch: QQQ 1h 45d, 720 rows via uv run --with redis --with ib_async --with pandas, gateway port 4002 -> provider-data/ibkr_QQQ_1h_45d.csv
+  tradingviewremix actual fetch: attempted NASDAQ:QQQ, blocked by missing ICT_ENGINE_TVREMIX_MCP_API_KEY; no TradingViewRemix data was used
+
+replay_ibkr:
+  command_surface=scripts/auto_quant_external/structural_feedback_replay_harness.py
+  candles=candles/ibkr_QQQ_1h_45d.json
+  observations=31
+  final_current_mature_rows=1
+  after_catboost_policy_status=raw_scored_mature 6/30; production_validation 6/30; observation_validation 31/30
+  runtime_selection=enabled_registered_artifact_ready
+  runtime_source=registered_artifact
+  model_family=catboost
+
+replay_yfinance_after_ibkr:
+  seed_state=replay_ibkr/state copied forward
+  candles=candles/yf_QQQ_1h.json
+  additional_observations=31
+  total_update_runs=62
+  total_mature_observations=62/30
+  final_policy_status=raw_scored_mature 6/30; production_validation 6/30; observation_validation 62/30
+  runtime_selection=enabled_registered_artifact_ready
+  runtime_source=registered_artifact
+  model_family=catboost
+
+target_history_diagnosis:
+  history_jsonl=/tmp/ict-r27-mature-row-harvest-20260510023136/replay_yfinance_after_ibkr/state/NQ/policy_training/structural_path_ranking_target_history.jsonl
+  history_rows=12
+  unique_candidate_path_keys=12
+  mature_scored_rows=6
+  feedback_observations_total=62
+  status_line=target_rows raw_scored_mature=6/30 production_validation=6/30 ready=false
+  observation_line=observations mature=62/30 pending=0 total=62 ready=true
+```
+
+Root cause: more replay observations are reaching the feedback/policy layer, but they are not becoming distinct production-validation target rows. The canonical upsert owner is `src/belief_core/ranking_label.rs`; `structural_path_ranking_target_row_history_key` currently keys history rows as `candidate_set_id|path_id`, while the target row payload has no persisted observation/run timestamp. Repeated observations for the same candidate/path therefore overwrite the history row instead of adding independent supervised samples. Blind replay is now low yield until the target-row identity contract or candidate-path diversity is fixed.
+
+Boundary: R27 is still open. This run proves actual operation through provider probing, replay feedback, filter/analyze state updates, CatBoost companion registration, and runtime readback, but it does not satisfy `raw_scored_mature >= 30` or production validation.
+
 ---
 
 ## Verification floor
