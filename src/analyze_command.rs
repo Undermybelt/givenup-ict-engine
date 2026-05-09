@@ -15,6 +15,14 @@ pub(crate) fn analyze_command(
     regime_consumer_bundle: Option<&str>,
     regime_consumer_bundle_strict: bool,
 ) -> Result<()> {
+    let regime_bundle_adapter = regime_consumer_bundle
+        .map(|bundle_path| {
+            RegimeConsumerBundleAdapter::load_optional(
+                Some(Path::new(bundle_path)),
+                regime_consumer_bundle_strict,
+            )
+        })
+        .transpose()?;
     let _ = migrate_ensemble_executor_scorecards(state_dir, symbol)?;
     let htf = load_candles(data_htf)?;
     let mtf = load_candles(data_mtf)?;
@@ -173,19 +181,17 @@ pub(crate) fn analyze_command(
         &artifact_consumed_impact_summary,
     );
     if let Some(bundle_path) = regime_consumer_bundle {
-        let adapter = RegimeConsumerBundleAdapter::load_optional(
-            Some(Path::new(bundle_path)),
-            regime_consumer_bundle_strict,
-        )?;
-        let trace_entries = adapter.trace_entries(Some(Path::new(bundle_path)));
-        report
-            .supporting
-            .artifact_action_summary
-            .push(format!("regime_bundle_trace:{}", trace_entries.join("|")));
-        report
-            .supporting
-            .artifact_action_summary
-            .extend(trace_entries);
+        if let Some(adapter) = regime_bundle_adapter.as_ref() {
+            let trace_entries = adapter.trace_entries(Some(Path::new(bundle_path)));
+            report
+                .supporting
+                .artifact_action_summary
+                .push(format!("regime_bundle_trace:{}", trace_entries.join("|")));
+            report
+                .supporting
+                .artifact_action_summary
+                .extend(trace_entries);
+        }
     }
     if let Ok(artifact) = ict_engine::pda_sequence::load_pda_sequence_analysis(state_dir, symbol) {
         let summary = ict_engine::pda_sequence::summarize_pda_sequence_artifact(&artifact);
