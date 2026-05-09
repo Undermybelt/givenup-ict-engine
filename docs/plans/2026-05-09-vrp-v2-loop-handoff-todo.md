@@ -70,11 +70,23 @@
 
 ## Next
 
-- [ ] Do not force-reingest `/tmp/vrp_v2_realized_trades.jsonl` into the copied state unless intentionally rolling back BBN feedback first.
-- [ ] Use the generated structural target CSV to produce a hot-plug external CatBoost/direct ranker artifact, then re-run `policy-training-status` to see whether runtime selection moves beyond `candidate_set_only`.
-- [ ] Keep the ranker artifact optional/hot-pluggable: consumer can use candidate-set scoring with zero config, or opt into the external ranker when enough validation rows exist.
-- [ ] If mature rows remain zero, the next practical slice should generate or import structural feedback rows rather than tuning the trainer again.
-- [ ] Keep all generated ranker experiments under `/tmp/...` or explicit caller-owned state dirs; do not write model artifacts to repo root.
+- [x] Do not force-reingest `/tmp/vrp_v2_realized_trades.jsonl` into the copied state unless intentionally rolling back BBN feedback first.
+  - kept intact; no forced historical trade reingest was used.
+- [x] Use the generated structural target CSV to produce a hot-plug external CatBoost/direct ranker artifact, then re-run `policy-training-status` to see whether runtime selection moves beyond `candidate_set_only`.
+  - command: `python3 scripts/auto_quant_external/path_ranker_integration.py --state-dir /tmp/vrp-v2-loop-20260509 --symbol NQ --register-runtime-artifact --reuse-mode candidate_set_only`
+  - result: `runtime_selection=enabled_registered_model_ready`, `runtime_source=registered_model_artifact`, `runtime_matches=3`.
+  - CatBoost package was not installed in the current Python, so zero-config fallback emitted and registered `path_ranker_direct_model.json` instead of requiring dependency installation.
+- [x] Keep the ranker artifact optional/hot-pluggable: consumer can use candidate-set scoring with zero config, or opt into the external ranker when enough validation rows exist.
+  - runtime mode remains explicit opt-in under `/tmp/vrp-v2-loop-20260509/NQ/policy_training/structural_path_ranking_runtime_selection.json`.
+- [x] If mature rows remain zero, the next practical slice should generate or import structural feedback rows rather than tuning the trainer again.
+  - added `emit-probe` mode to `scripts/auto_quant_external/structural_feedback_trade_enricher.py`, which turns a selected structural target row into an explicit `structural-feedback-v1` JSON for `ict-engine update --feedback-file`.
+  - command: `python3 scripts/auto_quant_external/structural_feedback_trade_enricher.py emit-probe --target-csv /tmp/vrp-v2-loop-20260509/NQ/policy_training/structural_path_ranking_target.csv --output /tmp/vrp-v2-loop-20260509/structural_feedback_probe_rank1.json --rank 1 --realized-outcome win --pnl 0.03 --exit-reason manual_probe_target_hit --notes "explicit opt-in probe from structural path-ranking target lineage"`
+  - command: `ict-engine update --symbol NQ --outcome win --entry-signal medium --state-dir /tmp/vrp-v2-loop-20260509 --pnl 0.03 --feedback-file /tmp/vrp-v2-loop-20260509/structural_feedback_probe_rank1.json`
+  - result after `export-structural-path-ranking-target`: `mature_rows=1`, `history_mature_rows=1`, `training_weight_rows=1`.
+  - result after `policy-training-status`: `raw_scored_mature=1/30`, `production_validation=0/30`, `runtime_source=registered_model_artifact`.
+- [x] Keep all generated ranker experiments under `/tmp/...` or explicit caller-owned state dirs; do not write model artifacts to repo root.
+  - generated probe, model, scores, runtime selection, and target exports stayed under `/tmp/vrp-v2-loop-20260509`.
+- [ ] Next threshold: collect or replay 29 more honest structural-feedback observations before claiming external ranker validation (`raw_scored_mature >= 30`).
 
 ## Drift Check
 

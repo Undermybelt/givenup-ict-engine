@@ -154,7 +154,10 @@ and make every handoff explicit, reviewable, and `/tmp/...` isolated.
   - `stopped_at_execution_tree`
   - `closed_loop_changed`
   - Slice verdict: `stopped_at_path_ranking` because `mature_rows=0`, `raw_scored_mature=0/30`, `production_validation=0/30`, while workflow still uses `candidate_set_only` scores.
-- [ ] Next practical slice: generate or import structural feedback rows / hot-plug ranker evidence so path-ranking can move beyond candidate-set scoring without breaking zero-config fallback.
+- [x] Next practical slice: generate or import structural feedback rows / hot-plug ranker evidence so path-ranking can move beyond candidate-set scoring without breaking zero-config fallback.
+  - hot-plug evidence: `runtime_selection=enabled_registered_model_ready`, `runtime_source=registered_model_artifact`, `runtime_matches=3` after `path_ranker_integration.py --register-runtime-artifact`.
+  - structural feedback evidence: `structural_feedback_trade_enricher.py emit-probe` generated `structural-feedback-v1` from the rank-1 target row; `ict-engine update --feedback-file` consumed it; target export moved to `mature_rows=1`, `raw_scored_mature=1/30`.
+  - remaining stop layer: `stopped_at_path_ranking_validation_floor` until 29 more honest structural-feedback observations exist.
 
 ### Not Yet
 

@@ -136,6 +136,33 @@ class StructuralFeedbackEnricherTests(unittest.TestCase):
             payload = pd.Series([lines[0]]).apply(lambda x: __import__("json").loads(x)).iloc[0]
             self.assertEqual(payload["structural_feedback"]["path_id"], "path-1")
 
+    def test_emit_structural_feedback_probe_uses_target_lineage(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            target_csv = tmp / "target.csv"
+            output_path = tmp / "feedback.json"
+            target_csv.write_text(
+                "symbol,candidate_set_id,candidate_set_size,rank,path_id,scenario_id,path_label,direction,generated_at,behavior_policy_probability,current_posterior,raw_path_score\n"
+                "NQ,set-1,3,1,path-1,scenario-1,trend_follow,Observe,2026-05-09T00:00:00Z,0.37,0.46,0.47\n",
+                encoding="utf-8",
+            )
+
+            summary = enricher.emit_structural_feedback_probe(
+                target_csv=target_csv,
+                output_path=output_path,
+                realized_outcome="win",
+                pnl=0.03,
+            )
+
+            payload = __import__("json").loads(output_path.read_text(encoding="utf-8"))
+            self.assertTrue(summary["ok"])
+            self.assertEqual(payload["protocol_version"], "structural-feedback-v1")
+            self.assertEqual(payload["path_id"], "path-1")
+            self.assertEqual(payload["scenario_id"], "scenario-1")
+            self.assertEqual(payload["candidate_set_id"], "set-1")
+            self.assertEqual(payload["realized_outcome"], "win")
+            self.assertEqual(payload["model_probabilities_before_trade"]["selected_probability"], 0.37)
+
 
 if __name__ == "__main__":
     unittest.main()
