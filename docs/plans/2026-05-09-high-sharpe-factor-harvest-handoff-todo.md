@@ -133,9 +133,27 @@ promotion_gate=reject
 
 ### R24: QQQ/NQ VRP sidecar
 
-- [ ] Add optional auxiliary schema for VIX/VIX3M/VVIX/HV/IV.
-- [ ] Emit `vrp_pressure_qqq_v1`.
-- [ ] Keep zero-config fallback when fields missing.
+- [x] Add optional auxiliary schema for VIX/VIX3M/VVIX/HV/IV.
+- [x] Emit `vrp_pressure_qqq_v1`.
+- [x] Keep zero-config fallback when fields missing.
+- [x] Add sidecar script: `scripts/research/qqq_nq_vrp_sidecar.py`.
+- [x] Add tests: `scripts/research/tests/test_qqq_nq_vrp_sidecar.py`.
+- [x] Validate CLI JSON output.
+
+Observed artifact:
+
+```text
+/tmp/ict-hl/r24_vrp_sidecar.json
+schema=qqq-nq-vrp-sidecar/v1
+candidate=vrp_pressure_qqq_v1
+rows=3
+missing_policy=emit_missing_optional_and_continue
+zero_config_fallback=True
+last_vrp=7.0
+last_pressure=7.899047619047619
+last_confidence=1.0
+bbn_targets=dealer_pressure,factor_uncertainty,crash_risk
+```
 
 ### R25: OFI/session sidecar
 
