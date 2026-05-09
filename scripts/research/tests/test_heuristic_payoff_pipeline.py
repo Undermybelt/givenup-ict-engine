@@ -37,12 +37,14 @@ class HeuristicPayoffPipelineTests(unittest.TestCase):
             self.assertEqual(result["candidate_id"], "zero-config-demo")
             self.assertTrue((output_dir / "labels.jsonl").is_file())
             self.assertTrue((output_dir / "payoff_report.json").is_file())
+            self.assertTrue((output_dir / "purged_cv_guard.json").is_file())
             self.assertTrue((output_dir / "handoff_summary.json").is_file())
             self.assertTrue((output_dir / "path_ranker_target.csv").is_file())
             self.assertTrue((output_dir / "bbn_gate.json").is_file())
             self.assertEqual(result["profile"]["profile_id"], "ict-default-v1")
             self.assertIn("qqq_hv_level", result["profile"]["auxiliary_fields"])
             self.assertEqual(result["path_ranker_handoff"]["bbn_gate"]["consume_by_regime_bbn"], True)
+            self.assertIn("purged_cv_guard", result)
 
     def test_profile_json_overrides_barriers_and_user_fields(self) -> None:
         with TemporaryDirectory() as tmpdir:

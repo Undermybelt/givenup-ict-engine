@@ -9,6 +9,7 @@ from typing import Any
 import factor_payoff_shape_report as payoff
 import labeling_triple_barrier as labeling
 import payoff_to_path_ranker_target as path_target
+import purged_cv_backtest_guard as purged_cv
 
 
 DEFAULT_PROFILE: dict[str, Any] = {
@@ -20,6 +21,9 @@ DEFAULT_PROFILE: dict[str, Any] = {
     "cost_bps": 0.0,
     "nb_trials": 1,
     "periods_per_year": 252,
+    "purged_cv_enabled": True,
+    "embargo_bars": 1,
+    "fold_count": 4,
     "auxiliary_fields": [
         "qqq_hv_level",
         "nq_vs_200d_pct",
@@ -109,6 +113,28 @@ def run_pipeline(
     summary_path = output_dir / artifact_names["handoff_summary"]
     _write_jsonl(labels_path, labels)
     _write_json(report_path, report)
+    purged_cv_guard = purged_cv.build_guard_report(
+        labels=labels,
+        nb_trials=int(profile.get("nb_trials", 1)),
+        embargo_bars=int(profile.get("embargo_bars", 1)),
+        fold_count=int(profile.get("fold_count", 4)),
+    ) if bool(profile.get("purged_cv_enabled", True)) else {
+        "schema_version": "purged-cv-backtest-guard/v1",
+        "purged_cv_gate": "disabled",
+        "leakage_flags": [],
+    }
+    purged_cv_path = output_dir / "purged_cv_guard.json"
+    _write_json(purged_cv_path, purged_cv_guard)
+    report.update(
+        {
+            "pbo": purged_cv_guard.get("pbo"),
+            "oos_sharpe_lcb": purged_cv_guard.get("oos_sharpe_lcb"),
+            "embargo_bars": purged_cv_guard.get("embargo_bars"),
+            "leakage_flags": purged_cv_guard.get("leakage_flags", []),
+            "purged_cv_gate": purged_cv_guard.get("purged_cv_gate"),
+        }
+    )
+    _write_json(report_path, report)
     path_ranker_handoff = path_target.export_targets(
         labels_jsonl=labels_path,
         payoff_report_json=report_path,
@@ -128,11 +154,13 @@ def run_pipeline(
         "artifact_paths": {
             "labels": str(labels_path),
             "payoff_report": str(report_path),
+            "purged_cv_guard": str(purged_cv_path),
             "handoff_summary": str(summary_path),
         },
         "label_count": len(labels),
         "payoff_gate": report["promotion_gate"],
         "failure_tags": report["failure_tags"],
+        "purged_cv_guard": purged_cv_guard,
         "path_ranker_handoff": path_ranker_handoff,
         "next_recommended_layer": "regime_bbn_path_ranker" if report["promotion_gate"] != "reject" else "rewrite_factor_or_data",
     }
