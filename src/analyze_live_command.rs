@@ -160,6 +160,7 @@ pub(crate) struct AnalyzeLiveCommandInput<'a> {
     pub output_format: &'a str,
     pub regime_consumer_bundle: Option<&'a str>,
     pub regime_consumer_bundle_strict: bool,
+    pub apply_regime_bundle_bbn_soft_evidence: bool,
 }
 
 pub(crate) struct AnalyzeLiveShellInput<'a> {
@@ -177,6 +178,7 @@ pub(crate) struct AnalyzeLiveShellInput<'a> {
     pub output_format: &'a str,
     pub regime_consumer_bundle: Option<&'a str>,
     pub regime_consumer_bundle_strict: bool,
+    pub apply_regime_bundle_bbn_soft_evidence: bool,
 }
 
 pub(crate) fn analyze_live_shell(input: AnalyzeLiveShellInput<'_>) -> Result<()> {
@@ -195,6 +197,7 @@ pub(crate) fn analyze_live_shell(input: AnalyzeLiveShellInput<'_>) -> Result<()>
         output_format,
         regime_consumer_bundle,
         regime_consumer_bundle_strict,
+        apply_regime_bundle_bbn_soft_evidence,
     } = input;
     ensure_state_dir_ready(state_dir)?;
     let futures_base_url = ict_engine::application::data_sources::resolve_live_backend_base_url(
@@ -222,6 +225,7 @@ pub(crate) fn analyze_live_shell(input: AnalyzeLiveShellInput<'_>) -> Result<()>
         output_format,
         regime_consumer_bundle,
         regime_consumer_bundle_strict,
+        apply_regime_bundle_bbn_soft_evidence,
     })
 }
 
@@ -313,6 +317,7 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
         output_format,
         regime_consumer_bundle,
         regime_consumer_bundle_strict,
+        apply_regime_bundle_bbn_soft_evidence,
     } = input;
     let regime_bundle_adapter = regime_consumer_bundle
         .map(|bundle_path| {
@@ -462,6 +467,8 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
                 m1: Some(&ltf_1m),
             },
         },
+        regime_bundle_adapter: regime_bundle_adapter.as_ref(),
+        apply_regime_bundle_bbn_soft_evidence,
         execution_focus: true,
     })?;
 
@@ -618,33 +625,10 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
                 .supporting
                 .artifact_action_summary
                 .extend(trace_entries);
-            let bbn_trace_entries = adapter.bbn_soft_evidence_trace_entries();
-            report.supporting.artifact_action_summary.push(format!(
-                "regime_bbn_soft_evidence_trace:{}",
-                bbn_trace_entries.join("|")
-            ));
-            report
-                .supporting
-                .artifact_action_summary
-                .extend(bbn_trace_entries.iter().cloned());
-            report
-                .supporting
-                .pre_bayes_evidence_filter
-                .rationale
-                .extend(
-                    bbn_trace_entries
-                        .iter()
-                        .map(|entry| format!("read_only_{entry}")),
-                );
-            for entry in bbn_trace_entries {
-                if let Some((key, value)) = entry.split_once('=') {
-                    report
-                        .supporting
-                        .pre_bayes_evidence_filter
-                        .evidence_assignments
-                        .insert(format!("read_only_{key}"), value.to_string());
-                }
-            }
+            adapter.append_read_only_bbn_diagnostics(
+                &mut report.supporting.artifact_action_summary,
+                &mut report.supporting.pre_bayes_evidence_filter,
+            );
         }
     }
     report.supporting.artifact_decision_summary =

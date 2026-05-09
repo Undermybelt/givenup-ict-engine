@@ -437,6 +437,10 @@ struct BuildAnalyzeReportInput<'a> {
     params: &'a HMMParams,
     network: &'a ict_engine::bbn::BayesianNetwork,
     build_context: AnalyzeBuildContext<'a>,
+    regime_bundle_adapter: Option<
+        &'a ict_engine::application::regime::consumer_bundle_adapter::RegimeConsumerBundleAdapter,
+    >,
+    apply_regime_bundle_bbn_soft_evidence: bool,
     execution_focus: bool,
 }
 
@@ -557,6 +561,12 @@ enum Commands {
             help = "Fail analyze if --regime-consumer-bundle is missing or invalid"
         )]
         regime_consumer_bundle_strict: bool,
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Opt in to applying strong/moderate regime bundle BBN soft evidence to the pre-Bayes filter"
+        )]
+        apply_regime_bundle_bbn_soft_evidence: bool,
     },
     /// Analyze live futures with integrated backends and spot/options auxiliary evidence
     AnalyzeLive {
@@ -629,6 +639,12 @@ enum Commands {
             help = "Fail analyze-live if --regime-consumer-bundle is missing or invalid"
         )]
         regime_consumer_bundle_strict: bool,
+        #[arg(
+            long,
+            default_value_t = false,
+            help = "Opt in to applying strong/moderate regime bundle BBN soft evidence to the pre-Bayes filter"
+        )]
+        apply_regime_bundle_bbn_soft_evidence: bool,
     },
     /// Validate market-state main/sub-regime confidence on OHLCV candles
     ValidateMarketState {
@@ -2106,6 +2122,7 @@ fn main() -> Result<()> {
             no_execution_focus,
             regime_consumer_bundle,
             regime_consumer_bundle_strict,
+            apply_regime_bundle_bbn_soft_evidence,
         } => {
             ensure_state_dir_ready(&state_dir)?;
             let (data_htf, data_mtf, data_ltf) = resolve_analyze_cli_inputs(
@@ -2128,6 +2145,7 @@ fn main() -> Result<()> {
                 !no_execution_focus,
                 regime_consumer_bundle.as_deref(),
                 regime_consumer_bundle_strict,
+                apply_regime_bundle_bbn_soft_evidence,
             )?
         }
         Commands::AnalyzeLive {
@@ -2148,6 +2166,7 @@ fn main() -> Result<()> {
             human,
             regime_consumer_bundle,
             regime_consumer_bundle_strict,
+            apply_regime_bundle_bbn_soft_evidence,
         } => analyze_live_shell(AnalyzeLiveShellInput {
             symbol: &symbol,
             futures_symbol: futures_symbol.as_deref(),
@@ -2168,6 +2187,7 @@ fn main() -> Result<()> {
             },
             regime_consumer_bundle: regime_consumer_bundle.as_deref(),
             regime_consumer_bundle_strict,
+            apply_regime_bundle_bbn_soft_evidence,
         })?,
         Commands::ValidateMarketState {
             data,
@@ -4008,6 +4028,8 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         params,
         network,
         build_context,
+        regime_bundle_adapter,
+        apply_regime_bundle_bbn_soft_evidence,
         execution_focus,
     } = input;
     let htf_features = build_frame_features(htf)?;
@@ -4246,6 +4268,16 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         "market_state_secondary_regime".to_string(),
         format!("{:?}", market_state_snapshot.secondary_regime),
     );
+    if let Some(adapter) = regime_bundle_adapter {
+        let status = adapter.apply_bbn_soft_evidence_to_pre_bayes_filter(
+            &mut pre_bayes_evidence_filter,
+            apply_regime_bundle_bbn_soft_evidence,
+        );
+        pre_bayes_evidence_filter.evidence_assignments.insert(
+            "regime_bundle_bbn_application_status".to_string(),
+            format!("{:?}", status).to_ascii_lowercase(),
+        );
+    }
 
     let evidence = trade_evidence_from_pre_bayes_filter(network, &pre_bayes_evidence_filter)?;
     let base_entry_quality = infer_entry_quality(network, &evidence)?;

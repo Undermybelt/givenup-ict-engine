@@ -1,7 +1,10 @@
 use ict_engine::application::regime::consumer_bundle_adapter::{
-    BundleStatus, ExecutionTreeHint, RegimeBbnEvidenceStrength, RegimeConsumerBundleAdapter,
+    BundleStatus, ExecutionTreeHint, RegimeBbnEvidenceApplicationStatus, RegimeBbnEvidenceStrength,
+    RegimeConsumerBundleAdapter,
 };
+use ict_engine::state::PreBayesEvidenceFilter;
 use serde_json::json;
+use std::collections::BTreeMap;
 use std::fs;
 
 #[test]
@@ -277,6 +280,113 @@ fn loaded_adapter_emits_compact_bbn_soft_evidence_trace_entries() {
     assert!(trace.contains(&"regime_bbn_decision_state=single_label_99".to_string()));
     assert!(trace.contains(&"regime_bbn_label=primary::TrendExpansion".to_string()));
     assert!(trace.contains(&"regime_bbn_transition_hazard=0.030".to_string()));
+}
+
+#[test]
+fn strong_bundle_applies_to_pre_bayes_soft_market_regime_when_opted_in() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("regime_consumer_bundle.json");
+    fs::write(
+        &path,
+        json!({
+            "schema_version": "regime-consumer-bundle/v1",
+            "latest_decision": {
+                "decision_state": "single_label_99",
+                "trade_usable": true,
+                "final_label": "primary::TrendExpansion",
+                "label_set": ["primary::TrendExpansion"],
+                "abstain_reasons": []
+            },
+            "consumer_hints": {
+                "execution_tree_hint": "accept_regime",
+                "bbn_evidence_hint": {
+                    "regime_decision_state": "single_label_99",
+                    "regime_trade_usable": true,
+                    "regime_label": "primary::TrendExpansion",
+                    "regime_transition_hazard": 0.03,
+                    "regime_decision_reasons": []
+                }
+            }
+        })
+        .to_string(),
+    )
+    .unwrap();
+    let adapter = RegimeConsumerBundleAdapter::load_optional(Some(&path), false).unwrap();
+    let mut filter = PreBayesEvidenceFilter {
+        uses_soft_evidence: false,
+        filtered_market_regime_label: "range".to_string(),
+        soft_market_regime_distribution: BTreeMap::from([
+            ("bull".to_string(), 0.2),
+            ("bear".to_string(), 0.2),
+            ("range".to_string(), 0.6),
+        ]),
+        ..PreBayesEvidenceFilter::default()
+    };
+
+    let status = adapter.apply_bbn_soft_evidence_to_pre_bayes_filter(&mut filter, true);
+
+    assert_eq!(status, RegimeBbnEvidenceApplicationStatus::Applied);
+    assert!(filter.uses_soft_evidence);
+    assert_eq!(filter.filtered_market_regime_label, "bull");
+    assert_eq!(filter.soft_market_regime_distribution["bull"], 0.9);
+    assert!(filter.rationale.contains(
+        &"regime_bundle_bbn_evidence_applied=strength:strong label:primary::TrendExpansion"
+            .to_string()
+    ));
+}
+
+#[test]
+fn absent_opt_in_or_neutral_bundle_skips_pre_bayes_mutation() {
+    let adapter = RegimeConsumerBundleAdapter::disabled();
+    let mut filter = PreBayesEvidenceFilter {
+        uses_soft_evidence: false,
+        filtered_market_regime_label: "range".to_string(),
+        soft_market_regime_distribution: BTreeMap::from([
+            ("bull".to_string(), 0.2),
+            ("bear".to_string(), 0.2),
+            ("range".to_string(), 0.6),
+        ]),
+        ..PreBayesEvidenceFilter::default()
+    };
+
+    let disabled_status = adapter.apply_bbn_soft_evidence_to_pre_bayes_filter(&mut filter, true);
+    assert_eq!(disabled_status, RegimeBbnEvidenceApplicationStatus::Skipped);
+    assert_eq!(filter.filtered_market_regime_label, "range");
+    assert_eq!(filter.soft_market_regime_distribution["range"], 0.6);
+
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("regime_consumer_bundle.json");
+    fs::write(
+        &path,
+        json!({
+            "schema_version": "regime-consumer-bundle/v1",
+            "latest_decision": {
+                "decision_state": "unknown_abstain",
+                "trade_usable": false,
+                "final_label": "",
+                "label_set": [],
+                "abstain_reasons": ["confidence_gate_failed"]
+            },
+            "consumer_hints": {
+                "execution_tree_hint": "unknown_abstain",
+                "bbn_evidence_hint": {
+                    "regime_decision_state": "unknown_abstain",
+                    "regime_trade_usable": false,
+                    "regime_label": "primary::RangeConsolidation",
+                    "regime_transition_hazard": 0.8,
+                    "regime_decision_reasons": ["confidence_gate_failed"]
+                }
+            }
+        })
+        .to_string(),
+    )
+    .unwrap();
+    let neutral = RegimeConsumerBundleAdapter::load_optional(Some(&path), false).unwrap();
+    let no_opt_status = neutral.apply_bbn_soft_evidence_to_pre_bayes_filter(&mut filter, false);
+    assert_eq!(no_opt_status, RegimeBbnEvidenceApplicationStatus::Skipped);
+    let neutral_status = neutral.apply_bbn_soft_evidence_to_pre_bayes_filter(&mut filter, true);
+    assert_eq!(neutral_status, RegimeBbnEvidenceApplicationStatus::Skipped);
+    assert_eq!(filter.filtered_market_regime_label, "range");
 }
 
 #[test]

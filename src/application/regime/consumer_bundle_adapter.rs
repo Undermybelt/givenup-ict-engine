@@ -1,7 +1,9 @@
 use anyhow::{anyhow, Result};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use std::path::Path;
+use std::{collections::BTreeMap, path::Path};
+
+use crate::state::PreBayesEvidenceFilter;
 
 const EXPECTED_SCHEMA_VERSION: &str = "regime-consumer-bundle/v1";
 
@@ -25,6 +27,12 @@ pub enum RegimeBbnEvidenceStrength {
     Strong,
     Moderate,
     Neutral,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RegimeBbnEvidenceApplicationStatus {
+    Applied,
+    Skipped,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -307,52 +315,83 @@ impl RegimeConsumerBundleAdapter {
     }
 
     pub fn bbn_soft_evidence_trace_entries(&self) -> Vec<String> {
+        self.to_read_only_bbn_soft_evidence().trace_entries()
+    }
+
+    pub fn append_read_only_bbn_diagnostics(
+        &self,
+        artifact_action_summary: &mut Vec<String>,
+        pre_bayes_filter: &mut PreBayesEvidenceFilter,
+    ) {
+        let bbn_trace_entries = self.bbn_soft_evidence_trace_entries();
+        artifact_action_summary.push(format!(
+            "regime_bbn_soft_evidence_trace:{}",
+            bbn_trace_entries.join("|")
+        ));
+        artifact_action_summary.extend(bbn_trace_entries.iter().cloned());
+        pre_bayes_filter.rationale.extend(
+            bbn_trace_entries
+                .iter()
+                .map(|entry| format!("read_only_{entry}")),
+        );
+        for entry in bbn_trace_entries {
+            if let Some((key, value)) = entry.split_once('=') {
+                pre_bayes_filter
+                    .evidence_assignments
+                    .insert(format!("read_only_{key}"), value.to_string());
+            }
+        }
+    }
+
+    pub fn apply_bbn_soft_evidence_to_pre_bayes_filter(
+        &self,
+        filter: &mut PreBayesEvidenceFilter,
+        opt_in: bool,
+    ) -> RegimeBbnEvidenceApplicationStatus {
+        if !opt_in {
+            filter
+                .rationale
+                .push("regime_bundle_bbn_evidence_skipped=flag_disabled".to_string());
+            return RegimeBbnEvidenceApplicationStatus::Skipped;
+        }
+
         let evidence = self.to_read_only_bbn_soft_evidence();
-        let mut entries = vec![
-            format!(
-                "regime_bbn_soft_evidence_strength={}",
+        let Some(bbn_label) = evidence.bbn_market_regime_label() else {
+            filter
+                .rationale
+                .push("regime_bundle_bbn_evidence_skipped=no_supported_label".to_string());
+            return RegimeBbnEvidenceApplicationStatus::Skipped;
+        };
+        if evidence.strength == RegimeBbnEvidenceStrength::Neutral || evidence.weight <= 0.0 {
+            filter.rationale.push(format!(
+                "regime_bundle_bbn_evidence_skipped=strength:{}",
                 evidence.strength.as_trace_value()
-            ),
-            format!("regime_bbn_soft_evidence_weight={:.3}", evidence.weight),
-            format!(
-                "regime_bbn_decision_state={}",
-                compact_trace_value(&evidence.decision_state)
-            ),
-        ];
-        if let Some(trade_usable) = evidence.trade_usable {
-            entries.push(format!("regime_bbn_trade_usable={trade_usable}"));
-        }
-        if let Some(label) = evidence.label.as_ref() {
-            entries.push(format!("regime_bbn_label={}", compact_trace_value(label)));
-        }
-        if !evidence.label_set.is_empty() {
-            entries.push(format!(
-                "regime_bbn_label_set={}",
-                evidence
-                    .label_set
-                    .iter()
-                    .map(|label| compact_trace_value(label))
-                    .collect::<Vec<_>>()
-                    .join(",")
             ));
+            return RegimeBbnEvidenceApplicationStatus::Skipped;
         }
-        if let Some(transition_hazard) = evidence.transition_hazard {
-            entries.push(format!(
-                "regime_bbn_transition_hazard={transition_hazard:.3}"
-            ));
-        }
-        if !evidence.reasons.is_empty() {
-            entries.push(format!(
-                "regime_bbn_reasons={}",
-                evidence
-                    .reasons
-                    .iter()
-                    .map(|reason| compact_trace_value(reason))
-                    .collect::<Vec<_>>()
-                    .join(",")
-            ));
-        }
-        entries
+
+        filter.uses_soft_evidence = true;
+        filter.filtered_market_regime_label = bbn_label.to_string();
+        filter.soft_market_regime_distribution =
+            market_regime_distribution(bbn_label, evidence.weight);
+        filter.evidence_assignments.insert(
+            "regime_bundle_bbn_evidence_application".to_string(),
+            "applied".to_string(),
+        );
+        filter.evidence_assignments.insert(
+            "regime_bundle_bbn_market_regime".to_string(),
+            bbn_label.to_string(),
+        );
+        filter.evidence_assignments.insert(
+            "regime_bundle_bbn_evidence_weight".to_string(),
+            format!("{:.3}", evidence.weight),
+        );
+        filter.rationale.push(format!(
+            "regime_bundle_bbn_evidence_applied=strength:{} label:{}",
+            evidence.strength.as_trace_value(),
+            evidence.label.as_deref().unwrap_or("unknown")
+        ));
+        RegimeBbnEvidenceApplicationStatus::Applied
     }
 
     fn neutral(status: BundleStatus, error: String) -> Self {
@@ -394,6 +433,86 @@ impl RegimeBbnEvidenceStrength {
             RegimeBbnEvidenceStrength::Neutral => "neutral",
         }
     }
+}
+
+impl RegimeReadOnlyBbnSoftEvidence {
+    fn trace_entries(&self) -> Vec<String> {
+        let mut entries = vec![
+            format!(
+                "regime_bbn_soft_evidence_strength={}",
+                self.strength.as_trace_value()
+            ),
+            format!("regime_bbn_soft_evidence_weight={:.3}", self.weight),
+            format!(
+                "regime_bbn_decision_state={}",
+                compact_trace_value(&self.decision_state)
+            ),
+        ];
+        if let Some(trade_usable) = self.trade_usable {
+            entries.push(format!("regime_bbn_trade_usable={trade_usable}"));
+        }
+        if let Some(label) = self.label.as_ref() {
+            entries.push(format!("regime_bbn_label={}", compact_trace_value(label)));
+        }
+        if !self.label_set.is_empty() {
+            entries.push(format!(
+                "regime_bbn_label_set={}",
+                self.label_set
+                    .iter()
+                    .map(|label| compact_trace_value(label))
+                    .collect::<Vec<_>>()
+                    .join(",")
+            ));
+        }
+        if let Some(transition_hazard) = self.transition_hazard {
+            entries.push(format!(
+                "regime_bbn_transition_hazard={transition_hazard:.3}"
+            ));
+        }
+        if !self.reasons.is_empty() {
+            entries.push(format!(
+                "regime_bbn_reasons={}",
+                self.reasons
+                    .iter()
+                    .map(|reason| compact_trace_value(reason))
+                    .collect::<Vec<_>>()
+                    .join(",")
+            ));
+        }
+        entries
+    }
+
+    fn bbn_market_regime_label(&self) -> Option<&'static str> {
+        self.label
+            .as_deref()
+            .and_then(regime_bundle_label_to_bbn_market_regime)
+    }
+}
+
+fn regime_bundle_label_to_bbn_market_regime(label: &str) -> Option<&'static str> {
+    match label {
+        "primary::TrendExpansion" => Some("bull"),
+        "primary::RangeConsolidation" => Some("range"),
+        "primary::ExtremeStress" => Some("range"),
+        "primary::ReversalBrewing" => Some("range"),
+        _ => None,
+    }
+}
+
+fn market_regime_distribution(selected: &str, weight: f64) -> BTreeMap<String, f64> {
+    let clamped = weight.clamp(0.0, 1.0);
+    let remainder = (1.0 - clamped) / 2.0;
+    ["bull", "bear", "range"]
+        .into_iter()
+        .map(|state| {
+            let probability = if state == selected {
+                clamped
+            } else {
+                remainder
+            };
+            (state.to_string(), probability)
+        })
+        .collect()
 }
 
 fn compact_trace_value(value: &str) -> String {

@@ -14,6 +14,7 @@ pub(crate) fn analyze_command(
     execution_focus: bool,
     regime_consumer_bundle: Option<&str>,
     regime_consumer_bundle_strict: bool,
+    apply_regime_bundle_bbn_soft_evidence: bool,
 ) -> Result<()> {
     let regime_bundle_adapter = regime_consumer_bundle
         .map(|bundle_path| {
@@ -156,6 +157,8 @@ pub(crate) fn analyze_command(
                 },
             },
         },
+        regime_bundle_adapter: regime_bundle_adapter.as_ref(),
+        apply_regime_bundle_bbn_soft_evidence,
         execution_focus,
     })?;
     let mut report = report;
@@ -191,33 +194,10 @@ pub(crate) fn analyze_command(
                 .supporting
                 .artifact_action_summary
                 .extend(trace_entries);
-            let bbn_trace_entries = adapter.bbn_soft_evidence_trace_entries();
-            report.supporting.artifact_action_summary.push(format!(
-                "regime_bbn_soft_evidence_trace:{}",
-                bbn_trace_entries.join("|")
-            ));
-            report
-                .supporting
-                .artifact_action_summary
-                .extend(bbn_trace_entries.iter().cloned());
-            report
-                .supporting
-                .pre_bayes_evidence_filter
-                .rationale
-                .extend(
-                    bbn_trace_entries
-                        .iter()
-                        .map(|entry| format!("read_only_{entry}")),
-                );
-            for entry in bbn_trace_entries {
-                if let Some((key, value)) = entry.split_once('=') {
-                    report
-                        .supporting
-                        .pre_bayes_evidence_filter
-                        .evidence_assignments
-                        .insert(format!("read_only_{key}"), value.to_string());
-                }
-            }
+            adapter.append_read_only_bbn_diagnostics(
+                &mut report.supporting.artifact_action_summary,
+                &mut report.supporting.pre_bayes_evidence_filter,
+            );
         }
     }
     if let Ok(artifact) = ict_engine::pda_sequence::load_pda_sequence_analysis(state_dir, symbol) {
