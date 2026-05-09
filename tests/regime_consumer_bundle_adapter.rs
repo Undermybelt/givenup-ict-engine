@@ -1,5 +1,5 @@
 use ict_engine::application::regime::consumer_bundle_adapter::{
-    BundleStatus, ExecutionTreeHint, RegimeConsumerBundleAdapter,
+    BundleStatus, ExecutionTreeHint, RegimeBbnEvidenceStrength, RegimeConsumerBundleAdapter,
 };
 use serde_json::json;
 use std::fs;
@@ -10,7 +10,10 @@ fn disabled_adapter_is_noop_default() {
 
     assert_eq!(adapter.status, BundleStatus::Disabled);
     assert!(!adapter.is_loaded());
-    assert_eq!(adapter.execution_tree_hint(), ExecutionTreeHint::UnknownAbstain);
+    assert_eq!(
+        adapter.execution_tree_hint(),
+        ExecutionTreeHint::UnknownAbstain
+    );
     assert!(adapter.bbn_evidence_hint().is_none());
 }
 
@@ -44,8 +47,14 @@ fn valid_bundle_loads_known_fields() {
 
     assert_eq!(adapter.status, BundleStatus::Loaded);
     assert!(adapter.is_loaded());
-    assert_eq!(adapter.execution_tree_hint(), ExecutionTreeHint::AcceptRegime);
-    assert_eq!(adapter.latest_decision.as_ref().unwrap().decision_state, "single_label_99");
+    assert_eq!(
+        adapter.execution_tree_hint(),
+        ExecutionTreeHint::AcceptRegime
+    );
+    assert_eq!(
+        adapter.latest_decision.as_ref().unwrap().decision_state,
+        "single_label_99"
+    );
     assert!(adapter.latest_decision.as_ref().unwrap().trade_usable);
     assert!(adapter.bbn_evidence_hint().is_some());
 }
@@ -59,7 +68,10 @@ fn missing_bundle_non_strict_is_neutral_noop() {
 
     assert_eq!(adapter.status, BundleStatus::Missing);
     assert!(!adapter.is_loaded());
-    assert_eq!(adapter.execution_tree_hint(), ExecutionTreeHint::UnknownAbstain);
+    assert_eq!(
+        adapter.execution_tree_hint(),
+        ExecutionTreeHint::UnknownAbstain
+    );
     assert!(adapter.error.as_ref().unwrap().contains("missing"));
 }
 
@@ -83,7 +95,10 @@ fn invalid_schema_non_strict_is_neutral_noop() {
 
     assert_eq!(adapter.status, BundleStatus::Invalid);
     assert!(!adapter.is_loaded());
-    assert_eq!(adapter.execution_tree_hint(), ExecutionTreeHint::UnknownAbstain);
+    assert_eq!(
+        adapter.execution_tree_hint(),
+        ExecutionTreeHint::UnknownAbstain
+    );
 }
 
 #[test]
@@ -122,7 +137,9 @@ fn loaded_adapter_emits_compact_read_only_trace_entries() {
     let trace = adapter.trace_entries(Some(&path));
 
     assert!(trace.contains(&"regime_bundle_status=loaded".to_string()));
-    assert!(trace.iter().any(|line| line.starts_with("regime_bundle_path=")));
+    assert!(trace
+        .iter()
+        .any(|line| line.starts_with("regime_bundle_path=")));
     assert!(trace.contains(&"regime_decision_state=single_label_95".to_string()));
     assert!(trace.contains(&"regime_trade_usable=true".to_string()));
     assert!(trace.contains(&"regime_execution_tree_hint=accept_regime".to_string()));
@@ -137,6 +154,152 @@ fn missing_adapter_emits_neutral_trace_entries() {
     let trace = adapter.trace_entries(Some(&path));
 
     assert!(trace.contains(&"regime_bundle_status=missing".to_string()));
-    assert!(trace.iter().any(|line| line.starts_with("regime_bundle_error=")));
+    assert!(trace
+        .iter()
+        .any(|line| line.starts_with("regime_bundle_error=")));
     assert!(trace.contains(&"regime_execution_tree_hint=unknown_abstain".to_string()));
+}
+
+#[test]
+fn single_label_99_maps_to_strong_read_only_bbn_soft_evidence() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("regime_consumer_bundle.json");
+    fs::write(
+        &path,
+        json!({
+            "schema_version": "regime-consumer-bundle/v1",
+            "latest_decision": {
+                "decision_state": "single_label_99",
+                "trade_usable": true,
+                "final_label": "primary::TrendExpansion",
+                "label_set": ["primary::TrendExpansion"],
+                "abstain_reasons": []
+            },
+            "consumer_hints": {
+                "execution_tree_hint": "accept_regime",
+                "bbn_evidence_hint": {
+                    "regime_decision_state": "single_label_99",
+                    "regime_trade_usable": true,
+                    "regime_label": "primary::TrendExpansion",
+                    "regime_transition_hazard": 0.0,
+                    "regime_decision_reasons": []
+                }
+            }
+        })
+        .to_string(),
+    )
+    .unwrap();
+
+    let adapter = RegimeConsumerBundleAdapter::load_optional(Some(&path), false).unwrap();
+    let evidence = adapter.to_read_only_bbn_soft_evidence();
+
+    assert_eq!(evidence.strength, RegimeBbnEvidenceStrength::Strong);
+    assert_eq!(evidence.label.as_deref(), Some("primary::TrendExpansion"));
+    assert_eq!(evidence.decision_state, "single_label_99");
+    assert_eq!(evidence.trade_usable, Some(true));
+    assert!(evidence.weight > 0.85);
+    assert!(evidence.reasons.is_empty());
+}
+
+#[test]
+fn single_label_95_maps_to_moderate_read_only_bbn_soft_evidence() {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("regime_consumer_bundle.json");
+    fs::write(
+        &path,
+        json!({
+            "schema_version": "regime-consumer-bundle/v1",
+            "latest_decision": {
+                "decision_state": "single_label_95",
+                "trade_usable": true,
+                "final_label": "primary::TrendExpansion",
+                "label_set": ["primary::TrendExpansion"],
+                "abstain_reasons": []
+            },
+            "consumer_hints": {
+                "execution_tree_hint": "accept_regime",
+                "bbn_evidence_hint": {
+                    "regime_decision_state": "single_label_95",
+                    "regime_trade_usable": true,
+                    "regime_label": "primary::TrendExpansion",
+                    "regime_transition_hazard": 0.15,
+                    "regime_decision_reasons": []
+                }
+            }
+        })
+        .to_string(),
+    )
+    .unwrap();
+
+    let adapter = RegimeConsumerBundleAdapter::load_optional(Some(&path), false).unwrap();
+    let evidence = adapter.to_read_only_bbn_soft_evidence();
+
+    assert_eq!(evidence.strength, RegimeBbnEvidenceStrength::Moderate);
+    assert_eq!(evidence.label.as_deref(), Some("primary::TrendExpansion"));
+    assert_eq!(evidence.weight, 0.65);
+}
+
+#[test]
+fn abstain_or_missing_bundle_maps_to_neutral_bbn_soft_evidence() {
+    let missing = RegimeConsumerBundleAdapter::load_optional(None, false).unwrap();
+    let missing_evidence = missing.to_read_only_bbn_soft_evidence();
+    assert_eq!(
+        missing_evidence.strength,
+        RegimeBbnEvidenceStrength::Neutral
+    );
+    assert_eq!(missing_evidence.weight, 0.0);
+
+    let dir = tempfile::tempdir().unwrap();
+    let invalid_path = dir.path().join("invalid.json");
+    fs::write(
+        &invalid_path,
+        json!({"schema_version": "wrong/v1"}).to_string(),
+    )
+    .unwrap();
+    let invalid = RegimeConsumerBundleAdapter::load_optional(Some(&invalid_path), false).unwrap();
+    let invalid_evidence = invalid.to_read_only_bbn_soft_evidence();
+    assert_eq!(
+        invalid_evidence.strength,
+        RegimeBbnEvidenceStrength::Neutral
+    );
+    assert_eq!(invalid_evidence.weight, 0.0);
+
+    for decision_state in ["label_set", "transitional", "unknown_abstain"] {
+        let path = dir.path().join(format!("{decision_state}.json"));
+        fs::write(
+            &path,
+            json!({
+                "schema_version": "regime-consumer-bundle/v1",
+                "latest_decision": {
+                    "decision_state": decision_state,
+                    "trade_usable": false,
+                    "final_label": "",
+                    "label_set": ["primary::TrendExpansion", "primary::RangeConsolidation"],
+                    "abstain_reasons": ["transition_guardrail"]
+                },
+                "consumer_hints": {
+                    "execution_tree_hint": if decision_state == "unknown_abstain" { "unknown_abstain" } else { "transition_guardrail" },
+                    "bbn_evidence_hint": {
+                        "regime_decision_state": decision_state,
+                        "regime_trade_usable": false,
+                        "regime_label_set": ["primary::TrendExpansion", "primary::RangeConsolidation"],
+                        "regime_transition_hazard": 0.72,
+                        "regime_decision_reasons": ["transition_guardrail"]
+                    }
+                }
+            })
+            .to_string(),
+        )
+        .unwrap();
+
+        let adapter = RegimeConsumerBundleAdapter::load_optional(Some(&path), false).unwrap();
+        let evidence = adapter.to_read_only_bbn_soft_evidence();
+
+        assert_eq!(evidence.strength, RegimeBbnEvidenceStrength::Neutral);
+        assert_eq!(evidence.weight, 0.0);
+        assert_eq!(evidence.transition_hazard, Some(0.72));
+        assert!(evidence
+            .reasons
+            .contains(&"transition_guardrail".to_string()));
+    }
 }

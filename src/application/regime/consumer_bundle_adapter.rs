@@ -20,6 +20,25 @@ pub enum ExecutionTreeHint {
     UnknownAbstain,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RegimeBbnEvidenceStrength {
+    Strong,
+    Moderate,
+    Neutral,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct RegimeReadOnlyBbnSoftEvidence {
+    pub strength: RegimeBbnEvidenceStrength,
+    pub weight: f64,
+    pub decision_state: String,
+    pub trade_usable: Option<bool>,
+    pub label: Option<String>,
+    pub label_set: Vec<String>,
+    pub transition_hazard: Option<f64>,
+    pub reasons: Vec<String>,
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct RegimeDecisionSummary {
     #[serde(default)]
@@ -125,8 +144,9 @@ impl RegimeConsumerBundleAdapter {
             .transpose()
             .map_err(|err| anyhow!("invalid consumer_hints: {err}"))?;
         if latest_decision.is_none() || consumer_hints.is_none() {
-            let message = "invalid regime consumer bundle: missing latest_decision or consumer_hints"
-                .to_string();
+            let message =
+                "invalid regime consumer bundle: missing latest_decision or consumer_hints"
+                    .to_string();
             if strict {
                 return Err(anyhow!(message));
             }
@@ -165,13 +185,106 @@ impl RegimeConsumerBundleAdapter {
             .filter(|value| !value.is_null())
     }
 
+    pub fn to_read_only_bbn_soft_evidence(&self) -> RegimeReadOnlyBbnSoftEvidence {
+        let hint = self.bbn_evidence_hint();
+        let decision_state = hint
+            .and_then(|value| value.get("regime_decision_state"))
+            .and_then(Value::as_str)
+            .or_else(|| {
+                self.latest_decision
+                    .as_ref()
+                    .map(|decision| decision.decision_state.as_str())
+            })
+            .unwrap_or_default()
+            .to_string();
+        let trade_usable = hint
+            .and_then(|value| value.get("regime_trade_usable"))
+            .and_then(Value::as_bool)
+            .or_else(|| {
+                self.latest_decision
+                    .as_ref()
+                    .map(|decision| decision.trade_usable)
+            });
+        let label = hint
+            .and_then(|value| value.get("regime_label"))
+            .and_then(Value::as_str)
+            .filter(|value| !value.is_empty())
+            .map(ToString::to_string)
+            .or_else(|| {
+                self.latest_decision
+                    .as_ref()
+                    .map(|decision| decision.final_label.as_str())
+                    .filter(|value| !value.is_empty())
+                    .map(ToString::to_string)
+            });
+        let label_set = hint
+            .and_then(|value| value.get("regime_label_set"))
+            .and_then(Value::as_array)
+            .map(|items| {
+                items
+                    .iter()
+                    .filter_map(Value::as_str)
+                    .map(ToString::to_string)
+                    .collect::<Vec<_>>()
+            })
+            .filter(|items| !items.is_empty())
+            .or_else(|| {
+                self.latest_decision
+                    .as_ref()
+                    .map(|decision| decision.label_set.clone())
+            })
+            .unwrap_or_default();
+        let transition_hazard = hint
+            .and_then(|value| value.get("regime_transition_hazard"))
+            .and_then(Value::as_f64);
+        let reasons = hint
+            .and_then(|value| value.get("regime_decision_reasons"))
+            .and_then(Value::as_array)
+            .map(|items| {
+                items
+                    .iter()
+                    .filter_map(Value::as_str)
+                    .map(ToString::to_string)
+                    .collect::<Vec<_>>()
+            })
+            .filter(|items| !items.is_empty())
+            .or_else(|| {
+                self.latest_decision
+                    .as_ref()
+                    .map(|decision| decision.abstain_reasons.clone())
+            })
+            .unwrap_or_default();
+        let (strength, weight) = match (self.is_loaded(), decision_state.as_str(), trade_usable) {
+            (true, "single_label_99", Some(true)) => (RegimeBbnEvidenceStrength::Strong, 0.9),
+            (true, "single_label_95", Some(true)) => (RegimeBbnEvidenceStrength::Moderate, 0.65),
+            _ => (RegimeBbnEvidenceStrength::Neutral, 0.0),
+        };
+
+        RegimeReadOnlyBbnSoftEvidence {
+            strength,
+            weight,
+            decision_state,
+            trade_usable,
+            label,
+            label_set,
+            transition_hazard,
+            reasons,
+        }
+    }
+
     pub fn trace_entries(&self, path: Option<&Path>) -> Vec<String> {
-        let mut entries = vec![format!("regime_bundle_status={}", self.status.as_trace_value())];
+        let mut entries = vec![format!(
+            "regime_bundle_status={}",
+            self.status.as_trace_value()
+        )];
         if let Some(path) = path {
             entries.push(format!("regime_bundle_path={}", path.display()));
         }
         if let Some(error) = self.error.as_ref() {
-            entries.push(format!("regime_bundle_error={}", compact_trace_value(error)));
+            entries.push(format!(
+                "regime_bundle_error={}",
+                compact_trace_value(error)
+            ));
         }
         if let Some(decision) = self.latest_decision.as_ref() {
             entries.push(format!(
