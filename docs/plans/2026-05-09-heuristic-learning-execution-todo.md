@@ -57,7 +57,7 @@
   - Files: `paper2code_adapters.py`, handoff, tests
   - Tests: target 3 OK; full research 52 OK
 - [x] Closure audit fix: orchestrate sidecars from payoff pipeline
-  - Commit: pending audit fix
+  - Commit: `4243f56 fix: orchestrate heuristic sidecar closure`
   - Files: `heuristic_payoff_pipeline.py`, tests
   - Tests: target 3 OK; full research 53 OK
 
