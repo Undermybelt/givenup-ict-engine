@@ -78,11 +78,23 @@ Repos captured:
 
 ### R22: factor formula seed library
 
-- [ ] Add `scripts/research/factor_formula_seed_library.py`.
-- [ ] Emit JSON candidate specs for first 16 candidates in the harvest doc.
-- [ ] Include `source_refs`, `family`, `required_fields`, `optional_fields`, `missing_optional_policy`.
-- [ ] No third-party heavy dependency.
-- [ ] Validate JSON output.
+- [x] Add `scripts/research/factor_formula_seed_library.py`.
+- [x] Add tests: `scripts/research/tests/test_factor_formula_seed_library.py`.
+- [x] Emit JSON candidate specs for first 16 candidates in the harvest doc.
+- [x] Include `source_refs`, `family`, `required_fields`, `optional_fields`, `missing_optional_policy`.
+- [x] Keep no third-party heavy dependency.
+- [x] Validate JSON output.
+- [x] Preserve user-specific fields as optional hot-plug fields, never required.
+
+Observed artifact:
+
+```text
+/tmp/ict-hl/factor_seed_candidates.json
+schema=factor-formula-seed-library/v1
+candidate_count=16
+first=tsmom_mtf_convexity_v1
+vrp_optional_ok=True
+```
 
 ### R23: payoff gate expansion
 
