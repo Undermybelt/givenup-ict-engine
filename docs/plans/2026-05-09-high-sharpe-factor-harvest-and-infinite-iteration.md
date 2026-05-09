@@ -29,6 +29,39 @@ paper/repo idea
 
 Do not call anything "high Sharpe" until the OOS and overfit guards pass.
 
+Runtime closure is mandatory after any promising candidate:
+
+```text
+Auto-Quant real run
+-> filter/analyze market_state
+-> auto-quant-results-import
+-> auto-quant-prior-init with non-empty strategies_applied
+-> export-structural-path-ranking-target
+-> CatBoost or explicitly named fallback ranker
+-> apply-structural-path-ranking-external-scores
+-> register/enable ranker runtime
+-> workflow-status / execution-tree evidence
+```
+
+Latest real closure evidence:
+
+```text
+run_root=/tmp/ict-high-sharpe-real-20260509-234554
+Auto-Quant strategies=MomentumMTFConfluence,RegimeAdaptiveBNB
+BBN strategies_applied=2
+BBN prior_final=[0.6734197006771924,0.000000013279761567917304,0.326580286043046]
+CatBoost train=uv run --with catboost ... pandas_path_ranker_trainer.py
+CatBoost model=/tmp/ict-high-sharpe-real-20260509-234554/path_ranker_catboost/catboost_model.cbm
+CatBoost scores=/tmp/ict-high-sharpe-real-20260509-234554/path_scores_catboost_after_analyze.csv
+workflow_ranker=using_candidate_set_scores source=candidate_set applied=1 raw=0.751
+analyze_ranker=candidate_set/catboost/not_ready
+structural_path=trend_follow_through posterior=1.000 selected_prob=1.000
+execution=observe/transition_guardrail/guarded
+validation_boundary=mature_rows=0/30, production_validation=0/30, calibration=not_fitted
+```
+
+Rule: if CatBoost is unavailable, name the fallback (`weighted_feature_sum_v1`) and do not call it CatBoost. If CatBoost is available but rows are immature, call it a real CatBoost smoke only, not production validation.
+
 ---
 
 ## Promotion gates
