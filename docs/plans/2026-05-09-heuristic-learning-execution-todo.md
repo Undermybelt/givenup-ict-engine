@@ -48,21 +48,12 @@
   - Commit: `b41f850 feat: add risk adjusted path utility`
   - Files: `payoff_to_path_ranker_target.py`, handoff, tests
   - Tests: target 3 OK; full research 46 OK
+- [x] Slice 11: Formula seed library
+  - Commit: pending this slice
+  - Files: `factor_formula_library.py`, handoff, tests
+  - Tests: target 3 OK; full research 49 OK
 
 ## Next Implementation Order
-
-### Slice 11: Formula seed library
-
-**Objective:** give model a hot-pluggable factor seed pool.
-
-**Create:**
-- `scripts/research/factor_formula_library.py`
-- tests + handoff
-
-**Sources:**
-- Qlib Alpha158 style formulas
-- Alpha101 operator skeletons
-- existing paper2code modules
 
 ### Slice 12: paper2code adapters
 
@@ -78,11 +69,11 @@
 
 ## Current Slice Status
 
-Active: Slice 10 `payoff_to_path_ranker_target.py`.
+Active: Slice 11 `factor_formula_library.py`.
 
 - [x] Write failing tests
 - [x] Implement minimal script
 - [x] Add handoff doc
 - [x] Run target tests
 - [x] Run full research tests
-- [x] Commit slice
+- [ ] Commit slice
