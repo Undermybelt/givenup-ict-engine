@@ -36,7 +36,8 @@
 - [x] Run full research tests
   - `python3 -m unittest discover -s scripts/research/tests -p 'test_*.py'` -> 52 OK
 - [x] Update master TODO
-- [ ] Commit only this slice
+- [x] Commit only this slice
+  - `11ac3c6 feat: add paper2code adapter reports`
 
 ## Output Contract
 

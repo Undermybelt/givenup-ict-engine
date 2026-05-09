@@ -53,7 +53,7 @@
   - Files: `factor_formula_library.py`, handoff, tests
   - Tests: target 3 OK; full research 49 OK
 - [x] Slice 12: paper2code adapters
-  - Commit: pending this slice
+  - Commit: `11ac3c6 feat: add paper2code adapter reports`
   - Files: `paper2code_adapters.py`, handoff, tests
   - Tests: target 3 OK; full research 52 OK
 
