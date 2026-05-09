@@ -137,6 +137,11 @@ impl FactorUsagePhase {
 #[derive(Debug, Clone, Default, Serialize)]
 pub struct FactorContext<'a> {
     pub paired_candles: Option<&'a [Candle]>,
+    pub m1_events: Option<&'a [PdaEvent]>,
+    pub m5_events: Option<&'a [PdaEvent]>,
+    pub m15_events: Option<&'a [PdaEvent]>,
+    pub m30_events: Option<&'a [PdaEvent]>,
+    pub h1_events: Option<&'a [PdaEvent]>,
     pub h4_events: Option<&'a [PdaEvent]>,
     pub d1_events: Option<&'a [PdaEvent]>,
     pub w1_events: Option<&'a [PdaEvent]>,
@@ -634,10 +639,9 @@ impl FactorDefinition {
                 "balanced_accuracy_regressed"
                 | "bull_bear_separation_regressed"
                 | "bull_bear_separation_weak"
-                | "worst_market_separation_weak" => vec![
-                    "lookback".to_string(),
-                    "volume_spike_ratio".to_string(),
-                ],
+                | "worst_market_separation_weak" => {
+                    vec!["lookback".to_string(), "volume_spike_ratio".to_string()]
+                }
                 "bridge_gap_regressed"
                 | "bridge_gap_too_small"
                 | "worst_market_bridge_gap_too_small" => vec![
@@ -646,10 +650,9 @@ impl FactorDefinition {
                 ],
                 "pre_bayes_gate_regressed"
                 | "pre_bayes_gate_observe_only"
-                | "pre_bayes_gate_neutralized" => vec![
-                    "lookback".to_string(),
-                    "volume_spike_ratio".to_string(),
-                ],
+                | "pre_bayes_gate_neutralized" => {
+                    vec!["lookback".to_string(), "volume_spike_ratio".to_string()]
+                }
                 _ => Vec::new(),
             },
             FactorCategory::SpectralRhythm => match reason {
@@ -678,10 +681,9 @@ impl FactorDefinition {
                 "balanced_accuracy_regressed"
                 | "bull_bear_separation_regressed"
                 | "bull_bear_separation_weak"
-                | "worst_market_separation_weak" => vec![
-                    "lookback".to_string(),
-                    "session_quality_weight".to_string(),
-                ],
+                | "worst_market_separation_weak" => {
+                    vec!["lookback".to_string(), "session_quality_weight".to_string()]
+                }
                 "bridge_gap_regressed"
                 | "bridge_gap_too_small"
                 | "worst_market_bridge_gap_too_small" => vec![
@@ -690,10 +692,9 @@ impl FactorDefinition {
                 ],
                 "pre_bayes_gate_regressed"
                 | "pre_bayes_gate_observe_only"
-                | "pre_bayes_gate_neutralized" => vec![
-                    "lookback".to_string(),
-                    "session_quality_weight".to_string(),
-                ],
+                | "pre_bayes_gate_neutralized" => {
+                    vec!["lookback".to_string(), "session_quality_weight".to_string()]
+                }
                 _ => Vec::new(),
             },
         }
@@ -838,14 +839,15 @@ impl FactorDefinition {
                 ]),
                 "bridge_gap_regressed"
                 | "bridge_gap_too_small"
-                | "worst_market_bridge_gap_too_small" => BTreeMap::from([
-                    ("participation_concentration_weight".to_string(), "increase".to_string()),
-                ]),
+                | "worst_market_bridge_gap_too_small" => BTreeMap::from([(
+                    "participation_concentration_weight".to_string(),
+                    "increase".to_string(),
+                )]),
                 "pre_bayes_gate_regressed"
                 | "pre_bayes_gate_observe_only"
-                | "pre_bayes_gate_neutralized" => BTreeMap::from([
-                    ("lookback".to_string(), "increase".to_string()),
-                ]),
+                | "pre_bayes_gate_neutralized" => {
+                    BTreeMap::from([("lookback".to_string(), "increase".to_string())])
+                }
                 _ => BTreeMap::new(),
             },
             FactorCategory::SpectralRhythm => match reason {
@@ -854,18 +856,21 @@ impl FactorDefinition {
                 | "bull_bear_separation_weak"
                 | "worst_market_separation_weak" => BTreeMap::from([
                     ("lookback".to_string(), "increase".to_string()),
-                    ("spectral_entropy_weight".to_string(), "decrease".to_string()),
+                    (
+                        "spectral_entropy_weight".to_string(),
+                        "decrease".to_string(),
+                    ),
                 ]),
                 "bridge_gap_regressed"
                 | "bridge_gap_too_small"
-                | "worst_market_bridge_gap_too_small" => BTreeMap::from([
-                    ("cycle_energy_weight".to_string(), "increase".to_string()),
-                ]),
+                | "worst_market_bridge_gap_too_small" => {
+                    BTreeMap::from([("cycle_energy_weight".to_string(), "increase".to_string())])
+                }
                 "pre_bayes_gate_regressed"
                 | "pre_bayes_gate_observe_only"
-                | "pre_bayes_gate_neutralized" => BTreeMap::from([
-                    ("lookback".to_string(), "increase".to_string()),
-                ]),
+                | "pre_bayes_gate_neutralized" => {
+                    BTreeMap::from([("lookback".to_string(), "increase".to_string())])
+                }
                 _ => BTreeMap::new(),
             },
             FactorCategory::SessionLiquidity => match reason {
@@ -878,14 +883,14 @@ impl FactorDefinition {
                 ]),
                 "bridge_gap_regressed"
                 | "bridge_gap_too_small"
-                | "worst_market_bridge_gap_too_small" => BTreeMap::from([
-                    ("kill_zone_weight".to_string(), "increase".to_string()),
-                ]),
+                | "worst_market_bridge_gap_too_small" => {
+                    BTreeMap::from([("kill_zone_weight".to_string(), "increase".to_string())])
+                }
                 "pre_bayes_gate_regressed"
                 | "pre_bayes_gate_observe_only"
-                | "pre_bayes_gate_neutralized" => BTreeMap::from([
-                    ("lookback".to_string(), "increase".to_string()),
-                ]),
+                | "pre_bayes_gate_neutralized" => {
+                    BTreeMap::from([("lookback".to_string(), "increase".to_string())])
+                }
                 _ => BTreeMap::new(),
             },
         }
@@ -1008,14 +1013,12 @@ impl FactorDefinition {
                 ]),
                 "bridge_gap_regressed"
                 | "bridge_gap_too_small"
-                | "worst_market_bridge_gap_too_small" => BTreeMap::from([
-                    ("participation_concentration_weight".to_string(), 0.12),
-                ]),
+                | "worst_market_bridge_gap_too_small" => {
+                    BTreeMap::from([("participation_concentration_weight".to_string(), 0.12)])
+                }
                 "pre_bayes_gate_regressed"
                 | "pre_bayes_gate_observe_only"
-                | "pre_bayes_gate_neutralized" => BTreeMap::from([
-                    ("lookback".to_string(), 0.10),
-                ]),
+                | "pre_bayes_gate_neutralized" => BTreeMap::from([("lookback".to_string(), 0.10)]),
                 _ => BTreeMap::new(),
             },
             FactorCategory::SpectralRhythm => match reason {
@@ -1028,14 +1031,12 @@ impl FactorDefinition {
                 ]),
                 "bridge_gap_regressed"
                 | "bridge_gap_too_small"
-                | "worst_market_bridge_gap_too_small" => BTreeMap::from([
-                    ("cycle_energy_weight".to_string(), 0.12),
-                ]),
+                | "worst_market_bridge_gap_too_small" => {
+                    BTreeMap::from([("cycle_energy_weight".to_string(), 0.12)])
+                }
                 "pre_bayes_gate_regressed"
                 | "pre_bayes_gate_observe_only"
-                | "pre_bayes_gate_neutralized" => BTreeMap::from([
-                    ("lookback".to_string(), 0.10),
-                ]),
+                | "pre_bayes_gate_neutralized" => BTreeMap::from([("lookback".to_string(), 0.10)]),
                 _ => BTreeMap::new(),
             },
             FactorCategory::SessionLiquidity => match reason {
@@ -1048,14 +1049,12 @@ impl FactorDefinition {
                 ]),
                 "bridge_gap_regressed"
                 | "bridge_gap_too_small"
-                | "worst_market_bridge_gap_too_small" => BTreeMap::from([
-                    ("kill_zone_weight".to_string(), 0.12),
-                ]),
+                | "worst_market_bridge_gap_too_small" => {
+                    BTreeMap::from([("kill_zone_weight".to_string(), 0.12)])
+                }
                 "pre_bayes_gate_regressed"
                 | "pre_bayes_gate_observe_only"
-                | "pre_bayes_gate_neutralized" => BTreeMap::from([
-                    ("lookback".to_string(), 0.10),
-                ]),
+                | "pre_bayes_gate_neutralized" => BTreeMap::from([("lookback".to_string(), 0.10)]),
                 _ => BTreeMap::new(),
             },
         }
@@ -1204,6 +1203,17 @@ impl FactorDefinition {
         // are not part of this factor's input contract; external
         // callers can supply them via `match_all_setups_extended`.
         let setup_matches = self.structure_ict_setup_matches_with_context(candles, context);
+        let pda_context_events = format!(
+            "m1:{}|m5:{}|m15:{}|m30:{}|h1:{}|h4:{}|d1:{}|w1:{}",
+            context.m1_events.map_or(0, <[PdaEvent]>::len),
+            context.m5_events.map_or(0, <[PdaEvent]>::len),
+            context.m15_events.map_or(0, <[PdaEvent]>::len),
+            context.m30_events.map_or(0, <[PdaEvent]>::len),
+            context.h1_events.map_or(0, <[PdaEvent]>::len),
+            context.h4_events.map_or(0, <[PdaEvent]>::len),
+            context.d1_events.map_or(0, <[PdaEvent]>::len),
+            context.w1_events.map_or(0, <[PdaEvent]>::len),
+        );
 
         candles
             .iter()
@@ -1366,7 +1376,7 @@ impl FactorDefinition {
                     value,
                     confidence,
                     format!(
-                        "bull_expansion={};bear_expansion={};bull_sweep={};bear_sweep={};bull_manipulation_confirmed={};bear_manipulation_confirmed={};bull_sweep_displacement={:.4};bear_sweep_displacement={:.4};bull_setup_hits={};bear_setup_hits={};bull_score={:.2};bear_score={:.2}",
+                        "bull_expansion={};bear_expansion={};bull_sweep={};bear_sweep={};bull_manipulation_confirmed={};bear_manipulation_confirmed={};bull_sweep_displacement={:.4};bear_sweep_displacement={:.4};pda_context_events={};bull_setup_hits={};bear_setup_hits={};bull_score={:.2};bear_score={:.2}",
                         bull_expansion,
                         bear_expansion,
                         recent_bull_sweep.is_some(),
@@ -1375,6 +1385,7 @@ impl FactorDefinition {
                         bear_manipulation_confirmed,
                         bull_sweep_displacement,
                         bear_sweep_displacement,
+                        pda_context_events,
                         bull_setup_hits,
                         bear_setup_hits,
                         bull_score,
@@ -1407,6 +1418,11 @@ impl FactorDefinition {
             &timeline,
             candles,
             context.paired_candles,
+            context.m1_events,
+            context.m5_events,
+            context.m15_events,
+            context.m30_events,
+            context.h1_events,
             context.h4_events,
             context.d1_events,
             context.w1_events,
@@ -1670,6 +1686,11 @@ fn collect_structure_ict_setup_matches(
     timeline: &[PdaEvent],
     primary_candles: &[Candle],
     paired_candles: Option<&[Candle]>,
+    m1_events: Option<&[PdaEvent]>,
+    m5_events: Option<&[PdaEvent]>,
+    m15_events: Option<&[PdaEvent]>,
+    m30_events: Option<&[PdaEvent]>,
+    h1_events: Option<&[PdaEvent]>,
     h4_events: Option<&[PdaEvent]>,
     d1_events: Option<&[PdaEvent]>,
     w1_events: Option<&[PdaEvent]>,
@@ -1687,6 +1708,53 @@ fn collect_structure_ict_setup_matches(
         &base_context,
         setup_horizon_bars,
     ));
+
+    for lower_events in [m1_events, m5_events, m15_events, m30_events, h1_events]
+        .into_iter()
+        .flatten()
+    {
+        all_matches.extend(match_all_setups_extended(
+            lower_events,
+            &base_context,
+            setup_horizon_bars,
+        ));
+    }
+
+    for (lower_events, higher_events) in [
+        (m1_events, m5_events),
+        (m5_events, m15_events),
+        (m15_events, m30_events.or(h1_events)),
+        (m30_events, h1_events),
+        (h1_events, h4_events),
+    ] {
+        if let (Some(lower), Some(higher)) = (lower_events, higher_events) {
+            let context = SetupContext {
+                primary_candles: Some(primary_candles),
+                paired_candles,
+                htf_events: Some(higher),
+                ..SetupContext::default()
+            };
+            all_matches.extend(match_all_setups_extended(
+                lower,
+                &context,
+                setup_horizon_bars,
+            ));
+        }
+    }
+
+    if let Some(h1) = h1_events {
+        let context = SetupContext {
+            primary_candles: Some(primary_candles),
+            paired_candles,
+            htf_events: Some(h1),
+            ..SetupContext::default()
+        };
+        all_matches.extend(match_all_setups_extended(
+            timeline,
+            &context,
+            setup_horizon_bars,
+        ));
+    }
 
     if let Some(h4) = h4_events {
         let context = SetupContext {
@@ -1869,8 +1937,7 @@ impl FactorDefinition {
                     }
                 };
                 let participation_concentration = if median_vol > f64::EPSILON {
-                    (candle.volume / median_vol / volume_spike_ratio)
-                        .clamp(0.0, 1.0)
+                    (candle.volume / median_vol / volume_spike_ratio).clamp(0.0, 1.0)
                 } else {
                     0.0
                 };
@@ -1897,9 +1964,10 @@ impl FactorDefinition {
 
                 // Crowding relief: volume decay after spike (3-bar lookback)
                 let crowding_relief = if index >= 3 && volumes[index] > f64::EPSILON {
-                    let prev3_avg = (volumes[index - 3] + volumes[index - 2] + volumes[index - 1]) / 3.0;
+                    let prev3_avg =
+                        (volumes[index - 3] + volumes[index - 2] + volumes[index - 1]) / 3.0;
                     if prev3_avg > f64::EPSILON {
-                        (1.0 - (candle.volume / prev3_avg)/ 2.0).clamp(0.0, f64::MAX)
+                        (1.0 - (candle.volume / prev3_avg) / 2.0).clamp(0.0, f64::MAX)
                     } else {
                         0.5
                     }
@@ -1930,7 +1998,11 @@ impl FactorDefinition {
                         participation_concentration,
                         same_side_pressure,
                         crowding_relief,
-                        if median_vol > f64::EPSILON { candle.volume / median_vol } else { 0.0 }
+                        if median_vol > f64::EPSILON {
+                            candle.volume / median_vol
+                        } else {
+                            0.0
+                        }
                     ),
                 )
             })
@@ -2016,10 +2088,20 @@ impl FactorDefinition {
                 // High entropy = chaotic = negative for execution readiness
                 let value = normalize_signed(
                     -se_weight * spectral_entropy
-                        + ce_weight * cycle_energy
-                            * if candle.close >= candle.open { 1.0 } else { -1.0 }
-                        + rs_weight * rhythm_stability
-                            * if candle.close >= candle.open { 1.0 } else { -1.0 },
+                        + ce_weight
+                            * cycle_energy
+                            * if candle.close >= candle.open {
+                                1.0
+                            } else {
+                                -1.0
+                            }
+                        + rs_weight
+                            * rhythm_stability
+                            * if candle.close >= candle.open {
+                                1.0
+                            } else {
+                                -1.0
+                            },
                     1.0,
                 );
                 let confidence = (se_weight * spectral_entropy
@@ -2061,7 +2143,7 @@ impl FactorDefinition {
                     let window_vol = &volumes[start..=index];
                     let avg = window_vol.iter().sum::<f64>() / window_vol.len() as f64;
                     if avg > f64::EPSILON {
-                        (candle.volume / avg)/ 3.0
+                        (candle.volume / avg) / 3.0
                     } else {
                         0.0
                     }
@@ -2070,7 +2152,12 @@ impl FactorDefinition {
                 // Kill-zone alignment: hour-of-day proxy (UTC)
                 // US RTH kill zones ~14-15, 19-20 UTC; London ~7-8, 12-13 UTC
                 let kill_zone_alignment = {
-                    let hour = candle.timestamp.format("%H").to_string().parse::<u32>().unwrap_or(12);
+                    let hour = candle
+                        .timestamp
+                        .format("%H")
+                        .to_string()
+                        .parse::<u32>()
+                        .unwrap_or(12);
                     match hour {
                         7 | 8 | 12 | 13 | 14 | 15 | 19 | 20 => 0.9,
                         9..=11 | 16..=18 => 0.6,
@@ -2080,7 +2167,12 @@ impl FactorDefinition {
 
                 // Session transition risk: near session boundaries
                 let session_transition_risk = {
-                    let hour = candle.timestamp.format("%H").to_string().parse::<u32>().unwrap_or(12);
+                    let hour = candle
+                        .timestamp
+                        .format("%H")
+                        .to_string()
+                        .parse::<u32>()
+                        .unwrap_or(12);
                     match hour {
                         7 | 8 | 13 | 14 | 19 | 20 => 0.7,
                         _ => 0.2,
@@ -2088,10 +2180,20 @@ impl FactorDefinition {
                 };
 
                 let value = normalize_signed(
-                    sq_weight * session_quality
-                        * if candle.close >= candle.open { 1.0 } else { -1.0 }
-                        + kz_weight * kill_zone_alignment
-                            * if candle.close >= candle.open { 1.0 } else { -1.0 }
+                    sq_weight
+                        * session_quality
+                        * if candle.close >= candle.open {
+                            1.0
+                        } else {
+                            -1.0
+                        }
+                        + kz_weight
+                            * kill_zone_alignment
+                            * if candle.close >= candle.open {
+                                1.0
+                            } else {
+                                -1.0
+                            }
                         - tr_weight * session_transition_risk,
                     1.0,
                 );
@@ -2342,6 +2444,11 @@ mod tests {
             &ltf_context_events,
             &series_candles,
             Some(&paired),
+            None,
+            None,
+            None,
+            None,
+            None,
             Some(&h4_events),
             Some(&d1_events),
             Some(&w1_events),

@@ -436,6 +436,7 @@ pub(crate) fn analyze_live_command(input: AnalyzeLiveCommandInput<'_>) -> Result
                 d1: Some(&htf),
                 h4: Some(&htf_4h),
                 h1: Some(&mtf),
+                m30: None,
                 m15: Some(&ltf),
                 m5: Some(&ltf_5m),
                 m1: Some(&ltf_1m),

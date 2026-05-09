@@ -67,17 +67,20 @@ pub(crate) fn run_factor_backtest(
     data_1m: Option<&str>,
     data_5m: Option<&str>,
     data_15m: Option<&str>,
+    data_30m: Option<&str>,
     data_1h: Option<&str>,
     data_4h: Option<&str>,
     data_1d: Option<&str>,
     paired_data: Option<&str>,
-    auxiliary_override: Option<&ict_engine::data::realtime::market_support::AuxiliaryMarketEvidence>,
+    auxiliary_override: Option<
+        &ict_engine::data::realtime::market_support::AuxiliaryMarketEvidence,
+    >,
     state_dir: &str,
 ) -> Result<ict_engine::factor_lab::BacktestResult> {
     let candles = load_candles(data)?;
     let paired_candles = paired_data.map(load_candles).transpose()?;
     let resolved_multi_timeframe_inputs = resolve_multi_timeframe_inputs(
-        data, data_1m, data_5m, data_15m, data_1h, data_4h, data_1d,
+        data, data_1m, data_5m, data_15m, data_30m, data_1h, data_4h, data_1d,
     );
     let multi_timeframe_summary =
         build_multi_timeframe_summary(data, &resolved_multi_timeframe_inputs)?;
@@ -95,7 +98,10 @@ pub(crate) fn run_factor_backtest(
         .map(LearningState::feedback_key)
         .collect::<std::collections::BTreeSet<_>>();
     let mut registry = FactorRegistry::default();
-    ict_engine::factors::FactorHotplugConfig::apply_to_registry_if_present(state_dir, &mut registry);
+    ict_engine::factors::FactorHotplugConfig::apply_to_registry_if_present(
+        state_dir,
+        &mut registry,
+    );
     let lab = FactorLab::new(registry);
 
     // Load regime V2 labels if available
@@ -106,6 +112,11 @@ pub(crate) fn run_factor_backtest(
         &candles,
         &FactorContext {
             paired_candles: paired_candles.as_deref(),
+            m1_events: structure_ict_context.m1_events.as_deref(),
+            m5_events: structure_ict_context.m5_events.as_deref(),
+            m15_events: structure_ict_context.m15_events.as_deref(),
+            m30_events: structure_ict_context.m30_events.as_deref(),
+            h1_events: structure_ict_context.h1_events.as_deref(),
             h4_events: structure_ict_context.h4_events.as_deref(),
             d1_events: structure_ict_context.d1_events.as_deref(),
             w1_events: structure_ict_context.w1_events.as_deref(),
@@ -315,6 +326,9 @@ pub(crate) fn run_factor_backtest(
         .cloned()
         .chain(multi_timeframe_signal.summary.iter().cloned())
         .collect();
+    report
+        .multi_timeframe_summary
+        .push(structure_ict_pda_context_summary(&structure_ict_context));
     report.agent_context_bundle.multi_timeframe_summary = report.multi_timeframe_summary.clone();
     report.agent_context_bundle_minimal =
         build_agent_context_bundle_minimal(&report.agent_context_bundle);

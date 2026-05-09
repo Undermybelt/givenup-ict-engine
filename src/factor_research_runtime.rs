@@ -11,6 +11,7 @@ pub(crate) fn run_factor_research(
         data_1m,
         data_5m,
         data_15m,
+        data_30m,
         data_1h,
         data_4h,
         data_1d,
@@ -27,8 +28,9 @@ pub(crate) fn run_factor_research(
         Some(candles) => Some(candles),
         None => paired_data.map(load_candles).transpose()?,
     };
-    let resolved_multi_timeframe_inputs =
-        resolve_multi_timeframe_inputs(data, data_1m, data_5m, data_15m, data_1h, data_4h, data_1d);
+    let resolved_multi_timeframe_inputs = resolve_multi_timeframe_inputs(
+        data, data_1m, data_5m, data_15m, data_30m, data_1h, data_4h, data_1d,
+    );
     let multi_timeframe_summary =
         build_multi_timeframe_summary(data, &resolved_multi_timeframe_inputs)?;
     let multi_timeframe_signal =
@@ -46,7 +48,10 @@ pub(crate) fn run_factor_research(
         .map(LearningState::feedback_key)
         .collect::<std::collections::BTreeSet<_>>();
     let mut registry = FactorRegistry::default();
-    ict_engine::factors::FactorHotplugConfig::apply_to_registry_if_present(state_dir, &mut registry);
+    ict_engine::factors::FactorHotplugConfig::apply_to_registry_if_present(
+        state_dir,
+        &mut registry,
+    );
     let baseline_multi_timeframe_summary = multi_timeframe_summary
         .iter()
         .chain(multi_timeframe_signal.summary.iter())
@@ -65,6 +70,11 @@ pub(crate) fn run_factor_research(
             baseline_learning_state: &baseline_learning_state,
             candles: &candles,
             paired_candles: paired_candles.as_deref(),
+            m1_events: structure_ict_context.m1_events.as_deref(),
+            m5_events: structure_ict_context.m5_events.as_deref(),
+            m15_events: structure_ict_context.m15_events.as_deref(),
+            m30_events: structure_ict_context.m30_events.as_deref(),
+            h1_events: structure_ict_context.h1_events.as_deref(),
             h4_events: structure_ict_context.h4_events.as_deref(),
             d1_events: structure_ict_context.d1_events.as_deref(),
             w1_events: structure_ict_context.w1_events.as_deref(),
@@ -82,6 +92,11 @@ pub(crate) fn run_factor_research(
         &candles,
         &FactorContext {
             paired_candles: paired_candles.as_deref(),
+            m1_events: structure_ict_context.m1_events.as_deref(),
+            m5_events: structure_ict_context.m5_events.as_deref(),
+            m15_events: structure_ict_context.m15_events.as_deref(),
+            m30_events: structure_ict_context.m30_events.as_deref(),
+            h1_events: structure_ict_context.h1_events.as_deref(),
             h4_events: structure_ict_context.h4_events.as_deref(),
             d1_events: structure_ict_context.d1_events.as_deref(),
             w1_events: structure_ict_context.w1_events.as_deref(),
@@ -282,6 +297,9 @@ pub(crate) fn run_factor_research(
         .chain(multi_timeframe_signal.summary.iter())
         .cloned()
         .collect();
+    report
+        .multi_timeframe_summary
+        .push(structure_ict_pda_context_summary(&structure_ict_context));
     report.multi_timeframe_summary.extend(runtime_notes);
     report.agent_prompts.prompts.push(research_diff_prompt(
         symbol,

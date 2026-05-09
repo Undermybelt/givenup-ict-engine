@@ -9,7 +9,8 @@ use crate::data::load_candles;
 pub fn build_multi_timeframe_training_observations(
     primary_data: &str,
 ) -> Result<(Vec<Vec<f64>>, Vec<String>, usize)> {
-    let resolved = resolve_multi_timeframe_inputs(primary_data, None, None, None, None, None, None);
+    let resolved =
+        resolve_multi_timeframe_inputs(primary_data, None, None, None, None, None, None, None);
     let mut observations = Vec::new();
     let mut summary = build_multi_timeframe_summary(primary_data, &resolved)?;
     let mut candles_total = 0usize;

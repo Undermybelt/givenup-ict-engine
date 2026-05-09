@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 use crate::application::data_sources::discover_tomac_futures_datasets;
 use crate::data::load_candles;
 
-pub const MULTI_TIMEFRAME_INTERVALS: [&str; 6] = ["1m", "5m", "15m", "1h", "4h", "1d"];
+pub const MULTI_TIMEFRAME_INTERVALS: [&str; 7] = ["1m", "5m", "15m", "30m", "1h", "4h", "1d"];
 
 #[derive(Debug, Clone, Default)]
 pub struct MultiTimeframeResearchSignal {
@@ -88,6 +88,7 @@ pub fn resolve_multi_timeframe_inputs(
     data_1m: Option<&str>,
     data_5m: Option<&str>,
     data_15m: Option<&str>,
+    data_30m: Option<&str>,
     data_1h: Option<&str>,
     data_4h: Option<&str>,
     data_1d: Option<&str>,
@@ -97,6 +98,7 @@ pub fn resolve_multi_timeframe_inputs(
         ("1m", data_1m),
         ("5m", data_5m),
         ("15m", data_15m),
+        ("30m", data_30m),
         ("1h", data_1h),
         ("4h", data_4h),
         ("1d", data_1d),
@@ -133,7 +135,8 @@ pub fn resolve_analyze_multi_timeframe_inputs(
     data_mtf: &str,
     data_ltf: &str,
 ) -> ResolvedMultiTimeframeInputs {
-    let mut resolved = resolve_multi_timeframe_inputs(data_ltf, None, None, None, None, None, None);
+    let mut resolved =
+        resolve_multi_timeframe_inputs(data_ltf, None, None, None, None, None, None, None);
     for (path, fallback) in [(data_htf, "1d"), (data_mtf, "1h"), (data_ltf, "15m")] {
         let interval = infer_interval_for_analyze_frame(path, fallback);
         resolved.paths.insert(interval, path.to_string());

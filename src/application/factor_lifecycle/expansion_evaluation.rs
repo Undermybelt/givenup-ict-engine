@@ -35,6 +35,7 @@ pub fn build_expansion_sop_mutation_metrics(
             None,
             None,
             None,
+            None,
         );
         let multi_timeframe_summary =
             build_multi_timeframe_summary(&dataset.output_path, &resolved_multi_timeframe_inputs)?

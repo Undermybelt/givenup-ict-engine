@@ -24,7 +24,7 @@ pub fn expansion_regression_reasons_by_market(
     for (market, output_path) in datasets {
         let candles = load_candles(output_path)?;
         let resolved_multi_timeframe_inputs =
-            resolve_multi_timeframe_inputs(output_path, None, None, None, None, None, None);
+            resolve_multi_timeframe_inputs(output_path, None, None, None, None, None, None, None);
         let multi_timeframe_summary =
             build_multi_timeframe_summary(output_path, &resolved_multi_timeframe_inputs)?
                 .into_iter()

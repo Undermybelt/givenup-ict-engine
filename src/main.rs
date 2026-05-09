@@ -415,6 +415,11 @@ struct BaselineFactorMutationMetricsInput<'a> {
     baseline_learning_state: &'a LearningState,
     candles: &'a [Candle],
     paired_candles: Option<&'a [Candle]>,
+    m1_events: Option<&'a [PdaEvent]>,
+    m5_events: Option<&'a [PdaEvent]>,
+    m15_events: Option<&'a [PdaEvent]>,
+    m30_events: Option<&'a [PdaEvent]>,
+    h1_events: Option<&'a [PdaEvent]>,
     h4_events: Option<&'a [PdaEvent]>,
     d1_events: Option<&'a [PdaEvent]>,
     w1_events: Option<&'a [PdaEvent]>,
@@ -770,6 +775,8 @@ enum Commands {
         data_5m: Option<String>,
         #[arg(long, help = "Optional 15m candle JSON path")]
         data_15m: Option<String>,
+        #[arg(long, help = "Optional 30m candle JSON path")]
+        data_30m: Option<String>,
         #[arg(long, help = "Optional 1h candle JSON path")]
         data_1h: Option<String>,
         #[arg(long, help = "Optional 4h candle JSON path")]
@@ -935,6 +942,8 @@ enum Commands {
         data_5m: Option<String>,
         #[arg(long, help = "Optional 15m candle JSON path")]
         data_15m: Option<String>,
+        #[arg(long, help = "Optional 30m candle JSON path")]
+        data_30m: Option<String>,
         #[arg(long, help = "Optional 1h candle JSON path")]
         data_1h: Option<String>,
         #[arg(long, help = "Optional 4h candle JSON path")]
@@ -1171,6 +1180,8 @@ enum Commands {
         data_5m: Option<String>,
         #[arg(long, help = "Optional 15m candle JSON path")]
         data_15m: Option<String>,
+        #[arg(long, help = "Optional 30m candle JSON path")]
+        data_30m: Option<String>,
         #[arg(long, help = "Optional 1h candle JSON path")]
         data_1h: Option<String>,
         #[arg(long, help = "Optional 4h candle JSON path")]
@@ -1329,6 +1340,8 @@ enum Commands {
         data_5m: Option<String>,
         #[arg(long, help = "Optional 15m candle JSON path")]
         data_15m: Option<String>,
+        #[arg(long, help = "Optional 30m candle JSON path")]
+        data_30m: Option<String>,
         #[arg(long, help = "Optional 1h candle JSON path")]
         data_1h: Option<String>,
         #[arg(long, help = "Optional 4h candle JSON path")]
@@ -2205,6 +2218,7 @@ fn main() -> Result<()> {
                         data_1m: None,
                         data_5m: None,
                         data_15m: None,
+                        data_30m: None,
                         data_1h: None,
                         data_4h: None,
                         data_1d: None,
@@ -2311,6 +2325,7 @@ fn main() -> Result<()> {
             data_1m,
             data_5m,
             data_15m,
+            data_30m,
             data_1h,
             data_4h,
             data_1d,
@@ -2336,6 +2351,7 @@ fn main() -> Result<()> {
             data_1m: data_1m.as_deref(),
             data_5m: data_5m.as_deref(),
             data_15m: data_15m.as_deref(),
+            data_30m: data_30m.as_deref(),
             data_1h: data_1h.as_deref(),
             data_4h: data_4h.as_deref(),
             data_1d: data_1d.as_deref(),
@@ -2400,6 +2416,7 @@ fn main() -> Result<()> {
             data_1m,
             data_5m,
             data_15m,
+            data_30m,
             data_1h,
             data_4h,
             data_1d,
@@ -2423,6 +2440,7 @@ fn main() -> Result<()> {
             data_1m: data_1m.as_deref(),
             data_5m: data_5m.as_deref(),
             data_15m: data_15m.as_deref(),
+            data_30m: data_30m.as_deref(),
             data_1h: data_1h.as_deref(),
             data_4h: data_4h.as_deref(),
             data_1d: data_1d.as_deref(),
@@ -2464,6 +2482,7 @@ fn main() -> Result<()> {
             data_1m,
             data_5m,
             data_15m,
+            data_30m,
             data_1h,
             data_4h,
             data_1d,
@@ -2481,6 +2500,7 @@ fn main() -> Result<()> {
             data_1m.as_deref(),
             data_5m.as_deref(),
             data_15m.as_deref(),
+            data_30m.as_deref(),
             data_1h.as_deref(),
             data_4h.as_deref(),
             data_1d.as_deref(),
@@ -2751,6 +2771,7 @@ fn main() -> Result<()> {
             data_1m,
             data_5m,
             data_15m,
+            data_30m,
             data_1h,
             data_4h,
             data_1d,
@@ -2763,6 +2784,7 @@ fn main() -> Result<()> {
                 data_1m: data_1m.as_deref(),
                 data_5m: data_5m.as_deref(),
                 data_15m: data_15m.as_deref(),
+                data_30m: data_30m.as_deref(),
                 data_1h: data_1h.as_deref(),
                 data_4h: data_4h.as_deref(),
                 data_1d: data_1d.as_deref(),
@@ -3185,6 +3207,7 @@ fn run_futures_sop(root: &str, output_dir: &str, interval: &str) -> Result<Futur
                 data_1m: input.multi_timeframe_inputs.get("1m"),
                 data_5m: input.multi_timeframe_inputs.get("5m"),
                 data_15m: input.multi_timeframe_inputs.get("15m"),
+                data_30m: input.multi_timeframe_inputs.get("30m"),
                 data_1h: input.multi_timeframe_inputs.get("1h"),
                 data_4h: input.multi_timeframe_inputs.get("4h"),
                 data_1d: input.multi_timeframe_inputs.get("1d"),
@@ -3237,6 +3260,7 @@ fn run_expansion_sop(
             let candles = load_candles(&input.output_path)?;
             let resolved_multi_timeframe_inputs = resolve_multi_timeframe_inputs(
                 &input.output_path,
+                None,
                 None,
                 None,
                 None,
@@ -3335,6 +3359,7 @@ struct RunFactorResearchInput<'a> {
     data_1m: Option<&'a str>,
     data_5m: Option<&'a str>,
     data_15m: Option<&'a str>,
+    data_30m: Option<&'a str>,
     data_1h: Option<&'a str>,
     data_4h: Option<&'a str>,
     data_1d: Option<&'a str>,
@@ -3349,48 +3374,94 @@ struct RunFactorResearchInput<'a> {
 
 #[derive(Default)]
 struct StructureIctContextEvents {
+    m1_events: Option<Vec<PdaEvent>>,
+    m5_events: Option<Vec<PdaEvent>>,
+    m15_events: Option<Vec<PdaEvent>>,
+    m30_events: Option<Vec<PdaEvent>>,
+    h1_events: Option<Vec<PdaEvent>>,
     h4_events: Option<Vec<PdaEvent>>,
     d1_events: Option<Vec<PdaEvent>>,
     w1_events: Option<Vec<PdaEvent>>,
 }
 
+fn build_pda_events_from_candles(candles: &[Candle]) -> Vec<PdaEvent> {
+    build_pda_timeline(candles, &compute_atr(candles, 14))
+}
+
+fn load_resolved_pda_events(
+    resolved: &ict_engine::application::multi_timeframe_inputs::ResolvedMultiTimeframeInputs,
+    interval: &str,
+) -> Result<Option<Vec<PdaEvent>>> {
+    resolved
+        .get(interval)
+        .map(load_candles)
+        .transpose()
+        .map(|candles| candles.map(|candles| build_pda_events_from_candles(&candles)))
+}
+
 fn build_structure_ict_context_events(
     resolved: &ict_engine::application::multi_timeframe_inputs::ResolvedMultiTimeframeInputs,
 ) -> Result<StructureIctContextEvents> {
-    let h4_events = resolved
-        .get("4h")
-        .map(load_candles)
-        .transpose()?
-        .map(|candles| build_pda_timeline(&candles, &compute_atr(&candles, 14)));
+    let m1_events = load_resolved_pda_events(resolved, "1m")?;
+    let m5_events = load_resolved_pda_events(resolved, "5m")?;
+    let m15_events = load_resolved_pda_events(resolved, "15m")?;
+    let m30_events = load_resolved_pda_events(resolved, "30m")?;
+    let h1_events = load_resolved_pda_events(resolved, "1h")?;
+    let h4_events = load_resolved_pda_events(resolved, "4h")?;
     let d1_candles = resolved.get("1d").map(load_candles).transpose()?;
     let d1_events = d1_candles
         .as_ref()
-        .map(|candles| build_pda_timeline(candles, &compute_atr(candles, 14)));
+        .map(|candles| build_pda_events_from_candles(candles));
     let w1_events = d1_candles.as_ref().map(|candles| {
         let weekly = aggregate_daily_candles_to_weekly(candles);
         build_pda_timeline(&weekly, &compute_atr(&weekly, 14))
     });
     Ok(StructureIctContextEvents {
+        m1_events,
+        m5_events,
+        m15_events,
+        m30_events,
+        h1_events,
         h4_events,
         d1_events,
         w1_events,
     })
 }
 
+fn structure_ict_pda_context_summary(context: &StructureIctContextEvents) -> String {
+    format!(
+        "structure_ict_pda_context_events=m1:{}|m5:{}|m15:{}|m30:{}|h1:{}|h4:{}|d1:{}|w1:{}",
+        context.m1_events.as_ref().map_or(0, Vec::len),
+        context.m5_events.as_ref().map_or(0, Vec::len),
+        context.m15_events.as_ref().map_or(0, Vec::len),
+        context.m30_events.as_ref().map_or(0, Vec::len),
+        context.h1_events.as_ref().map_or(0, Vec::len),
+        context.h4_events.as_ref().map_or(0, Vec::len),
+        context.d1_events.as_ref().map_or(0, Vec::len),
+        context.w1_events.as_ref().map_or(0, Vec::len),
+    )
+}
+
 fn build_structure_ict_context_events_from_native_frames(
     native_frames: AnalyzeNativeFrames<'_>,
 ) -> StructureIctContextEvents {
-    let h4_events = native_frames
-        .h4
-        .map(|candles| build_pda_timeline(candles, &compute_atr(candles, 14)));
-    let d1_events = native_frames
-        .d1
-        .map(|candles| build_pda_timeline(candles, &compute_atr(candles, 14)));
+    let m1_events = native_frames.m1.map(build_pda_events_from_candles);
+    let m5_events = native_frames.m5.map(build_pda_events_from_candles);
+    let m15_events = native_frames.m15.map(build_pda_events_from_candles);
+    let m30_events = native_frames.m30.map(build_pda_events_from_candles);
+    let h1_events = native_frames.h1.map(build_pda_events_from_candles);
+    let h4_events = native_frames.h4.map(build_pda_events_from_candles);
+    let d1_events = native_frames.d1.map(build_pda_events_from_candles);
     let w1_events = native_frames.d1.map(|candles| {
         let weekly = aggregate_daily_candles_to_weekly(candles);
         build_pda_timeline(&weekly, &compute_atr(&weekly, 14))
     });
     StructureIctContextEvents {
+        m1_events,
+        m5_events,
+        m15_events,
+        m30_events,
+        h1_events,
         h4_events,
         d1_events,
         w1_events,
@@ -3525,6 +3596,11 @@ fn baseline_factor_mutation_metrics(
         baseline_learning_state,
         candles,
         paired_candles,
+        m1_events,
+        m5_events,
+        m15_events,
+        m30_events,
+        h1_events,
         h4_events,
         d1_events,
         w1_events,
@@ -3538,6 +3614,11 @@ fn baseline_factor_mutation_metrics(
         candles,
         &FactorContext {
             paired_candles,
+            m1_events,
+            m5_events,
+            m15_events,
+            m30_events,
+            h1_events,
             h4_events,
             d1_events,
             w1_events,
@@ -4000,7 +4081,8 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
     let pre_bayes_policy = pre_bayes_evidence_policy();
     let multi_timeframe_evidence =
         parse_multi_timeframe_evidence(build_context.multi_timeframe_summary);
-    let market_state_snapshot = ict_engine::market_state::MarketStateClassifier::new().classify(native_ltf);
+    let market_state_snapshot =
+        ict_engine::market_state::MarketStateClassifier::new().classify(native_ltf);
     let market_state_evidence = market_state_evidence_lines(&market_state_snapshot);
     let structure_ict_context =
         build_structure_ict_context_events_from_native_frames(build_context.native_frames);
@@ -4059,7 +4141,10 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         pda_sequence_summary.as_ref(),
     )?;
     let mut factor_registry = FactorRegistry::default();
-    ict_engine::factors::hotplug::FactorHotplugConfig::apply_to_registry_if_present(state_dir, &mut factor_registry);
+    ict_engine::factors::hotplug::FactorHotplugConfig::apply_to_registry_if_present(
+        state_dir,
+        &mut factor_registry,
+    );
     factor_registry.apply_learning_state(build_context.learning_state);
     let factor_engine = FactorEngine::new(factor_registry);
     let factor_output = factor_engine.run(
@@ -4067,6 +4152,11 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         &FactorContext {
             paired_candles: build_context.paired_candles,
             auxiliary: build_context.auxiliary,
+            m1_events: structure_ict_context.m1_events.as_deref(),
+            m5_events: structure_ict_context.m5_events.as_deref(),
+            m15_events: structure_ict_context.m15_events.as_deref(),
+            m30_events: structure_ict_context.m30_events.as_deref(),
+            h1_events: structure_ict_context.h1_events.as_deref(),
             h4_events: structure_ict_context.h4_events.as_deref(),
             d1_events: structure_ict_context.d1_events.as_deref(),
             w1_events: structure_ict_context.w1_events.as_deref(),
@@ -4531,20 +4621,17 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         persist_mece_recovery_artifact(state_dir, &mece_artifact, "analyze", None, &decision_hint)?;
     }
 
-    let path_ranker_lineage = ict_engine::application::entry_models::policy_training_status(
-        state_dir,
-        symbol,
-        None,
-    )
-    .ok()
-    .map(|surface| {
-        vec![
-            surface.structural_path_ranking_runtime_summary,
-            surface.structural_path_ranking_validation_summary,
-            format!("factor_hotplug_summary={}", surface.factor_hotplug_summary),
-        ]
-    })
-    .unwrap_or_else(|| vec!["policy_training_status=unavailable".to_string()]);
+    let path_ranker_lineage =
+        ict_engine::application::entry_models::policy_training_status(state_dir, symbol, None)
+            .ok()
+            .map(|surface| {
+                vec![
+                    surface.structural_path_ranking_runtime_summary,
+                    surface.structural_path_ranking_validation_summary,
+                    format!("factor_hotplug_summary={}", surface.factor_hotplug_summary),
+                ]
+            })
+            .unwrap_or_else(|| vec!["policy_training_status=unavailable".to_string()]);
 
     let execution_tree_input = ExecutionTreeInput {
         execution_features: &execution_artifact.features,
@@ -5108,7 +5195,12 @@ fn market_state_evidence_lines(
             snapshot.behavior_confidence
         ),
     ];
-    lines.extend(snapshot.rationale.iter().map(|line| format!("rationale={line}")));
+    lines.extend(
+        snapshot
+            .rationale
+            .iter()
+            .map(|line| format!("rationale={line}")),
+    );
     lines
 }
 
@@ -6540,6 +6632,7 @@ mod tests {
             data_1m: None,
             data_5m: None,
             data_15m: None,
+            data_30m: None,
             data_1h: None,
             data_4h: None,
             data_1d: None,
@@ -6966,6 +7059,7 @@ mod tests {
                 d1: Some(&candles),
                 h4: Some(&candles),
                 h1: None,
+                m30: None,
                 m15: None,
                 m5: None,
                 m1: None,
@@ -7225,6 +7319,7 @@ mod tests {
             data_1m: None,
             data_5m: None,
             data_15m: None,
+            data_30m: None,
             data_1h: None,
             data_4h: None,
             data_1d: None,
@@ -7247,6 +7342,7 @@ mod tests {
             data_1m: None,
             data_5m: None,
             data_15m: None,
+            data_30m: None,
             data_1h: None,
             data_4h: None,
             data_1d: None,
@@ -7339,6 +7435,7 @@ mod tests {
                     data_1m: None,
                     data_5m: None,
                     data_15m: None,
+                    data_30m: None,
                     data_1h: None,
                     data_4h: None,
                     data_1d: None,
@@ -7424,6 +7521,7 @@ mod tests {
             data_1m: None,
             data_5m: None,
             data_15m: None,
+            data_30m: None,
             data_1h: None,
             data_4h: None,
             data_1d: None,
@@ -7505,6 +7603,7 @@ mod tests {
         let report = run_factor_backtest(
             "NQ",
             data.to_str().unwrap(),
+            None,
             None,
             None,
             None,
@@ -7624,6 +7723,7 @@ mod tests {
             data_1m: None,
             data_5m: None,
             data_15m: None,
+            data_30m: None,
             data_1h: None,
             data_4h: None,
             data_1d: None,
@@ -7639,6 +7739,7 @@ mod tests {
         run_factor_backtest(
             "NQ",
             research_data.to_str().unwrap(),
+            None,
             None,
             None,
             None,
@@ -7713,12 +7814,14 @@ mod tests {
             None,
             None,
             None,
+            None,
             temp.path().to_str().unwrap(),
         )
         .unwrap();
         run_factor_backtest(
             "NQ",
             data.to_str().unwrap(),
+            None,
             None,
             None,
             None,
@@ -8127,6 +8230,7 @@ mod tests {
             data_1m: None,
             data_5m: None,
             data_15m: None,
+            data_30m: None,
             data_1h: None,
             data_4h: None,
             data_1d: None,
@@ -8146,6 +8250,7 @@ mod tests {
             data_1m: None,
             data_5m: None,
             data_15m: None,
+            data_30m: None,
             data_1h: None,
             data_4h: None,
             data_1d: None,
@@ -8322,6 +8427,7 @@ mod tests {
             data_1m: None,
             data_5m: None,
             data_15m: None,
+            data_30m: None,
             data_1h: None,
             data_4h: None,
             data_1d: None,
@@ -12948,7 +13054,8 @@ mod tests {
             .join("nq.continuous-15m.json")
             .to_string_lossy()
             .to_string();
-        let resolved = resolve_multi_timeframe_inputs(&primary, None, None, None, None, None, None);
+        let resolved =
+            resolve_multi_timeframe_inputs(&primary, None, None, None, None, None, None, None);
         let summary =
             ict_engine::application::multi_timeframe_inputs::build_multi_timeframe_summary(
                 &primary, &resolved,
@@ -12959,7 +13066,7 @@ mod tests {
         assert_eq!(resolved.paths.len(), MULTI_TIMEFRAME_INTERVALS.len());
         assert!(summary
             .iter()
-            .any(|item| item.contains("covered_intervals=1m,5m,15m,1h,4h,1d")));
+            .any(|item| item.contains("covered_intervals=1m,5m,15m,30m,1h,4h,1d")));
     }
 
     #[test]
@@ -12985,7 +13092,8 @@ mod tests {
             .join("nq.continuous-15m.json")
             .to_string_lossy()
             .to_string();
-        let resolved = resolve_multi_timeframe_inputs(&primary, None, None, None, None, None, None);
+        let resolved =
+            resolve_multi_timeframe_inputs(&primary, None, None, None, None, None, None, None);
         let signal =
             ict_engine::application::multi_timeframe_inputs::build_multi_timeframe_research_signal(
                 &resolved,

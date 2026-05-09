@@ -37,6 +37,11 @@ pub(crate) fn analyze_command(
         .filter(|path| *path != data_htf && *path != data_mtf && *path != data_ltf)
         .map(load_candles)
         .transpose()?;
+    let m30_owned = resolved_multi_timeframe_inputs
+        .get("30m")
+        .filter(|path| *path != data_htf && *path != data_mtf && *path != data_ltf)
+        .map(load_candles)
+        .transpose()?;
     let m5_owned = resolved_multi_timeframe_inputs
         .get("5m")
         .filter(|path| *path != data_htf && *path != data_mtf && *path != data_ltf)
@@ -100,6 +105,15 @@ pub(crate) fn analyze_command(
                     Some(&ltf)
                 } else {
                     h1_owned.as_deref()
+                },
+                m30: if infer_interval_for_analyze_frame(data_htf, "1d") == "30m" {
+                    Some(&htf)
+                } else if infer_interval_for_analyze_frame(data_mtf, "1h") == "30m" {
+                    Some(&mtf)
+                } else if infer_interval_for_analyze_frame(data_ltf, "15m") == "30m" {
+                    Some(&ltf)
+                } else {
+                    m30_owned.as_deref()
                 },
                 m15: if infer_interval_for_analyze_frame(data_htf, "1d") == "15m" {
                     Some(&htf)
