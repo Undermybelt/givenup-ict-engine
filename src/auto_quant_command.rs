@@ -193,7 +193,8 @@ pub(crate) fn auto_quant_promote_canonical_setup_shell(
         state_dir: &aq_dir,
         ..input
     };
-    let report = ict_engine::application::backtest::auto_quant_promote_canonical_setup_command(resolved)?;
+    let report =
+        ict_engine::application::backtest::auto_quant_promote_canonical_setup_command(resolved)?;
     println!("{}", serde_json::to_string_pretty(&report)?);
     Ok(())
 }

@@ -59,11 +59,15 @@ pub fn validate_market_state_shell(input: ValidateMarketStateInput) -> Result<()
             )
         })?;
         let config = MarketStateConfig::from_profile(&profile);
-        config.validate().context("invalid market-state profile config")?;
+        config
+            .validate()
+            .context("invalid market-state profile config")?;
         config
     } else {
         let config = MarketStateConfig::default();
-        config.validate().context("invalid default market-state config")?;
+        config
+            .validate()
+            .context("invalid default market-state config")?;
         config
     };
 
