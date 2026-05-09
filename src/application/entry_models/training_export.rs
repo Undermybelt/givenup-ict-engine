@@ -16,17 +16,17 @@ use crate::application::orchestration::{
 use crate::application::provider_catalog::provider_status_agent_surface;
 use crate::belief_core::ranking_label::{
     load_structural_path_ranker_direct_model_artifact,
-    score_structural_path_ranker_runtime_rows_with_explicit_family,
     load_structural_path_ranker_runtime_artifact_rows,
     load_structural_path_ranking_runtime_selection,
     score_structural_path_ranker_runtime_rows_with_direct_model,
+    score_structural_path_ranker_runtime_rows_with_explicit_family,
     score_structural_path_ranker_runtime_rows_with_service,
-    structural_path_ranker_supports_explicit_family,
     structural_path_ranker_supports_direct_model_family,
+    structural_path_ranker_supports_explicit_family,
     structural_path_ranker_supports_service_family, structural_path_ranking_runtime_selection_path,
-    StructuralPathRankerCalibrationMetrics, StructuralPathRankerRule,
-    StructuralPathRankerTreeNode, StructuralPathRankerValidationMetrics,
-    StructuralPathRankingRuntimeSelection, STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+    StructuralPathRankerCalibrationMetrics, StructuralPathRankerRule, StructuralPathRankerTreeNode,
+    StructuralPathRankerValidationMetrics, StructuralPathRankingRuntimeSelection,
+    STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
     STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY,
     STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION,
 };
@@ -329,8 +329,7 @@ pub struct StructuralPathRankingValidationSummarySurface {
     #[serde(default)]
     pub target_row_validation: StructuralPathRankingTargetRowValidationSurface,
     #[serde(default)]
-    pub feedback_observation_validation:
-        StructuralPathRankingFeedbackObservationValidationSurface,
+    pub feedback_observation_validation: StructuralPathRankingFeedbackObservationValidationSurface,
     pub summary_line: String,
 }
 
@@ -502,6 +501,8 @@ pub struct StructuralPathRankingTrainerArtifact {
     pub model_family: String,
     #[serde(default)]
     pub artifact_uri: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub model_artifact_uri: Option<String>,
     #[serde(default)]
     pub score_column: String,
     #[serde(default)]
@@ -510,7 +511,11 @@ pub struct StructuralPathRankingTrainerArtifact {
     pub history_rows: usize,
     #[serde(default)]
     pub calibration_rows: usize,
-    #[serde(default, alias = "feature_columns", skip_serializing_if = "Vec::is_empty")]
+    #[serde(
+        default,
+        alias = "feature_columns",
+        skip_serializing_if = "Vec::is_empty"
+    )]
     pub selected_features: Vec<String>,
     #[serde(default)]
     pub validation_metrics: StructuralPathRankerValidationMetrics,
@@ -932,7 +937,10 @@ pub fn policy_training_status(
                 if disabled.is_empty() {
                     "Factor hotplug: config=present disabled=[]".to_string()
                 } else {
-                    format!("Factor hotplug: config=present disabled=[{}]", disabled.join(","))
+                    format!(
+                        "Factor hotplug: config=present disabled=[{}]",
+                        disabled.join(",")
+                    )
                 }
             }
             None => "Factor hotplug: config=absent all_default_enabled".to_string(),
@@ -987,7 +995,8 @@ pub fn policy_training_status(
                 .production_validation_min_rows,
             production_validation_shortfall_rows: structural_path_ranking_target
                 .production_validation_shortfall_rows,
-            observation_validation_ready: structural_path_ranking_target.observation_validation_ready,
+            observation_validation_ready: structural_path_ranking_target
+                .observation_validation_ready,
             observation_validation_rows: structural_path_ranking_target.observation_validation_rows,
             observation_validation_min_rows: structural_path_ranking_target
                 .observation_validation_min_rows,
@@ -1306,7 +1315,8 @@ pub fn structural_path_ranking_target_training_status(
     let observation_validation_min_rows = STRUCTURAL_PATH_RANKING_PRODUCTION_VALIDATION_MIN_ROWS;
     let observation_validation_shortfall_rows =
         observation_validation_min_rows.saturating_sub(observation_validation_rows);
-    let observation_validation_ready = observation_validation_rows >= observation_validation_min_rows;
+    let observation_validation_ready =
+        observation_validation_rows >= observation_validation_min_rows;
     let feedback_observation_validation_summary = format!(
         "observations mature={}/{} pending={} total={} ready={}",
         observation_validation_rows,
@@ -1441,7 +1451,9 @@ pub fn structural_path_ranking_target_training_status(
         None => "disabled".to_string(),
         Some(selection) if !selection.enabled => "disabled".to_string(),
         Some(_) if runtime_direct_model_ready => "enabled_registered_model_ready".to_string(),
-        Some(_) if runtime_explicit_ready => "enabled_registered_explicit_artifact_ready".to_string(),
+        Some(_) if runtime_explicit_ready => {
+            "enabled_registered_explicit_artifact_ready".to_string()
+        }
         Some(_) if runtime_service_ready => "enabled_registered_service_ready".to_string(),
         Some(_)
             if trainer_artifact.as_ref().is_some_and(|artifact| {
@@ -1763,6 +1775,12 @@ fn merge_structural_path_ranking_source_artifact(
     if let Some(score_column) = non_empty_string(&source.score_column) {
         artifact.score_column = score_column;
     }
+    if let Some(source_artifact_uri) = non_empty_string(&source.artifact_uri) {
+        artifact.artifact_uri = source_artifact_uri;
+    }
+    if source.model_artifact_uri.is_some() {
+        artifact.model_artifact_uri = source.model_artifact_uri;
+    }
     if source.trained_rows > 0 {
         artifact.trained_rows = source.trained_rows;
     }
@@ -1932,6 +1950,7 @@ fn register_structural_path_ranking_trainer_artifact(
         dataset_role: summary.trainer_manifest.dataset_role.clone(),
         model_family: model_family.to_string(),
         artifact_uri: artifact_uri.to_string(),
+        model_artifact_uri: None,
         score_column: score_column
             .map(str::trim)
             .filter(|value| !value.is_empty())
@@ -2888,6 +2907,7 @@ mod tests {
             dataset_role: "external_path_ranker_training_dataset".to_string(),
             model_family: "catboost".to_string(),
             artifact_uri: "/opt/external/path-ranker/model.cbm".to_string(),
+            model_artifact_uri: None,
             score_column: "raw_path_score".to_string(),
             trained_rows: 42,
             history_rows: 42,
@@ -3182,10 +3202,22 @@ mod tests {
         assert_eq!(status.observation_validation_rows, 0);
         assert_eq!(status.observation_validation_min_rows, 30);
         assert!(!status.observation_validation_ready);
-        assert_eq!(status.feedback_observation_validation.mature_observations, 0);
+        assert_eq!(
+            status.feedback_observation_validation.mature_observations,
+            0
+        );
         assert_eq!(status.feedback_observation_validation.total_observations, 0);
-        assert_eq!(status.feedback_observation_validation.pending_observations, 0);
-        assert_eq!(status.feedback_observation_validation.outcome_distribution.len(), 0);
+        assert_eq!(
+            status.feedback_observation_validation.pending_observations,
+            0
+        );
+        assert_eq!(
+            status
+                .feedback_observation_validation
+                .outcome_distribution
+                .len(),
+            0
+        );
         assert!(status
             .target_row_validation
             .summary_line
@@ -3355,16 +3387,26 @@ mod tests {
         let status =
             structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
                 .unwrap();
-        let full_status = policy_training_status(temp.path().to_str().unwrap(), "NQ", None).unwrap();
+        let full_status =
+            policy_training_status(temp.path().to_str().unwrap(), "NQ", None).unwrap();
 
         assert_eq!(status.raw_scored_mature_rows, 2);
         assert_eq!(status.production_validation_rows, 2);
         assert!(!status.production_validation_ready);
         assert_eq!(status.observation_validation_rows, 30);
         assert!(status.observation_validation_ready);
-        assert_eq!(status.feedback_observation_validation.mature_observations, 30);
-        assert_eq!(status.feedback_observation_validation.pending_observations, 1);
-        assert_eq!(status.feedback_observation_validation.total_observations, 31);
+        assert_eq!(
+            status.feedback_observation_validation.mature_observations,
+            30
+        );
+        assert_eq!(
+            status.feedback_observation_validation.pending_observations,
+            1
+        );
+        assert_eq!(
+            status.feedback_observation_validation.total_observations,
+            31
+        );
         assert_eq!(
             status
                 .feedback_observation_validation
@@ -3392,7 +3434,12 @@ mod tests {
         assert!(full_status
             .structural_path_ranking_validation_summary
             .contains("observation_validation=30/30"));
-        assert!(full_status.structural_path_ranking_validation.feedback_observation_validation.ready);
+        assert!(
+            full_status
+                .structural_path_ranking_validation
+                .feedback_observation_validation
+                .ready
+        );
     }
 
     #[test]
@@ -3569,7 +3616,10 @@ mod tests {
         assert_eq!(status.target_row_validation.raw_scored_mature_rows, 2);
         assert_eq!(status.target_row_validation.production_validation_rows, 2);
         assert!(!status.target_row_validation.production_validation_ready);
-        assert_eq!(status.feedback_observation_validation.mature_observations, 0);
+        assert_eq!(
+            status.feedback_observation_validation.mature_observations,
+            0
+        );
         assert_eq!(status.feedback_observation_validation.total_observations, 0);
         assert!(status.summary_line.contains("calibration=evaluated"));
         assert!(status.summary_line.contains("trainer_artifact=ready"));
@@ -3922,6 +3972,141 @@ mod tests {
     }
 
     #[test]
+    fn register_structural_path_ranking_trainer_artifact_accepts_catboost_companion_scores() {
+        let temp = tempfile::tempdir().unwrap();
+        let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
+        std::fs::create_dir_all(&summary_dir).unwrap();
+        let jsonl_path = summary_dir.join("structural_path_ranking_target.jsonl");
+        let summary = StructuralPathRankingTargetExportSummary {
+            symbol: "NQ".to_string(),
+            rows: 2,
+            candidate_set_id: "structural-candidates:NQ:test".to_string(),
+            candidate_set_size: 2,
+            mature_rows: 2,
+            rows_with_training_weight: 2,
+            rows_with_propensity_estimate: 2,
+            rows_with_calibrated_path_prob: 2,
+            rows_with_path_prob_lower_bound: 2,
+            history_rows: 2,
+            history_mature_rows: 2,
+            csv_path: summary_dir
+                .join("structural_path_ranking_target.csv")
+                .to_string_lossy()
+                .to_string(),
+            jsonl_path: jsonl_path.to_string_lossy().to_string(),
+            summary_path: summary_dir
+                .join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE)
+                .to_string_lossy()
+                .to_string(),
+            trainer_manifest: structural_path_ranking_trainer_manifest_for_test(),
+            summary_line: "structural_path_ranking_target rows=2".to_string(),
+            ..StructuralPathRankingTargetExportSummary::default()
+        };
+        std::fs::write(
+            summary_dir.join(STRUCTURAL_PATH_RANKING_TARGET_SUMMARY_FILE),
+            serde_json::to_string_pretty(&summary).unwrap(),
+        )
+        .unwrap();
+        std::fs::write(
+            &jsonl_path,
+            format!(
+                "{}\n{}\n",
+                serde_json::to_string(&structural_path_ranking_row(
+                    "path-win",
+                    0.8,
+                    "matured_success",
+                ))
+                .unwrap(),
+                serde_json::to_string(&structural_path_ranking_row(
+                    "path-loss",
+                    0.2,
+                    "matured_failure",
+                ))
+                .unwrap()
+            ),
+        )
+        .unwrap();
+        std::fs::write(
+            summary_dir.join("catboost_scores.csv"),
+            "candidate_set_id,path_id,raw_path_score\n\
+             structural-candidates:NQ:test,path-win,0.91\n\
+             structural-candidates:NQ:test,path-loss,0.19\n",
+        )
+        .unwrap();
+        let model_path = temp.path().join("catboost_model.cbm");
+        std::fs::write(&model_path, "binary model placeholder").unwrap();
+        let companion_path = temp.path().join("catboost_trainer_artifact.json");
+        std::fs::write(
+            &companion_path,
+            serde_json::to_string_pretty(&serde_json::json!({
+                "protocol_version": STRUCTURAL_PATH_RANKING_TRAINER_ARTIFACT_PROTOCOL_VERSION,
+                "dataset_role": "external_path_ranker_training_dataset",
+                "model_family": "catboost",
+                "artifact_uri": summary_dir.join("catboost_scores.csv").to_string_lossy(),
+                "model_artifact_uri": model_path.to_string_lossy(),
+                "score_column": "raw_path_score",
+                "trained_rows": 11,
+                "history_rows": 11,
+                "calibration_rows": 2,
+                "selected_features": ["rank", "experience_prior"],
+                "validation_metrics": {
+                    "raw_scored_mature_rows": 2,
+                    "raw_scored_mature_min_rows": 30,
+                    "production_validation_rows": 2,
+                    "production_validation_min_rows": 30
+                },
+                "calibration_metrics": {
+                    "eligible_rows": 2
+                },
+                "notes": ["catboost_runtime_scores_uri=required"]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        let (_, artifact) = register_structural_path_ranking_trainer_artifact(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            companion_path.to_str().unwrap(),
+            "catboost",
+            None,
+            None,
+            None,
+        )
+        .unwrap();
+
+        assert_eq!(artifact.model_family, "catboost");
+        assert!(artifact.artifact_uri.ends_with("catboost_scores.csv"));
+        assert!(artifact
+            .notes
+            .iter()
+            .any(|note| note == "catboost_runtime_scores_uri=required"));
+
+        enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+        )
+        .unwrap();
+        let status =
+            structural_path_ranking_target_training_status(temp.path().to_str().unwrap(), "NQ")
+                .unwrap();
+        assert_eq!(
+            status.runtime_selection_status,
+            "enabled_registered_artifact_ready"
+        );
+        assert_eq!(
+            status.runtime_source_kind.as_deref(),
+            Some("registered_artifact")
+        );
+        assert_eq!(status.runtime_artifact_match_count, 2);
+        assert_eq!(
+            status.trainer_artifact_model_family.as_deref(),
+            Some("catboost")
+        );
+    }
+
+    #[test]
     fn register_structural_path_ranking_trainer_artifact_prefers_history_counts() {
         let temp = tempfile::tempdir().unwrap();
         let summary_dir = temp.path().join("NQ").join(POLICY_TRAINING_DIR);
@@ -4259,6 +4444,7 @@ mod tests {
             dataset_role: "external_path_ranker_training_dataset".to_string(),
             model_family: "catboost".to_string(),
             artifact_uri: "artifact_scores.jsonl".to_string(),
+            model_artifact_uri: None,
             score_column: "raw_path_score".to_string(),
             trained_rows: 42,
             history_rows: 42,
@@ -4404,6 +4590,7 @@ mod tests {
             dataset_role: "external_path_ranker_training_dataset".to_string(),
             model_family: crate::belief_core::ranking_label::STRUCTURAL_PATH_RANKER_DIRECT_MODEL_FAMILY_WEIGHTED_SUM_V1.to_string(),
             artifact_uri: "path_ranker_direct_model.json".to_string(),
+            model_artifact_uri: None,
             score_column: "raw_path_score".to_string(),
             trained_rows: 42,
             history_rows: 42,
@@ -4534,6 +4721,7 @@ mod tests {
             dataset_role: "external_path_ranker_training_dataset".to_string(),
             model_family: crate::belief_core::ranking_label::STRUCTURAL_PATH_RANKER_SERVICE_FAMILY_ROW_SCORING_V1.to_string(),
             artifact_uri: service_uri,
+            model_artifact_uri: None,
             score_column: "raw_path_score".to_string(),
             trained_rows: 42,
             history_rows: 42,

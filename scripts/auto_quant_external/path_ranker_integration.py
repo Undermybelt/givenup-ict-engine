@@ -48,7 +48,12 @@ def find_target_csv(state_dir: str, symbol: str) -> Path:
     raise FileNotFoundError(f"No target CSV found in {state_dir}/{symbol}")
 
 
-def run_trainer(target_csv: str, output_dir: str, model_family: str = "catboost"):
+def run_trainer(
+    target_csv: str,
+    output_dir: str,
+    model_family: str = "catboost",
+    output_scores: str | None = None,
+):
     """运行训练器"""
     cmd = [
         sys.executable,
@@ -57,6 +62,8 @@ def run_trainer(target_csv: str, output_dir: str, model_family: str = "catboost"
         "--output-dir", output_dir,
         "--model-family", model_family,
     ]
+    if output_scores:
+        cmd.extend(["--output-scores", output_scores])
     
     print(f"[run] {' '.join(cmd)}")
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -101,6 +108,10 @@ def run_apply(
 def ensure_runtime_artifact(model_dir: str, target_csv: str) -> str:
     """Backfill a direct-model artifact for legacy model dirs before repo registration."""
     model_path = Path(model_dir)
+    trainer_artifact_path = model_path / "trainer_artifact.json"
+    if trainer_artifact_path.exists():
+        return str(trainer_artifact_path)
+
     artifact_path = model_path / "path_ranker_direct_model.json"
     if artifact_path.exists():
         return str(artifact_path)
@@ -115,6 +126,17 @@ def ensure_runtime_artifact(model_dir: str, target_csv: str) -> str:
     return str(artifact_path)
 
 
+def runtime_artifact_model_family(artifact_path: str) -> str:
+    """Read the repo runtime artifact family without exposing user-specific paths."""
+    try:
+        with open(artifact_path, "r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+    except (json.JSONDecodeError, OSError):
+        return "weighted_feature_sum_v1"
+    family = str(payload.get("model_family", "")).strip()
+    return family or "weighted_feature_sum_v1"
+
+
 def register_runtime_artifact(
     state_dir: str,
     symbol: str,
@@ -125,6 +147,7 @@ def register_runtime_artifact(
 ):
     """Opt in to repo-side runtime reuse using the emitted direct-model artifact."""
     artifact_path = ensure_runtime_artifact(model_dir=model_dir, target_csv=target_csv)
+    model_family = runtime_artifact_model_family(artifact_path)
     register_cmd = [
         str(ICT_ENGINE_BIN),
         "register-structural-path-ranking-trainer-artifact",
@@ -135,7 +158,7 @@ def register_runtime_artifact(
         "--artifact-uri",
         str(artifact_path),
         "--model-family",
-        "weighted_feature_sum_v1",
+        model_family,
         "--score-column",
         score_column,
     ]
@@ -221,7 +244,7 @@ def main():
         run_apply(args.reuse_model_dir, target_csv, output_scores, args.user_weights)
     else:
         # 训练
-        run_trainer(target_csv, output_dir, args.model_family)
+        run_trainer(target_csv, output_dir, args.model_family, output_scores)
         
         if not args.train_only:
             # 应用

@@ -113,6 +113,40 @@ class ReuseModelFlowTests(unittest.TestCase):
                 reuse_mode="candidate_set_only",
             )
 
+    def test_register_runtime_artifact_uses_catboost_companion_family(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            state_dir = Path(tmpdir) / "state"
+            model_dir = Path(tmpdir) / "catboost_model"
+            model_dir.mkdir()
+            target_csv = Path(tmpdir) / "target.csv"
+            target_csv.write_text("candidate_set_id,path_id\nset1,path1\n", encoding="utf-8")
+            companion_path = model_dir / "trainer_artifact.json"
+            companion_path.write_text(
+                json.dumps(
+                    {
+                        "protocol_version": "structural-path-ranking-trainer-artifact-v1",
+                        "model_family": "catboost",
+                        "artifact_uri": str(Path(tmpdir) / "scores.csv"),
+                        "model_artifact_uri": str(model_dir / "catboost_model.cbm"),
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            completed = subprocess_result()
+            with mock.patch.object(integration.subprocess, "run", return_value=completed) as run:
+                integration.register_runtime_artifact(
+                    state_dir=str(state_dir),
+                    symbol="NQ",
+                    model_dir=str(model_dir),
+                    target_csv=str(target_csv),
+                )
+
+            register_cmd = run.call_args_list[0].args[0]
+            self.assertIn(str(companion_path), register_cmd)
+            family_index = register_cmd.index("--model-family") + 1
+            self.assertEqual(register_cmd[family_index], "catboost")
+
     def test_register_runtime_artifact_backfills_direct_model_for_legacy_model_dir(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             model_dir = Path(tmpdir) / "legacy_model"
@@ -131,6 +165,31 @@ class ReuseModelFlowTests(unittest.TestCase):
             self.assertTrue(artifact_path.exists())
             artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
             self.assertEqual(artifact["model_family"], "weighted_feature_sum_v1")
+
+    def test_ensure_runtime_artifact_prefers_catboost_trainer_companion(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            model_dir = Path(tmpdir) / "catboost_model"
+            model_dir.mkdir()
+            companion_path = model_dir / "trainer_artifact.json"
+            companion_path.write_text(
+                json.dumps(
+                    {
+                        "model_family": "catboost",
+                        "artifact_uri": str(Path(tmpdir) / "scores.csv"),
+                        "model_artifact_uri": str(model_dir / "catboost_model.cbm"),
+                    }
+                ),
+                encoding="utf-8",
+            )
+            target_csv = Path(tmpdir) / "target.csv"
+            target_csv.write_text("candidate_set_id,path_id\nset1,path1\n", encoding="utf-8")
+
+            artifact_path = integration.ensure_runtime_artifact(
+                model_dir=str(model_dir),
+                target_csv=str(target_csv),
+            )
+
+        self.assertEqual(artifact_path, str(companion_path))
 
 
 class DirectModelArtifactTests(unittest.TestCase):
@@ -167,6 +226,7 @@ class DirectModelArtifactTests(unittest.TestCase):
 
             metadata = trainer.build_registered_artifact_metadata(
                 output_dir=output_dir,
+                scores_path=None,
                 trained_rows=7,
                 history_rows=9,
                 calibration_rows=3,
@@ -184,6 +244,7 @@ class DirectModelArtifactTests(unittest.TestCase):
     def test_build_registered_artifact_prefers_catboost_when_cbm_exists(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             output_dir = Path(tmpdir)
+            scores_path = Path(tmpdir) / "scores.csv"
             trainer.create_direct_model_artifact(
                 output_dir=output_dir,
                 features=["rank"],
@@ -193,6 +254,7 @@ class DirectModelArtifactTests(unittest.TestCase):
 
             metadata = trainer.build_registered_artifact_metadata(
                 output_dir=output_dir,
+                scores_path=scores_path,
                 trained_rows=7,
                 history_rows=9,
                 calibration_rows=3,
@@ -200,7 +262,13 @@ class DirectModelArtifactTests(unittest.TestCase):
             )
 
         self.assertEqual(metadata["model_family"], "catboost")
-        self.assertEqual(metadata["artifact_uri"], str(output_dir))
+        self.assertEqual(metadata["artifact_uri"], str(scores_path))
+        self.assertEqual(metadata["model_artifact_uri"], str(output_dir / "catboost_model.cbm"))
+        self.assertIn("catboost_runtime_scores_uri=required", metadata["notes"])
+
+
+def subprocess_result(stdout: str = "{}\n", stderr: str = "", returncode: int = 0):
+    return mock.Mock(stdout=stdout, stderr=stderr, returncode=returncode)
 
 
 if __name__ == "__main__":

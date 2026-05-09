@@ -286,7 +286,10 @@ Boundary: this closes the BBN evidence-value admission/persistence gap for the c
 - [x] Require `workflow-status --human` to explain practical recommendation delta.
 - [x] Train and apply actual CatBoost package against exported structural path target rows.
 - [x] Feed CatBoost-produced raw scores back into ict-engine candidate-set runtime and verify `workflow-status --human` readback.
-- [ ] Add a supported registered CatBoost runtime artifact path; current registry rejects binary `.cbm` and rejects the JSON companion as `weighted_feature_sum_v1`.
+- [x] Add a supported registered CatBoost runtime companion path:
+  - CatBoost `.cbm` stays as `model_artifact_uri` metadata.
+  - Runtime artifact URI points to CatBoost-produced scored rows.
+  - Weighted direct fallback remains `weighted_feature_sum_v1` and is not called CatBoost.
 - [ ] Collect enough mature scored rows for production validation (`raw_scored_mature >= 30`).
 
 Observed real closure slice:
@@ -338,6 +341,31 @@ workflow_ranker=status using_candidate_set_scores source candidate_set applied=3
 ```
 
 Boundary correction: the 2026-05-10 slice did use the CatBoost dependency for training and scoring, but it did not produce a registered CatBoost runtime artifact. Runtime currently consumes candidate-set scores derived from CatBoost output.
+
+Observed R27 registered CatBoost companion slice:
+
+```text
+run_root=/tmp/ict-r27-catboost-runtime-20260510021154
+source_state=/tmp/ict-high-sharpe-live-20260510-000946/repo-state copied into isolated /tmp state
+source_catboost_model=/tmp/ict-high-sharpe-live-20260510-000946/path_ranker_catboost/catboost_model.cbm
+refreshed_target=/tmp/ict-r27-catboost-runtime-20260510021154/state/NQ/policy_training/structural_path_ranking_target.csv
+candidate_set=structural-candidates:NQ:c5c555570db0f226
+target_rows=1
+catboost_apply_current=/tmp/ict-r27-catboost-runtime-20260510021154/path_scores_catboost_current.csv
+catboost_score=trend_follow_through raw_path_score 0.862256
+companion=/tmp/ict-r27-catboost-runtime-20260510021154/path_ranker_catboost/trainer_artifact.json
+companion_model_family=catboost
+companion_artifact_uri=/tmp/ict-r27-catboost-runtime-20260510021154/path_scores_catboost_current.csv
+companion_model_artifact_uri=/tmp/ict-r27-catboost-runtime-20260510021154/path_ranker_catboost/catboost_model.cbm
+register_cli=success
+enable_cli=success
+policy_status=runtime_selection enabled_registered_artifact_ready; runtime_source registered_artifact; runtime_matches 1
+workflow_structural=using_registered_artifact_scores; source registered_artifact; applied 1; artifact 1; raw 0.862256
+workflow_human_ranker=status using_registered_artifact_scores source registered_artifact applied=1 artifact=1 candidate=0 history=0 raw=0.862 gate=n/a
+validation_boundary=raw_scored_mature 0/30, production_validation 0/30, observation_validation 0/30, calibration not_fitted
+```
+
+Implementation note: this is registered CatBoost score-row runtime consumption, not Rust-side `.cbm` inference. The binary model is recorded in the companion as metadata and remains optional/hot-plug; runtime defaults are unchanged.
 
 ### R28: Auto-Quant log cross-check parser hardening
 
