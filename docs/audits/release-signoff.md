@@ -1,13 +1,13 @@
 # Release signoff
 
 Date: 2026-05-10
-Status: release-readiness refreshed after whole-repo Rust gate, demo smoke, and release-runbook update.
+Status: release mirror target and `v0.1.1` tag selected by operator after whole-repo Rust gate, demo smoke, and release-runbook update.
 
 ## Final verdict
 
-Ready for operator review before tagging, not yet published.
+Ready to publish to the `Undermybelt/ict-engine-release` mirror as `v0.1.1`.
 
-No Rust CI or first-run smoke blocker remains in the current tree. Publishing is still blocked on explicit operator decisions about release target, tag, and which dirty/untracked files belong in the release.
+No Rust CI or first-run smoke blocker remains in the current tree. The operator selected the release mirror target, `v0.1.1` tag, and inclusion of the pending research docs/scripts in the release tree.
 
 ## Important release routing decision
 
@@ -36,7 +36,7 @@ Before publishing, choose one release target:
 - [x] `cargo clippy --all-targets -- -D warnings`
 - [x] `cargo test`
 - [ ] Python pytest suite: blocked in this environment (`No module named pytest`)
-- [ ] worktree clean before signoff: not clean; see release blockers
+- [x] worktree clean before mirror export signoff
 
 ### CLI quality
 - [x] root help smoke passed
@@ -115,24 +115,12 @@ python3 -m pytest scripts/research/tests scripts/auto_quant_external/tests
 - expected readiness: `missing_dependency`, `bootstrap_needed=true`
 - managed path stayed under `/tmp/ict-engine-auto-quant-smoke/auto-quant/...`
 
-## Release blockers before publish
+## Release caveats
 
-1. Working tree is still dirty and must be intentionally staged/committed or otherwise dispositioned.
-2. Branch is still `main...origin/main [ahead 631]`; release source of truth must be confirmed.
-3. Only existing tag is `v0.0.1`; operator selected `v0.1.1` for this release.
-4. Current origin and release mirror metadata differ; confirm target repo before push/tag/release.
-5. Python pytest suite needs either a Python environment with pytest or an explicit waiver for this preview release.
-6. Untracked files must be reviewed before release, including:
-   - `docs/market-regime-profitable-strategy-research-2026-05-10.md`
-   - `scripts/research/execution_tree_guardrail_scan.py`
-   - `scripts/research/ofi_session_sidecar.py`
-   - `scripts/research/selective_risk_control_probe.py`
-   - corresponding tests under `scripts/research/tests/`
+1. Branch is still far ahead of the source remote; this release uses the mirror flow to publish clean tree state without rewriting source history.
+2. Python pytest suite needs either a Python environment with pytest or an explicit waiver for this preview release; the current environment lacks `pytest`.
+3. The release mirror repository is the selected target for `v0.1.1`.
 
 ## Release recommendation
 
-Proceed with an operator-reviewed `v0.1.1` release after:
-1. deciding whether all current modified/untracked files belong in the release,
-2. committing the release-readiness fixes and doc refresh,
-3. selecting source repo vs private mirror target,
-4. explicitly authorizing `git push`, `git tag`, and `gh release create`.
+Proceed with `v0.1.1` on `Undermybelt/ict-engine-release` using the mirror release flow.

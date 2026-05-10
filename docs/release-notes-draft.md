@@ -1,7 +1,7 @@
 # Release Notes Draft
 
 Version: `v0.1.1` candidate
-Status: draft, refreshed 2026-05-10
+Status: release mirror candidate, refreshed 2026-05-10
 
 ## Highlights
 
@@ -58,7 +58,7 @@ Passed as readiness reporting. It correctly returned `missing_dependency` / `boo
 - Some Python experiment flows still assume a maintainer-style cleaned-data layout unless `--data-root` is provided explicitly.
 - Auto-Quant is optional and reports `bootstrap_needed` until its managed dependency is installed in the selected state dir.
 - The bundled demo data has about 52 candles and is intentionally too small for full `backtest` paths that require more history.
-- Current checkout is dirty and far ahead of `origin/main`; publish only after deciding which modified/untracked files belong in the release.
+- Source development history remains far ahead of its origin; this release is published through the clean tree-state release mirror.
 
 ## Release label
 
