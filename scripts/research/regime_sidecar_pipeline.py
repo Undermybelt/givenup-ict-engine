@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 from pathlib import Path
 from typing import Any
@@ -18,6 +19,50 @@ import regime_transition_governor as r8
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=False) + "\n", encoding="utf-8")
+
+
+def _label_id_to_feature_truth(label_id: str) -> tuple[str, str] | None:
+    if "::" not in label_id:
+        return None
+    level, label = label_id.split("::", 1)
+    if not level or not label:
+        return None
+    return f"{level}_label", label
+
+
+def _join_truth_labels_into_features(features_path: Path, truth_path: Path | None) -> int:
+    if truth_path is None or not truth_path.exists():
+        return 0
+    truth_rows = [
+        json.loads(line)
+        for line in truth_path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    truth_by_timestamp = {
+        str(row.get("timestamp", "")): _label_id_to_feature_truth(str(row.get("label_id", row.get("label", ""))))
+        for row in truth_rows
+    }
+    with features_path.open(newline="", encoding="utf-8") as handle:
+        rows = [dict(row) for row in csv.DictReader(handle)]
+    if not rows:
+        return 0
+    columns = list(rows[0].keys())
+    joined = 0
+    for row in rows:
+        mapped = truth_by_timestamp.get(str(row.get("timestamp", "")))
+        if not mapped:
+            continue
+        field, label = mapped
+        row[field] = label
+        if field not in columns:
+            columns.append(field)
+        joined += 1
+    if joined:
+        with features_path.open("w", newline="", encoding="utf-8") as handle:
+            writer = csv.DictWriter(handle, fieldnames=columns)
+            writer.writeheader()
+            writer.writerows(rows)
+    return joined
 
 
 def _input_contract(output_dir: Path) -> dict[str, Any]:
@@ -78,6 +123,7 @@ def run_pipeline(
         output_report=paths["feature_quality"],
         auxiliary_path=auxiliary_evidence_path,
     )
+    truth_joined_rows = _join_truth_labels_into_features(paths["features"], truth_path)
     r5.build_expert_training_artifacts(
         ontology_path=paths["ontology_json"],
         features_path=paths["features"],
@@ -135,6 +181,7 @@ def run_pipeline(
             "optional_for_consumers": True,
             "no_repo_root_state": True,
         },
+        "truth_joined_rows": truth_joined_rows,
     }
     _write_json(paths["pipeline"], result)
     return result

@@ -12,11 +12,11 @@ use crate::domain::regime::{
     classify_mece_recovery_combined_gate, classify_mece_recovery_gate, MeceRecoveryArtifact,
     MeceRegimeLabel,
 };
+use crate::hmm::init_hmm_params;
 use crate::state::{
     append_artifact_ledger_entry, artifact_state_path, load_state, save_state, state_exists,
     ArtifactLedgerEntry,
 };
-use crate::hmm::init_hmm_params;
 use crate::types::HMMParams;
 
 pub const MECE_RECOVERY_ARTIFACT_FILE: &str = "mece_recovery_artifact.json";
@@ -26,8 +26,7 @@ pub const MECE_RECOVERY_ARTIFACT_LEDGER_VERSION: usize = 2;
 pub const MECE_RECOVERY_ARTIFACT_REVIEW_RULE_VERSION: &str = "mece-recovery-artifact-v2";
 pub const HMM_STATE_FILE: &str = "hmm_params.json";
 pub const HMM_NUMERIC_TRAINER_ARTIFACT_FILE: &str = "hmm_numeric_trainer_artifact.json";
-pub const HMM_NUMERIC_TRAINER_ARTIFACT_PROTOCOL_VERSION: &str =
-    "hmm-numeric-trainer-artifact-v1";
+pub const HMM_NUMERIC_TRAINER_ARTIFACT_PROTOCOL_VERSION: &str = "hmm-numeric-trainer-artifact-v1";
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq)]
 pub struct HmmNumericTrainerParameterBound {
@@ -82,7 +81,9 @@ fn apply_emission_std_floor(params: &mut HMMParams, floor: f64) {
 }
 
 fn hmm_numeric_trainer_artifact_path<P: AsRef<Path>>(dir: P, symbol: &str) -> std::path::PathBuf {
-    dir.as_ref().join(symbol).join(HMM_NUMERIC_TRAINER_ARTIFACT_FILE)
+    dir.as_ref()
+        .join(symbol)
+        .join(HMM_NUMERIC_TRAINER_ARTIFACT_FILE)
 }
 
 pub fn load_hmm_numeric_trainer_artifact<P: AsRef<Path>>(
@@ -544,8 +545,8 @@ mod tests {
     }
 
     #[test]
-    fn load_or_init_hmm_params_with_numeric_artifact_falls_back_to_saved_state_when_artifact_invalid()
-    {
+    fn load_or_init_hmm_params_with_numeric_artifact_falls_back_to_saved_state_when_artifact_invalid(
+    ) {
         let dir = TempDir::new().unwrap();
         fs::create_dir_all(dir.path().join("NQ")).unwrap();
         let artifact = HmmNumericTrainerArtifact {

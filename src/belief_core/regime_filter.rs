@@ -3,10 +3,10 @@ use std::collections::BTreeMap;
 use crate::belief_core::beta_dirichlet_update::{beta_posterior_mean, dirichlet_component_mean};
 use crate::state::{
     structural_event_outcome_pseudo_counts, structural_prior_source_weight,
-    structural_sorted_prior_events, StructuralPriorEvent,
-    StructuralBranchTemporalPosteriorState, StructuralBranchTransitionPrior,
-    StructuralNodeDurationPrior, StructuralNodeTemporalPosteriorState,
-    StructuralNodeTransitionPosteriorState,
+    structural_sorted_prior_events, StructuralBranchTemporalPosteriorState,
+    StructuralBranchTransitionPrior, StructuralNodeDurationPrior,
+    StructuralNodeTemporalPosteriorState, StructuralNodeTransitionPosteriorState,
+    StructuralPriorEvent,
 };
 use serde::{Deserialize, Serialize};
 
@@ -122,7 +122,10 @@ pub fn blend_node_posterior_with_duration_prior(
     temporal_state: Option<&StructuralNodeTemporalPosteriorState>,
 ) -> f64 {
     let (temporal_support, blend_weight) = if let Some(state) = temporal_state {
-        (state.temporal_posterior_support, state.posterior_blend_weight)
+        (
+            state.temporal_posterior_support,
+            state.posterior_blend_weight,
+        )
     } else if let Some(prior) = duration_prior {
         let temporal_support = if prior.temporal_posterior_support > f64::EPSILON {
             prior.temporal_posterior_support
@@ -1086,10 +1089,7 @@ pub(crate) fn rebuild_transition_posteriors_from_events(
     }
 
     refresh_node_transition_posteriors(node_transition_posteriors);
-    refresh_branch_transition_posteriors(
-        branch_transition_priors,
-        branch_temporal_posteriors,
-    );
+    refresh_branch_transition_posteriors(branch_transition_priors, branch_temporal_posteriors);
 }
 
 pub fn refresh_node_transition_posteriors(

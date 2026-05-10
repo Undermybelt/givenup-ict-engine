@@ -1,6 +1,6 @@
 use anyhow::Result;
 use chrono::{SecondsFormat, Utc};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
 use std::path::Path;
 
@@ -22,32 +22,33 @@ pub use crate::belief_core::ranking_label::{
     render_structural_path_ranking_target_csv, render_structural_path_ranking_target_jsonl,
     render_structural_path_ranking_target_rows_csv,
     render_structural_path_ranking_target_rows_jsonl,
-    score_structural_path_ranker_runtime_rows_with_explicit_family,
     score_structural_path_ranker_runtime_rows_with_direct_model,
+    score_structural_path_ranker_runtime_rows_with_explicit_family,
     score_structural_path_ranker_runtime_rows_with_service,
-    structural_path_ranker_supports_explicit_family,
     structural_path_ranker_supports_direct_model_family,
+    structural_path_ranker_supports_explicit_family,
     structural_path_ranker_supports_service_family, structural_path_ranking_beta_lower_bound,
     structural_path_ranking_beta_mean, structural_path_ranking_ips_weight,
     structural_path_ranking_propensity_estimate,
     structural_path_ranking_propensity_evaluation_weight, structural_path_ranking_reward_label,
     structural_path_ranking_runtime_selection_path, structural_path_ranking_target_export_summary,
-    StructuralPathRankingTargetExportSummaryInput,
-    structural_path_ranking_target_row_history_key, structural_path_ranking_trainer_manifest,
-    structural_path_ranking_training_weight, upsert_structural_path_ranking_target_history,
-    StructuralPathProbabilityCalibrationBin, StructuralPathProbabilityCalibrationEvaluationBin,
+    structural_path_ranking_target_row_history_key, structural_path_ranking_target_row_score_key,
+    structural_path_ranking_trainer_manifest, structural_path_ranking_training_weight,
+    upsert_structural_path_ranking_target_history, StructuralPathProbabilityCalibrationBin,
+    StructuralPathProbabilityCalibrationEvaluationBin,
     StructuralPathProbabilityCalibrationEvaluationReport,
     StructuralPathProbabilityCalibrationReport, StructuralPathRankerRuntimeRow,
     StructuralPathRankerRuntimeSurface, StructuralPathRankingExternalScoreInput,
     StructuralPathRankingRuntimeSelection, StructuralPathRankingTargetArtifact,
-    StructuralPathRankingTargetExportSummary, StructuralPathRankingTargetRow,
-    StructuralPathRankingTrainerManifest, STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+    StructuralPathRankingTargetExportSummary, StructuralPathRankingTargetExportSummaryInput,
+    StructuralPathRankingTargetRow, StructuralPathRankingTrainerManifest,
+    STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
     STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY,
     STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_FILE,
     STRUCTURAL_PATH_RANKING_RUNTIME_SELECTION_PROTOCOL_VERSION,
 };
-use crate::belief_core::regime_filter::StructuralTemporalSummaryArtifactInput;
 pub use crate::belief_core::regime_filter::StructuralTemporalSummaryArtifact;
+use crate::belief_core::regime_filter::StructuralTemporalSummaryArtifactInput;
 pub use crate::belief_core::regime_filter::{
     build_structural_temporal_summary_artifact, structural_duration_avg_streak_length,
     structural_duration_bocpd_break_probability, structural_duration_bocpd_continue_probability,
@@ -145,9 +146,8 @@ pub use crate::belief_core::source_reliability::{
     structural_source_confusion_concentration_multiplier, structural_source_panel_count,
     structural_source_reliability_em_readiness, structural_source_reliability_multiplier,
     structural_target_policy_context_surface, structural_target_policy_context_surfaces,
-    StructuralExperiencePriorEntry,
-    StructuralExperiencePriorSurfaceArtifact, StructuralSourceReliabilityEmReadiness,
-    StructuralTargetPolicyContextSurface,
+    StructuralExperiencePriorEntry, StructuralExperiencePriorSurfaceArtifact,
+    StructuralSourceReliabilityEmReadiness, StructuralTargetPolicyContextSurface,
 };
 pub use crate::belief_core::structural_state::{
     StructuralBranchArtifact, StructuralBranchHistoryArtifact, StructuralBranchOutcomeSummary,
@@ -1119,6 +1119,10 @@ fn structural_path_ranking_target_artifact_from_candidates(
                 experience_prior: path.path_prior,
                 current_posterior: path.path_posterior,
                 structural_baseline_score: path.composite_preference_score,
+                score_model_family: None,
+                score_source_kind: None,
+                score_model_artifact_uri: None,
+                score_generator: None,
             }
         })
         .collect::<Vec<_>>();
@@ -1134,6 +1138,166 @@ fn structural_path_ranking_target_artifact_from_candidates(
     };
     apply_structural_path_probability_calibration(&mut artifact);
     artifact
+}
+
+fn structural_path_ranking_pending_reward_state_from_feedback(
+    record: &FeedbackRecord,
+    refs: &StructuralFeedbackRefs,
+) -> Option<String> {
+    if structural_feedback_outcome_is_unresolved(&record.realized_outcome) {
+        return None;
+    }
+    if !refs.followed_path
+        || record
+            .realized_outcome
+            .trim()
+            .eq_ignore_ascii_case("not_followed")
+    {
+        return None;
+    }
+    if record
+        .realized_outcome
+        .trim()
+        .eq_ignore_ascii_case("invalidated")
+    {
+        return Some("matured_invalidated".to_string());
+    }
+    match structural_feedback_learning_outcome(record) {
+        Some(StructuralFeedbackLearningOutcome::Positive) => Some("matured_success".to_string()),
+        Some(StructuralFeedbackLearningOutcome::Neutral)
+        | Some(StructuralFeedbackLearningOutcome::Negative) => Some("matured_failure".to_string()),
+        None => None,
+    }
+}
+
+fn structural_feedback_runtime_candidate_set_id(
+    symbol: &str,
+    refs: &StructuralFeedbackRefs,
+) -> String {
+    let prefix = format!("structural-feedback:{symbol}:");
+    if let Some(rest) = refs.recommendation_id.strip_prefix(&prefix) {
+        if let Some((candidate_set_id, _)) = rest.split_once(":path:") {
+            let candidate_set_id = candidate_set_id.trim();
+            if !candidate_set_id.is_empty() {
+                return candidate_set_id.to_string();
+            }
+        }
+    }
+    format!(
+        "structural-feedback-history:{symbol}:{:016x}",
+        structural_stable_hash64(&refs.path_id)
+    )
+}
+
+fn structural_feedback_direction_label(direction: Direction) -> &'static str {
+    match direction {
+        Direction::Bull => "bull",
+        Direction::Bear => "bear",
+        Direction::Neutral => "neutral",
+    }
+}
+
+fn structural_feedback_regime_bucket(symbol: &str, regime: Regime) -> String {
+    let regime = match regime {
+        Regime::Accumulation => "accumulation",
+        Regime::ManipulationExpansion => "manipulation_expansion",
+        Regime::Distribution => "distribution",
+    };
+    format!("{symbol}:{regime}")
+}
+
+fn structural_path_ranking_feedback_target_rows(
+    symbol: &str,
+    feedback_history: &[FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
+) -> Vec<StructuralPathRankingTargetRow> {
+    feedback_history
+        .iter()
+        .enumerate()
+        .filter_map(|(index, record)| {
+            if record.symbol.trim() != symbol {
+                return None;
+            }
+            let refs = record.structural_feedback.as_ref()?;
+            let pending_reward_state =
+                structural_path_ranking_pending_reward_state_from_feedback(record, refs)?;
+            let raw_path_score = record
+                .model_probabilities_before_trade
+                .selected_probability
+                .clamp(0.0, 1.0);
+            if raw_path_score <= f64::EPSILON {
+                return None;
+            }
+            let calibrated_label = structural_path_ranking_reward_label(&pending_reward_state)?;
+            let behavior_policy_probability = raw_path_score;
+            let execution_propensity = Some(1.0);
+            let propensity_estimate = structural_path_ranking_propensity_estimate(
+                execution_propensity,
+                behavior_policy_probability,
+            );
+            let ips_weight = structural_path_ranking_ips_weight(propensity_estimate);
+            let maturity_weight = 1.0;
+            let training_weight = structural_path_ranking_training_weight(
+                Some(calibrated_label),
+                maturity_weight,
+                ips_weight,
+            );
+            let prior_stats = structural_prior_state.paths.get(&refs.path_id);
+            let experience_prior = prior_stats
+                .map(|stats| stats.smoothed_prior.clamp(0.0, 1.0))
+                .unwrap_or(raw_path_score);
+            let current_posterior =
+                structural_prior_target_policy_reward_prior(prior_stats).unwrap_or(raw_path_score);
+            Some(StructuralPathRankingTargetRow {
+                rank: index + 1,
+                candidate_set_id: structural_feedback_runtime_candidate_set_id(symbol, refs),
+                candidate_set_size: 1,
+                path_id: refs.path_id.clone(),
+                scenario_id: refs.scenario_id.clone(),
+                path_label: refs.path_id.clone(),
+                direction: structural_feedback_direction_label(
+                    record.model_probabilities_before_trade.selected_direction,
+                )
+                .to_string(),
+                raw_path_score: Some(raw_path_score),
+                calibrated_path_prob: None,
+                path_prob_lower_bound: None,
+                execution_gate_status: None,
+                execution_gate_min_path_prob: None,
+                execution_gate_reason: None,
+                pending_reward_state,
+                maturity_mask: true,
+                maturity_weight,
+                calibrated_label: Some(calibrated_label),
+                propensity_estimate,
+                ips_weight,
+                training_weight,
+                regime_calibration_bucket: structural_feedback_regime_bucket(
+                    symbol,
+                    record.regime_at_entry,
+                ),
+                behavior_policy_probability,
+                execution_propensity,
+                target_policy_probability_confidence:
+                    structural_prior_target_policy_probability_confidence(prior_stats),
+                target_policy_probability_lower_bound:
+                    structural_prior_target_policy_probability_lower_bound(prior_stats),
+                target_policy_reward_prior: structural_prior_target_policy_reward_prior(
+                    prior_stats,
+                ),
+                target_policy_reward_lower_bound: structural_prior_target_policy_reward_lower_bound(
+                    prior_stats,
+                ),
+                experience_prior,
+                current_posterior,
+                structural_baseline_score: raw_path_score,
+                score_model_family: None,
+                score_source_kind: None,
+                score_model_artifact_uri: None,
+                score_generator: None,
+            })
+        })
+        .collect()
 }
 
 pub(crate) fn build_structural_path_ranking_target_artifact_with_runtime_context_and_prior_state(
@@ -1201,23 +1365,30 @@ pub fn export_structural_path_ranking_target(
     );
     let history_jsonl_path = Path::new(state_dir).join(symbol).join(&history_jsonl_name);
     let existing_history_rows = load_structural_path_ranking_target_rows(&history_jsonl_path)?;
+    let feedback_target_rows = structural_path_ranking_feedback_target_rows(
+        symbol,
+        feedback_history,
+        structural_prior_state,
+    );
     let existing_history_score_map = existing_history_rows
         .iter()
         .filter_map(|row| {
             row.raw_path_score
-                .map(|score| (structural_path_ranking_target_row_history_key(row), score))
+                .map(|score| (structural_path_ranking_target_row_score_key(row), score))
         })
         .collect::<BTreeMap<_, _>>();
     for row in &mut artifact.rows {
         if let Some(raw_score) =
-            existing_history_score_map.get(&structural_path_ranking_target_row_history_key(row))
+            existing_history_score_map.get(&structural_path_ranking_target_row_score_key(row))
         {
             row.raw_path_score = Some(*raw_score);
             clear_structural_path_ranking_target_row_outputs(row);
         }
     }
+    let mut rows_for_history = artifact.rows.clone();
+    rows_for_history.extend(feedback_target_rows);
     let history_rows =
-        upsert_structural_path_ranking_target_history(&history_jsonl_path, &artifact.rows)?;
+        upsert_structural_path_ranking_target_history(&history_jsonl_path, &rows_for_history)?;
     let mut history_artifact = StructuralPathRankingTargetArtifact {
         protocol_version: artifact.protocol_version.clone(),
         symbol: artifact.symbol.clone(),
@@ -1289,26 +1460,27 @@ pub fn apply_structural_path_ranking_external_scores(
     let mut history_rows = load_structural_path_ranking_target_rows(&history_jsonl_path)?;
     let score_map = scores
         .iter()
-        .map(|item| {
-            (
-                format!("{}|{}", item.candidate_set_id, item.path_id),
-                item.raw_path_score.clamp(0.0, 1.0),
-            )
-        })
+        .map(|item| (format!("{}|{}", item.candidate_set_id, item.path_id), item))
         .collect::<BTreeMap<_, _>>();
     let mut matched = 0usize;
     for row in &mut current_rows {
-        if let Some(raw_score) = score_map.get(&structural_path_ranking_target_row_history_key(row))
-        {
-            row.raw_path_score = Some(*raw_score);
+        if let Some(score) = score_map.get(&structural_path_ranking_target_row_score_key(row)) {
+            row.raw_path_score = Some(score.raw_path_score.clamp(0.0, 1.0));
+            row.score_model_family = score.score_model_family.clone();
+            row.score_source_kind = score.score_source_kind.clone();
+            row.score_model_artifact_uri = score.score_model_artifact_uri.clone();
+            row.score_generator = score.score_generator.clone();
             clear_structural_path_ranking_target_row_outputs(row);
             matched += 1;
         }
     }
     for row in &mut history_rows {
-        if let Some(raw_score) = score_map.get(&structural_path_ranking_target_row_history_key(row))
-        {
-            row.raw_path_score = Some(*raw_score);
+        if let Some(score) = score_map.get(&structural_path_ranking_target_row_score_key(row)) {
+            row.raw_path_score = Some(score.raw_path_score.clamp(0.0, 1.0));
+            row.score_model_family = score.score_model_family.clone();
+            row.score_source_kind = score.score_source_kind.clone();
+            row.score_model_artifact_uri = score.score_model_artifact_uri.clone();
+            row.score_generator = score.score_generator.clone();
             clear_structural_path_ranking_target_row_outputs(row);
         }
     }
@@ -1405,9 +1577,14 @@ fn structural_candidate_policy_probability(
 fn structural_candidate_set_id(symbol: &str, candidate_paths: &[StructuralPathArtifact]) -> String {
     let mut fingerprint = String::new();
     fingerprint.push_str(symbol);
-    for path in candidate_paths {
+    let mut path_ids = candidate_paths
+        .iter()
+        .map(|path| path.path_id.as_str())
+        .collect::<Vec<_>>();
+    path_ids.sort_unstable();
+    for path_id in path_ids {
         fingerprint.push('|');
-        fingerprint.push_str(&path.path_id);
+        fingerprint.push_str(path_id);
     }
     format!(
         "structural-candidates:{symbol}:{:016x}",
@@ -1549,6 +1726,11 @@ fn resolve_structural_path_ranker_runtime(
             })
             .unwrap_or_default()
     };
+    let using_static_registered_artifact = !using_direct_model
+        && !using_explicit
+        && !using_service
+        && !service_declared
+        && artifact_metadata.is_some();
 
     let artifact_exact_matches = artifact_rows
         .iter()
@@ -1562,6 +1744,21 @@ fn resolve_structural_path_ranker_runtime(
         .cloned()
         .map(|row| (row.path_id.clone(), row))
         .collect::<BTreeMap<_, _>>();
+    let artifact_path_matches = if using_static_registered_artifact {
+        artifact_rows
+            .iter()
+            .filter(|row| {
+                row.raw_path_score.is_some()
+                    && candidate_paths
+                        .iter()
+                        .any(|path| path.path_id == row.path_id)
+            })
+            .cloned()
+            .map(|row| (row.path_id.clone(), row))
+            .collect::<BTreeMap<_, _>>()
+    } else {
+        BTreeMap::new()
+    };
     let mut artifact_history_matches = BTreeMap::<String, StructuralPathRankerRuntimeRow>::new();
     for row in &artifact_rows {
         if row.raw_path_score.is_none() {
@@ -1595,6 +1792,10 @@ fn resolve_structural_path_ranker_runtime(
                     calibrated_path_prob: row.calibrated_path_prob,
                     path_prob_lower_bound: row.path_prob_lower_bound,
                     execution_gate_status: row.execution_gate_status.clone(),
+                    score_model_family: row.score_model_family.clone(),
+                    score_source_kind: row.score_source_kind.clone(),
+                    score_model_artifact_uri: row.score_model_artifact_uri.clone(),
+                    score_generator: row.score_generator.clone(),
                 },
             )
         })
@@ -1618,6 +1819,10 @@ fn resolve_structural_path_ranker_runtime(
                     calibrated_path_prob: row.calibrated_path_prob,
                     path_prob_lower_bound: row.path_prob_lower_bound,
                     execution_gate_status: row.execution_gate_status.clone(),
+                    score_model_family: row.score_model_family.clone(),
+                    score_source_kind: row.score_source_kind.clone(),
+                    score_model_artifact_uri: row.score_model_artifact_uri.clone(),
+                    score_generator: row.score_generator.clone(),
                 },
             );
         }
@@ -1627,7 +1832,19 @@ fn resolve_structural_path_ranker_runtime(
     let mut artifact_match_count = 0usize;
     let mut history_match_count = 0usize;
     let mut candidate_set_match_count = 0usize;
+    let mut score_model_families = BTreeSet::<String>::new();
+    let mut score_source_kinds = BTreeSet::<String>::new();
+    let mut score_model_artifact_uris = BTreeSet::<String>::new();
+    let mut score_generators = BTreeSet::<String>::new();
     for path in candidate_paths {
+        let artifact_history_match = if !using_direct_model
+            && !using_service
+            && reuse_mode == STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY
+        {
+            artifact_history_matches.get(&path.path_id).cloned()
+        } else {
+            None
+        };
         let matched = if let Some(row) = artifact_exact_matches.get(&path.path_id) {
             artifact_match_count += 1;
             Some(StructuralPathRankerRuntimeRowMatch {
@@ -1642,20 +1859,18 @@ fn resolve_structural_path_ranker_runtime(
                 },
                 row: row.clone(),
             })
-        } else if !using_direct_model
-            && !using_service
-            && reuse_mode == STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY
-        {
-            artifact_history_matches
-                .get(&path.path_id)
-                .cloned()
-                .map(|row| {
-                    artifact_match_count += 1;
-                    StructuralPathRankerRuntimeRowMatch {
-                        source: "registered_artifact_history",
-                        row,
-                    }
-                })
+        } else if let Some(row) = artifact_history_match {
+            artifact_match_count += 1;
+            Some(StructuralPathRankerRuntimeRowMatch {
+                source: "registered_artifact_history",
+                row,
+            })
+        } else if let Some(row) = artifact_path_matches.get(&path.path_id) {
+            artifact_match_count += 1;
+            Some(StructuralPathRankerRuntimeRowMatch {
+                source: "registered_artifact_path",
+                row: row.clone(),
+            })
         } else if let Some(row) = exact_matches.get(&path.path_id) {
             candidate_set_match_count += 1;
             Some(StructuralPathRankerRuntimeRowMatch {
@@ -1723,6 +1938,38 @@ fn resolve_structural_path_ranker_runtime(
         path.path_ranker_path_prob_lower_bound = matched.row.path_prob_lower_bound;
         path.path_ranker_execution_gate_status = matched.row.execution_gate_status.clone();
         path.path_ranker_runtime_source = Some(matched.source.to_string());
+        if let Some(value) = matched
+            .row
+            .score_model_family
+            .as_deref()
+            .filter(|value| !value.trim().is_empty())
+        {
+            score_model_families.insert(value.to_string());
+        }
+        if let Some(value) = matched
+            .row
+            .score_source_kind
+            .as_deref()
+            .filter(|value| !value.trim().is_empty())
+        {
+            score_source_kinds.insert(value.to_string());
+        }
+        if let Some(value) = matched
+            .row
+            .score_model_artifact_uri
+            .as_deref()
+            .filter(|value| !value.trim().is_empty())
+        {
+            score_model_artifact_uris.insert(value.to_string());
+        }
+        if let Some(value) = matched
+            .row
+            .score_generator
+            .as_deref()
+            .filter(|value| !value.trim().is_empty())
+        {
+            score_generators.insert(value.to_string());
+        }
         path.composite_preference_score =
             if matched.row.execution_gate_status.as_deref() == Some("observe") {
                 blended_score.min(path.composite_preference_score)
@@ -1731,6 +1978,16 @@ fn resolve_structural_path_ranker_runtime(
             };
         applied_path_count += 1;
     }
+
+    let single_or_mixed = |values: BTreeSet<String>| -> Option<String> {
+        if values.is_empty() {
+            None
+        } else if values.len() == 1 {
+            values.into_iter().next()
+        } else {
+            Some("mixed".to_string())
+        }
+    };
 
     Some(StructuralPathRankerRuntimeSurface {
         enabled: true,
@@ -1754,6 +2011,10 @@ fn resolve_structural_path_ranker_runtime(
         candidate_set_match_count,
         history_match_count,
         applied_path_count,
+        score_model_family: single_or_mixed(score_model_families),
+        score_source_kind: single_or_mixed(score_source_kinds),
+        score_model_artifact_uri: single_or_mixed(score_model_artifact_uris),
+        score_generator: single_or_mixed(score_generators),
     })
 }
 
@@ -1913,6 +2174,22 @@ pub fn build_structural_recommended_path_bundle_artifact_with_prior_state(
         feedback_history,
         structural_prior_state,
         StructuralPathRankerRuntimeContext::default(),
+    )
+}
+
+pub fn build_structural_recommended_path_bundle_artifact_with_state_dir_and_prior_state(
+    snapshot: &WorkflowSnapshot,
+    provider_status_agent: &ProviderCatalogAgentSurface,
+    feedback_history: &[FeedbackRecord],
+    structural_prior_state: &StructuralPriorLearningState,
+    state_dir: Option<&str>,
+) -> Option<StructuralRecommendedPathBundleArtifact> {
+    build_structural_recommended_path_bundle_artifact_with_runtime_context_and_prior_state(
+        snapshot,
+        provider_status_agent,
+        feedback_history,
+        structural_prior_state,
+        StructuralPathRankerRuntimeContext { state_dir },
     )
 }
 
@@ -2664,6 +2941,13 @@ pub(crate) fn build_structural_path_plan_artifact_with_runtime_context_and_prior
         &current_candidate_rows,
         &mut paths,
     );
+    paths.sort_by(|left, right| {
+        right
+            .composite_preference_score
+            .total_cmp(&left.composite_preference_score)
+            .then_with(|| right.path_posterior.total_cmp(&left.path_posterior))
+            .then_with(|| right.path_prior.total_cmp(&left.path_prior))
+    });
     StructuralPathPlanArtifact {
         required_data_contracts: structural_relevant_profile_data_contracts(
             snapshot,
@@ -4116,6 +4400,10 @@ mod tests {
             experience_prior: 0.5,
             current_posterior: 0.7,
             structural_baseline_score: 0.4,
+            score_model_family: None,
+            score_source_kind: None,
+            score_model_artifact_uri: None,
+            score_generator: None,
         }
     }
 
@@ -4207,6 +4495,11 @@ mod tests {
     fn experience_prior_surface_path_includes_delayed_reward_replay_validation() {
         let snapshot =
             crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        let mut snapshot = snapshot;
+        if let Some(vote) = snapshot.latest_ensemble_vote.as_mut() {
+            vote.posterior_active_regime = "trend".to_string();
+            vote.posterior_probabilities = BTreeMap::from([("trend".to_string(), 0.8)]);
+        }
         let discovered_path_id =
             build_structural_experience_prior_surface_artifact_with_prior_state(
                 &snapshot,
@@ -4943,5 +5236,301 @@ mod tests {
         assert_eq!(report.propensity_weighted_rows, 2);
         assert!((report.brier_score.unwrap() - 0.53).abs() < 1e-9);
         assert!((report.propensity_weighted_brier_score.unwrap() - 0.698).abs() < 1e-9);
+    }
+
+    fn feedback_record_for_target_export(
+        recommendation_id: &str,
+        path_id: &str,
+        outcome: &str,
+        selected_probability: f64,
+    ) -> FeedbackRecord {
+        FeedbackRecord {
+            timestamp: Utc::now(),
+            symbol: "NQ".to_string(),
+            source: "structural_feedback_submission".to_string(),
+            run_id: Some(recommendation_id.to_string()),
+            trade_id: Some(recommendation_id.to_string()),
+            prompt_version: None,
+            factor_version: None,
+            data_fingerprint: None,
+            factors_used: Vec::new(),
+            model_probabilities_before_trade: ModelProbabilitySnapshot {
+                selected_direction: Direction::Bull,
+                selected_probability,
+                long_score: selected_probability,
+                short_score: 1.0 - selected_probability,
+                win_prob_long: selected_probability,
+                win_prob_short: 1.0 - selected_probability,
+                uncertainty: 1.0 - selected_probability,
+            },
+            realized_outcome: outcome.to_string(),
+            pnl: if outcome == "win" { 1.0 } else { -1.0 },
+            regime_at_entry: Regime::ManipulationExpansion,
+            structural_feedback: Some(StructuralFeedbackRefs {
+                protocol_version: "structural-feedback-v1".to_string(),
+                recommendation_id: recommendation_id.to_string(),
+                recommended_at: "2026-05-09T00:00:00Z".to_string(),
+                node_id: "NQ:belief_regime_node:trend".to_string(),
+                branch_id: "NQ:belief_regime_node:trend:trend_follow_through".to_string(),
+                scenario_id: format!("scenario:{path_id}"),
+                path_id: path_id.to_string(),
+                followed_path: true,
+                exit_reason: None,
+                notes: None,
+            }),
+            reflection_mismatch_tags: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn target_export_projects_mature_structural_feedback_into_history_rows() {
+        let temp = tempfile::tempdir().unwrap();
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            ..WorkflowSnapshot::default()
+        };
+        let path_id = "path:scenario:NQ:belief_regime_node:trend:trend_follow_through:primary";
+        let feedback = vec![
+            feedback_record_for_target_export("rec-win", path_id, "win", 0.91),
+            feedback_record_for_target_export("rec-loss", path_id, "loss", 0.24),
+        ];
+
+        let summary = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &feedback,
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let history_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.history_jsonl_path))
+                .unwrap();
+
+        assert!(summary.history_mature_rows >= 2);
+        assert!(summary.history_rows_with_raw_path_score >= 2);
+        assert!(
+            history_rows
+                .iter()
+                .filter(|row| row.path_id == path_id && row.maturity_mask)
+                .count()
+                >= 2
+        );
+        assert!(history_rows.iter().any(|row| {
+            row.path_id == path_id
+                && row.pending_reward_state == "matured_success"
+                && row.raw_path_score == Some(0.91)
+        }));
+        assert!(history_rows.iter().any(|row| {
+            row.path_id == path_id
+                && row.pending_reward_state == "matured_failure"
+                && row.raw_path_score == Some(0.24)
+        }));
+    }
+
+    #[test]
+    fn path_ranker_runtime_falls_back_to_history_when_registered_artifact_misses_path() {
+        let temp = tempfile::tempdir().unwrap();
+        let snapshot =
+            crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        let summary = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let current_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap();
+        let mut history_score_row = current_rows.first().expect("current row").clone();
+        let path_id = history_score_row.path_id.clone();
+        history_score_row.candidate_set_id = "structural-candidates:NQ:history".to_string();
+        history_score_row.raw_path_score = Some(0.91);
+        fs::write(
+            &summary.history_jsonl_path,
+            render_structural_path_ranking_target_rows_jsonl(&[history_score_row]).unwrap(),
+        )
+        .unwrap();
+        let artifact_dir = Path::new(&summary.summary_path)
+            .parent()
+            .expect("summary parent")
+            .to_path_buf();
+        fs::write(
+            artifact_dir.join("artifact_scores.jsonl"),
+            format!(
+                "{}\n",
+                serde_json::json!({
+                    "candidate_set_id": "structural-candidates:NQ:other",
+                    "path_id": "path:scenario:NQ:belief_regime_node:range:range_mean_reversion:primary",
+                    "raw_path_score": 0.12
+                })
+            ),
+        )
+        .unwrap();
+        let artifact =
+            crate::application::entry_models::training_export::StructuralPathRankingTrainerArtifact {
+                protocol_version: "structural-path-ranking-trainer-artifact-v1".to_string(),
+                dataset_role: "external_path_ranker_training_dataset".to_string(),
+                model_family: "catboost".to_string(),
+                artifact_uri: "artifact_scores.jsonl".to_string(),
+                model_artifact_uri: None,
+                score_column: "raw_path_score".to_string(),
+                trained_rows: 42,
+                history_rows: 42,
+                calibration_rows: 12,
+                selected_features: vec!["rank".to_string()],
+                validation_metrics:
+                    crate::belief_core::ranking_label::StructuralPathRankerValidationMetrics::default(),
+                calibration_metrics:
+                    crate::belief_core::ranking_label::StructuralPathRankerCalibrationMetrics::default(),
+                rule_list: Vec::new(),
+                tree_json: None,
+                created_at: None,
+                notes: vec![],
+            };
+        fs::write(
+            artifact_dir.join("structural_path_ranking_trainer_artifact.json"),
+            serde_json::to_string_pretty(&artifact).unwrap(),
+        )
+        .unwrap();
+        crate::application::entry_models::enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY,
+        )
+        .unwrap();
+
+        let selection = structural_ranked_paths_with_runtime_context_and_prior_state(
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            StructuralPathRankerRuntimeContext {
+                state_dir: Some(temp.path().to_str().unwrap()),
+            },
+        );
+
+        let runtime = selection.runtime.expect("runtime surface");
+        assert_eq!(runtime.status, "using_history_scores");
+        assert_eq!(runtime.artifact_match_count, 0);
+        assert_eq!(runtime.history_match_count, 1);
+        assert_eq!(runtime.applied_path_count, 1);
+        assert_eq!(
+            selection
+                .paths
+                .iter()
+                .find(|path| path.path_id == path_id)
+                .and_then(|path| path.path_ranker_runtime_source.as_deref()),
+            Some("history_path")
+        );
+    }
+
+    #[test]
+    fn path_ranker_runtime_applies_registered_artifact_scores_to_ranked_paths() {
+        let temp = tempfile::tempdir().unwrap();
+        let snapshot =
+            crate::application::orchestration::workflow_status::sample_human_workflow_snapshot();
+        let summary = export_structural_path_ranking_target(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+        )
+        .unwrap();
+        let current_rows =
+            load_structural_path_ranking_target_rows(Path::new(&summary.jsonl_path)).unwrap();
+        assert!(!current_rows.is_empty(), "expected structural target rows");
+        let artifact_dir = Path::new(&summary.summary_path)
+            .parent()
+            .expect("summary parent")
+            .to_path_buf();
+        let score_lines = current_rows
+            .iter()
+            .enumerate()
+            .map(|(index, row)| {
+                serde_json::json!({
+                    "candidate_set_id": row.candidate_set_id,
+                    "path_id": row.path_id,
+                    "raw_path_score": 0.91 - index as f64 * 0.04,
+                    "calibrated_path_prob": 0.86 - index as f64 * 0.03,
+                    "path_prob_lower_bound": 0.74 - index as f64 * 0.02,
+                    "execution_gate_status": if index == 0 { "pass" } else { "observe" },
+                })
+                .to_string()
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
+        fs::write(
+            artifact_dir.join("artifact_scores.jsonl"),
+            format!("{score_lines}\n"),
+        )
+        .unwrap();
+        let artifact =
+            crate::application::entry_models::training_export::StructuralPathRankingTrainerArtifact {
+                protocol_version: "structural-path-ranking-trainer-artifact-v1".to_string(),
+                dataset_role: "external_path_ranker_training_dataset".to_string(),
+                model_family: "catboost".to_string(),
+                artifact_uri: "artifact_scores.jsonl".to_string(),
+                model_artifact_uri: None,
+                score_column: "raw_path_score".to_string(),
+                trained_rows: 42,
+                history_rows: 42,
+                calibration_rows: 12,
+                selected_features: vec!["rank".to_string(), "raw_path_score".to_string()],
+                validation_metrics:
+                    crate::belief_core::ranking_label::StructuralPathRankerValidationMetrics::default(),
+                calibration_metrics:
+                    crate::belief_core::ranking_label::StructuralPathRankerCalibrationMetrics::default(),
+                rule_list: Vec::new(),
+                tree_json: None,
+                created_at: None,
+                notes: vec![],
+            };
+        fs::write(
+            artifact_dir.join("structural_path_ranking_trainer_artifact.json"),
+            serde_json::to_string_pretty(&artifact).unwrap(),
+        )
+        .unwrap();
+        crate::application::entry_models::enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+        )
+        .unwrap();
+
+        let selection = structural_ranked_paths_with_runtime_context_and_prior_state(
+            &snapshot,
+            &ProviderCatalogAgentSurface::default(),
+            &[],
+            &StructuralPriorLearningState::default(),
+            StructuralPathRankerRuntimeContext {
+                state_dir: Some(temp.path().to_str().unwrap()),
+            },
+        );
+
+        let runtime = selection.runtime.expect("runtime surface");
+        assert_eq!(runtime.status, "using_registered_artifact_scores");
+        assert_eq!(runtime.artifact_match_count, current_rows.len());
+        assert_eq!(runtime.applied_path_count, current_rows.len());
+        let expected_first = current_rows.first().expect("first row");
+        let selected = selection
+            .paths
+            .iter()
+            .find(|path| path.path_id == expected_first.path_id)
+            .expect("ranked path with registered score");
+        assert_eq!(
+            selected.path_ranker_runtime_source.as_deref(),
+            Some("registered_artifact")
+        );
+        assert_eq!(selected.catboost_score, Some(0.91));
+        assert_eq!(
+            selected.path_ranker_execution_gate_status.as_deref(),
+            Some("pass")
+        );
     }
 }

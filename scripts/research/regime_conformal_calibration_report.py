@@ -97,6 +97,12 @@ def _class_coverage(
     }
 
 
+def _all_truth_classes_meet_coverage(class_cov: dict[str, dict[str, Any]], target_coverage: float) -> bool:
+    if not class_cov:
+        return False
+    return all(float(stats.get("coverage", 0.0)) >= target_coverage for stats in class_cov.values())
+
+
 def build_conformal_calibration_report(
     *,
     scores_path: Path,
@@ -125,14 +131,21 @@ def build_conformal_calibration_report(
     singleton_rate = sum(1 for size in set_sizes if size == 1) / len(set_sizes) if set_sizes else 0.0
     max_set_size = max(set_sizes) if set_sizes else 0
     class_cov = _class_coverage(primary_sets, truth_map)
-    overall_coverage = 1.0
-    if truth_map:
+    has_truth = bool(truth_map)
+    overall_coverage = 0.0
+    warnings: list[str] = []
+    if has_truth:
         overall_coverage = sum(1 for ts, truth in truth_map.items() if truth in primary_sets.get(ts, [])) / len(truth_map)
+    else:
+        warnings.append("truth_labels_missing")
+    class_coverage_95 = _all_truth_classes_meet_coverage(class_cov, 0.95)
+    class_coverage_99 = _all_truth_classes_meet_coverage(class_cov, 0.99)
 
     report = {
         "schema_version": "regime-conformal-calibration/v1",
         "target_coverages": coverages,
         "label_prefix": label_prefix,
+        "truth_source": "provided" if has_truth else "missing",
         "row_count": len(grouped),
         "score_row_count": len(score_rows),
         "singleton_rate": round(singleton_rate, 6),
@@ -140,10 +153,11 @@ def build_conformal_calibration_report(
         "average_conformal_set_size": round(sum(set_sizes) / len(set_sizes), 6) if set_sizes else 0.0,
         "overall_coverage": round(overall_coverage, 6),
         "class_conditional_coverage": class_cov,
-        "confidence_95": bool(overall_coverage >= 0.95 and singleton_rate == 1.0 and max_set_size == 1),
-        "confidence_99": bool(overall_coverage >= 0.99 and singleton_rate == 1.0 and max_set_size == 1),
+        "confidence_95": bool(has_truth and overall_coverage >= 0.95 and class_coverage_95 and singleton_rate == 1.0 and max_set_size == 1),
+        "confidence_99": bool(has_truth and overall_coverage >= 0.99 and class_coverage_99 and singleton_rate == 1.0 and max_set_size == 1),
         "sets_by_target_coverage": sets_by_coverage,
         "label_contracts": contracts,
+        "warnings": warnings,
     }
     _write_json(output_json, report)
     return report

@@ -112,22 +112,26 @@ pub fn build_oracle_regime_probe_agent_surface(
     }
 }
 
-pub fn render_oracle_regime_probe_human_lines(
-    report: &OracleRegimeProbeReport,
-) -> Vec<String> {
+pub fn render_oracle_regime_probe_human_lines(report: &OracleRegimeProbeReport) -> Vec<String> {
     let mut lines = vec![
         format!("Probe: {}", report.summary),
         format!("Live truth rule: {}", report.live_truth_rule),
     ];
-    lines.extend(report.layer_contributions.iter().enumerate().map(|(idx, layer)| {
-        format!(
-            "Layer {}: kind={} score={:.3} rationale={}",
-            idx + 1,
-            layer.layer_kind,
-            layer.contribution_score,
-            layer.rationale
-        )
-    }));
+    lines.extend(
+        report
+            .layer_contributions
+            .iter()
+            .enumerate()
+            .map(|(idx, layer)| {
+                format!(
+                    "Layer {}: kind={} score={:.3} rationale={}",
+                    idx + 1,
+                    layer.layer_kind,
+                    layer.contribution_score,
+                    layer.rationale
+                )
+            }),
+    );
     lines
 }
 
@@ -147,7 +151,10 @@ mod tests {
         assert_eq!(config.raw_cluster_count, TINY_LEG_RAW_CLUSTER_COUNT);
         assert_eq!(config.merged_cluster_count, TINY_LEG_MERGED_CLUSTER_COUNT);
         assert_eq!(config.leg_feature_names.len(), TINY_LEG_FEATURE_COUNT);
-        assert_eq!(config.evaluation_periods.len(), DEFAULT_EVALUATION_PERIODS.len());
+        assert_eq!(
+            config.evaluation_periods.len(),
+            DEFAULT_EVALUATION_PERIODS.len()
+        );
     }
 
     #[test]
@@ -162,7 +169,10 @@ mod tests {
             }],
         );
         assert_eq!(report.mode, RegimeProbeMode::TinyLegResearch);
-        assert_eq!(report.evaluation_periods.len(), DEFAULT_EVALUATION_PERIODS.len());
+        assert_eq!(
+            report.evaluation_periods.len(),
+            DEFAULT_EVALUATION_PERIODS.len()
+        );
         assert_eq!(
             report.promotion_boundary,
             ProbePromotionBoundary::RequiresLiveNowcastBranch

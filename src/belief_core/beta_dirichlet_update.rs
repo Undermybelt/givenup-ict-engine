@@ -80,9 +80,7 @@ pub fn weighted_success_credit_beta_update(
     )
 }
 
-pub fn weighted_seed_beta_update(
-    input: WeightedSeedBetaUpdateInput,
-) -> WeightedBetaMassUpdate {
+pub fn weighted_seed_beta_update(input: WeightedSeedBetaUpdateInput) -> WeightedBetaMassUpdate {
     let WeightedSeedBetaUpdateInput {
         followed_observation_count,
         wins,
@@ -145,8 +143,7 @@ pub fn dirichlet_component_mean(component_mass: f64, total_mass: f64) -> f64 {
 mod tests {
     use super::{
         beta_posterior_lower_bound, beta_posterior_mean, beta_update_factor,
-        dirichlet_component_mean,
-        weighted_seed_beta_update, weighted_success_credit_beta_update,
+        dirichlet_component_mean, weighted_seed_beta_update, weighted_success_credit_beta_update,
         WeightedSeedBetaUpdateInput,
     };
 

@@ -63,7 +63,8 @@ pub fn auto_quant_readiness_from_status_with_state_dir(
     dependency_status: &AutoQuantDependencyStatus,
     state_dir: &str,
 ) -> AutoQuantReadinessSurface {
-    let workspace = auto_quant_workspace_config_for_state(&dependency_status.managed_dir, state_dir);
+    let workspace =
+        auto_quant_workspace_config_for_state(&dependency_status.managed_dir, state_dir);
     let data_ready = auto_quant_data_ready(&workspace);
     auto_quant_readiness_from_status_and_data(dependency_status, state_dir, workspace, data_ready)
 }

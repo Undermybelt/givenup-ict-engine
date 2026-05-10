@@ -139,7 +139,9 @@ pub fn validate_bbn_structure_candidate_artifact(
     }
     for edge in &artifact.forbidden_edges_violated {
         if edge.parent.trim().is_empty() || edge.child.trim().is_empty() {
-            anyhow::bail!("BBN structure candidate forbidden_edges_violated must be fully specified");
+            anyhow::bail!(
+                "BBN structure candidate forbidden_edges_violated must be fully specified"
+            );
         }
     }
     Ok(())
@@ -382,10 +384,9 @@ mod tests {
 
         assert_eq!(summary.score_name, "bic");
         assert_eq!(summary.added_edges.len(), 1);
-        assert!(summary
-            .added_edges
-            .iter()
-            .any(|edge| edge.parent == "multi_timeframe_resonance" && edge.child == "trade_outcome"));
+        assert!(summary.added_edges.iter().any(
+            |edge| edge.parent == "multi_timeframe_resonance" && edge.child == "trade_outcome"
+        ));
         assert!(!summary.removed_edges.is_empty());
     }
 }

@@ -1,8 +1,15 @@
-# High-Sharpe Factor Harvest Handoff TODO
+# Regime-Conditioned Win-Rate Strategy Selection Handoff TODO
 
 Live board for paper/repo factor harvest and infinite iteration.
 
-Goal: turn high-Sharpe factor references into zero-config, hot-plug sidecar candidates for `ict-engine`, with user-specific optional fields preserved but not required.
+Goal: turn external factor/strategy references into zero-config, hot-plug candidates that can be selected only when the current regime is reliable enough and the candidate's regime-conditioned win rate/payoff profile is acceptable.
+
+Direction correction: this board is no longer a "find high Sharpe" lane. Sharpe remains a useful diagnostic for smoothness and tail-adjusted stability, but it is not the north-star promotion gate. The next loop should prove:
+
+1. Regime classification is accurate/calibrated enough to trust.
+2. Each candidate has an explicit regime match or regime exclusion rule.
+3. The selected strategy has acceptable regime-conditioned win rate, trade density, profit factor / avg R:R, drawdown, and tail behavior.
+4. If regime confidence is low or no strategy matches the regime, execution should stay in `observe` / no-trade.
 
 ---
 
@@ -19,11 +26,13 @@ Goal: turn high-Sharpe factor references into zero-config, hot-plug sidecar cand
 - [x] Created source registry and iteration contract:
   - `docs/plans/2026-05-09-high-sharpe-factor-harvest-and-infinite-iteration.md`
 
+Note: the source-registry filename is historical. This handoff board now overrides the old high-Sharpe framing for subsequent execution.
+
 ---
 
-## Key harvest
+## Source harvest
 
-Papers/families captured:
+Papers/families captured as strategy/factor raw material, not as automatic high-Sharpe promotion targets:
 
 - Time-Series Momentum / managed futures trend following
 - Value and Momentum Everywhere
@@ -60,6 +69,15 @@ Repos captured:
 - Zero-config default remains unchanged.
 - Runtime must not import large research frameworks.
 - Candidate factors are sidecar artifacts first.
+- Regime quality is the first decision gate:
+  - classify current regime with confidence/calibration metadata;
+  - reject or downgrade strategy selection when regime confidence is weak;
+  - keep "unknown / transition / mixed" regimes as first-class no-trade or observe states.
+- Strategy promotion is regime-conditional:
+  - do not judge a strategy only by aggregate Sharpe;
+  - require per-regime hit rate / win-rate lower bound, trade density, profit factor, avg R:R, drawdown, and tail checks;
+  - require explicit "enabled regimes" and "disabled regimes" in the candidate artifact;
+  - prefer a lower-Sharpe strategy with stable, regime-matched win rate over a high-Sharpe strategy that wins only in an unidentified or unstable regime.
 - User-specific fields are optional and hot-plug:
   - `qqq_hv_level`
   - `qqq_hv_pct_rank_252`
@@ -70,11 +88,11 @@ Repos captured:
   - `iv_rank`
   - `hv_rank`
 - Missing optional fields must emit `missing_optional`, not fail.
-- Promotion requires OOS/DSR/PBO/tail/regime/BBN/path-ranker/execution-tree closure.
+- Promotion requires regime calibration, regime-conditioned OOS win-rate/payoff evidence, DSR/PBO/tail checks, BBN value lift, path-ranker readback, and execution-tree closure.
 
 ---
 
-## First implementation queue
+## Historical implementation queue
 
 ### R22: factor formula seed library
 
@@ -161,7 +179,7 @@ bbn_targets=dealer_pressure,factor_uncertainty,crash_risk
 - [ ] Emit `ofi_book_pressure_v1`.
 - [ ] Add OHLCV proxy mode with low confidence if L2 missing.
 
-Status: paused after user correction. Do not continue sidecar-only work before proving the current candidates through Auto-Quant -> filter/analyze -> BBN -> ranker -> execution tree.
+Status: paused after user correction. Do not continue sidecar-only work before proving regime-first strategy selection through Auto-Quant -> filter/analyze/regime -> BBN -> ranker -> execution tree.
 
 ### R26: BBN evidence value gate
 
@@ -529,6 +547,615 @@ Boundary: R27 is still open. This run proves actual operation through provider p
 
 ---
 
+## Direction Pivot After R30
+
+Current diagnosis:
+
+- The chain is no longer blocked on "can we produce a high-Sharpe-looking candidate." The latest accepted evidence already shows one candidate with weak aggregate Sharpe but higher win rate (`RegimeAdaptiveBNB`) and one candidate with more trades but weaker win rate (`MomentumMTFConfluence`).
+- The real blocker is selector correctness: if the regime layer is wrong or under-calibrated, the system cannot know which strategy should be enabled.
+- Therefore, the next work should optimize for regime-conditioned strategy selection, not standalone Sharpe harvest.
+- Sidecar factor work is still allowed, but only when it improves one of the selector inputs: regime identification, regime transition warning, strategy/regime match quality, or conditioned win-rate stability.
+
+Decision lock:
+
+- Do not rank candidates by aggregate Sharpe alone.
+- Do not promote a strategy that lacks per-regime evidence, even if its aggregate metrics look acceptable.
+- Do not continue blind replay only to increase observation count if the target-row identity contract still collapses repeated observations into too few production-validation rows.
+- Treat `observe` as a valid output when the regime classifier is uncertain, transitioning, or mismatched against all available strategies.
+- Keep Auto-Quant freedom: factors/strategies may be synthesized or hardcoded in the Auto-Quant workspace, but repo runtime changes must remain minimal and justified by a validated artifact contract.
+
+---
+
+## Next Implementation Queue
+
+### R31: regime classifier quality gate
+
+- [x] Define the minimum regime evidence needed before any strategy-selection claim:
+  - regime label;
+  - confidence / calibration score;
+  - transition-risk flag;
+  - lookback window and provider source;
+  - known failure mode when labels conflict across providers or timeframes.
+- [x] Run the regime classifier across the same provider matrix used in R29/R30:
+  - yfinance / Yahoo;
+  - IBKR;
+  - Kraken for crypto cross-check where relevant;
+  - TradingViewRemix if key becomes available.
+- [x] Compare regime labels across timeframes:
+  - intraday;
+  - daily / swing context;
+  - higher-timeframe trend context.
+- [x] Emit a regime-quality artifact under `/tmp/<run_root>/repo-state/<SYMBOL>/...` and import/read it through existing repo surfaces rather than chat-only notes.
+- [x] Add/extend tests only if a repo contract changes. A docs/runbook-only run does not need code tests.
+
+Acceptance:
+
+```text
+regime_quality_artifact exists
+regime_label is present
+regime_confidence is present
+transition_risk is present
+provider/timeframe disagreements are visible
+low-confidence regime produces observe/no-trade guidance
+```
+
+Observed R31 closure:
+
+```text
+source_run_root=/tmp/ict-r36-full-market-selector-20260510T023200Z
+aggregate_artifact=/tmp/ict-r36-full-market-selector-20260510T023200Z/repo-state/regime_quality_matrix.json
+NQ_artifact=/tmp/ict-r36-full-market-selector-20260510T023200Z/repo-state/NQ/regime_quality_artifact.json
+BTCUSD_artifact=/tmp/ict-r36-full-market-selector-20260510T023200Z/repo-state/BTCUSD/regime_quality_artifact.json
+AAPL_artifact=/tmp/ict-r36-full-market-selector-20260510T023200Z/repo-state/AAPL/regime_quality_artifact.json
+provider_matrix_rows=10
+providers=ibkr,kraken_public,tradingview_mcp,yfinance
+timeframes=1d,1h
+symbols=AAPL,BTCUSD,NQ
+decision_states_seen=unknown_abstain
+global_guidance=observe_no_trade
+json_validation=passed for aggregate and all per-symbol artifacts
+```
+
+NQ readback:
+
+```text
+artifact_symbol=NQ
+provider_timeframe_count=5
+regime_label=""
+all_confidence_95=false
+all_confidence_99=false
+all_trade_usable=false
+max_transition_hazard=0.6
+distributional_agreements_seen=disagree
+low_confidence_guidance=observe_no_trade
+known_failure_modes=confidence_95_failed,distributional_disagreement,distributional_transitional,high_distributional_distance,transitional_or_guardrailed,unknown_label,wide_conformal_set
+repo_surface_readback=analyze --demo --regime-consumer-bundle /tmp/ict-r36-full-market-selector-20260510T023200Z/regime/yf_QQQ_1h/regime_consumer_bundle.json --state-dir /tmp/ict-r36-full-market-selector-20260510T023200Z/repo-state
+repo_surface_result=market_state TrendExpansion/BullTrendAcceleration; execution observe/transition_guardrail/guarded; plan no_trade_due_to_insufficient_edge
+```
+
+### R32: strategy-regime match matrix
+
+- [x] Build a matrix for each candidate strategy:
+  - enabled regimes;
+  - disabled regimes;
+  - uncertain regimes;
+  - per-regime trade count;
+  - per-regime win rate / hit rate;
+  - win-rate lower confidence bound;
+  - profit factor;
+  - avg R:R;
+  - max drawdown;
+  - tail / CVaR check;
+  - failure tags.
+- [x] Re-score existing accepted strategies first:
+  - `MomentumMTFConfluence`;
+  - `RegimeAdaptiveBNB`.
+- [x] Require sufficient trade density per enabled regime. A high win rate from a tiny regime slice is not enough.
+- [x] Preserve aggregate Sharpe as a secondary diagnostic field, not a selector gate.
+- [x] Store the matrix as an explicit artifact that downstream BBN/ranker/execution-tree steps can read.
+
+Acceptance:
+
+```text
+strategy_regime_matrix exists
+each strategy has enabled/disabled/uncertain regime sets
+each enabled regime has win_rate_lcb and trade_count
+aggregate Sharpe is present only as diagnostic
+at least one strategy has a clear enable/disable recommendation by regime
+```
+
+Observed R32 closure:
+
+```text
+source_run_root=/tmp/ict-r36-full-market-selector-20260510T023200Z
+strategy_regime_matrix=/tmp/ict-r36-full-market-selector-20260510T023200Z/repo-state/strategy_regime_matrix.json
+json_validation=passed
+strategies=MomentumMTFConfluence,RegimeAdaptiveBNB
+provider_matrix_rows=10
+providers=ibkr,kraken_public,tradingview_mcp,yfinance
+timeframes=1d,1h
+symbols=AAPL,BTCUSD,NQ
+current_regime=unknown_abstain
+current_regime_trade_usable=false
+matrix_recommendation=observe_no_trade
+selected_strategy=none
+aggregate_sharpe_role=diagnostic_only
+```
+
+Strategy-regime decision summary:
+
+```text
+MomentumMTFConfluence:
+  enabled_regimes=[]
+  disabled_regimes=unknown_abstain
+  aggregate_diagnostics: trades=854, win_rate=34.7775, win_rate_lcb=31.6578, pf=1.1682, max_dd=-23.1801, sharpe_diagnostic_only=0.3993
+  reason=low hit rate and no current reliable regime; do not promote on aggregate Sharpe.
+
+RegimeAdaptiveBNB:
+  enabled_regimes=[]
+  disabled_regimes=unknown_abstain
+  historical/probe rows:
+    bull_2021: trades=16, win_rate=81.25, win_rate_lcb=56.9906, pf=2.4178, max_dd=-4.1163
+    winter_2022: trades=25, win_rate=68.0, win_rate_lcb=48.4099, pf=1.7511, max_dd=-2.3833
+    recovery_23_25: trades=72, win_rate=68.0556, win_rate_lcb=56.6074, pf=1.2912, max_dd=-4.6744
+    full_5y: trades=115, win_rate=69.5652, win_rate_lcb=60.6358, pf=1.4262, max_dd=-4.6742
+  reason=hit-rate evidence is better than MomentumMTFConfluence, but current regime quality is unknown_abstain / trade_usable=false, so it remains disabled.
+
+Missing optional fields:
+  avg_rr=missing_optional
+  tail_cvar_check=missing_optional
+```
+
+### R33: regime-first selector contract
+
+- [ ] Define selector order:
+  1. read current regime quality;
+  2. reject if regime confidence is below threshold or transition risk is too high;
+  3. load strategy-regime matrix;
+  4. select only strategies enabled for the current regime;
+  5. rank by conditioned win-rate/payoff/tail profile;
+  6. pass selected strategy evidence to BBN/ranker/execution tree.
+- [ ] Make the selector output explain why a strategy is enabled, disabled, or held in observe.
+- [ ] Add a no-trade/observe path for:
+  - unknown regime;
+  - unstable regime transition;
+  - provider/timeframe disagreement;
+  - no strategy with acceptable conditioned win-rate/payoff.
+- [ ] Keep zero-config behavior: missing optional strategy-regime artifacts should degrade to current observe/guarded behavior, not crash.
+
+Acceptance:
+
+```text
+selector_output shows current_regime
+selector_output shows regime_confidence
+selector_output shows selected_strategy or observe reason
+disabled strategies include human-readable regime mismatch reasons
+missing optional matrix does not fail zero-config runtime
+```
+
+### R34: Auto-Quant loop target rewrite
+
+- [ ] Change the Auto-Quant research prompt from "find high Sharpe" to "find regime-conditioned win-rate edges."
+- [ ] Ask Auto-Quant to generate or mutate candidates that improve one of:
+  - regime detection quality;
+  - regime transition warning;
+  - strategy/regime matching;
+  - conditioned win-rate lower bound;
+  - payoff profile inside the enabled regime.
+- [ ] Keep candidate artifacts explicit:
+  - required fields;
+  - optional hot-plug fields;
+  - enabled/disabled regimes;
+  - missing optional policy;
+  - expected BBN targets.
+- [ ] Reject candidates that only improve aggregate Sharpe while weakening regime-conditioned win rate or selector clarity.
+
+Acceptance:
+
+```text
+auto_quant_prompt mentions regime-conditioned win-rate target
+candidate artifact includes enabled_regimes and disabled_regimes
+candidate artifact includes win_rate_lcb or enough raw fields to compute it
+candidate artifact includes fallback behavior for unknown regime
+```
+
+### R35: BBN and path-ranker evidence rewrite
+
+- [ ] Feed BBN with regime-conditioned evidence, not only aggregate strategy metrics:
+  - `regime_reliability`;
+  - `strategy_regime_fit`;
+  - `conditioned_win_rate_edge`;
+  - `conditioned_payoff_quality`;
+  - `transition_risk`;
+  - `strategy_disabled_reason` when applicable.
+- [ ] Make contradiction lift sensitive to regime mismatch:
+  - high aggregate performance but wrong current regime should increase contradiction / uncertainty;
+  - lower aggregate Sharpe but strong current-regime win-rate evidence may be admitted.
+- [ ] Path-ranker targets should include regime identity and selector decision reason so mature rows do not collapse across materially different observations.
+- [ ] Revisit the R30 target-row identity blocker before more replay:
+  - current owner: `src/belief_core/ranking_label.rs`;
+  - current issue: `candidate_set_id|path_id` can collapse repeated observations;
+  - next fix should preserve observation/run identity if production-validation rows are meant to represent independent supervised samples.
+
+Acceptance:
+
+```text
+BBN prior init reports regime-conditioned strategy evidence
+path-ranker target rows include regime/selector context
+raw_scored_mature growth is not blocked by repeated observation overwrite
+workflow-status can explain regime mismatch vs selected strategy
+```
+
+### R36: full-market / full-timeframe validation pass
+
+- [x] Validate the selector on more than NQ before claiming family-level success.
+- [x] Include at least:
+  - index futures / QQQ/NQ lane;
+  - crypto lane via Kraken/public data;
+  - one equity or ETF lane through yfinance/IBKR if data is available.
+- [x] Run multiple timeframes for each lane and log disagreement, not just best-case results.
+- [x] Keep provider attempts explicit. Do not call the lane data-blocked after one provider failure.
+- [x] Produce a final table with:
+  - symbol;
+  - provider;
+  - timeframe;
+  - regime label/confidence;
+  - selected strategy;
+  - enabled/disabled reason;
+  - conditioned win rate;
+  - trade count;
+  - payoff/tail status;
+  - execution-tree action.
+
+Acceptance:
+
+```text
+full_market_selector_table exists
+provider attempts are enumerated
+at least 3 market lanes are attempted
+multiple timeframes are attempted per lane
+failures are tagged as provider_blocked, regime_uncertain, strategy_mismatch, or insufficient_trade_density
+```
+
+---
+
+### R37: real no-imagination chain rerun after user correction
+
+- [x] Build current repo binary before running the chain:
+  - `cargo build --bin ict-engine`
+  - result: `Finished dev profile`
+- [x] Create isolated run root:
+  - `run_root=/tmp/ict-real-regime-selector-20260510T020632Z`
+  - logs under `run_root/logs/`
+  - provider data under `run_root/provider-data/`
+  - repo state under `run_root/repo-state` and `run_root/structural-replay-36/state`
+- [x] Actually attempt every requested provider lane:
+  - YF/yfinance: `QQQ 1h`, 148 data rows -> `provider-data/yf_QQQ_1h.csv`
+  - Kraken: `XBTUSD 1h`, 721 data rows -> `provider-data/kraken_XBTUSD_1h.csv`
+  - IBKR: `QQQ STK 1 hour 30 D` via `uv run --with redis --with ib_async --with pandas` and gateway port `4002`, 480 data rows -> `provider-data/ibkr_QQQ_1h_30d.csv`
+  - TradingViewRemix: actual `market-data-harness fetch` attempted for `NASDAQ:QQQ`; blocked at environment boundary because `ICT_ENGINE_TVREMIX_MCP_API_KEY` is unset. Evidence log: `logs/05_tradingviewremix_fetch_attempt.log`
+- [x] Bootstrap and prepare managed Auto-Quant from the local checkout:
+  - `auto-quant-bootstrap --repo-url /Users/thrill3r/Auto-Quant`
+  - managed copy: `run_root/repo-state/auto-quant/.deps/auto-quant`
+  - pinned ref: `34ba6b6ee6aa69813a50a72158d4c089d97afb96`
+  - `auto-quant-prepare`: `data_ready=true`
+- [x] Seed and run real Auto-Quant strategies from managed versioned strategy files:
+  - `versions/0.4.0/strategies/MomentumMTFConfluence.py`
+  - `versions/0.4.1/strategies/RegimeAdaptiveBNB.py`
+  - command log: `logs/09_auto_quant_run.log`
+  - run result: `5 backtests succeeded, 0 failed`
+- [x] Import Auto-Quant output through ict-engine:
+  - manifest: `strategy_library_from_current_auto_quant_run.json`
+  - note: the managed copy did not contain canonical `export_strategy_library.py`; the manifest was parsed from the just-produced Auto-Quant run log, then validated by ict-engine against the same log.
+  - `auto-quant-results-import`: `n_ok=2`, `log_cross_check matched=2`, `mismatches=[]`, `manifest_only=[]`, `log_only=[]`
+  - library artifact: `auto_quant_strategy_library_NQ_20260510T021121.644863000Z`
+- [x] Apply BBN prior initialization:
+  - command log: `logs/11_auto_quant_prior_init.log`
+  - `evidence_value_gate_passed=true`
+  - `strategies_applied=MomentumMTFConfluence,RegimeAdaptiveBNB`
+  - `bbn_entropy_reduction=0.018056766371967514`
+  - `bbn_log_loss_delta=6.588649375209126`
+  - `bbn_contradiction_lift=1.931483401354385`
+- [x] Run regime/filter/analyze layer:
+  - NQ source: `/Users/thrill3r/Auto-Quant/user_data/data/NQ_USD-15m.feather`
+  - extracted 2500 latest 15m candles:
+    - `input/nq_auto_quant_15m_ohlcv.csv`
+    - `input/nq_auto_quant_15m_candles.json`
+    - range: `2025-11-20T18:45:00Z -> 2025-12-31T21:45:00Z`
+  - regime sidecar bundle: `regime-sidecar/regime_consumer_bundle.json`
+  - regime result: `decision_state=transitional`, `trade_usable=false`, `label_set=primary::TrendExpansion`, `execution_tree_hint=transition_guardrail`, `confidence_95=false`
+  - `analyze-live` with yfinance and the regime bundle:
+    - log: `logs/13_analyze_live_yfinance_with_regime.log`
+    - result: `market_state=TrendExpansion/BullTrendExhaustion`, `execution=observe/transition_guardrail/guarded`, `gate=pass_neutralized`, `quality=0.561`
+  - `analyze --demo` with the regime bundle:
+    - log: `logs/14_analyze_demo_with_regime.log`
+    - result: `market_state=TrendExpansion/BullTrendAcceleration`, `execution=observe/transition_guardrail/guarded`, `gate=pass_neutralized`, `quality=0.582`
+- [x] Run structural replay through ict-engine update/export/analyze surfaces:
+  - command log: `logs/15_structural_feedback_replay_36.log`
+  - replay result: `observations=36`, `final_mature_rows=1`
+  - state root: `structural-replay-36/state`
+  - target summary: `state/NQ/policy_training/structural_path_ranking_target_summary.json`
+  - target history: `history_rows=1372`, `history_mature_rows=1367`
+- [x] Train and apply real CatBoost path ranker:
+  - train log: `logs/16_catboost_train.log`
+  - input: `structural_path_ranking_target_history.csv`
+  - training samples: `1367`
+  - model: `catboost-path-ranker/catboost_model.cbm`
+  - selected feature: `structural_baseline_score`
+  - apply log: `logs/17_catboost_apply_current.log`
+  - score file: `path_scores_catboost_current.csv`
+  - current score: `raw_path_score=0.5234782652629066`
+- [x] Feed CatBoost output back into ict-engine runtime:
+  - `apply-structural-path-ranking-external-scores`: `rows=1`, `history_rows_with_raw_path_score=1367`
+  - companion artifact: `catboost-path-ranker/catboost_trainer_companion_scores.json`
+  - `register-structural-path-ranking-trainer-artifact`: `trainer_artifact_model_family=catboost`, `runtime_artifact_match_count=1`
+  - `enable-structural-path-ranking-runtime`: `runtime_selection=enabled_registered_artifact_ready`, `runtime_source=registered_artifact`, `runtime_matches=1`
+  - validation: `raw_scored_mature=1367/30`, `production_validation=1367/30`, `observation_validation=36/30`
+- [x] Verify execution-tree and workflow readback:
+  - `workflow-status --refresh --human` log: `logs/22_workflow_status_refresh_human_after_catboost.log`
+  - human ranker readback: `Ranker: status=using_registered_artifact_scores source=registered_artifact applied=1 artifact=1 raw=0.523`
+  - `analyze --demo` after CatBoost runtime:
+    - log: `logs/24_analyze_after_catboost_runtime.log`
+    - result: `market_state=TrendExpansion/BullTrendAcceleration | execution=observe/transition_guardrail/guarded | ranker=registered_artifact/catboost/ready`
+  - execution-tree trace: `structural-replay-36/state/NQ/execution_tree_trace.json`
+  - trace confirms:
+    - `path_ranker_score_visible_to_execution_tree=true`
+    - `path_ranker_score_used_by_execution_tree=true`
+    - `path_ranker_model_family=catboost`
+    - `path_ranker_runtime_source=registered_artifact`
+    - `ranker_validation_ready=true`
+
+Observed strategy metrics from the real Auto-Quant run:
+
+```text
+MomentumMTFConfluence full:
+  trades=854
+  win_rate=34.7775
+  sharpe=0.3993
+  profit=53.2400
+  max_dd=-23.1801
+  pf=1.1682
+
+RegimeAdaptiveBNB full_5y:
+  trades=115
+  win_rate=69.5652
+  sharpe=0.1380
+  profit=16.4100
+  max_dd=-4.6742
+  pf=1.4262
+```
+
+Prompt-to-artifact checklist:
+
+```text
+same TODO updated: yes, this R37 block
+actual Auto-Quant operated: yes, logs/09_auto_quant_run.log and strategy_library_from_current_auto_quant_run.json
+ict-engine filter/analyze operated: yes, logs/13_analyze_live_yfinance_with_regime.log and logs/14_analyze_demo_with_regime.log
+belief network operated: yes, logs/11_auto_quant_prior_init.log and auto_quant_prior_init state artifacts
+CatBoost operated: yes, logs/16_catboost_train.log, catboost_model.cbm, logs/17_catboost_apply_current.log
+execution tree operated: yes, logs/24_analyze_after_catboost_runtime.log and structural-replay-36/state/NQ/execution_tree_trace.json
+YF/yfinance used: yes, provider-data/yf_QQQ_1h.csv plus analyze-live yfinance path
+Kraken used: yes, provider-data/kraken_XBTUSD_1h.csv
+IBKR used: yes, provider-data/ibkr_QQQ_1h_30d.csv via gateway 4002
+TradingViewRemix used/attempted: attempted, blocked by missing ICT_ENGINE_TVREMIX_MCP_API_KEY; see logs/05_tradingviewremix_fetch_attempt.log
+repo pollution check: accidental catboost_info/ removed after CatBoost run
+```
+
+Boundary:
+
+- This is a real operated chain, not a speculative plan.
+- It still does not authorize a production trade. The regime sidecar says `transitional` / `trade_usable=false`, and the execution tree remains `observe/transition_guardrail/guarded`.
+- TradingViewRemix is not counted as successful data coverage because the API key is absent in the current environment.
+- The current CatBoost fit is real and runtime-consumed, but its selected feature is only `structural_baseline_score`; next work should add regime/selector context features before treating it as a high-quality strategy selector.
+
+### R38: TradingViewRemix credential recovery and current-shell refresh
+
+- [x] Rechecked the local credential owner before treating TradingViewRemix as data-blocked:
+  - local credential file exists: `~/.ict-engine/tvremix_mcp.json`
+  - file contains `api_key` and `url`
+  - root cause of the latest block: current shell had no `ICT_ENGINE_TVREMIX_MCP_API_KEY`, and the local file's key value had diverged from the newly supplied key
+  - fixed the local persisted credential without writing the secret into repo files
+  - tightened local secret permissions: `~/.ict-engine` is `700`, `~/.ict-engine/tvremix_mcp.json` is `600`
+- [x] Rebuilt the current repo binary:
+  - command: `cargo build --bin ict-engine`
+  - log: `/tmp/ict-tvremix-credential-refresh-20260510T022759Z/logs/00_cargo_build.log`
+  - result: `Finished dev profile`
+- [x] Re-ran TradingViewRemix with credentials injected only into the child process from the local credential file:
+  - run root: `/tmp/ict-tvremix-credential-refresh-20260510T022759Z`
+  - provider status artifact: `/tmp/ict-tvremix-credential-refresh-20260510T022759Z/provider-probes/tradingview_provider_status_agent.txt`
+  - status: `market_data:1/1 ready`
+  - reason: `mcp_url_and_api_key_available`
+  - missing-key check: `missing_tradingview_mcp_api_key=false`
+- [x] Re-ran the actual TradingViewRemix fetch:
+  - command: `ict-engine market-data-harness --action fetch --market NQ --interval 1d --role etf_reference --provider etf_reference=tradingview_mcp --symbol-spec etf_reference=NASDAQ:QQQ`
+  - output artifact: `/tmp/ict-tvremix-credential-refresh-20260510T022759Z/provider-probes/tradingview_qqq_1d_fetch.json`
+  - summary artifact: `/tmp/ict-tvremix-credential-refresh-20260510T022759Z/provider-probes/tradingview_refresh_summary.json`
+  - result: `ok=true`, provider `tradingview_mcp`, operation `ohlcv.fetch`
+  - rows: `21`
+  - range: `2026-04-10T13:30:00Z -> 2026-05-08T13:30:00Z`
+
+Updated provider boundary after R38:
+
+```text
+TradingViewRemix current shell status: ready when child process loads ~/.ict-engine/tvremix_mcp.json
+TradingViewRemix current fetch: succeeded, NASDAQ:QQQ 1d, 21 rows
+R37 key-blocked note is now superseded for the current credentialed child-process lane
+Do not call the provider matrix data-blocked while YF, Kraken, IBKR, and TradingViewRemix artifacts exist
+```
+
+### R39: R36 full-market / full-timeframe selector matrix pass
+
+- [x] Produce `full_market_selector_table` as an artifact, not a chat-only table.
+- [x] Attempt at least three market lanes:
+  - index / QQQ-NQ lane;
+  - crypto lane;
+  - equity or ETF lane.
+- [x] Attempt multiple timeframes per lane.
+- [x] Enumerate provider evidence across YF/yfinance, Kraken, IBKR, and TradingViewRemix.
+- [x] Run regime/analyze/selector surfaces where the current runtime supports the provider lane.
+- [x] Tag unsupported or failed lanes explicitly as `provider_blocked`, `regime_uncertain`, `strategy_mismatch`, or `insufficient_trade_density`.
+
+Live run root:
+
+```text
+/tmp/ict-r36-full-market-selector-20260510T023200Z
+```
+
+Provider and timeframe evidence:
+
+```text
+YF/yfinance:
+  QQQ 1h: 148 rows, 2026-04-10 13:30:00+00:00 -> 2026-05-08 20:00:00+00:00
+  QQQ 1d: 21 rows, 2026-04-10 13:30:00+00:00 -> 2026-05-08 13:30:00+00:00
+  AAPL 1h: 148 rows, 2026-04-10 13:30:00+00:00 -> 2026-05-08 20:00:00+00:00
+  AAPL 1d: 21 rows, 2026-04-10 13:30:00+00:00 -> 2026-05-08 13:30:00+00:00
+
+Kraken:
+  PF_XBTUSD 1h: 697 rows, 2026-04-10 00:00:00+00:00 -> 2026-05-09 00:00:00+00:00
+  PF_XBTUSD 1d: 30 rows, 2026-04-10 00:00:00+00:00 -> 2026-05-09 00:00:00+00:00
+
+TradingViewRemix:
+  NASDAQ:QQQ 1h: 147 rows, 2026-04-10T13:30:00Z -> 2026-05-08T19:30:00Z
+  NASDAQ:QQQ 1d: 21 rows, 2026-04-10T13:30:00Z -> 2026-05-08T13:30:00Z
+
+IBKR:
+  QQQ STK 1h 30D: 480 rows, 2026-03-27T08:00:00+00:00 -> 2026-05-08T23:00:00+00:00
+  AAPL STK 1d 60D: 60 rows, 2026-02-12T00:00:00+00:00 -> 2026-05-08T00:00:00+00:00
+```
+
+Artifacts:
+
+```text
+full_market_selector_table_csv=/tmp/ict-r36-full-market-selector-20260510T023200Z/selector/full_market_selector_table.csv
+full_market_selector_table_json=/tmp/ict-r36-full-market-selector-20260510T023200Z/selector/full_market_selector_table.json
+summary=/tmp/ict-r36-full-market-selector-20260510T023200Z/selector/full_market_selector_summary.json
+provider_data_dir=/tmp/ict-r36-full-market-selector-20260510T023200Z/provider-data
+regime_bundle_dir=/tmp/ict-r36-full-market-selector-20260510T023200Z/regime
+```
+
+Selector table summary:
+
+```text
+row_count=10
+market_lanes=crypto_xbtusd,equity_aapl,index_qqq_nq
+providers=ibkr,kraken_public,tradingview_mcp,yfinance
+timeframes=1d,1h
+selected_strategies=none
+failure_tags=provider_blocked+regime_uncertain,regime_uncertain,strategy_mismatch+regime_uncertain
+```
+
+Runtime/analyze notes:
+
+```text
+NQ/yfinance analyze-live succeeded:
+  market_state=TrendExpansion/BullTrendExhaustion
+  execution=observe/transition_guardrail/guarded
+  gate=pass_neutralized
+  quality=0.561
+
+NQ/TradingViewRemix provider fetch succeeded, but analyze-live does not currently accept `tradingview_mcp` as a live auxiliary backend:
+  tag=strategy_mismatch+regime_uncertain
+
+AAPL/yfinance provider fetch succeeded, but generic equity analyze-live tried the futures-style `AAPL=F` path and failed:
+  tag=provider_blocked+regime_uncertain
+```
+
+Decision:
+
+```text
+No strategy is promoted from this R36/R39 pass.
+Every sidecar bundle returned latest_decision=unknown_abstain and trade_usable=false.
+RegimeAdaptiveBNB remains an observed candidate with full_5y win_rate=69.5652, trades=115, pf=1.4262, max_dd=-4.6742, but it is disabled because the current regime gate is not reliable enough.
+This validates the corrected direction: provider breadth is now present; the blocking problem is regime/selector confidence, not Sharpe hunting and not missing data.
+```
+
+### R40: TradingViewRemix local credential fallback fix
+
+- [x] Root cause:
+  - `provider-status` and `market-data-harness` treated the current process env as the only TradingViewRemix credential owner.
+  - The real local owner already exists at `~/.ict-engine/tvremix_mcp.json`, but ict-engine did not read it unless an external wrapper injected `ICT_ENGINE_TVREMIX_MCP_API_KEY`.
+  - Consumer impact: every fresh shell or child process could report `missing_tradingview_mcp_api_key` even when the key was correctly stored locally.
+- [x] Code fix:
+  - added a shared TradingViewRemix runtime config resolver:
+    - env key/url first;
+    - fallback to `~/.ict-engine/tvremix_mcp.json`;
+    - fallback URL remains `https://tvremix.xyz/api/mcp/v1`;
+    - secret value is never printed in provider status.
+  - `provider-status` now marks `tradingview_mcp` ready when local config is present and the probe passes.
+  - `market-data-harness fetch` now uses the same resolver, so consumers do not need to export the key manually in every shell.
+  - legacy provider preference inference now also sees the local config instead of env only.
+  - optional TradingViewRemix options-probe failure no longer kills OHLCV readiness; if OHLCV is usable but options smoke fails, the provider remains available for OHLCV and options lanes are degraded.
+- [x] Regression test:
+  - command: `cargo test --lib control_matrix_providers::tests::tradingview_provider -- --nocapture`
+  - result: `4 passed`
+  - covered behavior: local `~/.ict-engine/tvremix_mcp.json` with no env makes TradingViewRemix provider ready, and the secret remains redacted.
+  - covered behavior: an options-probe failure with OHLCV still usable returns `ready_degraded` instead of making the whole provider unavailable.
+- [x] Build:
+  - command: `cargo build --bin ict-engine`
+  - result: `Finished dev profile`
+- [x] Real no-env consumer verification:
+  - run root: `/tmp/ict-tvremix-local-config-fix-20260510T025728Z`
+  - status command: `env -u ICT_ENGINE_TVREMIX_MCP_API_KEY -u ICT_ENGINE_TVREMIX_MCP_URL ict-engine provider-status --provider tradingview_mcp --agent`
+  - status result: `market_data:1/1 ready`, `reason=mcp_url_and_api_key_available`
+  - fetch command: `env -u ICT_ENGINE_TVREMIX_MCP_API_KEY -u ICT_ENGINE_TVREMIX_MCP_URL ict-engine market-data-harness --action fetch --market NQ --interval 1d --role etf_reference --provider etf_reference=tradingview_mcp --symbol-spec etf_reference=NASDAQ:QQQ`
+  - fetch result: `ok=true`, `21` rows, `2026-04-10T13:30:00Z -> 2026-05-08T13:30:00Z`
+- [x] Final rebuilt-binary no-env recheck after provider-support prompt cleanup:
+  - run root: `/tmp/ict-tvremix-local-config-fix-after-prompt-20260510T030151Z`
+  - status result: `market_data:1/1 ready`, provider `tradingview_mcp`, `reason=mcp_url_and_api_key_available`
+  - fetch result: `ok=true`, `21` rows, `2026-04-10T13:30:00Z -> 2026-05-08T13:30:00Z`
+- [x] Final rebuilt-binary no-env recheck after optional-options degradation fix:
+  - run root: `/tmp/ict-tvremix-local-config-final-20260510T034555Z`
+  - status artifact: `/tmp/ict-tvremix-local-config-final-20260510T034555Z/provider-probes/tradingview_provider_status_no_env.txt`
+  - fetch artifact: `/tmp/ict-tvremix-local-config-final-20260510T034555Z/provider-probes/tradingview_qqq_1d_fetch_no_env.json`
+  - summary artifact: `/tmp/ict-tvremix-local-config-final-20260510T034555Z/provider-probes/tradingview_no_env_summary.json`
+  - status result: `market_data:1/1 ready`, provider `tradingview_mcp`, `ready=true`, `reason=mcp_url_and_api_key_available`
+  - fetch result: `ok=true`, `21` rows, `2026-04-10T13:30:00Z -> 2026-05-08T13:30:00Z`
+
+Consumer boundary after R40:
+
+```text
+TradingViewRemix key is no longer considered "missing" merely because the current shell lacks ICT_ENGINE_TVREMIX_MCP_API_KEY.
+The canonical local fallback is ~/.ict-engine/tvremix_mcp.json.
+Provider status and fetch now use the same credential chain.
+Optional options smoke failures no longer hide usable OHLCV access from consumers.
+Agents should still not write the secret into repo files or TODO docs.
+```
+
+### R41: branch-specific factor priority queue
+
+- [x] Direction lock: the next Auto-Quant loop should generate / backtest branch-specific factor evidence under the current regime before feeding BBN and CatBoost/path-ranking.
+- [x] Range mean-reversion viability bucket:
+  - Bollinger / ATR stretch;
+  - distance from VWAP / session midpoint;
+  - prior sweep + failed continuation;
+  - chop / volatility compression vs expansion.
+- [x] Transition confirmation bucket:
+  - range break with displacement;
+  - volume expansion after compression;
+  - multi-timeframe alignment persistence;
+  - failed mean-reversion after boundary break.
+- [x] Stress de-risk bucket:
+  - volatility spike;
+  - liquidity thinning;
+  - wide-range continuation hazard;
+  - FOMO / crowding risk.
+- [x] Chain lock: these buckets should become Auto-Quant factor/candidate evidence first, then feed BBN evidence and CatBoost/path-ranker features. Do not turn the next slice into another pseudo-label model training endpoint.
+- [x] Downstream mapping:
+  - range mean-reversion viability -> selector evidence for `wait_for_reversion` vs disabled continuation; BBN targets `reversion_viability`, `factor_uncertainty`, and `liquidity_context`;
+  - transition confirmation -> selector evidence for enabling transition / continuation branches; BBN targets `transition_confirmed`, `evidence_quality`, and `mtf_alignment`;
+  - stress de-risk -> observe / no-trade / size-reduction evidence; BBN targets `crash_risk`, `crowding_pressure`, and `liquidity_risk`.
+- [ ] Next safe Auto-Quant slice: create an external feature pack or candidate-spec artifact outside the Rust runtime that emits all three buckets with `enabled_regimes`, `disabled_regimes`, BBN targets, and CatBoost/path-ranker feature fields.
+- [ ] Backtest order:
+  1. start from the current NQ/QQQ `15m/1h/1d` provider matrix proven in R39/R40;
+  2. test range mean-reversion only when regime quality supports range / chop / transition-guardrail context;
+  3. test transition confirmation when compression -> break evidence appears;
+  4. run stress de-risk as veto / size-reduction evidence, not as standalone entry alpha.
+- [ ] Promotion gate: require conditioned win-rate/payoff inside enabled regimes plus BBN value lift and CatBoost/readback feature contribution. Aggregate Sharpe and pseudo-label accuracy remain diagnostics only.
+
+Slice boundary: this R41 update is a docs-only queue capture. No runtime source was modified for this slice.
+
+---
+
 ## Verification floor
 
 ```bash
@@ -544,10 +1171,8 @@ cargo check
 
 ## Files in this slice
 
-Stage only:
+This direction-correction slice should stage only:
 
-- `src/application/auto_quant/results/log_parser.rs`
-- `docs/plans/2026-05-09-high-sharpe-factor-harvest-and-infinite-iteration.md`
 - `docs/plans/2026-05-09-high-sharpe-factor-harvest-handoff-todo.md`
 
 Unrelated dirty files remain outside this slice.

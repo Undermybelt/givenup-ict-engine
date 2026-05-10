@@ -110,26 +110,22 @@ pub fn apply_regime_execution_guardrail(
         } else {
             "execution_guarded_due_to_high_transition_hazard".to_string()
         };
-        output
-            .split_reason_lineage
-            .push(format!(
-                "hybrid_transition_hazard={:.3}",
-                hybrid_regime.transition_hazard.unwrap_or_default()
-            ));
+        output.split_reason_lineage.push(format!(
+            "hybrid_transition_hazard={:.3}",
+            hybrid_regime.transition_hazard.unwrap_or_default()
+        ));
         if pda_disagreement {
             output
                 .split_reason_lineage
                 .push("pda_hybrid_alignment=false".to_string());
         }
         if low_remaining_duration || short_remaining_duration {
-            output
-                .split_reason_lineage
-                .push(format!(
-                    "duration_remaining_expected_bars={:.3}",
-                    hybrid_regime
-                        .duration_remaining_expected_bars
-                        .unwrap_or_default()
-                ));
+            output.split_reason_lineage.push(format!(
+                "duration_remaining_expected_bars={:.3}",
+                hybrid_regime
+                    .duration_remaining_expected_bars
+                    .unwrap_or_default()
+            ));
         }
     } else if short_remaining_duration {
         output.execution_bias = "passive".to_string();

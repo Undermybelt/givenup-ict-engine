@@ -431,7 +431,6 @@ mod tests {
             bbn_log_loss_delta: 0.75,
             bbn_contradiction_lift: 0.5,
             evidence_value_gate_passed: true,
-            ..Default::default()
         };
 
         let pi = persist_prior_init_outcome(

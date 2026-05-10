@@ -663,9 +663,19 @@ pub(crate) fn workflow_phase_snapshot_from_analyze_run(
         pre_bayes_filtered_assignments: filtered_assignments,
         pre_bayes_soft_evidence,
         market_state_evidence: run.market_state_evidence.clone(),
-        canonical_structural_active_regime: None,
-        canonical_structural_confidence: None,
-        canonical_structural_probabilities: BTreeMap::new(),
+        canonical_structural_active_regime: run
+            .canonical_structural_regime_posterior
+            .as_ref()
+            .and_then(|posterior| posterior.active_regime.clone()),
+        canonical_structural_confidence: run
+            .canonical_structural_regime_posterior
+            .as_ref()
+            .and_then(|posterior| posterior.confidence),
+        canonical_structural_probabilities: run
+            .canonical_structural_regime_posterior
+            .as_ref()
+            .map(|posterior| posterior.probabilities.clone())
+            .unwrap_or_default(),
         pre_bayes_long_signal_probability: Some(
             run.pre_bayes_entry_quality_bridge.long_signal_probability,
         ),

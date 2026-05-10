@@ -8,14 +8,13 @@ use crate::belief_core::structural_state::{
 };
 use crate::state::{
     structural_feedback_outcome_is_unresolved, structural_source_observed_outcome_likelihood,
-    FeedbackRecord, StructuralPriorEvent, StructuralPriorLearningState, StructuralPriorStats,
-    StructuralPriorSourceSummary,
-    StructuralSourceReliabilityEmCalibrationSummary,
-    StructuralSourceReliabilityEmConfusionCell, StructuralSourceReliabilityEmDiagnostics,
-    StructuralSourceReliabilityEmFit, StructuralSourceReliabilityEmHoldoutSummary,
-    StructuralSourceReliabilityEmReplaySummary, StructuralSourceReliabilityEmSourceSummary,
-    StructuralSourceReliabilityPosterior, StructuralTargetPolicyContextPosterior,
-    STRUCTURAL_SOURCE_RELIABILITY_EM_ITERATIONS,
+    FeedbackRecord, StructuralPriorEvent, StructuralPriorLearningState,
+    StructuralPriorSourceSummary, StructuralPriorStats,
+    StructuralSourceReliabilityEmCalibrationSummary, StructuralSourceReliabilityEmConfusionCell,
+    StructuralSourceReliabilityEmDiagnostics, StructuralSourceReliabilityEmFit,
+    StructuralSourceReliabilityEmHoldoutSummary, StructuralSourceReliabilityEmReplaySummary,
+    StructuralSourceReliabilityEmSourceSummary, StructuralSourceReliabilityPosterior,
+    StructuralTargetPolicyContextPosterior, STRUCTURAL_SOURCE_RELIABILITY_EM_ITERATIONS,
     STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_CALIBRATION_OBSERVATIONS,
     STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_HOLDOUT_TRAIN_ITEMS,
     STRUCTURAL_SOURCE_RELIABILITY_EM_MIN_MULTI_SOURCE_ITEMS,
@@ -557,7 +556,11 @@ fn structural_source_reliability_em_calibration_summary(
                 let mut brier = row
                     .iter()
                     .map(|(row_label, probability)| {
-                        let target = if row_label == observed_label { 1.0 } else { 0.0 };
+                        let target = if row_label == observed_label {
+                            1.0
+                        } else {
+                            0.0
+                        };
                         (probability - target) * (probability - target)
                     })
                     .sum::<f64>();
@@ -731,7 +734,11 @@ fn structural_source_reliability_em_score_items(
                 let mut brier = row
                     .iter()
                     .map(|(row_label, probability)| {
-                        let target = if row_label == observed_label { 1.0 } else { 0.0 };
+                        let target = if row_label == observed_label {
+                            1.0
+                        } else {
+                            0.0
+                        };
                         (probability - target) * (probability - target)
                     })
                     .sum::<f64>();
@@ -1082,7 +1089,12 @@ fn structural_source_reliability_em_confusion(
         for true_label in labels {
             let mut observed_counts = labels
                 .iter()
-                .map(|label| (label.clone(), STRUCTURAL_SOURCE_RELIABILITY_EM_LAPLACE_ALPHA))
+                .map(|label| {
+                    (
+                        label.clone(),
+                        STRUCTURAL_SOURCE_RELIABILITY_EM_LAPLACE_ALPHA,
+                    )
+                })
                 .collect::<BTreeMap<_, _>>();
             for (item_key, item) in items {
                 let true_probability = posteriors
@@ -1125,7 +1137,12 @@ fn structural_source_reliability_em_class_prior(
 ) -> BTreeMap<String, f64> {
     let mut prior = labels
         .iter()
-        .map(|label| (label.clone(), STRUCTURAL_SOURCE_RELIABILITY_EM_LAPLACE_ALPHA))
+        .map(|label| {
+            (
+                label.clone(),
+                STRUCTURAL_SOURCE_RELIABILITY_EM_LAPLACE_ALPHA,
+            )
+        })
         .collect::<BTreeMap<_, _>>();
     for posterior in posteriors.values() {
         for label in labels {
@@ -1222,9 +1239,7 @@ fn structural_source_reliability_em_credit_class(outcome: &str) -> Option<&'stat
     }
     match outcome.as_str() {
         "win" | "profit" | "tp" | "take_profit" => Some("positive_executed"),
-        "loss" | "lose" | "sl" | "stop" | "stop_loss" | "invalidated" => {
-            Some("negative_executed")
-        }
+        "loss" | "lose" | "sl" | "stop" | "stop_loss" | "invalidated" => Some("negative_executed"),
         "breakeven" | "abandoned" => Some("neutral_executed"),
         "not_followed" => Some("no_credit_not_followed"),
         _ => Some("other_observed"),
@@ -1425,10 +1440,7 @@ pub fn structural_history_adjusted_prior(
     (base_prior * (1.0 - sample_weight) + empirical_success * sample_weight).clamp(0.0, 1.0)
 }
 
-pub fn structural_history_win_rate_from_counts(
-    followed_count: usize,
-    wins: usize,
-) -> Option<f64> {
+pub fn structural_history_win_rate_from_counts(followed_count: usize, wins: usize) -> Option<f64> {
     if followed_count == 0 {
         None
     } else {
@@ -2298,10 +2310,7 @@ pub(crate) fn structural_delayed_reward_elapsed_hours(
     (elapsed_seconds >= 0).then_some(elapsed_seconds as f64 / 3600.0)
 }
 
-pub(crate) fn structural_delayed_reward_avg_elapsed_hours(
-    count: usize,
-    elapsed_hours: f64,
-) -> f64 {
+pub(crate) fn structural_delayed_reward_avg_elapsed_hours(count: usize, elapsed_hours: f64) -> f64 {
     if count == 0 {
         0.0
     } else {
@@ -2353,15 +2362,15 @@ pub(crate) fn structural_delayed_reward_cumulative_incidence(
     {
         return 0.0;
     }
-    let cause_share =
-        (cause_hazard_per_hour.max(0.0) / resolution_hazard_per_hour.max(f64::EPSILON))
-            .clamp(0.0, 1.0);
-    let event_probability =
-        (1.0 - structural_delayed_reward_survival_probability(
+    let cause_share = (cause_hazard_per_hour.max(0.0)
+        / resolution_hazard_per_hour.max(f64::EPSILON))
+    .clamp(0.0, 1.0);
+    let event_probability = (1.0
+        - structural_delayed_reward_survival_probability(
             resolution_hazard_per_hour,
             horizon_hours,
         ))
-        .clamp(0.0, 1.0);
+    .clamp(0.0, 1.0);
     (cause_share * event_probability).clamp(0.0, 1.0)
 }
 
@@ -2477,12 +2486,18 @@ pub(crate) fn accumulate_structural_prior_stats_delayed_reward_observation(
             abandoned: &mut stats.abandoned,
             delayed_reward_elapsed_feedback_count: &mut stats.delayed_reward_elapsed_feedback_count,
             delayed_reward_elapsed_hours_at_risk: &mut stats.delayed_reward_elapsed_hours_at_risk,
-            delayed_reward_resolution_horizon_1h_count: &mut stats.delayed_reward_resolution_horizon_1h_count,
-            delayed_reward_resolution_within_1h_count: &mut stats.delayed_reward_resolution_within_1h_count,
-            delayed_reward_resolution_horizon_4h_count: &mut stats.delayed_reward_resolution_horizon_4h_count,
-            delayed_reward_resolution_within_4h_count: &mut stats.delayed_reward_resolution_within_4h_count,
-            delayed_reward_resolution_horizon_24h_count: &mut stats.delayed_reward_resolution_horizon_24h_count,
-            delayed_reward_resolution_within_24h_count: &mut stats.delayed_reward_resolution_within_24h_count,
+            delayed_reward_resolution_horizon_1h_count: &mut stats
+                .delayed_reward_resolution_horizon_1h_count,
+            delayed_reward_resolution_within_1h_count: &mut stats
+                .delayed_reward_resolution_within_1h_count,
+            delayed_reward_resolution_horizon_4h_count: &mut stats
+                .delayed_reward_resolution_horizon_4h_count,
+            delayed_reward_resolution_within_4h_count: &mut stats
+                .delayed_reward_resolution_within_4h_count,
+            delayed_reward_resolution_horizon_24h_count: &mut stats
+                .delayed_reward_resolution_horizon_24h_count,
+            delayed_reward_resolution_within_24h_count: &mut stats
+                .delayed_reward_resolution_within_24h_count,
         },
         record,
         followed_path,
@@ -2501,14 +2516,21 @@ pub(crate) fn accumulate_structural_prior_source_summary_delayed_reward_observat
             breakevens: &mut summary.breakevens,
             invalidated: &mut summary.invalidated,
             abandoned: &mut summary.abandoned,
-            delayed_reward_elapsed_feedback_count: &mut summary.delayed_reward_elapsed_feedback_count,
+            delayed_reward_elapsed_feedback_count: &mut summary
+                .delayed_reward_elapsed_feedback_count,
             delayed_reward_elapsed_hours_at_risk: &mut summary.delayed_reward_elapsed_hours_at_risk,
-            delayed_reward_resolution_horizon_1h_count: &mut summary.delayed_reward_resolution_horizon_1h_count,
-            delayed_reward_resolution_within_1h_count: &mut summary.delayed_reward_resolution_within_1h_count,
-            delayed_reward_resolution_horizon_4h_count: &mut summary.delayed_reward_resolution_horizon_4h_count,
-            delayed_reward_resolution_within_4h_count: &mut summary.delayed_reward_resolution_within_4h_count,
-            delayed_reward_resolution_horizon_24h_count: &mut summary.delayed_reward_resolution_horizon_24h_count,
-            delayed_reward_resolution_within_24h_count: &mut summary.delayed_reward_resolution_within_24h_count,
+            delayed_reward_resolution_horizon_1h_count: &mut summary
+                .delayed_reward_resolution_horizon_1h_count,
+            delayed_reward_resolution_within_1h_count: &mut summary
+                .delayed_reward_resolution_within_1h_count,
+            delayed_reward_resolution_horizon_4h_count: &mut summary
+                .delayed_reward_resolution_horizon_4h_count,
+            delayed_reward_resolution_within_4h_count: &mut summary
+                .delayed_reward_resolution_within_4h_count,
+            delayed_reward_resolution_horizon_24h_count: &mut summary
+                .delayed_reward_resolution_horizon_24h_count,
+            delayed_reward_resolution_within_24h_count: &mut summary
+                .delayed_reward_resolution_within_24h_count,
         },
         record,
         followed_path,
@@ -2621,9 +2643,7 @@ pub(crate) fn structural_censoring_adjusted_reward_lower_bound(
         .clamp(0.0, 1.0)
 }
 
-pub(crate) fn refresh_structural_prior_delayed_reward_metrics(
-    stats: &mut StructuralPriorStats,
-) {
+pub(crate) fn refresh_structural_prior_delayed_reward_metrics(stats: &mut StructuralPriorStats) {
     let matured_feedback_count = structural_delayed_reward_matured_feedback_count(
         stats.wins,
         stats.losses,
@@ -2684,11 +2704,10 @@ pub(crate) fn refresh_structural_prior_delayed_reward_metrics(
         stats.delayed_reward_resolution_hazard_per_hour,
         4.0,
     );
-    stats.delayed_reward_survival_probability_24h =
-        structural_delayed_reward_survival_probability(
-            stats.delayed_reward_resolution_hazard_per_hour,
-            24.0,
-        );
+    stats.delayed_reward_survival_probability_24h = structural_delayed_reward_survival_probability(
+        stats.delayed_reward_resolution_hazard_per_hour,
+        24.0,
+    );
     let elapsed_hazards = structural_delayed_reward_elapsed_hazards(
         stats.wins,
         stats.losses,
@@ -2758,11 +2777,10 @@ pub(crate) fn refresh_structural_source_summary_delayed_reward_metrics(
             summary.followed_count,
             matured_feedback_count,
         );
-    summary.delayed_reward_censoring_probability =
-        structural_delayed_reward_censoring_probability(
-            summary.followed_count,
-            matured_feedback_count,
-        );
+    summary.delayed_reward_censoring_probability = structural_delayed_reward_censoring_probability(
+        summary.followed_count,
+        matured_feedback_count,
+    );
     summary.censoring_adjusted_reward_prior = structural_censoring_adjusted_reward_prior(
         summary.target_policy_reward_prior,
         summary.smoothed_prior,
@@ -2801,16 +2819,14 @@ pub(crate) fn refresh_structural_source_summary_delayed_reward_metrics(
         structural_delayed_reward_expected_resolution_hours(
             summary.delayed_reward_resolution_hazard_per_hour,
         );
-    summary.delayed_reward_survival_probability_1h =
-        structural_delayed_reward_survival_probability(
-            summary.delayed_reward_resolution_hazard_per_hour,
-            1.0,
-        );
-    summary.delayed_reward_survival_probability_4h =
-        structural_delayed_reward_survival_probability(
-            summary.delayed_reward_resolution_hazard_per_hour,
-            4.0,
-        );
+    summary.delayed_reward_survival_probability_1h = structural_delayed_reward_survival_probability(
+        summary.delayed_reward_resolution_hazard_per_hour,
+        1.0,
+    );
+    summary.delayed_reward_survival_probability_4h = structural_delayed_reward_survival_probability(
+        summary.delayed_reward_resolution_hazard_per_hour,
+        4.0,
+    );
     summary.delayed_reward_survival_probability_24h =
         structural_delayed_reward_survival_probability(
             summary.delayed_reward_resolution_hazard_per_hour,

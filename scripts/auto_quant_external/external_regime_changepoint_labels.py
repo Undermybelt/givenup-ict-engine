@@ -61,7 +61,7 @@ def load_candles(path: str | Path) -> pd.DataFrame:
         df = pd.DataFrame(payload)
     else:
         raise ValueError(f"unsupported candle format for {raw_path}")
-    date_col = "date" if "date" in df.columns else "ts"
+    date_col = next((column for column in ("date", "timestamp", "ts") if column in df.columns), "ts")
     if pd.api.types.is_numeric_dtype(df[date_col]):
         df[date_col] = pd.to_datetime(df[date_col], unit="ms", utc=True, errors="coerce")
     else:

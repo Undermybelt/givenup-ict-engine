@@ -71,6 +71,13 @@ class RegimeSidecarPipelineTests(unittest.TestCase):
             self.assertTrue((out / "regime_consumer_bundle.json").exists())
             self.assertTrue((out / "regime_high_confidence_decision.json").exists())
             self.assertEqual(result["bundle_path"], str(out / "regime_consumer_bundle.json"))
+            self.assertEqual(result["truth_joined_rows"], 4)
+            training_report = json.loads((out / "regime_expert_training_report.json").read_text(encoding="utf-8"))
+            trend_summary = next(item for item in training_report["experts"] if item["label_id"] == "primary::TrendExpansion")
+            self.assertEqual(trend_summary["support"], 4)
+            with (out / "regime_features.csv").open(newline="", encoding="utf-8") as handle:
+                feature_rows = list(csv.DictReader(handle))
+            self.assertTrue(all(row["primary_label"] == "TrendExpansion" for row in feature_rows))
 
     def test_missing_ohlcv_returns_input_contract_without_repo_state(self) -> None:
         with TemporaryDirectory() as tmpdir:

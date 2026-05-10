@@ -61,27 +61,31 @@ fn parse_regime_v2(family: &str) -> Option<RegimeV2> {
     }
 }
 
+pub(crate) struct RunFactorBacktestInput<'a> {
+    pub(crate) symbol: &'a str,
+    pub(crate) data: &'a str,
+    pub(crate) multi_timeframe_inputs: MultiTimeframeInputPaths<'a>,
+    pub(crate) paired_data: Option<&'a str>,
+    pub(crate) auxiliary_override:
+        Option<&'a ict_engine::data::realtime::market_support::AuxiliaryMarketEvidence>,
+    pub(crate) state_dir: &'a str,
+}
+
 pub(crate) fn run_factor_backtest(
-    symbol: &str,
-    data: &str,
-    data_1m: Option<&str>,
-    data_5m: Option<&str>,
-    data_15m: Option<&str>,
-    data_30m: Option<&str>,
-    data_1h: Option<&str>,
-    data_4h: Option<&str>,
-    data_1d: Option<&str>,
-    paired_data: Option<&str>,
-    auxiliary_override: Option<
-        &ict_engine::data::realtime::market_support::AuxiliaryMarketEvidence,
-    >,
-    state_dir: &str,
+    input: RunFactorBacktestInput<'_>,
 ) -> Result<ict_engine::factor_lab::BacktestResult> {
+    let RunFactorBacktestInput {
+        symbol,
+        data,
+        multi_timeframe_inputs,
+        paired_data,
+        auxiliary_override,
+        state_dir,
+    } = input;
     let candles = load_candles(data)?;
     let paired_candles = paired_data.map(load_candles).transpose()?;
-    let resolved_multi_timeframe_inputs = resolve_multi_timeframe_inputs(
-        data, data_1m, data_5m, data_15m, data_30m, data_1h, data_4h, data_1d,
-    );
+    let resolved_multi_timeframe_inputs =
+        resolve_multi_timeframe_inputs(data, multi_timeframe_inputs);
     let multi_timeframe_summary =
         build_multi_timeframe_summary(data, &resolved_multi_timeframe_inputs)?;
     let multi_timeframe_signal =

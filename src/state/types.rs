@@ -4,8 +4,7 @@ use std::collections::BTreeMap;
 
 use crate::belief_core::beta_dirichlet_update::{
     beta_posterior_mean, beta_update_factor, weighted_seed_beta_update,
-    WeightedSeedBetaUpdateInput,
-    weighted_success_credit_beta_update,
+    weighted_success_credit_beta_update, WeightedSeedBetaUpdateInput,
 };
 use crate::belief_core::changepoint_gate::rebuild_node_duration_priors_from_events;
 use crate::belief_core::regime_filter::rebuild_transition_posteriors_from_events;

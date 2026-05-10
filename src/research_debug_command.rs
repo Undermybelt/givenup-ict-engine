@@ -1,21 +1,27 @@
 use super::*;
 
-pub(crate) fn factor_backtest_shell(
-    symbol: &str,
-    data: &str,
-    data_1m: Option<&str>,
-    data_5m: Option<&str>,
-    data_15m: Option<&str>,
-    data_30m: Option<&str>,
-    data_1h: Option<&str>,
-    data_4h: Option<&str>,
-    data_1d: Option<&str>,
-    paired_data: Option<&str>,
-    auxiliary_evidence: Option<&str>,
-    ensemble: bool,
-    state_dir: &str,
-    output_format: &str,
-) -> Result<()> {
+pub(crate) struct FactorBacktestShellInput<'a> {
+    pub symbol: &'a str,
+    pub data: &'a str,
+    pub multi_timeframe_inputs: MultiTimeframeInputPaths<'a>,
+    pub paired_data: Option<&'a str>,
+    pub auxiliary_evidence: Option<&'a str>,
+    pub ensemble: bool,
+    pub state_dir: &'a str,
+    pub output_format: &'a str,
+}
+
+pub(crate) fn factor_backtest_shell(input: FactorBacktestShellInput<'_>) -> Result<()> {
+    let FactorBacktestShellInput {
+        symbol,
+        data,
+        multi_timeframe_inputs,
+        paired_data,
+        auxiliary_evidence,
+        ensemble,
+        state_dir,
+        output_format,
+    } = input;
     ensure_state_dir_ready(state_dir)?;
     let auxiliary_override = auxiliary_evidence
         .map(load_auxiliary_evidence_from_path)
@@ -28,20 +34,14 @@ pub(crate) fn factor_backtest_shell(
         state_dir,
         output_format,
         |symbol, data, paired_data, state_dir| {
-            run_factor_backtest(
+            run_factor_backtest(RunFactorBacktestInput {
                 symbol,
                 data,
-                data_1m,
-                data_5m,
-                data_15m,
-                data_30m,
-                data_1h,
-                data_4h,
-                data_1d,
+                multi_timeframe_inputs,
                 paired_data,
-                auxiliary_override.as_ref(),
+                auxiliary_override: auxiliary_override.as_ref(),
                 state_dir,
-            )
+            })
         },
     )
 }

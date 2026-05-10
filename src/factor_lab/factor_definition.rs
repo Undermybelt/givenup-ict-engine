@@ -1414,20 +1414,7 @@ impl FactorDefinition {
         let setup_horizon_bars = self.parameter("setup_horizon_bars", 30.0) as usize;
         let atr = pad_indicator(compute_atr(candles, lookback.max(14)), candles.len(), 0.0);
         let timeline = build_pda_timeline(candles, &atr);
-        collect_structure_ict_setup_matches(
-            &timeline,
-            candles,
-            context.paired_candles,
-            context.m1_events,
-            context.m5_events,
-            context.m15_events,
-            context.m30_events,
-            context.h1_events,
-            context.h4_events,
-            context.d1_events,
-            context.w1_events,
-            setup_horizon_bars,
-        )
+        collect_structure_ict_setup_matches(&timeline, candles, context, setup_horizon_bars)
     }
 
     fn evaluate_cross_market_smt<'a>(
@@ -1685,22 +1672,14 @@ fn pad_indicator(values: Vec<f64>, target_len: usize, fill: f64) -> Vec<f64> {
 fn collect_structure_ict_setup_matches(
     timeline: &[PdaEvent],
     primary_candles: &[Candle],
-    paired_candles: Option<&[Candle]>,
-    m1_events: Option<&[PdaEvent]>,
-    m5_events: Option<&[PdaEvent]>,
-    m15_events: Option<&[PdaEvent]>,
-    m30_events: Option<&[PdaEvent]>,
-    h1_events: Option<&[PdaEvent]>,
-    h4_events: Option<&[PdaEvent]>,
-    d1_events: Option<&[PdaEvent]>,
-    w1_events: Option<&[PdaEvent]>,
+    context: &FactorContext<'_>,
     setup_horizon_bars: usize,
 ) -> Vec<SetupMatch> {
     let mut all_matches = Vec::new();
 
     let base_context = SetupContext {
         primary_candles: Some(primary_candles),
-        paired_candles,
+        paired_candles: context.paired_candles,
         ..SetupContext::default()
     };
     all_matches.extend(match_all_setups_extended(
@@ -1709,9 +1688,15 @@ fn collect_structure_ict_setup_matches(
         setup_horizon_bars,
     ));
 
-    for lower_events in [m1_events, m5_events, m15_events, m30_events, h1_events]
-        .into_iter()
-        .flatten()
+    for lower_events in [
+        context.m1_events,
+        context.m5_events,
+        context.m15_events,
+        context.m30_events,
+        context.h1_events,
+    ]
+    .into_iter()
+    .flatten()
     {
         all_matches.extend(match_all_setups_extended(
             lower_events,
@@ -1721,16 +1706,16 @@ fn collect_structure_ict_setup_matches(
     }
 
     for (lower_events, higher_events) in [
-        (m1_events, m5_events),
-        (m5_events, m15_events),
-        (m15_events, m30_events.or(h1_events)),
-        (m30_events, h1_events),
-        (h1_events, h4_events),
+        (context.m1_events, context.m5_events),
+        (context.m5_events, context.m15_events),
+        (context.m15_events, context.m30_events.or(context.h1_events)),
+        (context.m30_events, context.h1_events),
+        (context.h1_events, context.h4_events),
     ] {
         if let (Some(lower), Some(higher)) = (lower_events, higher_events) {
             let context = SetupContext {
                 primary_candles: Some(primary_candles),
-                paired_candles,
+                paired_candles: context.paired_candles,
                 htf_events: Some(higher),
                 ..SetupContext::default()
             };
@@ -1742,10 +1727,10 @@ fn collect_structure_ict_setup_matches(
         }
     }
 
-    if let Some(h1) = h1_events {
+    if let Some(h1) = context.h1_events {
         let context = SetupContext {
             primary_candles: Some(primary_candles),
-            paired_candles,
+            paired_candles: context.paired_candles,
             htf_events: Some(h1),
             ..SetupContext::default()
         };
@@ -1756,10 +1741,10 @@ fn collect_structure_ict_setup_matches(
         ));
     }
 
-    if let Some(h4) = h4_events {
+    if let Some(h4) = context.h4_events {
         let context = SetupContext {
             primary_candles: Some(primary_candles),
-            paired_candles,
+            paired_candles: context.paired_candles,
             htf_events: Some(h4),
             ..SetupContext::default()
         };
@@ -1769,10 +1754,10 @@ fn collect_structure_ict_setup_matches(
             setup_horizon_bars,
         ));
     }
-    if let Some(d1) = d1_events {
+    if let Some(d1) = context.d1_events {
         let context = SetupContext {
             primary_candles: Some(primary_candles),
-            paired_candles,
+            paired_candles: context.paired_candles,
             htf_events: Some(d1),
             ..SetupContext::default()
         };
@@ -1782,10 +1767,10 @@ fn collect_structure_ict_setup_matches(
             setup_horizon_bars,
         ));
     }
-    if let (Some(w1), Some(d1)) = (w1_events, d1_events) {
+    if let (Some(w1), Some(d1)) = (context.w1_events, context.d1_events) {
         let context = SetupContext {
             primary_candles: Some(primary_candles),
-            paired_candles,
+            paired_candles: context.paired_candles,
             htf_events: Some(w1),
             mtf_events: Some(d1),
         };
@@ -2440,20 +2425,15 @@ mod tests {
             PdaEvent::new(PdaEventKind::FairValueGap, 16, Direction::Bear)
                 .with_timestamp(base_ts + Duration::hours(2)),
         ];
-        let matches = collect_structure_ict_setup_matches(
-            &ltf_context_events,
-            &series_candles,
-            Some(&paired),
-            None,
-            None,
-            None,
-            None,
-            None,
-            Some(&h4_events),
-            Some(&d1_events),
-            Some(&w1_events),
-            30,
-        );
+        let context = FactorContext {
+            paired_candles: Some(&paired),
+            h4_events: Some(&h4_events),
+            d1_events: Some(&d1_events),
+            w1_events: Some(&w1_events),
+            ..FactorContext::default()
+        };
+        let matches =
+            collect_structure_ict_setup_matches(&ltf_context_events, &series_candles, &context, 30);
 
         assert!(matches
             .iter()

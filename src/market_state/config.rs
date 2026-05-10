@@ -296,10 +296,7 @@ impl MarketStateConfig {
             + self.enhanced_aggregation.behavior_weight;
 
         if (enhanced_weight_sum - 1.0).abs() > 0.01 {
-            anyhow::bail!(
-                "增强聚合权重和必须为 1.0，当前为 {}",
-                enhanced_weight_sum
-            );
+            anyhow::bail!("增强聚合权重和必须为 1.0，当前为 {}", enhanced_weight_sum);
         }
 
         Ok(())
@@ -419,12 +416,8 @@ mod tests {
         let profile = MarketStateProfile::risk_control_profile();
 
         assert!((profile.config.aggregate_weights.volatility - 0.35).abs() < 0.001);
-        assert!(
-            (profile.config.enhanced_aggregation.volatility_weight - 0.35).abs() < 0.001
-        );
-        assert!(
-            (profile.config.enhanced_aggregation.structure_weight - 0.20).abs() < 0.001
-        );
+        assert!((profile.config.enhanced_aggregation.volatility_weight - 0.35).abs() < 0.001);
+        assert!((profile.config.enhanced_aggregation.structure_weight - 0.20).abs() < 0.001);
     }
 
     #[test]

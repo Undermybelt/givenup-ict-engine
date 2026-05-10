@@ -135,7 +135,8 @@ impl VolatilityClassifier {
             0.3 + (percentile - 0.5).abs()
         };
 
-        let confidence = (base_confidence + percentile_confidence * 0.5 + clustering_score * 0.25).min(1.0);
+        let confidence =
+            (base_confidence + percentile_confidence * 0.5 + clustering_score * 0.25).min(1.0);
 
         (regime, confidence)
     }

@@ -102,9 +102,58 @@
 - [x] Next runtime/code slice: add an observation-level structural path-ranking evaluation export, or change validation status to count eligible structural-feedback observations separately from de-duplicated target rows.
   - implemented as observation validation status fields, not as inflated target rows.
 
+## 2026-05-10 Current-Shell Refresh
+
+- [x] Rebuilt and used the current repo binary:
+  - command: `cargo build --bin ict-engine`
+  - result: dev build completed successfully.
+- [x] Rechecked the same replay state after structural target re-export:
+  - command: `ict-engine export-structural-path-ranking-target --symbol NQ --state-dir /tmp/ict-engine-structural-replay-29/state`
+  - result: `rows=1`, `history_rows=35`, `mature_rows=1`, `history_mature_rows=33`, `history_rows_with_raw_path_score=35`, `history_rows_with_calibrated_path_prob=33`, output under `/tmp/ict-engine-structural-replay-29/state/NQ/policy_training/`.
+- [x] Rechecked CatBoost/path-ranker status from the same state:
+  - command: `ict-engine policy-training-status --symbol NQ --state-dir /tmp/ict-engine-structural-replay-29/state --human`
+  - result: `raw_scored_mature=33/30`, `production_validation=33/30`, `observation_validation=30/30`, `trainer_status=runtime_eligible`, `runtime_selection=enabled_registered_model_ready`, `runtime_source=registered_model_artifact`, `runtime_matches=1`.
+  - correction to older note: the earlier `raw_scored_mature=2/30` / `production_validation=2/30` status is stale after the current re-export; the current replay state now passes the 30-row validation floor.
+- [x] Rechecked pre-bayes / filter gate:
+  - command: `ict-engine pre-bayes-status --symbol NQ --state-dir /tmp/ict-engine-structural-replay-29/state --human`
+  - result: `gate=pass_neutralized`, `soft_evidence=yes`, `long=0.547`, `short=0.544`, `mtf=bullish`, `align=0.751`, `entry_align=0.883`.
+- [x] Rechecked BBN prior-init effect:
+  - command: `ict-engine auto-quant-prior-init --symbol NQ --state-dir /tmp/ict-engine-structural-replay-29/state --library /tmp/vrp_v2_strategy_library.json --dry-run`
+  - result: `trade_count=815`, `n_win=277`, `n_loss=538`, `evidence_value_gate_passed=true`, probabilities moved from `[0.34275405214176413, 0.001986731343802505, 0.6552592165144334]` to `[0.33990526417634764, 0.00001931209082675582, 0.6600754237328257]`.
+- [x] Rechecked execution-tree / workflow readback:
+  - command: `ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-structural-replay-29/state --human`
+  - result: latest analyze remains `gate=pass_neutralized`, `quality=0.593`; ranker reads `status=using_registered_model_artifact`, `source=registered_model_artifact`, `applied=1`, `lb=0.521`, `gate=pass`.
+  - command: `ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-structural-replay-29/state --phase ensemble-vote --human`
+  - result: `action=execute_follow_through`, `confidence=0.976`.
+  - command: `ict-engine workflow-status --symbol NQ --state-dir /tmp/ict-engine-structural-replay-29/state --phase structural-recommended-path-bundle --human`
+  - result: `trend_follow_through`, `posterior=0.787`, `selected_prob=1.000`.
+  - trace: `/tmp/ict-engine-structural-replay-29/state/NQ/execution_tree_trace.json`
+  - trace output: `branch=transition_guardrail`, `execution_bias=guarded`, `gate_status=observe`, `execution_score=0.5736691669503992`, `decision_hint=execution_guarded_due_to_low_remaining_regime_duration`.
+- [x] Rechecked requested provider lanes in the current process and saved fetch artifacts under `/tmp/ict-current-provider-probe-20260510/provider-probes/`:
+  - provider catalog: `provider-status --agent` reports `entry_model:2/2 ready | live_runtime:1/3 ready | local_runtime:1/2 ready | market_data:5/7 ready`.
+  - yfinance status: ready for live runtime and market data.
+  - yfinance fetch: `python3 scripts/auto_quant_external/fetch_external.py yahoo --symbol QQQ --interval 1h --start 2026-04-25 --end 2026-05-10 --output /tmp/ict-current-provider-probe-20260510/provider-probes/yf_QQQ_1h.csv`; result `71` data rows after one HTTP 429 retry.
+  - Kraken status: `kraken_cli` ready and `kraken_public` ready through provider catalog.
+  - Kraken fetch: `python3 scripts/auto_quant_external/fetch_external.py kraken-kline --market futures --pair PF_XBTUSD --interval 1h --start 2026-04-25 --end 2026-05-10 --output /tmp/ict-current-provider-probe-20260510/provider-probes/kraken_pf_xbtusd_1h.csv`; result `360` data rows.
+  - IBKR status: plain repo runtime still reports `configured_runtime_unhealthy` because `redis` is missing, but local gateway `127.0.0.1:4002` is reachable.
+  - IBKR fetch: `uv run --offline --with redis --with ib_async --with pandas python scripts/auto_quant_external/fetch_external.py ibkr-historical --symbol SPY --sec-type STK --exchange SMART --currency USD --primary-exchange ARCA --bar-size '1 hour' --duration '10 D' --what-to-show TRADES --host 127.0.0.1 --port 4002 --client-id 25 --output /tmp/ict-current-provider-probe-20260510/provider-probes/ibkr_SPY_1h_10d.csv`; result `160` data rows.
+  - TradingViewRemix status: current process is blocked by missing `ICT_ENGINE_TVREMIX_MCP_API_KEY`.
+  - TradingViewRemix fetch attempt: `ict-engine market-data-harness --action fetch --market NQ --interval 1d --role etf_reference --provider etf_reference=tradingview_mcp --symbol-spec etf_reference=NASDAQ:QQQ`; result `fetch_failed: ICT_ENGINE_TVREMIX_MCP_API_KEY must be set for tradingview_mcp`.
+
+## Current Chain Verdict After Refresh
+
+- Verdict: `reached_execution_tree_registered_ranker_observe_guarded`
+- Factor stage: `VRPCompression_V2_NQ_15m` remains explicit and dense on NQ (`815` trades), with candidate pack artifacts under `/tmp/vrp-v2-loop-20260509-candidate-pack/`.
+- Pre-bayes / filter stage: alive, `pass_neutralized`, not blocking.
+- BBN stage: alive; prior-init dry-run still produces measurable posterior movement and passes the evidence-value gate.
+- CatBoost/path-ranking stage: current replay state now passes the validation floor (`raw_scored_mature=33/30`, `production_validation=33/30`, `observation_validation=30/30`) and workflow reads the registered ranker artifact.
+- Execution-tree stage: reached and readable; ensemble wants `execute_follow_through`, structural path bundle selects `trend_follow_through`, but final execution trace remains `transition_guardrail` / `guarded` / `observe`.
+- Current blocker: not provider absence and not CatBoost attachment. The live blocker is execution-readiness / remaining-regime-duration gating: `execution_readiness=0.4648`, `hybrid_transition_hazard=0.607`, `duration_remaining_expected_bars=0.667`, with `decision_hint=execution_guarded_due_to_low_remaining_regime_duration`.
+- Provider boundary: yfinance, Kraken, and IBKR were physically fetched in this current shell; TradingViewRemix was physically attempted and is credential-blocked in this process. Do not claim `data_blocked` while these current/provider artifacts exist.
+
 ## Drift Check
 
 - Scope: still serving the original loop request: factor -> pre-bayes/filter -> BBN -> CatBoost/path-ranking -> execution tree.
-- Compatibility: zero-config remains intact; no runtime source edit was made for this handoff.
+- Compatibility: zero-config remains intact; the current refresh is docs/evidence only.
 - Pollution: generated artifacts are `/tmp` only; repo receives this handoff doc.
-- Decision: continue with path-ranking maturity / hot-plug ranker validation next.
+- Decision: path-ranking maturity is no longer the immediate stop layer for this replay state; continue by improving execution-readiness / temporal-duration / transition-guardrail evidence, while keeping the provider matrix broad.

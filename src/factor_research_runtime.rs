@@ -29,7 +29,16 @@ pub(crate) fn run_factor_research(
         None => paired_data.map(load_candles).transpose()?,
     };
     let resolved_multi_timeframe_inputs = resolve_multi_timeframe_inputs(
-        data, data_1m, data_5m, data_15m, data_30m, data_1h, data_4h, data_1d,
+        data,
+        MultiTimeframeInputPaths {
+            data_1m,
+            data_5m,
+            data_15m,
+            data_30m,
+            data_1h,
+            data_4h,
+            data_1d,
+        },
     );
     let multi_timeframe_summary =
         build_multi_timeframe_summary(data, &resolved_multi_timeframe_inputs)?;

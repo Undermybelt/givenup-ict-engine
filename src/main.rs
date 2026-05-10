@@ -35,7 +35,7 @@ use auto_quant_command::{
     auto_quant_results_import_shell, auto_quant_seed_evidence_shell, auto_quant_status_shell,
     auto_quant_update_shell,
 };
-use factor_backtest_runtime::run_factor_backtest;
+use factor_backtest_runtime::{run_factor_backtest, RunFactorBacktestInput};
 use factor_research_command::{
     factor_autoresearch_shell, factor_research_shell, FactorAutoresearchShellInput,
     FactorResearchShellInput,
@@ -154,7 +154,7 @@ use ict_engine::application::{
         build_live_multi_timeframe_signal, build_multi_timeframe_research_signal,
         build_multi_timeframe_summary, infer_interval_for_analyze_frame,
         resolve_analyze_cli_inputs, resolve_analyze_multi_timeframe_inputs,
-        resolve_multi_timeframe_inputs,
+        resolve_multi_timeframe_inputs, MultiTimeframeInputPaths,
     },
     orchestration::{
         build_execution_tree_artifact, build_execution_triage, build_stub_ensemble_vote_from_input,
@@ -229,7 +229,9 @@ use policy_training_command::{
 };
 use probabilistic_backtest_runtime::{finalize_backtest_report, run_probabilistic_backtest};
 use release_closure_command::{evidence_quality_breakdown_shell, research_verdict_shell};
-use research_debug_command::{factor_backtest_shell, factor_pipeline_debug_shell};
+use research_debug_command::{
+    factor_backtest_shell, factor_pipeline_debug_shell, FactorBacktestShellInput,
+};
 use serde_json::Value;
 use status_command::{
     artifact_diff_shell, artifact_lineage_shell, artifact_status_shell,
@@ -281,8 +283,8 @@ use ict_engine::state::{
     load_ensemble_executor_scorecards, load_ensemble_vote_history,
     load_execution_candidate_history, load_learning_state, load_pending_update_artifact,
     load_pending_update_history, load_pre_bayes_policy_history, load_state_or_default,
-    mark_artifact_consumed, migrate_ensemble_executor_scorecards, recommended_next_command_meta,
-    save_ensemble_executor_scorecards, save_ensemble_vote_artifact,
+    load_workflow_snapshot, mark_artifact_consumed, migrate_ensemble_executor_scorecards,
+    recommended_next_command_meta, save_ensemble_executor_scorecards, save_ensemble_vote_artifact,
     save_execution_candidate_artifact, save_learning_state, save_pending_update_artifact,
     save_state, save_workflow_snapshot, state_exists, AgentActionItem, AgentActionPlan,
     AgentContextBundle, AgentContextBundleMinimal, AnalyzeRunRecord, ArtifactLedgerEntry,
@@ -2544,27 +2546,29 @@ fn main() -> Result<()> {
             compact,
             agent,
             human,
-        } => factor_backtest_shell(
-            &symbol,
-            &data,
-            data_1m.as_deref(),
-            data_5m.as_deref(),
-            data_15m.as_deref(),
-            data_30m.as_deref(),
-            data_1h.as_deref(),
-            data_4h.as_deref(),
-            data_1d.as_deref(),
-            paired_data.as_deref(),
-            auxiliary_evidence.as_deref(),
+        } => factor_backtest_shell(FactorBacktestShellInput {
+            symbol: &symbol,
+            data: &data,
+            multi_timeframe_inputs: MultiTimeframeInputPaths {
+                data_1m: data_1m.as_deref(),
+                data_5m: data_5m.as_deref(),
+                data_15m: data_15m.as_deref(),
+                data_30m: data_30m.as_deref(),
+                data_1h: data_1h.as_deref(),
+                data_4h: data_4h.as_deref(),
+                data_1d: data_1d.as_deref(),
+            },
+            paired_data: paired_data.as_deref(),
+            auxiliary_evidence: auxiliary_evidence.as_deref(),
             ensemble,
-            &state_dir,
-            match resolve_output_format(&output_format, compact, agent, human)? {
+            state_dir: &state_dir,
+            output_format: match resolve_output_format(&output_format, compact, agent, human)? {
                 OutputFormat::Json => "json",
                 OutputFormat::Compact => "compact",
                 OutputFormat::Agent => "agent",
                 OutputFormat::Human => "human",
             },
-        )?,
+        })?,
         Commands::Env => env_command()?,
         Commands::AutoQuantStatus {
             state_dir,
@@ -3310,13 +3314,7 @@ fn run_expansion_sop(
             let candles = load_candles(&input.output_path)?;
             let resolved_multi_timeframe_inputs = resolve_multi_timeframe_inputs(
                 &input.output_path,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
+                MultiTimeframeInputPaths::default(),
             );
             let multi_timeframe_summary = build_multi_timeframe_summary(
                 &input.output_path,
@@ -4018,6 +4016,41 @@ fn augment_action_plan_with_factor_mutation_evaluation(
     );
 }
 
+fn hybrid_regime_duration_context(
+    previous_runs: &[AnalyzeRunRecord],
+    current_hybrid_label: &str,
+) -> (usize, Vec<usize>) {
+    let current_hybrid_age_bars = previous_runs
+        .last()
+        .map(|run| {
+            if run.hybrid_regime_label.as_deref() == Some(current_hybrid_label) {
+                run.hybrid_regime_age_bars.unwrap_or(1) + 1
+            } else {
+                1
+            }
+        })
+        .unwrap_or(1);
+    let mut completed_ages = Vec::new();
+    let mut active_label: Option<&str> = None;
+    let mut active_age: Option<usize> = None;
+    for run in previous_runs {
+        let label = run.hybrid_regime_label.as_deref();
+        if label != active_label {
+            if active_label == Some(current_hybrid_label) {
+                if let Some(age) = active_age {
+                    completed_ages.push(age);
+                }
+            }
+            active_label = label;
+            active_age = run.hybrid_regime_age_bars;
+        } else if let Some(age) = run.hybrid_regime_age_bars {
+            active_age = Some(age);
+        }
+    }
+    let historical_hybrid_regime_ages = completed_ages.into_iter().rev().take(20).collect();
+    (current_hybrid_age_bars, historical_hybrid_regime_ages)
+}
+
 fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeReport> {
     let BuildAnalyzeReportInput {
         symbol,
@@ -4168,10 +4201,10 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
     let structure_ict_context =
         build_structure_ict_context_events_from_native_frames(build_context.native_frames);
     let pre_bayes_regime_label = market_state_to_bbn_regime_label(&market_state_snapshot)
-        .unwrap_or_else(|| regime_label.as_str())
+        .unwrap_or(regime_label.as_str())
         .to_string();
     let pre_bayes_liquidity_label = market_state_to_bbn_liquidity_label(&market_state_snapshot)
-        .unwrap_or_else(|| liquidity_label.as_str())
+        .unwrap_or(liquidity_label.as_str())
         .to_string();
     let market = infer_market_from_symbol(build_context.symbol);
     let pda_sequence_artifact =
@@ -4195,23 +4228,8 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         .as_deref()
         .unwrap_or_default()
         .to_string();
-    let historical_hybrid_regime_ages = previous_runs
-        .iter()
-        .rev()
-        .take(20)
-        .filter(|run| run.hybrid_regime_label.as_deref() == Some(current_hybrid_label.as_str()))
-        .filter_map(|run| run.hybrid_regime_age_bars)
-        .collect::<Vec<_>>();
-    let current_hybrid_age_bars = previous_runs
-        .last()
-        .map(|run| {
-            if run.hybrid_regime_label.as_deref() == Some(current_hybrid_label.as_str()) {
-                run.hybrid_regime_age_bars.unwrap_or(1) + 1
-            } else {
-                1
-            }
-        })
-        .unwrap_or(1);
+    let (current_hybrid_age_bars, historical_hybrid_regime_ages) =
+        hybrid_regime_duration_context(&previous_runs, &current_hybrid_label);
     let hybrid_regime_packet = build_hybrid_regime_packet(
         Some(&htf_features),
         &ltf_features,
@@ -4716,11 +4734,163 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         ict_engine::application::entry_models::policy_training_status(state_dir, symbol, None)
             .ok()
             .map(|surface| {
-                vec![
+                let provider_status_agent =
+                    ict_engine::application::provider_catalog::provider_status_agent_surface(
+                        None,
+                        None,
+                        None,
+                    )
+                    .unwrap_or_default();
+                let ranker_timestamp = Utc::now();
+                let mut ranker_pre_bayes_filtered_assignments =
+                    pre_bayes_evidence_filter.evidence_assignments.clone();
+                ranker_pre_bayes_filtered_assignments.insert(
+                    "__policy_version".to_string(),
+                    pre_bayes_evidence_filter.policy.version.clone(),
+                );
+                if let Some(active_regime) = canonical_structural_regime_posterior
+                    .active_regime
+                    .as_ref()
+                    .filter(|value| !value.trim().is_empty())
+                    .cloned()
+                    .or_else(|| {
+                        canonical_structural_regime_posterior
+                            .probabilities
+                            .iter()
+                            .max_by(|a, b| {
+                                a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal)
+                            })
+                            .map(|(label, _)| label.clone())
+                    })
+                {
+                    ranker_pre_bayes_filtered_assignments
+                        .insert("market_regime".to_string(), active_regime);
+                }
+                let ranker_pre_bayes_soft_evidence =
+                    if canonical_structural_regime_posterior.probabilities.is_empty() {
+                        pre_bayes_soft_evidence_map(&pre_bayes_evidence_filter)
+                    } else {
+                        let mut soft = pre_bayes_soft_evidence_map(&pre_bayes_evidence_filter);
+                        soft.insert(
+                            "market_regime".to_string(),
+                            canonical_structural_regime_posterior.probabilities.clone(),
+                        );
+                        soft
+                    };
+                let ranker_phase = WorkflowPhaseSnapshot {
+                    phase: "analyze".to_string(),
+                    run_id: format!(
+                        "analyze:{}:{}",
+                        symbol,
+                        ranker_timestamp.format("%Y%m%dT%H%M%S%.3fZ")
+                    ),
+                    timestamp: ranker_timestamp,
+                    source_command: "analyze".to_string(),
+                    workflow_phase: workflow_state.phase.clone(),
+                    workflow_reason: workflow_state.reason.clone(),
+                    promotion_status: observe_promotion.status.clone(),
+                    rollback_scope: observe_rollback.scope.clone(),
+                    comparable_to_previous: dataset_comparability.comparable,
+                    comparison_class: dataset_comparability.comparison_class.clone(),
+                    recommended_next_command: recommended_next_command.clone(),
+                    recommended_next_command_meta: recommended_next_command_meta(
+                        &recommended_next_command,
+                    ),
+                    phase_summary: decision_hint.clone(),
+                    selected_direction: Some(format!("{:?}", decision.selected_direction)),
+                    selected_entry_quality: Some(selected_entry_quality_state.clone()),
+                    pre_bayes_gate_status: pre_bayes_evidence_filter.gating_status.clone(),
+                    pre_bayes_uses_soft_evidence: pre_bayes_evidence_filter.uses_soft_evidence,
+                    pre_bayes_policy_version: pre_bayes_evidence_filter.policy.version.clone(),
+                    pre_bayes_evidence_quality_score: pre_bayes_evidence_filter
+                        .evidence_quality_score,
+                    pre_bayes_conflict_flags: pre_bayes_evidence_filter.conflict_flags.clone(),
+                    pre_bayes_filtered_assignments: ranker_pre_bayes_filtered_assignments,
+                    pre_bayes_soft_evidence: ranker_pre_bayes_soft_evidence,
+                    market_state_evidence: market_state_evidence.clone(),
+                    canonical_structural_active_regime: canonical_structural_regime_posterior
+                        .active_regime
+                        .clone(),
+                    canonical_structural_confidence: canonical_structural_regime_posterior
+                        .confidence,
+                    canonical_structural_probabilities: canonical_structural_regime_posterior
+                        .probabilities
+                        .clone(),
+                    execution_readiness: Some(execution_artifact.features.execution_readiness),
+                    execution_gate_status: Some(execution_artifact.hard_gate_status.clone()),
+                    prediction_edge_share: Some(execution_artifact.features.prediction_edge_share),
+                    execution_edge_share: Some(execution_artifact.features.execution_edge_share),
+                    ..WorkflowPhaseSnapshot::default()
+                };
+                let mut ranker_snapshot =
+                    load_workflow_snapshot(state_dir, symbol).unwrap_or_default();
+                ranker_snapshot.symbol = symbol.to_string();
+                ranker_snapshot.current_focus_phase = "analyze".to_string();
+                ranker_snapshot.current_focus_reason = workflow_state.reason.clone();
+                ranker_snapshot.recommended_next_command = recommended_next_command.clone();
+                ranker_snapshot.recommended_next_command_meta =
+                    recommended_next_command_meta(&recommended_next_command);
+                if let Some(vote) = ranker_snapshot.latest_ensemble_vote.as_mut() {
+                    vote.source_phase = "analyze".to_string();
+                    vote.source_run_id = Some(ranker_phase.run_id.clone());
+                    vote.posterior_active_regime = canonical_structural_regime_posterior
+                        .active_regime
+                        .clone()
+                        .unwrap_or_else(|| vote.posterior_active_regime.clone());
+                    if !canonical_structural_regime_posterior.probabilities.is_empty() {
+                        vote.posterior_probabilities =
+                            canonical_structural_regime_posterior.probabilities.clone();
+                    }
+                    if let Some(confidence) = canonical_structural_regime_posterior.confidence {
+                        vote.posterior_confidence = Some(confidence);
+                        vote.confidence = confidence;
+                        vote.consensus_strength = confidence;
+                    }
+                    vote.posterior_normalization_status =
+                        "canonical_structural_regime_posterior".to_string();
+                }
+                ranker_snapshot.latest_analyze = Some(ranker_phase);
+                let recommended_bundle =
+                    ict_engine::application::orchestration::build_structural_recommended_path_bundle_artifact_with_state_dir_and_prior_state(
+                        &ranker_snapshot,
+                        &provider_status_agent,
+                        build_context.learning_state.feedback_history.as_slice(),
+                        &build_context.learning_state.structural_prior_state,
+                        Some(state_dir),
+                    );
+                let score_line = recommended_bundle
+                    .as_ref()
+                    .map(|bundle| {
+                        format!(
+                            "ranker_score=path_id={} runtime_source={} raw_path_score={} calibrated_path_prob={} path_prob_lower_bound={} execution_gate_status={}",
+                            bundle.path_id,
+                            bundle
+                                .path_ranker_runtime_source
+                                .as_deref()
+                                .unwrap_or("none"),
+                            bundle
+                                .path_ranker_raw_score
+                                .map(|value| format!("{value:.6}"))
+                                .unwrap_or_else(|| "none".to_string()),
+                            bundle
+                                .path_ranker_calibrated_path_prob
+                                .map(|value| format!("{value:.6}"))
+                                .unwrap_or_else(|| "none".to_string()),
+                            bundle
+                                .path_ranker_path_prob_lower_bound
+                                .map(|value| format!("{value:.6}"))
+                                .unwrap_or_else(|| "none".to_string()),
+                            bundle
+                                .path_ranker_execution_gate_status
+                                .as_deref()
+                                .unwrap_or("none")
+                        )
+                    });
+                let mut lineage = vec![
                     surface.structural_path_ranking_runtime_summary,
                     surface.structural_path_ranking_validation_summary,
                     format!(
-                        "ranker_machine=source={} model_family={} validation_ready={} active_match_count={}",
+                        "ranker_machine=runtime_source={} score_model_family={} score_source={} validation_ready={} active_match_count={}",
                         surface
                             .structural_path_ranking_runtime
                             .source_kind
@@ -4728,7 +4898,13 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
                             .unwrap_or("unknown"),
                         surface
                             .structural_path_ranking_runtime
-                            .model_family
+                            .score_model_family
+                            .as_deref()
+                            .or(surface.structural_path_ranking_runtime.model_family.as_deref())
+                            .unwrap_or("unknown"),
+                        surface
+                            .structural_path_ranking_runtime
+                            .score_source_kind
                             .as_deref()
                             .unwrap_or("unknown"),
                         surface
@@ -4740,7 +4916,11 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
                         surface.structural_path_ranking_runtime.active_match_count
                     ),
                     format!("factor_hotplug_summary={}", surface.factor_hotplug_summary),
-                ]
+                ];
+                if let Some(score_line) = score_line {
+                    lineage.push(score_line);
+                }
+                lineage
             })
             .unwrap_or_else(|| vec!["policy_training_status=unavailable".to_string()]);
 
@@ -5315,6 +5495,33 @@ fn market_state_evidence_lines(
             .map(|line| format!("rationale={line}")),
     );
     lines
+}
+
+fn pre_bayes_soft_evidence_map(
+    filter: &PreBayesEvidenceFilter,
+) -> BTreeMap<String, BTreeMap<String, f64>> {
+    BTreeMap::from([
+        (
+            "market_regime".to_string(),
+            filter.soft_market_regime_distribution.clone(),
+        ),
+        (
+            "liquidity_context".to_string(),
+            filter.soft_liquidity_context_distribution.clone(),
+        ),
+        (
+            "factor_alignment".to_string(),
+            filter.soft_factor_alignment_distribution.clone(),
+        ),
+        (
+            "factor_uncertainty".to_string(),
+            filter.soft_factor_uncertainty_distribution.clone(),
+        ),
+        (
+            "multi_timeframe_resonance".to_string(),
+            filter.soft_multi_timeframe_resonance_distribution.clone(),
+        ),
+    ])
 }
 
 struct BuildAnalyzeAgentPromptsInput<'a> {
@@ -5979,6 +6186,50 @@ mod tests {
             output_format,
             refresh_workflow_snapshot,
         )
+    }
+
+    #[test]
+    fn test_hybrid_regime_duration_context_does_not_treat_active_streak_as_history() {
+        let previous_runs = [1usize, 2, 3]
+            .into_iter()
+            .map(|age| AnalyzeRunRecord {
+                hybrid_regime_label: Some("range_choppy".to_string()),
+                hybrid_regime_age_bars: Some(age),
+                ..AnalyzeRunRecord::default()
+            })
+            .collect::<Vec<_>>();
+
+        let (current_age, historical_ages) =
+            hybrid_regime_duration_context(&previous_runs, "range_choppy");
+
+        assert_eq!(current_age, 4);
+        assert!(historical_ages.is_empty());
+    }
+
+    #[test]
+    fn test_hybrid_regime_duration_context_keeps_completed_same_label_dwell_samples() {
+        let previous_runs = [
+            ("range_choppy", 1usize),
+            ("range_choppy", 2),
+            ("trend_decay", 1),
+            ("trend_decay", 2),
+            ("range_choppy", 1),
+            ("range_choppy", 2),
+            ("range_choppy", 3),
+        ]
+        .into_iter()
+        .map(|(label, age)| AnalyzeRunRecord {
+            hybrid_regime_label: Some(label.to_string()),
+            hybrid_regime_age_bars: Some(age),
+            ..AnalyzeRunRecord::default()
+        })
+        .collect::<Vec<_>>();
+
+        let (current_age, historical_ages) =
+            hybrid_regime_duration_context(&previous_runs, "range_choppy");
+
+        assert_eq!(current_age, 4);
+        assert_eq!(historical_ages, vec![2]);
     }
 
     fn sample_candles(count: usize) -> Vec<Candle> {
@@ -6851,6 +7102,436 @@ mod tests {
     }
 
     #[test]
+    fn test_build_analyze_report_path_ranker_lineage_uses_state_dir_runtime_scores() {
+        let temp = tempfile::tempdir().unwrap();
+        let htf = sample_candles(220);
+        let mtf = sample_candles(180);
+        let ltf = sample_candles(140);
+        let params = load_or_init_hmm_params("NQ", temp.path().to_str().unwrap());
+        let network = load_or_init_trading_network("NQ", temp.path().to_str().unwrap()).unwrap();
+        let learning_state = load_learning_state(temp.path(), "NQ").unwrap();
+        let provider_status_agent =
+            ict_engine::application::provider_catalog::ProviderCatalogAgentSurface::default();
+        let snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            ..WorkflowSnapshot::default()
+        };
+        let summary =
+            ict_engine::application::orchestration::export_structural_path_ranking_target(
+                temp.path().to_str().unwrap(),
+                "NQ",
+                &snapshot,
+                &provider_status_agent,
+                &[],
+                &learning_state.structural_prior_state,
+            )
+            .unwrap();
+        let build_report = || {
+            build_analyze_report(BuildAnalyzeReportInput {
+                symbol: "NQ",
+                state_dir: temp.path().to_str().unwrap(),
+                htf: &htf,
+                mtf: &mtf,
+                ltf: &ltf,
+                params: &params,
+                network: &network,
+                build_context: AnalyzeBuildContext {
+                    symbol: "NQ",
+                    paired_candles: None,
+                    auxiliary: None,
+                    learning_state: &learning_state,
+                    multi_timeframe_summary: &[],
+                    native_frames: AnalyzeNativeFrames::default(),
+                },
+                regime_bundle_adapter: None,
+                apply_regime_bundle_bbn_soft_evidence: false,
+                execution_focus: true,
+            })
+        };
+        build_report().unwrap();
+        let trace_path = temp.path().join("NQ").join(EXECUTION_TREE_TRACE_FILE);
+        let trace: ict_engine::application::orchestration::ExecutionTreeArtifact =
+            serde_json::from_str(&std::fs::read_to_string(&trace_path).unwrap()).unwrap();
+        let discovered_path_id = trace
+            .output
+            .split_reason_lineage
+            .iter()
+            .find(|line| line.contains("ranker_score="))
+            .and_then(|line| line.split("path_id=").nth(1))
+            .and_then(|rest| rest.split_whitespace().next())
+            .expect("ranker score path id")
+            .to_string();
+        let artifact_dir = std::path::Path::new(&summary.summary_path)
+            .parent()
+            .expect("summary parent")
+            .to_path_buf();
+        std::fs::write(
+            artifact_dir.join("artifact_scores.jsonl"),
+            format!(
+                "{}\n",
+                serde_json::json!({
+                    "candidate_set_id": "structural-candidates:NQ:previous-run",
+                    "path_id": discovered_path_id,
+                    "raw_path_score": 0.97,
+                    "calibrated_path_prob": 0.88,
+                    "path_prob_lower_bound": 0.79,
+                    "execution_gate_status": "pass"
+                })
+            ),
+        )
+        .unwrap();
+        let artifact =
+            ict_engine::application::entry_models::training_export::StructuralPathRankingTrainerArtifact {
+                protocol_version: "structural-path-ranking-trainer-artifact-v1".to_string(),
+                dataset_role: "external_path_ranker_training_dataset".to_string(),
+                model_family: "catboost".to_string(),
+                artifact_uri: "artifact_scores.jsonl".to_string(),
+                model_artifact_uri: None,
+                score_column: "raw_path_score".to_string(),
+                trained_rows: 42,
+                history_rows: 42,
+                calibration_rows: 12,
+                selected_features: vec!["rank".to_string(), "raw_path_score".to_string()],
+                validation_metrics:
+                    ict_engine::belief_core::ranking_label::StructuralPathRankerValidationMetrics::default(),
+                calibration_metrics:
+                    ict_engine::belief_core::ranking_label::StructuralPathRankerCalibrationMetrics::default(),
+                rule_list: Vec::new(),
+                tree_json: None,
+                created_at: None,
+                notes: vec![],
+            };
+        std::fs::write(
+            artifact_dir.join("structural_path_ranking_trainer_artifact.json"),
+            serde_json::to_string_pretty(&artifact).unwrap(),
+        )
+        .unwrap();
+        ict_engine::application::entry_models::enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            ict_engine::application::orchestration::STRUCTURAL_PATH_RANKING_RUNTIME_MODE_PREFER_HISTORY,
+        )
+        .unwrap();
+
+        let report = build_report().unwrap();
+
+        assert!(report.supporting.execution_triage.is_some());
+        let trace: ict_engine::application::orchestration::ExecutionTreeArtifact =
+            serde_json::from_str(&std::fs::read_to_string(trace_path).unwrap()).unwrap();
+        let ranker_line = trace
+            .output
+            .split_reason_lineage
+            .iter()
+            .find(|line| line.contains("ranker_score="))
+            .expect("ranker score lineage");
+        assert!(
+            ranker_line.contains("runtime_source=registered_artifact_history"),
+            "ranker_line={ranker_line}"
+        );
+        assert!(
+            ranker_line.contains("raw_path_score=0.970000"),
+            "ranker_line={ranker_line}"
+        );
+        assert!(
+            trace.output.path_ranker_score_visible_to_execution_tree,
+            "execution tree did not mark the current-path ranker score as visible"
+        );
+        assert!(
+            trace.output.path_ranker_score_used_by_execution_tree,
+            "current-path ranker score should be consumed by prediction-vote branch math"
+        );
+        assert_eq!(
+            trace.output.path_ranker_runtime_source.as_deref(),
+            Some("registered_artifact_history")
+        );
+    }
+
+    #[test]
+    fn test_build_analyze_report_uses_current_analyze_regime_for_ranker_path_join() {
+        let temp = tempfile::tempdir().unwrap();
+        let htf = sample_candles(220);
+        let mtf = sample_candles(180);
+        let ltf = sample_candles(140);
+        let params = load_or_init_hmm_params("NQ", temp.path().to_str().unwrap());
+        let network = load_or_init_trading_network("NQ", temp.path().to_str().unwrap()).unwrap();
+        let learning_state = load_learning_state(temp.path(), "NQ").unwrap();
+        let provider_status_agent =
+            ict_engine::application::provider_catalog::ProviderCatalogAgentSurface::default();
+        let mut snapshot = WorkflowSnapshot {
+            symbol: "NQ".to_string(),
+            latest_analyze: Some(WorkflowPhaseSnapshot {
+                canonical_structural_active_regime: Some("trend".to_string()),
+                canonical_structural_confidence: Some(0.82),
+                canonical_structural_probabilities: BTreeMap::from([
+                    ("trend".to_string(), 0.82),
+                    ("range".to_string(), 0.18),
+                ]),
+                ..WorkflowPhaseSnapshot::default()
+            }),
+            ..WorkflowSnapshot::default()
+        };
+        snapshot.latest_ensemble_vote = Some(EnsembleVoteRecord {
+            source_phase: "research".to_string(),
+            source_run_id: Some("stale-research".to_string()),
+            posterior_active_regime: "research_iteration".to_string(),
+            posterior_probabilities: BTreeMap::new(),
+            posterior_normalization_status: "stale".to_string(),
+            confidence: 0.2,
+            consensus_strength: 0.2,
+            posterior_confidence: Some(0.2),
+            ..EnsembleVoteRecord::default()
+        });
+        ict_engine::state::persistence::save_workflow_snapshot(temp.path(), "NQ", &snapshot)
+            .unwrap();
+        let summary =
+            ict_engine::application::orchestration::export_structural_path_ranking_target(
+                temp.path().to_str().unwrap(),
+                "NQ",
+                &snapshot,
+                &provider_status_agent,
+                &[],
+                &learning_state.structural_prior_state,
+            )
+            .unwrap();
+        let target_rows = std::fs::read_to_string(&summary.jsonl_path)
+            .unwrap()
+            .lines()
+            .filter(|line| !line.trim().is_empty())
+            .map(|line| serde_json::from_str::<serde_json::Value>(line).unwrap())
+            .collect::<Vec<_>>();
+        assert!(
+            target_rows.iter().any(|row| row["path_id"]
+                .as_str()
+                .unwrap_or_default()
+                .contains("belief_regime_node:trend:trend_follow_through")),
+            "expected trend structural path rows: {target_rows:?}"
+        );
+        let score_lines = target_rows
+            .iter()
+            .enumerate()
+            .map(|(index, row)| {
+                serde_json::json!({
+                    "candidate_set_id": row["candidate_set_id"].as_str().unwrap(),
+                    "path_id": row["path_id"].as_str().unwrap(),
+                    "raw_path_score": 0.93 - index as f64 * 0.03,
+                    "calibrated_path_prob": 0.84 - index as f64 * 0.02,
+                    "path_prob_lower_bound": 0.74 - index as f64 * 0.02,
+                    "execution_gate_status": "pass",
+                })
+                .to_string()
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
+        let score_file = temp
+            .path()
+            .join("NQ")
+            .join("policy_training")
+            .join("current_analyze_scores.jsonl");
+        std::fs::write(&score_file, format!("{score_lines}\n")).unwrap();
+        ict_engine::application::entry_models::register_structural_path_ranking_trainer_artifact_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            "current_analyze_scores.jsonl",
+            "catboost",
+            Some("raw_path_score"),
+            Some(target_rows.len()),
+            Some(target_rows.len()),
+        )
+        .unwrap();
+        ict_engine::application::entry_models::enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            ict_engine::application::orchestration::STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+        )
+        .unwrap();
+
+        build_analyze_report(BuildAnalyzeReportInput {
+            symbol: "NQ",
+            state_dir: temp.path().to_str().unwrap(),
+            htf: &htf,
+            mtf: &mtf,
+            ltf: &ltf,
+            params: &params,
+            network: &network,
+            build_context: AnalyzeBuildContext {
+                symbol: "NQ",
+                paired_candles: None,
+                auxiliary: None,
+                learning_state: &learning_state,
+                multi_timeframe_summary: &[],
+                native_frames: AnalyzeNativeFrames::default(),
+            },
+            regime_bundle_adapter: None,
+            apply_regime_bundle_bbn_soft_evidence: false,
+            execution_focus: true,
+        })
+        .unwrap();
+
+        let trace_path = temp.path().join("NQ").join(EXECUTION_TREE_TRACE_FILE);
+        let trace: ict_engine::application::orchestration::ExecutionTreeArtifact =
+            serde_json::from_str(&std::fs::read_to_string(trace_path).unwrap()).unwrap();
+        let ranker_line = trace
+            .output
+            .split_reason_lineage
+            .iter()
+            .find(|line| line.contains("ranker_score="))
+            .expect("ranker score lineage");
+        assert!(
+            ranker_line.contains("path:scenario:NQ:belief_regime_node:trend:trend_follow_through"),
+            "ranker_line={ranker_line}"
+        );
+        assert!(
+            ranker_line.contains("runtime_source=registered_artifact_path"),
+            "ranker_line={ranker_line}"
+        );
+        assert!(
+            ranker_line.contains("raw_path_score=0.930000"),
+            "ranker_line={ranker_line}"
+        );
+        assert!(
+            trace.output.path_ranker_score_visible_to_execution_tree,
+            "execution tree did not mark current analyze ranker score as visible"
+        );
+        assert!(
+            trace.output.path_ranker_score_used_by_execution_tree,
+            "current analyze ranker score should be consumed by prediction-vote branch math"
+        );
+    }
+
+    #[test]
+    fn test_analyze_command_threads_registered_ranker_scores_into_execution_tree() {
+        let temp = tempfile::tempdir().unwrap();
+        let htf = temp.path().join("htf.json");
+        let mtf = temp.path().join("mtf.json");
+        let ltf = temp.path().join("ltf.json");
+
+        for (path, count) in [(&htf, 220usize), (&mtf, 180usize), (&ltf, 140usize)] {
+            std::fs::write(
+                path,
+                serde_json::to_string(&serde_json::json!({
+                    "candles": sample_candles(count)
+                }))
+                .unwrap(),
+            )
+            .unwrap();
+        }
+
+        analyze_command(
+            "NQ",
+            htf.to_str().unwrap(),
+            mtf.to_str().unwrap(),
+            ltf.to_str().unwrap(),
+            temp.path().to_str().unwrap(),
+            OutputFormat::Json,
+            false,
+            true,
+            None,
+            false,
+            false,
+        )
+        .unwrap();
+        ict_engine::application::entry_models::export_structural_path_ranking_target_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+        )
+        .unwrap();
+        let target_path = temp
+            .path()
+            .join("NQ")
+            .join("policy_training")
+            .join("structural_path_ranking_target.jsonl");
+        let target_rows = std::fs::read_to_string(&target_path)
+            .unwrap()
+            .lines()
+            .filter(|line| !line.trim().is_empty())
+            .map(|line| serde_json::from_str::<serde_json::Value>(line).unwrap())
+            .collect::<Vec<_>>();
+        assert!(
+            target_rows.len() >= 3,
+            "expected regime-path target rows, got {}",
+            target_rows.len()
+        );
+        let score_lines = target_rows
+            .iter()
+            .enumerate()
+            .map(|(index, row)| {
+                serde_json::json!({
+                    "candidate_set_id": row["candidate_set_id"].as_str().unwrap(),
+                    "path_id": row["path_id"].as_str().unwrap(),
+                    "raw_path_score": 0.91 - index as f64 * 0.04,
+                    "calibrated_path_prob": 0.86 - index as f64 * 0.03,
+                    "path_prob_lower_bound": 0.74 - index as f64 * 0.02,
+                    "execution_gate_status": if index == 0 { "pass" } else { "observe" },
+                })
+                .to_string()
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
+        let score_file = temp
+            .path()
+            .join("NQ")
+            .join("policy_training")
+            .join("cli_ranker_scores.jsonl");
+        std::fs::write(&score_file, format!("{score_lines}\n")).unwrap();
+        ict_engine::application::entry_models::register_structural_path_ranking_trainer_artifact_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            "cli_ranker_scores.jsonl",
+            "catboost",
+            Some("raw_path_score"),
+            Some(target_rows.len()),
+            Some(target_rows.len()),
+        )
+        .unwrap();
+        ict_engine::application::entry_models::enable_structural_path_ranking_runtime_command(
+            temp.path().to_str().unwrap(),
+            "NQ",
+            ict_engine::application::orchestration::STRUCTURAL_PATH_RANKING_RUNTIME_MODE_CANDIDATE_SET_ONLY,
+        )
+        .unwrap();
+
+        analyze_command(
+            "NQ",
+            htf.to_str().unwrap(),
+            mtf.to_str().unwrap(),
+            ltf.to_str().unwrap(),
+            temp.path().to_str().unwrap(),
+            OutputFormat::Json,
+            false,
+            true,
+            None,
+            false,
+            false,
+        )
+        .unwrap();
+
+        let trace_path = temp.path().join("NQ").join(EXECUTION_TREE_TRACE_FILE);
+        let trace: ict_engine::application::orchestration::ExecutionTreeArtifact =
+            serde_json::from_str(&std::fs::read_to_string(trace_path).unwrap()).unwrap();
+        let ranker_line = trace
+            .output
+            .split_reason_lineage
+            .iter()
+            .find(|line| line.contains("ranker_score="))
+            .expect("ranker score lineage");
+
+        assert!(
+            ranker_line.contains("runtime_source=registered_artifact"),
+            "ranker_line={ranker_line}"
+        );
+        assert!(
+            ranker_line.contains("raw_path_score=0.910000"),
+            "ranker_line={ranker_line}"
+        );
+        assert!(trace.output.path_ranker_score_visible_to_execution_tree);
+        assert!(trace.output.path_ranker_score_used_by_execution_tree);
+        assert_eq!(
+            trace.output.path_ranker_runtime_source.as_deref(),
+            Some("registered_artifact")
+        );
+    }
+
+    #[test]
     fn test_workflow_phase_snapshot_from_backtest_run_surfaces_objective_market_shrink() {
         let shrink = ict_engine::application::belief::objective_market_credibility_shrink(
             Some("expansion_manipulation"),
@@ -7719,20 +8400,14 @@ mod tests {
         )
         .unwrap();
 
-        let report = run_factor_backtest(
-            "NQ",
-            data.to_str().unwrap(),
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            temp.path().to_str().unwrap(),
-        )
+        let report = run_factor_backtest(RunFactorBacktestInput {
+            symbol: "NQ",
+            data: data.to_str().unwrap(),
+            multi_timeframe_inputs: MultiTimeframeInputPaths::default(),
+            paired_data: None,
+            auxiliary_override: None,
+            state_dir: temp.path().to_str().unwrap(),
+        })
         .unwrap();
         let learning_state = load_learning_state(temp.path(), "NQ").unwrap();
         let runs: Vec<BacktestRunRecord> =
@@ -7858,20 +8533,14 @@ mod tests {
             state_dir: temp.path().to_str().unwrap(),
         })
         .unwrap();
-        run_factor_backtest(
-            "NQ",
-            research_data.to_str().unwrap(),
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            temp.path().to_str().unwrap(),
-        )
+        run_factor_backtest(RunFactorBacktestInput {
+            symbol: "NQ",
+            data: research_data.to_str().unwrap(),
+            multi_timeframe_inputs: MultiTimeframeInputPaths::default(),
+            paired_data: None,
+            auxiliary_override: None,
+            state_dir: temp.path().to_str().unwrap(),
+        })
         .unwrap();
 
         let snapshot: WorkflowSnapshot =
@@ -7925,35 +8594,23 @@ mod tests {
         )
         .unwrap();
 
-        run_factor_backtest(
-            "NQ",
-            data.to_str().unwrap(),
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            temp.path().to_str().unwrap(),
-        )
+        run_factor_backtest(RunFactorBacktestInput {
+            symbol: "NQ",
+            data: data.to_str().unwrap(),
+            multi_timeframe_inputs: MultiTimeframeInputPaths::default(),
+            paired_data: None,
+            auxiliary_override: None,
+            state_dir: temp.path().to_str().unwrap(),
+        })
         .unwrap();
-        run_factor_backtest(
-            "NQ",
-            data.to_str().unwrap(),
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            temp.path().to_str().unwrap(),
-        )
+        run_factor_backtest(RunFactorBacktestInput {
+            symbol: "NQ",
+            data: data.to_str().unwrap(),
+            multi_timeframe_inputs: MultiTimeframeInputPaths::default(),
+            paired_data: None,
+            auxiliary_override: None,
+            state_dir: temp.path().to_str().unwrap(),
+        })
         .unwrap();
 
         let runs: Vec<BacktestRunRecord> =
@@ -13215,7 +13872,7 @@ mod tests {
             .to_string_lossy()
             .to_string();
         let resolved =
-            resolve_multi_timeframe_inputs(&primary, None, None, None, None, None, None, None);
+            resolve_multi_timeframe_inputs(&primary, MultiTimeframeInputPaths::default());
         let summary =
             ict_engine::application::multi_timeframe_inputs::build_multi_timeframe_summary(
                 &primary, &resolved,
@@ -13253,7 +13910,7 @@ mod tests {
             .to_string_lossy()
             .to_string();
         let resolved =
-            resolve_multi_timeframe_inputs(&primary, None, None, None, None, None, None, None);
+            resolve_multi_timeframe_inputs(&primary, MultiTimeframeInputPaths::default());
         let signal =
             ict_engine::application::multi_timeframe_inputs::build_multi_timeframe_research_signal(
                 &resolved,

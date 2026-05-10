@@ -9879,6 +9879,10 @@ mod tests {
                         candidate_set_id: scored_row.candidate_set_id.clone(),
                         path_id: scored_row.path_id.clone(),
                         raw_path_score: 0.91,
+                        score_model_family: None,
+                        score_source_kind: None,
+                        score_model_artifact_uri: None,
+                        score_generator: None,
                     },
                 ],
             )
@@ -9967,6 +9971,10 @@ mod tests {
                     candidate_set_id: scored_row.candidate_set_id.clone(),
                     path_id: scored_row.path_id.clone(),
                     raw_path_score: 0.91,
+                    score_model_family: None,
+                    score_source_kind: None,
+                    score_model_artifact_uri: None,
+                    score_generator: None,
                 },
             ],
         )

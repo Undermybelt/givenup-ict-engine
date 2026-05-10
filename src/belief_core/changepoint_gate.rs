@@ -2,8 +2,8 @@ use std::collections::BTreeMap;
 
 use crate::state::{
     structural_event_outcome_pseudo_counts, structural_prior_source_weight,
-    structural_sorted_prior_events, StructuralPriorEvent,
-    StructuralNodeDurationBucket, StructuralNodeDurationPrior, StructuralNodeTemporalPosteriorState,
+    structural_sorted_prior_events, StructuralNodeDurationBucket, StructuralNodeDurationPrior,
+    StructuralNodeTemporalPosteriorState, StructuralPriorEvent,
 };
 
 const CHANGEPOINT_PROBABILITY_EPSILON: f64 = 1e-3;

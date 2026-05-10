@@ -298,10 +298,10 @@ impl MarketStateValidator {
 }
 
 fn top_distribution_entry(distribution: &HashMap<String, usize>) -> String {
-    let Some((label, count)) = distribution.iter().max_by(|a, b| {
-        a.1.cmp(b.1)
-            .then_with(|| a.0.cmp(b.0).reverse())
-    }) else {
+    let Some((label, count)) = distribution
+        .iter()
+        .max_by(|a, b| a.1.cmp(b.1).then_with(|| a.0.cmp(b.0).reverse()))
+    else {
         return "none".to_string();
     };
     format!("{}:{}", label, count)

@@ -11,8 +11,8 @@
 use serde::{Deserialize, Serialize};
 
 use crate::market_state::{
-    InvestorBehaviorRegime, LiquidityRegime, MarketStateAggregationInputs,
-    MarketStructureRegime, PrimaryMarketRegime, SecondaryMarketRegime, VolatilityRegime,
+    InvestorBehaviorRegime, LiquidityRegime, MarketStateAggregationInputs, MarketStructureRegime,
+    PrimaryMarketRegime, SecondaryMarketRegime, VolatilityRegime,
 };
 use crate::types::Candle;
 
@@ -50,10 +50,10 @@ pub struct EnhancedAggregationConfig {
 impl Default for EnhancedAggregationConfig {
     fn default() -> Self {
         Self {
-            extreme_min_confidence: 0.65,   // 极端状态要求高置信
-            trend_min_confidence: 0.50,     // 趋势扩展要求中等置信
-            reversal_min_confidence: 0.50,  // 反转酝酿要求中等置信
-            consistency_weight: 0.30,       // 一致性贡献30%
+            extreme_min_confidence: 0.65,  // 极端状态要求高置信
+            trend_min_confidence: 0.50,    // 趋势扩展要求中等置信
+            reversal_min_confidence: 0.50, // 反转酝酿要求中等置信
+            consistency_weight: 0.30,      // 一致性贡献30%
             base_confidence: 0.25,
             volatility_weight: 0.15,
             liquidity_weight: 0.10,
@@ -304,9 +304,7 @@ impl EnhancedAggregator {
         behav_conf: f64,
     ) -> bool {
         // 危机波动 + 高置信（提高阈值到 0.75）
-        if matches!(vol, VolatilityRegime::CrisisVol)
-            && vol_conf > 0.75
-        {
+        if matches!(vol, VolatilityRegime::CrisisVol) && vol_conf > 0.75 {
             return true;
         }
 

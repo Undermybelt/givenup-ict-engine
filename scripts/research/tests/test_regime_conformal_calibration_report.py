@@ -44,6 +44,21 @@ class RegimeConformalCalibrationReportTests(unittest.TestCase):
         ]
         path.write_text("\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8")
 
+    def _write_imbalanced_scores_and_truth(self, scores_path: Path, truth_path: Path) -> None:
+        score_rows = []
+        truth_rows = []
+        for idx in range(100):
+            timestamp = f"t{idx}"
+            truth = "primary::RangeConsolidation" if idx == 99 else "primary::TrendExpansion"
+            truth_rows.append({"timestamp": timestamp, "label_id": truth})
+            score_rows.extend([
+                {"timestamp": timestamp, "label_id": "primary::TrendExpansion", "score": 0.94, "threshold": 0.8, "decision": "positive", "abstain_reason": ""},
+                {"timestamp": timestamp, "label_id": "primary::RangeConsolidation", "score": 0.08, "threshold": 0.8, "decision": "negative", "abstain_reason": ""},
+                {"timestamp": timestamp, "label_id": "primary::Unknown", "score": 0.01, "threshold": 1.0, "decision": "abstain", "abstain_reason": "always_abstain_label"},
+            ])
+        scores_path.write_text("\n".join(json.dumps(row) for row in score_rows) + "\n", encoding="utf-8")
+        truth_path.write_text("\n".join(json.dumps(row) for row in truth_rows) + "\n", encoding="utf-8")
+
     def test_report_emits_coverage_singleton_and_confidence_flags(self) -> None:
         with TemporaryDirectory() as tmpdir:
             tmp = Path(tmpdir)
@@ -90,6 +105,10 @@ class RegimeConformalCalibrationReportTests(unittest.TestCase):
             labels = {row for rows in result["sets_by_target_coverage"]["0.99"].values() for row in rows}
             self.assertTrue(labels)
             self.assertTrue(all(label.startswith("primary::Trend") for label in labels))
+            self.assertEqual(result["truth_source"], "missing")
+            self.assertFalse(result["confidence_95"])
+            self.assertFalse(result["confidence_99"])
+            self.assertIn("truth_labels_missing", result["warnings"])
 
     def test_unknown_labels_remain_non_trade_usable(self) -> None:
         with TemporaryDirectory() as tmpdir:
@@ -109,6 +128,29 @@ class RegimeConformalCalibrationReportTests(unittest.TestCase):
             unknown = result["label_contracts"]["primary::Unknown"]
             self.assertEqual(unknown["trade_usable"], False)
             self.assertEqual(unknown["abstain_policy"], "always_abstain")
+
+    def test_confidence_requires_every_truth_class_to_meet_target_coverage(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            tmp = Path(tmpdir)
+            scores = tmp / "regime_expert_scores.jsonl"
+            training = tmp / "regime_expert_training_report.json"
+            truth = tmp / "truth.jsonl"
+            output = tmp / "regime_conformal_calibration_report.json"
+            self._write_imbalanced_scores_and_truth(scores, truth)
+            self._write_training_report(training)
+
+            result = conformal.build_conformal_calibration_report(
+                scores_path=scores,
+                training_report_path=training,
+                truth_path=truth,
+                output_json=output,
+            )
+
+            self.assertEqual(result["overall_coverage"], 0.99)
+            self.assertEqual(result["class_conditional_coverage"]["primary::TrendExpansion"]["coverage"], 1.0)
+            self.assertEqual(result["class_conditional_coverage"]["primary::RangeConsolidation"]["coverage"], 0.0)
+            self.assertFalse(result["confidence_95"])
+            self.assertFalse(result["confidence_99"])
 
     def test_cli_writes_report(self) -> None:
         with TemporaryDirectory() as tmpdir:

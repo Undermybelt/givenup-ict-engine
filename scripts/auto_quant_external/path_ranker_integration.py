@@ -21,8 +21,10 @@ Path Ranker 一键集成脚本
 
 import argparse
 import json
+import shutil
 import subprocess
 import sys
+from importlib import util as importlib_util
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).parent
@@ -48,15 +50,48 @@ def find_target_csv(state_dir: str, symbol: str) -> Path:
     raise FileNotFoundError(f"No target CSV found in {state_dir}/{symbol}")
 
 
+def current_python_has_modules(modules: list[str]) -> bool:
+    return all(importlib_util.find_spec(module) is not None for module in modules)
+
+
+def python_runner_command(model_family: str, python_runner: str) -> list[str]:
+    if python_runner == "system":
+        return [sys.executable]
+    if python_runner not in {"auto", "uv"}:
+        raise ValueError(f"unsupported python runner: {python_runner}")
+    required = ["pandas", "numpy"]
+    if model_family in {"catboost", "both"}:
+        required.append("catboost")
+    if model_family in {"xgboost", "both"}:
+        required.append("xgboost")
+    if python_runner == "auto" and current_python_has_modules(required):
+        return [sys.executable]
+    uv = shutil.which("uv")
+    if not uv:
+        raise RuntimeError(
+            "CatBoost/path-ranker dependencies are missing from this Python and `uv` is not available; "
+            "install uv or run with a Python environment containing pandas, numpy, and catboost"
+        )
+    cmd = [uv, "run", "--with", "pandas", "--with", "numpy"]
+    if "catboost" in required:
+        cmd.extend(["--with", "catboost"])
+    if "xgboost" in required:
+        cmd.extend(["--with", "xgboost"])
+    cmd.append("python")
+    return cmd
+
+
 def run_trainer(
     target_csv: str,
     output_dir: str,
     model_family: str = "catboost",
     output_scores: str | None = None,
+    python_runner: str = "auto",
+    allow_direct_fallback: bool = False,
 ):
     """运行训练器"""
     cmd = [
-        sys.executable,
+        *python_runner_command(model_family, python_runner),
         str(TRAINER_SCRIPT),
         "--target-csv", target_csv,
         "--output-dir", output_dir,
@@ -64,14 +99,16 @@ def run_trainer(
     ]
     if output_scores:
         cmd.extend(["--output-scores", output_scores])
-    
+    if allow_direct_fallback:
+        cmd.append("--allow-direct-fallback")
+
     print(f"[run] {' '.join(cmd)}")
     result = subprocess.run(cmd, capture_output=True, text=True)
-    
+
     if result.returncode != 0:
-        print(f"[error] {result.stderr}")
+        print(f"[error] {result.stderr or result.stdout}")
         raise RuntimeError("Trainer failed")
-    
+
     print(result.stdout)
     return result
 
@@ -81,10 +118,13 @@ def run_apply(
     target_csv: str,
     output_scores: str,
     user_weights: str | None = None,
+    model_family: str = "catboost",
+    python_runner: str = "auto",
+    allow_direct_fallback: bool = False,
 ):
     """运行应用"""
     cmd = [
-        sys.executable,
+        *python_runner_command(model_family, python_runner),
         str(TRAINER_SCRIPT),
         "--apply",
         "--model-dir", model_dir,
@@ -93,14 +133,16 @@ def run_apply(
     ]
     if user_weights:
         cmd.extend(["--user-weights", user_weights])
-    
+    if allow_direct_fallback:
+        cmd.append("--allow-direct-fallback")
+
     print(f"[run] {' '.join(cmd)}")
     result = subprocess.run(cmd, capture_output=True, text=True)
-    
+
     if result.returncode != 0:
-        print(f"[error] {result.stderr}")
+        print(f"[error] {result.stderr or result.stdout}")
         raise RuntimeError("Apply failed")
-    
+
     print(result.stdout)
     return result
 
@@ -190,6 +232,17 @@ def main():
     parser.add_argument("--model-dir", default=None, help="Existing model directory (for apply)")
     parser.add_argument("--output-scores", default=None, help="Scores output path")
     parser.add_argument("--model-family", default="catboost", choices=["catboost", "xgboost", "both"])
+    parser.add_argument(
+        "--python-runner",
+        default="auto",
+        choices=["auto", "uv", "system"],
+        help="Python runner for trainer/apply; auto provisions CatBoost via uv when needed",
+    )
+    parser.add_argument(
+        "--allow-direct-fallback",
+        action="store_true",
+        help="Allow weighted_feature_sum_v1 fallback when no CatBoost/XGBoost model is available",
+    )
     parser.add_argument("--train-only", action="store_true", help="Only train, skip apply")
     parser.add_argument("--apply-only", action="store_true", help="Only apply, skip train")
     parser.add_argument(
@@ -239,16 +292,47 @@ def main():
     # 执行
     if args.apply_only:
         model_dir = args.model_dir or output_dir
-        run_apply(model_dir, target_csv, output_scores, args.user_weights)
+        run_apply(
+            model_dir,
+            target_csv,
+            output_scores,
+            args.user_weights,
+            model_family=args.model_family,
+            python_runner=args.python_runner,
+            allow_direct_fallback=args.allow_direct_fallback,
+        )
     elif args.reuse_model_dir:
-        run_apply(args.reuse_model_dir, target_csv, output_scores, args.user_weights)
+        run_apply(
+            args.reuse_model_dir,
+            target_csv,
+            output_scores,
+            args.user_weights,
+            model_family=args.model_family,
+            python_runner=args.python_runner,
+            allow_direct_fallback=args.allow_direct_fallback,
+        )
     else:
         # 训练
-        run_trainer(target_csv, output_dir, args.model_family, output_scores)
-        
+        run_trainer(
+            target_csv,
+            output_dir,
+            args.model_family,
+            output_scores,
+            python_runner=args.python_runner,
+            allow_direct_fallback=args.allow_direct_fallback,
+        )
+
         if not args.train_only:
             # 应用
-            run_apply(output_dir, target_csv, output_scores, args.user_weights)
+            run_apply(
+                output_dir,
+                target_csv,
+                output_scores,
+                args.user_weights,
+                model_family=args.model_family,
+                python_runner=args.python_runner,
+                allow_direct_fallback=args.allow_direct_fallback,
+            )
 
     if args.register_runtime_artifact:
         if not args.state_dir:

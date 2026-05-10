@@ -278,6 +278,12 @@ pub struct StructuralPathRankingRuntimeSummarySurface {
     pub active_match_count: usize,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub model_family: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub score_model_family: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub score_source_kind: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub score_model_artifact_uri: Option<String>,
     pub summary_line: String,
 }
 
@@ -395,6 +401,12 @@ pub struct StructuralPathRankingTargetTrainingStatusSurface {
     pub runtime_candidate_set_match_count: usize,
     #[serde(default)]
     pub runtime_history_match_count: usize,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub score_model_family: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub score_source_kind: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub score_model_artifact_uri: Option<String>,
     pub rows: usize,
     pub candidate_set_id: Option<String>,
     pub candidate_set_size: usize,
@@ -970,8 +982,11 @@ pub fn policy_training_status(
                 .clone(),
             source_kind: structural_path_ranking_target.runtime_source_kind.clone(),
             active_match_count: structural_path_ranking_target.runtime_active_match_count,
-            model_family: structural_path_ranking_target
-                .trainer_artifact_model_family
+            model_family: structural_path_ranking_target.score_model_family.clone(),
+            score_model_family: structural_path_ranking_target.score_model_family.clone(),
+            score_source_kind: structural_path_ranking_target.score_source_kind.clone(),
+            score_model_artifact_uri: structural_path_ranking_target
+                .score_model_artifact_uri
                 .clone(),
             summary_line: structural_path_ranking_runtime_summary.clone(),
         },
@@ -1501,8 +1516,33 @@ pub fn structural_path_ranking_target_training_status(
         runtime_candidate_set_match_count,
         runtime_history_match_count,
     );
+    let score_model_family = runtime_row_score_model_family(
+        runtime_source_kind.as_deref(),
+        &runtime_artifact_rows,
+        &history_rows,
+        &current_rows,
+        &summary.candidate_set_id,
+        trainer_artifact
+            .as_ref()
+            .and_then(|artifact| non_empty_string(&artifact.model_family)),
+    );
+    let score_source_kind = runtime_row_score_source_kind(
+        runtime_source_kind.as_deref(),
+        &history_rows,
+        &current_rows,
+        &summary.candidate_set_id,
+    );
+    let score_model_artifact_uri = runtime_row_score_model_artifact_uri(
+        runtime_source_kind.as_deref(),
+        &history_rows,
+        &current_rows,
+        &summary.candidate_set_id,
+        trainer_artifact
+            .as_ref()
+            .and_then(|artifact| non_empty_string(&artifact.artifact_uri)),
+    );
     let summary_line = format!(
-        "structural_path_ranking_target rows={} history_rows={} mature_rows={} history_mature_rows={} raw_scored_mature={}/{} production_validation={}/{} observation_validation={}/{} calibration={} trainer_artifact={} trainer_status={} runtime_selection={} runtime_mode={} runtime_source={} runtime_matches={}",
+        "structural_path_ranking_target rows={} history_rows={} mature_rows={} history_mature_rows={} raw_scored_mature={}/{} production_validation={}/{} observation_validation={}/{} calibration={} trainer_artifact={} trainer_status={} runtime_selection={} runtime_mode={} runtime_source={} score_model_family={} score_source={} runtime_matches={}",
         summary.rows,
         summary.history_rows,
         summary.mature_rows,
@@ -1519,6 +1559,8 @@ pub fn structural_path_ranking_target_training_status(
         runtime_selection_status,
         runtime_selection_mode.as_deref().unwrap_or("none"),
         runtime_source_kind.as_deref().unwrap_or("none"),
+        score_model_family.as_deref().unwrap_or("unknown"),
+        score_source_kind.as_deref().unwrap_or("unknown"),
         runtime_active_match_count
     );
     Ok(StructuralPathRankingTargetTrainingStatusSurface {
@@ -1576,6 +1618,9 @@ pub fn structural_path_ranking_target_training_status(
         runtime_artifact_match_count,
         runtime_candidate_set_match_count,
         runtime_history_match_count,
+        score_model_family: score_model_family.clone(),
+        score_source_kind: score_source_kind.clone(),
+        score_model_artifact_uri: score_model_artifact_uri.clone(),
         rows: summary.rows,
         candidate_set_id: Some(summary.candidate_set_id),
         candidate_set_size: summary.candidate_set_size,
@@ -1667,6 +1712,123 @@ fn structural_path_ranking_runtime_active_match_count(
         Some("candidate_set") => runtime_candidate_set_match_count,
         Some("history") => runtime_history_match_count,
         _ => 0,
+    }
+}
+
+fn unique_non_empty_values(values: impl Iterator<Item = Option<String>>) -> BTreeSet<String> {
+    values
+        .filter_map(|value| value.and_then(|value| non_empty_string(&value)))
+        .collect()
+}
+
+fn single_or_mixed(values: BTreeSet<String>) -> Option<String> {
+    if values.is_empty() {
+        None
+    } else if values.len() == 1 {
+        values.into_iter().next()
+    } else {
+        Some("mixed".to_string())
+    }
+}
+
+fn runtime_row_score_model_family(
+    runtime_source_kind: Option<&str>,
+    runtime_artifact_rows: &[crate::belief_core::ranking_label::StructuralPathRankerRuntimeRow],
+    history_rows: &[StructuralPathRankingTargetRow],
+    current_rows: &[StructuralPathRankingTargetRow],
+    candidate_set_id: &str,
+    trainer_artifact_family: Option<String>,
+) -> Option<String> {
+    match runtime_source_kind {
+        Some("registered_model_artifact" | "registered_service" | "registered_artifact") => {
+            single_or_mixed(unique_non_empty_values(
+                runtime_artifact_rows
+                    .iter()
+                    .filter(|row| {
+                        row.candidate_set_id == candidate_set_id && row.raw_path_score.is_some()
+                    })
+                    .map(|row| row.score_model_family.clone()),
+            ))
+            .or(trainer_artifact_family)
+        }
+        Some("candidate_set") => single_or_mixed(unique_non_empty_values(
+            history_rows
+                .iter()
+                .chain(current_rows.iter())
+                .filter(|row| {
+                    row.candidate_set_id == candidate_set_id && row.raw_path_score.is_some()
+                })
+                .map(|row| row.score_model_family.clone()),
+        )),
+        Some("history") => single_or_mixed(unique_non_empty_values(
+            history_rows
+                .iter()
+                .chain(current_rows.iter())
+                .filter(|row| row.raw_path_score.is_some())
+                .map(|row| row.score_model_family.clone()),
+        )),
+        _ => None,
+    }
+}
+
+fn runtime_row_score_source_kind(
+    runtime_source_kind: Option<&str>,
+    history_rows: &[StructuralPathRankingTargetRow],
+    current_rows: &[StructuralPathRankingTargetRow],
+    candidate_set_id: &str,
+) -> Option<String> {
+    match runtime_source_kind {
+        Some("candidate_set") => single_or_mixed(unique_non_empty_values(
+            history_rows
+                .iter()
+                .chain(current_rows.iter())
+                .filter(|row| {
+                    row.candidate_set_id == candidate_set_id && row.raw_path_score.is_some()
+                })
+                .map(|row| row.score_source_kind.clone()),
+        )),
+        Some("history") => single_or_mixed(unique_non_empty_values(
+            history_rows
+                .iter()
+                .chain(current_rows.iter())
+                .filter(|row| row.raw_path_score.is_some())
+                .map(|row| row.score_source_kind.clone()),
+        )),
+        Some("registered_model_artifact") => Some("direct_model".to_string()),
+        Some("registered_service") => Some("service".to_string()),
+        Some("registered_artifact") => Some("external_artifact".to_string()),
+        _ => None,
+    }
+}
+
+fn runtime_row_score_model_artifact_uri(
+    runtime_source_kind: Option<&str>,
+    history_rows: &[StructuralPathRankingTargetRow],
+    current_rows: &[StructuralPathRankingTargetRow],
+    candidate_set_id: &str,
+    trainer_artifact_uri: Option<String>,
+) -> Option<String> {
+    match runtime_source_kind {
+        Some("candidate_set") => single_or_mixed(unique_non_empty_values(
+            history_rows
+                .iter()
+                .chain(current_rows.iter())
+                .filter(|row| {
+                    row.candidate_set_id == candidate_set_id && row.raw_path_score.is_some()
+                })
+                .map(|row| row.score_model_artifact_uri.clone()),
+        )),
+        Some("history") => single_or_mixed(unique_non_empty_values(
+            history_rows
+                .iter()
+                .chain(current_rows.iter())
+                .filter(|row| row.raw_path_score.is_some())
+                .map(|row| row.score_model_artifact_uri.clone()),
+        )),
+        Some("registered_model_artifact" | "registered_service" | "registered_artifact") => {
+            trainer_artifact_uri
+        }
+        _ => None,
     }
 }
 
@@ -2882,6 +3044,10 @@ mod tests {
             experience_prior: 0.5,
             current_posterior: 0.5,
             structural_baseline_score: 0.5,
+            score_model_family: None,
+            score_source_kind: None,
+            score_model_artifact_uri: None,
+            score_generator: None,
         }
     }
 

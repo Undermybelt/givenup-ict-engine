@@ -133,10 +133,7 @@ impl ConfidenceValidator {
     pub fn validate(&mut self, snapshot: &MarketStateSnapshot) -> ValidationResult {
         let regime_key = format!("{:?}", snapshot.primary_regime);
         let (calibrated, samples_available, calibration_applied, regime_accuracy) = {
-            let stats = self
-                .regime_stats
-                .entry(regime_key)
-                .or_default();
+            let stats = self.regime_stats.entry(regime_key).or_default();
 
             let calibration_applied = stats.has_sufficient_samples(self.config.min_samples);
             let calibrated = if calibration_applied {
@@ -199,10 +196,7 @@ impl ConfidenceValidator {
 
         // 更新状态统计
         let regime_key = format!("{:?}", sample.regime);
-        let stats = self
-            .regime_stats
-            .entry(regime_key)
-            .or_default();
+        let stats = self.regime_stats.entry(regime_key).or_default();
         stats.update(&sample);
     }
 

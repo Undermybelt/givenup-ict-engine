@@ -40,6 +40,21 @@ class ChangePointHelperTests(unittest.TestCase):
         self.assertGreater(proximity.iloc[2], 0.0)
         self.assertGreater(proximity.iloc[4], 0.0)
 
+    def test_load_candles_accepts_timestamp_column(self) -> None:
+        with TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "candles.csv"
+            path.write_text(
+                "timestamp,open,high,low,close,volume\n"
+                "1740502800000,1,2,0.5,1.5,10\n",
+                encoding="utf-8",
+            )
+
+            candles = changepoint.load_candles(path)
+
+        self.assertEqual(len(candles), 1)
+        self.assertEqual(candles.index.name, "date")
+        self.assertEqual(float(candles.iloc[0]["close"]), 1.5)
+
 
 class EntryDroughtHelperTests(unittest.TestCase):
     def test_gate_ablations_flag_density_bottleneck(self) -> None:

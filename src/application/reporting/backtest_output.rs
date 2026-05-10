@@ -693,7 +693,7 @@ mod tests {
         assert_eq!(
             payload["structural_path_ranking_validation_summary"],
             serde_json::json!(
-                "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 ready=true"
+                "Ranker validation: calibration=true quality_ready=true raw_scored_mature=30/30 production_validation=30/30 observation_validation=0/30 ready=true"
             )
         );
         assert_eq!(

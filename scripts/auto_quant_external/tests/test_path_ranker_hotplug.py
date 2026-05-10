@@ -73,6 +73,9 @@ class ReuseModelFlowTests(unittest.TestCase):
                 str(target_csv),
                 str(policy_dir / "scores.csv"),
                 None,
+                model_family="catboost",
+                python_runner="auto",
+                allow_direct_fallback=False,
             )
 
     def test_register_runtime_artifact_triggers_repo_cli_opt_in(self) -> None:
@@ -103,7 +106,13 @@ class ReuseModelFlowTests(unittest.TestCase):
                     integration.main()
 
             run_trainer.assert_called_once()
+            _, trainer_kwargs = run_trainer.call_args
+            self.assertEqual(trainer_kwargs["python_runner"], "auto")
+            self.assertFalse(trainer_kwargs["allow_direct_fallback"])
             run_apply.assert_called_once()
+            _, apply_kwargs = run_apply.call_args
+            self.assertEqual(apply_kwargs["python_runner"], "auto")
+            self.assertFalse(apply_kwargs["allow_direct_fallback"])
             register_runtime_artifact.assert_called_once_with(
                 state_dir=str(state_dir),
                 symbol="NQ",

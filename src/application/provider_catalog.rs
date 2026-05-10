@@ -1882,11 +1882,7 @@ mod tests {
             .pending_providers
             .iter()
             .any(|item| item.contains("ibkr@market_data")));
-        assert_eq!(agent.available_opt_in_profiles.len(), 1);
-        assert_eq!(
-            agent.available_opt_in_profiles[0].selector,
-            "thrill3r-nq-closed-loop-v1"
-        );
+        assert!(agent.available_opt_in_profiles.is_empty());
         assert_eq!(agent.providers[0].provider_id, "yfinance");
         assert_eq!(agent.providers[0].user_access, "free_no_login");
         assert_eq!(

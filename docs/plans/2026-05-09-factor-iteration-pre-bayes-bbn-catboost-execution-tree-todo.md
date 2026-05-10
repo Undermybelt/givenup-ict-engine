@@ -4,17 +4,21 @@
 > This board does **not** replace the existing factor board or the post-factor runtime-closure board.  
 > It exists to sequence them correctly so factor iteration does not stop at backtest metrics and runtime closure does not begin from a vague handoff.
 
-**Goal:** run the next iteration as one explicit chain:
+**Goal:** run the next iteration as one explicit regime-rooted branch-ranking chain:
 
-1. factor iteration candidate
-2. pre-bayes / filter gate (`绿波` in user shorthand)
-3. BBN prior/posterior evidence
-4. CatBoost / structural path-ranking surface
-5. execution-tree / workflow outcome
+1. market data
+2. market state / regime inference
+3. regime-rooted execution-tree branch candidates
+4. Auto-Quant factor iteration and backtest by `regime + branch`
+5. imported `strategy_library` / realized trades
+6. BBN prior init/update
+7. structural path target export
+8. CatBoost / structural path-ranking surface
+9. execution-tree / workflow outcome
 
 and make every handoff explicit, reviewable, and `/tmp/...` isolated.
 
-**Architecture:** keep runtime code unchanged unless a real middle-layer defect is proven. Use existing public CLI/runtime surfaces first. Treat factor iteration as external/additive work, then push only explicit artifacts downstream. Do not mix new factor search, provider bootstrap, and runtime-surface refactors into one pass.
+**Architecture:** keep runtime code unchanged unless a real middle-layer defect is proven. Use existing public CLI/runtime surfaces first. Treat factor iteration as external/additive work, then push only explicit artifacts downstream. The root node is the current market state / regime; branch candidates are the allowed operation paths under that regime. Do not mix new factor search, provider bootstrap, and runtime-surface refactors into one pass.
 
 **Tech Stack:** `docs/plans/2026-05-08-factor-iteration-filter-belief-catboost-execution-tree-board.md`, `docs/plans/2026-05-07-auto-quant-post-factor-runtime-closure-todo.md`, `docs/plans/2026-05-05-execution-tree-factor-auto-quant-todo.md`, `docs/202605071246nextstep`, `./target/debug/ict-engine factor-research`, `auto-quant-results-import`, `auto-quant-prior-init`, `auto-quant-ingest-real-trades`, `pre-bayes-status`, `policy-training-status`, `export-structural-path-ranking-target`, `workflow-status`, `execution_tree_trace.json`, explicit `/tmp/...` state dirs, Auto-Quant `strategy_library.json`, realized-trades JSONL.
 
@@ -40,6 +44,21 @@ and make every handoff explicit, reviewable, and `/tmp/...` isolated.
 ## Decision Lock
 
 - [x] This board is orchestration/guidance only. It should tell the next agent exactly how to move a candidate through the full chain.
+- [x] The root of the chain is **current market state / regime**, not a detached high-Sharpe factor search.
+- [x] The execution tree candidates under that regime are the first-class branch targets:
+  - `range_mean_reversion`
+  - `transition_confirmation`
+  - `de_risk`
+  - `trend_continuation`
+  - `exhaustion_reversal`
+  - `breakout_continuation`
+  - `liquidity_sweep_failure`
+- [x] Every branch row must carry three separate scoring/evidence surfaces:
+  - `BBN prior`: historical / Auto-Quant / realized-trade evidence for the branch
+  - `market likelihood`: current market-state evidence for that branch
+  - `CatBoost score`: factor/path-result score for branch ranking
+- [x] Auto-Quant is not allowed to optimize a generic high-Sharpe strategy first. It must first train factors that separate **branch win probability inside a known regime bucket**.
+- [x] Do not reopen the pseudo-label direction-model lane as the main path. The next loop is branch-specific evidence generation for BBN and CatBoost.
 - [x] Factor iteration still starts on the factor board, not here.
 - [x] Runtime closure still lands on the post-factor board, not here.
 - [x] This board is the sequencing contract between the two.
@@ -52,6 +71,66 @@ and make every handoff explicit, reviewable, and `/tmp/...` isolated.
   - `docs/plans/2026-05-07-auto-quant-post-factor-runtime-closure-todo.md` still mentions `auto-quant-results-import --dry-run`
   - current `green-baseline` binary does **not** support `--dry-run` on that command
   - therefore import rehearsal on current mainline must use an isolated copied `/tmp/...` state dir instead of a non-existent dry-run flag
+
+## Regime-Rooted Branch Ranker Contract
+
+### Branch-ranking row shape
+
+Every candidate row exported to BBN / CatBoost must be keyed by:
+
+- `symbol`
+- `timeframe`
+- `run_id`
+- `regime_label`
+- `market_state_primary`
+- `market_state_secondary`
+- `branch_id`
+- `branch_family`
+- `factor_family`
+- `factor_variant`
+- `bbn_prior_evidence`
+- `market_likelihood_evidence`
+- `catboost_feature_vector`
+- `realized_branch_outcome`
+- `stopping_layer`
+
+This is the row identity contract for branch scoring. A factor candidate is incomplete if it only reports standalone strategy metrics and cannot be joined back to `regime_label + branch_id`.
+
+### Current QQQ run anchor
+
+- Current state: `range_choppy / RangeConsolidation + WideRange`.
+- Current structural branch: `range_mean_reversion`.
+- Current downstream outcome: execution blocked / observe.
+- Current interpretation: the engine should not ask "what high-Sharpe strategy works on QQQ?" first. It should ask "inside this range-choppy state, what evidence distinguishes range mean-reversion viability from transition confirmation or stress de-risk?"
+
+### First branch-specific factor queue
+
+1. `range_mean_reversion_viability`
+   - Bollinger / ATR stretch
+   - distance from VWAP / session midpoint
+   - prior sweep plus failed continuation
+   - chop / volatility compression versus expansion
+2. `transition_confirmation`
+   - range break with displacement
+   - volume expansion after compression
+   - multi-timeframe alignment persistence
+   - failed mean-reversion after boundary break
+3. `stress_de_risk`
+   - volatility spike
+   - liquidity thinning
+   - wide-range continuation hazard
+   - FOMO / crowding risk
+
+### Regime-bucket questions Auto-Quant must answer
+
+- In `range_choppy` / `range_consolidation`, which factors separate `range_mean_reversion` from `transition_confirmation`?
+- In `trend_expansion`, which factors separate `trend_continuation` from `exhaustion_reversal`?
+- In `manipulation_expansion`, which factors separate `breakout_continuation` from `liquidity_sweep_failure`?
+
+Auto-Quant output must feed two downstream lanes from the same artifact pack:
+
+- BBN lane: branch/node prior evidence.
+- CatBoost lane: branch scoring training rows.
 
 ## Current Closed-Loop Diagnosis
 
@@ -130,6 +209,16 @@ and make every handoff explicit, reviewable, and `/tmp/...` isolated.
 
 ### Next Slice
 
+- [ ] Build the next Auto-Quant candidate pack around `regime_label + branch_id`, not around standalone Sharpe.
+- [ ] For the current QQQ anchor, start with `range_choppy / RangeConsolidation + WideRange` and compare:
+  - `range_mean_reversion`
+  - `transition_confirmation`
+  - `stress_de_risk`
+- [ ] Require each factor result to state which branch it separates and which downstream lane it supports:
+  - BBN prior evidence
+  - CatBoost branch scoring row
+  - both
+- [ ] Export one branch-ranking row set with explicit `market_likelihood_evidence` before calling the loop closed.
 - [x] Run the next candidate through the chain in this order, without skipping layers:
   - build/refresh explicit factor candidate artifact
   - check pre-bayes / bridge state from the same `/tmp/...` state
@@ -161,6 +250,9 @@ and make every handoff explicit, reviewable, and `/tmp/...` isolated.
 
 ### Not Yet
 
+- [ ] Training a pseudo-label direction model as the main path
+- [ ] Calling a generic high-Sharpe strategy a valid factor if it cannot separate two branches inside the same regime
+- [ ] Treating `range_mean_reversion` as accepted just because the current structural branch names it while the execution tree remains observe/blocked
 - [ ] Reopening runtime code just to make the loop look cleaner
 - [ ] Treating `trainer_artifact=ready` as equivalent to a validated path-ranker loop
 - [ ] Treating `candidate_set` runtime scoring as equivalent to mature external CatBoost closure
@@ -168,22 +260,29 @@ and make every handoff explicit, reviewable, and `/tmp/...` isolated.
 
 ## Ordered Execution Checklist
 
-1. Pick one already-explicit factor candidate from the factor board.
-2. Materialize or refresh its explicit candidate artifact pack in `/tmp/...`.
-3. Record the factor-stage truth:
+1. Capture market data for the target symbol/timeframe and record the provider path.
+2. Infer the current market state / regime and write the regime anchor into the candidate pack.
+3. Enumerate the branch candidates allowed under that regime.
+4. Pick one branch pair to separate, for example `range_mean_reversion` versus `transition_confirmation`.
+5. Generate or import one explicit factor candidate for that branch-pair separation.
+6. Materialize or refresh its explicit candidate artifact pack in `/tmp/...`.
+7. Record the factor-stage truth:
    - trade-density bucket
    - breadth / market coverage
    - resonance stack
    - claimed downstream targets
-4. Push it into the `pre-bayes` stage and record:
+   - `regime_label`
+   - `branch_id`
+   - branch-pair discrimination result
+8. Push it into the `pre-bayes` stage and record:
    - `pre-bayes-status --human`
    - `bridge` line
    - whether the gate is blocked, neutralized, or supportive
-5. Push it into the `BBN` stage and record:
+9. Push it into the `BBN` stage and record:
    - `auto-quant-prior-init` diff or applied result
    - if real trades exist, `auto-quant-ingest-real-trades`
    - whether the BBN layer actually changed any downstream prior/posterior belief worth keeping
-6. Push it into the `CatBoost / path-ranking` stage and record:
+10. Push it into the `CatBoost / path-ranking` stage and record:
    - `export-structural-path-ranking-target`
    - `policy-training-status --human`
    - whether the lane is blocked by:
@@ -191,13 +290,13 @@ and make every handoff explicit, reviewable, and `/tmp/...` isolated.
      - no mature rows
      - no calibration
      - no structural lineage
-7. Push it into the `execution-tree` stage and record:
+11. Push it into the `execution-tree` stage and record:
    - `workflow-status --human`
    - `workflow-status --phase ensemble-vote --human`
    - `workflow-status --phase structural-playbook --human`
    - `workflow-status --phase structural-recommended-path-bundle --human`
    - `execution_tree_trace.json`
-8. Write one final chain verdict:
+12. Write one final chain verdict:
    - where the candidate stopped
    - what exact artifact/metric blocked it
    - whether the blocker is:
@@ -301,25 +400,44 @@ python3 scripts/research/factor_candidate_pack.py \
 
 ### Blocker B: path-ranking maturity gap
 
-- The current live VRP state still reports:
-  - `mature_rows=0`
-  - `raw_scored_mature=0/30`
-  - `production_validation=0/30`
-- This means the CatBoost/path-ranking surface is present but not yet mature enough to claim a validated external-ranker loop.
+- Historical note: the first VRP state stopped here with `mature_rows=0`, `raw_scored_mature=0/30`, and `production_validation=0/30`.
+- Current refresh on `/tmp/ict-engine-structural-replay-29/state` no longer stops here:
+  - `export-structural-path-ranking-target`: `history_rows=35`, `history_mature_rows=33`, `history_rows_with_raw_path_score=35`, `history_rows_with_calibrated_path_prob=33`
+  - `policy-training-status`: `raw_scored_mature=33/30`, `production_validation=33/30`, `observation_validation=30/30`
+  - runtime: `runtime_selection=enabled_registered_model_ready`, `runtime_source=registered_model_artifact`
+- Current interpretation: path-ranking maturity remains a required gate for new candidates, but this replay state has passed the 30-observation / 30-row floor.
 
 ### Blocker C: execution tree still reads candidate-set-level path support
 
-- Current `policy-training-status` still reports:
-  - `runtime_selection=enabled_candidate_set_ready`
-  - `runtime_source=candidate_set`
-- So the loop is not blocked at the execution-tree reader.
-- It is blocked because the upstream path-ranking evidence is not yet mature enough to replace candidate-set support.
+- Historical note: the first VRP state read candidate-set path support.
+- Current refresh no longer has that reader issue:
+  - `workflow-status --human`: `Ranker: status=using_registered_model_artifact source=registered_model_artifact applied=1`
+  - `workflow-status --phase ensemble-vote --human`: `action=execute_follow_through`, `confidence=0.976`
+  - `workflow-status --phase structural-recommended-path-bundle --human`: `trend_follow_through`, `posterior=0.787`, `selected_prob=1.000`
+  - `execution_tree_trace.json`: `branch=transition_guardrail`, `execution_bias=guarded`, `gate_status=observe`, `execution_score=0.5736691669503992`
+- Current stop layer: execution-tree guardrail, not CatBoost attachment. The trace names low remaining regime duration / transition hazard as the immediate reason:
+  - `execution_readiness=0.4648`
+  - `hybrid_transition_hazard=0.607`
+  - `duration_remaining_expected_bars=0.667`
+  - `decision_hint=execution_guarded_due_to_low_remaining_regime_duration`
+
+### Provider Matrix Requirement
+
+- Current provider refresh used `/tmp/ict-current-provider-probe-20260510/provider-probes/`.
+- YF/yfinance: actual QQQ 1h fetch succeeded with `71` rows after one HTTP 429 retry.
+- Kraken: actual `PF_XBTUSD` 1h futures fetch succeeded with `360` rows.
+- IBKR: plain repo runtime still lacks `redis`, but local gateway `127.0.0.1:4002` was reachable and an offline-`uv` IBKR SPY 1h fetch succeeded with `160` rows.
+- TradingViewRemix: current process has no `ICT_ENGINE_TVREMIX_MCP_API_KEY`; the `market-data-harness` fetch was attempted and failed at that credential boundary.
+- Rule for the next candidate: do not claim `data_blocked` from one provider; log YF, Kraken, IBKR, TradingViewRemix, local caches, and any reusable auxiliary artifacts separately.
 
 ## Success Standard
 
 This board is successful only if a later iteration can say all of the following with explicit artifacts:
 
 - the factor candidate is explicit and reviewable
+- the current regime root is explicit
+- the branch candidate or branch pair is explicit
+- the market likelihood evidence for that branch is explicit
 - the pre-bayes / filter gate result is explicit
 - the BBN prior/posterior effect is explicit
 - the structural path-ranking maturity state is explicit

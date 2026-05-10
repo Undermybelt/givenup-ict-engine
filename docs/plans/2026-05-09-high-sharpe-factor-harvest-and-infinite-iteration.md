@@ -1,6 +1,15 @@
 # High-Sharpe Factor Harvest and Infinite Iteration Contract
 
-Goal: harvest papers and open-source repos for high-Sharpe factor ideas, then turn them into a zero-config, hot-plug, consumer-safe `ict-engine` learning loop.
+Goal: harvest papers and open-source repos for regime-conditioned win-rate edges, then turn them into a zero-config, hot-plug, consumer-safe `ict-engine` learning loop.
+
+Direction correction, 2026-05-10:
+
+```text
+Do not optimize for aggregate Sharpe as the primary target.
+Primary target = regime is correct first, then strategy-regime fit, then conditioned win-rate/payoff/tail quality.
+High win rate is not enough when regime is unknown, transitioning, or mismatched.
+Aggregate Sharpe stays as a diagnostic field only.
+```
 
 Scope: all liquid markets are allowed: index futures, equities, ETFs, FX, rates, commodities, crypto, volatility, options, dealer/flow proxies.
 
@@ -27,7 +36,7 @@ paper/repo idea
 -> next mutation batch
 ```
 
-Do not call anything "high Sharpe" until the OOS and overfit guards pass.
+Do not call anything "promotable" until the regime gate, OOS gate, overfit guards, BBN value gate, path-ranker evidence, and execution-tree recommendation delta are all visible.
 
 Runtime closure is mandatory after any promising candidate:
 
@@ -61,6 +70,70 @@ validation_boundary=mature_rows=0/30, production_validation=0/30, calibration=no
 ```
 
 Rule: if CatBoost is unavailable, name the fallback (`weighted_feature_sum_v1`) and do not call it CatBoost. If CatBoost is available but rows are immature, call it a real CatBoost smoke only, not production validation.
+
+Latest regime-first real closure evidence, 2026-05-10:
+
+```text
+real_chain_run_root=/tmp/ict-real-regime-selector-20260510T020632Z
+provider_matrix_run_root=/tmp/ict-r36-full-market-selector-20260510T023200Z
+Auto-Quant real run=logs/09_auto_quant_run.log
+Auto-Quant strategies=MomentumMTFConfluence,RegimeAdaptiveBNB
+filter/regime bundle=/tmp/ict-r36-full-market-selector-20260510T023200Z/repo-state/regime_quality_matrix.json
+BBN import=logs/10_auto_quant_results_import.log
+BBN prior init=logs/11_auto_quant_prior_init.log, strategies_applied=2
+CatBoost train=logs/16_catboost_train.log, samples=1367
+CatBoost apply=logs/17_catboost_apply_current.log
+execution_tree_trace=/tmp/ict-real-regime-selector-20260510T020632Z/structural-replay-36/state/NQ/execution_tree_trace.json
+path_ranker_model_family=catboost
+execution=observe/transition_guardrail/guarded
+```
+
+Provider evidence:
+
+```text
+yfinance=QQQ 1h/1d and AAPL 1h/1d fetched
+IBKR=QQQ 1h 30D and AAPL 1d 60D fetched
+TradingViewRemix=QQQ 1h/1d fetched after local credential recovery
+Kraken=PF_XBTUSD 1h/1d fetched
+provider_matrix_rows=10
+providers=ibkr,kraken_public,tradingview_mcp,yfinance
+timeframes=1d,1h
+symbols=AAPL,BTCUSD,NQ
+```
+
+Regime/selector decision:
+
+```text
+regime_quality_matrix=/tmp/ict-r36-full-market-selector-20260510T023200Z/repo-state/regime_quality_matrix.json
+strategy_regime_matrix=/tmp/ict-r36-full-market-selector-20260510T023200Z/repo-state/strategy_regime_matrix.json
+current_regime=unknown_abstain
+current_regime_trade_usable=false
+selected_strategy=none
+recommendation=observe_no_trade
+reason=all current provider/timeframe regime bundles are unknown_abstain / trade_usable=false
+```
+
+Strategy-regime metrics currently say:
+
+```text
+MomentumMTFConfluence: trades=854, win_rate=34.7775, win_rate_lcb=31.6578, pf=1.1682, max_dd=-23.1801, sharpe_diagnostic_only=0.3993, disabled_regime=unknown_abstain
+RegimeAdaptiveBNB: trades=115 full_5y, win_rate=69.5652, win_rate_lcb=60.6358, pf=1.4262, max_dd=-4.6742, sharpe_diagnostic_only=0.1380, disabled_regime=unknown_abstain
+Decision: RegimeAdaptiveBNB is the better win-rate candidate, but it is not enabled until the current regime classifier becomes reliable.
+```
+
+TradingViewRemix consumer credential fix:
+
+```text
+root_cause=ict-engine used process env only and ignored the existing local credential owner
+canonical_local_fallback=~/.ict-engine/tvremix_mcp.json
+code_owner=src/application/data_sources/control_matrix_providers.rs and provider_fetch.rs
+env_order=ICT_ENGINE_TVREMIX_MCP_API_KEY / ICT_ENGINE_TVREMIX_MCP_URL first, then local file, then default URL
+secret_policy=never print or write the key into repo docs
+optional_options_probe_failure=degrade options lanes, do not hide usable OHLCV access
+final_no_env_run_root=/tmp/ict-tvremix-local-config-final-20260510T034555Z
+no_env_provider_status=market_data:1/1 ready, reason=mcp_url_and_api_key_available
+no_env_fetch=ok=true, rows=21
+```
 
 ---
 

@@ -240,8 +240,10 @@ def prepare_features(df: pd.DataFrame) -> tuple:
 def train_catboost(X, y, weights, output_dir: Path, cat_features: list = None):
     """训练 CatBoost 模型"""
     if not HAS_CATBOOST:
-        print("ERROR: catboost not installed. pip install catboost")
-        return None
+        raise RuntimeError(
+            "catboost requested but not installed; run via path_ranker_integration.py "
+            "or use `uv run --with pandas --with numpy --with catboost python ...`"
+        )
     
     # 检测分类特征索引
     cat_indices = []
@@ -322,6 +324,7 @@ def apply_model(
     target_csv: str,
     output_scores: str,
     user_weights_path: Path | None = None,
+    allow_direct_fallback: bool = False,
 ):
     """应用预训练模型生成 scores.csv"""
     # 加载 target
@@ -335,12 +338,22 @@ def apply_model(
     catboost_path = model_dir / "catboost_model.cbm"
     xgboost_path = model_dir / "xgboost_model.json"
     
-    if catboost_path.exists() and HAS_CATBOOST:
+    if catboost_path.exists():
+        if not HAS_CATBOOST:
+            raise RuntimeError(
+                f"CatBoost model exists at {catboost_path}, but catboost is not importable; "
+                "run via path_ranker_integration.py or `uv run --with pandas --with numpy --with catboost python ...`"
+            )
         model = cb.CatBoostClassifier()
         model.load_model(str(catboost_path))
         scores = model.predict_proba(X)[:, 1] if model.classes_.shape[0] == 2 else model.predict_proba(X).argmax(axis=1)
+        score_model_family = "catboost"
+        score_source_kind = "external_model"
+        score_model_artifact_uri = str(catboost_path)
         print(f"[apply] CatBoost predictions: {len(scores)}")
-    elif xgboost_path.exists() and HAS_XGBOOST:
+    elif xgboost_path.exists():
+        if not HAS_XGBOOST:
+            raise RuntimeError(f"XGBoost model exists at {xgboost_path}, but xgboost is not importable")
         model = xgb.XGBClassifier()
         model.load_model(str(xgboost_path))
         X_encoded = X.copy()
@@ -348,18 +361,31 @@ def apply_model(
             if col in X_encoded.columns:
                 X_encoded[col] = X_encoded[col].astype("category").cat.codes
         scores = model.predict_proba(X_encoded)[:, 1] if len(model.classes_) == 2 else model.predict_proba(X_encoded).argmax(axis=1)
+        score_model_family = "xgboost"
+        score_source_kind = "external_model"
+        score_model_artifact_uri = str(xgboost_path)
         print(f"[apply] XGBoost predictions: {len(scores)}")
     else:
-        # 回退到简单加权
+        if not allow_direct_fallback:
+            raise RuntimeError(
+                f"No trained model found in {model_dir}; pass --allow-direct-fallback to use weighted_feature_sum_v1"
+            )
         print("[apply] No trained model found, using weighted sum fallback")
         weights_path = user_weights_path or (model_dir / "user_weights.json")
         scores = weighted_sum_fallback(X, weights_path=weights_path)
-    
+        score_model_family = DIRECT_MODEL_FAMILY
+        score_source_kind = "direct_fallback"
+        score_model_artifact_uri = str(model_dir / "path_ranker_direct_model.json")
+
     # 输出 scores.csv
     scores_df = pd.DataFrame({
         "candidate_set_id": df["candidate_set_id"] if "candidate_set_id" in df.columns else ["unknown"] * len(df),
         "path_id": df["path_id"] if "path_id" in df.columns else [f"path_{i}" for i in range(len(df))],
         "raw_path_score": scores,
+        "score_model_family": score_model_family,
+        "score_source_kind": score_source_kind,
+        "score_model_artifact_uri": score_model_artifact_uri,
+        "score_generator": "pandas_path_ranker_trainer.py",
     })
     scores_df.to_csv(output_scores, index=False)
     print(f"[apply] Scores saved to {output_scores}")
@@ -523,6 +549,7 @@ def build_registered_artifact_metadata(
     history_rows: int,
     calibration_rows: int,
     selected_features: list[str],
+    allow_direct_fallback: bool = False,
 ) -> dict:
     """Build repo registration metadata from the emitted model directory."""
     catboost_path = output_dir / "catboost_model.cbm"
@@ -538,10 +565,9 @@ def build_registered_artifact_metadata(
         model_artifact_uri = None
         runtime_score_note = "repo_runtime_direct_model_emitted=true"
     else:
-        model_family = "catboost"
-        artifact_uri = str(scores_path) if scores_path is not None else str(output_dir)
-        model_artifact_uri = None
-        runtime_score_note = "catboost_runtime_scores_uri=missing"
+        raise RuntimeError(
+            f"No registered model artifact found in {output_dir}; CatBoost/XGBoost training did not produce a model"
+        )
 
     artifact = {
         "protocol_version": TRAINER_ARTIFACT_PROTOCOL_VERSION,
@@ -589,7 +615,12 @@ def main():
         "--user-weights",
         help="Optional user_weights.json override for weighted-sum fallback",
     )
-    
+    parser.add_argument(
+        "--allow-direct-fallback",
+        action="store_true",
+        help="Allow weighted_feature_sum_v1 fallback when no trained external model is available",
+    )
+
     args = parser.parse_args()
     
     output_dir = Path(args.output_dir)
@@ -606,6 +637,7 @@ def main():
             args.target_csv,
             args.output_scores or "./scores.csv",
             Path(args.user_weights) if args.user_weights else None,
+            allow_direct_fallback=args.allow_direct_fallback,
         )
         return
     
@@ -624,14 +656,17 @@ def main():
     
     # 创建用户权重模板
     create_user_weights_template(output_dir)
-    create_direct_model_artifact(output_dir, features, len(X))
-    
+    if args.allow_direct_fallback:
+        create_direct_model_artifact(output_dir, features, len(X))
+
     # 训练
     if args.model_family in ["catboost", "both"]:
         train_catboost(X, y, weights, output_dir, cat_features=CATEGORICAL_FEATURES)
-    
+
     if args.model_family in ["xgboost", "both"]:
-        train_xgboost(X, y, weights, output_dir)
+        trained_xgb = train_xgboost(X, y, weights, output_dir)
+        if trained_xgb is None and args.model_family == "xgboost" and not args.allow_direct_fallback:
+            raise RuntimeError("xgboost requested but not installed; install xgboost or use --allow-direct-fallback")
 
     trainer_artifact_path = output_dir / "trainer_artifact.json"
     trainer_artifact = build_registered_artifact_metadata(
@@ -641,6 +676,7 @@ def main():
         history_rows=len(X),
         calibration_rows=int(np.sum(np.isfinite(y))) if len(y) else 0,
         selected_features=features,
+        allow_direct_fallback=args.allow_direct_fallback,
     )
     with open(trainer_artifact_path, "w", encoding="utf-8") as handle:
         json.dump(trainer_artifact, handle, indent=2)

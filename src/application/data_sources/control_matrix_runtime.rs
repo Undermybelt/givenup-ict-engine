@@ -1,9 +1,9 @@
 use anyhow::Result;
 
 use crate::application::backtest::Pb12RunSpec;
+use crate::application::data_sources::control_matrix_providers::tradingview_mcp_config_from_env_or_local;
 use crate::application::data_sources::{
     build_market_data_harness_plan, execute_market_data_harness_plan, MarketDataHarnessRequest,
-    TVREMIX_MCP_API_KEY_ENV,
 };
 use crate::data::load_candles;
 use crate::data::realtime::external_http_runtime::ExternalHttpRuntimeProvider;
@@ -252,10 +252,7 @@ fn infer_provider_preferences_from_legacy_env() -> std::collections::BTreeMap<St
             .ok()
             .as_deref()
             .or_else(|| {
-                if std::env::var(TVREMIX_MCP_API_KEY_ENV)
-                    .map(|value| !value.trim().is_empty())
-                    .unwrap_or(false)
-                {
+                if tradingview_mcp_config_from_env_or_local().api_key.is_some() {
                     Some("tradingview_mcp")
                 } else {
                     None
