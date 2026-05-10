@@ -1,13 +1,10 @@
 use anyhow::{anyhow, bail, Context, Result};
-use chrono::{DateTime, TimeDelta, Utc};
-use reqwest::blocking::Client;
+use chrono::{DateTime, Utc};
 use serde_json::Value;
 use std::process::Command;
 
-use super::control_matrix_providers::{
-    TVREMIX_MCP_API_KEY_ENV, TVREMIX_MCP_DEFAULT_URL, TVREMIX_MCP_URL_ENV,
-};
 use super::harness::{MarketDataHarnessIbkrSpec, MarketDataHarnessTask, ProviderExecutionRequest};
+use super::tradingview_mcp::{fetch_tradingview_ohlcv, TradingViewMcpClient};
 use crate::data::realtime::market_support::{OptionsChainSummary, SpotInstrumentKind};
 use crate::data::realtime::yfinance_runtime::YahooFinanceProvider;
 use crate::types::Candle;
@@ -52,7 +49,19 @@ pub(crate) fn fetch_options_summary_for_task(
             }
         }
         ProviderExecutionRequest::TradingViewMcp { symbol } => {
-            fetch_tradingview_options_summary(symbol)
+            match fetch_tradingview_options_summary(symbol) {
+                Ok(summary) => Ok(summary),
+                Err(primary_error) => {
+                    let yahoo = YahooFinanceProvider::new("native://yfinance");
+                    if let Some(proxy_symbol) = task.fallback_options_proxy_symbol.as_deref() {
+                        yahoo.fetch_options_volatility_proxy_summary(proxy_symbol, symbol)
+                    } else {
+                        yahoo
+                            .fetch_options_chain_summary(task.symbol.as_str())
+                            .or(Err(primary_error))
+                    }
+                }
+            }
         }
         ProviderExecutionRequest::Ibkr { .. } => {
             bail!("unsupported options provider '{}'", task.provider)
@@ -138,55 +147,8 @@ fn fetch_ibkr_historical_candles(
     result
 }
 
-fn fetch_tradingview_ohlcv(
-    symbol: &str,
-    interval: &str,
-    start: DateTime<Utc>,
-    end: DateTime<Utc>,
-    count: usize,
-) -> Result<Vec<Candle>> {
-    let payload = call_tradingview_tool(
-        "get_ohlcv",
-        serde_json::json!({
-            "symbol": symbol,
-            "interval": tradingview_interval(interval),
-            "count": count,
-            "summary": false
-        }),
-    )?;
-    let bars = payload
-        .get("bars")
-        .and_then(Value::as_array)
-        .ok_or_else(|| anyhow!("tradingview get_ohlcv returned no bars"))?;
-    let mut candles = Vec::new();
-    for bar in bars {
-        let ts = bar.get("t").and_then(Value::as_f64).unwrap_or_default() as i64;
-        let timestamp = DateTime::<Utc>::from_timestamp(ts, 0)
-            .ok_or_else(|| anyhow!("invalid tradingview timestamp"))?;
-        if timestamp < start || timestamp > end + TimeDelta::days(3) {
-            continue;
-        }
-        let open = bar.get("o").and_then(Value::as_f64).unwrap_or_default();
-        let high = bar.get("h").and_then(Value::as_f64).unwrap_or_default();
-        let low = bar.get("l").and_then(Value::as_f64).unwrap_or_default();
-        let close = bar.get("c").and_then(Value::as_f64).unwrap_or_default();
-        candles.push(Candle {
-            timestamp,
-            open,
-            high,
-            low,
-            close,
-            volume: bar.get("v").and_then(Value::as_f64).unwrap_or_default(),
-        });
-    }
-    if candles.is_empty() {
-        bail!("tradingview returned no usable bars for '{}'", symbol);
-    }
-    Ok(candles)
-}
-
 fn fetch_tradingview_options_summary(symbol: &str) -> Result<OptionsChainSummary> {
-    let expirations = call_tradingview_tool(
+    let expirations = TradingViewMcpClient::from_env_or_local().call_tool(
         "get_option_expirations",
         serde_json::json!({ "symbol": symbol }),
     )?;
@@ -202,7 +164,7 @@ fn fetch_tradingview_options_summary(symbol: &str) -> Result<OptionsChainSummary
                 symbol
             )
         })?;
-    let chain = call_tradingview_tool(
+    let chain = TradingViewMcpClient::from_env_or_local().call_tool(
         "get_option_chain",
         serde_json::json!({
             "symbol": symbol,
@@ -280,74 +242,6 @@ fn fetch_tradingview_options_summary(symbol: &str) -> Result<OptionsChainSummary
     })
 }
 
-fn call_tradingview_tool(name: &str, arguments: Value) -> Result<Value> {
-    let key = std::env::var(TVREMIX_MCP_API_KEY_ENV).with_context(|| {
-        format!(
-            "{} must be set for tradingview_mcp",
-            TVREMIX_MCP_API_KEY_ENV
-        )
-    })?;
-    let url =
-        std::env::var(TVREMIX_MCP_URL_ENV).unwrap_or_else(|_| TVREMIX_MCP_DEFAULT_URL.to_string());
-    let client = Client::builder()
-        .timeout(std::time::Duration::from_secs(20))
-        .build()
-        .context("failed to build tradingview MCP client")?;
-    let response: Value = client
-        .post(url)
-        .header(reqwest::header::ACCEPT, "application/json, text/event-stream")
-        .bearer_auth(key)
-        .json(&serde_json::json!({
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "tools/call",
-            "params": {
-                "name": name,
-                "arguments": arguments,
-            }
-        }))
-        .send()
-        .with_context(|| format!("tradingview MCP call '{}' failed", name))?
-        .error_for_status()
-        .with_context(|| format!("tradingview MCP call '{}' returned error", name))?
-        .json()
-        .with_context(|| format!("failed to decode tradingview MCP response for '{}'", name))?;
-    if response
-        .pointer("/result/isError")
-        .and_then(Value::as_bool)
-        .unwrap_or(false)
-    {
-        bail!(
-            "tradingview MCP tool '{}' error: {}",
-            name,
-            response
-                .pointer("/result/content/0/text")
-                .and_then(Value::as_str)
-                .unwrap_or("unknown error")
-        );
-    }
-    if let Some(error_text) = response
-        .pointer("/result/structuredContent/error")
-        .and_then(Value::as_str)
-    {
-        bail!("tradingview MCP tool '{}' error: {}", name, error_text);
-    }
-    if response
-        .pointer("/result/structuredContent/success")
-        .and_then(Value::as_bool)
-        == Some(false)
-    {
-        bail!(
-            "tradingview MCP tool '{}' reported unsuccessful result",
-            name
-        );
-    }
-    response
-        .pointer("/result/structuredContent")
-        .cloned()
-        .ok_or_else(|| anyhow!("tradingview MCP tool '{}' missing structuredContent", name))
-}
-
 fn load_csv_candles(path: &std::path::Path) -> Result<Vec<Candle>> {
     let mut reader = csv::Reader::from_path(path)
         .with_context(|| format!("failed to open generated candle csv '{}'", path.display()))?;
@@ -404,20 +298,6 @@ fn load_csv_candles(path: &std::path::Path) -> Result<Vec<Candle>> {
         });
     }
     Ok(candles)
-}
-
-fn tradingview_interval(interval: &str) -> &str {
-    match interval {
-        "1m" => "1",
-        "2m" => "2",
-        "5m" => "5",
-        "15m" => "15",
-        "30m" => "30",
-        "60m" | "1h" => "60",
-        "90m" => "90",
-        "1d" => "1D",
-        _ => "1D",
-    }
 }
 
 fn ibkr_duration_from_range(start: DateTime<Utc>, end: DateTime<Utc>) -> String {

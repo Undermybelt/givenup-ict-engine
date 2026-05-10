@@ -10,6 +10,7 @@ pub mod sop_reports;
 pub mod source_freshness;
 pub mod source_health;
 pub mod source_snapshot;
+pub(crate) mod tradingview_mcp;
 
 pub use clean_futures::{
     discover_tomac_futures_datasets, infer_market_code_from_path, run_clean_futures,
@@ -25,7 +26,8 @@ pub use control_matrix_providers::{
     build_control_matrix_provider_summary, build_provider_summary_for_requirements,
     ControlMatrixDataRequirement, ControlMatrixProviderKind, ControlMatrixProviderStatus,
     ControlMatrixProviderSummary, IBKR_CAPABILITIES_RELATIVE_PATH, IBKR_CONSENT_RELATIVE_PATH,
-    TVREMIX_MCP_API_KEY_ENV, TVREMIX_MCP_DEFAULT_URL, TVREMIX_MCP_URL_ENV,
+    TRADINGVIEW_MCP_ARGS_ENV, TRADINGVIEW_MCP_CMD_ENV, TVREMIX_MCP_API_KEY_ENV,
+    TVREMIX_MCP_DEFAULT_URL, TVREMIX_MCP_LOCAL_CONFIG_RELATIVE_PATH, TVREMIX_MCP_URL_ENV,
 };
 pub use control_matrix_runtime::{
     build_control_matrix_runtime_overrides, ControlMatrixRuntimeOverrides,

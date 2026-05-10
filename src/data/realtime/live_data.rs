@@ -8,6 +8,7 @@ use super::{
     external_http_runtime::ExternalHttpRuntimeProvider,
     market_support::{AuxiliaryMarketEvidence, OptionsChainSummary, SpotInstrumentKind},
     provider::RealtimeDataProvider,
+    tradingview_mcp_runtime::TradingViewMcpRuntimeProvider,
     yfinance_runtime::YahooFinanceProvider,
 };
 
@@ -16,6 +17,7 @@ pub enum LiveDataBackend {
     ExternalHttp,
     Yfinance,
     CryptoPublic,
+    TradingViewMcp,
 }
 
 impl LiveDataBackend {
@@ -24,6 +26,7 @@ impl LiveDataBackend {
             "external_http" | "external_http_runtime" => Ok(Self::ExternalHttp),
             "yfinance" => Ok(Self::Yfinance),
             "crypto_public" | "crypto_public_runtime" => Ok(Self::CryptoPublic),
+            "tradingview" | "tradingview_mcp" | "tv_mcp" => Ok(Self::TradingViewMcp),
             other => bail!("unsupported live data backend '{}'", other),
         }
     }
@@ -33,6 +36,7 @@ impl LiveDataBackend {
             Self::ExternalHttp => "external_http_runtime",
             Self::Yfinance => "yfinance",
             Self::CryptoPublic => "crypto_public_runtime",
+            Self::TradingViewMcp => "tradingview_mcp",
         }
     }
 }
@@ -243,6 +247,87 @@ impl IntegratedLiveDataSource for YahooFinanceProvider {
     }
 }
 
+impl IntegratedLiveDataSource for TradingViewMcpRuntimeProvider {
+    fn fetch_futures_candles(
+        &self,
+        symbol: &str,
+        interval: &str,
+        start: DateTime<Utc>,
+        end: DateTime<Utc>,
+    ) -> Result<Vec<Candle>> {
+        TradingViewMcpRuntimeProvider::fetch_futures_candles(self, symbol, interval, start, end)
+    }
+
+    fn fetch_futures_last_price(&self, symbol: &str) -> Result<f64> {
+        Ok(TradingViewMcpRuntimeProvider::fetch_futures_quote(self, symbol)?.last)
+    }
+
+    fn fetch_spot_candles(
+        &self,
+        kind: SpotInstrumentKind,
+        symbol: &str,
+        interval: Option<&str>,
+        start: DateTime<Utc>,
+        end: DateTime<Utc>,
+    ) -> Result<Vec<Candle>> {
+        TradingViewMcpRuntimeProvider::fetch_spot_candles(self, kind, symbol, interval, start, end)
+    }
+
+    fn fetch_spot_last_price(&self, kind: SpotInstrumentKind, symbol: &str) -> Result<f64> {
+        Ok(TradingViewMcpRuntimeProvider::fetch_spot_quote(self, kind, symbol)?.last)
+    }
+
+    fn fetch_options_chain_summary(&self, symbol: &str) -> Result<OptionsChainSummary> {
+        TradingViewMcpRuntimeProvider::fetch_options_chain_summary(self, symbol)
+    }
+
+    fn fetch_options_volatility_proxy_summary(
+        &self,
+        proxy_symbol: &str,
+        underlying_symbol: &str,
+    ) -> Result<OptionsChainSummary> {
+        TradingViewMcpRuntimeProvider::fetch_options_volatility_proxy_summary(
+            self,
+            proxy_symbol,
+            underlying_symbol,
+        )
+    }
+
+    fn build_auxiliary_evidence(
+        &self,
+        spot_kind: SpotInstrumentKind,
+        spot_symbol: &str,
+        options_symbol: &str,
+        futures_candles: &[Candle],
+        spot_candles: &[Candle],
+        options_summary: &OptionsChainSummary,
+    ) -> AuxiliaryMarketEvidence {
+        TradingViewMcpRuntimeProvider::build_auxiliary_evidence(
+            self,
+            spot_kind,
+            spot_symbol,
+            options_symbol,
+            futures_candles,
+            spot_candles,
+            options_summary,
+        )
+    }
+
+    fn apply_auxiliary_evidence_to_outcome(
+        &self,
+        base_distribution: &[f64],
+        directional_bias: f64,
+        uncertainty_penalty: f64,
+    ) -> Vec<f64> {
+        TradingViewMcpRuntimeProvider::apply_auxiliary_evidence_to_outcome(
+            self,
+            base_distribution,
+            directional_bias,
+            uncertainty_penalty,
+        )
+    }
+}
+
 impl IntegratedLiveDataSource for CryptoPublicRuntimeProvider {
     fn fetch_futures_candles(
         &self,
@@ -328,5 +413,6 @@ pub fn build_live_data_source(
         LiveDataBackend::ExternalHttp => Box::new(ExternalHttpRuntimeProvider::new(base_url, None)),
         LiveDataBackend::Yfinance => Box::new(YahooFinanceProvider::new(base_url)),
         LiveDataBackend::CryptoPublic => Box::new(CryptoPublicRuntimeProvider::new(base_url)),
+        LiveDataBackend::TradingViewMcp => Box::new(TradingViewMcpRuntimeProvider::new(base_url)),
     }
 }

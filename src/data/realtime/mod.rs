@@ -6,6 +6,7 @@ pub mod live_data;
 pub mod market_support;
 pub mod provider;
 pub mod tradecat;
+pub mod tradingview_mcp_runtime;
 pub mod websocket;
 pub mod yfinance_runtime;
 
@@ -15,4 +16,5 @@ pub use external_http_runtime::ExternalHttpRuntimeProvider;
 pub use live_data::{build_live_data_source, IntegratedLiveDataSource, LiveDataBackend};
 pub use market_support::{AuxiliaryMarketEvidence, OptionsChainSummary, Quote, SpotInstrumentKind};
 pub use provider::RealtimeDataProvider;
+pub use tradingview_mcp_runtime::TradingViewMcpRuntimeProvider;
 pub use yfinance_runtime::YahooFinanceProvider;

@@ -11,6 +11,9 @@ use crate::application::backtest::{ControlMatrixPlan, Pb12Toggle, PB12_TOGGLES};
 pub const TVREMIX_MCP_DEFAULT_URL: &str = "https://tvremix.xyz/api/mcp/v1";
 pub const TVREMIX_MCP_URL_ENV: &str = "ICT_ENGINE_TVREMIX_MCP_URL";
 pub const TVREMIX_MCP_API_KEY_ENV: &str = "ICT_ENGINE_TVREMIX_MCP_API_KEY";
+pub const TVREMIX_MCP_LOCAL_CONFIG_RELATIVE_PATH: &str = ".ict-engine/tvremix_mcp.json";
+pub const TRADINGVIEW_MCP_CMD_ENV: &str = "ICT_ENGINE_TRADINGVIEW_MCP_CMD";
+pub const TRADINGVIEW_MCP_ARGS_ENV: &str = "ICT_ENGINE_TRADINGVIEW_MCP_ARGS";
 pub const IBKR_CONSENT_RELATIVE_PATH: &str = ".ict-engine/ibkr_consent.json";
 pub const IBKR_CAPABILITIES_RELATIVE_PATH: &str = ".ict-engine/ibkr_capabilities.json";
 pub const IBKR_GATEWAY_PORT_CANDIDATES: [(&str, u16); 4] = [
@@ -41,6 +44,14 @@ struct TradingviewMcpProbeDetails {
     connectivity_ok: bool,
     ohlcv_ok: Option<bool>,
     options_ok: Option<bool>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct TradingviewMcpRuntimeConfig {
+    pub url: String,
+    pub api_key: Option<String>,
+    pub credential_source: &'static str,
+    pub local_config_present: bool,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
@@ -139,7 +150,12 @@ where
     let provider_statuses = vec![
         ibkr_provider_status(&required, home_dir.as_deref(), &ibkr_runtime_probe()),
         yfinance_provider_status(&required, env_lookup),
-        tradingview_mcp_provider_status(&required, env_lookup, tradingview_probe),
+        tradingview_mcp_provider_status(
+            &required,
+            env_lookup,
+            home_dir.as_deref(),
+            tradingview_probe,
+        ),
     ];
     let actionable_install_prompts = provider_statuses
         .iter()
@@ -398,6 +414,7 @@ where
 fn tradingview_mcp_provider_status<F, T>(
     required: &BTreeSet<ControlMatrixDataRequirement>,
     env_lookup: &F,
+    home_dir: Option<&Path>,
     probe: &T,
 ) -> ControlMatrixProviderStatus
 where
@@ -411,16 +428,28 @@ where
         ControlMatrixDataRequirement::OptionsGreeks,
         ControlMatrixDataRequirement::OptionsImpliedVolatility,
     ];
-    let configured_url = env_lookup(TVREMIX_MCP_URL_ENV)
-        .filter(|value| !value.trim().is_empty())
-        .unwrap_or_else(|| TVREMIX_MCP_DEFAULT_URL.to_string());
-    let configured_key = env_lookup(TVREMIX_MCP_API_KEY_ENV)
-        .filter(|value| !value.trim().is_empty());
-    let has_api_key = configured_key.is_some();
-    let probe_details = configured_key
+    let config = tradingview_mcp_config_from_env_or_home(env_lookup, home_dir);
+    let configured_url = config.url.clone();
+    let has_api_key = config.api_key.is_some();
+    let probe_details = config
+        .api_key
         .as_deref()
         .map(|key| probe(required, &configured_url, key))
-        .unwrap_or_default();
+        .unwrap_or_else(|| TradingviewMcpProbeDetails {
+            connectivity_ok: true,
+            ohlcv_ok: None,
+            options_ok: if required.iter().any(|item| {
+                matches!(
+                    item,
+                    ControlMatrixDataRequirement::OptionsGreeks
+                        | ControlMatrixDataRequirement::OptionsImpliedVolatility
+                )
+            }) {
+                Some(false)
+            } else {
+                None
+            },
+        });
     let needs_ohlcv = required.iter().any(|item| {
         matches!(
             item,
@@ -436,25 +465,39 @@ where
                 | ControlMatrixDataRequirement::OptionsImpliedVolatility
         )
     });
-    let (healthy, status, reason, install_prompts) = if !has_api_key {
+    let (healthy, status, reason, install_prompts) = if !has_api_key
+        && needs_options
+        && !needs_ohlcv
+    {
         (
             false,
-            "install_required".to_string(),
-            "missing_tradingview_mcp_api_key".to_string(),
+            "ready_for_ohlcv_options_need_remote".to_string(),
+            "local_stdio_options_tools_unverified".to_string(),
             vec![
                 format!(
-                    "Consumer agent request: ask the user for a TradingViewRemix MCP API key, then add an HTTP MCP server pointing at {}. Search keywords: TradingViewRemix MCP API key.",
-                    configured_url
-                ),
-                format!(
-                    "Consumer agent follow-up: after the user shares the key, export {}=<redacted> and configure Authorization: Bearer from that env var",
+                    "Consumer agent optional remote mode for options lanes: set {}=<redacted> or save ~/.ict-engine/tvremix_mcp.json with fields api_key and optional url.",
                     TVREMIX_MCP_API_KEY_ENV
                 ),
+            ],
+        )
+    } else if !has_api_key && needs_options {
+        (
+            true,
+            "ready_degraded".to_string(),
+            "local_stdio_ohlcv_ready_options_unverified".to_string(),
+            vec![
                 format!(
-                    "Consumer agent optional override: export {}={}",
-                    TVREMIX_MCP_URL_ENV, TVREMIX_MCP_DEFAULT_URL
+                    "Consumer agent optional remote mode for options enrichment: set {}=<redacted>; OHLCV remains available through local stdio.",
+                    TVREMIX_MCP_API_KEY_ENV
                 ),
             ],
+        )
+    } else if !has_api_key {
+        (
+            true,
+            "ready".to_string(),
+            "local_stdio_ohlcv_available".to_string(),
+            Vec::new(),
         )
     } else if !probe_details.connectivity_ok {
         (
@@ -478,13 +521,22 @@ where
                 "Consumer agent follow-up: TradingViewRemix MCP is reachable but the OHLCV tool path failed on the built-in smoke check. Retry later or fall back to yfinance / IBKR for OHLCV lanes.".to_string(),
             ],
         )
-    } else if needs_options && probe_details.options_ok == Some(false) {
+    } else if needs_options && probe_details.options_ok == Some(false) && !needs_ohlcv {
         (
             false,
             "configured_runtime_unhealthy".to_string(),
             "tradingview_mcp_options_probe_failed".to_string(),
             vec![
                 "Consumer agent follow-up: TradingViewRemix MCP is reachable but the options-tool smoke check failed. Retry later or treat options_enriched lanes as temporarily degraded.".to_string(),
+            ],
+        )
+    } else if needs_options && probe_details.options_ok == Some(false) {
+        (
+            true,
+            "ready_degraded".to_string(),
+            "tradingview_mcp_options_probe_degraded".to_string(),
+            vec![
+                "Consumer agent follow-up: TradingViewRemix MCP OHLCV is usable, but the options-tool smoke check failed. Treat options_enriched lanes as temporarily degraded and keep OHLCV lanes available.".to_string(),
             ],
         )
     } else {
@@ -505,16 +557,31 @@ where
         supported_requirements: supported
             .into_iter()
             .filter(|item| required.contains(item))
+            .filter(|item| {
+                probe_details.options_ok != Some(false)
+                    || !matches!(
+                        item,
+                        ControlMatrixDataRequirement::OptionsGreeks
+                            | ControlMatrixDataRequirement::OptionsImpliedVolatility
+                    )
+            })
             .map(|item| item.as_str().to_string())
             .collect(),
         install_prompts,
         redacted_config: vec![
             format!("mcp_url={configured_url}"),
+            format!("credential_source={}", config.credential_source),
+            format!(
+                "local_config={}",
+                redact_secret_presence(config.local_config_present)
+            ),
             format!(
                 "{}={}",
                 TVREMIX_MCP_API_KEY_ENV,
                 redact_secret_presence(has_api_key)
             ),
+            format!("stdio_cmd_env={}", env_presence(TRADINGVIEW_MCP_CMD_ENV)),
+            format!("stdio_args_env={}", env_presence(TRADINGVIEW_MCP_ARGS_ENV)),
             format!("probe_connectivity={}", probe_details.connectivity_ok),
             format!(
                 "probe_ohlcv={}",
@@ -532,6 +599,70 @@ where
             ),
         ],
     }
+}
+
+pub(crate) fn tradingview_mcp_config_from_env_or_local() -> TradingviewMcpRuntimeConfig {
+    tradingview_mcp_config_from_env_or_home(&|name| std::env::var(name).ok(), home_dir().as_deref())
+}
+
+fn tradingview_mcp_config_from_env_or_home<F>(
+    env_lookup: &F,
+    home_dir: Option<&Path>,
+) -> TradingviewMcpRuntimeConfig
+where
+    F: Fn(&str) -> Option<String>,
+{
+    let local = home_dir
+        .map(|home| home.join(TVREMIX_MCP_LOCAL_CONFIG_RELATIVE_PATH))
+        .and_then(|path| load_local_tradingview_mcp_config(&path));
+    let local_config_present = local.is_some();
+    let env_url = env_lookup(TVREMIX_MCP_URL_ENV).filter(|value| !value.trim().is_empty());
+    let env_key = env_lookup(TVREMIX_MCP_API_KEY_ENV).filter(|value| !value.trim().is_empty());
+    let url = env_url
+        .or_else(|| local.as_ref().and_then(|config| config.url.clone()))
+        .unwrap_or_else(|| TVREMIX_MCP_DEFAULT_URL.to_string());
+    let (api_key, credential_source) = if let Some(key) = env_key {
+        (Some(key), "env")
+    } else if let Some(key) = local.as_ref().and_then(|config| config.api_key.clone()) {
+        (Some(key), "local_config")
+    } else {
+        (None, "missing")
+    };
+    TradingviewMcpRuntimeConfig {
+        url,
+        api_key,
+        credential_source,
+        local_config_present,
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct LocalTradingviewMcpConfig {
+    api_key: Option<String>,
+    url: Option<String>,
+}
+
+fn load_local_tradingview_mcp_config(path: &Path) -> Option<LocalTradingviewMcpConfig> {
+    let raw = std::fs::read_to_string(path).ok()?;
+    let payload: Value = serde_json::from_str(&raw).ok()?;
+    Some(LocalTradingviewMcpConfig {
+        api_key: first_non_empty_string(
+            &payload,
+            &["api_key", "key", "ICT_ENGINE_TVREMIX_MCP_API_KEY"],
+        ),
+        url: first_non_empty_string(&payload, &["url", "mcp_url", "ICT_ENGINE_TVREMIX_MCP_URL"]),
+    })
+}
+
+fn first_non_empty_string(payload: &Value, keys: &[&str]) -> Option<String> {
+    keys.iter().find_map(|key| {
+        payload
+            .get(*key)
+            .and_then(Value::as_str)
+            .map(str::trim)
+            .filter(|value| !value.is_empty())
+            .map(ToOwned::to_owned)
+    })
 }
 
 fn tradingview_mcp_probe_details(
@@ -594,15 +725,15 @@ fn tradingview_mcp_probe_details(
 }
 
 fn tradingview_mcp_tools_list_ok(url: &str, api_key: &str) -> bool {
-    let Ok(client) = Client::builder()
-        .timeout(Duration::from_secs(20))
-        .build()
-    else {
+    let Ok(client) = Client::builder().timeout(Duration::from_secs(20)).build() else {
         return false;
     };
     let Ok(response) = client
         .post(url)
-        .header(reqwest::header::ACCEPT, "application/json, text/event-stream")
+        .header(
+            reqwest::header::ACCEPT,
+            "application/json, text/event-stream",
+        )
         .bearer_auth(api_key)
         .json(&serde_json::json!({
             "jsonrpc": "2.0",
@@ -627,21 +758,16 @@ fn tradingview_mcp_tools_list_ok(url: &str, api_key: &str) -> bool {
         .unwrap_or(false)
 }
 
-fn tradingview_mcp_tool_success(
-    url: &str,
-    api_key: &str,
-    name: &str,
-    arguments: Value,
-) -> bool {
-    let Ok(client) = Client::builder()
-        .timeout(Duration::from_secs(20))
-        .build()
-    else {
+fn tradingview_mcp_tool_success(url: &str, api_key: &str, name: &str, arguments: Value) -> bool {
+    let Ok(client) = Client::builder().timeout(Duration::from_secs(20)).build() else {
         return false;
     };
     let Ok(response) = client
         .post(url)
-        .header(reqwest::header::ACCEPT, "application/json, text/event-stream")
+        .header(
+            reqwest::header::ACCEPT,
+            "application/json, text/event-stream",
+        )
         .bearer_auth(api_key)
         .json(&serde_json::json!({
             "jsonrpc": "2.0",
@@ -695,6 +821,14 @@ fn redact_secret_presence(present: bool) -> &'static str {
     }
 }
 
+fn env_presence(name: &str) -> &'static str {
+    if std::env::var_os(name).is_some() {
+        "<set>"
+    } else {
+        "<unset>"
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -719,13 +853,21 @@ mod tests {
             .provider_statuses
             .iter()
             .any(|status| status.provider == "ibkr" && status.status == "install_required"));
-        assert!(summary.provider_statuses.iter().any(|status| {
-            status.provider == "tradingview_mcp" && status.status == "install_required"
-        }));
+        let tradingview = summary
+            .provider_statuses
+            .iter()
+            .find(|status| status.provider == "tradingview_mcp")
+            .unwrap();
+        assert!(tradingview.healthy);
+        assert_eq!(tradingview.status, "ready_degraded");
+        assert_eq!(
+            tradingview.reason,
+            "local_stdio_ohlcv_ready_options_unverified"
+        );
         assert!(summary
             .actionable_install_prompts
             .iter()
-            .any(|prompt| prompt.contains("ask the user for a TradingViewRemix MCP API key")));
+            .any(|prompt| prompt.contains("options enrichment")));
         assert!(summary
             .actionable_install_prompts
             .iter()
@@ -809,5 +951,90 @@ mod tests {
             .unwrap();
         assert_eq!(provider.status, "configured_runtime_unhealthy");
         assert_eq!(provider.reason, "tradingview_mcp_ohlcv_probe_failed");
+    }
+
+    #[test]
+    fn tradingview_provider_keeps_ohlcv_ready_when_options_probe_degrades() {
+        let required = BTreeSet::from([
+            ControlMatrixDataRequirement::EtfReference,
+            ControlMatrixDataRequirement::OptionsGreeks,
+            ControlMatrixDataRequirement::OptionsImpliedVolatility,
+        ]);
+        let summary = build_provider_summary_for_requirements_with_env(
+            required,
+            &|name| match name {
+                TVREMIX_MCP_API_KEY_ENV => Some("secret-token-value".to_string()),
+                _ => None,
+            },
+            None,
+            &IbkrRuntimeProbeDetails::default,
+            &|_, _, _| TradingviewMcpProbeDetails {
+                connectivity_ok: true,
+                ohlcv_ok: Some(true),
+                options_ok: Some(false),
+            },
+        );
+        let provider = summary
+            .provider_statuses
+            .iter()
+            .find(|status| status.provider == "tradingview_mcp")
+            .unwrap();
+        assert!(provider.healthy);
+        assert_eq!(provider.status, "ready_degraded");
+        assert_eq!(provider.reason, "tradingview_mcp_options_probe_degraded");
+        assert!(provider
+            .supported_requirements
+            .contains(&"etf_reference".to_string()));
+        assert!(!provider
+            .supported_requirements
+            .contains(&"options_greeks".to_string()));
+        assert!(provider
+            .install_prompts
+            .iter()
+            .any(|prompt| prompt.contains("OHLCV is usable")));
+    }
+
+    #[test]
+    fn tradingview_provider_uses_local_credential_file_when_env_is_absent() {
+        let home = tempfile::tempdir().unwrap();
+        let config_dir = home.path().join(".ict-engine");
+        std::fs::create_dir_all(&config_dir).unwrap();
+        std::fs::write(
+            config_dir.join("tvremix_mcp.json"),
+            r#"{"api_key":"local-secret-token","url":"https://tvremix.example/mcp"}"#,
+        )
+        .unwrap();
+
+        let required = BTreeSet::from([ControlMatrixDataRequirement::EtfReference]);
+        let summary = build_provider_summary_for_requirements_with_env(
+            required,
+            &|_| None,
+            Some(home.path().to_path_buf()),
+            &IbkrRuntimeProbeDetails::default,
+            &|_, url, key| {
+                assert_eq!(url, "https://tvremix.example/mcp");
+                assert_eq!(key, "local-secret-token");
+                TradingviewMcpProbeDetails {
+                    connectivity_ok: true,
+                    ohlcv_ok: Some(true),
+                    options_ok: None,
+                }
+            },
+        );
+        let provider = summary
+            .provider_statuses
+            .iter()
+            .find(|status| status.provider == "tradingview_mcp")
+            .unwrap();
+        assert_eq!(provider.status, "ready");
+        assert_eq!(provider.reason, "mcp_url_and_api_key_available");
+        assert!(provider
+            .redacted_config
+            .iter()
+            .all(|item| !item.contains("local-secret-token")));
+        assert!(summary
+            .actionable_install_prompts
+            .iter()
+            .all(|prompt| !prompt.contains("TradingViewRemix MCP API key")));
     }
 }

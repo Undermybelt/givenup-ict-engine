@@ -5,11 +5,11 @@ use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 
+use crate::application::data_sources::control_matrix_providers::ibkr_runtime_probe_details;
 use crate::application::data_sources::{
     build_provider_summary_for_requirements, ControlMatrixDataRequirement,
     IBKR_CAPABILITIES_RELATIVE_PATH, IBKR_CONSENT_RELATIVE_PATH,
 };
-use crate::application::data_sources::control_matrix_providers::ibkr_runtime_probe_details;
 use crate::application::entry_models::{entry_model_providers, ConsumerDefaultMode};
 use crate::config::shell_quote;
 
@@ -664,9 +664,9 @@ fn all_market_data_requirements() -> std::collections::BTreeSet<ControlMatrixDat
 }
 
 fn market_data_access_mode(status: &str, reason: &str) -> String {
-    if status == "ready" && reason.contains("consent") {
+    if status.starts_with("ready") && reason.contains("consent") {
         "local_consent_runtime".to_string()
-    } else if status == "ready" {
+    } else if status.starts_with("ready") {
         "public_or_env_ready".to_string()
     } else if reason.contains("api_key") {
         "api_key_required".to_string()
@@ -795,7 +795,10 @@ fn probe_ibkr_bridge() -> LocalRuntimeProbe {
             "installed_unconfigured".to_string(),
             "ibkr_bridge_installed_but_consent_missing".to_string(),
         )
-    } else if !runtime_probe.ready && !runtime_probe.missing_modules.is_empty() && !reachable_candidates.is_empty() {
+    } else if !runtime_probe.ready
+        && !runtime_probe.missing_modules.is_empty()
+        && !reachable_candidates.is_empty()
+    {
         (
             false,
             "configured_runtime_unhealthy".to_string(),
@@ -1050,12 +1053,13 @@ fn apply_provider_user_semantics(item: &mut ProviderCatalogItem) {
                     .to_string();
         }
         "tradingview_mcp" => {
-            item.user_access = "api_key_required".to_string();
+            item.user_access = "local_stdio_or_remote_api_key".to_string();
             item.market_fit = vec!["tradfi".to_string(), "crypto".to_string()];
             item.fallback_priority = Some(31);
             item.user_summary =
-                "Setup-required TradingViewRemix MCP path for chart-linked symbols and richer TradingView coverage."
+                "Hot-pluggable TradingView MCP path: zero-config local stdio for OHLCV, optional remote key for enriched lanes."
                     .to_string();
+            item.notes.push("zero_config_stdio_ohlcv".to_string());
         }
         _ => {}
     }
@@ -1126,9 +1130,7 @@ fn compact_provider_guide_line(providers: &[ProviderCatalogItem]) -> Option<Stri
     let live_zero_config = providers
         .iter()
         .filter(|provider| {
-            provider.ready
-                && provider.domain == "live_runtime"
-                && provider.adopted_by_default
+            provider.ready && provider.domain == "live_runtime" && provider.adopted_by_default
         })
         .map(|provider| provider.provider_id.clone())
         .collect::<Vec<_>>();
@@ -1364,7 +1366,11 @@ fn build_provider_catalog_agent_surface(
         selectable_providers,
         default_enabled_providers,
         install_prompts,
-        available_opt_in_profiles: surface.available_opt_in_profiles.clone(),
+        available_opt_in_profiles: if surface.selected_profile.is_some() {
+            surface.available_opt_in_profiles.clone()
+        } else {
+            Vec::new()
+        },
         selected_profile: surface
             .selected_profile
             .as_ref()
@@ -1533,12 +1539,10 @@ fn workflow_relevant_provider_ids(
     ids
 }
 
-fn provider_ask_user_prompts(
-    provider: &ProviderCatalogPendingAgentItem,
-) -> Vec<String> {
+fn provider_ask_user_prompts(provider: &ProviderCatalogPendingAgentItem) -> Vec<String> {
     match provider.provider_id.as_str() {
         "tradingview_mcp" => vec![
-            "Ask the user for the TradingViewRemix MCP API key for this run and set ICT_ENGINE_TVREMIX_MCP_API_KEY before retrying TradingView-backed fetches.".to_string(),
+            "Use local stdio TradingView MCP for OHLCV by default; ask for ICT_ENGINE_TVREMIX_MCP_API_KEY only when the selected lane explicitly needs remote/options enrichment.".to_string(),
         ],
         "kraken_cli" => vec![
             format!(
@@ -1885,7 +1889,10 @@ mod tests {
         );
         assert_eq!(agent.providers[0].provider_id, "yfinance");
         assert_eq!(agent.providers[0].user_access, "free_no_login");
-        assert_eq!(agent.providers[0].summary, "Free historical tradfi fallback.");
+        assert_eq!(
+            agent.providers[0].summary,
+            "Free historical tradfi fallback."
+        );
     }
 
     #[test]
@@ -1945,9 +1952,9 @@ mod tests {
         assert!(!compact.contains("opt_in_profiles:"));
         assert!(compact.contains("guide:"));
         assert!(compact.contains("yfinance: access=free_no_login"));
-        assert!(compact.contains(
-            "details: use ict-engine provider-status --provider <id> --compact"
-        ));
+        assert!(
+            compact.contains("details: use ict-engine provider-status --provider <id> --compact")
+        );
     }
 
     #[test]
@@ -2096,7 +2103,8 @@ mod tests {
         assert!(support
             .pending_providers
             .iter()
-            .all(|item| item.contains("external_http_runtime") || item.contains("crypto_public_runtime")));
+            .all(|item| item.contains("external_http_runtime")
+                || item.contains("crypto_public_runtime")));
         assert!(support
             .install_prompts
             .iter()

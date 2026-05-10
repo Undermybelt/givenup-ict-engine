@@ -20,6 +20,7 @@ pub fn resolve_live_backend_base_url(
         "yfinance" => "native://yfinance".to_string(),
         "external_http" | "external_http_runtime" => external_http_base_url.to_string(),
         "crypto_public" | "crypto_public_runtime" => crypto_public_base_url.to_string(),
+        "tradingview" | "tradingview_mcp" | "tv_mcp" => "mcp://tradingview_mcp".to_string(),
         _ => "native://yfinance".to_string(),
     }
 }
@@ -84,6 +85,10 @@ mod tests {
             "http://crypto"
         );
         assert_eq!(
+            resolve_live_backend_base_url("tradingview_mcp", "http://ext", "http://crypto"),
+            "mcp://tradingview_mcp"
+        );
+        assert_eq!(
             resolve_live_backend_base_url("unknown", "http://ext", "http://crypto"),
             "native://yfinance"
         );
@@ -124,6 +129,14 @@ mod tests {
                 .unwrap()
                 .as_str(),
             "crypto_public_runtime"
+        );
+        assert_eq!(
+            parse_live_backend("tradingview_mcp").unwrap().as_str(),
+            "tradingview_mcp"
+        );
+        assert_eq!(
+            parse_live_backend("tv_mcp").unwrap().as_str(),
+            "tradingview_mcp"
         );
     }
 }
