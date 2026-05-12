@@ -1,7 +1,151 @@
 # ICT Engine — Agent Entry Map
 
 This file is the first thing any AI agent should read when entering this repo.
-It maps the factor landscape so agents cannot claim "no usable factors exist."
+It is the shared operating contract for Codex, Claude, and other agents. It also
+maps the factor landscape so agents cannot claim "no usable factors exist."
+
+## Current Release Gate
+
+Do not publish, tag, push a release mirror, or tell the operator that the release
+is ready until the closed-loop path below has fresh evidence in
+`docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`.
+
+Required before release:
+- zero-config first run works for an open-source consumer;
+- no private API key, token, local file path, or maintainer-only dataset is
+  required or leaked by default;
+- no-config provider behavior falls back to Yahoo/yfinance-compatible defaults;
+- explicitly configured richer/realtime providers are preferred only when the
+  user opts in with `--profile`, provider config, env vars, or an explicit
+  request;
+- current/in-progress regime posterior probabilities are visible to users and
+  agents, not just a completed regime label;
+- the chain can be inspected through provider data, Pre-Bayes/filter, BBN,
+  structural path-ranker/CatBoost artifacts, execution tree, and feedback/update
+  learning;
+- TimesFM remains optional hot-plug evidence only. Do not make it required, and
+  do not keep it in the decision path unless it improves calibrated posterior
+  quality in fresh evidence.
+
+## Zero-Config Consumer Start
+
+Use commands from a fresh shell and an explicit `/tmp` state directory when
+checking consumer readiness:
+
+```bash
+cargo run --quiet -- provider-status --compact
+cargo run --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --human
+cargo run --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-first-run --human
+cargo run --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --agent
+cargo run --quiet -- pre-bayes-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --refresh --output-format json
+cargo run --quiet -- policy-training-status --symbol DEMO --state-dir /tmp/ict-engine-first-run --output-format agent
+```
+
+Rules:
+- `--demo` is for first-run closure and smoke evidence; it is not trading proof.
+- Use `--state-dir /tmp/...` for trials unless the operator explicitly asks for
+  repo-local state.
+- Keep `--human`, `--compact`, or `--agent` outputs token-friendly. Avoid
+  `--inline-ledger` unless debugging a specific ledger issue.
+- If a command fails or a surface is missing, record the exact command and
+  blocker in the handoff TODO before changing code.
+
+## Provider And Privacy Contract
+
+Public surfaces must stay generic. The CLI must not assume the maintainer's
+markets, paths, broker account, provider keys, strategy folder, or private data.
+
+Provider policy:
+- Default/no config: use public Yahoo/yfinance-compatible behavior where live
+  data is needed and demo fixtures where the command is explicitly a demo.
+- Configured provider: if the user provides an opt-in `--profile`, provider
+  config, env var, local credential file, or explicit provider request, prefer
+  the richer or timelier provider for the requested role.
+- Missing provider: route agents through `provider-status --agent` and surface
+  install/config guidance via workflow status or `human-next` text. Do not invent
+  provider setup text in isolated command branches.
+- Private profiles: examples under `examples/provider_profiles/` are opt-in
+  references, not default runtime inputs.
+
+Privacy rules:
+- Never commit real API keys, tokens, account ids, secrets, private broker
+  output, or absolute maintainer data paths.
+- Do not expose `/Users/...`, local Downloads paths, or profile-specific paths in
+  default human/agent output.
+- Redacted path hints may appear only in explicit opt-in profile surfaces.
+- Generated dependency workspaces, Auto-Quant clones, large experiment state, and
+  provider caches do not belong in a public release.
+
+## Closed-Loop Contract
+
+The intended runtime order is:
+
+1. Provider/data surface: `provider-status`, `market-data-harness`,
+   `analyze-live`, or `analyze --demo`.
+2. Regime posterior: `analyze` persists the canonical structural posterior into
+   workflow state; `workflow-status --refresh --agent` must expose active regime,
+   confidence, and probability distribution.
+3. Pre-Bayes/filter: `pre-bayes-status --refresh` exposes evidence quality,
+   filtered labels, soft evidence, and policy/bridge status.
+4. BBN: belief evidence from the Pre-Bayes filter feeds the trading network and
+   persisted workflow snapshot.
+5. Structural path-ranker/CatBoost: export or register ranked structural-path
+   targets with `export-structural-path-ranking-target`,
+   `register-structural-path-ranking-trainer-artifact`,
+   `apply-structural-path-ranking-external-scores`, and
+   `enable-structural-path-ranking-runtime`.
+6. Execution tree: `analyze` persists `execution_tree_trace.json` and execution
+   tree artifacts; `workflow-status` must show whether the path-ranker score was
+   visible or actually used.
+7. Feedback/update: use `update --feedback-file` or explicit realized outcome
+   fields to feed posterior context and structural feedback into learning state.
+8. Training/refinement: `policy-training-status` and structural path-ranking
+   exports are the read-only inspection points for whether outcomes can train or
+   refine the network.
+
+Do not collapse this chain into a chat-only claim. For any release or promotion
+claim, provide commands and artifacts proving the relevant links ran.
+
+## Regime Posterior Requirement
+
+Agents must expose live/incomplete regime belief as a probability distribution.
+Acceptable agent-facing fields include maps such as:
+
+```text
+trend=0.42 range=0.31 transition=0.19 other=0.08
+```
+
+If the regime is not fully formed, do not force a single label. Report the
+candidate distribution, uncertainty, source evidence, and whether it is suitable
+for execution, observation, or training only. Aggregate Sharpe is not enough;
+regime accuracy and regime-conditioned win rate matter for promotion.
+
+## TimesFM Policy
+
+TimesFM is an optional forecast bridge (`src/python_bridge/timesfm.rs` and
+`scripts/timesfm_forecast.py`). Treat it as hot-pluggable evidence:
+- do not require Python or TimesFM for zero-config Rust CLI use;
+- do not block consumer workflow if TimesFM is absent;
+- only wire TimesFM into posterior or execution decisions when fresh validation
+  shows calibrated posterior quality improves;
+- if it does not improve the posterior, leave it disabled or remove that edge in
+  a separate, evidenced slice.
+
+## Agent Work Discipline
+
+- Read and update
+  `docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md` during
+  this release/closed-loop lane.
+- Preserve unrelated dirty worktree changes. Stage only files touched for the
+  current coherent slice.
+- Prefer `/tmp/...` for smoke state and generated artifacts.
+- Use `rg`/`rg --files` for discovery and small, focused tests for verification.
+- Public CLI/workflow surfaces must remain ontology-free and consumer-usable.
+- If provider evidence is missing, enumerate Yahoo/yfinance, IBKR,
+  TradingView/MCP, Kraken/public crypto, repo-local fixtures, and Auto-Quant
+  artifacts before calling the lane data-blocked.
+- Commit only verified, relevant slices. Do not release without a clean export
+  and explicit operator confirmation.
 
 ## Factor Traceability
 

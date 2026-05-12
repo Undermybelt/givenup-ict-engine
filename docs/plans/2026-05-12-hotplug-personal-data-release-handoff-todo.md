@@ -64,12 +64,18 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Update this board after each slice | Current slice recorded here. |
 | done | Commit safe slices | Checkpoint commit created for the intended source/docs/tests; nested dependency workspaces and active run state were excluded. |
 | done | Prepare release-mirror export/audit | Local mirror clone `/tmp/ict-engine-release-mirror-v012.87caSH` was synced from clean export and committed locally; re-read its HEAD before any push; no tag/push/release created. |
-| blocked | Publish release mirror | Blocked only on explicit operator confirmation for `v0.1.2` tag/push/`gh release create` per release runbook. GitHub auth is currently available and remote has no `v0.1.2` tag. |
+| done | Prove/fix consumer closed-loop usability before release | Found and fixed workflow-status first-run provider summary mismatch; `provider-status` and `workflow-status` now both show yfinance as zero-config live fallback. |
+| done | Add one-line `CLAUDE.md` redirect | Contains one line: `open AGENTS.md and read`. |
+| done | Expand `AGENTS.md` into the authoritative agent usage contract | Covers zero-config commands, provider policy, privacy rules, closed-loop order, posterior requirements, TimesFM optionality, feedback loop, and release constraints. |
+| done | Run fresh zero-config smoke in `/tmp` state | `/tmp/ict-engine-closed-loop-smoke-fixed.bmbPSO` ran provider/workflow/analyze/Pre-Bayes/policy-training/export/update checks with no profile and no private provider config. |
+| done | Run focused verification for the closed-loop/docs slice | `cargo fmt --check`, provider-neutral CLI tests, workflow-status tests, and Clippy passed. |
+| done | Commit the closed-loop/docs slice | This amended commit staged only `AGENTS.md`, `CLAUDE.md`, `workflow_status.rs`, and this handoff board. |
+| blocked | Publish release mirror | Blocked on the new closed-loop/entrypoint/privacy gate and then explicit operator confirmation for `v0.1.2` tag/push/`gh release create`. GitHub auth was previously available and remote had no `v0.1.2` tag, but re-check before any publish. |
 
 ## Resume State Hint
 
-Active slice: broader verification and safe commit curation after release-blocking
-Clippy repair plus hot-plug profile-choice improvement.
+Active slice: closed-loop applicability, consumer zero-config/privacy audit, agent
+entrypoint docs, and fresh `/tmp` smoke before release publication.
 
 If resuming:
 1. Re-run `git status --short --branch`.
@@ -80,7 +86,7 @@ If resuming:
 
 ## Drift Check Draft
 
-- Scope: still aligned with factor-result release readiness plus optional personal-data hot-plug UX.
+- Scope: still aligned with factor-result release readiness plus optional personal-data hot-plug UX; release is now gated by fresh closed-loop applicability proof.
 - Compatibility boundary: generic public CLI must not depend on maintainer-local ontology or data.
 - Retirement track: generated dependency workspaces should remain untracked or be moved out of repo release artifacts; this board does not make them release evidence.
 - Decision: continue.
@@ -113,6 +119,20 @@ If resuming:
 - Local mirror prep: `/tmp/ict-engine-release-mirror-v012.87caSH` was cloned from `Undermybelt/ict-engine-release`, synced from `/tmp/ict-engine-release-export.ueDk6B`, scanned for large files/nested `.git`/state dirs/common secret patterns, and committed locally; re-read mirror HEAD before any push.
 - GH CLI: `gh auth status` currently reports an active `Undermybelt` login with `repo`/`workflow` scopes.
 - Release mirror remote probe via HTTPS showed `v0.1.1` exists at commit `5bc7bc74dfc2b6c88840b774c662d62c1d81cca1`.
+- `cargo run --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-closed-loop-smoke-fixed.bmbPSO --agent`: passed after the provider-summary fix and now reports `live zero-config=yfinance` with `selected_profile_id=null`.
+- `cargo run --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-closed-loop-smoke-fixed.bmbPSO --human`: passed; produced Pre-Bayes `pass_neutralized`, execution `observe/transition_guardrail/guarded`, and persisted `execution_tree_trace.json`.
+- `cargo run --quiet -- workflow-status --symbol DEMO --state-dir /tmp/ict-engine-closed-loop-smoke-fixed.bmbPSO --refresh --agent`: passed; exposes posterior distribution `trend=0.4550`, `range=0.3090`, `stress=0.1596`, `transition=0.0764`.
+- `cargo run --quiet -- pre-bayes-status --symbol DEMO --state-dir /tmp/ict-engine-closed-loop-smoke-fixed.bmbPSO --refresh --output-format json`: passed; exposes the same canonical structural probabilities and `latest_uses_soft_evidence=true`.
+- `jq ... execution_tree_trace.json`: passed; execution tree persisted `branch=transition_guardrail`, `gate_status=observe`, ranker visible/used flags false, and fail-closed validation notes.
+- `cargo run --quiet -- export-structural-path-ranking-target --symbol DEMO --state-dir /tmp/ict-engine-closed-loop-smoke-fixed.bmbPSO`: passed; exported 3 structural path-ranking rows plus CSV/JSONL/history/manifest under `/tmp/.../policy_training/`.
+- `cargo run --quiet -- update --symbol DEMO --outcome win --entry-signal strong_buy --state-dir /tmp/ict-engine-closed-loop-smoke-fixed.bmbPSO --pnl 1.0 --ensemble`: passed; consumed pending update/execution candidate artifacts and recorded feedback into update history.
+- `cargo run --quiet -- policy-training-status --symbol DEMO --state-dir /tmp/ict-engine-closed-loop-smoke-fixed.bmbPSO --output-format agent`: passed after export/update; reports `analyze_runs=1`, `update_runs=1`, and structural path ranking target rows while keeping runtime disabled/fail-closed until a trainer artifact is explicitly registered.
+- Privacy smoke: `workflow-status --agent | rg "/Users/|api[_-]?key|secret|token" -i` returned no matches for the zero-config smoke state.
+- `cargo fmt --check`: passed after the closed-loop/docs slice.
+- `cargo test --test provider_neutral_cli -- --nocapture`: passed, 19 tests.
+- `cargo test application::orchestration::workflow_status::tests:: -- --nocapture`: passed, 114 tests.
+- `cargo clippy --all-targets -- -D warnings`: passed.
+- Commit checkpoint: this amended `Document closed-loop consumer gate` commit.
 
 ## Slice Notes
 
@@ -307,3 +327,32 @@ Next:
 - After explicit `v0.1.2` confirmation, re-check remote is still at the probed
   base, then push mirror `main`, create tag `v0.1.2`, push tag, and run
   `gh release create`.
+
+### 2026-05-12 closed-loop consumer gate slice
+
+Changed:
+- `CLAUDE.md`
+- `AGENTS.md`
+- `src/application/orchestration/workflow_status.rs`
+- `docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`
+
+Behavior:
+- `CLAUDE.md` is only a one-line redirect into `AGENTS.md`.
+- `AGENTS.md` is now the shared agent contract for zero-config use, provider
+  fallback/priority, privacy isolation, closed-loop order, regime posterior
+  surfacing, TimesFM optionality, and release constraints.
+- `workflow-status` first-run routing now treats ready default live runtimes as
+  live zero-config providers, matching `provider-status`.
+- `workflow-status --agent` now surfaces the resolved ensemble posterior active
+  regime, posterior confidence, posterior probability map, normalization status,
+  and short evidence tail.
+
+Evidence:
+- `cargo test application::orchestration::workflow_status::tests::agent_workflow_status_empty_state_uses_explicit_no_state_contract -- --nocapture`: passed.
+- `cargo test application::orchestration::workflow_status::tests::agent_and_human_workflow_status_views_prefer_canonical_analyze_ensemble_surface -- --nocapture`: passed.
+- `/tmp/ict-engine-closed-loop-smoke-fixed.bmbPSO` ran zero-config workflow/analyze/Pre-Bayes/policy-training/export/update checks listed in the evidence bundle above.
+- `cargo fmt --check`, `cargo test --test provider_neutral_cli -- --nocapture`, `cargo test application::orchestration::workflow_status::tests:: -- --nocapture`, and `cargo clippy --all-targets -- -D warnings` passed.
+
+Next:
+- No release publish yet. Re-check remote/mirror and run a clean export only
+  after the operator explicitly asks to resume release publication.

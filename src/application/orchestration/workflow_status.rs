@@ -1211,7 +1211,7 @@ fn build_first_run_provider_summary(provider_status_agent: &ProviderCatalogAgent
         .map(|provider| provider.provider_id.clone())
         .unwrap_or_else(|| "none".to_string());
     let live_zero_config = first_run_provider_ids(&provider_status_agent.providers, |provider| {
-        provider.ready && provider.user_access == "zero_config_local"
+        provider.ready && provider.domain == "live_runtime" && provider.adopted_by_default
     });
     let crypto = first_run_provider_ids(&provider_status_agent.providers, |provider| {
         provider.ready
@@ -2696,6 +2696,11 @@ fn build_agent_workflow_status_view_with_provider_agent_and_structural_prior_sta
                 "final_action": vote.final_action,
                 "confidence": vote.confidence,
                 "consensus_strength": vote.consensus_strength,
+                "posterior_active_regime": vote.posterior_active_regime,
+                "posterior_confidence": vote.posterior_confidence,
+                "posterior_probabilities": vote.posterior_probabilities,
+                "posterior_normalization_status": vote.posterior_normalization_status,
+                "posterior_evidence": vote.posterior_evidence.iter().take(5).cloned().collect::<Vec<_>>(),
                 "hard_block_active": vote.hard_block.active,
                 "hard_block_reason": vote.hard_block.reason,
                 "recommended_command": vote.recommended_command,
@@ -6651,6 +6656,10 @@ mod tests {
             .as_str()
             .unwrap()
             .contains("tradfi free fallback"));
+        assert!(value["first_run_router"]["provider_summary"]
+            .as_str()
+            .unwrap()
+            .contains("live zero-config=yfinance"));
     }
 
     #[test]
@@ -11929,6 +11938,15 @@ mod tests {
             0.78
         );
         assert_eq!(agent_value["ensemble"]["confidence"], 0.78);
+        assert_eq!(agent_value["ensemble"]["posterior_active_regime"], "trend");
+        assert_eq!(
+            agent_value["ensemble"]["posterior_probabilities"]["trend"],
+            0.78
+        );
+        assert_eq!(
+            agent_value["ensemble"]["posterior_probabilities"]["range"],
+            0.14
+        );
     }
 
     #[test]
