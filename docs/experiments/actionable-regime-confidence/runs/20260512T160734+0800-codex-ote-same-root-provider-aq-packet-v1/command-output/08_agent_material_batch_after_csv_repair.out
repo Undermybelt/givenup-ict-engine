@@ -1,0 +1,196 @@
+{
+  "artifact_id": "auto-quant-agent-material-batch:PROVIDER_OTE_160734:20260512T082336.305Z",
+  "generated_at": "2026-05-12T08:23:36.305931Z",
+  "symbol": "PROVIDER_OTE_160734",
+  "shared_workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/.deps/auto-quant",
+  "source_repo_url": "/Users/thrill3r/Auto-Quant",
+  "max_parallel": 1,
+  "jobs": [
+    {
+      "job_id": "OTE_current_provider_packet_-_yfinance_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_yfinance_SPY_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/agent-material/ote-current-yf-spy-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-current-yf-spy-1h-v1",
+        "generated_at": null,
+        "title": "OTE current provider packet - yfinance SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/yahoo_spy_1h.normalized.aq.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/agent-material/ProviderOteTrendRetracementV1.py",
+        "strategy_class_name": "ProviderOteTrendRetracementV1",
+        "strategy_brief": "Board B OTE continuation branch packet using 0.500, 0.618, 0.705, and 0.786 retracement leaves inside TrendExpansion.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendExpansion -> NormalVolatility -> OTERetracementLevel -> OTEContinuationLong",
+          "source_provider=yfinance/YF SPY 1h current fetch",
+          "promotion_allowed=false until same-root six-provider authority and downstream handoff probes are complete",
+          "data_path_repaired_for_ict_engine_loader=timestamp_header"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_current_provider_packet_-_Binance_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_Binance_BTCUSDT_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/agent-material/ote-current-binance-btcusdt-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-current-binance-btcusdt-1h-v1",
+        "generated_at": null,
+        "title": "OTE current provider packet - Binance BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/binance_btcusdt_1h.normalized.aq.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/agent-material/ProviderOteTrendRetracementV1.py",
+        "strategy_class_name": "ProviderOteTrendRetracementV1",
+        "strategy_brief": "Board B OTE continuation branch packet using 0.500, 0.618, 0.705, and 0.786 retracement leaves inside TrendExpansion.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendExpansion -> NormalVolatility -> OTERetracementLevel -> OTEContinuationLong",
+          "source_provider=Binance public BTCUSDT 1h current fetch",
+          "promotion_allowed=false until same-root six-provider authority and downstream handoff probes are complete",
+          "data_path_repaired_for_ict_engine_loader=timestamp_header"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_current_provider_packet_-_Bybit_BTCUSDT_linear_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_Bybit_BTCUSDT_linear_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/agent-material/ote-current-bybit-btcusdt-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-current-bybit-btcusdt-1h-v1",
+        "generated_at": null,
+        "title": "OTE current provider packet - Bybit BTCUSDT linear 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.aq.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/agent-material/ProviderOteTrendRetracementV1.py",
+        "strategy_class_name": "ProviderOteTrendRetracementV1",
+        "strategy_brief": "Board B OTE continuation branch packet using 0.500, 0.618, 0.705, and 0.786 retracement leaves inside TrendExpansion.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendExpansion -> NormalVolatility -> OTERetracementLevel -> OTEContinuationLong",
+          "source_provider=Bybit public linear BTCUSDT 1h current fetch",
+          "promotion_allowed=false until same-root six-provider authority and downstream handoff probes are complete",
+          "data_path_repaired_for_ict_engine_loader=timestamp_header"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_current_provider_packet_-_Kraken_PF_XBTUSD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_Kraken_PF_XBTUSD_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/agent-material/ote-current-kraken-pfxbtusd-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-current-kraken-pfxbtusd-1h-v1",
+        "generated_at": null,
+        "title": "OTE current provider packet - Kraken PF_XBTUSD 1h",
+        "symbol": "XBTUSD",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.aq.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/agent-material/ProviderOteTrendRetracementV1.py",
+        "strategy_class_name": "ProviderOteTrendRetracementV1",
+        "strategy_brief": "Board B OTE continuation branch packet using 0.500, 0.618, 0.705, and 0.786 retracement leaves inside TrendExpansion.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendExpansion -> NormalVolatility -> OTERetracementLevel -> OTEContinuationLong",
+          "source_provider=Kraken futures PF_XBTUSD 1h current fetch",
+          "promotion_allowed=false until same-root six-provider authority and downstream handoff probes are complete",
+          "data_path_repaired_for_ict_engine_loader=timestamp_header"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_current_provider_packet_-_IBKR_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_IBKR_SPY_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/agent-material/ote-current-ibkr-spy-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-current-ibkr-spy-1h-v1",
+        "generated_at": null,
+        "title": "OTE current provider packet - IBKR SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/ibkr_spy_1h_90d.normalized.aq.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/agent-material/ProviderOteTrendRetracementV1.py",
+        "strategy_class_name": "ProviderOteTrendRetracementV1",
+        "strategy_brief": "Board B OTE continuation branch packet using 0.500, 0.618, 0.705, and 0.786 retracement leaves inside TrendExpansion.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendExpansion -> NormalVolatility -> OTERetracementLevel -> OTEContinuationLong",
+          "source_provider=IBKR gateway SPY 1h 90D current fetch",
+          "promotion_allowed=false until same-root six-provider authority and downstream handoff probes are complete",
+          "data_path_repaired_for_ict_engine_loader=timestamp_header"
+        ]
+      }
+    }
+  ],
+  "dispatch_groups": [
+    {
+      "group_index": 0,
+      "job_ids": [
+        "OTE_current_provider_packet_-_yfinance_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_ids": [
+        "OTE_current_provider_packet_-_Binance_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_ids": [
+        "OTE_current_provider_packet_-_Bybit_BTCUSDT_linear_1h"
+      ]
+    },
+    {
+      "group_index": 3,
+      "job_ids": [
+        "OTE_current_provider_packet_-_Kraken_PF_XBTUSD_1h"
+      ]
+    },
+    {
+      "group_index": 4,
+      "job_ids": [
+        "OTE_current_provider_packet_-_IBKR_SPY_1h"
+      ]
+    }
+  ],
+  "notes": [
+    "public_protocol_generic_only",
+    "ontology_must_live_inside_agent_materials_not_cli"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "rows": 24,
+  "providers": [
+    "Binance",
+    "Bybit",
+    "IBKR",
+    "Kraken",
+    "TradingViewRemix_TVR",
+    "yfinance_YF"
+  ],
+  "levels": [
+    "0.500",
+    "0.618",
+    "0.705",
+    "0.786"
+  ],
+  "min_row_count": 719,
+  "max_row_count": 11905,
+  "local_cache_replay_all": true,
+  "new_provider_fetch_any": false
+}

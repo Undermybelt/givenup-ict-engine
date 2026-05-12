@@ -1,0 +1,11 @@
+provider,symbol,factor,trades,win_rate,mean_net_return,profit_factor,max_drawdown_sum_return,folds_present
+Binance,BTCUSDT,fair_value_gap_pullback_v1,2633,0.368401,-9.439178081e-05,0.978729,-0.6436177693,"test,train,validation"
+Binance,BTCUSDT,order_block_pullback_v1,750,0.369333,-0.0006943055268,0.883457,-0.7087133083,"test,train,validation"
+Bybit,BTCUSDT,fair_value_gap_pullback_v1,39,0.435897,0.0008155945759,1.381566,-0.03178723162,"test,train,validation"
+Bybit,BTCUSDT,order_block_pullback_v1,8,0.250000,-0.000815024152,0.785470,-0.0244852894,"test,train,validation"
+IBKR,SPY,fair_value_gap_pullback_v1,921,0.365907,-0.000843412378,0.642218,-0.8193453455,"test,train,validation"
+IBKR,SPY,order_block_pullback_v1,223,0.412556,-0.0003608415336,0.858551,-0.1636766174,"test,train,validation"
+Kraken,XBTUSD,fair_value_gap_pullback_v1,76,0.276316,-0.001235447292,0.705502,-0.1857316685,"test,train,validation"
+Kraken,XBTUSD,order_block_pullback_v1,22,0.136364,-0.005671367394,0.102856,-0.129740537,"test,train,validation"
+yfinance/YF,ES,fair_value_gap_pullback_v1,474,0.341772,-0.0006698832689,0.568220,-0.3415243723,"test,train,validation"
+yfinance/YF,ES,order_block_pullback_v1,130,0.230769,-0.001095245643,0.487284,-0.1443924209,"test,train,validation"

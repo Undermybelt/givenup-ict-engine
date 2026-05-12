@@ -1,0 +1,1048 @@
+{
+  "artifact_id": "auto-quant-agent-material-batch:PROVIDER_OTE_LEAF_192000:20260512T112551.707Z",
+  "generated_at": "2026-05-12T11:25:51.707937Z",
+  "symbol": "PROVIDER_OTE_LEAF_192000",
+  "shared_workspace_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/.deps/auto-quant",
+  "source_repo_url": "/Users/thrill3r/Auto-Quant",
+  "max_parallel": 1,
+  "jobs": [
+    {
+      "job_id": "OTE_0500_continuation_-_yfinance_YF_SPY_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0500_continuation_-_yfinance_YF_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0500-yfinance-yf-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0500-yfinance-yf-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0500 continuation - yfinance/YF SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0500ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0500ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=yfinance/YF",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-yfinance-yf-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0500 -> ote_retrace_0500_continuation_v1",
+          "ote_retrace_ratio=0.5",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0500_continuation_-_Binance_BTCUSDT_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0500_continuation_-_Binance_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0500-binance-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0500-binance-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0500 continuation - Binance BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0500ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0500ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Binance",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-binance-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0500 -> ote_retrace_0500_continuation_v1",
+          "ote_retrace_ratio=0.5",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0500_continuation_-_Bybit_BTCUSDT_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0500_continuation_-_Bybit_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0500-bybit-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0500-bybit-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0500 continuation - Bybit BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0500ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0500ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Bybit",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-bybit-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0500 -> ote_retrace_0500_continuation_v1",
+          "ote_retrace_ratio=0.5",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0500_continuation_-_Kraken_XBTUSD_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0500_continuation_-_Kraken_XBTUSD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0500-kraken-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0500-kraken-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0500 continuation - Kraken XBTUSD 1h",
+        "symbol": "XBTUSD",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0500ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0500ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Kraken",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-kraken-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0500 -> ote_retrace_0500_continuation_v1",
+          "ote_retrace_ratio=0.5",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0500_continuation_-_IBKR_SPY_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0500_continuation_-_IBKR_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0500-ibkr-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0500-ibkr-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0500 continuation - IBKR SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0500ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0500ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=IBKR",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-ibkr-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0500 -> ote_retrace_0500_continuation_v1",
+          "ote_retrace_ratio=0.5",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0500_continuation_-_TradingViewRemix_TVR_BTCUSD_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0500_continuation_-_TradingViewRemix_TVR_BTCUSD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0500-tvr-btc-usd-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0500-tvr-btc-usd-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0500 continuation - TradingViewRemix/TVR BTCUSD 1h",
+        "symbol": "BTCUSD",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/tvr_btc_usd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0500ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0500ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=TradingViewRemix/TVR",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-tvr-btc-usd-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0500 -> ote_retrace_0500_continuation_v1",
+          "ote_retrace_ratio=0.5",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0618_continuation_-_yfinance_YF_SPY_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0618_continuation_-_yfinance_YF_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0618-yfinance-yf-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0618-yfinance-yf-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0618 continuation - yfinance/YF SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0618ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0618ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=yfinance/YF",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-yfinance-yf-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0618 -> ote_retrace_0618_continuation_v1",
+          "ote_retrace_ratio=0.618",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0618_continuation_-_Binance_BTCUSDT_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0618_continuation_-_Binance_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0618-binance-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0618-binance-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0618 continuation - Binance BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0618ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0618ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Binance",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-binance-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0618 -> ote_retrace_0618_continuation_v1",
+          "ote_retrace_ratio=0.618",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0618_continuation_-_Bybit_BTCUSDT_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0618_continuation_-_Bybit_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0618-bybit-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0618-bybit-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0618 continuation - Bybit BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0618ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0618ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Bybit",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-bybit-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0618 -> ote_retrace_0618_continuation_v1",
+          "ote_retrace_ratio=0.618",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0618_continuation_-_Kraken_XBTUSD_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0618_continuation_-_Kraken_XBTUSD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0618-kraken-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0618-kraken-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0618 continuation - Kraken XBTUSD 1h",
+        "symbol": "XBTUSD",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0618ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0618ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Kraken",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-kraken-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0618 -> ote_retrace_0618_continuation_v1",
+          "ote_retrace_ratio=0.618",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0618_continuation_-_IBKR_SPY_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0618_continuation_-_IBKR_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0618-ibkr-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0618-ibkr-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0618 continuation - IBKR SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0618ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0618ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=IBKR",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-ibkr-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0618 -> ote_retrace_0618_continuation_v1",
+          "ote_retrace_ratio=0.618",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0618_continuation_-_TradingViewRemix_TVR_BTCUSD_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0618_continuation_-_TradingViewRemix_TVR_BTCUSD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0618-tvr-btc-usd-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0618-tvr-btc-usd-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0618 continuation - TradingViewRemix/TVR BTCUSD 1h",
+        "symbol": "BTCUSD",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/tvr_btc_usd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0618ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0618ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=TradingViewRemix/TVR",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-tvr-btc-usd-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0618 -> ote_retrace_0618_continuation_v1",
+          "ote_retrace_ratio=0.618",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0705_continuation_-_yfinance_YF_SPY_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0705_continuation_-_yfinance_YF_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0705-yfinance-yf-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0705-yfinance-yf-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0705 continuation - yfinance/YF SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0705ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0705ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=yfinance/YF",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-yfinance-yf-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0705 -> ote_retrace_0705_continuation_v1",
+          "ote_retrace_ratio=0.705",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0705_continuation_-_Binance_BTCUSDT_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0705_continuation_-_Binance_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0705-binance-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0705-binance-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0705 continuation - Binance BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0705ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0705ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Binance",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-binance-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0705 -> ote_retrace_0705_continuation_v1",
+          "ote_retrace_ratio=0.705",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0705_continuation_-_Bybit_BTCUSDT_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0705_continuation_-_Bybit_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0705-bybit-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0705-bybit-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0705 continuation - Bybit BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0705ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0705ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Bybit",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-bybit-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0705 -> ote_retrace_0705_continuation_v1",
+          "ote_retrace_ratio=0.705",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0705_continuation_-_Kraken_XBTUSD_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0705_continuation_-_Kraken_XBTUSD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0705-kraken-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0705-kraken-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0705 continuation - Kraken XBTUSD 1h",
+        "symbol": "XBTUSD",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0705ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0705ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Kraken",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-kraken-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0705 -> ote_retrace_0705_continuation_v1",
+          "ote_retrace_ratio=0.705",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0705_continuation_-_IBKR_SPY_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0705_continuation_-_IBKR_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0705-ibkr-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0705-ibkr-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0705 continuation - IBKR SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0705ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0705ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=IBKR",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-ibkr-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0705 -> ote_retrace_0705_continuation_v1",
+          "ote_retrace_ratio=0.705",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0705_continuation_-_TradingViewRemix_TVR_BTCUSD_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0705_continuation_-_TradingViewRemix_TVR_BTCUSD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0705-tvr-btc-usd-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0705-tvr-btc-usd-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0705 continuation - TradingViewRemix/TVR BTCUSD 1h",
+        "symbol": "BTCUSD",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/tvr_btc_usd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0705ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0705ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=TradingViewRemix/TVR",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-tvr-btc-usd-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0705 -> ote_retrace_0705_continuation_v1",
+          "ote_retrace_ratio=0.705",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0786_continuation_-_yfinance_YF_SPY_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0786_continuation_-_yfinance_YF_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0786-yfinance-yf-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0786-yfinance-yf-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0786 continuation - yfinance/YF SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0786ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0786ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=yfinance/YF",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-yfinance-yf-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0786 -> ote_retrace_0786_continuation_v1",
+          "ote_retrace_ratio=0.786",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0786_continuation_-_Binance_BTCUSDT_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0786_continuation_-_Binance_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0786-binance-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0786-binance-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0786 continuation - Binance BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0786ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0786ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Binance",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-binance-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0786 -> ote_retrace_0786_continuation_v1",
+          "ote_retrace_ratio=0.786",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0786_continuation_-_Bybit_BTCUSDT_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0786_continuation_-_Bybit_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0786-bybit-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0786-bybit-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0786 continuation - Bybit BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0786ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0786ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Bybit",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-bybit-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0786 -> ote_retrace_0786_continuation_v1",
+          "ote_retrace_ratio=0.786",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0786_continuation_-_Kraken_XBTUSD_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0786_continuation_-_Kraken_XBTUSD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0786-kraken-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0786-kraken-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0786 continuation - Kraken XBTUSD 1h",
+        "symbol": "XBTUSD",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0786ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0786ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Kraken",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-kraken-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0786 -> ote_retrace_0786_continuation_v1",
+          "ote_retrace_ratio=0.786",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0786_continuation_-_IBKR_SPY_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0786_continuation_-_IBKR_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0786-ibkr-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0786-ibkr-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0786 continuation - IBKR SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0786ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0786ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=IBKR",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-ibkr-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0786 -> ote_retrace_0786_continuation_v1",
+          "ote_retrace_ratio=0.786",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "OTE_0786_continuation_-_TradingViewRemix_TVR_BTCUSD_1h",
+      "isolated_state_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_0786_continuation_-_TradingViewRemix_TVR_BTCUSD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/ote-0786-tvr-btc-usd-1h-v1.material.json",
+      "package": {
+        "package_id": "ote-0786-tvr-btc-usd-1h-v1",
+        "generated_at": null,
+        "title": "OTE 0786 continuation - TradingViewRemix/TVR BTCUSD 1h",
+        "symbol": "BTCUSD",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/tvr_btc_usd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0786ContinuationV1.py",
+        "strategy_class_name": "OteRetrace0786ContinuationV1",
+        "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "average_adverse_excursion",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=TradingViewRemix/TVR",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-tvr-btc-usd-1h-v1.material.json",
+          "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0786 -> ote_retrace_0786_continuation_v1",
+          "ote_retrace_ratio=0.786",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+        ]
+      }
+    }
+  ],
+  "dispatch_groups": [
+    {
+      "group_index": 0,
+      "job_ids": [
+        "OTE_0500_continuation_-_yfinance_YF_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_ids": [
+        "OTE_0500_continuation_-_Binance_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_ids": [
+        "OTE_0500_continuation_-_Bybit_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 3,
+      "job_ids": [
+        "OTE_0500_continuation_-_Kraken_XBTUSD_1h"
+      ]
+    },
+    {
+      "group_index": 4,
+      "job_ids": [
+        "OTE_0500_continuation_-_IBKR_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 5,
+      "job_ids": [
+        "OTE_0500_continuation_-_TradingViewRemix_TVR_BTCUSD_1h"
+      ]
+    },
+    {
+      "group_index": 6,
+      "job_ids": [
+        "OTE_0618_continuation_-_yfinance_YF_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 7,
+      "job_ids": [
+        "OTE_0618_continuation_-_Binance_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 8,
+      "job_ids": [
+        "OTE_0618_continuation_-_Bybit_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 9,
+      "job_ids": [
+        "OTE_0618_continuation_-_Kraken_XBTUSD_1h"
+      ]
+    },
+    {
+      "group_index": 10,
+      "job_ids": [
+        "OTE_0618_continuation_-_IBKR_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 11,
+      "job_ids": [
+        "OTE_0618_continuation_-_TradingViewRemix_TVR_BTCUSD_1h"
+      ]
+    },
+    {
+      "group_index": 12,
+      "job_ids": [
+        "OTE_0705_continuation_-_yfinance_YF_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 13,
+      "job_ids": [
+        "OTE_0705_continuation_-_Binance_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 14,
+      "job_ids": [
+        "OTE_0705_continuation_-_Bybit_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 15,
+      "job_ids": [
+        "OTE_0705_continuation_-_Kraken_XBTUSD_1h"
+      ]
+    },
+    {
+      "group_index": 16,
+      "job_ids": [
+        "OTE_0705_continuation_-_IBKR_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 17,
+      "job_ids": [
+        "OTE_0705_continuation_-_TradingViewRemix_TVR_BTCUSD_1h"
+      ]
+    },
+    {
+      "group_index": 18,
+      "job_ids": [
+        "OTE_0786_continuation_-_yfinance_YF_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 19,
+      "job_ids": [
+        "OTE_0786_continuation_-_Binance_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 20,
+      "job_ids": [
+        "OTE_0786_continuation_-_Bybit_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 21,
+      "job_ids": [
+        "OTE_0786_continuation_-_Kraken_XBTUSD_1h"
+      ]
+    },
+    {
+      "group_index": 22,
+      "job_ids": [
+        "OTE_0786_continuation_-_IBKR_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 23,
+      "job_ids": [
+        "OTE_0786_continuation_-_TradingViewRemix_TVR_BTCUSD_1h"
+      ]
+    }
+  ],
+  "notes": [
+    "public_protocol_generic_only",
+    "ontology_must_live_inside_agent_materials_not_cli"
+  ]
+}

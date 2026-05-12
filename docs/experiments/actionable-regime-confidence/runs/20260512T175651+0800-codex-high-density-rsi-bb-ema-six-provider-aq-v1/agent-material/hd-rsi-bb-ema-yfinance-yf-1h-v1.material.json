@@ -1,0 +1,36 @@
+{
+  "consumer_evidence_profile": {
+    "branch_paths": [
+      "RangeConsolidation -> MeanReversion -> rsi_bollinger_revert -> hd_rsi_bb_revert_v1",
+      "TrendExpansion -> PullbackContinuation -> ema_atr_pullback -> hd_ema_atr_pullback_v1",
+      "VolatilityExpansion -> MomentumBreakout -> bollinger_band_breakout -> hd_bb_breakout_v1",
+      "Transition -> RiskSuppression -> overheat_or_liquidity_filter -> hd_risk_suppression_v1"
+    ],
+    "promotion_allowed": false
+  },
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+  "direction": "long",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "walk_forward_survival",
+    "sample_adequacy"
+  ],
+  "notes": [
+    "source_provider=yfinance/YF SPY 1h current fetch",
+    "branch_matrix=RangeConsolidation -> MeanReversion -> rsi_bollinger_revert -> hd_rsi_bb_revert_v1 | TrendExpansion -> PullbackContinuation -> ema_atr_pullback -> hd_ema_atr_pullback_v1 | VolatilityExpansion -> MomentumBreakout -> bollinger_band_breakout -> hd_bb_breakout_v1 | Transition -> RiskSuppression -> overheat_or_liquidity_filter -> hd_risk_suppression_v1",
+    "timerange=20250101-20260512",
+    "provider_preflight_only=true",
+    "aq_dispatch_started=false",
+    "promotion_allowed=false until AQ dispatch and ordered downstream chain pass"
+  ],
+  "package_id": "hd-rsi-bb-ema-yfinance-yf-1h-v1",
+  "strategy_brief": "Board B high-density RSI/Bollinger/EMA/ATR profitability packet with explicit regime-profit branch tags.",
+  "strategy_class_name": "ProviderHighDensityRsiBbEmaV1",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1/agent-material/ProviderHighDensityRsiBbEmaV1.py",
+  "symbol": "SPY",
+  "timeframe": "1h",
+  "timerange": "20250101-20260512",
+  "title": "High-density RSI/BB/EMA - yfinance/YF SPY 1h"
+}

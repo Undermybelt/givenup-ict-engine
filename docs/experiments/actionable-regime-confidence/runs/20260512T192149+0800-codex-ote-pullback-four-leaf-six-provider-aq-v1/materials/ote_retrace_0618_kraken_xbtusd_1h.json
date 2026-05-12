@@ -1,0 +1,30 @@
+{
+  "package_id": "ote_retrace_0618_kraken_xbtusd_1h",
+  "generated_at": "2026-05-12T11:24:56.731990Z",
+  "title": "OTE retrace 0.618 - Kraken BTC 1h",
+  "symbol": "BTC",
+  "timeframe": "1h",
+  "direction": "long",
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T192149+0800-codex-ote-pullback-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0618ContinuationV1.py",
+  "strategy_class_name": "OteRetrace0618ContinuationV1",
+  "strategy_brief": "Trend-following OTE pullback continuation at retracement 0.618; branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0618 -> ote_retrace_0618_continuation_v1",
+  "evaluation_priority": [
+    "branch_keyed_trade_density",
+    "regime_conditioned_win_rate",
+    "payoff_after_costs",
+    "provider_portability",
+    "max_drawdown_control"
+  ],
+  "consumer_evidence_profile": {},
+  "notes": [
+    "source_provider=Kraken futures PF_XBTUSD 1h current fetch from 184139 replay cache",
+    "training_source=184139_provider_provenanced_normalized_replay_cache",
+    "consumer_source=provider_backed_or_hotplug_export_required_before_promotion",
+    "local_cache_replay=true",
+    "ote_level=0.618",
+    "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0618 -> ote_retrace_0618_continuation_v1",
+    "board_b_profitability_factor_only=true",
+    "promotion_allowed=false until AQ dispatch/rank and downstream handoff pass"
+  ]
+}

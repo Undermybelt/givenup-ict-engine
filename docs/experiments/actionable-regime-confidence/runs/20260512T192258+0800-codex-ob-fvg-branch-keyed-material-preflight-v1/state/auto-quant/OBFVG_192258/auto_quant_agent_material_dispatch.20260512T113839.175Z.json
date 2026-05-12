@@ -1,0 +1,60 @@
+{
+  "artifact_id": "auto-quant-agent-material-dispatch:OBFVG_192258:20260512T113839.174Z",
+  "generated_at": "2026-05-12T11:38:39.175573Z",
+  "symbol": "OBFVG_192258",
+  "source_batch_artifact_id": "auto-quant-agent-material-batch:OBFVG_192258:20260512T113712.674Z",
+  "selected_group_indices": [
+    0
+  ],
+  "groups": [
+    {
+      "group_index": 0,
+      "job_results": [
+        {
+          "job_id": "OB_FVG_fvg_displacement_retest_expansion_v1_-_Binance_BTCUSDT_1h",
+          "title": "OB/FVG fvg_displacement_retest_expansion_v1 - Binance BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/state/auto-quant/agent_material_units/OB_FVG_fvg_displacement_retest_expansion_v1_-_Binance_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/state/auto-quant/agent_material_units/OB_FVG_fvg_displacement_retest_expansion_v1_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/state/auto-quant/agent_material_units/OB_FVG_fvg_displacement_retest_expansion_v1_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "job_id": "OB_FVG_fvg_displacement_retest_expansion_v1_-_Bybit_BTCUSDT_1h",
+          "title": "OB/FVG fvg_displacement_retest_expansion_v1 - Bybit BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/state/auto-quant/agent_material_units/OB_FVG_fvg_displacement_retest_expansion_v1_-_Bybit_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/state/auto-quant/agent_material_units/OB_FVG_fvg_displacement_retest_expansion_v1_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/state/auto-quant/agent_material_units/OB_FVG_fvg_displacement_retest_expansion_v1_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total_jobs": 2,
+    "completed_jobs": 2,
+    "blocked_jobs": 0,
+    "failed_jobs": 0
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "artifact_id": "auto-quant-agent-material-rank:PROVIDER_HDMULTI_175350:20260512T110103.304Z",
+  "generated_at": "2026-05-12T11:01:03.305415Z",
+  "symbol": "PROVIDER_HDMULTI_175350",
+  "source_dispatch_artifact_id": "auto-quant-agent-material-dispatch:PROVIDER_HDMULTI_175350:20260512T105915.013Z",
+  "ranking": [
+    {
+      "unit_label": "High-density multibranch - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 100.0,
+      "sharpe": -100.0,
+      "total_profit_pct": 1.86,
+      "trade_count": 1
+    },
+    {
+      "unit_label": "High-density multibranch - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 26.3158,
+      "sharpe": -0.0621,
+      "total_profit_pct": -4.6,
+      "trade_count": 19
+    },
+    {
+      "unit_label": "High-density multibranch - TradingViewRemix/TVR BTCUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "High-density multibranch - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "High-density multibranch - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "High-density multibranch - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    }
+  ]
+}

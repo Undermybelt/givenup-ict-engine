@@ -1,0 +1,1 @@
+cargo run --quiet -- auto-quant-agent-material-rank --symbol MACDMOM_193452 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T200319+0800-codex-agent-material-rank-branch-contract-verify-v1/state

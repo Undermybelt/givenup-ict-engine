@@ -1,0 +1,107 @@
+{
+  "parent_config": [
+    0,
+    0,
+    0
+  ],
+  "initial_probs": [
+    0.999956,
+    0.000022,
+    0.000022
+  ],
+  "final_probs": [
+    0.3441574496709725,
+    2.984030772817345e-8,
+    0.6558425204887198
+  ],
+  "strategies_applied": [
+    {
+      "strategy_name": "ProviderObFvgPullbackV1_IBKR_160511",
+      "mutation_id": "160511_ob_fvg_ibkr_v1",
+      "trade_count": 350,
+      "n_win": 137,
+      "n_loss": 213,
+      "n_breakeven": 0,
+      "temper": 0.35,
+      "before_probs": [
+        0.999956,
+        0.000022,
+        0.000022
+      ],
+      "after_probs": [
+        0.4106705454545454,
+        6.956521739130435e-7,
+        0.5893287588932806
+      ],
+      "diff": [
+        -0.5892854545454546,
+        -0.000021304347826086955,
+        0.5893067588932807
+      ],
+      "bbn_entropy_before": 0.0005158756285885085,
+      "bbn_entropy_after": 0.6771118639021343,
+      "bbn_entropy_reduction": 0.0,
+      "bbn_log_loss_before": 6.526622098324825,
+      "bbn_log_loss_after": 0.6701523042514932,
+      "bbn_log_loss_delta": 5.856469794073332,
+      "bbn_contradiction_before": 1.2170988571428571,
+      "bbn_contradiction_after": 0.038485339356295827,
+      "bbn_contradiction_lift": 1.1786135177865613,
+      "evidence_value_gate_passed": true
+    },
+    {
+      "strategy_name": "ProviderObFvgPullbackV1_yfinance_YF_160511",
+      "mutation_id": "160511_ob_fvg_yfinance_yf_v1",
+      "trade_count": 255,
+      "n_win": 87,
+      "n_loss": 168,
+      "n_breakeven": 0,
+      "temper": 0.35,
+      "before_probs": [
+        0.4106705454545454,
+        6.956521739130435e-7,
+        0.5893287588932806
+      ],
+      "after_probs": [
+        0.3441574496709725,
+        2.984030772817345e-8,
+        0.6558425204887198
+      ],
+      "diff": [
+        -0.0665130957835729,
+        -6.6581186618487e-7,
+        0.0665137615954392
+      ],
+      "bbn_entropy_before": 0.6771118639021343,
+      "bbn_entropy_after": 0.6437551874572989,
+      "bbn_entropy_reduction": 0.03335667644483542,
+      "bbn_log_loss_before": 0.6520016026219401,
+      "bbn_log_loss_after": 0.6418324837510929,
+      "bbn_log_loss_delta": 0.01016911887084715,
+      "bbn_contradiction_before": 0.1389895410369681,
+      "bbn_contradiction_after": 0.005962017846089799,
+      "bbn_contradiction_lift": 0.1330275231908783,
+      "evidence_value_gate_passed": true
+    }
+  ],
+  "strategies_skipped": [
+    [
+      "ProviderObFvgPullbackV1_Kraken_160511",
+      "status=error"
+    ],
+    [
+      "ProviderObFvgPullbackV1_Binance_160511",
+      "trade_count=0"
+    ],
+    [
+      "ProviderObFvgPullbackV1_Bybit_160511",
+      "status=error"
+    ]
+  ],
+  "temper": 0.35,
+  "prior_strength": 4.0,
+  "bbn_entropy_reduction": 0.03335667644483542,
+  "bbn_log_loss_delta": 5.866638912944179,
+  "bbn_contradiction_lift": 1.3116410409774395,
+  "evidence_value_gate_passed": true
+}

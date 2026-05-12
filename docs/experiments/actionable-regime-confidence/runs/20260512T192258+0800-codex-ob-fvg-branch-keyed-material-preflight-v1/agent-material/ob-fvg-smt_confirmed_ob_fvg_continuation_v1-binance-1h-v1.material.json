@@ -1,0 +1,39 @@
+{
+  "package_id": "ob-fvg-smt_confirmed_ob_fvg_continuation_v1-binance-1h-v1",
+  "title": "OB/FVG smt_confirmed_ob_fvg_continuation_v1 - Binance BTCUSDT 1h",
+  "symbol": "BTC",
+  "timeframe": "1h",
+  "timerange": "20250101-20260512",
+  "direction": "long",
+  "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+  "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/agent-material/SmtConfirmedObFvgContinuationV1.py",
+  "strategy_class_name": "SmtConfirmedObFvgContinuationV1",
+  "strategy_brief": "Board B OB/FVG branch-keyed profitability material.",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "walk_forward_survival",
+    "cost_slippage_robustness"
+  ],
+  "consumer_evidence_profile": {
+    "branch_path": "CrossMarketConfirmation -> SMTConfirmedContinuation -> fvg_or_order_block_retest -> smt_confirmed_ob_fvg_continuation_v1",
+    "branch_id": "smt_confirmed_ob_fvg_continuation_v1",
+    "main_regime": "CrossMarketConfirmation",
+    "sub_regime": "SMTConfirmedContinuation",
+    "sub_sub_regime_or_profit_factor": "fvg_or_order_block_retest",
+    "profit_factor": "smt_confirmed_ob_fvg_continuation_v1",
+    "provider": "Binance",
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "notes": [
+    "source_provider=Binance BTCUSDT 1h",
+    "branch_path=CrossMarketConfirmation -> SMTConfirmedContinuation -> fvg_or_order_block_retest -> smt_confirmed_ob_fvg_continuation_v1",
+    "provider_data_acquired_this_step=false",
+    "local_cache_replay=true",
+    "material_preflight_only=true",
+    "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+  ]
+}

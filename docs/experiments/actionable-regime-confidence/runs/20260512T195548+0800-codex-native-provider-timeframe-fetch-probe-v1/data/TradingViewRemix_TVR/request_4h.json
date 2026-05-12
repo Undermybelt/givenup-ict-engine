@@ -1,0 +1,18 @@
+{
+  "end": "2026-05-12T00:00:00Z",
+  "interval": "4h",
+  "market_key": "board-a-tvr-native-timeframe-probe",
+  "provider_preferences": {
+    "reference": "tradingview_mcp"
+  },
+  "related_roles": [
+    "reference"
+  ],
+  "start": "2024-05-13T00:00:00Z",
+  "symbol_overrides": {
+    "reference": {
+      "display_symbol": "BTCUSD",
+      "tradingview_mcp": "BITSTAMP:BTCUSD"
+    }
+  }
+}

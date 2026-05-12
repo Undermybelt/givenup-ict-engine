@@ -1,0 +1,4 @@
+provider,market,symbol,native_timeframe,requested_span,actual_first,actual_last,actual_span_days,candle_rows,provider_native_timeframe_fetch,long_span_candidate,board_a_support,support_reason
+yfinance/YF,equity,SPY,1d,2025-01-01T00:00:00Z_to_2026-05-12T00:00:00Z,2025-01-02T14:30:00Z,2026-05-11T13:30:00Z,493.958,339,True,True,False,data_preflight_only_no_auto_quant_pre_bayes_bbn_catboost_execution_tree
+Binance,crypto,BTCUSDT,4h,2025-01-01T00:00:00Z_to_2026-05-12T00:00:00Z,2025-01-01T00:00:00Z,2026-05-12T00:00:00Z,496.0,2977,True,True,False,data_preflight_only_no_auto_quant_pre_bayes_bbn_catboost_execution_tree
+Binance,crypto,BTCUSDT,1d,2025-01-01T00:00:00Z_to_2026-05-12T00:00:00Z,2025-01-01T00:00:00Z,2026-05-12T00:00:00Z,496.0,497,True,True,False,data_preflight_only_no_auto_quant_pre_bayes_bbn_catboost_execution_tree

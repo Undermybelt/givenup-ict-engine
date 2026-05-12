@@ -1,0 +1,50 @@
+{
+  "consumer_evidence_profile": {
+    "branch_keyed_by_construction": true,
+    "branch_path": "Sideways -> SessionLiquidityMeanReversion -> VWAPReclaim -> session_vwap_reclaim_long_v1",
+    "branch_paths": [
+      "Sideways -> SessionLiquidityMeanReversion -> VWAPReclaim -> session_vwap_reclaim_long_v1"
+    ],
+    "local_cache_replay": true,
+    "main_regime": "Sideways",
+    "profit_factor": "session_vwap_reclaim_long_v1",
+    "promotion_allowed": false,
+    "provider": "Kraken",
+    "source_material": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-kraken-1h-v1.material.json",
+    "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+    "sub_regime": "SessionLiquidityMeanReversion",
+    "sub_sub_regime_or_profit_factor": "VWAPReclaim"
+  },
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+  "direction": "long",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "walk_forward_survival",
+    "sample_adequacy"
+  ],
+  "negative_evidence_contract": {
+    "loss_after_full_chain": "market_factor_negative_sample",
+    "low_trade_density": "low_density_negative_sample",
+    "missing_branch_fields": "chain_contract_negative_sample",
+    "provider_or_fetch_fault": "infrastructure_negative_sample"
+  },
+  "notes": [
+    "source_provider=Kraken",
+    "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+    "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-kraken-1h-v1.material.json",
+    "branch_path=Sideways -> SessionLiquidityMeanReversion -> VWAPReclaim -> session_vwap_reclaim_long_v1",
+    "local_cache_replay=true",
+    "new_provider_fetch=false",
+    "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+  ],
+  "package_id": "branch-leaf-vwap-reclaim-kraken-1h-v1",
+  "strategy_brief": "Board B single branch-leaf VWAP reclaim profitability factor replay.",
+  "strategy_class_name": "BranchLeafVwapReclaimLongV1",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/agent-material/BranchLeafVwapReclaimLongV1.py",
+  "symbol": "XBTUSD",
+  "timeframe": "1h",
+  "timerange": "20250101-20260512",
+  "title": "Branch leaf VWAP reclaim - Kraken XBTUSD 1h"
+}

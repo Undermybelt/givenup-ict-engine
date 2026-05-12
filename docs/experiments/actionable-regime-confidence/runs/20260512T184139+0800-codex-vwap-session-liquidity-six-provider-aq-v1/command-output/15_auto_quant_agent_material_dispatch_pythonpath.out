@@ -1,0 +1,142 @@
+{
+  "artifact_id": "auto-quant-agent-material-dispatch:PROVIDER_VWAP_184139:20260512T111225.281Z",
+  "generated_at": "2026-05-12T11:12:25.289352Z",
+  "symbol": "PROVIDER_VWAP_184139",
+  "source_batch_artifact_id": "auto-quant-agent-material-batch:PROVIDER_VWAP_184139:20260512T110647.346Z",
+  "selected_group_indices": [
+    0,
+    1
+  ],
+  "groups": [
+    {
+      "group_index": 0,
+      "job_results": [
+        {
+          "job_id": "VWAP_session_liquidity_-_Binance_BTCUSDT_1h",
+          "title": "VWAP session liquidity - Binance BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_Binance_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "job_id": "VWAP_session_liquidity_-_Bybit_BTCUSDT_1h",
+          "title": "VWAP session liquidity - Bybit BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_Bybit_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "job_id": "VWAP_session_liquidity_-_IBKR_SPY_1h",
+          "title": "VWAP session liquidity - IBKR SPY 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_IBKR_SPY_1h/aq_workspace",
+          "stdout_log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_IBKR_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_IBKR_SPY_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -0.2784,
+            "sortino": -0.1527,
+            "calmar": -3.1815,
+            "total_profit_pct": -0.81,
+            "max_drawdown_pct": -3.8682,
+            "trade_count": 54,
+            "win_rate_pct": 29.6296,
+            "profit_factor": 0.8264
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_results": [
+        {
+          "job_id": "VWAP_session_liquidity_-_Kraken_XBTUSD_1h",
+          "title": "VWAP session liquidity - Kraken XBTUSD 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_Kraken_XBTUSD_1h/aq_workspace",
+          "stdout_log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "job_id": "VWAP_session_liquidity_-_TVR_BTC-USD_1h",
+          "title": "VWAP session liquidity - TVR BTC-USD 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_TVR_BTC-USD_1h/aq_workspace",
+          "stdout_log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_TVR_BTC-USD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_TVR_BTC-USD_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "job_id": "VWAP_session_liquidity_-_yfinance_YF_SPY_1h",
+          "title": "VWAP session liquidity - yfinance/YF SPY 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_yfinance_YF_SPY_1h/aq_workspace",
+          "stdout_log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -0.0476,
+            "sortino": -0.0445,
+            "calmar": -0.3543,
+            "total_profit_pct": -0.64,
+            "max_drawdown_pct": -7.0135,
+            "trade_count": 133,
+            "win_rate_pct": 30.0752,
+            "profit_factor": 0.9581
+          }
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total_jobs": 6,
+    "completed_jobs": 6,
+    "blocked_jobs": 0,
+    "failed_jobs": 0
+  }
+}

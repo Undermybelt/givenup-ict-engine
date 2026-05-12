@@ -1,0 +1,8 @@
+Rank the latest generic agent-material dispatch results by win rate, Sharpe, then return
+
+Usage: ict-engine auto-quant-agent-material-rank [OPTIONS] --symbol <SYMBOL>
+
+Options:
+      --symbol <SYMBOL>        Instrument identifier supplied by the caller
+      --state-dir <STATE_DIR>  State directory holding generic agent-material artifacts [env: ICT_ENGINE_STATE_DIR=] [default: state]
+  -h, --help                   Print help

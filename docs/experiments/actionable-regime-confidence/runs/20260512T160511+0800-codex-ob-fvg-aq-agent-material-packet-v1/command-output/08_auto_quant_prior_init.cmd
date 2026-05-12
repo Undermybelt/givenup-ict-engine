@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-prior-init --symbol PROVIDER_OB_FVG_160511 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/state_downstream_v1 --temper 0.35 --prior-strength 4.0

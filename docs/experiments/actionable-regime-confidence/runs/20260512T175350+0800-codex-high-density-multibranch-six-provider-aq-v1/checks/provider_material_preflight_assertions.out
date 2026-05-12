@@ -1,0 +1,6 @@
+PASS provider_rows_6 actual=6
+PASS material_count_6 actual=6
+PASS branch_paths_4 actual=4
+PASS promotion_allowed_false
+PASS trade_usable_false
+PASS update_goal_false

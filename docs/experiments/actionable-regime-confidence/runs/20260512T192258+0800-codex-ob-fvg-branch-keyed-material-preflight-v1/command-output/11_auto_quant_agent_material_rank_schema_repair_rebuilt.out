@@ -1,0 +1,472 @@
+{
+  "artifact_id": "auto-quant-agent-material-rank:OBFVG_192258:20260512T120406.029Z",
+  "generated_at": "2026-05-12T12:04:06.029944Z",
+  "symbol": "OBFVG_192258",
+  "source_dispatch_artifact_id": "auto-quant-agent-material-dispatch:OBFVG_192258:20260512T114649.171Z",
+  "ranking": [
+    {
+      "unit_label": "OB/FVG ote_ob_continuation_long_v1 - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 47.8261,
+      "sharpe": 0.4,
+      "total_profit_pct": 3.83,
+      "trade_count": 23
+    },
+    {
+      "unit_label": "OB/FVG ote_ob_continuation_long_v1 - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 36.5385,
+      "sharpe": -0.7851,
+      "total_profit_pct": -2.69,
+      "trade_count": 52
+    },
+    {
+      "unit_label": "OB/FVG ob_fvg_failed_mitigation_guard_v1 - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 35.3535,
+      "sharpe": 0.091,
+      "total_profit_pct": 1.86,
+      "trade_count": 99
+    },
+    {
+      "unit_label": "OB/FVG order_block_retest_continuation_long_v1 - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 33.3333,
+      "sharpe": -0.1759,
+      "total_profit_pct": -3.69,
+      "trade_count": 36
+    },
+    {
+      "unit_label": "OB/FVG session_ob_continuation_v1 - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 32.6531,
+      "sharpe": -0.1278,
+      "total_profit_pct": -2.11,
+      "trade_count": 49
+    },
+    {
+      "unit_label": "OB/FVG order_block_retest_continuation_long_v1 - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 32.3944,
+      "sharpe": -0.6318,
+      "total_profit_pct": -2.42,
+      "trade_count": 71
+    },
+    {
+      "unit_label": "OB/FVG session_ob_continuation_v1 - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 31.8681,
+      "sharpe": -0.9755,
+      "total_profit_pct": -3.09,
+      "trade_count": 91
+    },
+    {
+      "unit_label": "OB/FVG ob_fvg_confluence_continuation_long_v1 - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 31.7073,
+      "sharpe": -0.1012,
+      "total_profit_pct": -1.86,
+      "trade_count": 41
+    },
+    {
+      "unit_label": "OB/FVG fvg_displacement_retest_expansion_v1 - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 31.3043,
+      "sharpe": -0.3006,
+      "total_profit_pct": -4.81,
+      "trade_count": 115
+    },
+    {
+      "unit_label": "OB/FVG ote_fvg_continuation_long_v1 - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 31.1688,
+      "sharpe": -0.3395,
+      "total_profit_pct": -6.17,
+      "trade_count": 77
+    },
+    {
+      "unit_label": "OB/FVG smt_confirmed_ob_fvg_continuation_v1 - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 30.0,
+      "sharpe": 3.6272,
+      "total_profit_pct": 2.48,
+      "trade_count": 70
+    },
+    {
+      "unit_label": "OB/FVG session_fvg_continuation_v1 - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 29.6296,
+      "sharpe": -0.6243,
+      "total_profit_pct": -10.54,
+      "trade_count": 135
+    },
+    {
+      "unit_label": "OB/FVG smt_confirmed_ob_fvg_continuation_v1 - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 28.7671,
+      "sharpe": -0.5342,
+      "total_profit_pct": -9.15,
+      "trade_count": 73
+    },
+    {
+      "unit_label": "OB/FVG ob_fvg_failed_mitigation_guard_v1 - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 28.5714,
+      "sharpe": 0.5197,
+      "total_profit_pct": 0.33,
+      "trade_count": 7
+    },
+    {
+      "unit_label": "OB/FVG session_fvg_continuation_v1 - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 27.4648,
+      "sharpe": -1.4057,
+      "total_profit_pct": -3.56,
+      "trade_count": 142
+    },
+    {
+      "unit_label": "OB/FVG ote_fvg_continuation_long_v1 - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 26.3736,
+      "sharpe": -1.2296,
+      "total_profit_pct": -3.91,
+      "trade_count": 91
+    },
+    {
+      "unit_label": "OB/FVG fvg_retest_continuation_long_v1 - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 26.087,
+      "sharpe": -0.5693,
+      "total_profit_pct": -12.59,
+      "trade_count": 69
+    },
+    {
+      "unit_label": "OB/FVG fvg_retest_continuation_long_v1 - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 25.8065,
+      "sharpe": -2.0305,
+      "total_profit_pct": -7.09,
+      "trade_count": 93
+    },
+    {
+      "unit_label": "OB/FVG ob_fvg_confluence_continuation_long_v1 - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 24.6914,
+      "sharpe": -1.3032,
+      "total_profit_pct": -4.93,
+      "trade_count": 81
+    },
+    {
+      "unit_label": "OB/FVG fvg_displacement_retest_expansion_v1 - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 22.8571,
+      "sharpe": -1.2397,
+      "total_profit_pct": -4.75,
+      "trade_count": 70
+    },
+    {
+      "unit_label": "OB/FVG fvg_displacement_retest_expansion_v1 - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG fvg_displacement_retest_expansion_v1 - TradingViewRemix/TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG fvg_retest_continuation_long_v1 - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG fvg_retest_continuation_long_v1 - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG fvg_retest_continuation_long_v1 - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG fvg_retest_continuation_long_v1 - TradingViewRemix/TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ob_fvg_confluence_continuation_long_v1 - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ob_fvg_confluence_continuation_long_v1 - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ob_fvg_confluence_continuation_long_v1 - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ob_fvg_confluence_continuation_long_v1 - TradingViewRemix/TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ob_fvg_failed_mitigation_guard_v1 - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ob_fvg_failed_mitigation_guard_v1 - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ob_fvg_failed_mitigation_guard_v1 - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ob_fvg_failed_mitigation_guard_v1 - TradingViewRemix/TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG order_block_retest_continuation_long_v1 - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG order_block_retest_continuation_long_v1 - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG order_block_retest_continuation_long_v1 - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG order_block_retest_continuation_long_v1 - TradingViewRemix/TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ote_fvg_continuation_long_v1 - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ote_fvg_continuation_long_v1 - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ote_fvg_continuation_long_v1 - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ote_fvg_continuation_long_v1 - TradingViewRemix/TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ote_ob_continuation_long_v1 - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ote_ob_continuation_long_v1 - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ote_ob_continuation_long_v1 - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG ote_ob_continuation_long_v1 - TradingViewRemix/TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG session_fvg_continuation_v1 - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG session_fvg_continuation_v1 - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG session_fvg_continuation_v1 - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG session_fvg_continuation_v1 - TradingViewRemix/TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG session_ob_continuation_v1 - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG session_ob_continuation_v1 - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG session_ob_continuation_v1 - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG session_ob_continuation_v1 - TradingViewRemix/TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG smt_confirmed_ob_fvg_continuation_v1 - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG smt_confirmed_ob_fvg_continuation_v1 - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG smt_confirmed_ob_fvg_continuation_v1 - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG smt_confirmed_ob_fvg_continuation_v1 - TradingViewRemix/TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    }
+  ]
+}

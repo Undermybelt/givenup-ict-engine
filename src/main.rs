@@ -157,13 +157,16 @@ use ict_engine::application::{
         resolve_multi_timeframe_inputs, MultiTimeframeInputPaths,
     },
     orchestration::{
-        build_execution_tree_artifact, build_execution_triage, build_stub_ensemble_vote_from_input,
-        build_stub_ensemble_vote_from_research, persist_execution_tree_artifact,
-        refresh_consumer_reason, run_stage_plan, staged_orchestration_enabled,
-        AnalyzeEnsembleVoteInput, CatBoostCompatiblePolicyEngine, DefaultExecutionTreeScorer,
-        ExecutionShapProvider, ExecutionTreeArtifact, ExecutionTreeInput, ExecutionTreeScorer,
-        FinalOutputAdapter, FinalSurfaceAdapter, PipelineState, StagePlan, StagedArtifactsInput,
-        StructuralExecutionShap, EXECUTION_TREE_TRACE_FILE,
+        build_execution_tree_artifact,
+        build_execution_tree_closed_loop_branch_admission_from_ranker_or_output_lineage,
+        build_execution_triage, build_stub_ensemble_vote_from_input,
+        build_stub_ensemble_vote_from_research, execution_tree_branch_admission_gate_status,
+        persist_execution_tree_artifact, refresh_consumer_reason, run_stage_plan,
+        staged_orchestration_enabled, AnalyzeEnsembleVoteInput, CatBoostCompatiblePolicyEngine,
+        DefaultExecutionTreeScorer, ExecutionShapProvider, ExecutionTreeArtifact,
+        ExecutionTreeInput, ExecutionTreeScorer, FinalOutputAdapter, FinalSurfaceAdapter,
+        PipelineState, StagePlan, StagedArtifactsInput, StructuralExecutionShap,
+        EXECUTION_TREE_TRACE_FILE,
     },
     provider_catalog::provider_status_command,
     reflection::{build_reflection_bundle, ReflectionBundleInput},
@@ -4287,6 +4290,12 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
         format!("{:?}", market_state_snapshot.secondary_regime),
     );
     if let Some(adapter) = regime_bundle_adapter {
+        for (key, value) in adapter.path_ranker_assignment_entries() {
+            pre_bayes_evidence_filter
+                .evidence_assignments
+                .insert(key, value);
+        }
+        adapter.append_read_only_bbn_filter_diagnostics(&mut pre_bayes_evidence_filter);
         let status = adapter.apply_bbn_soft_evidence_to_pre_bayes_filter(
             &mut pre_bayes_evidence_filter,
             apply_regime_bundle_bbn_soft_evidence,
@@ -4961,12 +4970,19 @@ fn build_analyze_report(input: BuildAnalyzeReportInput<'_>) -> Result<AnalyzeRep
     } else {
         None
     };
-    let execution_tree_artifact = build_execution_tree_artifact(
+    let mut execution_tree_artifact = build_execution_tree_artifact(
         symbol,
         execution_tree_output,
         execution_shap_top_k,
         analyze_provenance.clone(),
     );
+    execution_tree_artifact.closed_loop_branch_admission =
+        build_execution_tree_closed_loop_branch_admission_from_ranker_or_output_lineage(
+            Some(&path_ranker_lineage),
+            &pre_bayes_evidence_filter.gating_status,
+            &execution_tree_branch_admission_gate_status(&execution_tree_artifact.output),
+            &execution_tree_artifact.output,
+        );
     persist_execution_tree_artifact(state_dir, &execution_tree_artifact, "analyze", None)?;
 
     let staged_orchestration_trace = if staged_orchestration_enabled() {
@@ -9428,6 +9444,93 @@ mod tests {
     }
 
     #[test]
+    fn test_analyze_command_persists_regime_bundle_branch_path_on_execution_candidate() {
+        let temp = tempfile::tempdir().unwrap();
+        let htf = temp.path().join("htf.json");
+        let mtf = temp.path().join("mtf.json");
+        let ltf = temp.path().join("ltf.json");
+        let bundle = temp.path().join("regime_consumer_bundle.json");
+        let branch_path = "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12";
+
+        for (path, count) in [(&htf, 220usize), (&mtf, 180usize), (&ltf, 140usize)] {
+            std::fs::write(
+                path,
+                serde_json::to_string(&serde_json::json!({
+                    "candles": sample_candles(count)
+                }))
+                .unwrap(),
+            )
+            .unwrap();
+        }
+        std::fs::write(
+            &bundle,
+            serde_json::to_string(&serde_json::json!({
+                "schema_version": "regime-consumer-bundle/v1",
+                "latest_decision": {
+                    "decision_state": "single_label_95",
+                    "trade_usable": true,
+                    "final_label": "primary::ExtremeStress",
+                    "label_set": ["primary::ExtremeStress", branch_path],
+                    "abstain_reasons": ["branch_rc_spa_passed", "root=Crisis"]
+                },
+                "consumer_hints": {
+                    "execution_tree_hint": "accept_regime",
+                    "bbn_evidence_hint": {
+                        "regime_decision_state": "single_label_95",
+                        "regime_trade_usable": true,
+                        "regime_label": "primary::ExtremeStress",
+                        "regime_label_set": ["primary::ExtremeStress", branch_path],
+                        "regime_transition_hazard": 0.0,
+                        "regime_decision_reasons": ["branch_rc_spa_passed", "root=Crisis"]
+                    },
+                    "path_ranker_context": {
+                        "regime_profit_branch_path": branch_path,
+                        "stable_profit_score": 85.7407
+                    },
+                    "trade_usable": true
+                }
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        analyze_command(
+            "NQ",
+            htf.to_str().unwrap(),
+            mtf.to_str().unwrap(),
+            ltf.to_str().unwrap(),
+            temp.path().to_str().unwrap(),
+            OutputFormat::Json,
+            false,
+            true,
+            Some(bundle.to_str().unwrap()),
+            true,
+            true,
+        )
+        .unwrap();
+
+        let candidate: ExecutionCandidateArtifact = load_state(
+            temp.path(),
+            "NQ",
+            ict_engine::state::EXECUTION_CANDIDATE_FILE,
+        )
+        .unwrap();
+        let assignments = &candidate
+            .pre_bayes_evidence_filter
+            .as_ref()
+            .expect("execution candidate should embed pre-Bayes filter")
+            .evidence_assignments;
+
+        assert_eq!(
+            assignments.get("read_only_regime_bbn_trade_usable"),
+            Some(&"true".to_string())
+        );
+        assert!(assignments
+            .get("read_only_regime_bbn_label_set")
+            .is_some_and(|value| value.contains("Crisis_->_CrisisReliefCarry")));
+    }
+
+    #[test]
     fn test_workflow_status_command_reads_snapshot() {
         let temp = tempfile::tempdir().unwrap();
         let snapshot = WorkflowSnapshot {
@@ -11307,6 +11410,19 @@ mod tests {
             .as_ref()
             .expect("update run structural refs");
         assert_eq!(run_refs.path_id, refs.path_id);
+        let consumed_filter = runs[0]
+            .consumed_pre_bayes_evidence_filter
+            .as_ref()
+            .expect("structural feedback pre-bayes filter");
+        assert_eq!(consumed_filter.gating_status, "pass_neutralized");
+        assert_eq!(
+            consumed_filter.evidence_assignments["regime_profit_branch_path"],
+            refs.path_id
+        );
+        assert_eq!(
+            consumed_filter.evidence_assignments["parent_regime_root"],
+            refs.node_id
+        );
         let snapshot_refs = snapshot
             .latest_update
             .as_ref()
@@ -11336,6 +11452,121 @@ mod tests {
             .iter()
             .filter(|prompt| prompt.id == "promotion_gate" || prompt.id == "rollback_review")
             .all(|prompt| prompt.user_prompt.contains("learning_semantics=")));
+    }
+
+    #[test]
+    fn test_update_command_merges_pending_update_structural_feedback_into_consumed_filter() {
+        let temp = tempfile::tempdir().unwrap();
+        let feedback_path = temp
+            .path()
+            .join("pending-update-with-structural-feedback.json");
+        let branch_path = "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12";
+        let node_id = "Sideways";
+        let artifact = PendingUpdateArtifact {
+            artifact_id: "pending-update:NQ:branch".to_string(),
+            version: 1,
+            generated_at: Utc.with_ymd_and_hms(2026, 5, 12, 0, 0, 0).unwrap(),
+            symbol: "NQ".to_string(),
+            source_phase: "analyze-live".to_string(),
+            source_run_id: Some("analyze-live:NQ:branch".to_string()),
+            source_command: "ict-engine analyze".to_string(),
+            provenance: RunProvenance::default(),
+            decision_hint: "branch feedback pending update".to_string(),
+            entry_quality: "medium".to_string(),
+            factor_alignment: "mixed".to_string(),
+            factor_uncertainty: "low".to_string(),
+            selected_win_probability: 0.58,
+            top_factor_score: 0.12,
+            avg_family_score: 0.12,
+            pre_bayes_evidence_filter: Some(PreBayesEvidenceFilter {
+                raw_market_regime_label: "range".to_string(),
+                filtered_market_regime_label: "range".to_string(),
+                evidence_quality_score: 0.58,
+                gating_status: "pass_neutralized".to_string(),
+                pass_to_bbn: true,
+                evidence_assignments: BTreeMap::from([(
+                    "market_regime".to_string(),
+                    "range".to_string(),
+                )]),
+                ..PreBayesEvidenceFilter::default()
+            }),
+            template_feedback: FeedbackRecord {
+                timestamp: Utc.with_ymd_and_hms(2026, 5, 12, 0, 0, 0).unwrap(),
+                symbol: "NQ".to_string(),
+                source: "pending_update_artifact".to_string(),
+                run_id: Some("analyze-live:NQ:branch".to_string()),
+                trade_id: Some("trade:NQ:branch".to_string()),
+                prompt_version: None,
+                factor_version: None,
+                data_fingerprint: None,
+                factors_used: Vec::new(),
+                model_probabilities_before_trade: ModelProbabilitySnapshot {
+                    selected_direction: Direction::Bull,
+                    selected_probability: 0.58,
+                    long_score: 0.2,
+                    short_score: 0.1,
+                    win_prob_long: 0.58,
+                    win_prob_short: 0.49,
+                    uncertainty: 0.2,
+                },
+                realized_outcome: "win".to_string(),
+                pnl: 0.02,
+                regime_at_entry: Regime::ManipulationExpansion,
+                structural_feedback: Some(ict_engine::state::StructuralFeedbackRefs {
+                    protocol_version: "board-b-source-root-stop-carry-longhorizon/v1".to_string(),
+                    recommendation_id: "SourceRootStopCarryLongHorizonV1:sideways".to_string(),
+                    recommended_at: "2026-05-12T00:00:00+00:00".to_string(),
+                    node_id: node_id.to_string(),
+                    branch_id: branch_path.to_string(),
+                    scenario_id: "RangeCarry".to_string(),
+                    path_id: branch_path.to_string(),
+                    followed_path: true,
+                    exit_reason: Some("target_hit".to_string()),
+                    notes: Some("exact Board B regime_profit_branch_path".to_string()),
+                }),
+                reflection_mismatch_tags: Vec::new(),
+            },
+            ..PendingUpdateArtifact::default()
+        };
+        std::fs::write(&feedback_path, serde_json::to_string(&artifact).unwrap()).unwrap();
+
+        crate::update_command::update_command(UpdateCommandInput {
+            symbol: "NQ",
+            outcome: "loss",
+            entry_signal: Some("medium"),
+            feedback_file: Some(feedback_path.to_str().unwrap()),
+            state_dir: temp.path().to_str().unwrap(),
+            pnl: Some(-0.01),
+            regime: None,
+            direction: Some("long"),
+            ensemble: false,
+        })
+        .unwrap();
+
+        let runs: Vec<UpdateRunRecord> =
+            load_state(temp.path(), "NQ", ict_engine::state::UPDATE_RUNS_FILE).unwrap();
+        let consumed_filter = runs[0]
+            .consumed_pre_bayes_evidence_filter
+            .as_ref()
+            .expect("pending update consumed pre-bayes filter");
+
+        assert_eq!(consumed_filter.gating_status, "pass_neutralized");
+        assert_eq!(
+            consumed_filter.evidence_assignments["market_regime"],
+            "range"
+        );
+        assert_eq!(
+            consumed_filter.evidence_assignments["regime_profit_branch_path"],
+            branch_path
+        );
+        assert_eq!(
+            consumed_filter.evidence_assignments["parent_regime_root"],
+            node_id
+        );
+        assert_eq!(
+            consumed_filter.evidence_assignments["pre_bayes_branch_path_gate"],
+            "pass_neutralized"
+        );
     }
 
     #[test]

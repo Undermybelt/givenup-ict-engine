@@ -1,0 +1,56 @@
+{
+  "artifact_id": "auto-quant-agent-material-rank:PROVIDER_OB_FVG_165122:20260512T092520.587Z",
+  "generated_at": "2026-05-12T09:25:20.587926Z",
+  "symbol": "PROVIDER_OB_FVG_165122",
+  "source_dispatch_artifact_id": "auto-quant-agent-material-dispatch:PROVIDER_OB_FVG_165122:20260512T092520.542Z",
+  "ranking": [
+    {
+      "unit_label": "OB/FVG branch matrix - Binance BTCUSDT 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "OB/FVG branch matrix - Bybit BTCUSDT 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "OB/FVG branch matrix - IBKR SPY 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "OB/FVG branch matrix - Kraken XBTUSD 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "OB/FVG branch matrix - TVR BTC-USD 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "OB/FVG branch matrix - yfinance/YF SPY 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    }
+  ]
+}

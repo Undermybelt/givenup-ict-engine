@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-agent-material-rank --symbol OBFVG_192258 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/state 

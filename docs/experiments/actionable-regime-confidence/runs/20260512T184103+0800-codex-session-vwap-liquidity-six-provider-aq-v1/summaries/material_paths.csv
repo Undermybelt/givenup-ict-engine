@@ -1,0 +1,7 @@
+provider,material_path,rows
+yfinance/YF,docs/experiments/actionable-regime-confidence/runs/20260512T184103+0800-codex-session-vwap-liquidity-six-provider-aq-v1/agent-material/session-vwap-liquidity-yfinance-yf-1h-v1.material.json,2355
+Binance,docs/experiments/actionable-regime-confidence/runs/20260512T184103+0800-codex-session-vwap-liquidity-six-provider-aq-v1/agent-material/session-vwap-liquidity-binance-1h-v1.material.json,11905
+Bybit,docs/experiments/actionable-regime-confidence/runs/20260512T184103+0800-codex-session-vwap-liquidity-six-provider-aq-v1/agent-material/session-vwap-liquidity-bybit-1h-v1.material.json,1000
+Kraken,docs/experiments/actionable-regime-confidence/runs/20260512T184103+0800-codex-session-vwap-liquidity-six-provider-aq-v1/agent-material/session-vwap-liquidity-kraken-1h-v1.material.json,2000
+IBKR,docs/experiments/actionable-regime-confidence/runs/20260512T184103+0800-codex-session-vwap-liquidity-six-provider-aq-v1/agent-material/session-vwap-liquidity-ibkr-1h-v1.material.json,1427
+TradingViewRemix/TVR,docs/experiments/actionable-regime-confidence/runs/20260512T184103+0800-codex-session-vwap-liquidity-six-provider-aq-v1/agent-material/session-vwap-liquidity-tvr-btc-usd-1h-v1.material.json,719

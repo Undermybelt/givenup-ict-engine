@@ -1,0 +1,1 @@
+uv run --with pandas --with requests --with ib_async --with redis --with pyyaml python scripts/auto_quant_external/fetch_external.py binance-kline --symbol BTCUSDT --interval 1h --start 2025-01-01 --end 2026-05-12 --output docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1/data/raw/binance_btcusdt_1h.csv

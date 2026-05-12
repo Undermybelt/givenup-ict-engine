@@ -1,0 +1,65 @@
+{
+  "confluence_window_bars": 24,
+  "evidence_class": "screen_only_ohlcv_proxy",
+  "exit_horizon_bars": 12,
+  "fold_rows": 415,
+  "max_wait_bars": 24,
+  "min_trades_for_top_table": 50,
+  "outputs": {
+    "fold_summary": "docs/experiments/actionable-regime-confidence/runs/20260512T151746+0800-codex-ob-fvg-trend-pullback-screen-v1/summaries/ob_fvg_fold_summary.csv",
+    "signals": "docs/experiments/actionable-regime-confidence/runs/20260512T151746+0800-codex-ob-fvg-trend-pullback-screen-v1/summaries/ob_fvg_signal_rows.csv",
+    "summary": "docs/experiments/actionable-regime-confidence/runs/20260512T151746+0800-codex-ob-fvg-trend-pullback-screen-v1/summaries/ob_fvg_summary.csv",
+    "top_candidates": "docs/experiments/actionable-regime-confidence/runs/20260512T151746+0800-codex-ob-fvg-trend-pullback-screen-v1/summaries/ob_fvg_top_candidates.csv"
+  },
+  "promotion_allowed": false,
+  "protocol": "ob-fvg-trend-pullback-screen-v1",
+  "source_counts": [
+    {
+      "bars": 76429,
+      "confluence_signals": 5550,
+      "fvg_signals": 7574,
+      "ob_signals": 2792,
+      "provider": "Binance",
+      "symbol": "BTCUSDT"
+    },
+    {
+      "bars": 20034,
+      "confluence_signals": 1762,
+      "fvg_signals": 3355,
+      "ob_signals": 645,
+      "provider": "IBKR",
+      "symbol": "SPY"
+    },
+    {
+      "bars": 11383,
+      "confluence_signals": 953,
+      "fvg_signals": 1471,
+      "ob_signals": 402,
+      "provider": "Yahoo",
+      "symbol": "ES"
+    }
+  ],
+  "sources": [
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/binance_btcusdt_1h_20170817_20260512.normalized.csv",
+      "provider": "Binance",
+      "roundtrip_cost": 0.001,
+      "symbol": "BTCUSDT"
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/ibkr_spy_1h_5y.normalized.csv",
+      "provider": "IBKR",
+      "roundtrip_cost": 0.0005,
+      "symbol": "SPY"
+    },
+    {
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T143900+0800-codex-provider-backed-regime-validation-smoke-v1/data/yahoo_es_1h_20240513_20260512.normalized.csv",
+      "provider": "Yahoo",
+      "roundtrip_cost": 0.0005,
+      "symbol": "ES"
+    }
+  ],
+  "summary_rows": 108,
+  "top_candidate_rows": 12,
+  "total_signals": 24504
+}

@@ -1,0 +1,12 @@
+requirement,evidence,status,notes
+same markdown work claim,docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md section "2026-05-12 Supplemental 160511 OB/FVG AQ Agent-Material Work Claim v1",pass,Claim was appended before execution.
+unowned profitability-factor hypothesis,ob_fvg_aq_agent_material_packet_v1.md,pass,New root converts the 151907 OB/FVG screen leaf into an AQ agent-material packet.
+canonical branch path,summaries/ob_fvg_aq_agent_material_contract_v1.json,pass,TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1.
+six provider rows,summaries/provider_provenance_matrix.csv,pass,Rows exist for IBKR, TradingViewRemix/TVR, yfinance/YF, Kraken, Binance, and Bybit.
+avoid new TVR call,summaries/provider_provenance_matrix.csv,pass,TVR is recorded from 154536 as provider_unreachable_current_rate_limited.
+real Auto-Quant execution,command-output/01c_auto_quant_agent_material_batch.out; command-output/02_auto_quant_agent_material_dispatch.out; command-output/03_auto_quant_agent_material_rank.out,pass,Batch dispatch and rank reached ict-engine/Auto-Quant after wrapper failures.
+provider authority current same-root,summaries/provider_provenance_matrix.csv,fail_closed,Non-TVR rows are provider-backed replay/local_cache_replay from 150855 and TVR is unreachable.
+portable profitability,command-output/03_auto_quant_agent_material_rank.out,fail_closed,Only IBKR SPY is positive; YF is negative; Binance zero-trade; Kraken/Bybit failed.
+branch-keyed downstream handoff,command-output/03_auto_quant_agent_material_rank.out,fail_closed,No Pre-Bayes/BBN/CatBoost/execution-tree handoff is justified because provider authority and portable profitability failed.
+multi-agent non-duplication,docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md,pass,No settled root was rerun or counted again.
+promotion decision,ob_fvg_aq_agent_material_terminal_readback_v1.md,fail_closed,promotion_allowed=false; trade_usable=false; update_goal=false.

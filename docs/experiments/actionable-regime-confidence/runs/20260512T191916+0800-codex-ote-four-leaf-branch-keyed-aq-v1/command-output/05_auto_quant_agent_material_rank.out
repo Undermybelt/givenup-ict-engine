@@ -1,0 +1,200 @@
+{
+  "artifact_id": "auto-quant-agent-material-rank:OTE4_191916:20260512T112920.050Z",
+  "generated_at": "2026-05-12T11:29:20.052715Z",
+  "symbol": "OTE4_191916",
+  "source_dispatch_artifact_id": "auto-quant-agent-material-dispatch:OTE4_191916:20260512T112828.023Z",
+  "ranking": [
+    {
+      "unit_label": "OTE 0500 pullback continuation - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 50.0,
+      "sharpe": 0.2599,
+      "total_profit_pct": 0.49,
+      "trade_count": 10
+    },
+    {
+      "unit_label": "OTE 0618 pullback continuation - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 50.0,
+      "sharpe": 0.2599,
+      "total_profit_pct": 0.49,
+      "trade_count": 10
+    },
+    {
+      "unit_label": "OTE 0705 pullback continuation - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 50.0,
+      "sharpe": 0.2599,
+      "total_profit_pct": 0.49,
+      "trade_count": 10
+    },
+    {
+      "unit_label": "OTE 0786 pullback continuation - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 50.0,
+      "sharpe": 0.2599,
+      "total_profit_pct": 0.49,
+      "trade_count": 10
+    },
+    {
+      "unit_label": "OTE 0500 pullback continuation - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 30.2326,
+      "sharpe": -0.6579,
+      "total_profit_pct": -7.1,
+      "trade_count": 43
+    },
+    {
+      "unit_label": "OTE 0618 pullback continuation - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 30.2326,
+      "sharpe": -0.6579,
+      "total_profit_pct": -7.1,
+      "trade_count": 43
+    },
+    {
+      "unit_label": "OTE 0705 pullback continuation - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 30.2326,
+      "sharpe": -0.6579,
+      "total_profit_pct": -7.1,
+      "trade_count": 43
+    },
+    {
+      "unit_label": "OTE 0786 pullback continuation - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 30.2326,
+      "sharpe": -0.6579,
+      "total_profit_pct": -7.1,
+      "trade_count": 43
+    },
+    {
+      "unit_label": "OTE 0500 pullback continuation - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE 0618 pullback continuation - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE 0705 pullback continuation - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE 0786 pullback continuation - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE 0500 pullback continuation - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE 0618 pullback continuation - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE 0705 pullback continuation - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE 0786 pullback continuation - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE 0500 pullback continuation - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE 0618 pullback continuation - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE 0705 pullback continuation - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE 0786 pullback continuation - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE 0500 pullback continuation - TradingViewRemix/TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE 0618 pullback continuation - TradingViewRemix/TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE 0705 pullback continuation - TradingViewRemix/TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OTE 0786 pullback continuation - TradingViewRemix/TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    }
+  ]
+}

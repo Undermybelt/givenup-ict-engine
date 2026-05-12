@@ -1,0 +1,56 @@
+{
+  "artifact_id": "auto-quant-agent-material-rank:PROVIDER_VWAP_184139:20260512T111650.278Z",
+  "generated_at": "2026-05-12T11:16:50.279508Z",
+  "symbol": "PROVIDER_VWAP_184139",
+  "source_dispatch_artifact_id": "auto-quant-agent-material-dispatch:PROVIDER_VWAP_184139:20260512T111226.439Z",
+  "ranking": [
+    {
+      "unit_label": "VWAP session liquidity - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 30.0752,
+      "sharpe": -0.0476,
+      "total_profit_pct": -0.64,
+      "trade_count": 133
+    },
+    {
+      "unit_label": "VWAP session liquidity - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 29.6296,
+      "sharpe": -0.2784,
+      "total_profit_pct": -0.81,
+      "trade_count": 54
+    },
+    {
+      "unit_label": "VWAP session liquidity - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "VWAP session liquidity - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "VWAP session liquidity - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "VWAP session liquidity - TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    }
+  ]
+}

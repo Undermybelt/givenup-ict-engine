@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-agent-material-dispatch --symbol OTE4_191916 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T191916+0800-codex-ote-four-leaf-branch-keyed-aq-v1/state

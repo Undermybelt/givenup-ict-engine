@@ -1,0 +1,64 @@
+{
+  "accepted_95_contexts_added": 0,
+  "board_a_support": false,
+  "controlling_retry_exits": {
+    "11_fetch_yahoo_spy_1d_retry": "0",
+    "12_fetch_binance_btcusdt_4h_retry": "0",
+    "13_fetch_binance_btcusdt_1d_retry": "0"
+  },
+  "long_span_native_candidates": 3,
+  "native_timeframe_fetches": 3,
+  "preflight_only": true,
+  "promotion_allowed": false,
+  "purpose": "supplemental_retry_readback_controls_195307_terminal_gate",
+  "retry_exit_total": 3,
+  "retry_exit_zero_count": 3,
+  "rows": [
+    {
+      "actual_end": "2026-05-11T13:30:00Z",
+      "actual_start": "2020-01-02T14:30:00Z",
+      "board_a_support": "False",
+      "columns": "['date', 'open', 'high', 'low', 'close', 'volume']",
+      "exit": "0",
+      "native_timeframe": "True",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T195307+0800-codex-provider-native-timeframe-acquisition-preflight-v1/data/raw/yahoo_spy_1d.retry.csv",
+      "provider": "yfinance/YF",
+      "rows": "1597",
+      "span_days": "2320.958",
+      "symbol": "SPY",
+      "timeframe": "1d"
+    },
+    {
+      "actual_end": "2026-05-12T00:00:00Z",
+      "actual_start": "2020-01-01T00:00:00Z",
+      "board_a_support": "False",
+      "columns": "['date', 'open', 'high', 'low', 'close', 'volume']",
+      "exit": "0",
+      "native_timeframe": "True",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T195307+0800-codex-provider-native-timeframe-acquisition-preflight-v1/data/raw/binance_btcusdt_4h.retry.csv",
+      "provider": "Binance",
+      "rows": "13938",
+      "span_days": "2323.0",
+      "symbol": "BTCUSDT",
+      "timeframe": "4h"
+    },
+    {
+      "actual_end": "2026-05-12T00:00:00Z",
+      "actual_start": "2020-01-01T00:00:00Z",
+      "board_a_support": "False",
+      "columns": "['date', 'open', 'high', 'low', 'close', 'volume']",
+      "exit": "0",
+      "native_timeframe": "True",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T195307+0800-codex-provider-native-timeframe-acquisition-preflight-v1/data/raw/binance_btcusdt_1d.retry.csv",
+      "provider": "Binance",
+      "rows": "2324",
+      "span_days": "2323.0",
+      "symbol": "BTCUSDT",
+      "timeframe": "1d"
+    }
+  ],
+  "run_id": "20260512T195307+0800-codex-provider-native-timeframe-acquisition-preflight-v1",
+  "support_reason": "native timeframe data coverage only; no Auto-Quant, Pre-Bayes, BBN, CatBoost/path-ranker, or execution-tree admission in this slice",
+  "trade_usable": false,
+  "update_goal": false
+}

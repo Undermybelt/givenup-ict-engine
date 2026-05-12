@@ -1,0 +1,15 @@
+{
+  "artifact_id": "auto-quant-agent-material-batch:PROVIDER_OTE_192149:20260512T112620.081Z",
+  "jobs": 24,
+  "groups": 6,
+  "max_parallel": 4,
+  "providers": 6,
+  "levels": [
+    "ote_level=0.500",
+    "ote_level=0.618",
+    "ote_level=0.705",
+    "ote_level=0.786"
+  ],
+  "branch_paths": 4,
+  "local_cache_replay_all": true
+}

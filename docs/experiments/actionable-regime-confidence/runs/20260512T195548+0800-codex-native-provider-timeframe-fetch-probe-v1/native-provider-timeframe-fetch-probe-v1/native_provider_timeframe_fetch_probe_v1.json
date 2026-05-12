@@ -1,0 +1,581 @@
+{
+  "accepted_95_contexts_added": 0,
+  "complete_native_provider_count": 3,
+  "generated_at": "2026-05-12T12:01:27.037088Z",
+  "intervals_required": [
+    "1h",
+    "4h",
+    "1d"
+  ],
+  "promotion_allowed": false,
+  "providers_required": [
+    "IBKR",
+    "TradingViewRemix/TVR",
+    "yfinance/YF",
+    "Kraken",
+    "Binance",
+    "Bybit"
+  ],
+  "providers_with_complete_native_1h_4h_1d": [
+    "Binance",
+    "Bybit",
+    "Kraken"
+  ],
+  "requested_end": "2026-05-12",
+  "requested_start": "2024-05-13",
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1",
+  "schema_version": "board-a-native-provider-timeframe-fetch-probe-v1",
+  "tasks": [
+    {
+      "first_ts": "2024-05-13 13:30:00+00:00",
+      "interval": "1h",
+      "last_ts": "2026-05-11 20:00:00+00:00",
+      "native_fetch_attempted": true,
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/yfinance_YF/SPY_1h.csv",
+      "provider": "yfinance_YF",
+      "rows": 3473,
+      "step": {
+        "argv": [
+          "python3",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py",
+          "yahoo",
+          "--symbol",
+          "SPY",
+          "--interval",
+          "1h",
+          "--start",
+          "2024-05-13",
+          "--end",
+          "2026-05-12",
+          "--output",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/yfinance_YF/SPY_1h.csv"
+        ],
+        "exit": 0,
+        "name": "yfinance_yf_spy_1h",
+        "timed_out": false
+      },
+      "symbol": "SPY"
+    },
+    {
+      "first_ts": null,
+      "interval": "4h",
+      "last_ts": null,
+      "native_fetch_attempted": false,
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/yfinance_YF/SPY_4h.csv",
+      "provider": "yfinance_YF",
+      "rows": 0,
+      "step": {
+        "argv": [
+          "SKIP",
+          "yfinance_YF native 4h unsupported by fetch_external.py"
+        ],
+        "exit": 125,
+        "name": "yfinance_yf_spy_4h",
+        "timed_out": false
+      },
+      "symbol": "SPY"
+    },
+    {
+      "first_ts": "2024-05-13 13:30:00+00:00",
+      "interval": "1d",
+      "last_ts": "2026-05-11 13:30:00+00:00",
+      "native_fetch_attempted": true,
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/yfinance_YF/SPY_1d.csv",
+      "provider": "yfinance_YF",
+      "rows": 500,
+      "step": {
+        "argv": [
+          "python3",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py",
+          "yahoo",
+          "--symbol",
+          "SPY",
+          "--interval",
+          "1d",
+          "--start",
+          "2024-05-13",
+          "--end",
+          "2026-05-12",
+          "--output",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/yfinance_YF/SPY_1d.csv"
+        ],
+        "exit": 0,
+        "name": "yfinance_yf_spy_1d",
+        "timed_out": false
+      },
+      "symbol": "SPY"
+    },
+    {
+      "first_ts": "2024-05-13 00:00:00+00:00",
+      "interval": "1h",
+      "last_ts": "2026-05-12 00:00:00+00:00",
+      "native_fetch_attempted": true,
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Binance/BTCUSDT_1h.csv",
+      "provider": "Binance",
+      "rows": 17497,
+      "step": {
+        "argv": [
+          "python3",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py",
+          "binance-kline",
+          "--symbol",
+          "BTCUSDT",
+          "--interval",
+          "1h",
+          "--start",
+          "2024-05-13",
+          "--end",
+          "2026-05-12",
+          "--output",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Binance/BTCUSDT_1h.csv"
+        ],
+        "exit": 0,
+        "name": "binance_btcusdt_1h",
+        "timed_out": false
+      },
+      "symbol": "BTCUSDT"
+    },
+    {
+      "first_ts": "2024-05-13 00:00:00+00:00",
+      "interval": "4h",
+      "last_ts": "2026-05-12 00:00:00+00:00",
+      "native_fetch_attempted": true,
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Binance/BTCUSDT_4h.csv",
+      "provider": "Binance",
+      "rows": 4375,
+      "step": {
+        "argv": [
+          "python3",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py",
+          "binance-kline",
+          "--symbol",
+          "BTCUSDT",
+          "--interval",
+          "4h",
+          "--start",
+          "2024-05-13",
+          "--end",
+          "2026-05-12",
+          "--output",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Binance/BTCUSDT_4h.csv"
+        ],
+        "exit": 0,
+        "name": "binance_btcusdt_4h",
+        "timed_out": false
+      },
+      "symbol": "BTCUSDT"
+    },
+    {
+      "first_ts": "2024-05-13 00:00:00+00:00",
+      "interval": "1d",
+      "last_ts": "2026-05-12 00:00:00+00:00",
+      "native_fetch_attempted": true,
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Binance/BTCUSDT_1d.csv",
+      "provider": "Binance",
+      "rows": 730,
+      "step": {
+        "argv": [
+          "python3",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py",
+          "binance-kline",
+          "--symbol",
+          "BTCUSDT",
+          "--interval",
+          "1d",
+          "--start",
+          "2024-05-13",
+          "--end",
+          "2026-05-12",
+          "--output",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Binance/BTCUSDT_1d.csv"
+        ],
+        "exit": 0,
+        "name": "binance_btcusdt_1d",
+        "timed_out": false
+      },
+      "symbol": "BTCUSDT"
+    },
+    {
+      "first_ts": "2026-03-31 09:00:00+00:00",
+      "interval": "1h",
+      "last_ts": "2026-05-12 00:00:00+00:00",
+      "native_fetch_attempted": true,
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Bybit/BTCUSDT_1h.csv",
+      "provider": "Bybit",
+      "rows": 1000,
+      "step": {
+        "argv": [
+          "python3",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py",
+          "bybit-kline",
+          "--category",
+          "linear",
+          "--symbol",
+          "BTCUSDT",
+          "--interval",
+          "1h",
+          "--start",
+          "2024-05-13",
+          "--end",
+          "2026-05-12",
+          "--output",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Bybit/BTCUSDT_1h.csv"
+        ],
+        "exit": 0,
+        "name": "bybit_btcusdt_1h",
+        "timed_out": false
+      },
+      "symbol": "BTCUSDT"
+    },
+    {
+      "first_ts": "2025-11-26 12:00:00+00:00",
+      "interval": "4h",
+      "last_ts": "2026-05-12 00:00:00+00:00",
+      "native_fetch_attempted": true,
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Bybit/BTCUSDT_4h.csv",
+      "provider": "Bybit",
+      "rows": 1000,
+      "step": {
+        "argv": [
+          "python3",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py",
+          "bybit-kline",
+          "--category",
+          "linear",
+          "--symbol",
+          "BTCUSDT",
+          "--interval",
+          "4h",
+          "--start",
+          "2024-05-13",
+          "--end",
+          "2026-05-12",
+          "--output",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Bybit/BTCUSDT_4h.csv"
+        ],
+        "exit": 0,
+        "name": "bybit_btcusdt_4h",
+        "timed_out": false
+      },
+      "symbol": "BTCUSDT"
+    },
+    {
+      "first_ts": "2024-05-13 00:00:00+00:00",
+      "interval": "1d",
+      "last_ts": "2026-05-12 00:00:00+00:00",
+      "native_fetch_attempted": true,
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Bybit/BTCUSDT_1d.csv",
+      "provider": "Bybit",
+      "rows": 730,
+      "step": {
+        "argv": [
+          "python3",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py",
+          "bybit-kline",
+          "--category",
+          "linear",
+          "--symbol",
+          "BTCUSDT",
+          "--interval",
+          "1d",
+          "--start",
+          "2024-05-13",
+          "--end",
+          "2026-05-12",
+          "--output",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Bybit/BTCUSDT_1d.csv"
+        ],
+        "exit": 0,
+        "name": "bybit_btcusdt_1d",
+        "timed_out": false
+      },
+      "symbol": "BTCUSDT"
+    },
+    {
+      "first_ts": "2024-05-13 00:00:00+00:00",
+      "interval": "1h",
+      "last_ts": "2024-08-04 07:00:00+00:00",
+      "native_fetch_attempted": true,
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Kraken/PF_XBTUSD_1h.csv",
+      "provider": "Kraken",
+      "rows": 2000,
+      "step": {
+        "argv": [
+          "python3",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py",
+          "kraken-kline",
+          "--market",
+          "futures",
+          "--pair",
+          "PF_XBTUSD",
+          "--interval",
+          "1h",
+          "--start",
+          "2024-05-13",
+          "--end",
+          "2026-05-12",
+          "--output",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Kraken/PF_XBTUSD_1h.csv"
+        ],
+        "exit": 0,
+        "name": "kraken_pf_xbtusd_1h",
+        "timed_out": false
+      },
+      "symbol": "PF_XBTUSD"
+    },
+    {
+      "first_ts": "2024-05-13 00:00:00+00:00",
+      "interval": "4h",
+      "last_ts": "2025-04-11 04:00:00+00:00",
+      "native_fetch_attempted": true,
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Kraken/PF_XBTUSD_4h.csv",
+      "provider": "Kraken",
+      "rows": 2000,
+      "step": {
+        "argv": [
+          "python3",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py",
+          "kraken-kline",
+          "--market",
+          "futures",
+          "--pair",
+          "PF_XBTUSD",
+          "--interval",
+          "4h",
+          "--start",
+          "2024-05-13",
+          "--end",
+          "2026-05-12",
+          "--output",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Kraken/PF_XBTUSD_4h.csv"
+        ],
+        "exit": 0,
+        "name": "kraken_pf_xbtusd_4h",
+        "timed_out": false
+      },
+      "symbol": "PF_XBTUSD"
+    },
+    {
+      "first_ts": "2024-05-13 00:00:00+00:00",
+      "interval": "1d",
+      "last_ts": "2026-05-12 00:00:00+00:00",
+      "native_fetch_attempted": true,
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Kraken/PF_XBTUSD_1d.csv",
+      "provider": "Kraken",
+      "rows": 730,
+      "step": {
+        "argv": [
+          "python3",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py",
+          "kraken-kline",
+          "--market",
+          "futures",
+          "--pair",
+          "PF_XBTUSD",
+          "--interval",
+          "1d",
+          "--start",
+          "2024-05-13",
+          "--end",
+          "2026-05-12",
+          "--output",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/Kraken/PF_XBTUSD_1d.csv"
+        ],
+        "exit": 0,
+        "name": "kraken_pf_xbtusd_1d",
+        "timed_out": false
+      },
+      "symbol": "PF_XBTUSD"
+    },
+    {
+      "first_ts": "2025-05-13T08:00:00+00:00",
+      "interval": "1h",
+      "last_ts": "2026-05-12T11:00:00+00:00",
+      "native_fetch_attempted": true,
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/IBKR/SPY_1h.csv",
+      "provider": "IBKR",
+      "rows": 3995,
+      "step": {
+        "argv": [
+          "/Users/thrill3r/.local/bin/uv",
+          "run",
+          "--with",
+          "pandas",
+          "--with",
+          "requests",
+          "--with",
+          "redis",
+          "--with",
+          "ib_async",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py",
+          "ibkr-historical",
+          "--symbol",
+          "SPY",
+          "--sec-type",
+          "STK",
+          "--exchange",
+          "SMART",
+          "--currency",
+          "USD",
+          "--primary-exchange",
+          "ARCA",
+          "--bar-size",
+          "1 hour",
+          "--duration",
+          "1 Y",
+          "--what-to-show",
+          "TRADES",
+          "--port",
+          "4002",
+          "--output",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/IBKR/SPY_1h.csv"
+        ],
+        "exit": 0,
+        "name": "ibkr_spy_1h",
+        "timed_out": false
+      },
+      "symbol": "SPY"
+    },
+    {
+      "first_ts": null,
+      "interval": "4h",
+      "last_ts": null,
+      "native_fetch_attempted": false,
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/IBKR/SPY_4h.csv",
+      "provider": "IBKR",
+      "rows": 0,
+      "step": {
+        "argv": [
+          "SKIP",
+          "IBKR historical native 4h bar size is not exposed by fetch_external.py"
+        ],
+        "exit": 125,
+        "name": "ibkr_spy_4h",
+        "timed_out": false
+      },
+      "symbol": "SPY"
+    },
+    {
+      "first_ts": "2024-05-13T00:00:00+00:00",
+      "interval": "1d",
+      "last_ts": "2026-05-12T00:00:00+00:00",
+      "native_fetch_attempted": true,
+      "output": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/IBKR/SPY_1d.csv",
+      "provider": "IBKR",
+      "rows": 501,
+      "step": {
+        "argv": [
+          "/Users/thrill3r/.local/bin/uv",
+          "run",
+          "--with",
+          "pandas",
+          "--with",
+          "requests",
+          "--with",
+          "redis",
+          "--with",
+          "ib_async",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/scripts/auto_quant_external/fetch_external.py",
+          "ibkr-historical",
+          "--symbol",
+          "SPY",
+          "--sec-type",
+          "STK",
+          "--exchange",
+          "SMART",
+          "--currency",
+          "USD",
+          "--primary-exchange",
+          "ARCA",
+          "--bar-size",
+          "1 day",
+          "--duration",
+          "2 Y",
+          "--what-to-show",
+          "TRADES",
+          "--port",
+          "4002",
+          "--output",
+          "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/IBKR/SPY_1d.csv"
+        ],
+        "exit": 0,
+        "name": "ibkr_spy_1d",
+        "timed_out": false
+      },
+      "symbol": "SPY"
+    },
+    {
+      "first_ts": null,
+      "interval": "1h",
+      "last_ts": null,
+      "native_fetch_attempted": true,
+      "provider": "TradingViewRemix/TVR",
+      "request": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/TradingViewRemix_TVR/request_1h.json",
+      "rows": 0,
+      "step": {
+        "argv": [
+          "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+          "market-data-harness",
+          "--action",
+          "fetch",
+          "--request-json",
+          "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/TradingViewRemix_TVR/request_1h.json"
+        ],
+        "exit": 1,
+        "name": "tvr_btcusd_1h",
+        "timed_out": false
+      },
+      "symbol": "BITSTAMP:BTCUSD"
+    },
+    {
+      "first_ts": null,
+      "interval": "4h",
+      "last_ts": null,
+      "native_fetch_attempted": true,
+      "provider": "TradingViewRemix/TVR",
+      "request": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/TradingViewRemix_TVR/request_4h.json",
+      "rows": 0,
+      "step": {
+        "argv": [
+          "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+          "market-data-harness",
+          "--action",
+          "fetch",
+          "--request-json",
+          "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/TradingViewRemix_TVR/request_4h.json"
+        ],
+        "exit": 1,
+        "name": "tvr_btcusd_4h",
+        "timed_out": false
+      },
+      "symbol": "BITSTAMP:BTCUSD"
+    },
+    {
+      "first_ts": null,
+      "interval": "1d",
+      "last_ts": null,
+      "native_fetch_attempted": true,
+      "provider": "TradingViewRemix/TVR",
+      "request": "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/TradingViewRemix_TVR/request_1d.json",
+      "rows": 0,
+      "step": {
+        "argv": [
+          "/Users/thrill3r/projects-ict-engine/ict-engine/target/debug/ict-engine",
+          "market-data-harness",
+          "--action",
+          "fetch",
+          "--request-json",
+          "docs/experiments/actionable-regime-confidence/runs/20260512T195548+0800-codex-native-provider-timeframe-fetch-probe-v1/data/TradingViewRemix_TVR/request_1d.json"
+        ],
+        "exit": 1,
+        "name": "tvr_btcusd_1d",
+        "timed_out": false
+      },
+      "symbol": "BITSTAMP:BTCUSD"
+    }
+  ],
+  "tasks_exit_zero": 13,
+  "tasks_total": 18,
+  "trade_usable": false,
+  "update_goal": false
+}

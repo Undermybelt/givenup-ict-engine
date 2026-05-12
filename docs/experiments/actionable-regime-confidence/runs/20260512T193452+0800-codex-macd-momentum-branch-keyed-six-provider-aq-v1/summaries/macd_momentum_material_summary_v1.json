@@ -1,0 +1,24 @@
+{
+  "branch_keyed_by_construction": true,
+  "branch_leaf_count": 2,
+  "branch_paths": [
+    "TrendExpansion -> MomentumPersistence -> macd_signal_pullback -> macd_signal_pullback_continuation_v1",
+    "TrendExpansion -> MomentumPersistence -> macd_zero_line_reclaim -> macd_zero_line_reclaim_long_v1"
+  ],
+  "explicit_branch_fields": true,
+  "local_cache_replay": true,
+  "material_count": 12,
+  "new_provider_fetch": false,
+  "promotion_allowed": false,
+  "provider_count": 6,
+  "providers": [
+    "Binance",
+    "Bybit",
+    "IBKR",
+    "Kraken",
+    "TradingViewRemix/TVR",
+    "yfinance/YF"
+  ],
+  "trade_usable": false,
+  "update_goal": false
+}

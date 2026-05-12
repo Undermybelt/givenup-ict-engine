@@ -1,0 +1,9 @@
+rank_rows=12
+missing_branch_path=0
+missing_regime_profit_branch_path=0
+missing_main_regime=0
+missing_sub_regime=0
+missing_sub_sub_regime_or_profit_factor=0
+missing_profit_factor=0
+missing_provider_provenance=0
+all_direct_branch_fields_present=True

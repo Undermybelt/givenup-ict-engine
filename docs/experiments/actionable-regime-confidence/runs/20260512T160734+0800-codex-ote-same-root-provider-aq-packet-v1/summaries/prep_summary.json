@@ -1,0 +1,109 @@
+{
+  "fetch_rows": [
+    {
+      "exit": 0,
+      "first": "2026-02-12 14:30:00",
+      "label": "01_fetch_yahoo_spy_1h",
+      "last": "2026-05-11 20:00:00",
+      "normalized_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/raw/yahoo_spy_1h.csv",
+      "rows": 428
+    },
+    {
+      "exit": 0,
+      "first": "2026-02-12 00:00:00",
+      "label": "02_fetch_binance_btcusdt_1h",
+      "last": "2026-05-12 00:00:00",
+      "normalized_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/raw/binance_btcusdt_1h.csv",
+      "rows": 2137
+    },
+    {
+      "exit": 0,
+      "first": "2026-03-31 09:00:00",
+      "label": "03_fetch_bybit_linear_btcusdt_1h",
+      "last": "2026-05-12 00:00:00",
+      "normalized_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/raw/bybit_linear_btcusdt_1h.csv",
+      "rows": 1000
+    },
+    {
+      "exit": 0,
+      "first": "2026-02-12 00:00:00",
+      "label": "04_fetch_kraken_futures_pfxbtusd_1h",
+      "last": "2026-05-06 07:00:00",
+      "normalized_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/raw/kraken_futures_pfxbtusd_1h.csv",
+      "rows": 2000
+    },
+    {
+      "exit": 0,
+      "first": "2026-01-02 09:00:00",
+      "label": "05_fetch_ibkr_spy_1h",
+      "last": "2026-05-11 23:00:00",
+      "normalized_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/raw/ibkr_spy_1h_90d.csv",
+      "rows": 1424
+    }
+  ],
+  "material_paths": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/agent-material/ote-current-yf-spy-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/agent-material/ote-current-binance-btcusdt-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/agent-material/ote-current-bybit-btcusdt-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/agent-material/ote-current-kraken-pfxbtusd-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/agent-material/ote-current-ibkr-spy-1h-v1.material.json"
+  ],
+  "promotion_allowed": false,
+  "provider_rows": [
+    {
+      "aq_material_created": true,
+      "provider": "IBKR",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_or_blocker": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv"
+    },
+    {
+      "aq_material_created": false,
+      "provider": "TradingViewRemix/TVR",
+      "provider_data_acquired": false,
+      "provider_requested": true,
+      "provider_unreachable": true,
+      "source_or_blocker": "docs/experiments/actionable-regime-confidence/runs/20260512T154536+0800-codex-board-b-tvr-mcp-redacted-health-probe-v1"
+    },
+    {
+      "aq_material_created": true,
+      "provider": "yfinance/YF",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_or_blocker": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/yahoo_spy_1h.normalized.csv"
+    },
+    {
+      "aq_material_created": true,
+      "provider": "Kraken",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_or_blocker": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv"
+    },
+    {
+      "aq_material_created": true,
+      "provider": "Binance",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_or_blocker": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/binance_btcusdt_1h.normalized.csv"
+    },
+    {
+      "aq_material_created": true,
+      "provider": "Bybit",
+      "provider_data_acquired": true,
+      "provider_requested": true,
+      "provider_unreachable": false,
+      "source_or_blocker": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv"
+    }
+  ],
+  "trade_usable": false,
+  "tvr_blocker": "docs/experiments/actionable-regime-confidence/runs/20260512T154536+0800-codex-board-b-tvr-mcp-redacted-health-probe-v1"
+}

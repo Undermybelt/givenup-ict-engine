@@ -1,0 +1,40 @@
+{
+  "consumer_evidence_profile": {
+    "branch_paths": [
+      "TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v2",
+      "TrendTransition -> LowVolatility -> up_momentum -> fair_value_gap_pullback_v1",
+      "TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> order_block_retest_confluence_v1",
+      "TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> fair_value_gap_rebalance_confluence_v1",
+      "TrendExpansion -> SessionLiquidityWindow -> liquidity_sweep_reclaim -> order_block_fvg_retest_v1",
+      "TrendExpansion -> CrossMarketConfirmation -> smt_confirmed_continuation -> order_block_or_fvg_pullback_v1"
+    ],
+    "main_regime": "TrendTransition_or_TrendExpansion",
+    "promotion_allowed": false
+  },
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+  "direction": "long",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "walk_forward_survival",
+    "sample_adequacy"
+  ],
+  "notes": [
+    "source_provider=Bybit public linear BTCUSDT 1h current fetch",
+    "branch_matrix=TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v2 | TrendTransition -> LowVolatility -> up_momentum -> fair_value_gap_pullback_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> order_block_retest_confluence_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> fair_value_gap_rebalance_confluence_v1 | TrendExpansion -> SessionLiquidityWindow -> liquidity_sweep_reclaim -> order_block_fvg_retest_v1 | TrendExpansion -> CrossMarketConfirmation -> smt_confirmed_continuation -> order_block_or_fvg_pullback_v1",
+    "provider_preflight_only=true",
+    "promotion_allowed=false until AQ dispatch and ordered downstream chain pass",
+    "timerange_repaired_for_current_2026_data=20260101-20260512",
+    "repair_v1_explicit_timerange_from_provider_rows=true",
+    "repair_v1_timerange=20260331-20260512"
+  ],
+  "package_id": "ob-fvg-branch-matrix-bybit-1h-v1",
+  "strategy_brief": "Board B Order Block and Fair Value Gap trend-pullback branch matrix.",
+  "strategy_class_name": "ProviderObFvgPullbackV1",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ProviderObFvgPullbackV1.py",
+  "symbol": "BTCUSDT",
+  "timeframe": "1h",
+  "timerange": "20260331-20260512",
+  "title": "OB/FVG branch matrix - Bybit BTCUSDT 1h"
+}

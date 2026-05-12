@@ -1,0 +1,4 @@
+Error: running git clone --branch master /Users/thrill3r/Auto-Quant docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/.deps/auto-quant
+
+Caused by:
+    No such file or directory (os error 2)

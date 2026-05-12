@@ -1,0 +1,50 @@
+{
+  "agent_material_count": 6,
+  "branch_paths": [
+    {
+      "main_regime": "TrendExpansion",
+      "path": "TrendExpansion -> NormalVolatility -> MomentumPullbackFast -> ema_rsi_pullback_density_v1",
+      "profit_factor": "ema_rsi_pullback_density_v1",
+      "sub_regime": "NormalVolatility",
+      "sub_sub_regime_or_profit_factor": "MomentumPullbackFast"
+    },
+    {
+      "main_regime": "TrendExpansion",
+      "path": "TrendExpansion -> HighVolatility -> BreakoutContinuationFast -> donchian_volume_breakout_density_v1",
+      "profit_factor": "donchian_volume_breakout_density_v1",
+      "sub_regime": "HighVolatility",
+      "sub_sub_regime_or_profit_factor": "BreakoutContinuationFast"
+    },
+    {
+      "main_regime": "RangeConsolidation",
+      "path": "RangeConsolidation -> NormalVolatility -> MeanReversionFast -> rsi_bollinger_reversion_density_v1",
+      "profit_factor": "rsi_bollinger_reversion_density_v1",
+      "sub_regime": "NormalVolatility",
+      "sub_sub_regime_or_profit_factor": "MeanReversionFast"
+    },
+    {
+      "main_regime": "Transition",
+      "path": "Transition -> VolatilityCompression -> CompressionBreakoutFast -> atr_compression_breakout_density_v1",
+      "profit_factor": "atr_compression_breakout_density_v1",
+      "sub_regime": "VolatilityCompression",
+      "sub_sub_regime_or_profit_factor": "CompressionBreakoutFast"
+    }
+  ],
+  "materials": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/high-density-multibranch-ibkr-spy-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/high-density-multibranch-tradingviewremix-tvr-btcusd-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/high-density-multibranch-yfinance-yf-spy-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/high-density-multibranch-kraken-xbtusd-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/high-density-multibranch-binance-btcusdt-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/high-density-multibranch-bybit-btcusdt-1h-v1.material.json"
+  ],
+  "missing_sources": [],
+  "packet": "175350_high_density_multibranch_six_provider_aq_packet_v1",
+  "promotion_allowed": false,
+  "provider_data_acquired_this_step": false,
+  "provider_rows": 6,
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1",
+  "same_root_replay_copy": true,
+  "trade_usable": false,
+  "update_goal": false
+}

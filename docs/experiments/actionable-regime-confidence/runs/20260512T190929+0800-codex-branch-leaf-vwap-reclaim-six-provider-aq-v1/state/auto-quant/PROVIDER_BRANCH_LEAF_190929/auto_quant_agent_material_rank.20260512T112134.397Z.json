@@ -1,0 +1,56 @@
+{
+  "artifact_id": "auto-quant-agent-material-rank:PROVIDER_BRANCH_LEAF_190929:20260512T112134.396Z",
+  "generated_at": "2026-05-12T11:21:34.397266Z",
+  "symbol": "PROVIDER_BRANCH_LEAF_190929",
+  "source_dispatch_artifact_id": "auto-quant-agent-material-dispatch:PROVIDER_BRANCH_LEAF_190929:20260512T112024.263Z",
+  "ranking": [
+    {
+      "unit_label": "Branch leaf VWAP reclaim - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 45.3125,
+      "sharpe": 0.3273,
+      "total_profit_pct": 5.24,
+      "trade_count": 128
+    },
+    {
+      "unit_label": "Branch leaf VWAP reclaim - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 35.7143,
+      "sharpe": -0.3444,
+      "total_profit_pct": -0.84,
+      "trade_count": 56
+    },
+    {
+      "unit_label": "Branch leaf VWAP reclaim - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "Branch leaf VWAP reclaim - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "Branch leaf VWAP reclaim - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "Branch leaf VWAP reclaim - TradingViewRemix/TVR BTCUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    }
+  ]
+}

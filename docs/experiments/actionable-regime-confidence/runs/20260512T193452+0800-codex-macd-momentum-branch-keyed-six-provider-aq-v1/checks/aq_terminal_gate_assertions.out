@@ -1,0 +1,16 @@
+rank_rows=12
+provider_count=6
+branch_leaf_count=2
+dispatch_completed_jobs=12
+dispatch_failed_jobs=0
+rank_joined_to_explicit_branch_fields=true
+adequate_branch_keyed_training_sample=false
+evidence_class=cross_provider_disagreement_sample
+secondary_evidence_class=low_density_or_zero_trade_provider_sample
+pre_bayes_filter_allowed=false
+bbn_learning_allowed=false
+catboost_learning_allowed=false
+execution_tree_branch_weight_update_allowed=false
+promotion_allowed=false
+trade_usable=false
+update_goal=false

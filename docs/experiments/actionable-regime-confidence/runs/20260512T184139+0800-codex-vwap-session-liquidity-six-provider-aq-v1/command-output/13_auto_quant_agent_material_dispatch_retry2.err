@@ -1,0 +1,5 @@
+Error: prepare_external failed for 'VWAP session liquidity - Binance BTCUSDT 1h': Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/state/auto-quant/agent_material_units/VWAP_session_liquidity_-_Binance_BTCUSDT_1h/aq_workspace/prepare_external.py", line 34, in <module>
+    import pandas as pd
+ModuleNotFoundError: No module named 'pandas'
+

@@ -1,0 +1,7 @@
+provider,material_path,rows
+yfinance/YF,docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/agent-material/ote-level-leaf-yfinance-yf-1h-v1.material.json,2355
+Binance,docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/agent-material/ote-level-leaf-binance-1h-v1.material.json,11905
+Bybit,docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/agent-material/ote-level-leaf-bybit-1h-v1.material.json,1000
+Kraken,docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/agent-material/ote-level-leaf-kraken-1h-v1.material.json,2000
+IBKR,docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/agent-material/ote-level-leaf-ibkr-1h-v1.material.json,1426
+TradingViewRemix/TVR,docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/agent-material/ote-level-leaf-tvr-btc-usd-1h-v1.material.json,720

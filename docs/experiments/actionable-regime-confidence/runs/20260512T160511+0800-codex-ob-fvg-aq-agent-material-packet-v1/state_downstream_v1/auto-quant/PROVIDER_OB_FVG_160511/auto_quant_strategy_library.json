@@ -1,0 +1,232 @@
+{
+  "manifest_version": "1.0",
+  "exported_at": "2026-05-12T08:20:29.596247+00:00",
+  "auto_quant_repo_url": "/Users/thrill3r/Auto-Quant",
+  "auto_quant_pinned_ref": "34ba6b6",
+  "config_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/state/auto-quant/PROVIDER_OB_FVG_160511/auto_quant_agent_material_dispatch.20260512T081604.843Z.json",
+  "timeframe": "1h",
+  "log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/command-output/04_agent_material_dispatch_groups_0_4.out",
+  "strategies": [
+    {
+      "name": "ProviderObFvgPullbackV1_IBKR_160511",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/state/auto-quant/agent_material_units/OB_FVG_pullback_-_IBKR_SPY_1h/aq_workspace/user_data/strategies_external/ProviderObFvgPullbackV1.py",
+      "metadata": {
+        "strategy": "ProviderObFvgPullbackV1",
+        "mutation_id": "160511_ob_fvg_ibkr_v1",
+        "base_factor": "order_block_pullback_v1",
+        "hypothesis": "Board B OB/FVG continuation-pullback profitability factor packet preserving branch path TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+        "paradigm": "ob_fvg_pullback_continuation",
+        "expected_regime": "TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+        "factors_used": [
+          "order_block_pullback_v1",
+          "fair_value_gap_pullback_v1"
+        ],
+        "parent": "TrendTransition",
+        "asset_class": "equity_etf",
+        "status": "provider_backed_auto_quant_dispatch_support_only",
+        "created": "2026-05-12T16:05:11+08:00"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 0.2862,
+        "sortino": 0.5517,
+        "calmar": 2.0234,
+        "total_profit_pct": 9.65,
+        "max_drawdown_pct": -8.3246,
+        "trade_count": 350,
+        "win_rate_pct": 39.1429,
+        "profit_factor": 1.1346
+      },
+      "per_pair_metrics": {
+        "SPY/USD": {
+          "sharpe": 0.2862,
+          "sortino": 0.5517,
+          "calmar": 2.0234,
+          "total_profit_pct": 9.65,
+          "max_drawdown_pct": -8.3246,
+          "trade_count": 350,
+          "win_rate_pct": 39.1429,
+          "profit_factor": 1.1346
+        }
+      },
+      "pairs": [
+        "SPY/USD"
+      ],
+      "timerange": "provider_material_replay_window",
+      "commit": "34ba6b6",
+      "error": null
+    },
+    {
+      "name": "ProviderObFvgPullbackV1_yfinance_YF_160511",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/state/auto-quant/agent_material_units/OB_FVG_pullback_-_Yahoo_ES_1h/aq_workspace/user_data/strategies_external/ProviderObFvgPullbackV1.py",
+      "metadata": {
+        "strategy": "ProviderObFvgPullbackV1",
+        "mutation_id": "160511_ob_fvg_yfinance_yf_v1",
+        "base_factor": "order_block_pullback_v1",
+        "hypothesis": "Board B OB/FVG continuation-pullback profitability factor packet preserving branch path TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+        "paradigm": "ob_fvg_pullback_continuation",
+        "expected_regime": "TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+        "factors_used": [
+          "order_block_pullback_v1",
+          "fair_value_gap_pullback_v1"
+        ],
+        "parent": "TrendTransition",
+        "asset_class": "futures_proxy",
+        "status": "provider_backed_auto_quant_dispatch_support_only",
+        "created": "2026-05-12T16:05:11+08:00"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": -0.1338,
+        "sortino": -0.223,
+        "calmar": -0.7153,
+        "total_profit_pct": -2.02,
+        "max_drawdown_pct": -9.2156,
+        "trade_count": 255,
+        "win_rate_pct": 34.1176,
+        "profit_factor": 0.9508
+      },
+      "per_pair_metrics": {
+        "ES/USD": {
+          "sharpe": -0.1338,
+          "sortino": -0.223,
+          "calmar": -0.7153,
+          "total_profit_pct": -2.02,
+          "max_drawdown_pct": -9.2156,
+          "trade_count": 255,
+          "win_rate_pct": 34.1176,
+          "profit_factor": 0.9508
+        }
+      },
+      "pairs": [
+        "ES/USD"
+      ],
+      "timerange": "provider_material_replay_window",
+      "commit": "34ba6b6",
+      "error": null
+    },
+    {
+      "name": "ProviderObFvgPullbackV1_Kraken_160511",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/state/auto-quant/agent_material_units/OB_FVG_pullback_-_Kraken_XBTUSD_1h/aq_workspace/user_data/strategies_external/ProviderObFvgPullbackV1.py",
+      "metadata": {
+        "strategy": "ProviderObFvgPullbackV1",
+        "mutation_id": "160511_ob_fvg_kraken_v1",
+        "base_factor": "order_block_pullback_v1",
+        "hypothesis": "Board B OB/FVG continuation-pullback profitability factor packet preserving branch path TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+        "paradigm": "ob_fvg_pullback_continuation",
+        "expected_regime": "TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+        "factors_used": [
+          "order_block_pullback_v1",
+          "fair_value_gap_pullback_v1"
+        ],
+        "parent": "TrendTransition",
+        "asset_class": "crypto_futures",
+        "status": "provider_backed_auto_quant_dispatch_support_only",
+        "created": "2026-05-12T16:05:11+08:00"
+      },
+      "status": "error",
+      "validation_metrics": null,
+      "per_pair_metrics": {},
+      "pairs": [
+        "XBTUSD/USD"
+      ],
+      "timerange": "provider_material_replay_window",
+      "commit": "34ba6b6",
+      "error": {
+        "type": "failed",
+        "message": "run_tomac_exit_nonzero: 2026-05-12 16:15:43,455 - freqtrade.loggers - INFO - Enabling colorized output."
+      }
+    },
+    {
+      "name": "ProviderObFvgPullbackV1_Binance_160511",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/state/auto-quant/agent_material_units/OB_FVG_pullback_-_Binance_BTCUSDT_1h/aq_workspace/user_data/strategies_external/ProviderObFvgPullbackV1.py",
+      "metadata": {
+        "strategy": "ProviderObFvgPullbackV1",
+        "mutation_id": "160511_ob_fvg_binance_v1",
+        "base_factor": "order_block_pullback_v1",
+        "hypothesis": "Board B OB/FVG continuation-pullback profitability factor packet preserving branch path TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+        "paradigm": "ob_fvg_pullback_continuation",
+        "expected_regime": "TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+        "factors_used": [
+          "order_block_pullback_v1",
+          "fair_value_gap_pullback_v1"
+        ],
+        "parent": "TrendTransition",
+        "asset_class": "crypto_spot",
+        "status": "provider_backed_auto_quant_dispatch_support_only",
+        "created": "2026-05-12T16:05:11+08:00"
+      },
+      "status": "ok",
+      "validation_metrics": {
+        "sharpe": 0.0,
+        "sortino": 0.0,
+        "calmar": 0.0,
+        "total_profit_pct": 0.0,
+        "max_drawdown_pct": -0.0,
+        "trade_count": 0,
+        "win_rate_pct": 0.0,
+        "profit_factor": 0.0
+      },
+      "per_pair_metrics": {
+        "BTCUSDT/USDT": {
+          "sharpe": 0.0,
+          "sortino": 0.0,
+          "calmar": 0.0,
+          "total_profit_pct": 0.0,
+          "max_drawdown_pct": -0.0,
+          "trade_count": 0,
+          "win_rate_pct": 0.0,
+          "profit_factor": 0.0
+        }
+      },
+      "pairs": [
+        "BTCUSDT/USDT"
+      ],
+      "timerange": "provider_material_replay_window",
+      "commit": "34ba6b6",
+      "error": null
+    },
+    {
+      "name": "ProviderObFvgPullbackV1_Bybit_160511",
+      "file_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/state/auto-quant/agent_material_units/OB_FVG_pullback_-_Bybit_BTCUSDT_linear_1h/aq_workspace/user_data/strategies_external/ProviderObFvgPullbackV1.py",
+      "metadata": {
+        "strategy": "ProviderObFvgPullbackV1",
+        "mutation_id": "160511_ob_fvg_bybit_v1",
+        "base_factor": "order_block_pullback_v1",
+        "hypothesis": "Board B OB/FVG continuation-pullback profitability factor packet preserving branch path TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+        "paradigm": "ob_fvg_pullback_continuation",
+        "expected_regime": "TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+        "factors_used": [
+          "order_block_pullback_v1",
+          "fair_value_gap_pullback_v1"
+        ],
+        "parent": "TrendTransition",
+        "asset_class": "crypto_linear",
+        "status": "provider_backed_auto_quant_dispatch_support_only",
+        "created": "2026-05-12T16:05:11+08:00"
+      },
+      "status": "error",
+      "validation_metrics": null,
+      "per_pair_metrics": {},
+      "pairs": [
+        "BTCUSDT/USDT"
+      ],
+      "timerange": "provider_material_replay_window",
+      "commit": "34ba6b6",
+      "error": {
+        "type": "failed",
+        "message": "run_tomac_exit_nonzero: 2026-05-12 16:16:04,301 - freqtrade.loggers - INFO - Enabling colorized output."
+      }
+    }
+  ],
+  "validation_errors": [
+    {
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/state/auto-quant/agent_material_units/OB_FVG_pullback_-_Kraken_XBTUSD_1h/aq_workspace/user_data/strategies_external/ProviderObFvgPullbackV1.py",
+      "error": "run_tomac_exit_nonzero: 2026-05-12 16:15:43,455 - freqtrade.loggers - INFO - Enabling colorized output."
+    },
+    {
+      "file": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/state/auto-quant/agent_material_units/OB_FVG_pullback_-_Bybit_BTCUSDT_linear_1h/aq_workspace/user_data/strategies_external/ProviderObFvgPullbackV1.py",
+      "error": "run_tomac_exit_nonzero: 2026-05-12 16:16:04,301 - freqtrade.loggers - INFO - Enabling colorized output."
+    }
+  ]
+}

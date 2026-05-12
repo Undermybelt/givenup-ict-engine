@@ -1,0 +1,4 @@
+PASS ob_fvg_screen_assertions
+total_signals 24504
+top_candidate fvg_ob_pullback_resume_v1 binance BTCUSDT 122 1.3735438736127317
+top_aggregate fvg_retrace_continuation_v1 trend_expansion->normal_volatility->up_momentum->fvg_retrace_continuation 3416 1.004204580777191

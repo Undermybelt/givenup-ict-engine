@@ -1,0 +1,5 @@
+error: unexpected argument '--material docs/experiments/actionable-regime-confidence/runs/20260512T172108+0800-codex-ob-fvg-aq-workspace-layout-repair-v1/agent-material/ob-fvg-branch-matrix-binance-1h-v1.material.json' found
+
+Usage: ict-engine auto-quant-agent-material-batch --symbol <SYMBOL> --state-dir <STATE_DIR> --repo-url <REPO_URL> --max-parallel <MAX_PARALLEL>
+
+For more information, try '--help'.

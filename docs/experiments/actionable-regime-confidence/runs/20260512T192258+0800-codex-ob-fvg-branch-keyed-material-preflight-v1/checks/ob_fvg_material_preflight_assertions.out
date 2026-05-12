@@ -1,0 +1,10 @@
+material_count=60
+provider_count=6
+branch_count=10
+expected_material_count=60
+branch_keyed_by_construction=True
+new_provider_fetch=False
+local_cache_replay=True
+promotion_allowed=False
+trade_usable=False
+update_goal=False

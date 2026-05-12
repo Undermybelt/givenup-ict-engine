@@ -1,0 +1,256 @@
+{
+  "artifact_id": "auto-quant-agent-material-batch:PROVIDER_HDMULTI_175350:20260512T105759.936Z",
+  "generated_at": "2026-05-12T10:57:59.936452Z",
+  "symbol": "PROVIDER_HDMULTI_175350",
+  "shared_workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/state/auto-quant/.deps/auto-quant",
+  "source_repo_url": "/Users/thrill3r/Auto-Quant",
+  "max_parallel": 1,
+  "jobs": [
+    {
+      "job_id": "High-density_multibranch_-_IBKR_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/state/auto-quant/agent_material_units/High-density_multibranch_-_IBKR_SPY_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/high-density-multibranch-ibkr-spy-1h-v1.material.json",
+      "package": {
+        "package_id": "high-density-multibranch-ibkr-spy-1h-v1",
+        "generated_at": null,
+        "title": "High-density multibranch - IBKR SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/data/normalized/ibkr_spy_1h_5y.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/ProviderHighDensityMultiBranchV1.py",
+        "strategy_class_name": "ProviderHighDensityMultiBranchV1",
+        "strategy_brief": "Board B high-density profitability packet preserving four main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor branches.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendExpansion -> NormalVolatility -> MomentumPullbackFast -> ema_rsi_pullback_density_v1",
+          "branch_path=TrendExpansion -> HighVolatility -> BreakoutContinuationFast -> donchian_volume_breakout_density_v1",
+          "branch_path=RangeConsolidation -> NormalVolatility -> MeanReversionFast -> rsi_bollinger_reversion_density_v1",
+          "branch_path=Transition -> VolatilityCompression -> CompressionBreakoutFast -> atr_compression_breakout_density_v1",
+          "source_provider=IBKR",
+          "provider_replay_source_root=docs/experiments/actionable-regime-confidence/runs/20260512T141554+0800-codex-provider-longspan-capability-matrix-v1",
+          "same_root_copy=true",
+          "promotion_allowed=false until AQ dispatch/rank and downstream admission readbacks pass"
+        ]
+      }
+    },
+    {
+      "job_id": "High-density_multibranch_-_TradingViewRemix_TVR_BTCUSD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/state/auto-quant/agent_material_units/High-density_multibranch_-_TradingViewRemix_TVR_BTCUSD_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/high-density-multibranch-tradingviewremix-tvr-btcusd-1h-v1.material.json",
+      "package": {
+        "package_id": "high-density-multibranch-tradingviewremix-tvr-btcusd-1h-v1",
+        "generated_at": null,
+        "title": "High-density multibranch - TradingViewRemix/TVR BTCUSD 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/data/normalized/tvr_btc_usd_1h.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/ProviderHighDensityMultiBranchV1.py",
+        "strategy_class_name": "ProviderHighDensityMultiBranchV1",
+        "strategy_brief": "Board B high-density profitability packet preserving four main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor branches.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendExpansion -> NormalVolatility -> MomentumPullbackFast -> ema_rsi_pullback_density_v1",
+          "branch_path=TrendExpansion -> HighVolatility -> BreakoutContinuationFast -> donchian_volume_breakout_density_v1",
+          "branch_path=RangeConsolidation -> NormalVolatility -> MeanReversionFast -> rsi_bollinger_reversion_density_v1",
+          "branch_path=Transition -> VolatilityCompression -> CompressionBreakoutFast -> atr_compression_breakout_density_v1",
+          "source_provider=TradingViewRemix/TVR",
+          "provider_replay_source_root=docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1",
+          "same_root_copy=true",
+          "promotion_allowed=false until AQ dispatch/rank and downstream admission readbacks pass"
+        ]
+      }
+    },
+    {
+      "job_id": "High-density_multibranch_-_yfinance_YF_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/state/auto-quant/agent_material_units/High-density_multibranch_-_yfinance_YF_SPY_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/high-density-multibranch-yfinance-yf-spy-1h-v1.material.json",
+      "package": {
+        "package_id": "high-density-multibranch-yfinance-yf-spy-1h-v1",
+        "generated_at": null,
+        "title": "High-density multibranch - yfinance/YF SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/ProviderHighDensityMultiBranchV1.py",
+        "strategy_class_name": "ProviderHighDensityMultiBranchV1",
+        "strategy_brief": "Board B high-density profitability packet preserving four main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor branches.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendExpansion -> NormalVolatility -> MomentumPullbackFast -> ema_rsi_pullback_density_v1",
+          "branch_path=TrendExpansion -> HighVolatility -> BreakoutContinuationFast -> donchian_volume_breakout_density_v1",
+          "branch_path=RangeConsolidation -> NormalVolatility -> MeanReversionFast -> rsi_bollinger_reversion_density_v1",
+          "branch_path=Transition -> VolatilityCompression -> CompressionBreakoutFast -> atr_compression_breakout_density_v1",
+          "source_provider=yfinance/YF",
+          "provider_replay_source_root=docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1",
+          "same_root_copy=true",
+          "promotion_allowed=false until AQ dispatch/rank and downstream admission readbacks pass"
+        ]
+      }
+    },
+    {
+      "job_id": "High-density_multibranch_-_Kraken_XBTUSD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/state/auto-quant/agent_material_units/High-density_multibranch_-_Kraken_XBTUSD_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/high-density-multibranch-kraken-xbtusd-1h-v1.material.json",
+      "package": {
+        "package_id": "high-density-multibranch-kraken-xbtusd-1h-v1",
+        "generated_at": null,
+        "title": "High-density multibranch - Kraken XBTUSD 1h",
+        "symbol": "XBTUSD",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/ProviderHighDensityMultiBranchV1.py",
+        "strategy_class_name": "ProviderHighDensityMultiBranchV1",
+        "strategy_brief": "Board B high-density profitability packet preserving four main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor branches.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendExpansion -> NormalVolatility -> MomentumPullbackFast -> ema_rsi_pullback_density_v1",
+          "branch_path=TrendExpansion -> HighVolatility -> BreakoutContinuationFast -> donchian_volume_breakout_density_v1",
+          "branch_path=RangeConsolidation -> NormalVolatility -> MeanReversionFast -> rsi_bollinger_reversion_density_v1",
+          "branch_path=Transition -> VolatilityCompression -> CompressionBreakoutFast -> atr_compression_breakout_density_v1",
+          "source_provider=Kraken",
+          "provider_replay_source_root=docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1",
+          "same_root_copy=true",
+          "promotion_allowed=false until AQ dispatch/rank and downstream admission readbacks pass"
+        ]
+      }
+    },
+    {
+      "job_id": "High-density_multibranch_-_Binance_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/state/auto-quant/agent_material_units/High-density_multibranch_-_Binance_BTCUSDT_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/high-density-multibranch-binance-btcusdt-1h-v1.material.json",
+      "package": {
+        "package_id": "high-density-multibranch-binance-btcusdt-1h-v1",
+        "generated_at": null,
+        "title": "High-density multibranch - Binance BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/ProviderHighDensityMultiBranchV1.py",
+        "strategy_class_name": "ProviderHighDensityMultiBranchV1",
+        "strategy_brief": "Board B high-density profitability packet preserving four main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor branches.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendExpansion -> NormalVolatility -> MomentumPullbackFast -> ema_rsi_pullback_density_v1",
+          "branch_path=TrendExpansion -> HighVolatility -> BreakoutContinuationFast -> donchian_volume_breakout_density_v1",
+          "branch_path=RangeConsolidation -> NormalVolatility -> MeanReversionFast -> rsi_bollinger_reversion_density_v1",
+          "branch_path=Transition -> VolatilityCompression -> CompressionBreakoutFast -> atr_compression_breakout_density_v1",
+          "source_provider=Binance",
+          "provider_replay_source_root=docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1",
+          "same_root_copy=true",
+          "promotion_allowed=false until AQ dispatch/rank and downstream admission readbacks pass"
+        ]
+      }
+    },
+    {
+      "job_id": "High-density_multibranch_-_Bybit_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/state/auto-quant/agent_material_units/High-density_multibranch_-_Bybit_BTCUSDT_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/high-density-multibranch-bybit-btcusdt-1h-v1.material.json",
+      "package": {
+        "package_id": "high-density-multibranch-bybit-btcusdt-1h-v1",
+        "generated_at": null,
+        "title": "High-density multibranch - Bybit BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/ProviderHighDensityMultiBranchV1.py",
+        "strategy_class_name": "ProviderHighDensityMultiBranchV1",
+        "strategy_brief": "Board B high-density profitability packet preserving four main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor branches.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendExpansion -> NormalVolatility -> MomentumPullbackFast -> ema_rsi_pullback_density_v1",
+          "branch_path=TrendExpansion -> HighVolatility -> BreakoutContinuationFast -> donchian_volume_breakout_density_v1",
+          "branch_path=RangeConsolidation -> NormalVolatility -> MeanReversionFast -> rsi_bollinger_reversion_density_v1",
+          "branch_path=Transition -> VolatilityCompression -> CompressionBreakoutFast -> atr_compression_breakout_density_v1",
+          "source_provider=Bybit",
+          "provider_replay_source_root=docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1",
+          "same_root_copy=true",
+          "promotion_allowed=false until AQ dispatch/rank and downstream admission readbacks pass"
+        ]
+      }
+    }
+  ],
+  "dispatch_groups": [
+    {
+      "group_index": 0,
+      "job_ids": [
+        "High-density_multibranch_-_IBKR_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_ids": [
+        "High-density_multibranch_-_TradingViewRemix_TVR_BTCUSD_1h"
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_ids": [
+        "High-density_multibranch_-_yfinance_YF_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 3,
+      "job_ids": [
+        "High-density_multibranch_-_Kraken_XBTUSD_1h"
+      ]
+    },
+    {
+      "group_index": 4,
+      "job_ids": [
+        "High-density_multibranch_-_Binance_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 5,
+      "job_ids": [
+        "High-density_multibranch_-_Bybit_BTCUSDT_1h"
+      ]
+    }
+  ],
+  "notes": [
+    "public_protocol_generic_only",
+    "ontology_must_live_inside_agent_materials_not_cli"
+  ]
+}

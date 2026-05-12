@@ -1,0 +1,27 @@
+{
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+  "direction": "long",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "walk_forward_survival"
+  ],
+  "notes": [
+    "branch_path=TrendExpansion -> NormalVolatility -> MomentumPullbackFast -> ema_rsi_pullback_density_v1",
+    "branch_path=TrendExpansion -> HighVolatility -> BreakoutContinuationFast -> donchian_volume_breakout_density_v1",
+    "branch_path=RangeConsolidation -> NormalVolatility -> MeanReversionFast -> rsi_bollinger_reversion_density_v1",
+    "branch_path=Transition -> VolatilityCompression -> CompressionBreakoutFast -> atr_compression_breakout_density_v1",
+    "source_provider=Kraken",
+    "provider_replay_source_root=docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1",
+    "same_root_copy=true",
+    "promotion_allowed=false until AQ dispatch/rank and downstream admission readbacks pass"
+  ],
+  "package_id": "high-density-multibranch-kraken-xbtusd-1h-v1",
+  "strategy_brief": "Board B high-density profitability packet preserving four main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor branches.",
+  "strategy_class_name": "ProviderHighDensityMultiBranchV1",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175350+0800-codex-high-density-multibranch-six-provider-aq-v1/agent-material/ProviderHighDensityMultiBranchV1.py",
+  "symbol": "XBTUSD",
+  "timeframe": "1h",
+  "title": "High-density multibranch - Kraken XBTUSD 1h"
+}

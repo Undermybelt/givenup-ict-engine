@@ -1,0 +1,1 @@
+SKIP IBKR historical native 4h bar size is not exposed by fetch_external.py

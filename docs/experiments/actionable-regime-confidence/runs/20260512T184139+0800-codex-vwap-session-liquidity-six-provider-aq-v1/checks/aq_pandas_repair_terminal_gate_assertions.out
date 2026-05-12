@@ -1,0 +1,14 @@
+PASS pandas_probe pandas=2.3.3
+PASS aq_dispatch_completed total_jobs=6 completed_jobs=6 blocked_jobs=0 failed_jobs=0
+PASS aq_rank_completed ranking_rows=6
+PASS branch_paths_preserved_in_material actual=4
+PASS provider_unit_profitability_observations_present tradfi_rows=2 crypto_tvr_zero_trade_rows=4
+FAIL branch_keyed_profitability_observation missing_branch_level_trade_metrics
+FAIL adequate_branch_trade_density aggregate_only_yf_trades=133 aggregate_only_ibkr_trades=54 zero_trade_provider_units=4
+FAIL regime_conditioned_win_rate not_reported_by_aq_readback
+PASS bbn_learning_allowed_false
+PASS catboost_learning_allowed_false
+PASS execution_tree_branch_weight_update_allowed_false
+PASS promotion_allowed_false
+PASS trade_usable_false
+PASS update_goal_false

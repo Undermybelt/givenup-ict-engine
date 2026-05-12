@@ -1,0 +1,48 @@
+{
+  "artifact_id": "auto-quant-agent-material-rank:B2R_OB_FVG_AQ_160511:20260512T082002.936Z",
+  "generated_at": "2026-05-12T08:20:02.939743Z",
+  "symbol": "B2R_OB_FVG_AQ_160511",
+  "source_dispatch_artifact_id": "auto-quant-agent-material-dispatch:B2R_OB_FVG_AQ_160511:20260512T081839.654Z",
+  "ranking": [
+    {
+      "unit_label": "OB FVG pullback - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 39.1429,
+      "sharpe": 0.2862,
+      "total_profit_pct": 9.65,
+      "trade_count": 350
+    },
+    {
+      "unit_label": "OB FVG pullback - Yahoo ES 1h",
+      "status": "completed",
+      "win_rate_pct": 34.1176,
+      "sharpe": -0.1338,
+      "total_profit_pct": -2.02,
+      "trade_count": 255
+    },
+    {
+      "unit_label": "OB FVG pullback - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB FVG pullback - Kraken XBTUSD 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    },
+    {
+      "unit_label": "OB FVG pullback - Bybit BTCUSDT linear 1h",
+      "status": "failed",
+      "win_rate_pct": null,
+      "sharpe": null,
+      "total_profit_pct": null,
+      "trade_count": null
+    }
+  ]
+}

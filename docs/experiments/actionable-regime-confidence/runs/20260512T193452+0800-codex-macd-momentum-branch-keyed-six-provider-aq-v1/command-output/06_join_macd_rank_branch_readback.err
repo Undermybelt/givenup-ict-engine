@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/scripts/join_macd_rank_branch_readback.py", line 206, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/scripts/join_macd_rank_branch_readback.py", line 175, in main
+    write_csv(ROOT / "summaries" / "macd_momentum_rank_branch_readback_v1.csv", rows, fieldnames)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/scripts/join_macd_rank_branch_readback.py", line 63, in write_csv
+    writer.writerows(rows)
+    ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/csv.py", line 228, in writerows
+    return self.writer.writerows(map(self._dict_to_list, rowdicts))
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/csv.py", line 220, in _dict_to_list
+    raise ValueError("dict contains fields not in fieldnames: "
+                     + ", ".join([repr(x) for x in wrong_fields]))
+ValueError: dict contains fields not in fieldnames: 'new_provider_fetch', 'local_cache_replay'

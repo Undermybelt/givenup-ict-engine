@@ -1,0 +1,52 @@
+{
+  "batch_artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/MACDMOM_193452/auto_quant_agent_material_batch.20260512T114143.933Z.json",
+  "bbn_learning_allowed": false,
+  "branch_keyed_by_construction": true,
+  "branch_leaf_count": 2,
+  "branch_paths": [
+    "TrendExpansion -> MomentumPersistence -> macd_signal_pullback -> macd_signal_pullback_continuation_v1",
+    "TrendExpansion -> MomentumPersistence -> macd_zero_line_reclaim -> macd_zero_line_reclaim_long_v1"
+  ],
+  "catboost_learning_allowed": false,
+  "classification": {
+    "max_trade_count": 16,
+    "nonzero_provider_count": 2,
+    "overall": "cross_provider_disagreement_sample and low_density; no downstream market/factor learning allowed",
+    "positive_nonzero_rows": 3,
+    "reason": "Only YF/IBKR produced nonzero trades, max trade_count is below Board B training density, and four providers emitted zero trades.",
+    "zero_trade_providers": [
+      "Binance",
+      "Bybit",
+      "Kraken",
+      "TradingViewRemix/TVR"
+    ]
+  },
+  "dispatch_artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/MACDMOM_193452/auto_quant_agent_material_dispatch.20260512T114513.687Z.json",
+  "dispatch_totals": {
+    "blocked_jobs": 0,
+    "completed_jobs": 12,
+    "failed_jobs": 0,
+    "total_jobs": 12
+  },
+  "execution_tree_branch_weight_update_allowed": false,
+  "local_cache_replay": true,
+  "new_provider_fetch": false,
+  "pre_bayes_filter_allowed": false,
+  "promotion_allowed": false,
+  "provider_count": 6,
+  "providers": [
+    "Binance",
+    "Bybit",
+    "IBKR",
+    "Kraken",
+    "TradingViewRemix/TVR",
+    "yfinance/YF"
+  ],
+  "rank_artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/MACDMOM_193452/auto_quant_agent_material_rank.20260512T114602.158Z.json",
+  "rank_joined_to_explicit_branch_fields": true,
+  "rank_rows": 12,
+  "root": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1",
+  "symbol": "MACDMOM_193452",
+  "trade_usable": false,
+  "update_goal": false
+}

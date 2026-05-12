@@ -1,0 +1,475 @@
+{
+  "artifact_id": "auto-quant-agent-material-batch:MACDMOM_193452:20260512T114143.933Z",
+  "generated_at": "2026-05-12T11:41:43.933832Z",
+  "symbol": "MACDMOM_193452",
+  "shared_workspace_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/.deps/auto-quant",
+  "source_repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+  "max_parallel": 4,
+  "jobs": [
+    {
+      "job_id": "MACD_zero-line_reclaim_-_yfinance_YF_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_yfinance_YF_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/macd-zero-line-reclaim-yfinance-yf-1h-v1.material.json",
+      "package": {
+        "package_id": "macd-zero-line-reclaim-yfinance-yf-1h-v1",
+        "generated_at": null,
+        "title": "MACD zero-line reclaim - yfinance/YF SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/MacdZeroLineReclaimLongV1.py",
+        "strategy_class_name": "MacdZeroLineReclaimLongV1",
+        "strategy_brief": "Board B MACD momentum branch-keyed profitability factor replay.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=yfinance/YF",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-yfinance-yf-1h-v1.material.json",
+          "branch_path=TrendExpansion -> MomentumPersistence -> macd_zero_line_reclaim -> macd_zero_line_reclaim_long_v1",
+          "branch_fields_explicit=true",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ and downstream gates pass"
+        ]
+      }
+    },
+    {
+      "job_id": "MACD_signal_pullback_continuation_-_yfinance_YF_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_yfinance_YF_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/macd-signal-pullback-yfinance-yf-1h-v1.material.json",
+      "package": {
+        "package_id": "macd-signal-pullback-yfinance-yf-1h-v1",
+        "generated_at": null,
+        "title": "MACD signal pullback continuation - yfinance/YF SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/MacdSignalPullbackContinuationV1.py",
+        "strategy_class_name": "MacdSignalPullbackContinuationV1",
+        "strategy_brief": "Board B MACD momentum branch-keyed profitability factor replay.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=yfinance/YF",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-yfinance-yf-1h-v1.material.json",
+          "branch_path=TrendExpansion -> MomentumPersistence -> macd_signal_pullback -> macd_signal_pullback_continuation_v1",
+          "branch_fields_explicit=true",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ and downstream gates pass"
+        ]
+      }
+    },
+    {
+      "job_id": "MACD_zero-line_reclaim_-_IBKR_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_IBKR_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/macd-zero-line-reclaim-ibkr-1h-v1.material.json",
+      "package": {
+        "package_id": "macd-zero-line-reclaim-ibkr-1h-v1",
+        "generated_at": null,
+        "title": "MACD zero-line reclaim - IBKR SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/MacdZeroLineReclaimLongV1.py",
+        "strategy_class_name": "MacdZeroLineReclaimLongV1",
+        "strategy_brief": "Board B MACD momentum branch-keyed profitability factor replay.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=IBKR",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-ibkr-1h-v1.material.json",
+          "branch_path=TrendExpansion -> MomentumPersistence -> macd_zero_line_reclaim -> macd_zero_line_reclaim_long_v1",
+          "branch_fields_explicit=true",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ and downstream gates pass"
+        ]
+      }
+    },
+    {
+      "job_id": "MACD_signal_pullback_continuation_-_IBKR_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_IBKR_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/macd-signal-pullback-ibkr-1h-v1.material.json",
+      "package": {
+        "package_id": "macd-signal-pullback-ibkr-1h-v1",
+        "generated_at": null,
+        "title": "MACD signal pullback continuation - IBKR SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/MacdSignalPullbackContinuationV1.py",
+        "strategy_class_name": "MacdSignalPullbackContinuationV1",
+        "strategy_brief": "Board B MACD momentum branch-keyed profitability factor replay.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=IBKR",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-ibkr-1h-v1.material.json",
+          "branch_path=TrendExpansion -> MomentumPersistence -> macd_signal_pullback -> macd_signal_pullback_continuation_v1",
+          "branch_fields_explicit=true",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ and downstream gates pass"
+        ]
+      }
+    },
+    {
+      "job_id": "MACD_zero-line_reclaim_-_TradingViewRemix_TVR_BTC-USD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_TradingViewRemix_TVR_BTC-USD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/macd-zero-line-reclaim-tvr-btc-usd-1h-v1.material.json",
+      "package": {
+        "package_id": "macd-zero-line-reclaim-tvr-btc-usd-1h-v1",
+        "generated_at": null,
+        "title": "MACD zero-line reclaim - TradingViewRemix/TVR BTC-USD 1h",
+        "symbol": "BTCUSD",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/data/normalized/tvr_btc_usd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/MacdZeroLineReclaimLongV1.py",
+        "strategy_class_name": "MacdZeroLineReclaimLongV1",
+        "strategy_brief": "Board B MACD momentum branch-keyed profitability factor replay.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=TradingViewRemix/TVR",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-tvr-btc-usd-1h-v1.material.json",
+          "branch_path=TrendExpansion -> MomentumPersistence -> macd_zero_line_reclaim -> macd_zero_line_reclaim_long_v1",
+          "branch_fields_explicit=true",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ and downstream gates pass"
+        ]
+      }
+    },
+    {
+      "job_id": "MACD_signal_pullback_continuation_-_TradingViewRemix_TVR_BTC-USD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_TradingViewRemix_TVR_BTC-USD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/macd-signal-pullback-tvr-btc-usd-1h-v1.material.json",
+      "package": {
+        "package_id": "macd-signal-pullback-tvr-btc-usd-1h-v1",
+        "generated_at": null,
+        "title": "MACD signal pullback continuation - TradingViewRemix/TVR BTC-USD 1h",
+        "symbol": "BTCUSD",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/data/normalized/tvr_btc_usd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/MacdSignalPullbackContinuationV1.py",
+        "strategy_class_name": "MacdSignalPullbackContinuationV1",
+        "strategy_brief": "Board B MACD momentum branch-keyed profitability factor replay.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=TradingViewRemix/TVR",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-tvr-btc-usd-1h-v1.material.json",
+          "branch_path=TrendExpansion -> MomentumPersistence -> macd_signal_pullback -> macd_signal_pullback_continuation_v1",
+          "branch_fields_explicit=true",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ and downstream gates pass"
+        ]
+      }
+    },
+    {
+      "job_id": "MACD_zero-line_reclaim_-_Kraken_XBTUSD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_Kraken_XBTUSD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/macd-zero-line-reclaim-kraken-1h-v1.material.json",
+      "package": {
+        "package_id": "macd-zero-line-reclaim-kraken-1h-v1",
+        "generated_at": null,
+        "title": "MACD zero-line reclaim - Kraken XBTUSD 1h",
+        "symbol": "XBTUSD",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/MacdZeroLineReclaimLongV1.py",
+        "strategy_class_name": "MacdZeroLineReclaimLongV1",
+        "strategy_brief": "Board B MACD momentum branch-keyed profitability factor replay.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Kraken",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-kraken-1h-v1.material.json",
+          "branch_path=TrendExpansion -> MomentumPersistence -> macd_zero_line_reclaim -> macd_zero_line_reclaim_long_v1",
+          "branch_fields_explicit=true",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ and downstream gates pass"
+        ]
+      }
+    },
+    {
+      "job_id": "MACD_signal_pullback_continuation_-_Kraken_XBTUSD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_Kraken_XBTUSD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/macd-signal-pullback-kraken-1h-v1.material.json",
+      "package": {
+        "package_id": "macd-signal-pullback-kraken-1h-v1",
+        "generated_at": null,
+        "title": "MACD signal pullback continuation - Kraken XBTUSD 1h",
+        "symbol": "XBTUSD",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/MacdSignalPullbackContinuationV1.py",
+        "strategy_class_name": "MacdSignalPullbackContinuationV1",
+        "strategy_brief": "Board B MACD momentum branch-keyed profitability factor replay.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Kraken",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-kraken-1h-v1.material.json",
+          "branch_path=TrendExpansion -> MomentumPersistence -> macd_signal_pullback -> macd_signal_pullback_continuation_v1",
+          "branch_fields_explicit=true",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ and downstream gates pass"
+        ]
+      }
+    },
+    {
+      "job_id": "MACD_zero-line_reclaim_-_Binance_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_Binance_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/macd-zero-line-reclaim-binance-1h-v1.material.json",
+      "package": {
+        "package_id": "macd-zero-line-reclaim-binance-1h-v1",
+        "generated_at": null,
+        "title": "MACD zero-line reclaim - Binance BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/MacdZeroLineReclaimLongV1.py",
+        "strategy_class_name": "MacdZeroLineReclaimLongV1",
+        "strategy_brief": "Board B MACD momentum branch-keyed profitability factor replay.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Binance",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-binance-1h-v1.material.json",
+          "branch_path=TrendExpansion -> MomentumPersistence -> macd_zero_line_reclaim -> macd_zero_line_reclaim_long_v1",
+          "branch_fields_explicit=true",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ and downstream gates pass"
+        ]
+      }
+    },
+    {
+      "job_id": "MACD_signal_pullback_continuation_-_Binance_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_Binance_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/macd-signal-pullback-binance-1h-v1.material.json",
+      "package": {
+        "package_id": "macd-signal-pullback-binance-1h-v1",
+        "generated_at": null,
+        "title": "MACD signal pullback continuation - Binance BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/MacdSignalPullbackContinuationV1.py",
+        "strategy_class_name": "MacdSignalPullbackContinuationV1",
+        "strategy_brief": "Board B MACD momentum branch-keyed profitability factor replay.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Binance",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-binance-1h-v1.material.json",
+          "branch_path=TrendExpansion -> MomentumPersistence -> macd_signal_pullback -> macd_signal_pullback_continuation_v1",
+          "branch_fields_explicit=true",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ and downstream gates pass"
+        ]
+      }
+    },
+    {
+      "job_id": "MACD_zero-line_reclaim_-_Bybit_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_Bybit_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/macd-zero-line-reclaim-bybit-1h-v1.material.json",
+      "package": {
+        "package_id": "macd-zero-line-reclaim-bybit-1h-v1",
+        "generated_at": null,
+        "title": "MACD zero-line reclaim - Bybit BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/MacdZeroLineReclaimLongV1.py",
+        "strategy_class_name": "MacdZeroLineReclaimLongV1",
+        "strategy_brief": "Board B MACD momentum branch-keyed profitability factor replay.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Bybit",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-bybit-1h-v1.material.json",
+          "branch_path=TrendExpansion -> MomentumPersistence -> macd_zero_line_reclaim -> macd_zero_line_reclaim_long_v1",
+          "branch_fields_explicit=true",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ and downstream gates pass"
+        ]
+      }
+    },
+    {
+      "job_id": "MACD_signal_pullback_continuation_-_Bybit_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_Bybit_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/macd-signal-pullback-bybit-1h-v1.material.json",
+      "package": {
+        "package_id": "macd-signal-pullback-bybit-1h-v1",
+        "generated_at": null,
+        "title": "MACD signal pullback continuation - Bybit BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/MacdSignalPullbackContinuationV1.py",
+        "strategy_class_name": "MacdSignalPullbackContinuationV1",
+        "strategy_brief": "Board B MACD momentum branch-keyed profitability factor replay.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Bybit",
+          "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+          "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-bybit-1h-v1.material.json",
+          "branch_path=TrendExpansion -> MomentumPersistence -> macd_signal_pullback -> macd_signal_pullback_continuation_v1",
+          "branch_fields_explicit=true",
+          "local_cache_replay=true",
+          "new_provider_fetch=false",
+          "promotion_allowed=false until AQ and downstream gates pass"
+        ]
+      }
+    }
+  ],
+  "dispatch_groups": [
+    {
+      "group_index": 0,
+      "job_ids": [
+        "MACD_zero-line_reclaim_-_yfinance_YF_SPY_1h",
+        "MACD_signal_pullback_continuation_-_yfinance_YF_SPY_1h",
+        "MACD_zero-line_reclaim_-_IBKR_SPY_1h",
+        "MACD_signal_pullback_continuation_-_IBKR_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_ids": [
+        "MACD_zero-line_reclaim_-_TradingViewRemix_TVR_BTC-USD_1h",
+        "MACD_signal_pullback_continuation_-_TradingViewRemix_TVR_BTC-USD_1h",
+        "MACD_zero-line_reclaim_-_Kraken_XBTUSD_1h",
+        "MACD_signal_pullback_continuation_-_Kraken_XBTUSD_1h"
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_ids": [
+        "MACD_zero-line_reclaim_-_Binance_BTCUSDT_1h",
+        "MACD_signal_pullback_continuation_-_Binance_BTCUSDT_1h",
+        "MACD_zero-line_reclaim_-_Bybit_BTCUSDT_1h",
+        "MACD_signal_pullback_continuation_-_Bybit_BTCUSDT_1h"
+      ]
+    }
+  ],
+  "notes": [
+    "public_protocol_generic_only",
+    "ontology_must_live_inside_agent_materials_not_cli"
+  ]
+}

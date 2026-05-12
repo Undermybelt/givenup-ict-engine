@@ -1,0 +1,150 @@
+{
+  "aq_dispatch_started": false,
+  "branch_paths_preserved_6_of_6": true,
+  "material_count": 6,
+  "output_dir": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material-repair-v1",
+  "outputs": [
+    {
+      "branch_path_count": 6,
+      "branch_paths": [
+        "TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v2",
+        "TrendTransition -> LowVolatility -> up_momentum -> fair_value_gap_pullback_v1",
+        "TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> order_block_retest_confluence_v1",
+        "TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> fair_value_gap_rebalance_confluence_v1",
+        "TrendExpansion -> SessionLiquidityWindow -> liquidity_sweep_reclaim -> order_block_fvg_retest_v1",
+        "TrendExpansion -> CrossMarketConfirmation -> smt_confirmed_continuation -> order_block_or_fvg_pullback_v1"
+      ],
+      "first": "2026-01-02T14:30:00Z",
+      "input_material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ob-fvg-branch-matrix-yfinance-yf-1h-v1.material.json",
+      "last": "2026-05-11T20:00:00Z",
+      "local_cache_replay": "False",
+      "output_material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material-repair-v1/ob-fvg-branch-matrix-yfinance-yf-1h-v1.material.json",
+      "provider": "yfinance/YF",
+      "provider_authority_state": "current_same_root_fetch",
+      "rows": 614,
+      "symbol": "SPY",
+      "timeframe": "1h",
+      "timerange": "20260102-20260511"
+    },
+    {
+      "branch_path_count": 6,
+      "branch_paths": [
+        "TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v2",
+        "TrendTransition -> LowVolatility -> up_momentum -> fair_value_gap_pullback_v1",
+        "TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> order_block_retest_confluence_v1",
+        "TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> fair_value_gap_rebalance_confluence_v1",
+        "TrendExpansion -> SessionLiquidityWindow -> liquidity_sweep_reclaim -> order_block_fvg_retest_v1",
+        "TrendExpansion -> CrossMarketConfirmation -> smt_confirmed_continuation -> order_block_or_fvg_pullback_v1"
+      ],
+      "first": "2026-01-01T00:00:00Z",
+      "input_material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ob-fvg-branch-matrix-binance-1h-v1.material.json",
+      "last": "2026-05-12T00:00:00Z",
+      "local_cache_replay": "False",
+      "output_material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material-repair-v1/ob-fvg-branch-matrix-binance-1h-v1.material.json",
+      "provider": "Binance",
+      "provider_authority_state": "current_same_root_fetch",
+      "rows": 3145,
+      "symbol": "BTCUSDT",
+      "timeframe": "1h",
+      "timerange": "20260101-20260512"
+    },
+    {
+      "branch_path_count": 6,
+      "branch_paths": [
+        "TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v2",
+        "TrendTransition -> LowVolatility -> up_momentum -> fair_value_gap_pullback_v1",
+        "TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> order_block_retest_confluence_v1",
+        "TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> fair_value_gap_rebalance_confluence_v1",
+        "TrendExpansion -> SessionLiquidityWindow -> liquidity_sweep_reclaim -> order_block_fvg_retest_v1",
+        "TrendExpansion -> CrossMarketConfirmation -> smt_confirmed_continuation -> order_block_or_fvg_pullback_v1"
+      ],
+      "first": "2026-03-31T09:00:00Z",
+      "input_material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ob-fvg-branch-matrix-bybit-1h-v1.material.json",
+      "last": "2026-05-12T00:00:00Z",
+      "local_cache_replay": "False",
+      "output_material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material-repair-v1/ob-fvg-branch-matrix-bybit-1h-v1.material.json",
+      "provider": "Bybit",
+      "provider_authority_state": "current_same_root_fetch",
+      "rows": 1000,
+      "symbol": "BTCUSDT",
+      "timeframe": "1h",
+      "timerange": "20260331-20260512"
+    },
+    {
+      "branch_path_count": 6,
+      "branch_paths": [
+        "TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v2",
+        "TrendTransition -> LowVolatility -> up_momentum -> fair_value_gap_pullback_v1",
+        "TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> order_block_retest_confluence_v1",
+        "TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> fair_value_gap_rebalance_confluence_v1",
+        "TrendExpansion -> SessionLiquidityWindow -> liquidity_sweep_reclaim -> order_block_fvg_retest_v1",
+        "TrendExpansion -> CrossMarketConfirmation -> smt_confirmed_continuation -> order_block_or_fvg_pullback_v1"
+      ],
+      "first": "2026-01-01T00:00:00Z",
+      "input_material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ob-fvg-branch-matrix-kraken-1h-v1.material.json",
+      "last": "2026-03-25T07:00:00Z",
+      "local_cache_replay": "False",
+      "output_material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material-repair-v1/ob-fvg-branch-matrix-kraken-1h-v1.material.json",
+      "provider": "Kraken",
+      "provider_authority_state": "current_same_root_fetch",
+      "rows": 2000,
+      "symbol": "XBTUSD",
+      "timeframe": "1h",
+      "timerange": "20260101-20260325"
+    },
+    {
+      "branch_path_count": 6,
+      "branch_paths": [
+        "TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v2",
+        "TrendTransition -> LowVolatility -> up_momentum -> fair_value_gap_pullback_v1",
+        "TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> order_block_retest_confluence_v1",
+        "TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> fair_value_gap_rebalance_confluence_v1",
+        "TrendExpansion -> SessionLiquidityWindow -> liquidity_sweep_reclaim -> order_block_fvg_retest_v1",
+        "TrendExpansion -> CrossMarketConfirmation -> smt_confirmed_continuation -> order_block_or_fvg_pullback_v1"
+      ],
+      "first": "2026-01-02T09:00:00Z",
+      "input_material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ob-fvg-branch-matrix-ibkr-1h-v1.material.json",
+      "last": "2026-05-12T08:00:00Z",
+      "local_cache_replay": "False",
+      "output_material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material-repair-v1/ob-fvg-branch-matrix-ibkr-1h-v1.material.json",
+      "provider": "IBKR",
+      "provider_authority_state": "current_same_root_fetch",
+      "rows": 1425,
+      "symbol": "SPY",
+      "timeframe": "1h",
+      "timerange": "20260102-20260512"
+    },
+    {
+      "branch_path_count": 6,
+      "branch_paths": [
+        "TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v2",
+        "TrendTransition -> LowVolatility -> up_momentum -> fair_value_gap_pullback_v1",
+        "TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> order_block_retest_confluence_v1",
+        "TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> fair_value_gap_rebalance_confluence_v1",
+        "TrendExpansion -> SessionLiquidityWindow -> liquidity_sweep_reclaim -> order_block_fvg_retest_v1",
+        "TrendExpansion -> CrossMarketConfirmation -> smt_confirmed_continuation -> order_block_or_fvg_pullback_v1"
+      ],
+      "first": "2026-04-12T09:00:00Z",
+      "input_material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ob-fvg-branch-matrix-tvr-btc-usd-1h-v1.material.json",
+      "last": "2026-05-12T08:59:12Z",
+      "local_cache_replay": "False",
+      "output_material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material-repair-v1/ob-fvg-branch-matrix-tvr-btc-usd-1h-v1.material.json",
+      "provider": "TradingViewRemix/TVR",
+      "provider_authority_state": "current_same_root_fetch_local_stdio",
+      "rows": 720,
+      "symbol": "BTC-USD",
+      "timeframe": "1h",
+      "timerange": "20260412-20260512"
+    }
+  ],
+  "promotion_allowed": false,
+  "provider_refetch_started": false,
+  "provider_rows_current_same_root": 6,
+  "provider_rows_current_same_root_6_of_6": true,
+  "repair_scope": "material_json_timerange_only",
+  "run_id": "20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1",
+  "source": "165122 provider/AQ fail-closed no-data repair preflight",
+  "summary_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/summaries/aq_workspace_layout_repair_preflight_v1.json",
+  "trade_usable": false,
+  "update_goal": false
+}

@@ -1,0 +1,1 @@
+./target/debug/ict-engine market-data-harness --action fetch --request-json docs/experiments/actionable-regime-confidence/runs/20260512T195604+0800-codex-native-provider-cross-timeframe-acquisition-preflight-v1/requests/tvr_binance_btcusdt_1d.json

@@ -1,0 +1,4 @@
+Error: reading agent material '/Users/thrill3r/projects-ict-engine/ict-engine/material'
+
+Caused by:
+    No such file or directory (os error 2)

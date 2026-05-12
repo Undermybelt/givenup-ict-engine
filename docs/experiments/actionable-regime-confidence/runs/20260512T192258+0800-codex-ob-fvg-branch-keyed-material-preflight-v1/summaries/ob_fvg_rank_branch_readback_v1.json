@@ -1,0 +1,199 @@
+{
+  "all_rank_rows_joined": true,
+  "bbn_learning_allowed": false,
+  "branch_count": 10,
+  "branch_stats": [
+    {
+      "branch_path": "CrossMarketConfirmation -> SMTConfirmedContinuation -> fvg_or_order_block_retest -> smt_confirmed_ob_fvg_continuation_v1",
+      "negative_rows": 1,
+      "nonzero_rows": 2,
+      "positive_rows": 1,
+      "providers": [
+        "Binance BTCUSDT 1h",
+        "Bybit BTCUSDT 1h",
+        "IBKR SPY 1h",
+        "Kraken XBTUSD 1h",
+        "TradingViewRemix/TVR BTC-USD 1h",
+        "yfinance/YF SPY 1h"
+      ],
+      "rows": 6,
+      "trade_count": 143,
+      "zero_rows": 4
+    },
+    {
+      "branch_path": "SessionContinuation -> KillzoneRetest -> session_fvg_retest -> session_fvg_continuation_v1",
+      "negative_rows": 2,
+      "nonzero_rows": 2,
+      "positive_rows": 0,
+      "providers": [
+        "Binance BTCUSDT 1h",
+        "Bybit BTCUSDT 1h",
+        "IBKR SPY 1h",
+        "Kraken XBTUSD 1h",
+        "TradingViewRemix/TVR BTC-USD 1h",
+        "yfinance/YF SPY 1h"
+      ],
+      "rows": 6,
+      "trade_count": 277,
+      "zero_rows": 4
+    },
+    {
+      "branch_path": "SessionContinuation -> KillzoneRetest -> session_order_block_retest -> session_ob_continuation_v1",
+      "negative_rows": 2,
+      "nonzero_rows": 2,
+      "positive_rows": 0,
+      "providers": [
+        "Binance BTCUSDT 1h",
+        "Bybit BTCUSDT 1h",
+        "IBKR SPY 1h",
+        "Kraken XBTUSD 1h",
+        "TradingViewRemix/TVR BTC-USD 1h",
+        "yfinance/YF SPY 1h"
+      ],
+      "rows": 6,
+      "trade_count": 140,
+      "zero_rows": 4
+    },
+    {
+      "branch_path": "Transition -> RiskSuppression -> failed_mitigation_guard -> ob_fvg_failed_mitigation_guard_v1",
+      "negative_rows": 0,
+      "nonzero_rows": 2,
+      "positive_rows": 2,
+      "providers": [
+        "Binance BTCUSDT 1h",
+        "Bybit BTCUSDT 1h",
+        "IBKR SPY 1h",
+        "Kraken XBTUSD 1h",
+        "TradingViewRemix/TVR BTC-USD 1h",
+        "yfinance/YF SPY 1h"
+      ],
+      "rows": 6,
+      "trade_count": 106,
+      "zero_rows": 4
+    },
+    {
+      "branch_path": "TrendExpansion -> OTERetracement -> ote_plus_fvg_retest -> ote_fvg_continuation_long_v1",
+      "negative_rows": 2,
+      "nonzero_rows": 2,
+      "positive_rows": 0,
+      "providers": [
+        "Binance BTCUSDT 1h",
+        "Bybit BTCUSDT 1h",
+        "IBKR SPY 1h",
+        "Kraken XBTUSD 1h",
+        "TradingViewRemix/TVR BTC-USD 1h",
+        "yfinance/YF SPY 1h"
+      ],
+      "rows": 6,
+      "trade_count": 168,
+      "zero_rows": 4
+    },
+    {
+      "branch_path": "TrendExpansion -> OTERetracement -> ote_plus_order_block_retest -> ote_ob_continuation_long_v1",
+      "negative_rows": 1,
+      "nonzero_rows": 2,
+      "positive_rows": 1,
+      "providers": [
+        "Binance BTCUSDT 1h",
+        "Bybit BTCUSDT 1h",
+        "IBKR SPY 1h",
+        "Kraken XBTUSD 1h",
+        "TradingViewRemix/TVR BTC-USD 1h",
+        "yfinance/YF SPY 1h"
+      ],
+      "rows": 6,
+      "trade_count": 75,
+      "zero_rows": 4
+    },
+    {
+      "branch_path": "TrendExpansion -> PullbackContinuation -> bullish_order_block_retest -> order_block_retest_continuation_long_v1",
+      "negative_rows": 2,
+      "nonzero_rows": 2,
+      "positive_rows": 0,
+      "providers": [
+        "Binance BTCUSDT 1h",
+        "Bybit BTCUSDT 1h",
+        "IBKR SPY 1h",
+        "Kraken XBTUSD 1h",
+        "TradingViewRemix/TVR BTC-USD 1h",
+        "yfinance/YF SPY 1h"
+      ],
+      "rows": 6,
+      "trade_count": 107,
+      "zero_rows": 4
+    },
+    {
+      "branch_path": "TrendExpansion -> PullbackContinuation -> fair_value_gap_retest -> fvg_retest_continuation_long_v1",
+      "negative_rows": 2,
+      "nonzero_rows": 2,
+      "positive_rows": 0,
+      "providers": [
+        "Binance BTCUSDT 1h",
+        "Bybit BTCUSDT 1h",
+        "IBKR SPY 1h",
+        "Kraken XBTUSD 1h",
+        "TradingViewRemix/TVR BTC-USD 1h",
+        "yfinance/YF SPY 1h"
+      ],
+      "rows": 6,
+      "trade_count": 162,
+      "zero_rows": 4
+    },
+    {
+      "branch_path": "TrendExpansion -> PullbackContinuation -> fvg_plus_order_block_confluence -> ob_fvg_confluence_continuation_long_v1",
+      "negative_rows": 2,
+      "nonzero_rows": 2,
+      "positive_rows": 0,
+      "providers": [
+        "Binance BTCUSDT 1h",
+        "Bybit BTCUSDT 1h",
+        "IBKR SPY 1h",
+        "Kraken XBTUSD 1h",
+        "TradingViewRemix/TVR BTC-USD 1h",
+        "yfinance/YF SPY 1h"
+      ],
+      "rows": 6,
+      "trade_count": 122,
+      "zero_rows": 4
+    },
+    {
+      "branch_path": "VolatilityCompression -> LiquidityExpansion -> displacement_fvg_retest -> fvg_displacement_retest_expansion_v1",
+      "negative_rows": 2,
+      "nonzero_rows": 2,
+      "positive_rows": 0,
+      "providers": [
+        "Binance BTCUSDT 1h",
+        "Bybit BTCUSDT 1h",
+        "IBKR SPY 1h",
+        "Kraken XBTUSD 1h",
+        "TradingViewRemix/TVR BTC-USD 1h",
+        "yfinance/YF SPY 1h"
+      ],
+      "rows": 6,
+      "trade_count": 185,
+      "zero_rows": 4
+    }
+  ],
+  "catboost_learning_allowed": false,
+  "classification": "branch_join_repair_success_but_downstream_blocked_by_quality_weight_and_missing_downstream_fields",
+  "execution_tree_branch_weight_update_allowed": false,
+  "expected_rows": 60,
+  "joined_rows": 60,
+  "material_matrix": "docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/summaries/material_paths.csv",
+  "missing_rows": [],
+  "nonzero_trade_rows": 20,
+  "pre_bayes_filter_allowed": false,
+  "promotion_allowed": false,
+  "provider_count": 6,
+  "quality_weight_for_downstream_learning": "0_for_bbn_catboost_execution_tree_learning",
+  "rank_artifacts": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/state/auto-quant/OBFVG_192258/auto_quant_agent_material_rank.20260512T113922.949Z.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/state/auto-quant/OBFVG_192258/auto_quant_agent_material_rank.20260512T114741.288Z.json"
+  ],
+  "rank_joined_to_explicit_branch_fields": true,
+  "root": "docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1",
+  "total_trade_count": 1485,
+  "trade_usable": false,
+  "update_goal": false,
+  "zero_trade_rows": 40
+}

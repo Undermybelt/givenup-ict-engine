@@ -1,0 +1,7 @@
+provider,provider_requested,provider_data_acquired,provider_unreachable,aq_material_created,source_or_blocker
+IBKR,True,True,False,True,docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv
+TradingViewRemix/TVR,True,False,True,False,docs/experiments/actionable-regime-confidence/runs/20260512T154536+0800-codex-board-b-tvr-mcp-redacted-health-probe-v1
+yfinance/YF,True,True,False,True,docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/yahoo_spy_1h.normalized.csv
+Kraken,True,True,False,True,docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv
+Binance,True,True,False,True,docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/binance_btcusdt_1h.normalized.csv
+Bybit,True,True,False,True,docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv

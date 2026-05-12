@@ -1,0 +1,7 @@
+provider,material_path,rows
+yfinance/YF,docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1/agent-material/hd-rsi-bb-ema-yfinance-yf-1h-v1.material.json,2355
+Binance,docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1/agent-material/hd-rsi-bb-ema-binance-1h-v1.material.json,11905
+Bybit,docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1/agent-material/hd-rsi-bb-ema-bybit-1h-v1.material.json,1000
+Kraken,docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1/agent-material/hd-rsi-bb-ema-kraken-1h-v1.material.json,2000
+IBKR,docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1/agent-material/hd-rsi-bb-ema-ibkr-1h-v1.material.json,1427
+TradingViewRemix/TVR,docs/experiments/actionable-regime-confidence/runs/20260512T175651+0800-codex-high-density-rsi-bb-ema-six-provider-aq-v1/agent-material/hd-rsi-bb-ema-tvr-btc-usd-1h-v1.material.json,719

@@ -1,0 +1,166 @@
+{
+  "artifact_id": "auto-quant-agent-material-dispatch:PROVIDER_OTE_173141:20260512T094311.198Z",
+  "generated_at": "2026-05-12T09:43:11.199553Z",
+  "symbol": "PROVIDER_OTE_173141",
+  "source_batch_artifact_id": "auto-quant-agent-material-batch:PROVIDER_OTE_173141:20260512T094245.022Z",
+  "selected_group_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "groups": [
+    {
+      "group_index": 0,
+      "job_results": [
+        {
+          "job_id": "OTE_level_leaves_-_Binance_BTCUSDT_1h",
+          "title": "OTE level leaves - Binance BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_Binance_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_results": [
+        {
+          "job_id": "OTE_level_leaves_-_Bybit_BTCUSDT_1h",
+          "title": "OTE level leaves - Bybit BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_Bybit_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_results": [
+        {
+          "job_id": "OTE_level_leaves_-_IBKR_SPY_1h",
+          "title": "OTE level leaves - IBKR SPY 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_IBKR_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_IBKR_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_IBKR_SPY_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.1297,
+            "sortino": 0.4628,
+            "calmar": 8.6285,
+            "total_profit_pct": 0.54,
+            "max_drawdown_pct": -0.9982,
+            "trade_count": 6,
+            "win_rate_pct": 33.3333,
+            "profit_factor": 1.4181
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 3,
+      "job_results": [
+        {
+          "job_id": "OTE_level_leaves_-_Kraken_XBTUSD_1h",
+          "title": "OTE level leaves - Kraken XBTUSD 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_Kraken_XBTUSD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 4,
+      "job_results": [
+        {
+          "job_id": "OTE_level_leaves_-_TVR_BTC-USD_1h",
+          "title": "OTE level leaves - TVR BTC-USD 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_TVR_BTC-USD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_TVR_BTC-USD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_TVR_BTC-USD_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 5,
+      "job_results": [
+        {
+          "job_id": "OTE_level_leaves_-_yfinance_YF_SPY_1h",
+          "title": "OTE level leaves - yfinance/YF SPY 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_yfinance_YF_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/state/auto-quant/agent_material_units/OTE_level_leaves_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -0.2454,
+            "sortino": -0.2454,
+            "calmar": -3.9473,
+            "total_profit_pct": -2.4,
+            "max_drawdown_pct": -2.3993,
+            "trade_count": 3,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total_jobs": 6,
+    "completed_jobs": 6,
+    "blocked_jobs": 0,
+    "failed_jobs": 0
+  }
+}

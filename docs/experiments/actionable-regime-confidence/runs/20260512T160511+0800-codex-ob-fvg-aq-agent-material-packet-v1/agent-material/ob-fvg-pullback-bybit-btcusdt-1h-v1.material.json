@@ -1,0 +1,22 @@
+{
+  "package_id": "ob-fvg-pullback-bybit-btcusdt-1h-v1",
+  "title": "OB FVG pullback - Bybit BTCUSDT linear 1h",
+  "symbol": "BTCUSDT",
+  "timeframe": "1h",
+  "direction": "long",
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/bybit_linear_btcusdt_1h_20200101_20260512.normalized.csv",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/agent-material/ProviderObFvgPullbackV1.py",
+  "strategy_class_name": "ProviderObFvgPullbackV1",
+  "strategy_brief": "Board B OB/FVG continuation-pullback profitability packet focused on TrendTransition -> LowVolatility -> up_momentum.",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "walk_forward_survival"
+  ],
+  "notes": [
+    "branch_path=TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+    "source_provider=Bybit linear BTCUSDT 1h provider-backed replay data",
+    "promotion_allowed=false until same-root six-provider authority and downstream admission are complete"
+  ]
+}

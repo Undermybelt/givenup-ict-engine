@@ -1,0 +1,7 @@
+provider,symbol,source_path,aq_provider_invoked,provider_requested,provider_data_acquired,provider_unreachable_or_missing,local_cache_replay,rows
+Binance,BTCUSDT,docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/binance_btcusdt_1h_20170817_20260512.normalized.csv,false,true,true,false,true,76429
+Bybit,BTCUSDT,docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/bybit_linear_btcusdt_1h_20200101_20260512.normalized.csv,false,true,true,false,true,1000
+IBKR,SPY,docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/ibkr_spy_1h_5y.normalized.csv,false,true,true,false,true,20034
+Kraken,XBTUSD,docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/kraken_futures_pfxbtusd_1h_20200101_20260512.normalized.csv,false,true,true,false,true,2000
+yfinance/YF,ES,docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/yahoo_es_1h_20240513_20260512.normalized.csv,false,true,true,false,true,11383
+TradingViewRemix/TVR,missing,,false,false,false,true,false,0

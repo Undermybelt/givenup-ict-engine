@@ -1,0 +1,43 @@
+{
+  "root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1",
+  "material_count": 24,
+  "provider_count": 6,
+  "branch_count": 4,
+  "branch_paths": [
+    "TrendExpansion -> MomentumContinuation -> volume_impulse_pullback -> volume_impulse_reclaim_long_v1",
+    "TrendExpansion -> MomentumContinuation -> ema_rsi_persistence -> ema_rsi_persistence_long_v1",
+    "VolatilityCompression -> MomentumBreakout -> compression_breakout_followthrough -> compression_breakout_followthrough_long_v1",
+    "Transition -> ContinuationFailureGuard -> momentum_failure_guard -> momentum_failure_guard_v1"
+  ],
+  "material_paths": [
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-volume_impulse_reclaim_long_v1-binance-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-volume_impulse_reclaim_long_v1-bybit-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-volume_impulse_reclaim_long_v1-ibkr-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-volume_impulse_reclaim_long_v1-kraken-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-volume_impulse_reclaim_long_v1-tradingviewremix-tvr-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-volume_impulse_reclaim_long_v1-yfinance-yf-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-ema_rsi_persistence_long_v1-binance-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-ema_rsi_persistence_long_v1-bybit-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-ema_rsi_persistence_long_v1-ibkr-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-ema_rsi_persistence_long_v1-kraken-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-ema_rsi_persistence_long_v1-tradingviewremix-tvr-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-ema_rsi_persistence_long_v1-yfinance-yf-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-compression_breakout_followthrough_long_v1-binance-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-compression_breakout_followthrough_long_v1-bybit-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-compression_breakout_followthrough_long_v1-ibkr-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-compression_breakout_followthrough_long_v1-kraken-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-compression_breakout_followthrough_long_v1-tradingviewremix-tvr-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-compression_breakout_followthrough_long_v1-yfinance-yf-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-momentum_failure_guard_v1-binance-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-momentum_failure_guard_v1-bybit-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-momentum_failure_guard_v1-ibkr-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-momentum_failure_guard_v1-kraken-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-momentum_failure_guard_v1-tradingviewremix-tvr-1h-v1.material.json",
+    "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-momentum_failure_guard_v1-yfinance-yf-1h-v1.material.json"
+  ],
+  "provider_data_acquired_this_step": false,
+  "local_cache_replay": true,
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

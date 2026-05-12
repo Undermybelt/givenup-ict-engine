@@ -1,0 +1,19 @@
+Build a generic agent-material batch from agent-produced strategy packages
+
+Usage: ict-engine auto-quant-agent-material-batch [OPTIONS] --symbol <SYMBOL>
+
+Options:
+      --symbol <SYMBOL>
+          Instrument identifier supplied by the caller
+      --material <MATERIALS>
+          Repeatable path to an agent-produced strategy material package (.json)
+      --max-parallel <MAX_PARALLEL>
+          Maximum number of independent jobs to dispatch in parallel [default: 4]
+      --state-dir <STATE_DIR>
+          State directory holding the generic agent-material batch artifact [env: ICT_ENGINE_STATE_DIR=] [default: state]
+      --repo-url <REPO_URL>
+          Optional Auto-Quant repo URL or local path override used when bootstrapping the shared workspace
+      --tracked-branch <TRACKED_BRANCH>
+          Optional Auto-Quant branch override used when bootstrapping the shared workspace
+  -h, --help
+          Print help

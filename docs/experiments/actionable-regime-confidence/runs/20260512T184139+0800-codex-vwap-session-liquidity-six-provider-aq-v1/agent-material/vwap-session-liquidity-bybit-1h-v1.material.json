@@ -1,0 +1,35 @@
+{
+  "consumer_evidence_profile": {
+    "branch_paths": [
+      "RangeConsolidation -> LiquidityMeanReversion -> vwap_reclaim -> vwap_reclaim_long_v1",
+      "TrendExpansion -> SessionContinuation -> session_range_breakout -> session_range_breakout_long_v1",
+      "VolatilityCompression -> LiquidityExpansion -> volume_zscore_expansion -> volume_zscore_expansion_long_v1",
+      "Transition -> RiskSuppression -> low_liquidity_or_overextension_guard -> liquidity_guard_v1"
+    ],
+    "main_regime": "RangeConsolidation_or_TrendExpansion_or_VolatilityCompression_or_Transition",
+    "promotion_allowed": false
+  },
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+  "direction": "long",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "walk_forward_survival",
+    "sample_adequacy"
+  ],
+  "notes": [
+    "source_provider=Bybit public linear BTCUSDT 1h current fetch",
+    "branch_matrix=RangeConsolidation -> LiquidityMeanReversion -> vwap_reclaim -> vwap_reclaim_long_v1 | TrendExpansion -> SessionContinuation -> session_range_breakout -> session_range_breakout_long_v1 | VolatilityCompression -> LiquidityExpansion -> volume_zscore_expansion -> volume_zscore_expansion_long_v1 | Transition -> RiskSuppression -> low_liquidity_or_overextension_guard -> liquidity_guard_v1",
+    "provider_preflight_only=true",
+    "promotion_allowed=false until AQ dispatch and ordered downstream chain pass"
+  ],
+  "package_id": "vwap-session-liquidity-bybit-1h-v1",
+  "strategy_brief": "Board B VWAP/session/liquidity branch packet.",
+  "strategy_class_name": "ProviderVwapSessionLiquidityV1",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184139+0800-codex-vwap-session-liquidity-six-provider-aq-v1/agent-material/ProviderVwapSessionLiquidityV1.py",
+  "symbol": "BTC",
+  "timeframe": "1h",
+  "timerange": "20250101-20260512",
+  "title": "VWAP session liquidity - Bybit BTCUSDT 1h"
+}

@@ -1,0 +1,40 @@
+{
+  "package_id": "tmvp-momentum_failure_guard_v1-yfinance-yf-1h-v1",
+  "title": "TMVP momentum_failure_guard_v1 - yfinance/YF SPY 1h",
+  "symbol": "SPY",
+  "timeframe": "1h",
+  "timerange": "20250101-20260512",
+  "direction": "short",
+  "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+  "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/MomentumFailureGuardV1.py",
+  "strategy_class_name": "MomentumFailureGuardV1",
+  "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "cross_provider_survival",
+    "cost_slippage_robustness"
+  ],
+  "consumer_evidence_profile": {
+    "branch_path": "Transition -> ContinuationFailureGuard -> momentum_failure_guard -> momentum_failure_guard_v1",
+    "regime_profit_branch_path": "Transition -> ContinuationFailureGuard -> momentum_failure_guard -> momentum_failure_guard_v1",
+    "branch_id": "momentum_failure_guard_v1",
+    "main_regime": "Transition",
+    "sub_regime": "ContinuationFailureGuard",
+    "sub_sub_regime_or_profit_factor": "momentum_failure_guard",
+    "profit_factor": "momentum_failure_guard_v1",
+    "provider": "yfinance/YF",
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "notes": [
+    "source_provider=yfinance/YF SPY 1h",
+    "branch_path=Transition -> ContinuationFailureGuard -> momentum_failure_guard -> momentum_failure_guard_v1",
+    "provider_data_acquired_this_step=false",
+    "local_cache_replay=true",
+    "material_preflight_only=true",
+    "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+  ]
+}

@@ -1,0 +1,886 @@
+{
+  "artifact_id": "auto-quant-agent-material-batch:TMVP_193422:20260512T120058.453Z",
+  "generated_at": "2026-05-12T12:00:58.453136Z",
+  "symbol": "TMVP_193422",
+  "shared_workspace_root": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/.deps/auto-quant",
+  "source_repo_url": "https://github.com/TraderAlice/Auto-Quant.git",
+  "max_parallel": 4,
+  "jobs": [
+    {
+      "job_id": "TMVP_volume_impulse_reclaim_long_v1_-_Binance_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_volume_impulse_reclaim_long_v1_-_Binance_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-volume_impulse_reclaim_long_v1-binance-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-volume_impulse_reclaim_long_v1-binance-1h-v1",
+        "generated_at": null,
+        "title": "TMVP volume_impulse_reclaim_long_v1 - Binance BTCUSDT 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/VolumeImpulseReclaimLongV1.py",
+        "strategy_class_name": "VolumeImpulseReclaimLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Binance BTCUSDT 1h",
+          "branch_path=TrendExpansion -> MomentumContinuation -> volume_impulse_pullback -> volume_impulse_reclaim_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_volume_impulse_reclaim_long_v1_-_Bybit_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_volume_impulse_reclaim_long_v1_-_Bybit_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-volume_impulse_reclaim_long_v1-bybit-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-volume_impulse_reclaim_long_v1-bybit-1h-v1",
+        "generated_at": null,
+        "title": "TMVP volume_impulse_reclaim_long_v1 - Bybit BTCUSDT 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/VolumeImpulseReclaimLongV1.py",
+        "strategy_class_name": "VolumeImpulseReclaimLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Bybit BTCUSDT 1h",
+          "branch_path=TrendExpansion -> MomentumContinuation -> volume_impulse_pullback -> volume_impulse_reclaim_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_volume_impulse_reclaim_long_v1_-_IBKR_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_volume_impulse_reclaim_long_v1_-_IBKR_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-volume_impulse_reclaim_long_v1-ibkr-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-volume_impulse_reclaim_long_v1-ibkr-1h-v1",
+        "generated_at": null,
+        "title": "TMVP volume_impulse_reclaim_long_v1 - IBKR SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/VolumeImpulseReclaimLongV1.py",
+        "strategy_class_name": "VolumeImpulseReclaimLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=IBKR SPY 1h",
+          "branch_path=TrendExpansion -> MomentumContinuation -> volume_impulse_pullback -> volume_impulse_reclaim_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_volume_impulse_reclaim_long_v1_-_Kraken_XBTUSD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_volume_impulse_reclaim_long_v1_-_Kraken_XBTUSD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-volume_impulse_reclaim_long_v1-kraken-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-volume_impulse_reclaim_long_v1-kraken-1h-v1",
+        "generated_at": null,
+        "title": "TMVP volume_impulse_reclaim_long_v1 - Kraken XBTUSD 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/VolumeImpulseReclaimLongV1.py",
+        "strategy_class_name": "VolumeImpulseReclaimLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Kraken XBTUSD 1h",
+          "branch_path=TrendExpansion -> MomentumContinuation -> volume_impulse_pullback -> volume_impulse_reclaim_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_volume_impulse_reclaim_long_v1_-_TradingViewRemix_TVR_BTC-USD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_volume_impulse_reclaim_long_v1_-_TradingViewRemix_TVR_BTC-USD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-volume_impulse_reclaim_long_v1-tradingviewremix-tvr-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-volume_impulse_reclaim_long_v1-tradingviewremix-tvr-1h-v1",
+        "generated_at": null,
+        "title": "TMVP volume_impulse_reclaim_long_v1 - TradingViewRemix/TVR BTC-USD 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/tvr_btc_usd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/VolumeImpulseReclaimLongV1.py",
+        "strategy_class_name": "VolumeImpulseReclaimLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=TradingViewRemix/TVR BTC-USD 1h",
+          "branch_path=TrendExpansion -> MomentumContinuation -> volume_impulse_pullback -> volume_impulse_reclaim_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_volume_impulse_reclaim_long_v1_-_yfinance_YF_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_volume_impulse_reclaim_long_v1_-_yfinance_YF_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-volume_impulse_reclaim_long_v1-yfinance-yf-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-volume_impulse_reclaim_long_v1-yfinance-yf-1h-v1",
+        "generated_at": null,
+        "title": "TMVP volume_impulse_reclaim_long_v1 - yfinance/YF SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/VolumeImpulseReclaimLongV1.py",
+        "strategy_class_name": "VolumeImpulseReclaimLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=yfinance/YF SPY 1h",
+          "branch_path=TrendExpansion -> MomentumContinuation -> volume_impulse_pullback -> volume_impulse_reclaim_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_ema_rsi_persistence_long_v1_-_Binance_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_ema_rsi_persistence_long_v1_-_Binance_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-ema_rsi_persistence_long_v1-binance-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-ema_rsi_persistence_long_v1-binance-1h-v1",
+        "generated_at": null,
+        "title": "TMVP ema_rsi_persistence_long_v1 - Binance BTCUSDT 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/EmaRsiPersistenceLongV1.py",
+        "strategy_class_name": "EmaRsiPersistenceLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Binance BTCUSDT 1h",
+          "branch_path=TrendExpansion -> MomentumContinuation -> ema_rsi_persistence -> ema_rsi_persistence_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_ema_rsi_persistence_long_v1_-_Bybit_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_ema_rsi_persistence_long_v1_-_Bybit_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-ema_rsi_persistence_long_v1-bybit-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-ema_rsi_persistence_long_v1-bybit-1h-v1",
+        "generated_at": null,
+        "title": "TMVP ema_rsi_persistence_long_v1 - Bybit BTCUSDT 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/EmaRsiPersistenceLongV1.py",
+        "strategy_class_name": "EmaRsiPersistenceLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Bybit BTCUSDT 1h",
+          "branch_path=TrendExpansion -> MomentumContinuation -> ema_rsi_persistence -> ema_rsi_persistence_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_ema_rsi_persistence_long_v1_-_IBKR_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_ema_rsi_persistence_long_v1_-_IBKR_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-ema_rsi_persistence_long_v1-ibkr-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-ema_rsi_persistence_long_v1-ibkr-1h-v1",
+        "generated_at": null,
+        "title": "TMVP ema_rsi_persistence_long_v1 - IBKR SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/EmaRsiPersistenceLongV1.py",
+        "strategy_class_name": "EmaRsiPersistenceLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=IBKR SPY 1h",
+          "branch_path=TrendExpansion -> MomentumContinuation -> ema_rsi_persistence -> ema_rsi_persistence_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_ema_rsi_persistence_long_v1_-_Kraken_XBTUSD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_ema_rsi_persistence_long_v1_-_Kraken_XBTUSD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-ema_rsi_persistence_long_v1-kraken-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-ema_rsi_persistence_long_v1-kraken-1h-v1",
+        "generated_at": null,
+        "title": "TMVP ema_rsi_persistence_long_v1 - Kraken XBTUSD 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/EmaRsiPersistenceLongV1.py",
+        "strategy_class_name": "EmaRsiPersistenceLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Kraken XBTUSD 1h",
+          "branch_path=TrendExpansion -> MomentumContinuation -> ema_rsi_persistence -> ema_rsi_persistence_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_ema_rsi_persistence_long_v1_-_TradingViewRemix_TVR_BTC-USD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_ema_rsi_persistence_long_v1_-_TradingViewRemix_TVR_BTC-USD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-ema_rsi_persistence_long_v1-tradingviewremix-tvr-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-ema_rsi_persistence_long_v1-tradingviewremix-tvr-1h-v1",
+        "generated_at": null,
+        "title": "TMVP ema_rsi_persistence_long_v1 - TradingViewRemix/TVR BTC-USD 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/tvr_btc_usd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/EmaRsiPersistenceLongV1.py",
+        "strategy_class_name": "EmaRsiPersistenceLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=TradingViewRemix/TVR BTC-USD 1h",
+          "branch_path=TrendExpansion -> MomentumContinuation -> ema_rsi_persistence -> ema_rsi_persistence_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_ema_rsi_persistence_long_v1_-_yfinance_YF_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_ema_rsi_persistence_long_v1_-_yfinance_YF_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-ema_rsi_persistence_long_v1-yfinance-yf-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-ema_rsi_persistence_long_v1-yfinance-yf-1h-v1",
+        "generated_at": null,
+        "title": "TMVP ema_rsi_persistence_long_v1 - yfinance/YF SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/EmaRsiPersistenceLongV1.py",
+        "strategy_class_name": "EmaRsiPersistenceLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=yfinance/YF SPY 1h",
+          "branch_path=TrendExpansion -> MomentumContinuation -> ema_rsi_persistence -> ema_rsi_persistence_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_compression_breakout_followthrough_long_v1_-_Binance_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_compression_breakout_followthrough_long_v1_-_Binance_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-compression_breakout_followthrough_long_v1-binance-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-compression_breakout_followthrough_long_v1-binance-1h-v1",
+        "generated_at": null,
+        "title": "TMVP compression_breakout_followthrough_long_v1 - Binance BTCUSDT 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/CompressionBreakoutFollowthroughLongV1.py",
+        "strategy_class_name": "CompressionBreakoutFollowthroughLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Binance BTCUSDT 1h",
+          "branch_path=VolatilityCompression -> MomentumBreakout -> compression_breakout_followthrough -> compression_breakout_followthrough_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_compression_breakout_followthrough_long_v1_-_Bybit_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_compression_breakout_followthrough_long_v1_-_Bybit_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-compression_breakout_followthrough_long_v1-bybit-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-compression_breakout_followthrough_long_v1-bybit-1h-v1",
+        "generated_at": null,
+        "title": "TMVP compression_breakout_followthrough_long_v1 - Bybit BTCUSDT 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/CompressionBreakoutFollowthroughLongV1.py",
+        "strategy_class_name": "CompressionBreakoutFollowthroughLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Bybit BTCUSDT 1h",
+          "branch_path=VolatilityCompression -> MomentumBreakout -> compression_breakout_followthrough -> compression_breakout_followthrough_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_compression_breakout_followthrough_long_v1_-_IBKR_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_compression_breakout_followthrough_long_v1_-_IBKR_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-compression_breakout_followthrough_long_v1-ibkr-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-compression_breakout_followthrough_long_v1-ibkr-1h-v1",
+        "generated_at": null,
+        "title": "TMVP compression_breakout_followthrough_long_v1 - IBKR SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/CompressionBreakoutFollowthroughLongV1.py",
+        "strategy_class_name": "CompressionBreakoutFollowthroughLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=IBKR SPY 1h",
+          "branch_path=VolatilityCompression -> MomentumBreakout -> compression_breakout_followthrough -> compression_breakout_followthrough_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_compression_breakout_followthrough_long_v1_-_Kraken_XBTUSD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_compression_breakout_followthrough_long_v1_-_Kraken_XBTUSD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-compression_breakout_followthrough_long_v1-kraken-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-compression_breakout_followthrough_long_v1-kraken-1h-v1",
+        "generated_at": null,
+        "title": "TMVP compression_breakout_followthrough_long_v1 - Kraken XBTUSD 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/CompressionBreakoutFollowthroughLongV1.py",
+        "strategy_class_name": "CompressionBreakoutFollowthroughLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Kraken XBTUSD 1h",
+          "branch_path=VolatilityCompression -> MomentumBreakout -> compression_breakout_followthrough -> compression_breakout_followthrough_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_compression_breakout_followthrough_long_v1_-_TradingViewRemix_TVR_BTC-USD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_compression_breakout_followthrough_long_v1_-_TradingViewRemix_TVR_BTC-USD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-compression_breakout_followthrough_long_v1-tradingviewremix-tvr-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-compression_breakout_followthrough_long_v1-tradingviewremix-tvr-1h-v1",
+        "generated_at": null,
+        "title": "TMVP compression_breakout_followthrough_long_v1 - TradingViewRemix/TVR BTC-USD 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/tvr_btc_usd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/CompressionBreakoutFollowthroughLongV1.py",
+        "strategy_class_name": "CompressionBreakoutFollowthroughLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=TradingViewRemix/TVR BTC-USD 1h",
+          "branch_path=VolatilityCompression -> MomentumBreakout -> compression_breakout_followthrough -> compression_breakout_followthrough_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_compression_breakout_followthrough_long_v1_-_yfinance_YF_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_compression_breakout_followthrough_long_v1_-_yfinance_YF_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-compression_breakout_followthrough_long_v1-yfinance-yf-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-compression_breakout_followthrough_long_v1-yfinance-yf-1h-v1",
+        "generated_at": null,
+        "title": "TMVP compression_breakout_followthrough_long_v1 - yfinance/YF SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "long",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/CompressionBreakoutFollowthroughLongV1.py",
+        "strategy_class_name": "CompressionBreakoutFollowthroughLongV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=yfinance/YF SPY 1h",
+          "branch_path=VolatilityCompression -> MomentumBreakout -> compression_breakout_followthrough -> compression_breakout_followthrough_long_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_momentum_failure_guard_v1_-_Binance_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_momentum_failure_guard_v1_-_Binance_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-momentum_failure_guard_v1-binance-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-momentum_failure_guard_v1-binance-1h-v1",
+        "generated_at": null,
+        "title": "TMVP momentum_failure_guard_v1 - Binance BTCUSDT 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "short",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/MomentumFailureGuardV1.py",
+        "strategy_class_name": "MomentumFailureGuardV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Binance BTCUSDT 1h",
+          "branch_path=Transition -> ContinuationFailureGuard -> momentum_failure_guard -> momentum_failure_guard_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_momentum_failure_guard_v1_-_Bybit_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_momentum_failure_guard_v1_-_Bybit_BTCUSDT_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-momentum_failure_guard_v1-bybit-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-momentum_failure_guard_v1-bybit-1h-v1",
+        "generated_at": null,
+        "title": "TMVP momentum_failure_guard_v1 - Bybit BTCUSDT 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "short",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/MomentumFailureGuardV1.py",
+        "strategy_class_name": "MomentumFailureGuardV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Bybit BTCUSDT 1h",
+          "branch_path=Transition -> ContinuationFailureGuard -> momentum_failure_guard -> momentum_failure_guard_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_momentum_failure_guard_v1_-_IBKR_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_momentum_failure_guard_v1_-_IBKR_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-momentum_failure_guard_v1-ibkr-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-momentum_failure_guard_v1-ibkr-1h-v1",
+        "generated_at": null,
+        "title": "TMVP momentum_failure_guard_v1 - IBKR SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "short",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/MomentumFailureGuardV1.py",
+        "strategy_class_name": "MomentumFailureGuardV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=IBKR SPY 1h",
+          "branch_path=Transition -> ContinuationFailureGuard -> momentum_failure_guard -> momentum_failure_guard_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_momentum_failure_guard_v1_-_Kraken_XBTUSD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_momentum_failure_guard_v1_-_Kraken_XBTUSD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-momentum_failure_guard_v1-kraken-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-momentum_failure_guard_v1-kraken-1h-v1",
+        "generated_at": null,
+        "title": "TMVP momentum_failure_guard_v1 - Kraken XBTUSD 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "short",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/MomentumFailureGuardV1.py",
+        "strategy_class_name": "MomentumFailureGuardV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Kraken XBTUSD 1h",
+          "branch_path=Transition -> ContinuationFailureGuard -> momentum_failure_guard -> momentum_failure_guard_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_momentum_failure_guard_v1_-_TradingViewRemix_TVR_BTC-USD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_momentum_failure_guard_v1_-_TradingViewRemix_TVR_BTC-USD_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-momentum_failure_guard_v1-tradingviewremix-tvr-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-momentum_failure_guard_v1-tradingviewremix-tvr-1h-v1",
+        "generated_at": null,
+        "title": "TMVP momentum_failure_guard_v1 - TradingViewRemix/TVR BTC-USD 1h",
+        "symbol": "BTC",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "short",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/tvr_btc_usd_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/MomentumFailureGuardV1.py",
+        "strategy_class_name": "MomentumFailureGuardV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=TradingViewRemix/TVR BTC-USD 1h",
+          "branch_path=Transition -> ContinuationFailureGuard -> momentum_failure_guard -> momentum_failure_guard_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    },
+    {
+      "job_id": "TMVP_momentum_failure_guard_v1_-_yfinance_YF_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/agent_material_units/TMVP_momentum_failure_guard_v1_-_yfinance_YF_SPY_1h",
+      "material_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/tmvp-momentum_failure_guard_v1-yfinance-yf-1h-v1.material.json",
+      "package": {
+        "package_id": "tmvp-momentum_failure_guard_v1-yfinance-yf-1h-v1",
+        "generated_at": null,
+        "title": "TMVP momentum_failure_guard_v1 - yfinance/YF SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20250101-20260512",
+        "direction": "short",
+        "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+        "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/agent-material/MomentumFailureGuardV1.py",
+        "strategy_class_name": "MomentumFailureGuardV1",
+        "strategy_brief": "Board B trend-momentum volume-persistence branch-keyed profitability material.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "cross_provider_survival",
+          "cost_slippage_robustness"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=yfinance/YF SPY 1h",
+          "branch_path=Transition -> ContinuationFailureGuard -> momentum_failure_guard -> momentum_failure_guard_v1",
+          "provider_data_acquired_this_step=false",
+          "local_cache_replay=true",
+          "material_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+        ]
+      }
+    }
+  ],
+  "dispatch_groups": [
+    {
+      "group_index": 0,
+      "job_ids": [
+        "TMVP_volume_impulse_reclaim_long_v1_-_Binance_BTCUSDT_1h",
+        "TMVP_volume_impulse_reclaim_long_v1_-_Bybit_BTCUSDT_1h",
+        "TMVP_volume_impulse_reclaim_long_v1_-_IBKR_SPY_1h",
+        "TMVP_volume_impulse_reclaim_long_v1_-_Kraken_XBTUSD_1h"
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_ids": [
+        "TMVP_volume_impulse_reclaim_long_v1_-_TradingViewRemix_TVR_BTC-USD_1h",
+        "TMVP_volume_impulse_reclaim_long_v1_-_yfinance_YF_SPY_1h",
+        "TMVP_ema_rsi_persistence_long_v1_-_Binance_BTCUSDT_1h",
+        "TMVP_ema_rsi_persistence_long_v1_-_Bybit_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_ids": [
+        "TMVP_ema_rsi_persistence_long_v1_-_IBKR_SPY_1h",
+        "TMVP_ema_rsi_persistence_long_v1_-_Kraken_XBTUSD_1h",
+        "TMVP_ema_rsi_persistence_long_v1_-_TradingViewRemix_TVR_BTC-USD_1h",
+        "TMVP_ema_rsi_persistence_long_v1_-_yfinance_YF_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 3,
+      "job_ids": [
+        "TMVP_compression_breakout_followthrough_long_v1_-_Binance_BTCUSDT_1h",
+        "TMVP_compression_breakout_followthrough_long_v1_-_Bybit_BTCUSDT_1h",
+        "TMVP_compression_breakout_followthrough_long_v1_-_IBKR_SPY_1h",
+        "TMVP_compression_breakout_followthrough_long_v1_-_Kraken_XBTUSD_1h"
+      ]
+    },
+    {
+      "group_index": 4,
+      "job_ids": [
+        "TMVP_compression_breakout_followthrough_long_v1_-_TradingViewRemix_TVR_BTC-USD_1h",
+        "TMVP_compression_breakout_followthrough_long_v1_-_yfinance_YF_SPY_1h",
+        "TMVP_momentum_failure_guard_v1_-_Binance_BTCUSDT_1h",
+        "TMVP_momentum_failure_guard_v1_-_Bybit_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 5,
+      "job_ids": [
+        "TMVP_momentum_failure_guard_v1_-_IBKR_SPY_1h",
+        "TMVP_momentum_failure_guard_v1_-_Kraken_XBTUSD_1h",
+        "TMVP_momentum_failure_guard_v1_-_TradingViewRemix_TVR_BTC-USD_1h",
+        "TMVP_momentum_failure_guard_v1_-_yfinance_YF_SPY_1h"
+      ]
+    }
+  ],
+  "notes": [
+    "public_protocol_generic_only",
+    "ontology_must_live_inside_agent_materials_not_cli"
+  ]
+}

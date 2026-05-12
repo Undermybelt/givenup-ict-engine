@@ -1,0 +1,123 @@
+{
+  "root": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1",
+  "rank_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state/auto-quant/TMVP_193422/auto_quant_agent_material_rank.20260512T120516.378Z.json",
+  "symbol": "TMVP_193422",
+  "source_dispatch_artifact_id": "auto-quant-agent-material-dispatch:TMVP_193422:20260512T120457.581Z",
+  "rank_rows": 24,
+  "provider_count": 6,
+  "providers": [
+    "Binance",
+    "Bybit",
+    "IBKR",
+    "Kraken",
+    "TradingViewRemix/TVR",
+    "yfinance/YF"
+  ],
+  "branch_leaf_count": 4,
+  "branch_paths": [
+    "Transition -> ContinuationFailureGuard -> momentum_failure_guard -> momentum_failure_guard_v1",
+    "TrendExpansion -> MomentumContinuation -> ema_rsi_persistence -> ema_rsi_persistence_long_v1",
+    "TrendExpansion -> MomentumContinuation -> volume_impulse_pullback -> volume_impulse_reclaim_long_v1",
+    "VolatilityCompression -> MomentumBreakout -> compression_breakout_followthrough -> compression_breakout_followthrough_long_v1"
+  ],
+  "missing_branch_field_rows": 0,
+  "rank_rows_have_explicit_branch_fields": true,
+  "nonzero_trade_rows": 7,
+  "zero_trade_rows": 17,
+  "positive_profit_rows": 3,
+  "negative_profit_rows": 4,
+  "nonzero_trade_providers": [
+    "IBKR",
+    "yfinance/YF"
+  ],
+  "zero_trade_only_providers": [
+    "Binance",
+    "Bybit",
+    "Kraken",
+    "TradingViewRemix/TVR"
+  ],
+  "max_trade_count": 133,
+  "max_total_profit_pct": 1.76,
+  "adequate_branch_keyed_training_sample": false,
+  "evidence_layer": "chain_contract_ok_but_cross_provider_profitability_negative_sample",
+  "secondary_evidence_layer": "low_or_zero_crypto_tvr_trade_density_sample",
+  "quality_weight": "0_for_bbn_catboost_execution_tree_learning",
+  "allowed_feedback_targets": "branch_nursery_profit_factor_hypothesis_provider_trade_density_weighting_aq_material_redesign_only",
+  "pre_bayes_filter_allowed": false,
+  "bbn_learning_allowed": false,
+  "catboost_learning_allowed": false,
+  "execution_tree_branch_weight_update_allowed": false,
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "branch_stats": [
+    {
+      "branch_path": "Transition -> ContinuationFailureGuard -> momentum_failure_guard -> momentum_failure_guard_v1",
+      "rows": 6,
+      "providers": [
+        "Binance",
+        "Bybit",
+        "IBKR",
+        "Kraken",
+        "TradingViewRemix/TVR",
+        "yfinance/YF"
+      ],
+      "nonzero_trade_rows": 2,
+      "positive_profit_rows": 1,
+      "negative_profit_rows": 1,
+      "max_trade_count": 103,
+      "max_total_profit_pct": 0.31
+    },
+    {
+      "branch_path": "TrendExpansion -> MomentumContinuation -> ema_rsi_persistence -> ema_rsi_persistence_long_v1",
+      "rows": 6,
+      "providers": [
+        "Binance",
+        "Bybit",
+        "IBKR",
+        "Kraken",
+        "TradingViewRemix/TVR",
+        "yfinance/YF"
+      ],
+      "nonzero_trade_rows": 2,
+      "positive_profit_rows": 1,
+      "negative_profit_rows": 1,
+      "max_trade_count": 133,
+      "max_total_profit_pct": 1.76
+    },
+    {
+      "branch_path": "TrendExpansion -> MomentumContinuation -> volume_impulse_pullback -> volume_impulse_reclaim_long_v1",
+      "rows": 6,
+      "providers": [
+        "Binance",
+        "Bybit",
+        "IBKR",
+        "Kraken",
+        "TradingViewRemix/TVR",
+        "yfinance/YF"
+      ],
+      "nonzero_trade_rows": 2,
+      "positive_profit_rows": 0,
+      "negative_profit_rows": 2,
+      "max_trade_count": 133,
+      "max_total_profit_pct": 0.0
+    },
+    {
+      "branch_path": "VolatilityCompression -> MomentumBreakout -> compression_breakout_followthrough -> compression_breakout_followthrough_long_v1",
+      "rows": 6,
+      "providers": [
+        "Binance",
+        "Bybit",
+        "IBKR",
+        "Kraken",
+        "TradingViewRemix/TVR",
+        "yfinance/YF"
+      ],
+      "nonzero_trade_rows": 1,
+      "positive_profit_rows": 1,
+      "negative_profit_rows": 0,
+      "max_trade_count": 3,
+      "max_total_profit_pct": 0.17
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+joined_rows=60
+missing_join_rows=0
+explicit_branch_fields_after_join=True
+provider_count=6
+branch_count=10
+total_trades=1485
+nonzero_trade_rows=20
+zero_trade_rows=40
+positive_rows=4
+quality_weight=0_for_bbn_catboost_execution_tree_learning
+downstream_allowed=False

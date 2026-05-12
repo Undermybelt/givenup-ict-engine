@@ -1,0 +1,11 @@
+{
+  "branch_keyed_by_construction": true,
+  "branch_path": "Sideways -> SessionLiquidityMeanReversion -> VWAPReclaim -> session_vwap_reclaim_long_v1",
+  "local_cache_replay": true,
+  "material_count": 6,
+  "new_provider_fetch": false,
+  "promotion_allowed": false,
+  "provider_rows": 6,
+  "trade_usable": false,
+  "update_goal": false
+}

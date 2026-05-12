@@ -1,0 +1,52 @@
+{
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T151907+0800-codex-ob-fvg-regime-branch-screen-v1",
+  "factor_concepts": [
+    "order_block_pullback_v1",
+    "fair_value_gap_pullback_v1"
+  ],
+  "branch_shape": "main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor",
+  "provider_stats": [
+    {
+      "provider": "Binance",
+      "rows": 76429,
+      "signals": 3383,
+      "first": "2017-08-17 04:00:00+00:00",
+      "last": "2026-05-12 00:00:00+00:00"
+    },
+    {
+      "provider": "Bybit",
+      "rows": 1000,
+      "signals": 47,
+      "first": "2026-03-31 09:00:00+00:00",
+      "last": "2026-05-12 00:00:00+00:00"
+    },
+    {
+      "provider": "IBKR",
+      "rows": 20034,
+      "signals": 1144,
+      "first": "2021-05-13T08:00:00+00:00",
+      "last": "2026-05-11T23:00:00+00:00"
+    },
+    {
+      "provider": "Kraken",
+      "rows": 2000,
+      "signals": 98,
+      "first": "2022-03-23 10:00:00+00:00",
+      "last": "2022-06-14 17:00:00+00:00"
+    },
+    {
+      "provider": "yfinance/YF",
+      "rows": 11383,
+      "signals": 604,
+      "first": "2024-05-13 00:00:00+00:00",
+      "last": "2026-05-11 23:00:00+00:00"
+    }
+  ],
+  "total_trades": 5276,
+  "branch_count": 24,
+  "provider_rows": 6,
+  "same_root_aq_provider_authority": false,
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

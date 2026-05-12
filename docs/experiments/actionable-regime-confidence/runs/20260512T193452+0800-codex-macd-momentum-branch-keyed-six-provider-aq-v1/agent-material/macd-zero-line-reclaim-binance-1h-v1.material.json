@@ -1,0 +1,54 @@
+{
+  "consumer_evidence_profile": {
+    "branch_keyed_by_construction": true,
+    "branch_path": "TrendExpansion -> MomentumPersistence -> macd_zero_line_reclaim -> macd_zero_line_reclaim_long_v1",
+    "branch_paths": [
+      "TrendExpansion -> MomentumPersistence -> macd_zero_line_reclaim -> macd_zero_line_reclaim_long_v1"
+    ],
+    "local_cache_replay": true,
+    "main_regime": "TrendExpansion",
+    "new_provider_fetch": false,
+    "profit_factor": "macd_zero_line_reclaim_long_v1",
+    "promotion_allowed": false,
+    "provider": "Binance",
+    "source_material": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-binance-1h-v1.material.json",
+    "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+    "sub_regime": "MomentumPersistence",
+    "sub_sub_regime_or_profit_factor": "macd_zero_line_reclaim",
+    "trade_usable": false
+  },
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+  "direction": "long",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "cross_provider_survival",
+    "sample_adequacy"
+  ],
+  "negative_evidence_contract": {
+    "loss_after_adequate_density": "market_factor_negative_sample",
+    "missing_branch_fields": "identity_negative_sample",
+    "profitable_but_low_density": "low_density_weak_positive_provider_sample",
+    "provider_or_runtime_fault": "infrastructure_negative_sample",
+    "provider_zero_trades": "low_density_negative_sample"
+  },
+  "notes": [
+    "source_provider=Binance",
+    "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+    "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-binance-1h-v1.material.json",
+    "branch_path=TrendExpansion -> MomentumPersistence -> macd_zero_line_reclaim -> macd_zero_line_reclaim_long_v1",
+    "branch_fields_explicit=true",
+    "local_cache_replay=true",
+    "new_provider_fetch=false",
+    "promotion_allowed=false until AQ and downstream gates pass"
+  ],
+  "package_id": "macd-zero-line-reclaim-binance-1h-v1",
+  "strategy_brief": "Board B MACD momentum branch-keyed profitability factor replay.",
+  "strategy_class_name": "MacdZeroLineReclaimLongV1",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/agent-material/MacdZeroLineReclaimLongV1.py",
+  "symbol": "BTCUSDT",
+  "timeframe": "1h",
+  "timerange": "20250101-20260512",
+  "title": "MACD zero-line reclaim - Binance BTCUSDT 1h"
+}

@@ -1,0 +1,250 @@
+{
+  "artifact_id": "auto-quant-agent-material-batch:PROVIDER_OB_FVG_165122:20260512T092844.510Z",
+  "generated_at": "2026-05-12T09:28:44.510190Z",
+  "symbol": "PROVIDER_OB_FVG_165122",
+  "shared_workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/.deps/auto-quant",
+  "source_repo_url": "/Users/thrill3r/Auto-Quant",
+  "max_parallel": 1,
+  "jobs": [
+    {
+      "job_id": "OB_FVG_branch_matrix_-_yfinance_YF_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_yfinance_YF_SPY_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ob-fvg-branch-matrix-yfinance-yf-1h-v1.material.json",
+      "package": {
+        "package_id": "ob-fvg-branch-matrix-yfinance-yf-1h-v1",
+        "generated_at": null,
+        "title": "OB/FVG branch matrix - yfinance/YF SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20260101-20260512",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ProviderObFvgPullbackV1.py",
+        "strategy_class_name": "ProviderObFvgPullbackV1",
+        "strategy_brief": "Board B Order Block and Fair Value Gap trend-pullback branch matrix.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=yfinance/YF SPY 1h current fetch",
+          "branch_matrix=TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v2 | TrendTransition -> LowVolatility -> up_momentum -> fair_value_gap_pullback_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> order_block_retest_confluence_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> fair_value_gap_rebalance_confluence_v1 | TrendExpansion -> SessionLiquidityWindow -> liquidity_sweep_reclaim -> order_block_fvg_retest_v1 | TrendExpansion -> CrossMarketConfirmation -> smt_confirmed_continuation -> order_block_or_fvg_pullback_v1",
+          "provider_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch and ordered downstream chain pass",
+          "timerange_repaired_for_current_2026_data=20260101-20260512"
+        ]
+      }
+    },
+    {
+      "job_id": "OB_FVG_branch_matrix_-_Binance_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_Binance_BTCUSDT_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ob-fvg-branch-matrix-binance-1h-v1.material.json",
+      "package": {
+        "package_id": "ob-fvg-branch-matrix-binance-1h-v1",
+        "generated_at": null,
+        "title": "OB/FVG branch matrix - Binance BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "timerange": "20260101-20260512",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/data/normalized/binance_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ProviderObFvgPullbackV1.py",
+        "strategy_class_name": "ProviderObFvgPullbackV1",
+        "strategy_brief": "Board B Order Block and Fair Value Gap trend-pullback branch matrix.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Binance public BTCUSDT 1h current fetch",
+          "branch_matrix=TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v2 | TrendTransition -> LowVolatility -> up_momentum -> fair_value_gap_pullback_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> order_block_retest_confluence_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> fair_value_gap_rebalance_confluence_v1 | TrendExpansion -> SessionLiquidityWindow -> liquidity_sweep_reclaim -> order_block_fvg_retest_v1 | TrendExpansion -> CrossMarketConfirmation -> smt_confirmed_continuation -> order_block_or_fvg_pullback_v1",
+          "provider_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch and ordered downstream chain pass",
+          "timerange_repaired_for_current_2026_data=20260101-20260512"
+        ]
+      }
+    },
+    {
+      "job_id": "OB_FVG_branch_matrix_-_Bybit_BTCUSDT_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_Bybit_BTCUSDT_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ob-fvg-branch-matrix-bybit-1h-v1.material.json",
+      "package": {
+        "package_id": "ob-fvg-branch-matrix-bybit-1h-v1",
+        "generated_at": null,
+        "title": "OB/FVG branch matrix - Bybit BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "timerange": "20260101-20260512",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/data/normalized/bybit_linear_btcusdt_1h.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ProviderObFvgPullbackV1.py",
+        "strategy_class_name": "ProviderObFvgPullbackV1",
+        "strategy_brief": "Board B Order Block and Fair Value Gap trend-pullback branch matrix.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Bybit public linear BTCUSDT 1h current fetch",
+          "branch_matrix=TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v2 | TrendTransition -> LowVolatility -> up_momentum -> fair_value_gap_pullback_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> order_block_retest_confluence_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> fair_value_gap_rebalance_confluence_v1 | TrendExpansion -> SessionLiquidityWindow -> liquidity_sweep_reclaim -> order_block_fvg_retest_v1 | TrendExpansion -> CrossMarketConfirmation -> smt_confirmed_continuation -> order_block_or_fvg_pullback_v1",
+          "provider_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch and ordered downstream chain pass",
+          "timerange_repaired_for_current_2026_data=20260101-20260512"
+        ]
+      }
+    },
+    {
+      "job_id": "OB_FVG_branch_matrix_-_Kraken_XBTUSD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_Kraken_XBTUSD_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ob-fvg-branch-matrix-kraken-1h-v1.material.json",
+      "package": {
+        "package_id": "ob-fvg-branch-matrix-kraken-1h-v1",
+        "generated_at": null,
+        "title": "OB/FVG branch matrix - Kraken XBTUSD 1h",
+        "symbol": "XBTUSD",
+        "timeframe": "1h",
+        "timerange": "20260101-20260512",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ProviderObFvgPullbackV1.py",
+        "strategy_class_name": "ProviderObFvgPullbackV1",
+        "strategy_brief": "Board B Order Block and Fair Value Gap trend-pullback branch matrix.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=Kraken futures PF_XBTUSD 1h current fetch",
+          "branch_matrix=TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v2 | TrendTransition -> LowVolatility -> up_momentum -> fair_value_gap_pullback_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> order_block_retest_confluence_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> fair_value_gap_rebalance_confluence_v1 | TrendExpansion -> SessionLiquidityWindow -> liquidity_sweep_reclaim -> order_block_fvg_retest_v1 | TrendExpansion -> CrossMarketConfirmation -> smt_confirmed_continuation -> order_block_or_fvg_pullback_v1",
+          "provider_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch and ordered downstream chain pass",
+          "timerange_repaired_for_current_2026_data=20260101-20260512"
+        ]
+      }
+    },
+    {
+      "job_id": "OB_FVG_branch_matrix_-_IBKR_SPY_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_IBKR_SPY_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ob-fvg-branch-matrix-ibkr-1h-v1.material.json",
+      "package": {
+        "package_id": "ob-fvg-branch-matrix-ibkr-1h-v1",
+        "generated_at": null,
+        "title": "OB/FVG branch matrix - IBKR SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "timerange": "20260101-20260512",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ProviderObFvgPullbackV1.py",
+        "strategy_class_name": "ProviderObFvgPullbackV1",
+        "strategy_brief": "Board B Order Block and Fair Value Gap trend-pullback branch matrix.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=IBKR gateway SPY 1h 90D current fetch",
+          "branch_matrix=TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v2 | TrendTransition -> LowVolatility -> up_momentum -> fair_value_gap_pullback_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> order_block_retest_confluence_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> fair_value_gap_rebalance_confluence_v1 | TrendExpansion -> SessionLiquidityWindow -> liquidity_sweep_reclaim -> order_block_fvg_retest_v1 | TrendExpansion -> CrossMarketConfirmation -> smt_confirmed_continuation -> order_block_or_fvg_pullback_v1",
+          "provider_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch and ordered downstream chain pass",
+          "timerange_repaired_for_current_2026_data=20260101-20260512"
+        ]
+      }
+    },
+    {
+      "job_id": "OB_FVG_branch_matrix_-_TVR_BTC-USD_1h",
+      "isolated_state_dir": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_TVR_BTC-USD_1h",
+      "material_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ob-fvg-branch-matrix-tvr-btc-usd-1h-v1.material.json",
+      "package": {
+        "package_id": "ob-fvg-branch-matrix-tvr-btc-usd-1h-v1",
+        "generated_at": null,
+        "title": "OB/FVG branch matrix - TVR BTC-USD 1h",
+        "symbol": "BTC-USD",
+        "timeframe": "1h",
+        "timerange": "20260101-20260512",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/data/normalized/tvr_btc_usd_1h.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/agent-material/ProviderObFvgPullbackV1.py",
+        "strategy_class_name": "ProviderObFvgPullbackV1",
+        "strategy_brief": "Board B Order Block and Fair Value Gap trend-pullback branch matrix.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival",
+          "sample_adequacy"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "source_provider=TradingViewRemix/TVR local-stdio BTC-USD 1h current fetch",
+          "branch_matrix=TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v2 | TrendTransition -> LowVolatility -> up_momentum -> fair_value_gap_pullback_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> order_block_retest_confluence_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0618_or_0705 -> fair_value_gap_rebalance_confluence_v1 | TrendExpansion -> SessionLiquidityWindow -> liquidity_sweep_reclaim -> order_block_fvg_retest_v1 | TrendExpansion -> CrossMarketConfirmation -> smt_confirmed_continuation -> order_block_or_fvg_pullback_v1",
+          "provider_preflight_only=true",
+          "promotion_allowed=false until AQ dispatch and ordered downstream chain pass",
+          "timerange_repaired_for_current_2026_data=20260101-20260512"
+        ]
+      }
+    }
+  ],
+  "dispatch_groups": [
+    {
+      "group_index": 0,
+      "job_ids": [
+        "OB_FVG_branch_matrix_-_yfinance_YF_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_ids": [
+        "OB_FVG_branch_matrix_-_Binance_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_ids": [
+        "OB_FVG_branch_matrix_-_Bybit_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 3,
+      "job_ids": [
+        "OB_FVG_branch_matrix_-_Kraken_XBTUSD_1h"
+      ]
+    },
+    {
+      "group_index": 4,
+      "job_ids": [
+        "OB_FVG_branch_matrix_-_IBKR_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 5,
+      "job_ids": [
+        "OB_FVG_branch_matrix_-_TVR_BTC-USD_1h"
+      ]
+    }
+  ],
+  "notes": [
+    "public_protocol_generic_only",
+    "ontology_must_live_inside_agent_materials_not_cli"
+  ]
+}

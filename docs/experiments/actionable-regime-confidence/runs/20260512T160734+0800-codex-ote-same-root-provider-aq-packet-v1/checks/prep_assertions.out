@@ -1,0 +1,4 @@
+PASS materials_created_at_least_5=5
+PASS tvr_recorded_unreachable_without_retry=True
+PASS promotion_allowed_false=True
+PASS board_b_profitability_packet_only=True

@@ -1,0 +1,36 @@
+{
+  "consumer_evidence_profile": {
+    "branch_paths": [
+      "RangeConsolidation -> SessionMeanReversion -> VwapDistanceFade -> session_vwap_fade_liquidity_v1",
+      "TrendExpansion -> SessionContinuation -> OpeningRangeRetest -> session_opening_range_retest_v1",
+      "VolatilityCompression -> LiquidityExpansion -> VolumeImpulseBreakout -> session_liquidity_impulse_breakout_v1",
+      "Transition -> LiquidityRiskControl -> LowLiquiditySuppression -> session_low_liquidity_suppression_v1"
+    ],
+    "main_regime": "SessionLiquidity",
+    "promotion_allowed": false
+  },
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184103+0800-codex-session-vwap-liquidity-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+  "direction": "long",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "provider_portability",
+    "sample_adequacy"
+  ],
+  "notes": [
+    "source_provider=Kraken futures PF_XBTUSD 1h current fetch",
+    "branch_matrix=RangeConsolidation -> SessionMeanReversion -> VwapDistanceFade -> session_vwap_fade_liquidity_v1 | TrendExpansion -> SessionContinuation -> OpeningRangeRetest -> session_opening_range_retest_v1 | VolatilityCompression -> LiquidityExpansion -> VolumeImpulseBreakout -> session_liquidity_impulse_breakout_v1 | Transition -> LiquidityRiskControl -> LowLiquiditySuppression -> session_low_liquidity_suppression_v1",
+    "timerange=20250101-20260512",
+    "provider_preflight_only=true",
+    "promotion_allowed=false until AQ dispatch and ordered downstream chain pass"
+  ],
+  "package_id": "session-vwap-liquidity-kraken-1h-v1",
+  "strategy_brief": "Board B session VWAP, opening-range, and liquidity impulse profitability factor with branch-tagged leaves.",
+  "strategy_class_name": "ProviderSessionVwapLiquidityV1",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184103+0800-codex-session-vwap-liquidity-six-provider-aq-v1/agent-material/ProviderSessionVwapLiquidityV1.py",
+  "symbol": "BTC",
+  "timeframe": "1h",
+  "timerange": "20250101-20260512",
+  "title": "Session VWAP liquidity - Kraken XBTUSD 1h"
+}

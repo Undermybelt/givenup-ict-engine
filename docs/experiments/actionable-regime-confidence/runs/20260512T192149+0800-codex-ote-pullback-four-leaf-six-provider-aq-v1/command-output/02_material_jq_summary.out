@@ -1,0 +1,12 @@
+{
+  "materials": 24,
+  "levels": [
+    "ote_level=0.500",
+    "ote_level=0.618",
+    "ote_level=0.705",
+    "ote_level=0.786"
+  ],
+  "branch_paths": 4,
+  "providers": 6,
+  "local_cache_replay_all": true
+}

@@ -1,0 +1,24 @@
+{
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1",
+  "source_screen_root": "docs/experiments/actionable-regime-confidence/runs/20260512T151907+0800-codex-ob-fvg-regime-branch-screen-v1",
+  "source_aq_seed_root": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1",
+  "hypothesis": "OB/FVG continuation-pullback as Board B profitability factor",
+  "branch_path": "TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+  "main_regime": "TrendTransition",
+  "sub_regime": "LowVolatility",
+  "sub_sub_regime_or_profit_factor": "up_momentum",
+  "profit_factor": "order_block_pullback_v1",
+  "materials": [
+    "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/agent-material/ob-fvg-pullback-ibkr-spy-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/agent-material/ob-fvg-pullback-yf-es-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/agent-material/ob-fvg-pullback-kraken-xbtusd-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/agent-material/ob-fvg-pullback-binance-btcusdt-1h-v1.material.json",
+    "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/agent-material/ob-fvg-pullback-bybit-btcusdt-1h-v1.material.json"
+  ],
+  "provider_rows": 6,
+  "same_root_six_provider_authority": false,
+  "tvr_policy": "no_new_call_record_154536_rate_limit_as_unreachable",
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

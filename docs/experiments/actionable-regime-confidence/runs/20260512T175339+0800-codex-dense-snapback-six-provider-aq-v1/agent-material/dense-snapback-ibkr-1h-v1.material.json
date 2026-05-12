@@ -1,0 +1,35 @@
+{
+  "consumer_evidence_profile": {
+    "branch_paths": [
+      "RangeReversion -> NormalVolatility -> Rsi2LowerTailSnapback -> rsi2_lower_tail_snapback_v1",
+      "RangeReversion -> NormalVolatility -> BollingerLowerBandSnapback -> bb_lower_band_snapback_v1",
+      "RangeReversion -> NormalVolatility -> KeltnerLowerBandSnapback -> keltner_lower_band_snapback_v1",
+      "TrendTransition -> NormalVolatility -> Ema20ReclaimContinuation -> ema20_reclaim_continuation_v1"
+    ],
+    "main_regime": "RangeReversion_or_TrendTransition",
+    "promotion_allowed": false
+  },
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175339+0800-codex-dense-snapback-six-provider-aq-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+  "direction": "long",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "walk_forward_survival",
+    "sample_adequacy"
+  ],
+  "notes": [
+    "source_provider=IBKR gateway SPY 1h 90D current fetch",
+    "branch_matrix=RangeReversion -> NormalVolatility -> Rsi2LowerTailSnapback -> rsi2_lower_tail_snapback_v1 | RangeReversion -> NormalVolatility -> BollingerLowerBandSnapback -> bb_lower_band_snapback_v1 | RangeReversion -> NormalVolatility -> KeltnerLowerBandSnapback -> keltner_lower_band_snapback_v1 | TrendTransition -> NormalVolatility -> Ema20ReclaimContinuation -> ema20_reclaim_continuation_v1",
+    "provider_preflight_only=true",
+    "promotion_allowed=false until AQ dispatch and ordered downstream chain pass"
+  ],
+  "package_id": "dense-snapback-ibkr-1h-v1",
+  "strategy_brief": "Board B dense RSI/Bollinger/Keltner snapback branch packet.",
+  "strategy_class_name": "ProviderDenseSnapbackV1",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T175339+0800-codex-dense-snapback-six-provider-aq-v1/agent-material/ProviderDenseSnapbackV1.py",
+  "symbol": "SPY",
+  "timeframe": "1h",
+  "timerange": "20260101-20260512",
+  "title": "Dense snapback - IBKR SPY 1h"
+}

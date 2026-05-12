@@ -1,0 +1,191 @@
+{
+  "artifact_id": "auto-quant-agent-material-batch:B2R_OB_FVG_AQ_160511:20260512T081513.808Z",
+  "generated_at": "2026-05-12T08:15:13.808710Z",
+  "symbol": "B2R_OB_FVG_AQ_160511",
+  "shared_workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/state/auto-quant/.deps/auto-quant",
+  "source_repo_url": "/Users/thrill3r/Auto-Quant",
+  "max_parallel": 1,
+  "jobs": [
+    {
+      "job_id": "OB_FVG_pullback_-_Binance_BTCUSDT_1h",
+      "isolated_state_dir": "/tmp/ict-obfvg160511/state/auto-quant/agent_material_units/OB_FVG_pullback_-_Binance_BTCUSDT_1h",
+      "material_path": "/tmp/ict-obfvg160511/agent-material/ob-fvg-pullback-binance-btcusdt-1h-v1.material.json",
+      "package": {
+        "package_id": "ob-fvg-pullback-binance-btcusdt-1h-v1",
+        "generated_at": null,
+        "title": "OB FVG pullback - Binance BTCUSDT 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/binance_btcusdt_1h_20170817_20260512.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/agent-material/ProviderObFvgPullbackV1.py",
+        "strategy_class_name": "ProviderObFvgPullbackV1",
+        "strategy_brief": "Board B OB/FVG continuation-pullback profitability packet focused on TrendTransition -> LowVolatility -> up_momentum.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+          "source_provider=Binance BTCUSDT 1h provider-backed replay data",
+          "promotion_allowed=false until same-root six-provider authority and downstream admission are complete"
+        ]
+      }
+    },
+    {
+      "job_id": "OB_FVG_pullback_-_IBKR_SPY_1h",
+      "isolated_state_dir": "/tmp/ict-obfvg160511/state/auto-quant/agent_material_units/OB_FVG_pullback_-_IBKR_SPY_1h",
+      "material_path": "/tmp/ict-obfvg160511/agent-material/ob-fvg-pullback-ibkr-spy-1h-v1.material.json",
+      "package": {
+        "package_id": "ob-fvg-pullback-ibkr-spy-1h-v1",
+        "generated_at": null,
+        "title": "OB FVG pullback - IBKR SPY 1h",
+        "symbol": "SPY",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/ibkr_spy_1h_5y.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/agent-material/ProviderObFvgPullbackV1.py",
+        "strategy_class_name": "ProviderObFvgPullbackV1",
+        "strategy_brief": "Board B OB/FVG continuation-pullback profitability packet focused on TrendTransition -> LowVolatility -> up_momentum.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+          "source_provider=IBKR gateway SPY 1h 5Y provider-backed replay data",
+          "promotion_allowed=false until same-root six-provider authority and downstream admission are complete"
+        ]
+      }
+    },
+    {
+      "job_id": "OB_FVG_pullback_-_Yahoo_ES_1h",
+      "isolated_state_dir": "/tmp/ict-obfvg160511/state/auto-quant/agent_material_units/OB_FVG_pullback_-_Yahoo_ES_1h",
+      "material_path": "/tmp/ict-obfvg160511/agent-material/ob-fvg-pullback-yf-es-1h-v1.material.json",
+      "package": {
+        "package_id": "ob-fvg-pullback-yf-es-1h-v1",
+        "generated_at": null,
+        "title": "OB FVG pullback - Yahoo ES 1h",
+        "symbol": "ES",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/yahoo_es_1h_20240513_20260512.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/agent-material/ProviderObFvgPullbackV1.py",
+        "strategy_class_name": "ProviderObFvgPullbackV1",
+        "strategy_brief": "Board B OB/FVG continuation-pullback profitability packet focused on TrendTransition -> LowVolatility -> up_momentum.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+          "source_provider=Yahoo ES 1h provider-backed replay data",
+          "promotion_allowed=false until same-root six-provider authority and downstream admission are complete"
+        ]
+      }
+    },
+    {
+      "job_id": "OB_FVG_pullback_-_Kraken_XBTUSD_1h",
+      "isolated_state_dir": "/tmp/ict-obfvg160511/state/auto-quant/agent_material_units/OB_FVG_pullback_-_Kraken_XBTUSD_1h",
+      "material_path": "/tmp/ict-obfvg160511/agent-material/ob-fvg-pullback-kraken-xbtusd-1h-v1.material.json",
+      "package": {
+        "package_id": "ob-fvg-pullback-kraken-xbtusd-1h-v1",
+        "generated_at": null,
+        "title": "OB FVG pullback - Kraken XBTUSD 1h",
+        "symbol": "XBTUSD",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/kraken_futures_pfxbtusd_1h_20200101_20260512.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/agent-material/ProviderObFvgPullbackV1.py",
+        "strategy_class_name": "ProviderObFvgPullbackV1",
+        "strategy_brief": "Board B OB/FVG continuation-pullback profitability packet focused on TrendTransition -> LowVolatility -> up_momentum.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+          "source_provider=Kraken futures XBTUSD 1h provider-backed replay data",
+          "promotion_allowed=false until same-root six-provider authority and downstream admission are complete"
+        ]
+      }
+    },
+    {
+      "job_id": "OB_FVG_pullback_-_Bybit_BTCUSDT_linear_1h",
+      "isolated_state_dir": "/tmp/ict-obfvg160511/state/auto-quant/agent_material_units/OB_FVG_pullback_-_Bybit_BTCUSDT_linear_1h",
+      "material_path": "/tmp/ict-obfvg160511/agent-material/ob-fvg-pullback-bybit-btcusdt-1h-v1.material.json",
+      "package": {
+        "package_id": "ob-fvg-pullback-bybit-btcusdt-1h-v1",
+        "generated_at": null,
+        "title": "OB FVG pullback - Bybit BTCUSDT linear 1h",
+        "symbol": "BTCUSDT",
+        "timeframe": "1h",
+        "direction": "long",
+        "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T150855+0800-codex-145809-aq-material-seed-dispatch-v1/data/bybit_linear_btcusdt_1h_20200101_20260512.normalized.csv",
+        "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160511+0800-codex-ob-fvg-aq-agent-material-packet-v1/agent-material/ProviderObFvgPullbackV1.py",
+        "strategy_class_name": "ProviderObFvgPullbackV1",
+        "strategy_brief": "Board B OB/FVG continuation-pullback profitability packet focused on TrendTransition -> LowVolatility -> up_momentum.",
+        "evaluation_priority": [
+          "branch_trade_density",
+          "regime_conditioned_win_rate",
+          "profit_factor",
+          "walk_forward_survival"
+        ],
+        "consumer_evidence_profile": {},
+        "notes": [
+          "branch_path=TrendTransition -> LowVolatility -> up_momentum -> order_block_pullback_v1",
+          "source_provider=Bybit linear BTCUSDT 1h provider-backed replay data",
+          "promotion_allowed=false until same-root six-provider authority and downstream admission are complete"
+        ]
+      }
+    }
+  ],
+  "dispatch_groups": [
+    {
+      "group_index": 0,
+      "job_ids": [
+        "OB_FVG_pullback_-_Binance_BTCUSDT_1h"
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_ids": [
+        "OB_FVG_pullback_-_IBKR_SPY_1h"
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_ids": [
+        "OB_FVG_pullback_-_Yahoo_ES_1h"
+      ]
+    },
+    {
+      "group_index": 3,
+      "job_ids": [
+        "OB_FVG_pullback_-_Kraken_XBTUSD_1h"
+      ]
+    },
+    {
+      "group_index": 4,
+      "job_ids": [
+        "OB_FVG_pullback_-_Bybit_BTCUSDT_linear_1h"
+      ]
+    }
+  ],
+  "notes": [
+    "public_protocol_generic_only",
+    "ontology_must_live_inside_agent_materials_not_cli"
+  ]
+}

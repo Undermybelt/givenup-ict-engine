@@ -1,0 +1,106 @@
+{
+  "artifact_id": "auto-quant-agent-material-dispatch:PROVIDER_OB_FVG_165122:20260512T092520.542Z",
+  "generated_at": "2026-05-12T09:25:20.544879Z",
+  "symbol": "PROVIDER_OB_FVG_165122",
+  "source_batch_artifact_id": "auto-quant-agent-material-batch:PROVIDER_OB_FVG_165122:20260512T090834.696Z",
+  "selected_group_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "groups": [
+    {
+      "group_index": 0,
+      "job_results": [
+        {
+          "job_id": "OB_FVG_branch_matrix_-_Binance_BTCUSDT_1h",
+          "title": "OB/FVG branch matrix - Binance BTCUSDT 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 17:25:01,500 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_Binance_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_results": [
+        {
+          "job_id": "OB_FVG_branch_matrix_-_Bybit_BTCUSDT_1h",
+          "title": "OB/FVG branch matrix - Bybit BTCUSDT 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 17:25:04,777 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_Bybit_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_results": [
+        {
+          "job_id": "OB_FVG_branch_matrix_-_IBKR_SPY_1h",
+          "title": "OB/FVG branch matrix - IBKR SPY 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 17:25:08,127 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_IBKR_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_IBKR_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_IBKR_SPY_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 3,
+      "job_results": [
+        {
+          "job_id": "OB_FVG_branch_matrix_-_Kraken_XBTUSD_1h",
+          "title": "OB/FVG branch matrix - Kraken XBTUSD 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 17:25:12,015 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_Kraken_XBTUSD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 4,
+      "job_results": [
+        {
+          "job_id": "OB_FVG_branch_matrix_-_TVR_BTC-USD_1h",
+          "title": "OB/FVG branch matrix - TVR BTC-USD 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 17:25:16,134 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_TVR_BTC-USD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_TVR_BTC-USD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_TVR_BTC-USD_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 5,
+      "job_results": [
+        {
+          "job_id": "OB_FVG_branch_matrix_-_yfinance_YF_SPY_1h",
+          "title": "OB/FVG branch matrix - yfinance/YF SPY 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 17:25:20,013 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_yfinance_YF_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state/auto-quant/agent_material_units/OB_FVG_branch_matrix_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total_jobs": 6,
+    "completed_jobs": 0,
+    "blocked_jobs": 0,
+    "failed_jobs": 6
+  }
+}

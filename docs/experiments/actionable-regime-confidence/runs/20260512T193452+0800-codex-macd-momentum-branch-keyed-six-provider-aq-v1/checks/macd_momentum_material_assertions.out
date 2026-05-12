@@ -1,0 +1,12 @@
+material_count=12
+provider_count=6
+branch_leaf_count=2
+providers=['Binance', 'Bybit', 'IBKR', 'Kraken', 'TradingViewRemix/TVR', 'yfinance/YF']
+branch_paths=['TrendExpansion -> MomentumPersistence -> macd_signal_pullback -> macd_signal_pullback_continuation_v1', 'TrendExpansion -> MomentumPersistence -> macd_zero_line_reclaim -> macd_zero_line_reclaim_long_v1']
+branch_keyed_by_construction=True
+explicit_branch_fields=True
+local_cache_replay=True
+new_provider_fetch=False
+promotion_allowed=False
+trade_usable=False
+update_goal=False

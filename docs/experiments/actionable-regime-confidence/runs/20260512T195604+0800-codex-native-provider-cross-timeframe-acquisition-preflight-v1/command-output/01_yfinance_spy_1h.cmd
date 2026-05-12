@@ -1,0 +1,1 @@
+/Users/thrill3r/.venvs/ict-engine-provider-py313/bin/python scripts/auto_quant_external/fetch_external.py yahoo --symbol SPY --interval 1h --start 2025-01-01 --end 2026-05-12 --output docs/experiments/actionable-regime-confidence/runs/20260512T195604+0800-codex-native-provider-cross-timeframe-acquisition-preflight-v1/provider-csv/yfinance_spy_1h.csv

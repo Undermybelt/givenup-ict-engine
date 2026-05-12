@@ -1,0 +1,10 @@
+PASS aq_batch_completed total_jobs=6
+PASS aq_dispatch_completed completed_jobs=6 blocked_jobs=0 failed_jobs=0
+PASS aq_rank_completed ranking_rows=6
+PASS branch_paths_preserved_in_material actual=4
+FAIL branch_keyed_profitability_observation missing_branch_level_trade_metrics
+FAIL adequate_trade_density yfinance_trades=1 ibkr_trades=19 zero_trade_provider_units=4
+FAIL regime_conditioned_win_rate not_reported_by_aq_readback
+PASS promotion_allowed_false
+PASS trade_usable_false
+PASS update_goal_false

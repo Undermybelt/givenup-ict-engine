@@ -1,0 +1,61 @@
+{
+  "accepted_95_contexts_added": 0,
+  "errors": [],
+  "gate": "preflight_only_not_board_a_support",
+  "long_span_count": 3,
+  "native_fetch_count": 3,
+  "next_action": "Use these native timeframe rows only as upstream coverage evidence; rerun the full provider/AQ/Pre-Bayes/BBN/CatBoost/execution-tree chain only after feedback maturity can be generated honestly.",
+  "promotion_allowed": false,
+  "requested_end": "2026-05-12T00:00:00Z",
+  "requested_start": "2025-01-01T00:00:00Z",
+  "rows": [
+    {
+      "actual_first": "2025-01-02T14:30:00Z",
+      "actual_last": "2026-05-11T13:30:00Z",
+      "actual_span_days": 493.958,
+      "board_a_support": false,
+      "candle_rows": 339,
+      "long_span_candidate": true,
+      "market": "equity",
+      "native_timeframe": "1d",
+      "provider": "yfinance/YF",
+      "provider_native_timeframe_fetch": true,
+      "requested_span": "2025-01-01T00:00:00Z_to_2026-05-12T00:00:00Z",
+      "support_reason": "data_preflight_only_no_auto_quant_pre_bayes_bbn_catboost_execution_tree",
+      "symbol": "SPY"
+    },
+    {
+      "actual_first": "2025-01-01T00:00:00Z",
+      "actual_last": "2026-05-12T00:00:00Z",
+      "actual_span_days": 496.0,
+      "board_a_support": false,
+      "candle_rows": 2977,
+      "long_span_candidate": true,
+      "market": "crypto",
+      "native_timeframe": "4h",
+      "provider": "Binance",
+      "provider_native_timeframe_fetch": true,
+      "requested_span": "2025-01-01T00:00:00Z_to_2026-05-12T00:00:00Z",
+      "support_reason": "data_preflight_only_no_auto_quant_pre_bayes_bbn_catboost_execution_tree",
+      "symbol": "BTCUSDT"
+    },
+    {
+      "actual_first": "2025-01-01T00:00:00Z",
+      "actual_last": "2026-05-12T00:00:00Z",
+      "actual_span_days": 496.0,
+      "board_a_support": false,
+      "candle_rows": 497,
+      "long_span_candidate": true,
+      "market": "crypto",
+      "native_timeframe": "1d",
+      "provider": "Binance",
+      "provider_native_timeframe_fetch": true,
+      "requested_span": "2025-01-01T00:00:00Z_to_2026-05-12T00:00:00Z",
+      "support_reason": "data_preflight_only_no_auto_quant_pre_bayes_bbn_catboost_execution_tree",
+      "symbol": "BTCUSDT"
+    }
+  ],
+  "run_id": "20260512T195307+0800-codex-provider-native-timeframe-acquisition-preflight-v1",
+  "trade_usable": false,
+  "update_goal": false
+}

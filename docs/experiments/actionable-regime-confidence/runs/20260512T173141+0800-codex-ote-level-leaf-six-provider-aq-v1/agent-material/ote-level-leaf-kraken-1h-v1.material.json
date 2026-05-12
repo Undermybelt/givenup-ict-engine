@@ -1,0 +1,36 @@
+{
+  "consumer_evidence_profile": {
+    "branch_paths": [
+      "TrendExpansion -> NormalVolatility -> OTERetracement050 -> ote_pullback_050_v1",
+      "TrendExpansion -> NormalVolatility -> OTERetracement0618 -> ote_pullback_0618_v1",
+      "TrendExpansion -> NormalVolatility -> OTERetracement0705 -> ote_pullback_0705_v1",
+      "TrendExpansion -> NormalVolatility -> OTERetracement0786 -> ote_pullback_0786_v1"
+    ],
+    "main_regime": "TrendExpansion",
+    "promotion_allowed": false
+  },
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+  "direction": "long",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "walk_forward_survival",
+    "sample_adequacy"
+  ],
+  "notes": [
+    "source_provider=Kraken futures PF_XBTUSD 1h current fetch",
+    "branch_matrix=TrendExpansion -> NormalVolatility -> OTERetracement050 -> ote_pullback_050_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0618 -> ote_pullback_0618_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0705 -> ote_pullback_0705_v1 | TrendExpansion -> NormalVolatility -> OTERetracement0786 -> ote_pullback_0786_v1",
+    "timerange=20250101-20260512",
+    "provider_preflight_only=true",
+    "promotion_allowed=false until AQ dispatch and ordered downstream chain pass"
+  ],
+  "package_id": "ote-level-leaf-kraken-1h-v1",
+  "strategy_brief": "Board B OTE level-leaf pullback profitability factor with separate retracement leaves.",
+  "strategy_class_name": "ProviderOteLevelPullbackV1",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T173141+0800-codex-ote-level-leaf-six-provider-aq-v1/agent-material/ProviderOteLevelPullbackV1.py",
+  "symbol": "BTC",
+  "timeframe": "1h",
+  "timerange": "20250101-20260512",
+  "title": "OTE level leaves - Kraken XBTUSD 1h"
+}

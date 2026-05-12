@@ -1,0 +1,53 @@
+{
+  "consumer_evidence_profile": {
+    "branch_keyed_by_construction": true,
+    "branch_path": "TrendExpansion -> PullbackContinuation -> ote_retrace_0618 -> ote_retrace_0618_continuation_v1",
+    "branch_paths": [
+      "TrendExpansion -> PullbackContinuation -> ote_retrace_0618 -> ote_retrace_0618_continuation_v1"
+    ],
+    "local_cache_replay": true,
+    "main_regime": "TrendExpansion",
+    "ote_retrace_ratio": 0.618,
+    "profit_factor": "ote_retrace_0618_continuation_v1",
+    "promotion_allowed": false,
+    "provider": "yfinance/YF",
+    "source_material": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-yfinance-yf-1h-v1.material.json",
+    "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+    "sub_regime": "PullbackContinuation",
+    "sub_sub_regime_or_profit_factor": "ote_retrace_0618"
+  },
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+  "direction": "long",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "average_adverse_excursion",
+    "walk_forward_survival",
+    "sample_adequacy"
+  ],
+  "negative_evidence_contract": {
+    "loss_after_branch_keyed_aq": "market_negative_sample",
+    "low_trade_density": "low_density_negative_sample",
+    "missing_branch_fields": "identity_negative_sample",
+    "provider_or_fetch_fault": "infrastructure_negative_sample"
+  },
+  "notes": [
+    "source_provider=yfinance/YF",
+    "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+    "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-yfinance-yf-1h-v1.material.json",
+    "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0618 -> ote_retrace_0618_continuation_v1",
+    "ote_retrace_ratio=0.618",
+    "local_cache_replay=true",
+    "new_provider_fetch=false",
+    "promotion_allowed=false until AQ dispatch/rank readback and ordered downstream chain pass"
+  ],
+  "package_id": "ote-0618-yfinance-yf-1h-v1",
+  "strategy_brief": "Board B single OTE pullback-continuation branch leaf. Each OTE level is materialized separately before AQ ranking.",
+  "strategy_class_name": "OteRetrace0618ContinuationV1",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T192000+0800-codex-ote-four-leaf-six-provider-aq-v1/agent-material/OteRetrace0618ContinuationV1.py",
+  "symbol": "SPY",
+  "timeframe": "1h",
+  "timerange": "20250101-20260512",
+  "title": "OTE 0618 continuation - yfinance/YF SPY 1h"
+}

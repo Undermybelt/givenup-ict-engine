@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-agent-material-rank --symbol PROVIDER_BRANCH_LEAF_190929 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state

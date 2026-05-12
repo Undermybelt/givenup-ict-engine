@@ -1,0 +1,6 @@
+PASS native_timeframe_fetches=3_of_3
+PASS long_span_native_candidates=3_of_3
+PASS accepted_95_contexts_added=0
+PASS promotion_allowed=false
+PASS trade_usable=false
+PASS update_goal=false

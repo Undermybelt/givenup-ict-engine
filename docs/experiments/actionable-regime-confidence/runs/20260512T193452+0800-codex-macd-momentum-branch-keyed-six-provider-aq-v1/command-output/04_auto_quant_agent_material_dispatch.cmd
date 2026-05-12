@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-agent-material-dispatch --symbol MACDMOM_193452 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state

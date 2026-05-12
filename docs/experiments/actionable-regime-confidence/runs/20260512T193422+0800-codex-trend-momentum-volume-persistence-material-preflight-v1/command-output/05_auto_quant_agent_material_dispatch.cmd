@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-agent-material-dispatch --symbol TMVP_193422 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T193422+0800-codex-trend-momentum-volume-persistence-material-preflight-v1/state 

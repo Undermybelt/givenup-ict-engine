@@ -1,0 +1,19 @@
+{
+  "count": 12000,
+  "end": "2026-05-12T00:00:00Z",
+  "interval": "1d",
+  "market_key": "board-a-195604-tvr-BINANCE:BTCUSDT-1d",
+  "provider_preferences": {
+    "crypto_reference": "tradingview_mcp"
+  },
+  "related_roles": [
+    "crypto_reference"
+  ],
+  "start": "2025-01-01T00:00:00Z",
+  "symbol_overrides": {
+    "crypto_reference": {
+      "display_symbol": "BINANCE:BTCUSDT",
+      "tradingview_mcp": "BINANCE:BTCUSDT"
+    }
+  }
+}

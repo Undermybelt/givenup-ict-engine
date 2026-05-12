@@ -1,0 +1,39 @@
+{
+  "package_id": "ob-fvg-fvg_retest_continuation_long_v1-kraken-1h-v1",
+  "title": "OB/FVG fvg_retest_continuation_long_v1 - Kraken XBTUSD 1h",
+  "symbol": "BTC",
+  "timeframe": "1h",
+  "timerange": "20250101-20260512",
+  "direction": "long",
+  "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/data/normalized/kraken_futures_pfxbtusd_1h.normalized.csv",
+  "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/agent-material/ObFvgRetestContinuationLongV1.py",
+  "strategy_class_name": "ObFvgRetestContinuationLongV1",
+  "strategy_brief": "Board B OB/FVG branch-keyed profitability material.",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "walk_forward_survival",
+    "cost_slippage_robustness"
+  ],
+  "consumer_evidence_profile": {
+    "branch_path": "TrendExpansion -> PullbackContinuation -> fair_value_gap_retest -> fvg_retest_continuation_long_v1",
+    "branch_id": "fvg_retest_continuation_long_v1",
+    "main_regime": "TrendExpansion",
+    "sub_regime": "PullbackContinuation",
+    "sub_sub_regime_or_profit_factor": "fair_value_gap_retest",
+    "profit_factor": "fvg_retest_continuation_long_v1",
+    "provider": "Kraken",
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "notes": [
+    "source_provider=Kraken XBTUSD 1h",
+    "branch_path=TrendExpansion -> PullbackContinuation -> fair_value_gap_retest -> fvg_retest_continuation_long_v1",
+    "provider_data_acquired_this_step=false",
+    "local_cache_replay=true",
+    "material_preflight_only=true",
+    "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+  ]
+}

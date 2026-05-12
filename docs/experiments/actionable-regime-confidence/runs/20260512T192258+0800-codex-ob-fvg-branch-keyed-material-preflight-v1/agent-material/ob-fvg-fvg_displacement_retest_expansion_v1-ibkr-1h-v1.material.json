@@ -1,0 +1,39 @@
+{
+  "package_id": "ob-fvg-fvg_displacement_retest_expansion_v1-ibkr-1h-v1",
+  "title": "OB/FVG fvg_displacement_retest_expansion_v1 - IBKR SPY 1h",
+  "symbol": "SPY",
+  "timeframe": "1h",
+  "timerange": "20250101-20260512",
+  "direction": "long",
+  "data_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/data/normalized/ibkr_spy_1h_90d.normalized.csv",
+  "strategy_source_path": "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T192258+0800-codex-ob-fvg-branch-keyed-material-preflight-v1/agent-material/DisplacementFvgRetestExpansionV1.py",
+  "strategy_class_name": "DisplacementFvgRetestExpansionV1",
+  "strategy_brief": "Board B OB/FVG branch-keyed profitability material.",
+  "evaluation_priority": [
+    "branch_trade_density",
+    "regime_conditioned_win_rate",
+    "profit_factor",
+    "walk_forward_survival",
+    "cost_slippage_robustness"
+  ],
+  "consumer_evidence_profile": {
+    "branch_path": "VolatilityCompression -> LiquidityExpansion -> displacement_fvg_retest -> fvg_displacement_retest_expansion_v1",
+    "branch_id": "fvg_displacement_retest_expansion_v1",
+    "main_regime": "VolatilityCompression",
+    "sub_regime": "LiquidityExpansion",
+    "sub_sub_regime_or_profit_factor": "displacement_fvg_retest",
+    "profit_factor": "fvg_displacement_retest_expansion_v1",
+    "provider": "IBKR",
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "notes": [
+    "source_provider=IBKR SPY 1h",
+    "branch_path=VolatilityCompression -> LiquidityExpansion -> displacement_fvg_retest -> fvg_displacement_retest_expansion_v1",
+    "provider_data_acquired_this_step=false",
+    "local_cache_replay=true",
+    "material_preflight_only=true",
+    "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+  ]
+}

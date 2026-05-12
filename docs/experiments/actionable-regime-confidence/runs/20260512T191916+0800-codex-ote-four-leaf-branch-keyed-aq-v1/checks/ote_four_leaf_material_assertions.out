@@ -1,0 +1,10 @@
+material_count=24
+provider_count=6
+branch_leaf_count=4
+branch_paths=['TrendExpansion -> PullbackContinuation -> ote_retrace_0500 -> ote_retrace_0500_continuation_v1', 'TrendExpansion -> PullbackContinuation -> ote_retrace_0618 -> ote_retrace_0618_continuation_v1', 'TrendExpansion -> PullbackContinuation -> ote_retrace_0705 -> ote_retrace_0705_continuation_v1', 'TrendExpansion -> PullbackContinuation -> ote_retrace_0786 -> ote_retrace_0786_continuation_v1']
+branch_keyed_by_construction=True
+local_cache_replay=True
+new_provider_fetch=False
+promotion_allowed=False
+trade_usable=False
+update_goal=False

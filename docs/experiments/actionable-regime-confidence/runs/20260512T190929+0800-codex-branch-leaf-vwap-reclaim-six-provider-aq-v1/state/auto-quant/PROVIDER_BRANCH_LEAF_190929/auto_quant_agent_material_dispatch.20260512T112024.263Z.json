@@ -1,0 +1,166 @@
+{
+  "artifact_id": "auto-quant-agent-material-dispatch:PROVIDER_BRANCH_LEAF_190929:20260512T112024.263Z",
+  "generated_at": "2026-05-12T11:20:24.263511Z",
+  "symbol": "PROVIDER_BRANCH_LEAF_190929",
+  "source_batch_artifact_id": "auto-quant-agent-material-batch:PROVIDER_BRANCH_LEAF_190929:20260512T111819.364Z",
+  "selected_group_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "groups": [
+    {
+      "group_index": 0,
+      "job_results": [
+        {
+          "job_id": "Branch_leaf_VWAP_reclaim_-_yfinance_YF_SPY_1h",
+          "title": "Branch leaf VWAP reclaim - yfinance/YF SPY 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_yfinance_YF_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.3273,
+            "sortino": 0.4728,
+            "calmar": 4.1903,
+            "total_profit_pct": 5.24,
+            "max_drawdown_pct": -4.9377,
+            "trade_count": 128,
+            "win_rate_pct": 45.3125,
+            "profit_factor": 1.2123
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_results": [
+        {
+          "job_id": "Branch_leaf_VWAP_reclaim_-_Binance_BTCUSDT_1h",
+          "title": "Branch leaf VWAP reclaim - Binance BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_Binance_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_results": [
+        {
+          "job_id": "Branch_leaf_VWAP_reclaim_-_Bybit_BTCUSDT_1h",
+          "title": "Branch leaf VWAP reclaim - Bybit BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_Bybit_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 3,
+      "job_results": [
+        {
+          "job_id": "Branch_leaf_VWAP_reclaim_-_Kraken_XBTUSD_1h",
+          "title": "Branch leaf VWAP reclaim - Kraken XBTUSD 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_Kraken_XBTUSD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 4,
+      "job_results": [
+        {
+          "job_id": "Branch_leaf_VWAP_reclaim_-_IBKR_SPY_1h",
+          "title": "Branch leaf VWAP reclaim - IBKR SPY 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_IBKR_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_IBKR_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_IBKR_SPY_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -0.3444,
+            "sortino": -0.7297,
+            "calmar": -3.8401,
+            "total_profit_pct": -0.84,
+            "max_drawdown_pct": -3.5021,
+            "trade_count": 56,
+            "win_rate_pct": 35.7143,
+            "profit_factor": 0.9007
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 5,
+      "job_results": [
+        {
+          "job_id": "Branch_leaf_VWAP_reclaim_-_TradingViewRemix_TVR_BTCUSD_1h",
+          "title": "Branch leaf VWAP reclaim - TradingViewRemix/TVR BTCUSD 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_TradingViewRemix_TVR_BTCUSD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_TradingViewRemix_TVR_BTCUSD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T190929+0800-codex-branch-leaf-vwap-reclaim-six-provider-aq-v1/state/auto-quant/agent_material_units/Branch_leaf_VWAP_reclaim_-_TradingViewRemix_TVR_BTCUSD_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total_jobs": 6,
+    "completed_jobs": 6,
+    "blocked_jobs": 0,
+    "failed_jobs": 0
+  }
+}

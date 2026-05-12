@@ -1,0 +1,262 @@
+{
+  "artifact_id": "auto-quant-agent-material-dispatch:MACDMOM_193452:20260512T114513.684Z",
+  "generated_at": "2026-05-12T11:45:13.687879Z",
+  "symbol": "MACDMOM_193452",
+  "source_batch_artifact_id": "auto-quant-agent-material-batch:MACDMOM_193452:20260512T114143.933Z",
+  "selected_group_indices": [
+    0,
+    1,
+    2
+  ],
+  "groups": [
+    {
+      "group_index": 0,
+      "job_results": [
+        {
+          "job_id": "MACD_zero-line_reclaim_-_yfinance_YF_SPY_1h",
+          "title": "MACD zero-line reclaim - yfinance/YF SPY 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_yfinance_YF_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.1778,
+            "sortino": 0.9008,
+            "calmar": 14.377,
+            "total_profit_pct": 4.66,
+            "max_drawdown_pct": -1.2781,
+            "trade_count": 10,
+            "win_rate_pct": 50.0,
+            "profit_factor": 3.8289
+          }
+        },
+        {
+          "job_id": "MACD_signal_pullback_continuation_-_yfinance_YF_SPY_1h",
+          "title": "MACD signal pullback continuation - yfinance/YF SPY 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_yfinance_YF_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.1266,
+            "sortino": 0.2854,
+            "calmar": 8.5923,
+            "total_profit_pct": 2.22,
+            "max_drawdown_pct": -1.0217,
+            "trade_count": 14,
+            "win_rate_pct": 64.2857,
+            "profit_factor": 1.7331
+          }
+        },
+        {
+          "job_id": "MACD_zero-line_reclaim_-_IBKR_SPY_1h",
+          "title": "MACD zero-line reclaim - IBKR SPY 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_IBKR_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_IBKR_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_IBKR_SPY_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.7144,
+            "sortino": 1.7014,
+            "calmar": 23.4171,
+            "total_profit_pct": 2.5,
+            "max_drawdown_pct": -1.7136,
+            "trade_count": 16,
+            "win_rate_pct": 56.25,
+            "profit_factor": 2.2409
+          }
+        },
+        {
+          "job_id": "MACD_signal_pullback_continuation_-_IBKR_SPY_1h",
+          "title": "MACD signal pullback continuation - IBKR SPY 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_IBKR_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_IBKR_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_IBKR_SPY_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -0.5743,
+            "sortino": -1.3756,
+            "calmar": -9.4152,
+            "total_profit_pct": -1.86,
+            "max_drawdown_pct": -3.1663,
+            "trade_count": 14,
+            "win_rate_pct": 21.4286,
+            "profit_factor": 0.5311
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_results": [
+        {
+          "job_id": "MACD_zero-line_reclaim_-_TradingViewRemix_TVR_BTC-USD_1h",
+          "title": "MACD zero-line reclaim - TradingViewRemix/TVR BTC-USD 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_TradingViewRemix_TVR_BTC-USD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_TradingViewRemix_TVR_BTC-USD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_TradingViewRemix_TVR_BTC-USD_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "job_id": "MACD_signal_pullback_continuation_-_TradingViewRemix_TVR_BTC-USD_1h",
+          "title": "MACD signal pullback continuation - TradingViewRemix/TVR BTC-USD 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_TradingViewRemix_TVR_BTC-USD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_TradingViewRemix_TVR_BTC-USD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_TradingViewRemix_TVR_BTC-USD_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "job_id": "MACD_zero-line_reclaim_-_Kraken_XBTUSD_1h",
+          "title": "MACD zero-line reclaim - Kraken XBTUSD 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_Kraken_XBTUSD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "job_id": "MACD_signal_pullback_continuation_-_Kraken_XBTUSD_1h",
+          "title": "MACD signal pullback continuation - Kraken XBTUSD 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_Kraken_XBTUSD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_results": [
+        {
+          "job_id": "MACD_zero-line_reclaim_-_Binance_BTCUSDT_1h",
+          "title": "MACD zero-line reclaim - Binance BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_Binance_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "job_id": "MACD_signal_pullback_continuation_-_Binance_BTCUSDT_1h",
+          "title": "MACD signal pullback continuation - Binance BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_Binance_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "job_id": "MACD_zero-line_reclaim_-_Bybit_BTCUSDT_1h",
+          "title": "MACD zero-line reclaim - Bybit BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_Bybit_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_zero-line_reclaim_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        },
+        {
+          "job_id": "MACD_signal_pullback_continuation_-_Bybit_BTCUSDT_1h",
+          "title": "MACD signal pullback continuation - Bybit BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_Bybit_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T193452+0800-codex-macd-momentum-branch-keyed-six-provider-aq-v1/state/auto-quant/agent_material_units/MACD_signal_pullback_continuation_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": 0.0,
+            "sortino": 0.0,
+            "calmar": 0.0,
+            "total_profit_pct": 0.0,
+            "max_drawdown_pct": -0.0,
+            "trade_count": 0,
+            "win_rate_pct": 0.0,
+            "profit_factor": 0.0
+          }
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total_jobs": 12,
+    "completed_jobs": 12,
+    "blocked_jobs": 0,
+    "failed_jobs": 0
+  }
+}

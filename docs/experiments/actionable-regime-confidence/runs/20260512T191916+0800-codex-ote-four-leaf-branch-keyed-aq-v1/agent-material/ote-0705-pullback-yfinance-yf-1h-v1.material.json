@@ -1,0 +1,57 @@
+{
+  "consumer_evidence_profile": {
+    "branch_keyed_by_construction": true,
+    "branch_path": "TrendExpansion -> PullbackContinuation -> ote_retrace_0705 -> ote_retrace_0705_continuation_v1",
+    "branch_paths": [
+      "TrendExpansion -> PullbackContinuation -> ote_retrace_0705 -> ote_retrace_0705_continuation_v1"
+    ],
+    "local_cache_replay": true,
+    "main_regime": "TrendExpansion",
+    "new_provider_fetch": false,
+    "ote_level": "0705",
+    "profit_factor": "ote_retrace_0705_continuation_v1",
+    "promotion_allowed": false,
+    "provider": "yfinance/YF",
+    "provider_symbol": "SPY",
+    "source_material": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-yfinance-yf-1h-v1.material.json",
+    "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+    "sub_regime": "PullbackContinuation",
+    "sub_sub_regime_or_profit_factor": "ote_retrace_0705"
+  },
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/data/normalized/yahoo_spy_1h.normalized.csv",
+  "direction": "long",
+  "evaluation_priority": [
+    "per_leaf_trade_density",
+    "regime_conditioned_win_rate",
+    "payoff_ratio",
+    "profit_factor",
+    "max_drawdown",
+    "cross_provider_survival",
+    "sample_adequacy"
+  ],
+  "negative_evidence_contract": {
+    "loss_after_full_chain": "market_factor_negative_sample",
+    "low_trade_density": "low_density_negative_sample",
+    "missing_branch_fields": "chain_contract_negative_sample",
+    "provider_disagreement": "cross_provider_disagreement_sample",
+    "provider_or_fetch_fault": "infrastructure_negative_sample"
+  },
+  "notes": [
+    "source_provider=yfinance/YF",
+    "source_root=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1",
+    "source_material=docs/experiments/actionable-regime-confidence/runs/20260512T184332+0800-codex-session-liquidity-vwap-opening-range-six-provider-aq-v1/agent-material/session-liquidity-yfinance-yf-1h-v1.material.json",
+    "branch_path=TrendExpansion -> PullbackContinuation -> ote_retrace_0705 -> ote_retrace_0705_continuation_v1",
+    "ote_level=0705",
+    "local_cache_replay=true",
+    "new_provider_fetch=false",
+    "promotion_allowed=false until AQ dispatch/rank and ordered downstream chain pass"
+  ],
+  "package_id": "ote-0705-pullback-yfinance-yf-1h-v1",
+  "strategy_brief": "Board B branch-keyed OTE pullback-continuation profitability factor replay.",
+  "strategy_class_name": "OtePullbackContinuationLongV1",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T191916+0800-codex-ote-four-leaf-branch-keyed-aq-v1/agent-material/OtePullbackContinuationLongV1.py",
+  "symbol": "SPY",
+  "timeframe": "1h",
+  "timerange": "20250101-20260512",
+  "title": "OTE 0705 pullback continuation - yfinance/YF SPY 1h"
+}

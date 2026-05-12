@@ -1,0 +1,1 @@
+./target/debug/ict-engine auto-quant-agent-material-rank --symbol PROVIDER_OB_FVG_165122 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T165122+0800-codex-ob-fvg-branch-matrix-six-provider-aq-v1/state

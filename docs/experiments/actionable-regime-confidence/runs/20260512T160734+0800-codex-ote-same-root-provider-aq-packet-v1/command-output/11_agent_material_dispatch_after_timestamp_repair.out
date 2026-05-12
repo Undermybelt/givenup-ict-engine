@@ -1,0 +1,91 @@
+{
+  "artifact_id": "auto-quant-agent-material-dispatch:PROVIDER_OTE_160734:20260512T082707.801Z",
+  "generated_at": "2026-05-12T08:27:07.802087Z",
+  "symbol": "PROVIDER_OTE_160734",
+  "source_batch_artifact_id": "auto-quant-agent-material-batch:PROVIDER_OTE_160734:20260512T082621.398Z",
+  "selected_group_indices": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "groups": [
+    {
+      "group_index": 0,
+      "job_results": [
+        {
+          "job_id": "OTE_current_provider_packet_-_yfinance_SPY_1h",
+          "title": "OTE current provider packet - yfinance SPY 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:26:52,031 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_yfinance_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_yfinance_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_yfinance_SPY_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_results": [
+        {
+          "job_id": "OTE_current_provider_packet_-_Binance_BTCUSDT_1h",
+          "title": "OTE current provider packet - Binance BTCUSDT 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:26:55,204 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_Binance_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_results": [
+        {
+          "job_id": "OTE_current_provider_packet_-_Bybit_BTCUSDT_linear_1h",
+          "title": "OTE current provider packet - Bybit BTCUSDT linear 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:26:58,428 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_Bybit_BTCUSDT_linear_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_Bybit_BTCUSDT_linear_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_Bybit_BTCUSDT_linear_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 3,
+      "job_results": [
+        {
+          "job_id": "OTE_current_provider_packet_-_Kraken_PF_XBTUSD_1h",
+          "title": "OTE current provider packet - Kraken PF_XBTUSD 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:27:02,321 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_Kraken_PF_XBTUSD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_Kraken_PF_XBTUSD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_Kraken_PF_XBTUSD_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    },
+    {
+      "group_index": 4,
+      "job_results": [
+        {
+          "job_id": "OTE_current_provider_packet_-_IBKR_SPY_1h",
+          "title": "OTE current provider packet - IBKR SPY 1h",
+          "status": "failed",
+          "reason": "run_tomac_exit_nonzero: 2026-05-12 16:27:07,258 - freqtrade.loggers - INFO - Enabling colorized output.",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_IBKR_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_IBKR_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T160734+0800-codex-ote-same-root-provider-aq-packet-v1/state/auto-quant/agent_material_units/OTE_current_provider_packet_-_IBKR_SPY_1h/aq_workspace/run_tomac.stderr.log"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total_jobs": 5,
+    "completed_jobs": 0,
+    "blocked_jobs": 0,
+    "failed_jobs": 5
+  }
+}

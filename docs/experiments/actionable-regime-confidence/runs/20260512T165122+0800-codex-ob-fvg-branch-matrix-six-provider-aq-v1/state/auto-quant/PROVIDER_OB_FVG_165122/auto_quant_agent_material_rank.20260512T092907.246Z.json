@@ -1,0 +1,56 @@
+{
+  "artifact_id": "auto-quant-agent-material-rank:PROVIDER_OB_FVG_165122:20260512T092907.246Z",
+  "generated_at": "2026-05-12T09:29:07.246856Z",
+  "symbol": "PROVIDER_OB_FVG_165122",
+  "source_dispatch_artifact_id": "auto-quant-agent-material-dispatch:PROVIDER_OB_FVG_165122:20260512T092905.114Z",
+  "ranking": [
+    {
+      "unit_label": "OB/FVG branch matrix - yfinance/YF SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 44.4444,
+      "sharpe": 0.5564,
+      "total_profit_pct": 2.54,
+      "trade_count": 9
+    },
+    {
+      "unit_label": "OB/FVG branch matrix - IBKR SPY 1h",
+      "status": "completed",
+      "win_rate_pct": 27.907,
+      "sharpe": -2.4024,
+      "total_profit_pct": -6.38,
+      "trade_count": 43
+    },
+    {
+      "unit_label": "OB/FVG branch matrix - Binance BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG branch matrix - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG branch matrix - Kraken XBTUSD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    },
+    {
+      "unit_label": "OB/FVG branch matrix - TVR BTC-USD 1h",
+      "status": "completed",
+      "win_rate_pct": 0.0,
+      "sharpe": 0.0,
+      "total_profit_pct": 0.0,
+      "trade_count": 0
+    }
+  ]
+}

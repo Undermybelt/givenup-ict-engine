@@ -1,0 +1,9 @@
+Dispatch the latest generic agent-material batch through external Auto-Quant execution
+
+Usage: ict-engine auto-quant-agent-material-dispatch [OPTIONS] --symbol <SYMBOL>
+
+Options:
+      --symbol <SYMBOL>                Instrument identifier supplied by the caller
+      --state-dir <STATE_DIR>          State directory holding generic agent-material artifacts [env: ICT_ENGINE_STATE_DIR=] [default: state]
+      --group-indices <GROUP_INDICES>  Optional comma-separated dispatch group indices, e.g. 0,1,3; defaults to every group
+  -h, --help                           Print help
