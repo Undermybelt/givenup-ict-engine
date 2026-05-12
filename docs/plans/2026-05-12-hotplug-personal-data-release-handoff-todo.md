@@ -59,7 +59,8 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Repair `workflow-status` branch-admission routing precedence | `cargo test application::orchestration::workflow_status::tests:: -- --nocapture` passed, 114 workflow-status tests. |
 | done | Run full verification after route-precedence repair | `cargo test`, `cargo fmt --check`, and `cargo clippy --all-targets -- -D warnings` passed. |
 | done | Final compile/targeted verification after path-literal cleanup and candidate-set field sync | `cargo fmt --check`, `cargo test --test provider_neutral_cli -- --nocapture`, `cargo test application::orchestration::workflow_status::tests:: -- --nocapture`, `cargo clippy --all-targets -- -D warnings`, and `cargo check --tests --quiet` passed. |
-| active | Clean release-export audit | `/tmp` clean export caught omitted branch-row contract files (`ranking_label.rs`, then one `training_export.rs` test constructor); fold required files into the checkpoint before any mirror push. |
+| done | Repair clean-export BBN fixture dependency | BBN tests now use tracked, path-redacted `tests/fixtures/policy_training/`; runtime user-state hot-plug path remains unchanged. |
+| active | Clean release-export audit | `/tmp` clean export next caught ignored `state/policy_training` BBN test fixtures; fix now points tests at tracked, path-redacted `tests/fixtures/policy_training/` files while runtime hot-plug search still uses user state. Re-run clean export from HEAD before any mirror push. |
 | done | Update this board after each slice | Current slice recorded here. |
 | done | Commit safe slices | Checkpoint commit created for the intended source/docs/tests; nested dependency workspaces and active run state were excluded. |
 | next | Prepare release-mirror export/audit | Requires clean curated export from committed source, excluding dirty local docs/runtime artifacts. |
@@ -101,6 +102,8 @@ If resuming:
 - `cargo check --tests --quiet`: passed after final staging candidate.
 - `/tmp` clean export from `HEAD`: `cargo test --manifest-path <export>/Cargo.toml bbn::trading -- --nocapture` failed at compile time because the checkpoint omitted required `StructuralPathRankingTargetRow` branch segment fields from `src/belief_core/ranking_label.rs`.
 - `/tmp` clean export after adding `ranking_label.rs`: same command progressed and then found one omitted `StructuralPathRankingTargetRow` test constructor in `src/application/entry_models/training_export.rs`.
+- `/tmp` clean export after checkpoint commit: `cargo test --manifest-path /tmp/ict-engine-release-export.Fa3UTZ/Cargo.toml bbn::trading -- --nocapture` compiled but failed 3 tests because ignored `state/policy_training` fixtures were absent from the export.
+- Local fixture repair: `cargo fmt --check` passed, `cargo test bbn::trading -- --nocapture` passed with 19 matching tests, and `cargo clippy --all-targets -- -D warnings` passed after moving test dependency to tracked fixtures.
 - GH CLI: `gh auth status` currently reports an active `Undermybelt` login with `repo`/`workflow` scopes.
 - Release mirror remote probe via HTTPS showed `v0.1.1` exists at commit `5bc7bc74dfc2b6c88840b774c662d62c1d81cca1`.
 
@@ -180,3 +183,33 @@ Evidence:
 Next:
 - Keep any release/export work from depending on `/Users/thrill3r/Downloads/Tomac` or other maintainer-local data paths.
 - For A/B evidence, prefer largest feasible provider-backed windows; if local training is used, require a portable factor/material/recipe before consumer-facing promotion.
+
+### 2026-05-12 clean-export BBN fixture repair slice
+
+Changed:
+- `src/bbn/trading/cpt_init.rs`
+- `src/bbn/trading/family_overlay.rs`
+- `src/bbn/trading/topology.rs`
+- `src/bbn/trading/update.rs`
+- `tests/fixtures/policy_training/repo_bbn_trading_cpt_init.json`
+- `tests/fixtures/policy_training/repo_bbn_trading_cpt_init_smoothed.json`
+- `tests/fixtures/policy_training/repo_bbn_logic_family_overlays.json`
+
+Behavior:
+- Unit tests no longer depend on ignored repo-local `state/policy_training`
+  files that disappear from a clean release export.
+- New fixture files are small, tracked, and do not contain maintainer-local
+  absolute paths.
+- Runtime BBN CPT and logic-family overlays remain hot-pluggable via the
+  existing user state search path; fixture files are test-only and are not
+  selected as zero-config consumer defaults.
+
+Evidence:
+- `cargo test --manifest-path /tmp/ict-engine-release-export.Fa3UTZ/Cargo.toml bbn::trading -- --nocapture`: failed 3 tests from missing ignored `state/policy_training` fixtures.
+- `cargo fmt --check`: passed after fixture repair formatting.
+- `cargo test bbn::trading -- --nocapture`: passed, 19 matching tests.
+- `cargo clippy --all-targets -- -D warnings`: passed.
+
+Next:
+- Rebuild a clean `/tmp` export from `HEAD` after staging/commit decision and
+  re-run `bbn::trading` there.
