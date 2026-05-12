@@ -1,0 +1,128 @@
+{
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T215037+0800-codex-smt-provider-window-event-alignment-expansion-v1",
+  "training_matrix_rows": "docs/experiments/actionable-regime-confidence/runs/20260512T221601+0800-codex-smt-training-matrix-readiness-v1/summaries/smt_training_matrix_rows.csv",
+  "factor_name": "smt_relationship_resolver_same_event_confirmation_failure_v1",
+  "definition": "SMT divergence is sibling-market same liquidity/swing event confirmation failure, not generic correlation or relative strength.",
+  "confirmation_only": true,
+  "standalone_actionable_allowed": false,
+  "counts": {
+    "rows": 72,
+    "smt_signal_rows": 72,
+    "training_row_eligible": 15,
+    "inverse_normalized_rows": 7,
+    "standalone_actionable_count": 0
+  },
+  "required_pair_summary": {
+    "NQ/ES": {
+      "event_count": 12,
+      "smt_signal_count": 12,
+      "trainable_count": 2,
+      "win_rate": 1.0,
+      "expectancy": -0.0020168094615039068,
+      "covered": true,
+      "trainable_present": true
+    },
+    "NQ/YM": {
+      "event_count": 0,
+      "smt_signal_count": 0,
+      "trainable_count": 0,
+      "win_rate": null,
+      "expectancy": null,
+      "covered": false,
+      "trainable_present": false
+    },
+    "EURUSD/GBPUSD": {
+      "event_count": 4,
+      "smt_signal_count": 4,
+      "trainable_count": 1,
+      "win_rate": 1.0,
+      "expectancy": 0.004714787803556571,
+      "covered": true,
+      "trainable_present": true
+    },
+    "EURUSD/DXY": {
+      "event_count": 1,
+      "smt_signal_count": 1,
+      "trainable_count": 0,
+      "win_rate": null,
+      "expectancy": null,
+      "covered": true,
+      "trainable_present": false
+    },
+    "XAUUSD/XAGUSD": {
+      "event_count": 9,
+      "smt_signal_count": 9,
+      "trainable_count": 2,
+      "win_rate": 0.0,
+      "expectancy": -0.002497996812960334,
+      "covered": true,
+      "trainable_present": true
+    },
+    "XAUUSD/DXY": {
+      "event_count": 6,
+      "smt_signal_count": 6,
+      "trainable_count": 2,
+      "win_rate": 0.5,
+      "expectancy": -0.0008189972164292804,
+      "covered": true,
+      "trainable_present": true
+    },
+    "BTC/ETH": {
+      "event_count": 40,
+      "smt_signal_count": 40,
+      "trainable_count": 8,
+      "win_rate": 0.75,
+      "expectancy": -0.010006455103715173,
+      "covered": true,
+      "trainable_present": true
+    }
+  },
+  "per_regime_statistics": {
+    "trend": {
+      "event_count": 31,
+      "smt_signal_count": 31,
+      "trainable_count": 5,
+      "win_rate": 0.6,
+      "expectancy": -0.018098369090827494
+    },
+    "range": {
+      "event_count": 16,
+      "smt_signal_count": 16,
+      "trainable_count": 3,
+      "win_rate": 1.0,
+      "expectancy": -0.0010590821324696369
+    },
+    "transition": {
+      "event_count": 25,
+      "smt_signal_count": 25,
+      "trainable_count": 7,
+      "win_rate": 0.5714285714285714,
+      "expectancy": 0.001094947406227788
+    },
+    "stress": {
+      "event_count": 0,
+      "smt_signal_count": 0,
+      "trainable_count": 0,
+      "win_rate": null,
+      "expectancy": null
+    },
+    "other": {
+      "event_count": 0,
+      "smt_signal_count": 0,
+      "trainable_count": 0,
+      "win_rate": null,
+      "expectancy": null
+    }
+  },
+  "quality_gate": {
+    "min_total_trainable_rows": 30,
+    "min_per_regime_trainable_rows": 10,
+    "total_learning_floor_met": false,
+    "per_regime_learning_floor_met": false,
+    "pair_coverage_met": false,
+    "inverse_normalization_auditable": true,
+    "standalone_actionable_count": 0,
+    "downstream_allowed": false,
+    "fail_closed_reason": "insufficient_pair_and_per_regime_strict_entry_training_rows"
+  }
+}

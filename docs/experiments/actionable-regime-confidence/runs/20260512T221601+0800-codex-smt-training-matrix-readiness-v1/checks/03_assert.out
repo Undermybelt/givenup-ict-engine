@@ -1,0 +1,1 @@
+{"downstream_allowed": false, "fail_closed_reason": "insufficient_pair_and_per_regime_strict_entry_training_rows", "inverse_normalized_rows": 7, "packet_assertion": "pass", "rows": 72, "training_row_eligible": 15}

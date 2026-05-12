@@ -1,0 +1,8 @@
+pair_lane,event_count,smt_signal_count,trainable_count,win_rate,expectancy,covered,trainable_present
+NQ/ES,12,12,2,1.0,-0.0020168094615039068,True,True
+NQ/YM,0,0,0,,,False,False
+EURUSD/GBPUSD,4,4,1,1.0,0.004714787803556571,True,True
+EURUSD/DXY,1,1,0,,,True,False
+XAUUSD/XAGUSD,9,9,2,0.0,-0.002497996812960334,True,True
+XAUUSD/DXY,6,6,2,0.5,-0.0008189972164292804,True,True
+BTC/ETH,40,40,8,0.75,-0.010006455103715173,True,True

@@ -1,0 +1,6 @@
+regime_bucket,event_count,smt_signal_count,trainable_count,win_rate,expectancy
+trend,31,31,5,0.6,-0.018098369090827494
+range,16,16,3,1.0,-0.0010590821324696369
+transition,25,25,7,0.5714285714285714,0.001094947406227788
+stress,0,0,0,,
+other,0,0,0,,
