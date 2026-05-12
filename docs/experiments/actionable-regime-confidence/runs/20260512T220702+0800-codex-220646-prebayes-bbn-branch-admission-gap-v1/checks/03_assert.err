@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T220702+0800-codex-220646-prebayes-bbn-branch-admission-gap-v1/scripts/assert_220646_prebayes_bbn_branch_admission_gap.py", line 38, in <module>
+    main()
+    ~~~~^^
+  File "/Users/thrill3r/projects-ict-engine/ict-engine/docs/experiments/actionable-regime-confidence/runs/20260512T220702+0800-codex-220646-prebayes-bbn-branch-admission-gap-v1/scripts/assert_220646_prebayes_bbn_branch_admission_gap.py", line 24, in main
+    assert gate["catboost_path_ranker_satisfied"] is True
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

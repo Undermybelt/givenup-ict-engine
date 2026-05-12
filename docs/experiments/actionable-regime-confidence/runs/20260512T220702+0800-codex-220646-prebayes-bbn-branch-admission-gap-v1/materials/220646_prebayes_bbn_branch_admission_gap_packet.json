@@ -1,0 +1,80 @@
+{
+  "bbn": {
+    "applied_rows": 3,
+    "learning_satisfied": false,
+    "probe_rows": 4,
+    "skipped_unsupported_label_rows": 1
+  },
+  "branch_feedback": {
+    "branch_path_count": 4,
+    "branch_paths": [
+      "Bear -> BearReliefCarry -> StopManagedRecoveryCarry -> SourceRootStopCarryLongHorizonV1:bear_carry_h20_sl048_tp12",
+      "Bull -> RootCarryExpansion -> StopManagedRiskCarry -> SourceRootStopCarryLongHorizonV1:bull_carry_h12_sl040_tp12",
+      "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+      "Sideways -> RangeCarry -> StopManagedRangeCarry -> SourceRootStopCarryLongHorizonV1:sideways_carry_h8_sl040_tp12"
+    ],
+    "expectancy": 0.0017114645191268173,
+    "feedback_rows": 48,
+    "losses": 25,
+    "win_rate": 0.4791666666666667,
+    "wins": 23
+  },
+  "catboost_path_ranker": {
+    "current_candidate_rows": 2,
+    "history_mature_rows": 274,
+    "mature_rows": 48,
+    "raw_scored_mature_rows": 48,
+    "rows": 50,
+    "rows_with_branch_path": 48,
+    "runtime_selection_status": null,
+    "score_model_family": null
+  },
+  "control_symbol_with_pre_bayes": "NQ",
+  "execution_tree": {
+    "admitted": false,
+    "candidate_present": true,
+    "candidate_status": "execution_blocked",
+    "execution_gate_status": "execution_blocked",
+    "execution_readiness": 0.37,
+    "path_id": "Crisis -> CrisisReliefCarry -> StopManagedPanicRecovery -> SourceRootStopCarryLongHorizonV1:crisis_carry_h8_sl048_tp12",
+    "pre_bayes_gate_status": "blocked",
+    "reason": "workflow execution-candidate is present but blocked; this packet does not mutate execution state"
+  },
+  "gate": {
+    "bbn_learning_satisfied": false,
+    "branch_path_preserved": true,
+    "catboost_path_ranker_satisfied": true,
+    "execution_tree_admitted": false,
+    "fail_closed_reasons": [
+      "src_root_pre_bayes_policy_absent",
+      "src_root_pre_bayes_gate_blocked",
+      "pre_bayes_state_exists_for_NQ_not_SRC_ROOT",
+      "bbn_probe_skipped_unsupported_label",
+      "execution_tree_not_admitted"
+    ],
+    "full_chain_satisfied": false,
+    "pre_bayes_filter_satisfied": false,
+    "promotion_allowed": false,
+    "trade_usable": false
+  },
+  "pre_bayes_filter": {
+    "branch_keyed_pre_bayes_admitted": false,
+    "nq_state": {
+      "bridge_present": true,
+      "gate_status": "pass_neutralized",
+      "policy_present": true,
+      "policy_versions": 2,
+      "soft_evidence_present": true
+    },
+    "src_root_state": {
+      "bridge_present": false,
+      "gate_status": "blocked",
+      "policy_present": false,
+      "policy_versions": 0,
+      "soft_evidence_present": false
+    }
+  },
+  "protocol_version": "board-b-220646-prebayes-bbn-branch-admission-gap-v1",
+  "source_root": "actionable-regime-confidence/runs/20260511T220646-codex-board-b-source-root-stop-carry-longhorizon-v1",
+  "symbol_under_test": "SRC_ROOT_CARRY_LONG_220646"
+}

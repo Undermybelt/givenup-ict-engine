@@ -1,0 +1,9 @@
+check,value,status
+branch_feedback_rows,48,pass
+branch_path_count,4,pass
+nq_pre_bayes_policy_present,True,info
+src_root_pre_bayes_policy_present,False,fail
+bbn_probe_applied_rows,3,partial
+bbn_probe_skipped_rows,1,fail
+catboost_raw_scored_mature_rows,48,pass
+execution_tree_admitted,False,fail
