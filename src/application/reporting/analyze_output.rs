@@ -373,6 +373,12 @@ pub fn dispatch_analyze_output(
             .probabilities,
     );
     let trade_plan_summary = human_trade_plan_summary(&report.analysis.trade_plan);
+    let price_structure_summary = human_price_structure_summary(&report.analysis.price_action);
+    let technical_price_summary = human_technical_price_summary(
+        &report.analysis.technical_price,
+        &report.analysis.price_action,
+    );
+    let smt_summary = human_smt_summary(&report.analysis.smt_correlation);
     let (mut compact_report, mut agent_report, mut human_report) =
         build_analyze_reporting_bundle(AnalyzeReportingBundleInput {
             input: AnalyzeHumanInput {
@@ -387,9 +393,9 @@ pub fn dispatch_analyze_output(
                 decision_hint: &report.supporting.decision_hint,
                 factor_iteration_queue: &report.supporting.factor_iteration_queue,
                 recommended_next_command: &report.supporting.recommended_next_command,
-                price_action_narrative: &report.analysis.price_action.narrative,
-                technical_price_narrative: &report.analysis.technical_price.narrative,
-                smt_correlation_narrative: &report.analysis.smt_correlation.narrative,
+                price_action_narrative: &price_structure_summary,
+                technical_price_narrative: &technical_price_summary,
+                smt_correlation_narrative: &smt_summary,
                 regime_label: &report.analysis.regime_bayesian.regime_label,
                 liquidity_label: &report.analysis.regime_bayesian.liquidity_label,
                 regime_selected_direction: report.analysis.regime_bayesian.selected_direction,
@@ -506,6 +512,12 @@ pub fn build_analyze_live_reporting_bundle(
     let combined_regime_suffix =
         combine_human_suffixes(&regime_probability_suffix, &regime_companion_suffix);
     let trade_plan_summary = human_trade_plan_summary(&report.analysis.trade_plan);
+    let price_structure_summary = human_price_structure_summary(&report.analysis.price_action);
+    let technical_price_summary = human_technical_price_summary(
+        &report.analysis.technical_price,
+        &report.analysis.price_action,
+    );
+    let smt_summary = human_smt_summary(&report.analysis.smt_correlation);
     let (mut compact_report, mut agent_report, mut human_report) =
         build_analyze_reporting_bundle(AnalyzeReportingBundleInput {
             input: AnalyzeHumanInput {
@@ -520,9 +532,9 @@ pub fn build_analyze_live_reporting_bundle(
                 decision_hint: &report.supporting.decision_hint,
                 factor_iteration_queue: &report.supporting.factor_iteration_queue,
                 recommended_next_command: &report.supporting.recommended_next_command,
-                price_action_narrative: &report.analysis.price_action.narrative,
-                technical_price_narrative: &report.analysis.technical_price.narrative,
-                smt_correlation_narrative: &report.analysis.smt_correlation.narrative,
+                price_action_narrative: &price_structure_summary,
+                technical_price_narrative: &technical_price_summary,
+                smt_correlation_narrative: &smt_summary,
                 regime_label: &report.analysis.regime_bayesian.regime_label,
                 liquidity_label: &report.analysis.regime_bayesian.liquidity_label,
                 regime_selected_direction: report.analysis.regime_bayesian.selected_direction,
@@ -794,6 +806,126 @@ fn combine_human_suffixes(first: &str, second: &str) -> String {
         ("", "") => String::new(),
         (only, "") | ("", only) => only.to_string(),
         (left, right) => format!("{left} {right}"),
+    }
+}
+
+fn human_price_structure_summary(section: &crate::analyze_sections::PriceActionSection) -> String {
+    let latest_break = match (&section.latest_break, section.latest_break_level) {
+        (Some(label), Some(level)) => {
+            format!("{} ({level:.2})", human_structure_break_label(label))
+        }
+        (Some(label), None) => human_structure_break_label(label),
+        (None, _) => "no_recent_BOS_or_CHoCH".to_string(),
+    };
+    let cisd_state = match (section.bullish_cisd, section.bearish_cisd) {
+        (true, true) => "mixed_CISD",
+        (true, false) => "bullish_CISD",
+        (false, true) => "bearish_CISD",
+        (false, false) => "no_recent_CISD",
+    };
+    format!(
+        "bias={:?}; swing_high={} swing_low={}; latest_structure_event={}; market_structure_shift/MSS={}; recent_breaks={}; change_in_state_of_delivery/CISD={}; delivery=bull_expansion={} bear_expansion={} expansion_strength={:.3}; rejection_block={}; narrative={}",
+        section.structure_bias,
+        format_optional_price(section.latest_swing_high),
+        format_optional_price(section.latest_swing_low),
+        latest_break,
+        latest_break,
+        section.recent_break_count,
+        cisd_state,
+        section.bull_expansion,
+        section.bear_expansion,
+        section.expansion_strength,
+        section.rejection_block_present,
+        section.narrative
+    )
+}
+
+fn human_technical_price_summary(
+    technical: &crate::analyze_sections::TechnicalPriceSection,
+    structure: &crate::analyze_sections::PriceActionSection,
+) -> String {
+    let fvg_band = format_price_band(
+        structure.nearest_open_fvg_bottom,
+        structure.nearest_open_fvg_top,
+    );
+    let ob_band = format_price_band(
+        structure.nearest_untested_order_block_low,
+        structure.nearest_untested_order_block_high,
+    );
+    format!(
+        "last_close=({:.2}); ema20={} ema50={} rsi14={} adx14={} atr14={} bollinger=lower:{} middle:{} upper:{}; liquidity_pool={} liquidity_pool_texture/smooth_or_jagged=(n/a) latest_sweep={} sweeps_recent={}; FVG/IFVG=open_count={} nearest_fvg={}; order_block=untested_count={} nearest_OB={} variants=mitigation_requires_followup,breaker_requires_followup,rejection_block={}; narrative={}",
+        technical.last_closed_bar_close,
+        format_optional_price(technical.ema20),
+        format_optional_price(technical.ema50),
+        format_optional_number(technical.rsi14),
+        format_optional_number(technical.adx14),
+        format_optional_price(technical.atr14),
+        format_optional_price(technical.bollinger_lower),
+        format_optional_price(technical.bollinger_middle),
+        format_optional_price(technical.bollinger_upper),
+        format_optional_price(structure.nearest_liquidity_pool_level),
+        format_optional_price(structure.latest_liquidity_sweep_level),
+        structure.liquidity_sweeps_recent,
+        structure.open_fvgs,
+        fvg_band,
+        structure.untested_order_blocks,
+        ob_band,
+        structure.rejection_block_present,
+        technical.narrative
+    )
+}
+
+fn human_smt_summary(section: &crate::analyze_sections::SmtCorrelationSection) -> String {
+    let mut universe = vec![
+        "NQ/ES/YM".to_string(),
+        "NAS100/US500/US30_CFD".to_string(),
+        "DXY".to_string(),
+        "Nikkei/KOSPI".to_string(),
+        "DAX/FTSE/EuroStoxx".to_string(),
+    ];
+    universe.extend(section.related_futures_symbols.iter().cloned());
+    universe.extend(section.related_cfd_symbols.iter().cloned());
+    universe.extend(section.related_etf_symbols.iter().cloned());
+    universe.extend(section.related_crypto_symbols.iter().cloned());
+    universe.sort();
+    universe.dedup();
+    format!(
+        "paired_market_available={}; primary_pair={}/{}; universe={}; corr20={} corr50={} divergence={:?}; cointegrated={:?}; basis_bps={}; narrative={}",
+        section.paired_market_available,
+        section.futures_symbol.as_deref().unwrap_or("unprovided"),
+        section.spot_symbol.as_deref().unwrap_or("unprovided"),
+        universe.join(","),
+        format_optional_number(section.rolling_correlation_20),
+        format_optional_number(section.rolling_correlation_50),
+        section.divergence_detected,
+        section.cointegrated,
+        format_optional_number(section.normalized_basis_bps),
+        section.narrative
+    )
+}
+
+fn human_structure_break_label(label: &str) -> String {
+    label
+        .replace("BOS", "Break_of_Structure/BOS")
+        .replace("CHoCH", "Change_of_Character/CHoCH")
+}
+
+fn format_optional_price(value: Option<f64>) -> String {
+    value
+        .map(|value| format!("({value:.2})"))
+        .unwrap_or_else(|| "(n/a)".to_string())
+}
+
+fn format_optional_number(value: Option<f64>) -> String {
+    value
+        .map(|value| format!("({value:.3})"))
+        .unwrap_or_else(|| "(n/a)".to_string())
+}
+
+fn format_price_band(low: Option<f64>, high: Option<f64>) -> String {
+    match (low, high) {
+        (Some(low), Some(high)) => format!("({low:.2}-{high:.2})"),
+        _ => "(n/a)".to_string(),
     }
 }
 
@@ -1476,6 +1608,80 @@ mod tests {
         assert!(rendered.contains("stop_loss=97.50"));
         assert!(rendered.contains("take_profits=102.00,104.00,106.00"));
         assert!(rendered.contains("risk_reward=2.40"));
+    }
+
+    #[test]
+    fn analyze_human_surface_carries_ict_template_with_price_levels() {
+        let price = crate::analyze_sections::PriceActionSection {
+            probability_role: "structural_evidence_for_probability_model".to_string(),
+            structure_bias: Direction::Bull,
+            latest_break: Some("BOS_Bull".to_string()),
+            latest_break_level: Some(18550.25),
+            latest_swing_high: Some(18550.25),
+            latest_swing_low: Some(18425.75),
+            recent_break_count: 2,
+            swing_highs: 4,
+            swing_lows: 3,
+            bull_expansion: true,
+            bear_expansion: false,
+            expansion_strength: 1.25,
+            liquidity_sweeps_recent: 1,
+            nearest_liquidity_pool_level: Some(18580.0),
+            latest_liquidity_sweep_level: Some(18579.5),
+            open_fvgs: 1,
+            nearest_open_fvg_top: Some(18510.0),
+            nearest_open_fvg_bottom: Some(18492.5),
+            untested_order_blocks: 1,
+            nearest_untested_order_block_high: Some(18480.0),
+            nearest_untested_order_block_low: Some(18460.0),
+            bullish_cisd: true,
+            bearish_cisd: false,
+            rejection_block_present: true,
+            narrative: "bullish_price_action_with_higher_probability_if_execution_confirms"
+                .to_string(),
+        };
+        let technical = crate::analyze_sections::TechnicalPriceSection {
+            probability_role: "technical_and_derivatives_evidence_for_probability_model"
+                .to_string(),
+            last_closed_bar_close: 18520.25,
+            live_market_price: None,
+            live_spot_price: None,
+            ema20: Some(18505.0),
+            ema50: Some(18470.0),
+            rsi14: Some(56.2),
+            adx14: Some(21.4),
+            atr14: Some(33.5),
+            macd_line: None,
+            macd_signal: None,
+            macd_histogram: None,
+            bollinger_upper: Some(18590.0),
+            bollinger_middle: Some(18515.0),
+            bollinger_lower: Some(18440.0),
+            bollinger_squeeze: false,
+            momentum_5_bar: None,
+            options_hedging: crate::analyze::options_hedging_section::build_options_hedging_section(
+                None,
+            ),
+            narrative: "technicals_support_bullish_continuation".to_string(),
+        };
+        let structure_summary = human_price_structure_summary(&price);
+        let technical_summary = human_technical_price_summary(&technical, &price);
+
+        assert!(structure_summary.contains("Break_of_Structure/BOS_Bull (18550.25)"));
+        assert!(structure_summary.contains("swing_high=(18550.25)"));
+        assert!(structure_summary.contains("swing_low=(18425.75)"));
+        assert!(structure_summary
+            .contains("market_structure_shift/MSS=Break_of_Structure/BOS_Bull (18550.25)"));
+        assert!(structure_summary.contains("change_in_state_of_delivery/CISD=bullish_CISD"));
+        assert!(technical_summary.contains("last_close=(18520.25)"));
+        assert!(technical_summary.contains("liquidity_pool=(18580.00)"));
+        assert!(technical_summary.contains("liquidity_pool_texture/smooth_or_jagged=(n/a)"));
+        assert!(technical_summary.contains("latest_sweep=(18579.50)"));
+        assert!(technical_summary.contains("nearest_fvg=(18492.50-18510.00)"));
+        assert!(technical_summary.contains("nearest_OB=(18460.00-18480.00)"));
+        assert!(technical_summary.contains(
+            "variants=mitigation_requires_followup,breaker_requires_followup,rejection_block=true"
+        ));
     }
 
     #[test]

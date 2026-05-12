@@ -5124,13 +5124,35 @@ fn build_price_action_section(
     let swing_highs = find_swing_highs(mtf, 3);
     let swing_lows = find_swing_lows(mtf, 3);
     let breaks = detect_structure_breaks(mtf, &swing_highs, &swing_lows);
+    let latest_break_ref = breaks.last();
     let latest_break = breaks
         .last()
         .map(|brk| format!("{:?}_{:?}", brk.break_type, brk.direction));
+    let latest_break_level = latest_break_ref.map(|brk| brk.level);
+    let latest_swing_high = swing_highs.last().map(|swing| swing.price);
+    let latest_swing_low = swing_lows.last().map(|swing| swing.price);
+    let last_close = mtf.last().map(|candle| candle.close).unwrap_or_default();
+    let nearest_open_fvg = fvgs.iter().min_by(|left, right| {
+        fvg_distance_to_price(left, last_close)
+            .partial_cmp(&fvg_distance_to_price(right, last_close))
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    let nearest_untested_order_block = obs.iter().min_by(|left, right| {
+        order_block_distance_to_price(left, last_close)
+            .partial_cmp(&order_block_distance_to_price(right, last_close))
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
     let recent_break_count = count_recent_breaks(&breaks, 20, mtf.len());
     let pools = detect_liquidity_pools(mtf, atr_ltf, 0.5, 2);
     let sweeps = detect_liquidity_sweep(mtf, &pools, 5);
     let liquidity_sweeps_recent = count_recent_sweeps(mtf, &sweeps, 20);
+    let nearest_liquidity_pool = pools.iter().min_by(|left, right| {
+        (left.price_level - last_close)
+            .abs()
+            .partial_cmp(&(right.price_level - last_close).abs())
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    let latest_liquidity_sweep = sweeps.last();
     let bullish_cisds = detect_cisd(ltf, &detect_order_blocks(ltf), 1);
     let bullish_cisd = bullish_cisds.iter().any(|cisd| {
         cisd.direction == Direction::Bull && cisd.confirm_bar >= ltf.len().saturating_sub(10)
@@ -5163,6 +5185,9 @@ fn build_price_action_section(
         probability_role: "structural_evidence_for_probability_model".to_string(),
         structure_bias,
         latest_break,
+        latest_break_level,
+        latest_swing_high,
+        latest_swing_low,
         recent_break_count,
         swing_highs: swing_highs.len(),
         swing_lows: swing_lows.len(),
@@ -5170,13 +5195,27 @@ fn build_price_action_section(
         bear_expansion,
         expansion_strength: expansion_strength(mtf, 20),
         liquidity_sweeps_recent,
+        nearest_liquidity_pool_level: nearest_liquidity_pool.map(|pool| pool.price_level),
+        latest_liquidity_sweep_level: latest_liquidity_sweep.map(|sweep| sweep.pool_price),
         open_fvgs: fvgs.len(),
+        nearest_open_fvg_top: nearest_open_fvg.map(|fvg| fvg.top),
+        nearest_open_fvg_bottom: nearest_open_fvg.map(|fvg| fvg.bottom),
         untested_order_blocks: obs.len(),
+        nearest_untested_order_block_high: nearest_untested_order_block.map(|ob| ob.high),
+        nearest_untested_order_block_low: nearest_untested_order_block.map(|ob| ob.low),
         bullish_cisd,
         bearish_cisd,
         rejection_block_present,
         narrative,
     }
+}
+
+fn fvg_distance_to_price(fvg: &ict_engine::types::FairValueGap, price: f64) -> f64 {
+    ((fvg.top + fvg.bottom) / 2.0 - price).abs()
+}
+
+fn order_block_distance_to_price(ob: &ict_engine::types::OrderBlock, price: f64) -> f64 {
+    ((ob.high + ob.low) / 2.0 - price).abs()
 }
 
 #[allow(clippy::too_many_arguments)]

@@ -71,6 +71,7 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Run focused verification for the closed-loop/docs slice | `cargo fmt --check`, provider-neutral CLI tests, workflow-status tests, and Clippy passed. |
 | done | Commit the closed-loop/docs slice | This amended commit staged only `AGENTS.md`, `CLAUDE.md`, `workflow_status.rs`, and this handoff board. |
 | done | Prove/fix practical 5-slot `--human` output | Kept English agent labels; practical `analyze --human` now exposes Structure, Technicals, SMT, Regime with posterior probabilities, and Plan with executable trade levels or honest observe/no-trade fields. |
+| done | Add data-backed ICT/PDA price-level human template | `Structure` and `Technicals` now cite existing swing/BOS/CHoCH/MSS/CISD/liquidity/FVG/OB/rejection fields with price levels in parentheses when detectors produce them; missing demo evidence and not-yet-trained variants are explicit `(n/a)`/`requires_followup`, not fabricated. |
 | blocked | Publish release mirror | Blocked on the new closed-loop/entrypoint/privacy gate and then explicit operator confirmation for `v0.1.2` tag/push/`gh release create`. GitHub auth was previously available and remote had no `v0.1.2` tag, but re-check before any publish. |
 
 ## Resume State Hint
@@ -140,8 +141,55 @@ If resuming:
 - `cargo test application::reporting::human_report::tests:: -- --nocapture` passed, 5 tests.
 - `cargo test application::reporting::analyze_output::tests:: -- --nocapture` passed, 10 tests.
 - `cargo fmt --check && cargo clippy --all-targets -- -D warnings` passed after the practical 5-slot human-output slice.
+- `cargo test application::reporting::analyze_output::tests::analyze_human_surface_carries_ict_template_with_price_levels -- --nocapture`: passed; guards BOS/swing/CISD/liquidity/FVG/OB/rejection template fields and price parentheses.
+- `/tmp` zero-config smoke `cargo run --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-human-template-smoke.AbKTQ5 --human`: passed; output included `last_close=(114.50)`, EMA/Bollinger/ATR values, SMT universe, posterior probabilities, and explicit `(n/a)` for demo-missing swing/FVG/OB/liquidity levels.
+- Privacy smoke on the same output: `rg -i "/Users/|api[_-]?key|secret|token"` returned no matches.
+- Direct runtime smoke `./target/debug/ict-engine analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-human-template-smoke.DA8dPq --human`: passed after the MSS/CISD/smooth-or-jagged template wording; output included `market_structure_shift/MSS=no_recent_BOS_or_CHoCH`, `change_in_state_of_delivery/CISD=no_recent_CISD`, `liquidity_pool_texture/smooth_or_jagged=(n/a)`, exact technical prices such as `last_close=(114.50)`, and no privacy matches.
+- `cargo test application::reporting::analyze_output::tests:: -- --nocapture` passed, 11 tests.
+- `cargo fmt --check` passed after the data-backed ICT/PDA price-level human-template slice.
+- `cargo clippy --lib -- -D warnings` passed for the library/runtime surface. `cargo clippy --all-targets -- -D warnings` is currently blocked by unrelated dirty Auto-Quant test drift in `src/application/auto_quant/agent_material.rs` where tests reference branch fields not present on `AgentMaterialDispatchJobResult` / `AgentMaterialRankRow`.
 
 ## Slice Notes
+
+### 2026-05-12 data-backed ICT/PDA price-level human-template slice
+
+Changed:
+- `src/analyze_sections.rs`
+- `src/main.rs`
+- `src/application/reporting/analyze_output.rs`
+- `docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`
+
+Behavior:
+- `PriceActionSection` now carries detector-derived levels for latest
+  BOS/CHoCH/MSS, latest swing high/low, nearest liquidity pool, latest
+  liquidity sweep, nearest open FVG, and nearest untested order block.
+- The active `analyze` and `analyze-live` human-report path renders those
+  fields into `Structure` and `Technicals` with explicit price parentheses,
+  including `change_in_state_of_delivery/CISD`.
+- Demo or missing detector evidence renders as `(n/a)` instead of invented
+  levels; not-yet-trained order-block variants and smooth/jagged liquidity
+  texture remain explicit follow-up evidence, not prose claims.
+- `SMT` human output includes the default practical universe reminder
+  (`NQ/ES/YM`, CFD indices, DXY, Nikkei/KOSPI, DAX/FTSE/EuroStoxx) plus any
+  configured related assets.
+
+Evidence:
+- `cargo test application::reporting::analyze_output::tests::analyze_human_surface_carries_ict_template_with_price_levels -- --nocapture` passed.
+- `/tmp` smoke `/tmp/ict-engine-human-template-smoke.AbKTQ5` produced the
+  expected 5-slot output with price parentheses and no private path/secret
+  pattern in the human output.
+- `/tmp` smoke `/tmp/ict-engine-human-template-smoke.DA8dPq` produced the
+  updated MSS/CISD/smooth-or-jagged template wording with price parentheses and
+  no private path/secret pattern in the human output.
+- `cargo test application::reporting::analyze_output::tests:: -- --nocapture`
+  passed, 11 tests.
+- `cargo fmt --check` passed.
+- `cargo clippy --lib -- -D warnings` passed. `cargo clippy --all-targets -- -D warnings` is blocked by unrelated dirty Auto-Quant test drift in `src/application/auto_quant/agent_material.rs`.
+
+Next:
+- If the user wants richer order-block variants beyond available detector
+  fields, train/promote the factor side to populate mitigation, breaker,
+  failed-mitigation, and PDA sequence scores as first-class runtime evidence.
 
 ### 2026-05-12 practical 5-slot human-output slice
 
