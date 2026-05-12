@@ -1,0 +1,121 @@
+{
+    "packet": "board_b_objective_completion_audit_current_state_v1",
+    "timestamp": "2026-05-12T22:11:52+08:00",
+    "objective_file": "docs/plans/2026-05-10-regime-conditional-auto-quant-profitability-todo.md",
+    "objective_restatement": [
+        "Train profitability factors keyed by regime-rooted branch path, not aggregate scores.",
+        "Preserve branch path as main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor through Auto-Quant, Pre-Bayes/filter, BBN, CatBoost/path-ranker, execution tree, and feedback/update.",
+        "Use real local Auto-Quant and ict-engine command/artifact evidence, not speculative chat claims.",
+        "Include provider coverage for IBKR, TradingViewRemix/TVR, YF/yfinance, and Kraken where the factor claims provider authority.",
+        "Coordinate with multi-agent Board B active claims and avoid rewriting or taking over active roots."
+    ],
+    "checklist": [
+        {
+            "requirement": "authoritative_board_updated",
+            "evidence": [
+                "Board B doc has active/closeout rows for 215407, 215914, 220445, 215037, 215748, 215756, 215828, and coordination rows including 221008."
+            ],
+            "status": "partial",
+            "gap": "Board is updated, but active roots are still not all terminal and the objective remains incomplete."
+        },
+        {
+            "requirement": "multi_agent_no_takeover",
+            "evidence": [
+                "Current active roots visible in Board/process state include 215407, 215914, 220445, and Cargo/Rust test owners.",
+                "This audit writes only a new root and a Board closeout row."
+            ],
+            "status": "satisfied_for_this_audit",
+            "gap": "Does not complete the trading objective."
+        },
+        {
+            "requirement": "provider_matrix_ibkr_tvr_yf_kraken",
+            "evidence": [
+                "215914 summary has provider_count=6 and provider_data_acquired_count=6: yfinance/YF, IBKR, Binance, Bybit, Kraken, TradingViewRemix/TVR.",
+                "215407 has TVR/YF/Binance/Bybit/Kraken acquired, but IBKR exit=1 and data_acquired=false."
+            ],
+            "status": "partial",
+            "gap": "215914 provider matrix is promising but active/root ownership is not terminal in Board yet; 215407 is explicitly incomplete because IBKR failed."
+        },
+        {
+            "requirement": "auto_quant_real_run",
+            "evidence": [
+                "215914 checks 01-10 and macd_current_six_provider_aq_v1.exit are all 0; summary reports rank_rows=12, rank_nonzero_trade_rows=6, rank_total_trade_count=140.",
+                "215407 material batch exit=0 but dispatch remains active/no terminal dispatch closeout in Board at readback."
+            ],
+            "status": "partial",
+            "gap": "Auto-Quant evidence exists, but no accepted downstream admission is proven from 215914 in Board; 215407 is active/incomplete."
+        },
+        {
+            "requirement": "regime_branch_path_survives_auto_quant_to_downstream",
+            "evidence": [
+                "215748 and 215828 preserve ATR-CISD branch path but are fail-closed and not sent downstream.",
+                "220445 sees regime-rooted path visibility trend -> trend_follow_through, but Board coordination says it does not prove full main_regime -> sub_regime -> sub_sub_regime_or_profit_factor -> profit_factor survival through accepted training."
+            ],
+            "status": "not_met",
+            "gap": "No terminal artifact proves a profitable branch path survived all requested downstream layers."
+        },
+        {
+            "requirement": "pre_bayes_filter",
+            "evidence": [
+                "220445 01_pre_bayes_status_nq.exit=0 and Pre-Bayes soft evidence is visible with latest_gate_status=pass_neutralized."
+            ],
+            "status": "partial",
+            "gap": "Visible status is diagnostic only; not learning/admission for a promoted branch."
+        },
+        {
+            "requirement": "bbn_learning_admission",
+            "evidence": [
+                "220445 policy-training-status reports cisd_rb_long_v1 matched_rows=0 and breaker_rb_long_v1 matched_rows=0."
+            ],
+            "status": "not_met",
+            "gap": "BBN/entry-model learning is not ready."
+        },
+        {
+            "requirement": "catboost_path_ranker",
+            "evidence": [
+                "220445 policy-training-status reports trainer_artifact_ready=true, trainer_artifact_model_family=catboost, but runtime source is candidate_set and validation is not ready.",
+                "raw_scored_mature_rows=0/30, production_validation_rows=0/30, observation_validation_rows=0/30."
+            ],
+            "status": "not_met",
+            "gap": "CatBoost/path-ranker is present as artifact/candidate-set support, not mature validated branch admission."
+        },
+        {
+            "requirement": "execution_tree_admission",
+            "evidence": [
+                "220445 workflow execution candidate exit=0 but actionable=false, ready=false, execution_gate_status=execution_observe_only."
+            ],
+            "status": "not_met",
+            "gap": "Execution tree blocks trading/admission."
+        },
+        {
+            "requirement": "feedback_update_learning",
+            "evidence": [
+                "220445 policy-training-status reports update_runs_with_structural_feedback=0 and feedback_rows_total=0."
+            ],
+            "status": "not_met",
+            "gap": "No feedback/update learning closure."
+        },
+        {
+            "requirement": "per_regime_win_rate_trade_count_expectancy",
+            "evidence": [
+                "215748 and 215828 provide per-regime ATR-CISD outcome stats.",
+                "215037 SMT provides per-regime strict-entry stats."
+            ],
+            "status": "partial",
+            "gap": "Those packets are fail-closed and do not satisfy provider/downstream admission; stress/other often have zero trades."
+        },
+        {
+            "requirement": "promotion_or_update_goal",
+            "evidence": [
+                "Latest visible gates keep promotion_allowed=false, trade_usable=false, update_goal=false across 215407, 215748, 215828, 215037, 215756, and 220445 coordination rows."
+            ],
+            "status": "not_met",
+            "gap": "Goal must not be marked complete."
+        }
+    ],
+    "next_non_overlapping_action": "Wait for or inspect terminal 215914 owner closeout; if no owner closeout appears, create a read-only no-takeover closeout over 215914 terminal artifacts only, then decide whether its rank output can be mapped into Pre-Bayes/BBN/CatBoost/execution-tree without taking over active 220445.",
+    "completion_status": "not_achieved",
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+}

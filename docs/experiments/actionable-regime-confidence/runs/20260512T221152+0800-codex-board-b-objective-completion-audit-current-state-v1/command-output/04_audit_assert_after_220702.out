@@ -1,0 +1,1 @@
+objective_completion_audit_assert=pass completion_status=not_achieved catboost_partial execution_tree_not_met update_goal=false
