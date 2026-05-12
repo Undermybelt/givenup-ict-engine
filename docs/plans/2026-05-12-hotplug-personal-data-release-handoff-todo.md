@@ -63,8 +63,8 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Clean release-export audit | Final `v0.1.2` clean export `/tmp/ict-engine-release-export.ueDk6B` passed fmt, Clippy, and full `cargo test` from committed `HEAD`. |
 | done | Update this board after each slice | Current slice recorded here. |
 | done | Commit safe slices | Checkpoint commit created for the intended source/docs/tests; nested dependency workspaces and active run state were excluded. |
-| active | Prepare release-mirror export/audit | `v0.1.2` candidate docs/version are being prepared because release mirror already has `v0.1.1`; release export must come from committed `HEAD`, not dirty worktree state. |
-| blocked | Publish release mirror | Blocked only on explicit operator confirmation for `v0.1.2` tag/push/`gh release create` per release runbook. GitHub auth is currently available. |
+| done | Prepare release-mirror export/audit | Local mirror clone `/tmp/ict-engine-release-mirror-v012.87caSH` was synced from clean export and committed locally; re-read its HEAD before any push; no tag/push/release created. |
+| blocked | Publish release mirror | Blocked only on explicit operator confirmation for `v0.1.2` tag/push/`gh release create` per release runbook. GitHub auth is currently available and remote has no `v0.1.2` tag. |
 
 ## Resume State Hint
 
@@ -109,6 +109,8 @@ If resuming:
 - `/tmp` clean export from `f1a561a`: `cargo clippy --manifest-path /tmp/ict-engine-release-export.IWadVv/Cargo.toml --all-targets -- -D warnings` failed on dead `StructuralRankedPathSelection.paths` and two unused `structural_ranked_paths*` wrappers that were still absent from the committed tree.
 - `/tmp` clean export from `32858ad`: `/tmp/ict-engine-release-export.y6Pefh` passed `cargo fmt --manifest-path ... --check`, `cargo clippy --manifest-path ... --all-targets -- -D warnings`, targeted `cargo test --manifest-path ... bbn::trading -- --nocapture`, and full `cargo test --manifest-path ...`.
 - `/tmp` clean export from `e6fca81`: `/tmp/ict-engine-release-export.ueDk6B` passed `cargo fmt --manifest-path ... --check`, `cargo clippy --manifest-path ... --all-targets -- -D warnings`, and full `cargo test --manifest-path ...` as the final `v0.1.2` release-candidate gate.
+- Release mirror remote probe: `main` and `v0.1.1` still point at `5bc7bc74dfc2b6c88840b774c662d62c1d81cca1`; no `v0.1.2` tag exists yet.
+- Local mirror prep: `/tmp/ict-engine-release-mirror-v012.87caSH` was cloned from `Undermybelt/ict-engine-release`, synced from `/tmp/ict-engine-release-export.ueDk6B`, scanned for large files/nested `.git`/state dirs/common secret patterns, and committed locally; re-read mirror HEAD before any push.
 - GH CLI: `gh auth status` currently reports an active `Undermybelt` login with `repo`/`workflow` scopes.
 - Release mirror remote probe via HTTPS showed `v0.1.1` exists at commit `5bc7bc74dfc2b6c88840b774c662d62c1d81cca1`.
 
@@ -278,3 +280,30 @@ Evidence:
 Next:
 - If operator confirms `v0.1.2`, sync committed `HEAD` into the release mirror
   clone flow without force-push, then tag and create the GitHub release.
+
+### 2026-05-12 local mirror-prep slice
+
+Changed:
+- Local clone only: `/tmp/ict-engine-release-mirror-v012.87caSH`
+- Source handoff updated with mirror-prep evidence.
+
+Behavior:
+- Clean export was synced into a real clone of `Undermybelt/ict-engine-release`
+  so the eventual push can be a normal mirror update, not a force push.
+- Local mirror commit exists but no local/remote tag was created and nothing was
+  pushed.
+
+Evidence:
+- `git ls-remote --heads --tags https://github.com/Undermybelt/ict-engine-release.git`: `v0.1.1` exists, no `v0.1.2`.
+- `gh auth status`: active `Undermybelt` login with `repo`/`workflow`.
+- `find . ... -size +1M`: no files over 1MB in mirror worktree.
+- Nested `.git`/state scan: no nested `.git`; only tracked lightweight
+  `docs/experiments` files and normal `src/state` source module appeared.
+- Secret scan: only code/documentation literals such as env var names and test
+  variable names matched; no concrete token/key value found.
+- Local mirror commit exists in the mirror worktree; re-read `git -C /tmp/ict-engine-release-mirror-v012.87caSH rev-parse --short HEAD` before any push.
+
+Next:
+- After explicit `v0.1.2` confirmation, re-check remote is still at the probed
+  base, then push mirror `main`, create tag `v0.1.2`, push tag, and run
+  `gh release create`.
