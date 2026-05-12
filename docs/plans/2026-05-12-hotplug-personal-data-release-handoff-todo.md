@@ -72,6 +72,7 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Commit the closed-loop/docs slice | This amended commit staged only `AGENTS.md`, `CLAUDE.md`, `workflow_status.rs`, and this handoff board. |
 | done | Prove/fix practical 5-slot `--human` output | Kept English agent labels; practical `analyze --human` now exposes Structure, Technicals, SMT, Regime with posterior probabilities, and Plan with executable trade levels or honest observe/no-trade fields. |
 | done | Add data-backed ICT/PDA price-level human template | `Structure` and `Technicals` now cite existing swing/BOS/CHoCH/MSS/CISD/liquidity/FVG/OB/rejection fields with price levels in parentheses when detectors produce them; missing demo evidence and not-yet-trained variants are explicit `(n/a)`/`requires_followup`, not fabricated. |
+| done | Implement ICT SMT confirmation-failure semantics | SMT now detects same-window swing confirmation failure across paired markets, emits base/comparison swing types and price levels, marks swept buy/sell-side liquidity, and stays `confirmation_only` with fail-closed relationship gating. |
 | blocked | Publish release mirror | Blocked on the new closed-loop/entrypoint/privacy gate and then explicit operator confirmation for `v0.1.2` tag/push/`gh release create`. GitHub auth was previously available and remote had no `v0.1.2` tag, but re-check before any publish. |
 
 ## Resume State Hint
@@ -148,8 +149,48 @@ If resuming:
 - `cargo test application::reporting::analyze_output::tests:: -- --nocapture` passed, 11 tests.
 - `cargo fmt --check` passed after the data-backed ICT/PDA price-level human-template slice.
 - `cargo clippy --lib -- -D warnings` passed for the library/runtime surface. `cargo clippy --all-targets -- -D warnings` is currently blocked by unrelated dirty Auto-Quant test drift in `src/application/auto_quant/agent_material.rs` where tests reference branch fields not present on `AgentMaterialDispatchJobResult` / `AgentMaterialRankRow`.
+- `cargo test analyze::smt_correlation_section::tests:: -- --nocapture` passed, 2 tests; guards bullish/bearish ICT SMT as swing confirmation failure with base/comparison levels and swept side.
+- `cargo test application::reporting::analyze_output::tests::analyze_human_surface_carries_ict_smt_confirmation_fields -- --nocapture` passed; guards human SMT output fields `smt_signal`, `base_level`, `comparison_level`, `swept_side`, and `trade_use=confirmation_only`.
+- `rustfmt --edition 2021 --check src/analyze/smt_correlation_section.rs src/application/reporting/analyze_output.rs` passed. Full `cargo fmt --check` is currently blocked by unrelated dirty formatting in `src/data/loader.rs`.
 
 ## Slice Notes
+
+### 2026-05-12 ICT SMT confirmation-failure semantics slice
+
+Changed:
+- `src/analyze/smt_correlation_section.rs`
+- `src/application/reporting/analyze_output.rs`
+- `docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`
+
+Behavior:
+- `build_smt_correlation_section` now evaluates ICT SMT as same-window swing
+  confirmation failure, not a generic rolling-correlation sentence.
+- Positive related markets can emit `bearish_smt` when one side sweeps a higher
+  high and the other fails to confirm, and `bullish_smt` when one side sweeps a
+  lower low and the other fails to confirm.
+- SMT output carries `base_swing_type`, `base_level`, `comparison_swing_type`,
+  `comparison_level`, `swept_side`, `relationship_type`,
+  `relationship_confidence`, `normalized_for_inverse_correlation`, and
+  `trade_use=confirmation_only`.
+- If relationship confidence is uncertain, SMT fails closed with
+  `relationship_uncertain`; SMT remains confirmation evidence and does not make
+  a trade actionable by itself.
+- The related-market map now seeds practical zero-config universes for index
+  futures, metals, and crypto instead of only echoing the provided spot/options
+  symbols.
+
+Evidence:
+- `cargo test analyze::smt_correlation_section::tests:: -- --nocapture`
+  passed, 2 tests.
+- `cargo test application::reporting::analyze_output::tests::analyze_human_surface_carries_ict_smt_confirmation_fields -- --nocapture`
+  passed.
+- `rustfmt --edition 2021 --check src/analyze/smt_correlation_section.rs src/application/reporting/analyze_output.rs`
+  passed.
+
+Next:
+- For inverse-correlation pairs such as DXY/EURUSD or DXY/XAUUSD, promote the
+  next factor-training/runtime slice to validate normalized inverse structure
+  with raw-level provenance before using it for execution confidence.
 
 ### 2026-05-12 data-backed ICT/PDA price-level human-template slice
 

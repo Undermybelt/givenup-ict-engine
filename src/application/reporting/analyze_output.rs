@@ -890,16 +890,32 @@ fn human_smt_summary(section: &crate::analyze_sections::SmtCorrelationSection) -
     universe.sort();
     universe.dedup();
     format!(
-        "paired_market_available={}; primary_pair={}/{}; universe={}; corr20={} corr50={} divergence={:?}; cointegrated={:?}; basis_bps={}; narrative={}",
+        "paired_market_available={}; primary_pair={}/{}; universe={}; relationship={}/confidence:{:.3} normalized_inverse={}; smt_signal={} base_swing={} base_level={} comparison_swing={} comparison_level={} raw_comparison_swing={} raw_comparison_level={} swept_side={} trade_use={}; corr20={} corr50={} legacy_divergence={:?}; cointegrated={:?}; basis_bps={}; fail_closed_reason={}; narrative={}",
         section.paired_market_available,
         section.futures_symbol.as_deref().unwrap_or("unprovided"),
         section.spot_symbol.as_deref().unwrap_or("unprovided"),
         universe.join(","),
+        section.relationship_type,
+        section.relationship_confidence,
+        section.normalized_for_inverse_correlation,
+        section.smt_signal.as_deref().unwrap_or("none"),
+        section.base_swing_type.as_deref().unwrap_or("n/a"),
+        format_optional_price(section.base_level),
+        section.comparison_swing_type.as_deref().unwrap_or("n/a"),
+        format_optional_price(section.comparison_level),
+        section
+            .raw_comparison_swing_type
+            .as_deref()
+            .unwrap_or("n/a"),
+        format_optional_price(section.raw_comparison_level),
+        section.swept_side.as_deref().unwrap_or("none"),
+        section.trade_use,
         format_optional_number(section.rolling_correlation_20),
         format_optional_number(section.rolling_correlation_50),
         section.divergence_detected,
         section.cointegrated,
         format_optional_number(section.normalized_basis_bps),
+        section.fail_closed_reason.as_deref().unwrap_or("none"),
         section.narrative
     )
 }
@@ -1682,6 +1698,58 @@ mod tests {
         assert!(technical_summary.contains(
             "variants=mitigation_requires_followup,breaker_requires_followup,rejection_block=true"
         ));
+    }
+
+    #[test]
+    fn analyze_human_surface_carries_ict_smt_confirmation_fields() {
+        let section = crate::analyze_sections::SmtCorrelationSection {
+            probability_role: "cross_market_confirmation_for_probability_model".to_string(),
+            paired_market_available: true,
+            futures_symbol: Some("NQ".to_string()),
+            spot_symbol: Some("ES".to_string()),
+            related_futures_symbols: vec!["YM".to_string(), "RTY".to_string()],
+            related_etf_symbols: vec!["QQQ".to_string(), "SPY".to_string()],
+            related_options_symbols: vec!["SPY".to_string()],
+            related_cfd_symbols: vec!["NAS100".to_string(), "US500".to_string()],
+            related_crypto_symbols: Vec::new(),
+            rolling_correlation_20: Some(0.82),
+            rolling_correlation_50: Some(0.76),
+            divergence_detected: Some(true),
+            cointegration_stat: Some(-2.1),
+            cointegrated: Some(false),
+            raw_basis_bps: None,
+            normalized_basis_bps: None,
+            rolling_price_ratio_mean: None,
+            smt_signal: Some("bearish_smt".to_string()),
+            base_swing_type: Some("HH_sweep".to_string()),
+            base_level: Some(18550.25),
+            comparison_swing_type: Some("failed_HH".to_string()),
+            comparison_level: Some(5320.75),
+            raw_comparison_swing_type: Some("failed_HH".to_string()),
+            raw_comparison_level: Some(5320.75),
+            swept_side: Some("buy_side_liquidity".to_string()),
+            normalized_for_inverse_correlation: false,
+            relationship_type: "positive".to_string(),
+            relationship_confidence: 0.82,
+            trade_use: "confirmation_only".to_string(),
+            fail_closed_reason: None,
+            notes: Vec::new(),
+            narrative: "ict_bearish_smt_is_confirmation_only_wait_for_pda_and_mss_or_cisd"
+                .to_string(),
+        };
+
+        let summary = human_smt_summary(&section);
+
+        assert!(summary.contains("relationship=positive/confidence:0.820"));
+        assert!(summary.contains("smt_signal=bearish_smt"));
+        assert!(summary.contains("base_swing=HH_sweep"));
+        assert!(summary.contains("base_level=(18550.25)"));
+        assert!(summary.contains("comparison_swing=failed_HH"));
+        assert!(summary.contains("comparison_level=(5320.75)"));
+        assert!(summary.contains("raw_comparison_swing=failed_HH"));
+        assert!(summary.contains("raw_comparison_level=(5320.75)"));
+        assert!(summary.contains("swept_side=buy_side_liquidity"));
+        assert!(summary.contains("trade_use=confirmation_only"));
     }
 
     #[test]
