@@ -1,0 +1,6 @@
+regime,event_count,trade_count,win_rate,expectancy,sample_window,instrument_coverage,confidence,fail_closed_reason
+trend,20,2,1.0,0.027480524843287633,forward_12_bars,"BTC,XAUUSD",0.06666666666666667,insufficient_entry_context_trade_count
+range,8,1,1.0,0.004714787803556571,forward_12_bars,"BTC,EURUSD,NQ,XAUUSD",0.03333333333333333,insufficient_entry_context_trade_count
+transition,14,0,,,forward_12_bars,"BTC,EURUSD,NQ,XAUUSD",0.0,insufficient_entry_context_trade_count
+stress,0,0,,,forward_12_bars,,0.0,insufficient_entry_context_trade_count
+other,3,0,,,forward_12_bars,"EURUSD,NQ,XAUUSD",0.0,insufficient_entry_context_trade_count

@@ -1,0 +1,1 @@
+outcome_readback_assertion=pass event_count=42 regimes=trend,range,transition,stress,other downstream_allowed=false

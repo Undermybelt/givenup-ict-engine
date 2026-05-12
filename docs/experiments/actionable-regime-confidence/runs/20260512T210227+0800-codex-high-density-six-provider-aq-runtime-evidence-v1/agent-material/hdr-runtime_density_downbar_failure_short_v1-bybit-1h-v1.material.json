@@ -1,0 +1,38 @@
+{
+  "package_id": "hdr-runtime_density_downbar_failure_short_v1-bybit-1h-v1",
+  "title": "HDR runtime_density_downbar_failure_short_v1 - Bybit BTCUSDT 1h",
+  "symbol": "BTC",
+  "timeframe": "1h",
+  "timerange": "20250101-20260512",
+  "direction": "short",
+  "data_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/normalized/bybit_btcusdt_1h.csv",
+  "strategy_source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/agent-material/RuntimeDensityDownbarFailureShortV1.py",
+  "strategy_class_name": "RuntimeDensityDownbarFailureShortV1",
+  "strategy_brief": "High-density runtime evidence probe; density diagnostic only, not promotion.",
+  "evaluation_priority": [
+    "provider_trade_density",
+    "cross_provider_survival",
+    "regime_conditioned_win_rate"
+  ],
+  "consumer_evidence_profile": {
+    "branch_path": "Transition -> RuntimeEvidenceDensity -> downbar_failure -> runtime_density_downbar_failure_short_v1",
+    "regime_profit_branch_path": "Transition -> RuntimeEvidenceDensity -> downbar_failure -> runtime_density_downbar_failure_short_v1",
+    "branch_id": "runtime_density_downbar_failure_short_v1",
+    "main_regime": "Transition",
+    "sub_regime": "RuntimeEvidenceDensity",
+    "sub_sub_regime_or_profit_factor": "downbar_failure",
+    "profit_factor": "runtime_density_downbar_failure_short_v1",
+    "provider": "Bybit",
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "update_goal": false
+  },
+  "notes": [
+    "source_provider=Bybit BTCUSDT 1h",
+    "aq_provider_invoked=true",
+    "provider_data_acquired_this_step=true",
+    "local_cache_replay=false",
+    "high_density_probe=true",
+    "promotion_allowed=false until ordered downstream chain passes calibrated >=95 gates"
+  ]
+}

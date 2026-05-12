@@ -1,0 +1,7 @@
+{
+  "packet_assertion": "pass",
+  "provider_files": 10,
+  "rows": 1237,
+  "downstream_allowed": false,
+  "quality_weight": 0.0
+}

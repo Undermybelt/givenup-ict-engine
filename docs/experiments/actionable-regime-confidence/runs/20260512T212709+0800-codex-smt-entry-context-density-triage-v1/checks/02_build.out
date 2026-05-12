@@ -1,0 +1,9 @@
+{
+  "smt_entry_context_density_triage": "pass",
+  "rows": 45,
+  "signal_rows": 42,
+  "strict_trade_count": 3,
+  "best_relaxed_scenario": "pda_only",
+  "best_relaxed_trade_count": 39,
+  "downstream_allowed": false
+}

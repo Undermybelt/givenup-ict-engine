@@ -1,0 +1,1 @@
+target/debug/ict-engine auto-quant-agent-material-dispatch --symbol HDR_210052 --state-dir docs/experiments/actionable-regime-confidence/runs/20260512T210052+0800-codex-204858-header-normalized-dispatch-rank-v1/state

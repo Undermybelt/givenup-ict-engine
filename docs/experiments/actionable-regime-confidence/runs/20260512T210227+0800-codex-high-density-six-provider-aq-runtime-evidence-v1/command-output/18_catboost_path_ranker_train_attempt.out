@@ -1,0 +1,14 @@
+[run] /opt/homebrew/opt/python@3.14/bin/python3.14 scripts/auto_quant_external/pandas_path_ranker_trainer.py --target-csv docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/HDR_204858/policy_training/structural_path_ranking_target.csv --output-dir docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/path-ranker/catboost_failclosed_after_aq --model-family catboost --output-scores docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/HDR_204858/policy_training/scores.csv
+[error] Traceback (most recent call last):
+  File "scripts/auto_quant_external/pandas_path_ranker_trainer.py", line 690, in <module>
+    main()
+    ~~~~^^
+  File "scripts/auto_quant_external/pandas_path_ranker_trainer.py", line 664, in main
+    train_catboost(X, y, weights, output_dir, cat_features=CATEGORICAL_FEATURES)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "scripts/auto_quant_external/pandas_path_ranker_trainer.py", line 243, in train_catboost
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: catboost requested but not installed; run via path_ranker_integration.py or use `uv run --with pandas --with numpy --with catboost python ...`
+

@@ -1,0 +1,8 @@
+{
+  "packet_assertion": "pass",
+  "strict_trade_count": 3,
+  "min_trade_count_for_learning": 30,
+  "best_relaxed_scenario": "pda_only",
+  "best_relaxed_trade_count": 39,
+  "downstream_allowed": false
+}

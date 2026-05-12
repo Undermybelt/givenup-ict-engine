@@ -1,0 +1,7 @@
+{
+  "packet_assertion": "pass",
+  "rows": 45,
+  "entry_context_trade_count": 3,
+  "downstream_allowed": false,
+  "quality_weight": 0.0
+}

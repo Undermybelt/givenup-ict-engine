@@ -1,0 +1,30 @@
+[
+  {
+    "entry_id": "ledger:auto-quant-agent-material-batch:HDR_210052:20260512T130342.310Z",
+    "artifact_kind": "auto_quant_agent_material_batch",
+    "artifact_id": "auto-quant-agent-material-batch:HDR_210052:20260512T130342.310Z",
+    "version": 1,
+    "generated_at": "2026-05-12T13:03:42.310263Z",
+    "symbol": "HDR_210052",
+    "source_phase": "auto_quant_agent_material_batch",
+    "source_run_id": null,
+    "path": "docs/experiments/actionable-regime-confidence/runs/20260512T210052+0800-codex-204858-header-normalized-dispatch-rank-v1/state/auto-quant/HDR_210052/auto_quant_agent_material_batch.20260512T130342.310Z.json",
+    "status": "batch_ready_for_dispatch",
+    "promote_candidate": false,
+    "actionable": true,
+    "decision_hint": "agent_material_dispatch",
+    "review_reason": "jobs=10 max_parallel=3",
+    "review_rule_version": "auto-quant-agent-material-batch-v1",
+    "top_factor_name": null,
+    "top_factor_action": "dispatch",
+    "family_scores": {},
+    "supersedes_artifact_id": null,
+    "quality_score": 10,
+    "consumed_by_update_run_id": null,
+    "consumed_at": null,
+    "consumed_outcome": null,
+    "regraded_at": null,
+    "consumption_regrade_status": null,
+    "consumption_regrade_reason": null
+  }
+]

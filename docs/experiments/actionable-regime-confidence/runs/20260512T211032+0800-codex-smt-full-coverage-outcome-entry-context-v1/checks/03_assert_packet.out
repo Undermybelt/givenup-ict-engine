@@ -1,0 +1,9 @@
+{
+  "packet_assertion": "pass",
+  "rows": 42,
+  "outcome_6h_count": 39,
+  "outcome_12h_count": 37,
+  "entry_context_complete_count": 0,
+  "learning_quality_weight": 0.0,
+  "downstream_allowed": false
+}

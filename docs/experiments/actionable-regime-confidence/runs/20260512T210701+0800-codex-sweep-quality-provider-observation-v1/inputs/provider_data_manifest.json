@@ -1,0 +1,6 @@
+{
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data",
+  "source_claim": "204436_smt_provider_observation_packet_v1",
+  "mode": "read_only_existing_provider_data",
+  "new_provider_fetch_allowed": false
+}

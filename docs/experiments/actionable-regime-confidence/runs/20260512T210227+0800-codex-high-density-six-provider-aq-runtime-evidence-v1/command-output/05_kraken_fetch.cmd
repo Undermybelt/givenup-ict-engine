@@ -1,0 +1,1 @@
+/Users/thrill3r/.venvs/ict-engine-provider-py313/bin/python scripts/auto_quant_external/fetch_external.py kraken-kline --market spot --pair XBTUSD --interval 1h --start 2026-03-01 --end 2026-05-12 --output docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/raw/kraken_xbtusd_1h.csv

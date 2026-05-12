@@ -1,0 +1,2 @@
+provider_provenance,event_count,outcome_6_bar_count,outcome_12_bar_count,hit_rate_6_bars,hit_rate_12_bars,expectancy_6_bars,expectancy_12_bars
+yfinance,42,42,40,0.6428571428571429,0.5,0.0005820075285714287,-0.0012493025274999997

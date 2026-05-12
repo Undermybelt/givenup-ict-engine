@@ -1,0 +1,15 @@
+{
+  "event_count": 42,
+  "outcome_6h_count": 39,
+  "outcome_12h_count": 37,
+  "required_provider_pair_count": 7,
+  "required_provider_pairs_with_data": 7,
+  "required_provider_pairs_without_smt_event": 3,
+  "inverse_relationship_event_count": 0,
+  "inverse_normalized_event_count": 0,
+  "candidate_win_rate_6h": 0.641026,
+  "candidate_expectancy_6h": 0.00074055,
+  "candidate_win_rate_12h": 0.648649,
+  "candidate_expectancy_12h": 0.00041507,
+  "entry_context_complete_count": 0
+}

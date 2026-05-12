@@ -1,0 +1,10 @@
+{
+  "event_count": 42,
+  "outcome_6h_count": 39,
+  "outcome_12h_count": 37,
+  "candidate_win_rate_6h": 0.641026,
+  "candidate_expectancy_6h": 0.00074055,
+  "candidate_win_rate_12h": 0.648649,
+  "candidate_expectancy_12h": 0.00041507,
+  "entry_context_complete_count": 0
+}

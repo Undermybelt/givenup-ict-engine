@@ -1,0 +1,242 @@
+[
+  {
+    "symbol": "BTC",
+    "provider": "paired_provider_packet",
+    "timeframe": "1h",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/BTC_ETH_1h.json",
+    "candle_rows": 1428,
+    "sweep_event_count": 147,
+    "first_time": "2026-03-14T00:00:00+00:00",
+    "last_time": "2026-05-12T12:00:00+00:00"
+  },
+  {
+    "symbol": "ETH",
+    "provider": "paired_provider_packet",
+    "timeframe": "1h",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/BTC_ETH_1h.json",
+    "candle_rows": 1428,
+    "sweep_event_count": 132,
+    "first_time": "2026-03-14T00:00:00+00:00",
+    "last_time": "2026-05-12T12:00:00+00:00"
+  },
+  {
+    "symbol": "BTC",
+    "provider": "kraken",
+    "timeframe": "1h",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/BTC_kraken_1h.json",
+    "candle_rows": 721,
+    "sweep_event_count": 83,
+    "first_time": "1775995200",
+    "last_time": "1778587200"
+  },
+  {
+    "symbol": "BTC",
+    "provider": "yahoo",
+    "timeframe": "1h",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/BTC_yahoo_1h.json",
+    "candle_rows": 1429,
+    "sweep_event_count": 147,
+    "first_time": "1773446400",
+    "last_time": "1778590304"
+  },
+  {
+    "symbol": "DXY",
+    "provider": "yahoo",
+    "timeframe": "1h",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/DXY_yahoo_1h.json",
+    "candle_rows": 1180,
+    "sweep_event_count": 143,
+    "first_time": "1772514000",
+    "last_time": "1778589700"
+  },
+  {
+    "symbol": "ES",
+    "provider": "yahoo",
+    "timeframe": "1h",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/ES_yahoo_1h.json",
+    "candle_rows": 1135,
+    "sweep_event_count": 156,
+    "first_time": "1772514000",
+    "last_time": "1778589696"
+  },
+  {
+    "symbol": "ETH",
+    "provider": "kraken",
+    "timeframe": "1h",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/ETH_kraken_1h.json",
+    "candle_rows": 721,
+    "sweep_event_count": 71,
+    "first_time": "1775995200",
+    "last_time": "1778587200"
+  },
+  {
+    "symbol": "ETH",
+    "provider": "yahoo",
+    "timeframe": "1h",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/ETH_yahoo_1h.json",
+    "candle_rows": 1429,
+    "sweep_event_count": 132,
+    "first_time": "1773446400",
+    "last_time": "1778590306"
+  },
+  {
+    "symbol": "EURUSD",
+    "provider": "paired_provider_packet",
+    "timeframe": "15m",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/EURUSD_DXY_15m.json",
+    "candle_rows": 434,
+    "sweep_event_count": 12,
+    "first_time": "2026-05-05T23:00:00+00:00",
+    "last_time": "2026-05-12T12:45:00+00:00"
+  },
+  {
+    "symbol": "DXY",
+    "provider": "paired_provider_packet",
+    "timeframe": "15m",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/EURUSD_DXY_15m.json",
+    "candle_rows": 308,
+    "sweep_event_count": 31,
+    "first_time": "2026-05-07T04:00:00+00:00",
+    "last_time": "2026-05-12T12:45:00+00:00"
+  },
+  {
+    "symbol": "EURUSD",
+    "provider": "paired_provider_packet",
+    "timeframe": "15m",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/EURUSD_GBPUSD_15m.json",
+    "candle_rows": 434,
+    "sweep_event_count": 12,
+    "first_time": "2026-05-05T23:00:00+00:00",
+    "last_time": "2026-05-12T12:45:00+00:00"
+  },
+  {
+    "symbol": "GBPUSD",
+    "provider": "paired_provider_packet",
+    "timeframe": "15m",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/EURUSD_GBPUSD_15m.json",
+    "candle_rows": 434,
+    "sweep_event_count": 38,
+    "first_time": "2026-05-05T23:00:00+00:00",
+    "last_time": "2026-05-12T12:45:00+00:00"
+  },
+  {
+    "symbol": "EURUSD",
+    "provider": "yahoo",
+    "timeframe": "1h",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/EURUSD_yahoo_1h.json",
+    "candle_rows": 1409,
+    "sweep_event_count": 121,
+    "first_time": "1771372800",
+    "last_time": "1778590285"
+  },
+  {
+    "symbol": "NQ",
+    "provider": "paired_provider_packet",
+    "timeframe": "5m",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/NQ_ES_5m.json",
+    "candle_rows": 929,
+    "sweep_event_count": 101,
+    "first_time": "2026-05-07T04:05:00+00:00",
+    "last_time": "2026-05-12T12:45:00+00:00"
+  },
+  {
+    "symbol": "ES",
+    "provider": "paired_provider_packet",
+    "timeframe": "5m",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/NQ_ES_5m.json",
+    "candle_rows": 929,
+    "sweep_event_count": 81,
+    "first_time": "2026-05-07T04:05:00+00:00",
+    "last_time": "2026-05-12T12:45:00+00:00"
+  },
+  {
+    "symbol": "NQ",
+    "provider": "paired_provider_packet",
+    "timeframe": "5m",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/NQ_YM_5m.json",
+    "candle_rows": 929,
+    "sweep_event_count": 101,
+    "first_time": "2026-05-07T04:05:00+00:00",
+    "last_time": "2026-05-12T12:45:00+00:00"
+  },
+  {
+    "symbol": "YM",
+    "provider": "paired_provider_packet",
+    "timeframe": "5m",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/NQ_YM_5m.json",
+    "candle_rows": 932,
+    "sweep_event_count": 79,
+    "first_time": "2026-05-07T04:00:00+00:00",
+    "last_time": "2026-05-12T12:45:00+00:00"
+  },
+  {
+    "symbol": "NQ",
+    "provider": "yahoo",
+    "timeframe": "1h",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/NQ_yahoo_1h.json",
+    "candle_rows": 1135,
+    "sweep_event_count": 157,
+    "first_time": "1772514000",
+    "last_time": "1778589695"
+  },
+  {
+    "symbol": "XAGUSD",
+    "provider": "yahoo",
+    "timeframe": "1h",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/XAGUSD_yahoo_1h.json",
+    "candle_rows": 1131,
+    "sweep_event_count": 119,
+    "first_time": "1772514000",
+    "last_time": "1778589698"
+  },
+  {
+    "symbol": "XAUUSD",
+    "provider": "paired_provider_packet",
+    "timeframe": "15m",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/XAUUSD_DXY_15m.json",
+    "candle_rows": 312,
+    "sweep_event_count": 27,
+    "first_time": "2026-05-07T04:00:00+00:00",
+    "last_time": "2026-05-12T12:45:00+00:00"
+  },
+  {
+    "symbol": "DXY",
+    "provider": "paired_provider_packet",
+    "timeframe": "15m",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/XAUUSD_DXY_15m.json",
+    "candle_rows": 308,
+    "sweep_event_count": 31,
+    "first_time": "2026-05-07T04:00:00+00:00",
+    "last_time": "2026-05-12T12:45:00+00:00"
+  },
+  {
+    "symbol": "XAUUSD",
+    "provider": "paired_provider_packet",
+    "timeframe": "15m",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/XAUUSD_XAGUSD_15m.json",
+    "candle_rows": 312,
+    "sweep_event_count": 27,
+    "first_time": "2026-05-07T04:00:00+00:00",
+    "last_time": "2026-05-12T12:45:00+00:00"
+  },
+  {
+    "symbol": "XAGUSD",
+    "provider": "paired_provider_packet",
+    "timeframe": "15m",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/XAUUSD_XAGUSD_15m.json",
+    "candle_rows": 312,
+    "sweep_event_count": 32,
+    "first_time": "2026-05-07T04:00:00+00:00",
+    "last_time": "2026-05-12T12:45:00+00:00"
+  },
+  {
+    "symbol": "XAUUSD",
+    "provider": "yahoo",
+    "timeframe": "1h",
+    "source_path": "docs/experiments/actionable-regime-confidence/runs/20260512T204436+0800-codex-smt-provider-observation-packet-v1/provider-data/XAUUSD_yahoo_1h.json",
+    "candle_rows": 1131,
+    "sweep_event_count": 108,
+    "first_time": "1772514000",
+    "last_time": "1778589699"
+  }
+]

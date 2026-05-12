@@ -1,0 +1,125 @@
+{
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T205906+0800-codex-smt-full-coverage-provider-observation-v2",
+  "branch_path": "Transition -> LiquiditySweepConfirmationFailure -> smt_divergence_confirmation_only -> smt_full_coverage_outcome_label_readback:v1",
+  "event_count": 42,
+  "missing_event_time_count": 0,
+  "outcome_6_bar_count": 42,
+  "hit_rate_6_bars": 0.6428571428571429,
+  "expectancy_6_bars": 0.0005820075285714287,
+  "regime_summary": [
+    {
+      "regime_bucket": "other",
+      "event_count": 0,
+      "outcome_6_bar_count": 0,
+      "outcome_12_bar_count": 0,
+      "hit_rate_6_bars": null,
+      "hit_rate_12_bars": null,
+      "expectancy_6_bars": null,
+      "expectancy_12_bars": null
+    },
+    {
+      "regime_bucket": "range",
+      "event_count": 8,
+      "outcome_6_bar_count": 8,
+      "outcome_12_bar_count": 8,
+      "hit_rate_6_bars": 0.625,
+      "hit_rate_12_bars": 0.625,
+      "expectancy_6_bars": -0.0010120815375,
+      "expectancy_12_bars": -0.00024325449999999994
+    },
+    {
+      "regime_bucket": "stress",
+      "event_count": 0,
+      "outcome_6_bar_count": 0,
+      "outcome_12_bar_count": 0,
+      "hit_rate_6_bars": null,
+      "hit_rate_12_bars": null,
+      "expectancy_6_bars": null,
+      "expectancy_12_bars": null
+    },
+    {
+      "regime_bucket": "transition",
+      "event_count": 14,
+      "outcome_6_bar_count": 14,
+      "outcome_12_bar_count": 12,
+      "hit_rate_6_bars": 0.5714285714285714,
+      "hit_rate_12_bars": 0.25,
+      "expectancy_6_bars": 0.002769400242857143,
+      "expectancy_12_bars": 0.00040760810833333347
+    },
+    {
+      "regime_bucket": "trend",
+      "event_count": 20,
+      "outcome_6_bar_count": 20,
+      "outcome_12_bar_count": 20,
+      "hit_rate_6_bars": 0.7,
+      "hit_rate_12_bars": 0.6,
+      "expectancy_6_bars": -0.00031153174499999993,
+      "expectancy_12_bars": -0.0026458681199999995
+    }
+  ],
+  "provider_summary": [
+    {
+      "provider_provenance": "yfinance",
+      "event_count": 42,
+      "outcome_6_bar_count": 42,
+      "outcome_12_bar_count": 40,
+      "hit_rate_6_bars": 0.6428571428571429,
+      "hit_rate_12_bars": 0.5,
+      "expectancy_6_bars": 0.0005820075285714287,
+      "expectancy_12_bars": -0.0012493025274999997
+    }
+  ],
+  "pair_summary": [
+    {
+      "comparison_symbol": "ES",
+      "event_count": 4,
+      "outcome_6_bar_count": 4,
+      "outcome_12_bar_count": 4,
+      "hit_rate_6_bars": 0.5,
+      "hit_rate_12_bars": 0.25,
+      "expectancy_6_bars": 0.0006612318,
+      "expectancy_12_bars": 0.000614379775
+    },
+    {
+      "comparison_symbol": "ETH",
+      "event_count": 28,
+      "outcome_6_bar_count": 28,
+      "outcome_12_bar_count": 28,
+      "hit_rate_6_bars": 0.6071428571428571,
+      "hit_rate_12_bars": 0.5357142857142857,
+      "expectancy_6_bars": 0.0005290602857142858,
+      "expectancy_12_bars": -0.001876445625
+    },
+    {
+      "comparison_symbol": "GBPUSD",
+      "event_count": 3,
+      "outcome_6_bar_count": 3,
+      "outcome_12_bar_count": 2,
+      "hit_rate_6_bars": 1.0,
+      "hit_rate_12_bars": 1.0,
+      "expectancy_6_bars": 0.0009407657333333334,
+      "expectancy_12_bars": 0.0018273698
+    },
+    {
+      "comparison_symbol": "XAGUSD",
+      "event_count": 7,
+      "outcome_6_bar_count": 7,
+      "outcome_12_bar_count": 6,
+      "hit_rate_6_bars": 0.7142857142857143,
+      "hit_rate_12_bars": 0.3333333333333333,
+      "expectancy_6_bars": 0.0005947719714285714,
+      "expectancy_12_bars": -0.00059064705
+    }
+  ],
+  "mss_or_cisd_confirmed": false,
+  "displacement_confirmed": false,
+  "pda_entry_model_confirmed": false,
+  "pre_bayes_filter_allowed": false,
+  "bbn_learning_allowed": false,
+  "catboost_learning_allowed": false,
+  "execution_tree_branch_weight_update_allowed": false,
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false
+}

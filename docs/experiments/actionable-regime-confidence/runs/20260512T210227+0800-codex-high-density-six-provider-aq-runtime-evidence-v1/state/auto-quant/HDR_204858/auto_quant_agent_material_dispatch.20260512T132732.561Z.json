@@ -1,0 +1,250 @@
+{
+  "artifact_id": "auto-quant-agent-material-dispatch:HDR_204858:20260512T132732.518Z",
+  "generated_at": "2026-05-12T13:27:32.561058Z",
+  "symbol": "HDR_204858",
+  "source_batch_artifact_id": "auto-quant-agent-material-batch:HDR_204858:20260512T130445.781Z",
+  "selected_group_indices": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "groups": [
+    {
+      "group_index": 0,
+      "job_results": [
+        {
+          "job_id": "HDR_runtime_density_upbar_reclaim_long_v1_-_yfinance_YF_SPY_1h",
+          "title": "HDR runtime_density_upbar_reclaim_long_v1 - yfinance/YF SPY 1h",
+          "package_id": "hdr-runtime_density_upbar_reclaim_long_v1-yfinance-yf-1h-v1",
+          "provider_provenance": "yfinance/YF SPY 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_upbar_reclaim_long_v1_-_yfinance_YF_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_upbar_reclaim_long_v1_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_upbar_reclaim_long_v1_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -1.833,
+            "sortino": -1.9381,
+            "calmar": -3.4822,
+            "total_profit_pct": -19.44,
+            "max_drawdown_pct": -21.6389,
+            "trade_count": 538,
+            "win_rate_pct": 30.6691,
+            "profit_factor": 0.7306
+          }
+        },
+        {
+          "job_id": "HDR_runtime_density_upbar_reclaim_long_v1_-_IBKR_SPY_1h",
+          "title": "HDR runtime_density_upbar_reclaim_long_v1 - IBKR SPY 1h",
+          "package_id": "hdr-runtime_density_upbar_reclaim_long_v1-ibkr-1h-v1",
+          "provider_provenance": "IBKR SPY 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_upbar_reclaim_long_v1_-_IBKR_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_upbar_reclaim_long_v1_-_IBKR_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_upbar_reclaim_long_v1_-_IBKR_SPY_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -5.9148,
+            "sortino": -6.4685,
+            "calmar": -10.7377,
+            "total_profit_pct": -10.26,
+            "max_drawdown_pct": -10.3121,
+            "trade_count": 583,
+            "win_rate_pct": 29.8456,
+            "profit_factor": 0.723
+          }
+        },
+        {
+          "job_id": "HDR_runtime_density_upbar_reclaim_long_v1_-_Binance_BTCUSDT_1h",
+          "title": "HDR runtime_density_upbar_reclaim_long_v1 - Binance BTCUSDT 1h",
+          "package_id": "hdr-runtime_density_upbar_reclaim_long_v1-binance-1h-v1",
+          "provider_provenance": "Binance BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_upbar_reclaim_long_v1_-_Binance_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_upbar_reclaim_long_v1_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_upbar_reclaim_long_v1_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -14.3433,
+            "sortino": -14.528,
+            "calmar": -3.8341,
+            "total_profit_pct": -79.56,
+            "max_drawdown_pct": -80.2535,
+            "trade_count": 4529,
+            "win_rate_pct": 36.8293,
+            "profit_factor": 0.7669
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 1,
+      "job_results": [
+        {
+          "job_id": "HDR_runtime_density_upbar_reclaim_long_v1_-_Bybit_BTCUSDT_1h",
+          "title": "HDR runtime_density_upbar_reclaim_long_v1 - Bybit BTCUSDT 1h",
+          "package_id": "hdr-runtime_density_upbar_reclaim_long_v1-bybit-1h-v1",
+          "provider_provenance": "Bybit BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_upbar_reclaim_long_v1_-_Bybit_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_upbar_reclaim_long_v1_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_upbar_reclaim_long_v1_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -8.7199,
+            "sortino": -9.3146,
+            "calmar": -34.9424,
+            "total_profit_pct": -6.09,
+            "max_drawdown_pct": -8.3191,
+            "trade_count": 369,
+            "win_rate_pct": 32.7913,
+            "profit_factor": 0.8591
+          }
+        },
+        {
+          "job_id": "HDR_runtime_density_upbar_reclaim_long_v1_-_Kraken_XBTUSD_1h",
+          "title": "HDR runtime_density_upbar_reclaim_long_v1 - Kraken XBTUSD 1h",
+          "package_id": "hdr-runtime_density_upbar_reclaim_long_v1-kraken-1h-v1",
+          "provider_provenance": "Kraken XBTUSD 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_upbar_reclaim_long_v1_-_Kraken_XBTUSD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_upbar_reclaim_long_v1_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_upbar_reclaim_long_v1_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -13.5147,
+            "sortino": -14.5176,
+            "calmar": -54.0272,
+            "total_profit_pct": -6.06,
+            "max_drawdown_pct": -7.6574,
+            "trade_count": 250,
+            "win_rate_pct": 34.0,
+            "profit_factor": 0.7811
+          }
+        },
+        {
+          "job_id": "HDR_runtime_density_downbar_failure_short_v1_-_yfinance_YF_SPY_1h",
+          "title": "HDR runtime_density_downbar_failure_short_v1 - yfinance/YF SPY 1h",
+          "package_id": "hdr-runtime_density_downbar_failure_short_v1-yfinance-yf-1h-v1",
+          "provider_provenance": "yfinance/YF SPY 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_downbar_failure_short_v1_-_yfinance_YF_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_downbar_failure_short_v1_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_downbar_failure_short_v1_-_yfinance_YF_SPY_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -2.8264,
+            "sortino": -2.592,
+            "calmar": -3.7989,
+            "total_profit_pct": -28.13,
+            "max_drawdown_pct": -28.6973,
+            "trade_count": 583,
+            "win_rate_pct": 23.1561,
+            "profit_factor": 0.5972
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 2,
+      "job_results": [
+        {
+          "job_id": "HDR_runtime_density_downbar_failure_short_v1_-_IBKR_SPY_1h",
+          "title": "HDR runtime_density_downbar_failure_short_v1 - IBKR SPY 1h",
+          "package_id": "hdr-runtime_density_downbar_failure_short_v1-ibkr-1h-v1",
+          "provider_provenance": "IBKR SPY 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_downbar_failure_short_v1_-_IBKR_SPY_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_downbar_failure_short_v1_-_IBKR_SPY_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_downbar_failure_short_v1_-_IBKR_SPY_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -4.1515,
+            "sortino": -4.9866,
+            "calmar": -7.6175,
+            "total_profit_pct": -7.68,
+            "max_drawdown_pct": -10.8852,
+            "trade_count": 565,
+            "win_rate_pct": 29.5575,
+            "profit_factor": 0.7901
+          }
+        },
+        {
+          "job_id": "HDR_runtime_density_downbar_failure_short_v1_-_Binance_BTCUSDT_1h",
+          "title": "HDR runtime_density_downbar_failure_short_v1 - Binance BTCUSDT 1h",
+          "package_id": "hdr-runtime_density_downbar_failure_short_v1-binance-1h-v1",
+          "provider_provenance": "Binance BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_downbar_failure_short_v1_-_Binance_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_downbar_failure_short_v1_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_downbar_failure_short_v1_-_Binance_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -17.0298,
+            "sortino": -16.9552,
+            "calmar": -3.8629,
+            "total_profit_pct": -81.28,
+            "max_drawdown_pct": -81.375,
+            "trade_count": 4547,
+            "win_rate_pct": 36.6395,
+            "profit_factor": 0.7252
+          }
+        },
+        {
+          "job_id": "HDR_runtime_density_downbar_failure_short_v1_-_Bybit_BTCUSDT_1h",
+          "title": "HDR runtime_density_downbar_failure_short_v1 - Bybit BTCUSDT 1h",
+          "package_id": "hdr-runtime_density_downbar_failure_short_v1-bybit-1h-v1",
+          "provider_provenance": "Bybit BTCUSDT 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_downbar_failure_short_v1_-_Bybit_BTCUSDT_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_downbar_failure_short_v1_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_downbar_failure_short_v1_-_Bybit_BTCUSDT_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -13.58,
+            "sortino": -16.8412,
+            "calmar": -38.0855,
+            "total_profit_pct": -9.21,
+            "max_drawdown_pct": -11.5535,
+            "trade_count": 362,
+            "win_rate_pct": 31.768,
+            "profit_factor": 0.8021
+          }
+        }
+      ]
+    },
+    {
+      "group_index": 3,
+      "job_results": [
+        {
+          "job_id": "HDR_runtime_density_downbar_failure_short_v1_-_Kraken_XBTUSD_1h",
+          "title": "HDR runtime_density_downbar_failure_short_v1 - Kraken XBTUSD 1h",
+          "package_id": "hdr-runtime_density_downbar_failure_short_v1-kraken-1h-v1",
+          "provider_provenance": "Kraken XBTUSD 1h",
+          "status": "completed",
+          "reason": "external_auto_quant_run_completed",
+          "workspace_root": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_downbar_failure_short_v1_-_Kraken_XBTUSD_1h/aq_workspace",
+          "stdout_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_downbar_failure_short_v1_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stdout.log",
+          "stderr_log_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/agent_material_units/HDR_runtime_density_downbar_failure_short_v1_-_Kraken_XBTUSD_1h/aq_workspace/run_tomac.stderr.log",
+          "aggregate_metrics": {
+            "sharpe": -14.4266,
+            "sortino": -17.6817,
+            "calmar": -48.9636,
+            "total_profit_pct": -6.74,
+            "max_drawdown_pct": -9.3884,
+            "trade_count": 251,
+            "win_rate_pct": 34.6614,
+            "profit_factor": 0.7891
+          }
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "total_jobs": 10,
+    "completed_jobs": 10,
+    "blocked_jobs": 0,
+    "failed_jobs": 0
+  }
+}

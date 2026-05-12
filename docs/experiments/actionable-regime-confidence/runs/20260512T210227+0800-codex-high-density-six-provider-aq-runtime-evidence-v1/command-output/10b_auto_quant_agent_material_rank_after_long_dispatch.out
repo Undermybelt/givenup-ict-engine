@@ -1,0 +1,108 @@
+{
+  "artifact_id": "auto-quant-agent-material-rank:HDR_204858:20260512T132752.335Z",
+  "generated_at": "2026-05-12T13:27:52.339205Z",
+  "symbol": "HDR_204858",
+  "source_dispatch_artifact_id": "auto-quant-agent-material-dispatch:HDR_204858:20260512T132732.518Z",
+  "ranking": [
+    {
+      "unit_label": "HDR runtime_density_upbar_reclaim_long_v1 - Binance BTCUSDT 1h",
+      "status": "completed",
+      "package_id": "hdr-runtime_density_upbar_reclaim_long_v1-binance-1h-v1",
+      "provider_provenance": "Binance BTCUSDT 1h",
+      "win_rate_pct": 36.8293,
+      "sharpe": -14.3433,
+      "total_profit_pct": -79.56,
+      "trade_count": 4529
+    },
+    {
+      "unit_label": "HDR runtime_density_downbar_failure_short_v1 - Binance BTCUSDT 1h",
+      "status": "completed",
+      "package_id": "hdr-runtime_density_downbar_failure_short_v1-binance-1h-v1",
+      "provider_provenance": "Binance BTCUSDT 1h",
+      "win_rate_pct": 36.6395,
+      "sharpe": -17.0298,
+      "total_profit_pct": -81.28,
+      "trade_count": 4547
+    },
+    {
+      "unit_label": "HDR runtime_density_downbar_failure_short_v1 - Kraken XBTUSD 1h",
+      "status": "completed",
+      "package_id": "hdr-runtime_density_downbar_failure_short_v1-kraken-1h-v1",
+      "provider_provenance": "Kraken XBTUSD 1h",
+      "win_rate_pct": 34.6614,
+      "sharpe": -14.4266,
+      "total_profit_pct": -6.74,
+      "trade_count": 251
+    },
+    {
+      "unit_label": "HDR runtime_density_upbar_reclaim_long_v1 - Kraken XBTUSD 1h",
+      "status": "completed",
+      "package_id": "hdr-runtime_density_upbar_reclaim_long_v1-kraken-1h-v1",
+      "provider_provenance": "Kraken XBTUSD 1h",
+      "win_rate_pct": 34.0,
+      "sharpe": -13.5147,
+      "total_profit_pct": -6.06,
+      "trade_count": 250
+    },
+    {
+      "unit_label": "HDR runtime_density_upbar_reclaim_long_v1 - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "package_id": "hdr-runtime_density_upbar_reclaim_long_v1-bybit-1h-v1",
+      "provider_provenance": "Bybit BTCUSDT 1h",
+      "win_rate_pct": 32.7913,
+      "sharpe": -8.7199,
+      "total_profit_pct": -6.09,
+      "trade_count": 369
+    },
+    {
+      "unit_label": "HDR runtime_density_downbar_failure_short_v1 - Bybit BTCUSDT 1h",
+      "status": "completed",
+      "package_id": "hdr-runtime_density_downbar_failure_short_v1-bybit-1h-v1",
+      "provider_provenance": "Bybit BTCUSDT 1h",
+      "win_rate_pct": 31.768,
+      "sharpe": -13.58,
+      "total_profit_pct": -9.21,
+      "trade_count": 362
+    },
+    {
+      "unit_label": "HDR runtime_density_upbar_reclaim_long_v1 - yfinance/YF SPY 1h",
+      "status": "completed",
+      "package_id": "hdr-runtime_density_upbar_reclaim_long_v1-yfinance-yf-1h-v1",
+      "provider_provenance": "yfinance/YF SPY 1h",
+      "win_rate_pct": 30.6691,
+      "sharpe": -1.833,
+      "total_profit_pct": -19.44,
+      "trade_count": 538
+    },
+    {
+      "unit_label": "HDR runtime_density_upbar_reclaim_long_v1 - IBKR SPY 1h",
+      "status": "completed",
+      "package_id": "hdr-runtime_density_upbar_reclaim_long_v1-ibkr-1h-v1",
+      "provider_provenance": "IBKR SPY 1h",
+      "win_rate_pct": 29.8456,
+      "sharpe": -5.9148,
+      "total_profit_pct": -10.26,
+      "trade_count": 583
+    },
+    {
+      "unit_label": "HDR runtime_density_downbar_failure_short_v1 - IBKR SPY 1h",
+      "status": "completed",
+      "package_id": "hdr-runtime_density_downbar_failure_short_v1-ibkr-1h-v1",
+      "provider_provenance": "IBKR SPY 1h",
+      "win_rate_pct": 29.5575,
+      "sharpe": -4.1515,
+      "total_profit_pct": -7.68,
+      "trade_count": 565
+    },
+    {
+      "unit_label": "HDR runtime_density_downbar_failure_short_v1 - yfinance/YF SPY 1h",
+      "status": "completed",
+      "package_id": "hdr-runtime_density_downbar_failure_short_v1-yfinance-yf-1h-v1",
+      "provider_provenance": "yfinance/YF SPY 1h",
+      "win_rate_pct": 23.1561,
+      "sharpe": -2.8264,
+      "total_profit_pct": -28.13,
+      "trade_count": 583
+    }
+  ]
+}

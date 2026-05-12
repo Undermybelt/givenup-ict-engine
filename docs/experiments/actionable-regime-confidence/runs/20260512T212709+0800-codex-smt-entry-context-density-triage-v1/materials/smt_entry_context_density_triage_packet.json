@@ -1,0 +1,387 @@
+{
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T210915+0800-codex-smt-entry-context-outcome-labeling-v1",
+  "branch_path": "Transition -> LiquiditySweepConfirmationFailure -> smt_divergence_confirmation_only -> smt_entry_context_density_triage_v1",
+  "scenarios": {
+    "mss_only": {
+      "aggregate": {
+        "trade_count": 7,
+        "win_rate": 0.7142857142857143,
+        "expectancy": 0.009075478382072809,
+        "instrument_coverage": [
+          "BTC",
+          "EURUSD",
+          "NQ",
+          "XAUUSD"
+        ]
+      },
+      "per_regime": {
+        "trend": {
+          "trade_count": 3,
+          "win_rate": 0.6666666666666666,
+          "expectancy": 0.013571650350457756,
+          "instrument_coverage": [
+            "BTC"
+          ]
+        },
+        "range": {
+          "trade_count": 2,
+          "win_rate": 1.0,
+          "expectancy": 0.0041525346561638015,
+          "instrument_coverage": [
+            "EURUSD",
+            "NQ"
+          ]
+        },
+        "transition": {
+          "trade_count": 2,
+          "win_rate": 0.5,
+          "expectancy": 0.007254164155404393,
+          "instrument_coverage": [
+            "BTC",
+            "XAUUSD"
+          ]
+        },
+        "stress": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        },
+        "other": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        }
+      }
+    },
+    "displacement_only": {
+      "aggregate": {
+        "trade_count": 6,
+        "win_rate": 0.8333333333333334,
+        "expectancy": 0.005146969795146542,
+        "instrument_coverage": [
+          "BTC",
+          "EURUSD"
+        ]
+      },
+      "per_regime": {
+        "trend": {
+          "trade_count": 4,
+          "win_rate": 0.75,
+          "expectancy": 0.006276745700654092,
+          "instrument_coverage": [
+            "BTC"
+          ]
+        },
+        "range": {
+          "trade_count": 2,
+          "win_rate": 1.0,
+          "expectancy": 0.0028874179841314406,
+          "instrument_coverage": [
+            "EURUSD"
+          ]
+        },
+        "transition": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        },
+        "stress": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        },
+        "other": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        }
+      }
+    },
+    "pda_only": {
+      "aggregate": {
+        "trade_count": 39,
+        "win_rate": 0.5128205128205128,
+        "expectancy": -0.00029998561127524847,
+        "instrument_coverage": [
+          "BTC",
+          "EURUSD",
+          "NQ",
+          "XAUUSD"
+        ]
+      },
+      "per_regime": {
+        "trend": {
+          "trade_count": 19,
+          "win_rate": 0.5789473684210527,
+          "expectancy": -0.000717410635114931,
+          "instrument_coverage": [
+            "BTC",
+            "XAUUSD"
+          ]
+        },
+        "range": {
+          "trade_count": 8,
+          "win_rate": 0.625,
+          "expectancy": 2.175754107108777e-05,
+          "instrument_coverage": [
+            "BTC",
+            "EURUSD",
+            "NQ",
+            "XAUUSD"
+          ]
+        },
+        "transition": {
+          "trade_count": 12,
+          "win_rate": 0.3333333333333333,
+          "expectancy": 0.00014644190824002456,
+          "instrument_coverage": [
+            "BTC",
+            "EURUSD",
+            "NQ",
+            "XAUUSD"
+          ]
+        },
+        "stress": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        },
+        "other": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        }
+      }
+    },
+    "mss_plus_pda": {
+      "aggregate": {
+        "trade_count": 7,
+        "win_rate": 0.7142857142857143,
+        "expectancy": 0.009075478382072809,
+        "instrument_coverage": [
+          "BTC",
+          "EURUSD",
+          "NQ",
+          "XAUUSD"
+        ]
+      },
+      "per_regime": {
+        "trend": {
+          "trade_count": 3,
+          "win_rate": 0.6666666666666666,
+          "expectancy": 0.013571650350457756,
+          "instrument_coverage": [
+            "BTC"
+          ]
+        },
+        "range": {
+          "trade_count": 2,
+          "win_rate": 1.0,
+          "expectancy": 0.0041525346561638015,
+          "instrument_coverage": [
+            "EURUSD",
+            "NQ"
+          ]
+        },
+        "transition": {
+          "trade_count": 2,
+          "win_rate": 0.5,
+          "expectancy": 0.007254164155404393,
+          "instrument_coverage": [
+            "BTC",
+            "XAUUSD"
+          ]
+        },
+        "stress": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        },
+        "other": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        }
+      }
+    },
+    "mss_plus_displacement": {
+      "aggregate": {
+        "trade_count": 3,
+        "win_rate": 1.0,
+        "expectancy": 0.019891945830043948,
+        "instrument_coverage": [
+          "BTC",
+          "EURUSD"
+        ]
+      },
+      "per_regime": {
+        "trend": {
+          "trade_count": 2,
+          "win_rate": 1.0,
+          "expectancy": 0.027480524843287633,
+          "instrument_coverage": [
+            "BTC"
+          ]
+        },
+        "range": {
+          "trade_count": 1,
+          "win_rate": 1.0,
+          "expectancy": 0.004714787803556571,
+          "instrument_coverage": [
+            "EURUSD"
+          ]
+        },
+        "transition": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        },
+        "stress": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        },
+        "other": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        }
+      }
+    },
+    "displacement_plus_pda": {
+      "aggregate": {
+        "trade_count": 6,
+        "win_rate": 0.8333333333333334,
+        "expectancy": 0.005146969795146542,
+        "instrument_coverage": [
+          "BTC",
+          "EURUSD"
+        ]
+      },
+      "per_regime": {
+        "trend": {
+          "trade_count": 4,
+          "win_rate": 0.75,
+          "expectancy": 0.006276745700654092,
+          "instrument_coverage": [
+            "BTC"
+          ]
+        },
+        "range": {
+          "trade_count": 2,
+          "win_rate": 1.0,
+          "expectancy": 0.0028874179841314406,
+          "instrument_coverage": [
+            "EURUSD"
+          ]
+        },
+        "transition": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        },
+        "stress": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        },
+        "other": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        }
+      }
+    },
+    "strict_mss_displacement_pda": {
+      "aggregate": {
+        "trade_count": 3,
+        "win_rate": 1.0,
+        "expectancy": 0.019891945830043948,
+        "instrument_coverage": [
+          "BTC",
+          "EURUSD"
+        ]
+      },
+      "per_regime": {
+        "trend": {
+          "trade_count": 2,
+          "win_rate": 1.0,
+          "expectancy": 0.027480524843287633,
+          "instrument_coverage": [
+            "BTC"
+          ]
+        },
+        "range": {
+          "trade_count": 1,
+          "win_rate": 1.0,
+          "expectancy": 0.004714787803556571,
+          "instrument_coverage": [
+            "EURUSD"
+          ]
+        },
+        "transition": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        },
+        "stress": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        },
+        "other": {
+          "trade_count": 0,
+          "win_rate": null,
+          "expectancy": null,
+          "instrument_coverage": []
+        }
+      }
+    }
+  },
+  "blocker_counts": {
+    "total_rows": 45,
+    "signal_rows": 42,
+    "mss_or_cisd_true": 7,
+    "displacement_true": 6,
+    "pda_true": 39,
+    "strict_complete": 3
+  },
+  "missingness": {
+    "entry_context_incomplete:missing_mss_cisd,missing_displacement,missing_pda": 3,
+    "entry_context_incomplete:missing_mss_cisd,missing_displacement": 29,
+    "entry_context_incomplete:missing_displacement": 4,
+    "event_time_missing_from_provider_candles": 3,
+    "entry_context_complete": 3,
+    "entry_context_incomplete:missing_mss_cisd": 3
+  },
+  "best_relaxed_scenario": {
+    "scenario": "pda_only",
+    "trade_count": 39
+  },
+  "quality_gate": {
+    "quality_weight": 0.0,
+    "downstream_allowed": false,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "fail_closed_reason": "triage_only_no_label_mutation_and_strict_trade_count_below_learning_floor",
+    "min_trade_count_for_learning": 30,
+    "strict_trade_count": 3
+  }
+}

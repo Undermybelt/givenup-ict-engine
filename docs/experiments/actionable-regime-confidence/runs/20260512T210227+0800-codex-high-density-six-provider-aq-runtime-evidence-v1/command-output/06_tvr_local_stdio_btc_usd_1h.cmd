@@ -1,0 +1,1 @@
+target/debug/ict-engine market-data-harness --action fetch --request-json docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/requests/tvr_btc_usd_1h.json

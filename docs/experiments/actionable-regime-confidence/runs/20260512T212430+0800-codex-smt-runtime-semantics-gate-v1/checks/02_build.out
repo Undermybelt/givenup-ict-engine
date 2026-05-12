@@ -1,0 +1,23 @@
+{
+  "provider_pairs": 7,
+  "rows": 45,
+  "smt_signal_rows": 42,
+  "semantic_gate_passed_rows": 42,
+  "inverse_signal_rows": 0,
+  "actionable_rows": 0,
+  "entry_context_complete_count": 0,
+  "trade_count": 0,
+  "semantic_gate_passed": true,
+  "smt_as_confirmation_only": true,
+  "actionable_allowed": false,
+  "entry_context_complete": false,
+  "learning_quality_weight": 0.0,
+  "pre_bayes_filter_allowed": false,
+  "bbn_learning_allowed": false,
+  "catboost_path_ranker_allowed": false,
+  "execution_tree_branch_weight_update_allowed": false,
+  "feedback_update_learning_allowed": false,
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "fail_closed_reason": "semantic_gate_passes_but_entry_context_and_per_regime_trade_counts_missing"
+}

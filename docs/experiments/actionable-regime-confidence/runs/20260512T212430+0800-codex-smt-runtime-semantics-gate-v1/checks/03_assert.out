@@ -1,0 +1,10 @@
+{
+  "packet_assertion": "pass",
+  "provider_pairs": 7,
+  "smt_signal_rows": 42,
+  "semantic_gate_passed_rows": 42,
+  "entry_context_complete_count": 0,
+  "downstream_allowed": false,
+  "trade_usable": false,
+  "fail_closed_reason": "semantic_gate_passes_but_entry_context_and_per_regime_trade_counts_missing"
+}

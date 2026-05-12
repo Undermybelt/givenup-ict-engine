@@ -1,0 +1,6 @@
+regime_bucket,semantic_event_count,event_count,trade_count,win_rate,expectancy,candidate_win_rate_6h,candidate_expectancy_6h,confidence,fail_closed_reason
+trend,20,20,0,,,0.7,0.00218755,0.0,missing_mss_cisd_displacement_pda_entry_context
+range,8,8,0,,,0.625,-0.00076717,0.0,missing_mss_cisd_displacement_pda_entry_context
+transition,14,14,0,,,0.545455,-0.00079384,0.0,missing_mss_cisd_displacement_pda_entry_context
+stress,0,0,0,,,,,0.0,missing_mss_cisd_displacement_pda_entry_context
+other,0,0,0,,,,,0.0,missing_mss_cisd_displacement_pda_entry_context

@@ -1,0 +1,6 @@
+regime_bucket,event_count,outcome_6_bar_count,outcome_12_bar_count,hit_rate_6_bars,hit_rate_12_bars,expectancy_6_bars,expectancy_12_bars
+other,0,0,0,,,,
+range,8,8,8,0.625,0.625,-0.0010120815375,-0.00024325449999999994
+stress,0,0,0,,,,
+transition,14,14,12,0.5714285714285714,0.25,0.002769400242857143,0.00040760810833333347
+trend,20,20,20,0.7,0.6,-0.00031153174499999993,-0.0026458681199999995

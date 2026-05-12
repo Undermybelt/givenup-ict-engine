@@ -1,0 +1,11 @@
+unit_label,package_id,provider_provenance,status,trade_count,win_rate_pct,sharpe,total_profit_pct
+HDR runtime_density_upbar_reclaim_long_v1 - Binance BTCUSDT 1h,hdr-runtime_density_upbar_reclaim_long_v1-binance-1h-v1,Binance BTCUSDT 1h,completed,4529,36.8293,-14.3433,-79.56
+HDR runtime_density_downbar_failure_short_v1 - Binance BTCUSDT 1h,hdr-runtime_density_downbar_failure_short_v1-binance-1h-v1,Binance BTCUSDT 1h,completed,4547,36.6395,-17.0298,-81.28
+HDR runtime_density_downbar_failure_short_v1 - Kraken XBTUSD 1h,hdr-runtime_density_downbar_failure_short_v1-kraken-1h-v1,Kraken XBTUSD 1h,completed,251,34.6614,-14.4266,-6.74
+HDR runtime_density_upbar_reclaim_long_v1 - Kraken XBTUSD 1h,hdr-runtime_density_upbar_reclaim_long_v1-kraken-1h-v1,Kraken XBTUSD 1h,completed,250,34.0,-13.5147,-6.06
+HDR runtime_density_upbar_reclaim_long_v1 - Bybit BTCUSDT 1h,hdr-runtime_density_upbar_reclaim_long_v1-bybit-1h-v1,Bybit BTCUSDT 1h,completed,369,32.7913,-8.7199,-6.09
+HDR runtime_density_downbar_failure_short_v1 - Bybit BTCUSDT 1h,hdr-runtime_density_downbar_failure_short_v1-bybit-1h-v1,Bybit BTCUSDT 1h,completed,362,31.768,-13.58,-9.21
+HDR runtime_density_upbar_reclaim_long_v1 - yfinance/YF SPY 1h,hdr-runtime_density_upbar_reclaim_long_v1-yfinance-yf-1h-v1,yfinance/YF SPY 1h,completed,538,30.6691,-1.833,-19.44
+HDR runtime_density_upbar_reclaim_long_v1 - IBKR SPY 1h,hdr-runtime_density_upbar_reclaim_long_v1-ibkr-1h-v1,IBKR SPY 1h,completed,583,29.8456,-5.9148,-10.26
+HDR runtime_density_downbar_failure_short_v1 - IBKR SPY 1h,hdr-runtime_density_downbar_failure_short_v1-ibkr-1h-v1,IBKR SPY 1h,completed,565,29.5575,-4.1515,-7.68
+HDR runtime_density_downbar_failure_short_v1 - yfinance/YF SPY 1h,hdr-runtime_density_downbar_failure_short_v1-yfinance-yf-1h-v1,yfinance/YF SPY 1h,completed,583,23.1561,-2.8264,-28.13

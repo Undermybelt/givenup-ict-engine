@@ -1,0 +1,343 @@
+{
+  "run_root": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1",
+  "provider_rows": [
+    {
+      "provider": "yfinance/YF",
+      "provider_label": "yfinance/YF SPY 1h",
+      "symbol": "SPY",
+      "timeframe": "1h",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/normalized/yf_spy_1h.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/raw/yf_spy_1h.csv",
+      "rows": 2355,
+      "aq_provider_invoked": "true",
+      "provider_requested": "true",
+      "provider_unreachable": "false",
+      "provider_data_acquired": "true",
+      "local_cache_replay": "false",
+      "exit": 0
+    },
+    {
+      "provider": "IBKR",
+      "provider_label": "IBKR SPY 1h",
+      "symbol": "SPY",
+      "timeframe": "1h",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/normalized/ibkr_spy_1h.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/raw/ibkr_spy_1h.csv",
+      "rows": 1935,
+      "aq_provider_invoked": "true",
+      "provider_requested": "true",
+      "provider_unreachable": "false",
+      "provider_data_acquired": "true",
+      "local_cache_replay": "false",
+      "exit": 0
+    },
+    {
+      "provider": "Binance",
+      "provider_label": "Binance BTCUSDT 1h",
+      "symbol": "BTC",
+      "timeframe": "1h",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/normalized/binance_btcusdt_1h.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/raw/binance_btcusdt_1h.csv",
+      "rows": 11905,
+      "aq_provider_invoked": "true",
+      "provider_requested": "true",
+      "provider_unreachable": "false",
+      "provider_data_acquired": "true",
+      "local_cache_replay": "false",
+      "exit": 0
+    },
+    {
+      "provider": "Bybit",
+      "provider_label": "Bybit BTCUSDT 1h",
+      "symbol": "BTC",
+      "timeframe": "1h",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/normalized/bybit_btcusdt_1h.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/raw/bybit_btcusdt_1h.csv",
+      "rows": 1000,
+      "aq_provider_invoked": "true",
+      "provider_requested": "true",
+      "provider_unreachable": "false",
+      "provider_data_acquired": "true",
+      "local_cache_replay": "false",
+      "exit": 0
+    },
+    {
+      "provider": "Kraken",
+      "provider_label": "Kraken XBTUSD 1h",
+      "symbol": "BTC",
+      "timeframe": "1h",
+      "path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/normalized/kraken_xbtusd_1h.csv",
+      "raw_path": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/raw/kraken_xbtusd_1h.csv",
+      "rows": 721,
+      "aq_provider_invoked": "true",
+      "provider_requested": "true",
+      "provider_unreachable": "false",
+      "provider_data_acquired": "true",
+      "local_cache_replay": "false",
+      "exit": 0
+    },
+    {
+      "provider": "TradingViewRemix/TVR",
+      "provider_label": "TradingViewRemix/TVR BTC-USD 1h",
+      "symbol": "BTC",
+      "timeframe": "1h",
+      "path": "",
+      "raw_path": "",
+      "rows": 0,
+      "aq_provider_invoked": "true",
+      "provider_requested": "true",
+      "provider_unreachable": "true",
+      "provider_data_acquired": "false",
+      "local_cache_replay": "false",
+      "exit": 1
+    }
+  ],
+  "provider_count": 6,
+  "provider_data_acquired_count": 5,
+  "material_count": 10,
+  "rank_rows": 10,
+  "rank_nonzero_trade_rows": 10,
+  "rank_total_trade_count": 12577,
+  "by_provider": {
+    "Binance BTCUSDT 1h": {
+      "rows": 2,
+      "nonzero_rows": 2,
+      "trade_count_sum": 9076,
+      "positive_rows": 0
+    },
+    "Kraken XBTUSD 1h": {
+      "rows": 2,
+      "nonzero_rows": 2,
+      "trade_count_sum": 501,
+      "positive_rows": 0
+    },
+    "Bybit BTCUSDT 1h": {
+      "rows": 2,
+      "nonzero_rows": 2,
+      "trade_count_sum": 731,
+      "positive_rows": 0
+    },
+    "yfinance/YF SPY 1h": {
+      "rows": 2,
+      "nonzero_rows": 2,
+      "trade_count_sum": 1121,
+      "positive_rows": 0
+    },
+    "IBKR SPY 1h": {
+      "rows": 2,
+      "nonzero_rows": 2,
+      "trade_count_sum": 1148,
+      "positive_rows": 0
+    }
+  },
+  "command_results": [
+    {
+      "name": "01_yfinance-yf_fetch",
+      "argv": [
+        "/Users/thrill3r/.venvs/ict-engine-provider-py313/bin/python",
+        "scripts/auto_quant_external/fetch_external.py",
+        "yahoo",
+        "--symbol",
+        "SPY",
+        "--interval",
+        "1h",
+        "--start",
+        "2025-01-01",
+        "--end",
+        "2026-05-12",
+        "--output",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/raw/yf_spy_1h.csv"
+      ],
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "02_ibkr_fetch",
+      "argv": [
+        "/Users/thrill3r/.venvs/ict-engine-provider-py313/bin/python",
+        "scripts/auto_quant_external/fetch_external.py",
+        "ibkr-historical",
+        "--symbol",
+        "SPY",
+        "--sec-type",
+        "STK",
+        "--exchange",
+        "SMART",
+        "--currency",
+        "USD",
+        "--primary-exchange",
+        "ARCA",
+        "--bar-size",
+        "1 hour",
+        "--duration",
+        "6 M",
+        "--what-to-show",
+        "TRADES",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "4002",
+        "--client-id",
+        "166",
+        "--output",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/raw/ibkr_spy_1h.csv"
+      ],
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "03_binance_fetch",
+      "argv": [
+        "/Users/thrill3r/.venvs/ict-engine-provider-py313/bin/python",
+        "scripts/auto_quant_external/fetch_external.py",
+        "binance-kline",
+        "--symbol",
+        "BTCUSDT",
+        "--interval",
+        "1h",
+        "--start",
+        "2025-01-01",
+        "--end",
+        "2026-05-12",
+        "--output",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/raw/binance_btcusdt_1h.csv"
+      ],
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "04_bybit_fetch",
+      "argv": [
+        "/Users/thrill3r/.venvs/ict-engine-provider-py313/bin/python",
+        "scripts/auto_quant_external/fetch_external.py",
+        "bybit-kline",
+        "--category",
+        "linear",
+        "--symbol",
+        "BTCUSDT",
+        "--interval",
+        "1h",
+        "--start",
+        "2025-01-01",
+        "--end",
+        "2026-05-12",
+        "--output",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/raw/bybit_btcusdt_1h.csv"
+      ],
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "05_kraken_fetch",
+      "argv": [
+        "/Users/thrill3r/.venvs/ict-engine-provider-py313/bin/python",
+        "scripts/auto_quant_external/fetch_external.py",
+        "kraken-kline",
+        "--market",
+        "spot",
+        "--pair",
+        "XBTUSD",
+        "--interval",
+        "1h",
+        "--start",
+        "2026-03-01",
+        "--end",
+        "2026-05-12",
+        "--output",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/data/provider/raw/kraken_xbtusd_1h.csv"
+      ],
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "06_tvr_local_stdio_btc_usd_1h",
+      "argv": [
+        "target/debug/ict-engine",
+        "market-data-harness",
+        "--action",
+        "fetch",
+        "--request-json",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/requests/tvr_btc_usd_1h.json"
+      ],
+      "exit": 1,
+      "timed_out": false
+    },
+    {
+      "name": "07_strategy_py_compile",
+      "argv": [
+        "/Users/thrill3r/.venvs/ict-engine-provider-py313/bin/python",
+        "-m",
+        "py_compile",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/agent-material/RuntimeDensityUpbarReclaimLongV1.py",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/agent-material/RuntimeDensityDownbarFailureShortV1.py"
+      ],
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "08_auto_quant_agent_material_batch",
+      "argv": [
+        "target/debug/ict-engine",
+        "auto-quant-agent-material-batch",
+        "--symbol",
+        "HDR_204858",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state",
+        "--max-parallel",
+        "3",
+        "--material",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/agent-material/hdr-runtime_density_upbar_reclaim_long_v1-yfinance-yf-1h-v1.material.json",
+        "--material",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/agent-material/hdr-runtime_density_upbar_reclaim_long_v1-ibkr-1h-v1.material.json",
+        "--material",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/agent-material/hdr-runtime_density_upbar_reclaim_long_v1-binance-1h-v1.material.json",
+        "--material",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/agent-material/hdr-runtime_density_upbar_reclaim_long_v1-bybit-1h-v1.material.json",
+        "--material",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/agent-material/hdr-runtime_density_upbar_reclaim_long_v1-kraken-1h-v1.material.json",
+        "--material",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/agent-material/hdr-runtime_density_downbar_failure_short_v1-yfinance-yf-1h-v1.material.json",
+        "--material",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/agent-material/hdr-runtime_density_downbar_failure_short_v1-ibkr-1h-v1.material.json",
+        "--material",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/agent-material/hdr-runtime_density_downbar_failure_short_v1-binance-1h-v1.material.json",
+        "--material",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/agent-material/hdr-runtime_density_downbar_failure_short_v1-bybit-1h-v1.material.json",
+        "--material",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/agent-material/hdr-runtime_density_downbar_failure_short_v1-kraken-1h-v1.material.json"
+      ],
+      "exit": 0,
+      "timed_out": false
+    },
+    {
+      "name": "09_auto_quant_agent_material_dispatch",
+      "argv": [
+        "target/debug/ict-engine",
+        "auto-quant-agent-material-dispatch",
+        "--symbol",
+        "HDR_204858",
+        "--state-dir",
+        "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state"
+      ],
+      "exit": 124,
+      "timed_out": true
+    }
+  ],
+  "pre_bayes_filter_allowed": false,
+  "bbn_allowed": false,
+  "catboost_allowed": false,
+  "execution_tree_allowed": false,
+  "promotion_allowed": false,
+  "trade_usable": false,
+  "update_goal": false,
+  "repair_note": "Initial dispatch in the wrapper timed out after normalized CSV header repair; long direct dispatch and rank completed afterward in the same run root.",
+  "latest_dispatch_artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/HDR_204858/auto_quant_agent_material_dispatch.20260512T132732.561Z.json",
+  "latest_rank_artifact": "docs/experiments/actionable-regime-confidence/runs/20260512T210227+0800-codex-high-density-six-provider-aq-runtime-evidence-v1/state/auto-quant/HDR_204858/auto_quant_agent_material_rank.20260512T132752.339Z.json",
+  "dispatch_totals": {
+    "total_jobs": 10,
+    "completed_jobs": 10,
+    "blocked_jobs": 0,
+    "failed_jobs": 0
+  },
+  "positive_profit_rows": 0
+}

@@ -1,0 +1,16 @@
+{
+  "provider_files": 10,
+  "rows": 1237,
+  "by_symbol": {
+    "BTC": 147,
+    "DXY": 143,
+    "ES": 156,
+    "ETH": 132,
+    "EURUSD": 121,
+    "NQ": 157,
+    "XAGUSD": 119,
+    "XAUUSD": 108
+  },
+  "downstream_allowed": false,
+  "quality_weight": 0.0
+}
