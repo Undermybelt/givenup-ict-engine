@@ -1,0 +1,154 @@
+{
+  "factor_name": "smt_provider_window_event_alignment_expansion_v1",
+  "source_root": "docs/experiments/actionable-regime-confidence/runs/20260512T205906+0800-codex-smt-full-coverage-provider-observation-v2",
+  "branch_path": "Transition -> LiquiditySweepConfirmationFailure -> smt_divergence_confirmation_only -> smt_provider_window_event_alignment_expansion_v1",
+  "definition": "SMT is sibling-market liquidity-sweep swing confirmation failure at the same timeframe/session event window, not ordinary correlation or relative strength.",
+  "counts": {
+    "rows": 72,
+    "smt_signal_rows": 72,
+    "strict_trade_count": 15,
+    "inverse_normalized_signal_rows": 7,
+    "actionable_true_count": 0
+  },
+  "pair_summary": [
+    {
+      "base_symbol": "NQ",
+      "comparison_symbol": "ES",
+      "relationship_type": "positive",
+      "aligned_rows": 930,
+      "recent_correlation": 0.8692,
+      "event_count": 12,
+      "strict_trade_count": 2,
+      "win_rate": 1.0,
+      "expectancy": -0.0020168094615039068,
+      "fail_closed_reason": "insufficient_strict_entry_context_trade_count"
+    },
+    {
+      "base_symbol": "NQ",
+      "comparison_symbol": "YM",
+      "relationship_type": "positive",
+      "aligned_rows": 930,
+      "recent_correlation": 0.2622,
+      "event_count": 0,
+      "strict_trade_count": 0,
+      "win_rate": null,
+      "expectancy": null,
+      "fail_closed_reason": "insufficient_strict_entry_context_trade_count"
+    },
+    {
+      "base_symbol": "EURUSD",
+      "comparison_symbol": "GBPUSD",
+      "relationship_type": "positive",
+      "aligned_rows": 435,
+      "recent_correlation": 0.7889,
+      "event_count": 4,
+      "strict_trade_count": 1,
+      "win_rate": 1.0,
+      "expectancy": 0.004714787803556571,
+      "fail_closed_reason": "insufficient_strict_entry_context_trade_count"
+    },
+    {
+      "base_symbol": "EURUSD",
+      "comparison_symbol": "DXY",
+      "relationship_type": "negative",
+      "aligned_rows": 304,
+      "recent_correlation": -0.9229,
+      "event_count": 1,
+      "strict_trade_count": 0,
+      "win_rate": null,
+      "expectancy": null,
+      "fail_closed_reason": "insufficient_strict_entry_context_trade_count"
+    },
+    {
+      "base_symbol": "XAUUSD",
+      "comparison_symbol": "XAGUSD",
+      "relationship_type": "positive",
+      "aligned_rows": 312,
+      "recent_correlation": 0.7749,
+      "event_count": 9,
+      "strict_trade_count": 2,
+      "win_rate": 0.0,
+      "expectancy": -0.002497996812960334,
+      "fail_closed_reason": "insufficient_strict_entry_context_trade_count"
+    },
+    {
+      "base_symbol": "XAUUSD",
+      "comparison_symbol": "DXY",
+      "relationship_type": "negative",
+      "aligned_rows": 300,
+      "recent_correlation": -0.5794,
+      "event_count": 6,
+      "strict_trade_count": 2,
+      "win_rate": 0.5,
+      "expectancy": -0.0008189972164292804,
+      "fail_closed_reason": "insufficient_strict_entry_context_trade_count"
+    },
+    {
+      "base_symbol": "BTC",
+      "comparison_symbol": "ETH",
+      "relationship_type": "positive",
+      "aligned_rows": 1429,
+      "recent_correlation": 0.9033,
+      "event_count": 40,
+      "strict_trade_count": 8,
+      "win_rate": 0.75,
+      "expectancy": -0.010006455103715173,
+      "fail_closed_reason": "insufficient_strict_entry_context_trade_count"
+    }
+  ],
+  "per_regime_statistics": {
+    "trend": {
+      "trade_count": 5,
+      "win_rate": 0.6,
+      "expectancy": -0.018098369090827494,
+      "fail_closed_reason": "insufficient_per_regime_trade_count"
+    },
+    "range": {
+      "trade_count": 3,
+      "win_rate": 1.0,
+      "expectancy": -0.0010590821324696369,
+      "fail_closed_reason": "insufficient_per_regime_trade_count"
+    },
+    "transition": {
+      "trade_count": 7,
+      "win_rate": 0.5714285714285714,
+      "expectancy": 0.0010949474062277881,
+      "fail_closed_reason": "insufficient_per_regime_trade_count"
+    },
+    "stress": {
+      "trade_count": 0,
+      "win_rate": null,
+      "expectancy": null,
+      "fail_closed_reason": "insufficient_per_regime_trade_count"
+    },
+    "other": {
+      "trade_count": 0,
+      "win_rate": null,
+      "expectancy": null,
+      "fail_closed_reason": "insufficient_per_regime_trade_count"
+    }
+  },
+  "aggregate_strict_statistics": {
+    "trade_count": 15,
+    "win_rate": 0.6666666666666666,
+    "expectancy": -0.005733630667196791
+  },
+  "quality_gate": {
+    "min_trade_count_for_learning": 30,
+    "pair_coverage_met": false,
+    "aggregate_learning_floor_met": false,
+    "per_regime_learning_floor_met": false,
+    "smt_confirmation_only": true,
+    "standalone_actionable_allowed": false,
+    "actionable": false,
+    "auto_quant_dispatch_allowed": false,
+    "pre_bayes_filter_allowed": false,
+    "bbn_learning_allowed": false,
+    "catboost_path_ranker_allowed": false,
+    "execution_tree_branch_weight_update_allowed": false,
+    "feedback_update_learning_allowed": false,
+    "promotion_allowed": false,
+    "trade_usable": false,
+    "fail_closed_reason": "insufficient_strict_entry_context_trade_count_or_per_regime_coverage"
+  }
+}

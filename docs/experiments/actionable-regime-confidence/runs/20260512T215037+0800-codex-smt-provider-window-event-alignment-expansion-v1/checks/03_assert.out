@@ -1,0 +1,8 @@
+{
+  "packet_assertion": "pass",
+  "rows": 72,
+  "strict_trade_count": 15,
+  "inverse_normalized_signal_rows": 7,
+  "downstream_allowed": false,
+  "fail_closed_reason": "insufficient_strict_entry_context_trade_count_or_per_regime_coverage"
+}

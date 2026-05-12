@@ -1,0 +1,8 @@
+base_symbol,comparison_symbol,relationship_type,aligned_rows,recent_correlation,event_count,strict_trade_count,win_rate,expectancy,fail_closed_reason
+NQ,ES,positive,930,0.8692,12,2,1.0,-0.0020168094615039068,insufficient_strict_entry_context_trade_count
+NQ,YM,positive,930,0.2622,0,0,,,insufficient_strict_entry_context_trade_count
+EURUSD,GBPUSD,positive,435,0.7889,4,1,1.0,0.004714787803556571,insufficient_strict_entry_context_trade_count
+EURUSD,DXY,negative,304,-0.9229,1,0,,,insufficient_strict_entry_context_trade_count
+XAUUSD,XAGUSD,positive,312,0.7749,9,2,0.0,-0.002497996812960334,insufficient_strict_entry_context_trade_count
+XAUUSD,DXY,negative,300,-0.5794,6,2,0.5,-0.0008189972164292804,insufficient_strict_entry_context_trade_count
+BTC,ETH,positive,1429,0.9033,40,8,0.75,-0.010006455103715173,insufficient_strict_entry_context_trade_count

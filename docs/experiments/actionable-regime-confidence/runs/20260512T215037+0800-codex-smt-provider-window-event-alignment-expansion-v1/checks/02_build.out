@@ -1,0 +1,7 @@
+{
+  "smt_provider_window_event_alignment_expansion": "pass",
+  "rows": 72,
+  "strict_trade_count": 15,
+  "pair_coverage_met": false,
+  "downstream_allowed": false
+}

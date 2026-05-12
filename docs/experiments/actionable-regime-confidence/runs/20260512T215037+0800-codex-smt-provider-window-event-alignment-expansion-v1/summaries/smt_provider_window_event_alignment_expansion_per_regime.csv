@@ -1,0 +1,6 @@
+regime,trade_count,win_rate,expectancy,fail_closed_reason
+trend,5,0.6,-0.018098369090827494,insufficient_per_regime_trade_count
+range,3,1.0,-0.0010590821324696369,insufficient_per_regime_trade_count
+transition,7,0.5714285714285714,0.0010949474062277881,insufficient_per_regime_trade_count
+stress,0,,,insufficient_per_regime_trade_count
+other,0,,,insufficient_per_regime_trade_count
