@@ -1,6 +1,7 @@
 use anyhow::Result;
 use serde::Serialize;
 use serde_json::{json, Value};
+use std::collections::BTreeMap;
 
 use crate::analyze_report_shell::AnalyzeReport;
 use crate::application::belief::{BeliefPolicyLineageSurface, BeliefShadowPolicySurface};
@@ -364,6 +365,14 @@ pub fn dispatch_analyze_output(
     report: &AnalyzeReport,
     input: AnalyzeOutputDispatchInput<'_>,
 ) -> Result<()> {
+    let regime_probability_suffix = regime_probability_human_suffix(
+        &report
+            .supporting
+            .canonical_belief_report
+            .regime_posterior
+            .probabilities,
+    );
+    let trade_plan_summary = human_trade_plan_summary(&report.analysis.trade_plan);
     let (mut compact_report, mut agent_report, mut human_report) =
         build_analyze_reporting_bundle(AnalyzeReportingBundleInput {
             input: AnalyzeHumanInput {
@@ -384,7 +393,7 @@ pub fn dispatch_analyze_output(
                 regime_label: &report.analysis.regime_bayesian.regime_label,
                 liquidity_label: &report.analysis.regime_bayesian.liquidity_label,
                 regime_selected_direction: report.analysis.regime_bayesian.selected_direction,
-                trade_plan_narrative: &report.analysis.trade_plan.narrative,
+                trade_plan_narrative: &trade_plan_summary,
                 market_family: report
                     .supporting
                     .canonical_belief_report
@@ -397,7 +406,8 @@ pub fn dispatch_analyze_output(
                     .as_deref()
                     .unwrap_or("unknown"),
                 objective_jump_weight: report.supporting.objective_jump_weight,
-                regime_companion_suffix: None,
+                regime_companion_suffix: (!regime_probability_suffix.is_empty())
+                    .then_some(regime_probability_suffix.as_str()),
             },
             artifact_action_summary: &report.supporting.artifact_action_summary,
             multi_timeframe_summary: &report.supporting.multi_timeframe_summary,
@@ -486,6 +496,16 @@ pub fn build_analyze_live_reporting_bundle(
         )
     });
     let regime_companion_suffix = regime_companion_human_suffix(&report.analysis.regime_bayesian);
+    let regime_probability_suffix = regime_probability_human_suffix(
+        &report
+            .supporting
+            .canonical_belief_report
+            .regime_posterior
+            .probabilities,
+    );
+    let combined_regime_suffix =
+        combine_human_suffixes(&regime_probability_suffix, &regime_companion_suffix);
+    let trade_plan_summary = human_trade_plan_summary(&report.analysis.trade_plan);
     let (mut compact_report, mut agent_report, mut human_report) =
         build_analyze_reporting_bundle(AnalyzeReportingBundleInput {
             input: AnalyzeHumanInput {
@@ -506,7 +526,7 @@ pub fn build_analyze_live_reporting_bundle(
                 regime_label: &report.analysis.regime_bayesian.regime_label,
                 liquidity_label: &report.analysis.regime_bayesian.liquidity_label,
                 regime_selected_direction: report.analysis.regime_bayesian.selected_direction,
-                trade_plan_narrative: &report.analysis.trade_plan.narrative,
+                trade_plan_narrative: &trade_plan_summary,
                 market_family: report
                     .supporting
                     .canonical_belief_report
@@ -519,8 +539,8 @@ pub fn build_analyze_live_reporting_bundle(
                     .as_deref()
                     .unwrap_or("unknown"),
                 objective_jump_weight: report.supporting.objective_jump_weight,
-                regime_companion_suffix: (!regime_companion_suffix.is_empty())
-                    .then_some(regime_companion_suffix.as_str()),
+                regime_companion_suffix: (!combined_regime_suffix.is_empty())
+                    .then_some(combined_regime_suffix.as_str()),
             },
             artifact_action_summary: &report.supporting.artifact_action_summary,
             multi_timeframe_summary: &report.supporting.multi_timeframe_summary,
@@ -755,6 +775,52 @@ fn regime_companion_human_suffix(
     } else {
         format!("; {}", fragments.join(" "))
     }
+}
+
+fn regime_probability_human_suffix(probabilities: &BTreeMap<String, f64>) -> String {
+    if probabilities.is_empty() {
+        return String::new();
+    }
+    let probability_line = probabilities
+        .iter()
+        .map(|(regime, probability)| format!("{regime}={probability:.3}"))
+        .collect::<Vec<_>>()
+        .join(" ");
+    format!("; posterior_probabilities={probability_line}")
+}
+
+fn combine_human_suffixes(first: &str, second: &str) -> String {
+    match (first.trim(), second.trim()) {
+        ("", "") => String::new(),
+        (only, "") | ("", only) => only.to_string(),
+        (left, right) => format!("{left} {right}"),
+    }
+}
+
+fn human_trade_plan_summary(section: &crate::analyze_sections::TradePlanSection) -> String {
+    let take_profits = if section.take_profits.is_empty() {
+        "none".to_string()
+    } else {
+        section
+            .take_profits
+            .iter()
+            .map(|level| format!("{level:.2}"))
+            .collect::<Vec<_>>()
+            .join(",")
+    };
+    format!(
+        "actionable={} direction={:?} entry={:.2} stop_loss={:.2} take_profits={} risk_reward={:.2} posterior={:.3} win_probability={:.3} position_size={:.3} narrative={}",
+        section.actionable,
+        section.direction,
+        section.entry,
+        section.stop_loss,
+        take_profits,
+        section.risk_reward,
+        section.posterior,
+        section.win_probability,
+        section.position_size,
+        section.narrative
+    )
 }
 
 pub fn build_human_analyze_surface(input: AnalyzeHumanInput<'_>) -> HumanAnalyzeReport {
@@ -1347,6 +1413,69 @@ mod tests {
             rendered.contains("Ask the user"),
             "human output should surface user-readable ask; got:\n{rendered}"
         );
+    }
+
+    #[test]
+    fn analyze_human_surface_carries_regime_probabilities_and_trade_levels() {
+        let regime_suffix = regime_probability_human_suffix(
+            &[
+                ("trend".to_string(), 0.455),
+                ("range".to_string(), 0.309),
+                ("stress".to_string(), 0.160),
+                ("transition".to_string(), 0.076),
+            ]
+            .into(),
+        );
+        let plan = human_trade_plan_summary(&crate::analyze_sections::TradePlanSection {
+            probability_role: "posterior_trade_plan".to_string(),
+            actionable: true,
+            direction: Direction::Bull,
+            entry: 100.0,
+            stop_loss: 97.5,
+            take_profits: vec![102.0, 104.0, 106.0],
+            risk_reward: 2.4,
+            posterior: 0.62,
+            win_probability: 0.58,
+            kelly_fraction: 0.1,
+            position_size: 1.0,
+            uncertainties: Vec::new(),
+            narrative: "preferred_Bull_entry_with_defined_risk".to_string(),
+        });
+        let report = build_human_analyze_surface(AnalyzeHumanInput {
+            symbol: "NQ",
+            selected_direction: Direction::Bull,
+            entry_quality: "medium",
+            gate_status: "pass_neutralized",
+            evidence_quality_score: 0.5,
+            decision_hint: "observe_only",
+            factor_iteration_queue: &[],
+            recommended_next_command: "ict-engine analyze",
+            price_action_narrative: "price",
+            technical_price_narrative: "tech",
+            smt_correlation_narrative: "smt",
+            regime_label: "trend",
+            liquidity_label: "sweep",
+            regime_selected_direction: Direction::Bull,
+            trade_plan_narrative: &plan,
+            market_family: None,
+            market_subgraph: "unknown",
+            objective_jump_weight: None,
+            regime_companion_suffix: Some(&regime_suffix),
+        });
+        let rendered = report.render();
+        assert!(rendered.contains("Regime:"));
+        assert!(rendered.contains("posterior_probabilities="));
+        assert!(rendered.contains("trend=0.455"));
+        assert!(rendered.contains("range=0.309"));
+        assert!(rendered.contains("stress=0.160"));
+        assert!(rendered.contains("transition=0.076"));
+        assert!(rendered.contains("Plan:"));
+        assert!(rendered.contains("actionable=true"));
+        assert!(rendered.contains("direction=Bull"));
+        assert!(rendered.contains("entry=100.00"));
+        assert!(rendered.contains("stop_loss=97.50"));
+        assert!(rendered.contains("take_profits=102.00,104.00,106.00"));
+        assert!(rendered.contains("risk_reward=2.40"));
     }
 
     #[test]

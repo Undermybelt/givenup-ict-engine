@@ -4,6 +4,16 @@ This file is the first thing any AI agent should read when entering this repo.
 It is the shared operating contract for Codex, Claude, and other agents. It also
 maps the factor landscape so agents cannot claim "no usable factors exist."
 
+## User Language Contract
+
+CLI, `--human`, `--agent`, and compact machine surfaces may use stable
+agent-friendly English field labels such as `Structure`, `Technicals`, `SMT`,
+`Regime`, and `Plan`. Those labels are the machine/agent contract.
+
+When explaining output to a human operator, answer in the user's language and
+translate the meaning, not the field contract. If the user writes Chinese,
+respond in Chinese unless they explicitly ask otherwise.
+
 ## Current Release Gate
 
 Do not publish, tag, push a release mirror, or tell the operator that the release

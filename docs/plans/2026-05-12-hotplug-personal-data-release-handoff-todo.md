@@ -70,6 +70,7 @@ Status legend: `done`, `active`, `next`, `blocked`, `not_yet`.
 | done | Run fresh zero-config smoke in `/tmp` state | `/tmp/ict-engine-closed-loop-smoke-fixed.bmbPSO` ran provider/workflow/analyze/Pre-Bayes/policy-training/export/update checks with no profile and no private provider config. |
 | done | Run focused verification for the closed-loop/docs slice | `cargo fmt --check`, provider-neutral CLI tests, workflow-status tests, and Clippy passed. |
 | done | Commit the closed-loop/docs slice | This amended commit staged only `AGENTS.md`, `CLAUDE.md`, `workflow_status.rs`, and this handoff board. |
+| done | Prove/fix practical 5-slot `--human` output | Kept English agent labels; practical `analyze --human` now exposes Structure, Technicals, SMT, Regime with posterior probabilities, and Plan with executable trade levels or honest observe/no-trade fields. |
 | blocked | Publish release mirror | Blocked on the new closed-loop/entrypoint/privacy gate and then explicit operator confirmation for `v0.1.2` tag/push/`gh release create`. GitHub auth was previously available and remote had no `v0.1.2` tag, but re-check before any publish. |
 
 ## Resume State Hint
@@ -133,8 +134,45 @@ If resuming:
 - `cargo test application::orchestration::workflow_status::tests:: -- --nocapture`: passed, 114 tests.
 - `cargo clippy --all-targets -- -D warnings`: passed.
 - Commit checkpoint: this amended `Document closed-loop consumer gate` commit.
+- `cargo test application::reporting::analyze_output::tests::analyze_human_surface_carries_regime_probabilities_and_trade_levels -- --nocapture`: passed after wiring the practical human report to regime posterior probabilities and trade-plan levels while preserving stable English agent labels.
+- `/tmp` zero-config smoke `cargo run --quiet -- analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-five-slot-smoke.YPxjBN --human`: passed and showed `Structure`, `Technicals`, `SMT`, `Regime` with `posterior_probabilities=range=0.309 stress=0.160 transition=0.076 trend=0.455`, and `Plan` with `actionable=false direction=Neutral entry=0.00 stop_loss=0.00 take_profits=0.00,0.00,0.00 risk_reward=0.00`.
+- Privacy smoke on the same output: `rg -i "/Users/|api[_-]?key|secret|token"` returned no matches.
+- `cargo test application::reporting::human_report::tests:: -- --nocapture` passed, 5 tests.
+- `cargo test application::reporting::analyze_output::tests:: -- --nocapture` passed, 10 tests.
+- `cargo fmt --check && cargo clippy --all-targets -- -D warnings` passed after the practical 5-slot human-output slice.
 
 ## Slice Notes
+
+### 2026-05-12 practical 5-slot human-output slice
+
+Changed:
+- `AGENT.md`
+- `src/application/reporting/analyze_output.rs`
+- `docs/plans/2026-05-12-hotplug-personal-data-release-handoff-todo.md`
+
+Behavior:
+- `--human` keeps token-friendly English agent labels: `Structure`,
+  `Technicals`, `SMT`, `Regime`, and `Plan`.
+- Agents are now explicitly instructed to answer human operators in the user's
+  language and translate meanings instead of mutating the CLI field contract.
+- The active practical `analyze` and `analyze-live` human-report path now
+  includes canonical regime posterior probabilities in `Regime`.
+- The active practical human-report path now includes `actionable`, direction,
+  entry, stop, take-profits, risk-reward, posterior, win probability, position
+  size, and narrative in `Plan` instead of only a terse plan label.
+
+Evidence:
+- RED: the focused human-output test first failed because the posterior/trade
+  plan helper functions were missing.
+- GREEN: `cargo test application::reporting::analyze_output::tests::analyze_human_surface_carries_regime_probabilities_and_trade_levels -- --nocapture` passed.
+- Smoke: `analyze --symbol DEMO --demo --state-dir /tmp/ict-engine-five-slot-smoke.YPxjBN --human` produced all five stable agent slots; `Regime` included posterior probabilities and `Plan` included actionable/trade-level fields.
+- Privacy: the smoke output did not match `/Users/`, API key, secret, or token patterns.
+- Final verification: focused reporting tests, `cargo fmt --check`, and
+  `cargo clippy --all-targets -- -D warnings` passed.
+
+Next:
+- Do not release until the broader release gate is re-checked and the operator
+  explicitly confirms tag/push/release creation.
 
 ### 2026-05-12 hot-plug profile-choice slice
 

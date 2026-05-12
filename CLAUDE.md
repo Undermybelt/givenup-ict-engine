@@ -1,1 +1,1 @@
-open AGENTS.md and read
+open AGENT.md and read
